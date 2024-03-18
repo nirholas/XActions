@@ -154,3 +154,7 @@ This script:
 - Doesn't try and get you to sign in or take your personal data.
 - Automates your web browser to make it click unfollow buttons, scroll down to reveal more, then do it again.
 - No tricks, all of the code is here so you can see exactly what it does.
+
+## Contributors
+
+- [Ethan JL](https://github.com/tahajalili) - Added feature to keep track of unfollowed users.
