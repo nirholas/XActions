@@ -1,3 +1,8 @@
+// Unfollow everyone on X (Formerly Twitter) and or unfollow who doesn't follow you back, by Nicholas Resendez (https://twitter.com/nichxbt)
+// https://github.com/nirholas/unfollowx
+// https://github.com/tahajalili (Ethan JL) - Added feature to keep track of unfollowed users in UnfollowWDFBLog.js
+//
+// Last Updated: 17 March 2024
 (() => {
   const $followButtons = '[data-testid$="-unfollow"]';
   const $confirmButton = '[data-testid="confirmationSheetConfirm"]';
