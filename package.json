@@ -1,0 +1,13 @@
+{
+  "name": "unfollowx",
+  "version": "1.0.0",
+  "description": "Simple scripts to automate unfollow actions on X (Twitter) — paste into browser console.",
+  "bin": {
+    "unfollowx": "bin/unfollowx"
+  },
+  "scripts": {
+    "test": "echo \"No tests\" && exit 0"
+  },
+  "author": "nirholas",
+  "license": "MIT"
+}

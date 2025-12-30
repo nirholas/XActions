@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UnfollowX — Clean Up Your X Following List</title>
+  <meta name="description" content="Free, open-source browser scripts to unfollow accounts on X (Twitter). No apps, no sign-ins, no data collection.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✂️</text></svg>">
+  <style>
+    :root {
+      --bg: #0f0f0f;
+      --card: #1a1a1a;
+      --text: #e5e5e5;
+      --muted: #888;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --success: #00ba7c;
+      --border: #2f2f2f;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    /* Header */
+    header {
+      text-align: center;
+      padding: 3rem 0;
+    }
+
+    .logo {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+
+    .tagline {
+      color: var(--muted);
+      font-size: 1.25rem;
+      margin-bottom: 2rem;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.875rem 1.5rem;
+      border-radius: 9999px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: var(--card);
+    }
+
+    /* Sections */
+    section {
+      margin: 3rem 0;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Feature Cards */
+    .features {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .feature-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+    }
+
+    .feature-card h3 {
+      font-size: 1.125rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .feature-card p {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    /* Steps */
+    .steps {
+      counter-reset: step;
+    }
+
+    .step {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      padding-left: 4rem;
+      margin-bottom: 1rem;
+      position: relative;
+    }
+
+    .step::before {
+      counter-increment: step;
+      content: counter(step);
+      position: absolute;
+      left: 1.5rem;
+      top: 1.5rem;
+      width: 2rem;
+      height: 2rem;
+      background: var(--accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.875rem;
+    }
+
+    .step h3 {
+      margin-bottom: 0.5rem;
+    }
+
+    .step p {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .step code {
+      display: inline-block;
+      background: var(--bg);
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+    }
+
+    /* Code Block */
+    .code-section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      overflow: hidden;
+    }
+
+    .code-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .code-header span {
+      font-weight: 600;
+    }
+
+    .copy-btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.875rem;
+      transition: all 0.2s;
+    }
+
+    .copy-btn:hover {
+      background: var(--accent-hover);
+    }
+
+    .copy-btn.copied {
+      background: var(--success);
+    }
+
+    pre {
+      padding: 1.5rem;
+      overflow-x: auto;
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 0.8rem;
+      line-height: 1.5;
+    }
+
+    /* Keyboard shortcuts */
+    kbd {
+      display: inline-block;
+      padding: 0.2rem 0.5rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 0.25rem;
+      font-family: inherit;
+      font-size: 0.8rem;
+    }
+
+    /* Safety section */
+    .safety-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .safety-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+
+    .safety-icon {
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .safety-item h4 {
+      font-size: 1rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .safety-item p {
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 3rem 0;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      margin-top: 3rem;
+    }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      h1 { font-size: 2rem; }
+      .tagline { font-size: 1rem; }
+      .container { padding: 1rem; }
+      header { padding: 2rem 0; }
+      .script-tabs { flex-direction: column; }
+      .tab-btn { width: 100%; }
+    }
+
+    /* Script Tabs */
+    .script-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      padding: 0.75rem 1.25rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      color: var(--muted);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.875rem;
+      transition: all 0.2s;
+    }
+
+    .tab-btn:hover {
+      background: var(--border);
+      color: var(--text);
+    }
+
+    .tab-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .script-note {
+      padding: 1rem 1.5rem;
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .script-note em {
+      color: var(--text);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">✂️</div>
+      <h1>UnfollowX</h1>
+      <p class="tagline">Clean up your X (Twitter) following list in seconds</p>
+      <div class="cta-buttons">
+        <a href="#get-started" class="btn btn-primary">Get Started</a>
+        <a href="https://github.com/nirholas/UnfollowX" class="btn btn-secondary" target="_blank">View on GitHub</a>
+      </div>
+    </header>
+
+    <section>
+      <h2>✨ What can it do?</h2>
+      <div class="features">
+        <div class="feature-card">
+          <h3>🔄 Unfollow Non-Followers</h3>
+          <p>Automatically unfollow everyone who doesn't follow you back. Keep it mutual!</p>
+        </div>
+        <div class="feature-card">
+          <h3>🧹 Unfollow Everyone</h3>
+          <p>Start fresh with a completely clean following list. Nuclear option!</p>
+        </div>
+        <div class="feature-card">
+          <h3>📝 Keep a Record</h3>
+          <p>Download a list of everyone you unfollowed. Great for reference.</p>
+        </div>
+        <div class="feature-card">
+          <h3>🔭 Detect Unfollowers</h3>
+          <p>Find out who stopped following you. Run periodically to track changes.</p>
+        </div>
+        <div class="feature-card">
+          <h3>🎉 New Follower Alerts</h3>
+          <p>Track when you gain new followers and get notified.</p>
+        </div>
+        <div class="feature-card">
+          <h3>👀 Monitor Any Account</h3>
+          <p>Watch any public account's followers or following list for changes.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>🤖 Automation Framework</h2>
+      <div class="features">
+        <div class="feature-card">
+          <h3>❤️ Auto-Liker</h3>
+          <p>Like posts on your timeline based on keywords or from specific users.</p>
+        </div>
+        <div class="feature-card">
+          <h3>🔍 Keyword Follow</h3>
+          <p>Search for keywords and auto-follow users matching your criteria.</p>
+        </div>
+        <div class="feature-card">
+          <h3>⏰ Smart Unfollow</h3>
+          <p>Unfollow users who don't follow back after a configurable grace period.</p>
+        </div>
+        <div class="feature-card">
+          <h3>🔗 Link Scraper</h3>
+          <p>Extract all external links shared by any user. Export to JSON or TXT.</p>
+        </div>
+        <div class="feature-card">
+          <h3>💬 Auto-Commenter</h3>
+          <p>Monitor a user and auto-comment on their new posts with smart replies.</p>
+        </div>
+        <div class="feature-card">
+          <h3>👥 Multi-Account</h3>
+          <p>Manage multiple X accounts for automation with account rotation.</p>
+        </div>
+        <div class="feature-card">
+          <h3>🚀 Growth Suite</h3>
+          <p>All-in-one automation: follow, like, and smart unfollow in one script.</p>
+        </div>
+      </div>
+      <p style="text-align: center; margin-top: 1.5rem;">
+        <a href="https://github.com/nirholas/UnfollowX/blob/main/docs/automation.md" class="btn btn-secondary" target="_blank">
+          📖 Read Full Automation Guide
+        </a>
+      </p>
+    </section>
+
+    <section id="get-started">
+      <h2>🚀 How to use (4 easy steps)</h2>
+      <div class="steps">
+        <div class="step">
+          <h3>Go to your Following page</h3>
+          <p>Open X (Twitter) and navigate to your Following list</p>
+          <code>twitter.com/YOUR_USERNAME/following</code>
+        </div>
+        <div class="step">
+          <h3>Open Developer Console</h3>
+          <p>
+            <strong>Windows/Linux:</strong> <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>J</kbd><br>
+            <strong>Mac:</strong> <kbd>Cmd</kbd> + <kbd>Option</kbd> + <kbd>J</kbd>
+          </p>
+        </div>
+        <div class="step">
+          <h3>Copy the script below</h3>
+          <p>Click the "Copy" button to copy the script to your clipboard</p>
+        </div>
+        <div class="step">
+          <h3>Paste and press Enter</h3>
+          <p>Paste the script into the console and press Enter. Watch it work!</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>📋 Scripts</h2>
+      
+      <!-- Script Tabs -->
+      <div class="script-tabs">
+        <button class="tab-btn active" onclick="showScript('unfollow')">Unfollow Non-Followers</button>
+        <button class="tab-btn" onclick="showScript('monitor')">Detect Unfollowers</button>
+        <button class="tab-btn" onclick="showScript('watch')">Monitor Any Account</button>
+      </div>
+
+      <div class="code-section" id="unfollow-script">
+        <div class="code-header">
+          <span>Unfollow Non-Followers</span>
+          <button class="copy-btn" onclick="copyCode('unfollow-code')">Copy</button>
+        </div>
+        <pre id="unfollow-code">(() => {
+  const $followButtons = '[data-testid$="-unfollow"]';
+  const $confirmButton = '[data-testid="confirmationSheetConfirm"]';
+  const retry = { count: 0, limit: 3 };
+
+  const sleep = (s) => new Promise(r => setTimeout(r, s * 1000));
+  const scroll = () => window.scrollTo(0, document.body.scrollHeight);
+
+  const unfollowAll = async (buttons) => {
+    for (const btn of buttons) {
+      btn.click();
+      await sleep(1);
+      document.querySelector($confirmButton)?.click();
+      await sleep(0.5);
+    }
+  };
+
+  const run = async () => {
+    scroll();
+    await sleep(1);
+    let buttons = [...document.querySelectorAll($followButtons)]
+      .filter(b => !b.closest('[data-testid="UserCell"]')
+        ?.querySelector('[data-testid="userFollowIndicator"]'));
+    
+    if (buttons.length) {
+      console.log(`Unfollowing ${buttons.length} users...`);
+      await unfollowAll(buttons);
+      retry.count = 0;
+      await sleep(2);
+      return run();
+    }
+    
+    if (++retry.count < retry.limit) {
+      await sleep(2);
+      return run();
+    }
+    console.log('✅ Done! Reload and run again if any were missed.');
+  };
+
+  run();
+})();</pre>
+        <div class="script-note">
+          <strong>📍 Use on:</strong> twitter.com/YOUR_USERNAME/following
+        </div>
+      </div>
+
+      <div class="code-section hidden" id="monitor-script">
+        <div class="code-header">
+          <span>Detect Who Unfollowed You</span>
+          <button class="copy-btn" onclick="copyCode('monitor-code')">Copy</button>
+        </div>
+        <pre id="monitor-code">(() => {
+  const KEY = 'unfollowx_followers';
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+  const scrape = async () => {
+    const users = new Set();
+    let prev = 0, retries = 0;
+    console.log('🔍 Scanning followers...');
+    
+    while (retries < 5) {
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(1500);
+      document.querySelectorAll('[data-testid="UserCell"] a[href^="/"]')
+        .forEach(a => {
+          const u = a.href.split('/')[3]?.toLowerCase();
+          if (u && !u.includes('?')) users.add(u);
+        });
+      console.log(`   Found ${users.size}...`);
+      if (users.size === prev) retries++; 
+      else { retries = 0; prev = users.size; }
+    }
+    return [...users];
+  };
+
+  const run = async () => {
+    const current = await scrape();
+    const saved = localStorage.getItem(KEY);
+    
+    if (saved) {
+      const { followers: old, time } = JSON.parse(saved);
+      const oldSet = new Set(old);
+      const gone = old.filter(u => !current.includes(u));
+      const newF = current.filter(u => !oldSet.has(u));
+      
+      console.log(`\n📊 Since ${new Date(time).toLocaleString()}:`);
+      if (gone.length) {
+        console.log(`\n🚨 UNFOLLOWED YOU (${gone.length}):`);
+        gone.forEach(u => console.log(`   @${u}`));
+      }
+      if (newF.length) {
+        console.log(`\n🎉 NEW FOLLOWERS (${newF.length}):`);
+        newF.forEach(u => console.log(`   @${u}`));
+      }
+      if (!gone.length && !newF.length) console.log('✨ No changes!');
+    } else {
+      console.log('📸 First scan — saving snapshot...');
+    }
+    
+    localStorage.setItem(KEY, JSON.stringify({
+      followers: current, time: Date.now()
+    }));
+    console.log(`\n💾 Saved ${current.length} followers. Run again later!`);
+  };
+  
+  run();
+})();</pre>
+        <div class="script-note">
+          <strong>📍 Use on:</strong> twitter.com/YOUR_USERNAME/followers
+        </div>
+      </div>
+
+      <div class="code-section hidden" id="watch-script">
+        <div class="code-header">
+          <span>Monitor Any Account</span>
+          <button class="copy-btn" onclick="copyCode('watch-code')">Copy</button>
+        </div>
+        <pre id="watch-code">(() => {
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+  const path = location.pathname;
+  const type = path.includes('/followers') ? 'followers' : 'following';
+  const user = path.split('/')[1].toLowerCase();
+  const KEY = `unfollowx_${user}_${type}`;
+
+  const scrape = async () => {
+    const users = new Set();
+    let prev = 0, retries = 0;
+    console.log(`🔍 Scanning @${user}'s ${type}...`);
+    
+    while (retries < 5) {
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(1500);
+      document.querySelectorAll('[data-testid="UserCell"] a[href^="/"]')
+        .forEach(a => {
+          const u = a.href.split('/')[3]?.toLowerCase();
+          if (u && u !== user && !u.includes('?')) users.add(u);
+        });
+      if (users.size === prev) retries++;
+      else { retries = 0; prev = users.size; }
+    }
+    return [...users];
+  };
+
+  const run = async () => {
+    const current = await scrape();
+    console.log(`✅ Found ${current.length} accounts`);
+    
+    const saved = localStorage.getItem(KEY);
+    if (saved) {
+      const { users: old, time } = JSON.parse(saved);
+      const oldSet = new Set(old);
+      const removed = old.filter(u => !current.includes(u));
+      const added = current.filter(u => !oldSet.has(u));
+      
+      console.log(`\n📊 Changes since ${new Date(time).toLocaleString()}:`);
+      if (removed.length) console.log(`👋 Gone: ${removed.map(u=>'@'+u).join(', ')}`);
+      if (added.length) console.log(`➕ New: ${added.map(u=>'@'+u).join(', ')}`);
+      if (!removed.length && !added.length) console.log('✨ No changes!');
+    } else {
+      console.log('📸 First scan — run again later to see changes.');
+    }
+    
+    localStorage.setItem(KEY, JSON.stringify({ users: current, time: Date.now() }));
+  };
+  
+  run();
+})();</pre>
+        <div class="script-note">
+          <strong>📍 Use on:</strong> twitter.com/ANYONE/followers <em>or</em> /following
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>🔒 Safe & Private</h2>
+      <div class="safety-grid">
+        <div class="safety-item">
+          <span class="safety-icon">✅</span>
+          <div>
+            <h4>100% Local</h4>
+            <p>Runs entirely in your browser. Nothing is sent anywhere.</p>
+          </div>
+        </div>
+        <div class="safety-item">
+          <span class="safety-icon">✅</span>
+          <div>
+            <h4>Open Source</h4>
+            <p>All code is visible on GitHub. No hidden functionality.</p>
+          </div>
+        </div>
+        <div class="safety-item">
+          <span class="safety-icon">✅</span>
+          <div>
+            <h4>No Sign-in</h4>
+            <p>Never asks for your password or any credentials.</p>
+          </div>
+        </div>
+        <div class="safety-item">
+          <span class="safety-icon">✅</span>
+          <div>
+            <h4>Just Clicks</h4>
+            <p>Only automates the same clicks you'd do manually.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <p>
+        Made with 🤍 by <a href="https://x.com/nichxbt" target="_blank">@nichxbt</a>
+        <br><br>
+        <a href="https://github.com/nirholas/UnfollowX" target="_blank">GitHub</a> · 
+        <a href="https://github.com/nirholas/UnfollowX/blob/main/docs/getting-started.md" target="_blank">Getting Started</a> · 
+        <a href="https://github.com/nirholas/UnfollowX/blob/main/docs/monitoring.md" target="_blank">Monitoring Guide</a> · 
+        <a href="https://github.com/nirholas/UnfollowX/blob/main/docs/automation.md" target="_blank">Automation Guide</a> · 
+        <a href="https://github.com/nirholas/UnfollowX/issues" target="_blank">Report Issue</a>
+      </p>
+    </footer>
+  </div>
+
+  <script>
+    function copyCode(elementId) {
+      const code = document.getElementById(elementId).textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        const btn = event.target;
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = 'Copy';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+
+    function showScript(type) {
+      // Hide all scripts
+      document.getElementById('unfollow-script').classList.add('hidden');
+      document.getElementById('monitor-script').classList.add('hidden');
+      document.getElementById('watch-script').classList.add('hidden');
+      
+      // Remove active from all tabs
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      
+      // Show selected and activate tab
+      if (type === 'unfollow') {
+        document.getElementById('unfollow-script').classList.remove('hidden');
+        document.querySelectorAll('.tab-btn')[0].classList.add('active');
+      } else if (type === 'monitor') {
+        document.getElementById('monitor-script').classList.remove('hidden');
+        document.querySelectorAll('.tab-btn')[1].classList.add('active');
+      } else if (type === 'watch') {
+        document.getElementById('watch-script').classList.remove('hidden');
+        document.querySelectorAll('.tab-btn')[2].classList.add('active');
+      }
+    }
+  </script>
+</body>
+</html>
