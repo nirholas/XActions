@@ -7,12 +7,12 @@ import { body, validationResult } from 'express-validator';
 const router = express.Router();
 const prisma = new PrismaClient();
 
-// Register new user
+// Register new user (email optional)
 router.post('/register',
   [
-    body('email').isEmail().normalizeEmail(),
     body('password').isLength({ min: 8 }),
-    body('username').isLength({ min: 3, max: 30 }).matches(/^[a-zA-Z0-9_]+$/)
+    body('username').isLength({ min: 3, max: 30 }).matches(/^[a-zA-Z0-9_]+$/),
+    body('email').optional({ checkFalsy: true }).isEmail().normalizeEmail()
   ],
   async (req, res) => {
     try {
@@ -21,22 +21,25 @@ router.post('/register',
         return res.status(400).json({ errors: errors.array() });
       }
 
-      const { email, password, username } = req.body;
+      const { password, username, email } = req.body;
 
-      // Check if user exists
+      // Check if username exists
       const existingUser = await prisma.user.findFirst({
         where: {
           OR: [
-            { email },
-            { username }
+            { username },
+            ...(email ? [{ email }] : [])
           ]
         }
       });
 
       if (existingUser) {
-        return res.status(400).json({ 
-          error: existingUser.email === email ? 'Email already registered' : 'Username already taken' 
-        });
+        if (existingUser.username === username) {
+          return res.status(400).json({ error: 'Username already taken' });
+        }
+        if (email && existingUser.email === email) {
+          return res.status(400).json({ error: 'Email already registered' });
+        }
       }
 
       // Hash password
@@ -45,7 +48,7 @@ router.post('/register',
       // Create user with 0 credits (must follow or buy to get credits)
       const user = await prisma.user.create({
         data: {
-          email,
+          email: email || null,  // Email is optional
           username,
           password: hashedPassword,
           credits: 0,
@@ -62,9 +65,9 @@ router.post('/register',
         }
       });
 
-      // Generate JWT
+      // Generate JWT (use username if no email)
       const token = jwt.sign(
-        { userId: user.id, email: user.email },
+        { userId: user.id, username: user.username },
         process.env.JWT_SECRET,
         { expiresIn: '7d' }
       );
