@@ -22,3 +22,4 @@ echo "  4. Choose 'Session Cookie' method"
 echo "  5. Paste your auth_token cookie from X.com"
 echo ""
 echo "📚 Full guide: See PUPPETEER_SETUP.md"
+
