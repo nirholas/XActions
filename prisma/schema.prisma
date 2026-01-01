@@ -14,8 +14,13 @@ model User {
   id        String   @id @default(cuid())
   email     String   @unique
   username  String   @unique
-  password  String
+  password  String?  // Nullable for guest users
   credits   Int      @default(50)
+  
+  // Quick start / Guest user flags
+  isGuest       Boolean  @default(false)
+  emailVerified Boolean  @default(false)
+  isAdmin       Boolean  @default(false)
   
   // Twitter OAuth
   twitterId           String?  @unique
@@ -29,9 +34,10 @@ model User {
   authMethod          String?  // 'oauth' or 'session'
   
   // Relationships
-  subscription  Subscription?
-  operations    Operation[]
-  payments      Payment[]
+  subscription    Subscription?
+  operations      Operation[]
+  payments        Payment[]
+  cryptoPayments  CryptoPayment[]
   
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -141,5 +147,38 @@ model JobQueue {
   
   @@index([status, priority])
   @@index([createdAt])
+}
+
+model CryptoPayment {
+  id          String   @id @default(cuid())
+  paymentId   String   @unique // Our internal payment ID
+  
+  userId      String?
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  email       String?  // For guest users
+  
+  package     String   // Package name: 'starter', 'small', 'medium', 'large', 'unlimited'
+  credits     Int      // Credits to add
+  
+  amountUSD   Float    // USD value
+  currency    String   // Crypto currency: BTC, ETH, USDC, SOL
+  amount      Float    // Amount in crypto
+  
+  status      String   @default("pending") // 'pending', 'completed', 'expired', 'failed'
+  
+  txHash      String?  // Transaction hash
+  provider    String?  // 'coinbase', 'nowpayments', 'btcpay', 'manual'
+  
+  expiresAt   DateTime
+  confirmedAt DateTime?
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([paymentId])
+  @@index([userId])
+  @@index([status])
+  @@index([email])
 }
 

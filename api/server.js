@@ -26,6 +26,8 @@ const operationRoutes = require('./routes/operations');
 const webhookRoutes = require('./routes/webhooks');
 const twitterRoutes = require('./routes/twitter');
 const sessionAuthRoutes = require('./routes/session-auth');
+const paymentsRoutes = require('./routes/payments');
+const cryptoPaymentsRoutes = require('./routes/crypto-payments');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -71,6 +73,8 @@ app.use('/api/operations', operationRoutes);
 app.use('/api/webhooks', webhookRoutes);
 app.use('/api/twitter', twitterRoutes);
 app.use('/api/session', sessionAuthRoutes);
+app.use('/api/payments', paymentsRoutes);
+app.use('/api/crypto', cryptoPaymentsRoutes);
 
 // Dashboard routes
 app.get('/', (req, res) => {

@@ -38,6 +38,33 @@ const authMiddleware = async (req, res, next) => {
   }
 };
 
+// Optional auth - doesn't fail if no token, just attaches user if valid
+const optionalAuthMiddleware = async (req, res, next) => {
+  try {
+    const authHeader = req.headers.authorization;
+    
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      req.user = null;
+      return next();
+    }
+
+    const token = authHeader.substring(7);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.userId },
+      include: { subscription: true }
+    });
+
+    req.user = user || null;
+    next();
+  } catch (error) {
+    // Invalid token, but still continue
+    req.user = null;
+    next();
+  }
+};
+
 const requireSubscription = (tier = 'free') => {
   return (req, res, next) => {
     const user = req.user;
@@ -89,6 +116,7 @@ const checkCredits = (requiredCredits) => {
 
 module.exports = {
   authMiddleware,
+  optionalAuthMiddleware,
   requireSubscription,
   checkCredits
 };

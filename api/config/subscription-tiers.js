@@ -96,25 +96,90 @@ const CREDIT_COSTS = {
 };
 
 const CREDIT_PACKAGES = {
+  starter: {
+    credits: 50,
+    price: 2.99,
+    priceId: process.env.STRIPE_CREDITS_STARTER_PRICE_ID,
+    popular: false,
+    description: 'Quick start'
+  },
   small: {
     credits: 100,
     price: 4.99,
-    priceId: process.env.STRIPE_CREDITS_SMALL_PRICE_ID
+    priceId: process.env.STRIPE_CREDITS_SMALL_PRICE_ID,
+    popular: false,
+    description: 'Light usage'
   },
   medium: {
     credits: 300,
     price: 12.99,
-    priceId: process.env.STRIPE_CREDITS_MEDIUM_PRICE_ID
+    priceId: process.env.STRIPE_CREDITS_MEDIUM_PRICE_ID,
+    popular: true,
+    description: 'Most popular'
   },
   large: {
     credits: 1000,
     price: 34.99,
-    priceId: process.env.STRIPE_CREDITS_LARGE_PRICE_ID
+    priceId: process.env.STRIPE_CREDITS_LARGE_PRICE_ID,
+    popular: false,
+    description: 'Power user'
+  },
+  unlimited: {
+    credits: 5000,
+    price: 149.99,
+    priceId: process.env.STRIPE_CREDITS_UNLIMITED_PRICE_ID,
+    popular: false,
+    description: 'Agency/Team'
+  }
+};
+
+// Crypto payment packages (non-KYC via Coinbase Commerce / BTCPay)
+const CRYPTO_PACKAGES = {
+  starter: {
+    credits: 50,
+    priceUSD: 2.99,
+    priceBTC: 0.00003,
+    priceETH: 0.001,
+    priceUSDC: 2.99,
+    priceSOL: 0.02
+  },
+  small: {
+    credits: 100,
+    priceUSD: 4.99,
+    priceBTC: 0.00005,
+    priceETH: 0.0017,
+    priceUSDC: 4.99,
+    priceSOL: 0.035
+  },
+  medium: {
+    credits: 300,
+    priceUSD: 12.99,
+    priceBTC: 0.00013,
+    priceETH: 0.0045,
+    priceUSDC: 12.99,
+    priceSOL: 0.09
+  },
+  large: {
+    credits: 1000,
+    priceUSD: 34.99,
+    priceBTC: 0.00035,
+    priceETH: 0.012,
+    priceUSDC: 34.99,
+    priceSOL: 0.24
+  },
+  unlimited: {
+    credits: 5000,
+    priceUSD: 149.99,
+    priceBTC: 0.0015,
+    priceETH: 0.05,
+    priceUSDC: 149.99,
+    priceSOL: 1.0
   }
 };
 
 module.exports = {
   SUBSCRIPTION_TIERS,
   CREDIT_COSTS,
-  CREDIT_PACKAGES
+  CREDIT_PACKAGES,
+  CRYPTO_PACKAGES
 };
