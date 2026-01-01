@@ -12,7 +12,7 @@ datasource db {
 
 model User {
   id        String   @id @default(cuid())
-  email     String   @unique
+  email     String?  @unique  // Optional - users can register with just username
   username  String   @unique
   password  String?  // Nullable for guest users
   credits   Int      @default(0)

@@ -89,10 +89,10 @@ router.post('/register',
   }
 );
 
-// Login
+// Login (accepts username OR email)
 router.post('/login',
   [
-    body('email').isEmail().normalizeEmail(),
+    body('identifier').notEmpty().withMessage('Username or email required'),
     body('password').notEmpty()
   ],
   async (req, res) => {
@@ -102,11 +102,16 @@ router.post('/login',
         return res.status(400).json({ errors: errors.array() });
       }
 
-      const { email, password } = req.body;
+      const { identifier, password } = req.body;
 
-      // Find user
-      const user = await prisma.user.findUnique({
-        where: { email },
+      // Find user by email OR username
+      const user = await prisma.user.findFirst({
+        where: {
+          OR: [
+            { email: identifier.toLowerCase() },
+            { username: identifier }
+          ]
+        },
         include: { subscription: true }
       });
 
@@ -130,7 +135,7 @@ router.post('/login',
 
       // Generate JWT
       const token = jwt.sign(
-        { userId: user.id, email: user.email },
+        { userId: user.id, username: user.username },
         process.env.JWT_SECRET,
         { expiresIn: '7d' }
       );
