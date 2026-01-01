@@ -553,3 +553,4 @@ If XActions helped you, give it a star! It helps others find the project.
   <a href="https://github.com/nirholas/xactions">GitHub</a> • 
   <a href="https://twitter.com/nichxbt">@nichxbt</a>
 </p>
+
