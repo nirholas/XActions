@@ -1,12 +1,12 @@
-# Getting Started with UnfollowX
+# Getting Started with XActions
 
-Welcome! This guide will walk you through using UnfollowX to clean up your X (Twitter) following list. No coding experience needed.
+Welcome! This guide will walk you through using XActions to clean up your X (Twitter) following list. No coding experience needed.
 
 ---
 
-## What Does UnfollowX Do?
+## What Does XActions Do?
 
-UnfollowX helps you:
+XActions helps you:
 - **Unfollow people who don't follow you back** — clean up one-sided follows
 - **Unfollow everyone** — start fresh with a clean following list
 - **Keep a record** — optionally download a list of everyone you unfollowed
@@ -70,7 +70,7 @@ Pick the script that matches what you want to do:
 
 ### Step 4: Copy the Script
 
-1. Go to the [UnfollowX GitHub repository](https://github.com/nirholas/UnfollowX)
+1. Go to the [XActions GitHub repository](https://github.com/nirholas/XActions)
 2. Open the `src` folder
 3. Click on the script file you want (e.g., `unfollowback.js`)
 4. Click the **"Copy raw file"** button (or select all the code and copy it)
@@ -126,7 +126,7 @@ Just reload the page and run the script again. It will pick up where it left off
 
 ### "I see an error message"
 - Copy the error message
-- [Open an issue](https://github.com/nirholas/UnfollowX/issues) on GitHub and paste it there
+- [Open an issue](https://github.com/nirholas/XActions/issues) on GitHub and paste it there
 
 ### "The console closed"
 - Press the keyboard shortcut again to reopen it
@@ -154,10 +154,10 @@ Check out the [Monitoring Guide](monitoring.md) to learn how to:
 
 ## Need Help?
 
-- 📖 [Full documentation](https://github.com/nirholas/UnfollowX/tree/main/docs)
+- 📖 [Full documentation](https://github.com/nirholas/XActions/tree/main/docs)
 - 🔭 [Monitoring Guide](monitoring.md)
-- 🐛 [Report a bug](https://github.com/nirholas/UnfollowX/issues)
-- 💬 [Ask a question](https://github.com/nirholas/UnfollowX/discussions)
+- 🐛 [Report a bug](https://github.com/nirholas/XActions/issues)
+- 💬 [Ask a question](https://github.com/nirholas/XActions/discussions)
 
 ---
 

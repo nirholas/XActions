@@ -1,5 +1,5 @@
-// UnfollowX Automation - Keyword Search & Follow
-// https://github.com/nirholas/UnfollowX
+// XActions Automation - Keyword Search & Follow
+// https://github.com/nirholas/XActions
 //
 // REQUIRES: Paste core.js first!
 //
@@ -9,12 +9,12 @@
 // 3. Configure keywords below and run!
 
 (() => {
-  if (!window.UnfollowX?.Core) {
+  if (!window.XActions?.Core) {
     console.error('❌ Core module not loaded! Paste core.js first.');
     return;
   }
 
-  const { log, sleep, randomDelay, scrollBy, clickElement, waitForElement, storage, rateLimit, SELECTORS } = window.UnfollowX.Core;
+  const { log, sleep, randomDelay, scrollBy, clickElement, waitForElement, storage, rateLimit, SELECTORS } = window.XActions.Core;
 
   // ============================================
   // CONFIGURATION

@@ -1,5 +1,5 @@
-// UnfollowX Automation - Customer Service Bot
-// https://github.com/nirholas/UnfollowX
+// XActions Automation - Customer Service Bot
+// https://github.com/nirholas/XActions
 //
 // REQUIRES: Paste core.js first!
 //
@@ -13,12 +13,12 @@
 // 4. Run and let it handle customer inquiries!
 
 (() => {
-  if (!window.UnfollowX?.Core) {
+  if (!window.XActions?.Core) {
     console.error('❌ Core module not loaded! Paste core.js first.');
     return;
   }
 
-  const { log, sleep, randomDelay, scrollBy, clickElement, waitForElement, storage, SELECTORS } = window.UnfollowX.Core;
+  const { log, sleep, randomDelay, scrollBy, clickElement, waitForElement, storage, SELECTORS } = window.XActions.Core;
 
   // ============================================
   // ACCOUNT CONFIGURATION
@@ -392,7 +392,7 @@ business_account
   const run = async () => {
     console.log(`
 ╔═══════════════════════════════════════════════════════════╗
-║  🎧 UnfollowX Customer Service Bot                        ║
+║  🎧 XActions Customer Service Bot                        ║
 ╠═══════════════════════════════════════════════════════════╣
 ║  Active Account: @${CONFIG.ACTIVE_ACCOUNT.padEnd(20)}                ║
 ║  Accounts Loaded: ${String(ACCOUNTS.length).padEnd(5)}                               ║
@@ -499,7 +499,7 @@ ${Object.entries(categories).map(([cat, count]) =>
     });
   };
 
-  window.UnfollowX.CustomerService = {
+  window.XActions.CustomerService = {
     state: () => state,
     config: CONFIG,
     templates: TEMPLATES,

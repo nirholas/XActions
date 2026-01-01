@@ -1,276 +1,555 @@
-# UnfollowX
+# ⚡ XActions
 
-![UnfollowX by nirholas](https://raw.githubusercontent.com/nirholas/UnfollowX/refs/heads/main/.github/UnfollowX.png)
+### The Complete X/Twitter Automation Toolkit
 
-**Clean up your X (Twitter) following list in seconds.** Free, open-source browser scripts that automate unfollowing — no apps, no sign-ins, no data collection.
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![npm version](https://img.shields.io/npm/v/xactions.svg)](https://www.npmjs.com/package/xactions)
+[![GitHub Stars](https://img.shields.io/github/stars/nirholas/xactions?style=social)](https://github.com/nirholas/xactions)
+[![Twitter Follow](https://img.shields.io/twitter/follow/nichxbt?style=social)](https://twitter.com/nichxbt)
 
-🌐 **[Visit the Website](https://unfollowx.vercel.app)** | 📖 **[Getting Started Guide](docs/getting-started.md)** | 🐛 **[Report an Issue](https://github.com/nirholas/UnfollowX/issues)**
+**Free, open-source X/Twitter automation.** Scrapers, MCP server for AI agents, CLI, browser scripts — all without expensive API fees.
 
----
-
-## ✨ What Can UnfollowX Do?
-
-### 🧹 Unfollow Tools
-| Feature | Description |
-|---------|-------------|
-| **Unfollow Non-Followers** | Remove people who don't follow you back |
-| **Unfollow Everyone** | Clean slate — unfollow your entire following list |
-| **Unfollow with Log** | Unfollow non-followers AND download a list of who was unfollowed |
-
-### 🔭 Monitoring Tools
-| Feature | Description |
-|---------|-------------|
-| **Detect Unfollowers** | Find out who stopped following YOU |
-| **New Follower Alerts** | Track when you gain new followers |
-| **Monitor Any Account** | Track follows/unfollows on ANY public account |
-| **Continuous Monitoring** | Auto-check with browser notifications |
-
-### 🤖 Automation Framework (NEW!)
-| Feature | Description |
-|---------|-------------|
-| **XActions Library** | Complete X/Twitter API with 100+ actions available |
-| **Auto-Liker** | Automatically like posts matching keywords or from specific users |
-| **Keyword Follow** | Search keywords and auto-follow matching profiles |
-| **Smart Unfollow** | Unfollow users who don't follow back after X days |
-| **Link Scraper** | Extract all links shared by any user |
-| **Auto-Commenter** | Auto-comment on a user's new posts |
-| **Multi-Account** | Manage multiple X accounts with user:pass import |
-| **Growth Suite** | All-in-one automation combining follow, like, and unfollow |
-| **Follow Target Users** | Follow followers/following of any account |
-| **Follow Engagers** | Follow people who liked/retweeted specific posts |
-| **Protect Active Users** | Don't unfollow users who engage with your content |
-| **Quota Supervisor** | Sophisticated rate limiting to protect your account |
-| **Session Logger** | Track all actions with analytics and reports |
-| **Customer Service Bot** | Automate customer support responses for business accounts |
+🌐 **[xactions.app](https://xactions.app)** — *Don't want to code? Use our website!*
 
 ---
 
-## 🚀 Quick Start (60 seconds)
+## 🎯 Why XActions?
 
-### 1. Go to your Following page
+| | XActions | Twitter API | Other Tools |
+|--|----------|-------------|-------------|
+| **Monthly Cost** | **$0** | $100-$5,000 | $29-99 |
+| **Setup Time** | **30 seconds** | Hours | Minutes |
+| **Open Source** | ✅ | - | ❌ |
+| **No API Key** | ✅ | ❌ | ❌ |
+| **AI Agent Ready** | ✅ MCP | ❌ | ❌ |
+
+---
+
+## 📦 Installation
+
+### npm (Recommended for developers)
+```bash
+npm install xactions
 ```
-https://twitter.com/YOUR_USERNAME/following
+
+### CLI (Global install)
+```bash
+npm install -g xactions
+xactions --help
 ```
 
-### 2. Open Developer Console
-| System | Shortcut |
-|--------|----------|
-| **Windows/Linux** | `Ctrl` + `Shift` + `J` |
-| **Mac** | `Cmd` + `Option` + `J` |
+### No Install (Browser console)
+Just copy-paste scripts directly into your browser console on x.com!
 
-### 3. Copy & paste a script
+---
 
-**Unfollow people who don't follow you back:**
-```js
-// Unfollow non-followers on X — by @nichxbt
-// https://github.com/nirholas/UnfollowX
+## 🚀 Quick Start Examples
+
+### Example 1: Unfollow Non-Followers (30 seconds)
+
+**Browser Console** — *No install required!*
+```javascript
+// Go to: x.com/YOUR_USERNAME/following
+// Press F12 → Console → Paste this:
+
 (() => {
-  const $followButtons = '[data-testid$="-unfollow"]';
-  const $confirmButton = '[data-testid="confirmationSheetConfirm"]';
-  const retry = { count: 0, limit: 3 };
-
   const sleep = (s) => new Promise(r => setTimeout(r, s * 1000));
-  const scroll = () => window.scrollTo(0, document.body.scrollHeight);
-
-  const unfollowAll = async (buttons) => {
+  const run = async () => {
+    const buttons = [...document.querySelectorAll('[data-testid$="-unfollow"]')]
+      .filter(b => !b.closest('[data-testid="UserCell"]')
+        ?.querySelector('[data-testid="userFollowIndicator"]'));
+    
     for (const btn of buttons) {
       btn.click();
       await sleep(1);
-      document.querySelector($confirmButton)?.click();
-      await sleep(0.5);
-    }
-  };
-
-  const run = async () => {
-    scroll();
-    await sleep(1);
-    let buttons = [...document.querySelectorAll($followButtons)]
-      .filter(b => !b.closest('[data-testid="UserCell"]')?.querySelector('[data-testid="userFollowIndicator"]'));
-    
-    if (buttons.length) {
-      console.log(`Unfollowing ${buttons.length} users...`);
-      await unfollowAll(buttons);
-      retry.count = 0;
+      document.querySelector('[data-testid="confirmationSheetConfirm"]')?.click();
       await sleep(2);
-      return run();
     }
-    
-    if (++retry.count < retry.limit) {
-      await sleep(2);
-      return run();
-    }
-    console.log('✅ Done! Reload and run again if any were missed.');
+    window.scrollTo(0, document.body.scrollHeight);
+    await sleep(2);
+    if (document.querySelectorAll('[data-testid$="-unfollow"]').length) run();
+    else console.log('✅ Done! Reload page to continue.');
   };
-
   run();
 })();
 ```
 
-### 4. Press Enter and watch it work! 🎉
-
----
-
-## 📁 Available Scripts
-
-All scripts are in the [`src/`](src/) folder:
-
-### 🧹 Unfollow Scripts
-| File | What it does |
-|------|--------------|
-| [`unfollowback.js`](src/unfollowback.js) | Unfollow users who don't follow you back |
-| [`unfollowEveryone.js`](src/unfollowEveryone.js) | Unfollow everyone in your following list |
-| [`unfollowWDFBLog.js`](src/unfollowWDFBLog.js) | Unfollow non-followers + download a `.txt` log file |
-
-### 🔭 Monitoring Scripts
-| File | What it does |
-|------|--------------|
-| [`detectUnfollowers.js`](src/detectUnfollowers.js) | Find out who unfollowed YOU — run on your followers page |
-| [`newFollowersAlert.js`](src/newFollowersAlert.js) | Track your new followers over time |
-| [`monitorAccount.js`](src/monitorAccount.js) | Monitor ANY public account's followers or following |
-| [`continuousMonitor.js`](src/continuousMonitor.js) | Auto-refresh monitoring with browser notifications |
-
-### 🤖 Automation Scripts
-| File | What it does |
-|------|--------------|
-| [`automation/core.js`](src/automation/core.js) | Core utilities required by all automation scripts |
-| [`automation/autoLiker.js`](src/automation/autoLiker.js) | Auto-like timeline posts with keyword filtering |
-| [`automation/keywordFollow.js`](src/automation/keywordFollow.js) | Search and auto-follow users matching keywords |
-| [`automation/smartUnfollow.js`](src/automation/smartUnfollow.js) | Unfollow non-followers after a grace period |
-| [`automation/linkScraper.js`](src/automation/linkScraper.js) | Extract all links from a user's profile |
-| [`automation/autoCommenter.js`](src/automation/autoCommenter.js) | Auto-comment on new posts from a target user |
-| [`automation/multiAccount.js`](src/automation/multiAccount.js) | Manage multiple X accounts (user:pass import) |
-| [`automation/growthSuite.js`](src/automation/growthSuite.js) | All-in-one growth automation suite |
-| [`automation/followTargetUsers.js`](src/automation/followTargetUsers.js) | Follow the followers/following of target accounts |
-| [`automation/followEngagers.js`](src/automation/followEngagers.js) | Follow users who liked/retweeted specific posts |
-| [`automation/protectActiveUsers.js`](src/automation/protectActiveUsers.js) | Protect users who engage with your content |
-| [`automation/quotaSupervisor.js`](src/automation/quotaSupervisor.js) | Rate limiting and action management |
-| [`automation/sessionLogger.js`](src/automation/sessionLogger.js) | Track actions with analytics and reporting |
-| [`automation/customerService.js`](src/automation/customerService.js) | Customer service bot for business accounts |
-| [`automation/actions.js`](src/automation/actions.js) | **Complete XActions library — 100+ X/Twitter actions** |
-
----
-
-## 📖 Documentation
-
-- **[Getting Started Guide](docs/getting-started.md)** — Step-by-step instructions with screenshots
-- **[Monitoring Guide](docs/monitoring.md)** — How to use monitoring scripts
-- **[Automation Guide](docs/automation.md)** — Full automation framework documentation
-- **[Usage Guide](docs/usage.md)** — Detailed usage information
-- **[Examples](examples/README.md)** — Quick examples and use cases
-- **[Contributing](CONTRIBUTING.md)** — How to contribute to the project
-
----
-
-## 🛠️ How It Works
-
-UnfollowX is a collection of JavaScript snippets that run in your browser's Developer Console. Here's what happens:
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│  1. Script scrolls down to load more accounts               │
-│  2. Finds "Following" buttons on screen                     │
-│  3. Filters out people who follow you back (optional)       │
-│  4. Clicks "Unfollow" on each one                          │
-│  5. Confirms the unfollow in the popup                     │
-│  6. Repeats until no more accounts are found               │
-└─────────────────────────────────────────────────────────────┘
+**CLI:**
+```bash
+xactions login
+xactions non-followers YOUR_USERNAME --output non-followers.json
 ```
 
-**No external servers. No data collection. Everything runs locally in YOUR browser.**
+**Node.js:**
+```javascript
+import { createBrowser, createPage, scrapeFollowing } from 'xactions';
 
----
-
-## ⚠️ Important Notes
-
-### Rate Limits
-X (Twitter) may temporarily limit your account if you unfollow too quickly. Tips:
-- The script has built-in delays (1-2 seconds between unfollows)
-- For large following lists (1000+), run in batches and take breaks
-- If you hit a limit, wait 15-30 minutes and try again
-
-### Browser Compatibility
-Works best in:
-- ✅ Google Chrome
-- ✅ Microsoft Edge
-- ✅ Firefox
-- ✅ Safari
-
-### Stay on the Page
-Keep the browser tab open and active while the script runs. Don't minimize or switch tabs.
-
----
-
-## 🔧 Customization
-
-Want to adjust the script? Here are some tweaks:
-
-### Change the delay between unfollows
-```js
-// Find this line and change the number (seconds):
-await sleep(1);  // Change 1 to 2 for slower, 0.5 for faster
+const browser = await createBrowser();
+const page = await createPage(browser);
+const following = await scrapeFollowing(page, 'your_username', { limit: 500 });
+const nonFollowers = following.filter(u => !u.followsBack);
+console.log(`Found ${nonFollowers.length} non-followers`);
+await browser.close();
 ```
 
-### Add a maximum unfollow limit
-```js
-// Add this at the top of the script:
-let unfollowCount = 0;
-const MAX_UNFOLLOWS = 100;
+> 💡 **Don't want to code?** Use [xactions.app](https://xactions.app) — just login and click!
 
-// Then check before each unfollow:
-if (unfollowCount >= MAX_UNFOLLOWS) {
-  console.log('Reached limit!');
-  return;
+---
+
+### Example 2: Scrape Any Profile
+
+**Browser Console:**
+```javascript
+// Go to any profile on x.com, then run:
+
+(() => {
+  const profile = {
+    name: document.querySelector('[data-testid="UserName"]')?.textContent?.split('@')[0]?.trim(),
+    username: location.pathname.slice(1),
+    bio: document.querySelector('[data-testid="UserDescription"]')?.textContent,
+    followers: document.querySelector('a[href$="/followers"] span')?.textContent,
+    following: document.querySelector('a[href$="/following"] span')?.textContent,
+  };
+  console.log(profile);
+  copy(JSON.stringify(profile, null, 2)); // Copies to clipboard!
+})();
+```
+
+**CLI:**
+```bash
+xactions profile elonmusk --json
+```
+
+**Node.js:**
+```javascript
+import { createBrowser, createPage, scrapeProfile } from 'xactions';
+
+const browser = await createBrowser();
+const page = await createPage(browser);
+const profile = await scrapeProfile(page, 'elonmusk');
+console.log(profile);
+// { name: 'Elon Musk', followers: '200M', bio: '...', ... }
+await browser.close();
+```
+
+---
+
+### Example 3: Search & Scrape Tweets
+
+**Browser Console:**
+```javascript
+// Go to: x.com/search?q=YOUR_KEYWORD&f=live
+
+(() => {
+  const tweets = [...document.querySelectorAll('article[data-testid="tweet"]')]
+    .map(article => ({
+      text: article.querySelector('[data-testid="tweetText"]')?.textContent,
+      author: article.querySelector('[data-testid="User-Name"] a')?.href?.split('/')[3],
+      time: article.querySelector('time')?.getAttribute('datetime'),
+    }));
+  console.table(tweets);
+  copy(JSON.stringify(tweets, null, 2));
+})();
+```
+
+**CLI:**
+```bash
+xactions search "AI startup" --limit 100 --output ai-tweets.json
+```
+
+**Node.js:**
+```javascript
+import { createBrowser, createPage, searchTweets } from 'xactions';
+
+const browser = await createBrowser();
+const page = await createPage(browser);
+const tweets = await searchTweets(page, 'AI startup', { limit: 100 });
+console.log(`Found ${tweets.length} tweets`);
+await browser.close();
+```
+
+---
+
+### Example 4: Detect Who Unfollowed You
+
+**Browser Console:**
+```javascript
+// Go to: x.com/YOUR_USERNAME/followers
+
+(() => {
+  const KEY = 'xactions_followers';
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+  
+  const scrape = async () => {
+    const users = new Set();
+    let retries = 0;
+    while (retries < 5) {
+      document.querySelectorAll('[data-testid="UserCell"] a')
+        .forEach(a => users.add(a.href.split('/')[3]?.toLowerCase()));
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(1500);
+      retries++;
+    }
+    return [...users].filter(Boolean);
+  };
+
+  scrape().then(current => {
+    const saved = localStorage.getItem(KEY);
+    if (saved) {
+      const old = JSON.parse(saved);
+      const gone = old.filter(u => !current.includes(u));
+      console.log('🚨 Unfollowed you:', gone);
+    }
+    localStorage.setItem(KEY, JSON.stringify(current));
+    console.log(`💾 Saved ${current.length} followers`);
+  });
+})();
+```
+
+**CLI:**
+```bash
+# First run saves snapshot
+xactions followers YOUR_USERNAME --output snapshot1.json
+
+# Later, compare
+xactions followers YOUR_USERNAME --output snapshot2.json
+# Use diff tools to compare
+```
+
+---
+
+### Example 5: Auto-Like Posts by Keyword
+
+**Browser Console:**
+```javascript
+// Go to: x.com/search?q=YOUR_KEYWORD&f=live
+
+(async () => {
+  const sleep = (s) => new Promise(r => setTimeout(r, s * 1000));
+  const liked = new Set();
+  
+  while (liked.size < 20) { // Like 20 posts
+    const buttons = [...document.querySelectorAll('[data-testid="like"]')]
+      .filter(b => !liked.has(b));
+    
+    for (const btn of buttons.slice(0, 3)) {
+      btn.click();
+      liked.add(btn);
+      console.log(`❤️ Liked ${liked.size} posts`);
+      await sleep(3 + Math.random() * 2); // Random delay
+    }
+    window.scrollTo(0, document.body.scrollHeight);
+    await sleep(2);
+  }
+  console.log('✅ Done!');
+})();
+```
+
+> ⚠️ **Go slow!** Twitter may rate-limit you. The website version handles this automatically.
+
+---
+
+## 📋 Complete Feature List
+
+### Feature Availability Matrix
+
+| Feature | Console Script | CLI | Node.js | Website |
+|---------|:-------------:|:---:|:-------:|:-------:|
+| **SCRAPING** |
+| Scrape Profile | ✅ | ✅ | ✅ | ✅ |
+| Scrape Followers | ✅ | ✅ | ✅ | ✅ |
+| Scrape Following | ✅ | ✅ | ✅ | ✅ |
+| Scrape Tweets | ✅ | ✅ | ✅ | ✅ |
+| Search Tweets | ✅ | ✅ | ✅ | ✅ |
+| Scrape Thread | ✅ | ✅ | ✅ | ✅ |
+| Scrape Hashtag | ✅ | ✅ | ✅ | ✅ |
+| Scrape Media | ✅ | ✅ | ✅ | ✅ |
+| Scrape List Members | ✅ | ✅ | ✅ | ✅ |
+| Scrape Likes | ✅ | ✅ | ✅ | ✅ |
+| **UNFOLLOW** |
+| Unfollow Non-Followers | ✅ | ✅ | ✅ | ✅ |
+| Unfollow Everyone | ✅ | ✅ | ✅ | ✅ |
+| Smart Unfollow (after X days) | ⚠️ | ✅ | ✅ | ✅ |
+| Unfollow with Logging | ✅ | ✅ | ✅ | ✅ |
+| **FOLLOW** |
+| Follow User | ✅ | ✅ | ✅ | ✅ |
+| Keyword Follow | ⚠️ | ✅ | ✅ | ✅ |
+| Follow Engagers | ⚠️ | ✅ | ✅ | ✅ |
+| Follow Target's Followers | ⚠️ | ✅ | ✅ | ✅ |
+| **ENGAGEMENT** |
+| Like Tweet | ✅ | ✅ | ✅ | ✅ |
+| Retweet | ✅ | ✅ | ✅ | ✅ |
+| Auto-Liker | ⚠️ | ✅ | ✅ | ✅ |
+| Auto-Commenter | ⚠️ | ✅ | ✅ | ✅ |
+| Post Tweet | ✅ | ✅ | ✅ | ✅ |
+| **MONITORING** |
+| Detect Unfollowers | ✅ | ✅ | ✅ | ✅ |
+| New Follower Alerts | ✅ | ✅ | ✅ | ✅ |
+| Monitor Any Account | ✅ | ✅ | ✅ | ✅ |
+| Continuous Monitoring | ⚠️ | ✅ | ✅ | ✅ |
+| **ADVANCED** |
+| Multi-Account | ❌ | ✅ | ✅ | ✅ Pro |
+| Link Scraper | ✅ | ✅ | ✅ | ✅ |
+| Growth Suite | ❌ | ✅ | ✅ | ✅ Pro |
+| Customer Service Bot | ❌ | ✅ | ✅ | ✅ Pro |
+| MCP Server (AI Agents) | ❌ | ✅ | ✅ | ❌ |
+| Export to CSV/JSON | ✅ | ✅ | ✅ | ✅ |
+
+**Legend:** ✅ Full Support | ⚠️ Basic/Manual | ❌ Not Available
+
+---
+
+## 🤖 MCP Server (AI Agents)
+
+XActions includes an MCP (Model Context Protocol) server so AI agents like Claude can automate X/Twitter.
+
+### Setup for Claude Desktop
+
+Add to your `claude_desktop_config.json`:
+```json
+{
+  "mcpServers": {
+    "xactions": {
+      "command": "node",
+      "args": ["/path/to/xactions/src/mcp/server.js"]
+    }
+  }
 }
-unfollowCount++;
+```
+
+### Available MCP Tools
+
+| Tool | Description |
+|------|-------------|
+| `x_login` | Login with session cookie |
+| `x_get_profile` | Get user profile info |
+| `x_get_followers` | Scrape followers |
+| `x_get_following` | Scrape following |
+| `x_get_non_followers` | Find non-followers |
+| `x_get_tweets` | Scrape user's tweets |
+| `x_search_tweets` | Search tweets by query |
+| `x_follow` | Follow a user |
+| `x_unfollow` | Unfollow a user |
+| `x_post_tweet` | Post a tweet |
+| `x_like` | Like a tweet |
+| `x_retweet` | Retweet |
+
+### Example AI Prompt
+> "Use XActions to find everyone I follow who doesn't follow me back"
+
+---
+
+## 💻 CLI Reference
+
+```bash
+# Authentication
+xactions login              # Set up session cookie
+xactions logout             # Remove saved auth
+
+# Profile
+xactions profile <user>     # Get profile info
+xactions profile elonmusk --json
+
+# Scraping
+xactions followers <user> [--limit 100] [--output file.json]
+xactions following <user> [--limit 100] [--output file.csv]
+xactions tweets <user> [--limit 50] [--replies]
+xactions search <query> [--filter latest|top] [--limit 50]
+xactions hashtag <tag> [--limit 50]
+xactions thread <url>
+xactions media <user> [--limit 50]
+
+# Analysis
+xactions non-followers <user> [--limit 500]
+
+# Info
+xactions info              # Show version and links
+xactions --help            # Full help
 ```
 
 ---
 
-## 🤔 FAQ
+## 📚 Node.js API
 
-**Q: Is this safe to use?**  
-A: Yes! The script only automates clicks — the same actions you'd do manually. No passwords or data are accessed.
+### Quick Start
+```javascript
+import { 
+  createBrowser, 
+  createPage, 
+  loginWithCookie,
+  scrapeProfile,
+  scrapeFollowers,
+  scrapeFollowing,
+  scrapeTweets,
+  searchTweets,
+  exportToJSON,
+  exportToCSV 
+} from 'xactions';
 
-**Q: Will I get banned?**  
-A: Unlikely if you use it reasonably. Avoid unfollowing thousands of accounts in minutes. Use the built-in delays.
+// Initialize
+const browser = await createBrowser({ headless: true });
+const page = await createPage(browser);
 
-**Q: Can I undo this?**  
-A: No — unfollows are permanent. Use the logging script (`unfollowWDFBLog.js`) to keep a record of who you unfollowed.
+// Optional: Login for private data
+await loginWithCookie(page, 'your_auth_token_cookie');
 
-**Q: It stopped working — help!**  
-A: X sometimes updates their website. [Open an issue](https://github.com/nirholas/UnfollowX/issues) and we'll update the script.
+// Scrape profile
+const profile = await scrapeProfile(page, 'elonmusk');
+
+// Scrape followers with progress
+const followers = await scrapeFollowers(page, 'elonmusk', {
+  limit: 1000,
+  onProgress: ({ scraped, limit }) => console.log(`${scraped}/${limit}`)
+});
+
+// Export data
+await exportToJSON(followers, 'followers.json');
+await exportToCSV(followers, 'followers.csv');
+
+await browser.close();
+```
+
+### All Scraper Functions
+
+```javascript
+// Profile
+scrapeProfile(page, username)
+
+// Followers & Following
+scrapeFollowers(page, username, { limit, onProgress })
+scrapeFollowing(page, username, { limit, onProgress })
+
+// Tweets
+scrapeTweets(page, username, { limit, includeReplies, onProgress })
+searchTweets(page, query, { limit, filter: 'latest'|'top' })
+scrapeThread(page, tweetUrl)
+scrapeHashtag(page, hashtag, { limit, filter })
+
+// Media
+scrapeMedia(page, username, { limit })
+scrapeLikes(page, tweetUrl, { limit })
+
+// Lists
+scrapeListMembers(page, listUrl, { limit })
+
+// Export
+exportToJSON(data, filename)
+exportToCSV(data, filename)
+```
 
 ---
 
-## 🌟 Contributing
+## 🌐 Don't Want to Code?
 
-We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+**Visit [xactions.app](https://xactions.app)** for a no-code solution:
 
-Ways to help:
-- 🐛 Report bugs
-- 💡 Suggest features
-- 📝 Improve documentation
-- 🔧 Submit pull requests
+1. Sign up (free tier available)
+2. Connect your X account
+3. Click buttons to run any action
+4. View results in your dashboard
 
----
-
-## 📜 License
-
-MIT License — see [LICENSE](LICENSE) for details.
+**Free Tier:** 50 actions/month  
+**Pro Tier:** Unlimited actions + multi-account
 
 ---
 
-## 💜 Credits
+## 🔒 Safety & Best Practices
 
-Created by **[Nicholas Resendez](https://x.com/nichxbt)** ([@nichxbt](https://x.com/nichxbt))
+### Rate Limiting
+XActions includes built-in delays to avoid rate limits:
+- 1-3 second delay between actions
+- Human-like scrolling patterns
+- Automatic pause on rate limit detection
 
-### Contributors
-- [Ethan JL](https://github.com/tahajalili) — Added unfollow logging feature
+### Getting Your Auth Token
+1. Go to x.com and log in
+2. Open DevTools (F12) → Application → Cookies
+3. Find `auth_token` and copy the value
+
+### Avoid Bans
+- ✅ Use reasonable delays (2-5 seconds)
+- ✅ Don't run 24/7
+- ✅ Mix automated with manual activity
+- ❌ Don't mass-follow thousands per day
+- ❌ Don't spam comments
+
+---
+
+## 📁 Project Structure
+
+```
+xactions/
+├── src/
+│   ├── index.js          # Main entry point
+│   ├── scrapers/         # All scraper functions
+│   │   └── index.js      # Scraper exports
+│   ├── cli/              # Command-line interface
+│   │   └── index.js      # CLI commands
+│   ├── mcp/              # MCP server for AI agents
+│   │   └── server.js     # MCP implementation
+│   └── automation/       # Advanced automation
+│       ├── autoLiker.js
+│       ├── autoCommenter.js
+│       ├── keywordFollow.js
+│       └── ...
+├── docs/                 # Documentation
+├── examples/             # Code examples
+├── dashboard/            # Web UI
+└── api/                  # Backend API
+```
+
+---
+
+## 🤝 Contributing
+
+Contributions welcome! See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+```bash
+# Clone
+git clone https://github.com/nirholas/xactions.git
+cd xactions
+
+# Install
+npm install
+
+# Run CLI locally
+npm run cli -- profile elonmusk
+
+# Run MCP server
+npm run mcp
+```
+
+---
+
+## 📄 License
+
+MIT License - see [LICENSE](LICENSE)
+
+Commercial use allowed. Attribution appreciated but not required.
+
+---
+
+## 👤 Author
+
+**nich** ([@nichxbt](https://twitter.com/nichxbt))
+
+- GitHub: [github.com/nirholas](https://github.com/nirholas)
+- Twitter: [@nichxbt](https://twitter.com/nichxbt)
+- Website: [xactions.app](https://xactions.app)
+
+---
+
+## ⭐ Star This Repo!
+
+If XActions helped you, give it a star! It helps others find the project.
+
+[![Star History Chart](https://api.star-history.com/svg?repos=nirholas/xactions&type=Date)](https://star-history.com/#nirholas/xactions&Date)
 
 ---
 
 <p align="center">
-  Made with 🤍 by the community
-  <br>
-  <a href="https://github.com/nirholas/UnfollowX">⭐ Star this repo</a> if you found it helpful!
+  <b>⚡ XActions</b> — The Complete X/Twitter Automation Toolkit<br>
+  <a href="https://xactions.app">xactions.app</a> • 
+  <a href="https://github.com/nirholas/xactions">GitHub</a> • 
+  <a href="https://twitter.com/nichxbt">@nichxbt</a>
 </p>

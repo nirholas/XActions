@@ -1,5 +1,5 @@
-// UnfollowX Automation - Growth Automation Suite
-// https://github.com/nirholas/UnfollowX
+// XActions Automation - Growth Automation Suite
+// https://github.com/nirholas/XActions
 //
 // REQUIRES: Paste core.js first!
 //
@@ -16,12 +16,12 @@
 // 4. Run and let it work!
 
 (() => {
-  if (!window.UnfollowX?.Core) {
+  if (!window.XActions?.Core) {
     console.error('❌ Core module not loaded! Paste core.js first.');
     return;
   }
 
-  const { log, sleep, randomDelay, scrollBy, clickElement, waitForElement, storage, rateLimit, SELECTORS } = window.UnfollowX.Core;
+  const { log, sleep, randomDelay, scrollBy, clickElement, waitForElement, storage, rateLimit, SELECTORS } = window.XActions.Core;
 
   // ============================================
   // GROWTH STRATEGY CONFIGURATION
@@ -312,7 +312,7 @@
   const run = async () => {
     console.log(`
 ╔═══════════════════════════════════════════════════════════╗
-║  🚀 UnfollowX Growth Automation                           ║
+║  🚀 XActions Growth Automation                           ║
 ╠═══════════════════════════════════════════════════════════╣
 ║  Keywords: ${STRATEGY.KEYWORDS.slice(0, 3).join(', ').substring(0, 30).padEnd(30)}  ║
 ║  Session: ${STRATEGY.TIMING.SESSION_DURATION_MINUTES} minutes                                 ║
@@ -359,7 +359,7 @@
     log('Stopping growth automation...', 'warning');
   };
 
-  window.UnfollowX.Growth = {
+  window.XActions.Growth = {
     state: () => state,
     tracked: () => tracked,
     strategy: STRATEGY,

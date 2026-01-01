@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - XActions | AI-Powered X/Twitter Automation Platform</title>
+  <meta name="description" content="Login to XActions - AI-powered X/Twitter automation platform. Smart unfollow with machine learning, LLM integration, MCP server support. Compatible with GPT & Claude AI agents.">
+  <meta name="keywords" content="xactions login, AI Twitter automation, LLM Twitter bot, machine learning Twitter, AI agents for X, GPT Twitter automation, Claude Twitter tools, MCP server Twitter, AI-powered unfollow, smart Twitter automation, twitter automation, mass unfollow, twitter bot">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta property="og:title" content="XActions - AI-Powered X/Twitter Automation Platform">
+  <meta property="og:description" content="AI-powered automation with LLM integration, MCP server support. GPT & Claude compatible. Free & open-source.">
+  <meta property="og:url" content="https://xactions.app">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:creator" content="@nichxbt">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  <link rel="canonical" href="https://xactions.app/login">
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --error: #f4212e;
+      --success: #00ba7c;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    .header {
+      padding: 16px 24px;
+      display: flex;
+      justify-content: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--text-primary);
+      font-size: 1.5rem;
+      font-weight: 800;
+    }
+
+    .logo-icon {
+      font-size: 2rem;
+    }
+
+    /* Main */
+    .main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .login-container {
+      width: 100%;
+      max-width: 440px;
+    }
+
+    .title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .subtitle {
+      color: var(--text-secondary);
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    /* Card */
+    .card {
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-size: 0.9375rem;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-size: 1rem;
+      transition: all 0.2s;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent);
+    }
+
+    .form-input::placeholder {
+      color: var(--text-secondary);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px 24px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 9999px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .error-message {
+      background: rgba(244, 33, 46, 0.1);
+      border: 1px solid var(--error);
+      color: var(--error);
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: none;
+      font-size: 0.875rem;
+    }
+
+    .error-message.visible {
+      display: block;
+    }
+
+    .success-message {
+      background: rgba(0, 186, 124, 0.1);
+      border: 1px solid var(--success);
+      color: var(--success);
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: none;
+      font-size: 0.875rem;
+    }
+
+    .success-message.visible {
+      display: block;
+    }
+
+    .toggle-text {
+      text-align: center;
+      margin-top: 20px;
+      color: var(--text-secondary);
+      font-size: 0.9375rem;
+    }
+
+    .toggle-text a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .toggle-text a:hover {
+      text-decoration: underline;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 24px 0;
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .links {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-top: 24px;
+    }
+
+    .links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+
+    .links a:hover {
+      color: var(--accent);
+    }
+
+    /* Footer */
+    .footer {
+      padding: 24px;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .footer-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.8125rem;
+    }
+
+    .footer-links a:hover {
+      text-decoration: underline;
+    }
+
+    .disclaimer {
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+      max-width: 500px;
+      margin: 0 auto;
+      line-height: 1.5;
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .card {
+        padding: 24px 16px;
+        border-left: none;
+        border-right: none;
+        border-radius: 0;
+      }
+      .title {
+        font-size: 1.5rem;
+      }
+    }
+
+    .site-footer {
+      border-top: 1px solid var(--border);
+      padding: 48px 24px;
+      background: var(--bg-primary);
+    }
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 32px;
+    }
+    .footer-brand h3 { font-size: 1.25rem; margin-bottom: 8px; }
+    .footer-brand p { color: var(--text-secondary); font-size: 0.875rem; line-height: 1.5; }
+    .footer-links h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 12px; color: var(--text-primary); }
+    .footer-links a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 4px 0; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 24px auto 0; padding-top: 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+    .footer-bottom p { color: var(--text-secondary); font-size: 0.8125rem; }
+    .footer-bottom a { color: var(--text-secondary); text-decoration: none; }
+    .footer-bottom a:hover { color: var(--accent); }
+    @media (max-width: 768px) { .footer-content { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 480px) { .footer-content { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <a href="/" class="logo-link">
+      <span class="logo-icon">⚡</span>
+      <span>XActions</span>
+    </a>
+  </header>
+
+  <main class="main">
+    <div class="login-container">
+      <h1 class="title" id="page-title">Sign in to XActions</h1>
+      <p class="subtitle">Automate your X/Twitter account management</p>
+
+      <!-- Login Card -->
+      <div class="card" id="login-card">
+        <div class="error-message" id="login-error"></div>
+        
+        <form id="login-form">
+          <div class="form-group">
+            <label class="form-label" for="login-email">Email</label>
+            <input type="email" class="form-input" id="login-email" placeholder="you@example.com" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="login-password">Password</label>
+            <input type="password" class="form-input" id="login-password" placeholder="••••••••" required>
+          </div>
+          <button type="submit" class="btn" id="login-btn">Sign in</button>
+        </form>
+
+        <p class="toggle-text">
+          Don't have an account? <a href="#" onclick="showRegister(); return false;">Sign up</a>
+        </p>
+
+        <div class="links">
+          <a href="/docs">📚 Documentation</a>
+          <a href="/pricing">💎 Pricing</a>
+          <a href="https://github.com/nirholas/XActions" target="_blank">⭐ GitHub</a>
+        </div>
+      </div>
+
+      <!-- Register Card -->
+      <div class="card" id="register-card" style="display: none;">
+        <div class="error-message" id="register-error"></div>
+        <div class="success-message" id="register-success"></div>
+        
+        <form id="register-form">
+          <div class="form-group">
+            <label class="form-label" for="register-username">Username</label>
+            <input type="text" class="form-input" id="register-username" placeholder="yourname" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="register-email">Email</label>
+            <input type="email" class="form-input" id="register-email" placeholder="you@example.com" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="register-password">Password</label>
+            <input type="password" class="form-input" id="register-password" placeholder="Minimum 8 characters" required minlength="8">
+          </div>
+          <button type="submit" class="btn" id="register-btn">Create account</button>
+        </form>
+
+        <p class="toggle-text">
+          Already have an account? <a href="#" onclick="showLogin(); return false;">Sign in</a>
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-links">
+      <a href="/docs#terms">Terms of Service</a>
+      <a href="/docs#privacy">Privacy Policy</a>
+      <a href="/docs#disclaimer">Disclaimer</a>
+      <a href="https://github.com/nirholas/XActions">Open Source</a>
+      <a href="https://twitter.com/nichxbt" target="_blank">@nichxbt</a>
+    </div>
+    <p class="disclaimer">
+      XActions is an independent, open-source project for educational purposes. 
+      Not affiliated with, endorsed by, or connected to X Corp. Use responsibly.
+    </p>
+  </footer>
+
+  <script>
+    const API_URL = window.location.hostname === 'localhost' 
+      ? 'http://localhost:3001/api' 
+      : 'https://xactions.app/api';
+
+    function showLogin() {
+      document.getElementById('login-card').style.display = 'block';
+      document.getElementById('register-card').style.display = 'none';
+      document.getElementById('page-title').textContent = 'Sign in to XActions';
+    }
+
+    function showRegister() {
+      document.getElementById('login-card').style.display = 'none';
+      document.getElementById('register-card').style.display = 'block';
+      document.getElementById('page-title').textContent = 'Create your account';
+    }
+
+    function showError(message, isRegister = false) {
+      const el = document.getElementById(isRegister ? 'register-error' : 'login-error');
+      el.textContent = message;
+      el.classList.add('visible');
+      setTimeout(() => el.classList.remove('visible'), 5000);
+    }
+
+    function showSuccess(message) {
+      const el = document.getElementById('register-success');
+      el.textContent = message;
+      el.classList.add('visible');
+    }
+
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('login-btn');
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+
+      btn.disabled = true;
+      btn.textContent = 'Signing in...';
+
+      try {
+        const res = await fetch(`${API_URL}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          localStorage.setItem('authToken', data.token);
+          window.location.href = '/dashboard';
+        } else {
+          showError(data.error || 'Login failed');
+          btn.disabled = false;
+          btn.textContent = 'Sign in';
+        }
+      } catch (error) {
+        showError('Network error. Please try again.');
+        btn.disabled = false;
+        btn.textContent = 'Sign in';
+      }
+    });
+
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('register-btn');
+      const username = document.getElementById('register-username').value;
+      const email = document.getElementById('register-email').value;
+      const password = document.getElementById('register-password').value;
+
+      btn.disabled = true;
+      btn.textContent = 'Creating account...';
+
+      try {
+        const res = await fetch(`${API_URL}/auth/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, email, password })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          localStorage.setItem('authToken', data.token);
+          window.location.href = '/dashboard';
+        } else {
+          showError(data.error || 'Registration failed', true);
+          btn.disabled = false;
+          btn.textContent = 'Create account';
+        }
+      } catch (error) {
+        showError('Network error. Please try again.', true);
+        btn.disabled = false;
+        btn.textContent = 'Create account';
+      }
+    });
+
+    // Check if already logged in
+    if (localStorage.getItem('authToken')) {
+      window.location.href = '/dashboard';
+    }
+  </script>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <h3>⚡ XActions</h3>
+        <p>Free, open-source X/Twitter automation toolkit. Mass unfollow, detect unfollowers, auto-engage, and grow your audience without expensive API fees.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/docs">Documentation</a>
+        <a href="/dashboard">Dashboard</a>
+      </div>
+      <div class="footer-links">
+        <h4>Company</h4>
+        <a href="/about">About</a>
+        <a href="https://github.com/nirholas/XActions" target="_blank">GitHub</a>
+        <a href="https://twitter.com/nichxbt" target="_blank">Twitter</a>
+      </div>
+      <div class="footer-links">
+        <h4>Legal</h4>
+        <a href="/terms">Terms of Service</a>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 XActions. Not affiliated with X Corp.</p>
+      <p>Made with ❤️ by <a href="https://twitter.com/nichxbt" target="_blank">@nichxbt</a></p>
+    </div>
+  </footer>
+</body>
+</html>

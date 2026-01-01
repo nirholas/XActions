@@ -1,5 +1,5 @@
-// UnfollowX Automation - Follow Followers/Following of Target Users
-// https://github.com/nirholas/UnfollowX
+// XActions Automation - Follow Followers/Following of Target Users
+// https://github.com/nirholas/XActions
 //
 // REQUIRES: Paste core.js first!
 //
@@ -12,12 +12,12 @@
 // 4. Run and let it work!
 
 (() => {
-  if (!window.UnfollowX?.Core) {
+  if (!window.XActions?.Core) {
     console.error('❌ Core module not loaded! Paste core.js first.');
     return;
   }
 
-  const { log, sleep, randomDelay, scrollBy, clickElement, waitForElement, storage, SELECTORS } = window.UnfollowX.Core;
+  const { log, sleep, randomDelay, scrollBy, clickElement, waitForElement, storage, SELECTORS } = window.XActions.Core;
 
   // ============================================
   // CONFIGURATION
@@ -317,7 +317,7 @@
   const run = async () => {
     console.log(`
 ╔═══════════════════════════════════════════════════════════╗
-║  👥 UnfollowX - Follow Target's ${CONFIG.LIST_TYPE.padEnd(10)}              ║
+║  👥 XActions - Follow Target's ${CONFIG.LIST_TYPE.padEnd(10)}              ║
 ╠═══════════════════════════════════════════════════════════╣
 ║  Targets: ${String(CONFIG.TARGET_ACCOUNTS.length).padEnd(5)} accounts                            ║
 ║  List type: ${CONFIG.LIST_TYPE.padEnd(12)}                             ║
@@ -365,7 +365,7 @@
     log('Stopping target follow...', 'warning');
   };
 
-  window.UnfollowX.TargetFollow = {
+  window.XActions.TargetFollow = {
     state: () => state,
     tracked: () => tracked,
     config: CONFIG,

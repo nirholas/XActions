@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About XActions | AI-Powered Open-Source X/Twitter Automation Toolkit</title>
+  <meta name="description" content="About XActions - The AI-powered open-source X/Twitter automation toolkit. Built with machine learning, LLM integration, and MCP server support. Learn about our mission to make intelligent automation accessible.">
+  <meta name="keywords" content="about xactions, AI Twitter automation, LLM Twitter bot, machine learning Twitter tools, AI agents for X, GPT Twitter automation, Claude Twitter tools, MCP server Twitter, xactions team, twitter automation open source, xactions mission">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+  
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="About XActions - AI-Powered Open-Source Automation">
+  <meta property="og:description" content="Learn about our AI-powered automation toolkit with LLM integration, MCP server support, and GPT/Claude compatibility.">
+  <meta property="og:url" content="https://xactions.app/about">
+  <meta property="og:site_name" content="XActions">
+  <meta property="og:image" content="https://xactions.app/og-about.png">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:creator" content="@nichxbt">
+  <meta name="twitter:title" content="About XActions - AI-Powered Automation">
+  <meta name="twitter:description" content="AI-powered X/Twitter automation with machine learning, LLM integration & MCP server support.">
+  
+  <link rel="canonical" href="https://xactions.app/about">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "XActions",
+    "description": "AI-powered open-source X/Twitter automation toolkit with LLM integration, MCP server support, and GPT/Claude compatibility",
+    "url": "https://xactions.app",
+    "logo": "https://xactions.app/logo.png",
+    "sameAs": [
+      "https://twitter.com/nichxbt",
+      "https://github.com/nirholas/XActions"
+    ],
+    "founder": {
+      "@type": "Person",
+      "name": "nich",
+      "url": "https://twitter.com/nichxbt"
+    }
+  }
+  </script>
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    ::-webkit-scrollbar { width: 16px; }
+    ::-webkit-scrollbar-track { background: var(--bg-primary); }
+    ::-webkit-scrollbar-thumb { background: var(--bg-tertiary); border-radius: 8px; border: 4px solid var(--bg-primary); }
+
+    .layout {
+      display: flex;
+      max-width: 1300px;
+      margin: 0 auto;
+      min-height: 100vh;
+    }
+
+    .sidebar-left {
+      width: 275px;
+      padding: 0 12px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--border);
+    }
+
+    .logo { padding: 12px; }
+    .logo a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--text-primary);
+      font-size: 1.5rem;
+      font-weight: 800;
+      padding: 12px;
+      border-radius: 9999px;
+      transition: background 0.2s;
+    }
+    .logo a:hover { background: var(--accent-light); }
+
+    nav { flex: 1; }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 12px;
+      border-radius: 9999px;
+      font-size: 1.25rem;
+      color: var(--text-primary);
+      text-decoration: none;
+      transition: background 0.2s;
+      margin-bottom: 4px;
+    }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+
+    .action-btn {
+      width: 90%;
+      padding: 16px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 9999px;
+      font-size: 1.0625rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin: 16px 0;
+      text-decoration: none;
+      display: block;
+      text-align: center;
+    }
+    .action-btn:hover { background: var(--accent-hover); }
+
+    .main-content {
+      flex: 1;
+      max-width: 600px;
+      border-right: 1px solid var(--border);
+    }
+
+    .main-header {
+      position: sticky;
+      top: 0;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 16px;
+      z-index: 100;
+    }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+
+    .hero {
+      padding: 48px 24px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-icon {
+      font-size: 4rem;
+      margin-bottom: 16px;
+    }
+
+    .hero h2 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .hero p {
+      color: var(--text-secondary);
+      font-size: 1.125rem;
+    }
+
+    .content {
+      padding: 24px 16px;
+    }
+
+    .section {
+      padding: 24px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section:last-child { border: none; }
+
+    h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin: 16px 0 8px;
+      color: var(--text-primary);
+    }
+
+    p {
+      color: var(--text-secondary);
+      font-size: 0.9375rem;
+      margin-bottom: 12px;
+    }
+
+    ul {
+      margin-left: 24px;
+      margin-bottom: 16px;
+    }
+
+    li {
+      color: var(--text-secondary);
+      font-size: 0.9375rem;
+      margin-bottom: 8px;
+    }
+
+    a { color: var(--accent); }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin: 24px 0;
+    }
+
+    .stat-card {
+      background: var(--bg-secondary);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .stat-label {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      margin-top: 4px;
+    }
+
+    .team-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .team-avatar {
+      width: 64px;
+      height: 64px;
+      background: var(--accent-light);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+    }
+
+    .team-info h3 { margin: 0 0 4px; }
+    .team-info p { margin: 0; }
+
+    .team-links {
+      margin-top: 8px;
+    }
+
+    .team-links a {
+      color: var(--accent);
+      text-decoration: none;
+      margin-right: 16px;
+      font-size: 0.875rem;
+    }
+
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .tech-item {
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .tech-icon { font-size: 1.5rem; }
+    .tech-name { font-weight: 600; font-size: 0.9375rem; }
+
+    .values-card {
+      background: var(--bg-secondary);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 12px;
+    }
+
+    .values-card h3 {
+      margin: 0 0 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .values-card p { margin: 0; }
+
+    .sidebar-right {
+      width: 350px;
+      padding: 12px 24px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .legal-nav {
+      background: var(--bg-secondary);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .legal-nav h3 { font-size: 1.25rem; font-weight: 800; margin-bottom: 12px; }
+    .legal-nav a {
+      display: block;
+      padding: 10px 0;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.9375rem;
+      border-bottom: 1px solid var(--border);
+      transition: color 0.2s;
+    }
+    .legal-nav a:last-child { border: none; }
+    .legal-nav a:hover { color: var(--accent); }
+    .legal-nav a.active { color: var(--accent); font-weight: 600; }
+
+    .connect-card {
+      background: var(--bg-secondary);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .connect-card h3 { font-size: 1.25rem; font-weight: 800; margin-bottom: 12px; }
+    .connect-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.9375rem;
+      border-bottom: 1px solid var(--border);
+      transition: color 0.2s;
+    }
+    .connect-link:last-child { border: none; }
+    .connect-link:hover { color: var(--accent); }
+    .connect-icon { font-size: 1.25rem; }
+
+    .disclaimer {
+      padding: 16px;
+      color: var(--text-secondary);
+      font-size: 0.8125rem;
+    }
+
+    @media (max-width: 1280px) { .sidebar-right { width: 290px; } }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } .main-content { max-width: 100%; } }
+    @media (max-width: 768px) {
+      .sidebar-left { width: 68px; padding: 0 4px; }
+      .logo a span:last-child, .nav-item span:last-child { display: none; }
+      .nav-item { justify-content: center; padding: 12px; }
+      .action-btn { width: 50px; height: 50px; padding: 0; font-size: 0; }
+      .action-btn::before { content: '→'; font-size: 1.5rem; }
+      .hero h2 { font-size: 1.5rem; }
+      .stat-grid { grid-template-columns: 1fr; }
+      .tech-grid { grid-template-columns: 1fr; }
+    }
+
+    .site-footer {
+      border-top: 1px solid var(--border);
+      padding: 48px 24px;
+      background: var(--bg-primary);
+    }
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 32px;
+    }
+    .footer-brand h3 { font-size: 1.25rem; margin-bottom: 8px; }
+    .footer-brand p { color: var(--text-secondary); font-size: 0.875rem; line-height: 1.5; }
+    .footer-links h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 12px; color: var(--text-primary); }
+    .footer-links a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 4px 0; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 24px auto 0; padding-top: 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+    .footer-bottom p { color: var(--text-secondary); font-size: 0.8125rem; }
+    .footer-bottom a { color: var(--text-secondary); text-decoration: none; }
+    .footer-bottom a:hover { color: var(--accent); }
+    @media (max-width: 768px) { .footer-content { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 480px) { .footer-content { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar-left">
+      <div class="logo">
+        <a href="/"><span>⚡</span><span>XActions</span></a>
+      </div>
+      <nav>
+        <a href="/" class="nav-item"><span class="nav-icon">🏠</span><span>Home</span></a>
+        <a href="/dashboard" class="nav-item"><span class="nav-icon">📊</span><span>Dashboard</span></a>
+        <a href="/features" class="nav-item"><span class="nav-icon">✨</span><span>Features</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/docs" class="nav-item"><span class="nav-icon">📚</span><span>Docs</span></a>
+        <a href="https://github.com/nirholas/XActions" target="_blank" class="nav-item"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <main class="main-content">
+      <header class="main-header">
+        <h1>ℹ️ About XActions</h1>
+      </header>
+
+      <div class="hero">
+        <div class="hero-icon">⚡</div>
+        <h2>XActions</h2>
+        <p>The Open-Source X/Twitter Automation Toolkit</p>
+      </div>
+
+      <div class="content">
+        <div class="section">
+          <h2>🎯 Our Mission</h2>
+          <p>XActions was created to give everyone access to powerful X/Twitter automation tools without the expensive API fees that can cost $100-$5,000+ per month.</p>
+          <p>We believe automation should be accessible, transparent, and open-source. Whether you're cleaning up your following list, monitoring accounts, or growing your presence, XActions provides the tools you need.</p>
+        </div>
+
+        <div class="section">
+          <div class="stat-grid">
+            <div class="stat-card">
+              <div class="stat-value">100%</div>
+              <div class="stat-label">Open Source</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">$0</div>
+              <div class="stat-label">API Fees</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">150+</div>
+              <div class="stat-label">Functions</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>💡 Why XActions?</h2>
+          
+          <div class="values-card">
+            <h3>🔓 Open Source</h3>
+            <p>All code is public on GitHub. See exactly what the tools do. No hidden functionality, no black boxes.</p>
+          </div>
+
+          <div class="values-card">
+            <h3>💰 No API Fees</h3>
+            <p>We use browser automation instead of X's expensive API. Save hundreds or thousands per month.</p>
+          </div>
+
+          <div class="values-card">
+            <h3>🔒 Privacy First</h3>
+            <p>Browser scripts run entirely locally. Your data never touches our servers unless you opt into the dashboard.</p>
+          </div>
+
+          <div class="values-card">
+            <h3>🎓 Educational</h3>
+            <p>Learn how browser automation works. Great for developers wanting to understand web scraping and automation.</p>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>👨‍💻 The Team</h2>
+          
+          <div class="team-card">
+            <div class="team-avatar">👤</div>
+            <div class="team-info">
+              <h3>nich</h3>
+              <p>Creator & Lead Developer</p>
+              <div class="team-links">
+                <a href="https://twitter.com/nichxbt">@nichxbt</a>
+                <a href="https://github.com/nirholas">GitHub</a>
+              </div>
+            </div>
+          </div>
+          
+          <p>XActions is primarily maintained by nich, with contributions from the open-source community. Want to contribute? Check out our <a href="https://github.com/nirholas/XActions">GitHub repository</a>!</p>
+        </div>
+
+        <div class="section">
+          <h2>🛠️ Technology Stack</h2>
+          
+          <div class="tech-grid">
+            <div class="tech-item">
+              <span class="tech-icon">📦</span>
+              <span class="tech-name">Node.js</span>
+            </div>
+            <div class="tech-item">
+              <span class="tech-icon">🎭</span>
+              <span class="tech-name">Puppeteer</span>
+            </div>
+            <div class="tech-item">
+              <span class="tech-icon">🚀</span>
+              <span class="tech-name">Express</span>
+            </div>
+            <div class="tech-item">
+              <span class="tech-icon">💾</span>
+              <span class="tech-name">Prisma</span>
+            </div>
+            <div class="tech-item">
+              <span class="tech-icon">💳</span>
+              <span class="tech-name">Stripe</span>
+            </div>
+            <div class="tech-item">
+              <span class="tech-icon">🤖</span>
+              <span class="tech-name">MCP Server</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>📜 History</h2>
+          <p><strong>2024:</strong> XActions started as a simple browser script to help clean up Twitter following lists.</p>
+          <p><strong>2025:</strong> Expanded to include monitoring, automation, and a full suite of tools. Rebranded from "UnfollowX" to "XActions" to reflect the broader feature set.</p>
+          <p><strong>2026:</strong> Launched the premium dashboard with scheduled automation, MCP server for AI agents, and CLI tools.</p>
+        </div>
+
+        <div class="section">
+          <h2>⚠️ Disclaimer</h2>
+          <p>XActions is an independent project created for <strong>educational purposes</strong>. We are not affiliated with, endorsed by, or connected to X Corp (formerly Twitter, Inc.) in any way.</p>
+          <p>Use of automation tools may be subject to X's Terms of Service. Users are responsible for ensuring their usage complies with applicable terms and regulations.</p>
+        </div>
+      </div>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="legal-nav">
+        <h3>📋 Legal Pages</h3>
+        <a href="/terms">Terms of Service</a>
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/about" class="active">About XActions</a>
+      </div>
+
+      <div class="connect-card">
+        <h3>🔗 Connect</h3>
+        <a href="https://twitter.com/nichxbt" target="_blank" class="connect-link">
+          <span class="connect-icon">🐦</span>
+          <span>@nichxbt on X</span>
+        </a>
+        <a href="https://github.com/nirholas/XActions" target="_blank" class="connect-link">
+          <span class="connect-icon">⭐</span>
+          <span>GitHub Repository</span>
+        </a>
+        <a href="mailto:hello@xactions.app" class="connect-link">
+          <span class="connect-icon">📧</span>
+          <span>hello@xactions.app</span>
+        </a>
+      </div>
+
+      <div class="disclaimer">
+        <p>XActions is an independent project for educational purposes. Not affiliated with X Corp.</p>
+        <p style="margin-top: 8px;">© 2026 XActions</p>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <h3>⚡ XActions</h3>
+        <p>Free, open-source X/Twitter automation toolkit. Mass unfollow, detect unfollowers, auto-engage, and grow your audience without expensive API fees.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/docs">Documentation</a>
+        <a href="/dashboard">Dashboard</a>
+      </div>
+      <div class="footer-links">
+        <h4>Company</h4>
+        <a href="/about">About</a>
+        <a href="https://github.com/nirholas/XActions" target="_blank">GitHub</a>
+        <a href="https://twitter.com/nichxbt" target="_blank">Twitter</a>
+      </div>
+      <div class="footer-links">
+        <h4>Legal</h4>
+        <a href="/terms">Terms of Service</a>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 XActions. Not affiliated with X Corp.</p>
+      <p>Made with ❤️ by <a href="https://twitter.com/nichxbt" target="_blank">@nichxbt</a></p>
+    </div>
+  </footer>
+</body>
+</html>

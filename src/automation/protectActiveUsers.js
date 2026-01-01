@@ -1,5 +1,5 @@
-// UnfollowX Automation - Don't Unfollow Active Users
-// https://github.com/nirholas/UnfollowX
+// XActions Automation - Don't Unfollow Active Users
+// https://github.com/nirholas/XActions
 //
 // REQUIRES: Paste core.js first!
 //
@@ -11,12 +11,12 @@
 // 3. Use with smartUnfollow.js - it will respect the protected list
 
 (() => {
-  if (!window.UnfollowX?.Core) {
+  if (!window.XActions?.Core) {
     console.error('❌ Core module not loaded! Paste core.js first.');
     return;
   }
 
-  const { log, sleep, scrollBy, storage, SELECTORS } = window.UnfollowX.Core;
+  const { log, sleep, scrollBy, storage, SELECTORS } = window.XActions.Core;
 
   // ============================================
   // CONFIGURATION
@@ -52,7 +52,7 @@
   // ============================================
   // STATE
   // ============================================
-  const KEY = 'unfollowx_protected_users';
+  const KEY = 'xactions_protected_users';
   
   const state = {
     postsScanned: 0,
@@ -236,7 +236,7 @@
   const run = async () => {
     console.log(`
 ╔═══════════════════════════════════════════════════════════╗
-║  🛡️ UnfollowX - Protect Active Users                      ║
+║  🛡️ XActions - Protect Active Users                      ║
 ╠═══════════════════════════════════════════════════════════╣
 ║  Posts to scan: ${String(CONFIG.POSTS_TO_SCAN).padEnd(5)}                                ║
 ║  Lookback: ${String(CONFIG.LOOKBACK_DAYS).padEnd(5)} days                               ║
@@ -359,7 +359,7 @@
     return false;
   };
 
-  window.UnfollowX.ActiveUsers = {
+  window.XActions.ActiveUsers = {
     getProtected: getProtectedList,
     isProtected: (u) => {
       const list = getProtectedList();

@@ -120,7 +120,7 @@ const CONFIG = {
 ### Stop Monitoring
 Run this in the console:
 ```js
-stopUnfollowXMonitor()
+stopXActionsMonitor()
 ```
 
 ---
@@ -135,17 +135,17 @@ All monitoring data is stored in your browser's `localStorage`:
 
 ### View Stored Data
 ```js
-// See all UnfollowX data
+// See all XActions data
 Object.keys(localStorage)
-  .filter(k => k.startsWith('unfollowx'))
+  .filter(k => k.startsWith('xactions'))
   .forEach(k => console.log(k, JSON.parse(localStorage[k])));
 ```
 
 ### Clear All Data
 ```js
-// Remove all UnfollowX snapshots
+// Remove all XActions snapshots
 Object.keys(localStorage)
-  .filter(k => k.startsWith('unfollowx'))
+  .filter(k => k.startsWith('xactions'))
   .forEach(k => localStorage.removeItem(k));
 ```
 

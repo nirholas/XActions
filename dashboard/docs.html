@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Documentation - XActions | AI Automation & MCP Server Guide</title>
+  <meta name="description" content="XActions documentation - Learn AI-powered Twitter automation, LLM integration with GPT & Claude, MCP server setup, and smart automation. Complete guides for AI agents, machine learning automation, and intelligent Twitter tools.">
+  <meta name="keywords" content="xactions docs, AI Twitter automation guide, LLM Twitter bot tutorial, MCP server Twitter setup, GPT Twitter automation, Claude Twitter tools, AI agents for X documentation, machine learning Twitter guide, AI-powered unfollow tutorial, smart Twitter automation, twitter automation guide, how to mass unfollow, twitter bot tutorial">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+  
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="XActions Documentation - AI Automation & MCP Server Guide">
+  <meta property="og:description" content="Complete guide to AI-powered X/Twitter automation. LLM integration, MCP server setup, GPT & Claude compatible.">
+  <meta property="og:url" content="https://xactions.app/docs">
+  <meta property="og:site_name" content="XActions">
+  <meta property="og:image" content="https://xactions.app/og-docs.png">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:creator" content="@nichxbt">
+  <meta name="twitter:title" content="XActions Documentation - AI & MCP Guide">
+  <meta name="twitter:description" content="Step-by-step guides for AI-powered automation, LLM integration & MCP server setup.">
+  
+  <link rel="canonical" href="https://xactions.app/docs">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "XActions Documentation - AI Automation & MCP Server Guide",
+    "description": "Complete guide to AI-powered X/Twitter automation with LLM integration, MCP server setup, and compatibility with GPT, Claude, and AI agents",
+    "url": "https://xactions.app/docs",
+    "author": {
+      "@type": "Person",
+      "name": "nich",
+      "url": "https://twitter.com/nichxbt"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "XActions"
+    },
+    "datePublished": "2026-01-01",
+    "dateModified": "2026-01-01"
+  }
+  </script>
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --bg-hover: #1d1f23;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    ::-webkit-scrollbar { width: 16px; }
+    ::-webkit-scrollbar-track { background: var(--bg-primary); }
+    ::-webkit-scrollbar-thumb { background: var(--bg-tertiary); border-radius: 8px; border: 4px solid var(--bg-primary); }
+
+    .layout {
+      display: flex;
+      max-width: 1300px;
+      margin: 0 auto;
+      min-height: 100vh;
+    }
+
+    /* Left Sidebar */
+    .sidebar-left {
+      width: 275px;
+      padding: 0 12px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--border);
+    }
+
+    .logo { padding: 12px; }
+    .logo a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--text-primary);
+      font-size: 1.5rem;
+      font-weight: 800;
+      padding: 12px;
+      border-radius: 9999px;
+      transition: background 0.2s;
+    }
+    .logo a:hover { background: var(--accent-light); }
+
+    nav { flex: 1; }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 12px;
+      border-radius: 9999px;
+      font-size: 1.25rem;
+      color: var(--text-primary);
+      text-decoration: none;
+      transition: background 0.2s;
+      margin-bottom: 4px;
+    }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+
+    .action-btn {
+      width: 90%;
+      padding: 16px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 9999px;
+      font-size: 1.0625rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin: 16px 0;
+      text-decoration: none;
+      display: block;
+      text-align: center;
+    }
+    .action-btn:hover { background: var(--accent-hover); }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      max-width: 600px;
+      border-right: 1px solid var(--border);
+    }
+
+    .main-header {
+      position: sticky;
+      top: 0;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 16px;
+      z-index: 100;
+    }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+
+    .section {
+      padding: 24px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin: 20px 0 8px;
+      color: var(--text-primary);
+    }
+
+    p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 12px; }
+    p a { color: var(--accent); }
+
+    ul, ol { margin-left: 20px; margin-bottom: 12px; }
+    li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+
+    code {
+      background: var(--bg-tertiary);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 0.8125rem;
+      color: var(--accent);
+    }
+
+    pre {
+      background: var(--bg-secondary);
+      padding: 16px;
+      border-radius: 12px;
+      overflow-x: auto;
+      margin: 12px 0;
+      border: 1px solid var(--border);
+    }
+    pre code { background: none; padding: 0; color: var(--text-primary); }
+
+    .info-box {
+      background: var(--accent-light);
+      border-left: 4px solid var(--accent);
+      padding: 12px 16px;
+      border-radius: 0 8px 8px 0;
+      margin: 16px 0;
+    }
+    .info-box p { color: var(--text-primary); margin: 0; }
+
+    .warning-box {
+      background: rgba(255, 173, 31, 0.1);
+      border-left: 4px solid var(--warning);
+      padding: 12px 16px;
+      border-radius: 0 8px 8px 0;
+      margin: 16px 0;
+    }
+    .warning-box p { color: var(--text-primary); margin: 0; }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 24px;
+      background: var(--accent);
+      color: white;
+      text-decoration: none;
+      border-radius: 9999px;
+      font-weight: 700;
+      font-size: 0.9375rem;
+      transition: background 0.2s;
+      margin-top: 12px;
+    }
+    .btn:hover { background: var(--accent-hover); }
+
+    /* Right Sidebar */
+    .sidebar-right {
+      width: 350px;
+      padding: 12px 24px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .toc-card {
+      background: var(--bg-secondary);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .toc-card h3 { margin: 0 0 12px; font-size: 1.25rem; font-weight: 800; }
+    .toc-card a {
+      display: block;
+      padding: 8px 0;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.9375rem;
+      border-bottom: 1px solid var(--border);
+      transition: color 0.2s;
+    }
+    .toc-card a:last-child { border: none; }
+    .toc-card a:hover { color: var(--accent); }
+
+    .disclaimer {
+      padding: 16px;
+      color: var(--text-secondary);
+      font-size: 0.8125rem;
+      line-height: 1.5;
+    }
+    .disclaimer a { color: var(--text-secondary); }
+    .disclaimer a:hover { text-decoration: underline; }
+
+    @media (max-width: 1280px) { .sidebar-right { width: 290px; } }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } .main-content { max-width: 100%; } }
+    @media (max-width: 768px) {
+      .sidebar-left { width: 68px; padding: 0 4px; }
+      .logo a span:last-child, .nav-item span:last-child { display: none; }
+      .nav-item { justify-content: center; padding: 12px; }
+      .action-btn { width: 50px; height: 50px; padding: 0; font-size: 0; }
+      .action-btn::before { content: '→'; font-size: 1.5rem; }
+    }
+
+    .site-footer {
+      border-top: 1px solid var(--border);
+      padding: 48px 24px;
+      background: var(--bg-primary);
+    }
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 32px;
+    }
+    .footer-brand h3 { font-size: 1.25rem; margin-bottom: 8px; }
+    .footer-brand p { color: var(--text-secondary); font-size: 0.875rem; line-height: 1.5; }
+    .footer-links h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 12px; color: var(--text-primary); }
+    .footer-links a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 4px 0; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 24px auto 0; padding-top: 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+    .footer-bottom p { color: var(--text-secondary); font-size: 0.8125rem; }
+    .footer-bottom a { color: var(--text-secondary); text-decoration: none; }
+    .footer-bottom a:hover { color: var(--accent); }
+    @media (max-width: 768px) { .footer-content { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 480px) { .footer-content { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Left Sidebar -->
+    <aside class="sidebar-left">
+      <div class="logo">
+        <a href="/"><span>⚡</span><span>XActions</span></a>
+      </div>
+      <nav>
+        <a href="/" class="nav-item"><span class="nav-icon">🏠</span><span>Home</span></a>
+        <a href="/dashboard" class="nav-item"><span class="nav-icon">📊</span><span>Dashboard</span></a>
+        <a href="/features" class="nav-item"><span class="nav-icon">✨</span><span>Features</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📚</span><span>Docs</span></a>
+        <a href="https://github.com/nirholas/XActions" target="_blank" class="nav-item"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>📚 Documentation</h1>
+      </header>
+
+      <section class="section" id="getting-started">
+        <h2 class="section-title">🚀 Getting Started</h2>
+        <p>XActions offers two powerful ways to automate your X/Twitter account cleanup:</p>
+        
+        <h3>Method 1: Browser Console Scripts (Free Forever)</h3>
+        <ol>
+          <li>Go to your <a href="https://twitter.com/following">X Following page</a></li>
+          <li>Open Developer Console (<code>Ctrl+Shift+J</code> on Windows/Linux, <code>Cmd+Option+J</code> on Mac)</li>
+          <li>Copy and paste one of our scripts</li>
+          <li>Press Enter and watch it work!</li>
+        </ol>
+
+        <div class="info-box">
+          <p><strong>✨ Perfect for:</strong> One-time cleanups, complete privacy, zero setup</p>
+        </div>
+
+        <h3>Method 2: Premium Dashboard</h3>
+        <ol>
+          <li>Create an account on XActions</li>
+          <li>Connect your X account</li>
+          <li>Schedule automated operations</li>
+          <li>Get reports and analytics</li>
+        </ol>
+
+        <div class="info-box">
+          <p><strong>🎯 Perfect for:</strong> Scheduled automation, multi-account management, detailed analytics</p>
+        </div>
+      </section>
+
+      <section class="section" id="operations">
+        <h2 class="section-title">🛠️ Available Operations</h2>
+
+        <h3>🧹 Unfollow Non-Followers</h3>
+        <p>Automatically unfollow accounts that don't follow you back. Great for cleaning up your following list.</p>
+
+        <h3>💥 Unfollow Everyone</h3>
+        <p>Start fresh by unfollowing everyone. Useful when you want to rebuild from scratch.</p>
+
+        <h3>🔍 Detect Unfollowers</h3>
+        <p>Find out who recently unfollowed you. Track changes over time.</p>
+
+        <h3>🤖 Advanced Automation (Premium)</h3>
+        <ul>
+          <li><strong>Auto-Liker:</strong> Automatically like posts from specific users</li>
+          <li><strong>Keyword Follow:</strong> Follow users based on hashtags or keywords</li>
+          <li><strong>Smart Unfollow:</strong> Unfollow users who don't engage after X days</li>
+          <li><strong>Growth Suite:</strong> Combined automation for account growth</li>
+        </ul>
+      </section>
+
+      <section class="section" id="credits">
+        <h2 class="section-title">💰 Credits & Pricing</h2>
+        
+        <h3>Free Tier</h3>
+        <ul>
+          <li>50 free credits</li>
+          <li>All console scripts (unlimited use)</li>
+          <li>Basic operations via dashboard</li>
+          <li>3 operations per day</li>
+        </ul>
+
+        <h3>Pro Tier - $29.99/month</h3>
+        <ul>
+          <li>Unlimited credits</li>
+          <li>50 operations per day</li>
+          <li>Scheduled automation</li>
+          <li>Advanced filtering</li>
+          <li>Priority support</li>
+        </ul>
+
+        <h3>Credit Costs</h3>
+        <ul>
+          <li>Unfollow Non-Followers: <strong>10 credits</strong></li>
+          <li>Unfollow Everyone: <strong>20 credits</strong></li>
+          <li>Detect Unfollowers: <strong>5 credits</strong></li>
+          <li>Advanced Automation: <strong>15-20 credits</strong></li>
+        </ul>
+
+        <a href="/pricing" class="btn">View All Plans →</a>
+      </section>
+
+      <section class="section" id="auth">
+        <h2 class="section-title">🔐 Authentication Options</h2>
+        
+        <h3>Option 1: X Account OAuth (Recommended)</h3>
+        <p>Connect your X account through official OAuth. Most secure and stable method.</p>
+        <ul>
+          <li>✅ Official X API integration</li>
+          <li>✅ Most stable and reliable</li>
+          <li>✅ Follows X Terms of Service</li>
+        </ul>
+
+        <h3>Option 2: Session Cookie (Alternative)</h3>
+        <p>Use your X session cookie for operations. No OAuth required.</p>
+        <ul>
+          <li>✅ No X API costs</li>
+          <li>✅ Works immediately</li>
+          <li>⚠️ Session expires after ~30 days</li>
+        </ul>
+
+        <div class="warning-box">
+          <p><strong>⚠️ Important:</strong> Session cookie method may be against X's Terms of Service. Use at your own risk.</p>
+        </div>
+      </section>
+
+      <section class="section" id="faq">
+        <h2 class="section-title">❓ FAQ</h2>
+        
+        <h3>Is this safe?</h3>
+        <p>The console scripts are completely safe. They run in your browser using your existing X session. We never see your password.</p>
+
+        <h3>Will I get banned?</h3>
+        <p>The scripts follow rate limits and add delays. However, aggressive unfollowing can trigger restrictions. Use responsibly.</p>
+
+        <h3>Can I cancel anytime?</h3>
+        <p>Yes! Cancel your subscription anytime through the billing portal. No questions asked.</p>
+
+        <h3>Do you store my X password?</h3>
+        <p>Never. We only store OAuth tokens or session cookies. We never ask for your password.</p>
+      </section>
+
+      <section class="section" id="support">
+        <h2 class="section-title">🆘 Support</h2>
+        <p>Need help? We're here for you!</p>
+        <ul>
+          <li>📧 Email: <a href="mailto:support@xactions.app">support@xactions.app</a></li>
+          <li>🐛 Bug Reports: <a href="https://github.com/nirholas/XActions/issues">GitHub Issues</a></li>
+          <li>💬 Community: <a href="https://twitter.com/nichxbt">@nichxbt on X</a></li>
+        </ul>
+      </section>
+    </main>
+
+    <!-- Right Sidebar -->
+    <aside class="sidebar-right">
+      <div class="toc-card">
+        <h3>📑 On This Page</h3>
+        <a href="#getting-started">Getting Started</a>
+        <a href="#operations">Available Operations</a>
+        <a href="#credits">Credits & Pricing</a>
+        <a href="#auth">Authentication</a>
+        <a href="#faq">FAQ</a>
+        <a href="#support">Support</a>
+      </div>
+
+      <div class="toc-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="https://github.com/nirholas/XActions">GitHub Repository</a>
+        <a href="https://github.com/nirholas/XActions/tree/main/docs">More Documentation</a>
+        <a href="/dashboard">Open Dashboard</a>
+      </div>
+
+      <div class="disclaimer">
+        <p>XActions is an independent project for educational purposes. Not affiliated with X Corp. Use responsibly.</p>
+        <p style="margin-top: 8px;">© 2026 XActions</p>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <h3>⚡ XActions</h3>
+        <p>Free, open-source X/Twitter automation toolkit. Mass unfollow, detect unfollowers, auto-engage, and grow your audience without expensive API fees.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/docs">Documentation</a>
+        <a href="/dashboard">Dashboard</a>
+      </div>
+      <div class="footer-links">
+        <h4>Company</h4>
+        <a href="/about">About</a>
+        <a href="https://github.com/nirholas/XActions" target="_blank">GitHub</a>
+        <a href="https://twitter.com/nichxbt" target="_blank">Twitter</a>
+      </div>
+      <div class="footer-links">
+        <h4>Legal</h4>
+        <a href="/terms">Terms of Service</a>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 XActions. Not affiliated with X Corp.</p>
+      <p>Made with ❤️ by <a href="https://twitter.com/nichxbt" target="_blank">@nichxbt</a></p>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,5 +1,5 @@
-// UnfollowX Automation - Auto Commenter
-// https://github.com/nirholas/UnfollowX
+// XActions Automation - Auto Commenter
+// https://github.com/nirholas/XActions
 //
 // REQUIRES: Paste core.js first!
 //
@@ -14,12 +14,12 @@
 // ⚠️ WARNING: Use responsibly! Spammy comments can get you limited.
 
 (() => {
-  if (!window.UnfollowX?.Core) {
+  if (!window.XActions?.Core) {
     console.error('❌ Core module not loaded! Paste core.js first.');
     return;
   }
 
-  const { log, sleep, randomDelay, scrollToTop, clickElement, waitForElement, storage, SELECTORS } = window.UnfollowX.Core;
+  const { log, sleep, randomDelay, scrollToTop, clickElement, waitForElement, storage, SELECTORS } = window.XActions.Core;
 
   // ============================================
   // CONFIGURATION
@@ -259,7 +259,7 @@
     
     console.log(`
 ╔═══════════════════════════════════════════════════════════╗
-║  💬 UnfollowX Auto Commenter                              ║
+║  💬 XActions Auto Commenter                              ║
 ║                                                           ║
 ║  Watching: @${username.padEnd(20)}                        ║
 ║  Interval: Every ${OPTIONS.CHECK_INTERVAL_SECONDS} seconds                         ║

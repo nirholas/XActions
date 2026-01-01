@@ -1,5 +1,5 @@
 // ContinuousMonitor.js — Auto-refresh monitoring for followers/following changes
-// https://github.com/nirholas/UnfollowX
+// https://github.com/nirholas/XActions
 //
 // HOW TO USE:
 // 1. Go to https://twitter.com/USERNAME/followers (or /following)
@@ -16,7 +16,7 @@ const CONFIG = {
 };
 
 (() => {
-  const STORAGE_PREFIX = 'unfollowx_continuous_';
+  const STORAGE_PREFIX = 'xactions_continuous_';
   const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
   // Parse page info
@@ -181,7 +181,7 @@ const CONFIG = {
   // Initial run
   console.log(`
 ╔═══════════════════════════════════════════════════════════╗
-║  🔭 UnfollowX Continuous Monitor                          ║
+║  🔭 XActions Continuous Monitor                          ║
 ║                                                           ║
 ║  Target: @${targetUser.padEnd(20)}                        ║
 ║  Tracking: ${pageType.padEnd(18)}                         ║
@@ -199,10 +199,10 @@ const CONFIG = {
   const intervalId = setInterval(runCheck, intervalMs);
 
   // Provide stop function
-  window.stopUnfollowXMonitor = () => {
+  window.stopXActionsMonitor = () => {
     clearInterval(intervalId);
     console.log('\n🛑 Monitoring stopped.');
   };
 
-  console.log('💡 Tip: Run stopUnfollowXMonitor() to stop monitoring.\n');
+  console.log('💡 Tip: Run stopXActionsMonitor() to stop monitoring.\n');
 })();

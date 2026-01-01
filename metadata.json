@@ -1,0 +1,165 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "xactions",
+  "displayName": "XActions",
+  "tagline": "The Complete X/Twitter Automation Platform",
+  "description": "Free, open-source X/Twitter automation tools. Mass unfollow non-followers, auto-engage, grow followers, monitor accounts — all without expensive API fees. Supports browser scripts, CLI, and self-hosted SaaS.",
+  "version": "3.0.0",
+  "author": {
+    "name": "nich",
+    "github": "nirholas",
+    "twitter": "@nichxbt",
+    "url": "https://github.com/nirholas"
+  },
+  "homepage": "https://xactions.app",
+  "repository": "https://github.com/nirholas/xactions",
+  "documentation": "https://xactions.app/docs",
+  "license": "MIT",
+  "keywords": [
+    "xactions",
+    "twitter automation",
+    "twitter unfollow tool",
+    "mass unfollow twitter",
+    "twitter bot",
+    "twitter growth",
+    "unfollow non followers",
+    "twitter cleanup",
+    "twitter manager",
+    "auto follow twitter",
+    "twitter api alternative",
+    "puppeteer twitter",
+    "social media automation",
+    "twitter tools",
+    "x automation",
+    "twitter follower manager",
+    "who unfollowed me",
+    "twitter analytics",
+    "auto like twitter",
+    "twitter engagement"
+  ],
+  "categories": [
+    "Developer Tools",
+    "Social Media",
+    "Automation",
+    "Twitter Tools",
+    "Growth Tools"
+  ],
+  "features": [
+    {
+      "name": "Unfollow Non-Followers",
+      "description": "Remove people who don't follow you back",
+      "category": "cleanup"
+    },
+    {
+      "name": "Unfollow Everyone",
+      "description": "Clean slate — unfollow your entire following list",
+      "category": "cleanup"
+    },
+    {
+      "name": "Detect Unfollowers",
+      "description": "Find out who stopped following you",
+      "category": "monitoring"
+    },
+    {
+      "name": "Auto-Liker",
+      "description": "Automatically like posts matching keywords",
+      "category": "engagement"
+    },
+    {
+      "name": "Auto-Commenter",
+      "description": "Auto-comment on a user's new posts",
+      "category": "engagement"
+    },
+    {
+      "name": "Keyword Follow",
+      "description": "Search keywords and auto-follow matching profiles",
+      "category": "growth"
+    },
+    {
+      "name": "Multi-Account",
+      "description": "Manage multiple X accounts with user:pass import",
+      "category": "business"
+    },
+    {
+      "name": "Growth Suite",
+      "description": "All-in-one automation combining follow, like, and unfollow",
+      "category": "growth"
+    },
+    {
+      "name": "Account Monitoring",
+      "description": "Track follows/unfollows on any public account",
+      "category": "monitoring"
+    },
+    {
+      "name": "Session Cookie Auth",
+      "description": "No Twitter API fees - use browser automation",
+      "category": "technical"
+    }
+  ],
+  "pricing": {
+    "model": "freemium",
+    "currency": "USD",
+    "plans": [
+      {
+        "name": "Free",
+        "price": 0,
+        "features": ["50 credits/month", "Browser scripts", "Basic features"]
+      },
+      {
+        "name": "Basic",
+        "price": 9,
+        "features": ["500 credits/month", "All features", "Email support"]
+      },
+      {
+        "name": "Pro",
+        "price": 29,
+        "features": ["Unlimited", "Multi-account", "Priority support"]
+      },
+      {
+        "name": "Enterprise",
+        "price": 99,
+        "features": ["Custom limits", "API access", "Dedicated support"]
+      }
+    ]
+  },
+  "techStack": [
+    "Node.js",
+    "Express",
+    "Prisma",
+    "Puppeteer",
+    "Bull",
+    "Redis",
+    "Stripe",
+    "SQLite",
+    "PostgreSQL"
+  ],
+  "platforms": [
+    "Web",
+    "CLI",
+    "Self-hosted"
+  ],
+  "alternatives": [
+    "Crowdfire",
+    "Hypefury",
+    "Tweethunter",
+    "Typefully",
+    "Buffer"
+  ],
+  "useCases": [
+    "Clean up Twitter following list",
+    "Find who unfollowed me on Twitter",
+    "Grow Twitter followers organically",
+    "Automate Twitter engagement",
+    "Monitor any Twitter account",
+    "Mass unfollow non-followers",
+    "Twitter account cleanup",
+    "Twitter follower management"
+  ],
+  "links": {
+    "website": "https://xactions.app",
+    "github": "https://github.com/nirholas/xactions",
+    "documentation": "https://xactions.app/docs",
+    "twitter": "https://twitter.com/nichxbt",
+    "support": "support@xactions.app"
+  }
+}

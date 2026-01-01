@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 const path = require('path');
-console.log('UnfollowX — repo helper');
+console.log('XActions — the complete X/Twitter automation platform');
 console.log('This repository contains small scripts to paste into your browser console.');
 console.log('See the usage docs: docs/usage.md');
 console.log('Examples: examples/README.md');

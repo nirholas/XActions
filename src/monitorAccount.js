@@ -1,5 +1,5 @@
 // MonitorAccount.js — Track follows/unfollows on ANY public X (Twitter) account
-// https://github.com/nirholas/UnfollowX
+// https://github.com/nirholas/XActions
 //
 // HOW TO USE:
 // 1. Go to https://twitter.com/TARGET_USERNAME/followers (or /following)
@@ -14,7 +14,7 @@
 // NOTE: Only works on PUBLIC accounts. Private accounts hide their lists.
 
 (() => {
-  const STORAGE_PREFIX = 'unfollowx_monitor_';
+  const STORAGE_PREFIX = 'xactions_monitor_';
   const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
   // Detect page type
@@ -118,7 +118,7 @@
   };
 
   const run = async () => {
-    console.log(`\n🔭 UnfollowX Monitor — Tracking @${targetUser}'s ${pageType}\n`);
+    console.log(`\n🔭 XActions Monitor — Tracking @${targetUser}'s ${pageType}\n`);
 
     const currentUsers = await scrapeUsers();
     console.log(`\n✅ Found ${currentUsers.length} accounts\n`);

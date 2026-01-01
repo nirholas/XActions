@@ -1,5 +1,5 @@
 // NewFollowersAlert.js — Get notified when you gain new followers
-// https://github.com/nirholas/UnfollowX
+// https://github.com/nirholas/XActions
 //
 // HOW TO USE:
 // 1. Go to https://twitter.com/YOUR_USERNAME/followers
@@ -8,7 +8,7 @@
 // 4. Run periodically to see your new followers!
 
 (() => {
-  const STORAGE_KEY = 'unfollowx_new_followers';
+  const STORAGE_KEY = 'xactions_new_followers';
   const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
   if (!window.location.pathname.includes('/followers')) {
@@ -72,7 +72,7 @@
   };
 
   const run = async () => {
-    console.log(`\n🎉 UnfollowX — New Followers Tracker for @${username}\n`);
+    console.log(`\n🎉 XActions — New Followers Tracker for @${username}\n`);
 
     const currentFollowers = await scrapeFollowers();
     console.log(`\n✅ Total followers: ${currentFollowers.size}\n`);

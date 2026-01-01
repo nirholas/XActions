@@ -1,11 +1,13 @@
-```markdown
-# Unfollow Everyone on X (archive)
+# Unfollow Everyone on X
 
-Original file content preserved for reference.
+
+1. Go to `https://twitter.com/YOUR_USER_NAME/following`
+2. Open the Developer Console. (<kbd>COMMAND</kbd>+<kbd>ALT</kbd>+<kbd>I</kbd> on Mac)
+3. Paste the script into the Developer Console and run it
 
 ```js
 // Unfollow everyone on X (Formerly Twitter) and or unfollow who doesn't follow you back, by Nicholas Resendez (https://twitter.com/nichxbt)
-// https://github.com/nirholas/unfollowx
+// https://github.com/nirholas/xactions
 //
 // 1. Go to https://twitter.com/YOUR_USER_NAME/following
 // 2. Open the Developer Console. (COMMAND+ALT+I on Mac)
@@ -69,7 +71,11 @@ Original file content preserved for reference.
 
   nextBatch();
 })();
-
 ```
 
-``` 
+This script:
+
+- Is completely free.
+- Doesn't try and get you to sign in or take your personal data.
+- Automates your web browser to make it click unfollow buttons, scroll down to reveal more, then do it again.
+- No tricks, all of the code is here so you can see exactly what it does.

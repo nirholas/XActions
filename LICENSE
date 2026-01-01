@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2025 nich
+Copyright (c) 2024-2026 nich (@nichxbt)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -19,3 +19,30 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+---
+
+## Additional Terms
+
+### Commercial Use
+✅ Commercial use is permitted. You may use XActions in commercial products,
+   SaaS platforms, and for-profit projects.
+
+### Attribution
+While not required, attribution is appreciated:
+- Link back to https://github.com/nirholas/xactions
+- Credit "XActions by nich (@nichxbt)"
+
+### Third-Party Services
+This software interacts with X (formerly Twitter). Users are responsible for
+complying with X's Terms of Service. The authors are not liable for account
+suspensions or other consequences from using this software.
+
+### No Warranty for Platform Compatibility
+X.com may change their website at any time. The authors do not guarantee
+continued functionality after platform updates.
+
+---
+
+⚡ XActions - https://xactions.app
+Created by nich (@nichxbt) - https://github.com/nirholas

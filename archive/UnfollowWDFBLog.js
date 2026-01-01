@@ -1,5 +1,8 @@
-// Archive: original UnfollowWDFBLog.js
-// Preserved for reference
+// Unfollow everyone on X (Formerly Twitter) and or unfollow who doesn't follow you back, by Nicholas Resendez (https://twitter.com/nichxbt)
+// https://github.com/nirholas/xactions
+// https://github.com/tahajalili (Ethan JL) - Added feature to keep track of unfollowed users in UnfollowWDFBLog.js
+//
+// Last Updated: 17 March 2024
 (() => {
   const $followButtons = '[data-testid$="-unfollow"]';
   const $confirmButton = '[data-testid="confirmationSheetConfirm"]';
@@ -23,6 +26,7 @@
   const unfollowAll = async (followButtons) => {
     console.log(`UNFOLLOWING ${followButtons.length} USERS...`);
     for (const button of followButtons) {
+      // Attempt to extract username for logging purposes
       const usernameElement = button.closest('[data-testid="UserCell"]')?.querySelector('[dir="ltr"]');
       const username = usernameElement ? usernameElement.textContent : "Unknown";
       unfollowedUsers.push(username); // Add username to the array

@@ -1,5 +1,5 @@
-// UnfollowX Automation - Timeline Auto-Liker
-// https://github.com/nirholas/UnfollowX
+// XActions Automation - Timeline Auto-Liker
+// https://github.com/nirholas/XActions
 //
 // REQUIRES: Paste core.js first!
 //
@@ -9,12 +9,12 @@
 // 3. Configure options below and run!
 
 (() => {
-  if (!window.UnfollowX?.Core) {
+  if (!window.XActions?.Core) {
     console.error('❌ Core module not loaded! Paste core.js first.');
     return;
   }
 
-  const { log, sleep, randomDelay, scrollBy, clickElement, rateLimit, storage, SELECTORS } = window.UnfollowX.Core;
+  const { log, sleep, randomDelay, scrollBy, clickElement, rateLimit, storage, SELECTORS } = window.XActions.Core;
 
   // ============================================
   // CONFIGURATION

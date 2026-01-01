@@ -1,5 +1,5 @@
-// UnfollowX Automation - Follow Likers & Commenters
-// https://github.com/nirholas/UnfollowX
+// XActions Automation - Follow Likers & Commenters
+// https://github.com/nirholas/XActions
 //
 // REQUIRES: Paste core.js first!
 //
@@ -11,12 +11,12 @@
 // 3. Configure and run
 
 (() => {
-  if (!window.UnfollowX?.Core) {
+  if (!window.XActions?.Core) {
     console.error('❌ Core module not loaded! Paste core.js first.');
     return;
   }
 
-  const { log, sleep, randomDelay, scrollBy, clickElement, waitForElement, storage, SELECTORS } = window.UnfollowX.Core;
+  const { log, sleep, randomDelay, scrollBy, clickElement, waitForElement, storage, SELECTORS } = window.XActions.Core;
 
   // ============================================
   // CONFIGURATION
@@ -278,7 +278,7 @@
   const run = async () => {
     console.log(`
 ╔═══════════════════════════════════════════════════════════╗
-║  💬 UnfollowX - Follow Likers & Engagers                  ║
+║  💬 XActions - Follow Likers & Engagers                  ║
 ╠═══════════════════════════════════════════════════════════╣
 ║  Mode: ${CONFIG.MODE.padEnd(15)}                               ║
 ║  Max per post: ${String(CONFIG.MAX_FOLLOWS_PER_POST).padEnd(5)}                                ║
@@ -351,7 +351,7 @@
     log('Stopping engager follow...', 'warning');
   };
 
-  window.UnfollowX.Engager = {
+  window.XActions.Engager = {
     state: () => state,
     tracked: () => tracked,
     config: CONFIG,

@@ -1,5 +1,5 @@
-// UnfollowX Automation - Link Scraper
-// https://github.com/nirholas/UnfollowX
+// XActions Automation - Link Scraper
+// https://github.com/nirholas/XActions
 //
 // REQUIRES: Paste core.js first!
 //
@@ -12,12 +12,12 @@
 // 3. Let it scroll and collect all links!
 
 (() => {
-  if (!window.UnfollowX?.Core) {
+  if (!window.XActions?.Core) {
     console.error('❌ Core module not loaded! Paste core.js first.');
     return;
   }
 
-  const { log, sleep, scrollBy, storage, SELECTORS } = window.UnfollowX.Core;
+  const { log, sleep, scrollBy, storage, SELECTORS } = window.XActions.Core;
 
   // ============================================
   // CONFIGURATION
@@ -282,7 +282,7 @@
   run();
 
   // Expose data for manual access
-  window.UnfollowX.linkData = () => links;
+  window.XActions.linkData = () => links;
   window.stopLinkScraper = () => {
     OPTIONS.MAX_SCROLLS = 0;
     log('Stopping...', 'warning');

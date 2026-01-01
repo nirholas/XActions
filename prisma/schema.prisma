@@ -1,0 +1,144 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  username  String   @unique
+  password  String
+  credits   Int      @default(50)
+  
+  // Twitter OAuth
+  twitterId           String?  @unique
+  twitterUsername     String?
+  twitterAccessToken  String?
+  twitterRefreshToken String?
+  twitterTokenExpiry  DateTime?
+  
+  // Browser Automation (Session Cookie)
+  sessionCookie       String?
+  authMethod          String?  // 'oauth' or 'session'
+  
+  // Relationships
+  subscription  Subscription?
+  operations    Operation[]
+  payments      Payment[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([email])
+  @@index([username])
+}
+
+model Subscription {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  tier            String   // 'free', 'basic', 'pro', 'enterprise'
+  status          String   // 'active', 'cancelled', 'expired', 'past_due'
+  
+  stripeCustomerId       String?  @unique
+  stripeSubscriptionId   String?  @unique
+  stripePriceId          String?
+  
+  startDate       DateTime
+  endDate         DateTime?
+  cancelAt        DateTime?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([userId])
+  @@index([stripeCustomerId])
+}
+
+model Operation {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  type        String   // 'unfollowNonFollowers', 'unfollowEveryone', 'detectUnfollowers', etc.
+  status      String   // 'pending', 'processing', 'completed', 'failed', 'cancelled'
+  
+  // Operation details
+  config      String?  // Configuration for the operation (JSON string)
+  result      String?  // Result data (JSON string)
+  
+  // Stats
+  unfollowedCount Int?  @default(0)
+  followedCount   Int?  @default(0)
+  creditsUsed     Int   @default(0)
+  
+  // Timing
+  startedAt   DateTime?
+  completedAt DateTime?
+  
+  // Error handling
+  error       String?
+  retryCount  Int      @default(0)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([userId, status])
+  @@index([createdAt])
+}
+
+model Payment {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  type            String   // 'subscription', 'credits'
+  amount          Float
+  currency        String   @default("usd")
+  
+  stripePaymentId String?  @unique
+  stripeInvoiceId String?
+  
+  status          String   // 'pending', 'succeeded', 'failed'
+  
+  // For credit purchases
+  creditsAdded    Int?
+  
+  metadata        String?  // JSON string
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model JobQueue {
+  id          String   @id @default(cuid())
+  
+  type        String   // Job type
+  data        String   // Job data (JSON string)
+  status      String   // 'waiting', 'active', 'completed', 'failed'
+  
+  priority    Int      @default(0)
+  attempts    Int      @default(0)
+  maxAttempts Int      @default(3)
+  
+  processedAt DateTime?
+  failedAt    DateTime?
+  error       String?
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([status, priority])
+  @@index([createdAt])
+}

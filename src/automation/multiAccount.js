@@ -1,5 +1,5 @@
-// UnfollowX Automation - Multi-Account Manager
-// https://github.com/nirholas/UnfollowX
+// XActions Automation - Multi-Account Manager
+// https://github.com/nirholas/XActions
 //
 // REQUIRES: Paste core.js first!
 //
@@ -15,12 +15,12 @@
 // 3. Use the manager functions to add/manage accounts
 
 (() => {
-  if (!window.UnfollowX?.Core) {
+  if (!window.XActions?.Core) {
     console.error('❌ Core module not loaded! Paste core.js first.');
     return;
   }
 
-  const { log, sleep, storage } = window.UnfollowX.Core;
+  const { log, sleep, storage } = window.XActions.Core;
 
   // ============================================
   // STORAGE KEYS
@@ -140,7 +140,7 @@
       
       if (accounts.length === 0) {
         console.log('No accounts added yet.');
-        console.log('Use: UnfollowX.Accounts.add("username", "password")');
+        console.log('Use: XActions.Accounts.add("username", "password")');
       } else {
         accounts.forEach((a, i) => {
           const lastUsed = a.lastUsed ? new Date(a.lastUsed).toLocaleString() : 'Never';
@@ -396,7 +396,7 @@
   // ============================================
   // EXPOSE API
   // ============================================
-  window.UnfollowX.Accounts = {
+  window.XActions.Accounts = {
     // Account management
     add: AccountManager.addAccount,
     remove: AccountManager.removeAccount,
@@ -422,7 +422,7 @@
   // ============================================
   console.log(`
 ╔═══════════════════════════════════════════════════════════╗
-║  👥 UnfollowX Multi-Account Manager                       ║
+║  👥 XActions Multi-Account Manager                       ║
 ╠═══════════════════════════════════════════════════════════╣
 ║                                                           ║
 ║  Commands:                                                ║
@@ -446,7 +446,7 @@
   `);
 
   // Global shortcut
-  window.XAccounts = window.UnfollowX.Accounts;
+  window.XAccounts = window.XActions.Accounts;
 
   const accounts = AccountManager.getAccounts();
   if (accounts.length > 0) {

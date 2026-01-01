@@ -1,7 +1,5 @@
-// Archive: original top-level unfollowback.js
-
 // Unfollow everyone on X (Formerly Twitter) and or unfollow who doesn't follow you back, by Nicholas Resendez (https://twitter.com/nichxbt)
-// https://github.com/nirholas/unfollowx
+// https://github.com/nirholas/xactions
 // 1. Go to https://twitter.com/YOUR_USER_NAME/following
 // 2. Open the Developer Console. (COMMAND+ALT+I on Mac)
 // 3. Paste this into the Developer Console and run it

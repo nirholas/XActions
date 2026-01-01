@@ -1,5 +1,5 @@
-// UnfollowX Automation - Quota Supervisor
-// https://github.com/nirholas/UnfollowX
+// XActions Automation - Quota Supervisor
+// https://github.com/nirholas/XActions
 //
 // REQUIRES: Paste core.js first!
 //
@@ -11,12 +11,12 @@
 // 3. All other automation scripts will respect these limits
 
 (() => {
-  if (!window.UnfollowX?.Core) {
+  if (!window.XActions?.Core) {
     console.error('❌ Core module not loaded! Paste core.js first.');
     return;
   }
 
-  const { log, storage } = window.UnfollowX.Core;
+  const { log, storage } = window.XActions.Core;
 
   // ============================================
   // QUOTA CONFIGURATION
@@ -65,7 +65,7 @@
   // ============================================
   // QUOTA STATE
   // ============================================
-  const KEY = 'unfollowx_quota_state';
+  const KEY = 'xactions_quota_state';
   
   const getState = () => {
     const saved = storage.get(KEY);
@@ -202,7 +202,7 @@
     log(`😴 Quota hit! Sleeping for ${sleepMinutes} minutes (${reason})`, 'warning');
     
     if (QUOTAS.NOTIFY.enabled && QUOTAS.NOTIFY.onQuotaHit) {
-      notify(`UnfollowX: Sleeping ${sleepMinutes}min`, reason);
+      notify(`XActions: Sleeping ${sleepMinutes}min`, reason);
     }
     
     return sleepMinutes;
@@ -336,7 +336,7 @@
   // ============================================
   // EXPORT
   // ============================================
-  window.UnfollowX.Quota = {
+  window.XActions.Quota = {
     canPerform,
     recordAction,
     perform,

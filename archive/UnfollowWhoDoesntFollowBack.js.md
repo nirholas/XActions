@@ -1,11 +1,19 @@
-````markdown
-# Archive: UnfollowWhoDoesntFollowBack
+# XActions
+Unfollow everyone on X (Formerly Twitter) and or unfollow who doesn't follow you back
 
-Original preserved here.
+## Unfollow Following Who Doesn't Follow Back on X
 
+1. Go to `https://twitter.com/YOUR_USER_NAME/following`
+2. Open the Developer Console. (<kbd>COMMAND</kbd>+<kbd>ALT</kbd>+<kbd>I</kbd> on Mac)
+3. Paste this into the Developer Console and run it
 ```js
-// Unfollow everyone on X (Formerly Twitter) and or unfollow who doesn't follow you back
-// https://github.com/nirholas/unfollowx
+
+// Unfollow everyone on X (Formerly Twitter) and or unfollow who doesn't follow you back, by Nicholas Resendez (https://twitter.com/nichxbt)
+// https://github.com/nirholas/xactions
+// 1. Go to https://twitter.com/YOUR_USER_NAME/following
+// 2. Open the Developer Console. (COMMAND+ALT+I on Mac)
+// 3. Paste this into the Developer Console and run it
+//
 // Last Updated 25 November 2025
 (() => {
   const $followButtons = '[data-testid$="-unfollow"]';
@@ -66,5 +74,3 @@ Original preserved here.
   nextBatch();
 })();
 ```
-
-````

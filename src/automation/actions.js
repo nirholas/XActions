@@ -1,5 +1,5 @@
-// UnfollowX Actions Library - Complete X/Twitter Actions
-// https://github.com/nirholas/UnfollowX
+// XActions Actions Library - Complete X/Twitter Actions
+// https://github.com/nirholas/XActions
 //
 // This module contains ALL available X/Twitter actions - visible, hidden, and undocumented.
 // Paste core.js FIRST, then this file. Other scripts can use window.XActions.
@@ -11,7 +11,7 @@
 window.XActions = window.XActions || {};
 
 window.XActions = (() => {
-  const Core = window.UnfollowX?.Core;
+  const Core = window.XActions?.Core;
   if (!Core) {
     console.error('❌ Core module not loaded! Paste core.js first.');
     return null;
@@ -1786,7 +1786,7 @@ window.XActions = (() => {
     // Clear all X data from localStorage
     clearXData: () => {
       Object.keys(localStorage)
-        .filter(k => k.includes('twitter') || k.includes('x.com') || k.startsWith('unfollowx_'))
+        .filter(k => k.includes('twitter') || k.includes('x.com') || k.startsWith('xactions_'))
         .forEach(k => localStorage.removeItem(k));
       log('X data cleared from localStorage', 'success');
     },

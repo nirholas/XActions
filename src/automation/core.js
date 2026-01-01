@@ -1,12 +1,12 @@
-// UnfollowX Automation Framework - Core Utilities
-// https://github.com/nirholas/UnfollowX
+// XActions Automation Framework - Core Utilities
+// https://github.com/nirholas/XActions
 //
 // This is the foundation module. Paste this FIRST, then paste any automation script.
 // All automations depend on this core module.
 
-window.UnfollowX = window.UnfollowX || {};
+window.XActions = window.XActions || {};
 
-window.UnfollowX.Core = (() => {
+window.XActions.Core = (() => {
   // ============================================
   // CONFIGURATION
   // ============================================
@@ -23,7 +23,7 @@ window.UnfollowX.Core = (() => {
     MAX_LIKES_PER_DAY: 200,
     
     // Storage keys prefix
-    STORAGE_PREFIX: 'unfollowx_',
+    STORAGE_PREFIX: 'xactions_',
     
     // Debug mode
     DEBUG: true,
@@ -322,4 +322,4 @@ window.UnfollowX.Core = (() => {
   };
 })();
 
-console.log('✅ UnfollowX Core loaded! Ready for automation scripts.');
+console.log('✅ XActions Core loaded! Ready for automation scripts.');

@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terms of Service - XActions | AI-Powered X/Twitter Automation</title>
+  <meta name="description" content="XActions Terms of Service - Terms for AI-powered X/Twitter automation, LLM integration, MCP server usage, and AI agents. User responsibilities for smart automation tools.">
+  <meta name="keywords" content="xactions terms, AI Twitter automation terms, LLM Twitter bot legal, MCP server terms, AI agents terms of service, machine learning Twitter terms, terms of service, twitter automation terms, xactions legal">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+  
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Terms of Service - XActions AI Automation">
+  <meta property="og:description" content="Terms for AI-powered automation, LLM integration & MCP server usage.">
+  <meta property="og:url" content="https://xactions.app/terms">
+  <meta property="og:site_name" content="XActions">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Terms of Service - XActions">
+  <meta name="twitter:description" content="Terms and conditions for using XActions automation tools.">
+  
+  <link rel="canonical" href="https://xactions.app/terms">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --warning: #ffad1f;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    ::-webkit-scrollbar { width: 16px; }
+    ::-webkit-scrollbar-track { background: var(--bg-primary); }
+    ::-webkit-scrollbar-thumb { background: var(--bg-tertiary); border-radius: 8px; border: 4px solid var(--bg-primary); }
+
+    .layout {
+      display: flex;
+      max-width: 1300px;
+      margin: 0 auto;
+      min-height: 100vh;
+    }
+
+    .sidebar-left {
+      width: 275px;
+      padding: 0 12px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--border);
+    }
+
+    .logo { padding: 12px; }
+    .logo a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--text-primary);
+      font-size: 1.5rem;
+      font-weight: 800;
+      padding: 12px;
+      border-radius: 9999px;
+      transition: background 0.2s;
+    }
+    .logo a:hover { background: var(--accent-light); }
+
+    nav { flex: 1; }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 12px;
+      border-radius: 9999px;
+      font-size: 1.25rem;
+      color: var(--text-primary);
+      text-decoration: none;
+      transition: background 0.2s;
+      margin-bottom: 4px;
+    }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+
+    .action-btn {
+      width: 90%;
+      padding: 16px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 9999px;
+      font-size: 1.0625rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin: 16px 0;
+      text-decoration: none;
+      display: block;
+      text-align: center;
+    }
+    .action-btn:hover { background: var(--accent-hover); }
+
+    .main-content {
+      flex: 1;
+      max-width: 600px;
+      border-right: 1px solid var(--border);
+    }
+
+    .main-header {
+      position: sticky;
+      top: 0;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 16px;
+      z-index: 100;
+    }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+
+    .content {
+      padding: 24px 16px;
+    }
+
+    .last-updated {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      margin-bottom: 24px;
+    }
+
+    h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin: 32px 0 16px;
+      color: var(--text-primary);
+    }
+
+    h2:first-of-type { margin-top: 0; }
+
+    p {
+      color: var(--text-secondary);
+      font-size: 0.9375rem;
+      margin-bottom: 16px;
+    }
+
+    ul, ol {
+      margin-left: 24px;
+      margin-bottom: 16px;
+    }
+
+    li {
+      color: var(--text-secondary);
+      font-size: 0.9375rem;
+      margin-bottom: 8px;
+    }
+
+    .warning-box {
+      background: rgba(255, 173, 31, 0.1);
+      border-left: 4px solid var(--warning);
+      padding: 16px;
+      border-radius: 0 12px 12px 0;
+      margin: 24px 0;
+    }
+    .warning-box p { color: var(--text-primary); margin: 0; }
+
+    .info-box {
+      background: var(--accent-light);
+      border-left: 4px solid var(--accent);
+      padding: 16px;
+      border-radius: 0 12px 12px 0;
+      margin: 24px 0;
+    }
+    .info-box p { color: var(--text-primary); margin: 0; }
+
+    a { color: var(--accent); }
+
+    .sidebar-right {
+      width: 350px;
+      padding: 12px 24px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .legal-nav {
+      background: var(--bg-secondary);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .legal-nav h3 { font-size: 1.25rem; font-weight: 800; margin-bottom: 12px; }
+    .legal-nav a {
+      display: block;
+      padding: 10px 0;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.9375rem;
+      border-bottom: 1px solid var(--border);
+      transition: color 0.2s;
+    }
+    .legal-nav a:last-child { border: none; }
+    .legal-nav a:hover { color: var(--accent); }
+    .legal-nav a.active { color: var(--accent); font-weight: 600; }
+
+    .disclaimer {
+      padding: 16px;
+      color: var(--text-secondary);
+      font-size: 0.8125rem;
+    }
+
+    @media (max-width: 1280px) { .sidebar-right { width: 290px; } }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } .main-content { max-width: 100%; } }
+    @media (max-width: 768px) {
+      .sidebar-left { width: 68px; padding: 0 4px; }
+      .logo a span:last-child, .nav-item span:last-child { display: none; }
+      .nav-item { justify-content: center; padding: 12px; }
+      .action-btn { width: 50px; height: 50px; padding: 0; font-size: 0; }
+      .action-btn::before { content: '→'; font-size: 1.5rem; }
+    }
+
+    .site-footer {
+      border-top: 1px solid var(--border);
+      padding: 48px 24px;
+      background: var(--bg-primary);
+    }
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 32px;
+    }
+    .footer-brand h3 { font-size: 1.25rem; margin-bottom: 8px; }
+    .footer-brand p { color: var(--text-secondary); font-size: 0.875rem; line-height: 1.5; }
+    .footer-links h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 12px; color: var(--text-primary); }
+    .footer-links a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 4px 0; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 24px auto 0; padding-top: 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+    .footer-bottom p { color: var(--text-secondary); font-size: 0.8125rem; }
+    .footer-bottom a { color: var(--text-secondary); text-decoration: none; }
+    .footer-bottom a:hover { color: var(--accent); }
+    @media (max-width: 768px) { .footer-content { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 480px) { .footer-content { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar-left">
+      <div class="logo">
+        <a href="/"><span>⚡</span><span>XActions</span></a>
+      </div>
+      <nav>
+        <a href="/" class="nav-item"><span class="nav-icon">🏠</span><span>Home</span></a>
+        <a href="/dashboard" class="nav-item"><span class="nav-icon">📊</span><span>Dashboard</span></a>
+        <a href="/features" class="nav-item"><span class="nav-icon">✨</span><span>Features</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/docs" class="nav-item"><span class="nav-icon">📚</span><span>Docs</span></a>
+        <a href="https://github.com/nirholas/XActions" target="_blank" class="nav-item"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <main class="main-content">
+      <header class="main-header">
+        <h1>📜 Terms of Service</h1>
+      </header>
+
+      <div class="content">
+        <p class="last-updated">Last updated: January 1, 2026</p>
+
+        <div class="warning-box">
+          <p><strong>⚠️ Important:</strong> By using XActions, you agree to these terms. Please read them carefully.</p>
+        </div>
+
+        <h2>1. Acceptance of Terms</h2>
+        <p>By accessing or using XActions ("the Service"), you agree to be bound by these Terms of Service. If you do not agree to these terms, do not use the Service.</p>
+
+        <h2>2. Description of Service</h2>
+        <p>XActions provides browser automation tools and scripts for X/Twitter account management, including but not limited to:</p>
+        <ul>
+          <li>Unfollowing accounts that don't follow back</li>
+          <li>Detecting who unfollowed you</li>
+          <li>Monitoring public account activity</li>
+          <li>Automated engagement features</li>
+        </ul>
+
+        <h2>3. Educational Purpose</h2>
+        <p>XActions is provided primarily for <strong>educational purposes</strong> to demonstrate browser automation techniques. The tools are designed to help users understand how web automation works.</p>
+
+        <div class="info-box">
+          <p>XActions is an independent project and is <strong>not affiliated with, endorsed by, or connected to X Corp (formerly Twitter, Inc.)</strong> in any way.</p>
+        </div>
+
+        <h2>4. User Responsibilities</h2>
+        <p>You are solely responsible for:</p>
+        <ul>
+          <li>Ensuring your use complies with X/Twitter's Terms of Service</li>
+          <li>Any consequences resulting from automation on your account</li>
+          <li>Maintaining the security of your account credentials</li>
+          <li>Using the tools in a reasonable, non-abusive manner</li>
+        </ul>
+
+        <h2>5. Prohibited Uses</h2>
+        <p>You agree NOT to use XActions to:</p>
+        <ul>
+          <li>Spam, harass, or abuse other users</li>
+          <li>Violate any applicable laws or regulations</li>
+          <li>Infringe on intellectual property rights</li>
+          <li>Attempt to circumvent rate limits excessively</li>
+          <li>Engage in any activity that could harm X/Twitter's platform</li>
+          <li>Sell or commercially exploit scraped data without authorization</li>
+        </ul>
+
+        <h2>6. Account Risks</h2>
+        <p>Using automation tools may result in:</p>
+        <ul>
+          <li>Temporary or permanent account restrictions from X/Twitter</li>
+          <li>Rate limiting or feature limitations</li>
+          <li>Account suspension</li>
+        </ul>
+        <p>XActions is not responsible for any actions taken by X/Twitter against your account.</p>
+
+        <h2>7. No Warranty</h2>
+        <p>THE SERVICE IS PROVIDED "AS IS" WITHOUT WARRANTIES OF ANY KIND. We do not guarantee that:</p>
+        <ul>
+          <li>The Service will be uninterrupted or error-free</li>
+          <li>The tools will work indefinitely (X may change their platform)</li>
+          <li>Results will meet your expectations</li>
+        </ul>
+
+        <h2>8. Limitation of Liability</h2>
+        <p>TO THE MAXIMUM EXTENT PERMITTED BY LAW, XACTIONS AND ITS CREATORS SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING BUT NOT LIMITED TO:</p>
+        <ul>
+          <li>Loss of profits or data</li>
+          <li>Account suspension or restrictions</li>
+          <li>Business interruption</li>
+          <li>Any other damages arising from use of the Service</li>
+        </ul>
+
+        <h2>9. Intellectual Property</h2>
+        <p>XActions is open-source software licensed under the MIT License. You may use, modify, and distribute the code in accordance with the license terms.</p>
+        <p>X, Twitter, and related trademarks are the property of X Corp. XActions claims no ownership or affiliation with these marks.</p>
+
+        <h2>10. Subscription & Payments</h2>
+        <p>For paid features:</p>
+        <ul>
+          <li>Payments are processed securely through Stripe</li>
+          <li>Subscriptions auto-renew unless cancelled</li>
+          <li>Refunds are handled on a case-by-case basis</li>
+          <li>We reserve the right to modify pricing with 30 days notice</li>
+        </ul>
+
+        <h2>11. Termination</h2>
+        <p>We may terminate or suspend your access to the Service at any time, with or without cause, with or without notice.</p>
+
+        <h2>12. Changes to Terms</h2>
+        <p>We reserve the right to modify these terms at any time. Continued use of the Service after changes constitutes acceptance of the new terms.</p>
+
+        <h2>13. Governing Law</h2>
+        <p>These terms shall be governed by and construed in accordance with applicable laws, without regard to conflict of law principles.</p>
+
+        <h2>14. Contact</h2>
+        <p>For questions about these Terms of Service, contact us at:</p>
+        <ul>
+          <li>Email: <a href="mailto:legal@xactions.app">legal@xactions.app</a></li>
+          <li>GitHub: <a href="https://github.com/nirholas/XActions/issues">Open an issue</a></li>
+        </ul>
+      </div>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="legal-nav">
+        <h3>📋 Legal Pages</h3>
+        <a href="/terms" class="active">Terms of Service</a>
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/about">About XActions</a>
+      </div>
+
+      <div class="disclaimer">
+        <p>XActions is an independent project for educational purposes. Not affiliated with X Corp.</p>
+        <p style="margin-top: 8px;">© 2026 XActions</p>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <h3>⚡ XActions</h3>
+        <p>Free, open-source X/Twitter automation toolkit. Mass unfollow, detect unfollowers, auto-engage, and grow your audience without expensive API fees.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/docs">Documentation</a>
+        <a href="/dashboard">Dashboard</a>
+      </div>
+      <div class="footer-links">
+        <h4>Company</h4>
+        <a href="/about">About</a>
+        <a href="https://github.com/nirholas/XActions" target="_blank">GitHub</a>
+        <a href="https://twitter.com/nichxbt" target="_blank">Twitter</a>
+      </div>
+      <div class="footer-links">
+        <h4>Legal</h4>
+        <a href="/terms">Terms of Service</a>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 XActions. Not affiliated with X Corp.</p>
+      <p>Made with ❤️ by <a href="https://twitter.com/nichxbt" target="_blank">@nichxbt</a></p>
+    </div>
+  </footer>
+</body>
+</html>

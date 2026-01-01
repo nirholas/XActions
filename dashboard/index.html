@@ -1,0 +1,1571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - XActions | AI-Powered X/Twitter Automation Platform</title>
+  <meta name="description" content="XActions Dashboard - AI-powered X/Twitter automation control center. Smart unfollow with machine learning, LLM integration, MCP server support. Manage automation with GPT & Claude compatible tools.">
+  <meta name="keywords" content="xactions dashboard, AI Twitter automation, LLM Twitter bot, machine learning Twitter, AI agents for X, GPT Twitter automation, Claude Twitter tools, MCP server Twitter, AI-powered unfollow, smart Twitter automation, twitter automation, twitter unfollow tool, mass unfollow twitter, twitter growth, twitter bot">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+  
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="XActions Dashboard - AI-Powered Automation Control Center">
+  <meta property="og:description" content="AI-powered X/Twitter automation platform with LLM integration. Compatible with GPT, Claude & MCP servers. Free, open-source, no API fees.">
+  <meta property="og:url" content="https://xactions.app/dashboard">
+  <meta property="og:site_name" content="XActions">
+  <meta property="og:image" content="https://xactions.app/og-dashboard.png">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:creator" content="@nichxbt">
+  <meta name="twitter:title" content="XActions Dashboard - AI Automation">
+  <meta name="twitter:description" content="AI-powered X/Twitter automation dashboard with LLM & MCP server integration.">
+  
+  <link rel="canonical" href="https://xactions.app/dashboard">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "XActions Dashboard",
+    "description": "AI-powered X/Twitter automation control center with LLM integration. Compatible with GPT, Claude, MCP servers for intelligent unfollowing, monitoring, and growth",
+    "url": "https://xactions.app/dashboard",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web Browser",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --bg-hover: #1d1f23;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --text-link: #1d9bf0;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --verified: #1d9bf0;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    /* Scrollbar styling */
+    ::-webkit-scrollbar {
+      width: 16px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg-primary);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+      border: 4px solid var(--bg-primary);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--text-secondary);
+    }
+
+    /* Three Column Layout */
+    .layout {
+      display: flex;
+      max-width: 1300px;
+      margin: 0 auto;
+      min-height: 100vh;
+    }
+
+    /* Left Sidebar */
+    .sidebar-left {
+      width: 275px;
+      padding: 0 12px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--border);
+    }
+
+    .logo {
+      padding: 12px;
+      margin-bottom: 4px;
+    }
+
+    .logo a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--text-primary);
+      font-size: 1.5rem;
+      font-weight: 800;
+      padding: 12px;
+      border-radius: 9999px;
+      transition: background 0.2s;
+    }
+
+    .logo a:hover {
+      background: var(--accent-light);
+    }
+
+    .logo-icon {
+      font-size: 1.8rem;
+    }
+
+    /* Navigation */
+    nav {
+      flex: 1;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 12px;
+      border-radius: 9999px;
+      font-size: 1.25rem;
+      font-weight: 400;
+      color: var(--text-primary);
+      text-decoration: none;
+      transition: background 0.2s;
+      margin-bottom: 4px;
+    }
+
+    .nav-item:hover {
+      background: var(--bg-tertiary);
+    }
+
+    .nav-item.active {
+      font-weight: 700;
+    }
+
+    .nav-icon {
+      font-size: 1.5rem;
+      width: 28px;
+      text-align: center;
+    }
+
+    .action-btn {
+      width: 90%;
+      padding: 16px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 9999px;
+      font-size: 1.0625rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin: 16px 0;
+    }
+
+    .action-btn:hover {
+      background: var(--accent-hover);
+    }
+
+    /* User Menu */
+    .user-menu {
+      padding: 12px;
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-bottom: 12px;
+    }
+
+    .user-menu:hover {
+      background: var(--bg-tertiary);
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent) 0%, #7856ff 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .user-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .user-name {
+      font-weight: 700;
+      font-size: 0.9375rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .user-handle {
+      color: var(--text-secondary);
+      font-size: 0.9375rem;
+    }
+
+    .user-menu-dots {
+      color: var(--text-primary);
+      font-size: 1.2rem;
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      max-width: 600px;
+      border-right: 1px solid var(--border);
+      min-height: 100vh;
+    }
+
+    .main-header {
+      position: sticky;
+      top: 0;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 16px;
+      z-index: 100;
+    }
+
+    .header-title {
+      padding: 12px 0;
+    }
+
+    .header-title h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .header-title p {
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tab {
+      flex: 1;
+      padding: 16px 0;
+      text-align: center;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .tab:hover {
+      background: var(--bg-tertiary);
+    }
+
+    .tab.active {
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 56px;
+      height: 4px;
+      background: var(--accent);
+      border-radius: 9999px;
+    }
+
+    /* Connection Card */
+    .connect-card {
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .connect-card.connected {
+      background: linear-gradient(135deg, rgba(0, 186, 124, 0.1) 0%, rgba(29, 155, 240, 0.1) 100%);
+    }
+
+    .connect-inner {
+      background: var(--bg-secondary);
+      border-radius: 16px;
+      padding: 20px;
+      border: 1px solid var(--border);
+    }
+
+    .connect-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .connect-icon {
+      font-size: 2rem;
+    }
+
+    .connect-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .connect-desc {
+      color: var(--text-secondary);
+      font-size: 0.9375rem;
+      margin-bottom: 16px;
+    }
+
+    .auth-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .auth-tab {
+      flex: 1;
+      padding: 10px 16px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 9999px;
+      color: var(--text-primary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .auth-tab:hover {
+      background: var(--bg-hover);
+    }
+
+    .auth-tab.active {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .auth-content {
+      display: none;
+    }
+
+    .auth-content.active {
+      display: block;
+    }
+
+    .input-group {
+      margin-bottom: 12px;
+    }
+
+    .input-group textarea,
+    .input-group input {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-size: 0.9375rem;
+      font-family: inherit;
+      resize: vertical;
+    }
+
+    .input-group textarea {
+      min-height: 80px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.8125rem;
+    }
+
+    .input-group textarea:focus,
+    .input-group input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent);
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 12px 24px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 9999px;
+      font-size: 0.9375rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn-secondary {
+      padding: 8px 16px;
+      background: transparent;
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-tertiary);
+      border-color: var(--text-secondary);
+    }
+
+    .help-link {
+      display: block;
+      text-align: center;
+      color: var(--text-link);
+      font-size: 0.8125rem;
+      margin-top: 12px;
+      text-decoration: none;
+    }
+
+    .help-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Operation Cards */
+    .operations-section {
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+    }
+
+    .operation-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .operation-card:hover {
+      background: var(--bg-tertiary);
+      border-color: var(--accent);
+    }
+
+    .operation-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .operation-icon {
+      font-size: 2rem;
+      line-height: 1;
+    }
+
+    .operation-info {
+      flex: 1;
+    }
+
+    .operation-title {
+      font-weight: 700;
+      font-size: 0.9375rem;
+      margin-bottom: 4px;
+    }
+
+    .operation-desc {
+      color: var(--text-secondary);
+      font-size: 0.8125rem;
+      line-height: 1.4;
+    }
+
+    .operation-cost {
+      background: var(--accent);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    /* Activity Feed */
+    .activity-section {
+      padding: 0;
+    }
+
+    .activity-item {
+      display: flex;
+      gap: 12px;
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.2s;
+    }
+
+    .activity-item:hover {
+      background: var(--bg-secondary);
+    }
+
+    .activity-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--bg-tertiary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .activity-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .activity-text {
+      font-size: 0.9375rem;
+      margin-bottom: 4px;
+    }
+
+    .activity-time {
+      color: var(--text-secondary);
+      font-size: 0.8125rem;
+    }
+
+    .activity-status {
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .status-completed {
+      background: rgba(0, 186, 124, 0.2);
+      color: var(--success);
+    }
+
+    .status-processing {
+      background: rgba(255, 173, 31, 0.2);
+      color: var(--warning);
+    }
+
+    .status-failed {
+      background: rgba(244, 33, 46, 0.2);
+      color: var(--error);
+    }
+
+    .status-pending {
+      background: var(--bg-tertiary);
+      color: var(--text-secondary);
+    }
+
+    /* Right Sidebar */
+    .sidebar-right {
+      width: 350px;
+      padding: 0 24px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    /* Search */
+    .search-box {
+      position: sticky;
+      top: 0;
+      background: var(--bg-primary);
+      padding: 12px 0;
+      z-index: 10;
+    }
+
+    .search-input-wrapper {
+      position: relative;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-secondary);
+      font-size: 1rem;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 12px 16px 12px 48px;
+      background: var(--bg-secondary);
+      border: 1px solid transparent;
+      border-radius: 9999px;
+      color: var(--text-primary);
+      font-size: 0.9375rem;
+    }
+
+    .search-input:focus {
+      outline: none;
+      background: var(--bg-primary);
+      border-color: var(--accent);
+    }
+
+    .search-input::placeholder {
+      color: var(--text-secondary);
+    }
+
+    /* Stats Card */
+    .stats-card {
+      background: var(--bg-secondary);
+      border-radius: 16px;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+
+    .stats-header {
+      padding: 12px 16px;
+      font-size: 1.25rem;
+      font-weight: 800;
+    }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      border-top: 1px solid var(--border);
+      transition: background 0.2s;
+    }
+
+    .stat-row:hover {
+      background: var(--bg-hover);
+    }
+
+    .stat-label {
+      color: var(--text-secondary);
+      font-size: 0.9375rem;
+    }
+
+    .stat-value {
+      font-weight: 700;
+      font-size: 0.9375rem;
+      color: var(--accent);
+    }
+
+    .credits-highlight {
+      background: linear-gradient(135deg, var(--accent) 0%, #7856ff 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-size: 1.5rem;
+    }
+
+    /* Who to follow / Tips */
+    .tips-card {
+      background: var(--bg-secondary);
+      border-radius: 16px;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+
+    .tips-header {
+      padding: 12px 16px;
+      font-size: 1.25rem;
+      font-weight: 800;
+    }
+
+    .tip-item {
+      padding: 12px 16px;
+      border-top: 1px solid var(--border);
+      transition: background 0.2s;
+    }
+
+    .tip-item:hover {
+      background: var(--bg-hover);
+    }
+
+    .tip-title {
+      font-weight: 700;
+      font-size: 0.9375rem;
+      margin-bottom: 4px;
+    }
+
+    .tip-desc {
+      color: var(--text-secondary);
+      font-size: 0.8125rem;
+    }
+
+    .show-more {
+      display: block;
+      padding: 16px;
+      color: var(--accent);
+      font-size: 0.9375rem;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .show-more:hover {
+      background: var(--bg-hover);
+    }
+
+    /* Disclaimer Footer */
+    .disclaimer {
+      padding: 12px 16px;
+      color: var(--text-secondary);
+      font-size: 0.8125rem;
+      line-height: 1.4;
+    }
+
+    .disclaimer a {
+      color: var(--text-secondary);
+    }
+
+    .disclaimer a:hover {
+      text-decoration: underline;
+    }
+
+    .disclaimer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 12px;
+      margin-bottom: 8px;
+    }
+
+    /* Legal Banner */
+    .legal-banner {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin: 16px;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .legal-banner strong {
+      color: var(--warning);
+    }
+
+    /* Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(91, 112, 131, 0.4);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--bg-primary);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.8);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: var(--bg-primary);
+      z-index: 10;
+    }
+
+    .modal-close {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      font-size: 1.25rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+
+    .modal-close:hover {
+      background: var(--bg-tertiary);
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .modal-body {
+      padding: 24px 16px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 8px;
+      font-size: 0.9375rem;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-size: 1rem;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent);
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: var(--bg-secondary);
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      accent-color: var(--accent);
+    }
+
+    .checkbox-label {
+      flex: 1;
+    }
+
+    .checkbox-title {
+      font-weight: 600;
+      font-size: 0.9375rem;
+    }
+
+    .checkbox-desc {
+      color: var(--text-secondary);
+      font-size: 0.8125rem;
+    }
+
+    .modal-footer {
+      padding: 16px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+
+    /* Responsive */
+    @media (max-width: 1280px) {
+      .sidebar-right {
+        width: 290px;
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .sidebar-right {
+        display: none;
+      }
+      .main-content {
+        max-width: 100%;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar-left {
+        width: 68px;
+        padding: 0 4px;
+      }
+      .logo a span,
+      .nav-item span,
+      .user-info,
+      .user-menu-dots {
+        display: none;
+      }
+      .nav-item {
+        justify-content: center;
+        padding: 12px;
+      }
+      .action-btn {
+        width: 50px;
+        height: 50px;
+        padding: 0;
+        font-size: 0;
+      }
+      .action-btn::before {
+        content: '+';
+        font-size: 1.5rem;
+      }
+      .user-menu {
+        justify-content: center;
+      }
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-secondary);
+    }
+
+    .empty-icon {
+      font-size: 3rem;
+      margin-bottom: 16px;
+    }
+
+    .empty-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .site-footer {
+      border-top: 1px solid var(--border);
+      padding: 48px 24px;
+      background: var(--bg-primary);
+    }
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 32px;
+    }
+    .footer-brand h3 { font-size: 1.25rem; margin-bottom: 8px; }
+    .footer-brand p { color: var(--text-secondary); font-size: 0.875rem; line-height: 1.5; }
+    .footer-links h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 12px; color: var(--text-primary); }
+    .footer-links a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 4px 0; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 24px auto 0; padding-top: 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+    .footer-bottom p { color: var(--text-secondary); font-size: 0.8125rem; }
+    .footer-bottom a { color: var(--text-secondary); text-decoration: none; }
+    .footer-bottom a:hover { color: var(--accent); }
+    @media (max-width: 768px) { .footer-content { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 480px) { .footer-content { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Left Sidebar -->
+    <aside class="sidebar-left">
+      <div class="logo">
+        <a href="/dashboard">
+          <span class="logo-icon">⚡</span>
+          <span>XActions</span>
+        </a>
+      </div>
+
+      <nav>
+        <a href="/dashboard" class="nav-item active">
+          <span class="nav-icon">🏠</span>
+          <span>Dashboard</span>
+        </a>
+        <a href="#operations" class="nav-item" onclick="scrollToSection('operations')">
+          <span class="nav-icon">🔧</span>
+          <span>Operations</span>
+        </a>
+        <a href="/docs" class="nav-item">
+          <span class="nav-icon">📚</span>
+          <span>Documentation</span>
+        </a>
+        <a href="/pricing" class="nav-item">
+          <span class="nav-icon">💎</span>
+          <span>Pricing</span>
+        </a>
+        <a href="https://github.com/nirholas/XActions" target="_blank" class="nav-item">
+          <span class="nav-icon">⭐</span>
+          <span>GitHub</span>
+        </a>
+        <a href="/features" class="nav-item">
+          <span class="nav-icon">✨</span>
+          <span>Features</span>
+        </a>
+      </nav>
+
+      <button class="action-btn" onclick="openOperationModal('unfollowNonFollowers')">
+        Run Operation
+      </button>
+
+      <div class="user-menu" onclick="toggleUserMenu()">
+        <div class="user-avatar" id="user-avatar">?</div>
+        <div class="user-info">
+          <div class="user-name" id="user-display-name">Loading...</div>
+          <div class="user-handle" id="user-handle">@---</div>
+        </div>
+        <span class="user-menu-dots">···</span>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <div class="header-title">
+          <h1>Dashboard</h1>
+          <p id="header-subtitle">Manage your X automation</p>
+        </div>
+      </header>
+
+      <!-- Legal Disclaimer Banner -->
+      <div class="legal-banner">
+        <strong>⚠️ Educational Use Only:</strong> XActions demonstrates browser automation techniques for educational purposes. 
+        Users are responsible for compliance with X/Twitter's Terms of Service. This tool is not affiliated with, endorsed by, or connected to X Corp.
+        <a href="/docs#disclaimer" style="color: var(--accent);">Learn more →</a>
+      </div>
+
+      <!-- Twitter Connection -->
+      <section class="connect-card" id="twitter-status">
+        <div class="connect-inner">
+          <div class="connect-header">
+            <span class="connect-icon">🐦</span>
+            <h2 class="connect-title">Connect Your X Account</h2>
+          </div>
+          <p class="connect-desc">Choose your authentication method to get started</p>
+          
+          <div class="auth-tabs">
+            <button class="auth-tab active" id="oauth-tab" onclick="showAuthMethod('oauth')">OAuth (API)</button>
+            <button class="auth-tab" id="session-tab" onclick="showAuthMethod('session')">Session Cookie</button>
+          </div>
+
+          <div id="oauth-method" class="auth-content active">
+            <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 16px;">
+              Uses official Twitter OAuth. Best if you have API access.
+            </p>
+            <button class="btn-primary" onclick="connectTwitterOAuth()">Connect with OAuth</button>
+          </div>
+
+          <div id="session-method" class="auth-content">
+            <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 16px;">
+              No API needed. Paste your X session cookie for faster setup.
+            </p>
+            <div class="input-group">
+              <textarea id="session-cookie-input" placeholder="Paste your auth_token cookie here (e.g., auth_token=abc123...)"></textarea>
+            </div>
+            <div class="input-group">
+              <input type="text" id="twitter-username-input" placeholder="Your X username (optional)">
+            </div>
+            <button class="btn-primary" onclick="saveSessionCookie()">Save Session</button>
+            <a href="/docs#session-cookie" class="help-link">How to find your session cookie →</a>
+          </div>
+
+          <p style="color: var(--text-secondary); font-size: 0.8125rem; margin-top: 16px; text-align: center;">
+            <strong>New here?</strong> Try our <a href="https://github.com/nirholas/XActions" target="_blank" style="color: var(--accent);">free browser scripts</a> first!
+          </p>
+        </div>
+      </section>
+
+      <!-- Operations Section -->
+      <section class="operations-section" id="operations">
+        <div class="section-header">
+          <h2 class="section-title">Operations</h2>
+        </div>
+
+        <div class="operation-card" onclick="openOperationModal('unfollowNonFollowers')">
+          <div class="operation-header">
+            <span class="operation-icon">🧹</span>
+            <div class="operation-info">
+              <div class="operation-title">Unfollow Non-Followers</div>
+              <div class="operation-desc">Remove accounts that don't follow you back. Clean up your following list.</div>
+            </div>
+            <span class="operation-cost">10 credits</span>
+          </div>
+        </div>
+
+        <div class="operation-card" onclick="openOperationModal('unfollowEveryone')">
+          <div class="operation-header">
+            <span class="operation-icon">💥</span>
+            <div class="operation-info">
+              <div class="operation-title">Unfollow Everyone</div>
+              <div class="operation-desc">Start fresh — unfollow your entire following list at once.</div>
+            </div>
+            <span class="operation-cost">20 credits</span>
+          </div>
+        </div>
+
+        <div class="operation-card" onclick="openOperationModal('detectUnfollowers')">
+          <div class="operation-header">
+            <span class="operation-icon">🔍</span>
+            <div class="operation-info">
+              <div class="operation-title">Detect Unfollowers</div>
+              <div class="operation-desc">Find out who stopped following you recently.</div>
+            </div>
+            <span class="operation-cost">5 credits</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Recent Activity -->
+      <section class="activity-section">
+        <div class="section-header" style="padding: 16px;">
+          <h2 class="section-title">Recent Activity</h2>
+        </div>
+        <div id="recent-operations-list">
+          <div class="empty-state">
+            <div class="empty-icon">📋</div>
+            <div class="empty-title">No operations yet</div>
+            <p>Run your first operation to see activity here</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Right Sidebar -->
+    <aside class="sidebar-right">
+      <div class="search-box">
+        <div class="search-input-wrapper">
+          <span class="search-icon">🔍</span>
+          <input type="text" class="search-input" placeholder="Search documentation">
+        </div>
+      </div>
+
+      <!-- Account Stats -->
+      <div class="stats-card">
+        <h3 class="stats-header">Your Stats</h3>
+        <div class="stat-row">
+          <span class="stat-label">Credits</span>
+          <span class="stat-value credits-highlight" id="credits-count">--</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Operations Run</span>
+          <span class="stat-value" id="total-operations">0</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Total Unfollowed</span>
+          <span class="stat-value" id="total-unfollowed">0</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Subscription</span>
+          <span class="stat-value" id="subscription-tier">Free</span>
+        </div>
+        <a href="/pricing" class="show-more">Upgrade plan →</a>
+      </div>
+
+      <!-- Tips -->
+      <div class="tips-card">
+        <h3 class="tips-header">Quick Tips</h3>
+        <div class="tip-item">
+          <div class="tip-title">🎯 Use Dry Run First</div>
+          <div class="tip-desc">Preview what will happen before making changes</div>
+        </div>
+        <div class="tip-item">
+          <div class="tip-title">⏱️ Rate Limits</div>
+          <div class="tip-desc">We handle rate limits automatically to protect your account</div>
+        </div>
+        <div class="tip-item">
+          <div class="tip-title">💾 Free Browser Scripts</div>
+          <div class="tip-desc">No account needed — run directly in your browser console</div>
+        </div>
+        <a href="/docs" class="show-more">View all tips →</a>
+      </div>
+
+      <!-- Disclaimer Footer -->
+      <div class="disclaimer">
+        <div class="disclaimer-links">
+          <a href="/docs#terms">Terms</a>
+          <a href="/docs#privacy">Privacy</a>
+          <a href="/docs#disclaimer">Disclaimer</a>
+          <a href="https://github.com/nirholas/XActions">Open Source</a>
+        </div>
+        <p>
+          XActions is an independent project for educational purposes. 
+          Not affiliated with X Corp. Use responsibly and in accordance with X's Terms of Service.
+        </p>
+        <p style="margin-top: 8px;">© 2026 XActions · <a href="https://twitter.com/nichxbt" target="_blank">@nichxbt</a></p>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Operation Modal -->
+  <div class="modal-overlay" id="operation-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <button class="modal-close" onclick="closeModal()">✕</button>
+        <h2 class="modal-title" id="modal-title">Configure Operation</h2>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Maximum Unfollows</label>
+          <input type="number" class="form-input" id="max-unfollows" value="100" min="1" max="1000">
+          <p style="color: var(--text-secondary); font-size: 0.8125rem; margin-top: 8px;">
+            Set a limit to control how many accounts to unfollow in this operation.
+          </p>
+        </div>
+        
+        <div class="form-group">
+          <label class="checkbox-group">
+            <input type="checkbox" id="dry-run">
+            <div class="checkbox-label">
+              <div class="checkbox-title">Dry Run Mode</div>
+              <div class="checkbox-desc">Preview the results without making any changes</div>
+            </div>
+          </label>
+        </div>
+
+        <div class="legal-banner" style="margin: 0;">
+          <strong>Reminder:</strong> This operation will interact with your X account. 
+          Make sure you understand what this operation does before proceeding.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+        <button class="btn-primary" style="width: auto; padding: 12px 32px;" onclick="startOperation()">Start Operation</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = window.location.hostname === 'localhost' 
+      ? 'http://localhost:3001/api' 
+      : 'https://xactions.app/api';
+    let currentOperation = null;
+    let authToken = localStorage.getItem('authToken');
+
+    // Load dashboard data
+    async function loadDashboard() {
+      if (!authToken) {
+        window.location.href = '/';
+        return;
+      }
+
+      try {
+        // Load profile
+        const profileRes = await fetch(`${API_URL}/user/profile`, {
+          headers: { 'Authorization': `Bearer ${authToken}` }
+        });
+        const profile = await profileRes.json();
+
+        document.getElementById('credits-count').textContent = profile.credits;
+        document.getElementById('subscription-tier').textContent = profile.subscription?.tier || 'Free';
+        
+        // Update user menu
+        const initial = (profile.email || profile.username || '?')[0].toUpperCase();
+        document.getElementById('user-avatar').textContent = initial;
+        document.getElementById('user-display-name').textContent = profile.username || profile.email?.split('@')[0] || 'User';
+        document.getElementById('user-handle').textContent = profile.twitterUsername ? `@${profile.twitterUsername}` : '@user';
+
+        // Check auth method
+        const authRes = await fetch(`${API_URL}/session/auth-method`, {
+          headers: { 'Authorization': `Bearer ${authToken}` }
+        });
+        const authData = await authRes.json();
+
+        // Update Twitter status
+        if (authData.hasOAuth || authData.hasSession) {
+          const method = authData.hasOAuth ? 'OAuth' : 'Session Cookie';
+          const statusSection = document.getElementById('twitter-status');
+          statusSection.classList.add('connected');
+          statusSection.innerHTML = `
+            <div class="connect-inner" style="background: linear-gradient(135deg, rgba(0, 186, 124, 0.1) 0%, rgba(29, 155, 240, 0.1) 100%);">
+              <div class="connect-header">
+                <span class="connect-icon">✅</span>
+                <h2 class="connect-title">X Account Connected</h2>
+              </div>
+              <p class="connect-desc">@${authData.username || 'Your account'} connected via ${method}</p>
+              <button class="btn-secondary" onclick="disconnectTwitter()">Disconnect Account</button>
+            </div>
+          `;
+          document.getElementById('header-subtitle').textContent = `Connected as @${authData.username || 'user'}`;
+        }
+
+        // Load stats
+        const statsRes = await fetch(`${API_URL}/user/stats`, {
+          headers: { 'Authorization': `Bearer ${authToken}` }
+        });
+        const stats = await statsRes.json();
+
+        document.getElementById('total-operations').textContent = stats.totalOperations;
+        document.getElementById('total-unfollowed').textContent = stats.totalUnfollows;
+
+        // Load recent operations
+        loadRecentOperations();
+      } catch (error) {
+        console.error('Failed to load dashboard:', error);
+        if (error.status === 401) {
+          logout();
+        }
+      }
+    }
+
+    async function loadRecentOperations() {
+      try {
+        const res = await fetch(`${API_URL}/operations?limit=5`, {
+          headers: { 'Authorization': `Bearer ${authToken}` }
+        });
+        const data = await res.json();
+
+        if (!data.operations || data.operations.length === 0) return;
+
+        const html = data.operations.map(op => `
+          <div class="activity-item">
+            <div class="activity-icon">${getOperationIcon(op.type)}</div>
+            <div class="activity-content">
+              <div class="activity-text"><strong>${formatOperationType(op.type)}</strong></div>
+              <div class="activity-time">${new Date(op.createdAt).toLocaleString()}</div>
+            </div>
+            <span class="activity-status status-${op.status}">${op.status}</span>
+          </div>
+        `).join('');
+
+        document.getElementById('recent-operations-list').innerHTML = html;
+      } catch (e) {
+        console.error('Failed to load operations:', e);
+      }
+    }
+
+    function getOperationIcon(type) {
+      const icons = {
+        unfollowNonFollowers: '🧹',
+        unfollowEveryone: '💥',
+        detectUnfollowers: '🔍'
+      };
+      return icons[type] || '⚙️';
+    }
+
+    function formatOperationType(type) {
+      const types = {
+        unfollowNonFollowers: 'Unfollow Non-Followers',
+        unfollowEveryone: 'Unfollow Everyone',
+        detectUnfollowers: 'Detect Unfollowers'
+      };
+      return types[type] || type;
+    }
+
+    function showAuthMethod(method) {
+      document.querySelectorAll('.auth-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.auth-tab').forEach(el => el.classList.remove('active'));
+      
+      document.getElementById(`${method}-method`).classList.add('active');
+      document.getElementById(`${method}-tab`).classList.add('active');
+    }
+
+    async function connectTwitterOAuth() {
+      try {
+        const res = await fetch(`${API_URL}/twitter/connect`, {
+          headers: { 'Authorization': `Bearer ${authToken}` }
+        });
+        const data = await res.json();
+        window.location.href = data.authUrl;
+      } catch (e) {
+        alert('Failed to connect. Please try again.');
+      }
+    }
+
+    async function saveSessionCookie() {
+      const sessionCookie = document.getElementById('session-cookie-input').value.trim();
+      const username = document.getElementById('twitter-username-input').value.trim();
+
+      if (!sessionCookie) {
+        alert('Please paste your session cookie');
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_URL}/session/save-session`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${authToken}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ sessionCookie, username })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          alert('✅ Session saved successfully!');
+          location.reload();
+        } else {
+          alert(`❌ Error: ${data.error}`);
+        }
+      } catch (error) {
+        alert('Failed to save session cookie');
+      }
+    }
+
+    async function disconnectTwitter() {
+      if (!confirm('Are you sure you want to disconnect your X account?')) return;
+      
+      try {
+        await fetch(`${API_URL}/twitter/disconnect`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${authToken}` }
+        });
+        await fetch(`${API_URL}/session/remove-session`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${authToken}` }
+        });
+        location.reload();
+      } catch (e) {
+        alert('Failed to disconnect');
+      }
+    }
+
+    function openOperationModal(type) {
+      currentOperation = type;
+      document.getElementById('modal-title').textContent = `Configure ${formatOperationType(type)}`;
+      document.getElementById('operation-modal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('operation-modal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    async function startOperation() {
+      const maxUnfollows = document.getElementById('max-unfollows').value;
+      const dryRun = document.getElementById('dry-run').checked;
+
+      try {
+        const res = await fetch(`${API_URL}/operations/${currentOperation.replace(/([A-Z])/g, '-$1').toLowerCase()}`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${authToken}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ maxUnfollows: parseInt(maxUnfollows), dryRun })
+        });
+
+        const data = await res.json();
+        
+        if (res.ok) {
+          alert('✅ Operation started successfully!');
+          closeModal();
+          loadDashboard();
+        } else {
+          alert(`❌ Error: ${data.error}`);
+        }
+      } catch (error) {
+        alert('Failed to start operation');
+      }
+    }
+
+    function scrollToSection(id) {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function toggleUserMenu() {
+      if (confirm('Do you want to log out?')) {
+        logout();
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem('authToken');
+      window.location.href = '/';
+    }
+
+    // Close modal on escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    // Close modal on overlay click
+    document.getElementById('operation-modal').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) closeModal();
+    });
+
+    // Load on page load
+    loadDashboard();
+    setInterval(loadRecentOperations, 10000);
+  </script>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <h3>⚡ XActions</h3>
+        <p>Free, open-source X/Twitter automation toolkit. Mass unfollow, detect unfollowers, auto-engage, and grow your audience without expensive API fees.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/docs">Documentation</a>
+        <a href="/dashboard">Dashboard</a>
+      </div>
+      <div class="footer-links">
+        <h4>Company</h4>
+        <a href="/about">About</a>
+        <a href="https://github.com/nirholas/XActions" target="_blank">GitHub</a>
+        <a href="https://twitter.com/nichxbt" target="_blank">Twitter</a>
+      </div>
+      <div class="footer-links">
+        <h4>Legal</h4>
+        <a href="/terms">Terms of Service</a>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 XActions. Not affiliated with X Corp.</p>
+      <p>Made with ❤️ by <a href="https://twitter.com/nichxbt" target="_blank">@nichxbt</a></p>
+    </div>
+  </footer>
+</body>
+</html>

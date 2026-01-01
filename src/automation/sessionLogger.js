@@ -1,5 +1,5 @@
-// UnfollowX Automation - Session Logger & Analytics
-// https://github.com/nirholas/UnfollowX
+// XActions Automation - Session Logger & Analytics
+// https://github.com/nirholas/XActions
 //
 // REQUIRES: Paste core.js first!
 //
@@ -11,12 +11,12 @@
 // 3. All automation actions will be recorded
 
 (() => {
-  if (!window.UnfollowX?.Core) {
+  if (!window.XActions?.Core) {
     console.error('❌ Core module not loaded! Paste core.js first.');
     return;
   }
 
-  const { log, storage } = window.UnfollowX.Core;
+  const { log, storage } = window.XActions.Core;
 
   // ============================================
   // CONFIGURATION
@@ -38,8 +38,8 @@
   // ============================================
   // SESSION STATE
   // ============================================
-  const KEY_SESSIONS = 'unfollowx_sessions';
-  const KEY_CURRENT = 'unfollowx_current_session';
+  const KEY_SESSIONS = 'xactions_sessions';
+  const KEY_CURRENT = 'xactions_current_session';
   
   const currentSession = {
     id: Date.now().toString(36) + Math.random().toString(36).substr(2, 5),
@@ -263,7 +263,7 @@
     
     console.log(`
 ╔═══════════════════════════════════════════════════════════╗
-║  📊 UnfollowX Analytics - ${periodLabel.padEnd(10)}                     ║
+║  📊 XActions Analytics - ${periodLabel.padEnd(10)}                     ║
 ╠═══════════════════════════════════════════════════════════╣
 ║  Sessions: ${String(stats.sessions).padEnd(10)}                              ║
 ║  Total Duration: ${formatDuration(stats.totalDuration).padEnd(15)}                   ║
@@ -346,7 +346,7 @@
     
     const a = document.createElement('a');
     a.href = url;
-    a.download = `unfollowx-logs-${period}-${Date.now()}.json`;
+    a.download = `xactions-logs-${period}-${Date.now()}.json`;
     a.click();
     
     URL.revokeObjectURL(url);
@@ -379,7 +379,7 @@
     
     const a = document.createElement('a');
     a.href = url;
-    a.download = `unfollowx-logs-${Date.now()}.csv`;
+    a.download = `xactions-logs-${Date.now()}.csv`;
     a.click();
     
     URL.revokeObjectURL(url);
@@ -412,7 +412,7 @@
   // ============================================
   // EXPORT API
   // ============================================
-  window.UnfollowX.Logger = {
+  window.XActions.Logger = {
     logAction,
     logError,
     endSession,

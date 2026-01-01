@@ -3,19 +3,70 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>UnfollowX — Clean Up Your X Following List</title>
-  <meta name="description" content="Free, open-source browser scripts to unfollow accounts on X (Twitter). No apps, no sign-ins, no data collection.">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✂️</text></svg>">
+  <title>XActions — Free AI-Powered X/Twitter Automation Tools | Mass Unfollow, Auto-Follow & More</title>
+  <meta name="description" content="Free, open-source AI-powered X/Twitter automation tools. Smart unfollow with machine learning, GPT & Claude compatible, MCP server integration. Mass unfollow non-followers, auto-liker, growth suite. No API fees, 100% browser-based.">
+  <meta name="keywords" content="xactions, AI Twitter automation, LLM Twitter bot, machine learning Twitter, AI agents for X, GPT Twitter automation, Claude Twitter tools, AI social media automation, Twitter AI bot, automated Twitter with AI, MCP server Twitter, AI-powered unfollow, smart Twitter automation, twitter automation, mass unfollow twitter, twitter unfollow tool, twitter bot, twitter growth, detect unfollowers, auto follow twitter, twitter scripts">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+  
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="XActions — Free AI-Powered X/Twitter Automation Tools">
+  <meta property="og:description" content="AI-powered mass unfollow, smart automation with LLM integration. Works with GPT, Claude & MCP servers. Free, open-source, no API fees.">
+  <meta property="og:url" content="https://xactions.app">
+  <meta property="og:site_name" content="XActions">
+  <meta property="og:image" content="https://xactions.app/og-home.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="en_US">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:creator" content="@nichxbt">
+  <meta name="twitter:title" content="XActions — AI-Powered X/Twitter Automation Tools">
+  <meta name="twitter:description" content="Smart automation with AI agents, LLM & MCP server integration. Mass unfollow, auto-engage, grow your audience. 100% free & open-source.">
+  <meta name="twitter:image" content="https://xactions.app/og-home.png">
+  
+  <link rel="canonical" href="https://xactions.app">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "XActions",
+    "description": "Free, open-source AI-powered X/Twitter automation tools with LLM integration. Compatible with GPT, Claude, and MCP servers for intelligent mass unfollow, auto-engagement and growth",
+    "url": "https://xactions.app",
+    "applicationCategory": "BrowserApplication",
+    "operatingSystem": "Web Browser",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "author": {
+      "@type": "Person",
+      "name": "nich",
+      "url": "https://twitter.com/nichxbt"
+    }
+  }
+  </script>
   <style>
     :root {
-      --bg: #0f0f0f;
-      --card: #1a1a1a;
-      --text: #e5e5e5;
-      --muted: #888;
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --bg-hover: #1d1f23;
       --accent: #1d9bf0;
       --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
       --success: #00ba7c;
-      --border: #2f2f2f;
+      --warning: #ffad1f;
     }
 
     * {
@@ -25,56 +76,176 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.5;
       min-height: 100vh;
     }
 
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 2rem 1.5rem;
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 16px; }
+    ::-webkit-scrollbar-track { background: var(--bg-primary); }
+    ::-webkit-scrollbar-thumb { 
+      background: var(--bg-tertiary); 
+      border-radius: 8px; 
+      border: 4px solid var(--bg-primary); 
     }
 
-    /* Header */
-    header {
-      text-align: center;
-      padding: 3rem 0;
+    /* Layout */
+    .layout {
+      display: flex;
+      max-width: 1300px;
+      margin: 0 auto;
+      min-height: 100vh;
+    }
+
+    /* Left Sidebar */
+    .sidebar-left {
+      width: 275px;
+      padding: 0 12px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--border);
     }
 
     .logo {
-      font-size: 3rem;
-      margin-bottom: 1rem;
+      padding: 12px;
     }
 
-    h1 {
-      font-size: 2.5rem;
-      font-weight: 800;
-      margin-bottom: 0.5rem;
-    }
-
-    .tagline {
-      color: var(--muted);
-      font-size: 1.25rem;
-      margin-bottom: 2rem;
-    }
-
-    .cta-buttons {
+    .logo a {
       display: flex;
-      gap: 1rem;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--text-primary);
+      font-size: 1.5rem;
+      font-weight: 800;
+      padding: 12px;
+      border-radius: 9999px;
+      transition: background 0.2s;
+    }
+
+    .logo a:hover {
+      background: var(--accent-light);
+    }
+
+    nav {
+      flex: 1;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 12px;
+      border-radius: 9999px;
+      font-size: 1.25rem;
+      font-weight: 400;
+      color: var(--text-primary);
+      text-decoration: none;
+      transition: background 0.2s;
+      margin-bottom: 4px;
+    }
+
+    .nav-item:hover {
+      background: var(--bg-tertiary);
+    }
+
+    .nav-item.active {
+      font-weight: 700;
+    }
+
+    .nav-icon {
+      font-size: 1.5rem;
+      width: 28px;
+      text-align: center;
+    }
+
+    .action-btn {
+      width: 90%;
+      padding: 16px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 9999px;
+      font-size: 1.0625rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin: 16px 0;
+      text-decoration: none;
+      display: block;
+      text-align: center;
+    }
+
+    .action-btn:hover {
+      background: var(--accent-hover);
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      max-width: 600px;
+      border-right: 1px solid var(--border);
+    }
+
+    .main-header {
+      position: sticky;
+      top: 0;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 16px;
+      z-index: 100;
+    }
+
+    .main-header h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    /* Hero */
+    .hero {
+      padding: 48px 24px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-icon {
+      font-size: 4rem;
+      margin-bottom: 16px;
+    }
+
+    .hero h2 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .hero p {
+      color: var(--text-secondary);
+      font-size: 1.125rem;
+      margin-bottom: 24px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 12px;
       justify-content: center;
       flex-wrap: wrap;
     }
 
     .btn {
-      display: inline-block;
-      padding: 0.875rem 1.5rem;
+      padding: 12px 24px;
       border-radius: 9999px;
-      font-weight: 600;
+      font-weight: 700;
       text-decoration: none;
       transition: all 0.2s;
+      font-size: 0.9375rem;
     }
 
     .btn-primary {
@@ -84,53 +255,85 @@
 
     .btn-primary:hover {
       background: var(--accent-hover);
-      transform: translateY(-2px);
     }
 
     .btn-secondary {
       background: transparent;
-      color: var(--text);
+      color: var(--text-primary);
       border: 1px solid var(--border);
     }
 
     .btn-secondary:hover {
-      background: var(--card);
+      background: var(--bg-tertiary);
     }
 
-    /* Sections */
-    section {
-      margin: 3rem 0;
+    /* Legal Banner */
+    .legal-banner {
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 24px;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      text-align: center;
     }
 
-    h2 {
-      font-size: 1.5rem;
-      margin-bottom: 1.5rem;
+    .legal-banner strong {
+      color: var(--warning);
+    }
+
+    /* Section */
+    .section {
+      padding: 24px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      margin-bottom: 16px;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 8px;
     }
 
     /* Feature Cards */
-    .features {
+    .features-grid {
       display: grid;
-      gap: 1rem;
+      gap: 12px;
     }
 
     .feature-card {
-      background: var(--card);
+      background: var(--bg-secondary);
       border: 1px solid var(--border);
-      border-radius: 1rem;
-      padding: 1.5rem;
+      border-radius: 16px;
+      padding: 16px;
+      transition: all 0.2s;
     }
 
-    .feature-card h3 {
-      font-size: 1.125rem;
-      margin-bottom: 0.5rem;
+    .feature-card:hover {
+      background: var(--bg-tertiary);
+      border-color: var(--accent);
     }
 
-    .feature-card p {
-      color: var(--muted);
-      font-size: 0.9rem;
+    .feature-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .feature-icon {
+      font-size: 1.5rem;
+    }
+
+    .feature-title {
+      font-weight: 700;
+      font-size: 0.9375rem;
+    }
+
+    .feature-desc {
+      color: var(--text-secondary);
+      font-size: 0.8125rem;
     }
 
     /* Steps */
@@ -139,12 +342,11 @@
     }
 
     .step {
-      background: var(--card);
+      background: var(--bg-secondary);
       border: 1px solid var(--border);
-      border-radius: 1rem;
-      padding: 1.5rem;
-      padding-left: 4rem;
-      margin-bottom: 1rem;
+      border-radius: 16px;
+      padding: 16px 16px 16px 60px;
+      margin-bottom: 12px;
       position: relative;
     }
 
@@ -152,10 +354,10 @@
       counter-increment: step;
       content: counter(step);
       position: absolute;
-      left: 1.5rem;
-      top: 1.5rem;
-      width: 2rem;
-      height: 2rem;
+      left: 16px;
+      top: 16px;
+      width: 32px;
+      height: 32px;
       background: var(--accent);
       border-radius: 50%;
       display: flex;
@@ -166,53 +368,56 @@
     }
 
     .step h3 {
-      margin-bottom: 0.5rem;
+      font-size: 0.9375rem;
+      margin-bottom: 4px;
     }
 
     .step p {
-      color: var(--muted);
-      font-size: 0.9rem;
+      color: var(--text-secondary);
+      font-size: 0.8125rem;
     }
 
     .step code {
       display: inline-block;
-      background: var(--bg);
-      padding: 0.25rem 0.5rem;
-      border-radius: 0.25rem;
+      background: var(--bg-primary);
+      padding: 4px 8px;
+      border-radius: 4px;
       font-family: 'SF Mono', Monaco, monospace;
-      font-size: 0.85rem;
-      margin-top: 0.5rem;
+      font-size: 0.75rem;
+      margin-top: 8px;
     }
 
-    /* Code Block */
+    /* Code Section */
     .code-section {
-      background: var(--card);
+      background: var(--bg-secondary);
       border: 1px solid var(--border);
-      border-radius: 1rem;
+      border-radius: 16px;
       overflow: hidden;
+      margin-bottom: 12px;
     }
 
     .code-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 1rem 1.5rem;
+      padding: 12px 16px;
       border-bottom: 1px solid var(--border);
     }
 
     .code-header span {
-      font-weight: 600;
+      font-weight: 700;
+      font-size: 0.9375rem;
     }
 
     .copy-btn {
       background: var(--accent);
       color: white;
       border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 0.5rem;
+      padding: 8px 16px;
+      border-radius: 9999px;
       cursor: pointer;
-      font-weight: 600;
-      font-size: 0.875rem;
+      font-weight: 700;
+      font-size: 0.8125rem;
       transition: all 0.2s;
     }
 
@@ -225,103 +430,45 @@
     }
 
     pre {
-      padding: 1.5rem;
+      padding: 16px;
       overflow-x: auto;
       font-family: 'SF Mono', Monaco, monospace;
-      font-size: 0.8rem;
-      line-height: 1.5;
+      font-size: 0.75rem;
+      line-height: 1.6;
+      background: var(--bg-primary);
     }
 
-    /* Keyboard shortcuts */
-    kbd {
-      display: inline-block;
-      padding: 0.2rem 0.5rem;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 0.25rem;
-      font-family: inherit;
-      font-size: 0.8rem;
-    }
-
-    /* Safety section */
-    .safety-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-    }
-
-    .safety-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.75rem;
-    }
-
-    .safety-icon {
-      font-size: 1.5rem;
-      flex-shrink: 0;
-    }
-
-    .safety-item h4 {
-      font-size: 1rem;
-      margin-bottom: 0.25rem;
-    }
-
-    .safety-item p {
-      color: var(--muted);
-      font-size: 0.85rem;
-    }
-
-    /* Footer */
-    footer {
-      text-align: center;
-      padding: 3rem 0;
-      color: var(--muted);
+    .code-note {
+      padding: 12px 16px;
+      background: var(--bg-tertiary);
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
       border-top: 1px solid var(--border);
-      margin-top: 3rem;
-    }
-
-    footer a {
-      color: var(--accent);
-      text-decoration: none;
-    }
-
-    footer a:hover {
-      text-decoration: underline;
-    }
-
-    /* Responsive */
-    @media (max-width: 600px) {
-      h1 { font-size: 2rem; }
-      .tagline { font-size: 1rem; }
-      .container { padding: 1rem; }
-      header { padding: 2rem 0; }
-      .script-tabs { flex-direction: column; }
-      .tab-btn { width: 100%; }
     }
 
     /* Script Tabs */
     .script-tabs {
       display: flex;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
+      gap: 8px;
+      margin-bottom: 12px;
       flex-wrap: wrap;
     }
 
     .tab-btn {
-      padding: 0.75rem 1.25rem;
-      background: var(--card);
+      padding: 10px 16px;
+      background: var(--bg-secondary);
       border: 1px solid var(--border);
-      border-radius: 0.5rem;
-      color: var(--muted);
+      border-radius: 9999px;
+      color: var(--text-secondary);
       cursor: pointer;
       font-weight: 600;
-      font-size: 0.875rem;
+      font-size: 0.8125rem;
       transition: all 0.2s;
     }
 
     .tab-btn:hover {
-      background: var(--border);
-      color: var(--text);
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
     }
 
     .tab-btn.active {
@@ -334,142 +481,333 @@
       display: none !important;
     }
 
-    .script-note {
-      padding: 1rem 1.5rem;
-      background: var(--bg);
-      border-top: 1px solid var(--border);
-      font-size: 0.85rem;
-      color: var(--muted);
+    /* Safety */
+    .safety-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
     }
 
-    .script-note em {
-      color: var(--text);
+    .safety-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px;
+      background: var(--bg-secondary);
+      border-radius: 12px;
     }
+
+    .safety-icon {
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .safety-item h4 {
+      font-size: 0.875rem;
+      margin-bottom: 2px;
+    }
+
+    .safety-item p {
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+    }
+
+    /* Right Sidebar */
+    .sidebar-right {
+      width: 350px;
+      padding: 12px 24px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    /* Stats Card */
+    .promo-card {
+      background: var(--bg-secondary);
+      border-radius: 16px;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+
+    .promo-header {
+      padding: 16px;
+      font-size: 1.25rem;
+      font-weight: 800;
+    }
+
+    .promo-item {
+      padding: 16px;
+      border-top: 1px solid var(--border);
+      transition: background 0.2s;
+    }
+
+    .promo-item:hover {
+      background: var(--bg-hover);
+    }
+
+    .promo-item h4 {
+      font-size: 0.9375rem;
+      margin-bottom: 4px;
+    }
+
+    .promo-item p {
+      color: var(--text-secondary);
+      font-size: 0.8125rem;
+    }
+
+    .promo-link {
+      display: block;
+      padding: 16px;
+      color: var(--accent);
+      font-size: 0.9375rem;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .promo-link:hover {
+      background: var(--bg-hover);
+    }
+
+    /* Disclaimer */
+    .disclaimer {
+      padding: 16px;
+      color: var(--text-secondary);
+      font-size: 0.8125rem;
+      line-height: 1.5;
+    }
+
+    .disclaimer a {
+      color: var(--text-secondary);
+    }
+
+    .disclaimer a:hover {
+      text-decoration: underline;
+    }
+
+    .disclaimer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 12px;
+      margin-bottom: 8px;
+    }
+
+    /* Responsive */
+    @media (max-width: 1280px) {
+      .sidebar-right { width: 290px; }
+    }
+
+    @media (max-width: 1024px) {
+      .sidebar-right { display: none; }
+      .main-content { max-width: 100%; }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar-left {
+        width: 68px;
+        padding: 0 4px;
+      }
+      .logo a span:last-child,
+      .nav-item span:last-child {
+        display: none;
+      }
+      .nav-item {
+        justify-content: center;
+        padding: 12px;
+      }
+      .action-btn {
+        width: 50px;
+        height: 50px;
+        padding: 0;
+        font-size: 0;
+      }
+      .action-btn::before {
+        content: '→';
+        font-size: 1.5rem;
+      }
+      .hero h2 { font-size: 1.5rem; }
+      .hero p { font-size: 1rem; }
+      .safety-grid { grid-template-columns: 1fr; }
+    }
+
+    .site-footer {
+      border-top: 1px solid var(--border);
+      padding: 48px 24px;
+      background: var(--bg-primary);
+    }
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 32px;
+    }
+    .footer-brand h3 { font-size: 1.25rem; margin-bottom: 8px; }
+    .footer-brand p { color: var(--text-secondary); font-size: 0.875rem; line-height: 1.5; }
+    .footer-links h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 12px; color: var(--text-primary); }
+    .footer-links a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 4px 0; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 24px auto 0; padding-top: 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+    .footer-bottom p { color: var(--text-secondary); font-size: 0.8125rem; }
+    .footer-bottom a { color: var(--text-secondary); text-decoration: none; }
+    .footer-bottom a:hover { color: var(--accent); }
+    @media (max-width: 768px) { .footer-content { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 480px) { .footer-content { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <div class="logo">✂️</div>
-      <h1>UnfollowX</h1>
-      <p class="tagline">Clean up your X (Twitter) following list in seconds</p>
-      <div class="cta-buttons">
-        <a href="#get-started" class="btn btn-primary">Get Started</a>
-        <a href="https://github.com/nirholas/UnfollowX" class="btn btn-secondary" target="_blank">View on GitHub</a>
-      </div>
-    </header>
-
-    <section>
-      <h2>✨ What can it do?</h2>
-      <div class="features">
-        <div class="feature-card">
-          <h3>🔄 Unfollow Non-Followers</h3>
-          <p>Automatically unfollow everyone who doesn't follow you back. Keep it mutual!</p>
-        </div>
-        <div class="feature-card">
-          <h3>🧹 Unfollow Everyone</h3>
-          <p>Start fresh with a completely clean following list. Nuclear option!</p>
-        </div>
-        <div class="feature-card">
-          <h3>📝 Keep a Record</h3>
-          <p>Download a list of everyone you unfollowed. Great for reference.</p>
-        </div>
-        <div class="feature-card">
-          <h3>🔭 Detect Unfollowers</h3>
-          <p>Find out who stopped following you. Run periodically to track changes.</p>
-        </div>
-        <div class="feature-card">
-          <h3>🎉 New Follower Alerts</h3>
-          <p>Track when you gain new followers and get notified.</p>
-        </div>
-        <div class="feature-card">
-          <h3>👀 Monitor Any Account</h3>
-          <p>Watch any public account's followers or following list for changes.</p>
-        </div>
-      </div>
-    </section>
-
-    <section>
-      <h2>🤖 Automation Framework</h2>
-      <div class="features">
-        <div class="feature-card">
-          <h3>❤️ Auto-Liker</h3>
-          <p>Like posts on your timeline based on keywords or from specific users.</p>
-        </div>
-        <div class="feature-card">
-          <h3>🔍 Keyword Follow</h3>
-          <p>Search for keywords and auto-follow users matching your criteria.</p>
-        </div>
-        <div class="feature-card">
-          <h3>⏰ Smart Unfollow</h3>
-          <p>Unfollow users who don't follow back after a configurable grace period.</p>
-        </div>
-        <div class="feature-card">
-          <h3>🔗 Link Scraper</h3>
-          <p>Extract all external links shared by any user. Export to JSON or TXT.</p>
-        </div>
-        <div class="feature-card">
-          <h3>💬 Auto-Commenter</h3>
-          <p>Monitor a user and auto-comment on their new posts with smart replies.</p>
-        </div>
-        <div class="feature-card">
-          <h3>👥 Multi-Account</h3>
-          <p>Manage multiple X accounts for automation with account rotation.</p>
-        </div>
-        <div class="feature-card">
-          <h3>🚀 Growth Suite</h3>
-          <p>All-in-one automation: follow, like, and smart unfollow in one script.</p>
-        </div>
-      </div>
-      <p style="text-align: center; margin-top: 1.5rem;">
-        <a href="https://github.com/nirholas/UnfollowX/blob/main/docs/automation.md" class="btn btn-secondary" target="_blank">
-          📖 Read Full Automation Guide
+  <div class="layout">
+    <!-- Left Sidebar -->
+    <aside class="sidebar-left">
+      <div class="logo">
+        <a href="/">
+          <span>⚡</span>
+          <span>XActions</span>
         </a>
-      </p>
-    </section>
-
-    <section id="get-started">
-      <h2>🚀 How to use (4 easy steps)</h2>
-      <div class="steps">
-        <div class="step">
-          <h3>Go to your Following page</h3>
-          <p>Open X (Twitter) and navigate to your Following list</p>
-          <code>twitter.com/YOUR_USERNAME/following</code>
-        </div>
-        <div class="step">
-          <h3>Open Developer Console</h3>
-          <p>
-            <strong>Windows/Linux:</strong> <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>J</kbd><br>
-            <strong>Mac:</strong> <kbd>Cmd</kbd> + <kbd>Option</kbd> + <kbd>J</kbd>
-          </p>
-        </div>
-        <div class="step">
-          <h3>Copy the script below</h3>
-          <p>Click the "Copy" button to copy the script to your clipboard</p>
-        </div>
-        <div class="step">
-          <h3>Paste and press Enter</h3>
-          <p>Paste the script into the console and press Enter. Watch it work!</p>
-        </div>
-      </div>
-    </section>
-
-    <section>
-      <h2>📋 Scripts</h2>
-      
-      <!-- Script Tabs -->
-      <div class="script-tabs">
-        <button class="tab-btn active" onclick="showScript('unfollow')">Unfollow Non-Followers</button>
-        <button class="tab-btn" onclick="showScript('monitor')">Detect Unfollowers</button>
-        <button class="tab-btn" onclick="showScript('watch')">Monitor Any Account</button>
       </div>
 
-      <div class="code-section" id="unfollow-script">
-        <div class="code-header">
-          <span>Unfollow Non-Followers</span>
-          <button class="copy-btn" onclick="copyCode('unfollow-code')">Copy</button>
+      <nav>
+        <a href="/" class="nav-item active">
+          <span class="nav-icon">🏠</span>
+          <span>Home</span>
+        </a>
+        <a href="#get-started" class="nav-item">
+          <span class="nav-icon">🚀</span>
+          <span>Get Started</span>
+        </a>
+        <a href="#scripts" class="nav-item">
+          <span class="nav-icon">📋</span>
+          <span>Scripts</span>
+        </a>
+        <a href="/dashboard" class="nav-item">
+          <span class="nav-icon">📊</span>
+          <span>Dashboard</span>
+        </a>
+        <a href="https://github.com/nirholas/XActions" target="_blank" class="nav-item">
+          <span class="nav-icon">⭐</span>
+          <span>GitHub</span>
+        </a>
+        <a href="https://github.com/nirholas/XActions/blob/main/docs/automation.md" target="_blank" class="nav-item">
+          <span class="nav-icon">🤖</span>
+          <span>Automation</span>
+        </a>
+      </nav>
+
+      <a href="/login" class="action-btn">Get Started</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>Welcome to XActions</h1>
+      </header>
+
+      <!-- Legal Banner -->
+      <div class="legal-banner">
+        <strong>⚠️ Educational Use Only:</strong> XActions demonstrates browser automation for educational purposes. 
+        Not affiliated with X Corp. <a href="/docs#disclaimer" style="color: var(--accent);">Learn more</a>
+      </div>
+
+      <!-- Hero -->
+      <section class="hero">
+        <div class="hero-icon">⚡</div>
+        <h2>Clean Up Your X Following List</h2>
+        <p>Free, open-source browser scripts. No apps, no sign-ins, no data collection.</p>
+        <div class="hero-buttons">
+          <a href="#get-started" class="btn btn-primary">Get Started</a>
+          <a href="https://github.com/nirholas/XActions" class="btn btn-secondary" target="_blank">View on GitHub</a>
         </div>
-        <pre id="unfollow-code">(() => {
+      </section>
+
+      <!-- Features -->
+      <section class="section">
+        <h2 class="section-title">✨ What can it do?</h2>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-header">
+              <span class="feature-icon">🔄</span>
+              <span class="feature-title">Unfollow Non-Followers</span>
+            </div>
+            <p class="feature-desc">Automatically unfollow everyone who doesn't follow you back.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-header">
+              <span class="feature-icon">🧹</span>
+              <span class="feature-title">Unfollow Everyone</span>
+            </div>
+            <p class="feature-desc">Start fresh with a completely clean following list.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-header">
+              <span class="feature-icon">🔍</span>
+              <span class="feature-title">Detect Unfollowers</span>
+            </div>
+            <p class="feature-desc">Find out who stopped following you recently.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-header">
+              <span class="feature-icon">👀</span>
+              <span class="feature-title">Monitor Any Account</span>
+            </div>
+            <p class="feature-desc">Watch any public account's followers for changes.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-header">
+              <span class="feature-icon">❤️</span>
+              <span class="feature-title">Auto-Liker</span>
+            </div>
+            <p class="feature-desc">Like posts based on keywords or from specific users.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-header">
+              <span class="feature-icon">🚀</span>
+              <span class="feature-title">Growth Suite</span>
+            </div>
+            <p class="feature-desc">All-in-one automation: follow, like, and smart unfollow.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- How to Use -->
+      <section class="section" id="get-started">
+        <h2 class="section-title">🚀 How to use</h2>
+        <div class="steps">
+          <div class="step">
+            <h3>Go to your Following page</h3>
+            <p>Open X (Twitter) and navigate to your Following list</p>
+            <code>twitter.com/YOUR_USERNAME/following</code>
+          </div>
+          <div class="step">
+            <h3>Open Developer Console</h3>
+            <p><strong>Windows/Linux:</strong> Ctrl + Shift + J<br><strong>Mac:</strong> Cmd + Option + J</p>
+          </div>
+          <div class="step">
+            <h3>Copy the script below</h3>
+            <p>Click the "Copy" button to copy the script to your clipboard</p>
+          </div>
+          <div class="step">
+            <h3>Paste and press Enter</h3>
+            <p>Paste the script into the console and press Enter. Watch it work!</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Scripts -->
+      <section class="section" id="scripts">
+        <h2 class="section-title">📋 Scripts</h2>
+        
+        <div class="script-tabs">
+          <button class="tab-btn active" onclick="showScript('unfollow')">Unfollow Non-Followers</button>
+          <button class="tab-btn" onclick="showScript('monitor')">Detect Unfollowers</button>
+          <button class="tab-btn" onclick="showScript('watch')">Monitor Account</button>
+        </div>
+
+        <div class="code-section" id="unfollow-script">
+          <div class="code-header">
+            <span>Unfollow Non-Followers</span>
+            <button class="copy-btn" onclick="copyCode('unfollow-code')">Copy</button>
+          </div>
+          <pre id="unfollow-code">(() => {
   const $followButtons = '[data-testid$="-unfollow"]';
   const $confirmButton = '[data-testid="confirmationSheetConfirm"]';
   const retry = { count: 0, limit: 3 };
@@ -510,18 +848,18 @@
 
   run();
 })();</pre>
-        <div class="script-note">
-          <strong>📍 Use on:</strong> twitter.com/YOUR_USERNAME/following
+          <div class="code-note">
+            <strong>📍 Use on:</strong> twitter.com/YOUR_USERNAME/following
+          </div>
         </div>
-      </div>
 
-      <div class="code-section hidden" id="monitor-script">
-        <div class="code-header">
-          <span>Detect Who Unfollowed You</span>
-          <button class="copy-btn" onclick="copyCode('monitor-code')">Copy</button>
-        </div>
-        <pre id="monitor-code">(() => {
-  const KEY = 'unfollowx_followers';
+        <div class="code-section hidden" id="monitor-script">
+          <div class="code-header">
+            <span>Detect Who Unfollowed You</span>
+            <button class="copy-btn" onclick="copyCode('monitor-code')">Copy</button>
+          </div>
+          <pre id="monitor-code">(() => {
+  const KEY = 'xactions_followers';
   const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
   const scrape = async () => {
@@ -576,22 +914,22 @@
   
   run();
 })();</pre>
-        <div class="script-note">
-          <strong>📍 Use on:</strong> twitter.com/YOUR_USERNAME/followers
+          <div class="code-note">
+            <strong>📍 Use on:</strong> twitter.com/YOUR_USERNAME/followers
+          </div>
         </div>
-      </div>
 
-      <div class="code-section hidden" id="watch-script">
-        <div class="code-header">
-          <span>Monitor Any Account</span>
-          <button class="copy-btn" onclick="copyCode('watch-code')">Copy</button>
-        </div>
-        <pre id="watch-code">(() => {
+        <div class="code-section hidden" id="watch-script">
+          <div class="code-header">
+            <span>Monitor Any Account</span>
+            <button class="copy-btn" onclick="copyCode('watch-code')">Copy</button>
+          </div>
+          <pre id="watch-code">(() => {
   const sleep = (ms) => new Promise(r => setTimeout(r, ms));
   const path = location.pathname;
   const type = path.includes('/followers') ? 'followers' : 'following';
   const user = path.split('/')[1].toLowerCase();
-  const KEY = `unfollowx_${user}_${type}`;
+  const KEY = `xactions_${user}_${type}`;
 
   const scrape = async () => {
     const users = new Set();
@@ -636,57 +974,104 @@
   
   run();
 })();</pre>
-        <div class="script-note">
-          <strong>📍 Use on:</strong> twitter.com/ANYONE/followers <em>or</em> /following
+          <div class="code-note">
+            <strong>📍 Use on:</strong> twitter.com/ANYONE/followers <em>or</em> /following
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section>
-      <h2>🔒 Safe & Private</h2>
-      <div class="safety-grid">
-        <div class="safety-item">
-          <span class="safety-icon">✅</span>
-          <div>
-            <h4>100% Local</h4>
-            <p>Runs entirely in your browser. Nothing is sent anywhere.</p>
+      <!-- Safety -->
+      <section class="section">
+        <h2 class="section-title">🔒 Safe & Private</h2>
+        <div class="safety-grid">
+          <div class="safety-item">
+            <span class="safety-icon">✅</span>
+            <div>
+              <h4>100% Local</h4>
+              <p>Runs entirely in your browser. Nothing sent anywhere.</p>
+            </div>
+          </div>
+          <div class="safety-item">
+            <span class="safety-icon">✅</span>
+            <div>
+              <h4>Open Source</h4>
+              <p>All code visible on GitHub. No hidden functionality.</p>
+            </div>
+          </div>
+          <div class="safety-item">
+            <span class="safety-icon">✅</span>
+            <div>
+              <h4>No Sign-in</h4>
+              <p>Never asks for your password or credentials.</p>
+            </div>
+          </div>
+          <div class="safety-item">
+            <span class="safety-icon">✅</span>
+            <div>
+              <h4>Just Clicks</h4>
+              <p>Only automates the same clicks you'd do manually.</p>
+            </div>
           </div>
         </div>
-        <div class="safety-item">
-          <span class="safety-icon">✅</span>
-          <div>
-            <h4>Open Source</h4>
-            <p>All code is visible on GitHub. No hidden functionality.</p>
-          </div>
-        </div>
-        <div class="safety-item">
-          <span class="safety-icon">✅</span>
-          <div>
-            <h4>No Sign-in</h4>
-            <p>Never asks for your password or any credentials.</p>
-          </div>
-        </div>
-        <div class="safety-item">
-          <span class="safety-icon">✅</span>
-          <div>
-            <h4>Just Clicks</h4>
-            <p>Only automates the same clicks you'd do manually.</p>
-          </div>
-        </div>
-      </div>
-    </section>
+      </section>
+    </main>
 
-    <footer>
-      <p>
-        Made with 🤍 by <a href="https://x.com/nichxbt" target="_blank">@nichxbt</a>
-        <br><br>
-        <a href="https://github.com/nirholas/UnfollowX" target="_blank">GitHub</a> · 
-        <a href="https://github.com/nirholas/UnfollowX/blob/main/docs/getting-started.md" target="_blank">Getting Started</a> · 
-        <a href="https://github.com/nirholas/UnfollowX/blob/main/docs/monitoring.md" target="_blank">Monitoring Guide</a> · 
-        <a href="https://github.com/nirholas/UnfollowX/blob/main/docs/automation.md" target="_blank">Automation Guide</a> · 
-        <a href="https://github.com/nirholas/UnfollowX/issues" target="_blank">Report Issue</a>
-      </p>
-    </footer>
+    <!-- Right Sidebar -->
+    <aside class="sidebar-right">
+      <!-- Dashboard Promo -->
+      <div class="promo-card">
+        <h3 class="promo-header">🚀 Try the Dashboard</h3>
+        <div class="promo-item">
+          <h4>Automated Operations</h4>
+          <p>Run unfollows and monitoring without the browser console.</p>
+        </div>
+        <div class="promo-item">
+          <h4>Track Your Stats</h4>
+          <p>See your operation history and account metrics.</p>
+        </div>
+        <div class="promo-item">
+          <h4>Free Tier Available</h4>
+          <p>Start with free credits, upgrade when you need more.</p>
+        </div>
+        <a href="/login" class="promo-link">Sign up for free →</a>
+      </div>
+
+      <!-- Resources -->
+      <div class="promo-card">
+        <h3 class="promo-header">📚 Resources</h3>
+        <div class="promo-item">
+          <h4>Getting Started Guide</h4>
+          <p>Step-by-step walkthrough for new users.</p>
+        </div>
+        <div class="promo-item">
+          <h4>XActions Reference</h4>
+          <p>150+ functions for advanced automation.</p>
+        </div>
+        <div class="promo-item">
+          <h4>Automation Guide</h4>
+          <p>Build custom growth workflows.</p>
+        </div>
+        <a href="https://github.com/nirholas/XActions/tree/main/docs" target="_blank" class="promo-link">View all docs →</a>
+      </div>
+
+      <!-- Disclaimer -->
+      <div class="disclaimer">
+        <div class="disclaimer-links">
+          <a href="/docs#terms">Terms</a>
+          <a href="/docs#privacy">Privacy</a>
+          <a href="/docs#disclaimer">Disclaimer</a>
+          <a href="https://github.com/nirholas/XActions">Open Source</a>
+        </div>
+        <p>
+          XActions is an independent project for educational purposes. 
+          Not affiliated with X Corp. Use responsibly and in accordance with X's Terms of Service.
+        </p>
+        <p style="margin-top: 8px;">
+          Made with 🤍 by <a href="https://twitter.com/nichxbt" target="_blank" style="color: var(--accent);">@nichxbt</a>
+        </p>
+        <p style="margin-top: 4px;">© 2026 XActions</p>
+      </div>
+    </aside>
   </div>
 
   <script>
@@ -712,18 +1097,53 @@
       // Remove active from all tabs
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
       
-      // Show selected and activate tab
-      if (type === 'unfollow') {
-        document.getElementById('unfollow-script').classList.remove('hidden');
-        document.querySelectorAll('.tab-btn')[0].classList.add('active');
-      } else if (type === 'monitor') {
-        document.getElementById('monitor-script').classList.remove('hidden');
-        document.querySelectorAll('.tab-btn')[1].classList.add('active');
-      } else if (type === 'watch') {
-        document.getElementById('watch-script').classList.remove('hidden');
-        document.querySelectorAll('.tab-btn')[2].classList.add('active');
-      }
+      // Show selected
+      const map = { unfollow: 0, monitor: 1, watch: 2 };
+      document.getElementById(`${type}-script`).classList.remove('hidden');
+      document.querySelectorAll('.tab-btn')[map[type]].classList.add('active');
     }
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
   </script>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <h3>⚡ XActions</h3>
+        <p>Free, open-source X/Twitter automation toolkit. Mass unfollow, detect unfollowers, auto-engage, and grow your audience without expensive API fees.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/docs">Documentation</a>
+        <a href="/dashboard">Dashboard</a>
+      </div>
+      <div class="footer-links">
+        <h4>Company</h4>
+        <a href="/about">About</a>
+        <a href="https://github.com/nirholas/XActions" target="_blank">GitHub</a>
+        <a href="https://twitter.com/nichxbt" target="_blank">Twitter</a>
+      </div>
+      <div class="footer-links">
+        <h4>Legal</h4>
+        <a href="/terms">Terms of Service</a>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 XActions. Not affiliated with X Corp.</p>
+      <p>Made with ❤️ by <a href="https://twitter.com/nichxbt" target="_blank">@nichxbt</a></p>
+    </div>
+  </footer>
 </body>
 </html>

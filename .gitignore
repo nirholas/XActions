@@ -40,12 +40,18 @@ tmp/
 .env.local
 .env*.local
 .env.development
+.env.production
 venv/
 .venv/
-.env.example.development
-.env.example
-.env.desktop 
 
+# SaaS Platform Additions
+node_modules/
+*.db
+*.sqlite
+prisma/migrations/*/migration.sql
+dump.rdb
+dist/
+build/
 
 # Dependencies
 node_modules/
