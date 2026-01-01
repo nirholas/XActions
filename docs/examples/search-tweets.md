@@ -1003,7 +1003,7 @@ Don't want to run scripts? Use our web app:
 
 ## 🔗 Resources
 
-- [Twitter Search Docs](https://help.twitter.com/en/using-x/x-advanced-search)
+- [Twitter Search Docs](https://help.x.com/en/using-x/x-advanced-search)
 - [XActions Documentation](https://xactions.app/docs)
 - [Puppeteer Setup Guide](../../PUPPETEER_SETUP.md)
 

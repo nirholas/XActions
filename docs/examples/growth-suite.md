@@ -272,7 +272,7 @@ The Growth Suite is your **complete growth automation engine** that:
       for (const keyword of STRATEGY.KEYWORDS) {
         if (!state.isRunning || !checkLimits().canFollow) break;
         log(`🔍 Searching: "${keyword}"`, 'action');
-        window.location.href = `https://twitter.com/search?q=${encodeURIComponent(keyword)}&f=user`;
+        window.location.href = `https://x.com/search?q=${encodeURIComponent(keyword)}&f=user`;
         await sleep(3000);
         await waitForElement(SELECTORS.userCell, 10000);
         
@@ -293,7 +293,7 @@ The Growth Suite is your **complete growth automation engine** that:
     // Phase 2: Like
     if (STRATEGY.ACTIONS.LIKE && state.isRunning && !isSessionExpired()) {
       log('📍 Phase 2: Timeline Engagement', 'info');
-      window.location.href = 'https://twitter.com/home';
+      window.location.href = 'https://x.com/home';
       await sleep(3000);
       
       for (let scroll = 0; scroll < 15 && checkLimits().canLike; scroll++) {

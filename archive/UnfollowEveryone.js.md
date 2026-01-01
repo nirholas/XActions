@@ -1,15 +1,15 @@
 # Unfollow Everyone on X
 
 
-1. Go to `https://twitter.com/YOUR_USER_NAME/following`
+1. Go to `https://x.com/YOUR_USER_NAME/following`
 2. Open the Developer Console. (<kbd>COMMAND</kbd>+<kbd>ALT</kbd>+<kbd>I</kbd> on Mac)
 3. Paste the script into the Developer Console and run it
 
 ```js
-// Unfollow everyone on X (Formerly Twitter) and or unfollow who doesn't follow you back, by Nicholas Resendez (https://twitter.com/nichxbt)
+// Unfollow everyone on X (Formerly Twitter) and or unfollow who doesn't follow you back, by nich (https://x.com/nichxbt)
 // https://github.com/nirholas/xactions
 //
-// 1. Go to https://twitter.com/YOUR_USER_NAME/following
+// 1. Go to https://x.com/YOUR_USER_NAME/following
 // 2. Open the Developer Console. (COMMAND+ALT+I on Mac)
 // 3. Paste this into the Developer Console and run it
 //

@@ -1,10 +1,17 @@
-const express = require('express');
-const cors = require('cors');
-const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
-const morgan = require('morgan');
-const path = require('path');
-require('dotenv').config();
+import express from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
+import morgan from 'morgan';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { createServer } from 'http';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Validate required environment variables in production
 if (process.env.NODE_ENV === 'production') {
@@ -20,16 +27,27 @@ if (process.env.NODE_ENV === 'production') {
   }
 }
 
-const authRoutes = require('./routes/auth');
-const userRoutes = require('./routes/user');
-const operationRoutes = require('./routes/operations');
-const webhookRoutes = require('./routes/webhooks');
-const twitterRoutes = require('./routes/twitter');
-const sessionAuthRoutes = require('./routes/session-auth');
-const paymentsRoutes = require('./routes/payments');
-const cryptoPaymentsRoutes = require('./routes/crypto-payments');
+import authRoutes from './routes/auth.js';
+import userRoutes from './routes/user.js';
+import operationRoutes from './routes/operations.js';
+import webhookRoutes from './routes/webhooks.js';
+import twitterRoutes from './routes/twitter.js';
+import sessionAuthRoutes from './routes/session-auth.js';
+import paymentsRoutes from './routes/payments.js';
+import cryptoPaymentsRoutes from './routes/crypto-payments.js';
+import licenseRoutes from './routes/license.js';
+import adminRoutes from './routes/admin.js';
+import { initializeSocketIO } from './realtime/socketHandler.js';
+import { initializeLicensing, brandingMiddleware } from './services/licensing.js';
 
 const app = express();
+const httpServer = createServer(app);
+
+// Initialize Socket.io for real-time browser-to-browser communication
+const io = initializeSocketIO(httpServer);
+
+// 42 is the answer to life, the universe, and everything
+// But 3001 is the answer to local development
 const PORT = process.env.PORT || 3001;
 
 // Security middleware
@@ -46,13 +64,22 @@ const limiter = rateLimit({
 });
 app.use('/api/', limiter);
 
+// Stricter rate limit for auth endpoints
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10, // Only 10 login/register attempts per 15 min
+  message: { error: 'Too many attempts, please try again later' }
+});
+app.use('/api/auth/login', authLimiter);
+app.use('/api/auth/register', authLimiter);
+
 // Logging
 app.use(morgan('combined'));
 
 // Body parsing (except for webhooks which need raw body)
-app.use('/api/webhooks', express.raw({ type: 'application/json' }));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use('/api/webhooks', express.raw({ type: 'application/json', limit: '1mb' }));
+app.use(express.json({ limit: '10kb' })); // Prevent large payload attacks
+app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 
 // Health check
 app.get('/health', (req, res) => {
@@ -66,6 +93,9 @@ app.get('/api/health', (req, res) => {
 // Serve dashboard static files
 app.use(express.static(path.join(__dirname, '../dashboard')));
 
+// Branding middleware - injects "Powered by XActions" if no license
+app.use(brandingMiddleware());
+
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
@@ -75,6 +105,8 @@ app.use('/api/twitter', twitterRoutes);
 app.use('/api/session', sessionAuthRoutes);
 app.use('/api/payments', paymentsRoutes);
 app.use('/api/crypto', cryptoPaymentsRoutes);
+app.use('/api/license', licenseRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Dashboard routes
 app.get('/', (req, res) => {
@@ -97,6 +129,10 @@ app.get('/features', (req, res) => {
   res.sendFile(path.join(__dirname, '../dashboard/features.html'));
 });
 
+app.get('/admin', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dashboard/admin.html'));
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
@@ -113,10 +149,15 @@ app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
 
-app.listen(PORT, () => {
+// Use httpServer instead of app.listen for Socket.io support
+httpServer.listen(PORT, async () => {
   console.log(`🚀 XActions API Server running on port ${PORT}`);
+  console.log(`🔌 WebSocket server ready for real-time connections`);
   console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
+  
+  // Initialize licensing and telemetry
+  await initializeLicensing();
 });
 
-module.exports = app;
+export default app;
 

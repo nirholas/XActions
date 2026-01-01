@@ -1,13 +1,13 @@
-const Queue = require('bull');
-const { PrismaClient } = require('@prisma/client');
-const { processUnfollowNonFollowers } = require('./operations/unfollowNonFollowers');
-const { processUnfollowEveryone } = require('./operations/unfollowEveryone');
-const { processDetectUnfollowers } = require('./operations/detectUnfollowers');
+import Queue from 'bull';
+import { PrismaClient } from '@prisma/client';
+import { processUnfollowNonFollowers } from './operations/unfollowNonFollowers.js';
+import { processUnfollowEveryone } from './operations/unfollowEveryone.js';
+import { processDetectUnfollowers } from './operations/detectUnfollowers.js';
 
 // Puppeteer processors
-const { unfollowNonFollowersBrowser } = require('./operations/puppeteer/unfollowNonFollowers');
-const { unfollowEveryoneBrowser } = require('./operations/puppeteer/unfollowEveryone');
-const { detectUnfollowersBrowser } = require('./operations/puppeteer/detectUnfollowers');
+import { unfollowNonFollowersBrowser } from './operations/puppeteer/unfollowNonFollowers.js';
+import { unfollowEveryoneBrowser } from './operations/puppeteer/unfollowEveryone.js';
+import { detectUnfollowersBrowser } from './operations/puppeteer/detectUnfollowers.js';
 
 const prisma = new PrismaClient();
 
@@ -122,7 +122,7 @@ process.on('SIGTERM', async () => {
   process.exit(0);
 });
 
-module.exports = {
+export {
   queueJob,
   operationsQueue
 };

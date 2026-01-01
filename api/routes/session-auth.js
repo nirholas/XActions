@@ -1,11 +1,11 @@
-const express = require('express');
-const router = express.Router();
-const crypto = require('crypto');
-const { body, validationResult } = require('express-validator');
-const { PrismaClient } = require('@prisma/client');
-const { authenticate } = require('../middleware/auth');
-const browserAutomation = require('../services/browserAutomation');
+import express from 'express';
+import crypto from 'crypto';
+import { body, validationResult } from 'express-validator';
+import { PrismaClient } from '@prisma/client';
+import { authenticate } from '../middleware/auth.js';
+import browserAutomation from '../services/browserAutomation.js';
 
+const router = express.Router();
 const prisma = new PrismaClient();
 
 // Encryption helpers for session cookies
@@ -152,7 +152,5 @@ async function getDecryptedSessionCookie(userId) {
   return decrypt(user.sessionCookie);
 }
 
-module.exports = router;
-module.exports.getDecryptedSessionCookie = getDecryptedSessionCookie;
-module.exports.encrypt = encrypt;
-module.exports.decrypt = decrypt;
+export default router;
+export { getDecryptedSessionCookie, encrypt, decrypt };

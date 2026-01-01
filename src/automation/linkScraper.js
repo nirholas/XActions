@@ -7,7 +7,7 @@
 // Great for research, finding resources, tracking promotions.
 //
 // HOW TO USE:
-// 1. Go to a user's profile: twitter.com/USERNAME
+// 1. Go to a user's profile: x.com/USERNAME
 // 2. Paste core.js, then paste this script
 // 3. Let it scroll and collect all links!
 
@@ -29,7 +29,7 @@
     
     // Filter options
     INCLUDE_TWITTER_LINKS: false, // Include links to other tweets/profiles
-    INCLUDE_MEDIA: false,         // Include pic.twitter.com links
+    INCLUDE_MEDIA: false,         // Include pic.x.com links
     DOMAINS_ONLY: [],             // Only these domains (empty = all)
     EXCLUDE_DOMAINS: [            // Skip these domains
       't.co',                     // Twitter's shortener (we expand these)
@@ -71,12 +71,12 @@
 
       // Skip Twitter internal links unless opted in
       if (!OPTIONS.INCLUDE_TWITTER_LINKS) {
-        if (['twitter.com', 'x.com'].includes(domain)) return false;
+        if (['x.com', 'x.com'].includes(domain)) return false;
       }
 
       // Skip media links unless opted in
       if (!OPTIONS.INCLUDE_MEDIA) {
-        if (['pic.twitter.com', 'pbs.twimg.com', 'video.twimg.com'].includes(domain)) return false;
+        if (['pic.x.com', 'pbs.twimg.com', 'video.twimg.com'].includes(domain)) return false;
       }
 
       // Domain whitelist
@@ -142,7 +142,7 @@
       tweetsProcessed++;
 
       const tweetLinks = extractLinks(tweet);
-      const tweetUrl = `https://twitter.com/i/status/${tweetId}`;
+      const tweetUrl = `https://x.com/i/status/${tweetId}`;
       
       for (const url of tweetLinks) {
         if (links.has(url)) {

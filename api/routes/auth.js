@@ -1,8 +1,8 @@
-const express = require('express');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const { PrismaClient } = require('@prisma/client');
-const { body, validationResult } = require('express-validator');
+import express from 'express';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import { PrismaClient } from '@prisma/client';
+import { body, validationResult } from 'express-validator';
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -42,13 +42,13 @@ router.post('/register',
       // Hash password
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      // Create user with free tier subscription
+      // Create user with 0 credits (must follow or buy to get credits)
       const user = await prisma.user.create({
         data: {
           email,
           username,
           password: hashedPassword,
-          credits: 50,
+          credits: 0,
           subscription: {
             create: {
               tier: 'free',
@@ -111,6 +111,14 @@ router.post('/login',
         return res.status(401).json({ error: 'Invalid credentials' });
       }
 
+      // Check if user has a password (guest users don't)
+      if (!user.password) {
+        return res.status(401).json({ 
+          error: 'This account was created as a guest. Please set a password first.',
+          needsPassword: true
+        });
+      }
+
       // Verify password
       const validPassword = await bcrypt.compare(password, user.password);
       if (!validPassword) {
@@ -166,4 +174,4 @@ router.post('/refresh', async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

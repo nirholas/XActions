@@ -2,7 +2,7 @@
 
 Thank you for your interest in contributing to **XActions** — the complete X/Twitter automation platform!
 
-Created by [nich](https://github.com/nirholas) ([@nichxbt](https://twitter.com/nichxbt))
+Created by [nich](https://github.com/nirholas) ([@nichxbt](https://x.com/nichxbt))
 
 ## 🚀 How to Contribute
 
@@ -92,7 +92,7 @@ When filing an issue, please include:
 ## 💬 Questions?
 
 - Open a [GitHub Issue](https://github.com/nirholas/xactions/issues)
-- Tweet [@nichxbt](https://twitter.com/nichxbt)
+- Tweet [@nichxbt](https://x.com/nichxbt)
 
 ## 📄 License
 

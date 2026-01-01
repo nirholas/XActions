@@ -1,8 +1,9 @@
-const express = require('express');
-const crypto = require('crypto');
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const { PrismaClient } = require('@prisma/client');
+import express from 'express';
+import crypto from 'crypto';
+import Stripe from 'stripe';
+import { PrismaClient } from '@prisma/client';
 
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 const router = express.Router();
 const prisma = new PrismaClient();
 
@@ -377,4 +378,4 @@ router.post('/coinbase', handleCoinbaseWebhook);
 router.post('/nowpayments', handleNowPaymentsWebhook);
 router.post('/btcpay', handleBTCPayWebhook);
 
-module.exports = router;
+export default router;

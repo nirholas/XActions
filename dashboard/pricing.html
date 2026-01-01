@@ -386,93 +386,74 @@
     <main class="main-content">
       <header class="main-header">
         <h1>Buy Credits & Start Now</h1>
-        <p>Pay with crypto • No KYC required • Instant activation</p>
+        <p>Pay with crypto • Instant activation</p>
       </header>
 
       <div class="tip-banner" style="background: linear-gradient(90deg, var(--accent-light), var(--bg-secondary)); border-color: var(--accent);">
-        🔐 <strong>Privacy First:</strong> Pay with BTC, ETH, SOL, or USDC. No identity verification needed. Credits added instantly after payment.
+        🔐 <strong>Privacy First:</strong> Pay with BTC, ETH, SOL, or USDC. Credits added instantly after payment.
       </div>
 
       <div class="pricing-grid">
         <div class="pricing-card">
           <div class="tier-name">Starter</div>
           <div class="price">$2.99</div>
-          <div class="price-period">50 credits</div>
+          <div class="price-period">17 credits</div>
           <ul class="features">
-            <li>Quick start package</li>
+            <li>~5-8 operations</li>
             <li>All automation features</li>
-            <li>~5 unfollow operations</li>
-            <li>No expiry</li>
+            <li>Credits expire in 14 days</li>
           </ul>
           <button class="btn btn-secondary" onclick="buyCredits('starter')">Buy with Card</button>
           <button class="btn" style="margin-top: 8px; background: #f7931a;" onclick="buyCrypto('starter')">Pay with Crypto</button>
         </div>
 
-        <div class="pricing-card">
-          <div class="tier-name">Small</div>
-          <div class="price">$4.99</div>
-          <div class="price-period">100 credits</div>
-          <ul class="features">
-            <li>Light usage</li>
-            <li>All automation features</li>
-            <li>~10 operations</li>
-            <li>No expiry</li>
-          </ul>
-          <button class="btn btn-secondary" onclick="buyCredits('small')">Buy with Card</button>
-          <button class="btn" style="margin-top: 8px; background: #f7931a;" onclick="buyCrypto('small')">Pay with Crypto</button>
-        </div>
-
         <div class="pricing-card featured">
           <span class="badge">Most Popular</span>
-          <div class="tier-name">Medium</div>
-          <div class="price">$12.99</div>
-          <div class="price-period">300 credits</div>
+          <div class="tier-name">Basic</div>
+          <div class="price">$6.99</div>
+          <div class="price-period">47 credits</div>
           <ul class="features">
-            <li>Best value</li>
+            <li>~15-23 operations</li>
             <li>All automation features</li>
-            <li>~30 operations</li>
-            <li>No expiry</li>
-            <li>Priority support</li>
+            <li>Credits expire in 14 days</li>
+            <li><strong>Save 20%</strong></li>
           </ul>
-          <button class="btn btn-secondary" onclick="buyCredits('medium')">Buy with Card</button>
-          <button class="btn" style="margin-top: 8px; background: #f7931a;" onclick="buyCrypto('medium')">Pay with Crypto</button>
+          <button class="btn btn-secondary" onclick="buyCredits('basic')">Buy with Card</button>
+          <button class="btn" style="margin-top: 8px; background: #f7931a;" onclick="buyCrypto('basic')">Pay with Crypto</button>
         </div>
 
         <div class="pricing-card">
-          <div class="tier-name">Large</div>
-          <div class="price">$34.99</div>
-          <div class="price-period">1,000 credits</div>
+          <div class="tier-name">Pro</div>
+          <div class="price">$14.99</div>
+          <div class="price-period">113 credits</div>
           <ul class="features">
-            <li>Power user package</li>
+            <li>~35-55 operations</li>
             <li>All automation features</li>
-            <li>~100 operations</li>
-            <li>No expiry</li>
-            <li>Priority support</li>
+            <li>Credits expire in 14 days</li>
+            <li><strong>Save 35%</strong></li>
           </ul>
-          <button class="btn btn-secondary" onclick="buyCredits('large')">Buy with Card</button>
-          <button class="btn" style="margin-top: 8px; background: #f7931a;" onclick="buyCrypto('large')">Pay with Crypto</button>
+          <button class="btn btn-secondary" onclick="buyCredits('pro')">Buy with Card</button>
+          <button class="btn" style="margin-top: 8px; background: #f7931a;" onclick="buyCrypto('pro')">Pay with Crypto</button>
         </div>
 
         <div class="pricing-card">
-          <div class="tier-name">Unlimited</div>
-          <div class="price">$149.99</div>
-          <div class="price-period">5,000 credits</div>
+          <div class="tier-name">Power</div>
+          <div class="price">$29.99</div>
+          <div class="price-period">251 credits</div>
           <ul class="features">
-            <li>Agency / Team package</li>
+            <li>~80-125 operations</li>
             <li>All automation features</li>
-            <li>Unlimited operations</li>
-            <li>No expiry</li>
-            <li>Dedicated support</li>
-            <li>API access</li>
+            <li>Credits expire in 14 days</li>
+            <li><strong>Save 50%</strong></li>
           </ul>
-          <button class="btn btn-secondary" onclick="buyCredits('unlimited')">Buy with Card</button>
-          <button class="btn" style="margin-top: 8px; background: #f7931a;" onclick="buyCrypto('unlimited')">Pay with Crypto</button>
+          <button class="btn btn-secondary" onclick="buyCredits('power')">Buy with Card</button>
+          <button class="btn" style="margin-top: 8px; background: #f7931a;" onclick="buyCrypto('power')">Pay with Crypto</button>
         </div>
       </div>
 
       <!-- Crypto Payment Info -->
       <div id="buy" style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 32px;">
-        <h3 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">🔐 Crypto Payments - No KYC Required</h3>
+        <h3 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">🔐 Crypto Payments</h3>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 16px; margin-bottom: 16px;">
           <div style="background: var(--bg-tertiary); padding: 16px; border-radius: 12px; text-align: center;">
             <span style="font-size: 1.5rem;">₿</span>
@@ -495,57 +476,7 @@
             <p style="color: var(--text-secondary); font-size: 0.75rem;">Stablecoin</p>
           </div>
         </div>
-        <p style="color: var(--text-secondary); font-size: 0.875rem; text-align: center;">No identity verification • Credits added instantly after confirmation • Complete privacy</p>
-      </div>
-
-      <!-- Subscription Plans -->
-      <h2 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 24px; text-align: center;">🔄 Or Subscribe for Unlimited Access</h2>
-
-      <div class="pricing-grid" style="margin-bottom: 32px;">
-        <div class="pricing-card">
-          <div class="tier-name">Free</div>
-          <div class="price">$0</div>
-          <div class="price-period">forever</div>
-          <ul class="features">
-            <li>50 free credits</li>
-            <li>Basic unfollow features</li>
-            <li>3 operations/day</li>
-            <li>Max 50 unfollows/operation</li>
-          </ul>
-          <a href="/dashboard" class="btn btn-secondary">Get Started</a>
-        </div>
-
-        <div class="pricing-card featured">
-          <span class="badge">Best Value</span>
-          <div class="tier-name">Pro</div>
-          <div class="price">$29.99</div>
-          <div class="price-period">per month</div>
-          <ul class="features">
-            <li>Unlimited operations</li>
-            <li>All automation features</li>
-            <li>Monitor any account</li>
-            <li>Continuous monitoring</li>
-            <li>50 operations/day</li>
-            <li>Max 2000 unfollows/operation</li>
-            <li>Priority support</li>
-          </ul>
-          <button class="btn" onclick="subscribe('pro')">Subscribe</button>
-        </div>
-
-        <div class="pricing-card">
-          <div class="tier-name">Enterprise</div>
-          <div class="price">$99.99</div>
-          <div class="price-period">per month</div>
-          <ul class="features">
-            <li>Everything in Pro</li>
-            <li>Unlimited everything</li>
-            <li>Multi-account support</li>
-            <li>API access</li>
-            <li>White-label option</li>
-            <li>Dedicated support</li>
-          </ul>
-          <button class="btn" onclick="subscribe('enterprise')">Subscribe</button>
-        </div>
+        <p style="color: var(--text-secondary); font-size: 0.875rem; text-align: center;">Credits added instantly after confirmation • Fast & private</p>
       </div>
 
       <div class="back-link">
@@ -576,7 +507,7 @@
         <h4>Company</h4>
         <a href="/about">About</a>
         <a href="https://github.com/nirholas/XActions" target="_blank">GitHub</a>
-        <a href="https://twitter.com/nichxbt" target="_blank">Twitter</a>
+        <a href="https://x.com/nichxbt" target="_blank">Twitter</a>
       </div>
       <div class="footer-links">
         <h4>Legal</h4>
@@ -586,7 +517,7 @@
     </div>
     <div class="footer-bottom">
       <p>© 2026 XActions. Not affiliated with X Corp.</p>
-      <p>Made with ❤️ by <a href="https://twitter.com/nichxbt" target="_blank">@nichxbt</a></p>
+      <p>Made with ❤️ by <a href="https://x.com/nichxbt" target="_blank">@nichxbt</a></p>
     </div>
   </footer>
 
@@ -594,36 +525,6 @@
     const API_URL = window.location.hostname === 'localhost' 
       ? 'http://localhost:3001/api' 
       : 'https://xactions.app/api';
-
-    async function subscribe(tier) {
-      const token = localStorage.getItem('authToken');
-      
-      if (!token) {
-        window.location.href = '/login';
-        return;
-      }
-
-      try {
-        const res = await fetch(`${API_URL}/payments/create-checkout-session`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ tier })
-        });
-
-        const data = await res.json();
-
-        if (res.ok) {
-          window.location.href = data.url;
-        } else {
-          alert('Failed to start checkout: ' + data.error);
-        }
-      } catch (error) {
-        alert('Network error. Please try again.');
-      }
-    }
 
     async function buyCredits(packageName) {
       const token = localStorage.getItem('authToken');

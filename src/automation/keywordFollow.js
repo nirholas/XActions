@@ -4,7 +4,7 @@
 // REQUIRES: Paste core.js first!
 //
 // HOW TO USE:
-// 1. Go to X search page: twitter.com/search
+// 1. Go to X search page: x.com/search
 // 2. Paste core.js, then paste this script
 // 3. Configure keywords below and run!
 
@@ -64,7 +64,7 @@
     log(`Searching for: "${keyword}"`, 'action');
     
     // Navigate to search
-    const searchUrl = `https://twitter.com/search?q=${encodeURIComponent(keyword)}&src=typed_query&f=user`;
+    const searchUrl = `https://x.com/search?q=${encodeURIComponent(keyword)}&src=typed_query&f=user`;
     window.location.href = searchUrl;
     
     // Wait for page load

@@ -209,7 +209,7 @@
       if (!state.isRunning || !checkLimits().canFollow) break;
 
       log(`Searching: "${keyword}"`, 'action');
-      window.location.href = `https://twitter.com/search?q=${encodeURIComponent(keyword)}&src=typed_query&f=user`;
+      window.location.href = `https://x.com/search?q=${encodeURIComponent(keyword)}&src=typed_query&f=user`;
       await sleep(3000);
       await waitForElement(SELECTORS.userCell, 10000);
 
@@ -239,7 +239,7 @@
     if (!STRATEGY.ACTIONS.LIKE) return;
     log('📍 Phase 2: Timeline Engagement', 'info');
 
-    window.location.href = 'https://twitter.com/home';
+    window.location.href = 'https://x.com/home';
     await sleep(3000);
 
     let scrolls = 0;
@@ -278,7 +278,7 @@
       ?.textContent?.match(/@(\w+)/)?.[1];
     
     if (username) {
-      window.location.href = `https://twitter.com/${username}/following`;
+      window.location.href = `https://x.com/${username}/following`;
       await sleep(3000);
 
       const expiredSet = new Set(expired);

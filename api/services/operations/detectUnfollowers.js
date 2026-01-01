@@ -1,5 +1,5 @@
-const { PrismaClient } = require('@prisma/client');
-const { getTwitterClient } = require('../../routes/twitter');
+import { PrismaClient } from '@prisma/client';
+import { getTwitterClient } from '../../routes/twitter.js';
 
 const prisma = new PrismaClient();
 
@@ -75,4 +75,4 @@ async function processDetectUnfollowers({ operationId, userId }) {
   }
 }
 
-module.exports = { processDetectUnfollowers };
+export { processDetectUnfollowers };

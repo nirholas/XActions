@@ -14,7 +14,7 @@ The Link Scraper automatically scrolls through a user's tweets and extracts all 
 
 ### What You Get
 
-- All external URLs shared in tweets (excludes twitter.com/x.com links)
+- All external URLs shared in tweets (excludes x.com/x.com links)
 - Tweet text context for each link
 - Engagement metrics (likes, retweets, replies, views)
 - Share frequency (how many times same URL was shared)
@@ -39,7 +39,7 @@ The Link Scraper automatically scrolls through a user's tweets and extracts all 
 (async () => {
   const TARGET_TWEETS = 200;       // Number of tweets to process
   const SCROLL_DELAY = 2000;       // ms between scrolls
-  const INCLUDE_TWITTER_LINKS = false; // Set true to include x.com/twitter.com links
+  const INCLUDE_TWITTER_LINKS = false; // Set true to include x.com/x.com links
   
   console.log('🔗 Starting Link Scraper...');
   console.log(`🎯 Target: ${TARGET_TWEETS} tweets`);
@@ -78,7 +78,7 @@ The Link Scraper automatically scrolls through a user's tweets and extracts all 
       const domain = parsed.hostname.replace('www.', '').toLowerCase();
       
       // Skip Twitter internal links
-      const twitterDomains = ['twitter.com', 'x.com', 't.co', 'pic.twitter.com', 'pbs.twimg.com', 'video.twimg.com', 'abs.twimg.com'];
+      const twitterDomains = ['x.com', 'x.com', 't.co', 'pic.x.com', 'pbs.twimg.com', 'video.twimg.com', 'abs.twimg.com'];
       
       if (!INCLUDE_TWITTER_LINKS && twitterDomains.some(d => domain.includes(d))) {
         return false;
@@ -409,8 +409,8 @@ puppeteer.use(StealthPlugin());
  */
 const CONFIG = {
   // Filtering
-  includeTwitterLinks: false,     // Include x.com/twitter.com links
-  includeMediaLinks: false,       // Include pic.twitter.com, pbs.twimg.com
+  includeTwitterLinks: false,     // Include x.com/x.com links
+  includeMediaLinks: false,       // Include pic.x.com, pbs.twimg.com
   
   // Domains to exclude (beyond Twitter)
   excludeDomains: [
@@ -537,7 +537,7 @@ async function scrapeLinks(username, options = {}) {
             const parsed = new URL(url);
             const domain = parsed.hostname.replace('www.', '').toLowerCase();
 
-            const twitterDomains = ['twitter.com', 'x.com', 't.co', 'pic.twitter.com', 'pbs.twimg.com', 'video.twimg.com', 'abs.twimg.com'];
+            const twitterDomains = ['x.com', 'x.com', 't.co', 'pic.x.com', 'pbs.twimg.com', 'video.twimg.com', 'abs.twimg.com'];
 
             if (!config.includeTwitterLinks && twitterDomains.some(d => domain.includes(d))) {
               return false;

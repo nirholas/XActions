@@ -2,7 +2,7 @@
 
 Quick example — unfollow non-followers:
 
-1. Open `https://twitter.com/YOUR_USER_NAME/following`
+1. Open `https://x.com/YOUR_USER_NAME/following`
 2. Open Developer Console
 3. Copy the contents of `src/unfollowback.js` and paste into the console
 

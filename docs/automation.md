@@ -897,7 +897,7 @@ Each script has a configuration section at the top. Modify it to match your need
 **Purpose:** Automatically like posts on your timeline based on keywords or users.
 
 **How to use:**
-1. Go to `twitter.com/home`
+1. Go to `x.com/home`
 2. Paste `core.js` then `autoLiker.js`
 3. Configure and run
 
@@ -925,7 +925,7 @@ window.XActions.Liker.stats()   // View statistics
 **Purpose:** Search for keywords and auto-follow users who match your criteria.
 
 **How to use:**
-1. Go to `twitter.com/home`
+1. Go to `x.com/home`
 2. Paste `core.js` then `keywordFollow.js`
 3. Configure and run
 
@@ -956,7 +956,7 @@ const CONFIG = {
 **Purpose:** Unfollow users who didn't follow back within a specified time period.
 
 **How to use:**
-1. Go to your Following page: `twitter.com/YOUR_USERNAME/following`
+1. Go to your Following page: `x.com/YOUR_USERNAME/following`
 2. Paste `core.js` then `smartUnfollow.js`
 3. Configure and run
 
@@ -991,7 +991,7 @@ const CONFIG = {
   MAX_SCROLLS: 100,              // How far to scroll
   AUTO_DOWNLOAD: true,           // Download results automatically
   INCLUDE_DOMAINS: [],           // Only include these domains (empty = all)
-  EXCLUDE_DOMAINS: ['twitter.com', 'x.com'],  // Skip these domains
+  EXCLUDE_DOMAINS: ['x.com', 'x.com'],  // Skip these domains
 };
 ```
 
@@ -1084,7 +1084,7 @@ XAccounts.login('username')
 **Purpose:** All-in-one growth automation combining follow, like, and unfollow.
 
 **How to use:**
-1. Go to `twitter.com/home`
+1. Go to `x.com/home`
 2. Paste `core.js` then `growthSuite.js`
 3. Configure and run
 
@@ -1673,7 +1673,7 @@ console.log("CSRF token:", tokens.csrf)
 
 // Example 2: Use tokens for custom fetch
 const tokens = await XActions.utils.getTokens()
-const response = await fetch("https://api.twitter.com/2/...", {
+const response = await fetch("https://api.x.com/2/...", {
   headers: {
     "Authorization": `Bearer ${tokens.bearer}`,
     "x-csrf-token": tokens.csrf
@@ -1688,20 +1688,20 @@ console.log("Tokens available:", Object.keys(tokens))
 ```js
 // XActions.utils.getTweetIdFromUrl - Extract tweet ID from URL
 // Example 1: Extract ID from a tweet URL
-const url = "https://twitter.com/elonmusk/status/1234567890123456789"
+const url = "https://x.com/elonmusk/status/1234567890123456789"
 const tweetId = XActions.utils.getTweetIdFromUrl(url)
 console.log(`Tweet ID: ${tweetId}`) // 1234567890123456789
 
 // Example 2: Batch process tweet URLs
 const urls = [
   "https://x.com/user1/status/111111111",
-  "https://twitter.com/user2/status/222222222"
+  "https://x.com/user2/status/222222222"
 ]
 const ids = urls.map(u => XActions.utils.getTweetIdFromUrl(u))
 console.log("Tweet IDs:", ids)
 
 // Example 3: Validate tweet URL
-const input = "https://twitter.com/user/status/123456"
+const input = "https://x.com/user/status/123456"
 const id = XActions.utils.getTweetIdFromUrl(input)
 if (id) {
   console.log(`Valid tweet URL, ID: ${id}`)
@@ -1713,7 +1713,7 @@ if (id) {
 ```js
 // XActions.utils.getUsernameFromUrl - Extract username from URL
 // Example 1: Get username from profile URL
-const url = "https://twitter.com/nichxbt"
+const url = "https://x.com/nichxbt"
 const username = XActions.utils.getUsernameFromUrl(url)
 console.log(`Username: @${username}`) // nichxbt
 
@@ -1723,7 +1723,7 @@ const user = XActions.utils.getUsernameFromUrl(tweetUrl)
 console.log(`Tweet author: @${user}`) // elonmusk
 
 // Example 3: Clean up pasted URLs
-const messyUrl = "https://twitter.com/TechCrunch?s=20"
+const messyUrl = "https://x.com/TechCrunch?s=20"
 const clean = XActions.utils.getUsernameFromUrl(messyUrl)
 console.log(`Clean username: @${clean}`) // TechCrunch
 ```
@@ -1848,17 +1848,17 @@ console.log("Data copied to clipboard as JSON")
 ```js
 // XActions.utils.screenshotTweet - Screenshot a tweet
 // Example 1: Screenshot a tweet by URL
-const imageBlob = await XActions.utils.screenshotTweet("https://twitter.com/user/status/123456")
+const imageBlob = await XActions.utils.screenshotTweet("https://x.com/user/status/123456")
 console.log("Tweet screenshot captured!")
 
 // Example 2: Screenshot and download
-const url = "https://twitter.com/elonmusk/status/123456789"
+const url = "https://x.com/elonmusk/status/123456789"
 const screenshot = await XActions.utils.screenshotTweet(url)
 const imgUrl = URL.createObjectURL(screenshot)
 const a = document.createElement('a'); a.href = imgUrl; a.download = 'tweet.png'; a.click()
 
 // Example 3: Screenshot for evidence/documentation
-const reportedTweet = "https://twitter.com/user/status/123456"
+const reportedTweet = "https://x.com/user/status/123456"
 await XActions.utils.screenshotTweet(reportedTweet)
 console.log("Evidence captured before reporting")
 ```
@@ -1925,7 +1925,7 @@ await XActions.spaces.join("1BRKjZYWXYZKw")
 console.log("Joined the Space!")
 
 // Example 2: Join from URL
-const spaceUrl = "https://twitter.com/i/spaces/1BRKjZYWXYZKw"
+const spaceUrl = "https://x.com/i/spaces/1BRKjZYWXYZKw"
 const spaceId = spaceUrl.split('/').pop()
 await XActions.spaces.join(spaceId)
 

@@ -2,7 +2,7 @@
 // https://github.com/nirholas/XActions
 //
 // HOW TO USE:
-// 1. Go to https://twitter.com/YOUR_USERNAME/followers
+// 1. Go to https://x.com/YOUR_USERNAME/followers
 // 2. Open Developer Console (Ctrl+Shift+J or Cmd+Option+J)
 // 3. Paste this script and press Enter
 // 4. The script will scan your followers and save them
@@ -18,7 +18,7 @@
   const isFollowersPage = window.location.pathname.includes('/followers');
   if (!isFollowersPage) {
     console.error('❌ Please navigate to your FOLLOWERS page first!');
-    console.log('👉 Go to: https://twitter.com/YOUR_USERNAME/followers');
+    console.log('👉 Go to: https://x.com/YOUR_USERNAME/followers');
     return;
   }
 
@@ -125,7 +125,7 @@
       if (unfollowed.length > 0) {
         console.log(`\n🚨 ${unfollowed.length} PEOPLE UNFOLLOWED YOU:\n`);
         unfollowed.forEach((u, i) => {
-          console.log(`   ${i + 1}. @${u} — https://twitter.com/${u}`);
+          console.log(`   ${i + 1}. @${u} — https://x.com/${u}`);
         });
       } else {
         console.log('✨ No one unfollowed you since last check!');
@@ -134,7 +134,7 @@
       if (newFollowers.length > 0) {
         console.log(`\n🎉 ${newFollowers.length} NEW FOLLOWERS:\n`);
         newFollowers.forEach((u, i) => {
-          console.log(`   ${i + 1}. @${u} — https://twitter.com/${u}`);
+          console.log(`   ${i + 1}. @${u} — https://x.com/${u}`);
         });
       }
 

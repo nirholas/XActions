@@ -1,8 +1,8 @@
-const express = require('express');
-const axios = require('axios');
-const { PrismaClient } = require('@prisma/client');
-const { authMiddleware } = require('../middleware/auth');
-const crypto = require('crypto');
+import express from 'express';
+import axios from 'axios';
+import { PrismaClient } from '@prisma/client';
+import { authMiddleware } from '../middleware/auth.js';
+import crypto from 'crypto';
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -27,7 +27,7 @@ router.get('/connect', authMiddleware, (req, res) => {
   req.session.codeVerifier = codeVerifier;
   req.session.userId = req.user.id;
 
-  const authUrl = new URL('https://twitter.com/i/oauth2/authorize');
+  const authUrl = new URL('https://x.com/i/oauth2/authorize');
   authUrl.searchParams.append('response_type', 'code');
   authUrl.searchParams.append('client_id', TWITTER_CLIENT_ID);
   authUrl.searchParams.append('redirect_uri', CALLBACK_URL);
@@ -51,7 +51,7 @@ router.get('/callback', async (req, res) => {
 
     // Exchange code for access token
     const tokenResponse = await axios.post(
-      'https://api.twitter.com/2/oauth2/token',
+      'https://api.x.com/2/oauth2/token',
       new URLSearchParams({
         code,
         grant_type: 'authorization_code',
@@ -73,7 +73,7 @@ router.get('/callback', async (req, res) => {
     const { access_token, refresh_token, expires_in } = tokenResponse.data;
 
     // Get user info from Twitter
-    const userResponse = await axios.get('https://api.twitter.com/2/users/me', {
+    const userResponse = await axios.get('https://api.x.com/2/users/me', {
       headers: {
         Authorization: `Bearer ${access_token}`
       }
@@ -126,7 +126,7 @@ router.post('/disconnect', authMiddleware, async (req, res) => {
 async function refreshTwitterToken(user) {
   try {
     const response = await axios.post(
-      'https://api.twitter.com/2/oauth2/token',
+      'https://api.x.com/2/oauth2/token',
       new URLSearchParams({
         grant_type: 'refresh_token',
         refresh_token: user.twitterRefreshToken,
@@ -171,12 +171,12 @@ async function getTwitterClient(user) {
   }
 
   return axios.create({
-    baseURL: 'https://api.twitter.com/2',
+    baseURL: 'https://api.x.com/2',
     headers: {
       Authorization: `Bearer ${accessToken}`
     }
   });
 }
 
-module.exports = router;
-module.exports.getTwitterClient = getTwitterClient;
+export default router;
+export { getTwitterClient };

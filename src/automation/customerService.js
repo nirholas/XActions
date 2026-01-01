@@ -373,7 +373,7 @@ business_account
     log('📬 Checking notifications...', 'action');
     
     // Navigate to notifications
-    window.location.href = 'https://twitter.com/notifications/mentions';
+    window.location.href = 'https://x.com/notifications/mentions';
     await sleep(3000);
     
     // Get notification items

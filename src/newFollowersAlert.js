@@ -2,7 +2,7 @@
 // https://github.com/nirholas/XActions
 //
 // HOW TO USE:
-// 1. Go to https://twitter.com/YOUR_USERNAME/followers
+// 1. Go to https://x.com/YOUR_USERNAME/followers
 // 2. Open Developer Console (Ctrl+Shift+J or Cmd+Option+J)
 // 3. Paste this script and press Enter
 // 4. Run periodically to see your new followers!
@@ -98,7 +98,7 @@
         console.log(`🎉 ${newFollowers.length} NEW FOLLOWERS:\n`);
         newFollowers.forEach((f, i) => {
           console.log(`   ${i + 1}. ${f.displayName} (@${f.user})`);
-          console.log(`      https://twitter.com/${f.user}`);
+          console.log(`      https://x.com/${f.user}`);
         });
 
         // Create welcome message template

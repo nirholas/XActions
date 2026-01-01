@@ -1,5 +1,5 @@
-const jwt = require('jsonwebtoken');
-const { PrismaClient } = require('@prisma/client');
+import jwt from 'jsonwebtoken';
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -114,9 +114,29 @@ const checkCredits = (requiredCredits) => {
   };
 };
 
-module.exports = {
+/**
+ * Require admin privileges
+ */
+const requireAdmin = (req, res, next) => {
+  if (!req.user) {
+    return res.status(401).json({ error: 'Authentication required' });
+  }
+
+  if (!req.user.isAdmin) {
+    return res.status(403).json({ error: 'Admin access required' });
+  }
+
+  next();
+};
+
+export {
   authMiddleware,
   optionalAuthMiddleware,
   requireSubscription,
-  checkCredits
+  checkCredits,
+  requireAdmin,
 };
+
+// Also export authenticate as alias for authMiddleware for backward compatibility
+export const authenticate = authMiddleware;
+export const authenticateToken = authMiddleware;

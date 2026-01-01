@@ -1,9 +1,9 @@
-const express = require('express');
-const { PrismaClient } = require('@prisma/client');
-const { authMiddleware, checkCredits } = require('../middleware/auth');
-const { getTwitterClient } = require('./twitter');
-const { queueJob } = require('../services/jobQueue');
-const { CREDIT_COSTS } = require('../config/subscription-tiers');
+import express from 'express';
+import { PrismaClient } from '@prisma/client';
+import { authMiddleware, checkCredits } from '../middleware/auth.js';
+import { getTwitterClient } from './twitter.js';
+import { queueJob } from '../services/jobQueue.js';
+import { CREDIT_COSTS } from '../config/subscription-tiers.js';
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -255,4 +255,4 @@ router.get('/', async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

@@ -1,5 +1,5 @@
-const puppeteer = require('puppeteer-extra');
-const StealthPlugin = require('puppeteer-extra-plugin-stealth');
+import puppeteer from 'puppeteer-extra';
+import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 
 // Add stealth plugin to avoid detection
 puppeteer.use(StealthPlugin());
@@ -240,4 +240,4 @@ class BrowserAutomation {
   }
 }
 
-module.exports = new BrowserAutomation();
+export default new BrowserAutomation();

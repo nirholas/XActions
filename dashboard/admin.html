@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - XActions Live Sessions</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --error: #f4212e;
+      --warning: #ffad1f;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header h1 {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.5rem;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    .status-connected {
+      background: rgba(0, 186, 124, 0.1);
+      color: var(--success);
+    }
+
+    .status-disconnected {
+      background: rgba(244, 33, 46, 0.1);
+      color: var(--error);
+    }
+
+    .pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .stats-bar {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .stat-box {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 24px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .stat-label {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+    }
+
+    .sessions-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .session-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      transition: all 0.2s;
+    }
+
+    .session-card:hover {
+      border-color: var(--accent);
+    }
+
+    .session-card.running {
+      border-color: var(--success);
+      box-shadow: 0 0 20px rgba(0, 186, 124, 0.1);
+    }
+
+    .session-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .session-user {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--bg-tertiary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+    }
+
+    .user-info h3 {
+      font-size: 1rem;
+      margin-bottom: 2px;
+    }
+
+    .user-info p {
+      color: var(--text-secondary);
+      font-size: 0.8125rem;
+    }
+
+    .session-status {
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .session-status.waiting { background: var(--bg-tertiary); color: var(--text-secondary); }
+    .session-status.connected { background: rgba(29, 155, 240, 0.2); color: var(--accent); }
+    .session-status.running { background: rgba(0, 186, 124, 0.2); color: var(--success); }
+    .session-status.completed { background: rgba(0, 186, 124, 0.1); color: var(--success); }
+    .session-status.error { background: rgba(244, 33, 46, 0.2); color: var(--error); }
+
+    .session-operation {
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+
+    .operation-name {
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: var(--bg-primary);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--success));
+      border-radius: 4px;
+      transition: width 0.3s;
+    }
+
+    .progress-text {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+    }
+
+    .session-log {
+      max-height: 150px;
+      overflow-y: auto;
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 0.75rem;
+      background: var(--bg-primary);
+      border-radius: 8px;
+      padding: 12px;
+    }
+
+    .log-entry {
+      padding: 4px 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      gap: 8px;
+    }
+
+    .log-entry:last-child { border: none; }
+    .log-time { color: var(--text-secondary); }
+    .log-action { color: var(--success); }
+    .log-handle { color: var(--accent); }
+
+    .empty-state {
+      text-align: center;
+      padding: 64px 24px;
+      color: var(--text-secondary);
+    }
+
+    .empty-state .icon {
+      font-size: 3rem;
+      margin-bottom: 16px;
+    }
+
+    #connection-status {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      padding: 12px 20px;
+      border-radius: 9999px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <h1>
+      <span>⚡</span>
+      XActions Admin
+      <span style="font-weight: 400; font-size: 1rem; color: var(--text-secondary);">Live Sessions</span>
+    </h1>
+    <a href="/dashboard" style="color: var(--accent); text-decoration: none;">← Back to Dashboard</a>
+  </header>
+
+  <div class="stats-bar">
+    <div class="stat-box">
+      <div class="stat-value" id="total-sessions">0</div>
+      <div class="stat-label">Active Sessions</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-value" id="running-sessions">0</div>
+      <div class="stat-label">Running Now</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-value" id="total-unfollows">0</div>
+      <div class="stat-label">Unfollows Today</div>
+    </div>
+  </div>
+
+  <div class="sessions-grid" id="sessions-container">
+    <div class="empty-state">
+      <div class="icon">📡</div>
+      <h3>No active sessions</h3>
+      <p>Sessions will appear here when users connect their browser</p>
+    </div>
+  </div>
+
+  <div id="connection-status" class="status-badge status-disconnected">
+    <span class="pulse"></span>
+    <span id="connection-text">Connecting...</span>
+  </div>
+
+  <script>
+    const API_URL = window.location.origin;
+    const authToken = localStorage.getItem('authToken');
+    
+    if (!authToken) {
+      window.location.href = '/login';
+    }
+
+    const sessions = new Map();
+    let totalUnfollows = 0;
+
+    // Connect to WebSocket as admin
+    const socket = io(API_URL, {
+      auth: { token: authToken, role: 'admin' }
+    });
+
+    socket.on('connect', () => {
+      document.getElementById('connection-status').className = 'status-badge status-connected';
+      document.getElementById('connection-text').textContent = 'Connected';
+    });
+
+    socket.on('disconnect', () => {
+      document.getElementById('connection-status').className = 'status-badge status-disconnected';
+      document.getElementById('connection-text').textContent = 'Disconnected';
+    });
+
+    socket.on('connect_error', (err) => {
+      if (err.message === 'Admin access required') {
+        alert('You do not have admin access');
+        window.location.href = '/dashboard';
+      }
+    });
+
+    // Initial session list
+    socket.on('sessions:list', (list) => {
+      sessions.clear();
+      list.forEach(s => sessions.set(s.sessionId, s));
+      renderSessions();
+    });
+
+    // New session
+    socket.on('session:new', (session) => {
+      sessions.set(session.sessionId, session);
+      renderSessions();
+    });
+
+    // Session updated
+    socket.on('session:updated', (session) => {
+      if (session) {
+        sessions.set(session.sessionId, { ...sessions.get(session.sessionId), ...session });
+        renderSessions();
+      }
+    });
+
+    // Session started operation
+    socket.on('session:started', (data) => {
+      const session = sessions.get(data.sessionId);
+      if (session) {
+        session.status = 'running';
+        session.operation = data.operation;
+        session.logs = session.logs || [];
+        session.logs.push({ time: new Date(), action: 'started', operation: data.operation });
+        renderSessions();
+      }
+    });
+
+    // Progress update
+    socket.on('session:progress', (data) => {
+      const session = sessions.get(data.sessionId);
+      if (session) {
+        session.progress = data;
+        renderSessions();
+      }
+    });
+
+    // Action (individual unfollow, etc.)
+    socket.on('session:action', (data) => {
+      const session = sessions.get(data.sessionId);
+      if (session) {
+        session.logs = session.logs || [];
+        session.logs.unshift({ time: new Date(), ...data });
+        if (session.logs.length > 50) session.logs.pop();
+        
+        if (data.type === 'unfollow') totalUnfollows++;
+        document.getElementById('total-unfollows').textContent = totalUnfollows;
+        
+        renderSessions();
+      }
+    });
+
+    // Session complete
+    socket.on('session:complete', (data) => {
+      const session = sessions.get(data.sessionId);
+      if (session) {
+        session.status = 'completed';
+        session.result = data;
+        renderSessions();
+      }
+    });
+
+    // Session error
+    socket.on('session:error', (data) => {
+      const session = sessions.get(data.sessionId);
+      if (session) {
+        session.status = 'error';
+        session.error = data.message;
+        renderSessions();
+      }
+    });
+
+    // Session removed
+    socket.on('session:removed', (data) => {
+      sessions.delete(data.sessionId);
+      renderSessions();
+    });
+
+    function renderSessions() {
+      const container = document.getElementById('sessions-container');
+      const sessionList = Array.from(sessions.values());
+      
+      document.getElementById('total-sessions').textContent = sessionList.length;
+      document.getElementById('running-sessions').textContent = sessionList.filter(s => s.status === 'running').length;
+
+      if (sessionList.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="icon">📡</div>
+            <h3>No active sessions</h3>
+            <p>Sessions will appear here when users connect their browser</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = sessionList.map(session => `
+        <div class="session-card ${session.status === 'running' ? 'running' : ''}">
+          <div class="session-header">
+            <div class="session-user">
+              <div class="user-avatar">👤</div>
+              <div class="user-info">
+                <h3>@${session.username || 'Unknown'}</h3>
+                <p>${session.sessionId.slice(0, 20)}...</p>
+              </div>
+            </div>
+            <span class="session-status ${session.status}">${session.status}</span>
+          </div>
+          
+          ${session.operation ? `
+            <div class="session-operation">
+              <div class="operation-name">${formatOperation(session.operation)}</div>
+              ${session.progress ? `
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width: ${session.progress.percent || 0}%"></div>
+                </div>
+                <div class="progress-text">
+                  <span>${session.progress.message || ''}</span>
+                  <span>${session.progress.current || 0}/${session.progress.max || '?'}</span>
+                </div>
+              ` : ''}
+            </div>
+          ` : ''}
+          
+          ${session.logs?.length ? `
+            <div class="session-log">
+              ${session.logs.slice(0, 10).map(log => `
+                <div class="log-entry">
+                  <span class="log-time">${new Date(log.time).toLocaleTimeString()}</span>
+                  <span class="log-action">${log.type || log.action}</span>
+                  ${log.handle ? `<span class="log-handle">@${log.handle}</span>` : ''}
+                </div>
+              `).join('')}
+            </div>
+          ` : ''}
+        </div>
+      `).join('');
+    }
+
+    function formatOperation(op) {
+      const names = {
+        unfollowNonFollowers: '🧹 Unfollow Non-Followers',
+        unfollowEveryone: '💥 Unfollow Everyone',
+        detectUnfollowers: '🔍 Detect Unfollowers'
+      };
+      return names[op] || op;
+    }
+  </script>
+</body>
+</html>

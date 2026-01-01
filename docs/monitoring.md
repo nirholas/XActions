@@ -21,7 +21,7 @@ Want to know who stopped following you? Here's how:
 
 ### Step 1: Go to Your Followers Page
 ```
-https://twitter.com/YOUR_USERNAME/followers
+https://x.com/YOUR_USERNAME/followers
 ```
 
 ### Step 2: Run the Script
@@ -49,7 +49,7 @@ Later runs: 📸 Takes new snapshot
 
 Use `newFollowersAlert.js` to see your new followers:
 
-1. Go to `https://twitter.com/YOUR_USERNAME/followers`
+1. Go to `https://x.com/YOUR_USERNAME/followers`
 2. Paste the script and run
 3. First run saves your current followers
 4. Run again later to see who's new!
@@ -67,14 +67,14 @@ Want to track someone else's followers or following list? Use `monitorAccount.js
 
 ### Track Who Follows Someone
 ```
-https://twitter.com/elonmusk/followers
+https://x.com/elonmusk/followers
 → Run script
 → See who starts/stops following them
 ```
 
 ### Track Who Someone Follows
 ```
-https://twitter.com/elonmusk/following
+https://x.com/elonmusk/following
 → Run script  
 → See who they follow/unfollow
 ```

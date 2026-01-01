@@ -1,148 +1,165 @@
 # Getting Started with XActions
 
-Welcome! This guide will walk you through using XActions to clean up your X (Twitter) following list. No coding experience needed.
+Welcome! XActions helps you automate your X (Twitter) account. No coding needed.
 
 ---
 
 ## What Does XActions Do?
 
 XActions helps you:
-- **Unfollow people who don't follow you back** — clean up one-sided follows
+- **Unfollow non-followers** — clean up one-sided follows
 - **Unfollow everyone** — start fresh with a clean following list
-- **Keep a record** — optionally download a list of everyone you unfollowed
-- **Detect who unfollowed you** — find out who stopped following you
-- **Monitor any account** — track follows/unfollows on any public profile
+- **Detect unfollowers** — find out who stopped following you
+- **Auto-like & engage** — grow your account automatically
+- **Monitor accounts** — track follows/unfollows on any profile
 
 ---
 
-## Before You Start
+## Two Ways to Use XActions
 
-You'll need:
-1. A computer (Windows, Mac, or Linux)
-2. A web browser (Chrome, Firefox, Edge, or Safari)
-3. An X (Twitter) account
+### Option 1: Dashboard (Recommended) 🌐
 
-**Time needed:** About 5 minutes to set up, then the script runs automatically.
+Use our web dashboard for the easiest experience:
 
----
+1. **Sign up** at [xactions.app](https://xactions.app)
+2. **Get credits** — Follow @nichxbt for 3 free credits, or buy a package
+3. **Connect your browser** — Paste a simple script in your x.com tab
+4. **Run operations** — Click buttons to automate, watch progress in real-time
 
-## Step-by-Step Instructions
+**Pricing:**
+- Start with 2 free credits (1 demo operation)
+- Follow @nichxbt = +1 bonus credit
+- Starter pack = $2.99 for 17 credits
 
-### Step 1: Open X and Go to Your Following List
+### Option 2: Browser Scripts (Free) 📜
 
-1. Open your web browser
-2. Go to [twitter.com](https://twitter.com) and log in
-3. Click on your profile picture
-4. Click **"Following"** to see everyone you follow
-
-Or go directly to: `https://twitter.com/YOUR_USERNAME/following`  
-(Replace `YOUR_USERNAME` with your actual username)
+Run scripts directly in your browser console — 100% free, no account needed.
 
 ---
 
-### Step 2: Open the Developer Console
+## Dashboard Quick Start
 
-This is where you'll paste the script. Don't worry — it sounds technical but it's easy!
+### Step 1: Create an Account
 
-**On Windows/Linux:**
-- Press `Ctrl` + `Shift` + `J` (Chrome)
-- Or press `F12`, then click the "Console" tab
+1. Go to [xactions.app](https://xactions.app)
+2. Click **Sign Up**
+3. Enter your email, username, and password
 
-**On Mac:**
-- Press `Cmd` + `Option` + `J` (Chrome)
-- Or press `Cmd` + `Option` + `I`, then click the "Console" tab
+### Step 2: Get Credits
 
-You should see a panel open at the bottom or side of your browser with a blinking cursor.
+**Free option:**
+1. New accounts get 2 free credits (1 demo operation)
+2. Follow @nichxbt on X for +1 bonus credit
+3. Refer friends for more credits (after they pay)
+
+**Paid option:**
+1. Go to [Pricing](https://xactions.app/pricing)
+2. Choose a credit package
+3. Pay with card or crypto (BTC, ETH, SOL, USDC)
+
+### Step 3: Connect Your Browser
+
+XActions uses a "browser-to-browser" approach. The automation runs in YOUR x.com tab, so it's just like doing actions manually — only automated!
+
+1. Open [x.com](https://x.com) in a new tab and log in
+2. On the XActions dashboard, click **"Connect Browser"**
+3. Copy the script that appears
+4. In your x.com tab, press `F12` to open Developer Tools
+5. Go to the **Console** tab
+6. Paste the script and press Enter
+7. You'll see "✅ Connected to XActions"
+
+### Step 4: Run an Operation
+
+1. Back on the dashboard, click an operation (e.g., "Unfollow Non-Followers")
+2. Set your options (how many to unfollow, delays, etc.)
+3. Click **Run**
+4. Watch the real-time progress as it runs in your x.com tab!
+
+You'll see:
+- Live progress bar
+- Each action logged in real-time
+- Results summary when complete
 
 ---
 
-### Step 3: Choose Your Script
+## Browser Scripts (Free)
 
-Pick the script that matches what you want to do:
+If you just want free scripts without an account:
 
-| I want to... | Use this script |
-|--------------|-----------------|
-| Unfollow people who don't follow me back | `src/unfollowback.js` |
+### Step 1: Go to Your Following List
+
+1. Open [x.com](https://x.com) and log in
+2. Go to `x.com/YOUR_USERNAME/following`
+
+### Step 2: Open the Console
+
+**Windows/Linux:** Press `Ctrl` + `Shift` + `J`  
+**Mac:** Press `Cmd` + `Option` + `J`
+
+### Step 3: Pick a Script
+
+| I want to... | Script |
+|--------------|--------|
+| Unfollow non-followers | `src/unfollowback.js` |
 | Unfollow everyone | `src/unfollowEveryone.js` |
-| Unfollow non-followers AND save a list | `src/unfollowWDFBLog.js` |
+| Unfollow + save list | `src/unfollowWDFBLog.js` |
 
----
+### Step 4: Copy & Paste
 
-### Step 4: Copy the Script
-
-1. Go to the [XActions GitHub repository](https://github.com/nirholas/XActions)
+1. Go to [github.com/nirholas/XActions](https://github.com/nirholas/XActions)
 2. Open the `src` folder
-3. Click on the script file you want (e.g., `unfollowback.js`)
-4. Click the **"Copy raw file"** button (or select all the code and copy it)
+3. Click on the script you want
+4. Click **"Copy raw file"**
+5. Paste into the console and press Enter
 
 ---
 
-### Step 5: Paste and Run
+## Credit System
 
-1. Click inside the Developer Console (the panel you opened in Step 2)
-2. Paste the code (`Ctrl+V` on Windows/Linux, `Cmd+V` on Mac)
-3. Press `Enter` to run it
+| Package | Credits | Price |
+|---------|---------|-------|
+| Free Demo | 2 | Free |
+| Follow Bonus | +1 | Free |
+| Starter | 17 | $2.99 |
+| Basic | 47 | $6.99 |
+| Pro | 113 | $14.99 |
+| Power | 251 | $29.99 |
 
----
+**Credit costs vary by operation:**
+- Basic ops (unfollow): 2 credits
+- Detection ops (unfollowers, alerts): 3 credits
+- Power features (auto-liker, keyword follow): 5 credits
 
-### Step 6: Watch It Work
-
-The script will:
-1. Scroll down your following list
-2. Click "Unfollow" on each person (skipping those who follow you back, if applicable)
-3. Confirm each unfollow automatically
-4. Keep going until it's done
-
-**You'll see messages in the console like:**
-```
-WAITING FOR 1 SECONDS...
-UNFOLLOWING 10 USERS...
-NO ACCOUNTS FOUND, SO I THINK WE'RE DONE
-```
+We accept: **Crypto** (BTC, ETH, SOL, USDC) or **Card** (Stripe)
 
 ---
 
 ## Tips & Tricks
 
 ### Go Slow to Avoid Rate Limits
-X (Twitter) may temporarily limit your account if you unfollow too many people too fast. The script has built-in delays, but if you're unfollowing thousands of people:
-- Run the script in batches
+X may limit your account if you do too many actions too fast. The scripts have built-in delays, but if you're unfollowing thousands of people:
+- Run in batches
 - Wait 15-30 minutes between runs
 
 ### Keep Your Browser Open
-Don't close the tab or put your computer to sleep while the script is running.
+Don't close the x.com tab while operations are running.
 
-### Missed Some People?
-Just reload the page and run the script again. It will pick up where it left off.
-
----
-
-## Troubleshooting
-
-### "Nothing is happening"
-- Make sure you're on the Following page (not Followers)
-- Try scrolling down manually first to load some accounts
-- Reload the page and try again
-
-### "I see an error message"
-- Copy the error message
-- [Open an issue](https://github.com/nirholas/XActions/issues) on GitHub and paste it there
-
-### "The console closed"
-- Press the keyboard shortcut again to reopen it
-- You may need to paste and run the script again
+### Dashboard Real-Time Monitoring
+With the dashboard, you can watch operations happen in real-time. The admin can also monitor all sessions!
 
 ---
 
 ## Safety & Privacy
 
-✅ **Safe:** This script only clicks buttons in your browser — the same actions you'd do manually  
-✅ **Private:** No data is sent anywhere; everything runs locally in your browser  
-✅ **Open Source:** All code is visible on GitHub so you can verify exactly what it does  
+✅ **Safe:** Scripts run in YOUR browser — just like doing actions manually  
+✅ **Private:** No passwords or session cookies stored on our servers  
+✅ **Open Source:** All code is visible on [GitHub](https://github.com/nirholas/XActions)  
+✅ **Non-KYC:** Pay with crypto, no identity verification needed
 
 ---
 
-## 🔭 Want to Monitor Followers Instead?
+## 🔭 Want to Monitor Followers?
 
 Check out the [Monitoring Guide](monitoring.md) to learn how to:
 - Find out who unfollowed you
@@ -154,12 +171,11 @@ Check out the [Monitoring Guide](monitoring.md) to learn how to:
 
 ## Need Help?
 
-- 📖 [Full documentation](https://github.com/nirholas/XActions/tree/main/docs)
-- 🔭 [Monitoring Guide](monitoring.md)
-- 🐛 [Report a bug](https://github.com/nirholas/XActions/issues)
-- 💬 [Ask a question](https://github.com/nirholas/XActions/discussions)
+- 📚 [Full Documentation](https://xactions.app/docs)
+- 💬 [GitHub Issues](https://github.com/nirholas/XActions/issues)
+- 🐦 [@nichxbt on X](https://x.com/nichxbt)
 
 ---
 
-Happy unfollowing! 🎉
+*Made with ❤️ by [@nichxbt](https://x.com/nichxbt)*
 

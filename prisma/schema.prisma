@@ -15,12 +15,13 @@ model User {
   email     String   @unique
   username  String   @unique
   password  String?  // Nullable for guest users
-  credits   Int      @default(50)
+  credits   Int      @default(0)
   
   // Quick start / Guest user flags
-  isGuest       Boolean  @default(false)
-  emailVerified Boolean  @default(false)
-  isAdmin       Boolean  @default(false)
+  isGuest           Boolean  @default(false)
+  emailVerified     Boolean  @default(false)
+  isAdmin           Boolean  @default(false)
+  followBonusClaimed Boolean @default(false)  // Track if they claimed follow bonus
   
   // Twitter OAuth
   twitterId           String?  @unique
@@ -180,5 +181,49 @@ model CryptoPayment {
   @@index([userId])
   @@index([status])
   @@index([email])
+}
+
+model License {
+  id          String   @id @default(cuid())
+  
+  key         String   @unique  // XACT-XXXX-XXXX-XXXX-XXXX
+  tier        String   // 'starter', 'business', 'enterprise'
+  
+  // Customer info
+  customerName    String?
+  customerEmail   String?
+  companyName     String?
+  
+  // Limits
+  maxUsers        Int      @default(500)
+  maxInstances    Int      @default(1)
+  
+  // Features
+  whiteLabel      Boolean  @default(false)
+  customDomain    Boolean  @default(false)
+  apiAccess       Boolean  @default(false)
+  
+  // Tracking
+  activations     Int      @default(0)
+  lastActivatedAt DateTime?
+  instanceIds     String?  // JSON array of activated instance IDs
+  
+  // Status
+  status          String   @default("active") // 'active', 'suspended', 'revoked', 'expired'
+  expiresAt       DateTime?
+  
+  // Payment reference
+  paymentId       String?
+  amountPaid      Float?
+  
+  // Notes
+  notes           String?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([key])
+  @@index([customerEmail])
+  @@index([status])
 }
 

@@ -7,7 +7,7 @@
 // Works with the keywordFollow.js tracking data.
 //
 // HOW TO USE:
-// 1. Go to twitter.com/YOUR_USERNAME/following
+// 1. Go to x.com/YOUR_USERNAME/following
 // 2. Paste core.js, then paste this script
 // 3. Configure options below and run!
 
@@ -77,7 +77,7 @@
     
     // Navigate to followers if not there
     const username = window.location.pathname.split('/')[1];
-    const followersUrl = `https://twitter.com/${username}/followers`;
+    const followersUrl = `https://x.com/${username}/followers`;
     
     if (!window.location.href.includes('/followers')) {
       window.open(followersUrl, '_blank');

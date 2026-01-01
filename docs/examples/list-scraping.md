@@ -274,7 +274,7 @@ puppeteer.use(StealthPlugin());
 function parseListUrl(listUrl) {
   // Handle various list URL formats:
   // https://x.com/i/lists/123456789
-  // https://twitter.com/i/lists/123456789
+  // https://x.com/i/lists/123456789
   // https://x.com/username/lists/listname
   
   const url = new URL(listUrl);
@@ -549,11 +549,11 @@ Arguments:
 Examples:
   node scrape-list.js "https://x.com/i/lists/123456789" 500
   node scrape-list.js "https://x.com/elonmusk/lists/spacex-team"
-  node scrape-list.js "https://twitter.com/i/lists/87654321" 2000
+  node scrape-list.js "https://x.com/i/lists/87654321" 2000
 
 Supported URL formats:
   - https://x.com/i/lists/LIST_ID
-  - https://twitter.com/i/lists/LIST_ID
+  - https://x.com/i/lists/LIST_ID
   - https://x.com/username/lists/listname
 
 Output:

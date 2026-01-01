@@ -2,7 +2,7 @@
 // https://github.com/nirholas/XActions
 //
 // HOW TO USE:
-// 1. Go to https://twitter.com/USERNAME/followers (or /following)
+// 1. Go to https://x.com/USERNAME/followers (or /following)
 // 2. Open Developer Console (Ctrl+Shift+J or Cmd+Option+J)
 // 3. Paste this script and press Enter
 // 4. Leave the tab open — it will check periodically and alert you!

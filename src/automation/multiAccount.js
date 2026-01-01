@@ -350,7 +350,7 @@
 
     // Navigate to login page
     goToLogin: () => {
-      window.location.href = 'https://twitter.com/login';
+      window.location.href = 'https://x.com/login';
     },
 
     // Navigate to logout

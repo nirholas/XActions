@@ -219,7 +219,7 @@ window.XActions.Core = (() => {
       const text = tweetElement.querySelector(SELECTORS.tweetText)?.textContent || '';
       const links = Array.from(tweetElement.querySelectorAll('a[href]'))
         .map(a => a.href)
-        .filter(href => href && !href.includes('twitter.com'));
+        .filter(href => href && !href.includes('x.com'));
       const tweetLink = tweetElement.querySelector(SELECTORS.tweetLink)?.href || '';
       const userName = tweetElement.querySelector(SELECTORS.userName)?.textContent || '';
       

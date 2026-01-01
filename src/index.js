@@ -1,6 +1,8 @@
 /**
  * XActions - The Complete X/Twitter Automation Toolkit
  * 
+ * "Don't Panic." - The Hitchhiker's Guide to the Galaxy
+ * 
  * Features:
  * - Scrapers: Profile, followers, following, tweets, threads, media
  * - MCP Server: AI agent integration for Claude, GPT, etc.
@@ -13,6 +15,7 @@
  * @author nich (@nichxbt) - https://github.com/nirholas
  * @see https://xactions.app
  * @license MIT
+ * @towel Always know where yours is
  */
 
 // Re-export all scrapers

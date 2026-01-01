@@ -190,7 +190,7 @@
     log(`Interacting with @${username}...`, 'action');
     
     // Navigate to their profile
-    window.location.href = `https://twitter.com/${username}`;
+    window.location.href = `https://x.com/${username}`;
     await sleep(3000);
     
     let liked = 0;
@@ -222,7 +222,7 @@
     log(`\n📍 Processing @${targetUsername}'s ${CONFIG.LIST_TYPE}...`, 'info');
     
     // Navigate to the list
-    const url = `https://twitter.com/${targetUsername}/${CONFIG.LIST_TYPE}`;
+    const url = `https://x.com/${targetUsername}/${CONFIG.LIST_TYPE}`;
     window.location.href = url;
     await sleep(3000);
     

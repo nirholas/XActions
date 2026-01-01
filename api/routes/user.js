@@ -1,6 +1,6 @@
-const express = require('express');
-const { PrismaClient } = require('@prisma/client');
-const { authMiddleware } = require('../middleware/auth');
+import express from 'express';
+import { PrismaClient } from '@prisma/client';
+import { authMiddleware } from '../middleware/auth.js';
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -152,4 +152,49 @@ router.delete('/account', async (req, res) => {
   }
 });
 
-module.exports = router;
+// Claim follow bonus - gives 3 credits for following @nichxbt
+import { FOLLOW_BONUS_CREDITS } from '../config/subscription-tiers.js';
+
+router.post('/claim-follow-bonus', async (req, res) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: req.user.id }
+    });
+
+    // Check if already claimed
+    if (user.followBonusClaimed) {
+      return res.status(400).json({ error: 'Follow bonus already claimed' });
+    }
+
+    // Check if user has connected their X session
+    if (!user.sessionCookie && !user.twitterAccessToken) {
+      return res.status(400).json({ 
+        error: 'Connect your X account first to verify the follow',
+        requiresConnection: true
+      });
+    }
+
+    // TODO: Verify follow using session cookie or API
+    // For now, trust-based - mark as claimed and add credits
+    // In production, use browser automation to check if they follow @nichxbt
+
+    await prisma.user.update({
+      where: { id: req.user.id },
+      data: {
+        credits: { increment: FOLLOW_BONUS_CREDITS },
+        followBonusClaimed: true
+      }
+    });
+
+    res.json({ 
+      success: true,
+      creditsAdded: FOLLOW_BONUS_CREDITS,
+      message: `${FOLLOW_BONUS_CREDITS} credits added! You can now run 1 operation.`
+    });
+  } catch (error) {
+    console.error('Claim follow bonus error:', error);
+    res.status(500).json({ error: 'Failed to claim follow bonus' });
+  }
+});
+
+export default router;

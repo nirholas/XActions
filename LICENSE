@@ -1,49 +1,122 @@
-MIT License
+# Business Source License 1.1
 
-Copyright (c) 2024-2026 nich (@nichxbt)
+## License
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+**Licensor:** nich (@nichxbt)
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+**Licensed Work:** XActions  
+The Licensed Work is (c) 2024-2026 nich (@nichxbt)
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+**Additional Use Grant:** 
+
+You may use the Licensed Work for any purpose, including production use,
+**except** you may not:
+
+1. Offer the Licensed Work or any substantial portion of it as a commercial
+   hosted or managed service that competes with the Licensor's paid offerings
+   (including xactions.app or any successor)
+
+2. Sell, resell, lease, license, sublicense, or distribute access to the
+   Licensed Work as a service to third parties
+
+3. Offer a product or service that is a substitute for the Licensed Work's
+   commercial offerings
+
+**Browser Scripts Exception:**
+
+Files in the `src/*.js` and `archive/*.js` directories (browser console scripts)
+are separately licensed under the MIT License and may be used freely for any
+purpose, including commercial use, without restriction.
+
+**Change Date:** January 1, 2030
+
+**Change License:** MIT License
 
 ---
 
 ## Additional Terms
 
-### Commercial Use
-✅ Commercial use is permitted. You may use XActions in commercial products,
-   SaaS platforms, and for-profit projects.
+### What You CAN Do
+
+✅ Use XActions for personal projects  
+✅ Use XActions internally at your company  
+✅ Build integrations, plugins, bots, and tools that connect to XActions  
+✅ Modify the code for your own use  
+✅ Contribute improvements back to the project  
+✅ Learn from the source code  
+✅ Use the browser scripts (src/, archive/) for anything — they're MIT  
+
+### What You CANNOT Do (Without Permission)
+
+❌ Run a competing SaaS offering using this code  
+❌ Sell XActions as a managed/hosted service  
+❌ White-label and resell XActions  
+❌ Offer XActions functionality as a paid product  
+
+### Commercial Licensing
+
+Want to build a commercial product with XActions? We're developer-friendly!
+
+- Contact: @nichxbt on X (Twitter)
+- GitHub: https://github.com/nirholas
+
+We offer commercial licenses for:
+- White-label deployments
+- Enterprise self-hosting
+- Custom integrations
+- Revenue-sharing partnerships
+
+### Contributions
+
+By contributing to XActions, you agree that:
+1. Your contributions are licensed under the same terms
+2. The Licensor may use your contributions in commercial offerings
+3. You have the right to make the contribution
 
 ### Attribution
-While not required, attribution is appreciated:
-- Link back to https://github.com/nirholas/xactions
-- Credit "XActions by nich (@nichxbt)"
 
-### Third-Party Services
-This software interacts with X (formerly Twitter). Users are responsible for
-complying with X's Terms of Service. The authors are not liable for account
-suspensions or other consequences from using this software.
-
-### No Warranty for Platform Compatibility
-X.com may change their website at any time. The authors do not guarantee
-continued functionality after platform updates.
+If you use XActions, please include visible attribution:
+- "Built with XActions" or "Powered by XActions"  
+- Link to https://xactions.app or https://github.com/nirholas/xactions
 
 ---
 
-⚡ XActions - https://xactions.app
+## Standard BSL Terms
+
+**Effective Date:** January 1, 2024
+
+The Licensor hereby grants you the right to copy, modify, create derivative
+works, redistribute, and make non-production use of the Licensed Work.
+
+If your use of the Licensed Work does not comply with the requirements
+currently in effect as described in this License, you must purchase a
+commercial license from the Licensor, its affiliated entities, or authorized
+resellers.
+
+**Change Date:** On the Change Date above, in accordance with Section 2 of
+this License, the Licensed Work will be made available under the Change
+License (MIT License).
+
+---
+
+## Disclaimer of Warranty
+
+THE LICENSED WORK IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+LICENSOR BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE LICENSED WORK OR THE USE OR OTHER DEALINGS IN THE LICENSED WORK.
+
+## Platform Disclaimer
+
+This software interacts with X (formerly Twitter). Users are solely
+responsible for complying with X's Terms of Service. The Licensor is not
+liable for account suspensions, restrictions, or other consequences arising
+from use of this software.
+
+---
+
+⚡ XActions - https://xactions.app  
 Created by nich (@nichxbt) - https://github.com/nirholas
 

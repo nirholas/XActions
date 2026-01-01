@@ -1,9 +1,10 @@
-const express = require('express');
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const { PrismaClient } = require('@prisma/client');
-const { authMiddleware } = require('../middleware/auth');
-const { SUBSCRIPTION_TIERS, CREDIT_PACKAGES } = require('../config/subscription-tiers');
+import express from 'express';
+import Stripe from 'stripe';
+import { PrismaClient } from '@prisma/client';
+import { authMiddleware } from '../middleware/auth.js';
+import { SUBSCRIPTION_TIERS, CREDIT_PACKAGES } from '../config/subscription-tiers.js';
 
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 const router = express.Router();
 const prisma = new PrismaClient();
 
@@ -154,4 +155,4 @@ router.post('/billing-portal', authMiddleware, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

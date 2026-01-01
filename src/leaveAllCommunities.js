@@ -96,6 +96,7 @@
       // No more communities found
       const total = getLeftCommunities().length;
       console.log(`🎉 DONE! LEFT ${total} COMMUNITIES TOTAL`);
+      console.log(`So long, and thanks for all the communities! 🐬`);
       console.log(`IDs: ${getLeftCommunities().join(', ')}`);
       sessionStorage.removeItem('xactions_left_ids');
     }

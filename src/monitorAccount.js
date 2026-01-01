@@ -2,7 +2,7 @@
 // https://github.com/nirholas/XActions
 //
 // HOW TO USE:
-// 1. Go to https://twitter.com/TARGET_USERNAME/followers (or /following)
+// 1. Go to https://x.com/TARGET_USERNAME/followers (or /following)
 // 2. Open Developer Console (Ctrl+Shift+J or Cmd+Option+J)
 // 3. Paste this script and press Enter
 // 4. Run again later to see changes!
@@ -24,7 +24,7 @@
 
   if (!isFollowersPage && !isFollowingPage) {
     console.error('❌ Please navigate to a followers or following page!');
-    console.log('👉 Example: https://twitter.com/elonmusk/followers');
+    console.log('👉 Example: https://x.com/elonmusk/followers');
     return;
   }
 

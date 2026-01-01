@@ -4,7 +4,7 @@ These scripts are intended to be pasted into your browser's Developer Console wh
 
 Basic steps:
 
-1. Visit: https://twitter.com/YOUR_USER_NAME/following
+1. Visit: https://x.com/YOUR_USER_NAME/following
 2. Open Developer Console (Ctrl+Shift+I on Linux/Windows, Cmd+Opt+I on macOS)
 3. Open one of the scripts in `src/`, copy its contents, and paste into the console
 

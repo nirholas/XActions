@@ -1,4 +1,4 @@
-const browserAutomation = require('../../browserAutomation');
+import browserAutomation from '../../browserAutomation.js';
 
 async function detectUnfollowersBrowser(userId, config, updateProgress) {
   const page = await browserAutomation.createPage(config.sessionCookie);
@@ -54,4 +54,4 @@ async function detectUnfollowersBrowser(userId, config, updateProgress) {
   }
 }
 
-module.exports = { detectUnfollowersBrowser };
+export { detectUnfollowersBrowser };

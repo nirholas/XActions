@@ -91,7 +91,7 @@
   const getMyPosts = async (username) => {
     log('📍 Fetching your recent posts...', 'info');
     
-    window.location.href = `https://twitter.com/${username}`;
+    window.location.href = `https://x.com/${username}`;
     await sleep(3000);
     
     const posts = [];

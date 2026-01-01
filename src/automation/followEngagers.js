@@ -26,7 +26,7 @@
     MODE: 'likers',
     
     // Target posts to analyze (leave empty to use current page)
-    // Format: ['https://twitter.com/user/status/123456']
+    // Format: ['https://x.com/user/status/123456']
     TARGET_POSTS: [],
     
     // How many posts to analyze if using a profile

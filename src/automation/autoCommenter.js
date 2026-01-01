@@ -7,7 +7,7 @@
 // Great for engagement, building relationships, never missing a post.
 //
 // HOW TO USE:
-// 1. Go to the user's profile: twitter.com/USERNAME
+// 1. Go to the user's profile: x.com/USERNAME
 // 2. Paste core.js, then paste this script
 // 3. Configure your comments and let it run!
 //

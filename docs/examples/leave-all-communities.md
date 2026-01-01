@@ -157,7 +157,7 @@ This script automates leaving every X Community you're a member of:
 - Progress is shown in the console
 - If the script stops, just paste and run again (it remembers progress)
 - Closing the tab clears the progress tracker (uses sessionStorage)
-- Works on both x.com and twitter.com
+- Works on both x.com and x.com
 
 ---
 
