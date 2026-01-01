@@ -249,6 +249,66 @@ xactions followers YOUR_USERNAME --output snapshot2.json
 
 ---
 
+### Example 6: Leave All Communities
+
+**Browser Console:**
+```javascript
+// Go to: x.com/YOUR_USERNAME/communities
+
+(() => {
+  const $communityLinks = 'a[href^="/i/communities/"]';
+  const $joinedButton = 'button[aria-label^="Joined"]';
+  const $confirmButton = '[data-testid="confirmationSheetConfirm"]';
+  const $communitiesNav = 'a[aria-label="Communities"]';
+
+  const getLeftCommunities = () => {
+    try { return JSON.parse(sessionStorage.getItem('xactions_left_ids') || '[]'); }
+    catch { return []; }
+  };
+  const markAsLeft = (id) => {
+    const left = getLeftCommunities();
+    if (!left.includes(id)) {
+      left.push(id);
+      sessionStorage.setItem('xactions_left_ids', JSON.stringify(left));
+    }
+  };
+
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+  const getCommunityId = () => {
+    const leftAlready = getLeftCommunities();
+    for (const link of document.querySelectorAll($communityLinks)) {
+      const match = link.href.match(/\/i\/communities\/(\d+)/);
+      if (match && !leftAlready.includes(match[1])) return { id: match[1], element: link };
+    }
+    return null;
+  };
+
+  const run = async () => {
+    console.log(`🚀 Left so far: ${getLeftCommunities().length}`);
+    await sleep(1500);
+    const joinedBtn = document.querySelector($joinedButton);
+    if (joinedBtn) {
+      const urlMatch = window.location.href.match(/\/i\/communities\/(\d+)/);
+      const currentId = urlMatch ? urlMatch[1] : null;
+      joinedBtn.click();
+      await sleep(1000);
+      const confirmBtn = document.querySelector($confirmButton);
+      if (confirmBtn) { confirmBtn.click(); if (currentId) markAsLeft(currentId); await sleep(1500); }
+      const communitiesLink = document.querySelector($communitiesNav);
+      if (communitiesLink) { communitiesLink.click(); await sleep(2500); return run(); }
+    }
+    const community = getCommunityId();
+    if (community) { community.element.click(); await sleep(2500); return run(); }
+    else { console.log(`🎉 DONE! Left ${getLeftCommunities().length} communities`); sessionStorage.removeItem('xactions_left_ids'); }
+  };
+  run();
+})();
+```
+
+> 📖 Full documentation: [docs/examples/leave-all-communities.md](docs/examples/leave-all-communities.md)
+
+---
+
 ## 📋 Complete Feature List
 
 ### Feature Availability Matrix
@@ -287,6 +347,8 @@ xactions followers YOUR_USERNAME --output snapshot2.json
 | New Follower Alerts | ✅ | ✅ | ✅ | ✅ |
 | Monitor Any Account | ✅ | ✅ | ✅ | ✅ |
 | Continuous Monitoring | ⚠️ | ✅ | ✅ | ✅ |
+| **COMMUNITIES** |
+| Leave All Communities | ✅ | ⚠️ | ⚠️ | ⚠️ |
 | **ADVANCED** |
 | Multi-Account | ❌ | ✅ | ✅ | ✅ Pro |
 | Link Scraper | ✅ | ✅ | ✅ | ✅ |
