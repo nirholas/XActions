@@ -55,8 +55,6 @@ build/
 
 # Dependencies
 node_modules/
-*.lock
-package-lock.json
 bun.lockb
 .pnpm-store/
 
