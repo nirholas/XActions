@@ -142,3 +142,4 @@ model JobQueue {
   @@index([status, priority])
   @@index([createdAt])
 }
+
