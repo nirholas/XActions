@@ -5,3 +5,4 @@ console.log('This repository contains small scripts to paste into your browser c
 console.log('See the usage docs: docs/usage.md');
 console.log('Examples: examples/README.md');
 console.log(`Scripts are in: ${path.join(__dirname, '..', 'src')}`);
+
