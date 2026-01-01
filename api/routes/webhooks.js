@@ -1,4 +1,5 @@
 const express = require('express');
+const crypto = require('crypto');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const { PrismaClient } = require('@prisma/client');
 
@@ -222,5 +223,158 @@ async function handlePaymentFailed(invoice) {
 
   console.log(`❌ Payment failed: ${invoice.id}`);
 }
+
+// Coinbase Commerce webhook handler
+async function handleCoinbaseWebhook(req, res) {
+  const signature = req.headers['x-cc-webhook-signature'];
+  
+  if (!signature) {
+    return res.status(400).json({ error: 'Missing signature' });
+  }
+
+  try {
+    // Verify webhook signature
+    const hmac = crypto.createHmac('sha256', process.env.COINBASE_WEBHOOK_SECRET);
+    hmac.update(JSON.stringify(req.body));
+    const expectedSignature = hmac.digest('hex');
+
+    if (signature !== expectedSignature) {
+      return res.status(401).json({ error: 'Invalid signature' });
+    }
+
+    const event = req.body;
+    const { type, data } = event;
+
+    if (type === 'charge:confirmed' || type === 'charge:completed') {
+      const paymentId = data.metadata?.paymentId;
+      
+      if (paymentId) {
+        await confirmCryptoPayment(paymentId, data.code);
+      }
+    }
+
+    res.json({ received: true });
+  } catch (error) {
+    console.error('Coinbase webhook error:', error);
+    res.status(500).json({ error: 'Webhook handler failed' });
+  }
+}
+
+// NOWPayments webhook handler  
+async function handleNowPaymentsWebhook(req, res) {
+  try {
+    const { payment_status, order_id, payment_id } = req.body;
+
+    // Verify IPN signature
+    const hmac = crypto.createHmac('sha512', process.env.NOWPAYMENTS_IPN_SECRET);
+    hmac.update(JSON.stringify(req.body));
+    const signature = hmac.digest('hex');
+
+    if (req.headers['x-nowpayments-sig'] !== signature) {
+      return res.status(401).json({ error: 'Invalid signature' });
+    }
+
+    if (payment_status === 'confirmed' || payment_status === 'finished') {
+      await confirmCryptoPayment(order_id, payment_id);
+    }
+
+    res.json({ received: true });
+  } catch (error) {
+    console.error('NOWPayments webhook error:', error);
+    res.status(500).json({ error: 'Webhook handler failed' });
+  }
+}
+
+// BTCPay Server webhook handler
+async function handleBTCPayWebhook(req, res) {
+  try {
+    const { type, invoiceId, metadata } = req.body;
+
+    // Verify webhook signature
+    const signature = req.headers['btcpay-sig'];
+    const hmac = crypto.createHmac('sha256', process.env.BTCPAY_WEBHOOK_SECRET);
+    hmac.update(JSON.stringify(req.body));
+    const expectedSignature = `sha256=${hmac.digest('hex')}`;
+
+    if (signature !== expectedSignature) {
+      return res.status(401).json({ error: 'Invalid signature' });
+    }
+
+    if (type === 'InvoiceSettled' || type === 'InvoicePaymentSettled') {
+      const paymentId = metadata?.orderId;
+      if (paymentId) {
+        await confirmCryptoPayment(paymentId, invoiceId);
+      }
+    }
+
+    res.json({ received: true });
+  } catch (error) {
+    console.error('BTCPay webhook error:', error);
+    res.status(500).json({ error: 'Webhook handler failed' });
+  }
+}
+
+// Common function to confirm crypto payments and add credits
+async function confirmCryptoPayment(paymentId, txHash) {
+  const payment = await prisma.cryptoPayment.findUnique({
+    where: { paymentId }
+  });
+
+  if (!payment) {
+    console.error(`Payment not found: ${paymentId}`);
+    return;
+  }
+
+  if (payment.status === 'completed') {
+    console.log(`Payment already confirmed: ${paymentId}`);
+    return;
+  }
+
+  // Update payment status
+  await prisma.cryptoPayment.update({
+    where: { paymentId },
+    data: {
+      status: 'completed',
+      txHash,
+      confirmedAt: new Date()
+    }
+  });
+
+  // Add credits to user
+  if (payment.userId) {
+    await prisma.user.update({
+      where: { id: payment.userId },
+      data: {
+        credits: { increment: payment.credits }
+      }
+    });
+
+    // Create payment record
+    await prisma.payment.create({
+      data: {
+        userId: payment.userId,
+        type: 'crypto_credits',
+        amount: payment.amountUSD,
+        currency: 'USD',
+        status: 'succeeded',
+        metadata: {
+          package: payment.package,
+          credits: payment.credits,
+          cryptoCurrency: payment.currency,
+          cryptoAmount: payment.amount,
+          txHash,
+          paymentId
+        }
+      }
+    });
+
+    console.log(`✅ Crypto payment confirmed: ${paymentId}, Credits added: ${payment.credits}`);
+  }
+}
+
+// Register crypto webhook routes
+router.post('/coinbase', handleCoinbaseWebhook);
+router.post('/nowpayments', handleNowPaymentsWebhook);
+router.post('/btcpay', handleBTCPayWebhook);
 
 module.exports = router;
