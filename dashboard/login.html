@@ -336,8 +336,8 @@
         
         <form id="login-form">
           <div class="form-group">
-            <label class="form-label" for="login-email">Email</label>
-            <input type="email" class="form-input" id="login-email" placeholder="you@example.com" required>
+            <label class="form-label" for="login-identifier">Username or Email</label>
+            <input type="text" class="form-input" id="login-identifier" placeholder="yourname or you@example.com" required autocomplete="username">
           </div>
           <div class="form-group">
             <label class="form-label" for="login-password">Password</label>
@@ -365,15 +365,15 @@
         <form id="register-form">
           <div class="form-group">
             <label class="form-label" for="register-username">Username</label>
-            <input type="text" class="form-input" id="register-username" placeholder="yourname" required>
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="register-email">Email</label>
-            <input type="email" class="form-input" id="register-email" placeholder="you@example.com" required>
+            <input type="text" class="form-input" id="register-username" placeholder="yourname" required autocomplete="username">
           </div>
           <div class="form-group">
             <label class="form-label" for="register-password">Password</label>
             <input type="password" class="form-input" id="register-password" placeholder="Minimum 8 characters" required minlength="8" autocomplete="new-password">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="register-email">Email <span style="color: var(--text-secondary); font-weight: normal;">(optional)</span></label>
+            <input type="email" class="form-input" id="register-email" placeholder="you@example.com" autocomplete="email">
           </div>
           <button type="submit" class="btn" id="register-btn">Create account</button>
         </form>
@@ -432,7 +432,7 @@
     document.getElementById('login-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const btn = document.getElementById('login-btn');
-      const email = document.getElementById('login-email').value;
+      const identifier = document.getElementById('login-identifier').value;
       const password = document.getElementById('login-password').value;
 
       btn.disabled = true;
@@ -442,7 +442,7 @@
         const res = await fetch(`${API_URL}/auth/login`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password })
+          body: JSON.stringify({ identifier, password })
         });
 
         const data = await res.json();
@@ -466,8 +466,8 @@
       e.preventDefault();
       const btn = document.getElementById('register-btn');
       const username = document.getElementById('register-username').value;
-      const email = document.getElementById('register-email').value;
       const password = document.getElementById('register-password').value;
+      const email = document.getElementById('register-email').value || undefined;
 
       btn.disabled = true;
       btn.textContent = 'Creating account...';
@@ -476,7 +476,7 @@
         const res = await fetch(`${API_URL}/auth/register`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username, email, password })
+          body: JSON.stringify({ username, password, email })
         });
 
         const data = await res.json();
