@@ -4,6 +4,5 @@
   "title": "Twitter X Automation",
   "description": "Twitter X automation MCP - post schedule analytics engagement social media",
   "keywords": ["twitter", "x", "automation", "social-media", "posting", "analytics"],
-  "repository": {"url": "https://github.com/nirholas/XActions", "source": "github"},
-  "packages": [{"registryType": "source", "identifier": "https://github.com/nirholas/XActions", "transport": {"type": "stdio"}}]
+  "repository": {"url": "https://github.com/nirholas/XActions", "source": "github"}
 }
