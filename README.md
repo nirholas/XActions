@@ -859,6 +859,16 @@ If XActions helped you, give it a star! It helps others find the project.
 
 **XActions is 100% free and open source.** Visit [xactions.app](https://xactions.app) for interactive tutorials.
 
+### 🚀 One-Click Script Runner
+
+**NEW!** Run scripts without any coding knowledge:
+
+1. Visit [xactions.app/run.html](https://xactions.app/run.html)
+2. Drag any blue button to your bookmarks bar
+3. Go to x.com and click the bookmarklet
+
+No console, no code, no setup!
+
 ### Quick Links by Category
 
 | Category | Scripts | Tutorial |
