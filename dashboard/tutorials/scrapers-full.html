@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scraper Tutorials | XActions</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --accent: #1d9bf0;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --border: #2f3336;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; height: 53px;
+      background: rgba(0,0,0,0.8); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; padding: 0 20px; z-index: 100;
+    }
+    .nav a { color: var(--text-primary); text-decoration: none; font-weight: 700; font-size: 20px; }
+    .main { max-width: 900px; margin: 0 auto; padding: 80px 20px 60px; }
+    h1 { font-size: 36px; margin-bottom: 12px; }
+    .subtitle { color: var(--text-secondary); font-size: 18px; margin-bottom: 32px; }
+    .toc { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 40px; }
+    .toc h3 { margin-bottom: 12px; }
+    .toc ul { list-style: none; }
+    .toc li { margin: 8px 0; }
+    .toc a { color: var(--accent); text-decoration: none; }
+    .toc a:hover { text-decoration: underline; }
+    section { margin-bottom: 60px; padding-top: 20px; }
+    h2 { font-size: 28px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+    h3 { font-size: 20px; margin: 24px 0 12px; color: var(--accent); }
+    p { margin-bottom: 16px; color: var(--text-secondary); }
+    .steps { background: var(--bg-secondary); border-radius: 12px; padding: 20px; margin: 20px 0; }
+    .steps ol { margin-left: 20px; }
+    .steps li { margin: 12px 0; color: var(--text-primary); }
+    .steps code { background: var(--bg-tertiary); padding: 2px 8px; border-radius: 4px; }
+    pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 20px; overflow-x: auto; margin: 20px 0; position: relative; }
+    pre code { color: var(--text-primary); font-family: 'SF Mono', Monaco, monospace; font-size: 13px; line-height: 1.5; }
+    .copy-btn { position: absolute; top: 12px; right: 12px; background: var(--accent); color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 13px; }
+    .copy-btn:hover { background: #1a8cd8; }
+    .warning { background: rgba(255,173,31,0.1); border: 1px solid var(--warning); border-radius: 12px; padding: 16px; margin: 20px 0; }
+    .warning-title { color: var(--warning); font-weight: 700; margin-bottom: 8px; }
+    .tip { background: rgba(0,186,124,0.1); border: 1px solid var(--success); border-radius: 12px; padding: 16px; margin: 20px 0; }
+    .tip-title { color: var(--success); font-weight: 700; margin-bottom: 8px; }
+    .footer { text-align: center; padding: 40px; border-top: 1px solid var(--border); color: var(--text-secondary); }
+    .footer a { color: var(--accent); text-decoration: none; }
+    .comment { color: #6a9955; }
+    .keyword { color: #569cd6; }
+    .string { color: #ce9178; }
+    .function { color: #dcdcaa; }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a href="../index.html">⚡ XActions</a>
+    <span style="margin-left: 20px; color: var(--text-secondary);">/ Tutorials / Scrapers</span>
+  </nav>
+
+  <main class="main">
+    <h1>📊 Scraper Tutorials</h1>
+    <p class="subtitle">Export data, download videos, and scrape content from X/Twitter</p>
+
+    <div class="toc">
+      <h3>📑 Table of Contents</h3>
+      <ul>
+        <li><a href="#video">🎬 Video Downloader</a></li>
+        <li><a href="#bookmarks">📚 Bookmark Exporter</a></li>
+        <li><a href="#threads">🧵 Thread Unroller</a></li>
+        <li><a href="#viral">🔥 Viral Tweet Finder</a></li>
+      </ul>
+    </div>
+
+    <!-- VIDEO DOWNLOADER -->
+    <section id="video">
+      <h2>🎬 Video Downloader</h2>
+      <p>Download any video from X/Twitter tweets. Gets the highest quality available.</p>
+
+      <h3>How It Works</h3>
+      <p>This script extracts the video URL from the page and opens it in a new tab where you can right-click and save.</p>
+
+      <div class="steps">
+        <ol>
+          <li>Navigate to a tweet that contains a video</li>
+          <li>Open browser console: <code>Ctrl+Shift+J</code> (Windows) or <code>Cmd+Option+J</code> (Mac)</li>
+          <li>Paste the script below and press Enter</li>
+          <li>Video opens in new tab - right-click → "Save Video As"</li>
+        </ol>
+      </div>
+
+      <pre><code><span class="comment">// Video Downloader - by nichxbt</span>
+<span class="comment">// Go to: Any tweet with a video</span>
+
+(<span class="keyword">async</span> () => {
+  <span class="keyword">const</span> sleep = ms => <span class="keyword">new</span> Promise(r => setTimeout(r, ms));
+  
+  <span class="comment">// Try to find video element</span>
+  <span class="keyword">let</span> video = document.querySelector(<span class="string">'video'</span>);
+  
+  <span class="keyword">if</span> (!video) {
+    <span class="comment">// Click on video to load it</span>
+    <span class="keyword">const</span> mediaContainer = document.querySelector(<span class="string">'[data-testid="videoPlayer"]'</span>);
+    <span class="keyword">if</span> (mediaContainer) {
+      mediaContainer.click();
+      <span class="keyword">await</span> sleep(1000);
+      video = document.querySelector(<span class="string">'video'</span>);
+    }
+  }
+  
+  <span class="keyword">if</span> (!video) {
+    console.error(<span class="string">'❌ No video found on this page!'</span>);
+    alert(<span class="string">'No video found! Make sure you are on a tweet with a video.'</span>);
+    <span class="keyword">return</span>;
+  }
+  
+  <span class="comment">// Get video sources</span>
+  <span class="keyword">const</span> urls = [];
+  
+  <span class="keyword">if</span> (video.src) urls.push(video.src);
+  video.querySelectorAll(<span class="string">'source'</span>).forEach(s => {
+    <span class="keyword">if</span> (s.src) urls.push(s.src);
+  });
+  
+  <span class="comment">// Check for blob URLs and try to get actual URLs</span>
+  <span class="keyword">if</span> (urls.length === 0 || urls[0].startsWith(<span class="string">'blob:'</span>)) {
+    console.log(<span class="string">'🔍 Looking for video URL in network...'</span>);
+    
+    <span class="comment">// Look for video in the page's script data</span>
+    <span class="keyword">const</span> scripts = document.querySelectorAll(<span class="string">'script'</span>);
+    scripts.forEach(script => {
+      <span class="keyword">const</span> match = script.textContent.match(<span class="string">/https:\/\/video\.twimg\.com[^"'\s]+\.mp4[^"'\s]*/g</span>);
+      <span class="keyword">if</span> (match) urls.push(...match);
+    });
+  }
+  
+  <span class="keyword">if</span> (urls.length > 0) {
+    console.log(<span class="string">'🎬 Video URLs found:'</span>, urls);
+    
+    <span class="comment">// Open in new tab for easy download</span>
+    <span class="keyword">const</span> cleanUrls = [...<span class="keyword">new</span> Set(urls)].filter(u => !u.startsWith(<span class="string">'blob:'</span>));
+    <span class="keyword">if</span> (cleanUrls.length > 0) {
+      window.open(cleanUrls[0], <span class="string">'_blank'</span>);
+      console.log(<span class="string">'✅ Opened video in new tab. Right-click → Save As to download.'</span>);
+    } <span class="keyword">else</span> {
+      alert(<span class="string">'Found blob URL only. Video may use streaming/DRM.'</span>);
+    }
+  } <span class="keyword">else</span> {
+    alert(<span class="string">'Could not extract video URL.'</span>);
+  }
+})();</code></pre>
+      <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+
+      <div class="tip">
+        <div class="tip-title">💡 Tip</div>
+        <p>For GIFs, the script will find the MP4 version which is higher quality than the animated GIF.</p>
+      </div>
+    </section>
+
+    <!-- BOOKMARK EXPORTER -->
+    <section id="bookmarks">
+      <h2>📚 Bookmark Exporter</h2>
+      <p>Export all your X/Twitter bookmarks to a JSON file for backup or analysis.</p>
+
+      <h3>What It Exports</h3>
+      <ul style="margin-left: 20px; margin-bottom: 20px;">
+        <li>Tweet text</li>
+        <li>Tweet URL</li>
+        <li>Author handle</li>
+        <li>Timestamp</li>
+      </ul>
+
+      <div class="steps">
+        <ol>
+          <li>Go to <code>x.com/i/bookmarks</code></li>
+          <li>Open browser console: <code>Ctrl+Shift+J</code> or <code>Cmd+Option+J</code></li>
+          <li>Paste the script and press Enter</li>
+          <li>Wait while it scrolls through all bookmarks</li>
+          <li>JSON file downloads automatically</li>
+        </ol>
+      </div>
+
+      <pre><code><span class="comment">// Bookmark Exporter - by nichxbt</span>
+<span class="comment">// Go to: x.com/i/bookmarks</span>
+
+(<span class="keyword">async</span> () => {
+  <span class="keyword">if</span> (!location.pathname.includes(<span class="string">'/bookmarks'</span>)) {
+    alert(<span class="string">'Please go to x.com/i/bookmarks first!'</span>);
+    <span class="keyword">return</span>;
+  }
+  
+  <span class="keyword">const</span> sleep = ms => <span class="keyword">new</span> Promise(r => setTimeout(r, ms));
+  <span class="keyword">const</span> bookmarks = [];
+  <span class="keyword">let</span> lastCount = 0;
+  <span class="keyword">let</span> retries = 0;
+  
+  console.log(<span class="string">'📚 Exporting bookmarks...'</span>);
+  
+  <span class="keyword">while</span> (retries < 10) {
+    document.querySelectorAll(<span class="string">'article[data-testid="tweet"]'</span>).forEach(article => {
+      <span class="keyword">const</span> text = article.querySelector(<span class="string">'[data-testid="tweetText"]'</span>)?.textContent || <span class="string">''</span>;
+      <span class="keyword">const</span> timeEl = article.querySelector(<span class="string">'time'</span>);
+      <span class="keyword">const</span> url = timeEl?.closest(<span class="string">'a'</span>)?.href || <span class="string">''</span>;
+      <span class="keyword">const</span> time = timeEl?.getAttribute(<span class="string">'datetime'</span>) || <span class="string">''</span>;
+      <span class="keyword">const</span> userName = article.querySelector(<span class="string">'[data-testid="User-Name"]'</span>)?.textContent || <span class="string">''</span>;
+      <span class="keyword">const</span> handle = userName.match(<span class="string">/@(\w+)/</span>)?.[1] || <span class="string">''</span>;
+      
+      <span class="keyword">if</span> (text && !bookmarks.find(b => b.url === url)) {
+        bookmarks.push({ text, url, handle, time });
+        console.log(<span class="string">`📖 Found: ${bookmarks.length}`</span>);
+      }
+    });
+    
+    <span class="keyword">if</span> (bookmarks.length === lastCount) {
+      retries++;
+    } <span class="keyword">else</span> {
+      retries = 0;
+    }
+    lastCount = bookmarks.length;
+    
+    window.scrollTo(0, document.body.scrollHeight);
+    <span class="keyword">await</span> sleep(1500);
+  }
+  
+  <span class="comment">// Download as JSON</span>
+  <span class="keyword">const</span> blob = <span class="keyword">new</span> Blob([JSON.stringify(bookmarks, <span class="keyword">null</span>, 2)], { type: <span class="string">'application/json'</span> });
+  <span class="keyword">const</span> a = document.createElement(<span class="string">'a'</span>);
+  a.href = URL.createObjectURL(blob);
+  a.download = <span class="string">'twitter_bookmarks.json'</span>;
+  a.click();
+  
+  console.log(<span class="string">'✅ Exported'</span>, bookmarks.length, <span class="string">'bookmarks!'</span>);
+  alert(<span class="string">'Exported '</span> + bookmarks.length + <span class="string">' bookmarks to JSON file!'</span>);
+})();</code></pre>
+      <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+
+      <div class="warning">
+        <div class="warning-title">⚠️ Note</div>
+        <p>If you have many bookmarks (1000+), the script may take several minutes. Keep the tab active.</p>
+      </div>
+    </section>
+
+    <!-- THREAD UNROLLER -->
+    <section id="threads">
+      <h2>🧵 Thread Unroller</h2>
+      <p>Save any Twitter thread as clean, readable text. Perfect for long threads you want to read later or share.</p>
+
+      <h3>How It Works</h3>
+      <p>The script identifies all tweets from the thread author, scrolls to load them all, then combines them into a readable format and copies to your clipboard.</p>
+
+      <div class="steps">
+        <ol>
+          <li>Go to any tweet in a thread</li>
+          <li>Open browser console: <code>Ctrl+Shift+J</code> or <code>Cmd+Option+J</code></li>
+          <li>Paste the script and press Enter</li>
+          <li>Thread is copied to your clipboard!</li>
+        </ol>
+      </div>
+
+      <pre><code><span class="comment">// Thread Unroller - by nichxbt</span>
+<span class="comment">// Go to: Any tweet in a thread</span>
+
+(<span class="keyword">async</span> () => {
+  <span class="keyword">const</span> author = location.pathname.match(<span class="string">/\/(\w+)\/status/</span>)?.[1];
+  <span class="keyword">if</span> (!author) {
+    alert(<span class="string">'Please navigate to a tweet first!'</span>);
+    <span class="keyword">return</span>;
+  }
+  
+  <span class="keyword">const</span> sleep = ms => <span class="keyword">new</span> Promise(r => setTimeout(r, ms));
+  <span class="keyword">const</span> tweets = [];
+  <span class="keyword">let</span> retries = 0;
+  
+  console.log(<span class="string">`🧵 Unrolling thread by @${author}...`</span>);
+  
+  <span class="keyword">while</span> (retries < 10) {
+    document.querySelectorAll(<span class="string">'article[data-testid="tweet"]'</span>).forEach(article => {
+      <span class="keyword">const</span> text = article.querySelector(<span class="string">'[data-testid="tweetText"]'</span>)?.textContent || <span class="string">''</span>;
+      <span class="keyword">const</span> userName = article.querySelector(<span class="string">'[data-testid="User-Name"]'</span>)?.textContent || <span class="string">''</span>;
+      <span class="keyword">const</span> handle = userName.match(<span class="string">/@(\w+)/</span>)?.[1] || <span class="string">''</span>;
+      <span class="keyword">const</span> url = article.querySelector(<span class="string">'time'</span>)?.closest(<span class="string">'a'</span>)?.href || <span class="string">''</span>;
+      <span class="keyword">const</span> time = article.querySelector(<span class="string">'time'</span>)?.getAttribute(<span class="string">'datetime'</span>) || <span class="string">''</span>;
+      
+      <span class="keyword">if</span> (handle.toLowerCase() === author.toLowerCase() && text) {
+        <span class="keyword">const</span> exists = tweets.find(t => t.url === url);
+        <span class="keyword">if</span> (!exists) {
+          tweets.push({ text, url, time });
+          console.log(<span class="string">`📝 Tweet ${tweets.length}`</span>);
+        }
+      }
+    });
+    
+    window.scrollBy(0, 500);
+    <span class="keyword">await</span> sleep(1000);
+    retries++;
+  }
+  
+  <span class="comment">// Sort by time (oldest first)</span>
+  tweets.sort((a, b) => <span class="keyword">new</span> Date(a.time) - <span class="keyword">new</span> Date(b.time));
+  
+  <span class="comment">// Format as markdown</span>
+  <span class="keyword">const</span> thread = <span class="string">`# 🧵 Thread by @${author}\n\n`</span> +
+    tweets.map((t, i) => <span class="string">`## Tweet ${i + 1}\n\n${t.text}\n\n---\n`</span>).join(<span class="string">'\n'</span>);
+  
+  <span class="comment">// Copy to clipboard</span>
+  <span class="keyword">await</span> navigator.clipboard.writeText(thread);
+  
+  console.log(thread);
+  console.log(<span class="string">'\n✅ Thread copied to clipboard!'</span>);
+  alert(<span class="string">'Thread unrolled! '</span> + tweets.length + <span class="string">' tweets copied to clipboard.'</span>);
+})();</code></pre>
+      <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+
+      <div class="tip">
+        <div class="tip-title">💡 Output Format</div>
+        <p>The thread is formatted as Markdown, making it perfect for pasting into note-taking apps like Notion, Obsidian, or any Markdown editor.</p>
+      </div>
+    </section>
+
+    <!-- VIRAL TWEETS -->
+    <section id="viral">
+      <h2>🔥 Viral Tweet Finder</h2>
+      <p>Find the top performing tweets from any search query or profile. Great for content research.</p>
+
+      <h3>Use Cases</h3>
+      <ul style="margin-left: 20px; margin-bottom: 20px;">
+        <li>Find viral content in your niche</li>
+        <li>Research what works for competitors</li>
+        <li>Discover trending topics</li>
+        <li>Analyze engagement patterns</li>
+      </ul>
+
+      <div class="steps">
+        <ol>
+          <li>Go to <code>x.com/search?q=your+keyword</code> or any profile</li>
+          <li>Open browser console: <code>Ctrl+Shift+J</code> or <code>Cmd+Option+J</code></li>
+          <li>Paste the script and press Enter</li>
+          <li>View sorted results in the console</li>
+        </ol>
+      </div>
+
+      <pre><code><span class="comment">// Viral Tweet Finder - by nichxbt</span>
+<span class="comment">// Go to: x.com/search or any profile</span>
+
+(<span class="keyword">async</span> () => {
+  <span class="keyword">const</span> CONFIG = {
+    MIN_LIKES: 100,      <span class="comment">// Minimum likes to include</span>
+    MAX_TWEETS: 100,     <span class="comment">// How many to scan</span>
+  };
+  
+  <span class="keyword">const</span> sleep = ms => <span class="keyword">new</span> Promise(r => setTimeout(r, ms));
+  <span class="keyword">const</span> parseNum = str => {
+    <span class="keyword">if</span> (!str) <span class="keyword">return</span> 0;
+    <span class="keyword">const</span> n = parseFloat(str.replace(<span class="string">/,/g</span>, <span class="string">''</span>));
+    <span class="keyword">if</span> (str.includes(<span class="string">'K'</span>)) <span class="keyword">return</span> n * 1000;
+    <span class="keyword">if</span> (str.includes(<span class="string">'M'</span>)) <span class="keyword">return</span> n * 1000000;
+    <span class="keyword">return</span> n;
+  };
+  
+  <span class="keyword">const</span> tweets = <span class="keyword">new</span> Map();
+  <span class="keyword">let</span> scrolls = 0;
+  
+  console.log(<span class="string">'🔥 Finding viral tweets...'</span>);
+  console.log(<span class="string">`Looking for tweets with ${CONFIG.MIN_LIKES}+ likes\n`</span>);
+  
+  <span class="keyword">while</span> (tweets.size < CONFIG.MAX_TWEETS && scrolls < 30) {
+    document.querySelectorAll(<span class="string">'article[data-testid="tweet"]'</span>).forEach(article => {
+      <span class="keyword">const</span> text = article.querySelector(<span class="string">'[data-testid="tweetText"]'</span>)?.textContent || <span class="string">''</span>;
+      <span class="keyword">const</span> url = article.querySelector(<span class="string">'time'</span>)?.closest(<span class="string">'a'</span>)?.href || <span class="string">''</span>;
+      <span class="keyword">const</span> tweetId = url.split(<span class="string">'/status/'</span>)[1]?.split(<span class="string">'?'</span>)[0] || <span class="string">''</span>;
+      <span class="keyword">const</span> userName = article.querySelector(<span class="string">'[data-testid="User-Name"]'</span>)?.textContent || <span class="string">''</span>;
+      <span class="keyword">const</span> handle = userName.match(<span class="string">/@(\w+)/</span>)?.[1] || <span class="string">''</span>;
+      
+      <span class="comment">// Get engagement metrics</span>
+      <span class="keyword">const</span> buttons = article.querySelectorAll(<span class="string">'[role="group"] button'</span>);
+      <span class="keyword">let</span> likes = 0, retweets = 0, replies = 0;
+      
+      buttons.forEach(btn => {
+        <span class="keyword">const</span> label = btn.getAttribute(<span class="string">'aria-label'</span>) || <span class="string">''</span>;
+        <span class="keyword">const</span> num = parseNum(label.match(<span class="string">/[\d,.]+[KM]?/</span>)?.[0] || <span class="string">'0'</span>);
+        <span class="keyword">if</span> (label.includes(<span class="string">'like'</span>)) likes = num;
+        <span class="keyword">else if</span> (label.includes(<span class="string">'repost'</span>)) retweets = num;
+        <span class="keyword">else if</span> (label.includes(<span class="string">'repl'</span>)) replies = num;
+      });
+      
+      <span class="keyword">if</span> (text && tweetId && likes >= CONFIG.MIN_LIKES && !tweets.has(tweetId)) {
+        tweets.set(tweetId, {
+          text: text.slice(0, 80) + <span class="string">'...'</span>,
+          handle,
+          url,
+          likes,
+          retweets,
+          replies,
+          engagement: likes + retweets + replies
+        });
+      }
+    });
+    
+    window.scrollBy(0, 500);
+    <span class="keyword">await</span> sleep(1000);
+    scrolls++;
+    
+    <span class="keyword">if</span> (scrolls % 10 === 0) {
+      console.log(<span class="string">`📊 Scanned ${scrolls * 10}+ tweets, found ${tweets.size} viral...`</span>);
+    }
+  }
+  
+  <span class="comment">// Sort by likes</span>
+  <span class="keyword">const</span> sorted = Array.from(tweets.values()).sort((a, b) => b.likes - a.likes);
+  
+  console.log(<span class="string">'\n🔥 TOP VIRAL TWEETS:\n'</span>);
+  console.table(sorted.slice(0, 20));
+  
+  <span class="comment">// Also log URLs for easy access</span>
+  console.log(<span class="string">'\n📎 Tweet URLs:'</span>);
+  sorted.slice(0, 10).forEach((t, i) => {
+    console.log(<span class="string">`${i+1}. @${t.handle} (${t.likes} likes): ${t.url}`</span>);
+  });
+  
+  alert(<span class="string">'Found '</span> + tweets.size + <span class="string">' viral tweets! Check console for details.'</span>);
+})();</code></pre>
+      <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+
+      <div class="tip">
+        <div class="tip-title">💡 Customization</div>
+        <p>Edit <code>MIN_LIKES</code> at the top of the script to change the threshold. Set it lower (50) for smaller niches or higher (1000) for mainstream topics.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>
+      <a href="index.html">← Back to Tutorials</a> •
+      Made by <a href="https://x.com/nichxbt" target="_blank">@nichxbt</a>
+    </p>
+  </footer>
+
+  <script>
+    function copyCode(btn) {
+      const pre = btn.previousElementSibling;
+      const code = pre.textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        btn.textContent = '✅ Copied!';
+        setTimeout(() => btn.textContent = '📋 Copy', 2000);
+      });
+    }
+  </script>
+</body>
+</html>

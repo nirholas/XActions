@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Automation Tutorials - XActions | Auto-Like, Comment & Engage on X/Twitter</title>
+  <meta name="description" content="Complete tutorials for X/Twitter automation. Auto-liker, auto-commenter, follow engagers, keyword follow with full copy-paste-ready scripts.">
+  <meta name="author" content="nich (@nichxbt)">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar {
+      width: 275px;
+      padding: 0 12px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      border-right: 1px solid var(--border);
+    }
+    .logo { padding: 16px 12px; }
+    .logo a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--text-primary);
+      font-size: 1.5rem;
+      font-weight: 800;
+    }
+    nav { margin-top: 8px; }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 16px;
+      border-radius: 9999px;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      text-decoration: none;
+      transition: background 0.2s;
+      margin-bottom: 4px;
+    }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.3rem; width: 28px; text-align: center; }
+    .main { flex: 1; border-right: 1px solid var(--border); }
+    .header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+    }
+    .header h1 { font-size: 1.3rem; font-weight: 700; }
+    .content { padding: 20px; }
+    .free-banner {
+      background: linear-gradient(90deg, var(--success), var(--accent));
+      padding: 14px 20px;
+      border-radius: 16px;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+    .free-banner span { font-weight: 700; }
+    .free-banner a { color: white; margin-left: 12px; }
+    .section { margin-bottom: 48px; padding-top: 20px; }
+    .section-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+    .prereq {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+    .prereq h4 { color: var(--warning); margin-bottom: 8px; }
+    .prereq p { color: var(--text-secondary); font-size: 0.9rem; }
+    .step { margin-bottom: 24px; }
+    .step h4 { color: var(--accent); margin-bottom: 8px; font-size: 1rem; }
+    .step p { color: var(--text-secondary); margin-bottom: 12px; }
+    .code-block {
+      position: relative;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin: 16px 0;
+      overflow: hidden;
+    }
+    .code-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 16px;
+      background: var(--bg-tertiary);
+      border-bottom: 1px solid var(--border);
+    }
+    .code-header span { font-size: 0.85rem; color: var(--text-secondary); }
+    .copy-btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .copy-btn:hover { background: var(--accent-hover); }
+    .code-block pre {
+      padding: 16px;
+      overflow-x: auto;
+      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      margin: 0;
+    }
+    .code-block code { color: var(--text-primary); }
+    .warning-box {
+      background: rgba(255, 173, 31, 0.1);
+      border: 1px solid var(--warning);
+      border-radius: 12px;
+      padding: 16px;
+      margin: 16px 0;
+    }
+    .warning-box h4 { color: var(--warning); margin-bottom: 8px; }
+    .warning-box ul { padding-left: 20px; color: var(--text-secondary); }
+    .warning-box li { margin-bottom: 4px; }
+    .nav-toc {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 24px;
+    }
+    .nav-toc h4 { margin-bottom: 12px; }
+    .nav-toc a {
+      display: block;
+      color: var(--accent);
+      text-decoration: none;
+      padding: 6px 0;
+      font-size: 0.9rem;
+    }
+    .nav-toc a:hover { text-decoration: underline; }
+    footer {
+      padding: 40px 20px;
+      border-top: 1px solid var(--border);
+      margin-top: 40px;
+    }
+    .footer-links { display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; }
+    .footer-links a { color: var(--text-secondary); text-decoration: none; }
+    .footer-links a:hover { color: var(--accent); }
+    .footer-copy { text-align: center; margin-top: 20px; color: var(--text-secondary); font-size: 0.85rem; }
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo"><a href="../index.html">⚡ XActions</a></div>
+      <nav>
+        <a href="../index.html" class="nav-item"><span class="nav-icon">🏠</span>Dashboard</a>
+        <a href="index.html" class="nav-item"><span class="nav-icon">📚</span>Tutorials</a>
+        <a href="unfollow.html" class="nav-item"><span class="nav-icon">👋</span>Unfollow</a>
+        <a href="scrapers.html" class="nav-item"><span class="nav-icon">🔍</span>Scrapers</a>
+        <a href="automation.html" class="nav-item active"><span class="nav-icon">🤖</span>Automation</a>
+        <a href="monitoring.html" class="nav-item"><span class="nav-icon">👁️</span>Monitoring</a>
+        <a href="communities.html" class="nav-item"><span class="nav-icon">🏘️</span>Communities</a>
+        <a href="mcp.html" class="nav-item"><span class="nav-icon">🧠</span>MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank"><span class="nav-icon">⭐</span>GitHub</a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <div class="header">
+        <h1>🤖 Automation Tutorials</h1>
+      </div>
+
+      <div class="content">
+        <div class="free-banner">
+          <span>🎉 XActions is 100% Free & Open Source</span>
+          <a href="https://github.com/nirholas/XActions" target="_blank">Star on GitHub ⭐</a>
+        </div>
+
+        <div class="nav-toc">
+          <h4>📑 On This Page</h4>
+          <a href="#auto-liker">❤️ Auto Liker</a>
+          <a href="#auto-commenter">💬 Auto Commenter</a>
+          <a href="#follow-engagers">👥 Follow Engagers</a>
+        </div>
+
+        <div class="prereq">
+          <h4>⚠️ Prerequisites</h4>
+          <p>These automation scripts require <strong>core.js</strong> to be loaded first. The core module provides shared utilities like rate limiting, storage, and selectors. Paste core.js before running any automation script.</p>
+        </div>
+
+        <!-- AUTO LIKER -->
+        <section class="section" id="auto-liker">
+          <h2 class="section-title">❤️ Auto Liker</h2>
+          <p style="color: var(--text-secondary); margin-bottom: 16px;">
+            Automatically like tweets in your timeline or on any profile. Filter by keywords, users, or like everything.
+          </p>
+
+          <div class="step">
+            <h4>Step 1: Go to your timeline or any profile</h4>
+            <p>Navigate to <code>x.com/home</code> or any user's profile page.</p>
+          </div>
+
+          <div class="step">
+            <h4>Step 2: Open Developer Console</h4>
+            <p>Press <code>F12</code> (Windows) or <code>Cmd+Option+J</code> (Mac) and click the Console tab.</p>
+          </div>
+
+          <div class="step">
+            <h4>Step 3: First paste core.js (required)</h4>
+            <div class="code-block">
+              <div class="code-header">
+                <span>core.js (paste this first)</span>
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+              </div>
+              <pre><code>// XActions Core Module - Required for automation scripts
+// https://github.com/nirholas/XActions
+window.XActions = window.XActions || {};
+window.XActions.Core = (() => {
+  const SELECTORS = {
+    tweet: 'article[data-testid="tweet"]',
+    likeButton: '[data-testid="like"]',
+    unlikeButton: '[data-testid="unlike"]',
+    retweetButton: '[data-testid="retweet"]',
+    replyButton: '[data-testid="reply"]',
+    tweetText: '[data-testid="tweetText"]',
+    userCell: '[data-testid="UserCell"]',
+  };
+
+  const log = (msg, type = 'info') => {
+    const icons = { info: 'ℹ️', success: '✅', warning: '⚠️', error: '❌', action: '🎯' };
+    console.log(`${icons[type] || '•'} [XActions] ${msg}`);
+  };
+
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+  const randomDelay = (min = 1000, max = 3000) => sleep(min + Math.random() * (max - min));
+  const scrollBy = (px = 500) => window.scrollBy({ top: px, behavior: 'smooth' });
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  const clickElement = async (el) => {
+    if (!el) return false;
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    await sleep(300);
+    el.click();
+    return true;
+  };
+
+  const waitForElement = (selector, timeout = 5000) => {
+    return new Promise((resolve) => {
+      const el = document.querySelector(selector);
+      if (el) return resolve(el);
+      const observer = new MutationObserver(() => {
+        const el = document.querySelector(selector);
+        if (el) { observer.disconnect(); resolve(el); }
+      });
+      observer.observe(document.body, { childList: true, subtree: true });
+      setTimeout(() => { observer.disconnect(); resolve(null); }, timeout);
+    });
+  };
+
+  const storage = {
+    get: (key) => { try { return JSON.parse(localStorage.getItem(`xactions_${key}`)); } catch { return null; } },
+    set: (key, val) => localStorage.setItem(`xactions_${key}`, JSON.stringify(val)),
+    remove: (key) => localStorage.removeItem(`xactions_${key}`),
+  };
+
+  const rateLimit = {
+    _counts: {},
+    check: (action, limit, period) => {
+      const key = `${action}_${period}`;
+      const count = rateLimit._counts[key] || 0;
+      return count < limit;
+    },
+    increment: (action, period) => {
+      const key = `${action}_${period}`;
+      rateLimit._counts[key] = (rateLimit._counts[key] || 0) + 1;
+    },
+  };
+
+  log('Core module loaded!', 'success');
+  return { SELECTORS, log, sleep, randomDelay, scrollBy, scrollToTop, clickElement, waitForElement, storage, rateLimit };
+})();</code></pre>
+            </div>
+          </div>
+
+          <div class="step">
+            <h4>Step 4: Then paste the Auto Liker script</h4>
+            <div class="code-block">
+              <div class="code-header">
+                <span>autoLiker.js</span>
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+              </div>
+              <pre><code>// XActions Auto Liker - by nichxbt
+// https://github.com/nirholas/XActions
+// Requires core.js to be loaded first!
+
+(() => {
+  if (!window.XActions?.Core) {
+    console.error('❌ Core module not loaded! Paste core.js first.');
+    return;
+  }
+
+  const { log, sleep, randomDelay, scrollBy, clickElement, storage, SELECTORS } = window.XActions.Core;
+
+  // ============================================
+  // CONFIGURATION - Edit these options!
+  // ============================================
+  const OPTIONS = {
+    LIKE_ALL: false,                    // true = like everything, false = use filters
+    KEYWORDS: ['web3', 'crypto', 'AI'], // Only like posts with these words (if LIKE_ALL is false)
+    FROM_USERS: [],                     // Only like from these users (empty = all users)
+    MAX_LIKES: 20,                      // Stop after this many likes
+    MIN_DELAY: 2000,                    // Minimum delay between likes (ms)
+    MAX_DELAY: 5000,                    // Maximum delay between likes (ms)
+    SKIP_REPLIES: true,                 // Skip reply tweets
+  };
+
+  let likeCount = 0;
+  let scrollCount = 0;
+  const likedIds = new Set(storage.get('liked_tweets') || []);
+
+  const getTweetId = (tweet) => {
+    const link = tweet.querySelector('a[href*="/status/"]');
+    const match = link?.href?.match(/status\/(\d+)/);
+    return match ? match[1] : null;
+  };
+
+  const matchesKeywords = (text) => {
+    if (OPTIONS.LIKE_ALL) return true;
+    if (OPTIONS.KEYWORDS.length === 0) return true;
+    const lower = text.toLowerCase();
+    return OPTIONS.KEYWORDS.some(kw => lower.includes(kw.toLowerCase()));
+  };
+
+  const isAlreadyLiked = (tweet) => !!tweet.querySelector(SELECTORS.unlikeButton);
+
+  const likeTweet = async (tweet) => {
+    const btn = tweet.querySelector(SELECTORS.likeButton);
+    if (!btn) return false;
+    await clickElement(btn);
+    likeCount++;
+    const id = getTweetId(tweet);
+    if (id) { likedIds.add(id); storage.set('liked_tweets', [...likedIds]); }
+    log(`Liked tweet #${likeCount}`, 'success');
+    return true;
+  };
+
+  const run = async () => {
+    log(`Starting Auto Liker (max: ${OPTIONS.MAX_LIKES} likes)`, 'info');
+
+    while (likeCount < OPTIONS.MAX_LIKES && scrollCount < 50) {
+      const tweets = document.querySelectorAll(SELECTORS.tweet);
+
+      for (const tweet of tweets) {
+        if (likeCount >= OPTIONS.MAX_LIKES) break;
+
+        const id = getTweetId(tweet);
+        if (id && likedIds.has(id)) continue;
+        if (isAlreadyLiked(tweet)) continue;
+
+        const text = tweet.querySelector(SELECTORS.tweetText)?.textContent || '';
+        if (!matchesKeywords(text)) continue;
+
+        await likeTweet(tweet);
+        await sleep(OPTIONS.MIN_DELAY + Math.random() * (OPTIONS.MAX_DELAY - OPTIONS.MIN_DELAY));
+      }
+
+      scrollBy(600);
+      scrollCount++;
+      await sleep(2000);
+    }
+
+    log(`Done! Liked ${likeCount} tweets.`, 'success');
+  };
+
+  run();
+})();</code></pre>
+            </div>
+          </div>
+
+          <div class="warning-box">
+            <h4>⚠️ Important Notes</h4>
+            <ul>
+              <li>Edit the <code>OPTIONS</code> object to customize behavior</li>
+              <li>Set <code>KEYWORDS</code> to only like relevant tweets</li>
+              <li>Keep delays reasonable (2-5 seconds) to avoid rate limits</li>
+              <li>Start with small <code>MAX_LIKES</code> values to test</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- AUTO COMMENTER -->
+        <section class="section" id="auto-commenter">
+          <h2 class="section-title">💬 Auto Commenter</h2>
+          <p style="color: var(--text-secondary); margin-bottom: 16px;">
+            Monitor a user's profile and automatically reply to their new posts. Great for engagement and building relationships.
+          </p>
+
+          <div class="step">
+            <h4>Step 1: Go to the target user's profile</h4>
+            <p>Navigate to <code>x.com/USERNAME</code> (replace with the account you want to engage with).</p>
+          </div>
+
+          <div class="step">
+            <h4>Step 2: Paste core.js first (same as above)</h4>
+            <p>If you haven't already, paste the core.js script from the Auto Liker section.</p>
+          </div>
+
+          <div class="step">
+            <h4>Step 3: Paste the Auto Commenter script</h4>
+            <div class="code-block">
+              <div class="code-header">
+                <span>autoCommenter.js</span>
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+              </div>
+              <pre><code>// XActions Auto Commenter - by nichxbt
+// https://github.com/nirholas/XActions
+// Monitors a profile and auto-comments on new posts
+// Requires core.js to be loaded first!
+
+(() => {
+  if (!window.XActions?.Core) {
+    console.error('❌ Core module not loaded! Paste core.js first.');
+    return;
+  }
+
+  const { log, sleep, clickElement, waitForElement, storage, SELECTORS } = window.XActions.Core;
+
+  // ============================================
+  // CONFIGURATION - Customize your comments!
+  // ============================================
+  const OPTIONS = {
+    // Random comments to choose from
+    COMMENTS: [
+      '🔥',
+      'Great point!',
+      'This is so true 👏',
+      'Interesting take!',
+      'Love this perspective',
+      '💯',
+    ],
+    CHECK_INTERVAL: 60,       // Check for new posts every X seconds
+    MAX_COMMENTS: 5,          // Max comments per session
+    ONLY_ORIGINAL: true,      // Skip replies and retweets
+  };
+
+  let commentCount = 0;
+  let isRunning = true;
+  const commented = new Set(storage.get('commented_tweets') || []);
+
+  const getUsername = () => window.location.pathname.split('/')[1];
+  const getRandomComment = () => OPTIONS.COMMENTS[Math.floor(Math.random() * OPTIONS.COMMENTS.length)];
+
+  const getTweetId = (tweet) => {
+    const link = tweet.querySelector('a[href*="/status/"]');
+    const match = link?.href?.match(/status\/(\d+)/);
+    return match ? match[1] : null;
+  };
+
+  const postComment = async (tweet) => {
+    const id = getTweetId(tweet);
+    if (!id || commented.has(id)) return false;
+
+    // Click reply button
+    const replyBtn = tweet.querySelector(SELECTORS.replyButton);
+    if (!replyBtn) return false;
+
+    await clickElement(replyBtn);
+    await sleep(1000);
+
+    // Wait for reply input
+    const input = await waitForElement('[data-testid="tweetTextarea_0"]', 5000);
+    if (!input) {
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+      return false;
+    }
+
+    // Type comment
+    input.focus();
+    await sleep(300);
+    document.execCommand('insertText', false, getRandomComment());
+    await sleep(500);
+
+    // Click post
+    const postBtn = await waitForElement('[data-testid="tweetButton"]', 3000);
+    if (postBtn) {
+      await clickElement(postBtn);
+      commentCount++;
+      commented.add(id);
+      storage.set('commented_tweets', [...commented]);
+      log(`Posted comment #${commentCount}`, 'success');
+      return true;
+    }
+
+    return false;
+  };
+
+  const checkForPosts = async () => {
+    if (!isRunning || commentCount >= OPTIONS.MAX_COMMENTS) {
+      log(`Session complete. Posted ${commentCount} comments.`, 'success');
+      return;
+    }
+
+    log(`Checking for new posts from @${getUsername()}...`, 'info');
+
+    const tweets = document.querySelectorAll(SELECTORS.tweet);
+    for (const tweet of tweets) {
+      if (commentCount >= OPTIONS.MAX_COMMENTS) break;
+
+      const id = getTweetId(tweet);
+      if (commented.has(id)) continue;
+
+      // Skip retweets if configured
+      if (OPTIONS.ONLY_ORIGINAL && tweet.textContent?.includes('reposted')) continue;
+
+      await postComment(tweet);
+      await sleep(3000);
+    }
+
+    // Schedule next check
+    log(`Next check in ${OPTIONS.CHECK_INTERVAL} seconds...`, 'info');
+    setTimeout(checkForPosts, OPTIONS.CHECK_INTERVAL * 1000);
+  };
+
+  // Stop function
+  window.stopAutoComment = () => { isRunning = false; log('Stopping...', 'warning'); };
+
+  log(`Auto Commenter started for @${getUsername()}`, 'info');
+  log('Type stopAutoComment() to stop', 'info');
+  checkForPosts();
+})();</code></pre>
+            </div>
+          </div>
+
+          <div class="warning-box">
+            <h4>⚠️ Use Responsibly</h4>
+            <ul>
+              <li>Customize comments to be genuine and relevant</li>
+              <li>Don't spam - use reasonable limits</li>
+              <li>Type <code>stopAutoComment()</code> in console to stop</li>
+              <li>Spammy behavior can get your account limited</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- FOLLOW ENGAGERS -->
+        <section class="section" id="follow-engagers">
+          <h2 class="section-title">👥 Follow Engagers</h2>
+          <p style="color: var(--text-secondary); margin-bottom: 16px;">
+            Find and follow users who liked or retweeted specific posts. Great for growing your network with engaged users.
+          </p>
+
+          <div class="step">
+            <h4>Step 1: Go to any tweet</h4>
+            <p>Navigate to a popular tweet: <code>x.com/user/status/123456</code></p>
+          </div>
+
+          <div class="step">
+            <h4>Step 2: Paste core.js first</h4>
+            <p>If you haven't already, paste the core.js script.</p>
+          </div>
+
+          <div class="step">
+            <h4>Step 3: Paste the Follow Engagers script</h4>
+            <div class="code-block">
+              <div class="code-header">
+                <span>followEngagers.js</span>
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+              </div>
+              <pre><code>// XActions Follow Engagers - by nichxbt
+// https://github.com/nirholas/XActions
+// Follow users who liked/retweeted a post
+// Requires core.js to be loaded first!
+
+(() => {
+  if (!window.XActions?.Core) {
+    console.error('❌ Core module not loaded! Paste core.js first.');
+    return;
+  }
+
+  const { log, sleep, scrollBy, clickElement, storage, SELECTORS } = window.XActions.Core;
+
+  // ============================================
+  // CONFIGURATION
+  // ============================================
+  const CONFIG = {
+    MODE: 'likers',           // 'likers' or 'retweeters'
+    MAX_FOLLOWS: 20,          // Max follows per session
+    DELAY_BETWEEN: 3000,      // Delay between follows (ms)
+    SKIP_VERIFIED: false,     // Skip verified accounts
+    SKIP_PROTECTED: true,     // Skip private accounts
+  };
+
+  let followCount = 0;
+  const followed = new Set(storage.get('engager_followed') || []);
+
+  const extractPostId = () => {
+    const match = window.location.href.match(/status\/(\d+)/);
+    return match ? match[1] : null;
+  };
+
+  const followUser = async (cell) => {
+    const followBtn = cell.querySelector('[data-testid$="-follow"]');
+    if (!followBtn) return false;
+
+    // Check if already following
+    if (followBtn.textContent?.includes('Following')) return false;
+
+    // Get username
+    const link = cell.querySelector('a[href^="/"]');
+    const username = link?.getAttribute('href')?.replace('/', '') || 'unknown';
+
+    if (followed.has(username)) return false;
+
+    await clickElement(followBtn);
+    followCount++;
+    followed.add(username);
+    storage.set('engager_followed', [...followed]);
+    log(`Followed @${username} (#${followCount})`, 'success');
+    return true;
+  };
+
+  const run = async () => {
+    const postId = extractPostId();
+    if (!postId) {
+      log('Please navigate to a tweet first!', 'error');
+      return;
+    }
+
+    // Navigate to likers/retweeters
+    const targetUrl = CONFIG.MODE === 'likers' 
+      ? `${window.location.href}/likes`
+      : `${window.location.href}/retweets`;
+
+    log(`Opening ${CONFIG.MODE} list...`, 'info');
+    window.location.href = targetUrl;
+
+    // Wait for page load
+    await sleep(3000);
+
+    log(`Starting to follow ${CONFIG.MODE} (max: ${CONFIG.MAX_FOLLOWS})`, 'info');
+
+    let scrolls = 0;
+    while (followCount < CONFIG.MAX_FOLLOWS && scrolls < 30) {
+      const cells = document.querySelectorAll(SELECTORS.userCell);
+
+      for (const cell of cells) {
+        if (followCount >= CONFIG.MAX_FOLLOWS) break;
+
+        // Skip protected if configured
+        if (CONFIG.SKIP_PROTECTED && cell.querySelector('[data-testid="icon-lock"]')) continue;
+
+        // Skip verified if configured
+        if (CONFIG.SKIP_VERIFIED && cell.querySelector('[data-testid="icon-verified"]')) continue;
+
+        if (await followUser(cell)) {
+          await sleep(CONFIG.DELAY_BETWEEN);
+        }
+      }
+
+      scrollBy(500);
+      scrolls++;
+      await sleep(2000);
+    }
+
+    log(`Done! Followed ${followCount} ${CONFIG.MODE}.`, 'success');
+  };
+
+  run();
+})();</code></pre>
+            </div>
+          </div>
+
+          <div class="warning-box">
+            <h4>⚠️ Follow Limits</h4>
+            <ul>
+              <li>X has daily follow limits - don't exceed ~400/day</li>
+              <li>Following too fast can trigger rate limits</li>
+              <li>Keep <code>MAX_FOLLOWS</code> reasonable per session</li>
+              <li>Use <code>DELAY_BETWEEN</code> of at least 2-3 seconds</li>
+            </ul>
+          </div>
+        </section>
+
+        <footer>
+          <div class="footer-links">
+            <a href="../index.html">Dashboard</a>
+            <a href="index.html">All Tutorials</a>
+            <a href="https://github.com/nirholas/XActions" target="_blank">GitHub</a>
+            <a href="https://x.com/nichxbt" target="_blank">@nichxbt</a>
+          </div>
+          <p class="footer-copy">
+            Made with ❤️ by <a href="https://x.com/nichxbt" style="color: var(--accent);">@nichxbt</a> · 
+            100% Free & Open Source
+          </p>
+        </footer>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    function copyCode(btn) {
+      const code = btn.closest('.code-block').querySelector('code').textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        btn.textContent = '✅ Copied!';
+        setTimeout(() => btn.textContent = '📋 Copy', 2000);
+      });
+    }
+  </script>
+</body>
+</html>

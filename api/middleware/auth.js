@@ -3,6 +3,9 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
+// Payment routes archived - XActions is now 100% free and open-source
+// All users have full access to all features - no credits or subscription tiers
+
 const authMiddleware = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
@@ -16,15 +19,14 @@ const authMiddleware = async (req, res, next) => {
 
     // Get user from database
     const user = await prisma.user.findUnique({
-      where: { id: decoded.userId },
-      include: { subscription: true }
+      where: { id: decoded.userId }
     });
 
     if (!user) {
       return res.status(401).json({ error: 'User not found' });
     }
 
-    // Attach user to request
+    // Attach user to request - all users have full access
     req.user = user;
     next();
   } catch (error) {
@@ -52,8 +54,7 @@ const optionalAuthMiddleware = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     const user = await prisma.user.findUnique({
-      where: { id: decoded.userId },
-      include: { subscription: true }
+      where: { id: decoded.userId }
     });
 
     req.user = user || null;
@@ -65,51 +66,20 @@ const optionalAuthMiddleware = async (req, res, next) => {
   }
 };
 
+// Subscription check - DEPRECATED: XActions is now free
+// Kept for backward compatibility but always allows access
 const requireSubscription = (tier = 'free') => {
   return (req, res, next) => {
-    const user = req.user;
-    
-    if (!user.subscription) {
-      return res.status(403).json({ 
-        error: 'Subscription required',
-        requiredTier: tier
-      });
-    }
-
-    const tierLevels = { free: 0, basic: 1, pro: 2, enterprise: 3 };
-    const userTierLevel = tierLevels[user.subscription.tier] || 0;
-    const requiredTierLevel = tierLevels[tier] || 0;
-
-    if (userTierLevel < requiredTierLevel) {
-      return res.status(403).json({ 
-        error: 'Insufficient subscription tier',
-        currentTier: user.subscription.tier,
-        requiredTier: tier
-      });
-    }
-
+    // XActions is now 100% free - all users have full access
     next();
   };
 };
 
+// Credit check - DEPRECATED: XActions is now free
+// Kept for backward compatibility but always allows access
 const checkCredits = (requiredCredits) => {
   return async (req, res, next) => {
-    const user = req.user;
-
-    if (user.subscription?.tier !== 'free' && user.subscription?.tier) {
-      // Paid users get unlimited operations
-      return next();
-    }
-
-    if (user.credits < requiredCredits) {
-      return res.status(403).json({
-        error: 'Insufficient credits',
-        required: requiredCredits,
-        available: user.credits
-      });
-    }
-
-    req.creditsToDeduct = requiredCredits;
+    // XActions is now 100% free - no credit checks
     next();
   };
 };

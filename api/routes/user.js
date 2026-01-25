@@ -5,6 +5,9 @@ import { authMiddleware } from '../middleware/auth.js';
 const router = express.Router();
 const prisma = new PrismaClient();
 
+// Payment routes archived - XActions is now 100% free and open-source
+// All credit and subscription endpoints have been removed
+
 // All routes require authentication
 router.use(authMiddleware);
 
@@ -14,7 +17,6 @@ router.get('/profile', async (req, res) => {
     const user = await prisma.user.findUnique({
       where: { id: req.user.id },
       include: {
-        subscription: true,
         operations: {
           orderBy: { createdAt: 'desc' },
           take: 10
@@ -26,8 +28,8 @@ router.get('/profile', async (req, res) => {
       id: user.id,
       email: user.email,
       username: user.username,
-      credits: user.credits,
-      subscription: user.subscription,
+      // XActions is now free - unlimited access for all users
+      plan: 'free_unlimited',
       twitterConnected: !!user.twitterAccessToken,
       recentOperations: user.operations
     });
@@ -58,16 +60,14 @@ router.patch('/profile', async (req, res) => {
 
     const user = await prisma.user.update({
       where: { id: req.user.id },
-      data: { username },
-      include: { subscription: true }
+      data: { username }
     });
 
     res.json({
       id: user.id,
       email: user.email,
       username: user.username,
-      credits: user.credits,
-      subscription: user.subscription
+      plan: 'free_unlimited'
     });
   } catch (error) {
     console.error('Profile update error:', error);
@@ -86,7 +86,6 @@ router.get('/stats', async (req, res) => {
       totalOperations: operations.length,
       totalUnfollows: operations.reduce((sum, op) => sum + (op.unfollowedCount || 0), 0),
       totalFollowers: operations.reduce((sum, op) => sum + (op.followedCount || 0), 0),
-      creditsUsed: operations.reduce((sum, op) => sum + (op.creditsUsed || 0), 0),
       operationsByType: {},
       operationsByStatus: {}
     };
@@ -149,51 +148,6 @@ router.delete('/account', async (req, res) => {
   } catch (error) {
     console.error('Account deletion error:', error);
     res.status(500).json({ error: 'Failed to delete account' });
-  }
-});
-
-// Claim follow bonus - gives 3 credits for following @nichxbt
-import { FOLLOW_BONUS_CREDITS } from '../config/subscription-tiers.js';
-
-router.post('/claim-follow-bonus', async (req, res) => {
-  try {
-    const user = await prisma.user.findUnique({
-      where: { id: req.user.id }
-    });
-
-    // Check if already claimed
-    if (user.followBonusClaimed) {
-      return res.status(400).json({ error: 'Follow bonus already claimed' });
-    }
-
-    // Check if user has connected their X session
-    if (!user.sessionCookie && !user.twitterAccessToken) {
-      return res.status(400).json({ 
-        error: 'Connect your X account first to verify the follow',
-        requiresConnection: true
-      });
-    }
-
-    // TODO: Verify follow using session cookie or API
-    // For now, trust-based - mark as claimed and add credits
-    // In production, use browser automation to check if they follow @nichxbt
-
-    await prisma.user.update({
-      where: { id: req.user.id },
-      data: {
-        credits: { increment: FOLLOW_BONUS_CREDITS },
-        followBonusClaimed: true
-      }
-    });
-
-    res.json({ 
-      success: true,
-      creditsAdded: FOLLOW_BONUS_CREDITS,
-      message: `${FOLLOW_BONUS_CREDITS} credits added! You can now run 1 operation.`
-    });
-  } catch (error) {
-    console.error('Claim follow bonus error:', error);
-    res.status(500).json({ error: 'Failed to claim follow bonus' });
   }
 });
 

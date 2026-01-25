@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Monitoring Tutorials - XActions | Track Followers & Account Changes</title>
+  <meta name="description" content="Complete tutorials for X/Twitter account monitoring. Detect unfollowers, track any account, new follower alerts with full copy-paste-ready scripts.">
+  <meta name="author" content="nich (@nichxbt)">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar {
+      width: 275px; padding: 0 12px; position: sticky; top: 0;
+      height: 100vh; border-right: 1px solid var(--border);
+    }
+    .logo { padding: 16px 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; }
+    nav { margin-top: 8px; }
+    .nav-item { display: flex; align-items: center; gap: 16px; padding: 12px 16px; border-radius: 9999px; font-size: 1.1rem; color: var(--text-primary); text-decoration: none; transition: background 0.2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.3rem; width: 28px; text-align: center; }
+    .main { flex: 1; border-right: 1px solid var(--border); }
+    .header { padding: 16px 20px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(12px); z-index: 100; }
+    .header h1 { font-size: 1.3rem; font-weight: 700; }
+    .content { padding: 20px; }
+    .free-banner { background: linear-gradient(90deg, var(--success), var(--accent)); padding: 14px 20px; border-radius: 16px; margin-bottom: 24px; text-align: center; }
+    .free-banner span { font-weight: 700; }
+    .free-banner a { color: white; margin-left: 12px; }
+    .section { margin-bottom: 48px; padding-top: 20px; }
+    .section-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+    .step { margin-bottom: 24px; }
+    .step h4 { color: var(--accent); margin-bottom: 8px; font-size: 1rem; }
+    .step p { color: var(--text-secondary); margin-bottom: 12px; }
+    .code-block { position: relative; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; margin: 16px 0; overflow: hidden; }
+    .code-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; background: var(--bg-tertiary); border-bottom: 1px solid var(--border); }
+    .code-header span { font-size: 0.85rem; color: var(--text-secondary); }
+    .copy-btn { background: var(--accent); color: white; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 600; }
+    .copy-btn:hover { background: var(--accent-hover); }
+    .code-block pre { padding: 16px; overflow-x: auto; font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace; font-size: 0.85rem; line-height: 1.5; margin: 0; }
+    .code-block code { color: var(--text-primary); }
+    .info-box { background: rgba(29, 155, 240, 0.1); border: 1px solid var(--accent); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .info-box h4 { color: var(--accent); margin-bottom: 8px; }
+    .nav-toc { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 24px; }
+    .nav-toc h4 { margin-bottom: 12px; }
+    .nav-toc a { display: block; color: var(--accent); text-decoration: none; padding: 6px 0; font-size: 0.9rem; }
+    .nav-toc a:hover { text-decoration: underline; }
+    footer { padding: 40px 20px; border-top: 1px solid var(--border); margin-top: 40px; }
+    .footer-links { display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; }
+    .footer-links a { color: var(--text-secondary); text-decoration: none; }
+    .footer-links a:hover { color: var(--accent); }
+    .footer-copy { text-align: center; margin-top: 20px; color: var(--text-secondary); font-size: 0.85rem; }
+    @media (max-width: 768px) { .sidebar { display: none; } }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo"><a href="../index.html">⚡ XActions</a></div>
+      <nav>
+        <a href="../index.html" class="nav-item"><span class="nav-icon">🏠</span>Dashboard</a>
+        <a href="index.html" class="nav-item"><span class="nav-icon">📚</span>Tutorials</a>
+        <a href="unfollow.html" class="nav-item"><span class="nav-icon">👋</span>Unfollow</a>
+        <a href="scrapers.html" class="nav-item"><span class="nav-icon">🔍</span>Scrapers</a>
+        <a href="automation.html" class="nav-item"><span class="nav-icon">🤖</span>Automation</a>
+        <a href="monitoring.html" class="nav-item active"><span class="nav-icon">👁️</span>Monitoring</a>
+        <a href="communities.html" class="nav-item"><span class="nav-icon">🏘️</span>Communities</a>
+        <a href="mcp.html" class="nav-item"><span class="nav-icon">🧠</span>MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank"><span class="nav-icon">⭐</span>GitHub</a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <div class="header">
+        <h1>📡 Monitoring Tutorials</h1>
+      </div>
+
+      <div class="content">
+        <div class="free-banner">
+          <span>🎉 XActions is 100% Free & Open Source</span>
+          <a href="https://github.com/nirholas/XActions" target="_blank">Star on GitHub ⭐</a>
+        </div>
+
+        <div class="nav-toc">
+          <h4>📑 On This Page</h4>
+          <a href="#monitor-account">🔭 Monitor Any Account</a>
+          <a href="#new-followers">🎉 New Follower Alerts</a>
+          <a href="#detect-unfollowers">🚨 Detect Unfollowers</a>
+        </div>
+
+        <!-- MONITOR ANY ACCOUNT -->
+        <section class="section" id="monitor-account">
+          <h2 class="section-title">🔭 Monitor Any Account</h2>
+          <p style="color: var(--text-secondary); margin-bottom: 16px;">
+            Track follows and unfollows on any public X account over time. Great for competitor analysis or tracking influential accounts.
+          </p>
+
+          <div class="step">
+            <h4>Step 1: Go to any account's followers or following page</h4>
+            <p>Navigate to <code>x.com/USERNAME/followers</code> or <code>x.com/USERNAME/following</code></p>
+          </div>
+
+          <div class="step">
+            <h4>Step 2: Paste the Monitor Account script</h4>
+            <div class="code-block">
+              <div class="code-header">
+                <span>monitorAccount.js</span>
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+              </div>
+              <pre><code>// Monitor Any Account - by nichxbt
+// https://github.com/nirholas/XActions
+// Track follows/unfollows on ANY public X account
+// Go to x.com/USERNAME/followers or /following
+
+(() => {
+  const STORAGE_PREFIX = 'xactions_monitor_';
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+  const path = window.location.pathname;
+  const isFollowers = path.includes('/followers');
+  const isFollowing = path.includes('/following');
+
+  if (!isFollowers && !isFollowing) {
+    console.error('❌ Please go to a followers or following page!');
+    console.log('Example: x.com/elonmusk/followers');
+    return;
+  }
+
+  const pageType = isFollowers ? 'followers' : 'following';
+  const targetUser = path.split('/')[1].toLowerCase();
+  const storageKey = `${STORAGE_PREFIX}${targetUser}_${pageType}`;
+
+  console.log(`🔭 Monitoring @${targetUser}'s ${pageType}...\n`);
+
+  const scrapeUsers = async () => {
+    const users = new Set();
+    let prevSize = 0;
+    let retries = 0;
+
+    while (retries < 5) {
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(1500);
+
+      document.querySelectorAll('[data-testid="UserCell"]').forEach(cell => {
+        const links = cell.querySelectorAll('a[href^="/"]');
+        links.forEach(link => {
+          const href = link.getAttribute('href');
+          if (href?.startsWith('/') && !href.includes('/status/')) {
+            const username = href.replace('/', '').split('/')[0].toLowerCase();
+            if (username && username !== targetUser && !username.includes('?')) {
+              users.add(username);
+            }
+          }
+        });
+      });
+
+      console.log(`Found ${users.size} accounts...`);
+      if (users.size === prevSize) retries++;
+      else { retries = 0; prevSize = users.size; }
+    }
+
+    return Array.from(users);
+  };
+
+  const loadPrevious = () => {
+    try {
+      const data = localStorage.getItem(storageKey);
+      return data ? JSON.parse(data) : null;
+    } catch { return null; }
+  };
+
+  const saveData = (users) => {
+    const data = {
+      target: targetUser,
+      type: pageType,
+      users,
+      timestamp: new Date().toISOString(),
+      count: users.length
+    };
+    localStorage.setItem(storageKey, JSON.stringify(data));
+    return data;
+  };
+
+  const compare = (previous, current) => {
+    const prevSet = new Set(previous);
+    const currSet = new Set(current);
+    return {
+      removed: previous.filter(u => !currSet.has(u)),
+      added: current.filter(u => !prevSet.has(u))
+    };
+  };
+
+  const downloadList = (list, filename) => {
+    if (list.length === 0) return;
+    const blob = new Blob([list.map(u => `@${u}`).join('\n')], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
+
+  scrapeUsers().then(currentUsers => {
+    console.log(`\n✅ Found ${currentUsers.length} accounts\n`);
+
+    const previous = loadPrevious();
+
+    if (previous) {
+      const prevDate = new Date(previous.timestamp).toLocaleString();
+      console.log(`📊 Comparing with snapshot from ${prevDate}`);
+      console.log(`Previous: ${previous.count} | Current: ${currentUsers.length}\n`);
+
+      const { removed, added } = compare(previous.users, currentUsers);
+
+      if (pageType === 'followers') {
+        if (removed.length > 0) {
+          console.log(`🚨 ${removed.length} UNFOLLOWED @${targetUser}:`);
+          removed.forEach(u => console.log(`   @${u}`));
+          downloadList(removed, `${targetUser}-lost-followers.txt`);
+        }
+        if (added.length > 0) {
+          console.log(`\n🎉 ${added.length} NEW FOLLOWERS:`);
+          added.forEach(u => console.log(`   @${u}`));
+        }
+      } else {
+        if (removed.length > 0) {
+          console.log(`👋 @${targetUser} UNFOLLOWED ${removed.length}:`);
+          removed.forEach(u => console.log(`   @${u}`));
+        }
+        if (added.length > 0) {
+          console.log(`\n➕ @${targetUser} NOW FOLLOWS ${added.length} NEW:`);
+          added.forEach(u => console.log(`   @${u}`));
+        }
+      }
+
+      if (removed.length === 0 && added.length === 0) {
+        console.log('✨ No changes since last check!');
+      }
+    } else {
+      console.log('📸 First scan! Saving snapshot...');
+      console.log('Run again later to see changes.');
+    }
+
+    saveData(currentUsers);
+    console.log(`\n💾 Snapshot saved. Run again anytime!\n`);
+  });
+})();</code></pre>
+            </div>
+          </div>
+
+          <div class="info-box">
+            <h4>💡 How It Works</h4>
+            <p>The script saves a snapshot of the account's followers/following list in your browser's localStorage. When you run it again, it compares with the previous snapshot to show who was added or removed.</p>
+          </div>
+        </section>
+
+        <!-- NEW FOLLOWER ALERTS -->
+        <section class="section" id="new-followers">
+          <h2 class="section-title">🎉 New Follower Alerts</h2>
+          <p style="color: var(--text-secondary); margin-bottom: 16px;">
+            Track your new followers with display names and get ready-to-use welcome message templates.
+          </p>
+
+          <div class="step">
+            <h4>Step 1: Go to your followers page</h4>
+            <p>Navigate to <code>x.com/YOUR_USERNAME/followers</code></p>
+          </div>
+
+          <div class="step">
+            <h4>Step 2: Paste the New Followers Alert script</h4>
+            <div class="code-block">
+              <div class="code-header">
+                <span>newFollowersAlert.js</span>
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+              </div>
+              <pre><code>// New Followers Alert - by nichxbt
+// https://github.com/nirholas/XActions
+// Track new followers + get welcome templates
+// Go to x.com/YOUR_USERNAME/followers
+
+(() => {
+  const STORAGE_KEY = 'xactions_new_followers';
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+  if (!window.location.pathname.includes('/followers')) {
+    console.error('❌ Please go to your FOLLOWERS page!');
+    return;
+  }
+
+  const username = window.location.pathname.split('/')[1];
+  console.log(`🎉 Tracking new followers for @${username}...\n`);
+
+  const scrapeFollowers = async () => {
+    const followers = new Map();
+    let prevSize = 0;
+    let retries = 0;
+
+    while (retries < 5) {
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(1500);
+
+      document.querySelectorAll('[data-testid="UserCell"]').forEach(cell => {
+        const link = cell.querySelector('a[href^="/"]');
+        const nameEl = cell.querySelector('[dir="ltr"] > span');
+        
+        if (link) {
+          const user = link.getAttribute('href').replace('/', '').split('/')[0].toLowerCase();
+          const displayName = nameEl?.textContent || user;
+          if (user && user !== username.toLowerCase()) {
+            followers.set(user, displayName);
+          }
+        }
+      });
+
+      if (followers.size === prevSize) retries++;
+      else { retries = 0; prevSize = followers.size; }
+      console.log(`Found ${followers.size} followers...`);
+    }
+
+    return followers;
+  };
+
+  const loadPrevious = () => {
+    try {
+      const data = localStorage.getItem(STORAGE_KEY);
+      return data ? JSON.parse(data) : null;
+    } catch { return null; }
+  };
+
+  const saveFollowers = (followersMap) => {
+    const data = {
+      username,
+      followers: Object.fromEntries(followersMap),
+      timestamp: new Date().toISOString(),
+      count: followersMap.size
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    return data;
+  };
+
+  scrapeFollowers().then(currentFollowers => {
+    console.log(`\n✅ Total followers: ${currentFollowers.size}\n`);
+
+    const previous = loadPrevious();
+
+    if (previous && previous.username.toLowerCase() === username.toLowerCase()) {
+      const prevUsers = new Set(Object.keys(previous.followers));
+      const newFollowers = [];
+
+      currentFollowers.forEach((displayName, user) => {
+        if (!prevUsers.has(user)) {
+          newFollowers.push({ user, displayName });
+        }
+      });
+
+      const prevDate = new Date(previous.timestamp).toLocaleString();
+      console.log(`📊 Comparing with ${prevDate}`);
+      console.log(`Previous: ${previous.count} | Current: ${currentFollowers.size}`);
+      console.log(`Net change: ${currentFollowers.size - previous.count > 0 ? '+' : ''}${currentFollowers.size - previous.count}\n`);
+
+      if (newFollowers.length > 0) {
+        console.log(`🎉 ${newFollowers.length} NEW FOLLOWERS:\n`);
+        newFollowers.forEach((f, i) => {
+          console.log(`${i + 1}. ${f.displayName} (@${f.user})`);
+          console.log(`   https://x.com/${f.user}`);
+        });
+
+        console.log('\n📝 Welcome templates (copy & customize):');
+        console.log('─'.repeat(50));
+        newFollowers.slice(0, 5).forEach(f => {
+          console.log(`Hey @${f.user}, thanks for the follow! 🙏`);
+        });
+        console.log('─'.repeat(50));
+      } else {
+        console.log('📭 No new followers since last check.');
+      }
+
+      // Check for unfollowers
+      const currentUsers = new Set(currentFollowers.keys());
+      const lost = Object.keys(previous.followers).filter(u => !currentUsers.has(u));
+      if (lost.length > 0) {
+        console.log(`\n👋 ${lost.length} unfollowed you:`);
+        lost.forEach(u => console.log(`   @${u}`));
+      }
+    } else {
+      console.log('📸 First scan! Saving your followers...');
+      console.log('Run again later to see new followers!');
+    }
+
+    saveFollowers(currentFollowers);
+    console.log('\n💾 Snapshot saved!\n');
+  });
+})();</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- DETECT UNFOLLOWERS -->
+        <section class="section" id="detect-unfollowers">
+          <h2 class="section-title">🚨 Detect Unfollowers</h2>
+          <p style="color: var(--text-secondary); margin-bottom: 16px;">
+            Find out exactly who unfollowed you since your last check. Downloads a list of unfollowers.
+          </p>
+
+          <div class="step">
+            <h4>Step 1: Go to your followers page</h4>
+            <p>Navigate to <code>x.com/YOUR_USERNAME/followers</code></p>
+          </div>
+
+          <div class="step">
+            <h4>Step 2: Paste the Detect Unfollowers script</h4>
+            <div class="code-block">
+              <div class="code-header">
+                <span>detectUnfollowers.js</span>
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+              </div>
+              <pre><code>// Detect Unfollowers - by nichxbt
+// https://github.com/nirholas/XActions
+// Find who unfollowed you
+// Go to x.com/YOUR_USERNAME/followers
+
+(() => {
+  const STORAGE_KEY = 'xactions_my_followers';
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+  if (!window.location.pathname.includes('/followers')) {
+    console.error('❌ Please go to your FOLLOWERS page!');
+    console.log('👉 Go to: x.com/YOUR_USERNAME/followers');
+    return;
+  }
+
+  const username = window.location.pathname.match(/^\/([^/]+)\/followers/)?.[1] || 'unknown';
+  console.log(`🔍 Detecting unfollowers for @${username}...\n`);
+
+  const scrapeFollowers = async () => {
+    const followers = new Set();
+    let prevSize = 0;
+    let retries = 0;
+
+    while (retries < 5) {
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(1500);
+
+      document.querySelectorAll('[data-testid="UserCell"]').forEach(cell => {
+        const link = cell.querySelector('a[href^="/"]');
+        if (link) {
+          const href = link.getAttribute('href');
+          const user = href.replace('/', '').toLowerCase();
+          if (user && !user.includes('/')) {
+            followers.add(user);
+          }
+        }
+      });
+
+      console.log(`Found ${followers.size} followers...`);
+      if (followers.size === prevSize) retries++;
+      else { retries = 0; prevSize = followers.size; }
+    }
+
+    return Array.from(followers);
+  };
+
+  const loadPrevious = () => {
+    try {
+      const data = localStorage.getItem(STORAGE_KEY);
+      return data ? JSON.parse(data) : null;
+    } catch { return null; }
+  };
+
+  const saveFollowers = (followers) => {
+    const data = {
+      username,
+      followers,
+      timestamp: new Date().toISOString(),
+      count: followers.length
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    return data;
+  };
+
+  scrapeFollowers().then(currentFollowers => {
+    console.log(`\n✅ Found ${currentFollowers.length} followers\n`);
+
+    const previous = loadPrevious();
+
+    if (previous && previous.username === username) {
+      const prevDate = new Date(previous.timestamp).toLocaleString();
+      console.log(`📊 Comparing with snapshot from ${prevDate}`);
+      console.log(`Previous: ${previous.count} | Current: ${currentFollowers.length}\n`);
+
+      const currSet = new Set(currentFollowers);
+      const unfollowed = previous.followers.filter(f => !currSet.has(f.toLowerCase()));
+      const newFollowers = currentFollowers.filter(f => !previous.followers.includes(f));
+
+      if (unfollowed.length > 0) {
+        console.log(`🚨 ${unfollowed.length} PEOPLE UNFOLLOWED YOU:\n`);
+        unfollowed.forEach((u, i) => {
+          console.log(`${i + 1}. @${u} — https://x.com/${u}`);
+        });
+
+        // Download list
+        const blob = new Blob([unfollowed.join('\n')], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `unfollowers-${new Date().toISOString().split('T')[0]}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        console.log('\n📥 Downloaded unfollowers list!');
+      } else {
+        console.log('✨ No one unfollowed you since last check!');
+      }
+
+      if (newFollowers.length > 0) {
+        console.log(`\n🎉 ${newFollowers.length} NEW FOLLOWERS:`);
+        newFollowers.forEach((u, i) => console.log(`${i + 1}. @${u}`));
+      }
+    } else {
+      console.log('📸 First scan! Saving snapshot...');
+      console.log('Run again later to detect unfollowers.');
+    }
+
+    saveFollowers(currentFollowers);
+    console.log(`\n💾 Snapshot saved!\n`);
+  });
+})();</code></pre>
+            </div>
+          </div>
+
+          <div class="info-box">
+            <h4>💡 Pro Tip</h4>
+            <p>Run this script regularly (daily or weekly) to catch unfollowers quickly. The more frequently you run it, the more accurate your tracking will be.</p>
+          </div>
+        </section>
+
+        <footer>
+          <div class="footer-links">
+            <a href="../index.html">Dashboard</a>
+            <a href="index.html">All Tutorials</a>
+            <a href="https://github.com/nirholas/XActions" target="_blank">GitHub</a>
+            <a href="https://x.com/nichxbt" target="_blank">@nichxbt</a>
+          </div>
+          <p class="footer-copy">
+            Made with ❤️ by <a href="https://x.com/nichxbt" style="color: var(--accent);">@nichxbt</a> · 
+            100% Free & Open Source
+          </p>
+        </footer>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    function copyCode(btn) {
+      const code = btn.closest('.code-block').querySelector('code').textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        btn.textContent = '✅ Copied!';
+        setTimeout(() => btn.textContent = '📋 Copy', 2000);
+      });
+    }
+  </script>
+</body>
+</html>

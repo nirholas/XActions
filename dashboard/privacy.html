@@ -281,14 +281,13 @@
       max-width: 1200px;
       margin: 0 auto;
       display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
       gap: 32px;
     }
-    .footer-brand h3 { font-size: 1.25rem; margin-bottom: 8px; }
-    .footer-brand p { color: var(--text-secondary); font-size: 0.875rem; line-height: 1.5; }
-    .footer-links h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 12px; color: var(--text-primary); }
-    .footer-links a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 4px 0; transition: color 0.2s; }
-    .footer-links a:hover { color: var(--accent); }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 12px; color: var(--text-primary); }
+    .footer-section p { color: var(--text-secondary); font-size: 0.875rem; line-height: 1.5; margin-bottom: 8px; }
+    .footer-section a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 4px 0; transition: color 0.2s; }
+    .footer-section a:hover { color: var(--accent); }
     .footer-bottom { max-width: 1200px; margin: 24px auto 0; padding-top: 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
     .footer-bottom p { color: var(--text-secondary); font-size: 0.8125rem; }
     .footer-bottom a { color: var(--text-secondary); text-decoration: none; }
@@ -305,19 +304,27 @@
       </div>
       <nav>
         <a href="/" class="nav-item"><span class="nav-icon">🏠</span><span>Home</span></a>
-        <a href="/dashboard" class="nav-item"><span class="nav-icon">📊</span><span>Dashboard</span></a>
-        <a href="/features" class="nav-item"><span class="nav-icon">✨</span><span>Features</span></a>
-        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
-        <a href="/docs" class="nav-item"><span class="nav-icon">📚</span><span>Docs</span></a>
-        <a href="https://github.com/nirholas/XActions" target="_blank" class="nav-item"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/mcp" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank"><span class="nav-icon">⭐</span><span>GitHub</span></a>
       </nav>
-      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+      <a href="https://github.com/nirholas/XActions" class="action-btn" target="_blank">Star on GitHub ⭐</a>
     </aside>
 
     <main class="main-content">
       <header class="main-header">
         <h1>🔒 Privacy Policy</h1>
       </header>
+
+      <!-- Free & Open Source Banner -->
+      <div style="background: linear-gradient(90deg, #00ba7c, #1d9bf0); padding: 12px 20px; border-radius: 12px; margin: 16px; text-align: center;">
+        <span style="font-weight: 700;">🎉 XActions is 100% Free & Open Source</span>
+        <span style="margin-left: 12px; opacity: 0.9;">No accounts, no payments, no limits</span>
+        <a href="https://github.com/nirholas/XActions" style="margin-left: 12px; color: white; text-decoration: underline;">Star on GitHub ⭐</a>
+      </div>
 
       <div class="content">
         <p class="last-updated">Last updated: January 1, 2026</p>
@@ -377,18 +384,12 @@
             <td>Activity logs</td>
             <td>90 days</td>
           </tr>
-          <tr>
-            <td>Payment info</td>
-            <td>Processed by Stripe</td>
-            <td>Per Stripe's policy</td>
-          </tr>
         </table>
 
         <h2>3. How We Use Your Information</h2>
         <p>We use collected information to:</p>
         <ul>
           <li>Provide and maintain the Service</li>
-          <li>Process payments and manage subscriptions</li>
           <li>Send service-related notifications</li>
           <li>Improve and optimize the Service</li>
           <li>Respond to support requests</li>
@@ -417,10 +418,10 @@
         <h2>6. Third-Party Services</h2>
         <p>We use the following third-party services:</p>
         <ul>
-          <li><strong>Stripe</strong> - Payment processing (<a href="https://stripe.com/privacy">Stripe Privacy</a>)</li>
-          <li><strong>Vercel</strong> - Hosting (if applicable)</li>
+          <li><strong>Vercel/Railway</strong> - Hosting (if applicable)</li>
+          <li><strong>GitHub</strong> - Source code hosting</li>
         </ul>
-        <p>We do not use third-party analytics or tracking services.</p>
+        <p>We do not use third-party analytics, tracking, or payment services.</p>
 
         <h2>7. Your Rights</h2>
         <p>You have the right to:</p>
@@ -486,32 +487,32 @@
 
   <footer class="site-footer">
     <div class="footer-content">
-      <div class="footer-brand">
-        <h3>⚡ XActions</h3>
-        <p>Free, open-source X/Twitter automation toolkit. Mass unfollow, detect unfollowers, auto-engage, and grow your audience without expensive API fees.</p>
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt">@nichxbt</a></p>
       </div>
-      <div class="footer-links">
-        <h4>Product</h4>
-        <a href="/features">Features</a>
-        <a href="/pricing">Pricing</a>
+      <div class="footer-section">
+        <h4>Resources</h4>
+        <a href="/features">All Scripts</a>
+        <a href="/tutorials">Tutorials</a>
         <a href="/docs">Documentation</a>
-        <a href="/dashboard">Dashboard</a>
+        <a href="/mcp">AI Integration</a>
       </div>
-      <div class="footer-links">
-        <h4>Company</h4>
-        <a href="/about">About</a>
-        <a href="https://github.com/nirholas/XActions" target="_blank">GitHub</a>
-        <a href="https://x.com/nichxbt" target="_blank">Twitter</a>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions">GitHub</a>
+        <a href="https://github.com/nirholas/XActions/issues">Report Issues</a>
+        <a href="https://github.com/nirholas/XActions/blob/main/CONTRIBUTING.md">Contribute</a>
       </div>
-      <div class="footer-links">
+      <div class="footer-section">
         <h4>Legal</h4>
-        <a href="/terms">Terms of Service</a>
-        <a href="/privacy">Privacy Policy</a>
+        <a href="/privacy">Privacy</a>
+        <a href="/terms">Terms</a>
       </div>
     </div>
     <div class="footer-bottom">
-      <p>© 2026 XActions. Not affiliated with X Corp.</p>
-      <p>Made with ❤️ by <a href="https://x.com/nichxbt" target="_blank">@nichxbt</a></p>
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
     </div>
   </footer>
 </body>

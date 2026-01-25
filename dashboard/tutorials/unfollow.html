@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unfollow Tutorials - XActions | Mass Unfollow X/Twitter</title>
+  <meta name="description" content="Complete tutorials for unfollowing on X/Twitter. Mass unfollow everyone, remove non-followers, smart unfollow with whitelist, detect who unfollowed you.">
+  <meta name="author" content="nich (@nichxbt)">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --bg-hover: #1d1f23;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --text-link: #1d9bf0;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    .layout {
+      display: flex;
+      max-width: 1300px;
+      margin: 0 auto;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 275px;
+      padding: 0 12px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--border);
+    }
+
+    .logo {
+      padding: 12px;
+      margin-bottom: 4px;
+    }
+
+    .logo a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--text-primary);
+      font-size: 1.5rem;
+      font-weight: 800;
+      padding: 12px;
+      border-radius: 9999px;
+      transition: background 0.2s;
+    }
+
+    .logo a:hover { background: var(--accent-light); }
+
+    nav { flex: 1; }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 12px;
+      border-radius: 9999px;
+      font-size: 1.25rem;
+      font-weight: 400;
+      color: var(--text-primary);
+      text-decoration: none;
+      transition: background 0.2s;
+      margin-bottom: 4px;
+    }
+
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      max-width: 900px;
+      border-right: 1px solid var(--border);
+      min-height: 100vh;
+    }
+
+    .main-header {
+      position: sticky;
+      top: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 16px;
+      z-index: 100;
+    }
+
+    .main-header h1 { font-size: 1.5rem; font-weight: 700; }
+    .main-header p { color: var(--text-secondary); font-size: 0.9rem; }
+
+    .free-banner {
+      background: linear-gradient(135deg, var(--accent) 0%, #7856ff 100%);
+      padding: 12px 16px;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    /* Tutorial Sections */
+    .tutorial-section {
+      padding: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tutorial-section h2 {
+      font-size: 1.4rem;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .tutorial-section h3 {
+      font-size: 1.1rem;
+      margin: 20px 0 12px 0;
+      color: var(--accent);
+    }
+
+    .tutorial-section p {
+      margin-bottom: 12px;
+      color: var(--text-secondary);
+    }
+
+    .tutorial-section ul, .tutorial-section ol {
+      margin: 12px 0;
+      padding-left: 24px;
+    }
+
+    .tutorial-section li {
+      margin-bottom: 8px;
+      color: var(--text-secondary);
+    }
+
+    /* Code Blocks */
+    .code-block {
+      position: relative;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin: 16px 0;
+      overflow: hidden;
+    }
+
+    .code-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      background: var(--bg-tertiary);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .code-title {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    .copy-btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .copy-btn:hover { background: var(--accent-hover); }
+
+    .code-block pre {
+      padding: 16px;
+      overflow-x: auto;
+      font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+
+    .code-block code {
+      color: var(--text-primary);
+    }
+
+    /* Inline Code */
+    code:not(pre code) {
+      background: var(--bg-tertiary);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.9em;
+    }
+
+    /* Alert Boxes */
+    .alert {
+      padding: 16px;
+      border-radius: 12px;
+      margin: 16px 0;
+    }
+
+    .alert-warning {
+      background: rgba(255, 173, 31, 0.15);
+      border: 1px solid var(--warning);
+    }
+
+    .alert-info {
+      background: var(--accent-light);
+      border: 1px solid var(--accent);
+    }
+
+    .alert-success {
+      background: rgba(0, 186, 124, 0.15);
+      border: 1px solid var(--success);
+    }
+
+    .alert-title {
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    /* TOC */
+    .toc {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 16px 0;
+    }
+
+    .toc h3 {
+      margin-bottom: 12px;
+      color: var(--text-primary);
+    }
+
+    .toc-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .toc-list li {
+      margin-bottom: 8px;
+    }
+
+    .toc-list a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .toc-list a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo">
+        <a href="../index.html">⚡ XActions</a>
+      </div>
+      <nav>
+        <a href="../index.html" class="nav-item">
+          <span class="nav-icon">🏠</span> Dashboard
+        </a>
+        <a href="index.html" class="nav-item">
+          <span class="nav-icon">📚</span> Tutorials
+        </a>
+        <a href="unfollow.html" class="nav-item active">
+          <span class="nav-icon">👋</span> Unfollow
+        </a>
+        <a href="scrapers.html" class="nav-item">
+          <span class="nav-icon">🔍</span> Scrapers
+        </a>
+        <a href="automation.html" class="nav-item">
+          <span class="nav-icon">🤖</span> Automation
+        </a>
+        <a href="monitoring.html" class="nav-item">
+          <span class="nav-icon">👁️</span> Monitoring
+        </a>
+        <a href="communities.html" class="nav-item">
+          <span class="nav-icon">🏘️</span> Communities
+        </a>
+        <a href="mcp.html" class="nav-item">
+          <span class="nav-icon">🧠</span> MCP Server
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="free-banner">
+        🎉 100% Free & Open Source — No API fees, no subscriptions!
+      </div>
+
+      <header class="main-header">
+        <h1>👋 Unfollow Tutorials</h1>
+        <p>Complete guides for mass unfollowing on X/Twitter</p>
+      </header>
+
+      <!-- Table of Contents -->
+      <section class="tutorial-section">
+        <div class="toc">
+          <h3>📖 On This Page</h3>
+          <ul class="toc-list">
+            <li><a href="#unfollow-everyone">1. Unfollow Everyone</a></li>
+            <li><a href="#unfollow-non-followers">2. Unfollow Non-Followers Only</a></li>
+            <li><a href="#smart-unfollow">3. Smart Unfollow with Whitelist</a></li>
+            <li><a href="#detect-unfollowers">4. Detect Who Unfollowed You</a></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Section 1: Unfollow Everyone -->
+      <section class="tutorial-section" id="unfollow-everyone">
+        <h2>🚀 1. Unfollow Everyone</h2>
+        
+        <h3>📋 What This Does</h3>
+        <p>Mass unfollows ALL accounts you're currently following. This is the nuclear option - use it when you want to start fresh with a clean following list.</p>
+        
+        <h3>🎯 Quick Start</h3>
+        <ol>
+          <li>Go to <code>x.com/YOUR_USERNAME/following</code></li>
+          <li>Open DevTools with <code>F12</code> (Windows/Linux) or <code>Cmd+Option+J</code> (Mac)</li>
+          <li>Click the "Console" tab</li>
+          <li>Paste the code below and press Enter</li>
+        </ol>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-title">unfollow-everyone.js</span>
+            <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+          </div>
+          <pre><code>// Unfollow everyone on X
+// by nichxbt - https://github.com/nirholas/XActions
+(() => {
+  const $followButtons = '[data-testid$="-unfollow"]';
+  const $confirmButton = '[data-testid="confirmationSheetConfirm"]';
+
+  const retry = {
+    count: 0,
+    limit: 3,
+  };
+
+  const scrollToTheBottom = () => window.scrollTo(0, document.body.scrollHeight);
+  const retryLimitReached = () => retry.count === retry.limit;
+  const addNewRetry = () => retry.count++;
+
+  const sleep = ({ seconds }) =>
+    new Promise((proceed) => {
+      console.log(`WAITING FOR ${seconds} SECONDS...`);
+      setTimeout(proceed, seconds * 1000);
+    });
+
+  const unfollowAll = async (followButtons) => {
+    console.log(`UNFOLLOWING ${followButtons.length} USERS...`);
+    await Promise.all(
+      followButtons.map(async (followButton) => {
+        followButton && followButton.click();
+        await sleep({ seconds: 1 });
+        const confirmButton = document.querySelector($confirmButton);
+        confirmButton && confirmButton.click();
+      })
+    );
+  };
+
+  const nextBatch = async () => {
+    scrollToTheBottom();
+    await sleep({ seconds: 1 });
+
+    const followButtons = Array.from(document.querySelectorAll($followButtons));
+    const followButtonsWereFound = followButtons.length > 0;
+
+    if (followButtonsWereFound) {
+      await unfollowAll(followButtons);
+      await sleep({ seconds: 2 });
+      return nextBatch();
+    } else {
+      addNewRetry();
+    }
+
+    if (retryLimitReached()) {
+      console.log(`NO ACCOUNTS FOUND, SO I THINK WE'RE DONE`);
+      console.log(`RELOAD PAGE AND RE-RUN SCRIPT IF ANY WERE MISSED`);
+    } else {
+      await sleep({ seconds: 2 });
+      return nextBatch();
+    }
+  };
+
+  nextBatch();
+})();</code></pre>
+        </div>
+
+        <div class="alert alert-warning">
+          <div class="alert-title">⚠️ Warning</div>
+          <p>This will unfollow EVERYONE. There's no undo button. Make sure you really want to do this!</p>
+        </div>
+
+        <h3>⚙️ How It Works</h3>
+        <ul>
+          <li>Scrolls down your following list to load more accounts</li>
+          <li>Finds all "Following" buttons and clicks them</li>
+          <li>Automatically confirms each unfollow</li>
+          <li>Repeats until no more accounts are found</li>
+          <li>Retries 3 times to catch any stragglers</li>
+        </ul>
+      </section>
+
+      <!-- Section 2: Unfollow Non-Followers -->
+      <section class="tutorial-section" id="unfollow-non-followers">
+        <h2>👥 2. Unfollow Non-Followers Only</h2>
+        
+        <h3>📋 What This Does</h3>
+        <p>Unfollows only people who don't follow you back. Keeps mutual follows intact. Perfect for cleaning up your following list without losing your real connections.</p>
+        
+        <h3>🎯 Quick Start</h3>
+        <ol>
+          <li>Go to <code>x.com/YOUR_USERNAME/following</code></li>
+          <li>Open DevTools (F12 or Cmd+Option+J)</li>
+          <li>Paste the code below and press Enter</li>
+        </ol>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-title">unfollow-non-followers.js</span>
+            <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+          </div>
+          <pre><code>// Unfollow people who don't follow you back
+// by nichxbt - https://github.com/nirholas/XActions
+(() => {
+  const $followButtons = '[data-testid$="-unfollow"]';
+  const $confirmButton = '[data-testid="confirmationSheetConfirm"]';
+
+  const retry = {
+    count: 0,
+    limit: 3,
+  };
+
+  const scrollToTheBottom = () => window.scrollTo(0, document.body.scrollHeight);
+  const retryLimitReached = () => retry.count === retry.limit;
+  const addNewRetry = () => retry.count++;
+
+  const sleep = ({ seconds }) =>
+    new Promise((proceed) => {
+      console.log(`WAITING FOR ${seconds} SECONDS...`);
+      setTimeout(proceed, seconds * 1000);
+    });
+
+  const unfollowAll = async (followButtons) => {
+    console.log(`UNFOLLOWING ${followButtons.length} USERS...`);
+    await Promise.all(
+      followButtons.map(async (followButton) => {
+        followButton && followButton.click();
+        await sleep({ seconds: 1 });
+        const confirmButton = document.querySelector($confirmButton);
+        confirmButton && confirmButton.click();
+      })
+    );
+  };
+
+  const nextBatch = async () => {
+    scrollToTheBottom();
+    await sleep({ seconds: 1 });
+
+    let followButtons = Array.from(document.querySelectorAll($followButtons));
+    // Filter out users who follow you back (they have the "Follows you" indicator)
+    followButtons = followButtons.filter(b => 
+      b.parentElement?.parentElement?.querySelector('[data-testid="userFollowIndicator"]') === null
+    );
+    const followButtonsWereFound = followButtons.length > 0;
+
+    if (followButtonsWereFound) {
+      await unfollowAll(followButtons);
+      await sleep({ seconds: 2 });
+      return nextBatch();
+    } else {
+      addNewRetry();
+    }
+
+    if (retryLimitReached()) {
+      console.log(`NO ACCOUNTS FOUND, SO I THINK WE'RE DONE`);
+      console.log(`RELOAD PAGE AND RE-RUN SCRIPT IF ANY WERE MISSED`);
+    } else {
+      await sleep({ seconds: 2 });
+      return nextBatch();
+    }
+  };
+
+  nextBatch();
+})();</code></pre>
+        </div>
+
+        <div class="alert alert-info">
+          <div class="alert-title">💡 How It Detects Mutuals</div>
+          <p>X shows a "Follows you" badge on users who follow you back. The script looks for <code>[data-testid="userFollowIndicator"]</code> and skips those users.</p>
+        </div>
+      </section>
+
+      <!-- Section 3: Smart Unfollow -->
+      <section class="tutorial-section" id="smart-unfollow">
+        <h2>🧠 3. Smart Unfollow with Whitelist</h2>
+        
+        <h3>📋 What This Does</h3>
+        <p>Unfollows non-followers BUT lets you keep specific accounts you want to keep following (like celebrities, brands, or news accounts that never follow back).</p>
+        
+        <h3>🎯 Quick Start</h3>
+        <ol>
+          <li>Edit the <code>WHITELIST</code> array with usernames you want to keep</li>
+          <li>Go to <code>x.com/YOUR_USERNAME/following</code></li>
+          <li>Open DevTools and paste the code</li>
+        </ol>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-title">smart-unfollow.js</span>
+            <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+          </div>
+          <pre><code>// Smart Unfollow - Non-followers with whitelist
+// by nichxbt - https://github.com/nirholas/XActions
+(() => {
+  // ⬇️ ADD USERNAMES TO KEEP (without @)
+  const WHITELIST = [
+    'elonmusk',
+    'naval',
+    'paulg',
+    // Add more usernames here...
+  ];
+  
+  const $followButtons = '[data-testid$="-unfollow"]';
+  const $confirmButton = '[data-testid="confirmationSheetConfirm"]';
+  const $userCell = '[data-testid="UserCell"]';
+
+  let unfollowedCount = 0;
+  let skippedCount = 0;
+  let retry = { count: 0, limit: 3 };
+
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+  const scrollToBottom = () => window.scrollTo(0, document.body.scrollHeight);
+
+  const getUsernameFromCell = (cell) => {
+    const link = cell.querySelector('a[href^="/"]');
+    if (link) {
+      const href = link.getAttribute('href');
+      return href.replace('/', '').toLowerCase();
+    }
+    return null;
+  };
+
+  const isWhitelisted = (username) => {
+    return WHITELIST.map(u => u.toLowerCase()).includes(username?.toLowerCase());
+  };
+
+  const followsBack = (cell) => {
+    return cell.querySelector('[data-testid="userFollowIndicator"]') !== null;
+  };
+
+  const unfollowUser = async (unfollowBtn) => {
+    unfollowBtn.click();
+    await sleep(800);
+    const confirmBtn = document.querySelector($confirmButton);
+    if (confirmBtn) {
+      confirmBtn.click();
+      await sleep(500);
+    }
+  };
+
+  const processVisible = async () => {
+    const cells = document.querySelectorAll($userCell);
+    let processed = 0;
+
+    for (const cell of cells) {
+      const username = getUsernameFromCell(cell);
+      const unfollowBtn = cell.querySelector($followButtons);
+      
+      if (!unfollowBtn || !username) continue;
+
+      // Skip if follows back
+      if (followsBack(cell)) {
+        continue;
+      }
+
+      // Skip if whitelisted
+      if (isWhitelisted(username)) {
+        console.log(`⏭️ Skipping @${username} (whitelisted)`);
+        skippedCount++;
+        continue;
+      }
+
+      console.log(`👋 Unfollowing @${username}...`);
+      await unfollowUser(unfollowBtn);
+      unfollowedCount++;
+      processed++;
+      await sleep(1500);
+    }
+
+    return processed > 0;
+  };
+
+  const run = async () => {
+    console.log('🧠 Smart Unfollow Started');
+    console.log(`📝 Whitelist: ${WHITELIST.length} accounts protected`);
+
+    while (retry.count < retry.limit) {
+      scrollToBottom();
+      await sleep(2000);
+
+      const didProcess = await processVisible();
+      
+      if (!didProcess) {
+        retry.count++;
+        console.log(`⏳ No users found, retry ${retry.count}/${retry.limit}...`);
+      } else {
+        retry.count = 0;
+      }
+    }
+
+    console.log('');
+    console.log('✅ DONE!');
+    console.log(`👋 Unfollowed: ${unfollowedCount}`);
+    console.log(`⏭️ Skipped (whitelisted): ${skippedCount}`);
+  };
+
+  run();
+})();</code></pre>
+        </div>
+
+        <div class="alert alert-success">
+          <div class="alert-title">✅ Tip</div>
+          <p>Keep a list of your favorite accounts that never follow back (news, brands, etc.) and add them to your whitelist!</p>
+        </div>
+      </section>
+
+      <!-- Section 4: Detect Unfollowers -->
+      <section class="tutorial-section" id="detect-unfollowers">
+        <h2>🔍 4. Detect Who Unfollowed You</h2>
+        
+        <h3>📋 What This Does</h3>
+        <p>Scans your followers and saves a snapshot. Run it again later to see who unfollowed you! Also shows new followers. Data is saved locally in your browser.</p>
+        
+        <h3>🎯 Quick Start</h3>
+        <ol>
+          <li>Go to <code>x.com/YOUR_USERNAME/followers</code></li>
+          <li>Open DevTools and paste the code</li>
+          <li>Wait for scan to complete (saves snapshot)</li>
+          <li>Run again later to see changes!</li>
+        </ol>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-title">detect-unfollowers.js</span>
+            <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+          </div>
+          <pre><code>// Detect who unfollowed you on X
+// by nichxbt - https://github.com/nirholas/XActions
+(() => {
+  const STORAGE_KEY = 'xactions_my_followers';
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+  // Check we're on the right page
+  const isFollowersPage = window.location.pathname.includes('/followers');
+  if (!isFollowersPage) {
+    console.error('❌ Please navigate to your FOLLOWERS page first!');
+    console.log('👉 Go to: https://x.com/YOUR_USERNAME/followers');
+    return;
+  }
+
+  const getCurrentUsername = () => {
+    const match = window.location.pathname.match(/^\/([^/]+)\/followers/);
+    return match ? match[1] : 'unknown';
+  };
+
+  const scrapeFollowers = async () => {
+    const followers = new Set();
+    let previousSize = 0;
+    let retries = 0;
+    const maxRetries = 5;
+
+    console.log('🔍 Scanning your followers...');
+
+    while (retries < maxRetries) {
+      // Scroll to load more
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(1500);
+
+      // Find all user cells and extract usernames
+      const userCells = document.querySelectorAll('[data-testid="UserCell"]');
+      userCells.forEach(cell => {
+        const usernameEl = cell.querySelector('a[href^="/"]');
+        if (usernameEl) {
+          const href = usernameEl.getAttribute('href');
+          const username = href.replace('/', '').toLowerCase();
+          if (username && !username.includes('/')) {
+            followers.add(username);
+          }
+        }
+      });
+
+      console.log(`   Found ${followers.size} followers so far...`);
+
+      if (followers.size === previousSize) {
+        retries++;
+      } else {
+        retries = 0;
+        previousSize = followers.size;
+      }
+    }
+
+    return Array.from(followers);
+  };
+
+  const loadPreviousFollowers = () => {
+    try {
+      const data = localStorage.getItem(STORAGE_KEY);
+      if (data) {
+        return JSON.parse(data);
+      }
+    } catch (e) {
+      console.warn('Could not load previous data:', e);
+    }
+    return null;
+  };
+
+  const saveFollowers = (followers, username) => {
+    const data = {
+      username,
+      followers,
+      timestamp: new Date().toISOString(),
+      count: followers.length
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    return data;
+  };
+
+  const compareFollowers = (previous, current) => {
+    const prevSet = new Set(previous.map(f => f.toLowerCase()));
+    const currSet = new Set(current.map(f => f.toLowerCase()));
+
+    const unfollowed = previous.filter(f => !currSet.has(f.toLowerCase()));
+    const newFollowers = current.filter(f => !prevSet.has(f.toLowerCase()));
+
+    return { unfollowed, newFollowers };
+  };
+
+  const formatDate = (isoString) => {
+    return new Date(isoString).toLocaleString();
+  };
+
+  const run = async () => {
+    const username = getCurrentUsername();
+    console.log(`\n🐦 XActions Detector — Monitoring @${username}\n`);
+
+    // Scrape current followers
+    const currentFollowers = await scrapeFollowers();
+    console.log(`\n✅ Found ${currentFollowers.length} total followers\n`);
+
+    // Check for previous data
+    const previousData = loadPreviousFollowers();
+
+    if (previousData && previousData.username === username) {
+      console.log(`📊 Comparing with snapshot from ${formatDate(previousData.timestamp)}`);
+      console.log(`   Previous count: ${previousData.count}`);
+      console.log(`   Current count: ${currentFollowers.length}`);
+      console.log('');
+
+      const { unfollowed, newFollowers } = compareFollowers(previousData.followers, currentFollowers);
+
+      if (unfollowed.length > 0) {
+        console.log(`\n🚨 ${unfollowed.length} PEOPLE UNFOLLOWED YOU:\n`);
+        unfollowed.forEach((u, i) => {
+          console.log(`   ${i + 1}. @${u} — https://x.com/${u}`);
+        });
+      } else {
+        console.log('✨ No one unfollowed you since last check!');
+      }
+
+      if (newFollowers.length > 0) {
+        console.log(`\n🎉 ${newFollowers.length} NEW FOLLOWERS:\n`);
+        newFollowers.forEach((u, i) => {
+          console.log(`   ${i + 1}. @${u} — https://x.com/${u}`);
+        });
+      }
+
+      // Offer download of unfollowers
+      if (unfollowed.length > 0) {
+        const blob = new Blob([unfollowed.join('\n')], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `unfollowers-${new Date().toISOString().split('T')[0]}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        console.log('\n📥 Downloaded list of unfollowers!');
+      }
+    } else {
+      console.log('📸 First scan! Saving snapshot of your followers...');
+      console.log('   Run this script again later to detect changes.');
+    }
+
+    // Save current state
+    const saved = saveFollowers(currentFollowers, username);
+    console.log(`\n💾 Snapshot saved at ${formatDate(saved.timestamp)}`);
+    console.log('   Run this script again anytime to check for changes!\n');
+  };
+
+  run();
+})();</code></pre>
+        </div>
+
+        <div class="alert alert-info">
+          <div class="alert-title">💾 Data Storage</div>
+          <p>Your follower data is saved in your browser's localStorage under the key <code>xactions_my_followers</code>. It stays on your computer and is never sent anywhere.</p>
+        </div>
+      </section>
+
+      <!-- CLI Method -->
+      <section class="tutorial-section">
+        <h2>📦 Node.js / CLI Method</h2>
+        <p>You can also use XActions from the command line:</p>
+        
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-title">Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+          </div>
+          <pre><code># Install XActions globally
+npm install -g xactions
+
+# Unfollow everyone (requires auth cookie)
+npx xactions unfollow --all
+
+# Unfollow non-followers only
+npx xactions unfollow --non-followers
+
+# Get list of non-followers
+npx xactions analyze non-followers @yourusername</code></pre>
+        </div>
+      </section>
+
+      <!-- Important Notes -->
+      <section class="tutorial-section">
+        <h2>⚠️ Important Notes</h2>
+        <ul>
+          <li><strong>Rate Limits:</strong> X may temporarily limit your account if you unfollow too fast. The scripts include delays to minimize this risk.</li>
+          <li><strong>No Undo:</strong> Unfollows cannot be undone automatically. You'd need to re-follow accounts manually.</li>
+          <li><strong>Page Navigation:</strong> Don't navigate away while scripts are running - they stop when you leave the page.</li>
+          <li><strong>Large Lists:</strong> For accounts following 10,000+ people, run the script multiple times with refreshes.</li>
+          <li><strong>Best Practice:</strong> Start during off-peak hours and don't run multiple automation scripts simultaneously.</li>
+        </ul>
+      </section>
+
+      <!-- Footer -->
+      <footer style="padding: 24px; text-align: center; color: var(--text-secondary); border-top: 1px solid var(--border);">
+        <p>Made with ❤️ by <a href="https://x.com/nichxbt" style="color: var(--accent);">@nichxbt</a></p>
+        <p style="margin-top: 8px;">
+          <a href="https://github.com/nirholas/XActions" style="color: var(--text-secondary);">GitHub</a> · 
+          <a href="index.html" style="color: var(--text-secondary);">All Tutorials</a>
+        </p>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    function copyCode(btn) {
+      const codeBlock = btn.closest('.code-block');
+      const code = codeBlock.querySelector('code').textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        btn.textContent = '✅ Copied!';
+        setTimeout(() => btn.textContent = '📋 Copy', 2000);
+      });
+    }
+  </script>
+</body>
+</html>
