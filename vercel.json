@@ -30,8 +30,6 @@
         "X-XSS-Protection": "1; mode=block"
       }
     }
-  ],
-  "trailingSlash": false,
-  "cleanUrls": true
+  ]
 }
 
