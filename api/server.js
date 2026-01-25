@@ -30,15 +30,18 @@ if (process.env.NODE_ENV === 'production') {
 import authRoutes from './routes/auth.js';
 import userRoutes from './routes/user.js';
 import operationRoutes from './routes/operations.js';
-import webhookRoutes from './routes/webhooks.js';
 import twitterRoutes from './routes/twitter.js';
 import sessionAuthRoutes from './routes/session-auth.js';
-import paymentsRoutes from './routes/payments.js';
-import cryptoPaymentsRoutes from './routes/crypto-payments.js';
 import licenseRoutes from './routes/license.js';
 import adminRoutes from './routes/admin.js';
 import { initializeSocketIO } from './realtime/socketHandler.js';
 import { initializeLicensing, brandingMiddleware } from './services/licensing.js';
+
+// Payment routes archived - XActions is now 100% free and open-source
+// Archived files moved to: archive/backend/
+// - payments.js (Stripe)
+// - crypto-payments.js (Coinbase, NOWPayments)
+// - webhooks.js (payment webhooks)
 
 const app = express();
 const httpServer = createServer(app);
@@ -78,8 +81,7 @@ app.use('/api/auth/register', authLimiter);
 // Logging
 app.use(morgan('combined'));
 
-// Body parsing (except for webhooks which need raw body)
-app.use('/api/webhooks', express.raw({ type: 'application/json', limit: '1mb' }));
+// Body parsing
 app.use(express.json({ limit: '10kb' })); // Prevent large payload attacks
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 
@@ -99,14 +101,12 @@ app.use(express.static(path.join(__dirname, '../dashboard')));
 app.use(brandingMiddleware());
 
 // Routes
+// Payment routes archived - XActions is now 100% free and open-source
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/operations', operationRoutes);
-app.use('/api/webhooks', webhookRoutes);
 app.use('/api/twitter', twitterRoutes);
 app.use('/api/session', sessionAuthRoutes);
-app.use('/api/payments', paymentsRoutes);
-app.use('/api/crypto', cryptoPaymentsRoutes);
 app.use('/api/license', licenseRoutes);
 app.use('/api/admin', adminRoutes);
 
@@ -119,8 +119,9 @@ app.get('/dashboard', (req, res) => {
   res.sendFile(path.join(__dirname, '../dashboard/index.html'));
 });
 
+// Pricing page now redirects to docs - XActions is 100% free
 app.get('/pricing', (req, res) => {
-  res.sendFile(path.join(__dirname, '../dashboard/pricing.html'));
+  res.redirect('/docs');
 });
 
 app.get('/docs', (req, res) => {

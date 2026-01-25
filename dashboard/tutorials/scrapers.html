@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scraper Tutorials - XActions | Scrape X/Twitter Data</title>
+  <meta name="description" content="Scrape X/Twitter data without API fees. Extract followers, following lists, tweets, likes, hashtags. Download videos, unroll threads.">
+  <meta name="author" content="nich (@nichxbt)">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar {
+      width: 275px;
+      padding: 0 12px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      border-right: 1px solid var(--border);
+    }
+    .logo { padding: 12px; margin-bottom: 4px; }
+    .logo a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--text-primary);
+      font-size: 1.5rem;
+      font-weight: 800;
+      padding: 12px;
+      border-radius: 9999px;
+      transition: background 0.2s;
+    }
+    .logo a:hover { background: var(--accent-light); }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 12px;
+      border-radius: 9999px;
+      font-size: 1.25rem;
+      color: var(--text-primary);
+      text-decoration: none;
+      transition: background 0.2s;
+      margin-bottom: 4px;
+    }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .main-content { flex: 1; max-width: 900px; border-right: 1px solid var(--border); }
+    .main-header {
+      position: sticky;
+      top: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 16px;
+      z-index: 100;
+    }
+    .main-header h1 { font-size: 1.5rem; font-weight: 700; }
+    .main-header p { color: var(--text-secondary); font-size: 0.9rem; }
+    .free-banner {
+      background: linear-gradient(135deg, var(--accent) 0%, #7856ff 100%);
+      padding: 12px 16px;
+      text-align: center;
+      font-weight: 600;
+    }
+    .tutorial-section {
+      padding: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .tutorial-section h2 {
+      font-size: 1.4rem;
+      margin-bottom: 16px;
+    }
+    .tutorial-section h3 {
+      font-size: 1.1rem;
+      margin: 20px 0 12px 0;
+      color: var(--accent);
+    }
+    .tutorial-section p { margin-bottom: 12px; color: var(--text-secondary); }
+    .tutorial-section ul, .tutorial-section ol { margin: 12px 0; padding-left: 24px; }
+    .tutorial-section li { margin-bottom: 8px; color: var(--text-secondary); }
+    .code-block {
+      position: relative;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin: 16px 0;
+      overflow: hidden;
+    }
+    .code-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      background: var(--bg-tertiary);
+      border-bottom: 1px solid var(--border);
+    }
+    .code-title { font-size: 0.85rem; color: var(--text-secondary); font-weight: 600; }
+    .copy-btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .copy-btn:hover { background: var(--accent-hover); }
+    .code-block pre { padding: 16px; overflow-x: auto; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.85rem; line-height: 1.5; }
+    code:not(pre code) { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'SF Mono', monospace; font-size: 0.9em; }
+    .alert { padding: 16px; border-radius: 12px; margin: 16px 0; }
+    .alert-warning { background: rgba(255, 173, 31, 0.15); border: 1px solid var(--warning); }
+    .alert-info { background: var(--accent-light); border: 1px solid var(--accent); }
+    .alert-success { background: rgba(0, 186, 124, 0.15); border: 1px solid var(--success); }
+    .alert-title { font-weight: 700; margin-bottom: 8px; }
+    .toc { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin: 16px 0; }
+    .toc h3 { margin-bottom: 12px; color: var(--text-primary); }
+    .toc-list { list-style: none; padding: 0; }
+    .toc-list li { margin-bottom: 8px; }
+    .toc-list a { color: var(--accent); text-decoration: none; }
+    .toc-list a:hover { text-decoration: underline; }
+    @media (max-width: 768px) { .sidebar { display: none; } }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo"><a href="../index.html">⚡ XActions</a></div>
+      <nav>
+        <a href="../index.html" class="nav-item"><span class="nav-icon">🏠</span> Dashboard</a>
+        <a href="index.html" class="nav-item"><span class="nav-icon">📚</span> Tutorials</a>
+        <a href="unfollow.html" class="nav-item"><span class="nav-icon">👋</span> Unfollow</a>
+        <a href="scrapers.html" class="nav-item active"><span class="nav-icon">🔍</span> Scrapers</a>
+        <a href="automation.html" class="nav-item"><span class="nav-icon">🤖</span> Automation</a>
+        <a href="monitoring.html" class="nav-item"><span class="nav-icon">👁️</span> Monitoring</a>
+        <a href="communities.html" class="nav-item"><span class="nav-icon">🏘️</span> Communities</a>
+        <a href="mcp.html" class="nav-item"><span class="nav-icon">🧠</span> MCP Server</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <div class="free-banner">🎉 100% Free & Open Source — No API fees ($0 vs Twitter's $100/mo API!)</div>
+
+      <header class="main-header">
+        <h1>🔍 Scraper Tutorials</h1>
+        <p>Extract data from X/Twitter without paying for API access</p>
+      </header>
+
+      <section class="tutorial-section">
+        <div class="toc">
+          <h3>📖 On This Page</h3>
+          <ul class="toc-list">
+            <li><a href="#followers">1. Scrape Followers List</a></li>
+            <li><a href="#following">2. Scrape Following List</a></li>
+            <li><a href="#likes">3. Scrape Tweet Likes</a></li>
+            <li><a href="#hashtags">4. Scrape Hashtag Results</a></li>
+            <li><a href="#video">5. Video Downloader</a></li>
+            <li><a href="#thread">6. Thread Unroller</a></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Followers Scraper -->
+      <section class="tutorial-section" id="followers">
+        <h2>👥 1. Scrape Followers List</h2>
+        
+        <h3>📋 What This Does</h3>
+        <p>Extracts a list of all followers for any public account. Exports usernames, names, and bios to JSON or CSV format.</p>
+        
+        <h3>🎯 Quick Start</h3>
+        <ol>
+          <li>Go to <code>x.com/USERNAME/followers</code></li>
+          <li>Open DevTools (F12) → Console</li>
+          <li>Paste the code below and press Enter</li>
+        </ol>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-title">scrape-followers.js</span>
+            <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+          </div>
+          <pre><code>// Scrape Followers List - XActions
+// by nichxbt - https://github.com/nirholas/XActions
+(() => {
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+  
+  const targetUser = window.location.pathname.split('/')[1];
+  const followers = new Map();
+  
+  const scrape = async () => {
+    console.log(`🔍 Scraping followers for @${targetUser}...`);
+    
+    let retries = 0;
+    const maxRetries = 10;
+    
+    while (retries < maxRetries) {
+      const prevSize = followers.size;
+      
+      // Get all user cells
+      document.querySelectorAll('[data-testid="UserCell"]').forEach(cell => {
+        const link = cell.querySelector('a[href^="/"]');
+        const nameEl = cell.querySelector('[dir="ltr"] > span');
+        const bioEl = cell.querySelector('[data-testid="UserDescription"]');
+        const avatarEl = cell.querySelector('img[src*="profile_images"]');
+        const verifiedEl = cell.querySelector('svg[aria-label*="Verified"]');
+        
+        if (link) {
+          const username = link.getAttribute('href').replace('/', '').split('/')[0];
+          if (username && !followers.has(username)) {
+            followers.set(username, {
+              username,
+              name: nameEl?.textContent || '',
+              bio: bioEl?.textContent || '',
+              avatar: avatarEl?.src || '',
+              verified: !!verifiedEl
+            });
+          }
+        }
+      });
+      
+      console.log(`   Found ${followers.size} followers...`);
+      
+      if (followers.size === prevSize) {
+        retries++;
+      } else {
+        retries = 0;
+      }
+      
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(1500);
+    }
+    
+    return Array.from(followers.values());
+  };
+  
+  const downloadJSON = (data, filename) => {
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+  };
+  
+  const downloadCSV = (data, filename) => {
+    const headers = ['username', 'name', 'bio', 'verified'];
+    const csv = [
+      headers.join(','),
+      ...data.map(row => headers.map(h => `"${(row[h] || '').toString().replace(/"/g, '""')}"`).join(','))
+    ].join('\n');
+    
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+  };
+  
+  const run = async () => {
+    const data = await scrape();
+    
+    console.log(`\n✅ DONE! Scraped ${data.length} followers\n`);
+    
+    // Store in window for access
+    window.scrapedFollowers = data;
+    console.log('📊 Data available at: window.scrapedFollowers');
+    
+    // Download both formats
+    downloadJSON(data, `${targetUser}-followers-${Date.now()}.json`);
+    downloadCSV(data, `${targetUser}-followers-${Date.now()}.csv`);
+    
+    console.log('📥 Downloaded JSON and CSV files!');
+  };
+  
+  run();
+})();</code></pre>
+        </div>
+      </section>
+
+      <!-- Following Scraper -->
+      <section class="tutorial-section" id="following">
+        <h2>📋 2. Scrape Following List</h2>
+        
+        <h3>📋 What This Does</h3>
+        <p>Extracts who a user is following. Also detects which accounts follow them back (mutual follows).</p>
+        
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-title">scrape-following.js</span>
+            <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+          </div>
+          <pre><code>// Scrape Following List - XActions
+// by nichxbt - https://github.com/nirholas/XActions
+(() => {
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+  
+  const targetUser = window.location.pathname.split('/')[1];
+  const following = new Map();
+  
+  const scrape = async () => {
+    console.log(`🔍 Scraping following for @${targetUser}...`);
+    
+    let retries = 0;
+    
+    while (retries < 10) {
+      const prevSize = following.size;
+      
+      document.querySelectorAll('[data-testid="UserCell"]').forEach(cell => {
+        const link = cell.querySelector('a[href^="/"]');
+        const nameEl = cell.querySelector('[dir="ltr"] > span');
+        const bioEl = cell.querySelector('[data-testid="UserDescription"]');
+        const followsBack = cell.querySelector('[data-testid="userFollowIndicator"]');
+        
+        if (link) {
+          const username = link.getAttribute('href').replace('/', '').split('/')[0];
+          if (username && !following.has(username)) {
+            following.set(username, {
+              username,
+              name: nameEl?.textContent || '',
+              bio: bioEl?.textContent || '',
+              followsBack: !!followsBack
+            });
+          }
+        }
+      });
+      
+      console.log(`   Found ${following.size} accounts...`);
+      
+      if (following.size === prevSize) retries++;
+      else retries = 0;
+      
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(1500);
+    }
+    
+    return Array.from(following.values());
+  };
+  
+  const run = async () => {
+    if (!window.location.pathname.includes('/following')) {
+      console.error('❌ Go to x.com/USERNAME/following first!');
+      return;
+    }
+    
+    const data = await scrape();
+    const mutuals = data.filter(u => u.followsBack);
+    const nonFollowers = data.filter(u => !u.followsBack);
+    
+    console.log(`\n✅ DONE!`);
+    console.log(`📊 Total following: ${data.length}`);
+    console.log(`🤝 Mutual follows: ${mutuals.length}`);
+    console.log(`👻 Non-followers: ${nonFollowers.length}`);
+    
+    window.scrapedFollowing = data;
+    window.nonFollowers = nonFollowers;
+    
+    // Download
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${targetUser}-following-${Date.now()}.json`;
+    a.click();
+    
+    console.log('\n📥 Downloaded! Also check window.nonFollowers for accounts that don\'t follow back.');
+  };
+  
+  run();
+})();</code></pre>
+        </div>
+      </section>
+
+      <!-- Likes Scraper -->
+      <section class="tutorial-section" id="likes">
+        <h2>❤️ 3. Scrape Tweet Likes</h2>
+        
+        <h3>📋 What This Does</h3>
+        <p>Get a list of everyone who liked a specific tweet. Great for finding engaged users in your niche.</p>
+        
+        <h3>🎯 Quick Start</h3>
+        <ol>
+          <li>Go to any tweet: <code>x.com/user/status/123456</code></li>
+          <li>Click the likes count to open likes list</li>
+          <li>Open DevTools and paste the code</li>
+        </ol>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-title">scrape-likes.js</span>
+            <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+          </div>
+          <pre><code>// Scrape Tweet Likes - XActions
+// by nichxbt - https://github.com/nirholas/XActions
+(() => {
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+  
+  // Check we're on a likes page
+  if (!window.location.pathname.includes('/likes')) {
+    console.error('❌ Click on the likes count of a tweet first!');
+    console.log('👉 You should be on a URL like: x.com/user/status/123/likes');
+    return;
+  }
+  
+  const likers = new Map();
+  
+  const scrape = async () => {
+    console.log('🔍 Scraping users who liked this tweet...');
+    
+    let retries = 0;
+    
+    while (retries < 10) {
+      const prevSize = likers.size;
+      
+      document.querySelectorAll('[data-testid="UserCell"]').forEach(cell => {
+        const link = cell.querySelector('a[href^="/"]');
+        const nameEl = cell.querySelector('[dir="ltr"] > span');
+        const bioEl = cell.querySelector('[data-testid="UserDescription"]');
+        
+        if (link) {
+          const username = link.getAttribute('href').replace('/', '').split('/')[0];
+          if (username && !likers.has(username)) {
+            likers.set(username, {
+              username,
+              name: nameEl?.textContent || '',
+              bio: bioEl?.textContent || ''
+            });
+          }
+        }
+      });
+      
+      console.log(`   Found ${likers.size} likers...`);
+      
+      if (likers.size === prevSize) retries++;
+      else retries = 0;
+      
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(1500);
+    }
+    
+    return Array.from(likers.values());
+  };
+  
+  const run = async () => {
+    const data = await scrape();
+    
+    console.log(`\n✅ DONE! Found ${data.length} users who liked this tweet\n`);
+    
+    // Print usernames
+    console.log('📋 Usernames:');
+    data.forEach(u => console.log(`   @${u.username}`));
+    
+    window.tweetLikers = data;
+    
+    // Download
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `tweet-likers-${Date.now()}.json`;
+    a.click();
+    
+    console.log('\n📥 Downloaded! Data also at window.tweetLikers');
+  };
+  
+  run();
+})();</code></pre>
+        </div>
+      </section>
+
+      <!-- Hashtag Scraper -->
+      <section class="tutorial-section" id="hashtags">
+        <h2>#️⃣ 4. Scrape Hashtag Results</h2>
+        
+        <h3>📋 What This Does</h3>
+        <p>Scrape tweets from hashtag search results. Get tweet text, author, engagement metrics, and URLs.</p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-title">scrape-hashtag.js</span>
+            <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+          </div>
+          <pre><code>// Scrape Hashtag/Search Results - XActions
+// by nichxbt - https://github.com/nirholas/XActions
+(() => {
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+  
+  const tweets = new Map();
+  
+  const extractTweet = (article) => {
+    try {
+      const textEl = article.querySelector('[data-testid="tweetText"]');
+      const timeEl = article.querySelector('time');
+      const authorEl = article.querySelector('[data-testid="User-Name"] a');
+      const linkEl = article.querySelector('a[href*="/status/"]');
+      const likesEl = article.querySelector('[data-testid="like"] span');
+      const retweetsEl = article.querySelector('[data-testid="retweet"] span');
+      
+      const url = linkEl?.href || '';
+      const id = url.match(/status\/(\d+)/)?.[1];
+      
+      return {
+        id,
+        text: textEl?.textContent || '',
+        author: authorEl?.href?.split('/')[3] || '',
+        timestamp: timeEl?.getAttribute('datetime') || '',
+        url,
+        likes: likesEl?.textContent || '0',
+        retweets: retweetsEl?.textContent || '0'
+      };
+    } catch (e) {
+      return null;
+    }
+  };
+  
+  const scrape = async (maxTweets = 100) => {
+    console.log('🔍 Scraping search results...');
+    
+    let retries = 0;
+    
+    while (retries < 10 && tweets.size < maxTweets) {
+      const prevSize = tweets.size;
+      
+      document.querySelectorAll('article[data-testid="tweet"]').forEach(article => {
+        const tweet = extractTweet(article);
+        if (tweet?.id && !tweets.has(tweet.id)) {
+          tweets.set(tweet.id, tweet);
+        }
+      });
+      
+      console.log(`   Found ${tweets.size} tweets...`);
+      
+      if (tweets.size === prevSize) retries++;
+      else retries = 0;
+      
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(1500);
+    }
+    
+    return Array.from(tweets.values());
+  };
+  
+  const run = async () => {
+    const data = await scrape(200);
+    
+    console.log(`\n✅ DONE! Scraped ${data.length} tweets\n`);
+    
+    window.scrapedTweets = data;
+    
+    // Download
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `search-results-${Date.now()}.json`;
+    a.click();
+    
+    console.log('📥 Downloaded! Data at window.scrapedTweets');
+  };
+  
+  run();
+})();</code></pre>
+        </div>
+
+        <div class="alert alert-info">
+          <div class="alert-title">💡 Tip</div>
+          <p>First search for your hashtag on X, then run this script on the search results page.</p>
+        </div>
+      </section>
+
+      <!-- Video Downloader -->
+      <section class="tutorial-section" id="video">
+        <h2>🎬 5. Video Downloader</h2>
+        
+        <h3>📋 What This Does</h3>
+        <p>Download any video from X/Twitter posts. Finds all available qualities and lets you download the best one.</p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-title">video-downloader.js</span>
+            <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+          </div>
+          <pre><code>// X Video Downloader - XActions
+// by nichxbt - https://github.com/nirholas/XActions
+(() => {
+  const CONFIG = {
+    QUALITY: 'highest',
+    AUTO_DOWNLOAD: true,
+    SHOW_ALL_QUALITIES: true
+  };
+
+  const getTweetId = () => {
+    const match = window.location.href.match(/status\/(\d+)/);
+    return match ? match[1] : null;
+  };
+
+  const getAuthor = () => {
+    const match = window.location.href.match(/x\.com\/(\w+)/);
+    return match ? match[1] : 'unknown';
+  };
+
+  // Find video URLs in page data
+  const findVideoUrls = () => {
+    const videos = [];
+    const pageContent = document.documentElement.innerHTML;
+    
+    const patterns = [
+      /https:\/\/video\.twimg\.com\/[^"'\s]+\.mp4[^"'\s]*/g,
+      /https:\/\/video\.twimg\.com\/[^"'\s]+\.m3u8[^"'\s]*/g,
+      /https:\/\/[^"'\s]*\/amplify_video[^"'\s]*\.mp4[^"'\s]*/g,
+      /https:\/\/[^"'\s]*\/ext_tw_video[^"'\s]*\.mp4[^"'\s]*/g,
+    ];
+    
+    patterns.forEach(pattern => {
+      const matches = pageContent.match(pattern) || [];
+      matches.forEach(url => {
+        let cleanUrl = url.replace(/\\u002F/g, '/').replace(/\\/g, '');
+        cleanUrl = cleanUrl.split('"')[0].split("'")[0].split(' ')[0];
+        
+        if (cleanUrl.includes('.mp4')) {
+          const qualityMatch = cleanUrl.match(/\/(\d+x\d+)\//);
+          const quality = qualityMatch ? qualityMatch[1] : 'unknown';
+          
+          videos.push({ url: cleanUrl, quality, type: 'mp4' });
+        }
+      });
+    });
+
+    // Deduplicate
+    const unique = [];
+    const seen = new Set();
+    videos.forEach(v => {
+      const key = v.url.split('?')[0];
+      if (!seen.has(key)) {
+        seen.add(key);
+        unique.push(v);
+      }
+    });
+
+    return unique;
+  };
+
+  // Sort by quality (highest first)
+  const sortByQuality = (videos) => {
+    return videos.sort((a, b) => {
+      const getRes = (q) => {
+        const match = q.quality?.match(/(\d+)x(\d+)/);
+        return match ? parseInt(match[1]) * parseInt(match[2]) : 0;
+      };
+      return getRes(b) - getRes(a);
+    });
+  };
+
+  // Download video
+  const downloadVideo = async (url, filename) => {
+    console.log('⬇️ Downloading...');
+    
+    try {
+      const response = await fetch(url, { mode: 'cors' });
+      if (response.ok) {
+        const blob = await response.blob();
+        const blobUrl = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = blobUrl;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(blobUrl);
+        console.log('✅ Downloaded!');
+        return true;
+      }
+    } catch (e) {
+      // Fallback: open in new tab
+      console.log('📎 Opening in new tab (right-click to save)...');
+      window.open(url, '_blank');
+      return true;
+    }
+    
+    return false;
+  };
+
+  // Main
+  const run = async () => {
+    const tweetId = getTweetId();
+    const author = getAuthor();
+    
+    if (!tweetId) {
+      console.error('❌ Please navigate to a tweet with a video!');
+      return;
+    }
+
+    console.log(`🎬 XActions Video Downloader`);
+    console.log(`📍 Tweet: ${tweetId} by @${author}\n`);
+
+    const videos = sortByQuality(findVideoUrls());
+
+    if (videos.length === 0) {
+      console.error('❌ No video found on this page.');
+      console.log('💡 Make sure the video has loaded (play it first).');
+      return;
+    }
+
+    console.log(`✅ Found ${videos.length} video(s):\n`);
+    
+    videos.forEach((v, i) => {
+      console.log(`${i + 1}. Quality: ${v.quality}`);
+      console.log(`   URL: ${v.url.slice(0, 80)}...`);
+      console.log('');
+    });
+
+    // Auto-download best quality
+    if (CONFIG.AUTO_DOWNLOAD && videos.length > 0) {
+      const best = videos[0];
+      const filename = `${author}-${tweetId}-${best.quality}.mp4`;
+      console.log(`\n⬇️ Downloading best quality (${best.quality})...`);
+      await downloadVideo(best.url, filename);
+    }
+
+    // Store for manual access
+    window.videoUrls = videos;
+    console.log('\n📊 All URLs available at: window.videoUrls');
+  };
+
+  run();
+})();</code></pre>
+        </div>
+
+        <div class="alert alert-warning">
+          <div class="alert-title">⚠️ Note</div>
+          <p>Make sure to play the video first so it loads in the browser. The script finds video URLs from the page content.</p>
+        </div>
+      </section>
+
+      <!-- Thread Unroller -->
+      <section class="tutorial-section" id="thread">
+        <h2>🧵 6. Thread Unroller</h2>
+        
+        <h3>📋 What This Does</h3>
+        <p>Save any X thread as clean text or markdown. Perfect for saving valuable threads for later reading or sharing.</p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-title">thread-unroller.js</span>
+            <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+          </div>
+          <pre><code>// Thread Unroller - XActions
+// by nichxbt - https://github.com/nirholas/XActions
+(() => {
+  const CONFIG = {
+    FORMAT: 'markdown',  // 'text', 'markdown', 'json'
+    INCLUDE_MEDIA: true,
+    MAX_TWEETS: 50,
+    SCROLL_DELAY: 1000,
+  };
+
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+  const getAuthor = () => {
+    const match = window.location.pathname.match(/\/(\w+)\/status/);
+    return match ? match[1] : null;
+  };
+
+  const extractTweet = (article) => {
+    try {
+      const text = article.querySelector('[data-testid="tweetText"]')?.textContent || '';
+      const time = article.querySelector('time')?.getAttribute('datetime') || '';
+      const timeLink = article.querySelector('time')?.closest('a');
+      const url = timeLink?.href || '';
+      
+      const images = Array.from(article.querySelectorAll('img[src*="media"]'))
+        .map(img => img.src)
+        .filter(src => !src.includes('profile'));
+      
+      const userName = article.querySelector('[data-testid="User-Name"]')?.textContent || '';
+      const handle = userName.match(/@(\w+)/)?.[1] || '';
+
+      return { text, time, url, images, handle };
+    } catch (e) {
+      return null;
+    }
+  };
+
+  const run = async () => {
+    const author = getAuthor();
+    if (!author) {
+      console.error('❌ Please navigate to a tweet first!');
+      return;
+    }
+
+    console.log(`🧵 Unrolling thread by @${author}...`);
+
+    const tweets = [];
+    let lastCount = 0;
+    let attempts = 0;
+
+    while (attempts < 10) {
+      const articles = document.querySelectorAll('article[data-testid="tweet"]');
+      
+      articles.forEach(article => {
+        const tweet = extractTweet(article);
+        if (tweet && tweet.handle.toLowerCase() === author.toLowerCase()) {
+          const exists = tweets.find(t => t.url === tweet.url);
+          if (!exists && tweet.text) {
+            tweets.push(tweet);
+            console.log(`📝 Tweet ${tweets.length}: "${tweet.text.slice(0, 50)}..."`);
+          }
+        }
+      });
+
+      if (tweets.length === lastCount) attempts++;
+      else attempts = 0;
+      lastCount = tweets.length;
+
+      if (tweets.length >= CONFIG.MAX_TWEETS) break;
+
+      window.scrollBy(0, 500);
+      await sleep(CONFIG.SCROLL_DELAY);
+    }
+
+    // Sort by time (oldest first)
+    tweets.sort((a, b) => new Date(a.time) - new Date(b.time));
+
+    // Format output
+    let output = '';
+    
+    if (CONFIG.FORMAT === 'markdown') {
+      output = `# Thread by @${author}\n\n`;
+      output += `> ${tweets.length} tweets | ${new Date(tweets[0]?.time).toLocaleDateString()}\n\n`;
+      output += `---\n\n`;
+      
+      tweets.forEach((t, i) => {
+        output += `**${i + 1}/${tweets.length}**\n\n`;
+        output += `${t.text}\n\n`;
+        
+        if (CONFIG.INCLUDE_MEDIA) {
+          t.images.forEach(img => {
+            output += `![Image](${img})\n\n`;
+          });
+        }
+        
+        output += `---\n\n`;
+      });
+      
+      output += `\n[Original Thread](${tweets[0]?.url})\n`;
+      
+    } else if (CONFIG.FORMAT === 'json') {
+      output = JSON.stringify({ author, tweets }, null, 2);
+      
+    } else {
+      output = `Thread by @${author}\n`;
+      output += `${'='.repeat(40)}\n\n`;
+      
+      tweets.forEach((t, i) => {
+        output += `[${i + 1}/${tweets.length}]\n`;
+        output += `${t.text}\n\n`;
+      });
+    }
+
+    console.log('\n' + '='.repeat(60));
+    console.log(`🧵 THREAD UNROLLED: ${tweets.length} tweets`);
+    console.log('='.repeat(60) + '\n');
+    console.log(output);
+
+    // Copy to clipboard
+    try {
+      await navigator.clipboard.writeText(output);
+      console.log('📋 Thread copied to clipboard!');
+    } catch (e) {
+      console.log('📋 Copy from window.unrolledThread');
+    }
+
+    window.unrolledThread = output;
+    window.threadData = { author, tweets };
+
+    // Download
+    const ext = CONFIG.FORMAT === 'json' ? 'json' : 'md';
+    const blob = new Blob([output], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `thread-${author}-${Date.now()}.${ext}`;
+    a.click();
+
+    console.log('📥 Thread downloaded!');
+  };
+
+  run();
+})();</code></pre>
+        </div>
+      </section>
+
+      <!-- Node.js Section -->
+      <section class="tutorial-section">
+        <h2>📦 Node.js / CLI Method</h2>
+        <p>For more powerful scraping with Puppeteer:</p>
+        
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-title">Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+          </div>
+          <pre><code># Install XActions
+npm install xactions
+
+# Scrape followers (requires auth cookie)
+npx xactions scrape followers @username --limit 1000 --output followers.json
+
+# Scrape following
+npx xactions scrape following @username --limit 500
+
+# Scrape tweets from a user
+npx xactions scrape tweets @username --limit 100
+
+# Search tweets
+npx xactions search "web3 developer" --limit 50</code></pre>
+        </div>
+      </section>
+
+      <footer style="padding: 24px; text-align: center; color: var(--text-secondary); border-top: 1px solid var(--border);">
+        <p>Made with ❤️ by <a href="https://x.com/nichxbt" style="color: var(--accent);">@nichxbt</a></p>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    function copyCode(btn) {
+      const codeBlock = btn.closest('.code-block');
+      const code = codeBlock.querySelector('code').textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        btn.textContent = '✅ Copied!';
+        setTimeout(() => btn.textContent = '📋 Copy', 2000);
+      });
+    }
+  </script>
+</body>
+</html>

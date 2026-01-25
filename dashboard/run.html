@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>One-Click Scripts | XActions</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --danger: #f4212e;
+      --border: #2f3336;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    /* Navigation */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 53px;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      z-index: 100;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text-primary);
+      font-weight: 700;
+      font-size: 20px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 8px;
+    }
+
+    .nav-links a {
+      color: var(--text-primary);
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 9999px;
+      transition: background 0.2s;
+      font-weight: 500;
+    }
+
+    .nav-links a:hover {
+      background: var(--bg-tertiary);
+    }
+
+    /* Main Content */
+    .main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 80px 20px 60px;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 40px 0;
+    }
+
+    .hero h1 {
+      font-size: 48px;
+      font-weight: 800;
+      margin-bottom: 16px;
+    }
+
+    .hero p {
+      font-size: 20px;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Instructions */
+    .instructions {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      margin: 40px 0;
+    }
+
+    .instructions h2 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 24px;
+    }
+
+    .step {
+      display: flex;
+      gap: 16px;
+    }
+
+    .step-num {
+      width: 40px;
+      height: 40px;
+      background: var(--accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .step-content h3 {
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    .step-content p {
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    /* Script Categories */
+    .category {
+      margin-bottom: 48px;
+    }
+
+    .category h2 {
+      font-size: 28px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .category > p {
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+
+    /* Script Cards */
+    .script-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 20px;
+    }
+
+    .script-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .script-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .script-card h3 {
+      font-size: 18px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .script-card p {
+      color: var(--text-secondary);
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+
+    .script-card .where {
+      font-size: 12px;
+      color: var(--warning);
+      margin-bottom: 16px;
+      padding: 8px 12px;
+      background: rgba(255, 173, 31, 0.1);
+      border-radius: 8px;
+    }
+
+    .script-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* Bookmarklet Button */
+    .bookmarklet {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: linear-gradient(135deg, var(--accent), #1a6eb0);
+      color: white;
+      text-decoration: none;
+      border-radius: 9999px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: grab;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .bookmarklet:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 20px rgba(29, 155, 240, 0.4);
+    }
+
+    .bookmarklet:active {
+      cursor: grabbing;
+    }
+
+    /* Copy Button */
+    .copy-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+      border-radius: 9999px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .copy-btn:hover {
+      background: var(--border);
+    }
+
+    .copy-btn.copied {
+      background: var(--success);
+      border-color: var(--success);
+    }
+
+    /* Tutorial Link */
+    .tutorial-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 14px;
+      padding: 10px 0;
+    }
+
+    .tutorial-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Tags */
+    .tag {
+      display: inline-block;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-left: 8px;
+    }
+
+    .tag.standalone {
+      background: rgba(0, 186, 124, 0.2);
+      color: var(--success);
+    }
+
+    .tag.requires-core {
+      background: rgba(255, 173, 31, 0.2);
+      color: var(--warning);
+    }
+
+    /* Alert Box */
+    .alert {
+      background: rgba(29, 155, 240, 0.1);
+      border: 1px solid var(--accent);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin: 24px 0;
+      display: flex;
+      gap: 12px;
+    }
+
+    .alert-icon {
+      font-size: 24px;
+    }
+
+    .alert-content h4 {
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    .alert-content p {
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    .alert-content code {
+      background: var(--bg-tertiary);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 40px 20px;
+      border-top: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+
+    .footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 32px;
+      }
+      
+      .script-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .nav-links {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="nav">
+    <a href="index.html" class="nav-brand">
+      <span>⚡</span>
+      <span>XActions</span>
+    </a>
+    <div class="nav-links">
+      <a href="features.html">Features</a>
+      <a href="docs.html">Docs</a>
+      <a href="tutorials/">Tutorials</a>
+      <a href="https://github.com/nirholas/XActions" target="_blank">GitHub</a>
+    </div>
+  </nav>
+
+  <main class="main">
+    <!-- Hero -->
+    <div class="hero">
+      <h1>🚀 One-Click Scripts</h1>
+      <p>Run powerful X/Twitter automation scripts instantly. No coding knowledge required.</p>
+    </div>
+
+    <!-- Instructions -->
+    <div class="instructions">
+      <h2>📖 How to Use</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h3>Drag to Bookmarks Bar</h3>
+            <p>Drag any blue button to your browser's bookmarks bar (or right-click → Bookmark Link)</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h3>Go to X.com</h3>
+            <p>Navigate to the correct page on X/Twitter (mentioned on each card)</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h3>Click the Bookmark</h3>
+            <p>Click the bookmarklet in your bookmarks bar - the script runs automatically!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="alert">
+      <div class="alert-icon">💡</div>
+      <div class="alert-content">
+        <h4>Alternative: Copy & Paste</h4>
+        <p>You can also click "Copy Script" to copy the code, then paste it in the browser console (<code>Ctrl+Shift+J</code> or <code>Cmd+Option+J</code>)</p>
+      </div>
+    </div>
+
+    <!-- ==================== UNFOLLOW SCRIPTS ==================== -->
+    <section class="category">
+      <h2>🧹 Unfollow Scripts</h2>
+      <p>Clean up your following list with one click</p>
+
+      <div class="script-grid">
+        <!-- Unfollow Everyone -->
+        <div class="script-card">
+          <h3>
+            Unfollow Everyone
+            <span class="tag standalone">Standalone</span>
+          </h3>
+          <p>Mass unfollow ALL accounts you're following. Nuclear option for a fresh start.</p>
+          <div class="where">📍 Run on: x.com/YOUR_USERNAME/following</div>
+          <div class="script-actions">
+            <a class="bookmarklet" href="javascript:(function(){const $unfollow='[data-testid$=%22-unfollow%22]',confirmBtn='[data-testid=%22confirmationSheetConfirm%22]',sleep=ms=>new Promise(r=>setTimeout(r,ms));let count=0;async function run(){while(true){const btn=document.querySelector($unfollow);if(!btn){console.log('✅ Done! Unfollowed:',count);return}btn.click();await sleep(500);document.querySelector(confirmBtn)?.click();count++;console.log('Unfollowed:',count);await sleep(1500);window.scrollBy(0,200)}}run()})();">⚡ Unfollow All</a>
+            <button class="copy-btn" data-script="unfollowEveryone">📋 Copy Script</button>
+          </div>
+          <a href="tutorials/unfollow.html" class="tutorial-link">📚 Full Tutorial →</a>
+        </div>
+
+        <!-- Unfollow Non-Followers -->
+        <div class="script-card">
+          <h3>
+            Unfollow Non-Followers
+            <span class="tag standalone">Standalone</span>
+          </h3>
+          <p>Only unfollow people who don't follow you back. Keep your real connections.</p>
+          <div class="where">📍 Run on: x.com/YOUR_USERNAME/following</div>
+          <div class="script-actions">
+            <a class="bookmarklet" href="javascript:(function(){const $unfollow='[data-testid$=%22-unfollow%22]',confirmBtn='[data-testid=%22confirmationSheetConfirm%22]',indicator='[data-testid=%22userFollowIndicator%22]',sleep=ms=>new Promise(r=>setTimeout(r,ms));let count=0;async function run(){while(true){const cells=document.querySelectorAll('[data-testid=%22UserCell%22]');let found=false;for(const cell of cells){const followsYou=cell.querySelector(indicator);const unfollowBtn=cell.querySelector($unfollow);if(!followsYou&&unfollowBtn){unfollowBtn.click();await sleep(500);document.querySelector(confirmBtn)?.click();count++;console.log('Unfollowed:',count);await sleep(1500);found=true;break}}if(!found){window.scrollBy(0,500);await sleep(1000);if(!document.querySelector('[data-testid=%22UserCell%22]')){console.log('✅ Done! Unfollowed:',count);return}}}}run()})();">⚡ Unfollow Non-Followers</a>
+            <button class="copy-btn" data-script="unfollowNonFollowers">📋 Copy Script</button>
+          </div>
+          <a href="tutorials/unfollow.html#non-followers" class="tutorial-link">📚 Full Tutorial →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SCRAPERS ==================== -->
+    <section class="category">
+      <h2>📊 Scrapers & Exporters</h2>
+      <p>Export data and download content from X/Twitter</p>
+
+      <div class="script-grid">
+        <!-- Video Downloader -->
+        <div class="script-card">
+          <h3>
+            Video Downloader
+            <span class="tag standalone">Standalone</span>
+          </h3>
+          <p>Download any video from a tweet. Gets the highest quality available.</p>
+          <div class="where">📍 Run on: Any tweet with a video</div>
+          <div class="script-actions">
+            <a class="bookmarklet" href="javascript:(function(){const videos=document.querySelectorAll('video');if(!videos.length){alert('No video found on this page!');return}const urls=[];videos.forEach(v=>{if(v.src)urls.push(v.src);const sources=v.querySelectorAll('source');sources.forEach(s=>urls.push(s.src))});if(urls.length){console.log('🎬 Video URLs found:',urls);const win=window.open('','_blank');win.document.write('<h2>Video URLs Found</h2><ul>'+urls.map(u=>'<li><a href=%22'+u+'%22 target=%22_blank%22>'+u+'</a></li>').join('')+'</ul><p>Right-click and Save As to download</p>')}else{alert('Could not extract video URL. Try the full script.')}})();">⚡ Get Video URL</a>
+            <button class="copy-btn" data-script="videoDownloader">📋 Copy Script</button>
+          </div>
+          <a href="tutorials/scrapers.html#video" class="tutorial-link">📚 Full Tutorial →</a>
+        </div>
+
+        <!-- Bookmark Exporter -->
+        <div class="script-card">
+          <h3>
+            Export Bookmarks
+            <span class="tag standalone">Standalone</span>
+          </h3>
+          <p>Export all your X/Twitter bookmarks to JSON or CSV file.</p>
+          <div class="where">📍 Run on: x.com/i/bookmarks</div>
+          <div class="script-actions">
+            <a class="bookmarklet" href="javascript:(function(){if(!location.pathname.includes('/bookmarks')){alert('Go to x.com/i/bookmarks first!');return}const sleep=ms=>new Promise(r=>setTimeout(r,ms));const bookmarks=[];async function run(){let lastCount=0,retries=0;while(retries<5){document.querySelectorAll('article').forEach(a=>{const text=a.querySelector('[data-testid=%22tweetText%22]')?.textContent||'';const time=a.querySelector('time')?.closest('a')?.href||'';if(text%26%26!bookmarks.find(b=>b.text===text))bookmarks.push({text,url:time})});if(bookmarks.length===lastCount)retries++;else retries=0;lastCount=bookmarks.length;window.scrollTo(0,document.body.scrollHeight);await sleep(1500)}console.table(bookmarks);const blob=new Blob([JSON.stringify(bookmarks,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='bookmarks.json';a.click();alert('Exported '+bookmarks.length+' bookmarks!')}run()})();">⚡ Export Bookmarks</a>
+            <button class="copy-btn" data-script="bookmarkExporter">📋 Copy Script</button>
+          </div>
+          <a href="tutorials/scrapers.html#bookmarks" class="tutorial-link">📚 Full Tutorial →</a>
+        </div>
+
+        <!-- Thread Unroller -->
+        <div class="script-card">
+          <h3>
+            Thread Unroller
+            <span class="tag standalone">Standalone</span>
+          </h3>
+          <p>Save any Twitter thread as clean text or markdown. Perfect for long threads.</p>
+          <div class="where">📍 Run on: Any tweet in a thread</div>
+          <div class="script-actions">
+            <a class="bookmarklet" href="javascript:(function(){const author=location.pathname.match(/\/(\w+)\/status/)?.[1];if(!author){alert('Go to a tweet first!');return}const sleep=ms=>new Promise(r=>setTimeout(r,ms));const tweets=[];async function run(){let retries=0;while(retries<5){document.querySelectorAll('article').forEach(a=>{const text=a.querySelector('[data-testid=%22tweetText%22]')?.textContent||'';const handle=a.querySelector('[data-testid=%22User-Name%22]')?.textContent?.match(/@(\w+)/)?.[1]||'';if(handle.toLowerCase()===author.toLowerCase()%26%26text%26%26!tweets.includes(text))tweets.push(text)});window.scrollBy(0,500);await sleep(1000);retries++}const thread='🧵 Thread by @'+author+'\\n\\n'+tweets.map((t,i)=>(i+1)+'. '+t).join('\\n\\n');console.log(thread);navigator.clipboard.writeText(thread);alert('Thread copied! '+tweets.length+' tweets')}run()})();">⚡ Unroll Thread</a>
+            <button class="copy-btn" data-script="threadUnroller">📋 Copy Script</button>
+          </div>
+          <a href="tutorials/scrapers.html#threads" class="tutorial-link">📚 Full Tutorial →</a>
+        </div>
+
+        <!-- Viral Tweets -->
+        <div class="script-card">
+          <h3>
+            Viral Tweet Finder
+            <span class="tag standalone">Standalone</span>
+          </h3>
+          <p>Find top performing tweets from search results or any profile.</p>
+          <div class="where">📍 Run on: x.com/search or any profile</div>
+          <div class="script-actions">
+            <a class="bookmarklet" href="javascript:(function(){const sleep=ms=>new Promise(r=>setTimeout(r,ms));const tweets=[];const parseNum=s=>{if(!s)return 0;const n=parseFloat(s.replace(/,/g,''));if(s.includes('K'))return n*1000;if(s.includes('M'))return n*1000000;return n};async function run(){let scrolls=0;while(scrolls<20){document.querySelectorAll('article').forEach(a=>{const text=a.querySelector('[data-testid=%22tweetText%22]')?.textContent||'';const url=a.querySelector('time')?.closest('a')?.href||'';const btns=a.querySelectorAll('[role=%22group%22] button');let likes=0;btns.forEach(b=>{const l=b.getAttribute('aria-label')||'';if(l.includes('like'))likes=parseNum(l.match(/[\d,.]+[KM]?/)?.[0]||'0')});if(text%26%26likes>=100%26%26!tweets.find(t=>t.url===url))tweets.push({text:text.slice(0,100),likes,url})});window.scrollBy(0,500);await sleep(1000);scrolls++}tweets.sort((a,b)=>b.likes-a.likes);console.table(tweets.slice(0,20));alert('Found '+tweets.length+' viral tweets! Check console.')}run()})();">⚡ Find Viral Tweets</a>
+            <button class="copy-btn" data-script="viralTweets">📋 Copy Script</button>
+          </div>
+          <a href="tutorials/scrapers.html#viral" class="tutorial-link">📚 Full Tutorial →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== MONITORING ==================== -->
+    <section class="category">
+      <h2>👀 Monitoring</h2>
+      <p>Track unfollowers, monitor accounts, and get alerts</p>
+
+      <div class="script-grid">
+        <!-- Detect Unfollowers -->
+        <div class="script-card">
+          <h3>
+            Detect Unfollowers
+            <span class="tag standalone">Standalone</span>
+          </h3>
+          <p>Find out who unfollowed you by comparing snapshots of your followers.</p>
+          <div class="where">📍 Run on: x.com/YOUR_USERNAME/followers</div>
+          <div class="script-actions">
+            <a class="bookmarklet" href="javascript:(function(){const sleep=ms=>new Promise(r=>setTimeout(r,ms));const followers=new Set();async function scrape(){let retries=0;while(retries<5){document.querySelectorAll('[data-testid=%22UserCell%22] a[href^=%22/%22]').forEach(a=>{const u=a.getAttribute('href')?.replace('/','');if(u)followers.add(u.toLowerCase())});window.scrollTo(0,document.body.scrollHeight);await sleep(1500);retries++}}async function run(){await scrape();const prev=JSON.parse(localStorage.getItem('xactions_followers')||'[]');const current=Array.from(followers);if(prev.length){const lost=prev.filter(u=>!followers.has(u));const gained=current.filter(u=>!prev.includes(u));console.log('❌ Unfollowed you:',lost);console.log('✅ New followers:',gained);alert('Lost: '+lost.length+' | Gained: '+gained.length)}localStorage.setItem('xactions_followers',JSON.stringify(current));alert('Saved '+current.length+' followers. Run again later to compare!')}run()})();">⚡ Check Unfollowers</a>
+            <button class="copy-btn" data-script="detectUnfollowers">📋 Copy Script</button>
+          </div>
+          <a href="tutorials/monitoring.html#unfollowers" class="tutorial-link">📚 Full Tutorial →</a>
+        </div>
+
+        <!-- Monitor Account -->
+        <div class="script-card">
+          <h3>
+            Monitor Any Account
+            <span class="tag standalone">Standalone</span>
+          </h3>
+          <p>Track changes to any public account - new tweets, follower changes, bio updates.</p>
+          <div class="where">📍 Run on: Any profile page (x.com/username)</div>
+          <div class="script-actions">
+            <a class="bookmarklet" href="javascript:(function(){const user=location.pathname.split('/')[1];if(!user){alert('Go to a profile page first!');return}const data={user,followers:document.querySelector('[href$=%22/followers%22]')?.textContent||'0',following:document.querySelector('[href$=%22/following%22]')?.textContent||'0',bio:document.querySelector('[data-testid=%22UserDescription%22]')?.textContent||'',time:new Date().toISOString()};const key='xactions_monitor_'+user;const prev=JSON.parse(localStorage.getItem(key)||'null');localStorage.setItem(key,JSON.stringify(data));if(prev){const changes=[];if(prev.followers!==data.followers)changes.push('Followers: '+prev.followers+' → '+data.followers);if(prev.following!==data.following)changes.push('Following: '+prev.following+' → '+data.following);if(prev.bio!==data.bio)changes.push('Bio changed!');alert(changes.length?'Changes detected:\\n'+changes.join('\\n'):'No changes since last check')}else{alert('Snapshot saved for @'+user+'. Run again later to detect changes!')}})();">⚡ Monitor Account</a>
+            <button class="copy-btn" data-script="monitorAccount">📋 Copy Script</button>
+          </div>
+          <a href="tutorials/monitoring.html#monitor" class="tutorial-link">📚 Full Tutorial →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== COMMUNITIES ==================== -->
+    <section class="category">
+      <h2>👥 Communities</h2>
+      <p>Manage your X/Twitter communities</p>
+
+      <div class="script-grid">
+        <!-- Leave All Communities -->
+        <div class="script-card">
+          <h3>
+            Leave All Communities
+            <span class="tag standalone">Standalone</span>
+          </h3>
+          <p>Leave every X/Twitter community you've joined. Clean slate.</p>
+          <div class="where">📍 Run on: x.com/YOUR_USERNAME (your profile)</div>
+          <div class="script-actions">
+            <a class="bookmarklet" href="javascript:(function(){const sleep=ms=>new Promise(r=>setTimeout(r,ms));const processed=JSON.parse(sessionStorage.getItem('xactions_communities')||'[]');async function run(){const communityLinks=Array.from(document.querySelectorAll('a[href^=%22/i/communities/%22]')).map(a=>a.href).filter((v,i,a)=>a.indexOf(v)===i%26%26!processed.includes(v));if(!communityLinks.length){const nav=document.querySelector('a[aria-label=%22Communities%22]');if(nav%26%26!location.pathname.includes('/communities')){nav.click();await sleep(2000);return run()}alert('No communities found or all processed!');return}const url=communityLinks[0];processed.push(url);sessionStorage.setItem('xactions_communities',JSON.stringify(processed));window.location.href=url}if(location.pathname.includes('/i/communities/')){setTimeout(async()=>{const joined=document.querySelector('button[aria-label^=%22Joined%22]');if(joined){joined.click();await sleep(500);const leave=Array.from(document.querySelectorAll('[role=%22menuitem%22]')).find(el=>el.textContent.includes('Leave'));leave?.click();await sleep(500);document.querySelector('[data-testid=%22confirmationSheetConfirm%22]')?.click();await sleep(1000)}history.back()},1000)}else{run()}})();">⚡ Leave All Communities</a>
+            <button class="copy-btn" data-script="leaveAllCommunities">📋 Copy Script</button>
+          </div>
+          <a href="tutorials/communities.html" class="tutorial-link">📚 Full Tutorial →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== AUTOMATION ==================== -->
+    <section class="category">
+      <h2>🤖 Automation (Advanced)</h2>
+      <p>Advanced automation requires core.js - see full tutorials for setup</p>
+
+      <div class="alert">
+        <div class="alert-icon">⚠️</div>
+        <div class="alert-content">
+          <h4>These scripts require setup</h4>
+          <p>Advanced automation scripts need <code>core.js</code> loaded first. Click "Full Tutorial" for complete instructions.</p>
+        </div>
+      </div>
+
+      <div class="script-grid">
+        <!-- Auto Liker -->
+        <div class="script-card">
+          <h3>
+            Auto Liker
+            <span class="tag requires-core">Requires core.js</span>
+          </h3>
+          <p>Automatically like tweets on your timeline with customizable filters.</p>
+          <div class="where">📍 Run on: x.com/home or any timeline</div>
+          <div class="script-actions">
+            <button class="copy-btn" data-script="autoLiker">📋 Copy Script</button>
+          </div>
+          <a href="tutorials/automation.html#liker" class="tutorial-link">📚 Full Tutorial →</a>
+        </div>
+
+        <!-- Auto Commenter -->
+        <div class="script-card">
+          <h3>
+            Auto Commenter
+            <span class="tag requires-core">Requires core.js</span>
+          </h3>
+          <p>Post relevant comments automatically on targeted tweets.</p>
+          <div class="where">📍 Run on: x.com/home or any timeline</div>
+          <div class="script-actions">
+            <button class="copy-btn" data-script="autoCommenter">📋 Copy Script</button>
+          </div>
+          <a href="tutorials/automation.html#commenter" class="tutorial-link">📚 Full Tutorial →</a>
+        </div>
+
+        <!-- Follow Engagers -->
+        <div class="script-card">
+          <h3>
+            Follow Engagers
+            <span class="tag requires-core">Requires core.js</span>
+          </h3>
+          <p>Follow people who liked/retweeted a specific tweet.</p>
+          <div class="where">📍 Run on: Any tweet page</div>
+          <div class="script-actions">
+            <button class="copy-btn" data-script="followEngagers">📋 Copy Script</button>
+          </div>
+          <a href="tutorials/automation.html#engagers" class="tutorial-link">📚 Full Tutorial →</a>
+        </div>
+
+        <!-- Keyword Follow -->
+        <div class="script-card">
+          <h3>
+            Keyword Follow
+            <span class="tag requires-core">Requires core.js</span>
+          </h3>
+          <p>Search for keywords and auto-follow matching users.</p>
+          <div class="where">📍 Run on: x.com/search</div>
+          <div class="script-actions">
+            <button class="copy-btn" data-script="keywordFollow">📋 Copy Script</button>
+          </div>
+          <a href="tutorials/automation.html#keyword" class="tutorial-link">📚 Full Tutorial →</a>
+        </div>
+
+        <!-- Smart Unfollow -->
+        <div class="script-card">
+          <h3>
+            Smart Unfollow
+            <span class="tag requires-core">Requires core.js</span>
+          </h3>
+          <p>Time-based unfollow - remove users who didn't follow back after X days.</p>
+          <div class="where">📍 Run on: x.com/YOUR_USERNAME/following</div>
+          <div class="script-actions">
+            <button class="copy-btn" data-script="smartUnfollow">📋 Copy Script</button>
+          </div>
+          <a href="tutorials/automation.html#smart" class="tutorial-link">📚 Full Tutorial →</a>
+        </div>
+
+        <!-- Growth Suite -->
+        <div class="script-card">
+          <h3>
+            Growth Suite
+            <span class="tag requires-core">Requires core.js</span>
+          </h3>
+          <p>All-in-one: keyword follow + auto-like + smart unfollow combined.</p>
+          <div class="where">📍 Run on: x.com/home</div>
+          <div class="script-actions">
+            <button class="copy-btn" data-script="growthSuite">📋 Copy Script</button>
+          </div>
+          <a href="tutorials/automation.html#growth" class="tutorial-link">📚 Full Tutorial →</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>
+      Made with ❤️ by <a href="https://x.com/nichxbt" target="_blank">@nichxbt</a> • 
+      <a href="https://github.com/nirholas/XActions" target="_blank">GitHub</a> • 
+      100% Free & Open Source
+    </p>
+  </footer>
+
+  <script>
+    // Full scripts for copying
+    const SCRIPTS = {
+      unfollowEveryone: `// Unfollow Everyone - by nichxbt
+// Go to: x.com/YOUR_USERNAME/following
+
+(async () => {
+  const $unfollow = '[data-testid$="-unfollow"]';
+  const $confirm = '[data-testid="confirmationSheetConfirm"]';
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  let count = 0;
+
+  while (true) {
+    const btn = document.querySelector($unfollow);
+    if (!btn) {
+      console.log('✅ Done! Unfollowed:', count);
+      break;
+    }
+    
+    btn.click();
+    await sleep(500);
+    document.querySelector($confirm)?.click();
+    count++;
+    console.log('👋 Unfollowed:', count);
+    await sleep(1500);
+    window.scrollBy(0, 200);
+  }
+})();`,
+
+      unfollowNonFollowers: `// Unfollow Non-Followers - by nichxbt
+// Go to: x.com/YOUR_USERNAME/following
+
+(async () => {
+  const $unfollow = '[data-testid$="-unfollow"]';
+  const $confirm = '[data-testid="confirmationSheetConfirm"]';
+  const $indicator = '[data-testid="userFollowIndicator"]';
+  const $userCell = '[data-testid="UserCell"]';
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  let count = 0;
+
+  while (true) {
+    const cells = document.querySelectorAll($userCell);
+    let found = false;
+
+    for (const cell of cells) {
+      const followsYou = cell.querySelector($indicator);
+      const unfollowBtn = cell.querySelector($unfollow);
+
+      if (!followsYou && unfollowBtn) {
+        unfollowBtn.click();
+        await sleep(500);
+        document.querySelector($confirm)?.click();
+        count++;
+        console.log('👋 Unfollowed non-follower:', count);
+        await sleep(1500);
+        found = true;
+        break;
+      }
+    }
+
+    if (!found) {
+      window.scrollBy(0, 500);
+      await sleep(1000);
+      const newCells = document.querySelectorAll($userCell);
+      if (newCells.length === 0) {
+        console.log('✅ Done! Unfollowed:', count, 'non-followers');
+        break;
+      }
+    }
+  }
+})();`,
+
+      videoDownloader: `// Video Downloader - by nichxbt
+// Go to: Any tweet with a video
+
+(async () => {
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  
+  // Try to find video element
+  let video = document.querySelector('video');
+  
+  if (!video) {
+    // Click on video to load it
+    const mediaContainer = document.querySelector('[data-testid="videoPlayer"]');
+    if (mediaContainer) {
+      mediaContainer.click();
+      await sleep(1000);
+      video = document.querySelector('video');
+    }
+  }
+  
+  if (!video) {
+    console.error('❌ No video found on this page!');
+    alert('No video found! Make sure you are on a tweet with a video.');
+    return;
+  }
+  
+  // Get video sources
+  const urls = [];
+  
+  if (video.src) urls.push(video.src);
+  video.querySelectorAll('source').forEach(s => {
+    if (s.src) urls.push(s.src);
+  });
+  
+  // Check for blob URLs and try to get actual URLs
+  if (urls.length === 0 || urls[0].startsWith('blob:')) {
+    console.log('🔍 Looking for video URL in network...');
+    
+    // Look for video in the page's script data
+    const scripts = document.querySelectorAll('script');
+    scripts.forEach(script => {
+      const match = script.textContent.match(/https:\\/\\/video\\.twimg\\.com[^"'\\s]+\\.mp4[^"'\\s]*/g);
+      if (match) urls.push(...match);
+    });
+  }
+  
+  if (urls.length > 0) {
+    console.log('🎬 Video URLs found:', urls);
+    
+    // Open in new tab for easy download
+    const cleanUrls = [...new Set(urls)].filter(u => !u.startsWith('blob:'));
+    if (cleanUrls.length > 0) {
+      window.open(cleanUrls[0], '_blank');
+      console.log('✅ Opened video in new tab. Right-click → Save As to download.');
+    } else {
+      alert('Found blob URL only. Try the full tutorial for advanced options.');
+    }
+  } else {
+    alert('Could not extract video URL. The video might use DRM protection.');
+  }
+})();`,
+
+      bookmarkExporter: `// Bookmark Exporter - by nichxbt
+// Go to: x.com/i/bookmarks
+
+(async () => {
+  if (!location.pathname.includes('/bookmarks')) {
+    alert('Please go to x.com/i/bookmarks first!');
+    return;
+  }
+  
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  const bookmarks = [];
+  let lastCount = 0;
+  let retries = 0;
+  
+  console.log('📚 Exporting bookmarks...');
+  
+  while (retries < 10) {
+    document.querySelectorAll('article[data-testid="tweet"]').forEach(article => {
+      const text = article.querySelector('[data-testid="tweetText"]')?.textContent || '';
+      const timeEl = article.querySelector('time');
+      const url = timeEl?.closest('a')?.href || '';
+      const time = timeEl?.getAttribute('datetime') || '';
+      const userName = article.querySelector('[data-testid="User-Name"]')?.textContent || '';
+      const handle = userName.match(/@(\\w+)/)?.[1] || '';
+      
+      if (text && !bookmarks.find(b => b.url === url)) {
+        bookmarks.push({ text, url, handle, time });
+        console.log(\`📖 Found: \${bookmarks.length}\`);
+      }
+    });
+    
+    if (bookmarks.length === lastCount) {
+      retries++;
+    } else {
+      retries = 0;
+    }
+    lastCount = bookmarks.length;
+    
+    window.scrollTo(0, document.body.scrollHeight);
+    await sleep(1500);
+  }
+  
+  // Download as JSON
+  const blob = new Blob([JSON.stringify(bookmarks, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'twitter_bookmarks.json';
+  a.click();
+  
+  console.log('✅ Exported', bookmarks.length, 'bookmarks!');
+  alert('Exported ' + bookmarks.length + ' bookmarks to JSON file!');
+})();`,
+
+      threadUnroller: `// Thread Unroller - by nichxbt
+// Go to: Any tweet in a thread
+
+(async () => {
+  const author = location.pathname.match(/\\/(\\w+)\\/status/)?.[1];
+  if (!author) {
+    alert('Please navigate to a tweet first!');
+    return;
+  }
+  
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  const tweets = [];
+  let retries = 0;
+  
+  console.log(\`🧵 Unrolling thread by @\${author}...\`);
+  
+  while (retries < 10) {
+    document.querySelectorAll('article[data-testid="tweet"]').forEach(article => {
+      const text = article.querySelector('[data-testid="tweetText"]')?.textContent || '';
+      const userName = article.querySelector('[data-testid="User-Name"]')?.textContent || '';
+      const handle = userName.match(/@(\\w+)/)?.[1] || '';
+      const url = article.querySelector('time')?.closest('a')?.href || '';
+      const time = article.querySelector('time')?.getAttribute('datetime') || '';
+      
+      if (handle.toLowerCase() === author.toLowerCase() && text) {
+        const exists = tweets.find(t => t.url === url);
+        if (!exists) {
+          tweets.push({ text, url, time });
+          console.log(\`📝 Tweet \${tweets.length}\`);
+        }
+      }
+    });
+    
+    window.scrollBy(0, 500);
+    await sleep(1000);
+    retries++;
+  }
+  
+  // Sort by time
+  tweets.sort((a, b) => new Date(a.time) - new Date(b.time));
+  
+  // Format as markdown
+  const thread = \`# 🧵 Thread by @\${author}\\n\\n\` +
+    tweets.map((t, i) => \`## Tweet \${i + 1}\\n\\n\${t.text}\\n\\n---\\n\`).join('\\n');
+  
+  // Copy to clipboard
+  await navigator.clipboard.writeText(thread);
+  
+  console.log(thread);
+  console.log('\\n✅ Thread copied to clipboard!');
+  alert('Thread unrolled! ' + tweets.length + ' tweets copied to clipboard.');
+})();`,
+
+      viralTweets: `// Viral Tweet Finder - by nichxbt
+// Go to: x.com/search or any profile
+
+(async () => {
+  const CONFIG = {
+    MIN_LIKES: 100,
+    MAX_TWEETS: 100,
+  };
+  
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  const parseNum = str => {
+    if (!str) return 0;
+    const n = parseFloat(str.replace(/,/g, ''));
+    if (str.includes('K')) return n * 1000;
+    if (str.includes('M')) return n * 1000000;
+    return n;
+  };
+  
+  const tweets = new Map();
+  let scrolls = 0;
+  
+  console.log('🔥 Finding viral tweets...');
+  
+  while (tweets.size < CONFIG.MAX_TWEETS && scrolls < 30) {
+    document.querySelectorAll('article[data-testid="tweet"]').forEach(article => {
+      const text = article.querySelector('[data-testid="tweetText"]')?.textContent || '';
+      const url = article.querySelector('time')?.closest('a')?.href || '';
+      const tweetId = url.split('/status/')[1]?.split('?')[0] || '';
+      
+      // Get likes
+      const buttons = article.querySelectorAll('[role="group"] button');
+      let likes = 0;
+      buttons.forEach(btn => {
+        const label = btn.getAttribute('aria-label') || '';
+        if (label.includes('like')) {
+          likes = parseNum(label.match(/[\\d,.]+[KM]?/)?.[0] || '0');
+        }
+      });
+      
+      if (text && tweetId && likes >= CONFIG.MIN_LIKES && !tweets.has(tweetId)) {
+        tweets.set(tweetId, { text: text.slice(0, 100), url, likes });
+      }
+    });
+    
+    window.scrollBy(0, 500);
+    await sleep(1000);
+    scrolls++;
+    
+    if (scrolls % 10 === 0) {
+      console.log(\`📊 Found \${tweets.size} viral tweets so far...\`);
+    }
+  }
+  
+  // Sort by likes
+  const sorted = Array.from(tweets.values()).sort((a, b) => b.likes - a.likes);
+  
+  console.log('\\n🔥 TOP VIRAL TWEETS:');
+  console.table(sorted.slice(0, 20));
+  
+  alert('Found ' + tweets.size + ' viral tweets! Check console for details.');
+})();`,
+
+      detectUnfollowers: `// Detect Unfollowers - by nichxbt
+// Go to: x.com/YOUR_USERNAME/followers
+
+(async () => {
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  const followers = new Set();
+  let prevCount = 0;
+  let retries = 0;
+  
+  console.log('📊 Scraping your followers...');
+  
+  while (retries < 10) {
+    document.querySelectorAll('[data-testid="UserCell"] a[href^="/"]').forEach(a => {
+      const user = a.getAttribute('href')?.replace('/', '').split('/')[0];
+      if (user && !user.includes('/')) {
+        followers.add(user.toLowerCase());
+      }
+    });
+    
+    if (followers.size === prevCount) {
+      retries++;
+    } else {
+      retries = 0;
+      console.log(\`Found: \${followers.size} followers\`);
+    }
+    prevCount = followers.size;
+    
+    window.scrollTo(0, document.body.scrollHeight);
+    await sleep(1500);
+  }
+  
+  const currentFollowers = Array.from(followers);
+  const prevFollowers = JSON.parse(localStorage.getItem('xactions_followers_snapshot') || '[]');
+  
+  if (prevFollowers.length > 0) {
+    const unfollowed = prevFollowers.filter(u => !followers.has(u));
+    const newFollowers = currentFollowers.filter(u => !prevFollowers.includes(u));
+    
+    console.log('\\n❌ UNFOLLOWED YOU:');
+    unfollowed.forEach(u => console.log(\`  @\${u}\`));
+    
+    console.log('\\n✅ NEW FOLLOWERS:');
+    newFollowers.forEach(u => console.log(\`  @\${u}\`));
+    
+    alert(\`Unfollowed: \${unfollowed.length}\\nNew followers: \${newFollowers.length}\`);
+  }
+  
+  localStorage.setItem('xactions_followers_snapshot', JSON.stringify(currentFollowers));
+  console.log(\`\\n💾 Saved \${currentFollowers.length} followers. Run again later to detect changes!\`);
+  
+  if (prevFollowers.length === 0) {
+    alert('Snapshot saved! Run this script again later to see who unfollowed you.');
+  }
+})();`,
+
+      monitorAccount: `// Monitor Any Account - by nichxbt
+// Go to: Any profile page (x.com/username)
+
+(() => {
+  const user = location.pathname.split('/')[1];
+  if (!user || user.includes('/')) {
+    alert('Please go to a profile page first!');
+    return;
+  }
+  
+  // Scrape current data
+  const data = {
+    user,
+    followers: document.querySelector('[href$="/followers"]')?.textContent || '0',
+    following: document.querySelector('[href$="/following"]')?.textContent || '0',
+    bio: document.querySelector('[data-testid="UserDescription"]')?.textContent || '',
+    name: document.querySelector('[data-testid="UserName"]')?.textContent || user,
+    timestamp: new Date().toISOString(),
+  };
+  
+  const storageKey = 'xactions_monitor_' + user.toLowerCase();
+  const prev = JSON.parse(localStorage.getItem(storageKey) || 'null');
+  
+  localStorage.setItem(storageKey, JSON.stringify(data));
+  
+  if (prev) {
+    const changes = [];
+    
+    if (prev.followers !== data.followers) {
+      changes.push(\`📊 Followers: \${prev.followers} → \${data.followers}\`);
+    }
+    if (prev.following !== data.following) {
+      changes.push(\`📊 Following: \${prev.following} → \${data.following}\`);
+    }
+    if (prev.bio !== data.bio) {
+      changes.push('📝 Bio changed!');
+    }
+    if (prev.name !== data.name) {
+      changes.push(\`🏷️ Name: \${prev.name} → \${data.name}\`);
+    }
+    
+    if (changes.length > 0) {
+      console.log('🔔 Changes detected for @' + user + ':');
+      changes.forEach(c => console.log('  ' + c));
+      alert('Changes detected for @' + user + ':\\n\\n' + changes.join('\\n'));
+    } else {
+      console.log('✅ No changes for @' + user);
+      alert('No changes detected since last check.');
+    }
+  } else {
+    console.log('📸 First snapshot saved for @' + user);
+    alert('Snapshot saved for @' + user + '! Run again later to detect changes.');
+  }
+})();`,
+
+      leaveAllCommunities: `// Leave All Communities - by nichxbt
+// Go to: Your profile or any page to start
+
+(async () => {
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  const processed = JSON.parse(sessionStorage.getItem('xactions_left_communities') || '[]');
+  
+  // If on a community page, leave it
+  if (location.pathname.includes('/i/communities/')) {
+    console.log('📍 On community page, attempting to leave...');
+    
+    await sleep(1000);
+    
+    // Find "Joined" button
+    const joinedBtn = document.querySelector('button[aria-label^="Joined"]');
+    if (joinedBtn) {
+      joinedBtn.click();
+      await sleep(500);
+      
+      // Find "Leave" option
+      const menuItems = document.querySelectorAll('[role="menuitem"]');
+      const leaveOption = Array.from(menuItems).find(el => 
+        el.textContent.toLowerCase().includes('leave')
+      );
+      
+      if (leaveOption) {
+        leaveOption.click();
+        await sleep(500);
+        
+        // Confirm
+        document.querySelector('[data-testid="confirmationSheetConfirm"]')?.click();
+        console.log('✅ Left community!');
+        await sleep(1000);
+      }
+    }
+    
+    // Go back to find more
+    history.back();
+    return;
+  }
+  
+  // Find community links
+  const communityLinks = Array.from(document.querySelectorAll('a[href^="/i/communities/"]'))
+    .map(a => a.href)
+    .filter((v, i, arr) => arr.indexOf(v) === i && !processed.includes(v));
+  
+  if (communityLinks.length === 0) {
+    // Try to navigate to communities tab
+    const commNav = document.querySelector('a[aria-label="Communities"]');
+    if (commNav && !location.href.includes('/communities')) {
+      console.log('📍 Navigating to Communities...');
+      commNav.click();
+      await sleep(2000);
+      location.reload();
+      return;
+    }
+    
+    console.log('✅ All done! Left all communities.');
+    alert('Finished! Left all communities (or none found).');
+    sessionStorage.removeItem('xactions_left_communities');
+    return;
+  }
+  
+  console.log(\`🔍 Found \${communityLinks.length} communities to leave\`);
+  
+  // Visit first community
+  const nextUrl = communityLinks[0];
+  processed.push(nextUrl);
+  sessionStorage.setItem('xactions_left_communities', JSON.stringify(processed));
+  
+  window.location.href = nextUrl;
+})();`,
+
+      autoLiker: `// Auto Liker - Requires core.js first!
+// See full tutorial: tutorials/automation.html#liker
+
+// First paste core.js from: src/automation/core.js
+// Then paste this script
+
+console.log('⚠️ This script requires core.js to be loaded first!');
+console.log('📚 See full tutorial at: tutorials/automation.html#liker');`,
+
+      autoCommenter: `// Auto Commenter - Requires core.js first!
+// See full tutorial: tutorials/automation.html#commenter
+
+// First paste core.js from: src/automation/core.js
+// Then paste this script
+
+console.log('⚠️ This script requires core.js to be loaded first!');
+console.log('📚 See full tutorial at: tutorials/automation.html#commenter');`,
+
+      followEngagers: `// Follow Engagers - Requires core.js first!
+// See full tutorial: tutorials/automation.html#engagers
+
+// First paste core.js from: src/automation/core.js
+// Then paste this script
+
+console.log('⚠️ This script requires core.js to be loaded first!');
+console.log('📚 See full tutorial at: tutorials/automation.html#engagers');`,
+
+      keywordFollow: `// Keyword Follow - Requires core.js first!
+// See full tutorial: tutorials/automation.html#keyword
+
+// First paste core.js from: src/automation/core.js
+// Then paste this script
+
+console.log('⚠️ This script requires core.js to be loaded first!');
+console.log('📚 See full tutorial at: tutorials/automation.html#keyword');`,
+
+      smartUnfollow: `// Smart Unfollow - Requires core.js first!
+// See full tutorial: tutorials/automation.html#smart
+
+// First paste core.js from: src/automation/core.js
+// Then paste this script
+
+console.log('⚠️ This script requires core.js to be loaded first!');
+console.log('📚 See full tutorial at: tutorials/automation.html#smart');`,
+
+      growthSuite: `// Growth Suite - Requires core.js first!
+// See full tutorial: tutorials/automation.html#growth
+
+// First paste core.js from: src/automation/core.js
+// Then paste this script
+
+console.log('⚠️ This script requires core.js to be loaded first!');
+console.log('📚 See full tutorial at: tutorials/automation.html#growth');`,
+    };
+
+    // Copy button functionality
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const scriptKey = btn.dataset.script;
+        const script = SCRIPTS[scriptKey];
+        
+        if (!script) {
+          alert('Script not found!');
+          return;
+        }
+        
+        try {
+          await navigator.clipboard.writeText(script);
+          btn.textContent = '✅ Copied!';
+          btn.classList.add('copied');
+          
+          setTimeout(() => {
+            btn.textContent = '📋 Copy Script';
+            btn.classList.remove('copied');
+          }, 2000);
+        } catch (err) {
+          // Fallback for older browsers
+          const textarea = document.createElement('textarea');
+          textarea.value = script;
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand('copy');
+          document.body.removeChild(textarea);
+          
+          btn.textContent = '✅ Copied!';
+          btn.classList.add('copied');
+          
+          setTimeout(() => {
+            btn.textContent = '📋 Copy Script';
+            btn.classList.remove('copied');
+          }, 2000);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

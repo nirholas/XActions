@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Community Tutorials - XActions | Leave All X Communities</title>
+  <meta name="description" content="Complete tutorial for leaving all X/Twitter communities at once. Mass leave communities with a single script.">
+  <meta name="author" content="nich (@nichxbt)">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar {
+      width: 275px; padding: 0 12px; position: sticky; top: 0;
+      height: 100vh; border-right: 1px solid var(--border);
+    }
+    .logo { padding: 16px 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; }
+    nav { margin-top: 8px; }
+    .nav-item { display: flex; align-items: center; gap: 16px; padding: 12px 16px; border-radius: 9999px; font-size: 1.1rem; color: var(--text-primary); text-decoration: none; transition: background 0.2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.3rem; width: 28px; text-align: center; }
+    .main { flex: 1; border-right: 1px solid var(--border); }
+    .header { padding: 16px 20px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(12px); z-index: 100; }
+    .header h1 { font-size: 1.3rem; font-weight: 700; }
+    .content { padding: 20px; }
+    .free-banner { background: linear-gradient(90deg, var(--success), var(--accent)); padding: 14px 20px; border-radius: 16px; margin-bottom: 24px; text-align: center; }
+    .free-banner span { font-weight: 700; }
+    .free-banner a { color: white; margin-left: 12px; }
+    .section { margin-bottom: 48px; padding-top: 20px; }
+    .section-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+    .step { margin-bottom: 24px; }
+    .step h4 { color: var(--accent); margin-bottom: 8px; font-size: 1rem; }
+    .step p { color: var(--text-secondary); margin-bottom: 12px; }
+    .code-block { position: relative; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; margin: 16px 0; overflow: hidden; }
+    .code-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; background: var(--bg-tertiary); border-bottom: 1px solid var(--border); }
+    .code-header span { font-size: 0.85rem; color: var(--text-secondary); }
+    .copy-btn { background: var(--accent); color: white; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 600; }
+    .copy-btn:hover { background: var(--accent-hover); }
+    .code-block pre { padding: 16px; overflow-x: auto; font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace; font-size: 0.85rem; line-height: 1.5; margin: 0; }
+    .code-block code { color: var(--text-primary); }
+    .warning-box { background: rgba(255, 173, 31, 0.1); border: 1px solid var(--warning); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .warning-box h4 { color: var(--warning); margin-bottom: 8px; }
+    .warning-box ul { padding-left: 20px; color: var(--text-secondary); }
+    .warning-box li { margin-bottom: 4px; }
+    .info-box { background: rgba(29, 155, 240, 0.1); border: 1px solid var(--accent); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .info-box h4 { color: var(--accent); margin-bottom: 8px; }
+    .nav-toc { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 24px; }
+    .nav-toc h4 { margin-bottom: 12px; }
+    .nav-toc a { display: block; color: var(--accent); text-decoration: none; padding: 6px 0; font-size: 0.9rem; }
+    .nav-toc a:hover { text-decoration: underline; }
+    footer { padding: 40px 20px; border-top: 1px solid var(--border); margin-top: 40px; }
+    .footer-links { display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; }
+    .footer-links a { color: var(--text-secondary); text-decoration: none; }
+    .footer-links a:hover { color: var(--accent); }
+    .footer-copy { text-align: center; margin-top: 20px; color: var(--text-secondary); font-size: 0.85rem; }
+    @media (max-width: 768px) { .sidebar { display: none; } }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo"><a href="../index.html">⚡ XActions</a></div>
+      <nav>
+        <a href="../index.html" class="nav-item"><span class="nav-icon">🏠</span>Dashboard</a>
+        <a href="index.html" class="nav-item"><span class="nav-icon">📚</span>Tutorials</a>
+        <a href="unfollow.html" class="nav-item"><span class="nav-icon">👋</span>Unfollow</a>
+        <a href="scrapers.html" class="nav-item"><span class="nav-icon">🔍</span>Scrapers</a>
+        <a href="automation.html" class="nav-item"><span class="nav-icon">🤖</span>Automation</a>
+        <a href="monitoring.html" class="nav-item"><span class="nav-icon">👁️</span>Monitoring</a>
+        <a href="communities.html" class="nav-item active"><span class="nav-icon">🏘️</span>Communities</a>
+        <a href="mcp.html" class="nav-item"><span class="nav-icon">🧠</span>MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank"><span class="nav-icon">⭐</span>GitHub</a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <div class="header">
+        <h1>🏠 Community Management</h1>
+      </div>
+
+      <div class="content">
+        <div class="free-banner">
+          <span>🎉 XActions is 100% Free & Open Source</span>
+          <a href="https://github.com/nirholas/XActions" target="_blank">Star on GitHub ⭐</a>
+        </div>
+
+        <div class="nav-toc">
+          <h4>📑 On This Page</h4>
+          <a href="#leave-all-communities">🚪 Leave All Communities</a>
+          <a href="#how-it-works">⚙️ How It Works</a>
+          <a href="#troubleshooting">🔧 Troubleshooting</a>
+        </div>
+
+        <section class="section" id="leave-all-communities">
+          <h2 class="section-title">🚪 Leave All Communities</h2>
+          <p style="color: var(--text-secondary); margin-bottom: 16px;">
+            Mass leave all X communities you've joined with one script. Useful for cleaning up your account or starting fresh.
+          </p>
+
+          <div class="step">
+            <h4>Step 1: Go to your Communities page</h4>
+            <p>Navigate to <code>x.com/YOUR_USERNAME/communities</code> or click Communities in the sidebar on X.</p>
+          </div>
+
+          <div class="step">
+            <h4>Step 2: Open Developer Console</h4>
+            <p>Press <code>F12</code> (Windows) or <code>Cmd+Option+J</code> (Mac) and click the Console tab.</p>
+          </div>
+
+          <div class="step">
+            <h4>Step 3: Paste the Leave All Communities script</h4>
+            <div class="code-block">
+              <div class="code-header">
+                <span>leaveAllCommunities.js</span>
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+              </div>
+              <pre><code>// Leave All X Communities - by nichxbt
+// https://github.com/nirholas/XActions
+// Go to x.com/YOUR_USERNAME/communities and paste this script
+
+(() => {
+  const $communityLinks = 'a[href^="/i/communities/"]';
+  const $joinedButton = 'button[aria-label^="Joined"]';
+  const $confirmButton = '[data-testid="confirmationSheetConfirm"]';
+  const $communitiesNav = 'a[aria-label="Communities"]';
+
+  // Track communities we've left (persists during page navigation)
+  const getLeftCommunities = () => {
+    try {
+      return JSON.parse(sessionStorage.getItem('xactions_left_ids') || '[]');
+    } catch { return []; }
+  };
+  
+  const markAsLeft = (id) => {
+    const left = getLeftCommunities();
+    if (!left.includes(id)) {
+      left.push(id);
+      sessionStorage.setItem('xactions_left_ids', JSON.stringify(left));
+    }
+  };
+
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+  const getCommunityId = () => {
+    const leftAlready = getLeftCommunities();
+    const links = document.querySelectorAll($communityLinks);
+    
+    for (const link of links) {
+      const match = link.href.match(/\/i\/communities\/(\d+)/);
+      if (match && !leftAlready.includes(match[1])) {
+        return { id: match[1], element: link };
+      }
+    }
+    return null;
+  };
+
+  const run = async () => {
+    const leftCount = getLeftCommunities().length;
+    console.log(`🚀 LEAVE ALL COMMUNITIES (Left so far: ${leftCount})`);
+    console.log(`📋 Already processed: ${getLeftCommunities().join(', ') || 'none'}`);
+    
+    await sleep(1500);
+    
+    // Check if we're inside a community (has "Joined" button)
+    const joinedBtn = document.querySelector($joinedButton);
+    
+    if (joinedBtn) {
+      // Get current community ID from URL
+      const urlMatch = window.location.href.match(/\/i\/communities\/(\d+)/);
+      const currentId = urlMatch ? urlMatch[1] : null;
+      
+      console.log(`📍 Inside community ${currentId}, clicking "Joined"...`);
+      joinedBtn.click();
+      await sleep(1000);
+      
+      const confirmBtn = document.querySelector($confirmButton);
+      if (confirmBtn) {
+        console.log('✅ Confirming leave...');
+        confirmBtn.click();
+        
+        if (currentId) {
+          markAsLeft(currentId);
+          console.log(`📝 Marked ${currentId} as left`);
+        }
+        
+        await sleep(1500);
+      }
+      
+      // Go back to communities list
+      const communitiesLink = document.querySelector($communitiesNav);
+      if (communitiesLink) {
+        console.log('⬅️ Going back to communities...');
+        communitiesLink.click();
+        await sleep(2500);
+        return run();
+      }
+    }
+    
+    // We're on communities list - find next community to leave
+    const community = getCommunityId();
+    
+    if (community) {
+      console.log(`🏠 Entering community ${community.id}...`);
+      community.element.click();
+      await sleep(2500);
+      return run();
+    } else {
+      // No more communities
+      const total = getLeftCommunities().length;
+      console.log(`\n🎉 DONE! Left ${total} communities total`);
+      console.log(`So long, and thanks for all the communities! 🐬`);
+      console.log(`IDs: ${getLeftCommunities().join(', ')}`);
+      sessionStorage.removeItem('xactions_left_ids');
+    }
+  };
+
+  run();
+})();</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- HOW IT WORKS -->
+        <section class="section" id="how-it-works">
+          <h2 class="section-title">⚙️ How It Works</h2>
+
+          <div class="info-box">
+            <h4>🔄 Navigation Flow</h4>
+            <p style="color: var(--text-secondary);">
+              The script handles page navigation intelligently:
+            </p>
+            <ol style="color: var(--text-secondary); margin-top: 8px; padding-left: 20px;">
+              <li>Starts from your Communities list page</li>
+              <li>Finds the first community link not yet processed</li>
+              <li>Clicks to enter the community</li>
+              <li>Finds and clicks the "Joined" button</li>
+              <li>Confirms the leave action</li>
+              <li>Navigates back to the Communities list</li>
+              <li>Repeats until all communities are left</li>
+            </ol>
+          </div>
+
+          <div class="info-box">
+            <h4>💾 State Persistence</h4>
+            <p style="color: var(--text-secondary);">
+              Uses <code>sessionStorage</code> to track which communities have been left. This prevents 
+              infinite loops and allows the script to resume if interrupted. The storage is automatically 
+              cleared when the script completes.
+            </p>
+          </div>
+
+          <div class="info-box">
+            <h4>🎯 Key Selectors Used</h4>
+            <table style="width: 100%; margin-top: 8px; color: var(--text-secondary);">
+              <tr><td><code>a[href^="/i/communities/"]</code></td><td style="padding-left: 16px;">Community links</td></tr>
+              <tr><td><code>button[aria-label^="Joined"]</code></td><td style="padding-left: 16px;">Joined/Leave button</td></tr>
+              <tr><td><code>[data-testid="confirmationSheetConfirm"]</code></td><td style="padding-left: 16px;">Confirmation button</td></tr>
+              <tr><td><code>a[aria-label="Communities"]</code></td><td style="padding-left: 16px;">Back to Communities nav</td></tr>
+            </table>
+          </div>
+        </section>
+
+        <!-- TROUBLESHOOTING -->
+        <section class="section" id="troubleshooting">
+          <h2 class="section-title">🔧 Troubleshooting</h2>
+
+          <div class="warning-box">
+            <h4>⚠️ Common Issues</h4>
+            <ul>
+              <li><strong>Script stops early:</strong> Scroll down on the Communities page to load more communities, then run again</li>
+              <li><strong>Community not found:</strong> Make sure you're on <code>x.com/YOUR_USERNAME/communities</code></li>
+              <li><strong>Stuck in a community:</strong> Manually click the back button and run the script again - it will skip already-left communities</li>
+              <li><strong>Rate limited:</strong> Wait a few minutes and run again - the script tracks progress</li>
+            </ul>
+          </div>
+
+          <div class="info-box">
+            <h4>💡 Pro Tips</h4>
+            <ul style="color: var(--text-secondary); padding-left: 20px;">
+              <li>If you have many communities, run the script multiple times</li>
+              <li>Keep the browser tab focused while the script runs</li>
+              <li>Don't navigate away or refresh the page during execution</li>
+              <li>Check the console for progress updates</li>
+            </ul>
+          </div>
+
+          <div class="step">
+            <h4>Reset Progress (if needed)</h4>
+            <p>If you need to start fresh, clear the session storage:</p>
+            <div class="code-block">
+              <div class="code-header">
+                <span>Reset tracking</span>
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+              </div>
+              <pre><code>sessionStorage.removeItem('xactions_left_ids');</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <footer>
+          <div class="footer-links">
+            <a href="../index.html">Dashboard</a>
+            <a href="index.html">All Tutorials</a>
+            <a href="https://github.com/nirholas/XActions" target="_blank">GitHub</a>
+            <a href="https://x.com/nichxbt" target="_blank">@nichxbt</a>
+          </div>
+          <p class="footer-copy">
+            Made with ❤️ by <a href="https://x.com/nichxbt" style="color: var(--accent);">@nichxbt</a> · 
+            100% Free & Open Source
+          </p>
+        </footer>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    function copyCode(btn) {
+      const code = btn.closest('.code-block').querySelector('code').textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        btn.textContent = '✅ Copied!';
+        setTimeout(() => btn.textContent = '📋 Copy', 2000);
+      });
+    }
+  </script>
+</body>
+</html>

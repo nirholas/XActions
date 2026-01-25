@@ -3,532 +3,459 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Documentation - XActions | AI Automation & MCP Server Guide</title>
-  <meta name="description" content="XActions documentation - Learn AI-powered Twitter automation, LLM integration with GPT & Claude, MCP server setup, and smart automation. Complete guides for AI agents, machine learning automation, and intelligent Twitter tools.">
-  <meta name="keywords" content="xactions docs, AI Twitter automation guide, LLM Twitter bot tutorial, MCP server Twitter setup, GPT Twitter automation, Claude Twitter tools, AI agents for X documentation, machine learning Twitter guide, AI-powered unfollow tutorial, smart Twitter automation, twitter automation guide, how to mass unfollow, twitter bot tutorial">
-  <meta name="author" content="nich (@nichxbt)">
-  <meta name="robots" content="index, follow">
-  
-  <!-- Open Graph -->
-  <meta property="og:type" content="article">
-  <meta property="og:title" content="XActions Documentation - AI Automation & MCP Server Guide">
-  <meta property="og:description" content="Complete guide to AI-powered X/Twitter automation. LLM integration, MCP server setup, GPT & Claude compatible.">
-  <meta property="og:url" content="https://xactions.app/docs">
-  <meta property="og:site_name" content="XActions">
-  <meta property="og:image" content="https://xactions.app/og-docs.png">
-  
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:creator" content="@nichxbt">
-  <meta name="twitter:title" content="XActions Documentation - AI & MCP Guide">
-  <meta name="twitter:description" content="Step-by-step guides for AI-powered automation, LLM integration & MCP server setup.">
-  
-  <link rel="canonical" href="https://xactions.app/docs">
+  <title>Documentation - XActions | Free X/Twitter Automation</title>
+  <meta name="description" content="XActions documentation - Quick start guide, CLI reference, API docs. Learn how to use free X/Twitter automation tools.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
-  
-  <!-- Structured Data -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "TechArticle",
-    "headline": "XActions Documentation - AI Automation & MCP Server Guide",
-    "description": "Complete guide to AI-powered X/Twitter automation with LLM integration, MCP server setup, and compatibility with GPT, Claude, and AI agents",
-    "url": "https://xactions.app/docs",
-    "author": {
-      "@type": "Person",
-      "name": "nich",
-      "url": "https://x.com/nichxbt"
-    },
-    "publisher": {
-      "@type": "Organization",
-      "name": "XActions"
-    },
-    "datePublished": "2026-01-01",
-    "dateModified": "2026-01-01"
-  }
-  </script>
   <style>
-    :root {
-      --bg-primary: #000000;
-      --bg-secondary: #16181c;
-      --bg-tertiary: #202327;
-      --bg-hover: #1d1f23;
-      --accent: #1d9bf0;
-      --accent-hover: #1a8cd8;
-      --accent-light: rgba(29, 155, 240, 0.1);
-      --text-primary: #e7e9ea;
-      --text-secondary: #71767b;
-      --border: #2f3336;
-      --success: #00ba7c;
-      --warning: #ffad1f;
-      --error: #f4212e;
-    }
-
+    :root { --bg-primary: #000; --bg-secondary: #16181c; --bg-tertiary: #202327; --accent: #1d9bf0; --accent-hover: #1a8cd8; --accent-light: rgba(29,155,240,0.1); --text-primary: #e7e9ea; --text-secondary: #71767b; --border: #2f3336; --success: #00ba7c; --warning: #ffad1f; }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background: var(--bg-primary);
-      color: var(--text-primary);
-      line-height: 1.5;
-      min-height: 100vh;
-    }
-
-    ::-webkit-scrollbar { width: 16px; }
-    ::-webkit-scrollbar-track { background: var(--bg-primary); }
-    ::-webkit-scrollbar-thumb { background: var(--bg-tertiary); border-radius: 8px; border: 4px solid var(--bg-primary); }
-
-    .layout {
-      display: flex;
-      max-width: 1300px;
-      margin: 0 auto;
-      min-height: 100vh;
-    }
-
-    /* Left Sidebar */
-    .sidebar-left {
-      width: 275px;
-      padding: 0 12px;
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      border-right: 1px solid var(--border);
-    }
-
-    .logo { padding: 12px; }
-    .logo a {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      text-decoration: none;
-      color: var(--text-primary);
-      font-size: 1.5rem;
-      font-weight: 800;
-      padding: 12px;
-      border-radius: 9999px;
-      transition: background 0.2s;
-    }
-    .logo a:hover { background: var(--accent-light); }
-
-    nav { flex: 1; }
-
-    .nav-item {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      padding: 12px;
-      border-radius: 9999px;
-      font-size: 1.25rem;
-      color: var(--text-primary);
-      text-decoration: none;
-      transition: background 0.2s;
-      margin-bottom: 4px;
-    }
-    .nav-item:hover { background: var(--bg-tertiary); }
-    .nav-item.active { font-weight: 700; }
-    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
-
-    .action-btn {
-      width: 90%;
-      padding: 16px;
-      background: var(--accent);
-      color: white;
-      border: none;
-      border-radius: 9999px;
-      font-size: 1.0625rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: background 0.2s;
-      margin: 16px 0;
-      text-decoration: none;
-      display: block;
-      text-align: center;
-    }
-    .action-btn:hover { background: var(--accent-hover); }
-
-    /* Main Content */
-    .main-content {
-      flex: 1;
-      max-width: 600px;
-      border-right: 1px solid var(--border);
-    }
-
-    .main-header {
-      position: sticky;
-      top: 0;
-      background: rgba(0, 0, 0, 0.65);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-      padding: 16px;
-      z-index: 100;
-    }
-    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
-
-    .section {
-      padding: 24px 16px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .section-title {
-      font-size: 1.25rem;
-      font-weight: 800;
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    h3 {
-      font-size: 1rem;
-      font-weight: 700;
-      margin: 20px 0 8px;
-      color: var(--text-primary);
-    }
-
-    p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 12px; }
-    p a { color: var(--accent); }
-
-    ul, ol { margin-left: 20px; margin-bottom: 12px; }
-    li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
-
-    code {
-      background: var(--bg-tertiary);
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-family: 'SF Mono', Monaco, monospace;
-      font-size: 0.8125rem;
-      color: var(--accent);
-    }
-
-    pre {
-      background: var(--bg-secondary);
-      padding: 16px;
-      border-radius: 12px;
-      overflow-x: auto;
-      margin: 12px 0;
-      border: 1px solid var(--border);
-    }
-    pre code { background: none; padding: 0; color: var(--text-primary); }
-
-    .info-box {
-      background: var(--accent-light);
-      border-left: 4px solid var(--accent);
-      padding: 12px 16px;
-      border-radius: 0 8px 8px 0;
-      margin: 16px 0;
-    }
-    .info-box p { color: var(--text-primary); margin: 0; }
-
-    .warning-box {
-      background: rgba(255, 173, 31, 0.1);
-      border-left: 4px solid var(--warning);
-      padding: 12px 16px;
-      border-radius: 0 8px 8px 0;
-      margin: 16px 0;
-    }
-    .warning-box p { color: var(--text-primary); margin: 0; }
-
-    .btn {
-      display: inline-block;
-      padding: 12px 24px;
-      background: var(--accent);
-      color: white;
-      text-decoration: none;
-      border-radius: 9999px;
-      font-weight: 700;
-      font-size: 0.9375rem;
-      transition: background 0.2s;
-      margin-top: 12px;
-    }
-    .btn:hover { background: var(--accent-hover); }
-
-    /* Right Sidebar */
-    .sidebar-right {
-      width: 350px;
-      padding: 12px 24px;
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      overflow-y: auto;
-    }
-
-    .toc-card {
-      background: var(--bg-secondary);
-      border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 16px;
-    }
-    .toc-card h3 { margin: 0 0 12px; font-size: 1.25rem; font-weight: 800; }
-    .toc-card a {
-      display: block;
-      padding: 8px 0;
-      color: var(--text-secondary);
-      text-decoration: none;
-      font-size: 0.9375rem;
-      border-bottom: 1px solid var(--border);
-      transition: color 0.2s;
-    }
-    .toc-card a:last-child { border: none; }
-    .toc-card a:hover { color: var(--accent); }
-
-    .disclaimer {
-      padding: 16px;
-      color: var(--text-secondary);
-      font-size: 0.8125rem;
-      line-height: 1.5;
-    }
-    .disclaimer a { color: var(--text-secondary); }
-    .disclaimer a:hover { text-decoration: underline; }
-
-    @media (max-width: 1280px) { .sidebar-right { width: 290px; } }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.5; }
+    ::-webkit-scrollbar { width: 16px; } ::-webkit-scrollbar-track { background: var(--bg-primary); } ::-webkit-scrollbar-thumb { background: var(--bg-tertiary); border-radius: 8px; border: 4px solid var(--bg-primary); }
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar-left { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; } .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background 0.2s; } .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; } .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background 0.2s; margin-bottom: 4px; } .nav-item:hover { background: var(--bg-tertiary); } .nav-item.active { font-weight: 700; } .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: white; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background 0.2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; } .action-btn:hover { background: var(--accent-hover); }
+    .main-content { flex: 1; max-width: 600px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,0.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px; z-index: 100; } .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .section { padding: 24px 16px; border-bottom: 1px solid var(--border); } .section-title { font-size: 1.25rem; font-weight: 800; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    h3 { font-size: 1rem; font-weight: 700; margin: 16px 0 8px; color: var(--text-primary); } p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 12px; } p a, .section a { color: var(--accent); }
+    ul, ol { color: var(--text-secondary); margin: 12px 0 12px 24px; } li { margin-bottom: 8px; }
+    .code-block { position: relative; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin: 12px 0; overflow-x: auto; } .code-block pre { margin: 0; font-family: 'Monaco', 'Menlo', monospace; font-size: 13px; line-height: 1.5; white-space: pre; } .code-block code { color: var(--text-primary); }
+    .copy-btn { position: absolute; top: 8px; right: 8px; background: var(--accent); color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; } .copy-btn:hover { background: var(--accent-hover); } .copy-btn.copied { background: var(--success); }
+    .highlight-box { background: var(--accent-light); border: 1px solid var(--accent); border-radius: 12px; padding: 16px; margin: 16px 0; } .highlight-box p { color: var(--text-primary); margin: 0; }
+    .warning-box { background: rgba(255,173,31,0.1); border: 1px solid var(--warning); border-radius: 12px; padding: 16px; margin: 16px 0; } .warning-box p { color: var(--text-primary); margin: 0; }
+    .step-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 12px; } .step-card h4 { font-size: 0.9375rem; margin: 0 0 8px; color: var(--text-primary); display: flex; align-items: center; gap: 8px; } .step-number { background: var(--accent); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; } .step-card p { margin: 0; }
+    .command-ref { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 12px; overflow: hidden; } .command-header { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; } .command-header code { font-family: 'Monaco', 'Menlo', monospace; color: var(--accent); font-size: 14px; font-weight: 600; } .command-body { padding: 16px; } .command-body p { margin: 0 0 8px; } .command-body ul { margin: 8px 0 0 20px; }
+    .sidebar-right { width: 350px; padding: 12px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .toc { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; } .toc h3 { margin: 0 0 12px; font-size: 0.875rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; } .toc a { display: block; color: var(--text-primary); text-decoration: none; padding: 8px 0; font-size: 0.9375rem; border-bottom: 1px solid var(--border); } .toc a:last-child { border-bottom: none; } .toc a:hover { color: var(--accent); }
+    .promo-card { background: var(--bg-secondary); border-radius: 16px; margin-bottom: 16px; overflow: hidden; } .promo-header { padding: 16px; font-size: 1.25rem; font-weight: 800; } .promo-item { padding: 16px; border-top: 1px solid var(--border); } .promo-item h4 { font-size: 0.9375rem; margin-bottom: 4px; } .promo-item p { color: var(--text-secondary); font-size: 0.8125rem; margin: 0; } .promo-link { display: block; padding: 16px; color: var(--accent); font-size: 0.9375rem; text-decoration: none; } .promo-link:hover { background: var(--bg-tertiary); }
+    .disclaimer { padding: 16px; color: var(--text-secondary); font-size: 0.8125rem; }
     @media (max-width: 1024px) { .sidebar-right { display: none; } .main-content { max-width: 100%; } }
-    @media (max-width: 768px) {
-      .sidebar-left { width: 68px; padding: 0 4px; }
-      .logo a span:last-child, .nav-item span:last-child { display: none; }
-      .nav-item { justify-content: center; padding: 12px; }
-      .action-btn { width: 50px; height: 50px; padding: 0; font-size: 0; }
-      .action-btn::before { content: '→'; font-size: 1.5rem; }
-    }
-
-    .site-footer {
-      border-top: 1px solid var(--border);
-      padding: 48px 24px;
-      background: var(--bg-primary);
-    }
-    .footer-content {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr;
-      gap: 32px;
-    }
-    .footer-brand h3 { font-size: 1.25rem; margin-bottom: 8px; }
-    .footer-brand p { color: var(--text-secondary); font-size: 0.875rem; line-height: 1.5; }
-    .footer-links h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 12px; color: var(--text-primary); }
-    .footer-links a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 4px 0; transition: color 0.2s; }
-    .footer-links a:hover { color: var(--accent); }
-    .footer-bottom { max-width: 1200px; margin: 24px auto 0; padding-top: 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
-    .footer-bottom p { color: var(--text-secondary); font-size: 0.8125rem; }
-    .footer-bottom a { color: var(--text-secondary); text-decoration: none; }
-    .footer-bottom a:hover { color: var(--accent); }
+    @media (max-width: 768px) { .sidebar-left { width: 68px; } .logo a span:last-child, .nav-item span:last-child { display: none; } .nav-item { justify-content: center; } .action-btn { width: 50px; height: 50px; padding: 0; font-size: 0; } .action-btn::before { content: '→'; font-size: 1.5rem; } }
+    .site-footer { border-top: 1px solid var(--border); padding: 48px 24px; } .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px; } .footer-brand h3 { font-size: 1.25rem; margin-bottom: 8px; } .footer-brand p { color: var(--text-secondary); font-size: 0.875rem; } .footer-links h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 12px; } .footer-links a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 4px 0; } .footer-links a:hover { color: var(--accent); } .footer-bottom { max-width: 1200px; margin: 24px auto 0; padding-top: 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; } .footer-bottom p { color: var(--text-secondary); font-size: 0.8125rem; } .footer-bottom a { color: var(--text-secondary); } .footer-bottom a:hover { color: var(--accent); }
     @media (max-width: 768px) { .footer-content { grid-template-columns: 1fr 1fr; } }
-    @media (max-width: 480px) { .footer-content { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
   <div class="layout">
-    <!-- Left Sidebar -->
     <aside class="sidebar-left">
-      <div class="logo">
-        <a href="/"><span>⚡</span><span>XActions</span></a>
-      </div>
+      <div class="logo"><a href="/"><span>⚡</span><span>XActions</span></a></div>
       <nav>
         <a href="/" class="nav-item"><span class="nav-icon">🏠</span><span>Home</span></a>
         <a href="/dashboard" class="nav-item"><span class="nav-icon">📊</span><span>Dashboard</span></a>
         <a href="/features" class="nav-item"><span class="nav-icon">✨</span><span>Features</span></a>
-        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
         <a href="/docs" class="nav-item active"><span class="nav-icon">📚</span><span>Docs</span></a>
         <a href="https://github.com/nirholas/XActions" target="_blank" class="nav-item"><span class="nav-icon">⭐</span><span>GitHub</span></a>
       </nav>
       <a href="/dashboard" class="action-btn">Open Dashboard</a>
     </aside>
 
-    <!-- Main Content -->
     <main class="main-content">
-      <header class="main-header">
-        <h1>📚 Documentation</h1>
-      </header>
+      <header class="main-header"><h1>📚 XActions Documentation</h1></header>
 
-      <section class="section" id="getting-started">
-        <h2 class="section-title">🚀 Getting Started</h2>
-        <p>XActions offers two powerful ways to automate your X/Twitter account cleanup:</p>
-        
-        <h3>Method 1: Browser Console Scripts (Free Forever)</h3>
-        <ol>
-          <li>Go to your <a href="https://x.com/following">X Following page</a></li>
-          <li>Open Developer Console (<code>Ctrl+Shift+J</code> on Windows/Linux, <code>Cmd+Option+J</code> on Mac)</li>
-          <li>Copy and paste one of our scripts</li>
-          <li>Press Enter and watch it work!</li>
-        </ol>
+      <div style="background: linear-gradient(90deg, #00ba7c, #1d9bf0); padding: 12px 20px; border-radius: 12px; margin: 16px; text-align: center;">
+        <span style="font-weight: 700;">🎉 100% Free & Open Source</span>
+        <span style="margin-left: 12px; opacity: 0.9;">No API fees, no accounts required</span>
+      </div>
 
-        <div class="info-box">
-          <p><strong>✨ Perfect for:</strong> One-time cleanups, complete privacy, zero setup</p>
+      <!-- QUICK START -->
+      <section class="section" id="quick-start">
+        <h2 class="section-title">🚀 Quick Start (60 Seconds)</h2>
+        <p>Get started with XActions in under a minute. Choose your preferred method:</p>
+
+        <div class="step-card">
+          <h4><span class="step-number">1</span> Browser Scripts (Easiest)</h4>
+          <p>No installation needed. Just paste code in your browser console.</p>
+        </div>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre><code>1. Go to x.com and log in
+2. Navigate to the relevant page (e.g., /following)
+3. Press F12 to open DevTools
+4. Click "Console" tab
+5. Paste the script and press Enter</code></pre>
         </div>
 
-        <h3>Method 2: Premium Dashboard</h3>
-        <ol>
-          <li>Create an account on XActions</li>
-          <li>Connect your X account</li>
-          <li>Schedule automated operations</li>
-          <li>Get reports and analytics</li>
-        </ol>
+        <div class="step-card">
+          <h4><span class="step-number">2</span> CLI Tool (Power Users)</h4>
+          <p>Install globally for command-line access to all features.</p>
+        </div>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre><code># Install globally
+npm install -g xactions
 
-        <div class="info-box">
-          <p><strong>🎯 Perfect for:</strong> Scheduled automation, multi-account management, detailed analytics</p>
+# Or use npx (no install)
+npx xactions --help</code></pre>
+        </div>
+
+        <div class="step-card">
+          <h4><span class="step-number">3</span> Node.js Library</h4>
+          <p>Import into your own projects for programmatic access.</p>
+        </div>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre><code>npm install xactions
+
+// In your code:
+const xactions = require('xactions');
+const profile = await xactions.scrapeProfile('elonmusk');</code></pre>
         </div>
       </section>
 
-      <section class="section" id="operations">
-        <h2 class="section-title">🛠️ Available Operations</h2>
-
-        <h3>🧹 Unfollow Non-Followers</h3>
-        <p>Automatically unfollow accounts that don't follow you back. Great for cleaning up your following list.</p>
-
-        <h3>💥 Unfollow Everyone</h3>
-        <p>Start fresh by unfollowing everyone. Useful when you want to rebuild from scratch.</p>
-
-        <h3>🔍 Detect Unfollowers</h3>
-        <p>Find out who recently unfollowed you. Track changes over time.</p>
-
-        <h3>🤖 Advanced Automation (Premium)</h3>
+      <!-- CLI INSTALLATION -->
+      <section class="section" id="cli-installation">
+        <h2 class="section-title">💻 CLI Installation</h2>
+        
+        <h3>Requirements</h3>
         <ul>
-          <li><strong>Auto-Liker:</strong> Automatically like posts from specific users</li>
-          <li><strong>Keyword Follow:</strong> Follow users based on hashtags or keywords</li>
-          <li><strong>Smart Unfollow:</strong> Unfollow users who don't engage after X days</li>
-          <li><strong>Growth Suite:</strong> Combined automation for account growth</li>
+          <li>Node.js 18+ (check with <code>node --version</code>)</li>
+          <li>npm or yarn package manager</li>
         </ul>
+
+        <h3>Install Globally</h3>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre><code># npm
+npm install -g xactions
+
+# yarn
+yarn global add xactions
+
+# Verify installation
+xactions --version</code></pre>
+        </div>
+
+        <h3>Or Use Without Installing</h3>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre><code># Run any command with npx
+npx xactions scrape profile elonmusk
+npx xactions mcp</code></pre>
+        </div>
+
+        <div class="warning-box">
+          <p>⚠️ <strong>Note:</strong> Some features require Puppeteer for browser automation. It will be installed automatically but may need additional dependencies on Linux.</p>
+        </div>
       </section>
 
-      <section class="section" id="credits">
-        <h2 class="section-title">💰 Credits & Pricing</h2>
-        
-        <h3>Free Tier</h3>
-        <ul>
-          <li>50 free credits</li>
-          <li>All console scripts (unlimited use)</li>
-          <li>Basic operations via dashboard</li>
-          <li>3 operations per day</li>
-        </ul>
+      <!-- CLI REFERENCE -->
+      <section class="section" id="cli-reference">
+        <h2 class="section-title">📖 CLI Reference</h2>
 
-        <h3>Pro Tier - $29.99/month</h3>
-        <ul>
-          <li>Unlimited credits</li>
-          <li>50 operations per day</li>
-          <li>Scheduled automation</li>
-          <li>Advanced filtering</li>
-          <li>Priority support</li>
-        </ul>
+        <div class="command-ref">
+          <div class="command-header"><code>xactions scrape profile &lt;username&gt;</code></div>
+          <div class="command-body">
+            <p>Scrape a user's profile information.</p>
+            <ul>
+              <li><code>--output, -o</code> - Output format (json, csv, table)</li>
+              <li><code>--file, -f</code> - Save to file</li>
+            </ul>
+          </div>
+        </div>
 
-        <h3>Credit Costs</h3>
-        <ul>
-          <li>Unfollow Non-Followers: <strong>10 credits</strong></li>
-          <li>Unfollow Everyone: <strong>20 credits</strong></li>
-          <li>Detect Unfollowers: <strong>5 credits</strong></li>
-          <li>Advanced Automation: <strong>15-20 credits</strong></li>
-        </ul>
+        <div class="command-ref">
+          <div class="command-header"><code>xactions scrape followers &lt;username&gt;</code></div>
+          <div class="command-body">
+            <p>Scrape a user's followers list.</p>
+            <ul>
+              <li><code>--limit, -l</code> - Maximum followers to scrape (default: 100)</li>
+              <li><code>--output, -o</code> - Output format</li>
+            </ul>
+          </div>
+        </div>
 
-        <a href="/pricing" class="btn">View All Plans →</a>
+        <div class="command-ref">
+          <div class="command-header"><code>xactions scrape following &lt;username&gt;</code></div>
+          <div class="command-body">
+            <p>Scrape who a user follows.</p>
+            <ul>
+              <li><code>--limit, -l</code> - Maximum users to scrape</li>
+              <li><code>--output, -o</code> - Output format</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="command-ref">
+          <div class="command-header"><code>xactions scrape tweets &lt;username&gt;</code></div>
+          <div class="command-body">
+            <p>Scrape a user's recent tweets.</p>
+            <ul>
+              <li><code>--limit, -l</code> - Maximum tweets (default: 50)</li>
+              <li><code>--include-replies</code> - Include replies</li>
+              <li><code>--include-retweets</code> - Include retweets</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="command-ref">
+          <div class="command-header"><code>xactions mcp</code></div>
+          <div class="command-body">
+            <p>Start the MCP (Model Context Protocol) server for AI agent integration.</p>
+            <ul>
+              <li>Works with Claude Desktop, Cursor, and other MCP clients</li>
+              <li>Exposes all XActions features as AI tools</li>
+            </ul>
+          </div>
+        </div>
       </section>
 
-      <section class="section" id="auth">
-        <h2 class="section-title">🔐 Authentication Options</h2>
+      <!-- NODE.JS API -->
+      <section class="section" id="nodejs-api">
+        <h2 class="section-title">📦 Node.js API</h2>
         
-        <h3>Option 1: X Account OAuth (Recommended)</h3>
-        <p>Connect your X account through official OAuth. Most secure and stable method.</p>
+        <h3>Installation</h3>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre><code>npm install xactions</code></pre>
+        </div>
+
+        <h3>Basic Usage</h3>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre><code>const xactions = require('xactions');
+
+// Scrape a profile
+const profile = await xactions.scrapeProfile('elonmusk');
+console.log(profile);
+// { username, name, bio, followers, following, tweets, ... }
+
+// Scrape followers
+const followers = await xactions.scrapeFollowers('elonmusk', { limit: 100 });
+console.log(`Found ${followers.length} followers`);
+
+// Scrape following
+const following = await xactions.scrapeFollowing('elonmusk', { limit: 100 });
+
+// Scrape tweets
+const tweets = await xactions.scrapeTweets('elonmusk', { limit: 50 });
+
+// Search tweets
+const results = await xactions.searchTweets('web3 crypto', { limit: 100 });</code></pre>
+        </div>
+
+        <h3>Advanced Options</h3>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre><code>// Configure scraper options
+const xactions = require('xactions');
+
+// With authentication (for protected actions)
+const client = xactions.createClient({
+  authToken: process.env.X_AUTH_TOKEN,
+  headless: true,  // Run browser in background
+  timeout: 30000,  // 30 second timeout
+});
+
+// Use authenticated client
+const myFollowers = await client.scrapeFollowers('myusername');
+await client.close();</code></pre>
+        </div>
+      </section>
+
+      <!-- MCP SERVER -->
+      <section class="section" id="mcp-server">
+        <h2 class="section-title">🤖 MCP Server Setup</h2>
+        <p>Connect XActions to Claude Desktop or any MCP-compatible AI agent.</p>
+
+        <h3>Quick Setup</h3>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre><code># Start MCP server
+npx xactions mcp</code></pre>
+        </div>
+
+        <h3>Claude Desktop Configuration</h3>
+        <p>Add to your <code>~/.claude/config.json</code>:</p>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre><code>{
+  "mcpServers": {
+    "xactions": {
+      "command": "npx",
+      "args": ["xactions", "mcp"],
+      "env": {
+        "X_AUTH_TOKEN": "your_auth_token_here"
+      }
+    }
+  }
+}</code></pre>
+        </div>
+
+        <h3>Available MCP Tools</h3>
         <ul>
-          <li>✅ Official X API integration</li>
-          <li>✅ Most stable and reliable</li>
-          <li>✅ Follows X Terms of Service</li>
+          <li><strong>scrape_profile</strong> - Get user profile information</li>
+          <li><strong>scrape_followers</strong> - Get user's followers</li>
+          <li><strong>scrape_following</strong> - Get who user follows</li>
+          <li><strong>scrape_tweets</strong> - Get user's tweets</li>
+          <li><strong>search_tweets</strong> - Search tweets by keyword</li>
+          <li><strong>unfollow_everyone</strong> - Mass unfollow all</li>
+          <li><strong>unfollow_non_followers</strong> - Unfollow non-followers</li>
+          <li><strong>detect_unfollowers</strong> - Find who unfollowed</li>
+          <li><strong>auto_like</strong> - Like posts by keyword</li>
+          <li><strong>download_video</strong> - Download tweet videos</li>
         </ul>
 
-        <h3>Option 2: Session Cookie (Alternative)</h3>
-        <p>Use your X session cookie for operations. No OAuth required.</p>
+        <div class="highlight-box">
+          <p>💡 <strong>Tip:</strong> Once configured, just ask Claude "scrape Elon Musk's profile" and it will use XActions automatically!</p>
+        </div>
+      </section>
+
+      <!-- BROWSER SCRIPTS -->
+      <section class="section" id="browser-scripts">
+        <h2 class="section-title">🌐 Browser Scripts Guide</h2>
+        <p>Browser scripts are the easiest way to use XActions. No installation required!</p>
+
+        <h3>How to Use</h3>
+        <ol>
+          <li>Go to <a href="https://x.com" target="_blank">x.com</a> and log in</li>
+          <li>Navigate to the relevant page</li>
+          <li>Press <strong>F12</strong> (or Cmd+Option+J on Mac) to open DevTools</li>
+          <li>Click the <strong>Console</strong> tab</li>
+          <li>Paste the script and press <strong>Enter</strong></li>
+        </ol>
+
+        <h3>Available Scripts</h3>
+        <p>See the <a href="/features">Features page</a> for all scripts with full code.</p>
         <ul>
-          <li>✅ No X API costs</li>
-          <li>✅ Works immediately</li>
-          <li>⚠️ Session expires after ~30 days</li>
+          <li><a href="/features#unfollow-everyone">Unfollow Everyone</a> - Mass unfollow all accounts</li>
+          <li><a href="/features#unfollow-nonfollowers">Unfollow Non-Followers</a> - Remove non-followers</li>
+          <li><a href="/features#smart-unfollow">Smart Unfollow</a> - Unfollow with logging</li>
+          <li><a href="/features#detect-unfollowers">Detect Unfollowers</a> - Find who unfollowed you</li>
+          <li><a href="/features#auto-liker">Auto Liker</a> - Like posts by keyword</li>
+          <li><a href="/features#follow-engagers">Follow Engagers</a> - Follow users from likes</li>
+          <li><a href="/features#leave-communities">Leave Communities</a> - Leave all communities</li>
+          <li><a href="/features#video-downloader">Video Downloader</a> - Download tweet videos</li>
         </ul>
 
         <div class="warning-box">
-          <p><strong>⚠️ Important:</strong> Session cookie method may be against X's Terms of Service. Use at your own risk.</p>
+          <p>⚠️ <strong>Safety Tips:</strong></p>
+          <ul style="margin-top: 8px;">
+            <li>Don't run scripts from untrusted sources</li>
+            <li>Start with small batches to test</li>
+            <li>Aggressive automation may trigger rate limits</li>
+            <li>Scripts only work while the browser tab is open</li>
+          </ul>
         </div>
       </section>
 
-      <section class="section" id="faq">
-        <h2 class="section-title">❓ FAQ</h2>
-        
-        <h3>Is this safe?</h3>
-        <p>The console scripts are completely safe. They run in your browser using your existing X session. We never see your password.</p>
+      <!-- AUTHENTICATION -->
+      <section class="section" id="authentication">
+        <h2 class="section-title">🔐 Authentication</h2>
+        <p>Some features require authentication. Here's how to get your auth token:</p>
 
-        <h3>Will I get banned?</h3>
-        <p>The scripts follow rate limits and add delays. However, aggressive unfollowing can trigger restrictions. Use responsibly.</p>
+        <h3>Getting Your Auth Token</h3>
+        <ol>
+          <li>Go to <a href="https://x.com" target="_blank">x.com</a> and log in</li>
+          <li>Open DevTools (F12)</li>
+          <li>Go to <strong>Application</strong> → <strong>Cookies</strong> → <strong>x.com</strong></li>
+          <li>Find the <code>auth_token</code> cookie</li>
+          <li>Copy the value</li>
+        </ol>
 
-        <h3>Can I cancel anytime?</h3>
-        <p>Yes! Cancel your subscription anytime through the billing portal. No questions asked.</p>
+        <div class="warning-box">
+          <p>⚠️ <strong>Security Warning:</strong> Never share your auth token! It provides full access to your account. Treat it like a password.</p>
+        </div>
 
-        <h3>Do you store my X password?</h3>
-        <p>Never. We only store OAuth tokens or session cookies. We never ask for your password.</p>
+        <h3>Using Auth Token</h3>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre><code># Set as environment variable
+export X_AUTH_TOKEN="your_auth_token_here"
+
+# Or pass to CLI
+xactions scrape followers myuser --auth-token="your_token"
+
+# Or in Node.js
+const client = xactions.createClient({
+  authToken: process.env.X_AUTH_TOKEN
+});</code></pre>
+        </div>
       </section>
 
+      <!-- FAQ -->
+      <section class="section" id="faq">
+        <h2 class="section-title">❓ FAQ</h2>
+
+        <h3>Is XActions free?</h3>
+        <p>Yes! XActions is 100% free and open source under the MIT license. No API fees, no subscriptions.</p>
+
+        <h3>Do I need to pay for Twitter/X API?</h3>
+        <p>No! XActions uses browser automation, not the official API. This means you avoid the $100+/month API fees.</p>
+
+        <h3>Is it safe to use?</h3>
+        <p>Browser scripts run entirely in your browser. The CLI uses Puppeteer to automate a real browser. Nothing is sent to third-party servers.</p>
+
+        <h3>Can I get banned?</h3>
+        <p>Any automation carries some risk. XActions includes rate limiting and human-like delays, but aggressive use may trigger spam detection. Use responsibly!</p>
+
+        <h3>Why did my script stop?</h3>
+        <p>Browser scripts stop when you navigate away. For long-running tasks, keep the tab open or use the CLI.</p>
+
+        <h3>How do I report bugs?</h3>
+        <p>Open an issue on <a href="https://github.com/nirholas/XActions/issues" target="_blank">GitHub</a>!</p>
+      </section>
+
+      <!-- SUPPORT -->
       <section class="section" id="support">
-        <h2 class="section-title">🆘 Support</h2>
-        <p>Need help? We're here for you!</p>
+        <h2 class="section-title">💬 Support</h2>
         <ul>
-          <li>📧 Email: <a href="mailto:support@xactions.app">support@xactions.app</a></li>
-          <li>🐛 Bug Reports: <a href="https://github.com/nirholas/XActions/issues">GitHub Issues</a></li>
-          <li>💬 Community: <a href="https://x.com/nichxbt">@nichxbt on X</a></li>
+          <li><strong>GitHub Issues:</strong> <a href="https://github.com/nirholas/XActions/issues" target="_blank">Report bugs & request features</a></li>
+          <li><strong>GitHub Discussions:</strong> <a href="https://github.com/nirholas/XActions/discussions" target="_blank">Ask questions & share ideas</a></li>
+          <li><strong>Twitter:</strong> <a href="https://x.com/nichxbt" target="_blank">@nichxbt</a></li>
         </ul>
+
+        <div class="highlight-box">
+          <p>⭐ If XActions helped you, please <a href="https://github.com/nirholas/XActions" target="_blank" style="color: white; text-decoration: underline;">star us on GitHub</a>!</p>
+        </div>
       </section>
     </main>
 
-    <!-- Right Sidebar -->
     <aside class="sidebar-right">
-      <div class="toc-card">
-        <h3>📑 On This Page</h3>
-        <a href="#getting-started">Getting Started</a>
-        <a href="#operations">Available Operations</a>
-        <a href="#credits">Credits & Pricing</a>
-        <a href="#auth">Authentication</a>
-        <a href="#faq">FAQ</a>
-        <a href="#support">Support</a>
+      <div class="toc">
+        <h3>On This Page</h3>
+        <a href="#quick-start">🚀 Quick Start</a>
+        <a href="#cli-installation">💻 CLI Installation</a>
+        <a href="#cli-reference">📖 CLI Reference</a>
+        <a href="#nodejs-api">📦 Node.js API</a>
+        <a href="#mcp-server">🤖 MCP Server</a>
+        <a href="#browser-scripts">🌐 Browser Scripts</a>
+        <a href="#authentication">🔐 Authentication</a>
+        <a href="#faq">❓ FAQ</a>
+        <a href="#support">💬 Support</a>
       </div>
 
-      <div class="toc-card">
-        <h3>🔗 Quick Links</h3>
-        <a href="https://github.com/nirholas/XActions">GitHub Repository</a>
-        <a href="https://github.com/nirholas/XActions/tree/main/docs">More Documentation</a>
-        <a href="/dashboard">Open Dashboard</a>
+      <div class="promo-card">
+        <h3 class="promo-header">🎉 100% Free</h3>
+        <div class="promo-item"><h4>Open Source</h4><p>MIT License - use however you want</p></div>
+        <a href="https://github.com/nirholas/XActions" target="_blank" class="promo-link">Star on GitHub ⭐</a>
       </div>
 
-      <div class="disclaimer">
-        <p>XActions is an independent project for educational purposes. Not affiliated with X Corp. Use responsibly.</p>
-        <p style="margin-top: 8px;">© 2026 XActions</p>
-      </div>
+      <div class="disclaimer"><p>XActions is an independent project for educational purposes. Not affiliated with X Corp.</p><p style="margin-top: 8px;">© 2026 XActions</p></div>
     </aside>
   </div>
 
   <footer class="site-footer">
     <div class="footer-content">
-      <div class="footer-brand">
-        <h3>⚡ XActions</h3>
-        <p>Free, open-source X/Twitter automation toolkit. Mass unfollow, detect unfollowers, auto-engage, and grow your audience without expensive API fees.</p>
-      </div>
-      <div class="footer-links">
-        <h4>Product</h4>
-        <a href="/features">Features</a>
-        <a href="/pricing">Pricing</a>
-        <a href="/docs">Documentation</a>
-        <a href="/dashboard">Dashboard</a>
-      </div>
-      <div class="footer-links">
-        <h4>Company</h4>
-        <a href="/about">About</a>
-        <a href="https://github.com/nirholas/XActions" target="_blank">GitHub</a>
-        <a href="https://x.com/nichxbt" target="_blank">Twitter</a>
-      </div>
-      <div class="footer-links">
-        <h4>Legal</h4>
-        <a href="/terms">Terms of Service</a>
-        <a href="/privacy">Privacy Policy</a>
-      </div>
+      <div class="footer-brand"><h3>⚡ XActions</h3><p>Free, open-source X/Twitter automation toolkit. Mass unfollow, detect unfollowers, auto-engage, and grow your audience without expensive API fees.</p></div>
+      <div class="footer-links"><h4>Product</h4><a href="/features">Features</a><a href="/docs">Documentation</a><a href="/dashboard">Dashboard</a><a href="https://github.com/nirholas/XActions" target="_blank">GitHub</a></div>
+      <div class="footer-links"><h4>Company</h4><a href="/about">About</a><a href="https://github.com/nirholas/XActions" target="_blank">GitHub</a><a href="https://x.com/nichxbt" target="_blank">Twitter</a></div>
+      <div class="footer-links"><h4>Legal</h4><a href="/terms">Terms of Service</a><a href="/privacy">Privacy Policy</a></div>
     </div>
-    <div class="footer-bottom">
-      <p>© 2026 XActions. Not affiliated with X Corp.</p>
-      <p>Made with ❤️ by <a href="https://x.com/nichxbt" target="_blank">@nichxbt</a></p>
-    </div>
+    <div class="footer-bottom"><p>© 2026 XActions. Not affiliated with X Corp.</p><p>Made with ❤️ by <a href="https://x.com/nichxbt" target="_blank">@nichxbt</a></p></div>
   </footer>
+
+  <script>
+    function copyCode(btn) {
+      const code = btn.parentElement.querySelector('code, pre').textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+      });
+    }
+  </script>
 </body>
 </html>

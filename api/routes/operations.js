@@ -1,9 +1,11 @@
 import express from 'express';
 import { PrismaClient } from '@prisma/client';
-import { authMiddleware, checkCredits } from '../middleware/auth.js';
+import { authMiddleware } from '../middleware/auth.js';
 import { getTwitterClient } from './twitter.js';
 import { queueJob } from '../services/jobQueue.js';
-import { CREDIT_COSTS } from '../config/subscription-tiers.js';
+
+// Payment routes archived - XActions is now 100% free and open-source
+// All credit checks have been removed - unlimited operations for all users
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -12,7 +14,7 @@ const prisma = new PrismaClient();
 router.use(authMiddleware);
 
 // Unfollow non-followers
-router.post('/unfollow-non-followers', checkCredits(CREDIT_COSTS.unfollowNonFollowers), async (req, res) => {
+router.post('/unfollow-non-followers', async (req, res) => {
   try {
     if (!req.user.twitterAccessToken && !req.user.sessionCookie) {
       return res.status(400).json({ error: 'Twitter account not connected - use OAuth or Session Cookie' });
@@ -26,8 +28,7 @@ router.post('/unfollow-non-followers', checkCredits(CREDIT_COSTS.unfollowNonFoll
         userId: req.user.id,
         type: 'unfollowNonFollowers',
         status: 'pending',
-        config: JSON.stringify({ maxUnfollows, dryRun }),
-        creditsUsed: req.creditsToDeduct || 0
+        config: JSON.stringify({ maxUnfollows, dryRun })
       }
     });
 
@@ -45,14 +46,6 @@ router.post('/unfollow-non-followers', checkCredits(CREDIT_COSTS.unfollowNonFoll
       }
     });
 
-    // Deduct credits for free users
-    if (req.creditsToDeduct) {
-      await prisma.user.update({
-        where: { id: req.user.id },
-        data: { credits: { decrement: req.creditsToDeduct } }
-      });
-    }
-
     res.json({
       operationId: operation.id,
       status: 'queued',
@@ -65,7 +58,7 @@ router.post('/unfollow-non-followers', checkCredits(CREDIT_COSTS.unfollowNonFoll
 });
 
 // Unfollow everyone
-router.post('/unfollow-everyone', checkCredits(CREDIT_COSTS.unfollowEveryone), async (req, res) => {
+router.post('/unfollow-everyone', async (req, res) => {
   try {
     if (!req.user.twitterAccessToken && !req.user.sessionCookie) {
       return res.status(400).json({ error: 'Twitter account not connected - use OAuth or Session Cookie' });
@@ -78,8 +71,7 @@ router.post('/unfollow-everyone', checkCredits(CREDIT_COSTS.unfollowEveryone), a
         userId: req.user.id,
         type: 'unfollowEveryone',
         status: 'pending',
-        config: JSON.stringify({ maxUnfollows, dryRun }),
-        creditsUsed: req.creditsToDeduct || 0
+        config: JSON.stringify({ maxUnfollows, dryRun })
       }
     });
 
@@ -96,13 +88,6 @@ router.post('/unfollow-everyone', checkCredits(CREDIT_COSTS.unfollowEveryone), a
       }
     });
 
-    if (req.creditsToDeduct) {
-      await prisma.user.update({
-        where: { id: req.user.id },
-        data: { credits: { decrement: req.creditsToDeduct } }
-      });
-    }
-
     res.json({
       operationId: operation.id,
       status: 'queued',
@@ -115,7 +100,7 @@ router.post('/unfollow-everyone', checkCredits(CREDIT_COSTS.unfollowEveryone), a
 });
 
 // Detect unfollowers
-router.post('/detect-unfollowers', checkCredits(CREDIT_COSTS.detectUnfollowers), async (req, res) => {
+router.post('/detect-unfollowers', async (req, res) => {
   try {
     if (!req.user.twitterAccessToken && !req.user.sessionCookie) {
       return res.status(400).json({ error: 'Twitter account not connected - use OAuth or Session Cookie' });
@@ -126,8 +111,7 @@ router.post('/detect-unfollowers', checkCredits(CREDIT_COSTS.detectUnfollowers),
         userId: req.user.id,
         type: 'detectUnfollowers',
         status: 'pending',
-        config: JSON.stringify({}),
-        creditsUsed: req.creditsToDeduct || 0
+        config: JSON.stringify({})
       }
     });
 
@@ -141,13 +125,6 @@ router.post('/detect-unfollowers', checkCredits(CREDIT_COSTS.detectUnfollowers),
         sessionCookie: req.user.sessionCookie
       }
     });
-
-    if (req.creditsToDeduct) {
-      await prisma.user.update({
-        where: { id: req.user.id },
-        data: { credits: { decrement: req.creditsToDeduct } }
-      });
-    }
 
     res.json({
       operationId: operation.id,
@@ -204,14 +181,6 @@ router.post('/cancel/:operationId', async (req, res) => {
       where: { id: operationId },
       data: { status: 'cancelled' }
     });
-
-    // Refund credits
-    if (operation.creditsUsed > 0) {
-      await prisma.user.update({
-        where: { id: req.user.id },
-        data: { credits: { increment: operation.creditsUsed } }
-      });
-    }
 
     res.json({ message: 'Operation cancelled successfully' });
   } catch (error) {

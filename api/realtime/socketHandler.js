@@ -1,7 +1,9 @@
 import { Server } from 'socket.io';
 import jwt from 'jsonwebtoken';
 import { PrismaClient } from '@prisma/client';
-import { CREDIT_COSTS } from '../config/subscription-tiers.js';
+
+// Payment routes archived - XActions is now 100% free and open-source
+// All credit checks have been removed - unlimited operations for all users
 
 const prisma = new PrismaClient();
 
@@ -140,22 +142,14 @@ function handleAgentConnection(io, socket) {
     if (session) {
       session.status = 'completed';
       
-      // Deduct credits
+      // Record operation (XActions is now free - no credit deduction)
       if (session.user && session.operation) {
-        const cost = CREDIT_COSTS[session.operation] || 2;
-        await prisma.user.update({
-          where: { id: session.user.id },
-          data: { credits: { decrement: cost } }
-        });
-        
-        // Record operation
         await prisma.operation.create({
           data: {
             userId: session.user.id,
             type: session.operation,
             status: 'completed',
-            result: JSON.stringify(data),
-            creditsUsed: cost
+            result: JSON.stringify(data)
           }
         });
       }
@@ -233,18 +227,7 @@ function handleDashboardConnection(io, socket) {
       return;
     }
 
-    // Check credits
-    const cost = CREDIT_COSTS[operation] || 2;
-    const user = await prisma.user.findUnique({ where: { id: socket.user.id } });
-    
-    if (user.credits < cost) {
-      socket.emit('error', { 
-        message: `Not enough credits. Need ${cost}, have ${user.credits}`,
-        needCredits: true
-      });
-      return;
-    }
-
+    // XActions is now 100% free - no credit checks required
     session.operation = operation;
     session.config = config;
     session.status = 'running';

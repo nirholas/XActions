@@ -697,14 +697,6 @@
       color: var(--accent);
     }
 
-    .credits-highlight {
-      background: linear-gradient(135deg, var(--accent) 0%, #7856ff 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      font-size: 1.5rem;
-    }
-
     /* Who to follow / Tips */
     .tips-card {
       background: var(--bg-secondary);
@@ -999,14 +991,13 @@
       max-width: 1200px;
       margin: 0 auto;
       display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
       gap: 32px;
     }
-    .footer-brand h3 { font-size: 1.25rem; margin-bottom: 8px; }
-    .footer-brand p { color: var(--text-secondary); font-size: 0.875rem; line-height: 1.5; }
-    .footer-links h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 12px; color: var(--text-primary); }
-    .footer-links a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 4px 0; transition: color 0.2s; }
-    .footer-links a:hover { color: var(--accent); }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 12px; color: var(--text-primary); }
+    .footer-section p { color: var(--text-secondary); font-size: 0.875rem; line-height: 1.5; margin-bottom: 8px; }
+    .footer-section a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 4px 0; transition: color 0.2s; }
+    .footer-section a:hover { color: var(--accent); }
     .footer-bottom { max-width: 1200px; margin: 24px auto 0; padding-top: 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
     .footer-bottom p { color: var(--text-secondary); font-size: 0.8125rem; }
     .footer-bottom a { color: var(--text-secondary); text-decoration: none; }
@@ -1027,35 +1018,16 @@
       </div>
 
       <nav>
-        <a href="/dashboard" class="nav-item active">
-          <span class="nav-icon">🏠</span>
-          <span>Dashboard</span>
-        </a>
-        <a href="#operations" class="nav-item" onclick="scrollToSection('operations')">
-          <span class="nav-icon">🔧</span>
-          <span>Operations</span>
-        </a>
-        <a href="/docs" class="nav-item">
-          <span class="nav-icon">📚</span>
-          <span>Documentation</span>
-        </a>
-        <a href="/pricing" class="nav-item">
-          <span class="nav-icon">💎</span>
-          <span>Pricing</span>
-        </a>
-        <a href="https://github.com/nirholas/XActions" target="_blank" class="nav-item">
-          <span class="nav-icon">⭐</span>
-          <span>GitHub</span>
-        </a>
-        <a href="/features" class="nav-item">
-          <span class="nav-icon">✨</span>
-          <span>Features</span>
-        </a>
+        <a href="/" class="nav-item active"><span class="nav-icon">🏠</span><span>Home</span></a>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/mcp" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank"><span class="nav-icon">⭐</span><span>GitHub</span></a>
       </nav>
 
-      <button class="action-btn" onclick="openOperationModal('unfollowNonFollowers')">
-        Run Operation
-      </button>
+      <a href="https://github.com/nirholas/XActions" class="action-btn" target="_blank">Star on GitHub ⭐</a>
 
       <div class="user-menu" onclick="toggleUserMenu()">
         <div class="user-avatar" id="user-avatar">?</div>
@@ -1076,48 +1048,19 @@
         </div>
       </header>
 
+      <!-- Free & Open Source Banner -->
+      <div class="free-banner" style="background: linear-gradient(90deg, #00ba7c, #1d9bf0); padding: 12px 20px; border-radius: 12px; margin: 16px; text-align: center;">
+        <span style="font-weight: 700;">🎉 XActions is 100% Free & Open Source</span>
+        <span style="margin-left: 12px; opacity: 0.9;">No accounts, no payments, no limits</span>
+        <a href="https://github.com/nirholas/XActions" style="margin-left: 12px; color: white; text-decoration: underline;">Star on GitHub ⭐</a>
+      </div>
+
       <!-- Legal Disclaimer Banner -->
       <div class="legal-banner">
         <strong>⚠️ Educational Use Only:</strong> XActions demonstrates browser automation techniques for educational purposes. 
         Users are responsible for compliance with X/Twitter's Terms of Service. This tool is not affiliated with, endorsed by, or connected to X Corp.
         <a href="/docs#disclaimer" style="color: var(--accent);">Learn more →</a>
       </div>
-
-      <!-- Get Credits Section -->
-      <section class="connect-card" id="credits-section">
-        <div class="connect-inner">
-          <div class="connect-header">
-            <span class="connect-icon">🎁</span>
-            <h2 class="connect-title">Get Credits to Start</h2>
-          </div>
-          <p class="connect-desc">Basic ops: 2 credits | Detection: 3 credits | Power: 5 credits</p>
-          
-          <div style="margin-top: 20px;">
-            <!-- Follow Bonus -->
-            <div id="follow-bonus-section" style="background: var(--bg-tertiary); border-radius: 12px; padding: 20px; margin-bottom: 16px;">
-              <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
-                <span style="font-size: 1.5rem;">🆓</span>
-                <div>
-                  <div style="font-weight: 700;">Free: Follow @nichxbt</div>
-                  <div style="color: var(--text-secondary); font-size: 0.875rem;">Get +1 bonus credit</div>
-                </div>
-              </div>
-              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                <a href="https://x.com/intent/follow?screen_name=nichxbt" target="_blank" class="btn-secondary" style="flex: 1; min-width: 120px; text-align: center; padding: 10px 16px; border-radius: 9999px; text-decoration: none; font-weight: 600; font-size: 0.875rem;">1. Follow @nichxbt</a>
-                <button onclick="claimFollowBonus()" class="btn-primary" style="flex: 1; min-width: 120px; padding: 10px 16px; border-radius: 9999px; font-weight: 600; font-size: 0.875rem;">2. Claim Credits</button>
-              </div>
-              <p id="follow-bonus-status" style="color: var(--text-secondary); font-size: 0.75rem; margin-top: 12px; text-align: center;"></p>
-            </div>
-
-            <!-- Buy Credits -->
-            <div style="text-align: center; color: var(--text-secondary); font-size: 0.8125rem; margin: 16px 0;">— or —</div>
-            
-            <a href="/pricing" class="btn-primary" style="display: block; text-align: center; padding: 14px 24px; border-radius: 9999px; text-decoration: none; font-weight: 700;">
-              💎 Buy Credits — Starting at $2.99
-            </a>
-          </div>
-        </div>
-      </section>
 
       <!-- Operations Section -->
       <section class="operations-section" id="operations">
@@ -1173,7 +1116,7 @@
               <div class="operation-title">Unfollow Non-Followers</div>
               <div class="operation-desc">Remove accounts that don't follow you back. Clean up your following list.</div>
             </div>
-            <span class="operation-cost">2 credits</span>
+            <span class="operation-cost" style="background: var(--success);">Free</span>
           </div>
         </div>
 
@@ -1184,7 +1127,7 @@
               <div class="operation-title">Unfollow Everyone</div>
               <div class="operation-desc">Start fresh — unfollow your entire following list at once.</div>
             </div>
-            <span class="operation-cost">2 credits</span>
+            <span class="operation-cost" style="background: var(--success);">Free</span>
           </div>
         </div>
 
@@ -1195,7 +1138,7 @@
               <div class="operation-title">Detect Unfollowers</div>
               <div class="operation-desc">Find out who stopped following you recently.</div>
             </div>
-            <span class="operation-cost">3 credits</span>
+            <span class="operation-cost" style="background: var(--success);">Free</span>
           </div>
         </div>
       </section>
@@ -1228,8 +1171,8 @@
       <div class="stats-card">
         <h3 class="stats-header">Your Stats</h3>
         <div class="stat-row">
-          <span class="stat-label">Credits</span>
-          <span class="stat-value credits-highlight" id="credits-count">--</span>
+          <span class="stat-label">Plan</span>
+          <span class="stat-value" style="color: var(--success);">100% Free</span>
         </div>
         <div class="stat-row">
           <span class="stat-label">Operations Run</span>
@@ -1240,10 +1183,10 @@
           <span class="stat-value" id="total-unfollowed">0</span>
         </div>
         <div class="stat-row">
-          <span class="stat-label">Subscription</span>
-          <span class="stat-value" id="subscription-tier">Free</span>
+          <span class="stat-label">Status</span>
+          <span class="stat-value">Open Source</span>
         </div>
-        <a href="/pricing" class="show-more">Upgrade plan →</a>
+        <a href="https://github.com/nirholas/XActions" class="show-more" target="_blank">View on GitHub →</a>
       </div>
 
       <!-- Tips -->
@@ -1491,14 +1434,6 @@
         \${data.handle ? \`<span style="color:var(--accent);">@\${data.handle}</span>\` : ''}
       \`;
       log.insertBefore(entry, log.firstChild);
-      
-      // Update credits display
-      const creditsEl = document.getElementById('credits-count');
-      if (creditsEl && data.count === 1) {
-        // First action, deduct credits
-        const current = parseInt(creditsEl.textContent) || 0;
-        creditsEl.textContent = Math.max(0, current - 2);
-      }
     }
 
     function completeOperation(data) {
@@ -1516,10 +1451,6 @@
       document.getElementById('progress-message').textContent = '❌ ' + data.message;
       document.getElementById('progress-bar').style.background = 'var(--error)';
       
-      if (data.needCredits) {
-        alert('Not enough credits! Buy more to continue.');
-        window.location.href = '/pricing';
-      }
       if (data.agentDisconnected) {
         alert('Browser disconnected. Please reconnect and try again.');
         updateConnectionStatus('disconnected');
@@ -1557,7 +1488,7 @@
         config.maxUnfollows = parseInt(max) || 100;
       }
       
-      if (confirm(\`Run \${formatOperationName(operation)}?\\n\\nThis will cost 2 credits.\`)) {
+      if (confirm(\`Run \${formatOperationName(operation)}?\`)) {
         socket.emit('start:operation', { operation, config });
       }
     }
@@ -1581,9 +1512,6 @@
         });
         const profile = await profileRes.json();
 
-        document.getElementById('credits-count').textContent = profile.credits;
-        document.getElementById('subscription-tier').textContent = profile.subscription?.tier || 'Free';
-        
         // Update user menu
         const initial = (profile.email || profile.username || '?')[0].toUpperCase();
         document.getElementById('user-avatar').textContent = initial;
@@ -1683,39 +1611,6 @@
       
       document.getElementById(`${method}-method`).classList.add('active');
       document.getElementById(`${method}-tab`).classList.add('active');
-    }
-
-    // Claim follow bonus
-    async function claimFollowBonus() {
-      const statusEl = document.getElementById('follow-bonus-status');
-      statusEl.textContent = 'Verifying...';
-      statusEl.style.color = 'var(--accent)';
-
-      try {
-        const res = await fetch(`${API_URL}/user/claim-follow-bonus`, {
-          method: 'POST',
-          headers: { 'Authorization': `Bearer ${authToken}` }
-        });
-
-        const data = await res.json();
-
-        if (res.ok) {
-          statusEl.textContent = `✅ ${data.message}`;
-          statusEl.style.color = 'var(--success)';
-          // Update credits display
-          document.getElementById('credits-count').textContent = (parseInt(document.getElementById('credits-count').textContent) || 0) + data.creditsAdded;
-          // Hide the bonus section after claiming
-          setTimeout(() => {
-            document.getElementById('follow-bonus-section').style.display = 'none';
-          }, 2000);
-        } else {
-          statusEl.textContent = `❌ ${data.error}`;
-          statusEl.style.color = 'var(--error)';
-        }
-      } catch (error) {
-        statusEl.textContent = '❌ Network error. Try again.';
-        statusEl.style.color = 'var(--error)';
-      }
     }
 
     async function connectTwitterOAuth() {
@@ -1852,32 +1747,32 @@
 
   <footer class="site-footer">
     <div class="footer-content">
-      <div class="footer-brand">
-        <h3>⚡ XActions</h3>
-        <p>Free, open-source X/Twitter automation toolkit. Mass unfollow, detect unfollowers, auto-engage, and grow your audience without expensive API fees.</p>
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt">@nichxbt</a></p>
       </div>
-      <div class="footer-links">
-        <h4>Product</h4>
-        <a href="/features">Features</a>
-        <a href="/pricing">Pricing</a>
+      <div class="footer-section">
+        <h4>Resources</h4>
+        <a href="/features">All Scripts</a>
+        <a href="/tutorials">Tutorials</a>
         <a href="/docs">Documentation</a>
-        <a href="/dashboard">Dashboard</a>
+        <a href="/mcp">AI Integration</a>
       </div>
-      <div class="footer-links">
-        <h4>Company</h4>
-        <a href="/about">About</a>
-        <a href="https://github.com/nirholas/XActions" target="_blank">GitHub</a>
-        <a href="https://x.com/nichxbt" target="_blank">Twitter</a>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions">GitHub</a>
+        <a href="https://github.com/nirholas/XActions/issues">Report Issues</a>
+        <a href="https://github.com/nirholas/XActions/blob/main/CONTRIBUTING.md">Contribute</a>
       </div>
-      <div class="footer-links">
+      <div class="footer-section">
         <h4>Legal</h4>
-        <a href="/terms">Terms of Service</a>
-        <a href="/privacy">Privacy Policy</a>
+        <a href="/privacy">Privacy</a>
+        <a href="/terms">Terms</a>
       </div>
     </div>
     <div class="footer-bottom">
-      <p>© 2026 XActions. Not affiliated with X Corp.</p>
-      <p>Made with ❤️ by <a href="https://x.com/nichxbt" target="_blank">@nichxbt</a></p>
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
     </div>
   </footer>
 </body>

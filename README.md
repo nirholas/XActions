@@ -855,8 +855,51 @@ If XActions helped you, give it a star! It helps others find the project.
 
 ---
 
+## 📚 Full Tutorial Library
+
+**XActions is 100% free and open source.** Visit [xactions.app](https://xactions.app) for interactive tutorials.
+
+### Quick Links by Category
+
+| Category | Scripts | Tutorial |
+|----------|---------|----------|
+| **Unfollow** | Unfollow Everyone, Non-Followers, Smart Unfollow | [Tutorial](https://xactions.app/tutorials/unfollow) |
+| **Automation** | Auto-Liker, Auto-Commenter, Follow Engagers | [Tutorial](https://xactions.app/tutorials/automation) |
+| **Scraping** | Video Download, Followers, Tweets, Hashtags | [Tutorial](https://xactions.app/tutorials/scrapers) |
+| **Monitoring** | Detect Unfollowers, Track Accounts, Alerts | [Tutorial](https://xactions.app/tutorials/monitoring) |
+| **Communities** | Leave All Communities | [Tutorial](https://xactions.app/tutorials/communities) |
+| **AI/MCP** | Claude Desktop, GPT Integration | [Tutorial](https://xactions.app/tutorials/mcp) |
+
+### All Documentation
+
+- [Getting Started](docs/getting-started.md)
+- [CLI Reference](docs/cli-reference.md)
+- [Automation Guide](docs/automation.md)
+- [Monitoring Guide](docs/monitoring.md)
+
+### Example Docs (Full Code)
+
+| Feature | Documentation |
+|---------|---------------|
+| Unfollow Everyone | [unfollow-everyone.md](docs/examples/unfollow-everyone.md) |
+| Unfollow Non-Followers | [unfollow-non-followers.md](docs/examples/unfollow-non-followers.md) |
+| Detect Unfollowers | [detect-unfollowers.md](docs/examples/detect-unfollowers.md) |
+| Auto-Liker | [auto-liker.md](docs/examples/auto-liker.md) |
+| Auto-Commenter | [auto-commenter.md](docs/examples/auto-commenter.md) |
+| Follow Engagers | [follow-engagers.md](docs/examples/follow-engagers.md) |
+| Video Downloader | [video-downloader.md](docs/examples/video-downloader.md) |
+| Followers Scraping | [followers-scraping.md](docs/examples/followers-scraping.md) |
+| Tweet Scraping | [tweet-scraping.md](docs/examples/tweet-scraping.md) |
+| Leave Communities | [leave-all-communities.md](docs/examples/leave-all-communities.md) |
+| MCP Server | [mcp-server.md](docs/examples/mcp-server.md) |
+| Monitor Account | [monitor-account.md](docs/examples/monitor-account.md) |
+| New Follower Alerts | [new-follower-alerts.md](docs/examples/new-follower-alerts.md) |
+
+---
+
 <p align="center">
   <b>⚡ XActions</b> — The Complete X/Twitter Automation Toolkit<br>
+  <b>100% Free & Open Source</b><br>
   <a href="https://xactions.app">xactions.app</a> • 
   <a href="https://github.com/nirholas/xactions">GitHub</a> • 
   <a href="https://x.com/nichxbt">@nichxbt</a>

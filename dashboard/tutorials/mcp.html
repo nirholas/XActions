@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MCP Server Tutorial - XActions | AI Integration for Claude, GPT & More</title>
+  <meta name="description" content="Complete guide to setting up XActions MCP server for AI agents. Connect Claude Desktop, GPT, and other AI tools to automate X/Twitter.">
+  <meta name="author" content="nich (@nichxbt)">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --purple: #9333ea;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar {
+      width: 275px; padding: 0 12px; position: sticky; top: 0;
+      height: 100vh; border-right: 1px solid var(--border);
+    }
+    .logo { padding: 16px 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; }
+    nav { margin-top: 8px; }
+    .nav-item { display: flex; align-items: center; gap: 16px; padding: 12px 16px; border-radius: 9999px; font-size: 1.1rem; color: var(--text-primary); text-decoration: none; transition: background 0.2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.3rem; width: 28px; text-align: center; }
+    .main { flex: 1; border-right: 1px solid var(--border); }
+    .header { padding: 16px 20px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(12px); z-index: 100; }
+    .header h1 { font-size: 1.3rem; font-weight: 700; }
+    .content { padding: 20px; }
+    .free-banner { background: linear-gradient(90deg, var(--purple), var(--accent)); padding: 14px 20px; border-radius: 16px; margin-bottom: 24px; text-align: center; }
+    .free-banner span { font-weight: 700; }
+    .free-banner a { color: white; margin-left: 12px; }
+    .section { margin-bottom: 48px; padding-top: 20px; }
+    .section-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+    .step { margin-bottom: 24px; }
+    .step h4 { color: var(--accent); margin-bottom: 8px; font-size: 1rem; }
+    .step p { color: var(--text-secondary); margin-bottom: 12px; }
+    .code-block { position: relative; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; margin: 16px 0; overflow: hidden; }
+    .code-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; background: var(--bg-tertiary); border-bottom: 1px solid var(--border); }
+    .code-header span { font-size: 0.85rem; color: var(--text-secondary); }
+    .copy-btn { background: var(--accent); color: white; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 600; }
+    .copy-btn:hover { background: var(--accent-hover); }
+    .code-block pre { padding: 16px; overflow-x: auto; font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace; font-size: 0.85rem; line-height: 1.5; margin: 0; }
+    .code-block code { color: var(--text-primary); }
+    .info-box { background: rgba(29, 155, 240, 0.1); border: 1px solid var(--accent); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .info-box h4 { color: var(--accent); margin-bottom: 8px; }
+    .tool-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin: 20px 0; }
+    .tool-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+    .tool-card h4 { font-size: 1rem; margin-bottom: 8px; color: var(--accent); }
+    .tool-card p { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px; }
+    .tool-card code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-size: 0.8rem; }
+    .nav-toc { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 24px; }
+    .nav-toc h4 { margin-bottom: 12px; }
+    .nav-toc a { display: block; color: var(--accent); text-decoration: none; padding: 6px 0; font-size: 0.9rem; }
+    .nav-toc a:hover { text-decoration: underline; }
+    footer { padding: 40px 20px; border-top: 1px solid var(--border); margin-top: 40px; }
+    .footer-links { display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; }
+    .footer-links a { color: var(--text-secondary); text-decoration: none; }
+    .footer-links a:hover { color: var(--accent); }
+    .footer-copy { text-align: center; margin-top: 20px; color: var(--text-secondary); font-size: 0.85rem; }
+    @media (max-width: 768px) { .sidebar { display: none; } .tool-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo"><a href="../index.html">⚡ XActions</a></div>
+      <nav>
+        <a href="../index.html" class="nav-item"><span class="nav-icon">🏠</span>Dashboard</a>
+        <a href="index.html" class="nav-item"><span class="nav-icon">📚</span>Tutorials</a>
+        <a href="unfollow.html" class="nav-item"><span class="nav-icon">👋</span>Unfollow</a>
+        <a href="scrapers.html" class="nav-item"><span class="nav-icon">🔍</span>Scrapers</a>
+        <a href="automation.html" class="nav-item"><span class="nav-icon">🤖</span>Automation</a>
+        <a href="monitoring.html" class="nav-item"><span class="nav-icon">👁️</span>Monitoring</a>
+        <a href="communities.html" class="nav-item"><span class="nav-icon">🏘️</span>Communities</a>
+        <a href="mcp.html" class="nav-item active"><span class="nav-icon">🧠</span>MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank"><span class="nav-icon">⭐</span>GitHub</a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <div class="header">
+        <h1>🤖 MCP Server Tutorial</h1>
+      </div>
+
+      <div class="content">
+        <div class="free-banner">
+          <span>🔌 Connect AI Agents to X/Twitter</span>
+          <span style="opacity: 0.9; margin-left: 8px;">Works with Claude Desktop, GPT, and more</span>
+        </div>
+
+        <div class="nav-toc">
+          <h4>📑 On This Page</h4>
+          <a href="#what-is-mcp">What is MCP?</a>
+          <a href="#setup-claude">Setup with Claude Desktop</a>
+          <a href="#available-tools">Available Tools</a>
+          <a href="#example-prompts">Example Prompts</a>
+        </div>
+
+        <!-- WHAT IS MCP -->
+        <section class="section" id="what-is-mcp">
+          <h2 class="section-title">🔌 What is MCP?</h2>
+          <p style="color: var(--text-secondary); margin-bottom: 16px;">
+            <strong>Model Context Protocol (MCP)</strong> is a standard that allows AI assistants to use external tools. XActions provides an MCP server that lets Claude, GPT, and other AI agents automate X/Twitter tasks.
+          </p>
+
+          <div class="info-box">
+            <h4>💡 Why Use MCP?</h4>
+            <p>Instead of manually running scripts, you can ask Claude to "scrape followers from @elonmusk" or "unfollow everyone who doesn't follow me back" - and it just works.</p>
+          </div>
+        </section>
+
+        <!-- SETUP WITH CLAUDE DESKTOP -->
+        <section class="section" id="setup-claude">
+          <h2 class="section-title">🖥️ Setup with Claude Desktop</h2>
+          
+          <div class="step">
+            <h4>Step 1: Install XActions globally</h4>
+            <div class="code-block">
+              <div class="code-header">
+                <span>Terminal</span>
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+              </div>
+              <pre><code>npm install -g xactions</code></pre>
+            </div>
+          </div>
+
+          <div class="step">
+            <h4>Step 2: Find your Claude Desktop config</h4>
+            <p>The config file location depends on your OS:</p>
+            <div class="code-block">
+              <div class="code-header">
+                <span>Config file locations</span>
+              </div>
+              <pre><code># macOS
+~/Library/Application Support/Claude/claude_desktop_config.json
+
+# Windows
+%APPDATA%\Claude\claude_desktop_config.json
+
+# Linux
+~/.config/Claude/claude_desktop_config.json</code></pre>
+            </div>
+          </div>
+
+          <div class="step">
+            <h4>Step 3: Add XActions MCP server to config</h4>
+            <p>Edit the config file and add the XActions server:</p>
+            <div class="code-block">
+              <div class="code-header">
+                <span>claude_desktop_config.json</span>
+                <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+              </div>
+              <pre><code>{
+  "mcpServers": {
+    "xactions": {
+      "command": "npx",
+      "args": ["xactions-mcp"],
+      "env": {
+        "X_AUTH_TOKEN": "your_auth_token_here"
+      }
+    }
+  }
+}</code></pre>
+            </div>
+          </div>
+
+          <div class="step">
+            <h4>Step 4: Get your X auth token</h4>
+            <p>To get your auth token from X:</p>
+            <ol style="padding-left: 20px; color: var(--text-secondary);">
+              <li>Go to <a href="https://x.com" style="color: var(--accent);">x.com</a> and log in</li>
+              <li>Open Developer Tools (F12)</li>
+              <li>Go to Application → Cookies → x.com</li>
+              <li>Find the <code>auth_token</code> cookie and copy its value</li>
+            </ol>
+          </div>
+
+          <div class="step">
+            <h4>Step 5: Restart Claude Desktop</h4>
+            <p>Quit and reopen Claude Desktop. You should now see XActions tools available!</p>
+          </div>
+        </section>
+
+        <!-- AVAILABLE TOOLS -->
+        <section class="section" id="available-tools">
+          <h2 class="section-title">🛠️ Available MCP Tools</h2>
+          <p style="color: var(--text-secondary); margin-bottom: 16px;">
+            The XActions MCP server provides these tools to AI agents:
+          </p>
+
+          <div class="tool-grid">
+            <div class="tool-card">
+              <h4>scrape_followers</h4>
+              <p>Get a list of followers for any public account</p>
+              <code>username, limit</code>
+            </div>
+            <div class="tool-card">
+              <h4>scrape_following</h4>
+              <p>Get who an account follows (includes followsBack status)</p>
+              <code>username, limit</code>
+            </div>
+            <div class="tool-card">
+              <h4>scrape_tweets</h4>
+              <p>Get tweets from a profile with engagement stats</p>
+              <code>username, limit</code>
+            </div>
+            <div class="tool-card">
+              <h4>search_tweets</h4>
+              <p>Search X for tweets matching a query</p>
+              <code>query, limit</code>
+            </div>
+            <div class="tool-card">
+              <h4>scrape_profile</h4>
+              <p>Get full profile info (bio, followers count, etc.)</p>
+              <code>username</code>
+            </div>
+            <div class="tool-card">
+              <h4>get_non_followers</h4>
+              <p>Find who you follow that doesn't follow back</p>
+              <code>username</code>
+            </div>
+            <div class="tool-card">
+              <h4>unfollow_users</h4>
+              <p>Unfollow a list of usernames</p>
+              <code>usernames[]</code>
+            </div>
+            <div class="tool-card">
+              <h4>follow_users</h4>
+              <p>Follow a list of usernames</p>
+              <code>usernames[]</code>
+            </div>
+          </div>
+        </section>
+
+        <!-- EXAMPLE PROMPTS -->
+        <section class="section" id="example-prompts">
+          <h2 class="section-title">💬 Example Prompts</h2>
+          <p style="color: var(--text-secondary); margin-bottom: 16px;">
+            Once connected, try these prompts with Claude:
+          </p>
+
+          <div class="code-block">
+            <div class="code-header">
+              <span>Example prompts for Claude</span>
+            </div>
+            <pre><code># Scraping
+"Get me a list of @elonmusk's last 50 followers"
+"Who does @naval follow? Show me the first 100"
+"Search for tweets about 'AI agents' from the last week"
+
+# Analysis
+"Find all the people I follow who don't follow me back"
+"Get @pmarca's most liked tweets from his profile"
+"Compare the followers of @a16z and @sequoia"
+
+# Actions
+"Unfollow everyone who doesn't follow me back"
+"Follow the top 20 people who liked @balajis's last post"
+
+# Combined
+"Find tech founders who follow both @paulg and @naval, 
+then follow them if they have over 1000 followers"</code></pre>
+          </div>
+
+          <div class="info-box">
+            <h4>🔒 Safety Notes</h4>
+            <p>The MCP server respects rate limits and adds human-like delays. Actions like unfollowing require explicit confirmation. Your auth token is stored locally and never sent to external servers.</p>
+          </div>
+        </section>
+
+        <!-- ALTERNATIVE: Direct CLI -->
+        <section class="section" id="cli-alternative">
+          <h2 class="section-title">⌨️ Alternative: Direct CLI</h2>
+          <p style="color: var(--text-secondary); margin-bottom: 16px;">
+            If you prefer using the CLI directly instead of through AI:
+          </p>
+
+          <div class="code-block">
+            <div class="code-header">
+              <span>CLI commands</span>
+              <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+            </div>
+            <pre><code># Install globally
+npm install -g xactions
+
+# Login (saves session)
+xactions login
+
+# Scrape followers
+xactions followers elonmusk --limit 100 --output followers.json
+
+# Get non-followers
+xactions non-followers YOUR_USERNAME --output non-followers.json
+
+# Unfollow non-followers
+xactions unfollow non-followers.json
+
+# Search tweets
+xactions search "AI agents" --limit 50</code></pre>
+          </div>
+        </section>
+
+        <footer>
+          <div class="footer-links">
+            <a href="../index.html">Dashboard</a>
+            <a href="index.html">All Tutorials</a>
+            <a href="https://github.com/nirholas/XActions" target="_blank">GitHub</a>
+            <a href="https://x.com/nichxbt" target="_blank">@nichxbt</a>
+          </div>
+          <p class="footer-copy">
+            Made with ❤️ by <a href="https://x.com/nichxbt" style="color: var(--accent);">@nichxbt</a> · 
+            100% Free & Open Source
+          </p>
+        </footer>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    function copyCode(btn) {
+      const code = btn.closest('.code-block').querySelector('code').textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        btn.textContent = '✅ Copied!';
+        setTimeout(() => btn.textContent = '📋 Copy', 2000);
+      });
+    }
+  </script>
+</body>
+</html>

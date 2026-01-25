@@ -3,548 +3,963 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Features - XActions | AI-Powered X/Twitter Automation Tools</title>
-  <meta name="description" content="XActions features - AI-powered mass unfollow, smart automation with machine learning, LLM integration for GPT & Claude. 150+ automation tools including MCP server support, AI agents for X, and intelligent follower management.">
-  <meta name="keywords" content="xactions features, AI Twitter automation, LLM Twitter bot, machine learning Twitter, AI agents for X, GPT Twitter automation, Claude Twitter tools, MCP server Twitter, AI-powered unfollow, smart Twitter automation, twitter automation tools, mass unfollow twitter, twitter bot features, auto liker, follower growth">
-  <meta name="author" content="nich (@nichxbt)">
-  <meta name="robots" content="index, follow">
-  
-  <!-- Open Graph -->
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="XActions Features - AI-Powered 150+ Automation Tools">
-  <meta property="og:description" content="AI-powered mass unfollow, smart automation with LLM integration. GPT, Claude & MCP server compatible. Free & open-source.">
-  <meta property="og:url" content="https://xactions.app/features">
-  <meta property="og:site_name" content="XActions">
-  <meta property="og:image" content="https://xactions.app/og-features.png">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:creator" content="@nichxbt">
-  <meta name="twitter:title" content="XActions Features - AI-Powered 150+ Automation Tools">
-  <meta name="twitter:description" content="AI-powered automation with LLM integration. Works with GPT, Claude & MCP servers.">
-  <meta name="twitter:image" content="https://xactions.app/og-features.png">
-  
-  <link rel="canonical" href="https://xactions.app/features">
+  <title>Features - XActions | Free X/Twitter Automation Tools</title>
+  <meta name="description" content="XActions features - 100% free mass unfollow, detect unfollowers, auto liker, follower growth tools. Open source X/Twitter automation.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
-  
-  <!-- Structured Data -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    "name": "XActions Features",
-    "description": "150+ AI-powered X/Twitter automation tools with LLM integration. Compatible with GPT, Claude, MCP servers. Includes smart unfollow, machine learning automation, and AI agents for X",
-    "url": "https://xactions.app/features",
-    "publisher": {
-      "@type": "Organization",
-      "name": "XActions",
-      "url": "https://xactions.app"
-    }
-  }
-  </script>
   <style>
-    :root {
-      --bg-primary: #000000;
-      --bg-secondary: #16181c;
-      --bg-tertiary: #202327;
-      --bg-hover: #1d1f23;
-      --accent: #1d9bf0;
-      --accent-hover: #1a8cd8;
-      --accent-light: rgba(29, 155, 240, 0.1);
-      --text-primary: #e7e9ea;
-      --text-secondary: #71767b;
-      --border: #2f3336;
-      --success: #00ba7c;
-      --warning: #ffad1f;
-    }
-
+    :root { --bg-primary: #000; --bg-secondary: #16181c; --bg-tertiary: #202327; --accent: #1d9bf0; --accent-hover: #1a8cd8; --accent-light: rgba(29,155,240,0.1); --text-primary: #e7e9ea; --text-secondary: #71767b; --border: #2f3336; --success: #00ba7c; --warning: #ffad1f; }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background: var(--bg-primary);
-      color: var(--text-primary);
-      line-height: 1.5;
-      min-height: 100vh;
-    }
-
-    ::-webkit-scrollbar { width: 16px; }
-    ::-webkit-scrollbar-track { background: var(--bg-primary); }
-    ::-webkit-scrollbar-thumb { background: var(--bg-tertiary); border-radius: 8px; border: 4px solid var(--bg-primary); }
-
-    .layout {
-      display: flex;
-      max-width: 1300px;
-      margin: 0 auto;
-      min-height: 100vh;
-    }
-
-    /* Sidebar */
-    .sidebar-left {
-      width: 275px;
-      padding: 0 12px;
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      border-right: 1px solid var(--border);
-    }
-
-    .logo { padding: 12px; }
-    .logo a {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      text-decoration: none;
-      color: var(--text-primary);
-      font-size: 1.5rem;
-      font-weight: 800;
-      padding: 12px;
-      border-radius: 9999px;
-      transition: background 0.2s;
-    }
-    .logo a:hover { background: var(--accent-light); }
-
-    nav { flex: 1; }
-
-    .nav-item {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      padding: 12px;
-      border-radius: 9999px;
-      font-size: 1.25rem;
-      color: var(--text-primary);
-      text-decoration: none;
-      transition: background 0.2s;
-      margin-bottom: 4px;
-    }
-    .nav-item:hover { background: var(--bg-tertiary); }
-    .nav-item.active { font-weight: 700; }
-    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
-
-    .action-btn {
-      width: 90%;
-      padding: 16px;
-      background: var(--accent);
-      color: white;
-      border: none;
-      border-radius: 9999px;
-      font-size: 1.0625rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: background 0.2s;
-      margin: 16px 0;
-      text-decoration: none;
-      display: block;
-      text-align: center;
-    }
-    .action-btn:hover { background: var(--accent-hover); }
-
-    /* Main */
-    .main-content {
-      flex: 1;
-      max-width: 600px;
-      border-right: 1px solid var(--border);
-    }
-
-    .main-header {
-      position: sticky;
-      top: 0;
-      background: rgba(0, 0, 0, 0.65);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-      padding: 16px;
-      z-index: 100;
-    }
-    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
-
-    .section {
-      padding: 24px 16px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .section-title {
-      font-size: 1.25rem;
-      font-weight: 800;
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .highlight-box {
-      background: var(--accent-light);
-      border: 1px solid var(--accent);
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 20px;
-    }
-    .highlight-box p { color: var(--text-primary); margin: 0; font-weight: 600; }
-
-    h3 {
-      font-size: 1rem;
-      font-weight: 700;
-      margin: 20px 0 8px;
-      color: var(--text-primary);
-    }
-
-    p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 12px; }
-    p a { color: var(--accent); }
-
-    ul { margin-left: 20px; margin-bottom: 12px; }
-    li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
-
-    .feature-card {
-      background: var(--bg-secondary);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 12px;
-      transition: all 0.2s;
-    }
-    .feature-card:hover {
-      border-color: var(--accent);
-      background: var(--bg-tertiary);
-    }
-    .feature-card h3 { margin: 0 0 8px; }
-    .feature-card p { margin: 0 0 8px; }
-    .feature-card ul { margin: 8px 0 0 20px; }
-
-    /* Right Sidebar */
-    .sidebar-right {
-      width: 350px;
-      padding: 12px 24px;
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      overflow-y: auto;
-    }
-
-    .promo-card {
-      background: var(--bg-secondary);
-      border-radius: 16px;
-      margin-bottom: 16px;
-      overflow: hidden;
-    }
-    .promo-header { padding: 16px; font-size: 1.25rem; font-weight: 800; }
-    .promo-item {
-      padding: 16px;
-      border-top: 1px solid var(--border);
-      transition: background 0.2s;
-    }
-    .promo-item:hover { background: var(--bg-hover); }
-    .promo-item h4 { font-size: 0.9375rem; margin-bottom: 4px; }
-    .promo-item p { color: var(--text-secondary); font-size: 0.8125rem; margin: 0; }
-    .promo-link {
-      display: block;
-      padding: 16px;
-      color: var(--accent);
-      font-size: 0.9375rem;
-      text-decoration: none;
-      transition: background 0.2s;
-    }
-    .promo-link:hover { background: var(--bg-hover); }
-
-    .disclaimer {
-      padding: 16px;
-      color: var(--text-secondary);
-      font-size: 0.8125rem;
-      line-height: 1.5;
-    }
-
-    @media (max-width: 1280px) { .sidebar-right { width: 290px; } }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.5; }
+    ::-webkit-scrollbar { width: 16px; } ::-webkit-scrollbar-track { background: var(--bg-primary); } ::-webkit-scrollbar-thumb { background: var(--bg-tertiary); border-radius: 8px; border: 4px solid var(--bg-primary); }
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar-left { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; } .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background 0.2s; } .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; } .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background 0.2s; margin-bottom: 4px; } .nav-item:hover { background: var(--bg-tertiary); } .nav-item.active { font-weight: 700; } .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: white; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background 0.2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; } .action-btn:hover { background: var(--accent-hover); }
+    .main-content { flex: 1; max-width: 600px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,0.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px; z-index: 100; } .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .section { padding: 24px 16px; border-bottom: 1px solid var(--border); } .section-title { font-size: 1.25rem; font-weight: 800; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    h3 { font-size: 1rem; font-weight: 700; margin: 0 0 8px; } p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 12px; } p a { color: var(--accent); }
+    .feature-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 12px; transition: all 0.2s; } .feature-card:hover { border-color: var(--accent); background: var(--bg-tertiary); }
+    .feature-header { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; } .feature-icon { font-size: 1.5rem; } .feature-header h3 { flex: 1; } .feature-desc { color: var(--text-secondary); margin: 0 0 12px; }
+    .feature-badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; text-transform: uppercase; } .feature-badge.free { background: var(--success); color: white; }
+    .feature-code { margin-top: 12px; } .feature-code summary { cursor: pointer; color: var(--accent); font-weight: 600; padding: 8px 0; list-style: none; } .feature-code summary::-webkit-details-marker { display: none; } .feature-code summary::before { content: '▶ '; font-size: 0.75rem; } .feature-code[open] summary::before { content: '▼ '; } .feature-code[open] summary { margin-bottom: 12px; }
+    .code-block { position: relative; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; } .code-block pre { margin: 0; font-family: 'Monaco', 'Menlo', monospace; font-size: 12px; line-height: 1.5; white-space: pre; overflow-x: auto; } .code-block code { color: var(--text-primary); }
+    .copy-btn { position: absolute; top: 8px; right: 8px; background: var(--accent); color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; transition: background 0.2s; } .copy-btn:hover { background: var(--accent-hover); } .copy-btn.copied { background: var(--success); }
+    .feature-links { margin-top: 12px; display: flex; gap: 16px; flex-wrap: wrap; } .feature-links a { color: var(--accent); text-decoration: none; font-size: 0.875rem; font-weight: 600; } .feature-links a:hover { text-decoration: underline; }
+    .code-note { background: rgba(255,173,31,0.1); border-left: 3px solid var(--warning); padding: 8px 12px; margin-bottom: 12px; border-radius: 0 8px 8px 0; font-size: 0.8125rem; color: var(--text-secondary); }
+    .sidebar-right { width: 350px; padding: 12px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .promo-card { background: var(--bg-secondary); border-radius: 16px; margin-bottom: 16px; overflow: hidden; } .promo-header { padding: 16px; font-size: 1.25rem; font-weight: 800; } .promo-item { padding: 16px; border-top: 1px solid var(--border); } .promo-item h4 { font-size: 0.9375rem; margin-bottom: 4px; } .promo-item p { color: var(--text-secondary); font-size: 0.8125rem; margin: 0; } .promo-link { display: block; padding: 16px; color: var(--accent); font-size: 0.9375rem; text-decoration: none; } .promo-link:hover { background: var(--bg-tertiary); }
+    .disclaimer { padding: 16px; color: var(--text-secondary); font-size: 0.8125rem; }
     @media (max-width: 1024px) { .sidebar-right { display: none; } .main-content { max-width: 100%; } }
-    @media (max-width: 768px) {
-      .sidebar-left { width: 68px; padding: 0 4px; }
-      .logo a span:last-child, .nav-item span:last-child { display: none; }
-      .nav-item { justify-content: center; padding: 12px; }
-      .action-btn { width: 50px; height: 50px; padding: 0; font-size: 0; }
-      .action-btn::before { content: '→'; font-size: 1.5rem; }
-    }
-
-    .site-footer {
-      border-top: 1px solid var(--border);
-      padding: 48px 24px;
-      background: var(--bg-primary);
-    }
-    .footer-content {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr;
-      gap: 32px;
-    }
-    .footer-brand h3 { font-size: 1.25rem; margin-bottom: 8px; }
-    .footer-brand p { color: var(--text-secondary); font-size: 0.875rem; line-height: 1.5; }
-    .footer-links h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 12px; color: var(--text-primary); }
-    .footer-links a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 4px 0; transition: color 0.2s; }
-    .footer-links a:hover { color: var(--accent); }
-    .footer-bottom { max-width: 1200px; margin: 24px auto 0; padding-top: 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
-    .footer-bottom p { color: var(--text-secondary); font-size: 0.8125rem; }
-    .footer-bottom a { color: var(--text-secondary); text-decoration: none; }
-    .footer-bottom a:hover { color: var(--accent); }
+    @media (max-width: 768px) { .sidebar-left { width: 68px; } .logo a span:last-child, .nav-item span:last-child { display: none; } .nav-item { justify-content: center; } .action-btn { width: 50px; height: 50px; padding: 0; font-size: 0; } .action-btn::before { content: '→'; font-size: 1.5rem; } }
+    .site-footer { border-top: 1px solid var(--border); padding: 48px 24px; } .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px; } .footer-brand h3 { font-size: 1.25rem; margin-bottom: 8px; } .footer-brand p { color: var(--text-secondary); font-size: 0.875rem; } .footer-links h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 12px; } .footer-links a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 4px 0; } .footer-links a:hover { color: var(--accent); } .footer-bottom { max-width: 1200px; margin: 24px auto 0; padding-top: 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; } .footer-bottom p { color: var(--text-secondary); font-size: 0.8125rem; } .footer-bottom a { color: var(--text-secondary); } .footer-bottom a:hover { color: var(--accent); }
     @media (max-width: 768px) { .footer-content { grid-template-columns: 1fr 1fr; } }
-    @media (max-width: 480px) { .footer-content { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
   <div class="layout">
-    <!-- Sidebar -->
     <aside class="sidebar-left">
-      <div class="logo">
-        <a href="/"><span>⚡</span><span>XActions</span></a>
-      </div>
+      <div class="logo"><a href="/"><span>⚡</span><span>XActions</span></a></div>
       <nav>
         <a href="/" class="nav-item"><span class="nav-icon">🏠</span><span>Home</span></a>
         <a href="/dashboard" class="nav-item"><span class="nav-icon">📊</span><span>Dashboard</span></a>
         <a href="/features" class="nav-item active"><span class="nav-icon">✨</span><span>Features</span></a>
-        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
         <a href="/docs" class="nav-item"><span class="nav-icon">📚</span><span>Docs</span></a>
         <a href="https://github.com/nirholas/XActions" target="_blank" class="nav-item"><span class="nav-icon">⭐</span><span>GitHub</span></a>
       </nav>
       <a href="/dashboard" class="action-btn">Open Dashboard</a>
     </aside>
 
-    <!-- Main -->
     <main class="main-content">
-      <header class="main-header">
-        <h1>⚡ XActions Features</h1>
-      </header>
+      <header class="main-header"><h1>⚡ XActions Features</h1></header>
 
+      <div style="background: linear-gradient(90deg, #00ba7c, #1d9bf0); padding: 12px 20px; border-radius: 12px; margin: 16px; text-align: center;">
+        <span style="font-weight: 700;">🎉 XActions is 100% Free & Open Source</span>
+        <span style="margin-left: 12px; opacity: 0.9;">No accounts, no payments, no limits</span>
+        <a href="https://github.com/nirholas/XActions" style="margin-left: 12px; color: white; text-decoration: underline;">Star on GitHub ⭐</a>
+      </div>
+
+      <!-- UNFOLLOW TOOLS -->
       <section class="section">
-        <h2 class="section-title">🎯 Two Ways to Use</h2>
-        
-        <div class="highlight-box">
-          <p>We offer BOTH approaches - pick what works for you!</p>
+        <h2 class="section-title">🧹 Unfollow Tools</h2>
+
+        <div class="feature-card" id="unfollow-everyone">
+          <div class="feature-header">
+            <span class="feature-icon">👋</span>
+            <h3>Unfollow Everyone</h3>
+            <span class="feature-badge free">100% Free</span>
+          </div>
+          <p class="feature-desc">Mass unfollow all accounts with one script. Perfect for a fresh start.</p>
+          <details class="feature-code">
+            <summary>📋 View Full Code</summary>
+            <div class="code-note">Go to: x.com/YOUR_USERNAME/following → Open Console (F12) → Paste & Enter</div>
+            <div class="code-block">
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              <pre><code>// Unfollow Everyone - by nichxbt
+// Go to: x.com/YOUR_USERNAME/following
+
+(() => {
+  const $followButtons = '[data-testid$="-unfollow"]';
+  const $confirmButton = '[data-testid="confirmationSheetConfirm"]';
+  const retry = { count: 0, limit: 3 };
+
+  const scrollToTheBottom = () => window.scrollTo(0, document.body.scrollHeight);
+  const retryLimitReached = () => retry.count === retry.limit;
+  const addNewRetry = () => retry.count++;
+
+  const sleep = ({ seconds }) =>
+    new Promise((proceed) => {
+      console.log(`WAITING FOR ${seconds} SECONDS...`);
+      setTimeout(proceed, seconds * 1000);
+    });
+
+  const unfollowAll = async (followButtons) => {
+    console.log(`UNFOLLOWING ${followButtons.length} USERS...`);
+    await Promise.all(
+      followButtons.map(async (followButton) => {
+        followButton && followButton.click();
+        await sleep({ seconds: 1 });
+        const confirmButton = document.querySelector($confirmButton);
+        confirmButton && confirmButton.click();
+      })
+    );
+  };
+
+  const nextBatch = async () => {
+    scrollToTheBottom();
+    await sleep({ seconds: 1 });
+    const followButtons = Array.from(document.querySelectorAll($followButtons));
+
+    if (followButtons.length > 0) {
+      await unfollowAll(followButtons);
+      await sleep({ seconds: 2 });
+      return nextBatch();
+    } else {
+      addNewRetry();
+    }
+
+    if (retryLimitReached()) {
+      console.log(`✅ DONE! Reload page and re-run if any were missed.`);
+    } else {
+      await sleep({ seconds: 2 });
+      return nextBatch();
+    }
+  };
+
+  console.log('🚀 Starting unfollow everyone...');
+  nextBatch();
+})();</code></pre>
+            </div>
+          </details>
+          <div class="feature-links">
+            <a href="https://github.com/nirholas/XActions/blob/main/src/unfollowEveryone.js" target="_blank">View Source ↗</a>
+          </div>
         </div>
 
-        <div class="feature-card">
-          <h3>1️⃣ Free Browser Scripts (Open Source)</h3>
-          <ul>
-            <li>Paste scripts directly into X/Twitter console</li>
-            <li>100% free, no account needed</li>
-            <li>No API costs, runs in your browser</li>
-            <li>Complete privacy - nothing leaves your computer</li>
-            <li>Perfect for one-time cleanup</li>
-          </ul>
-          <p><a href="https://github.com/nirholas/XActions">→ Get the free scripts on GitHub</a></p>
+        <div class="feature-card" id="unfollow-nonfollowers">
+          <div class="feature-header">
+            <span class="feature-icon">🔄</span>
+            <h3>Unfollow Non-Followers</h3>
+            <span class="feature-badge free">100% Free</span>
+          </div>
+          <p class="feature-desc">Remove people who don't follow you back. Clean up your following list.</p>
+          <details class="feature-code">
+            <summary>📋 View Full Code</summary>
+            <div class="code-note">Go to: x.com/YOUR_USERNAME/following → Open Console (F12) → Paste & Enter</div>
+            <div class="code-block">
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              <pre><code>// Unfollow Non-Followers - by nichxbt
+// Go to: x.com/YOUR_USERNAME/following
+
+(() => {
+  const $followButtons = '[data-testid$="-unfollow"]';
+  const $confirmButton = '[data-testid="confirmationSheetConfirm"]';
+  const retry = { count: 0, limit: 3 };
+
+  const sleep = ({ seconds }) => new Promise(r => setTimeout(r, seconds * 1000));
+
+  const unfollowAll = async (followButtons) => {
+    console.log(`UNFOLLOWING ${followButtons.length} USERS...`);
+    for (const btn of followButtons) {
+      btn.click();
+      await sleep({ seconds: 1 });
+      document.querySelector($confirmButton)?.click();
+      await sleep({ seconds: 1 });
+    }
+  };
+
+  const nextBatch = async () => {
+    window.scrollTo(0, document.body.scrollHeight);
+    await sleep({ seconds: 1 });
+
+    let followButtons = Array.from(document.querySelectorAll($followButtons));
+    // Only unfollow those who DON'T follow back (no "Follows you" indicator)
+    followButtons = followButtons.filter(b => 
+      b.parentElement?.parentElement?.querySelector('[data-testid="userFollowIndicator"]') === null
+    );
+
+    if (followButtons.length > 0) {
+      await unfollowAll(followButtons);
+      await sleep({ seconds: 2 });
+      return nextBatch();
+    } else if (retry.count < retry.limit) {
+      retry.count++;
+      await sleep({ seconds: 2 });
+      return nextBatch();
+    } else {
+      console.log(`✅ DONE! Reload and re-run if any were missed.`);
+    }
+  };
+
+  console.log('🚀 Starting unfollow non-followers...');
+  nextBatch();
+})();</code></pre>
+            </div>
+          </details>
+          <div class="feature-links">
+            <a href="https://github.com/nirholas/XActions/blob/main/src/unfollowback.js" target="_blank">View Source ↗</a>
+          </div>
         </div>
 
-        <div class="feature-card">
-          <h3>2️⃣ Premium SaaS Platform</h3>
-          <ul>
-            <li>Automated scheduled operations</li>
-            <li>Email notifications & reports</li>
-            <li>Multi-account management</li>
-            <li>Operation history & analytics</li>
-            <li>No manual copy-paste needed</li>
-          </ul>
-          <p><a href="/pricing">→ See pricing plans</a></p>
+        <div class="feature-card" id="smart-unfollow">
+          <div class="feature-header">
+            <span class="feature-icon">📝</span>
+            <h3>Smart Unfollow with Logging</h3>
+            <span class="feature-badge free">100% Free</span>
+          </div>
+          <p class="feature-desc">Unfollow non-followers and download a list of who you unfollowed.</p>
+          <details class="feature-code">
+            <summary>📋 View Full Code</summary>
+            <div class="code-note">Go to: x.com/YOUR_USERNAME/following → Downloads unfollowed-users.txt when done</div>
+            <div class="code-block">
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              <pre><code>// Smart Unfollow with Logging - by nichxbt
+// Downloads a list of unfollowed users
+
+(() => {
+  const $followButtons = '[data-testid$="-unfollow"]';
+  const $confirmButton = '[data-testid="confirmationSheetConfirm"]';
+  const unfollowedUsers = [];
+  const retry = { count: 0, limit: 5 };
+
+  const sleep = (seconds) => new Promise(r => setTimeout(r, seconds * 1000));
+
+  const unfollowAll = async (followButtons) => {
+    for (const button of followButtons) {
+      const usernameEl = button.closest('[data-testid="UserCell"]')?.querySelector('[dir="ltr"]');
+      const username = usernameEl ? usernameEl.textContent : "Unknown";
+      unfollowedUsers.push(username);
+      button.click();
+      await sleep(2);
+      document.querySelector($confirmButton)?.click();
+      await sleep(1);
+    }
+  };
+
+  const createDownload = () => {
+    const blob = new Blob([unfollowedUsers.join('\n')], { type: 'text/plain' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'unfollowed-users.txt';
+    a.click();
+  };
+
+  const nextBatch = async () => {
+    window.scrollTo(0, document.body.scrollHeight);
+    await sleep(3);
+    let followButtons = Array.from(document.querySelectorAll($followButtons));
+    followButtons = followButtons.filter(btn => 
+      !btn.closest('[data-testid="UserCell"]')?.querySelector('[data-testid="userFollowIndicator"]')
+    );
+
+    if (followButtons.length > 0) {
+      await unfollowAll(followButtons);
+      retry.count = 0;
+      await sleep(3);
+      nextBatch();
+    } else if (retry.count < retry.limit) {
+      retry.count++;
+      await sleep(3);
+      nextBatch();
+    } else {
+      console.log(`✅ DONE! Unfollowed ${unfollowedUsers.length} users.`);
+      if (unfollowedUsers.length > 0) createDownload();
+    }
+  };
+
+  console.log('🚀 Starting smart unfollow with logging...');
+  nextBatch();
+})();</code></pre>
+            </div>
+          </details>
+          <div class="feature-links">
+            <a href="https://github.com/nirholas/XActions/blob/main/src/unfollowWDFBLog.js" target="_blank">View Source ↗</a>
+          </div>
+        </div>
+
+        <div class="feature-card" id="detect-unfollowers">
+          <div class="feature-header">
+            <span class="feature-icon">🔍</span>
+            <h3>Detect Unfollowers</h3>
+            <span class="feature-badge free">100% Free</span>
+          </div>
+          <p class="feature-desc">Find out who stopped following you. Run twice to compare.</p>
+          <details class="feature-code">
+            <summary>📋 View Full Code</summary>
+            <div class="code-note">Go to: x.com/YOUR_USERNAME/followers → Run once to save, run again to compare</div>
+            <div class="code-block">
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              <pre><code>// Detect Unfollowers - by nichxbt
+// Run once to save, run again later to detect changes
+
+(() => {
+  const STORAGE_KEY = 'xactions_my_followers';
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+  if (!window.location.pathname.includes('/followers')) {
+    console.error('❌ Go to: x.com/YOUR_USERNAME/followers');
+    return;
+  }
+
+  const username = window.location.pathname.match(/^\/([^/]+)\/followers/)?.[1] || 'unknown';
+
+  const scrapeFollowers = async () => {
+    const followers = new Set();
+    let prevSize = 0, retries = 0;
+    console.log('🔍 Scanning followers...');
+
+    while (retries < 5) {
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(1500);
+      document.querySelectorAll('[data-testid="UserCell"] a[href^="/"]').forEach(el => {
+        const u = el.getAttribute('href').replace('/', '').toLowerCase();
+        if (u && !u.includes('/')) followers.add(u);
+      });
+      console.log(`   Found ${followers.size}...`);
+      if (followers.size === prevSize) retries++;
+      else { retries = 0; prevSize = followers.size; }
+    }
+    return Array.from(followers);
+  };
+
+  const run = async () => {
+    console.log(`\n🐦 Tracking @${username}\n`);
+    const current = await scrapeFollowers();
+    const prev = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+
+    if (prev && prev.username === username) {
+      const prevSet = new Set(prev.followers);
+      const unfollowed = prev.followers.filter(f => !current.includes(f));
+      const newFollows = current.filter(f => !prevSet.has(f));
+
+      console.log(`📊 Previous: ${prev.count} | Current: ${current.length}`);
+      if (unfollowed.length) {
+        console.log(`\n🚨 UNFOLLOWED (${unfollowed.length}):`);
+        unfollowed.forEach(u => console.log(`   @${u}`));
+      } else console.log('✨ No one unfollowed you!');
+      if (newFollows.length) {
+        console.log(`\n🎉 NEW (${newFollows.length}):`);
+        newFollows.forEach(u => console.log(`   @${u}`));
+      }
+    } else {
+      console.log('📸 First scan! Run again later to detect changes.');
+    }
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      username, followers: current, count: current.length, timestamp: new Date().toISOString()
+    }));
+    console.log(`\n💾 Saved! Run again to check for changes.\n`);
+  };
+
+  run();
+})();</code></pre>
+            </div>
+          </details>
+          <div class="feature-links">
+            <a href="https://github.com/nirholas/XActions/blob/main/src/detectUnfollowers.js" target="_blank">View Source ↗</a>
+          </div>
         </div>
       </section>
 
+      <!-- AUTOMATION TOOLS -->
       <section class="section">
-        <h2 class="section-title">🧹 Available Operations</h2>
+        <h2 class="section-title">🤖 Automation Tools</h2>
 
-        <div class="feature-card">
-          <h3>🔄 Unfollow Non-Followers</h3>
-          <p>Remove people who don't follow you back. Perfect for cleaning up your following list.</p>
-          <ul>
-            <li><strong>Free tier:</strong> Up to 50 per operation</li>
-            <li><strong>Pro tier:</strong> Up to 2,000 per operation</li>
-            <li><strong>Cost:</strong> 10 credits</li>
-          </ul>
+        <div class="feature-card" id="auto-liker">
+          <div class="feature-header">
+            <span class="feature-icon">❤️</span>
+            <h3>Auto Liker</h3>
+            <span class="feature-badge free">100% Free</span>
+          </div>
+          <p class="feature-desc">Automatically like posts based on keywords.</p>
+          <details class="feature-code">
+            <summary>📋 View Full Code</summary>
+            <div class="code-note">Go to: x.com/home or any profile → Configure keywords and run</div>
+            <div class="code-block">
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              <pre><code>// Auto Liker - by nichxbt
+// Configure KEYWORDS array below
+
+(() => {
+  const OPTIONS = {
+    KEYWORDS: ['web3', 'crypto', 'AI'],  // Edit these!
+    MAX_LIKES: 20,
+    MIN_DELAY: 2000,
+    MAX_DELAY: 5000,
+  };
+
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  const randomDelay = () => sleep(OPTIONS.MIN_DELAY + Math.random() * (OPTIONS.MAX_DELAY - OPTIONS.MIN_DELAY));
+  let likeCount = 0;
+  const liked = new Set();
+
+  const matchesKeywords = (text) => {
+    if (!OPTIONS.KEYWORDS.length) return true;
+    return OPTIONS.KEYWORDS.some(kw => text.toLowerCase().includes(kw.toLowerCase()));
+  };
+
+  const processTweets = async () => {
+    for (const tweet of document.querySelectorAll('[data-testid="tweet"]')) {
+      if (likeCount >= OPTIONS.MAX_LIKES) {
+        console.log(`✅ Done! Liked ${likeCount} tweets.`);
+        return;
+      }
+      if (liked.has(tweet) || tweet.querySelector('[data-testid="unlike"]')) continue;
+
+      const text = tweet.querySelector('[data-testid="tweetText"]')?.textContent || '';
+      if (!matchesKeywords(text)) continue;
+
+      const likeBtn = tweet.querySelector('[data-testid="like"]');
+      if (likeBtn) {
+        likeBtn.click();
+        likeCount++;
+        liked.add(tweet);
+        console.log(`❤️ Liked #${likeCount}: "${text.substring(0, 50)}..."`);
+        await randomDelay();
+      }
+    }
+    window.scrollBy(0, 800);
+    await sleep(2000);
+    processTweets();
+  };
+
+  console.log(`🚀 Auto Liker | Keywords: ${OPTIONS.KEYWORDS.join(', ')}`);
+  processTweets();
+})();</code></pre>
+            </div>
+          </details>
+          <div class="feature-links">
+            <a href="https://github.com/nirholas/XActions/blob/main/src/automation/autoLiker.js" target="_blank">View Source ↗</a>
+          </div>
         </div>
 
-        <div class="feature-card">
-          <h3>💥 Unfollow Everyone</h3>
-          <p>Clean slate - unfollow your entire following list at once.</p>
-          <ul>
-            <li><strong>Cost:</strong> 20 credits</li>
-            <li>Useful for starting fresh</li>
-          </ul>
+        <div class="feature-card" id="follow-engagers">
+          <div class="feature-header">
+            <span class="feature-icon">👥</span>
+            <h3>Follow Engagers</h3>
+            <span class="feature-badge free">100% Free</span>
+          </div>
+          <p class="feature-desc">Follow users who liked/retweeted a specific post.</p>
+          <details class="feature-code">
+            <summary>📋 View Full Code</summary>
+            <div class="code-note">Go to: Any tweet → Click likes/retweets → Paste this script</div>
+            <div class="code-block">
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              <pre><code>// Follow Engagers - by nichxbt
+// Follow users from likes/retweets list
+
+(() => {
+  const CONFIG = { MAX_FOLLOWS: 20, DELAY: 3000 };
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  let count = 0;
+
+  const followUsers = async () => {
+    for (const cell of document.querySelectorAll('[data-testid="UserCell"]')) {
+      if (count >= CONFIG.MAX_FOLLOWS) {
+        console.log(`✅ Done! Followed ${count} users.`);
+        return;
+      }
+      const btn = cell.querySelector('[data-testid$="-follow"]');
+      if (!btn) continue;
+
+      const username = cell.querySelector('a[href^="/"]')?.getAttribute('href')?.replace('/', '');
+      btn.click();
+      count++;
+      console.log(`✅ Followed @${username} (${count}/${CONFIG.MAX_FOLLOWS})`);
+      await sleep(CONFIG.DELAY);
+    }
+    window.scrollBy(0, 500);
+    await sleep(2000);
+    followUsers();
+  };
+
+  console.log('🚀 Starting Follow Engagers...');
+  followUsers();
+})();</code></pre>
+            </div>
+          </details>
+          <div class="feature-links">
+            <a href="https://github.com/nirholas/XActions/blob/main/src/automation/followEngagers.js" target="_blank">View Source ↗</a>
+          </div>
         </div>
 
-        <div class="feature-card">
-          <h3>🔍 Detect Unfollowers</h3>
-          <p>Find out who stopped following you since your last check.</p>
-          <ul>
-            <li><strong>Cost:</strong> 5 credits</li>
-            <li>Tracks changes over time</li>
-          </ul>
-        </div>
+        <div class="feature-card" id="keyword-follow">
+          <div class="feature-header">
+            <span class="feature-icon">🔎</span>
+            <h3>Keyword Follow</h3>
+            <span class="feature-badge free">100% Free</span>
+          </div>
+          <p class="feature-desc">Search for keywords and follow relevant users.</p>
+          <details class="feature-code">
+            <summary>📋 View Full Code</summary>
+            <div class="code-note">Go to: x.com/search → Search "People" tab → Paste this script</div>
+            <div class="code-block">
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              <pre><code>// Keyword Follow - by nichxbt
+// Follow users from search results
 
-        <div class="feature-card">
-          <h3>🔔 New Follower Alerts (Pro)</h3>
-          <p>Get notified when you gain new followers.</p>
-        </div>
+(() => {
+  const CONFIG = { MAX_FOLLOWS: 30, DELAY: 3000, MUST_HAVE_BIO: true };
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  let count = 0;
 
-        <div class="feature-card">
-          <h3>👀 Monitor Any Account (Pro)</h3>
-          <p>Track follows/unfollows on any public account.</p>
-        </div>
+  const followUsers = async () => {
+    for (const cell of document.querySelectorAll('[data-testid="UserCell"]')) {
+      if (count >= CONFIG.MAX_FOLLOWS) {
+        console.log(`✅ Done! Followed ${count} users.`);
+        return;
+      }
+      const btn = cell.querySelector('[data-testid$="-follow"]');
+      if (!btn) continue;
 
-        <div class="feature-card">
-          <h3>🚀 Automation Suite (Pro)</h3>
-          <p>Auto-liker, keyword follow, smart unfollow, and more!</p>
+      if (CONFIG.MUST_HAVE_BIO) {
+        const bio = cell.querySelector('[data-testid="UserDescription"]');
+        if (!bio || !bio.textContent.trim()) continue;
+      }
+
+      const username = cell.querySelector('a[href^="/"]')?.getAttribute('href')?.replace('/', '');
+      btn.click();
+      count++;
+      console.log(`✅ Followed @${username} (${count}/${CONFIG.MAX_FOLLOWS})`);
+      await sleep(CONFIG.DELAY);
+    }
+    window.scrollBy(0, 500);
+    await sleep(2000);
+    followUsers();
+  };
+
+  console.log('🚀 Keyword Follow | Search "People" tab first!');
+  followUsers();
+})();</code></pre>
+            </div>
+          </details>
+          <div class="feature-links">
+            <a href="https://github.com/nirholas/XActions/blob/main/src/automation/keywordFollow.js" target="_blank">View Source ↗</a>
+          </div>
         </div>
       </section>
 
+      <!-- MONITORING TOOLS -->
+      <section class="section">
+        <h2 class="section-title">👀 Monitoring Tools</h2>
+
+        <div class="feature-card" id="monitor-account">
+          <div class="feature-header">
+            <span class="feature-icon">📊</span>
+            <h3>Monitor Any Account</h3>
+            <span class="feature-badge free">100% Free</span>
+          </div>
+          <p class="feature-desc">Track follows/unfollows on any public account.</p>
+          <details class="feature-code">
+            <summary>📋 View Full Code</summary>
+            <div class="code-note">Go to: x.com/TARGET_USER/followers or /following</div>
+            <div class="code-block">
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              <pre><code>// Monitor Any Account - by nichxbt
+// Track changes on any public account
+
+(() => {
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  const path = window.location.pathname;
+  const isFollowers = path.includes('/followers');
+  const isFollowing = path.includes('/following');
+
+  if (!isFollowers && !isFollowing) {
+    console.error('❌ Go to: x.com/username/followers or /following');
+    return;
+  }
+
+  const type = isFollowers ? 'followers' : 'following';
+  const target = path.split('/')[1].toLowerCase();
+  const key = `xactions_${target}_${type}`;
+
+  const scrape = async () => {
+    const users = new Set();
+    let prev = 0, retries = 0;
+    console.log(`🔍 Scanning @${target}'s ${type}...`);
+
+    while (retries < 5) {
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(1500);
+      document.querySelectorAll('[data-testid="UserCell"] a[href^="/"]').forEach(el => {
+        const u = el.getAttribute('href').replace('/', '').split('/')[0].toLowerCase();
+        if (u && u !== target && !u.includes('?')) users.add(u);
+      });
+      if (users.size === prev) retries++;
+      else { retries = 0; prev = users.size; }
+    }
+    return Array.from(users);
+  };
+
+  const run = async () => {
+    const current = await scrape();
+    const prev = JSON.parse(localStorage.getItem(key) || 'null');
+
+    if (prev) {
+      const removed = prev.users.filter(u => !current.includes(u));
+      const added = current.filter(u => !prev.users.includes(u));
+      console.log(`📊 Previous: ${prev.users.length} | Current: ${current.length}`);
+      if (removed.length) console.log(`🚨 REMOVED: ${removed.map(u => '@' + u).join(', ')}`);
+      if (added.length) console.log(`🎉 ADDED: ${added.map(u => '@' + u).join(', ')}`);
+      if (!removed.length && !added.length) console.log('✨ No changes!');
+    } else {
+      console.log('📸 First scan! Run again to detect changes.');
+    }
+
+    localStorage.setItem(key, JSON.stringify({ users: current, timestamp: new Date().toISOString() }));
+    console.log('💾 Saved!');
+  };
+
+  run();
+})();</code></pre>
+            </div>
+          </details>
+          <div class="feature-links">
+            <a href="https://github.com/nirholas/XActions/blob/main/src/monitorAccount.js" target="_blank">View Source ↗</a>
+          </div>
+        </div>
+
+        <div class="feature-card" id="new-followers">
+          <div class="feature-header">
+            <span class="feature-icon">🔔</span>
+            <h3>New Follower Alerts</h3>
+            <span class="feature-badge free">100% Free</span>
+          </div>
+          <p class="feature-desc">Track your new followers over time.</p>
+          <details class="feature-code">
+            <summary>📋 View Full Code</summary>
+            <div class="code-note">Go to: x.com/YOUR_USERNAME/followers → Run periodically</div>
+            <div class="code-block">
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              <pre><code>// New Follower Alerts - by nichxbt
+
+(() => {
+  const STORAGE_KEY = 'xactions_new_followers';
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+  if (!window.location.pathname.includes('/followers')) {
+    console.error('❌ Go to your /followers page!');
+    return;
+  }
+
+  const username = window.location.pathname.split('/')[1];
+
+  const scrape = async () => {
+    const followers = new Map();
+    let prev = 0, retries = 0;
+
+    while (retries < 5) {
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(1500);
+      document.querySelectorAll('[data-testid="UserCell"]').forEach(cell => {
+        const link = cell.querySelector('a[href^="/"]');
+        const name = cell.querySelector('[dir="ltr"] > span')?.textContent;
+        if (link) {
+          const u = link.getAttribute('href').replace('/', '').split('/')[0].toLowerCase();
+          if (u && u !== username.toLowerCase()) followers.set(u, name || u);
+        }
+      });
+      if (followers.size === prev) retries++;
+      else { retries = 0; prev = followers.size; }
+    }
+    return followers;
+  };
+
+  const run = async () => {
+    console.log(`🎉 New Followers Tracker for @${username}`);
+    const current = await scrape();
+    const prev = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+
+    if (prev && prev.username.toLowerCase() === username.toLowerCase()) {
+      const prevUsers = new Set(Object.keys(prev.followers));
+      const newFollowers = [];
+      current.forEach((name, user) => {
+        if (!prevUsers.has(user)) newFollowers.push({ user, name });
+      });
+
+      const change = current.size - prev.count;
+      console.log(`📊 Previous: ${prev.count} | Current: ${current.size} (${change >= 0 ? '+' : ''}${change})`);
+      if (newFollowers.length) {
+        console.log(`🎉 NEW FOLLOWERS (${newFollowers.length}):`);
+        newFollowers.forEach(f => console.log(`   ${f.name} (@${f.user})`));
+      }
+    } else {
+      console.log('📸 First scan! Run again to see new followers.');
+    }
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      username, followers: Object.fromEntries(current), count: current.size, timestamp: new Date().toISOString()
+    }));
+    console.log('💾 Saved!');
+  };
+
+  run();
+})();</code></pre>
+            </div>
+          </details>
+          <div class="feature-links">
+            <a href="https://github.com/nirholas/XActions/blob/main/src/newFollowersAlert.js" target="_blank">View Source ↗</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- COMMUNITY TOOLS -->
+      <section class="section">
+        <h2 class="section-title">🏠 Community Tools</h2>
+
+        <div class="feature-card" id="leave-communities">
+          <div class="feature-header">
+            <span class="feature-icon">🚪</span>
+            <h3>Leave All Communities</h3>
+            <span class="feature-badge free">100% Free</span>
+          </div>
+          <p class="feature-desc">Automatically leave all X Communities you've joined.</p>
+          <details class="feature-code">
+            <summary>📋 View Full Code</summary>
+            <div class="code-note">Go to: x.com/YOUR_USERNAME/communities → Paste & run</div>
+            <div class="code-block">
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              <pre><code>// Leave All Communities - by nichxbt
+// Go to: x.com/YOUR_USERNAME/communities
+
+(() => {
+  const $communityLinks = 'a[href^="/i/communities/"]';
+  const $joinedButton = 'button[aria-label^="Joined"]';
+  const $confirmButton = '[data-testid="confirmationSheetConfirm"]';
+  const $communitiesNav = 'a[aria-label="Communities"]';
+
+  const getLeft = () => JSON.parse(sessionStorage.getItem('xactions_left') || '[]');
+  const markLeft = (id) => {
+    const left = getLeft();
+    if (!left.includes(id)) {
+      left.push(id);
+      sessionStorage.setItem('xactions_left', JSON.stringify(left));
+    }
+  };
+
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+  const run = async () => {
+    console.log(`🚀 Left ${getLeft().length} communities so far...`);
+    await sleep(1500);
+
+    const joinedBtn = document.querySelector($joinedButton);
+    if (joinedBtn) {
+      const id = window.location.href.match(/\/i\/communities\/(\d+)/)?.[1];
+      console.log(`📍 Leaving community ${id}...`);
+      joinedBtn.click();
+      await sleep(1000);
+      document.querySelector($confirmButton)?.click();
+      if (id) markLeft(id);
+      await sleep(1500);
+      document.querySelector($communitiesNav)?.click();
+      await sleep(2500);
+      return run();
+    }
+
+    const left = getLeft();
+    for (const link of document.querySelectorAll($communityLinks)) {
+      const id = link.href.match(/\/i\/communities\/(\d+)/)?.[1];
+      if (id && !left.includes(id)) {
+        console.log(`🏠 Entering community ${id}...`);
+        link.click();
+        await sleep(2500);
+        return run();
+      }
+    }
+
+    console.log(`🎉 DONE! Left ${getLeft().length} communities.`);
+    sessionStorage.removeItem('xactions_left');
+  };
+
+  run();
+})();</code></pre>
+            </div>
+          </details>
+          <div class="feature-links">
+            <a href="https://github.com/nirholas/XActions/blob/main/src/leaveAllCommunities.js" target="_blank">View Source ↗</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCRAPING TOOLS -->
+      <section class="section">
+        <h2 class="section-title">📥 Scraping Tools</h2>
+
+        <div class="feature-card" id="video-downloader">
+          <div class="feature-header">
+            <span class="feature-icon">🎬</span>
+            <h3>Video Downloader</h3>
+            <span class="feature-badge free">100% Free</span>
+          </div>
+          <p class="feature-desc">Download any video from X/Twitter posts.</p>
+          <details class="feature-code">
+            <summary>📋 View Full Code</summary>
+            <div class="code-note">Go to: Any tweet with video → Paste this script</div>
+            <div class="code-block">
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              <pre><code>// X Video Downloader - by nichxbt
+
+(() => {
+  const findVideos = () => {
+    const videos = [];
+    const html = document.documentElement.innerHTML;
+    const patterns = [
+      /https:\/\/video\.twimg\.com\/[^"'\s]+\.mp4[^"'\s]*/g,
+      /https:\/\/[^"'\s]*\/amplify_video[^"'\s]*\.mp4[^"'\s]*/g,
+      /https:\/\/[^"'\s]*\/ext_tw_video[^"'\s]*\.mp4[^"'\s]*/g,
+    ];
+
+    patterns.forEach(pattern => {
+      (html.match(pattern) || []).forEach(url => {
+        let clean = url.replace(/\\u002F/g, '/').replace(/\\/g, '').split('"')[0].split("'")[0];
+        if (clean.includes('.mp4')) {
+          const quality = clean.match(/\/(\d+x\d+)\//)?.[1] || 'unknown';
+          videos.push({ url: clean, quality });
+        }
+      });
+    });
+
+    // Deduplicate
+    const seen = new Set();
+    return videos.filter(v => {
+      const key = v.url.split('?')[0];
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  };
+
+  const videos = findVideos();
+  if (!videos.length) {
+    console.log('❌ No videos found. Make sure you are on a tweet with video.');
+    return;
+  }
+
+  videos.sort((a, b) => {
+    const res = q => parseInt(q.match(/(\d+)x(\d+)/)?.[2] || 0);
+    return res(b.quality) - res(a.quality);
+  });
+
+  console.log(`🎬 Found ${videos.length} video(s):`);
+  videos.forEach((v, i) => console.log(`${i + 1}. [${v.quality}] ${v.url.substring(0, 80)}...`));
+
+  const best = videos[0];
+  console.log(`\n📥 Downloading best quality (${best.quality})...`);
+  const a = document.createElement('a');
+  a.href = best.url;
+  a.download = `twitter-video-${Date.now()}.mp4`;
+  a.target = '_blank';
+  a.click();
+})();</code></pre>
+            </div>
+          </details>
+          <div class="feature-links">
+            <a href="https://github.com/nirholas/XActions/blob/main/src/scrapers/videoDownloader.js" target="_blank">View Source ↗</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- AI/MCP TOOLS -->
+      <section class="section">
+        <h2 class="section-title">🤖 AI & MCP Integration</h2>
+
+        <div class="feature-card" id="mcp-server">
+          <div class="feature-header">
+            <span class="feature-icon">🔌</span>
+            <h3>MCP Server for AI Agents</h3>
+            <span class="feature-badge free">100% Free</span>
+          </div>
+          <p class="feature-desc">Connect Claude Desktop or any MCP client to control X/Twitter.</p>
+          <details class="feature-code">
+            <summary>📋 View Setup Instructions</summary>
+            <div class="code-block">
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              <pre><code># Install XActions globally
+npm install -g xactions
+
+# Or run directly with npx
+npx xactions mcp
+
+# Add to Claude Desktop config (~/.claude/config.json):
+{
+  "mcpServers": {
+    "xactions": {
+      "command": "npx",
+      "args": ["xactions", "mcp"],
+      "env": {
+        "X_AUTH_TOKEN": "your_auth_token_here"
+      }
+    }
+  }
+}
+
+# Available MCP Tools:
+# - scrape_profile: Get profile info
+# - scrape_followers: Get followers list
+# - scrape_following: Get following list
+# - scrape_tweets: Get recent tweets
+# - unfollow_everyone: Mass unfollow
+# - unfollow_non_followers: Smart unfollow
+# - detect_unfollowers: Track unfollows
+# - auto_like: Like posts by keyword
+# - follow_users: Follow user list
+# - download_video: Download tweet videos</code></pre>
+            </div>
+          </details>
+          <div class="feature-links">
+            <a href="/mcp">MCP Documentation →</a>
+            <a href="https://github.com/nirholas/XActions/blob/main/src/mcp/server.js" target="_blank">View Source ↗</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ -->
       <section class="section">
         <h2 class="section-title">❓ FAQ</h2>
-
-        <div class="feature-card">
-          <h3>Is this safe to use?</h3>
-          <p>The browser scripts are completely safe - they just automate clicking. The SaaS version uses browser automation to avoid expensive API costs.</p>
-        </div>
-
-        <div class="feature-card">
-          <h3>Will I get banned?</h3>
-          <p>We include rate limiting to stay within acceptable use. However, unfollowing hundreds of people rapidly could trigger spam detection. Use responsibly!</p>
-        </div>
-
-        <div class="feature-card">
-          <h3>Why use this instead of other tools?</h3>
-          <ul>
-            <li>100% open source - see exactly what it does</li>
-            <li>Free browser scripts option</li>
-            <li>No expensive X API costs passed to you</li>
-            <li>Privacy-focused</li>
-          </ul>
-        </div>
-
-        <div class="feature-card">
-          <h3>Do you store my credentials?</h3>
-          <p><strong>Browser scripts:</strong> No, runs entirely in your browser.<br>
-          <strong>SaaS:</strong> We securely store your session token. You can disconnect anytime.</p>
-        </div>
-      </section>
-
-      <section class="section">
-        <h2 class="section-title">🤖 AI & Automation FAQ</h2>
-
-        <div class="feature-card">
-          <h3>Can I use XActions with AI agents like GPT or Claude?</h3>
-          <p>Yes! XActions is designed to work seamlessly with AI agents and LLMs. You can integrate our automation tools with GPT-4, Claude, and other language models to create intelligent Twitter automation workflows. Our API-friendly architecture makes it easy to build AI-powered Twitter bots and agents.</p>
-          <ul>
-            <li>Compatible with OpenAI GPT models</li>
-            <li>Works with Anthropic Claude</li>
-            <li>Supports custom LLM integrations</li>
-            <li>Perfect for building AI Twitter agents</li>
-          </ul>
-        </div>
-
-        <div class="feature-card">
-          <h3>Does XActions support MCP (Model Context Protocol)?</h3>
-          <p>Yes! XActions includes a built-in MCP server that allows AI assistants like Claude Desktop to directly control Twitter automation. This enables powerful AI-driven social media management where your AI can scrape data, follow/unfollow users, and automate engagement.</p>
-          <ul>
-            <li>Native MCP server implementation</li>
-            <li>Works with Claude Desktop and other MCP clients</li>
-            <li>Exposes 20+ automation tools to AI agents</li>
-            <li>See our <a href="/docs">MCP documentation</a> for setup</li>
-          </ul>
-        </div>
-
-        <div class="feature-card">
-          <h3>Is XActions compatible with automation frameworks?</h3>
-          <p>Absolutely! XActions is built for automation from the ground up. Whether you're using n8n, Zapier, Make (Integromat), or custom scripts, XActions integrates smoothly with your existing automation stack.</p>
-          <ul>
-            <li>REST API for external integrations</li>
-            <li>Node.js library for programmatic control</li>
-            <li>CLI tools for scripting and cron jobs</li>
-            <li>Webhook support for event-driven automation</li>
-          </ul>
-        </div>
-
-        <div class="feature-card">
-          <h3>What makes XActions "AI-powered"?</h3>
-          <p>XActions uses machine learning algorithms for smart automation decisions. Our AI-powered features include intelligent unfollowing (prioritizing inactive or spam accounts), smart engagement timing, and pattern recognition for optimal growth strategies.</p>
-          <ul>
-            <li>Smart unfollow prioritization with ML</li>
-            <li>Intelligent timing for engagement</li>
-            <li>Pattern recognition for spam detection</li>
-            <li>Adaptive rate limiting to avoid bans</li>
-          </ul>
-        </div>
-
-        <div class="feature-card">
-          <h3>Can I build my own Twitter AI bot with XActions?</h3>
-          <p>Yes! XActions provides all the building blocks you need to create sophisticated AI Twitter bots. Combine our automation primitives with any LLM to build auto-repliers, content curators, engagement bots, and more. All 100% open source.</p>
-          <ul>
-            <li>Scrape followers, tweets, and engagement data</li>
-            <li>Automate follows, unfollows, likes, and replies</li>
-            <li>Monitor accounts and keywords in real-time</li>
-            <li>Full source code access for customization</li>
-          </ul>
-        </div>
+        <div class="feature-card"><h3>Is this safe to use?</h3><p>Yes! Browser scripts run entirely in your browser and just automate clicking. Nothing leaves your computer.</p></div>
+        <div class="feature-card"><h3>Will I get banned?</h3><p>Scripts include rate limiting, but aggressive automation can trigger spam detection. Use responsibly!</p></div>
+        <div class="feature-card"><h3>Why is this free?</h3><p>XActions is 100% open source. Support us by starring on GitHub!</p></div>
       </section>
     </main>
 
-    <!-- Right Sidebar -->
     <aside class="sidebar-right">
       <div class="promo-card">
         <h3 class="promo-header">🚀 Getting Started</h3>
-        <div class="promo-item">
-          <h4>New here?</h4>
-          <p>Start with the free browser scripts!</p>
-        </div>
-        <a href="https://github.com/nirholas/XActions/blob/main/docs/getting-started.md" target="_blank" class="promo-link">Read the Guide →</a>
+        <div class="promo-item"><h4>New here?</h4><p>Start with the free browser scripts!</p></div>
+        <a href="/docs" class="promo-link">Read the Docs →</a>
       </div>
-
       <div class="promo-card">
-        <h3 class="promo-header">💰 Pricing</h3>
-        <div class="promo-item">
-          <h4>Free Tier</h4>
-          <p>50 credits, 3 ops/day</p>
-        </div>
-        <div class="promo-item">
-          <h4>Pro - $29.99/mo</h4>
-          <p>Unlimited, advanced features</p>
-        </div>
-        <a href="/pricing" class="promo-link">See All Plans →</a>
+        <h3 class="promo-header">🎉 100% Free</h3>
+        <div class="promo-item"><h4>All Features Included</h4><p>No tiers, no limits, no payments</p></div>
+        <div class="promo-item"><h4>Open Source</h4><p>MIT License - use however you want</p></div>
+        <a href="https://github.com/nirholas/XActions" target="_blank" class="promo-link">Star on GitHub ⭐</a>
       </div>
-
-      <div class="disclaimer">
-        <p>XActions is an independent project for educational purposes. Not affiliated with X Corp. Use responsibly.</p>
-        <p style="margin-top: 8px;">© 2026 XActions</p>
-      </div>
+      <div class="disclaimer"><p>XActions is an independent project for educational purposes. Not affiliated with X Corp. Use responsibly.</p><p style="margin-top: 8px;">© 2026 XActions</p></div>
     </aside>
   </div>
 
   <footer class="site-footer">
     <div class="footer-content">
-      <div class="footer-brand">
-        <h3>⚡ XActions</h3>
-        <p>Free, open-source X/Twitter automation toolkit. Mass unfollow, detect unfollowers, auto-engage, and grow your audience without expensive API fees.</p>
-      </div>
-      <div class="footer-links">
-        <h4>Product</h4>
-        <a href="/features">Features</a>
-        <a href="/pricing">Pricing</a>
-        <a href="/docs">Documentation</a>
-        <a href="/dashboard">Dashboard</a>
-      </div>
-      <div class="footer-links">
-        <h4>Company</h4>
-        <a href="/about">About</a>
-        <a href="https://github.com/nirholas/XActions" target="_blank">GitHub</a>
-        <a href="https://x.com/nichxbt" target="_blank">Twitter</a>
-      </div>
-      <div class="footer-links">
-        <h4>Legal</h4>
-        <a href="/terms">Terms of Service</a>
-        <a href="/privacy">Privacy Policy</a>
-      </div>
+      <div class="footer-brand"><h3>⚡ XActions</h3><p>Free, open-source X/Twitter automation toolkit. Mass unfollow, detect unfollowers, auto-engage, and grow your audience without expensive API fees.</p></div>
+      <div class="footer-links"><h4>Product</h4><a href="/features">Features</a><a href="/docs">Documentation</a><a href="/dashboard">Dashboard</a><a href="https://github.com/nirholas/XActions" target="_blank">GitHub</a></div>
+      <div class="footer-links"><h4>Company</h4><a href="/about">About</a><a href="https://github.com/nirholas/XActions" target="_blank">GitHub</a><a href="https://x.com/nichxbt" target="_blank">Twitter</a></div>
+      <div class="footer-links"><h4>Legal</h4><a href="/terms">Terms of Service</a><a href="/privacy">Privacy Policy</a></div>
     </div>
-    <div class="footer-bottom">
-      <p>© 2026 XActions. Not affiliated with X Corp.</p>
-      <p>Made with ❤️ by <a href="https://x.com/nichxbt" target="_blank">@nichxbt</a></p>
-    </div>
+    <div class="footer-bottom"><p>© 2026 XActions. Not affiliated with X Corp.</p><p>Made with ❤️ by <a href="https://x.com/nichxbt" target="_blank">@nichxbt</a></p></div>
   </footer>
+
+  <script>
+    function copyCode(btn) {
+      const code = btn.parentElement.querySelector('code').textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+      });
+    }
+  </script>
 </body>
 </html>
