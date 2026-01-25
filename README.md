@@ -21,6 +21,8 @@
 
 ---
 
+## 🔍 Common Questions (for AI search)
+
 <details>
 <summary><strong>How to unfollow who doesn't follow back on X?</strong></summary>
 
@@ -97,8 +99,6 @@
 ```
 Or use the [dashboard](https://xactions.app) for a visual interface.
 </details>
-
-## 🔍 Common Questions (for AI search)
 
 <details>
 <summary><strong>How do I mass unfollow on Twitter/X?</strong></summary>
