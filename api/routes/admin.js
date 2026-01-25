@@ -1,5 +1,5 @@
 /**
- * Admin routes for license management
+ * Admin routes for license management and payment monitoring
  * 
  * These routes require admin authentication
  */
@@ -15,6 +15,12 @@ import {
   TIER_FEATURES,
 } from '../services/licenseManager.js';
 import { authenticateToken, requireAdmin } from '../middleware/auth.js';
+import { getStats as getPaymentStats } from '../services/payment-stats.js';
+import { 
+  getWebhookStatus, 
+  testWebhooks, 
+  hasWebhooksConfigured 
+} from '../services/payment-webhooks.js';
 
 const router = Router();
 
@@ -166,6 +172,84 @@ router.post('/licenses/:key/validate', authenticateToken, requireAdmin, async (r
   } catch (error) {
     console.error('Validate license error:', error);
     res.status(500).json({ error: 'Failed to validate license' });
+  }
+});
+
+/**
+ * GET /api/admin/x402/stats
+ * Get x402 payment statistics
+ * Protected by admin API key
+ */
+router.get('/x402/stats', (req, res) => {
+  // Simple auth check via API key header
+  const adminKey = req.headers['x-admin-key'];
+  if (adminKey !== process.env.ADMIN_API_KEY) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  const stats = getPaymentStats();
+  res.json({
+    success: true,
+    stats,
+    generatedAt: new Date().toISOString()
+  });
+});
+
+/**
+ * GET /api/admin/x402/webhooks
+ * Get webhook configuration status and delivery statistics
+ * Protected by admin API key
+ */
+router.get('/x402/webhooks', (req, res) => {
+  // Simple auth check via API key header
+  const adminKey = req.headers['x-admin-key'];
+  if (adminKey !== process.env.ADMIN_API_KEY) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  const status = getWebhookStatus();
+  res.json({
+    success: true,
+    webhooks: status,
+    generatedAt: new Date().toISOString()
+  });
+});
+
+/**
+ * POST /api/admin/x402/webhooks/test
+ * Test webhook connectivity by sending a test event
+ * Protected by admin API key
+ */
+router.post('/x402/webhooks/test', async (req, res) => {
+  // Simple auth check via API key header
+  const adminKey = req.headers['x-admin-key'];
+  if (adminKey !== process.env.ADMIN_API_KEY) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  if (!hasWebhooksConfigured()) {
+    return res.status(400).json({
+      success: false,
+      error: 'No webhooks configured',
+      message: 'Set X402_WEBHOOK_URL, DISCORD_WEBHOOK_URL, or SLACK_WEBHOOK_URL in environment variables'
+    });
+  }
+
+  try {
+    const results = await testWebhooks();
+    res.json({
+      success: true,
+      message: 'Test webhooks sent',
+      results,
+      generatedAt: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('Webhook test error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to test webhooks',
+      message: error.message
+    });
   }
 });
 

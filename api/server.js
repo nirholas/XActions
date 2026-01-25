@@ -34,6 +34,7 @@ import twitterRoutes from './routes/twitter.js';
 import sessionAuthRoutes from './routes/session-auth.js';
 import licenseRoutes from './routes/license.js';
 import adminRoutes from './routes/admin.js';
+import webhookRoutes from './routes/webhooks.js';
 // AI API routes - modular structure optimized for AI agent consumption
 import aiRoutes from './routes/ai/index.js';
 import { initializeSocketIO } from './realtime/socketHandler.js';
@@ -126,6 +127,7 @@ app.use(brandingMiddleware());
 
 // Routes
 // Payment routes archived - XActions is now 100% free and open-source
+app.use('/webhooks', webhookRoutes); // Receive payment notifications
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/operations', operationRoutes);
@@ -183,12 +185,31 @@ httpServer.listen(PORT, async () => {
   console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
   
   // Validate x402 configuration
-  const x402Validation = validateX402Config();
-  if (!x402Validation.valid) {
-    x402Validation.errors.forEach(e => console.error(`❌ x402: ${e}`));
+  // In production, this will throw if payment address is not configured
+  try {
+    const x402Validation = validateX402Config();
+    if (!x402Validation.valid) {
+      x402Validation.errors.forEach(e => console.error(`❌ x402: ${e}`));
+      if (process.env.NODE_ENV === 'production') {
+        console.error('\n🚨 FATAL: x402 configuration errors in production - shutting down');
+        console.error('   Set X402_PAY_TO_ADDRESS to your wallet address to receive payments');
+        process.exit(1);
+      }
+    }
+    x402Validation.warnings?.forEach(w => console.warn(`⚠️  x402: ${w}`));
+    
+    if (x402Validation.valid) {
+      console.log(`💰 x402 AI monetization: Humans free, AI agents pay per call`);
+    } else {
+      console.log(`⚠️  x402 AI monetization: DISABLED (payment address not configured)`);
+    }
+  } catch (error) {
+    console.error('\n🚨 FATAL: x402 configuration error');
+    console.error(error.message);
+    if (process.env.NODE_ENV === 'production') {
+      process.exit(1);
+    }
   }
-  x402Validation.warnings?.forEach(w => console.warn(`⚠️  x402: ${w}`));
-  console.log(`💰 x402 AI monetization: Humans free, AI agents pay per call`);
   
   // Initialize licensing and telemetry
   await initializeLicensing();

@@ -36,17 +36,112 @@ async function loadViem() {
   return { viem, viemAccounts, viemChains };
 }
 
-// USDC contract addresses
+// Supported network configurations
+export const NETWORK_CONFIGS = {
+  'base-sepolia': {
+    chainId: 84532,
+    networkId: 'eip155:84532',
+    usdc: '0x036CbD53842c5426634e7929541eC2318f3dCF7e',
+    name: 'Base Sepolia',
+    testnet: true,
+    gasCost: 'low'
+  },
+  'base': {
+    chainId: 8453,
+    networkId: 'eip155:8453',
+    usdc: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
+    name: 'Base',
+    recommended: true,
+    gasCost: 'low'
+  },
+  'ethereum': {
+    chainId: 1,
+    networkId: 'eip155:1',
+    usdc: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+    name: 'Ethereum',
+    gasCost: 'high'
+  },
+  'arbitrum': {
+    chainId: 42161,
+    networkId: 'eip155:42161',
+    usdc: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
+    name: 'Arbitrum One',
+    gasCost: 'low'
+  }
+};
+
+// Legacy USDC addresses (for backwards compatibility)
 const USDC_ADDRESSES = {
   'base-sepolia': '0x036CbD53842c5426634e7929541eC2318f3dCF7e',
   'base': '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
+  'ethereum': '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+  'arbitrum': '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
 };
 
-// Chain configurations (loaded dynamically)
+// Legacy chain IDs (for backwards compatibility)
 const CHAIN_IDS = {
   'base-sepolia': 84532,
   'base': 8453,
+  'ethereum': 1,
+  'arbitrum': 42161,
 };
+
+/**
+ * Get the cheapest available network from payment options
+ * Prefers networks with low gas costs and skips testnets in production
+ */
+function selectBestNetwork(accepts, preferTestnet = false) {
+  if (!accepts || accepts.length === 0) return null;
+  
+  // Sort by: recommended first, then low gas cost, then name
+  const sorted = [...accepts].sort((a, b) => {
+    const aExtra = a.extra || {};
+    const bExtra = b.extra || {};
+    
+    // Skip testnets if not preferred
+    if (!preferTestnet) {
+      if (aExtra.testnet && !bExtra.testnet) return 1;
+      if (!aExtra.testnet && bExtra.testnet) return -1;
+    }
+    
+    // Recommended first
+    if (aExtra.recommended && !bExtra.recommended) return -1;
+    if (!aExtra.recommended && bExtra.recommended) return 1;
+    
+    // Low gas cost preferred
+    if (aExtra.gasCost === 'low' && bExtra.gasCost !== 'low') return -1;
+    if (aExtra.gasCost !== 'low' && bExtra.gasCost === 'low') return 1;
+    
+    return 0;
+  });
+  
+  return sorted[0];
+}
+
+/**
+ * Convert network ID (eip155:8453) to network name (base)
+ */
+function networkIdToName(networkId) {
+  for (const [name, config] of Object.entries(NETWORK_CONFIGS)) {
+    if (config.networkId === networkId) return name;
+  }
+  return null;
+}
+
+/**
+ * Get chain object for viem based on network name
+ */
+async function getChainForNetwork(networkName) {
+  const { viemChains } = await loadViem();
+  
+  switch (networkName) {
+    case 'base-sepolia': return viemChains.baseSepolia;
+    case 'base': return viemChains.base;
+    case 'ethereum': return viemChains.mainnet;
+    case 'arbitrum': return viemChains.arbitrum;
+    default: return viemChains.baseSepolia;
+  }
+}
 
 /**
  * Create an x402-enabled API client
@@ -55,7 +150,8 @@ const CHAIN_IDS = {
  * @param {string} config.apiUrl - Base URL for XActions API
  * @param {string} config.privateKey - Wallet private key for payments (0x prefixed)
  * @param {string} config.sessionCookie - X/Twitter session cookie (optional)
- * @param {string} config.network - Network to use ('base-sepolia' or 'base')
+ * @param {string} config.network - Preferred network ('base-sepolia', 'base', 'ethereum', 'arbitrum')
+ * @param {boolean} config.autoSelectNetwork - Auto-select cheapest network from options (default: true)
  */
 export async function createX402Client(config) {
   const { 
@@ -63,6 +159,7 @@ export async function createX402Client(config) {
     privateKey, 
     sessionCookie,
     network = 'base-sepolia', // Default to testnet
+    autoSelectNetwork = true, // Auto-select best network from 402 response
   } = config;
   
   if (!privateKey) {
@@ -70,19 +167,26 @@ export async function createX402Client(config) {
     console.error('   Get testnet USDC: https://faucet.circle.com/');
   }
   
+  // Validate network
+  if (!NETWORK_CONFIGS[network]) {
+    console.error(`⚠️  Unknown network: ${network}. Using base-sepolia.`);
+    console.error(`   Available networks: ${Object.keys(NETWORK_CONFIGS).join(', ')}`);
+  }
+  
   // Set up wallet for signing payments (lazy loaded)
   let wallet = null;
   let account = null;
+  let currentNetwork = network;
   
   if (privateKey) {
     try {
-      const { viem, viemAccounts, viemChains } = await loadViem();
+      const { viem, viemAccounts } = await loadViem();
       
       // Ensure private key has 0x prefix
       const pk = privateKey.startsWith('0x') ? privateKey : `0x${privateKey}`;
       account = viemAccounts.privateKeyToAccount(pk);
       
-      const chain = network === 'base' ? viemChains.base : viemChains.baseSepolia;
+      const chain = await getChainForNetwork(network);
       wallet = viem.createWalletClient({
         account,
         chain,
@@ -90,7 +194,8 @@ export async function createX402Client(config) {
       });
       
       console.error(`💰 x402 wallet initialized: ${account.address}`);
-      console.error(`   Network: ${network}`);
+      console.error(`   Default network: ${NETWORK_CONFIGS[network]?.name || network}`);
+      console.error(`   Auto-select: ${autoSelectNetwork ? 'enabled' : 'disabled'}`);
     } catch (e) {
       console.error(`⚠️  Failed to initialize wallet: ${e.message}`);
     }
@@ -164,11 +269,30 @@ export async function createX402Client(config) {
         paymentRequired = JSON.parse(paymentRequiredHeader);
       }
       
-      console.error(`   Amount: ${paymentRequired.accepts?.[0]?.maxAmountRequired || 'unknown'}`);
+      // Select the best network for payment
+      let selectedNetwork = network;
+      let selectedAccept = paymentRequired.accepts?.[0];
+      
+      if (autoSelectNetwork && paymentRequired.accepts?.length > 1) {
+        // Auto-select the best network (cheapest gas, recommended, etc.)
+        const preferTestnet = network.includes('sepolia') || network.includes('testnet');
+        selectedAccept = selectBestNetwork(paymentRequired.accepts, preferTestnet);
+        
+        if (selectedAccept) {
+          const networkName = networkIdToName(selectedAccept.network);
+          if (networkName && networkName !== network) {
+            selectedNetwork = networkName;
+            console.error(`   Auto-selected network: ${selectedAccept.extra?.networkName || selectedNetwork}`);
+          }
+        }
+      }
+      
+      console.error(`   Amount: ${selectedAccept?.maxAmountRequired || 'unknown'}`);
+      console.error(`   Network: ${selectedAccept?.extra?.networkName || selectedNetwork}`);
       console.error(`   Asset: USDC`);
       
-      // Sign payment
-      const payment = await signPayment(wallet, account, paymentRequired, network);
+      // Sign payment for the selected network
+      const payment = await signPayment(wallet, account, paymentRequired, selectedNetwork, selectedAccept);
       
       console.error(`   Signed payment, retrying request...`);
       
@@ -223,12 +347,23 @@ export async function createX402Client(config) {
   
   /**
    * Sign payment using x402 protocol (EIP-3009 TransferWithAuthorization)
+   * @param {Object} wallet - Viem wallet client
+   * @param {Object} account - Viem account
+   * @param {Object} paymentRequired - Full payment requirements from 402 response
+   * @param {string} network - Network name to use (e.g., 'base', 'ethereum', 'arbitrum')
+   * @param {Object} selectedAccept - Specific accept option to use (optional)
    */
-  async function signPayment(wallet, account, paymentRequired, network) {
-    const requirements = paymentRequired.accepts?.[0] || paymentRequired;
+  async function signPayment(wallet, account, paymentRequired, network, selectedAccept = null) {
+    // Use selected accept or fall back to first option
+    const requirements = selectedAccept || paymentRequired.accepts?.[0] || paymentRequired;
     
-    const usdcAddress = requirements.asset?.address || USDC_ADDRESSES[network];
-    const chainId = CHAIN_IDS[network];
+    // Get network config
+    const networkConfig = NETWORK_CONFIGS[network] || NETWORK_CONFIGS['base-sepolia'];
+    
+    // Get USDC address from requirements or network config
+    const usdcAddress = requirements.asset || networkConfig.usdc;
+    const chainId = networkConfig.chainId;
+    const networkId = requirements.network || networkConfig.networkId;
     
     // Generate unique nonce
     const nonce = `0x${crypto.randomBytes(32).toString('hex')}`;
@@ -273,11 +408,12 @@ export async function createX402Client(config) {
       message,
     });
     
-    // Return x402 payment object
+    // Return x402 payment object with network information
+    // Using x402Version: 2 to match middleware expectations
     return {
-      x402Version: 1,
+      x402Version: 2,
       scheme: 'exact',
-      network,
+      network: networkId, // Use EIP-155 network ID (e.g., 'eip155:8453')
       payload: {
         signature,
         authorization: {
@@ -288,6 +424,8 @@ export async function createX402Client(config) {
           validBefore: validBefore.toString(),
           nonce,
         },
+        networkName: network, // Human-readable network name
+        chainId, // Chain ID for verification
       },
     };
   }
@@ -340,17 +478,31 @@ export async function createX402Client(config) {
   }
   
   /**
-   * Get wallet balance (for debugging)
+   * Get wallet info and supported networks (for debugging)
    */
   async function getBalance() {
     if (!account) {
       return { error: 'No wallet configured' };
     }
     
-    // Note: This is a simplified check. In production, you'd query the USDC contract
+    const networkConfig = NETWORK_CONFIGS[currentNetwork] || NETWORK_CONFIGS['base-sepolia'];
+    
     return {
       address: account.address,
-      network,
+      network: currentNetwork,
+      networkName: networkConfig.name,
+      chainId: networkConfig.chainId,
+      usdcContract: networkConfig.usdc,
+      autoSelectNetwork,
+      supportedNetworks: Object.entries(NETWORK_CONFIGS).map(([name, config]) => ({
+        name,
+        displayName: config.name,
+        chainId: config.chainId,
+        networkId: config.networkId,
+        recommended: config.recommended || false,
+        testnet: config.testnet || false,
+        gasCost: config.gasCost
+      })),
       note: 'Use a block explorer to check USDC balance',
     };
   }
@@ -360,7 +512,10 @@ export async function createX402Client(config) {
     getBalance,
     wallet,
     account,
-    network,
+    network: currentNetwork,
+    networkConfig: NETWORK_CONFIGS[currentNetwork],
+    supportedNetworks: NETWORK_CONFIGS,
+    autoSelectNetwork,
   };
 }
 
@@ -383,6 +538,7 @@ export function formatPaymentError(error) {
       network: error.network,
       hint: 'Set X402_PRIVATE_KEY environment variable with a funded wallet',
       faucet: 'Get testnet USDC at https://faucet.circle.com/',
+      supportedNetworks: Object.keys(NETWORK_CONFIGS),
     };
   }
   
@@ -391,10 +547,11 @@ export function formatPaymentError(error) {
       error: 'Payment failed',
       message: error.message,
       hint: 'Check wallet has sufficient USDC balance and has approved the transfer',
+      supportedNetworks: Object.keys(NETWORK_CONFIGS),
     };
   }
   
   return { error: error.message };
 }
 
-export default { createX402Client, isPaymentError, formatPaymentError };
+export default { createX402Client, isPaymentError, formatPaymentError, NETWORK_CONFIGS };

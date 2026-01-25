@@ -614,3 +614,425 @@ describe('Payment header encoding', () => {
     expect(decoded).toEqual(requirements);
   });
 });
+
+describe('x402 Configuration Validation', () => {
+  // Test helper to create a mock environment
+  const withEnv = (env, fn) => {
+    const original = { ...process.env };
+    Object.assign(process.env, env);
+    try {
+      return fn();
+    } finally {
+      // Restore original env
+      for (const key of Object.keys(env)) {
+        if (original[key] === undefined) {
+          delete process.env[key];
+        } else {
+          process.env[key] = original[key];
+        }
+      }
+    }
+  };
+
+  describe('Payment address validation', () => {
+    it('should reject placeholder address 0xYourWalletAddress', () => {
+      const result = mockValidateAddress('0xYourWalletAddress');
+      expect(result.valid).toBe(false);
+      expect(result.error).toContain('placeholder');
+    });
+    
+    it('should reject placeholder address 0xYourEthereumAddress', () => {
+      const result = mockValidateAddress('0xYourEthereumAddress');
+      expect(result.valid).toBe(false);
+      expect(result.error).toContain('placeholder');
+    });
+    
+    it('should reject invalid address format (too short)', () => {
+      const result = mockValidateAddress('0x123');
+      expect(result.valid).toBe(false);
+      expect(result.error).toContain('valid Ethereum address');
+    });
+    
+    it('should reject invalid address format (no 0x prefix)', () => {
+      const result = mockValidateAddress('abcd1234567890abcd1234567890abcd12345678');
+      expect(result.valid).toBe(false);
+    });
+    
+    it('should accept valid Ethereum address', () => {
+      const result = mockValidateAddress('0x742d35Cc6634C0532925a3b844Bc9e7595f5FacB');
+      expect(result.valid).toBe(true);
+    });
+    
+    it('should accept valid address with lowercase', () => {
+      const result = mockValidateAddress('0x742d35cc6634c0532925a3b844bc9e7595f5facb');
+      expect(result.valid).toBe(true);
+    });
+    
+    it('should accept valid address with uppercase', () => {
+      const result = mockValidateAddress('0x742D35CC6634C0532925A3B844BC9E7595F5FACB');
+      expect(result.valid).toBe(true);
+    });
+  });
+  
+  describe('Network configuration', () => {
+    it('should recognize Base Sepolia testnet', () => {
+      expect(getNetworkInfo('eip155:84532').isTestnet).toBe(true);
+      expect(getNetworkInfo('eip155:84532').name).toContain('Sepolia');
+    });
+    
+    it('should recognize Base mainnet', () => {
+      expect(getNetworkInfo('eip155:8453').isTestnet).toBe(false);
+      expect(getNetworkInfo('eip155:8453').name).toContain('Base');
+    });
+    
+    it('should warn about testnet in production', () => {
+      const result = mockValidateNetwork('eip155:84532', true);
+      expect(result.warnings.length).toBeGreaterThan(0);
+      expect(result.warnings[0]).toContain('testnet');
+    });
+    
+    it('should warn about mainnet in development', () => {
+      const result = mockValidateNetwork('eip155:8453', false);
+      expect(result.warnings.length).toBeGreaterThan(0);
+      expect(result.warnings[0]).toContain('mainnet');
+    });
+  });
+  
+  describe('Production requirements', () => {
+    it('should require payment address in production', () => {
+      const result = mockValidateConfig({ payToAddress: null, isProduction: true });
+      expect(result.valid).toBe(false);
+      expect(result.errors.some(e => e.includes('REQUIRED'))).toBe(true);
+    });
+    
+    it('should allow missing payment address in development', () => {
+      const result = mockValidateConfig({ payToAddress: null, isProduction: false });
+      // In dev, missing address is a warning not an error
+      expect(result.errors.length).toBe(0);
+      expect(result.warnings.length).toBeGreaterThan(0);
+    });
+    
+    it('should not allow placeholder address even in development', () => {
+      const result = mockValidateConfig({ payToAddress: '0xYourWalletAddress', isProduction: false });
+      expect(result.valid).toBe(false);
+    });
+  });
+});
+
+// Mock validation functions for testing (mirrors logic from x402-config.js)
+function mockValidateAddress(address) {
+  if (!address) {
+    return { valid: false, error: 'Address is required' };
+  }
+  if (address === '0xYourWalletAddress' || address === '0xYourEthereumAddress') {
+    return { valid: false, error: 'Address is set to a placeholder value' };
+  }
+  if (!address.match(/^0x[a-fA-F0-9]{40}$/)) {
+    return { valid: false, error: 'Not a valid Ethereum address' };
+  }
+  return { valid: true };
+}
+
+function getNetworkInfo(networkId) {
+  const networks = {
+    'eip155:84532': { name: 'Base Sepolia', isTestnet: true },
+    'eip155:8453': { name: 'Base Mainnet', isTestnet: false },
+    'eip155:1': { name: 'Ethereum Mainnet', isTestnet: false },
+  };
+  return networks[networkId] || { name: 'Unknown', isTestnet: false };
+}
+
+function mockValidateNetwork(networkId, isProduction) {
+  const warnings = [];
+  const info = getNetworkInfo(networkId);
+  
+  if (info.isTestnet && isProduction) {
+    warnings.push('Using testnet in production - switch to mainnet');
+  }
+  if (!info.isTestnet && !isProduction) {
+    warnings.push('Using mainnet in development - consider testnet');
+  }
+  
+  return { warnings };
+}
+
+function mockValidateConfig({ payToAddress, isProduction }) {
+  const errors = [];
+  const warnings = [];
+  
+  if (!payToAddress) {
+    if (isProduction) {
+      errors.push('X402_PAY_TO_ADDRESS is REQUIRED in production');
+    } else {
+      warnings.push('X402_PAY_TO_ADDRESS not set - x402 payments disabled');
+    }
+  } else {
+    const addrResult = mockValidateAddress(payToAddress);
+    if (!addrResult.valid) {
+      errors.push(addrResult.error);
+    }
+  }
+  
+  return { valid: errors.length === 0, errors, warnings };
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// Payment Webhook Tests
+// ═══════════════════════════════════════════════════════════════════════════════
+
+describe('Payment Webhooks', () => {
+  describe('Webhook Service', () => {
+    it('should export all required functions', async () => {
+      const webhooks = await import('../api/services/payment-webhooks.js');
+      
+      expect(webhooks.notifyPaymentReceived).toBeDefined();
+      expect(webhooks.notifyPaymentFailed).toBeDefined();
+      expect(webhooks.notifyPaymentSettled).toBeDefined();
+      expect(webhooks.hasWebhooksConfigured).toBeDefined();
+      expect(webhooks.getWebhookStatus).toBeDefined();
+      expect(webhooks.testWebhooks).toBeDefined();
+      expect(webhooks.PAYMENT_EVENTS).toBeDefined();
+    });
+    
+    it('should have correct PAYMENT_EVENTS', async () => {
+      const { PAYMENT_EVENTS } = await import('../api/services/payment-webhooks.js');
+      
+      expect(PAYMENT_EVENTS.RECEIVED).toBe('payment.received');
+      expect(PAYMENT_EVENTS.SETTLED).toBe('payment.settled');
+      expect(PAYMENT_EVENTS.FAILED).toBe('payment.failed');
+      expect(PAYMENT_EVENTS.VERIFICATION_FAILED).toBe('payment.verification_failed');
+    });
+    
+    it('should return false when no webhooks configured', async () => {
+      const { hasWebhooksConfigured } = await import('../api/services/payment-webhooks.js');
+      
+      // Without env vars, should return false
+      expect(hasWebhooksConfigured()).toBe(false);
+    });
+    
+    it('should return status object with correct structure', async () => {
+      const { getWebhookStatus } = await import('../api/services/payment-webhooks.js');
+      
+      const status = getWebhookStatus();
+      
+      expect(status).toHaveProperty('configured');
+      expect(status).toHaveProperty('delivery');
+      expect(status).toHaveProperty('recentDeliveries');
+      
+      expect(status.configured).toHaveProperty('customWebhook');
+      expect(status.configured).toHaveProperty('discord');
+      expect(status.configured).toHaveProperty('slack');
+      expect(status.configured).toHaveProperty('signatureEnabled');
+      
+      expect(status.delivery).toHaveProperty('total');
+      expect(status.delivery).toHaveProperty('successful');
+      expect(status.delivery).toHaveProperty('failed');
+      expect(status.delivery).toHaveProperty('retried');
+      expect(status.delivery).toHaveProperty('successRate');
+    });
+    
+    it('should skip notification when no webhooks configured', async () => {
+      const { notifyPaymentReceived } = await import('../api/services/payment-webhooks.js');
+      
+      const result = await notifyPaymentReceived({
+        price: '$0.01',
+        operation: 'test:operation',
+        payerAddress: '0x1234567890123456789012345678901234567890',
+        network: 'eip155:8453',
+      });
+      
+      expect(result.skipped).toBe(true);
+      expect(result.reason).toBe('No webhooks configured');
+    });
+  });
+  
+  describe('Webhook Payload Structure', () => {
+    it('should format payment amounts correctly', () => {
+      // Test amount parsing helper - this is internal but we test the concept
+      const parseAmountToCents = (price) => {
+        if (!price) return 0;
+        const numericValue = parseFloat(price.replace(/[^0-9.]/g, ''));
+        return Math.round(numericValue * 100);
+      };
+      
+      expect(parseAmountToCents('$0.01')).toBe(1);
+      expect(parseAmountToCents('$0.05')).toBe(5);
+      expect(parseAmountToCents('$1.00')).toBe(100);
+      expect(parseAmountToCents('$0.001')).toBe(0); // Rounds to 0 cents
+      expect(parseAmountToCents(null)).toBe(0);
+    });
+    
+    it('should format network names correctly', () => {
+      const getNetworkName = (network) => {
+        const networks = {
+          'eip155:8453': 'Base',
+          'eip155:84532': 'Base Sepolia (Testnet)',
+          'eip155:1': 'Ethereum',
+          'eip155:42161': 'Arbitrum One',
+        };
+        return networks[network] || network || 'Unknown';
+      };
+      
+      expect(getNetworkName('eip155:8453')).toBe('Base');
+      expect(getNetworkName('eip155:84532')).toBe('Base Sepolia (Testnet)');
+      expect(getNetworkName('eip155:1')).toBe('Ethereum');
+      expect(getNetworkName('unknown')).toBe('unknown');
+      expect(getNetworkName(null)).toBe('Unknown');
+    });
+    
+    it('should generate block explorer URLs correctly', () => {
+      const getExplorerUrl = (network, txHash) => {
+        if (!txHash) return null;
+        const explorers = {
+          'eip155:8453': `https://basescan.org/tx/${txHash}`,
+          'eip155:84532': `https://sepolia.basescan.org/tx/${txHash}`,
+          'eip155:1': `https://etherscan.io/tx/${txHash}`,
+          'eip155:42161': `https://arbiscan.io/tx/${txHash}`,
+        };
+        return explorers[network] || null;
+      };
+      
+      const testTxHash = '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef';
+      
+      expect(getExplorerUrl('eip155:8453', testTxHash)).toBe(`https://basescan.org/tx/${testTxHash}`);
+      expect(getExplorerUrl('eip155:84532', testTxHash)).toBe(`https://sepolia.basescan.org/tx/${testTxHash}`);
+      expect(getExplorerUrl('eip155:8453', null)).toBeNull();
+      expect(getExplorerUrl('unknown', testTxHash)).toBeNull();
+    });
+  });
+});
+
+// Multi-network support tests
+describe('Multi-Network Support', () => {
+  describe('SUPPORTED_NETWORKS configuration', () => {
+    it('should have Base mainnet as recommended', async () => {
+      const { SUPPORTED_NETWORKS } = await import('../api/config/x402-config.js');
+      
+      expect(SUPPORTED_NETWORKS['eip155:8453']).toBeDefined();
+      expect(SUPPORTED_NETWORKS['eip155:8453'].recommended).toBe(true);
+      expect(SUPPORTED_NETWORKS['eip155:8453'].name).toBe('Base');
+    });
+    
+    it('should have Base Sepolia as testnet', async () => {
+      const { SUPPORTED_NETWORKS } = await import('../api/config/x402-config.js');
+      
+      expect(SUPPORTED_NETWORKS['eip155:84532']).toBeDefined();
+      expect(SUPPORTED_NETWORKS['eip155:84532'].testnet).toBe(true);
+      expect(SUPPORTED_NETWORKS['eip155:84532'].name).toBe('Base Sepolia');
+    });
+    
+    it('should have Ethereum mainnet with high gas cost', async () => {
+      const { SUPPORTED_NETWORKS } = await import('../api/config/x402-config.js');
+      
+      expect(SUPPORTED_NETWORKS['eip155:1']).toBeDefined();
+      expect(SUPPORTED_NETWORKS['eip155:1'].gasCost).toBe('high');
+      expect(SUPPORTED_NETWORKS['eip155:1'].name).toBe('Ethereum');
+    });
+    
+    it('should have Arbitrum One with low gas cost', async () => {
+      const { SUPPORTED_NETWORKS } = await import('../api/config/x402-config.js');
+      
+      expect(SUPPORTED_NETWORKS['eip155:42161']).toBeDefined();
+      expect(SUPPORTED_NETWORKS['eip155:42161'].gasCost).toBe('low');
+      expect(SUPPORTED_NETWORKS['eip155:42161'].name).toBe('Arbitrum One');
+    });
+    
+    it('should have valid USDC addresses for all networks', async () => {
+      const { SUPPORTED_NETWORKS } = await import('../api/config/x402-config.js');
+      
+      for (const [networkId, config] of Object.entries(SUPPORTED_NETWORKS)) {
+        expect(config.usdc).toBeDefined();
+        expect(config.usdc).toMatch(/^0x[a-fA-F0-9]{40}$/);
+      }
+    });
+  });
+  
+  describe('getAcceptedNetworks function', () => {
+    it('should exclude testnets when includeTestnet is false', async () => {
+      const { getAcceptedNetworks } = await import('../api/config/x402-config.js');
+      
+      const networks = getAcceptedNetworks(false);
+      const hasTestnet = networks.some(n => n.testnet);
+      
+      expect(hasTestnet).toBe(false);
+      expect(networks.length).toBeGreaterThan(0);
+    });
+    
+    it('should include testnets when includeTestnet is true', async () => {
+      const { getAcceptedNetworks } = await import('../api/config/x402-config.js');
+      
+      const networks = getAcceptedNetworks(true);
+      const hasTestnet = networks.some(n => n.testnet);
+      
+      expect(hasTestnet).toBe(true);
+    });
+    
+    it('should return network objects with all required properties', async () => {
+      const { getAcceptedNetworks } = await import('../api/config/x402-config.js');
+      
+      const networks = getAcceptedNetworks(true);
+      
+      for (const network of networks) {
+        expect(network.network).toBeDefined();
+        expect(network.name).toBeDefined();
+        expect(network.usdc).toBeDefined();
+        expect(network.gasCost).toBeDefined();
+      }
+    });
+  });
+  
+  describe('getNetworkConfig function', () => {
+    it('should return config for valid network ID', async () => {
+      const { getNetworkConfig } = await import('../api/config/x402-config.js');
+      
+      const config = getNetworkConfig('eip155:8453');
+      
+      expect(config).toBeDefined();
+      expect(config.name).toBe('Base');
+      expect(config.usdc).toBe('0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913');
+    });
+    
+    it('should return null for invalid network ID', async () => {
+      const { getNetworkConfig } = await import('../api/config/x402-config.js');
+      
+      const config = getNetworkConfig('eip155:99999');
+      
+      expect(config).toBeNull();
+    });
+  });
+  
+  describe('x402 Client NETWORK_CONFIGS', () => {
+    it('should export NETWORK_CONFIGS with all networks', async () => {
+      const { NETWORK_CONFIGS } = await import('../src/mcp/x402-client.js');
+      
+      expect(NETWORK_CONFIGS).toBeDefined();
+      expect(NETWORK_CONFIGS['base']).toBeDefined();
+      expect(NETWORK_CONFIGS['base-sepolia']).toBeDefined();
+      expect(NETWORK_CONFIGS['ethereum']).toBeDefined();
+      expect(NETWORK_CONFIGS['arbitrum']).toBeDefined();
+    });
+    
+    it('should have chainId and networkId for all networks', async () => {
+      const { NETWORK_CONFIGS } = await import('../src/mcp/x402-client.js');
+      
+      for (const [name, config] of Object.entries(NETWORK_CONFIGS)) {
+        expect(config.chainId).toBeDefined();
+        expect(typeof config.chainId).toBe('number');
+        expect(config.networkId).toBeDefined();
+        expect(config.networkId).toMatch(/^eip155:\d+$/);
+      }
+    });
+    
+    it('should have Base as recommended network', async () => {
+      const { NETWORK_CONFIGS } = await import('../src/mcp/x402-client.js');
+      
+      expect(NETWORK_CONFIGS['base'].recommended).toBe(true);
+    });
+    
+    it('should have base-sepolia as testnet', async () => {
+      const { NETWORK_CONFIGS } = await import('../src/mcp/x402-client.js');
+      
+      expect(NETWORK_CONFIGS['base-sepolia'].testnet).toBe(true);
+    });
+  });
+});

@@ -34,6 +34,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:x402": "vitest run tests/x402.test.js",
+    "test:x402:integration": "vitest run tests/x402-integration.test.js",
+    "test:x402:all": "vitest run tests/x402*.test.js",
     "verify:x402": "node scripts/verify-x402.js",
     "test:payment": "node scripts/test-x402-payment.js"
   },

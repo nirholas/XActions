@@ -27,10 +27,15 @@ if (existsSync(envPath)) {
   console.log('⚠️  No .env file found, using environment variables\n');
 }
 
-// Configuration
-const PAY_TO_ADDRESS = process.env.X402_PAY_TO_ADDRESS;
-const FACILITATOR_URL = process.env.X402_FACILITATOR_URL || 'https://x402.org/facilitator';
-const NETWORK = process.env.X402_NETWORK || 'eip155:84532';
+// Import configuration from the actual config module to ensure consistency
+import { 
+  PAY_TO_ADDRESS, 
+  FACILITATOR_URL, 
+  NETWORK, 
+  AI_OPERATION_PRICES,
+  validateConfig,
+  isX402Configured 
+} from '../api/config/x402-config.js';
 
 // Network names for display
 const NETWORK_NAMES = {
@@ -38,30 +43,6 @@ const NETWORK_NAMES = {
   'eip155:8453': 'Base (mainnet)',
   'eip155:1': 'Ethereum Mainnet',
   'eip155:11155111': 'Ethereum Sepolia (testnet)',
-};
-
-// Pricing configuration (must match x402-config.js)
-const AI_OPERATION_PRICES = {
-  'scrape:profile': '$0.001',
-  'scrape:followers': '$0.01',
-  'scrape:following': '$0.01',
-  'scrape:tweets': '$0.005',
-  'scrape:thread': '$0.002',
-  'scrape:search': '$0.01',
-  'scrape:hashtag': '$0.01',
-  'scrape:media': '$0.005',
-  'action:unfollow-non-followers': '$0.05',
-  'action:unfollow-everyone': '$0.10',
-  'action:detect-unfollowers': '$0.02',
-  'action:auto-like': '$0.02',
-  'action:follow-engagers': '$0.03',
-  'action:keyword-follow': '$0.03',
-  'monitor:account': '$0.01',
-  'monitor:followers': '$0.01',
-  'alert:new-followers': '$0.005',
-  'download:video': '$0.005',
-  'export:bookmarks': '$0.01',
-  'unroll:thread': '$0.002',
 };
 
 console.log('╔════════════════════════════════════════════════════════════════╗');

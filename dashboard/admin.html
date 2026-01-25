@@ -104,6 +104,156 @@
       font-size: 0.875rem;
     }
 
+    /* Tab Navigation */
+    .tab-nav {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 12px;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      padding: 12px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    .tab-btn:hover {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+    }
+
+    .tab-btn.active {
+      background: var(--accent);
+      color: white;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Payment Sections */
+    .payment-sections {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .section-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .section-card h3 {
+      font-size: 1rem;
+      margin-bottom: 16px;
+      color: var(--text-primary);
+    }
+
+    .stats-list, .payments-list, .config-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .stats-item, .payment-item, .config-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+    }
+
+    .stats-item .operation {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+    }
+
+    .stats-item .count {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .payment-item {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .payment-item .header {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .payment-item .amount {
+      color: var(--success);
+      font-weight: 700;
+    }
+
+    .payment-item .time {
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+    }
+
+    .payment-item .details {
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+    }
+
+    .config-status {
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .config-status.configured {
+      background: rgba(0, 186, 124, 0.2);
+      color: var(--success);
+    }
+
+    .config-status.not-configured {
+      background: rgba(113, 118, 123, 0.2);
+      color: var(--text-secondary);
+    }
+
+    .btn-test-webhook {
+      margin-top: 16px;
+      width: 100%;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      padding: 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.875rem;
+      transition: all 0.2s;
+    }
+
+    .btn-test-webhook:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .empty-state.small {
+      padding: 24px;
+      font-size: 0.875rem;
+    }
+
     .sessions-grid {
       display: grid;
       gap: 16px;
@@ -264,18 +414,84 @@
     <a href="/dashboard" style="color: var(--accent); text-decoration: none;">← Back to Dashboard</a>
   </header>
 
-  <div class="stats-bar">
-    <div class="stat-box">
-      <div class="stat-value" id="total-sessions">0</div>
-      <div class="stat-label">Active Sessions</div>
+  <!-- Tab Navigation -->
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('sessions')">📡 Live Sessions</button>
+    <button class="tab-btn" onclick="switchTab('payments')">💰 x402 Payments</button>
+  </div>
+
+  <!-- Sessions Tab -->
+  <div id="tab-sessions" class="tab-content active">
+    <div class="stats-bar">
+      <div class="stat-box">
+        <div class="stat-value" id="total-sessions">0</div>
+        <div class="stat-label">Active Sessions</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value" id="running-sessions">0</div>
+        <div class="stat-label">Running Now</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value" id="total-unfollows">0</div>
+        <div class="stat-label">Unfollows Today</div>
+      </div>
     </div>
-    <div class="stat-box">
-      <div class="stat-value" id="running-sessions">0</div>
-      <div class="stat-label">Running Now</div>
+  </div>
+
+  <!-- Payments Tab -->
+  <div id="tab-payments" class="tab-content" style="display: none;">
+    <div class="stats-bar">
+      <div class="stat-box">
+        <div class="stat-value" id="total-payments">0</div>
+        <div class="stat-label">Total Payments</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value" id="total-revenue">$0.00</div>
+        <div class="stat-label">Revenue (USDC)</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value" id="webhook-status">-</div>
+        <div class="stat-label">Webhook Status</div>
+      </div>
     </div>
-    <div class="stat-box">
-      <div class="stat-value" id="total-unfollows">0</div>
-      <div class="stat-label">Unfollows Today</div>
+
+    <div class="payment-sections">
+      <div class="section-card">
+        <h3>📊 Payments by Operation</h3>
+        <div id="payments-by-operation" class="stats-list">
+          <div class="empty-state small">No payments yet</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h3>🕐 Recent Payments</h3>
+        <div id="recent-payments" class="payments-list">
+          <div class="empty-state small">No recent payments</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h3>🔔 Webhook Configuration</h3>
+        <div id="webhook-config" class="config-list">
+          <div class="config-item">
+            <span>Custom Webhook</span>
+            <span id="webhook-custom" class="config-status">-</span>
+          </div>
+          <div class="config-item">
+            <span>Discord</span>
+            <span id="webhook-discord" class="config-status">-</span>
+          </div>
+          <div class="config-item">
+            <span>Slack</span>
+            <span id="webhook-slack" class="config-status">-</span>
+          </div>
+          <div class="config-item">
+            <span>Signature Verification</span>
+            <span id="webhook-signature" class="config-status">-</span>
+          </div>
+        </div>
+        <button class="btn-test-webhook" onclick="testWebhooks()">🧪 Test Webhooks</button>
+      </div>
     </div>
   </div>
 
@@ -477,6 +693,153 @@
       };
       return names[op] || op;
     }
+
+    // Tab switching
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+      
+      document.querySelector(`[onclick="switchTab('${tab}')"]`).classList.add('active');
+      document.getElementById(`tab-${tab}`).classList.add('active');
+      document.getElementById(`tab-${tab}`).style.display = 'block';
+      
+      // Hide other tabs
+      document.querySelectorAll('.tab-content:not(.active)').forEach(t => t.style.display = 'none');
+      
+      if (tab === 'payments') {
+        loadPaymentStats();
+      }
+    }
+
+    // Load x402 payment statistics
+    async function loadPaymentStats() {
+      const adminKey = localStorage.getItem('adminKey') || prompt('Enter Admin API Key:');
+      if (!adminKey) return;
+      localStorage.setItem('adminKey', adminKey);
+
+      try {
+        // Load stats
+        const statsRes = await fetch('/api/admin/x402/stats', {
+          headers: { 'X-Admin-Key': adminKey }
+        });
+        
+        if (statsRes.status === 401) {
+          localStorage.removeItem('adminKey');
+          alert('Invalid admin key');
+          return;
+        }
+        
+        const statsData = await statsRes.json();
+        if (statsData.success) {
+          renderPaymentStats(statsData.stats);
+        }
+
+        // Load webhook status
+        const webhookRes = await fetch('/api/admin/x402/webhooks', {
+          headers: { 'X-Admin-Key': adminKey }
+        });
+        const webhookData = await webhookRes.json();
+        if (webhookData.success) {
+          renderWebhookStatus(webhookData.webhooks);
+        }
+      } catch (err) {
+        console.error('Failed to load payment stats:', err);
+      }
+    }
+
+    function renderPaymentStats(stats) {
+      document.getElementById('total-payments').textContent = stats.totalPayments || 0;
+      document.getElementById('total-revenue').textContent = '$' + (stats.totalRevenueUSD || '0.00');
+
+      // Render by operation
+      const byOpContainer = document.getElementById('payments-by-operation');
+      const operations = Object.entries(stats.byOperation || {});
+      
+      if (operations.length === 0) {
+        byOpContainer.innerHTML = '<div class="empty-state small">No payments yet</div>';
+      } else {
+        byOpContainer.innerHTML = operations
+          .sort((a, b) => b[1] - a[1])
+          .map(([op, count]) => `
+            <div class="stats-item">
+              <span class="operation">${op}</span>
+              <span class="count">${count}</span>
+            </div>
+          `).join('');
+      }
+
+      // Render recent payments
+      const recentContainer = document.getElementById('recent-payments');
+      const recent = stats.recentPayments || [];
+      
+      if (recent.length === 0) {
+        recentContainer.innerHTML = '<div class="empty-state small">No recent payments</div>';
+      } else {
+        recentContainer.innerHTML = recent.slice(0, 10).map(p => `
+          <div class="payment-item">
+            <div class="header">
+              <span class="amount">${p.price}</span>
+              <span class="time">${new Date(p.timestamp).toLocaleString()}</span>
+            </div>
+            <div class="details">${p.operation} • ${p.network || 'unknown'}</div>
+          </div>
+        `).join('');
+      }
+    }
+
+    function renderWebhookStatus(webhooks) {
+      const { configured, delivery } = webhooks;
+      
+      // Update status indicators
+      document.getElementById('webhook-custom').textContent = configured.customWebhook ? '✓ Configured' : 'Not configured';
+      document.getElementById('webhook-custom').className = 'config-status ' + (configured.customWebhook ? 'configured' : 'not-configured');
+      
+      document.getElementById('webhook-discord').textContent = configured.discord ? '✓ Configured' : 'Not configured';
+      document.getElementById('webhook-discord').className = 'config-status ' + (configured.discord ? 'configured' : 'not-configured');
+      
+      document.getElementById('webhook-slack').textContent = configured.slack ? '✓ Configured' : 'Not configured';
+      document.getElementById('webhook-slack').className = 'config-status ' + (configured.slack ? 'configured' : 'not-configured');
+      
+      document.getElementById('webhook-signature').textContent = configured.signatureEnabled ? '✓ Enabled' : 'Disabled';
+      document.getElementById('webhook-signature').className = 'config-status ' + (configured.signatureEnabled ? 'configured' : 'not-configured');
+
+      // Update overall status
+      const anyConfigured = configured.customWebhook || configured.discord || configured.slack;
+      document.getElementById('webhook-status').textContent = anyConfigured ? delivery.successRate : 'None';
+    }
+
+    async function testWebhooks() {
+      const adminKey = localStorage.getItem('adminKey');
+      if (!adminKey) {
+        alert('Please load payment stats first to set admin key');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/admin/x402/webhooks/test', {
+          method: 'POST',
+          headers: { 'X-Admin-Key': adminKey }
+        });
+        const data = await res.json();
+        
+        if (data.success) {
+          alert('Test webhooks sent! Check your configured endpoints.');
+        } else {
+          alert('Failed: ' + (data.message || data.error));
+        }
+      } catch (err) {
+        alert('Error: ' + err.message);
+      }
+    }
+
+    // Listen for real-time payment events
+    socket.on('x402:payment', (payment) => {
+      console.log('💰 Real-time payment:', payment);
+      // Refresh stats if on payments tab
+      if (document.getElementById('tab-payments').classList.contains('active')) {
+        loadPaymentStats();
+      }
+    });
   </script>
 </body>
 </html>
