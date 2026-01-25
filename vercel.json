@@ -1,9 +1,5 @@
 {
   "version": 2,
-  "builds": [
-    { "src": "site/**", "use": "@vercel/static" },
-    { "src": "dashboard/**", "use": "@vercel/static" }
-  ],
   "rewrites": [
     { "source": "/dashboard/:path*", "destination": "/dashboard/:path*" },
     { "source": "/tutorials/:path*", "destination": "/dashboard/tutorials/:path*" },
