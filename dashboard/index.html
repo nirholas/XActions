@@ -1030,14 +1030,14 @@
 
       <a href="https://github.com/nirholas/XActions" class="action-btn" target="_blank">Star on GitHub ⭐</a>
 
-      <div class="user-menu" onclick="toggleUserMenu()">
+      <a href="/login" class="user-menu" id="user-menu-link">
         <div class="user-avatar" id="user-avatar">?</div>
         <div class="user-info">
-          <div class="user-name" id="user-display-name">Loading...</div>
-          <div class="user-handle" id="user-handle">@---</div>
+          <div class="user-name" id="user-display-name">Login / Sign Up</div>
+          <div class="user-handle" id="user-handle">Click to continue</div>
         </div>
-        <span class="user-menu-dots">···</span>
-      </div>
+        <span class="user-menu-dots">→</span>
+      </a>
     </aside>
 
     <!-- Main Content -->
@@ -1545,11 +1545,14 @@
         
         const profile = await profileRes.json();
 
-        // Update user menu
+        // Update user menu - show logged in state
         const initial = (profile.email || profile.username || '?')[0].toUpperCase();
         document.getElementById('user-avatar').textContent = initial;
         document.getElementById('user-display-name').textContent = profile.username || profile.email?.split('@')[0] || 'User';
-        document.getElementById('user-handle').textContent = profile.twitterUsername ? `@${profile.twitterUsername}` : '@user';
+        document.getElementById('user-handle').textContent = profile.twitterUsername ? `@${profile.twitterUsername}` : '@' + (profile.username || 'user');
+        document.getElementById('user-menu-link').href = '#';
+        document.getElementById('user-menu-link').onclick = toggleUserMenu;
+        document.querySelector('.user-menu-dots').textContent = '···';
 
         // Check auth method
         const authRes = await fetch(`${API_URL}/session/auth-method`, {
