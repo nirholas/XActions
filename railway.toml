@@ -4,7 +4,5 @@ buildCommand = "npx prisma generate"
 
 [deploy]
 startCommand = "npx prisma migrate deploy && npm start"
-healthcheckPath = "/api/health"
-healthcheckTimeout = 300
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 3
