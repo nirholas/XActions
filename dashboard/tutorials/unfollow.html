@@ -892,12 +892,36 @@ npx xactions analyze non-followers @yourusername</code></pre>
 
   <script>
     function copyCode(btn) {
-      const codeBlock = btn.closest('.code-block');
-      const code = codeBlock.querySelector('code').textContent;
-      navigator.clipboard.writeText(code).then(() => {
+      const codeBlock = btn.closest('.code-block') || btn.parentElement;
+      const codeEl = codeBlock.querySelector('code') || codeBlock.querySelector('pre');
+      if (!codeEl) { alert('Could not find code to copy'); return; }
+      const code = codeEl.textContent;
+      
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(code).then(() => {
+          btn.textContent = '✅ Copied!';
+          setTimeout(() => btn.textContent = '📋 Copy', 2000);
+        }).catch(() => fallbackCopy(code, btn));
+      } else {
+        fallbackCopy(code, btn);
+      }
+    }
+    
+    function fallbackCopy(text, btn) {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      try {
+        document.execCommand('copy');
         btn.textContent = '✅ Copied!';
         setTimeout(() => btn.textContent = '📋 Copy', 2000);
-      });
+      } catch (e) {
+        alert('Copy failed. Please select and copy manually.');
+      }
+      document.body.removeChild(textarea);
     }
   </script>
 </body>

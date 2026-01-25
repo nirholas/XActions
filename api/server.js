@@ -158,6 +158,53 @@ app.get('/features', (req, res) => {
   res.sendFile(path.join(__dirname, '../dashboard/features.html'));
 });
 
+app.get('/about', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dashboard/about.html'));
+});
+
+app.get('/mcp', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dashboard/mcp.html'));
+});
+
+app.get('/ai', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dashboard/ai.html'));
+});
+
+app.get('/ai-api', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dashboard/ai-api.html'));
+});
+
+app.get('/privacy', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dashboard/privacy.html'));
+});
+
+app.get('/terms', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dashboard/terms.html'));
+});
+
+app.get('/login', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dashboard/login.html'));
+});
+
+app.get('/run', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dashboard/run.html'));
+});
+
+app.get('/tutorials', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dashboard/tutorials.html'));
+});
+
+// Tutorials subdirectory
+app.get('/tutorials/:page', (req, res) => {
+  const page = req.params.page.replace(/[^a-zA-Z0-9-]/g, ''); // Sanitize
+  const filePath = path.join(__dirname, `../dashboard/tutorials/${page}.html`);
+  res.sendFile(filePath, (err) => {
+    if (err) {
+      res.sendFile(path.join(__dirname, '../dashboard/404.html'));
+    }
+  });
+});
+
 app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, '../dashboard/admin.html'));
 });

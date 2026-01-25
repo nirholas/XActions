@@ -1115,16 +1115,44 @@
 
   <script>
     function copyCode(elementId) {
-      const code = document.getElementById(elementId).textContent;
-      navigator.clipboard.writeText(code).then(() => {
-        const btn = event.target;
+      const codeEl = document.getElementById(elementId);
+      if (!codeEl) { alert('Could not find code to copy'); return; }
+      const code = codeEl.textContent;
+      const btn = event.target;
+      
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(code).then(() => {
+          btn.textContent = 'Copied!';
+          btn.classList.add('copied');
+          setTimeout(() => {
+            btn.textContent = 'Copy';
+            btn.classList.remove('copied');
+          }, 2000);
+        }).catch(() => fallbackCopy(code, btn));
+      } else {
+        fallbackCopy(code, btn);
+      }
+    }
+    
+    function fallbackCopy(text, btn) {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      try {
+        document.execCommand('copy');
         btn.textContent = 'Copied!';
         btn.classList.add('copied');
         setTimeout(() => {
           btn.textContent = 'Copy';
           btn.classList.remove('copied');
         }, 2000);
-      });
+      } catch (e) {
+        alert('Copy failed. Please select and copy manually.');
+      }
+      document.body.removeChild(textarea);
     }
 
     function showScript(type) {

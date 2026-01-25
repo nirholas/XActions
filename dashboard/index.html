@@ -1533,6 +1533,16 @@
         const profileRes = await fetch(`${API_URL}/user/profile`, {
           headers: { 'Authorization': `Bearer ${authToken}` }
         });
+        
+        if (!profileRes.ok) {
+          if (profileRes.status === 401) {
+            console.error('Unauthorized - logging out');
+            logout();
+            return;
+          }
+          throw new Error(`Profile fetch failed: ${profileRes.status}`);
+        }
+        
         const profile = await profileRes.json();
 
         // Update user menu
@@ -1578,9 +1588,9 @@
         loadRecentOperations();
       } catch (error) {
         console.error('Failed to load dashboard:', error);
-        if (error.status === 401) {
-          logout();
-        }
+        // Clear the loading state on error
+        document.getElementById('user-display-name').textContent = 'Error';
+        document.getElementById('user-handle').textContent = 'Failed to load';
       }
     }
 
