@@ -22,11 +22,7 @@
 ---
 
 <details>
-<summary><strong>Looking for a simple script to unfollow who doesn't follow back on X? Unfollow everyone on X? </strong></summary>
-
-Unfollow everyone on X (Formerly Twitter) and or unfollow who doesn't follow you back
-
- Unfollow Following Who Doesn't Follow Back on X
+<summary><strong>How to unfollow who doesn't follow back on X?</strong></summary>
 
 1. Go to `https://x.com/YOUR_USER_NAME/following`
 2. Open the Developer Console. (<kbd>COMMAND</kbd>+<kbd>ALT</kbd>+<kbd>I</kbd> on Mac)
