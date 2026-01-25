@@ -1278,12 +1278,33 @@
 
     // ===== SOCKET.IO REAL-TIME CONNECTION =====
     function initSocket() {
+      if (!authToken) {
+        alert('Please log in first to connect your browser.');
+        window.location.href = '/login';
+        return;
+      }
+
       socket = io(WS_URL, {
-        auth: { token: authToken, role: 'dashboard' }
+        auth: { token: authToken, role: 'dashboard' },
+        reconnection: true,
+        reconnectionAttempts: 5,
+        reconnectionDelay: 1000
       });
 
       socket.on('connect', () => {
         console.log('✅ Dashboard connected to server');
+        document.getElementById('connection-substatus').textContent = 'Socket connected, waiting for session...';
+      });
+
+      socket.on('connect_error', (error) => {
+        console.error('❌ Socket connection error:', error.message);
+        if (error.message.includes('Invalid token') || error.message.includes('Authentication')) {
+          alert('Session expired. Please log in again.');
+          localStorage.removeItem('authToken');
+          window.location.href = '/login';
+        } else {
+          document.getElementById('connection-substatus').textContent = 'Connection failed: ' + error.message;
+        }
       });
 
       socket.on('session:created', (data) => {
@@ -1291,6 +1312,7 @@
         console.log('📡 Session created:', sessionId);
         // Store agent script for display
         window.agentScript = data.agentScript;
+        document.getElementById('connection-substatus').textContent = 'Session ready! Click Connect Browser to continue.';
       });
 
       socket.on('agent:connected', () => {
@@ -1744,6 +1766,11 @@
     // Load on page load
     loadDashboard();
     setInterval(loadRecentOperations, 10000);
+
+    // Auto-connect socket on page load if logged in
+    if (authToken) {
+      initSocket();
+    }
   </script>
 
   <footer class="site-footer">
