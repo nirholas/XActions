@@ -1,44 +1,26 @@
 {
   "version": 2,
   "builds": [
-    {
-      "src": "site/**",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "dashboard/**",
-      "use": "@vercel/static"
-    }
+    { "src": "site/**", "use": "@vercel/static" },
+    { "src": "dashboard/**", "use": "@vercel/static" }
   ],
   "routes": [
-    {
-      "src": "/dashboard/(.*)",
-      "dest": "/dashboard/$1"
-    },
-    {
-      "src": "/login",
-      "dest": "/dashboard/login.html"
-    },
-    {
-      "src": "/pricing",
-      "dest": "/dashboard/pricing.html"
-    },
-    {
-      "src": "/about",
-      "dest": "/dashboard/about.html"
-    },
-    {
-      "src": "/docs",
-      "dest": "/dashboard/docs.html"
-    },
-    {
-      "src": "/privacy",
-      "dest": "/dashboard/privacy.html"
-    },
-    {
-      "src": "/terms",
-      "dest": "/dashboard/terms.html"
-    },
+    { "src": "/dashboard/(.*)", "dest": "/dashboard/$1" },
+    { "src": "/tutorials/(.*)", "dest": "/dashboard/tutorials/$1" },
+    { "src": "/tutorials", "dest": "/dashboard/tutorials/index.html" },
+    { "src": "/login", "dest": "/dashboard/login.html" },
+    { "src": "/pricing", "dest": "/dashboard/pricing.html" },
+    { "src": "/about", "dest": "/dashboard/about.html" },
+    { "src": "/docs", "dest": "/dashboard/docs.html" },
+    { "src": "/privacy", "dest": "/dashboard/privacy.html" },
+    { "src": "/terms", "dest": "/dashboard/terms.html" },
+    { "src": "/features", "dest": "/dashboard/features.html" },
+    { "src": "/run", "dest": "/dashboard/run.html" },
+    { "src": "/admin", "dest": "/dashboard/admin.html" },
+    { "src": "/ai", "dest": "/dashboard/ai.html" },
+    { "src": "/ai-api", "dest": "/dashboard/ai-api.html" },
+    { "src": "/mcp", "dest": "/dashboard/mcp.html" },
+    { "src": "/404", "dest": "/dashboard/404.html" },
     {
       "src": "/(.*)",
       "dest": "/site/$1",
@@ -48,6 +30,8 @@
         "X-XSS-Protection": "1; mode=block"
       }
     }
-  ]
+  ],
+  "trailingSlash": false,
+  "cleanUrls": true
 }
 

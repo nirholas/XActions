@@ -227,3 +227,13 @@ model License {
   @@index([status])
 }
 
+model AccountSnapshot {
+  id        String   @id @default(cuid())
+  username  String
+  type      String   @default("full")
+  data      String   @db.Text
+  createdAt DateTime @default(now())
+  
+  @@index([username, type])
+  @@index([createdAt])
+}

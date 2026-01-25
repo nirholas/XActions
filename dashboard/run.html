@@ -370,14 +370,15 @@
 <body>
   <!-- Navigation -->
   <nav class="nav">
-    <a href="index.html" class="nav-brand">
+    <a href="/" class="nav-brand">
       <span>⚡</span>
       <span>XActions</span>
     </a>
     <div class="nav-links">
-      <a href="features.html">Features</a>
-      <a href="docs.html">Docs</a>
-      <a href="tutorials/">Tutorials</a>
+      <a href="/features">Features</a>
+      <a href="/docs">Docs</a>
+      <a href="/tutorials">Tutorials</a>
+      <a href="/dashboard">Dashboard</a>
       <a href="https://github.com/nirholas/XActions" target="_blank">GitHub</a>
     </div>
   </nav>
@@ -387,6 +388,22 @@
     <div class="hero">
       <h1>🚀 One-Click Scripts</h1>
       <p>Run powerful X/Twitter automation scripts instantly. No coding knowledge required.</p>
+    </div>
+
+    <!-- Server-Side Execution Option -->
+    <div class="instructions" style="background: linear-gradient(135deg, rgba(29, 155, 240, 0.1), rgba(0, 186, 124, 0.1));">
+      <h2>🖥️ Run via Dashboard (Server-Side)</h2>
+      <p style="color: var(--text-secondary); margin-bottom: 16px;">Don't want to use browser scripts? Run operations from our dashboard with your session cookie.</p>
+      <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+        <a href="/dashboard" class="server-btn">📊 Open Dashboard</a>
+        <a href="/tutorials/unfollow.html#session-cookie" class="server-btn secondary">🔑 How to Get Session Cookie</a>
+      </div>
+      <style>
+        .server-btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background: var(--accent); color: white; text-decoration: none; border-radius: 9999px; font-weight: 600; transition: all 0.2s; }
+        .server-btn:hover { background: var(--accent-hover); transform: translateY(-2px); }
+        .server-btn.secondary { background: var(--bg-tertiary); border: 1px solid var(--border); }
+        .server-btn.secondary:hover { background: var(--border); }
+      </style>
     </div>
 
     <!-- Instructions -->
