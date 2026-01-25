@@ -115,7 +115,7 @@ Or use the [dashboard](https://xactions.app) for a visual interface.
 // 2. Open the Developer Console. (COMMAND+ALT+I on Mac)
 // 3. Paste this into the Developer Console and run it
 //
-// Last Updated: 17 March 2024
+// Last Updated: January 2026
 (() => {
   const $followButtons = '[data-testid$="-unfollow"]';
   const $confirmButton = '[data-testid="confirmationSheetConfirm"]';
@@ -205,7 +205,7 @@ XActions uses browser automation instead of the API. No API keys needed, no rate
 <details>
 <summary><strong>Hypefury / Tweethunter alternative?</strong></summary>
 
-XActions is open-source and cheaper. Browser scripts are free forever. Dashboard starts at $2.99.
+XActions is open-source and completely free for humans. AI agents pay micropayments per request.
 </details>
 
 ---
@@ -222,16 +222,26 @@ Your x.com tab does all the work. Nothing gets scraped to our servers. You're in
 
 ## 💰 Pricing
 
-| Package | Credits | Price |
-|---------|---------|-------|
-| Free Demo | 2 | **Free** |
-| Follow Bonus | +1 | **Free** |
-| Starter | 17 | $2.99 |
-| Basic | 47 | $6.99 ⭐ |
-| Pro | 113 | $14.99 |
-| Power | 251 | $29.99 |
+### 🆓 Humans — FREE Forever
 
-**Credit costs:** 2-5 per operation (basic: 2, detection: 3, power: 5)
+All browser scripts, CLI, Node.js library, and local MCP server are **completely free**.
+
+### 🤖 AI Agents — Pay-per-Request
+
+AI agents pay micropayments via [x402](https://x402.org) protocol:
+
+| Operation | Price |
+|-----------|-------|
+| Profile scrape | $0.001 |
+| Followers/Following | $0.01 |
+| Tweet scrape | $0.005 |
+| Search tweets | $0.01 |
+| Unfollow non-followers | $0.05 |
+| Detect unfollowers | $0.02 |
+| Auto-like | $0.02 |
+| Video download | $0.005 |
+
+> **Why charge AI?** AI can make thousands of requests per minute. Micropayments ensure fair access.
 
 ---
 
@@ -239,11 +249,12 @@ Your x.com tab does all the work. Nothing gets scraped to our servers. You're in
 
 | | XActions | Twitter API | Other Tools |
 |--|----------|-------------|-------------|
-| **Monthly Cost** | **$0-35** | $100-$5,000 | $29-99 |
+| **Cost (Humans)** | **$0** | $100-$5,000 | $29-99/mo |
+| **Cost (AI Agents)** | **$0.001-0.10** | $100-$5,000 | N/A |
 | **Setup Time** | **30 seconds** | Hours | Minutes |
 | **Open Source** | ✅ | - | ❌ |
 | **No API Key** | ✅ | ❌ | ❌ |
-| **AI Agent Ready** | ✅ MCP | ❌ | ❌ |
+| **AI Agent Ready** | ✅ MCP + x402 | ❌ | ❌ |
 | **Non-KYC Crypto** | ✅ | ❌ | ❌ |
 
 ---
@@ -745,13 +756,11 @@ exportToCSV(data, filename)
 
 **Visit [xactions.app](https://xactions.app)** for a no-code solution:
 
-1. Sign up (free tier available)
-2. Connect your X account
-3. Click buttons to run any action
-4. View results in your dashboard
+1. Use browser scripts (drag to bookmarks bar)
+2. Copy-paste console scripts on x.com
+3. View tutorials and documentation
 
-**Free Tier:** 50 actions/month  
-**Pro Tier:** Unlimited actions + multi-account
+**100% Free for humans.** AI agents pay per request via x402 micropayments.
 
 ---
 
