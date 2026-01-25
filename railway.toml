@@ -1,6 +1,6 @@
 [build]
 builder = "nixpacks"
-buildCommand = "npx prisma generate"
+buildCommand = "npx prisma generate && npx prisma migrate deploy"
 
 [deploy]
 startCommand = "node api/server.js"
