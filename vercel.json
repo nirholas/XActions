@@ -4,31 +4,33 @@
     { "src": "site/**", "use": "@vercel/static" },
     { "src": "dashboard/**", "use": "@vercel/static" }
   ],
-  "routes": [
-    { "src": "/dashboard/(.*)", "dest": "/dashboard/$1" },
-    { "src": "/tutorials/(.*)", "dest": "/dashboard/tutorials/$1" },
-    { "src": "/tutorials", "dest": "/dashboard/tutorials/index.html" },
-    { "src": "/login", "dest": "/dashboard/login.html" },
-    { "src": "/pricing", "dest": "/dashboard/pricing.html" },
-    { "src": "/about", "dest": "/dashboard/about.html" },
-    { "src": "/docs", "dest": "/dashboard/docs.html" },
-    { "src": "/privacy", "dest": "/dashboard/privacy.html" },
-    { "src": "/terms", "dest": "/dashboard/terms.html" },
-    { "src": "/features", "dest": "/dashboard/features.html" },
-    { "src": "/run", "dest": "/dashboard/run.html" },
-    { "src": "/admin", "dest": "/dashboard/admin.html" },
-    { "src": "/ai", "dest": "/dashboard/ai.html" },
-    { "src": "/ai-api", "dest": "/dashboard/ai-api.html" },
-    { "src": "/mcp", "dest": "/dashboard/mcp.html" },
-    { "src": "/404", "dest": "/dashboard/404.html" },
+  "rewrites": [
+    { "source": "/dashboard/:path*", "destination": "/dashboard/:path*" },
+    { "source": "/tutorials/:path*", "destination": "/dashboard/tutorials/:path*" },
+    { "source": "/tutorials", "destination": "/dashboard/tutorials/index.html" },
+    { "source": "/login", "destination": "/dashboard/login.html" },
+    { "source": "/pricing", "destination": "/dashboard/pricing.html" },
+    { "source": "/about", "destination": "/dashboard/about.html" },
+    { "source": "/docs", "destination": "/dashboard/docs.html" },
+    { "source": "/privacy", "destination": "/dashboard/privacy.html" },
+    { "source": "/terms", "destination": "/dashboard/terms.html" },
+    { "source": "/features", "destination": "/dashboard/features.html" },
+    { "source": "/run", "destination": "/dashboard/run.html" },
+    { "source": "/admin", "destination": "/dashboard/admin.html" },
+    { "source": "/ai", "destination": "/dashboard/ai.html" },
+    { "source": "/ai-api", "destination": "/dashboard/ai-api.html" },
+    { "source": "/mcp", "destination": "/dashboard/mcp.html" },
+    { "source": "/404", "destination": "/dashboard/404.html" },
+    { "source": "/:path*", "destination": "/site/:path*" }
+  ],
+  "headers": [
     {
-      "src": "/(.*)",
-      "dest": "/site/$1",
-      "headers": {
-        "X-Content-Type-Options": "nosniff",
-        "X-Frame-Options": "DENY",
-        "X-XSS-Protection": "1; mode=block"
-      }
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "X-XSS-Protection", "value": "1; mode=block" }
+      ]
     }
   ],
   "trailingSlash": false,
