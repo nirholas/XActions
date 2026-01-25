@@ -1,0 +1,21 @@
+# Ignore API folder - backend runs separately on Railway
+api/
+
+# Ignore source files
+src/
+bin/
+scripts/
+tests/
+prisma/
+
+# Ignore config files
+*.js
+*.json
+!vercel.json
+*.toml
+*.md
+*.config.js
+
+# Keep only static site files
+!site/
+!dashboard/
