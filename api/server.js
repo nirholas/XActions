@@ -64,8 +64,21 @@ const io = initializeSocketIO(httpServer);
 // But 3001 is the answer to local development
 const PORT = process.env.PORT || 3001;
 
-// Security middleware
-app.use(helmet());
+// Security middleware - allow inline scripts for dashboard pages
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.socket.io"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'", "wss:", "https:"],
+      fontSrc: ["'self'", "https:", "data:"],
+      objectSrc: ["'none'"],
+      frameSrc: ["'self'"]
+    }
+  }
+}));
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
     ? ['https://xactions.app', process.env.FRONTEND_URL].filter(Boolean)
