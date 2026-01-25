@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI API - XActions | Pay-per-Request X/Twitter Automation</title>
+  <meta name="description" content="XActions AI API - Pay-per-request API for AI agents via x402 protocol. No subscriptions, no minimums. Scrape profiles, automate unfollows, monitor accounts.">
+  <meta name="keywords" content="Twitter API, X API, AI agent, x402, pay per request, micropayments, MCP server, Claude, GPT, Twitter automation API">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="XActions AI API - Pay-per-Request X/Twitter Automation">
+  <meta property="og:description" content="API for AI agents with micropayment support via x402 protocol. No subscriptions, pay only for what you use.">
+  <meta property="og:url" content="https://xactions.app/ai-api">
+  <meta property="og:site_name" content="XActions">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="XActions AI API - x402 Micropayments">
+  <link rel="canonical" href="https://xactions.app/ai-api">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"TechArticle","headline":"XActions AI API Documentation","description":"Pay-per-request API for AI agents via x402 protocol","url":"https://xactions.app/ai-api","author":{"@type":"Person","name":"nich"},"publisher":{"@type":"Organization","name":"XActions"}}
+  </script>
+  <style>
+    :root{--bg-primary:#000;--bg-secondary:#16181c;--bg-tertiary:#202327;--accent:#1d9bf0;--accent-hover:#1a8cd8;--accent-light:rgba(29,155,240,0.1);--text-primary:#e7e9ea;--text-secondary:#71767b;--border:#2f3336;--success:#00ba7c;--warning:#ffad1f;--purple:#a855f7;--orange:#f97316}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg-primary);color:var(--text-primary);line-height:1.6}
+    .layout{display:flex;max-width:1300px;margin:0 auto;min-height:100vh}
+    .sidebar-left{width:275px;padding:0 12px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;border-right:1px solid var(--border)}
+    .logo{padding:12px}
+    .logo a{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--text-primary);font-size:1.5rem;font-weight:800;padding:12px;border-radius:9999px;transition:background .2s}
+    .logo a:hover{background:var(--accent-light)}
+    nav{flex:1}
+    .nav-item{display:flex;align-items:center;gap:20px;padding:12px;border-radius:9999px;font-size:1.25rem;color:var(--text-primary);text-decoration:none;transition:background .2s;margin-bottom:4px}
+    .nav-item:hover{background:var(--bg-tertiary)}
+    .nav-item.active{font-weight:700}
+    .nav-icon{font-size:1.5rem;width:28px;text-align:center}
+    .action-btn{width:90%;padding:16px;background:var(--accent);color:#fff;border:none;border-radius:9999px;font-size:1.0625rem;font-weight:700;cursor:pointer;transition:background .2s;margin:16px 0;text-decoration:none;display:block;text-align:center}
+    .action-btn:hover{background:var(--accent-hover)}
+    .main-content{flex:1;max-width:600px;border-right:1px solid var(--border)}
+    .main-header{position:sticky;top:0;background:rgba(0,0,0,.65);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:16px;z-index:100}
+    .main-header h1{font-size:1.25rem;font-weight:700}
+    .content{padding:24px 16px}
+    .subtitle{font-size:1.125rem;color:var(--text-secondary);margin-bottom:24px}
+    h2{font-size:1.25rem;font-weight:700;margin:32px 0 16px;display:flex;align-items:center;gap:8px}
+    h2:first-of-type{margin-top:0}
+    h3{font-size:1rem;font-weight:600;margin:20px 0 8px}
+    p{color:var(--text-secondary);font-size:.9375rem;margin-bottom:16px}
+    ul,ol{margin-left:24px;margin-bottom:16px}
+    li{color:var(--text-secondary);font-size:.9375rem;margin-bottom:8px}
+    a{color:var(--accent)}
+    code{background:var(--bg-tertiary);padding:2px 6px;border-radius:4px;font-family:'Monaco','Menlo',monospace;font-size:.875rem}
+    pre{background:var(--bg-secondary);border:1px solid var(--border);border-radius:12px;padding:16px;overflow-x:auto;margin:16px 0}
+    pre code{background:none;padding:0;font-size:.8125rem}
+    
+    /* Pricing Grid */
+    .pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin:16px 0}
+    .pricing-card{background:var(--bg-secondary);border:1px solid var(--border);border-radius:12px;padding:16px;transition:border-color .2s}
+    .pricing-card:hover{border-color:var(--accent)}
+    .pricing-card h3{font-size:1rem;font-weight:700;margin:0 0 12px;color:var(--purple)}
+    .pricing-card ul{margin:0;list-style:none;padding:0}
+    .pricing-card li{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);color:var(--text-primary);font-size:.875rem}
+    .pricing-card li:last-child{border-bottom:none}
+    .pricing-card .price{color:var(--success);font-weight:600;font-family:'Monaco','Menlo',monospace}
+    
+    /* Dual Tier Banner */
+    .tier-banner{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
+    .tier-card{border-radius:12px;padding:20px;text-align:center}
+    .tier-card.free{background:linear-gradient(135deg,rgba(0,186,124,0.15),rgba(0,186,124,0.05));border:1px solid var(--success)}
+    .tier-card.paid{background:linear-gradient(135deg,rgba(168,85,247,0.15),rgba(168,85,247,0.05));border:1px solid var(--purple)}
+    .tier-card h3{margin:0 0 8px;font-size:1.125rem}
+    .tier-card.free h3{color:var(--success)}
+    .tier-card.paid h3{color:var(--purple)}
+    .tier-card p{margin:0;font-size:.875rem}
+    
+    /* Info Boxes */
+    .info-box{background:var(--accent-light);border:1px solid var(--accent);border-radius:12px;padding:16px;margin:16px 0}
+    .info-box p{color:var(--text-primary);margin:0}
+    .warning-box{background:rgba(255,173,31,0.1);border:1px solid var(--warning);border-radius:12px;padding:16px;margin:16px 0}
+    .warning-box p{color:var(--text-primary);margin:0}
+    
+    /* Tool Grid */
+    .tool-grid{display:grid;gap:12px;margin:16px 0}
+    .tool-card{background:var(--bg-secondary);border:1px solid var(--border);border-radius:12px;padding:16px}
+    .tool-card h4{font-size:.9375rem;font-weight:600;margin-bottom:4px;color:var(--purple)}
+    .tool-card p{margin:0;font-size:.8125rem}
+    .tool-card .cost{color:var(--success);font-size:.75rem;font-weight:600;margin-top:4px}
+    
+    /* Free Alternatives */
+    .free-list{background:var(--bg-secondary);border:1px solid var(--success);border-radius:12px;padding:16px;margin:16px 0}
+    .free-list h3{color:var(--success);margin:0 0 12px}
+    .free-list ul{margin:0;list-style:none;padding:0}
+    .free-list li{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border)}
+    .free-list li:last-child{border-bottom:none}
+    .free-list .emoji{font-size:1.25rem}
+    
+    /* Copy Button */
+    .code-wrapper{position:relative}
+    .copy-btn{position:absolute;top:8px;right:8px;background:var(--accent);color:white;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;transition:background .2s}
+    .copy-btn:hover{background:var(--accent-hover)}
+    .copy-btn.copied{background:var(--success)}
+    
+    .sidebar-right{width:350px;padding:12px 24px;position:sticky;top:0;height:100vh;overflow-y:auto}
+    .info-sidebar{background:var(--bg-secondary);border-radius:16px;padding:16px;margin-bottom:16px}
+    .info-sidebar h3{font-size:1.25rem;font-weight:800;margin-bottom:12px}
+    .info-sidebar a{display:block;padding:8px 0;color:var(--text-secondary);text-decoration:none;font-size:.9375rem;border-bottom:1px solid var(--border);transition:color .2s}
+    .info-sidebar a:last-child{border:none}
+    .info-sidebar a:hover{color:var(--accent)}
+    
+    @media(max-width:1024px){.sidebar-right{display:none}.main-content{max-width:100%}}
+    @media(max-width:768px){
+      .sidebar-left{width:68px;padding:0 4px}
+      .logo a span:last-child,.nav-item span:last-child{display:none}
+      .nav-item{justify-content:center;padding:12px}
+      .tier-banner{grid-template-columns:1fr}
+      .pricing-grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar-left">
+      <div class="logo"><a href="/"><span>⚡</span><span>XActions</span></a></div>
+      <nav>
+        <a href="/" class="nav-item"><span class="nav-icon">🏠</span><span>Home</span></a>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/mcp" class="nav-item"><span class="nav-icon">🤖</span><span>MCP Server</span></a>
+        <a href="/ai-api" class="nav-item active"><span class="nav-icon">💳</span><span>AI API</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="https://github.com/nirholas/XActions" class="action-btn" target="_blank">Star on GitHub ⭐</a>
+    </aside>
+    
+    <main class="main-content">
+      <header class="main-header"><h1>🤖 XActions AI API</h1></header>
+      
+      <div class="content">
+        <p class="subtitle">Pay-per-request API for AI agents via x402 protocol</p>
+        
+        <!-- Dual Tier System -->
+        <div class="tier-banner">
+          <div class="tier-card free">
+            <h3>🆓 Humans: FREE</h3>
+            <p>Browser scripts, CLI, Node.js library, local MCP server</p>
+          </div>
+          <div class="tier-card paid">
+            <h3>🤖 AI Agents: Pay-per-Use</h3>
+            <p>Remote API with x402 micropayments</p>
+          </div>
+        </div>
+        
+        <div class="info-box">
+          <p><strong>Why the difference?</strong> AI agents can make thousands of requests per minute. The x402 protocol enables fair, usage-based pricing with instant micropayments—no subscriptions, no minimums, no API keys to manage.</p>
+        </div>
+        
+        <!-- Pricing Section -->
+        <h2 id="pricing">💰 Pricing</h2>
+        <p>Pay only for what you use. Prices in USD, paid via x402 protocol (ETH/USDC).</p>
+        
+        <div class="pricing-grid">
+          <div class="pricing-card">
+            <h3>📊 Scraping</h3>
+            <ul>
+              <li><span>Profile</span><span class="price">$0.001</span></li>
+              <li><span>Followers (up to 100)</span><span class="price">$0.01</span></li>
+              <li><span>Following (up to 100)</span><span class="price">$0.01</span></li>
+              <li><span>Tweets (up to 50)</span><span class="price">$0.005</span></li>
+              <li><span>Search</span><span class="price">$0.01</span></li>
+            </ul>
+          </div>
+          
+          <div class="pricing-card">
+            <h3>⚡ Actions</h3>
+            <ul>
+              <li><span>Unfollow non-followers</span><span class="price">$0.05</span></li>
+              <li><span>Unfollow everyone</span><span class="price">$0.10</span></li>
+              <li><span>Detect unfollowers</span><span class="price">$0.02</span></li>
+              <li><span>Auto-like (per session)</span><span class="price">$0.02</span></li>
+            </ul>
+          </div>
+          
+          <div class="pricing-card">
+            <h3>📡 Monitoring</h3>
+            <ul>
+              <li><span>Account monitor</span><span class="price">$0.01</span></li>
+              <li><span>Follower alerts</span><span class="price">$0.005</span></li>
+            </ul>
+          </div>
+        </div>
+        
+        <!-- Quick Start -->
+        <h2 id="quickstart">🚀 Quick Start</h2>
+        
+        <h3>For Claude/MCP Users</h3>
+        <p>Add to your <code>claude_desktop_config.json</code>:</p>
+        <div class="code-wrapper">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre><code>{
+  "mcpServers": {
+    "xactions": {
+      "command": "npx",
+      "args": ["xactions-mcp"],
+      "env": {
+        "XACTIONS_MODE": "remote",
+        "X402_PRIVATE_KEY": "0x...",
+        "XACTIONS_SESSION_COOKIE": "your_auth_token_here"
+      }
+    }
+  }
+}</code></pre>
+        </div>
+        
+        <h3>Direct API Usage</h3>
+        <p>The x402 protocol uses HTTP 402 (Payment Required) responses:</p>
+        <div class="code-wrapper">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre><code>// 1. Make initial request
+const response = await fetch('https://api.xactions.app/api/ai/scrape/profile', {
+  method: 'POST',
+  headers: { 
+    'Content-Type': 'application/json',
+    'X-Session-Cookie': 'your_auth_token_here'
+  },
+  body: JSON.stringify({ username: 'elonmusk' })
+});
+
+// 2. Response: 402 Payment Required
+// Headers include: X-Payment-Required with payment details
+
+// 3. Sign payment with your wallet
+const paymentDetails = response.headers.get('X-Payment-Required');
+const signedPayment = await signWithWallet(paymentDetails);
+
+// 4. Retry with payment header
+const paidResponse = await fetch('https://api.xactions.app/api/ai/scrape/profile', {
+  method: 'POST',
+  headers: { 
+    'Content-Type': 'application/json',
+    'X-Session-Cookie': 'your_auth_token_here',
+    'X-Payment': signedPayment
+  },
+  body: JSON.stringify({ username: 'elonmusk' })
+});
+
+const profile = await paidResponse.json();
+// { username: 'elonmusk', name: 'Elon Musk', followers: 150000000, ... }</code></pre>
+        </div>
+        
+        <!-- x402 Protocol -->
+        <h2 id="x402">🔐 x402 Protocol</h2>
+        <p>x402 is an open protocol for HTTP-native payments. No API keys, no accounts—just sign requests with your Ethereum wallet.</p>
+        
+        <h3>How It Works</h3>
+        <ol>
+          <li><strong>Request:</strong> Client makes API request</li>
+          <li><strong>402 Response:</strong> Server returns payment requirements (amount, address, chain)</li>
+          <li><strong>Sign:</strong> Client signs payment authorization with their wallet</li>
+          <li><strong>Pay & Get Data:</strong> Server verifies signature, processes payment, returns data</li>
+        </ol>
+        
+        <h3>Supported Chains</h3>
+        <ul>
+          <li><strong>Base</strong> (recommended) - Low fees</li>
+          <li><strong>Ethereum Mainnet</strong></li>
+          <li><strong>Arbitrum</strong></li>
+        </ul>
+        
+        <h3>Supported Tokens</h3>
+        <ul>
+          <li>ETH</li>
+          <li>USDC</li>
+        </ul>
+        
+        <!-- Endpoints -->
+        <h2 id="endpoints">📡 API Endpoints</h2>
+        
+        <div class="tool-grid">
+          <div class="tool-card">
+            <h4>POST /api/ai/scrape/profile</h4>
+            <p>Get profile information for any X/Twitter user</p>
+            <div class="cost">$0.001 per request</div>
+          </div>
+          
+          <div class="tool-card">
+            <h4>POST /api/ai/scrape/followers</h4>
+            <p>Scrape followers list for any account</p>
+            <div class="cost">$0.01 per 100 followers</div>
+          </div>
+          
+          <div class="tool-card">
+            <h4>POST /api/ai/scrape/following</h4>
+            <p>Scrape following list for any account</p>
+            <div class="cost">$0.01 per 100 following</div>
+          </div>
+          
+          <div class="tool-card">
+            <h4>POST /api/ai/scrape/tweets</h4>
+            <p>Scrape recent tweets from a user</p>
+            <div class="cost">$0.005 per 50 tweets</div>
+          </div>
+          
+          <div class="tool-card">
+            <h4>POST /api/ai/scrape/search</h4>
+            <p>Search tweets by keyword or hashtag</p>
+            <div class="cost">$0.01 per search</div>
+          </div>
+          
+          <div class="tool-card">
+            <h4>POST /api/ai/action/unfollow-non-followers</h4>
+            <p>Mass unfollow accounts that don't follow back</p>
+            <div class="cost">$0.05 per operation</div>
+          </div>
+          
+          <div class="tool-card">
+            <h4>POST /api/ai/action/unfollow-everyone</h4>
+            <p>Unfollow all accounts</p>
+            <div class="cost">$0.10 per operation</div>
+          </div>
+          
+          <div class="tool-card">
+            <h4>POST /api/ai/action/detect-unfollowers</h4>
+            <p>Find who unfollowed you recently</p>
+            <div class="cost">$0.02 per operation</div>
+          </div>
+          
+          <div class="tool-card">
+            <h4>POST /api/ai/monitor/account</h4>
+            <p>Monitor an account for changes</p>
+            <div class="cost">$0.01 per check</div>
+          </div>
+        </div>
+        
+        <p>See <a href="/docs/ai-api">full API documentation</a> for request/response schemas.</p>
+        
+        <!-- Free Alternatives -->
+        <h2 id="free">🆓 Free Alternatives</h2>
+        <p>Humans can use these features for free:</p>
+        
+        <div class="free-list">
+          <h3>Use XActions Free Forever</h3>
+          <ul>
+            <li>
+              <span class="emoji">🌐</span>
+              <span><a href="/features">Browser Scripts</a> — Copy-paste automation in your browser console</span>
+            </li>
+            <li>
+              <span class="emoji">💻</span>
+              <span><a href="https://github.com/nirholas/XActions" target="_blank">CLI Tool</a> — <code>npm install -g xactions</code></span>
+            </li>
+            <li>
+              <span class="emoji">📦</span>
+              <span><a href="https://github.com/nirholas/XActions" target="_blank">Node.js Library</a> — <code>npm install xactions</code></span>
+            </li>
+            <li>
+              <span class="emoji">🤖</span>
+              <span><a href="/mcp">Local MCP Server</a> — Free with Puppeteer (runs on your machine)</span>
+            </li>
+          </ul>
+        </div>
+        
+        <div class="warning-box">
+          <p><strong>💡 Tip:</strong> If you're building a personal project or just want to clean up your following list, use the free browser scripts! The AI API is designed for agents and automated systems.</p>
+        </div>
+        
+        <!-- FAQ -->
+        <h2 id="faq">❓ FAQ</h2>
+        
+        <h3>Why charge AI agents but not humans?</h3>
+        <p>Humans manually run scripts occasionally. AI agents can make thousands of automated requests. Usage-based pricing ensures fair access and sustainable infrastructure.</p>
+        
+        <h3>Do I need an API key?</h3>
+        <p>No! The x402 protocol uses cryptographic signatures instead of API keys. Just sign payments with your Ethereum wallet.</p>
+        
+        <h3>What's the minimum payment?</h3>
+        <p>As low as $0.001. No minimums, no prepaying, no subscriptions.</p>
+        
+        <h3>Is my X/Twitter account safe?</h3>
+        <p>Yes. XActions uses browser automation, not the official API. It behaves like a real user. We recommend reasonable rate limits.</p>
+        
+        <h3>Can I try before paying?</h3>
+        <p>Use the free local MCP server to test! It has full functionality. Switch to remote API when you need hosted infrastructure.</p>
+      </div>
+    </main>
+    
+    <aside class="sidebar-right">
+      <div class="info-sidebar">
+        <h3>📖 On This Page</h3>
+        <a href="#pricing">Pricing</a>
+        <a href="#quickstart">Quick Start</a>
+        <a href="#x402">x402 Protocol</a>
+        <a href="#endpoints">API Endpoints</a>
+        <a href="#free">Free Alternatives</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <div class="info-sidebar">
+        <h3>🔗 Resources</h3>
+        <a href="/docs/ai-api">Full API Documentation</a>
+        <a href="/mcp">Local MCP Server (Free)</a>
+        <a href="https://github.com/nirholas/XActions" target="_blank">GitHub Repo</a>
+        <a href="https://x402.org" target="_blank">x402 Protocol Spec</a>
+      </div>
+    </aside>
+  </div>
+  
+  <script>
+    function copyCode(btn) {
+      const code = btn.parentElement.querySelector('code').textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = 'Copy';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+  </script>
+</body>
+</html>
