@@ -34,14 +34,24 @@ import twitterRoutes from './routes/twitter.js';
 import sessionAuthRoutes from './routes/session-auth.js';
 import licenseRoutes from './routes/license.js';
 import adminRoutes from './routes/admin.js';
+// AI API routes - modular structure optimized for AI agent consumption
+import aiRoutes from './routes/ai/index.js';
 import { initializeSocketIO } from './realtime/socketHandler.js';
 import { initializeLicensing, brandingMiddleware } from './services/licensing.js';
+
+// x402 Payment Protocol for AI Agents
+import { x402Middleware, x402HealthCheck, x402Pricing } from './middleware/x402.js';
+import aiDetectorMiddleware from './middleware/ai-detector.js';
+import { validateConfig as validateX402Config } from './config/x402-config.js';
 
 // Payment routes archived - XActions is now 100% free and open-source
 // Archived files moved to: archive/backend/
 // - payments.js (Stripe)
 // - crypto-payments.js (Coinbase, NOWPayments)
 // - webhooks.js (payment webhooks)
+// 
+// NEW: AI agents pay per API call via x402 protocol
+// Humans continue to use free browser scripts
 
 const app = express();
 const httpServer = createServer(app);
@@ -85,6 +95,13 @@ app.use(morgan('combined'));
 app.use(express.json({ limit: '10kb' })); // Prevent large payload attacks
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 
+// AI Agent Detection - adds req.isAI and req.agentType
+app.use(aiDetectorMiddleware);
+
+// x402 Payment Middleware - protects /api/ai/* routes with crypto payments
+// Humans use free browser scripts; AI agents pay per API call
+app.use(x402Middleware);
+
 // Health check
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
@@ -93,6 +110,13 @@ app.get('/health', (req, res) => {
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', service: 'xactions-api', timestamp: new Date().toISOString() });
 });
+
+// x402 AI API endpoints (health check, pricing info - no payment required)
+app.get('/api/ai/health', x402HealthCheck);
+app.get('/api/ai/pricing', x402Pricing);
+
+// AI Agent paid endpoints (protected by x402 middleware)
+app.use('/api/ai', aiRoutes);
 
 // Serve dashboard static files
 app.use(express.static(path.join(__dirname, '../dashboard')));
@@ -157,6 +181,14 @@ httpServer.listen(PORT, async () => {
   console.log(`🚀 XActions API Server running on port ${PORT}`);
   console.log(`🔌 WebSocket server ready for real-time connections`);
   console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
+  
+  // Validate x402 configuration
+  const x402Validation = validateX402Config();
+  if (!x402Validation.valid) {
+    x402Validation.errors.forEach(e => console.error(`❌ x402: ${e}`));
+  }
+  x402Validation.warnings?.forEach(w => console.warn(`⚠️  x402: ${w}`));
+  console.log(`💰 x402 AI monetization: Humans free, AI agents pay per call`);
   
   // Initialize licensing and telemetry
   await initializeLicensing();

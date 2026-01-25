@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="refresh" content="0; url=/docs">
-  <title>XActions is 100% Free & Open Source</title>
+  <title>Pricing - XActions | Free for Humans, Pay-per-Use for AI</title>
+  <meta name="description" content="XActions pricing - Free forever for humans. AI agents pay per request via x402 micropayments.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
   <style>
     body {
@@ -20,6 +20,7 @@
     }
     .container {
       padding: 40px;
+      max-width: 600px;
     }
     h1 {
       font-size: 2rem;
@@ -30,6 +31,63 @@
       font-size: 1.125rem;
       margin-bottom: 24px;
     }
+    .tier-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin: 32px 0;
+    }
+    .tier-card {
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+    }
+    .tier-card.free {
+      background: linear-gradient(135deg, rgba(0,186,124,0.15), rgba(0,186,124,0.05));
+      border: 2px solid #00ba7c;
+    }
+    .tier-card.paid {
+      background: linear-gradient(135deg, rgba(168,85,247,0.15), rgba(168,85,247,0.05));
+      border: 2px solid #a855f7;
+    }
+    .tier-card h2 {
+      font-size: 1.5rem;
+      margin-bottom: 8px;
+    }
+    .tier-card.free h2 { color: #00ba7c; }
+    .tier-card.paid h2 { color: #a855f7; }
+    .tier-card p {
+      font-size: 0.9375rem;
+      margin: 0 0 16px;
+    }
+    .tier-card ul {
+      text-align: left;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .tier-card li {
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      font-size: 0.875rem;
+      color: #e7e9ea;
+    }
+    .tier-card li:last-child { border-bottom: none; }
+    .btn {
+      display: inline-block;
+      padding: 12px 24px;
+      border-radius: 9999px;
+      font-weight: 700;
+      text-decoration: none;
+      margin-top: 16px;
+      transition: transform 0.2s, opacity 0.2s;
+    }
+    .btn:hover {
+      transform: scale(1.05);
+      opacity: 0.9;
+    }
+    .btn-green { background: #00ba7c; color: white; }
+    .btn-purple { background: #a855f7; color: white; }
     a {
       color: #1d9bf0;
       text-decoration: none;
@@ -37,14 +95,65 @@
     a:hover {
       text-decoration: underline;
     }
+    .footer-links {
+      margin-top: 32px;
+      color: #71767b;
+      font-size: 0.875rem;
+    }
+    .footer-links a {
+      margin: 0 12px;
+    }
+    @media (max-width: 600px) {
+      .tier-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>🎉 XActions is 100% Free!</h1>
-    <p>No pricing, no credits, no payments required.<br>Everything is open source and free forever.</p>
-    <p>Redirecting to documentation...</p>
-    <p><a href="/docs">Click here if not redirected</a> | <a href="https://github.com/nirholas/XActions">Star on GitHub ⭐</a></p>
+    <h1>⚡ XActions Pricing</h1>
+    <p>Dual-tier system: Free for humans, pay-per-use for AI agents</p>
+    
+    <div class="tier-grid">
+      <div class="tier-card free">
+        <h2>🆓 Humans</h2>
+        <p>FREE Forever</p>
+        <ul>
+          <li>✅ Browser scripts</li>
+          <li>✅ CLI tool</li>
+          <li>✅ Node.js library</li>
+          <li>✅ Local MCP server</li>
+          <li>✅ All features included</li>
+          <li>✅ Open source</li>
+        </ul>
+        <a href="/features" class="btn btn-green">Get Started Free</a>
+      </div>
+      
+      <div class="tier-card paid">
+        <h2>🤖 AI Agents</h2>
+        <p>Pay-per-Request</p>
+        <ul>
+          <li>💳 Profile scrape: $0.001</li>
+          <li>💳 Followers/Following: $0.01</li>
+          <li>💳 Unfollow non-followers: $0.05</li>
+          <li>💳 Detect unfollowers: $0.02</li>
+          <li>💳 No subscriptions</li>
+          <li>💳 x402 micropayments</li>
+        </ul>
+        <a href="/ai-api" class="btn btn-purple">View AI API Docs</a>
+      </div>
+    </div>
+    
+    <p style="font-size: 0.9375rem;">
+      <strong>Why charge AI agents?</strong><br>
+      AI can make thousands of requests per minute. Usage-based pricing ensures fair access.
+    </p>
+    
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="/features">Features</a>
+      <a href="/ai-api">AI API</a>
+      <a href="https://github.com/nirholas/XActions">GitHub ⭐</a>
+    </div>
   </div>
 </body>
 </html>
