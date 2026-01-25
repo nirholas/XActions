@@ -1,7 +1,5 @@
 {
   "version": 2,
-  "buildCommand": "",
-  "outputDirectory": ".",
   "rewrites": [
     { "source": "/dashboard/:path*", "destination": "/dashboard/:path*" },
     { "source": "/tutorials/:path*", "destination": "/dashboard/tutorials/:path*" },

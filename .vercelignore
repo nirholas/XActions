@@ -8,14 +8,9 @@ scripts/
 tests/
 prisma/
 
-# Ignore config files
-*.js
-*.json
-!vercel.json
-*.toml
+# Ignore non-static files
+node_modules/
 *.md
+*.toml
 *.config.js
-
-# Keep only static site files
-!site/
-!dashboard/
+package*.json
