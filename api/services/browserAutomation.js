@@ -913,7 +913,7 @@ export async function extractVideoUrls(sessionCookie, tweetId) {
     await randomDelay();
 
     // Click on video to ensure it loads
-    const videoPlayer = await page.\$('[data-testid="videoPlayer"]');
+    const videoPlayer = await page.$('[data-testid="videoPlayer"]');
     if (videoPlayer) {
       await videoPlayer.click().catch(() => {});
       await sleep(2000);
