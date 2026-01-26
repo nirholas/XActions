@@ -2,22 +2,76 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.nirholas/xactions",
   "title": "XActions",
-  "description": "Twitter X automation MCP - post, schedule, analytics, engagement, social media automation",
+  "description": "X/Twitter automation MCP - scraping, posting, scheduling, analytics, engagement, monitoring. No API required. AI agents for social media.",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "nich",
+      "url": "https://github.com/nirholas"
+    }
+  ],
   "repository": {
     "url": "https://github.com/nirholas/XActions",
     "source": "github"
   },
   "version": "3.0.42",
-  "icons": {
-    "light": "https://raw.githubusercontent.com/nirholas/g1t/d9a0ee206b8136472c04384905999369f198b3c9/milady.svg",
-    "dark": "https://raw.githubusercontent.com/nirholas/g1t/d9a0ee206b8136472c04384905999369f198b3c9/bg.svg"
+  "links": {
+    "homepage": "https://github.com/nirholas/XActions",
+    "bugs": "https://github.com/nirholas/XActions/issues",
+    "npm": "https://www.npmjs.com/package/xactions"
   },
-  "packages": {
-    "npm": "xactions"
-  },
+  "icons": [
+    {
+      "url": "https://raw.githubusercontent.com/nirholas/g1t/d9a0ee206b8136472c04384905999369f198b3c9/milady.svg",
+      "type": "svg"
+    }
+  ],
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "xactions",
+      "version": "3.0.42",
+      "runtimeHint": "npx",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "X_COOKIES",
+          "description": "X/Twitter authentication cookies (JSON string or path to cookies file)",
+          "isRequired": false,
+          "isSecret": true
+        },
+        {
+          "name": "X_USERNAME",
+          "description": "X/Twitter username for login",
+          "isRequired": false,
+          "isSecret": false
+        },
+        {
+          "name": "X_PASSWORD",
+          "description": "X/Twitter password for login",
+          "isRequired": false,
+          "isSecret": true
+        }
+      ]
+    }
+  ],
   "_meta": {
     "io.modelcontextprotocol.registry/publisher-provided": {
-      "keywords": ["twitter", "x", "social-media", "automation", "posting", "scheduling", "analytics", "engagement", "mcp", "ai"],
+      "keywords": [
+        "twitter",
+        "x",
+        "social-media",
+        "automation",
+        "scraping",
+        "posting",
+        "scheduling",
+        "analytics",
+        "engagement",
+        "mcp",
+        "ai"
+      ],
       "category": "Social Media"
     }
   }
