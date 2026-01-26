@@ -42,9 +42,42 @@ Watch the console for progress messages and results!
 
 ### Twitter/X Scripts (`twitter/`)
 
+#### 🗑️ Unfollow & Cleanup
 | Script | Description |
 |--------|-------------|
-| `scrape-profile-posts.js` | Scrape the last 100 posts from any Twitter/X profile page |
+| `unfollow-everyone.js` | Mass unfollow all accounts you follow |
+| `unfollow-non-followers.js` | Unfollow accounts that don't follow you back |
+| `unfollow-with-log.js` | Unfollow with a downloadable log of all actions |
+| `smart-unfollow.js` | Time-based smart unfollow for non-followers after grace period |
+| `leave-all-communities.js` | Leave all X Communities you've joined |
+
+#### 👀 Monitoring & Tracking
+| Script | Description |
+|--------|-------------|
+| `detect-unfollowers.js` | Compare follower snapshots to detect who unfollowed you |
+| `monitor-account.js` | Track any account's follower/following changes |
+| `continuous-monitor.js` | Auto-refresh monitoring with browser notifications |
+| `new-followers-alert.js` | New follower alerts with welcome message templates |
+
+#### 🤖 Automation
+| Script | Description |
+|--------|-------------|
+| `auto-liker.js` | Auto-like tweets with keyword/user filtering |
+| `auto-commenter.js` | Auto-comment on target user's posts |
+| `follow-engagers.js` | Follow likers/retweeters of specific posts |
+| `follow-target-users.js` | Follow followers/following of target accounts |
+| `keyword-follow.js` | Follow users from keyword search results |
+| `protect-active-users.js` | Find engaged users to protect from unfollow |
+
+#### 📊 Scrapers
+| Script | Description |
+|--------|-------------|
+| `scrape-profile-posts.js` | Advanced tweet scraper with filtering, analytics, multi-format export |
+| `viral-tweets-scraper.js` | Find top-performing viral tweets by engagement |
+| `link-scraper.js` | Extract all links shared by a specific user |
+| `bookmark-exporter.js` | Export all your bookmarks to JSON and CSV |
+| `thread-unroller.js` | Save Twitter threads as markdown, text, or JSON |
+| `video-downloader.js` | Download videos from any X/Twitter post |
 
 ### Templates (`templates/`)
 
