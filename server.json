@@ -1,9 +1,24 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.nirholas/xactions",
-  "version": "1.0.0",
-  "title": "Twitter X Automation",
-  "description": "Twitter X automation MCP - post schedule analytics engagement social media",
-  "keywords": ["twitter", "x", "automation", "social-media", "posting", "analytics"],
-  "repository": {"url": "https://github.com/nirholas/XActions", "source": "github"}
+  "title": "XActions",
+  "description": "Twitter X automation MCP - post, schedule, analytics, engagement, social media automation",
+  "repository": {
+    "url": "https://github.com/nirholas/XActions",
+    "source": "github"
+  },
+  "version": "3.0.42",
+  "icons": {
+    "light": "https://raw.githubusercontent.com/nirholas/g1t/d9a0ee206b8136472c04384905999369f198b3c9/milady.svg",
+    "dark": "https://raw.githubusercontent.com/nirholas/g1t/d9a0ee206b8136472c04384905999369f198b3c9/bg.svg"
+  },
+  "packages": {
+    "npm": "xactions"
+  },
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "keywords": ["twitter", "x", "social-media", "automation", "posting", "scheduling", "analytics", "engagement", "mcp", "ai"],
+      "category": "Social Media"
+    }
+  }
 }
