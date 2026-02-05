@@ -73,6 +73,13 @@
     await sleep(1000);
   };
 
+  const getBioFromUserCell = (cell) => {
+        // bio 通常是 dir="auto" 且带 overflow hidden（简介会截断）
+        const bioDiv = [...cell.querySelectorAll('div[dir="auto"]')]
+            .find(d => (d.getAttribute('style') || '').includes('overflow: hidden'));
+        return (bioDiv?.textContent || '').trim();
+  };
+
   // ============================================
   // USER EXTRACTION
   // ============================================
@@ -85,7 +92,7 @@
       const displayName = nameEl?.textContent || username;
       
       const bioEl = userCell.querySelector('[data-testid="UserDescription"]');
-      const bio = bioEl?.textContent || '';
+      const bio = bioEl?.textContent || getBioFromUserCell(userCell);
       
       // Try to get follower count (might not always be visible)
       const statsText = userCell.textContent || '';
