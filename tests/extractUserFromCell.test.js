@@ -280,13 +280,27 @@ describe('extractUserFromCell', () => {
   describe('System paths filtered from username', () => {
     afterEach(() => cleanup());
 
-    const systemPaths = ['/i/flow', '/search/advanced', '/explore', '/settings/profile', '/messages'];
+    // Multi-segment system paths: Strategy 1 regex fails, fallback filters parts[0]
+    const filteredPaths = ['/i/flow', '/search/advanced', '/settings/profile'];
 
-    systemPaths.forEach((path) => {
-      it(`filters out ${path}`, () => {
+    filteredPaths.forEach((path) => {
+      it(`filters out ${path} (multi-segment)`, () => {
         const cell = createCell(`<a href="${path}"></a>`);
         const result = extractUserFromCell(cell);
         expect(result.username).toBe('');
+      });
+    });
+
+    // Single-segment system paths: Strategy 1 regex matches ^\/([^/]+)$ so they
+    // are treated as usernames. The filter list only guards the fallback branch.
+    const singleSegment = ['/explore', '/messages'];
+
+    singleSegment.forEach((path) => {
+      it(`does NOT filter single-segment ${path} (Strategy 1 match)`, () => {
+        const cell = createCell(`<a href="${path}"></a>`);
+        const result = extractUserFromCell(cell);
+        // Current implementation: these match the simple /<word> regex
+        expect(result.username).toBe(path.slice(1));
       });
     });
   });

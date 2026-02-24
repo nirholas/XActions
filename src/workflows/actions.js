@@ -206,6 +206,305 @@ registerAction('scrapeTrending', {
 });
 
 // ============================================================================
+// Automation Actions (follow, unfollow, post, like, retweet)
+// ============================================================================
+
+registerAction('follow', {
+  description: 'Follow a Twitter/X user',
+  category: 'automation',
+  params: {
+    target: { type: 'string', required: true, description: 'Username to follow (with or without @)' },
+  },
+  async execute(params, context) {
+    const username = params.target.replace(/^@/, '');
+    const page = await getAuthenticatedPage(context.authToken);
+    try {
+      await page.goto(`https://x.com/${username}`, { waitUntil: 'networkidle2' });
+      await new Promise(r => setTimeout(r, 1000 + Math.random() * 1000));
+      const followBtn = await page.$('[data-testid="placementTracking"] [role="button"]:not([data-testid$="-unfollow"])');
+      if (followBtn) {
+        await followBtn.click();
+        await new Promise(r => setTimeout(r, 1000 + Math.random() * 1000));
+        return { success: true, message: `Followed @${username}` };
+      }
+      return { success: false, message: `Could not follow @${username} (already following or button not found)` };
+    } finally {
+      await page.close();
+    }
+  },
+});
+
+registerAction('unfollow', {
+  description: 'Unfollow a Twitter/X user',
+  category: 'automation',
+  params: {
+    target: { type: 'string', required: true, description: 'Username to unfollow (with or without @)' },
+  },
+  async execute(params, context) {
+    const username = params.target.replace(/^@/, '');
+    const page = await getAuthenticatedPage(context.authToken);
+    try {
+      await page.goto(`https://x.com/${username}`, { waitUntil: 'networkidle2' });
+      await new Promise(r => setTimeout(r, 1000 + Math.random() * 1000));
+      const unfollowBtn = await page.$('[data-testid$="-unfollow"]');
+      if (unfollowBtn) {
+        await unfollowBtn.click();
+        await new Promise(r => setTimeout(r, 500));
+        const confirmBtn = await page.$('[data-testid="confirmationSheetConfirm"]');
+        if (confirmBtn) await confirmBtn.click();
+        await new Promise(r => setTimeout(r, 1000 + Math.random() * 1000));
+        return { success: true, message: `Unfollowed @${username}` };
+      }
+      return { success: false, message: `Could not unfollow @${username} (not following or button not found)` };
+    } finally {
+      await page.close();
+    }
+  },
+});
+
+registerAction('postTweet', {
+  description: 'Post a tweet on Twitter/X',
+  category: 'automation',
+  params: {
+    text: { type: 'string', required: true, description: 'Tweet text (supports {{variable}} template syntax)' },
+  },
+  async execute(params, context) {
+    const page = await getAuthenticatedPage(context.authToken);
+    try {
+      await page.goto('https://x.com/compose/tweet', { waitUntil: 'networkidle2' });
+      await new Promise(r => setTimeout(r, 1000 + Math.random() * 1000));
+      const textbox = await page.$('[data-testid="tweetTextarea_0"]');
+      if (textbox) {
+        await textbox.type(params.text, { delay: 50 });
+        await new Promise(r => setTimeout(r, 500));
+        const tweetBtn = await page.$('[data-testid="tweetButton"]');
+        if (tweetBtn) {
+          await tweetBtn.click();
+          await new Promise(r => setTimeout(r, 1000 + Math.random() * 1000));
+          return { success: true, message: 'Tweet posted successfully' };
+        }
+      }
+      return { success: false, message: 'Could not post tweet' };
+    } finally {
+      await page.close();
+    }
+  },
+});
+
+registerAction('like', {
+  description: 'Like a tweet on Twitter/X',
+  category: 'automation',
+  params: {
+    url: { type: 'string', required: true, description: 'URL of the tweet to like' },
+  },
+  async execute(params, context) {
+    const page = await getAuthenticatedPage(context.authToken);
+    try {
+      await page.goto(params.url, { waitUntil: 'networkidle2' });
+      await new Promise(r => setTimeout(r, 1000 + Math.random() * 1000));
+      const likeBtn = await page.$('[data-testid="like"]');
+      if (likeBtn) {
+        await likeBtn.click();
+        await new Promise(r => setTimeout(r, 1000 + Math.random() * 1000));
+        return { success: true, message: 'Tweet liked' };
+      }
+      return { success: false, message: 'Could not like tweet (already liked or button not found)' };
+    } finally {
+      await page.close();
+    }
+  },
+});
+
+registerAction('retweet', {
+  description: 'Retweet a tweet on Twitter/X',
+  category: 'automation',
+  params: {
+    url: { type: 'string', required: true, description: 'URL of the tweet to retweet' },
+  },
+  async execute(params, context) {
+    const page = await getAuthenticatedPage(context.authToken);
+    try {
+      await page.goto(params.url, { waitUntil: 'networkidle2' });
+      await new Promise(r => setTimeout(r, 1000 + Math.random() * 1000));
+      const retweetBtn = await page.$('[data-testid="retweet"]');
+      if (retweetBtn) {
+        await retweetBtn.click();
+        await new Promise(r => setTimeout(r, 500));
+        const confirmBtn = await page.$('[data-testid="retweetConfirm"]');
+        if (confirmBtn) await confirmBtn.click();
+        await new Promise(r => setTimeout(r, 1000 + Math.random() * 1000));
+        return { success: true, message: 'Retweeted successfully' };
+      }
+      return { success: false, message: 'Could not retweet (already retweeted or button not found)' };
+    } finally {
+      await page.close();
+    }
+  },
+});
+
+registerAction('reply', {
+  description: 'Reply to a tweet on Twitter/X',
+  category: 'automation',
+  params: {
+    url: { type: 'string', required: true, description: 'URL of the tweet to reply to' },
+    text: { type: 'string', required: true, description: 'Reply text' },
+  },
+  async execute(params, context) {
+    const page = await getAuthenticatedPage(context.authToken);
+    try {
+      await page.goto(params.url, { waitUntil: 'networkidle2' });
+      await new Promise(r => setTimeout(r, 1000 + Math.random() * 1000));
+      const replyBox = await page.$('[data-testid="tweetTextarea_0"]');
+      if (replyBox) {
+        await replyBox.type(params.text, { delay: 50 });
+        await new Promise(r => setTimeout(r, 500));
+        const replyBtn = await page.$('[data-testid="tweetButtonInline"]');
+        if (replyBtn) {
+          await replyBtn.click();
+          await new Promise(r => setTimeout(r, 1000 + Math.random() * 1000));
+          return { success: true, message: 'Reply posted' };
+        }
+      }
+      return { success: false, message: 'Could not reply to tweet' };
+    } finally {
+      await page.close();
+    }
+  },
+});
+
+registerAction('getNonFollowers', {
+  description: 'Get users you follow who don\'t follow you back',
+  category: 'automation',
+  params: {
+    target: { type: 'string', required: true, description: 'Your username' },
+    limit: { type: 'number', default: 200, description: 'Max users to check' },
+  },
+  async execute(params, context) {
+    const username = params.target.replace(/^@/, '');
+    const page = await getAuthenticatedPage(context.authToken);
+    try {
+      const followers = await scrapers.scrapeFollowers(page, username, { limit: params.limit || 200 });
+      const following = await scrapers.scrapeFollowing(page, username, { limit: params.limit || 200 });
+      const followerSet = new Set(followers.map(f => f.username?.toLowerCase()).filter(Boolean));
+      const nonFollowers = following.filter(f => !followerSet.has(f.username?.toLowerCase()));
+      return {
+        username,
+        nonFollowers: nonFollowers.map(f => f.username),
+        count: nonFollowers.length,
+        totalFollowers: followers.length,
+        totalFollowing: following.length,
+      };
+    } finally {
+      await page.close();
+    }
+  },
+});
+
+// ============================================================================
+// Additional Scraper Actions
+// ============================================================================
+
+registerAction('scrapeThread', {
+  description: 'Scrape a full tweet thread/conversation',
+  category: 'scraper',
+  params: {
+    url: { type: 'string', required: true, description: 'URL of the tweet thread' },
+  },
+  async execute(params, context) {
+    const page = await getAuthenticatedPage(context.authToken);
+    try {
+      return await scrapers.scrapeThread(page, params.url);
+    } finally {
+      await page.close();
+    }
+  },
+});
+
+registerAction('scrapeMedia', {
+  description: 'Scrape media (images/videos) from a Twitter/X user',
+  category: 'scraper',
+  params: {
+    target: { type: 'string', required: true, description: 'Username' },
+    limit: { type: 'number', default: 20, description: 'Max media items to scrape' },
+  },
+  async execute(params, context) {
+    const username = params.target.replace(/^@/, '');
+    const page = await getAuthenticatedPage(context.authToken);
+    try {
+      return await scrapers.scrapeMedia(page, username, { limit: params.limit || 20 });
+    } finally {
+      await page.close();
+    }
+  },
+});
+
+registerAction('scrapeBookmarks', {
+  description: 'Scrape your bookmarked tweets (requires authentication)',
+  category: 'scraper',
+  params: {
+    limit: { type: 'number', default: 50, description: 'Max bookmarks to scrape' },
+  },
+  async execute(params, context) {
+    const page = await getAuthenticatedPage(context.authToken);
+    try {
+      return await scrapers.scrapeBookmarks(page, { limit: params.limit || 50 });
+    } finally {
+      await page.close();
+    }
+  },
+});
+
+registerAction('scrapeNotifications', {
+  description: 'Scrape your recent notifications (requires authentication)',
+  category: 'scraper',
+  params: {
+    limit: { type: 'number', default: 30, description: 'Max notifications to scrape' },
+  },
+  async execute(params, context) {
+    const page = await getAuthenticatedPage(context.authToken);
+    try {
+      return await scrapers.scrapeNotifications(page, { limit: params.limit || 30 });
+    } finally {
+      await page.close();
+    }
+  },
+});
+
+registerAction('scrapeListMembers', {
+  description: 'Scrape members of a Twitter/X list',
+  category: 'scraper',
+  params: {
+    url: { type: 'string', required: true, description: 'URL of the Twitter list' },
+    limit: { type: 'number', default: 100, description: 'Max members to scrape' },
+  },
+  async execute(params, context) {
+    const page = await getAuthenticatedPage(context.authToken);
+    try {
+      return await scrapers.scrapeListMembers(page, params.url, { limit: params.limit || 100 });
+    } finally {
+      await page.close();
+    }
+  },
+});
+
+registerAction('scrapeLikes', {
+  description: 'Scrape users who liked a specific tweet',
+  category: 'scraper',
+  params: {
+    url: { type: 'string', required: true, description: 'URL of the tweet' },
+    limit: { type: 'number', default: 50, description: 'Max likers to scrape' },
+  },
+  async execute(params, context) {
+    const page = await getAuthenticatedPage(context.authToken);
+    try {
+      return await scrapers.scrapeLikes(page, params.url, { limit: params.limit || 50 });
+    } finally {
+      await page.close();
+    }
+  },
+});
+
+// ============================================================================
 // Data Transform Actions
 // ============================================================================
 

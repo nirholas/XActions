@@ -825,7 +825,7 @@ const TOOLS = [
   // ====== Real-Time Streaming (continued) ======
   {
     name: 'x_stream_start',
-    description: 'Start a real-time stream that polls an X/Twitter account and pushes new events. Types: tweet (new tweets), follower (follow/unfollow events), mention (new mentions). Events are emitted via Socket.IO.',
+    description: 'Start a real-time stream that polls an X/Twitter account and pushes new events. Types: tweet (new tweets), follower (follow/unfollow events), mention (new mentions). Events are emitted via Socket.IO. Rejects duplicates (same type + username).',
     inputSchema: {
       type: 'object',
       properties: {
@@ -840,7 +840,7 @@ const TOOLS = [
         },
         interval: {
           type: 'number',
-          description: 'Poll interval in seconds (default: 60, minimum: 15)',
+          description: 'Poll interval in seconds (default: 60, minimum: 15, maximum: 3600)',
         },
       },
       required: ['type', 'username'],
@@ -848,7 +848,7 @@ const TOOLS = [
   },
   {
     name: 'x_stream_stop',
-    description: 'Stop an active real-time stream by its ID.',
+    description: 'Stop an active real-time stream by its ID. Removes all state and history.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -862,10 +862,74 @@ const TOOLS = [
   },
   {
     name: 'x_stream_list',
-    description: 'List all active real-time streams with their status, poll counts, and browser pool info.',
+    description: 'List all active real-time streams with status, poll/event counts, errors, and browser pool info.',
     inputSchema: {
       type: 'object',
       properties: {},
+    },
+  },
+  {
+    name: 'x_stream_pause',
+    description: 'Pause an active stream (stops polling but retains state). Resume later with x_stream_resume.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        streamId: {
+          type: 'string',
+          description: 'The stream ID to pause',
+        },
+      },
+      required: ['streamId'],
+    },
+  },
+  {
+    name: 'x_stream_resume',
+    description: 'Resume a paused stream. Clears backoff and starts polling again immediately.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        streamId: {
+          type: 'string',
+          description: 'The stream ID to resume',
+        },
+      },
+      required: ['streamId'],
+    },
+  },
+  {
+    name: 'x_stream_status',
+    description: 'Get detailed status for a single stream including poll count, event count, errors, and backoff info.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        streamId: {
+          type: 'string',
+          description: 'The stream ID to check',
+        },
+      },
+      required: ['streamId'],
+    },
+  },
+  {
+    name: 'x_stream_history',
+    description: 'Get recent events from a stream. Optionally filter by event type.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        streamId: {
+          type: 'string',
+          description: 'The stream ID',
+        },
+        limit: {
+          type: 'number',
+          description: 'Max events to return (default: 20)',
+        },
+        eventType: {
+          type: 'string',
+          description: 'Optional filter: stream:tweet, stream:follower, or stream:mention',
+        },
+      },
+      required: ['streamId'],
     },
   },
   // ---- Workflow Tools ----
@@ -1062,7 +1126,7 @@ async function executeTool(name, args) {
   }
 
   // Handle streaming tools directly (they work in both local and remote modes)
-  if (name === 'x_stream_start' || name === 'x_stream_stop' || name === 'x_stream_list') {
+  if (name.startsWith('x_stream_')) {
     return await executeStreamTool(name, args);
   }
 
@@ -1121,7 +1185,7 @@ async function executeStreamTool(name, args) {
 
   switch (name) {
     case 'x_stream_start': {
-      const intervalMs = args.interval ? Math.max(15, Number(args.interval)) * 1000 : undefined;
+      const intervalMs = args.interval ? Math.max(15, Math.min(3600, Number(args.interval))) * 1000 : undefined;
       const stream = await streaming.createStream({
         type: args.type,
         username: args.username,
@@ -1137,6 +1201,21 @@ async function executeStreamTool(name, args) {
       const streams = await streaming.listStreams();
       const pool = streaming.getPoolStatus();
       return { streams, pool };
+    }
+    case 'x_stream_pause': {
+      return await streaming.pauseStream(args.streamId);
+    }
+    case 'x_stream_resume': {
+      return await streaming.resumeStream(args.streamId);
+    }
+    case 'x_stream_status': {
+      return await streaming.getStreamStatus(args.streamId);
+    }
+    case 'x_stream_history': {
+      return await streaming.getStreamHistory(args.streamId, {
+        limit: args.limit,
+        eventType: args.eventType,
+      });
     }
     default:
       throw new Error(`Unknown stream tool: ${name}`);

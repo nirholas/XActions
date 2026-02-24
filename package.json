@@ -72,13 +72,14 @@
     "stripe": "^14.10.0"
   },
   "optionalDependencies": {
-    "@atproto/api": "^0.13.0",
+    "@atproto/api": "^0.13.35",
     "@x402/core": "^0.1.0",
     "@x402/evm": "^0.1.0",
     "@x402/express": "^0.1.0",
     "viem": "^2.0.0"
   },
   "devDependencies": {
+    "jsdom": "^28.1.0",
     "nodemon": "^3.0.2",
     "supertest": "^6.3.4",
     "vitest": "^1.6.1"

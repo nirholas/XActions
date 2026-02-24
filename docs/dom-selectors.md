@@ -56,7 +56,9 @@ Search results, followers lists, following lists, and any user-list UI.
 | Protected icon | `[data-testid="icon-lock"]` | `svg[aria-label*="Protected"]` | |
 | Avatar container | `[data-testid="UserAvatar-Container"]` | — | |
 | Avatar image | `[data-testid="UserAvatar-Container"] img` | `[data-testid*="UserAvatar"] img` | |
-| User actions menu | `[data-testid="userActions"]` | — | The "…" menu on user cells |
+| User actions menu | `[data-testid="userActions"]` | `button[aria-label="More"]` | The "…" menu on user cells |
+| Scrollable cell | `[data-testid="cellInnerDiv"]` | — | Generic inner div for scrollable lists |
+| Internal profile link | `a[href^="/"][role="link"]` | `a[href^="/"]` | Username extraction from cells |
 
 ---
 
@@ -87,6 +89,9 @@ Selectors for profile pages (`x.com/username`).
 | Verified followers | `a[href$="/verified_followers"]` | — | |
 | Premium badge | `[data-testid="premiumBadge"]` | — | |
 | Premium banner | `[data-testid="premiumBanner"]` | — | |
+| Premium link | `a[href*="premium"]` | — | Premium upgrade link |
+| Profile tab bar link | `[data-testid="AppTabBar_Profile_Link"]` | — | Used for shadow-ban checking |
+| Profile meta tag | `meta[property="al:android:url"]` | — | Profile detection via meta tag |
 
 ---
 
@@ -145,8 +150,8 @@ Like, reply, retweet, bookmark, share, and analytics buttons on tweets.
 |---------|-----------------|----------------------|-------|
 | Follow button | `[data-testid$="-follow"]` | `button[aria-label*="Follow @"]` | Suffix match — username prefix varies |
 | Unfollow button | `[data-testid$="-unfollow"]` | `button[aria-label*="Following @"]` | Suffix match |
-| Unblock button | `[data-testid$="-unblock"]` | — | Suffix match |
-| Unmute button | `[data-testid$="-unmute"]` | `button[aria-label*="Unmute"]` | Suffix match |
+| Unblock button | `[data-testid$="-unblock"]` | `button[aria-label*="Unblock"]`, `button[aria-label*="Blocked"]` | Suffix match |
+| Unmute button | `[data-testid$="-unmute"]` | `button[aria-label*="Unmute"]`, `button[aria-label*="Muted"]` | Suffix match |
 | Placement button | `[data-testid="placementTracking"] [role="button"]` | — | Follow/Unblock variant in placements |
 
 ---
@@ -228,6 +233,10 @@ Like, reply, retweet, bookmark, share, and analytics buttons on tweets.
 | Cancel button | `[data-testid="cancelButton"]` | |
 | Sort by latest | `[data-testid="sortByLatest"]` | |
 | Sort by liked | `[data-testid="sortByLiked"]` | |
+| Name input field | `input[name="displayName"]` | Used in edit profile modal |
+| Bio textarea | `textarea[name="description"]` | Used in edit profile modal |
+| Location input | `input[name="location"]` | Used in edit profile modal |
+| Website URL input | `input[name="url"]` | Used in edit profile modal |
 
 ---
 
@@ -246,6 +255,7 @@ Like, reply, retweet, bookmark, share, and analytics buttons on tweets.
 | Account switcher | `[data-testid="SideNav_AccountSwitcher_Button"]` | — | |
 | Sidebar avatar | `div[data-testid="SideNav_AccountSwitcher_Button"] img` | — | |
 | Cell inner div | `[data-testid="cellInnerDiv"]` | — | Generic scrollable cell |
+| Profile tab link | `[data-testid="AppTabBar_Profile_Link"]` | — | Profile link in app tab bar |
 
 ---
 
@@ -286,6 +296,9 @@ Like, reply, retweet, bookmark, share, and analytics buttons on tweets.
 | DM GIF button | `[data-testid="DMGifButton"]` | — | |
 | GIF result | `[data-testid="gif"]` | — | |
 | Reaction emoji | `[data-testid="reactionEmoji"]` | — | |
+| DM conversation (variant) | `[data-testid="DM_Conversation"]` | — | Underscore-separated variant |
+| DM conversation avatar | `[data-testid="DM_Conversation_Avatar"]` | — | Avatar in DM conversation list |
+| Sent message indicator | `[data-testid="messageSent"]` | — | Indicates message was sent |
 
 ---
 
@@ -302,6 +315,8 @@ Like, reply, retweet, bookmark, share, and analytics buttons on tweets.
 | Muted word input | `[data-testid="mutedWordInput"]` | — | |
 | Save muted word | `[data-testid="saveMutedWord"]` | — | |
 | Report flow next | `[data-testid="ChoiceSelectionNextButton"]` | — | Report wizard |
+| Report reason options | `[role="radio"]`, `[role="option"]`, `button` | — | Options in report/mute flows |
+| Block inside menu | `[role="menuitem"] [data-testid="block"]` | — | Block option nested in menu |
 
 ---
 
@@ -430,7 +445,14 @@ Like, reply, retweet, bookmark, share, and analytics buttons on tweets.
 | Stat elements | `[data-testid*="stat"]` | Wildcard match |
 | Metric elements | `[data-testid*="metric"]` | Wildcard match |
 | Subscription info | `[data-testid="subscriptionInfo"]` | |
+| Analytics tab | `[data-testid="analyticsTab"]` | |
+| Boost button | `[data-testid="boostButton"]` | |
+| Ads dashboard | `[data-testid="adsDashboard"]` | |
+| Campaign list | `[data-testid="campaignList"]` | |
+| Create campaign | `[data-testid="createCampaign"]` | |
 | List item (stats) | `[role="listitem"]` | |
+| Analytics nav link | `a[href="/i/account_analytics"]` | |
+| Monetization settings | `a[href="/settings/monetization"]` | |
 
 ---
 
@@ -444,6 +466,17 @@ Like, reply, retweet, bookmark, share, and analytics buttons on tweets.
 | Request data | `[data-testid="requestData"]` | |
 | Settings links | `a[href^="/settings/"]` | |
 | Option element | `[role="option"]` | |
+| Account settings | `a[href="/settings/account"]` | |
+| Privacy & safety | `a[href="/settings/privacy_and_safety"]` | |
+| Notifications settings | `a[href="/settings/notifications"]` | |
+| Download data | `a[href="/settings/download_data"]` | |
+| Deactivate account | `a[href="/settings/deactivate"]` | |
+| 2FA settings | `a[href="/settings/account/login_verification"]` | |
+| Blocked accounts | `a[href="/settings/blocked"]` | |
+| Muted accounts | `a[href="/settings/muted"]` | |
+| Muted keywords | `a[href="/settings/muted_keywords"]` | |
+| Content preferences | `a[href="/settings/content_preferences"]` | |
+| Display settings | `a[href="/settings/display"]` | |
 
 ---
 
@@ -487,6 +520,15 @@ Selectors used across many contexts as fallbacks or for text extraction.
 | SVG with testid | `svg[data-testid]` | |
 | Heading element | `[role="heading"]` | |
 | Generic send button | `button[aria-label="Send"]` | |
+| Any button | `button`, `[role="button"]` | Generic button matching |
+| Link with role | `a[role="link"]` | Accessible link element |
+| Threads post container | `[data-pressable-container="true"]` | Meta Threads scraper only |
+| Threads post fallback | `div[role="article"]` | Meta Threads scraper only |
+| Markdown response | `[class*="markdown"]` | Grok markdown-formatted text |
+| Compose article link | `a[href="/compose/article"]` | Navigate to article composer |
+| Grok nav link | `a[href="/i/grok"]` | Navigate to Grok AI |
+| Spaces nav link | `a[href*="/spaces"]` | Navigate to Spaces |
+| Bookmarks nav link | `a[href="/i/bookmarks"]` | Navigate to bookmarks |
 
 ---
 

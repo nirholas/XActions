@@ -8,9 +8,15 @@
 export {
   createStream,
   stopStream,
+  stopAllStreams,
+  pauseStream,
+  resumeStream,
+  updateStream,
   listStreams,
   getStreamHistory,
   getStreamStatus,
+  getStreamStats,
+  isHealthy,
   setIO,
   shutdown,
   STREAM_TYPES,
@@ -28,4 +34,5 @@ export {
   releasePage,
   closeAll as closeAllBrowsers,
   getPoolStatus as getBrowserPoolStatus,
+  isHealthy as isBrowserPoolHealthy,
 } from './browserPool.js';
