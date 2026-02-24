@@ -1173,74 +1173,7 @@
   console.log('║  🚀 ENGAGEMENT BOOSTER v2                ║');
   console.log('║  by nichxbt — floating panel active      ║');
   console.log('║  Console: XActions.engagementBooster.*    ║');
-  console.log('╚══════════════════════════════════════════╝'</div>
-      <div style="text-align:center;background:#202327;border-radius:8px;padding:6px 4px;">
-        <div id="xab-followed" style="font-size:18px;font-weight:800;color:#7856ff;">0</div>
-        <div style="font-size:10px;color:#8b8f94;">Followed</div>
-      </div>
-      <div style="text-align:center;background:#202327;border-radius:8px;padding:6px 4px;">
-        <div id="xab-failed" style="font-size:18px;font-weight:800;color:#f4212e;">0</div>
-        <div style="font-size:10px;color:#8b8f94;">Failed</div>
-      </div>
-    </div>
-    <div style="display:flex;gap:6px;margin-bottom:10px;">
-      <button id="xab-pause" style="flex:1;padding:8px;border:none;border-radius:8px;background:#202327;color:#e7e9ea;font-size:12px;font-weight:700;cursor:pointer;transition:background 0.15s;">⏸ Pause</button>
-      <button id="xab-abort" style="flex:1;padding:8px;border:none;border-radius:8px;background:#f4212e22;color:#f4212e;font-size:12px;font-weight:700;cursor:pointer;transition:background 0.15s;">⏹ Stop</button>
-    </div>
-    <div style="display:flex;gap:6px;">
-      <button id="xab-export-json" style="flex:1;padding:6px;border:none;border-radius:8px;background:#202327;color:#8b8f94;font-size:11px;cursor:pointer;">📥 JSON</button>
-      <button id="xab-export-csv" style="flex:1;padding:6px;border:none;border-radius:8px;background:#202327;color:#8b8f94;font-size:11px;cursor:pointer;">📊 CSV</button>
-    </div>
-    <div id="xab-mode" style="margin-top:8px;text-align:center;font-size:11px;padding:4px 8px;border-radius:6px;background:${CONFIG.dryRun ? '#ffad1f22' : '#f4212e22'};color:${CONFIG.dryRun ? '#ffad1f' : '#f4212e'};">
-      ${CONFIG.dryRun ? '🏃 DRY RUN' : '⚡ LIVE MODE'}
-    </div>
-  `;
-
-  const bindPanelEvents = () => {
-    const pauseBtn = document.getElementById('xab-pause');
-    pauseBtn?.addEventListener('click', () => {
-      if (paused) { window.XActions.resume(); pauseBtn.textContent = '⏸ Pause'; }
-      else { window.XActions.pause(); pauseBtn.textContent = '▶ Resume'; }
-    });
-    document.getElementById('xab-abort')?.addEventListener('click', () => window.XActions.abort());
-    document.getElementById('xab-close')?.addEventListener('click', () => { panelEl.style.display = 'none'; });
-    document.getElementById('xab-export-json')?.addEventListener('click', () => exportResults('json'));
-    document.getElementById('xab-export-csv')?.addEventListener('click', () => exportResults('csv'));
-  };
-
-  const updatePanel = () => {
-    if (!panelEl) return;
-    const pct = stats.total > 0 ? Math.round((stats.processed / stats.total) * 100) : 0;
-    const bar = document.getElementById('xab-bar');
-    if (bar) bar.style.width = pct + '%';
-
-    document.getElementById('xab-liked') && (document.getElementById('xab-liked').textContent = stats.liked);
-    document.getElementById('xab-replied') && (document.getElementById('xab-replied').textContent = stats.replied);
-    document.getElementById('xab-retweeted') && (document.getElementById('xab-retweeted').textContent = stats.retweeted);
-    document.getElementById('xab-bookmarked') && (document.getElementById('xab-bookmarked').textContent = stats.bookmarked);
-    document.getElementById('xab-followed') && (document.getElementById('xab-followed').textContent = stats.followed);
-    document.getElementById('xab-failed') && (document.getElementById('xab-failed').textContent = stats.failed);
-
-    // Phase text
-    const phaseEl = document.getElementById('xab-phase');
-    if (phaseEl) {
-      if (aborted) phaseEl.textContent = '🛑 Stopped';
-      else if (paused) phaseEl.textContent = '⏸️ Paused';
-      else phaseEl.textContent = stats.phase;
-    }
-
-    // ETA
-    const etaEl = document.getElementById('xab-eta');
-    if (etaEl && stats.processed > 0 && stats.total > stats.processed) {
-      const elapsed = Date.now() - startTime;
-      const perItem = elapsed / stats.processed;
-      const remaining = (stats.total - stats.processed) * perItem;
-      const mins = Math.ceil(remaining / 60000);
-      etaEl.textContent = `~${mins}m remaining · ${pct}%`;
-    } else if (etaEl) {
-      etaEl.textContent = stats.processed > 0 ? `Done · ${pct}%` : `${pct}%`;
-    }
-  };
+  console.log('╚══════════════════════════════════════════╝');
 
   // ── Export Helpers ─────────────────────────────────────────
   const exportResults = (format) => {

@@ -144,21 +144,21 @@
     }
 
     .logo {
-      padding: 12px;
+      padding: 8px 12px;
       margin-bottom: 4px;
     }
 
     .logo a {
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      gap: 8px;
+      justify-content: center;
       text-decoration: none;
       color: var(--text-primary);
-      font-size: 1.5rem;
-      font-weight: 800;
+      font-size: 1.8rem;
       padding: 12px;
       border-radius: 9999px;
       transition: background 0.2s;
+      line-height: 1;
     }
 
     .logo a:hover {
@@ -166,7 +166,8 @@
     }
 
     .logo-icon {
-      font-size: 1.8rem;
+      font-size: 1.75rem;
+      line-height: 1;
     }
 
     /* Navigation */
@@ -197,9 +198,21 @@
     }
 
     .nav-icon {
-      font-size: 1.5rem;
-      width: 28px;
-      text-align: center;
+      width: 26px;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .nav-icon svg {
+      width: 26px;
+      height: 26px;
+    }
+
+    .nav-item.active .nav-icon svg {
+      stroke-width: 2.5;
     }
 
     .action-btn {
@@ -966,11 +979,13 @@
         width: 68px;
         padding: 0 4px;
       }
-      .logo a span,
-      .nav-item span,
+      .nav-item span:last-child,
       .user-info,
       .user-menu-dots {
         display: none;
+      }
+      .logo a {
+        padding: 8px;
       }
       .nav-item {
         justify-content: center;
@@ -983,7 +998,7 @@
         font-size: 0;
       }
       .action-btn::before {
-        content: '+';
+        content: '⚡';
         font-size: 1.5rem;
       }
       .user-menu {
@@ -1063,28 +1078,59 @@
     <!-- Left Sidebar -->
     <aside class="sidebar-left" aria-label="Main navigation">
       <div class="logo">
-        <a href="/dashboard">
+        <a href="/" aria-label="XActions Home">
           <span class="logo-icon">⚡</span>
-          <span>XActions</span>
         </a>
       </div>
 
       <nav>
-        <a href="/" class="nav-item active" aria-label="Home"><span class="nav-icon" aria-hidden="true">🏠</span><span>Home</span></a>
-        <a href="/run" class="nav-item" aria-label="One-Click"><span class="nav-icon" aria-hidden="true">🚀</span><span>One-Click</span></a>
-        <a href="/dashboard" class="nav-item" aria-label="Dashboard"><span class="nav-icon" aria-hidden="true">📊</span><span>Dashboard</span></a>
-        <a href="/thread" class="nav-item" aria-label="Thread Reader"><span class="nav-icon" aria-hidden="true">🧵</span><span>Thread Reader</span></a>
-        <a href="/video" class="nav-item" aria-label="Video Downloader"><span class="nav-icon" aria-hidden="true">🎬</span><span>Video DL</span></a>
-        <a href="/features" class="nav-item" aria-label="All Scripts"><span class="nav-icon" aria-hidden="true">⚡</span><span>All Scripts</span></a>
-        <a href="/tutorials" class="nav-item" aria-label="Tutorials"><span class="nav-icon" aria-hidden="true">📚</span><span>Tutorials</span></a>
-        <a href="/docs" class="nav-item" aria-label="Documentation"><span class="nav-icon" aria-hidden="true">📖</span><span>Documentation</span></a>
-        <a href="/mcp" class="nav-item" aria-label="AI/MCP"><span class="nav-icon" aria-hidden="true">🤖</span><span>AI/MCP</span></a>
-        <a href="/pricing" class="nav-item" aria-label="Pricing"><span class="nav-icon" aria-hidden="true">💰</span><span>Pricing</span></a>
-        <a href="/about" class="nav-item" aria-label="About"><span class="nav-icon" aria-hidden="true">ℹ️</span><span>About</span></a>
-        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><span class="nav-icon" aria-hidden="true">⭐</span><span>GitHub</span></a>
+        <a href="/" class="nav-item active" aria-label="Home">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
+          <span>Home</span>
+        </a>
+        <a href="/run" class="nav-item" aria-label="Run Scripts">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
+          <span>Run</span>
+        </a>
+        <a href="/dashboard" class="nav-item" aria-label="Dashboard">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg></span>
+          <span>Dashboard</span>
+        </a>
+        <a href="/features" class="nav-item" aria-label="Scripts">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></span>
+          <span>Scripts</span>
+        </a>
+        <a href="/video" class="nav-item" aria-label="Video Downloader">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg></span>
+          <span>Video</span>
+        </a>
+        <a href="/thread" class="nav-item" aria-label="Thread Reader">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+          <span>Threads</span>
+        </a>
+        <a href="/mcp" class="nav-item" aria-label="AI / MCP">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg></span>
+          <span>AI / MCP</span>
+        </a>
+        <a href="/docs" class="nav-item" aria-label="Documentation">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span>
+          <span>Docs</span>
+        </a>
+        <a href="/tutorials" class="nav-item" aria-label="Tutorials">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span>
+          <span>Tutorials</span>
+        </a>
+        <a href="/about" class="nav-item" aria-label="About">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span>
+          <span>About</span>
+        </a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg></span>
+          <span>GitHub</span>
+        </a>
       </nav>
 
-      <a href="https://github.com/nirholas/XActions" class="action-btn" target="_blank" rel="noopener noreferrer">Star on GitHub ⭐</a>
+      <a href="/run" class="action-btn">Run Script</a>
 
       <a href="/login" class="user-menu" id="user-menu-link">
         <div class="user-avatar" id="user-avatar">?</div>
@@ -1092,7 +1138,7 @@
           <div class="user-name" id="user-display-name">Login / Sign Up</div>
           <div class="user-handle" id="user-handle">Click to continue</div>
         </div>
-        <span class="user-menu-dots">→</span>
+        <span class="user-menu-dots">···</span>
       </a>
     </aside>
 
@@ -1100,8 +1146,12 @@
     <main class="main-content" id="main-content">
       <header class="main-header">
         <div class="header-title">
-          <h1>X/Twitter Automation Dashboard</h1>
-          <p id="header-subtitle">Manage your X automation</p>
+          <h1>Home</h1>
+          <p id="header-subtitle">XActions Automation</p>
+        </div>
+        <div class="tabs">
+          <div class="tab active" data-tab="operations">Operations</div>
+          <div class="tab" data-tab="activity">Activity</div>
         </div>
       </header>
 
@@ -1219,14 +1269,14 @@
     <aside class="sidebar-right" aria-label="Supplementary information">
       <div class="search-box">
         <div class="search-input-wrapper">
-          <span class="search-icon">🔍</span>
-          <input type="text" class="search-input" placeholder="Search documentation" aria-label="Search documentation">
+          <span class="search-icon"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--text-secondary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+          <input type="text" class="search-input" placeholder="Search XActions" aria-label="Search XActions">
         </div>
       </div>
 
       <!-- Account Stats -->
       <div class="stats-card">
-        <h3 class="stats-header">Your Stats</h3>
+        <h3 class="stats-header">Your Activity</h3>
         <div class="stat-row">
           <span class="stat-label">Plan</span>
           <span class="stat-value" style="color: var(--success);">100% Free</span>
@@ -1246,22 +1296,22 @@
         <a href="https://github.com/nirholas/XActions" class="show-more" target="_blank" rel="noopener noreferrer">View on GitHub →</a>
       </div>
 
-      <!-- Tips -->
+      <!-- What's New -->
       <div class="tips-card">
-        <h3 class="tips-header">Quick Tips</h3>
+        <h3 class="tips-header">What's happening</h3>
         <div class="tip-item">
-          <div class="tip-title">🎯 Use Dry Run First</div>
-          <div class="tip-desc">Preview what will happen before making changes</div>
+          <div class="tip-title">⚡ 43+ Free Automation Scripts</div>
+          <div class="tip-desc">Mass unfollow, scrapers, auto-engage, video download & more</div>
         </div>
         <div class="tip-item">
-          <div class="tip-title">⏱️ Rate Limits</div>
-          <div class="tip-desc">We handle rate limits automatically to protect your account</div>
+          <div class="tip-title">🤖 AI / MCP Server</div>
+          <div class="tip-desc">Connect Claude, GPT, or any AI agent to automate X</div>
         </div>
         <div class="tip-item">
-          <div class="tip-title">💾 Free Browser Scripts</div>
-          <div class="tip-desc">No account needed — run directly in your browser console</div>
+          <div class="tip-title">🔓 100% Open Source</div>
+          <div class="tip-desc">No API keys needed — runs in your browser console</div>
         </div>
-        <a href="/docs" class="show-more">View all tips →</a>
+        <a href="/features" class="show-more">Show more</a>
       </div>
 
       <!-- Disclaimer Footer -->
@@ -1849,7 +1899,7 @@
       <div class="footer-section">
         <h4>AI & Developers</h4>
         <a href="/ai">AI Integration</a>
-        <a href="/ai-api">AI API (x402)</a>
+        <a href="/ai-api">AI API</a>
         <a href="/mcp">MCP Server</a>
         <a href="/docs">Documentation</a>
         <a href="/tutorials">Tutorials</a>
