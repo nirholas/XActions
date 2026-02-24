@@ -51,18 +51,18 @@ body {
   border-right: 1px solid var(--border);
 }
 
-.logo { padding: 12px; }
+.logo { padding: 8px 12px; margin-bottom: 4px; }
 .logo a {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
   text-decoration: none;
   color: var(--text-primary);
-  font-size: 1.5rem;
-  font-weight: 800;
+  font-size: 1.8rem;
   padding: 12px;
   border-radius: 9999px;
   transition: background 0.2s;
+  line-height: 1;
 }
 .logo a:hover { background: var(--accent-light); }
 
@@ -82,7 +82,9 @@ nav { flex: 1; }
 }
 .nav-item:hover { background: var(--bg-tertiary); }
 .nav-item.active { font-weight: 700; }
-.nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+.nav-icon { width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.nav-icon svg { width: 26px; height: 26px; }
+.nav-item.active .nav-icon svg { stroke-width: 2.5; }
 
 .action-btn {
   width: 90%;
@@ -193,10 +195,12 @@ nav { flex: 1; }
 
 @media (max-width: 768px) {
   .sidebar-left { width: 68px; padding: 0 4px; }
-  .logo a span:last-child, .nav-item span:last-child { display: none; }
+  .nav-item span:last-child, .user-info, .user-menu-dots { display: none; }
+  .logo a { padding: 8px; }
   .nav-item { justify-content: center; padding: 12px; }
   .action-btn { width: 50px; height: 50px; padding: 0; font-size: 0; }
-  .action-btn::before { content: '→'; font-size: 1.5rem; }
+  .action-btn::before { content: '⚡'; font-size: 1.5rem; }
+  .user-menu { justify-content: center; }
   .footer-content { grid-template-columns: 1fr 1fr; }
 }
 

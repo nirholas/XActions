@@ -113,6 +113,10 @@ export const browserScripts = {
   audienceDemographics: { file: 'src/audienceDemographics.js', description: 'Analyze follower demographics, niches, and bot likelihood' },
   followerGrowthTracker: { file: 'src/followerGrowthTracker.js', description: 'Track follower count over time with growth projections' },
   contentCalendar: { file: 'src/contentCalendar.js', description: 'Posting frequency heatmap, gap analysis, and content queue' },
+  engagementLeaderboard: { file: 'src/engagementLeaderboard.js', description: 'Rank top engagers, identify superfans, VIP list export' },
+  tweetABTester: { file: 'src/tweetABTester.js', description: 'A/B test tweet variations with statistical comparison' },
+  followRatioManager: { file: 'src/followRatioManager.js', description: 'Monitor follow ratio with letter grades, plans, and history' },
+  audienceOverlap: { file: 'src/audienceOverlap.js', description: 'Compare follower lists between two accounts for overlap analysis' },
 
   // --- Content Posting ---
   postThread: { file: 'src/postThread.js', description: 'Post multi-tweet threads' },
@@ -121,6 +125,8 @@ export const browserScripts = {
   autoRepost: { file: 'src/autoRepost.js', description: 'Auto-retweet by keyword/user filters' },
   threadComposer: { file: 'src/threadComposer.js', description: 'Compose, preview, and publish threads with draft persistence' },
   quoteTweetAutomation: { file: 'src/quoteTweetAutomation.js', description: 'Auto quote-tweet with customizable templates and filters' },
+  contentRepurposer: { file: 'src/contentRepurposer.js', description: 'Repurpose tweets into threads, storms, blog outlines, and quote templates' },
+  autoPlugReplies: { file: 'src/autoPlugReplies.js', description: 'Auto-reply to own viral tweets with promotional plugs' },
 
   // --- Tweet Management ---
   bulkDeleteTweets: { file: 'src/bulkDeleteTweets.js', description: 'Bulk delete tweets with keyword/date/engagement filters' },
@@ -150,6 +156,10 @@ export const browserScripts = {
 
   // --- Spaces ---
   scrapeSpaces: { file: 'src/scrapeSpaces.js', description: 'Find live/scheduled X Spaces' },
+
+  // --- Discovery & Monitoring ---
+  trendingTopicMonitor: { file: 'src/trendingTopicMonitor.js', description: 'Real-time trending topic monitoring with niche classification' },
+  keywordMonitor: { file: 'src/keywordMonitor.js', description: 'Monitor keyword mentions across X search with alerts and sentiment' },
 };
 
 /**
