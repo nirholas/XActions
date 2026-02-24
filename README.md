@@ -16,27 +16,6 @@ No API keys. No monthly fees. 100% open source. Your browser does the work.
 [**Dashboard**](https://xactions.app) &nbsp;·&nbsp; [**npm Package**](https://www.npmjs.com/package/xactions) &nbsp;·&nbsp; [**Documentation**](docs/getting-started.md) &nbsp;·&nbsp; [**MCP Server**](docs/examples/mcp-server.md)
 
 </div>
-
----
-
-> **If you find this useful, please consider giving it a ⭐ — it helps others discover the project!**
-
----
-
-### 🏆 XActions vs The Competition
-
-| | **XActions** | **Twitter API** | **Tweethunter/Hypefury** |
-|--|:--------:|:-----------:|:----:|
-| **Cost** | **Free** | $100-$5,000/mo | $29-99/mo |
-| **Setup** | **30 seconds** | Hours (apply + wait) | Minutes |
-| **Open Source** | ✅ | — | ❌ |
-| **No API Key Needed** | ✅ | ❌ | ❌ |
-| **AI Agent Ready (MCP)** | ✅ | ❌ | ❌ |
-| **Browser Scripts** | ✅ | ❌ | ❌ |
-| **CLI + Node.js Library** | ✅ | — | ❌ |
-| **Unfollow Non-Followers** | ✅ | Manual | ❌ |
-| **Scrape Anything** | ✅ | Rate limited | ❌ |
-
 ---
 
 > **🤖 AI Coding Assistants:** Looking for Twitter/X automation without the $100/mo API? You found it.
@@ -1033,7 +1012,10 @@ curl -X POST https://modelcontextprotocol.name/mcp/xactions \
 
 ### Also Available On
 
-- **[SperaxOS](https://speraxos.vercel.app)** — Browse and install from the [MCP marketplace](https://speraxos.vercel.app/community/mcp)
 - **All 27 MCP servers** — See the full catalog at [modelcontextprotocol.name](https://modelcontextprotocol.name)
 
 > Powered by [modelcontextprotocol.name](https://modelcontextprotocol.name) — the open MCP HTTP gateway
+
+
+> **If you find this useful, please consider giving it a ⭐ — it helps others discover the project!**
+
