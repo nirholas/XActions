@@ -106,15 +106,31 @@ export const browserScripts = {
   bestTimeToPost: { file: 'src/bestTimeToPost.js', description: 'Find optimal posting times' },
   hashtagAnalytics: { file: 'src/hashtagAnalytics.js', description: 'Analyze hashtag performance' },
   competitorAnalysis: { file: 'src/competitorAnalysis.js', description: 'Compare account metrics' },
+  sentimentAnalyzer: { file: 'src/sentimentAnalyzer.js', description: 'Lexicon-based sentiment analysis on any timeline' },
+  tweetPerformance: { file: 'src/tweetPerformance.js', description: 'Compare tweet performance side by side with rankings' },
+  viralTweetDetector: { file: 'src/viralTweetDetector.js', description: 'Detect viral tweets by velocity and multi-factor scoring' },
+  tweetScheduleOptimizer: { file: 'src/tweetScheduleOptimizer.js', description: 'Personalized optimal posting schedule from historical data' },
+  audienceDemographics: { file: 'src/audienceDemographics.js', description: 'Analyze follower demographics, niches, and bot likelihood' },
+  followerGrowthTracker: { file: 'src/followerGrowthTracker.js', description: 'Track follower count over time with growth projections' },
+  contentCalendar: { file: 'src/contentCalendar.js', description: 'Posting frequency heatmap, gap analysis, and content queue' },
 
   // --- Content Posting ---
   postThread: { file: 'src/postThread.js', description: 'Post multi-tweet threads' },
   schedulePosts: { file: 'src/schedulePosts.js', description: 'Schedule future posts' },
   createPoll: { file: 'src/createPoll.js', description: 'Create poll tweets' },
   autoRepost: { file: 'src/autoRepost.js', description: 'Auto-retweet by keyword/user filters' },
+  threadComposer: { file: 'src/threadComposer.js', description: 'Compose, preview, and publish threads with draft persistence' },
+  quoteTweetAutomation: { file: 'src/quoteTweetAutomation.js', description: 'Auto quote-tweet with customizable templates and filters' },
+
+  // --- Tweet Management ---
+  bulkDeleteTweets: { file: 'src/bulkDeleteTweets.js', description: 'Bulk delete tweets with keyword/date/engagement filters' },
+  pinTweetManager: { file: 'src/pinTweetManager.js', description: 'Pin/unpin tweets and find best tweet to pin' },
 
   // --- Messaging & Engagement ---
   sendDirectMessage: { file: 'src/sendDirectMessage.js', description: 'Send personalized DMs' },
+  welcomeNewFollowers: { file: 'src/welcomeNewFollowers.js', description: 'Detect new followers and send welcome DMs' },
+  engagementBooster: { file: 'src/engagementBooster.js', description: 'Systematically like/reply to target account tweets' },
+  autoReply: { file: 'src/autoReply.js', description: 'Auto-reply to tweets matching keyword filters' },
 
   // --- Community & Lists ---
   joinCommunities: { file: 'src/joinCommunities.js', description: 'Join communities by keyword' },
@@ -126,6 +142,8 @@ export const browserScripts = {
   backupAccount: { file: 'src/backupAccount.js', description: 'Export account data as JSON' },
   downloadAccountData: { file: 'src/downloadAccountData.js', description: 'Trigger official X data archive' },
   qrCodeSharing: { file: 'src/qrCodeSharing.js', description: 'Generate QR code for profiles' },
+  shadowbanChecker: { file: 'src/shadowbanChecker.js', description: 'Multi-method shadowban detection with scoring' },
+  accountHealthMonitor: { file: 'src/accountHealthMonitor.js', description: 'Comprehensive account health scoring and diagnostics' },
 
   // --- Bookmarks ---
   bookmarkOrganizer: { file: 'src/bookmarkOrganizer.js', description: 'Categorize bookmarks by keywords' },

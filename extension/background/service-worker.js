@@ -14,7 +14,7 @@ const state = {
 // ============================================
 // INITIALIZATION
 // ============================================
-chrome.runtime.onInstalled.addListener(async () => {
+chrome.runtime.onInstalled.addListener(async (details) => {
   console.log('✅ XActions extension installed');
   await chrome.storage.local.set({
     automations: {},
@@ -24,6 +24,33 @@ chrome.runtime.onInstalled.addListener(async () => {
   });
   chrome.action.setBadgeBackgroundColor({ color: '#1d9bf0' });
   chrome.action.setBadgeText({ text: '' });
+
+  // First-run flag
+  if (details.reason === 'install') {
+    await chrome.storage.local.set({ firstRun: true });
+  }
+
+  // Context menus
+  chrome.contextMenus.removeAll(() => {
+    chrome.contextMenus.create({
+      id: 'xactions-download-video',
+      title: 'Download video (XActions)',
+      contexts: ['link', 'video', 'page'],
+      documentUrlPatterns: ['https://x.com/*', 'https://twitter.com/*'],
+    });
+    chrome.contextMenus.create({
+      id: 'xactions-unroll-thread',
+      title: 'Unroll thread (XActions)',
+      contexts: ['link', 'page'],
+      documentUrlPatterns: ['https://x.com/*', 'https://twitter.com/*'],
+    });
+    chrome.contextMenus.create({
+      id: 'xactions-analyze-account',
+      title: 'Analyze account (XActions)',
+      contexts: ['link', 'page'],
+      documentUrlPatterns: ['https://x.com/*', 'https://twitter.com/*'],
+    });
+  });
 });
 
 // ============================================
@@ -263,6 +290,75 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
 
 // Set up periodic health check
 chrome.alarms.create('xactions-health-check', { periodInMinutes: 1 });
+
+// ============================================
+// CONTEXT MENUS
+// ============================================
+chrome.contextMenus.onClicked.addListener(async (info, tab) => {
+  if (!tab?.id) return;
+
+  switch (info.menuItemId) {
+    case 'xactions-download-video':
+      try {
+        await chrome.tabs.sendMessage(tab.id, {
+          type: 'RUN_AUTOMATION',
+          automationId: 'videoDownloader',
+          settings: { showButton: true, quality: 'highest' },
+        });
+      } catch (e) { /* content script not ready */ }
+      break;
+
+    case 'xactions-unroll-thread':
+      try {
+        await chrome.tabs.sendMessage(tab.id, {
+          type: 'RUN_AUTOMATION',
+          automationId: 'threadReader',
+          settings: { showUnrollBtn: true, autoDetect: true },
+        });
+      } catch (e) { /* content script not ready */ }
+      break;
+
+    case 'xactions-analyze-account':
+      try {
+        await chrome.tabs.sendMessage(tab.id, {
+          type: 'RUN_AUTOMATION',
+          automationId: 'quickStats',
+          settings: { showOverlay: true, sampleSize: 20 },
+        });
+      } catch (e) { /* content script not ready */ }
+      break;
+  }
+});
+
+// ============================================
+// RATE LIMIT DETECTION
+// ============================================
+chrome.webRequest?.onCompleted?.addListener?.(
+  async (details) => {
+    if (details.statusCode === 429) {
+      // Rate limited — pause all automations
+      await globalPause();
+      await logActivity({
+        time: Date.now(),
+        type: 'error',
+        automation: 'system',
+        message: 'Rate limit detected (HTTP 429) — automations paused',
+      });
+      await chrome.storage.local.set({ rateLimited: true });
+
+      // Show notification if permission granted
+      try {
+        chrome.notifications.create('rate-limit', {
+          type: 'basic',
+          iconUrl: 'icons/icon128.png',
+          title: 'XActions — Rate Limited',
+          message: 'X/Twitter rate limit detected. Automations paused automatically.',
+        });
+      } catch { /* notifications may not be available */ }
+    }
+  },
+  { urls: ['https://x.com/*', 'https://twitter.com/*', 'https://api.x.com/*'] }
+);
 
 // ============================================
 // HELPERS

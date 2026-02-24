@@ -24,8 +24,24 @@
   <meta name="twitter:description" content="Step-by-step guides for X/Twitter automation. No coding required.">
   
   <link rel="canonical" href="https://xactions.app/tutorials">
+  <link rel="manifest" href="/manifest.json">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
-  
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "XActions Tutorials",
+    "description": "Step-by-step X/Twitter automation guides — unfollow, scraping, automation, MCP, and more",
+    "url": "https://xactions.app/tutorials",
+    "publisher": { "@type": "Organization", "name": "XActions" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://xactions.app"},{"@type":"ListItem","position":2,"name":"Tutorials","item":"https://xactions.app/tutorials"}]}
+  </script>
+
   <style>
     :root {
       --bg-primary: #000000;
@@ -322,7 +338,7 @@
         <a href="/about" class="nav-item" aria-label="About"><span class="nav-icon" aria-hidden="true">ℹ️</span><span>About</span></a>
         <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><span class="nav-icon" aria-hidden="true">⭐</span><span>GitHub</span></a>
       </nav>
-      <a href="https://github.com/nirholas/XActions" class="action-btn" target="_blank">Star on GitHub ⭐</a>
+      <a href="https://github.com/nirholas/XActions" class="action-btn" target="_blank" rel="noopener noreferrer">Star on GitHub ⭐</a>
     </aside>
 
     <main class="main-content" id="main-content">

@@ -1,87 +1,59 @@
 ---
 name: engagement-interaction
-description: Automate X/Twitter engagement including likes, replies, bookmarks, mentions, hashtags, reactions, sharing, analytics, reply limits, hidden replies, and video reactions. Manage engagement at scale with rate limiting and smart targeting.
+description: Automates X/Twitter engagement actions including liking, replying, and managing interactions. Handles bulk engagement operations and engagement tracking. Use when users want to automate likes, replies, or manage engagement on tweets.
 license: MIT
 metadata:
   author: nichxbt
   version: "3.0"
 ---
 
-# Engagement & Interaction with XActions
+# Engagement & Interaction
 
-Manage and automate all forms of X/Twitter engagement.
+Browser console script for automating engagement actions on X/Twitter.
 
-## Features
+## Available Scripts
 
-- **Likes**: Auto-like posts by keyword, user, or hashtag
-- **Replies/Comments**: Automated threaded responses with text/media
-- **Bookmarks**: Save posts privately, organize in folders (Premium)
-- **Mentions (@)**: Tag users in posts and replies
-- **Hashtags (#)**: Categorize content (recommended limit: 2)
-- **Reactions**: Emoji reactions (expanding feature)
-- **Sharing**: Share via links, DMs, or externally
-- **Analytics**: View impressions and engagements (Premium)
-- **Reply Limits**: Restrict who can reply (everyone, followers, mentioned)
-- **Hide Replies**: Conceal unwanted comments
-- **Video Reactions**: Short video reply feature
-- **Boost/Promote**: Amplify posts via Ads
-- **Paid Promotion Label**: Sponsored post disclosure (2026)
+| Script | File | Purpose |
+|--------|------|---------|
+| Engagement Manager | `src/engagementManager.js` | Bulk like, reply, and manage engagement |
+| Unlike All Posts | `src/unlikeAllPosts.js` | Remove all likes from your account |
 
-## Browser Console Scripts
+## Engagement Manager
 
-### Auto Liker
-**File:** `scripts/autoEngage.js`
+**File:** `src/engagementManager.js`
 
-### Key selectors
+Automates engagement actions: bulk liking, replying, and tracking interactions.
+
+### How to use
+
+1. Navigate to a timeline, search results, or profile page
+2. Open DevTools (F12) → Console
+3. Paste the script → Enter
+
+## Unlike All Posts
+
+**File:** `src/unlikeAllPosts.js`
+
+Removes all likes from your account by scrolling through your likes page.
+
+1. Navigate to `x.com/YOUR_USERNAME/likes`
+2. Paste in DevTools console → Enter
+
+### Key Selectors
 
 | Element | Selector |
 |---------|----------|
 | Like button | `[data-testid="like"]` |
 | Unlike button | `[data-testid="unlike"]` |
 | Reply button | `[data-testid="reply"]` |
-| Retweet button | `[data-testid="retweet"]` |
-| Bookmark button | `[data-testid="bookmark"]` |
-| Share button | `[data-testid="share"]` |
-| Tweet | `article[data-testid="tweet"]` |
-| Tweet text | `[data-testid="tweetText"]` |
 | Reply input | `[data-testid="tweetTextarea_0"]` |
 | Reply submit | `[data-testid="tweetButton"]` |
+| Share button | `[data-testid="share"]` |
+| Engagements count | `[data-testid="engagements"]` |
 | Hide reply | `[data-testid="hideReply"]` |
-
-## MCP Tools
-
-- `x_like` – Like a tweet
-- `x_unlike` – Unlike a tweet
-- `x_reply` – Reply to a tweet
-- `x_bookmark` – Bookmark a tweet
-- `x_unbookmark` – Remove bookmark
-- `x_hide_reply` – Hide a reply
-- `x_set_reply_limit` – Set who can reply
-- `x_get_engagement` – Get engagement analytics
-
-## API Endpoints
-
-- `POST /api/engagement/like` – Like a post
-- `POST /api/engagement/reply` – Reply to a post
-- `POST /api/engagement/bookmark` – Bookmark a post
-- `DELETE /api/engagement/bookmark/:id` – Remove bookmark
-- `POST /api/engagement/hide-reply` – Hide a reply
-- `PUT /api/engagement/reply-limit` – Set reply restrictions
-- `GET /api/engagement/analytics/:postId` – Get post analytics
-
-## Related Files
-
-- `src/engagementManager.js` – Core engagement module
-- `src/automation/autoLiker.js` – Auto-liker
-- `src/automation/autoCommenter.js` – Auto-commenter
-- `src/clearAllBookmarks.js` – Clear all bookmarks
-- `scripts/autoEngage.js` – Browser engagement script
-- `scripts/scrapeBookmarks.js` – Export bookmarks
 
 ## Notes
 
-- Rate limit: ~500 likes/day, ~100 replies/day
-- Use 1-3 second delays between actions
-- Premium accounts get higher organic reach
-- Bookmark folders require Premium
-- Analytics require Premium
+- Unlike All Posts is irreversible — likes cannot be restored
+- Add 1-2s delays between engagement actions to avoid rate limits
+- Engagement scripts work on any page with tweets (timeline, search, profile)

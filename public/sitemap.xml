@@ -72,6 +72,32 @@
     <priority>0.7</priority>
   </url>
 
+  <!-- Dashboard Tools -->
+  <url>
+    <loc>https://xactions.app/analytics</loc>
+    <lastmod>2026-02-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://xactions.app/automations</loc>
+    <lastmod>2026-02-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://xactions.app/monitor</loc>
+    <lastmod>2026-02-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://xactions.app/workflows</loc>
+    <lastmod>2026-02-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
   <!-- Tutorials Hub -->
   <url>
     <loc>https://xactions.app/tutorials</loc>

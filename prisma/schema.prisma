@@ -237,3 +237,43 @@ model AccountSnapshot {
   @@index([username, type])
   @@index([createdAt])
 }
+
+model FollowerSnapshot {
+  id          String   @id @default(cuid())
+  userId      String   // the monitored account (XActions user ID)
+  username    String   // Twitter username being tracked
+  followers   String   @db.Text // JSON array of { username, name, avatarUrl, followedSince }
+  totalCount  Int
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+  @@index([username, createdAt])
+}
+
+model FollowerChange {
+  id            String    @id @default(cuid())
+  userId        String    // XActions user ID
+  type          String    // "gained" or "lost"
+  username      String    // the follower who followed/unfollowed
+  name          String?
+  avatarUrl     String?
+  detectedAt    DateTime  @default(now())
+  followedSince DateTime? // for "lost" — when they originally followed
+
+  @@index([userId, detectedAt])
+  @@index([userId, type])
+}
+
+model UnfollowerSchedule {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  interval  String   // 'hourly', 'every6h', 'daily'
+  active    Boolean  @default(true)
+  lastRunAt DateTime?
+  nextRunAt DateTime?
+  webhookUrl String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([active, nextRunAt])
+}

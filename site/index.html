@@ -80,6 +80,55 @@
     }
   }
   </script>
+  <!-- Structured Data - FAQPage (targets Google PAA & Featured Snippets) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Is XActions free?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes! XActions is 100% free and open-source for humans. All browser scripts, the CLI, and the dashboard are free with no API fees. AI agents pay per request via x402 micropayments."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I mass unfollow on Twitter/X?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Open x.com in your browser, press F12 to open DevTools, paste the XActions unfollow script into the console, and press Enter. It will automatically unfollow accounts that don't follow you back."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does XActions require the Twitter API?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. XActions uses browser automation — scripts run directly in your browser on x.com. No API keys, no developer account, no monthly fees."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the XActions MCP server?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The MCP (Model Context Protocol) server lets AI agents like Claude, GPT-4, and Cursor automate X/Twitter actions. It provides 20+ tools for scraping, posting, unfollowing, and monitoring."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is XActions safe to use?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. XActions is open-source (MIT license) so you can inspect all code. Scripts run locally in your browser — your credentials never leave your device. Built-in rate limiting prevents account issues."
+        }
+      }
+    ]
+  }
+  </script>
   <style>
     :root {
       --bg-primary: #000000;
@@ -835,7 +884,7 @@
     <!-- Main Content -->
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>Welcome to XActions</h1>
+        <h1>Free X/Twitter Automation Tools</h1>
       </header>
 
       <!-- Trust Banner -->

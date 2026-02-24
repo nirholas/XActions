@@ -3,11 +3,52 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Monitor — XActions</title>
+  <title>X/Twitter Account Monitor — Real-Time Follower & Engagement Tracking | XActions</title>
+  <meta name="description" content="Monitor your X/Twitter account in real time — follower changes, unfollower detection, engagement metrics, and live charts. Free open-source dashboard.">
+  <meta name="keywords" content="Twitter monitor, follower tracker, unfollower detector, Twitter engagement tracking, real-time Twitter analytics, follower count monitor">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="X/Twitter Account Monitor — Real-Time Tracking">
+  <meta property="og:description" content="Real-time follower tracking, unfollower detection, and engagement monitoring for X/Twitter. Free and open-source.">
+  <meta property="og:url" content="https://xactions.app/monitor">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="XActions Monitor — Follower & Engagement Tracker">
+  <meta name="twitter:description" content="Real-time follower changes, unfollower detection, and engagement charts. Free.">
+
+  <link rel="canonical" href="https://xactions.app/monitor">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "XActions Monitor",
+    "description": "Real-time X/Twitter account monitoring — follower tracking, unfollower detection, engagement metrics",
+    "url": "https://xactions.app/monitor",
+    "applicationCategory": "AnalyticsApplication",
+    "operatingSystem": "Web Browser",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://xactions.app"},{"@type":"ListItem","position":2,"name":"Monitor","item":"https://xactions.app/monitor"}]}
+  </script>
+
   <link rel="preconnect" href="https://cdn.socket.io" crossorigin>
   <link rel="dns-prefetch" href="//cdn.socket.io">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
   <script src="https://cdn.socket.io/4.7.2/socket.io.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" defer></script>
   <style>
     :root {
       --bg-primary: #000;

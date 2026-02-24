@@ -24,7 +24,8 @@
     "./cli": "./src/cli/index.js"
   },
   "bin": {
-    "xactions": "./src/cli/index.js"
+    "xactions": "./src/cli/index.js",
+    "xactions-mcp": "./src/mcp/server.js"
   },
   "scripts": {
     "dev": "NODE_ENV=development nodemon api/server.js",

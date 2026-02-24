@@ -20,10 +20,17 @@
     activityLog: $('#activityLog'),
     btnClearLog: $('#btnClearLog'),
     btnExportSettings: $('#btnExportSettings'),
+    btnImportSettings: $('#btnImportSettings'),
+    importFileInput: $('#importFileInput'),
     btnResetAll: $('#btnResetAll'),
     globalMinDelay: $('#globalMinDelay'),
     globalMaxDelay: $('#globalMaxDelay'),
     globalDebug: $('#globalDebug'),
+    rateLimitWarning: $('#rateLimitWarning'),
+    btnDismissRateLimit: $('#btnDismissRateLimit'),
+    onboardingModal: $('#onboardingModal'),
+    btnOnboardingStart: $('#btnOnboardingStart'),
+    onboardingEnablePopular: $('#onboardingEnablePopular'),
   };
 
   // ============================================
@@ -42,6 +49,8 @@
     setupSettings();
     await loadState();
     await checkConnection();
+    await checkFirstRun();
+    await checkRateLimit();
     startActivityPolling();
   }
 
@@ -267,6 +276,24 @@
       location.reload();
     });
 
+    // Import
+    DOM.btnImportSettings.addEventListener('click', () => {
+      DOM.importFileInput.click();
+    });
+    DOM.importFileInput.addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      try {
+        const text = await file.text();
+        const data = JSON.parse(text);
+        await chrome.storage.local.set(data);
+        addLocalLog('start', 'system', 'Settings imported successfully');
+        location.reload();
+      } catch (err) {
+        alert('Failed to import settings: ' + err.message);
+      }
+    });
+
     // Clear log
     DOM.btnClearLog.addEventListener('click', async () => {
       await chrome.storage.local.set({ activityLog: [] });
@@ -398,6 +425,48 @@
         }
       } catch { /* noop */ }
     }, 1000);
+  }
+
+  // ============================================
+  // FIRST-RUN ONBOARDING
+  // ============================================
+  async function checkFirstRun() {
+    try {
+      const data = await chrome.storage.local.get('firstRun');
+      if (data.firstRun) {
+        DOM.onboardingModal.classList.remove('hidden');
+
+        DOM.btnOnboardingStart.addEventListener('click', async () => {
+          DOM.onboardingModal.classList.add('hidden');
+          await chrome.storage.local.set({ firstRun: false });
+
+          // Enable popular features if checked
+          if (DOM.onboardingEnablePopular.checked) {
+            await chrome.storage.local.set({
+              settings_videoDownloader: { quality: 'highest', showButton: true, autoDownload: false },
+              settings_threadReader: { showUnrollBtn: true, autoDetect: true, maxTweets: 50 },
+            });
+            addLocalLog('start', 'system', 'Popular features enabled: Video Downloader, Thread Reader');
+          }
+        });
+      }
+    } catch { /* noop */ }
+  }
+
+  // ============================================
+  // RATE LIMIT CHECK
+  // ============================================
+  async function checkRateLimit() {
+    try {
+      const data = await chrome.storage.local.get('rateLimited');
+      if (data.rateLimited) {
+        DOM.rateLimitWarning.classList.remove('hidden');
+      }
+      DOM.btnDismissRateLimit.addEventListener('click', async () => {
+        DOM.rateLimitWarning.classList.add('hidden');
+        await chrome.storage.local.set({ rateLimited: false });
+      });
+    } catch { /* noop */ }
   }
 
   // ============================================

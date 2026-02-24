@@ -53,6 +53,7 @@ import automationsRoutes from './routes/automations.js';
 import analyticsRoutes from './routes/analytics.js';
 import workflowRoutes from './routes/workflows.js';
 import portabilityRoutes from './routes/portability.js';
+import threadRoutes from './routes/thread.js';
 import { initializeSocketIO } from './realtime/socketHandler.js';
 import { initializeLicensing, brandingMiddleware } from './services/licensing.js';
 
@@ -201,6 +202,7 @@ app.use('/api/settings', settingsRoutes);
 app.use('/api/workflows', workflowRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/portability', portabilityRoutes);
+app.use('/api/thread', threadRoutes);
 
 // Plugin routes — mounted under /api/plugins/<plugin-name>/
 function mountPluginRoutes() {
@@ -302,8 +304,21 @@ app.get('/monitor', (req, res) => {
   res.sendFile(path.join(__dirname, '../dashboard/monitor.html'));
 });
 
+app.get('/unfollowers', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dashboard/unfollowers.html'));
+});
+
 app.get('/workflows', (req, res) => {
   res.sendFile(path.join(__dirname, '../dashboard/workflows.html'));
+});
+
+app.get('/thread', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dashboard/thread.html'));
+});
+
+// SEO-friendly thread URL: /thread/1234567890
+app.get('/thread/:tweetId', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dashboard/thread.html'));
 });
 
 // Error handling middleware
