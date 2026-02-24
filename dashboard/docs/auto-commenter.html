@@ -1,0 +1,1716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auto-Commenter — Free X/Twitter Engagement Tool | XActions</title>
+  <meta name="description" content="Automatically post comments/replies on tweets matching your criteria on X (Twitter).">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, auto, commenter, auto-commenter, engagement, auto commenter twitter, twitter auto commenter">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Auto-Commenter — XActions">
+  <meta property="og:description" content="Automatically post comments/replies on tweets matching your criteria on X (Twitter).">
+  <meta property="og:url" content="https://xactions.app/docs/auto-commenter">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Auto-Commenter — Free X/Twitter Tool">
+  <meta name="twitter:description" content="Automatically post comments/replies on tweets matching your criteria on X (Twitter).">
+
+  <link rel="canonical" href="https://xactions.app/docs/auto-commenter">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Auto-Commenter — Free X/Twitter Engagement Tool | XActions",
+    "description": "Automatically post comments/replies on tweets matching your criteria on X (Twitter).",
+    "url": "https://xactions.app/docs/auto-commenter",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/auto-commenter",
+    "articleSection": "Engagement",
+    "keywords": "xactions, twitter automation, x automation, free, auto, commenter, auto-commenter, engagement, auto commenter twitter, twitter auto commenter"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Auto-Commenter", "item": "https://xactions.app/docs/auto-commenter" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use Auto-Commenter",
+    "description": "Automatically post comments/replies on tweets matching your criteria on X (Twitter).",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions Auto-Commenter script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>💬 Auto-Commenter</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › Auto-Commenter
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Engagement</span>
+        <h1>💬 Auto-Commenter</h1>
+<p>Automatically post comments/replies on tweets matching your criteria on X (Twitter).</p>
+<hr>
+<h2>📋 What It Does</h2>
+<p>This feature helps you engage with content automatically by posting relevant comments on tweets. It&#39;s ideal for:</p>
+<ol>
+<li><strong>Monitoring accounts</strong> - Watch specific users and reply to their new posts instantly</li>
+<li><strong>Keyword targeting</strong> - Comment on tweets containing specific keywords or hashtags</li>
+<li><strong>Smart replies</strong> - Use a pool of template comments for natural variation</li>
+<li><strong>Rate limiting</strong> - Uses random delays to mimic human behavior</li>
+<li><strong>Duplicate prevention</strong> - Tracks previously commented tweets to avoid spamming</li>
+</ol>
+<p><strong>Use cases:</strong></p>
+<ul>
+<li>Engage with thought leaders in your niche as soon as they post</li>
+<li>Build relationships by being first to comment</li>
+<li>Promote your presence on trending topics</li>
+<li>Support accounts you follow with timely engagement</li>
+<li>Run engagement campaigns with varied responses</li>
+</ul>
+<hr>
+<h2>⚠️ CRITICAL WARNINGS</h2>
+<blockquote>
+<p><strong>🚨 HIGH RISK AUTOMATION!</strong> Auto-commenting is MORE DANGEROUS than auto-liking. Spammy, repetitive, or low-quality comments will get your account restricted or PERMANENTLY SUSPENDED very quickly.</p>
+</blockquote>
+<h3>🔴 WHAT NOT TO DO</h3>
+<ul>
+<li>❌ <strong>DON&#39;T</strong> post identical comments repeatedly</li>
+<li>❌ <strong>DON&#39;T</strong> comment more than 10-20 times per day</li>
+<li>❌ <strong>DON&#39;T</strong> use generic/spammy comments like &quot;Great post!&quot; everywhere</li>
+<li>❌ <strong>DON&#39;T</strong> comment on accounts that don&#39;t know you</li>
+<li>❌ <strong>DON&#39;T</strong> run this 24/7 or on multiple accounts</li>
+<li>❌ <strong>DON&#39;T</strong> comment too fast (under 30 seconds between comments)</li>
+<li>❌ <strong>DON&#39;T</strong> use this for promotional/advertising content</li>
+</ul>
+<h3>✅ WHAT TO DO</h3>
+<ul>
+<li>✅ <strong>DO</strong> use varied, contextual comment templates</li>
+<li>✅ <strong>DO</strong> keep delays between 30-60+ seconds minimum</li>
+<li>✅ <strong>DO</strong> limit to 5-10 comments per session</li>
+<li>✅ <strong>DO</strong> only comment on relevant content you&#39;d genuinely engage with</li>
+<li>✅ <strong>DO</strong> mix automated and manual commenting</li>
+<li>✅ <strong>DO</strong> monitor for warning signs and stop immediately if flagged</li>
+<li>✅ <strong>DO</strong> have genuine, value-adding comments</li>
+</ul>
+<h3>⚡ Account Risk Levels</h3>
+<table>
+<thead>
+<tr>
+<th>Behavior</th>
+<th>Risk Level</th>
+<th>Likely Outcome</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>5-10 varied comments/day</td>
+<td>🟢 Low</td>
+<td>Generally safe</td>
+</tr>
+<tr>
+<td>10-20 comments/day</td>
+<td>🟡 Medium</td>
+<td>Monitor closely</td>
+</tr>
+<tr>
+<td>20-50 comments/day</td>
+<td>🔴 High</td>
+<td>Likely restriction</td>
+</tr>
+<tr>
+<td>50+ comments/day</td>
+<td>⛔ Extreme</td>
+<td>Almost certain ban</td>
+</tr>
+<tr>
+<td>Identical comments</td>
+<td>⛔ Extreme</td>
+<td>Immediate flag</td>
+</tr>
+<tr>
+<td>Fast commenting (&lt;30s)</td>
+<td>⛔ Extreme</td>
+<td>Immediate flag</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>🌐 Example 1: Browser Console (Quick)</h2>
+<p><strong>Best for:</strong> Quickly commenting on visible tweets from a user&#39;s profile or search results</p>
+<p><strong>Steps:</strong></p>
+<ol>
+<li>Go to a user&#39;s profile (<code>x.com/username</code>) or search results</li>
+<li>Open browser console (F12 → Console tab)</li>
+<li>Paste the script below and press Enter</li>
+</ol>
+<pre><code class="language-javascript">// ============================================
+// XActions - Auto-Commenter (Browser Console)
+// Author: nich (@nichxbt)
+// Go to: x.com/username or x.com/search
+// Open console (F12), paste this
+// ============================================
+
+(async () =&gt; {
+  // ==========================================
+  // CONFIGURATION - Customize these settings!
+  // ==========================================
+  const CONFIG = {
+    // Comment templates - MAKE THESE VARIED AND GENUINE!
+    // The script will randomly pick from these
+    COMMENTS: [
+      &#39;🔥 Great insight!&#39;,
+      &#39;This is so true 👏&#39;,
+      &#39;Interesting perspective, thanks for sharing!&#39;,
+      &#39;Love this take 💯&#39;,
+      &#39;Really good point here&#39;,
+      &#39;This resonates with me&#39;,
+      &#39;Solid thread, appreciate you sharing this&#39;,
+      &#39;Facts! This needed to be said&#39;,
+      &#39;Exactly what I was thinking&#39;,
+      &#39;Quality content as always 🙌&#39;,
+    ],
+    
+    // Targeting
+    KEYWORDS: [],                       // Only comment if tweet contains these (empty = all tweets)
+    SKIP_REPLIES: true,                 // Skip tweets that are replies
+    SKIP_RETWEETS: true,                // Skip retweets
+    
+    // Limits (KEEP THESE VERY LOW!)
+    MAX_COMMENTS: 5,                    // Maximum comments per session (KEEP LOW!)
+    MAX_SCROLLS: 10,                    // Maximum times to scroll down
+    
+    // Delays (in milliseconds) - KEEP THESE HIGH!
+    MIN_DELAY: 30000,                   // Minimum delay between comments (30 seconds)
+    MAX_DELAY: 60000,                   // Maximum delay between comments (60 seconds)
+    SCROLL_DELAY: 3000,                 // Delay after scrolling
+    TYPE_DELAY: 100,                    // Delay between keystrokes (ms)
+    
+    // Safety
+    PAUSE_EVERY: 3,                     // Pause every N comments
+    PAUSE_DURATION: 45000,              // Pause duration (45 seconds)
+  };
+
+  // ==========================================
+  // SCRIPT - Don&#39;t modify below this line
+  // ==========================================
+  
+  console.log(&#39;💬 XActions - Auto-Commenter&#39;);
+  console.log(&#39;=&#39;.repeat(50));
+  console.log(&#39;⚙️  Settings:&#39;);
+  console.log(`   • Comment templates: ${CONFIG.COMMENTS.length} variations`);
+  console.log(`   • Keywords: ${CONFIG.KEYWORDS.length ? CONFIG.KEYWORDS.join(&#39;, &#39;) : &#39;ALL TWEETS&#39;}`);
+  console.log(`   • Max comments: ${CONFIG.MAX_COMMENTS}`);
+  console.log(`   • Delay: ${CONFIG.MIN_DELAY/1000}s - ${CONFIG.MAX_DELAY/1000}s`);
+  console.log(`   • Skip replies: ${CONFIG.SKIP_REPLIES ? &#39;Yes&#39; : &#39;No&#39;}`);
+  console.log(`   • Skip retweets: ${CONFIG.SKIP_RETWEETS ? &#39;Yes&#39; : &#39;No&#39;}`);
+  console.log(&#39;&#39;);
+  console.log(&#39;⚠️  WARNING: Use responsibly! Spammy comments = account ban!&#39;);
+  console.log(&#39;⚠️  Press Ctrl+C in console to stop at any time&#39;);
+  console.log(&#39;=&#39;.repeat(50));
+  console.log(&#39;&#39;);
+
+  // Helpers
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+  const randomDelay = (min, max) =&gt; Math.floor(Math.random() * (max - min + 1)) + min;
+  const getRandomComment = () =&gt; CONFIG.COMMENTS[Math.floor(Math.random() * CONFIG.COMMENTS.length)];
+  
+  // State
+  let commentCount = 0;
+  let scrollCount = 0;
+  let skippedCount = 0;
+  const commentedTweetIds = new Set();
+  const processedTweets = new Set();
+
+  // Load previously commented tweets from localStorage
+  const storageKey = &#39;xactions_commented_tweets&#39;;
+  try {
+    const saved = localStorage.getItem(storageKey);
+    if (saved) {
+      JSON.parse(saved).forEach(id =&gt; commentedTweetIds.add(id));
+      console.log(`📋 Loaded ${commentedTweetIds.size} previously commented tweets`);
+    }
+  } catch (e) {}
+
+  // Save commented tweets to localStorage
+  const saveCommentedTweets = () =&gt; {
+    try {
+      localStorage.setItem(storageKey, JSON.stringify([...commentedTweetIds]));
+    } catch (e) {}
+  };
+
+  // Check if tweet matches keywords
+  const matchesKeywords = (text) =&gt; {
+    if (CONFIG.KEYWORDS.length === 0) return true;
+    const lowerText = text.toLowerCase();
+    return CONFIG.KEYWORDS.some(kw =&gt; lowerText.includes(kw.toLowerCase()));
+  };
+
+  // Get unique tweet identifier
+  const getTweetId = (article) =&gt; {
+    const link = article.querySelector(&#39;a[href*=&quot;/status/&quot;]&#39;);
+    if (link) {
+      const match = link.href.match(/\/status\/(\d+)/);
+      return match ? match[1] : null;
+    }
+    return null;
+  };
+
+  // Check if tweet is a reply
+  const isReply = (article) =&gt; {
+    return article.innerText?.includes(&#39;Replying to @&#39;) || false;
+  };
+
+  // Check if tweet is a retweet
+  const isRetweet = (article) =&gt; {
+    const socialContext = article.querySelector(&#39;[data-testid=&quot;socialContext&quot;]&#39;);
+    return socialContext?.textContent?.includes(&#39;reposted&#39;) || 
+           socialContext?.textContent?.includes(&#39;Retweeted&#39;) || false;
+  };
+
+  // Simulate typing for more human-like behavior
+  const simulateTyping = async (element, text) =&gt; {
+    element.focus();
+    await sleep(200);
+    
+    for (const char of text) {
+      document.execCommand(&#39;insertText&#39;, false, char);
+      await sleep(CONFIG.TYPE_DELAY + Math.random() * 50);
+    }
+  };
+
+  // Post a comment on a tweet
+  const postComment = async (article, tweetId) =&gt; {
+    try {
+      // Find and click the reply button
+      const replyBtn = article.querySelector(&#39;[data-testid=&quot;reply&quot;]&#39;);
+      if (!replyBtn) {
+        console.log(&#39;   ⚠️  Reply button not found, skipping...&#39;);
+        return false;
+      }
+
+      // Scroll tweet into view
+      article.scrollIntoView({ behavior: &#39;smooth&#39;, block: &#39;center&#39; });
+      await sleep(800);
+
+      // Click reply button
+      replyBtn.click();
+      await sleep(1500);
+
+      // Wait for reply modal/input to appear
+      let replyInput = null;
+      for (let i = 0; i &lt; 10; i++) {
+        replyInput = document.querySelector(&#39;[data-testid=&quot;tweetTextarea_0&quot;]&#39;);
+        if (replyInput) break;
+        await sleep(300);
+      }
+
+      if (!replyInput) {
+        console.log(&#39;   ⚠️  Reply input not found, closing modal...&#39;);
+        document.dispatchEvent(new KeyboardEvent(&#39;keydown&#39;, { key: &#39;Escape&#39;, bubbles: true }));
+        return false;
+      }
+
+      // Get a random comment
+      const comment = getRandomComment();
+      
+      // Type the comment with realistic delays
+      await simulateTyping(replyInput, comment);
+      await sleep(800);
+
+      // Find and click the Post/Reply button
+      let postBtn = null;
+      for (let i = 0; i &lt; 10; i++) {
+        postBtn = document.querySelector(&#39;[data-testid=&quot;tweetButton&quot;]&#39;);
+        if (postBtn &amp;&amp; !postBtn.disabled) break;
+        await sleep(300);
+      }
+
+      if (!postBtn || postBtn.disabled) {
+        console.log(&#39;   ⚠️  Post button not available, closing modal...&#39;);
+        document.dispatchEvent(new KeyboardEvent(&#39;keydown&#39;, { key: &#39;Escape&#39;, bubbles: true }));
+        return false;
+      }
+
+      // Click post button
+      postBtn.click();
+      await sleep(2000);
+
+      // Close any remaining modal
+      document.dispatchEvent(new KeyboardEvent(&#39;keydown&#39;, { key: &#39;Escape&#39;, bubbles: true }));
+
+      // Mark as commented
+      commentedTweetIds.add(tweetId);
+      saveCommentedTweets();
+      commentCount++;
+
+      return { success: true, comment };
+
+    } catch (error) {
+      console.log(`   ❌ Error posting comment: ${error.message}`);
+      document.dispatchEvent(new KeyboardEvent(&#39;keydown&#39;, { key: &#39;Escape&#39;, bubbles: true }));
+      return false;
+    }
+  };
+
+  // Process all visible tweets
+  const processVisibleTweets = async () =&gt; {
+    const articles = document.querySelectorAll(&#39;article[data-testid=&quot;tweet&quot;]&#39;);
+    
+    for (const article of articles) {
+      // Check if we&#39;ve hit our limit
+      if (commentCount &gt;= CONFIG.MAX_COMMENTS) {
+        console.log(&#39;&#39;);
+        console.log(&#39;🎯 Reached maximum comments limit!&#39;);
+        return false;
+      }
+
+      const tweetId = getTweetId(article);
+      if (!tweetId || processedTweets.has(tweetId)) continue;
+      processedTweets.add(tweetId);
+
+      // Skip if already commented
+      if (commentedTweetIds.has(tweetId)) {
+        continue;
+      }
+
+      // Skip based on settings
+      if (CONFIG.SKIP_REPLIES &amp;&amp; isReply(article)) {
+        skippedCount++;
+        continue;
+      }
+
+      if (CONFIG.SKIP_RETWEETS &amp;&amp; isRetweet(article)) {
+        skippedCount++;
+        continue;
+      }
+
+      // Check keyword match
+      const textEl = article.querySelector(&#39;[data-testid=&quot;tweetText&quot;]&#39;);
+      const tweetText = textEl?.textContent || &#39;&#39;;
+      
+      if (!matchesKeywords(tweetText)) {
+        skippedCount++;
+        continue;
+      }
+
+      // Get tweet preview for logging
+      const preview = tweetText.substring(0, 40) || &#39;[No text]&#39;;
+      console.log(`🎯 Found tweet: &quot;${preview}...&quot;`);
+
+      // Post comment on this tweet
+      const result = await postComment(article, tweetId);
+      
+      if (result &amp;&amp; result.success) {
+        console.log(`💬 [${commentCount}/${CONFIG.MAX_COMMENTS}] Commented: &quot;${result.comment}&quot;`);
+        
+        // Random delay between comments
+        const delay = randomDelay(CONFIG.MIN_DELAY, CONFIG.MAX_DELAY);
+        console.log(`   ⏳ Waiting ${(delay/1000).toFixed(0)}s before next comment...`);
+        await sleep(delay);
+
+        // Periodic pause for safety
+        if (commentCount &gt; 0 &amp;&amp; commentCount % CONFIG.PAUSE_EVERY === 0) {
+          console.log(&#39;&#39;);
+          console.log(`☕ Taking a ${CONFIG.PAUSE_DURATION/1000}s safety break...`);
+          await sleep(CONFIG.PAUSE_DURATION);
+          console.log(&#39;🔄 Resuming...&#39;);
+          console.log(&#39;&#39;);
+        }
+      } else {
+        skippedCount++;
+      }
+    }
+
+    return true;
+  };
+
+  // Main loop
+  console.log(&#39;🔍 Scanning for tweets to comment on...&#39;);
+  console.log(&#39;&#39;);
+
+  while (scrollCount &lt; CONFIG.MAX_SCROLLS &amp;&amp; commentCount &lt; CONFIG.MAX_COMMENTS) {
+    const shouldContinue = await processVisibleTweets();
+    if (!shouldContinue) break;
+
+    // Scroll down to load more tweets
+    window.scrollBy({ top: 600, behavior: &#39;smooth&#39; });
+    scrollCount++;
+    
+    // Progress update every 3 scrolls
+    if (scrollCount % 3 === 0) {
+      console.log(`📊 Progress: ${commentCount} commented, ${skippedCount} skipped, ${scrollCount} scrolls`);
+    }
+
+    await sleep(CONFIG.SCROLL_DELAY);
+  }
+
+  // Final summary
+  console.log(&#39;&#39;);
+  console.log(&#39;=&#39;.repeat(50));
+  console.log(&#39;✅ AUTO-COMMENTER COMPLETE&#39;);
+  console.log(&#39;=&#39;.repeat(50));
+  console.log(`💬 Comments posted: ${commentCount}`);
+  console.log(`⏭️  Tweets skipped: ${skippedCount}`);
+  console.log(`📜 Total scrolls: ${scrollCount}`);
+  console.log(`🕐 Session ended: ${new Date().toLocaleTimeString()}`);
+  console.log(`📋 Total commented tweets tracked: ${commentedTweetIds.size}`);
+  console.log(&#39;&#39;);
+  console.log(&#39;⚠️  IMPORTANT: Wait at least 2-4 hours before running again!&#39;);
+  console.log(&#39;⚠️  Mix with manual activity to appear more natural.&#39;);
+  console.log(&#39;=&#39;.repeat(50));
+
+  // Return results
+  return {
+    commented: commentCount,
+    skipped: skippedCount,
+    scrolls: scrollCount,
+    commentedIds: Array.from(commentedTweetIds)
+  };
+})();
+</code></pre>
+<p><strong>What happens:</strong></p>
+<ol>
+<li>Script scans visible tweets on the page</li>
+<li>Filters based on your settings (keywords, replies, retweets)</li>
+<li>Opens the reply modal for matching tweets</li>
+<li>Types a random comment from your template list</li>
+<li>Posts the reply with human-like typing delays</li>
+<li>Saves commented tweet IDs to avoid repeat commenting</li>
+<li>Waits 30-60 seconds between comments for safety</li>
+<li>Stops when reaching your limit</li>
+</ol>
+<p><strong>Output example:</strong></p>
+<pre><code>💬 XActions - Auto-Commenter
+==================================================
+⚙️  Settings:
+   • Comment templates: 10 variations
+   • Keywords: ALL TWEETS
+   • Max comments: 5
+   • Delay: 30s - 60s
+   • Skip replies: Yes
+   • Skip retweets: Yes
+
+⚠️  WARNING: Use responsibly! Spammy comments = account ban!
+⚠️  Press Ctrl+C in console to stop at any time
+==================================================
+
+📋 Loaded 12 previously commented tweets
+🔍 Scanning for tweets to comment on...
+
+🎯 Found tweet: &quot;Just launched my new project! Check it o...&quot;
+💬 [1/5] Commented: &quot;🔥 Great insight!&quot;
+   ⏳ Waiting 42s before next comment...
+🎯 Found tweet: &quot;Thread on why web3 is changing everythi...&quot;
+💬 [2/5] Commented: &quot;Solid thread, appreciate you sharing this&quot;
+   ⏳ Waiting 38s before next comment...
+🎯 Found tweet: &quot;Hot take: AI will replace most develope...&quot;
+💬 [3/5] Commented: &quot;Interesting perspective, thanks for sharing!&quot;
+   ⏳ Waiting 55s before next comment...
+
+☕ Taking a 45s safety break...
+🔄 Resuming...
+
+...
+
+==================================================
+✅ AUTO-COMMENTER COMPLETE
+==================================================
+💬 Comments posted: 5
+⏭️  Tweets skipped: 12
+📜 Total scrolls: 6
+🕐 Session ended: 3:15:42 PM
+📋 Total commented tweets tracked: 17
+
+⚠️  IMPORTANT: Wait at least 2-4 hours before running again!
+⚠️  Mix with manual activity to appear more natural.
+==================================================
+</code></pre>
+<hr>
+<h2>🖥️ Example 2: Node.js with Puppeteer (Production)</h2>
+<p><strong>Best for:</strong> Monitoring a specific user for new tweets and auto-replying</p>
+<p><strong>Features:</strong></p>
+<ul>
+<li>Monitors a target user&#39;s profile for new tweets</li>
+<li>Posts smart replies from a customizable template list</li>
+<li>Comprehensive logging with timestamps</li>
+<li>Persistent tracking of commented tweets</li>
+<li>Human-like random delays</li>
+<li>Configurable safety limits</li>
+<li>Graceful error handling</li>
+</ul>
+<h3>Setup</h3>
+<pre><code class="language-bash"># Create project folder
+mkdir auto-commenter &amp;&amp; cd auto-commenter
+
+# Initialize and install dependencies
+npm init -y
+npm install puppeteer
+
+# Create the script
+touch auto-commenter.js
+</code></pre>
+<h3>Main Script: <code>auto-commenter.js</code></h3>
+<pre><code class="language-javascript">// ============================================
+// XActions - Auto-Commenter (Node.js + Puppeteer)
+// Author: nich (@nichxbt)
+//
+// Monitors a user&#39;s profile and comments on new tweets
+//
+// Usage:
+//   node auto-commenter.js elonmusk         # Monitor @elonmusk
+//   node auto-commenter.js naval --limit 3  # Comment on max 3 tweets
+//   node auto-commenter.js vitalik --keywords &quot;ethereum,eth&quot;
+//
+// ⚠️  USE RESPONSIBLY! Spammy comments = account ban!
+// ============================================
+
+const puppeteer = require(&#39;puppeteer&#39;);
+const fs = require(&#39;fs&#39;);
+const path = require(&#39;path&#39;);
+
+// ==========================================
+// CONFIGURATION
+// ==========================================
+const CONFIG = {
+  // Comment templates - CUSTOMIZE THESE!
+  // Make them varied and genuine to avoid looking like a bot
+  comments: [
+    &#39;🔥 Great point!&#39;,
+    &#39;This is insightful, thanks for sharing!&#39;,
+    &#39;Really interesting perspective 👏&#39;,
+    &#39;Love this take 💯&#39;,
+    &#39;Solid thread, appreciate you posting this&#39;,
+    &#39;Facts! This needed to be said&#39;,
+    &#39;This resonates with me&#39;,
+    &#39;Quality content as always 🙌&#39;,
+    &#39;Exactly what I was thinking&#39;,
+    &#39;Great insight here!&#39;,
+  ],
+  
+  // Browser settings
+  headless: true,                       // Set to false to watch the browser
+  userDataDir: &#39;./browser-data&#39;,        // Persistent login session
+  viewport: { width: 1280, height: 900 },
+  
+  // Limits (KEEP THESE VERY CONSERVATIVE!)
+  maxCommentsPerSession: 5,             // Max comments per script run
+  maxCommentsPerDay: 15,                // Max comments per 24 hours
+  checkIntervalSeconds: 120,            // How often to check for new tweets (2 min)
+  maxRunTimeMinutes: 60,                // Max time to run before stopping
+  
+  // Delays (milliseconds) - KEEP THESE HIGH!
+  minCommentDelay: 30000,               // Min delay between comments (30 sec)
+  maxCommentDelay: 90000,               // Max delay between comments (90 sec)
+  pageLoadDelay: 5000,                  // Wait for page to load
+  typeDelay: 80,                        // Delay between keystrokes (ms)
+  
+  // Filters
+  skipReplies: true,                    // Skip tweets that are replies
+  skipRetweets: true,                   // Skip retweets
+  minTweetAgeSeconds: 30,               // Don&#39;t comment on tweets younger than this
+  maxTweetAgeMinutes: 60,               // Don&#39;t comment on tweets older than this
+  
+  // Logging &amp; Storage
+  logDir: &#39;./logs&#39;,
+  dataDir: &#39;./data&#39;,
+  statsFile: &#39;./data/comment-stats.json&#39;,
+  commentedFile: &#39;./data/commented-tweets.json&#39;,
+};
+
+// ==========================================
+// PARSE COMMAND LINE ARGUMENTS
+// ==========================================
+const args = process.argv.slice(2);
+const targetUsername = args[0]?.replace(&#39;@&#39;, &#39;&#39;);
+
+if (!targetUsername || targetUsername.startsWith(&#39;--&#39;)) {
+  console.log(`
+╔═══════════════════════════════════════════════════════════╗
+║  💬 XActions Auto-Commenter                               ║
+╠═══════════════════════════════════════════════════════════╣
+║  Usage:                                                   ║
+║    node auto-commenter.js &lt;username&gt; [options]            ║
+║                                                           ║
+║  Examples:                                                ║
+║    node auto-commenter.js elonmusk                        ║
+║    node auto-commenter.js naval --limit 3                 ║
+║    node auto-commenter.js vitalik --keywords &quot;eth,defi&quot;   ║
+║                                                           ║
+║  Options:                                                 ║
+║    --limit &lt;n&gt;      Max comments per session              ║
+║    --keywords &lt;k&gt;   Only comment if tweet contains these  ║
+║    --headless       Run in headless mode (default: true)  ║
+║    --watch          Run with visible browser              ║
+║                                                           ║
+║  ⚠️  USE RESPONSIBLY - Spam = Ban!                        ║
+╚═══════════════════════════════════════════════════════════╝
+  `);
+  process.exit(0);
+}
+
+// Parse options
+const options = {
+  limit: CONFIG.maxCommentsPerSession,
+  keywords: [],
+  headless: CONFIG.headless,
+};
+
+for (let i = 1; i &lt; args.length; i++) {
+  if (args[i] === &#39;--limit&#39; &amp;&amp; args[i + 1]) {
+    options.limit = parseInt(args[i + 1], 10);
+    i++;
+  } else if (args[i] === &#39;--keywords&#39; &amp;&amp; args[i + 1]) {
+    options.keywords = args[i + 1].split(&#39;,&#39;).map(k =&gt; k.trim().toLowerCase());
+    i++;
+  } else if (args[i] === &#39;--watch&#39;) {
+    options.headless = false;
+  } else if (args[i] === &#39;--headless&#39;) {
+    options.headless = true;
+  }
+}
+
+// ==========================================
+// UTILITY FUNCTIONS
+// ==========================================
+
+const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+
+const randomDelay = (min, max) =&gt; {
+  const delay = Math.floor(Math.random() * (max - min + 1)) + min;
+  return delay + Math.floor(Math.random() * 2000); // Add jitter
+};
+
+const getTimestamp = () =&gt; new Date().toISOString();
+const getDateKey = () =&gt; new Date().toISOString().split(&#39;T&#39;)[0];
+
+const getRandomComment = () =&gt; {
+  return CONFIG.comments[Math.floor(Math.random() * CONFIG.comments.length)];
+};
+
+// Ensure directories exist
+const ensureDirectories = () =&gt; {
+  [CONFIG.userDataDir, CONFIG.logDir, CONFIG.dataDir].forEach(dir =&gt; {
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+  });
+};
+
+// ==========================================
+// LOGGER CLASS
+// ==========================================
+class Logger {
+  constructor(username) {
+    this.username = username;
+    this.logFile = path.join(CONFIG.logDir, `auto-commenter-${getDateKey()}.log`);
+    this.sessionLogs = [];
+  }
+
+  log(level, message) {
+    const timestamp = getTimestamp();
+    const line = `[${timestamp}] [${level.toUpperCase()}] ${message}`;
+    console.log(line);
+    fs.appendFileSync(this.logFile, line + &#39;\n&#39;);
+    this.sessionLogs.push({ timestamp, level, message });
+  }
+
+  info(message) { this.log(&#39;info&#39;, message); }
+  success(message) { this.log(&#39;success&#39;, `✅ ${message}`); }
+  warning(message) { this.log(&#39;warning&#39;, `⚠️  ${message}`); }
+  error(message) { this.log(&#39;error&#39;, `❌ ${message}`); }
+  comment(message) { this.log(&#39;comment&#39;, `💬 ${message}`); }
+
+  saveSessionLog(sessionId, stats) {
+    const sessionFile = path.join(CONFIG.logDir, `session-${sessionId}.json`);
+    fs.writeFileSync(sessionFile, JSON.stringify({
+      sessionId,
+      username: this.username,
+      stats,
+      logs: this.sessionLogs
+    }, null, 2));
+    this.info(`Session log saved: ${sessionFile}`);
+  }
+}
+
+// ==========================================
+// STATS TRACKER CLASS
+// ==========================================
+class StatsTracker {
+  constructor() {
+    this.loadStats();
+  }
+
+  loadStats() {
+    try {
+      if (fs.existsSync(CONFIG.statsFile)) {
+        this.stats = JSON.parse(fs.readFileSync(CONFIG.statsFile, &#39;utf8&#39;));
+      } else {
+        this.stats = {};
+      }
+    } catch (e) {
+      this.stats = {};
+    }
+  }
+
+  saveStats() {
+    fs.writeFileSync(CONFIG.statsFile, JSON.stringify(this.stats, null, 2));
+  }
+
+  getTodayComments() {
+    const today = getDateKey();
+    return this.stats[today]?.comments || 0;
+  }
+
+  addComment() {
+    const today = getDateKey();
+    if (!this.stats[today]) {
+      this.stats[today] = { comments: 0, sessions: 0 };
+    }
+    this.stats[today].comments++;
+    this.saveStats();
+  }
+
+  startSession() {
+    const today = getDateKey();
+    if (!this.stats[today]) {
+      this.stats[today] = { comments: 0, sessions: 0 };
+    }
+    this.stats[today].sessions++;
+    this.saveStats();
+  }
+
+  canCommentMore() {
+    return this.getTodayComments() &lt; CONFIG.maxCommentsPerDay;
+  }
+
+  getRemainingComments() {
+    return Math.max(0, CONFIG.maxCommentsPerDay - this.getTodayComments());
+  }
+}
+
+// ==========================================
+// COMMENTED TWEETS TRACKER
+// ==========================================
+class CommentedTracker {
+  constructor() {
+    this.load();
+  }
+
+  load() {
+    try {
+      if (fs.existsSync(CONFIG.commentedFile)) {
+        this.commented = new Set(JSON.parse(fs.readFileSync(CONFIG.commentedFile, &#39;utf8&#39;)));
+      } else {
+        this.commented = new Set();
+      }
+    } catch (e) {
+      this.commented = new Set();
+    }
+  }
+
+  save() {
+    fs.writeFileSync(CONFIG.commentedFile, JSON.stringify([...this.commented], null, 2));
+  }
+
+  has(tweetId) {
+    return this.commented.has(tweetId);
+  }
+
+  add(tweetId) {
+    this.commented.add(tweetId);
+    this.save();
+  }
+
+  size() {
+    return this.commented.size;
+  }
+}
+
+// ==========================================
+// BROWSER AUTOMATION
+// ==========================================
+
+async function launchBrowser(headless = true) {
+  return await puppeteer.launch({
+    headless: headless ? &#39;new&#39; : false,
+    userDataDir: CONFIG.userDataDir,
+    args: [
+      &#39;--no-sandbox&#39;,
+      &#39;--disable-setuid-sandbox&#39;,
+      &#39;--disable-dev-shm-usage&#39;,
+      &#39;--disable-accelerated-2d-canvas&#39;,
+      &#39;--disable-gpu&#39;,
+      &#39;--window-size=1280,900&#39;
+    ]
+  });
+}
+
+async function checkLogin(page, logger) {
+  logger.info(&#39;Checking login status...&#39;);
+  
+  await page.goto(&#39;https://x.com/home&#39;, { 
+    waitUntil: &#39;networkidle2&#39;,
+    timeout: 30000 
+  });
+  
+  await sleep(3000);
+  
+  const isLoggedIn = await page.evaluate(() =&gt; {
+    return !!document.querySelector(&#39;[data-testid=&quot;SideNav_NewTweet_Button&quot;]&#39;) ||
+           !!document.querySelector(&#39;[data-testid=&quot;AppTabBar_Profile_Link&quot;]&#39;) ||
+           !!document.querySelector(&#39;[aria-label=&quot;Post&quot;]&#39;);
+  });
+  
+  return isLoggedIn;
+}
+
+async function promptLogin(logger) {
+  logger.warning(&#39;Not logged in to X/Twitter&#39;);
+  logger.info(&#39;Opening browser for manual login...&#39;);
+  
+  console.log(&#39;\n&#39; + &#39;=&#39;.repeat(50));
+  console.log(&#39;🔐 LOGIN REQUIRED&#39;);
+  console.log(&#39;=&#39;.repeat(50));
+  console.log(&#39;1. A browser window will open&#39;);
+  console.log(&#39;2. Log in to your X/Twitter account&#39;);
+  console.log(&#39;3. Complete any 2FA if prompted&#39;);
+  console.log(&#39;4. Press ENTER here when done&#39;);
+  console.log(&#39;=&#39;.repeat(50) + &#39;\n&#39;);
+  
+  const browser = await puppeteer.launch({
+    headless: false,
+    userDataDir: CONFIG.userDataDir,
+    args: [&#39;--no-sandbox&#39;, &#39;--window-size=1280,900&#39;]
+  });
+  
+  const page = await browser.newPage();
+  await page.goto(&#39;https://x.com/login&#39;, { waitUntil: &#39;networkidle2&#39; });
+  
+  // Wait for user input
+  await new Promise(resolve =&gt; {
+    process.stdin.once(&#39;data&#39;, resolve);
+  });
+  
+  await browser.close();
+  logger.success(&#39;Login saved! Session will persist for future runs.&#39;);
+}
+
+// ==========================================
+// POST COMMENT FUNCTION
+// ==========================================
+
+async function postComment(page, tweetId, logger) {
+  try {
+    // Find the tweet by ID
+    const tweetSelector = `article[data-testid=&quot;tweet&quot;] a[href*=&quot;/status/${tweetId}&quot;]`;
+    const tweetLink = await page.$(tweetSelector);
+    
+    if (!tweetLink) {
+      logger.warning(`Tweet ${tweetId} not found on page`);
+      return false;
+    }
+
+    // Get the parent article
+    const article = await page.evaluateHandle(el =&gt; el.closest(&#39;article&#39;), tweetLink);
+    
+    if (!article) {
+      logger.warning(`Could not find article for tweet ${tweetId}`);
+      return false;
+    }
+
+    // Find reply button within the article
+    const replyBtn = await article.$(&#39;[data-testid=&quot;reply&quot;]&#39;);
+    
+    if (!replyBtn) {
+      logger.warning(&#39;Reply button not found&#39;);
+      return false;
+    }
+
+    // Scroll into view and click
+    await article.evaluate(el =&gt; el.scrollIntoView({ behavior: &#39;smooth&#39;, block: &#39;center&#39; }));
+    await sleep(800);
+    await replyBtn.click();
+    await sleep(1500);
+
+    // Wait for reply modal
+    const replyInput = await page.waitForSelector(&#39;[data-testid=&quot;tweetTextarea_0&quot;]&#39;, { timeout: 5000 });
+    
+    if (!replyInput) {
+      logger.warning(&#39;Reply input not found&#39;);
+      await page.keyboard.press(&#39;Escape&#39;);
+      return false;
+    }
+
+    // Get random comment and type it
+    const comment = getRandomComment();
+    logger.info(`Typing comment: &quot;${comment}&quot;`);
+    
+    await replyInput.click();
+    await sleep(300);
+    
+    // Type with human-like delays
+    for (const char of comment) {
+      await page.keyboard.type(char, { delay: CONFIG.typeDelay + Math.random() * 30 });
+    }
+    await sleep(800);
+
+    // Find and click post button
+    const postBtn = await page.waitForSelector(&#39;[data-testid=&quot;tweetButton&quot;]:not([disabled])&#39;, { timeout: 3000 });
+    
+    if (!postBtn) {
+      logger.warning(&#39;Post button not available&#39;);
+      await page.keyboard.press(&#39;Escape&#39;);
+      return false;
+    }
+
+    await postBtn.click();
+    await sleep(2000);
+
+    // Close any remaining modal
+    await page.keyboard.press(&#39;Escape&#39;);
+    await sleep(500);
+
+    return { success: true, comment };
+
+  } catch (error) {
+    logger.error(`Error posting comment: ${error.message}`);
+    try {
+      await page.keyboard.press(&#39;Escape&#39;);
+    } catch (e) {}
+    return false;
+  }
+}
+
+// ==========================================
+// FIND NEW TWEETS FUNCTION
+// ==========================================
+
+async function findNewTweets(page, username, commentedTracker, logger) {
+  const tweets = await page.evaluate((opts) =&gt; {
+    const articles = document.querySelectorAll(&#39;article[data-testid=&quot;tweet&quot;]&#39;);
+    const results = [];
+
+    articles.forEach(article =&gt; {
+      // Get tweet ID
+      const statusLink = article.querySelector(&#39;a[href*=&quot;/status/&quot;]&#39;);
+      const href = statusLink?.getAttribute(&#39;href&#39;) || &#39;&#39;;
+      const idMatch = href.match(/\/status\/(\d+)/);
+      const tweetId = idMatch ? idMatch[1] : null;
+      
+      if (!tweetId) return;
+
+      // Get tweet text
+      const textEl = article.querySelector(&#39;[data-testid=&quot;tweetText&quot;]&#39;);
+      const text = textEl?.textContent || &#39;&#39;;
+
+      // Get tweet time
+      const timeEl = article.querySelector(&#39;time&#39;);
+      const datetime = timeEl?.getAttribute(&#39;datetime&#39;) || null;
+
+      // Check if reply
+      const isReply = article.innerText?.includes(&#39;Replying to @&#39;) || false;
+
+      // Check if retweet
+      const socialContext = article.querySelector(&#39;[data-testid=&quot;socialContext&quot;]&#39;);
+      const isRetweet = socialContext?.textContent?.includes(&#39;reposted&#39;) || 
+                        socialContext?.textContent?.includes(&#39;Retweeted&#39;) || false;
+
+      // Check author (should match target username)
+      const authorLink = article.querySelector(&#39;a[href^=&quot;/&quot;][role=&quot;link&quot;] span&#39;);
+      const authorHref = article.querySelector(&#39;a[href*=&quot;/status/&quot;]&#39;)?.getAttribute(&#39;href&#39;) || &#39;&#39;;
+      const authorMatch = authorHref.match(/^\/([^/]+)\//);
+      const author = authorMatch ? authorMatch[1] : null;
+
+      results.push({
+        tweetId,
+        text: text.substring(0, 150),
+        datetime,
+        isReply,
+        isRetweet,
+        author
+      });
+    });
+
+    return results;
+  }, { username });
+
+  // Filter tweets
+  const newTweets = [];
+  const now = Date.now();
+
+  for (const tweet of tweets) {
+    // Skip if already commented
+    if (commentedTracker.has(tweet.tweetId)) continue;
+
+    // Skip if not from target user (compare lowercase)
+    if (tweet.author?.toLowerCase() !== username.toLowerCase()) continue;
+
+    // Skip replies if configured
+    if (CONFIG.skipReplies &amp;&amp; tweet.isReply) continue;
+
+    // Skip retweets if configured
+    if (CONFIG.skipRetweets &amp;&amp; tweet.isRetweet) continue;
+
+    // Check age
+    if (tweet.datetime) {
+      const tweetTime = new Date(tweet.datetime).getTime();
+      const ageSeconds = (now - tweetTime) / 1000;
+      const ageMinutes = ageSeconds / 60;
+
+      if (ageSeconds &lt; CONFIG.minTweetAgeSeconds) continue;
+      if (ageMinutes &gt; CONFIG.maxTweetAgeMinutes) continue;
+    }
+
+    // Check keywords if configured
+    if (options.keywords.length &gt; 0) {
+      const lowerText = tweet.text.toLowerCase();
+      const matches = options.keywords.some(kw =&gt; lowerText.includes(kw));
+      if (!matches) continue;
+    }
+
+    newTweets.push(tweet);
+  }
+
+  return newTweets;
+}
+
+// ==========================================
+// MAIN FUNCTION
+// ==========================================
+
+async function main() {
+  const sessionId = Date.now().toString(36);
+  const logger = new Logger(targetUsername);
+  const stats = new StatsTracker();
+  const commentedTracker = new CommentedTracker();
+
+  ensureDirectories();
+
+  // Session header
+  console.log(&#39;\n&#39; + &#39;=&#39;.repeat(60));
+  console.log(&#39;💬 XACTIONS AUTO-COMMENTER&#39;);
+  console.log(&#39;=&#39;.repeat(60));
+  
+  logger.info(`Session ID: ${sessionId}`);
+  logger.info(`Target user: @${targetUsername}`);
+  logger.info(`Max comments this session: ${options.limit}`);
+  if (options.keywords.length &gt; 0) {
+    logger.info(`Keywords filter: ${options.keywords.join(&#39;, &#39;)}`);
+  }
+
+  // Check daily limit
+  const todayComments = stats.getTodayComments();
+  const remainingComments = stats.getRemainingComments();
+
+  logger.info(`Today&#39;s comments so far: ${todayComments}/${CONFIG.maxCommentsPerDay}`);
+  logger.info(`Previously commented tweets: ${commentedTracker.size()}`);
+
+  if (!stats.canCommentMore()) {
+    logger.warning(`Daily limit reached (${CONFIG.maxCommentsPerDay} comments)`);
+    logger.info(&#39;Try again tomorrow to avoid account restrictions.&#39;);
+    return { success: false, reason: &#39;daily_limit_reached&#39; };
+  }
+
+  // Adjust session limit
+  const sessionLimit = Math.min(options.limit, remainingComments);
+  logger.info(`Adjusted session limit: ${sessionLimit} comments`);
+  stats.startSession();
+
+  // Launch browser
+  const browser = await launchBrowser(options.headless);
+  const page = await browser.newPage();
+  await page.setViewport(CONFIG.viewport);
+
+  // Set realistic user agent
+  await page.setUserAgent(
+    &#39;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36&#39;
+  );
+
+  let commentCount = 0;
+  let checkCount = 0;
+  const startTime = Date.now();
+  const maxRunTime = CONFIG.maxRunTimeMinutes * 60 * 1000;
+  const commentsLog = [];
+
+  try {
+    // Check login
+    const isLoggedIn = await checkLogin(page, logger);
+
+    if (!isLoggedIn) {
+      await browser.close();
+      await promptLogin(logger);
+      return await main(); // Retry
+    }
+
+    logger.success(&#39;Logged in to X/Twitter&#39;);
+
+    // Navigate to target user&#39;s profile
+    const profileUrl = `https://x.com/${targetUsername}`;
+    logger.info(`Navigating to @${targetUsername}&#39;s profile...`);
+    
+    await page.goto(profileUrl, { waitUntil: &#39;networkidle2&#39;, timeout: 30000 });
+    await sleep(CONFIG.pageLoadDelay);
+
+    // Verify profile loaded
+    const profileExists = await page.evaluate(() =&gt; {
+      return !document.body.innerText.includes(&#39;This account doesn&#39;t exist&#39;) &amp;&amp;
+             !document.body.innerText.includes(&#39;Account suspended&#39;);
+    });
+
+    if (!profileExists) {
+      logger.error(`Profile @${targetUsername} not found or suspended`);
+      await browser.close();
+      return { success: false, reason: &#39;profile_not_found&#39; };
+    }
+
+    logger.success(`Profile @${targetUsername} loaded`);
+    console.log(&#39;&#39;);
+
+    // Main monitoring loop
+    logger.info(`Starting to monitor @${targetUsername} for new tweets...`);
+    logger.info(`Check interval: ${CONFIG.checkIntervalSeconds} seconds`);
+    logger.info(`Max run time: ${CONFIG.maxRunTimeMinutes} minutes`);
+    console.log(&#39;&#39;);
+
+    while (commentCount &lt; sessionLimit &amp;&amp; (Date.now() - startTime) &lt; maxRunTime) {
+      checkCount++;
+      const time = new Date().toLocaleTimeString();
+      logger.info(`[${time}] Check #${checkCount}...`);
+
+      // Refresh the page
+      await page.reload({ waitUntil: &#39;networkidle2&#39; });
+      await sleep(CONFIG.pageLoadDelay);
+
+      // Find new tweets
+      const newTweets = await findNewTweets(page, targetUsername, commentedTracker, logger);
+
+      if (newTweets.length &gt; 0) {
+        logger.success(`Found ${newTweets.length} new tweet(s) to comment on!`);
+
+        for (const tweet of newTweets) {
+          if (commentCount &gt;= sessionLimit) break;
+
+          logger.info(`Processing tweet: &quot;${tweet.text.substring(0, 50)}...&quot;`);
+
+          const result = await postComment(page, tweet.tweetId, logger);
+
+          if (result &amp;&amp; result.success) {
+            commentedTracker.add(tweet.tweetId);
+            stats.addComment();
+            commentCount++;
+
+            commentsLog.push({
+              timestamp: getTimestamp(),
+              tweetId: tweet.tweetId,
+              tweetPreview: tweet.text.substring(0, 100),
+              comment: result.comment
+            });
+
+            logger.comment(`[${commentCount}/${sessionLimit}] Posted: &quot;${result.comment}&quot;`);
+
+            // Delay before next comment
+            if (commentCount &lt; sessionLimit) {
+              const delay = randomDelay(CONFIG.minCommentDelay, CONFIG.maxCommentDelay);
+              logger.info(`Waiting ${(delay/1000).toFixed(0)}s before next action...`);
+              await sleep(delay);
+            }
+          } else {
+            logger.warning(&#39;Failed to post comment, skipping...&#39;);
+          }
+        }
+      } else {
+        logger.info(&#39;No new tweets found&#39;);
+      }
+
+      // Check if we should continue
+      if (commentCount &gt;= sessionLimit) {
+        logger.info(&#39;Reached session comment limit&#39;);
+        break;
+      }
+
+      // Wait for next check
+      if ((Date.now() - startTime) &lt; maxRunTime) {
+        logger.info(`Next check in ${CONFIG.checkIntervalSeconds} seconds...`);
+        await sleep(CONFIG.checkIntervalSeconds * 1000);
+      }
+    }
+
+    // Reason for stopping
+    if ((Date.now() - startTime) &gt;= maxRunTime) {
+      logger.warning(`Reached max run time (${CONFIG.maxRunTimeMinutes} minutes)`);
+    }
+
+  } catch (error) {
+    logger.error(`Fatal error: ${error.message}`);
+    console.error(error);
+  } finally {
+    await browser.close();
+  }
+
+  // Final summary
+  const finalStats = {
+    sessionId,
+    targetUser: targetUsername,
+    commentsPosted: commentCount,
+    checksPerformed: checkCount,
+    todayTotal: stats.getTodayComments(),
+    remainingToday: stats.getRemainingComments(),
+    runTimeMinutes: ((Date.now() - startTime) / 60000).toFixed(1),
+    comments: commentsLog
+  };
+
+  console.log(&#39;&#39;);
+  console.log(&#39;=&#39;.repeat(60));
+  console.log(&#39;✅ SESSION COMPLETE&#39;);
+  console.log(&#39;=&#39;.repeat(60));
+  logger.success(`Comments posted: ${commentCount}`);
+  logger.info(`Checks performed: ${checkCount}`);
+  logger.info(`Run time: ${finalStats.runTimeMinutes} minutes`);
+  logger.info(`Today&#39;s total comments: ${finalStats.todayTotal}/${CONFIG.maxCommentsPerDay}`);
+  logger.info(`Remaining today: ${finalStats.remainingToday}`);
+  console.log(&#39;=&#39;.repeat(60));
+  
+  // Save session log
+  logger.saveSessionLog(sessionId, finalStats);
+
+  console.log(&#39;&#39;);
+  console.log(&#39;⚠️  IMPORTANT: Wait at least 2-4 hours before running again!&#39;);
+  console.log(&#39;⚠️  Mix with manual activity to avoid detection.&#39;);
+  console.log(&#39;&#39;);
+
+  return finalStats;
+}
+
+// ==========================================
+// RUN
+// ==========================================
+main().then(result =&gt; {
+  if (!result.success) {
+    process.exit(1);
+  }
+}).catch(error =&gt; {
+  console.error(&#39;Fatal error:&#39;, error);
+  process.exit(1);
+});
+</code></pre>
+<h3>Running the Script</h3>
+<pre><code class="language-bash"># Basic usage - monitor a user
+node auto-commenter.js elonmusk
+
+# Limit to 3 comments per session
+node auto-commenter.js naval --limit 3
+
+# Only comment on tweets containing specific keywords
+node auto-commenter.js vitalik --keywords &quot;ethereum,eth,crypto&quot;
+
+# Watch mode (visible browser)
+node auto-commenter.js balajis --watch
+</code></pre>
+<p><strong>Output example:</strong></p>
+<pre><code>============================================================
+💬 XACTIONS AUTO-COMMENTER
+============================================================
+[2026-01-01T14:30:00.000Z] [INFO] Session ID: abc123xyz
+[2026-01-01T14:30:00.001Z] [INFO] Target user: @elonmusk
+[2026-01-01T14:30:00.002Z] [INFO] Max comments this session: 5
+[2026-01-01T14:30:00.003Z] [INFO] Today&#39;s comments so far: 3/15
+[2026-01-01T14:30:00.004Z] [INFO] Previously commented tweets: 12
+[2026-01-01T14:30:00.005Z] [INFO] Adjusted session limit: 5 comments
+[2026-01-01T14:30:03.000Z] [SUCCESS] ✅ Logged in to X/Twitter
+[2026-01-01T14:30:05.000Z] [INFO] Navigating to @elonmusk&#39;s profile...
+[2026-01-01T14:30:10.000Z] [SUCCESS] ✅ Profile @elonmusk loaded
+
+[2026-01-01T14:30:11.000Z] [INFO] Starting to monitor @elonmusk for new tweets...
+[2026-01-01T14:30:11.001Z] [INFO] Check interval: 120 seconds
+[2026-01-01T14:30:11.002Z] [INFO] Max run time: 60 minutes
+
+[2026-01-01T14:30:15.000Z] [INFO] [2:30:15 PM] Check #1...
+[2026-01-01T14:30:20.000Z] [SUCCESS] ✅ Found 1 new tweet(s) to comment on!
+[2026-01-01T14:30:21.000Z] [INFO] Processing tweet: &quot;Just had a great conversation about the futur...&quot;
+[2026-01-01T14:30:22.000Z] [INFO] Typing comment: &quot;🔥 Great point!&quot;
+[2026-01-01T14:30:27.000Z] [COMMENT] 💬 [1/5] Posted: &quot;🔥 Great point!&quot;
+[2026-01-01T14:30:27.001Z] [INFO] Waiting 45s before next action...
+
+[2026-01-01T14:32:20.000Z] [INFO] [2:32:20 PM] Check #2...
+[2026-01-01T14:32:25.000Z] [INFO] No new tweets found
+[2026-01-01T14:32:25.001Z] [INFO] Next check in 120 seconds...
+...
+
+============================================================
+✅ SESSION COMPLETE
+============================================================
+[2026-01-01T15:30:00.000Z] [SUCCESS] ✅ Comments posted: 3
+[2026-01-01T15:30:00.001Z] [INFO] Checks performed: 28
+[2026-01-01T15:30:00.002Z] [INFO] Run time: 60.0 minutes
+[2026-01-01T15:30:00.003Z] [INFO] Today&#39;s total comments: 6/15
+[2026-01-01T15:30:00.004Z] [INFO] Remaining today: 9
+============================================================
+[2026-01-01T15:30:00.005Z] [INFO] Session log saved: ./logs/session-abc123xyz.json
+
+⚠️  IMPORTANT: Wait at least 2-4 hours before running again!
+⚠️  Mix with manual activity to avoid detection.
+</code></pre>
+<hr>
+<h2>🛡️ Safety &amp; Rate Limits</h2>
+<h3>⚠️ X (Twitter) Rate Limits for Comments/Replies</h3>
+<p>Commenting is treated MORE strictly than likes. These are conservative estimates:</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Soft Limit</th>
+<th>Hard Limit</th>
+<th>Recommended</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Comments per hour</td>
+<td>~10-15</td>
+<td>~25</td>
+<td><strong>3-5</strong></td>
+</tr>
+<tr>
+<td>Comments per day</td>
+<td>~50</td>
+<td>~100</td>
+<td><strong>10-15</strong></td>
+</tr>
+<tr>
+<td>Comments per 15 min</td>
+<td>~5</td>
+<td>~10</td>
+<td><strong>1-2</strong></td>
+</tr>
+</tbody></table>
+<h3>🚫 Spam Detection Triggers</h3>
+<p>X actively looks for these patterns:</p>
+<ul>
+<li>Identical or very similar comments</li>
+<li>Rapid-fire commenting (less than 30 seconds apart)</li>
+<li>Commenting on unrelated content</li>
+<li>One-word or emoji-only replies at scale</li>
+<li>Mass commenting on trending topics</li>
+<li>Automated promotional content</li>
+</ul>
+<h3>📊 Recommended Safe Limits</h3>
+<table>
+<thead>
+<tr>
+<th>Account Age</th>
+<th>Max Comments/Day</th>
+<th>Max Sessions</th>
+<th>Min Wait Between</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&lt; 1 month</td>
+<td>5</td>
+<td>1</td>
+<td>4+ hours</td>
+</tr>
+<tr>
+<td>1-6 months</td>
+<td>10</td>
+<td>1-2</td>
+<td>3+ hours</td>
+</tr>
+<tr>
+<td>6+ months</td>
+<td>15</td>
+<td>2</td>
+<td>2+ hours</td>
+</tr>
+<tr>
+<td>Verified</td>
+<td>20</td>
+<td>2-3</td>
+<td>2+ hours</td>
+</tr>
+</tbody></table>
+<h3>✅ Best Practices for Safe Auto-Commenting</h3>
+<ol>
+<li><strong>Vary your comments</strong> - Use at least 10+ different templates</li>
+<li><strong>Keep delays long</strong> - Minimum 30 seconds, preferably 45-60+</li>
+<li><strong>Add context</strong> - Include keywords from the original tweet when possible</li>
+<li><strong>Stay relevant</strong> - Only comment on content in your niche</li>
+<li><strong>Mix it up</strong> - Combine auto-commenting with genuine manual engagement</li>
+<li><strong>Monitor closely</strong> - Watch for any warnings or restrictions</li>
+<li><strong>Quality over quantity</strong> - 5 good comments &gt; 50 spam comments</li>
+</ol>
+<h3>🔴 Signs of Trouble</h3>
+<p><strong>Stop immediately if you see:</strong></p>
+<ul>
+<li>&quot;You can&#39;t reply to this conversation&quot; errors</li>
+<li>&quot;Slow down&quot; warnings</li>
+<li>Temporary restriction notices</li>
+<li>CAPTCHAs appearing frequently</li>
+<li>Comments not posting</li>
+<li>Account locked warning</li>
+<li>Shadow ban indicators (low engagement)</li>
+</ul>
+<hr>
+<h2>🌐 Website Alternative</h2>
+<h3>Use XActions.app</h3>
+<p>Don&#39;t want to run scripts? Use our web dashboard instead!</p>
+<p><strong><a href="https://xactions.app">👉 xactions.app</a></strong></p>
+<p><strong>Features:</strong></p>
+<ul>
+<li>✅ No coding required</li>
+<li>✅ Visual configuration with template editor</li>
+<li>✅ Built-in spam protection</li>
+<li>✅ Smart comment rotation</li>
+<li>✅ Real-time monitoring dashboard</li>
+<li>✅ Automatic rate limit protection</li>
+<li>✅ Comment history and analytics</li>
+<li>✅ Multi-account support (Pro)</li>
+<li>✅ Keyword-based targeting</li>
+<li>✅ User watchlist monitoring</li>
+</ul>
+<p><strong>How it works:</strong></p>
+<ol>
+<li>Sign in with your X account at <a href="https://xactions.app">xactions.app</a></li>
+<li>Navigate to <strong>Automation</strong> → <strong>Auto-Commenter</strong></li>
+<li>Add your comment templates (varied and genuine!)</li>
+<li>Set up your target users or keywords</li>
+<li>Configure safety limits</li>
+<li>Click &quot;Start&quot; and monitor progress</li>
+</ol>
+<p>The web version includes additional safety features and is recommended for users who want peace of mind.</p>
+<hr>
+<h2>📚 Related Examples</h2>
+<ul>
+<li><a href="auto-liker.md">❤️ Auto-Liker</a> - Automatically like tweets</li>
+<li><a href="detect-unfollowers.md">🔍 Detect Unfollowers</a> - Track who unfollowed you</li>
+<li><a href="unfollow-non-followers.md">🚫 Unfollow Non-Followers</a> - Clean up your following list</li>
+<li><a href="followers-scraping.md">👥 Followers Scraping</a> - Get follower lists</li>
+<li><a href="tweet-scraping.md">🐦 Tweet Scraping</a> - Extract tweets and data</li>
+</ul>
+<hr>
+<h2>📄 License</h2>
+<p>MIT License - Use at your own risk. The author is not responsible for any account restrictions or suspensions resulting from the use of these scripts.</p>
+<p><strong>Remember:</strong> With great automation comes great responsibility. Don&#39;t be a spammer!</p>
+<hr>
+<p><strong>Author:</strong> nich (<a href="https://x.com/nichxbt">@nichxbt</a>)</p>
+<p><strong>Last Updated:</strong> January 2026</p>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try Auto-Commenter?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/auto-liker">❤️ Auto Liker</a>
+        <a href="/docs/auto-repost">🔁 Auto Repost</a>
+        <a href="/docs/smart-unfollow">🧠 Smart Unfollow</a>
+        <a href="/docs/detect-unfollowers">🔍 Detect Unfollowers</a>
+        <a href="/docs/video-downloader">🎬 Video Downloader</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

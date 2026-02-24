@@ -1,0 +1,1429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>☢ Unfollow Everyone — Free X/Twitter Unfollow Tools Tool | XActions</title>
+  <meta name="description" content="The nuclear option - unfollow ALL accounts you're following on X (Twitter).">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, unfollow, everyone, unfollow tools, unfollow everyone twitter, twitter unfollow everyone">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="☢ Unfollow Everyone — XActions">
+  <meta property="og:description" content="The nuclear option - unfollow ALL accounts you're following on X (Twitter).">
+  <meta property="og:url" content="https://xactions.app/docs/unfollow-everyone">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="☢ Unfollow Everyone — Free X/Twitter Tool">
+  <meta name="twitter:description" content="The nuclear option - unfollow ALL accounts you're following on X (Twitter).">
+
+  <link rel="canonical" href="https://xactions.app/docs/unfollow-everyone">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "☢ Unfollow Everyone — Free X/Twitter Unfollow Tools Tool | XActions",
+    "description": "The nuclear option - unfollow ALL accounts you're following on X (Twitter).",
+    "url": "https://xactions.app/docs/unfollow-everyone",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/unfollow-everyone",
+    "articleSection": "Unfollow Tools",
+    "keywords": "xactions, twitter automation, x automation, free, unfollow, everyone, unfollow tools, unfollow everyone twitter, twitter unfollow everyone"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "☢ Unfollow Everyone", "item": "https://xactions.app/docs/unfollow-everyone" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use ☢ Unfollow Everyone",
+    "description": "The nuclear option - unfollow ALL accounts you're following on X (Twitter).",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions ☢ Unfollow Everyone script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>👋 ☢ Unfollow Everyone</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › ☢ Unfollow Everyone
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Unfollow Tools</span>
+        <h1>☢️ Unfollow Everyone</h1>
+<p>The nuclear option - unfollow ALL accounts you&#39;re following on X (Twitter).</p>
+<hr>
+<h2>⚠️ MAJOR WARNING - READ FIRST!</h2>
+<blockquote>
+<p><strong>🚨 THIS ACTION IS IRREVERSIBLE!</strong></p>
+<p>This script will unfollow <strong>EVERYONE</strong> you follow. There is no undo button.<br>X/Twitter does not provide a way to restore your following list.</p>
+<p><strong>Before proceeding:</strong></p>
+<ol>
+<li>✅ Export your following list as a backup (scripts do this automatically)</li>
+<li>✅ Download the backup file and store it safely</li>
+<li>✅ Consider if you really want to do this</li>
+<li>✅ Have coffee and think about it again</li>
+</ol>
+<p><strong>You cannot recover your following list after running this script!</strong></p>
+</blockquote>
+<hr>
+<h2>📋 What It Does</h2>
+<p>This is the <strong>nuclear option</strong> for your X/Twitter account:</p>
+<ol>
+<li><strong>Unfollows EVERYONE</strong> - Every single account you follow, gone</li>
+<li><strong>No exceptions</strong> - Friends, celebrities, brands, everyone</li>
+<li><strong>Complete reset</strong> - Takes your following count to zero</li>
+<li><strong>Permanent action</strong> - Cannot be undone automatically</li>
+</ol>
+<p><strong>Use cases:</strong></p>
+<ul>
+<li>Fresh start on your X account</li>
+<li>Privacy reset (removing all social connections)</li>
+<li>Account cleanup before rebranding</li>
+<li>Escaping an account takeover situation</li>
+<li>Starting over with a curated following list</li>
+<li>Detox from social media algorithm manipulation</li>
+</ul>
+<p><strong>This is NOT for:</strong></p>
+<ul>
+<li>❌ Unfollowing just non-followers (use <a href="unfollow-non-followers.md">unfollow-non-followers.md</a> instead)</li>
+<li>❌ Unfollowing a few specific accounts (do that manually)</li>
+<li>❌ Testing or &quot;just to see what happens&quot;</li>
+</ul>
+<hr>
+<h2>🌐 Example 1: Browser Console (Quick)</h2>
+<p><strong>Best for:</strong> Accounts following up to ~500 users</p>
+<p><strong>Steps:</strong></p>
+<ol>
+<li>Go to <code>x.com/YOUR_USERNAME/following</code></li>
+<li>Open browser console (F12 → Console tab)</li>
+<li>Paste the script below and press Enter</li>
+<li>Confirm when prompted</li>
+</ol>
+<pre><code class="language-javascript">// ============================================
+// XActions - Unfollow Everyone (Browser Console)
+// Author: nich (@nichxbt)
+// Go to: x.com/YOUR_USERNAME/following
+// Open console (F12), paste this
+// ============================================
+
+(async () =&gt; {
+  // Configuration
+  const UNFOLLOW_DELAY_MIN = 3000;   // Minimum delay between unfollows (ms)
+  const UNFOLLOW_DELAY_MAX = 5000;   // Maximum delay between unfollows (ms)
+  const SCROLL_DELAY = 2000;         // Time between scrolls (ms)
+  const BATCH_PAUSE = 30000;         // Pause every 10 unfollows (ms)
+  const MAX_SCROLL_RETRIES = 15;     // Stop scrolling if no new users found
+  
+  console.log(&#39;&#39;);
+  console.log(&#39;☢️  XActions - UNFOLLOW EVERYONE&#39;);
+  console.log(&#39;====================================&#39;);
+  console.log(&#39;⚠️  WARNING: This will unfollow ALL accounts!&#39;);
+  console.log(&#39;⚠️  This action CANNOT be undone!&#39;);
+  console.log(&#39;&#39;);
+
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+  const randomDelay = (min, max) =&gt; sleep(min + Math.random() * (max - min));
+  
+  // Verify we&#39;re on the following page
+  const pathMatch = window.location.pathname.match(/^\/([^/]+)\/following/);
+  if (!pathMatch) {
+    console.error(&#39;❌ Please navigate to your FOLLOWING page first!&#39;);
+    console.log(&#39;👉 Go to: x.com/YOUR_USERNAME/following&#39;);
+    return;
+  }
+  
+  const currentUsername = pathMatch[1];
+  console.log(`📍 Account: @${currentUsername}`);
+  console.log(&#39;&#39;);
+  
+  // ============================================
+  // Step 1: Scan all users you&#39;re following
+  // ============================================
+  console.log(&#39;📜 Step 1: Scanning your following list...&#39;);
+  console.log(&#39;   (This may take a while for large lists)&#39;);
+  
+  const users = new Map();
+  let scrollRetries = 0;
+  
+  while (scrollRetries &lt; MAX_SCROLL_RETRIES) {
+    const cells = document.querySelectorAll(&#39;[data-testid=&quot;UserCell&quot;]&#39;);
+    const prevSize = users.size;
+    
+    cells.forEach(cell =&gt; {
+      try {
+        const link = cell.querySelector(&#39;a[href^=&quot;/&quot;]&#39;);
+        const href = link?.getAttribute(&#39;href&#39;) || &#39;&#39;;
+        const username = href.split(&#39;/&#39;)[1];
+        
+        if (!username || username.includes(&#39;?&#39;) || username.includes(&#39;/&#39;)) return;
+        
+        const nameEl = cell.querySelector(&#39;[dir=&quot;ltr&quot;] &gt; span&#39;);
+        const name = nameEl?.textContent?.trim() || username;
+        
+        const bioEl = cell.querySelector(&#39;[data-testid=&quot;UserDescription&quot;]&#39;);
+        const bio = bioEl?.textContent?.trim() || &#39;&#39;;
+        
+        if (!users.has(username)) {
+          users.set(username, {
+            username,
+            name,
+            bio,
+            cell
+          });
+        }
+      } catch (e) {
+        // Skip malformed cells
+      }
+    });
+    
+    // Progress update
+    console.log(`   📊 Found: ${users.size} users`);
+    
+    if (users.size === prevSize) {
+      scrollRetries++;
+    } else {
+      scrollRetries = 0;
+    }
+    
+    // Scroll to load more
+    window.scrollTo(0, document.body.scrollHeight);
+    await sleep(SCROLL_DELAY);
+  }
+  
+  const allUsers = Array.from(users.values());
+  console.log(&#39;&#39;);
+  console.log(`   ✅ Total accounts found: ${allUsers.length}`);
+  
+  if (allUsers.length === 0) {
+    console.log(&#39;&#39;);
+    console.log(&#39;🎉 You\&#39;re not following anyone! Nothing to do.&#39;);
+    return;
+  }
+  
+  // ============================================
+  // Step 2: Export backup before unfollowing
+  // ============================================
+  console.log(&#39;&#39;);
+  console.log(&#39;💾 Step 2: Creating backup of your following list...&#39;);
+  
+  const timestamp = new Date().toISOString().replace(/[:.]/g, &#39;-&#39;);
+  const exportData = allUsers.map(u =&gt; ({
+    username: u.username,
+    name: u.name,
+    bio: u.bio,
+    exportedAt: new Date().toISOString()
+  }));
+  
+  // Download JSON backup
+  const json = JSON.stringify(exportData, null, 2);
+  const blob = new Blob([json], { type: &#39;application/json&#39; });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement(&#39;a&#39;);
+  a.href = url;
+  a.download = `following-backup-${currentUsername}-${timestamp}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  
+  console.log(`   📥 Backup downloaded: following-backup-${currentUsername}-${timestamp}.json`);
+  console.log(&#39;   ⚠️  KEEP THIS FILE SAFE! It\&#39;s your only way to know who you followed.&#39;);
+  
+  // Also copy to clipboard
+  try {
+    await navigator.clipboard.writeText(json);
+    console.log(&#39;   📋 Also copied to clipboard!&#39;);
+  } catch (e) {
+    // Clipboard might not be available
+  }
+  
+  // ============================================
+  // Step 3: Show summary and get confirmation
+  // ============================================
+  console.log(&#39;&#39;);
+  console.log(&#39;====================================&#39;);
+  console.log(&#39;⚠️  FINAL WARNING&#39;);
+  console.log(&#39;====================================&#39;);
+  console.log(`You are about to unfollow ${allUsers.length} accounts.`);
+  console.log(&#39;&#39;);
+  console.log(&#39;Preview of accounts to unfollow:&#39;);
+  allUsers.slice(0, 10).forEach((u, i) =&gt; {
+    console.log(`   ${i + 1}. @${u.username} (${u.name})`);
+  });
+  if (allUsers.length &gt; 10) {
+    console.log(`   ... and ${allUsers.length - 10} more`);
+  }
+  console.log(&#39;&#39;);
+  
+  // Confirmation prompt
+  const confirmed = window.confirm(
+    `☢️ NUCLEAR OPTION: Unfollow ALL ${allUsers.length} accounts?\n\n` +
+    `This action CANNOT be undone!\n\n` +
+    `Your backup has been downloaded.\n` +
+    `Click OK to proceed, Cancel to abort.`
+  );
+  
+  if (!confirmed) {
+    console.log(&#39;&#39;);
+    console.log(&#39;👋 Cancelled! No accounts were unfollowed.&#39;);
+    console.log(&#39;   Your backup file has been saved.&#39;);
+    return { unfollowed: [], total: allUsers.length, cancelled: true };
+  }
+  
+  console.log(&#39;&#39;);
+  console.log(&#39;☢️  CONFIRMED - Starting unfollow process...&#39;);
+  console.log(&#39;   Press Ctrl+C or close this tab to stop!&#39;);
+  console.log(&#39;&#39;);
+  
+  // ============================================
+  // Step 4: Unfollow everyone
+  // ============================================
+  console.log(&#39;🚫 Step 4: Unfollowing all accounts...&#39;);
+  console.log(&#39;&#39;);
+  
+  const unfollowed = [];
+  const failed = [];
+  let consecutiveFailures = 0;
+  const MAX_CONSECUTIVE_FAILURES = 5;
+  
+  // Scroll back to top
+  window.scrollTo(0, 0);
+  await sleep(1000);
+  
+  for (let i = 0; i &lt; allUsers.length; i++) {
+    const user = allUsers[i];
+    
+    try {
+      // Find current unfollow buttons on screen
+      const unfollowButtons = document.querySelectorAll(&#39;[data-testid$=&quot;-unfollow&quot;]&#39;);
+      
+      if (unfollowButtons.length === 0) {
+        // Need to scroll to find more buttons
+        window.scrollTo(0, 0);
+        await sleep(1500);
+        
+        const retryButtons = document.querySelectorAll(&#39;[data-testid$=&quot;-unfollow&quot;]&#39;);
+        if (retryButtons.length === 0) {
+          console.log(&#39;   ⏭️  No more unfollow buttons found, checking if done...&#39;);
+          break;
+        }
+      }
+      
+      // Click the first available unfollow button
+      const unfollowBtn = document.querySelector(&#39;[data-testid$=&quot;-unfollow&quot;]&#39;);
+      
+      if (!unfollowBtn) {
+        consecutiveFailures++;
+        if (consecutiveFailures &gt;= MAX_CONSECUTIVE_FAILURES) {
+          console.log(&#39;   ⚠️  Multiple failures in a row, might be rate limited or done&#39;);
+          break;
+        }
+        continue;
+      }
+      
+      // Get username from the cell
+      const cell = unfollowBtn.closest(&#39;[data-testid=&quot;UserCell&quot;]&#39;);
+      let username = &#39;unknown&#39;;
+      if (cell) {
+        const link = cell.querySelector(&#39;a[href^=&quot;/&quot;]&#39;);
+        username = link?.getAttribute(&#39;href&#39;)?.split(&#39;/&#39;)[1] || &#39;unknown&#39;;
+      }
+      
+      // Click unfollow
+      unfollowBtn.click();
+      await sleep(500);
+      
+      // Click confirmation dialog
+      const confirmBtn = document.querySelector(&#39;[data-testid=&quot;confirmationSheetConfirm&quot;]&#39;);
+      
+      if (confirmBtn) {
+        confirmBtn.click();
+        unfollowed.push(username);
+        consecutiveFailures = 0;
+        
+        const progress = ((i + 1) / allUsers.length * 100).toFixed(1);
+        console.log(`   ✅ ${unfollowed.length} unfollowed | @${username} | ${progress}% complete`);
+      } else {
+        failed.push({ username, reason: &#39;No confirm dialog&#39; });
+        console.log(`   ⚠️  @${username} - Confirm dialog not found`);
+        consecutiveFailures++;
+      }
+      
+      // Wait between unfollows (3-5 seconds with randomization)
+      await randomDelay(UNFOLLOW_DELAY_MIN, UNFOLLOW_DELAY_MAX);
+      
+      // Pause every 10 unfollows for safety
+      if (unfollowed.length % 10 === 0 &amp;&amp; unfollowed.length &gt; 0) {
+        console.log(`   ⏸️  Safety pause (${BATCH_PAUSE / 1000}s) - Completed ${unfollowed.length} unfollows...`);
+        await sleep(BATCH_PAUSE);
+        console.log(&#39;   ▶️  Resuming...&#39;);
+      }
+      
+      // Check for rate limit warning
+      const rateLimitWarning = document.querySelector(&#39;[data-testid=&quot;toast&quot;]&#39;);
+      if (rateLimitWarning?.textContent?.includes(&#39;limit&#39;)) {
+        console.log(&#39;&#39;);
+        console.log(&#39;⛔ RATE LIMIT DETECTED! Stopping to protect your account.&#39;);
+        console.log(&#39;   Wait 15-30 minutes before running again.&#39;);
+        break;
+      }
+      
+    } catch (error) {
+      failed.push({ username: user.username, reason: error.message });
+      console.log(`   ❌ Error with @${user.username}: ${error.message}`);
+      consecutiveFailures++;
+    }
+    
+    // Safety check
+    if (consecutiveFailures &gt;= MAX_CONSECUTIVE_FAILURES) {
+      console.log(&#39;&#39;);
+      console.log(&#39;⚠️  Too many consecutive failures. Stopping.&#39;);
+      break;
+    }
+  }
+  
+  // ============================================
+  // Step 5: Final summary
+  // ============================================
+  console.log(&#39;&#39;);
+  console.log(&#39;====================================&#39;);
+  console.log(&#39;☢️  UNFOLLOW EVERYONE - COMPLETE&#39;);
+  console.log(&#39;====================================&#39;);
+  console.log(`📊 Total accounts scanned: ${allUsers.length}`);
+  console.log(`✅ Successfully unfollowed: ${unfollowed.length}`);
+  console.log(`❌ Failed: ${failed.length}`);
+  console.log(&#39;&#39;);
+  
+  if (unfollowed.length === allUsers.length) {
+    console.log(&#39;🎉 All accounts have been unfollowed!&#39;);
+    console.log(&#39;   Your following count should now be 0.&#39;);
+  } else {
+    console.log(`💡 ${allUsers.length - unfollowed.length} accounts may remain.`);
+    console.log(&#39;   Refresh the page and run the script again if needed.&#39;);
+  }
+  
+  console.log(&#39;&#39;);
+  console.log(&#39;📁 Your backup file: following-backup-&#39; + currentUsername + &#39;-*.json&#39;);
+  console.log(&#39;   Use this to manually re-follow accounts if needed.&#39;);
+  
+  // Download results log
+  const resultsData = {
+    date: new Date().toISOString(),
+    account: currentUsername,
+    totalScanned: allUsers.length,
+    unfollowed: unfollowed,
+    failed: failed,
+    unfollowedCount: unfollowed.length,
+    failedCount: failed.length
+  };
+  
+  const resultsBlob = new Blob([JSON.stringify(resultsData, null, 2)], { type: &#39;application/json&#39; });
+  const resultsUrl = URL.createObjectURL(resultsBlob);
+  const resultsLink = document.createElement(&#39;a&#39;);
+  resultsLink.href = resultsUrl;
+  resultsLink.download = `unfollow-everyone-results-${timestamp}.json`;
+  resultsLink.click();
+  URL.revokeObjectURL(resultsUrl);
+  
+  console.log(`📥 Results saved: unfollow-everyone-results-${timestamp}.json`);
+  
+  return {
+    unfollowed,
+    failed,
+    total: allUsers.length
+  };
+})();
+</code></pre>
+<p><strong>What happens:</strong></p>
+<ol>
+<li>Script scans your entire following list</li>
+<li><strong>Automatically downloads a backup</strong> of everyone you follow</li>
+<li>Shows a confirmation dialog with warning</li>
+<li>Unfollows each account one by one with 3-5 second delays</li>
+<li>Pauses for 30 seconds every 10 unfollows</li>
+<li>Downloads a results log when complete</li>
+</ol>
+<p><strong>Safety features:</strong></p>
+<ul>
+<li>✅ Automatic backup download before any changes</li>
+<li>✅ Confirmation dialog with clear warning</li>
+<li>✅ 3-5 second random delay between unfollows</li>
+<li>✅ 30 second pause every 10 unfollows</li>
+<li>✅ Automatic stop on rate limit detection</li>
+<li>✅ Progress tracking in console</li>
+</ul>
+<hr>
+<h2>🤖 Example 2: Node.js with Puppeteer (Production-Ready)</h2>
+<p><strong>Best for:</strong> Large accounts (500+ following), scheduled runs, complete automation</p>
+<pre><code class="language-javascript">// ============================================
+// XActions - Unfollow Everyone (Node.js/Puppeteer)
+// Author: nich (@nichxbt)
+// Save as: unfollow-everyone.js
+// Run: node unfollow-everyone.js
+// ============================================
+
+import puppeteer from &#39;puppeteer-extra&#39;;
+import StealthPlugin from &#39;puppeteer-extra-plugin-stealth&#39;;
+import fs from &#39;fs/promises&#39;;
+import readline from &#39;readline&#39;;
+import path from &#39;path&#39;;
+
+puppeteer.use(StealthPlugin());
+
+// ============================================
+// Configuration
+// ============================================
+const CONFIG = {
+  // Your X username (without @)
+  username: &#39;YOUR_USERNAME&#39;,
+  
+  // Your auth_token cookie from X
+  // Get this from: Browser DevTools → Application → Cookies → x.com → auth_token
+  authToken: &#39;YOUR_AUTH_TOKEN_HERE&#39;,
+  
+  // Maximum users to unfollow per session (for safety)
+  maxUnfollowsPerSession: 100,
+  
+  // Delay between unfollows (ms) - random between min and max
+  unfollowDelayMin: 3000,
+  unfollowDelayMax: 5000,
+  
+  // Pause every N unfollows (ms)
+  batchSize: 10,
+  batchPauseMin: 25000,
+  batchPauseMax: 35000,
+  
+  // Extended pause every 50 unfollows
+  extendedBatchSize: 50,
+  extendedPauseMin: 120000,  // 2 minutes
+  extendedPauseMax: 180000,  // 3 minutes
+  
+  // Run in headless mode (set to false to see browser)
+  headless: true,
+  
+  // Skip confirmation prompt (⚠️ DANGEROUS!)
+  skipConfirmation: false,
+  
+  // Output directory for backups and logs
+  outputDir: &#39;./unfollow-everyone-output&#39;,
+};
+
+// ============================================
+// Helper Functions
+// ============================================
+
+const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+const randomDelay = (min, max) =&gt; sleep(min + Math.random() * (max - min));
+
+function log(message, type = &#39;info&#39;) {
+  const timestamp = new Date().toISOString().split(&#39;T&#39;)[1].split(&#39;.&#39;)[0];
+  const prefix = {
+    info: &#39;   &#39;,
+    success: &#39; ✅&#39;,
+    error: &#39; ❌&#39;,
+    warning: &#39; ⚠️&#39;,
+    progress: &#39; 📊&#39;,
+  }[type] || &#39;   &#39;;
+  console.log(`[${timestamp}]${prefix} ${message}`);
+}
+
+async function askConfirmation(question) {
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+  });
+  
+  return new Promise(resolve =&gt; {
+    rl.question(question, answer =&gt; {
+      rl.close();
+      resolve(answer.toLowerCase().trim());
+    });
+  });
+}
+
+async function ensureDir(dir) {
+  try {
+    await fs.mkdir(dir, { recursive: true });
+  } catch (e) {
+    // Directory exists
+  }
+}
+
+// ============================================
+// Scrape Following List
+// ============================================
+
+async function scrapeFollowingList(page, username, maxUsers = 5000) {
+  log(`Navigating to @${username}/following...`);
+  
+  await page.goto(`https://x.com/${username}/following`, { 
+    waitUntil: &#39;networkidle2&#39;, 
+    timeout: 30000 
+  });
+  
+  try {
+    await page.waitForSelector(&#39;[data-testid=&quot;UserCell&quot;]&#39;, { timeout: 15000 });
+  } catch {
+    log(&#39;No users found or page didn\&#39;t load&#39;, &#39;warning&#39;);
+    return [];
+  }
+  
+  await sleep(2000);
+  
+  const users = new Map();
+  let retries = 0;
+  const maxRetries = 20;
+  
+  log(&#39;Scanning following list (this may take a while)...&#39;);
+  
+  while (users.size &lt; maxUsers &amp;&amp; retries &lt; maxRetries) {
+    const extracted = await page.evaluate(() =&gt; {
+      const cells = document.querySelectorAll(&#39;[data-testid=&quot;UserCell&quot;]&#39;);
+      return Array.from(cells).map(cell =&gt; {
+        try {
+          const link = cell.querySelector(&#39;a[href^=&quot;/&quot;]&#39;);
+          const href = link?.getAttribute(&#39;href&#39;) || &#39;&#39;;
+          const username = href.split(&#39;/&#39;)[1];
+          
+          if (!username || username.includes(&#39;?&#39;) || username.includes(&#39;/&#39;)) return null;
+          
+          const nameEl = cell.querySelector(&#39;[dir=&quot;ltr&quot;] &gt; span&#39;);
+          const bioEl = cell.querySelector(&#39;[data-testid=&quot;UserDescription&quot;]&#39;);
+          
+          return {
+            username,
+            name: nameEl?.textContent?.trim() || null,
+            bio: bioEl?.textContent?.trim() || null,
+          };
+        } catch {
+          return null;
+        }
+      }).filter(Boolean);
+    });
+    
+    const prevSize = users.size;
+    extracted.forEach(user =&gt; {
+      if (!users.has(user.username)) {
+        users.set(user.username, user);
+      }
+    });
+    
+    if (users.size === prevSize) {
+      retries++;
+    } else {
+      retries = 0;
+    }
+    
+    process.stdout.write(`\r   📊 Scanned: ${users.size} users...`);
+    
+    await page.evaluate(() =&gt; window.scrollTo(0, document.body.scrollHeight));
+    await randomDelay(1500, 2500);
+  }
+  
+  console.log(&#39;&#39;); // New line after progress
+  return Array.from(users.values());
+}
+
+// ============================================
+// Export Following List as Backup
+// ============================================
+
+async function exportBackup(users, username, outputDir) {
+  const timestamp = new Date().toISOString().replace(/[:.]/g, &#39;-&#39;);
+  
+  const backupData = {
+    exportedAt: new Date().toISOString(),
+    account: username,
+    totalCount: users.length,
+    users: users.map(u =&gt; ({
+      username: u.username,
+      name: u.name,
+      bio: u.bio,
+    }))
+  };
+  
+  // Save JSON
+  const jsonPath = path.join(outputDir, `following-backup-${username}-${timestamp}.json`);
+  await fs.writeFile(jsonPath, JSON.stringify(backupData, null, 2));
+  log(`Backup saved: ${jsonPath}`, &#39;success&#39;);
+  
+  // Save CSV
+  const csvPath = path.join(outputDir, `following-backup-${username}-${timestamp}.csv`);
+  const csvHeader = &#39;username,name,bio&#39;;
+  const csvRows = users.map(u =&gt; 
+    `&quot;${u.username}&quot;,&quot;${(u.name || &#39;&#39;).replace(/&quot;/g, &#39;&quot;&quot;&#39;)}&quot;,&quot;${(u.bio || &#39;&#39;).replace(/&quot;/g, &#39;&quot;&quot;&#39;).replace(/\n/g, &#39; &#39;)}&quot;`
+  );
+  await fs.writeFile(csvPath, [csvHeader, ...csvRows].join(&#39;\n&#39;));
+  log(`CSV backup saved: ${csvPath}`, &#39;success&#39;);
+  
+  // Save simple text list
+  const txtPath = path.join(outputDir, `following-backup-${username}-${timestamp}.txt`);
+  const txtContent = users.map(u =&gt; `@${u.username}`).join(&#39;\n&#39;);
+  await fs.writeFile(txtPath, txtContent);
+  log(`Text list saved: ${txtPath}`, &#39;success&#39;);
+  
+  return { jsonPath, csvPath, txtPath, timestamp };
+}
+
+// ============================================
+// Unfollow a Single User
+// ============================================
+
+async function unfollowUser(page, username) {
+  try {
+    // Navigate to user&#39;s profile
+    await page.goto(`https://x.com/${username}`, { 
+      waitUntil: &#39;networkidle2&#39;, 
+      timeout: 20000 
+    });
+    
+    await sleep(1000 + Math.random() * 500);
+    
+    // Find the &quot;Following&quot; button (which triggers unfollow)
+    const followingBtn = await page.$(&#39;[data-testid$=&quot;-unfollow&quot;]&#39;);
+    
+    if (!followingBtn) {
+      // Check if we&#39;re already not following
+      const followBtn = await page.$(&#39;[data-testid$=&quot;-follow&quot;]&#39;);
+      if (followBtn) {
+        return { success: true, alreadyUnfollowed: true };
+      }
+      return { success: false, error: &#39;Follow button not found&#39; };
+    }
+    
+    // Click the following button
+    await followingBtn.click();
+    await sleep(600);
+    
+    // Click confirm in the dialog
+    const confirmBtn = await page.$(&#39;[data-testid=&quot;confirmationSheetConfirm&quot;]&#39;);
+    
+    if (confirmBtn) {
+      await confirmBtn.click();
+      await sleep(500);
+      return { success: true };
+    } else {
+      return { success: false, error: &#39;Confirm dialog not found&#39; };
+    }
+    
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+}
+
+// ============================================
+// Main Function
+// ============================================
+
+async function unfollowEveryone() {
+  console.log(&#39;&#39;);
+  console.log(&#39;☢️  ═══════════════════════════════════════════&#39;);
+  console.log(&#39;☢️  XACTIONS - UNFOLLOW EVERYONE&#39;);
+  console.log(&#39;☢️  ═══════════════════════════════════════════&#39;);
+  console.log(&#39;&#39;);
+  console.log(&#39;⚠️  WARNING: This will unfollow ALL accounts!&#39;);
+  console.log(&#39;⚠️  This action CANNOT be undone!&#39;);
+  console.log(&#39;&#39;);
+  console.log(`👤 Account: @${CONFIG.username}`);
+  console.log(`📊 Max unfollows per session: ${CONFIG.maxUnfollowsPerSession}`);
+  console.log(`⏱️  Delay between unfollows: ${CONFIG.unfollowDelayMin/1000}-${CONFIG.unfollowDelayMax/1000}s`);
+  console.log(&#39;&#39;);
+  
+  // Validate config
+  if (CONFIG.username === &#39;YOUR_USERNAME&#39; || CONFIG.authToken === &#39;YOUR_AUTH_TOKEN_HERE&#39;) {
+    console.error(&#39;❌ Error: Please update CONFIG with your username and auth_token&#39;);
+    console.log(&#39;&#39;);
+    console.log(&#39;To get your auth_token:&#39;);
+    console.log(&#39;1. Go to x.com in your browser and log in&#39;);
+    console.log(&#39;2. Press F12 → Application tab → Cookies → x.com&#39;);
+    console.log(&#39;3. Find &quot;auth_token&quot; and copy its value&#39;);
+    console.log(&#39;4. Paste it in the CONFIG section of this script&#39;);
+    process.exit(1);
+  }
+  
+  // Create output directory
+  await ensureDir(CONFIG.outputDir);
+  
+  // Launch browser
+  log(&#39;Launching browser...&#39;);
+  const browser = await puppeteer.launch({
+    headless: CONFIG.headless ? &#39;new&#39; : false,
+    args: [
+      &#39;--no-sandbox&#39;,
+      &#39;--disable-setuid-sandbox&#39;,
+      &#39;--disable-blink-features=AutomationControlled&#39;,
+      &#39;--disable-web-security&#39;,
+    ],
+  });
+  
+  const startTime = Date.now();
+  const results = {
+    startTime: new Date().toISOString(),
+    account: CONFIG.username,
+    unfollowed: [],
+    failed: [],
+    skipped: [],
+  };
+  
+  try {
+    const page = await browser.newPage();
+    
+    // Set viewport and user agent
+    await page.setViewport({ 
+      width: 1280 + Math.floor(Math.random() * 100), 
+      height: 900 + Math.floor(Math.random() * 100),
+    });
+    
+    await page.setUserAgent(
+      &#39;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36&#39;
+    );
+    
+    // Set auth cookie
+    log(&#39;Setting authentication...&#39;);
+    await page.setCookie({
+      name: &#39;auth_token&#39;,
+      value: CONFIG.authToken,
+      domain: &#39;.x.com&#39;,
+      path: &#39;/&#39;,
+      httpOnly: true,
+      secure: true,
+    });
+    
+    // Test authentication
+    await page.goto(&#39;https://x.com/home&#39;, { waitUntil: &#39;networkidle2&#39; });
+    await sleep(2500);
+    
+    const isLoggedIn = await page.evaluate(() =&gt; {
+      return document.querySelector(&#39;[data-testid=&quot;SideNav_AccountSwitcher_Button&quot;]&#39;) !== null;
+    });
+    
+    if (!isLoggedIn) {
+      throw new Error(&#39;Authentication failed. Please check your auth_token.&#39;);
+    }
+    log(&#39;Logged in successfully!&#39;, &#39;success&#39;);
+    console.log(&#39;&#39;);
+    
+    // ============================================
+    // Step 1: Scrape following list
+    // ============================================
+    console.log(&#39;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━&#39;);
+    console.log(&#39;📜 STEP 1: Exporting your following list (BACKUP)&#39;);
+    console.log(&#39;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━&#39;);
+    
+    const following = await scrapeFollowingList(page, CONFIG.username);
+    
+    log(`Found ${following.length} accounts you follow`, &#39;success&#39;);
+    console.log(&#39;&#39;);
+    
+    if (following.length === 0) {
+      log(&#39;You\&#39;re not following anyone! Nothing to do.&#39;, &#39;success&#39;);
+      return;
+    }
+    
+    // ============================================
+    // Step 2: Export backup
+    // ============================================
+    console.log(&#39;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━&#39;);
+    console.log(&#39;💾 STEP 2: Creating backup files&#39;);
+    console.log(&#39;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━&#39;);
+    
+    const backup = await exportBackup(following, CONFIG.username, CONFIG.outputDir);
+    console.log(&#39;&#39;);
+    log(&#39;IMPORTANT: Keep these backup files safe!&#39;, &#39;warning&#39;);
+    log(&#39;They are your ONLY way to know who you followed.&#39;, &#39;warning&#39;);
+    console.log(&#39;&#39;);
+    
+    // ============================================
+    // Step 3: Show preview and confirm
+    // ============================================
+    console.log(&#39;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━&#39;);
+    console.log(&#39;📋 STEP 3: Review and confirm&#39;);
+    console.log(&#39;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━&#39;);
+    
+    console.log(&#39;&#39;);
+    console.log(&#39;Preview of accounts to unfollow:&#39;);
+    following.slice(0, 15).forEach((u, i) =&gt; {
+      console.log(`   ${(i + 1).toString().padStart(2)}. @${u.username.padEnd(20)} ${u.name || &#39;&#39;}`);
+    });
+    if (following.length &gt; 15) {
+      console.log(`   ... and ${following.length - 15} more`);
+    }
+    console.log(&#39;&#39;);
+    
+    const toUnfollow = following.slice(0, CONFIG.maxUnfollowsPerSession);
+    
+    console.log(&#39;┌──────────────────────────────────────────┐&#39;);
+    console.log(&#39;│  ☢️  NUCLEAR OPTION WARNING              │&#39;);
+    console.log(&#39;├──────────────────────────────────────────┤&#39;);
+    console.log(`│  Total following: ${following.length.toString().padEnd(20)} │`);
+    console.log(`│  Will unfollow: ${toUnfollow.length.toString().padEnd(22)} │`);
+    console.log(&#39;│                                          │&#39;);
+    console.log(&#39;│  THIS CANNOT BE UNDONE!                  │&#39;);
+    console.log(&#39;└──────────────────────────────────────────┘&#39;);
+    console.log(&#39;&#39;);
+    
+    if (!CONFIG.skipConfirmation) {
+      const answer = await askConfirmation(
+        `☢️  Type &quot;UNFOLLOW ALL&quot; to confirm (or anything else to cancel): `
+      );
+      
+      if (answer !== &#39;unfollow all&#39;) {
+        console.log(&#39;&#39;);
+        log(&#39;Cancelled! No accounts were unfollowed.&#39;, &#39;success&#39;);
+        log(`Your backup has been saved to: ${CONFIG.outputDir}`);
+        return;
+      }
+    }
+    
+    console.log(&#39;&#39;);
+    console.log(&#39;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━&#39;);
+    console.log(&#39;☢️  STEP 4: Unfollowing all accounts&#39;);
+    console.log(&#39;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━&#39;);
+    console.log(&#39;&#39;);
+    log(&#39;Press Ctrl+C at any time to stop&#39;, &#39;warning&#39;);
+    console.log(&#39;&#39;);
+    
+    // ============================================
+    // Step 4: Unfollow everyone
+    // ============================================
+    
+    for (let i = 0; i &lt; toUnfollow.length; i++) {
+      const user = toUnfollow[i];
+      
+      const result = await unfollowUser(page, user.username);
+      
+      if (result.success) {
+        if (result.alreadyUnfollowed) {
+          results.skipped.push(user.username);
+          log(`${(i + 1).toString().padStart(3)}/${toUnfollow.length} - @${user.username} (already unfollowed)`, &#39;warning&#39;);
+        } else {
+          results.unfollowed.push(user.username);
+          const percent = ((i + 1) / toUnfollow.length * 100).toFixed(1);
+          log(`${(i + 1).toString().padStart(3)}/${toUnfollow.length} - Unfollowed @${user.username} (${percent}%)`, &#39;success&#39;);
+        }
+      } else {
+        results.failed.push({ username: user.username, error: result.error });
+        log(`${(i + 1).toString().padStart(3)}/${toUnfollow.length} - Failed @${user.username}: ${result.error}`, &#39;error&#39;);
+      }
+      
+      // Standard delay between unfollows
+      await randomDelay(CONFIG.unfollowDelayMin, CONFIG.unfollowDelayMax);
+      
+      // Batch pause every N unfollows
+      if ((i + 1) % CONFIG.batchSize === 0 &amp;&amp; i &lt; toUnfollow.length - 1) {
+        const pauseDuration = Math.floor(CONFIG.batchPauseMin + Math.random() * (CONFIG.batchPauseMax - CONFIG.batchPauseMin));
+        log(`Safety pause (${Math.round(pauseDuration/1000)}s)...`, &#39;warning&#39;);
+        await sleep(pauseDuration);
+      }
+      
+      // Extended pause every 50 unfollows
+      if ((i + 1) % CONFIG.extendedBatchSize === 0 &amp;&amp; i &lt; toUnfollow.length - 1) {
+        const extendedPause = Math.floor(CONFIG.extendedPauseMin + Math.random() * (CONFIG.extendedPauseMax - CONFIG.extendedPauseMin));
+        console.log(&#39;&#39;);
+        log(`Extended safety pause (${Math.round(extendedPause/1000)}s) - Completed ${i + 1} unfollows`, &#39;warning&#39;);
+        await sleep(extendedPause);
+        console.log(&#39;&#39;);
+      }
+    }
+    
+    // ============================================
+    // Step 5: Summary
+    // ============================================
+    const duration = Math.round((Date.now() - startTime) / 1000);
+    
+    console.log(&#39;&#39;);
+    console.log(&#39;☢️  ═══════════════════════════════════════════&#39;);
+    console.log(&#39;☢️  UNFOLLOW EVERYONE - COMPLETE&#39;);
+    console.log(&#39;☢️  ═══════════════════════════════════════════&#39;);
+    console.log(&#39;&#39;);
+    console.log(`📊 Total accounts found: ${following.length}`);
+    console.log(`✅ Successfully unfollowed: ${results.unfollowed.length}`);
+    console.log(`⏭️  Already unfollowed: ${results.skipped.length}`);
+    console.log(`❌ Failed: ${results.failed.length}`);
+    console.log(`⏱️  Duration: ${Math.floor(duration/60)}m ${duration%60}s`);
+    console.log(&#39;&#39;);
+    
+    if (following.length &gt; CONFIG.maxUnfollowsPerSession) {
+      console.log(`💡 ${following.length - CONFIG.maxUnfollowsPerSession} accounts remaining.`);
+      console.log(&#39;   Wait 1-2 hours, then run the script again!&#39;);
+      console.log(&#39;&#39;);
+    }
+    
+    // Save results log
+    results.endTime = new Date().toISOString();
+    results.duration = duration;
+    results.totalFound = following.length;
+    
+    const resultsPath = path.join(CONFIG.outputDir, `unfollow-results-${backup.timestamp}.json`);
+    await fs.writeFile(resultsPath, JSON.stringify(results, null, 2));
+    log(`Results saved: ${resultsPath}`, &#39;success&#39;);
+    
+    console.log(&#39;&#39;);
+    console.log(&#39;📁 All files saved to:&#39;, CONFIG.outputDir);
+    console.log(&#39;   Keep the backup files to manually re-follow accounts if needed.&#39;);
+    
+  } finally {
+    await browser.close();
+  }
+}
+
+// ============================================
+// Run
+// ============================================
+
+unfollowEveryone().catch(error =&gt; {
+  console.error(&#39;&#39;);
+  console.error(&#39;❌ Fatal Error:&#39;, error.message);
+  process.exit(1);
+});
+</code></pre>
+<p><strong>Setup &amp; Run:</strong></p>
+<pre><code class="language-bash"># Create a new directory for this script
+mkdir unfollow-everyone &amp;&amp; cd unfollow-everyone
+
+# Initialize npm project
+npm init -y
+
+# Add &quot;type&quot;: &quot;module&quot; to package.json for ES modules
+npm pkg set type=module
+
+# Install dependencies
+npm install puppeteer puppeteer-extra puppeteer-extra-plugin-stealth
+
+# Create the script file
+# Copy the code above into unfollow-everyone.js
+
+# Edit the CONFIG section with your username and auth_token
+# Then run:
+node unfollow-everyone.js
+</code></pre>
+<p><strong>Getting your auth_token:</strong></p>
+<ol>
+<li>Log into X/Twitter in your browser</li>
+<li>Press F12 → Application tab (Chrome) or Storage tab (Firefox)</li>
+<li>Click Cookies → <code>x.com</code></li>
+<li>Find <code>auth_token</code> and copy the value</li>
+<li>Paste it in the CONFIG section</li>
+</ol>
+<p><strong>Output example:</strong></p>
+<pre><code>☢️  ═══════════════════════════════════════════
+☢️  XACTIONS - UNFOLLOW EVERYONE
+☢️  ═══════════════════════════════════════════
+
+⚠️  WARNING: This will unfollow ALL accounts!
+⚠️  This action CANNOT be undone!
+
+👤 Account: @nichxbt
+📊 Max unfollows per session: 100
+⏱️  Delay between unfollows: 3-5s
+
+[10:23:45]    Launching browser...
+[10:23:48]    Setting authentication...
+[10:23:51] ✅ Logged in successfully!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📜 STEP 1: Exporting your following list (BACKUP)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   📊 Scanned: 847 users...
+[10:24:32] ✅ Found 847 accounts you follow
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💾 STEP 2: Creating backup files
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[10:24:33] ✅ Backup saved: ./unfollow-everyone-output/following-backup-nichxbt-2026-01-01T10-24-33-123Z.json
+[10:24:33] ✅ CSV backup saved: ./unfollow-everyone-output/following-backup-nichxbt-2026-01-01T10-24-33-123Z.csv
+[10:24:33] ✅ Text list saved: ./unfollow-everyone-output/following-backup-nichxbt-2026-01-01T10-24-33-123Z.txt
+
+[10:24:33] ⚠️ IMPORTANT: Keep these backup files safe!
+[10:24:33] ⚠️ They are your ONLY way to know who you followed.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 STEP 3: Review and confirm
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Preview of accounts to unfollow:
+    1. @elonmusk             Elon Musk
+    2. @OpenAI               OpenAI
+    3. @github               GitHub
+   ... and 832 more
+
+┌──────────────────────────────────────────┐
+│  ☢️  NUCLEAR OPTION WARNING              │
+├──────────────────────────────────────────┤
+│  Total following: 847                    │
+│  Will unfollow: 100                      │
+│                                          │
+│  THIS CANNOT BE UNDONE!                  │
+└──────────────────────────────────────────┘
+
+☢️  Type &quot;UNFOLLOW ALL&quot; to confirm (or anything else to cancel): UNFOLLOW ALL
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+☢️  STEP 4: Unfollowing all accounts
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+[10:24:45] ⚠️ Press Ctrl+C at any time to stop
+
+[10:24:50] ✅   1/100 - Unfollowed @elonmusk (1.0%)
+[10:24:55] ✅   2/100 - Unfollowed @OpenAI (2.0%)
+[10:25:00] ✅   3/100 - Unfollowed @github (3.0%)
+...
+[10:26:20] ⚠️ Safety pause (30s)...
+...
+
+☢️  ═══════════════════════════════════════════
+☢️  UNFOLLOW EVERYONE - COMPLETE
+☢️  ═══════════════════════════════════════════
+
+📊 Total accounts found: 847
+✅ Successfully unfollowed: 100
+⏭️  Already unfollowed: 0
+❌ Failed: 0
+⏱️  Duration: 12m 34s
+
+💡 747 accounts remaining.
+   Wait 1-2 hours, then run the script again!
+
+[10:37:19] ✅ Results saved: ./unfollow-everyone-output/unfollow-results-2026-01-01T10-24-33-123Z.json
+
+📁 All files saved to: ./unfollow-everyone-output
+   Keep the backup files to manually re-follow accounts if needed.
+</code></pre>
+<hr>
+<h2>⚠️ Safety Guidelines &amp; Rate Limits</h2>
+<h3>Rate Limit Guidelines</h3>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Recommended Limit</th>
+<th>Reason</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Unfollows per session</td>
+<td>50-100</td>
+<td>Avoid triggering rate limits</td>
+</tr>
+<tr>
+<td>Delay between unfollows</td>
+<td>3-5 seconds</td>
+<td>Mimics human behavior</td>
+</tr>
+<tr>
+<td>Batch pause (every 10)</td>
+<td>25-35 seconds</td>
+<td>Gives API breathing room</td>
+</tr>
+<tr>
+<td>Extended pause (every 50)</td>
+<td>2-3 minutes</td>
+<td>Major safety break</td>
+</tr>
+<tr>
+<td>Between sessions</td>
+<td>1-2 hours</td>
+<td>Account protection</td>
+</tr>
+<tr>
+<td>Maximum per day</td>
+<td>200-300</td>
+<td>Stay well under radar</td>
+</tr>
+</tbody></table>
+<h3>Warning Signs - STOP IMMEDIATELY If You See:</h3>
+<ul>
+<li>⛔ &quot;You&#39;re doing that too fast&quot; message</li>
+<li>⛔ &quot;Rate limit exceeded&quot; error</li>
+<li>⛔ Unfollow buttons stop responding</li>
+<li>⛔ Account gets temporarily restricted</li>
+<li>⛔ Asked to verify phone number</li>
+<li>⛔ Multiple consecutive failures</li>
+</ul>
+<h3>Recovery If Rate Limited</h3>
+<ol>
+<li><strong>Stop immediately</strong> - Close the script/browser</li>
+<li><strong>Wait at least 2 hours</strong> - Let the rate limit reset</li>
+<li><strong>Reduce batch size</strong> - Set <code>maxUnfollowsPerSession</code> to 25-50</li>
+<li><strong>Increase delays</strong> - Double the delay times</li>
+<li><strong>Try again tomorrow</strong> - If issues persist, wait 24 hours</li>
+</ol>
+<hr>
+<h2>🌐 Website Alternative</h2>
+<p>Don&#39;t want to run scripts? Use <a href="https://xactions.app">xactions.app</a>:</p>
+<ol>
+<li><strong>Login</strong> - Connect your X account securely</li>
+<li><strong>Backup</strong> - Export your entire following list first</li>
+<li><strong>Select</strong> - Choose &quot;Unfollow Everyone&quot; option</li>
+<li><strong>Confirm</strong> - Multiple confirmation steps for safety</li>
+<li><strong>Execute</strong> - Automated unfollowing with built-in rate limits</li>
+</ol>
+<p><strong>Benefits:</strong></p>
+<ul>
+<li>✅ No coding or setup required</li>
+<li>✅ Automatic backup before any changes</li>
+<li>✅ Visual progress tracking</li>
+<li>✅ Built-in rate limit protection</li>
+<li>✅ Pause and resume capability</li>
+<li>✅ Email notification when complete</li>
+</ul>
+<hr>
+<h2>📝 Frequently Asked Questions</h2>
+<h3>Can I undo this?</h3>
+<p><strong>No.</strong> Once you unfollow everyone, there&#39;s no automatic way to restore your following list. The only way is to:</p>
+<ol>
+<li>Use your backup file</li>
+<li>Manually follow each account again one by one</li>
+</ol>
+<h3>How long does this take?</h3>
+<p>Depends on how many accounts you follow:</p>
+<ul>
+<li>100 accounts: ~10-15 minutes</li>
+<li>500 accounts: ~1-2 hours (with safety pauses)</li>
+<li>1000+ accounts: Multiple sessions over several hours</li>
+</ul>
+<h3>Will my followers know?</h3>
+<p>They won&#39;t get notified that you unfollowed them. However:</p>
+<ul>
+<li>They may notice if they check their followers</li>
+<li>You&#39;ll disappear from their &quot;Following&quot; notifications</li>
+<li>DM history remains intact</li>
+</ul>
+<h3>Is this against X/Twitter&#39;s rules?</h3>
+<p>Mass unfollowing is a gray area. To stay safe:</p>
+<ul>
+<li>Use reasonable delays (this script does)</li>
+<li>Don&#39;t run multiple sessions back-to-back</li>
+<li>Don&#39;t combine with other automation at the same time</li>
+</ul>
+<h3>What about protected accounts I follow?</h3>
+<p>The script will attempt to unfollow them normally. If it fails, they&#39;ll appear in the &quot;failed&quot; list.</p>
+<hr>
+<h2>📚 Related Documentation</h2>
+<ul>
+<li><a href="detect-unfollowers.md">Detect Unfollowers</a> - Track who unfollowed you</li>
+<li><a href="unfollow-non-followers.md">Unfollow Non-Followers</a> - Only unfollow people who don&#39;t follow back</li>
+<li><a href="following-scraping.md">Following Scraping</a> - Export your following list</li>
+</ul>
+<hr>
+<p><em>Author: nich (<a href="https://x.com/nichxbt">@nichxbt</a>)</em><br><em>Part of <a href="https://xactions.app">XActions</a> - X/Twitter Automation Tools</em></p>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try ☢ Unfollow Everyone?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/smart-unfollow">🧠 Smart Unfollow</a>
+        <a href="/docs/unfollow-non-followers">🧹 Unfollow Non Followers</a>
+        <a href="/docs/detect-unfollowers">🔍 Detect Unfollowers</a>
+        <a href="/docs/video-downloader">🎬 Video Downloader</a>
+        <a href="/docs/followers-scraping">📋 Followers Scraping</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

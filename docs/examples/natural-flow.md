@@ -1,6 +1,6 @@
 # 🌊 Natural Flow — Human-Like Browsing Session
 
-Simulates a real person using X/Twitter: scroll timeline, like keyword posts, reply occasionally, follow interesting accounts, check your own profile, read notifications, and return home.
+Simulates a real person using X/Twitter: scroll timeline, like keyword posts, reply occasionally, retweet, bookmark, follow interesting accounts, check your own profile, read notifications, and return home.
 
 ---
 
@@ -10,7 +10,7 @@ Unlike single-purpose scripts (auto-liker, keyword-follow), Natural Flow chains 
 
 | Phase | Action | Automated? |
 |-------|--------|------------|
-| 1. Home timeline | Scroll, like keyword-matched posts, reply to a few, queue follows | ✅ Like, Reply, Follow |
+| 1. Home timeline | Scroll, like keyword-matched posts, reply, retweet, bookmark, queue follows | ✅ Like, Reply, RT, Bookmark, Follow |
 | 2. Own profile | Visit your profile, scroll your recent posts | 👀 Read-only |
 | 3. Notifications | Check notifications, scroll briefly | 👀 Read-only |
 | 4. Return home | Navigate back, brief final scroll | 👀 Read-only |
@@ -19,6 +19,7 @@ Unlike single-purpose scripts (auto-liker, keyword-follow), Natural Flow chains 
 - Bots like the same things at constant rates — humans browse, pause, switch pages
 - Mixing read-only phases with engagement phases mimics real usage patterns
 - Randomized timing, probabilities, and scroll distances add variance every run
+- Cooldown escalation makes delays gradually increase as the session progresses — just like a real person slowing down
 
 ---
 

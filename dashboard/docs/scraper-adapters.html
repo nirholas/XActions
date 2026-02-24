@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scraper Framework Adapters — Free X/Twitter Scrapers Tool | XActions</title>
+  <meta name="description" content="XActions scrapers support multiple scraping frameworks via a pluggable adapter system.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, scraper, adapters, framework, scrapers, scraper adapters twitter, twitter scraper adapters">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Scraper Framework Adapters — XActions">
+  <meta property="og:description" content="XActions scrapers support multiple scraping frameworks via a pluggable adapter system.">
+  <meta property="og:url" content="https://xactions.app/docs/scraper-adapters">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Scraper Framework Adapters — Free X/Twitter Tool">
+  <meta name="twitter:description" content="XActions scrapers support multiple scraping frameworks via a pluggable adapter system.">
+
+  <link rel="canonical" href="https://xactions.app/docs/scraper-adapters">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Scraper Framework Adapters — Free X/Twitter Scrapers Tool | XActions",
+    "description": "XActions scrapers support multiple scraping frameworks via a pluggable adapter system.",
+    "url": "https://xactions.app/docs/scraper-adapters",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/scraper-adapters",
+    "articleSection": "Scrapers",
+    "keywords": "xactions, twitter automation, x automation, free, scraper, adapters, framework, scrapers, scraper adapters twitter, twitter scraper adapters"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Scraper Framework Adapters", "item": "https://xactions.app/docs/scraper-adapters" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use Scraper Framework Adapters",
+    "description": "XActions scrapers support multiple scraping frameworks via a pluggable adapter system.",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions Scraper Framework Adapters script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>🔌 Scraper Framework Adapters</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › Scraper Framework Adapters
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Scrapers</span>
+        <h1>Scraper Framework Adapters</h1>
+<p>XActions scrapers support multiple scraping frameworks via a pluggable adapter system.</p>
+<h2>Available Adapters</h2>
+<table>
+<thead>
+<tr>
+<th>Adapter</th>
+<th>Package</th>
+<th align="center">JS Execution</th>
+<th align="center">Browser Required</th>
+<th>Best For</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Puppeteer</strong> (default)</td>
+<td><code>puppeteer-extra</code></td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td>Anti-detection, stealth scraping on x.com</td>
+</tr>
+<tr>
+<td><strong>Playwright</strong></td>
+<td><code>playwright</code></td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td>Multi-browser, CI/CD, auto-wait, tracing</td>
+</tr>
+<tr>
+<td><strong>Crawlee</strong></td>
+<td><code>crawlee</code></td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td>Production-scale crawling, proxy rotation, auto-retry</td>
+</tr>
+<tr>
+<td><strong>Got-Scraping + JSDOM</strong></td>
+<td><code>got-scraping</code> + <code>jsdom</code></td>
+<td align="center">✅*</td>
+<td align="center">❌</td>
+<td>TLS fingerprint bypass, DOM API without a browser</td>
+</tr>
+<tr>
+<td><strong>Selenium</strong></td>
+<td><code>selenium-webdriver</code></td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td>Enterprise environments, cross-language, Selenium Grid</td>
+</tr>
+<tr>
+<td><strong>Cheerio</strong></td>
+<td><code>cheerio</code></td>
+<td align="center">❌</td>
+<td align="center">❌</td>
+<td>Lightweight parsing, APIs, static pages</td>
+</tr>
+</tbody></table>
+<p>* <em>JSDOM supports basic inline JS — not full browser rendering</em></p>
+<h2>Quick Start</h2>
+<h3>Default (Puppeteer) — no changes needed</h3>
+<pre><code class="language-js">import { createBrowser, createPage, scrapeProfile } from &#39;xactions/scrapers&#39;;
+
+const browser = await createBrowser();
+const page = await createPage(browser);
+const profile = await scrapeProfile(page, &#39;nichxbt&#39;);
+await browser.close();
+</code></pre>
+<p>All existing code works exactly as before. Puppeteer is the default.</p>
+<h3>Using Playwright</h3>
+<pre><code class="language-bash">npm install playwright
+npx playwright install chromium
+</code></pre>
+<pre><code class="language-js">import { createBrowser, createPage, scrapeProfile } from &#39;xactions/scrapers&#39;;
+
+const browser = await createBrowser({ adapter: &#39;playwright&#39; });
+const page = await createPage(browser);
+const profile = await scrapeProfile(page, &#39;nichxbt&#39;);
+// page is an adapter page — scraper functions that use page.evaluate() work automatically
+</code></pre>
+<p>Playwright benefits:</p>
+<ul>
+<li>Multi-browser: pass <code>{ adapter: &#39;playwright&#39;, browser: &#39;firefox&#39; }</code> or <code>&#39;webkit&#39;</code></li>
+<li>Auto-wait: Playwright waits for elements automatically</li>
+<li>Tracing: record full traces for debugging</li>
+<li>Better CI support: works reliably in Docker/GitHub Actions</li>
+</ul>
+<h3>Using Cheerio (HTTP-only)</h3>
+<pre><code class="language-bash">npm install cheerio
+</code></pre>
+<pre><code class="language-js">import { getAdapter } from &#39;xactions/scrapers&#39;;
+
+const adapter = await getAdapter(&#39;cheerio&#39;);
+const browser = await adapter.launch();
+const page = await adapter.newPage(browser);
+await adapter.goto(page, &#39;https://example.com&#39;);
+
+// Query elements in a Cheerio-like way
+const titles = await adapter.queryAll(page, &#39;h1&#39;, (els, $) =&gt;
+  els.map((i, el) =&gt; $(el).text()).get()
+);
+
+// Fetch JSON APIs directly
+const data = await adapter.fetchJSON(&#39;https://api.example.com/data&#39;);
+</code></pre>
+<blockquote>
+<p><strong>Note:</strong> Cheerio cannot execute JavaScript. Most x.com pages require JS rendering,<br>so Cheerio is best for pre-rendered content, RSS feeds, APIs, or pages you&#39;ve cached.</p>
+</blockquote>
+<h3>Using Crawlee (Production Crawling)</h3>
+<pre><code class="language-bash">npm install crawlee puppeteer  # or: npm install crawlee playwright
+</code></pre>
+<pre><code class="language-js">import { getAdapter } from &#39;xactions/scrapers&#39;;
+
+// Simple adapter usage (like other adapters)
+const adapter = await getAdapter(&#39;crawlee&#39;);
+const browser = await adapter.launch({ browserPlugin: &#39;puppeteer&#39; });
+const page = await adapter.newPage(browser);
+await adapter.goto(page, &#39;https://x.com/nichxbt&#39;);
+const html = await adapter.getContent(page);
+await adapter.closeBrowser(browser);
+
+// Crawlee-native mode: use the full crawling framework
+// with auto-retry, proxy rotation, request queuing
+const crawler = await adapter.createCrawler({
+  maxRequestsPerCrawl: 50,
+  maxConcurrency: 3,
+  proxyUrls: [&#39;http://proxy1:8080&#39;, &#39;http://proxy2:8080&#39;],
+  requestHandler: async ({ page, request }) =&gt; {
+    const title = await page.title();
+    console.log(`[${request.url}] ${title}`);
+  },
+});
+await crawler.run([&#39;https://x.com/user1&#39;, &#39;https://x.com/user2&#39;]);
+</code></pre>
+<p>Crawlee benefits:</p>
+<ul>
+<li>Auto-retry with exponential backoff on failures</li>
+<li>Proxy rotation across a pool of proxies</li>
+<li>Session management: rotate identities automatically</li>
+<li>Request queue: crawl thousands of URLs reliably</li>
+<li>Uses Puppeteer or Playwright under the hood</li>
+</ul>
+<h3>Using Got-Scraping + JSDOM (TLS Fingerprinting)</h3>
+<pre><code class="language-bash">npm install got-scraping jsdom
+</code></pre>
+<pre><code class="language-js">import { getAdapter } from &#39;xactions/scrapers&#39;;
+
+const adapter = await getAdapter(&#39;got-jsdom&#39;);
+const browser = await adapter.launch({
+  fingerprint: &#39;chrome&#39;,     // Mimic Chrome&#39;s TLS fingerprint
+  runScripts: false,          // Set to &#39;dangerously&#39; for JS execution
+});
+const page = await adapter.newPage(browser);
+await adapter.goto(page, &#39;https://example.com&#39;);
+
+// Full DOM API — querySelector, textContent, etc.
+const titles = await adapter.queryAll(page, &#39;h1&#39;,
+  (elements) =&gt; elements.map(el =&gt; el.textContent)
+);
+
+// Evaluate JS against the JSDOM window
+const count = await adapter.evaluate(page,
+  () =&gt; document.querySelectorAll(&#39;a&#39;).length
+);
+
+// Raw HTTP with browser TLS fingerprints (bypass bot detection)
+const data = await adapter.fetchJSON(&#39;https://api.example.com/data&#39;);
+
+// Switch fingerprint mid-session
+adapter.setFingerprint(browser, &#39;firefox&#39;);
+</code></pre>
+<p>Got-JSDOM benefits:</p>
+<ul>
+<li>Browser-like TLS/HTTP2 fingerprints without launching a browser</li>
+<li>Much lighter than Puppeteer/Playwright (~50MB vs ~300MB+)</li>
+<li>JSDOM provides full DOM API (querySelector, innerHTML, etc.)</li>
+<li>Optional inline JS execution</li>
+<li>Perfect for APIs that inspect TLS handshake signatures</li>
+</ul>
+<h3>Using Selenium</h3>
+<pre><code class="language-bash">npm install selenium-webdriver chromedriver
+# For Firefox: npm install selenium-webdriver geckodriver
+</code></pre>
+<pre><code class="language-js">import { getAdapter } from &#39;xactions/scrapers&#39;;
+
+const adapter = await getAdapter(&#39;selenium&#39;);
+const browser = await adapter.launch({
+  browser: &#39;chrome&#39;,          // &#39;chrome&#39;, &#39;firefox&#39;, &#39;edge&#39;, &#39;safari&#39;
+  headless: true,
+  // seleniumServer: &#39;http://grid:4444/wd/hub&#39;,  // Remote Selenium Grid
+});
+const page = await adapter.newPage(browser);
+await adapter.goto(page, &#39;https://x.com/nichxbt&#39;);
+
+// Works like other adapters
+const title = await adapter.evaluate(page, () =&gt; document.title);
+await adapter.screenshot(page, { path: &#39;screenshot.png&#39; });
+
+// Selenium-specific: open multiple tabs
+const tab2 = await adapter.newTab(browser);
+await adapter.goto(tab2, &#39;https://x.com/another_user&#39;);
+
+// Selenium-specific: async script execution
+const result = await adapter.executeAsyncScript(page, `
+  const callback = arguments[arguments.length - 1];
+  setTimeout(() =&gt; callback(document.title), 1000);
+`);
+
+await adapter.closeBrowser(browser);
+</code></pre>
+<p>Selenium benefits:</p>
+<ul>
+<li>Works with Selenium Grid for distributed scraping</li>
+<li>Cross-browser: Chrome, Firefox, Edge, Safari</li>
+<li>Enterprise-standard: familiar to QA/testing teams</li>
+<li>Cross-language ecosystem (same Grid, different clients)</li>
+</ul>
+<h2>Global Configuration</h2>
+<h3>Environment Variable</h3>
+<pre><code class="language-bash">export XACTIONS_SCRAPER_ADAPTER=playwright
+</code></pre>
+<h3>Programmatic</h3>
+<pre><code class="language-js">import { setDefaultAdapter } from &#39;xactions/scrapers&#39;;
+
+setDefaultAdapter(&#39;playwright&#39;);
+
+// Now all createBrowser() calls without explicit adapter use Playwright
+const browser = await createBrowser();
+</code></pre>
+<h2>Adapter API</h2>
+<p>All adapters implement the same interface:</p>
+<pre><code class="language-js">const adapter = await getAdapter(&#39;playwright&#39;);
+
+// Lifecycle
+const browser = await adapter.launch({ headless: true });
+const page = await adapter.newPage(browser);
+await adapter.goto(page, url, { waitUntil: &#39;networkidle&#39; });
+await adapter.closePage(page);
+await adapter.closeBrowser(browser);
+
+// Page operations
+await adapter.evaluate(page, () =&gt; document.title);      // Browser adapters only
+await adapter.queryAll(page, &#39;a&#39;, mapFn);                // All adapters
+await adapter.getContent(page);                           // Get HTML
+await adapter.setCookie(page, { name, value, domain });
+await adapter.scroll(page);
+await adapter.screenshot(page, { path: &#39;shot.png&#39; });
+await adapter.waitForSelector(page, &#39;[data-testid=&quot;tweet&quot;]&#39;);
+</code></pre>
+<h2>Checking Availability</h2>
+<pre><code class="language-js">import { checkAvailability, getAdapterInfo } from &#39;xactions/scrapers&#39;;
+
+// Quick check
+const status = await checkAvailability();
+// { puppeteer: { available: true }, playwright: { available: false, message: &#39;...&#39; }, ... }
+
+// Detailed info
+const info = await getAdapterInfo();
+// [{ name: &#39;puppeteer&#39;, description: &#39;...&#39;, supportsJavaScript: true, available: true }, ...]
+</code></pre>
+<h2>Auto-Fallback</h2>
+<pre><code class="language-js">import { getAvailableAdapter } from &#39;xactions/scrapers&#39;;
+
+// Tries: preferred → default → puppeteer → playwright → crawlee → got-jsdom → selenium → cheerio
+const adapter = await getAvailableAdapter(&#39;playwright&#39;);
+</code></pre>
+<h2>Custom Adapters</h2>
+<p>Create your own adapter by extending <code>BaseAdapter</code>:</p>
+<pre><code class="language-js">import { BaseAdapter, registerAdapter } from &#39;xactions/scrapers&#39;;
+
+class MyCustomAdapter extends BaseAdapter {
+  name = &#39;my-custom&#39;;
+  description = &#39;My custom scraping adapter&#39;;
+  supportsJavaScript = true;
+  requiresBrowser = false;
+
+  async checkDependencies() {
+    try {
+      await import(&#39;my-scraping-lib&#39;);
+      return { available: true };
+    } catch {
+      return { available: false, message: &#39;npm install my-scraping-lib&#39; };
+    }
+  }
+
+  async launch(options = {}) { /* ... */ }
+  async newPage(browser) { /* ... */ }
+  async goto(page, url, options) { /* ... */ }
+  async evaluate(page, fn, ...args) { /* ... */ }
+  async queryAll(page, selector, mapFn) { /* ... */ }
+  async closePage(page) { /* ... */ }
+  async closeBrowser(browser) { /* ... */ }
+  // ... implement all methods from BaseAdapter
+}
+
+registerAdapter(&#39;my-custom&#39;, MyCustomAdapter);
+</code></pre>
+<h2>Adapter Comparison</h2>
+<h3>Puppeteer (Default)</h3>
+<ul>
+<li>✅ Best anti-detection with stealth plugin</li>
+<li>✅ Mature ecosystem, most XActions code tested with it</li>
+<li>✅ Already installed as a dependency</li>
+<li>❌ Chromium only</li>
+<li>❌ Heavier than HTTP-based scraping</li>
+</ul>
+<h3>Playwright</h3>
+<ul>
+<li>✅ Multi-browser (Chromium, Firefox, WebKit)</li>
+<li>✅ Built-in auto-wait, less flaky tests</li>
+<li>✅ Trace recording for debugging</li>
+<li>✅ Resource blocking for faster scraping</li>
+<li>✅ Better CI/Docker support</li>
+<li>❌ No stealth plugin (though you can configure it manually)</li>
+<li>❌ Separate install: <code>npx playwright install</code></li>
+</ul>
+<h3>Crawlee (Apify)</h3>
+<ul>
+<li>✅ Best-in-class crawling framework</li>
+<li>✅ Auto-retry with backoff on errors</li>
+<li>✅ Proxy rotation built in</li>
+<li>✅ Session management (rotate identities)</li>
+<li>✅ Request queuing for large crawl jobs</li>
+<li>✅ Uses Puppeteer or Playwright under the hood</li>
+<li>❌ Heavier dependency</li>
+<li>❌ Learning curve if you want native Crawlee features</li>
+</ul>
+<h3>Got-Scraping + JSDOM</h3>
+<ul>
+<li>✅ Browser TLS fingerprints without a browser</li>
+<li>✅ Bypasses TLS-based bot detection</li>
+<li>✅ Full DOM API (querySelector, etc.) via JSDOM</li>
+<li>✅ Much lighter than browser-based adapters</li>
+<li>✅ Optional inline JS execution</li>
+<li>❌ JSDOM JS execution is limited (no canvas, webgl, etc.)</li>
+<li>❌ Cannot render complex SPAs</li>
+</ul>
+<h3>Selenium</h3>
+<ul>
+<li>✅ Enterprise standard, industry-proven</li>
+<li>✅ Selenium Grid for distributed/remote scraping</li>
+<li>✅ Cross-browser: Chrome, Firefox, Edge, Safari</li>
+<li>✅ Cross-language: same Grid works with Python/Java/C# clients</li>
+<li>❌ Slower than Puppeteer/Playwright</li>
+<li>❌ No stealth/anti-detection built in</li>
+<li>❌ More setup required (drivers)</li>
+</ul>
+<h3>Cheerio/HTTP</h3>
+<ul>
+<li>✅ Extremely fast (no browser)</li>
+<li>✅ Minimal memory usage</li>
+<li>✅ Works everywhere, no binary dependencies</li>
+<li>✅ Great for APIs, RSS, static HTML</li>
+<li>❌ No JavaScript execution</li>
+<li>❌ Cannot scrape JS-rendered pages (most of x.com)</li>
+</ul>
+<h2>Choosing an Adapter</h2>
+<pre><code>Do you need to scrape x.com (JavaScript-heavy)?
+├── Yes → Do you need proxy rotation or large-scale crawling?
+│   ├── Yes → Use Crawlee
+│   └── No → Do you need multi-browser support?
+│       ├── Yes → Use Playwright
+│       └── No → Use Puppeteer (default, best anti-detection)
+└── No → Does the target check TLS fingerprints?
+    ├── Yes → Use Got-Scraping + JSDOM
+    └── No → Is it a JSON API or static HTML?
+        ├── Yes → Use Cheerio (fastest)
+        └── No → Use Got-Scraping + JSDOM
+
+Using Selenium Grid or enterprise infra? → Use Selenium
+</code></pre>
+<h2>Aliases</h2>
+<table>
+<thead>
+<tr>
+<th>Alias</th>
+<th>Resolves To</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>pptr</code></td>
+<td>Puppeteer</td>
+</tr>
+<tr>
+<td><code>pw</code></td>
+<td>Playwright</td>
+</tr>
+<tr>
+<td><code>http</code></td>
+<td>Cheerio</td>
+</tr>
+<tr>
+<td><code>got</code></td>
+<td>Got-JSDOM</td>
+</tr>
+<tr>
+<td><code>jsdom</code></td>
+<td>Got-JSDOM</td>
+</tr>
+<tr>
+<td><code>apify</code></td>
+<td>Crawlee</td>
+</tr>
+</tbody></table>
+<h2>File Structure</h2>
+<pre><code>src/scrapers/
+├── adapters/
+│   ├── index.js          # Adapter registry &amp; factory
+│   ├── base.js           # Abstract base adapter interface
+│   ├── puppeteer.js      # Puppeteer + stealth
+│   ├── playwright.js     # Playwright (Chromium/Firefox/WebKit)
+│   ├── crawlee.js        # Crawlee (Apify) smart crawling
+│   ├── got-jsdom.js      # Got-Scraping + JSDOM
+│   ├── selenium.js       # Selenium WebDriver
+│   └── cheerio.js        # HTTP/Cheerio (lightweight)
+├── index.js              # Main scraper module (backward compatible)
+├── bookmarkExporter.js
+├── threadUnroller.js
+├── videoDownloader.js
+└── viralTweets.js
+</code></pre>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try Scraper Framework Adapters?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/followers-scraping">📋 Followers Scraping</a>
+        <a href="/docs/following-scraping">📋 Following Scraping</a>
+        <a href="/docs/hashtag-scraping">#️⃣ Hashtag Scraping</a>
+        <a href="/docs/likes-scraping">❤️ Likes Scraping</a>
+        <a href="/docs/link-scraper">🔗 Link Scraper</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

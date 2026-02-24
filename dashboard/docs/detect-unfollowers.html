@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detect Unfollowers — Free X/Twitter Follower Monitoring Tool | XActions</title>
+  <meta name="description" content="Track who unfollowed you over time on X (Twitter).">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, detect, unfollowers, follower monitoring, detect unfollowers twitter, twitter detect unfollowers">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Detect Unfollowers — XActions">
+  <meta property="og:description" content="Track who unfollowed you over time on X (Twitter).">
+  <meta property="og:url" content="https://xactions.app/docs/detect-unfollowers">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Detect Unfollowers — Free X/Twitter Tool">
+  <meta name="twitter:description" content="Track who unfollowed you over time on X (Twitter).">
+
+  <link rel="canonical" href="https://xactions.app/docs/detect-unfollowers">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Detect Unfollowers — Free X/Twitter Follower Monitoring Tool | XActions",
+    "description": "Track who unfollowed you over time on X (Twitter).",
+    "url": "https://xactions.app/docs/detect-unfollowers",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/detect-unfollowers",
+    "articleSection": "Follower Monitoring",
+    "keywords": "xactions, twitter automation, x automation, free, detect, unfollowers, follower monitoring, detect unfollowers twitter, twitter detect unfollowers"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Detect Unfollowers", "item": "https://xactions.app/docs/detect-unfollowers" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use Detect Unfollowers",
+    "description": "Track who unfollowed you over time on X (Twitter).",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions Detect Unfollowers script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>🔍 Detect Unfollowers</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › Detect Unfollowers
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Follower Monitoring</span>
+        <h1>🔍 Detect Unfollowers</h1>
+<p>Track who unfollowed you over time on X (Twitter).</p>
+<hr>
+<h2>📋 What It Does</h2>
+<p>This feature helps you monitor your follower changes by:</p>
+<ol>
+<li><strong>Taking snapshots</strong> - Saves your current followers list with timestamps</li>
+<li><strong>Comparing over time</strong> - Detects who unfollowed since your last check</li>
+<li><strong>Tracking new followers</strong> - Also shows who started following you</li>
+<li><strong>Persistent storage</strong> - Data survives browser restarts (localStorage/JSON files)</li>
+</ol>
+<p><strong>Use cases:</strong></p>
+<ul>
+<li>Find out who unfollowed you after a tweet</li>
+<li>Monitor follower health over time</li>
+<li>Identify fake followers who follow/unfollow</li>
+<li>Keep records of your audience changes</li>
+<li>Detect mass unfollows from bot accounts</li>
+</ul>
+<hr>
+<h2>🌐 Example 1: Browser Console (Quick)</h2>
+<p><strong>Best for:</strong> Quick checks from your browser, no setup needed</p>
+<p><strong>Steps:</strong></p>
+<ol>
+<li>Go to <code>x.com/YOUR_USERNAME/followers</code></li>
+<li>Open browser console (F12 → Console tab)</li>
+<li>Paste the script below and press Enter</li>
+<li>Run again later to detect changes!</li>
+</ol>
+<pre><code class="language-javascript">// ============================================
+// XActions - Detect Unfollowers (Browser Console)
+// Author: nich (@nichxbt)
+// Go to: x.com/YOUR_USERNAME/followers
+// Open console (F12), paste this
+// ============================================
+
+(async () =&gt; {
+  // Configuration
+  const STORAGE_KEY = &#39;xactions_followers_snapshot&#39;;
+  const SCROLL_DELAY = 1500;         // Time between scrolls (ms)
+  const MAX_SCROLL_RETRIES = 10;     // Stop if no new users found
+  
+  console.log(&#39;🔍 XActions - Detect Unfollowers&#39;);
+  console.log(&#39;=================================&#39;);
+  
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+  
+  // Verify we&#39;re on the followers page
+  const pathMatch = window.location.pathname.match(/^\/([^/]+)\/followers/);
+  if (!pathMatch) {
+    console.error(&#39;❌ Please navigate to your FOLLOWERS page first!&#39;);
+    console.log(&#39;👉 Go to: x.com/YOUR_USERNAME/followers&#39;);
+    return;
+  }
+  
+  const username = pathMatch[1];
+  console.log(`📍 Monitoring: @${username}`);
+  console.log(&#39;&#39;);
+  
+  // Step 1: Scrape current followers
+  console.log(&#39;📜 Step 1: Scanning your followers list...&#39;);
+  
+  const followers = new Map();
+  let scrollRetries = 0;
+  
+  while (scrollRetries &lt; MAX_SCROLL_RETRIES) {
+    const cells = document.querySelectorAll(&#39;[data-testid=&quot;UserCell&quot;]&#39;);
+    const prevSize = followers.size;
+    
+    cells.forEach(cell =&gt; {
+      try {
+        // Get username from link
+        const link = cell.querySelector(&#39;a[href^=&quot;/&quot;]&#39;);
+        const href = link?.getAttribute(&#39;href&#39;) || &#39;&#39;;
+        const handle = href.split(&#39;/&#39;)[1]?.toLowerCase();
+        
+        if (!handle || handle.includes(&#39;?&#39;) || handle.includes(&#39;/&#39;)) return;
+        
+        // Get display name
+        const nameEl = cell.querySelector(&#39;[dir=&quot;ltr&quot;] &gt; span&#39;);
+        const displayName = nameEl?.textContent?.trim() || handle;
+        
+        // Get bio
+        const bioEl = cell.querySelector(&#39;[data-testid=&quot;UserDescription&quot;]&#39;);
+        const bio = bioEl?.textContent?.trim() || null;
+        
+        if (!followers.has(handle)) {
+          followers.set(handle, {
+            username: handle,
+            displayName,
+            bio,
+            scrapedAt: new Date().toISOString()
+          });
+        }
+      } catch (e) {
+        // Skip malformed cells
+      }
+    });
+    
+    console.log(`   📊 Found ${followers.size} followers so far...`);
+    
+    // Check if we&#39;re stuck
+    if (followers.size === prevSize) {
+      scrollRetries++;
+    } else {
+      scrollRetries = 0;
+    }
+    
+    // Scroll to load more
+    window.scrollTo(0, document.body.scrollHeight);
+    await sleep(SCROLL_DELAY);
+  }
+  
+  const currentFollowers = Array.from(followers.values());
+  console.log(&#39;&#39;);
+  console.log(`✅ Scan complete! Found ${currentFollowers.length} followers`);
+  
+  // Step 2: Load previous snapshot
+  console.log(&#39;&#39;);
+  console.log(&#39;📂 Step 2: Checking for previous snapshot...&#39;);
+  
+  let previousData = null;
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      previousData = JSON.parse(stored);
+    }
+  } catch (e) {
+    console.warn(&#39;   ⚠️ Could not load previous data:&#39;, e.message);
+  }
+  
+  // Step 3: Compare and show results
+  if (previousData &amp;&amp; previousData.username === username) {
+    console.log(`   📸 Found snapshot from ${new Date(previousData.timestamp).toLocaleString()}`);
+    console.log(`   📊 Previous count: ${previousData.count}`);
+    console.log(`   📊 Current count: ${currentFollowers.length}`);
+    console.log(&#39;&#39;);
+    console.log(&#39;🔎 Step 3: Comparing snapshots...&#39;);
+    
+    // Create sets for comparison
+    const prevUsernames = new Set(previousData.followers.map(f =&gt; f.username.toLowerCase()));
+    const currUsernames = new Set(currentFollowers.map(f =&gt; f.username.toLowerCase()));
+    
+    // Find unfollowers (were in previous, not in current)
+    const unfollowers = previousData.followers.filter(
+      f =&gt; !currUsernames.has(f.username.toLowerCase())
+    );
+    
+    // Find new followers (in current, not in previous)
+    const newFollowers = currentFollowers.filter(
+      f =&gt; !prevUsernames.has(f.username.toLowerCase())
+    );
+    
+    // Display unfollowers
+    console.log(&#39;&#39;);
+    if (unfollowers.length &gt; 0) {
+      console.log(`🚨 ${unfollowers.length} PEOPLE UNFOLLOWED YOU:`);
+      console.log(&#39;─&#39;.repeat(40));
+      unfollowers.forEach((u, i) =&gt; {
+        console.log(`   ${i + 1}. @${u.username} (${u.displayName})`);
+        console.log(`      └─ https://x.com/${u.username}`);
+      });
+      
+      // Download unfollowers list
+      const unfollowersList = unfollowers.map(u =&gt; `@${u.username}`).join(&#39;\n&#39;);
+      const blob = new Blob([unfollowersList], { type: &#39;text/plain&#39; });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement(&#39;a&#39;);
+      a.href = url;
+      a.download = `unfollowers-${new Date().toISOString().split(&#39;T&#39;)[0]}.txt`;
+      a.click();
+      console.log(&#39;&#39;);
+      console.log(&#39;📥 Downloaded unfollowers list!&#39;);
+    } else {
+      console.log(&#39;✨ No one unfollowed you since last check!&#39;);
+    }
+    
+    // Display new followers
+    console.log(&#39;&#39;);
+    if (newFollowers.length &gt; 0) {
+      console.log(`🎉 ${newFollowers.length} NEW FOLLOWERS:`);
+      console.log(&#39;─&#39;.repeat(40));
+      newFollowers.slice(0, 20).forEach((u, i) =&gt; {
+        console.log(`   ${i + 1}. @${u.username} (${u.displayName})`);
+      });
+      if (newFollowers.length &gt; 20) {
+        console.log(`   ... and ${newFollowers.length - 20} more!`);
+      }
+    } else {
+      console.log(&#39;📭 No new followers since last check.&#39;);
+    }
+    
+    // Summary
+    console.log(&#39;&#39;);
+    console.log(&#39;📈 SUMMARY:&#39;);
+    console.log(&#39;─&#39;.repeat(40));
+    const netChange = newFollowers.length - unfollowers.length;
+    const changeIcon = netChange &gt; 0 ? &#39;📈&#39; : netChange &lt; 0 ? &#39;📉&#39; : &#39;➡️&#39;;
+    console.log(`   ${changeIcon} Net change: ${netChange &gt;= 0 ? &#39;+&#39; : &#39;&#39;}${netChange} followers`);
+    console.log(`   ➕ Gained: ${newFollowers.length}`);
+    console.log(`   ➖ Lost: ${unfollowers.length}`);
+    
+  } else {
+    console.log(&#39;   📸 No previous snapshot found (first run)&#39;);
+    console.log(&#39;   💡 Run this script again later to detect changes!&#39;);
+  }
+  
+  // Step 4: Save current snapshot
+  console.log(&#39;&#39;);
+  console.log(&#39;💾 Step 4: Saving current snapshot...&#39;);
+  
+  const snapshot = {
+    username,
+    followers: currentFollowers,
+    count: currentFollowers.length,
+    timestamp: new Date().toISOString()
+  };
+  
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
+  console.log(`   ✅ Saved ${currentFollowers.length} followers`);
+  console.log(`   📅 Timestamp: ${new Date().toLocaleString()}`);
+  
+  // Final message
+  console.log(&#39;&#39;);
+  console.log(&#39;═&#39;.repeat(50));
+  console.log(&#39;🔄 Run this script again anytime to detect changes!&#39;);
+  console.log(&#39;💡 Tip: Bookmark this script for easy access&#39;);
+  console.log(&#39;═&#39;.repeat(50));
+  
+  // Return data for further use
+  return {
+    username,
+    currentCount: currentFollowers.length,
+    unfollowers: previousData ? 
+      previousData.followers.filter(f =&gt; 
+        !new Set(currentFollowers.map(c =&gt; c.username)).has(f.username)
+      ) : [],
+    newFollowers: previousData ? 
+      currentFollowers.filter(f =&gt; 
+        !new Set(previousData.followers.map(p =&gt; p.username)).has(f.username)
+      ) : [],
+    snapshot
+  };
+})();
+</code></pre>
+<p><strong>What happens:</strong></p>
+<ol>
+<li>Script scrolls through your followers list</li>
+<li>Collects all follower usernames and display names</li>
+<li>Saves snapshot to localStorage with timestamp</li>
+<li>On subsequent runs, compares with previous snapshot</li>
+<li>Shows who unfollowed and who&#39;s new</li>
+<li>Downloads a text file of unfollowers</li>
+</ol>
+<p><strong>Output example:</strong></p>
+<pre><code>🔍 XActions - Detect Unfollowers
+=================================
+📍 Monitoring: @nichxbt
+
+📜 Step 1: Scanning your followers list...
+   📊 Found 156 followers so far...
+   📊 Found 312 followers so far...
+   📊 Found 489 followers so far...
+
+✅ Scan complete! Found 489 followers
+
+📂 Step 2: Checking for previous snapshot...
+   📸 Found snapshot from 12/28/2025, 3:45:00 PM
+   📊 Previous count: 495
+   📊 Current count: 489
+
+🔎 Step 3: Comparing snapshots...
+
+🚨 8 PEOPLE UNFOLLOWED YOU:
+────────────────────────────────────────
+   1. @spammer123 (Spam Bot)
+      └─ https://x.com/spammer123
+   2. @fakefollower (Fake Account)
+      └─ https://x.com/fakefollower
+   ...
+
+📥 Downloaded unfollowers list!
+
+🎉 2 NEW FOLLOWERS:
+────────────────────────────────────────
+   1. @genuine_user (Real Person)
+   2. @newbie2025 (New User)
+
+📈 SUMMARY:
+────────────────────────────────────────
+   📉 Net change: -6 followers
+   ➕ Gained: 2
+   ➖ Lost: 8
+
+💾 Step 4: Saving current snapshot...
+   ✅ Saved 489 followers
+   📅 Timestamp: 1/1/2026, 10:30:00 AM
+
+══════════════════════════════════════════════════
+🔄 Run this script again anytime to detect changes!
+💡 Tip: Bookmark this script for easy access
+══════════════════════════════════════════════════
+</code></pre>
+<hr>
+<h2>🖥️ Example 2: Node.js with Puppeteer (Production)</h2>
+<p><strong>Best for:</strong> Automated daily checks, large follower lists, historical tracking</p>
+<p><strong>Features:</strong></p>
+<ul>
+<li>Saves snapshots to JSON files with dates</li>
+<li>Keeps historical records</li>
+<li>Compare any two snapshots</li>
+<li>Export detailed reports</li>
+<li>Perfect for scheduling with cron</li>
+</ul>
+<h3>Setup</h3>
+<pre><code class="language-bash"># Create project folder
+mkdir unfollower-tracker &amp;&amp; cd unfollower-tracker
+
+# Initialize and install dependencies
+npm init -y
+npm install puppeteer
+</code></pre>
+<h3>Main Script: <code>detect-unfollowers.js</code></h3>
+<pre><code class="language-javascript">// ============================================
+// XActions - Detect Unfollowers (Node.js + Puppeteer)
+// Author: nich (@nichxbt)
+// 
+// Usage:
+//   node detect-unfollowers.js scrape &lt;username&gt;
+//   node detect-unfollowers.js compare &lt;file1&gt; &lt;file2&gt;
+//   node detect-unfollowers.js check &lt;username&gt;
+// ============================================
+
+const puppeteer = require(&#39;puppeteer&#39;);
+const fs = require(&#39;fs&#39;);
+const path = require(&#39;path&#39;);
+
+// Configuration
+const CONFIG = {
+  headless: true,                    // Set to false to see browser
+  scrollDelay: 2000,                 // Time between scrolls (ms)
+  maxRetries: 15,                    // Max scroll retries before stopping
+  snapshotDir: &#39;./snapshots&#39;,        // Where to save snapshot files
+  userDataDir: &#39;./browser-data&#39;,     // Persistent browser session
+  viewport: { width: 1280, height: 800 }
+};
+
+// Ensure directories exist
+if (!fs.existsSync(CONFIG.snapshotDir)) {
+  fs.mkdirSync(CONFIG.snapshotDir, { recursive: true });
+}
+if (!fs.existsSync(CONFIG.userDataDir)) {
+  fs.mkdirSync(CONFIG.userDataDir, { recursive: true });
+}
+
+/**
+ * Sleep helper
+ */
+const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+
+/**
+ * Get today&#39;s date string for filenames
+ */
+const getDateString = () =&gt; {
+  const now = new Date();
+  return now.toISOString().split(&#39;T&#39;)[0]; // YYYY-MM-DD
+};
+
+/**
+ * Launch browser with persistent session
+ */
+async function launchBrowser() {
+  return await puppeteer.launch({
+    headless: CONFIG.headless,
+    userDataDir: CONFIG.userDataDir,
+    args: [
+      &#39;--no-sandbox&#39;,
+      &#39;--disable-setuid-sandbox&#39;,
+      &#39;--disable-dev-shm-usage&#39;,
+      &#39;--disable-accelerated-2d-canvas&#39;,
+      &#39;--disable-gpu&#39;
+    ]
+  });
+}
+
+/**
+ * Check if user is logged in to X/Twitter
+ */
+async function checkLogin(page) {
+  await page.goto(&#39;https://x.com/home&#39;, { 
+    waitUntil: &#39;networkidle2&#39;,
+    timeout: 30000 
+  });
+  
+  // Check for login indicators
+  const isLoggedIn = await page.evaluate(() =&gt; {
+    // Look for compose tweet button or profile link
+    return !!document.querySelector(&#39;[data-testid=&quot;SideNav_NewTweet_Button&quot;]&#39;) ||
+           !!document.querySelector(&#39;[data-testid=&quot;AppTabBar_Profile_Link&quot;]&#39;);
+  });
+  
+  return isLoggedIn;
+}
+
+/**
+ * Prompt user to log in manually
+ */
+async function manualLogin(page) {
+  console.log(&#39;\n🔐 Login Required&#39;);
+  console.log(&#39;═&#39;.repeat(50));
+  console.log(&#39;1. A browser window will open&#39;);
+  console.log(&#39;2. Log in to your X/Twitter account&#39;);
+  console.log(&#39;3. Press Enter here when done&#39;);
+  console.log(&#39;═&#39;.repeat(50));
+  
+  // Open login page in visible browser
+  const browser = await puppeteer.launch({
+    headless: false,
+    userDataDir: CONFIG.userDataDir,
+    args: [&#39;--no-sandbox&#39;]
+  });
+  
+  const loginPage = await browser.newPage();
+  await loginPage.goto(&#39;https://x.com/login&#39;, { waitUntil: &#39;networkidle2&#39; });
+  
+  // Wait for user to press Enter
+  await new Promise(resolve =&gt; {
+    process.stdin.once(&#39;data&#39;, resolve);
+  });
+  
+  await browser.close();
+  console.log(&#39;✅ Login saved! You can now run in headless mode.\n&#39;);
+}
+
+/**
+ * Scrape followers list for a username
+ */
+async function scrapeFollowers(username) {
+  console.log(`\n🔍 Scraping followers for @${username}`);
+  console.log(&#39;─&#39;.repeat(50));
+  
+  const browser = await launchBrowser();
+  const page = await browser.newPage();
+  await page.setViewport(CONFIG.viewport);
+  
+  try {
+    // Check login status
+    const isLoggedIn = await checkLogin(page);
+    if (!isLoggedIn) {
+      await browser.close();
+      console.log(&#39;❌ Not logged in to X/Twitter&#39;);
+      await manualLogin(page);
+      // Retry with new browser instance
+      return await scrapeFollowers(username);
+    }
+    
+    console.log(&#39;✅ Logged in to X/Twitter&#39;);
+    
+    // Navigate to followers page
+    console.log(`📍 Navigating to @${username}/followers...`);
+    await page.goto(`https://x.com/${username}/followers`, {
+      waitUntil: &#39;networkidle2&#39;,
+      timeout: 30000
+    });
+    
+    // Wait for content to load
+    await sleep(3000);
+    
+    // Check if page exists
+    const pageError = await page.evaluate(() =&gt; {
+      return document.body.innerText.includes(&quot;This account doesn&#39;t exist&quot;) ||
+             document.body.innerText.includes(&quot;Account suspended&quot;);
+    });
+    
+    if (pageError) {
+      throw new Error(`Account @${username} not found or suspended`);
+    }
+    
+    // Scrape followers with scrolling
+    console.log(&#39;📜 Scanning followers list...&#39;);
+    
+    const followers = new Map();
+    let retries = 0;
+    let lastHeight = 0;
+    
+    while (retries &lt; CONFIG.maxRetries) {
+      // Extract visible followers
+      const newFollowers = await page.evaluate(() =&gt; {
+        const users = [];
+        const cells = document.querySelectorAll(&#39;[data-testid=&quot;UserCell&quot;]&#39;);
+        
+        cells.forEach(cell =&gt; {
+          try {
+            const link = cell.querySelector(&#39;a[href^=&quot;/&quot;]&#39;);
+            const href = link?.getAttribute(&#39;href&#39;) || &#39;&#39;;
+            const username = href.split(&#39;/&#39;)[1]?.toLowerCase();
+            
+            if (!username || username.includes(&#39;?&#39;) || username.includes(&#39;/&#39;)) return;
+            
+            const nameEl = cell.querySelector(&#39;[dir=&quot;ltr&quot;] &gt; span&#39;);
+            const displayName = nameEl?.textContent?.trim() || username;
+            
+            const bioEl = cell.querySelector(&#39;[data-testid=&quot;UserDescription&quot;]&#39;);
+            const bio = bioEl?.textContent?.trim() || null;
+            
+            const verified = !!cell.querySelector(&#39;svg[aria-label*=&quot;Verified&quot;]&#39;);
+            
+            users.push({ username, displayName, bio, verified });
+          } catch (e) {
+            // Skip malformed cells
+          }
+        });
+        
+        return users;
+      });
+      
+      // Add to map (deduplicates)
+      const prevSize = followers.size;
+      newFollowers.forEach(f =&gt; {
+        if (!followers.has(f.username)) {
+          followers.set(f.username, f);
+        }
+      });
+      
+      console.log(`   📊 Found ${followers.size} followers...`);
+      
+      // Check if stuck
+      if (followers.size === prevSize) {
+        retries++;
+      } else {
+        retries = 0;
+      }
+      
+      // Scroll down
+      const currentHeight = await page.evaluate(() =&gt; {
+        window.scrollTo(0, document.body.scrollHeight);
+        return document.body.scrollHeight;
+      });
+      
+      if (currentHeight === lastHeight) {
+        retries++;
+      }
+      lastHeight = currentHeight;
+      
+      await sleep(CONFIG.scrollDelay);
+    }
+    
+    const followersList = Array.from(followers.values());
+    console.log(`\n✅ Scraping complete! Found ${followersList.length} followers`);
+    
+    // Create snapshot
+    const snapshot = {
+      username,
+      followers: followersList,
+      count: followersList.length,
+      timestamp: new Date().toISOString(),
+      scrapedAt: getDateString()
+    };
+    
+    // Save to file
+    const filename = `${username}-${getDateString()}.json`;
+    const filepath = path.join(CONFIG.snapshotDir, filename);
+    fs.writeFileSync(filepath, JSON.stringify(snapshot, null, 2));
+    
+    console.log(`💾 Saved snapshot: ${filepath}`);
+    
+    return snapshot;
+    
+  } finally {
+    await browser.close();
+  }
+}
+
+/**
+ * Compare two snapshot files and show differences
+ */
+function compareSnapshots(file1, file2) {
+  console.log(&#39;\n🔎 Comparing Snapshots&#39;);
+  console.log(&#39;═&#39;.repeat(50));
+  
+  // Load snapshots
+  let snapshot1, snapshot2;
+  
+  try {
+    const path1 = file1.includes(&#39;/&#39;) ? file1 : path.join(CONFIG.snapshotDir, file1);
+    const path2 = file2.includes(&#39;/&#39;) ? file2 : path.join(CONFIG.snapshotDir, file2);
+    
+    snapshot1 = JSON.parse(fs.readFileSync(path1, &#39;utf-8&#39;));
+    snapshot2 = JSON.parse(fs.readFileSync(path2, &#39;utf-8&#39;));
+  } catch (e) {
+    console.error(`❌ Error loading snapshots: ${e.message}`);
+    return null;
+  }
+  
+  console.log(`📅 Older: ${snapshot1.scrapedAt} (${snapshot1.count} followers)`);
+  console.log(`📅 Newer: ${snapshot2.scrapedAt} (${snapshot2.count} followers)`);
+  console.log(&#39;&#39;);
+  
+  // Create username sets
+  const users1 = new Set(snapshot1.followers.map(f =&gt; f.username));
+  const users2 = new Set(snapshot2.followers.map(f =&gt; f.username));
+  
+  // Find differences
+  const unfollowers = snapshot1.followers.filter(f =&gt; !users2.has(f.username));
+  const newFollowers = snapshot2.followers.filter(f =&gt; !users1.has(f.username));
+  
+  // Display unfollowers
+  if (unfollowers.length &gt; 0) {
+    console.log(`🚨 ${unfollowers.length} UNFOLLOWED YOU:`);
+    console.log(&#39;─&#39;.repeat(40));
+    unfollowers.forEach((u, i) =&gt; {
+      const verified = u.verified ? &#39; ✓&#39; : &#39;&#39;;
+      console.log(`   ${i + 1}. @${u.username}${verified} — ${u.displayName}`);
+    });
+    console.log(&#39;&#39;);
+  } else {
+    console.log(&#39;✨ No one unfollowed!\n&#39;);
+  }
+  
+  // Display new followers
+  if (newFollowers.length &gt; 0) {
+    console.log(`🎉 ${newFollowers.length} NEW FOLLOWERS:`);
+    console.log(&#39;─&#39;.repeat(40));
+    newFollowers.forEach((u, i) =&gt; {
+      const verified = u.verified ? &#39; ✓&#39; : &#39;&#39;;
+      console.log(`   ${i + 1}. @${u.username}${verified} — ${u.displayName}`);
+    });
+    console.log(&#39;&#39;);
+  } else {
+    console.log(&#39;📭 No new followers.\n&#39;);
+  }
+  
+  // Summary
+  console.log(&#39;📈 SUMMARY:&#39;);
+  console.log(&#39;─&#39;.repeat(40));
+  const netChange = newFollowers.length - unfollowers.length;
+  const changeIcon = netChange &gt; 0 ? &#39;📈&#39; : netChange &lt; 0 ? &#39;📉&#39; : &#39;➡️&#39;;
+  console.log(`   ${changeIcon} Net change: ${netChange &gt;= 0 ? &#39;+&#39; : &#39;&#39;}${netChange}`);
+  console.log(`   ➕ Gained: ${newFollowers.length}`);
+  console.log(`   ➖ Lost: ${unfollowers.length}`);
+  console.log(`   📊 Previous: ${snapshot1.count} → Current: ${snapshot2.count}`);
+  
+  // Save report
+  const report = {
+    comparedAt: new Date().toISOString(),
+    older: { file: file1, date: snapshot1.scrapedAt, count: snapshot1.count },
+    newer: { file: file2, date: snapshot2.scrapedAt, count: snapshot2.count },
+    unfollowers,
+    newFollowers,
+    netChange
+  };
+  
+  const reportFile = path.join(CONFIG.snapshotDir, `report-${getDateString()}.json`);
+  fs.writeFileSync(reportFile, JSON.stringify(report, null, 2));
+  console.log(`\n💾 Report saved: ${reportFile}`);
+  
+  return report;
+}
+
+/**
+ * Quick check - scrape and compare with most recent snapshot
+ */
+async function quickCheck(username) {
+  console.log(`\n🚀 Quick Check for @${username}`);
+  console.log(&#39;═&#39;.repeat(50));
+  
+  // Find most recent snapshot for this user
+  const files = fs.readdirSync(CONFIG.snapshotDir)
+    .filter(f =&gt; f.startsWith(`${username}-`) &amp;&amp; f.endsWith(&#39;.json&#39;))
+    .sort()
+    .reverse();
+  
+  const previousFile = files[0];
+  
+  if (previousFile) {
+    console.log(`📂 Found previous snapshot: ${previousFile}`);
+  } else {
+    console.log(&#39;📸 First time checking this account&#39;);
+  }
+  
+  // Scrape current followers
+  const currentSnapshot = await scrapeFollowers(username);
+  
+  // Compare if we have a previous snapshot
+  if (previousFile &amp;&amp; previousFile !== `${username}-${getDateString()}.json`) {
+    console.log(&#39;\n&#39;);
+    compareSnapshots(previousFile, `${username}-${getDateString()}.json`);
+  } else if (previousFile) {
+    console.log(&#39;\n⚠️  Already scraped today. Compare with an older snapshot:&#39;);
+    files.slice(0, 5).forEach(f =&gt; console.log(`   • ${f}`));
+  }
+  
+  return currentSnapshot;
+}
+
+/**
+ * List all snapshots for a user
+ */
+function listSnapshots(username) {
+  console.log(`\n📁 Snapshots for @${username || &#39;all users&#39;}`);
+  console.log(&#39;═&#39;.repeat(50));
+  
+  const files = fs.readdirSync(CONFIG.snapshotDir)
+    .filter(f =&gt; {
+      if (!f.endsWith(&#39;.json&#39;)) return false;
+      if (username) return f.startsWith(`${username}-`);
+      return !f.startsWith(&#39;report-&#39;);
+    })
+    .sort()
+    .reverse();
+  
+  if (files.length === 0) {
+    console.log(&#39;   No snapshots found.&#39;);
+    return;
+  }
+  
+  files.forEach(f =&gt; {
+    const data = JSON.parse(fs.readFileSync(path.join(CONFIG.snapshotDir, f), &#39;utf-8&#39;));
+    console.log(`   📸 ${f}`);
+    console.log(`      └─ ${data.count} followers @ ${data.timestamp}`);
+  });
+}
+
+// ============================================
+// CLI Handler
+// ============================================
+
+const args = process.argv.slice(2);
+const command = args[0];
+
+async function main() {
+  console.log(&#39;\n🔍 XActions - Unfollower Detector&#39;);
+  console.log(&#39;═&#39;.repeat(50));
+  
+  switch (command) {
+    case &#39;scrape&#39;:
+      if (!args[1]) {
+        console.log(&#39;Usage: node detect-unfollowers.js scrape &lt;username&gt;&#39;);
+        process.exit(1);
+      }
+      await scrapeFollowers(args[1].replace(&#39;@&#39;, &#39;&#39;));
+      break;
+      
+    case &#39;compare&#39;:
+      if (!args[1] || !args[2]) {
+        console.log(&#39;Usage: node detect-unfollowers.js compare &lt;older.json&gt; &lt;newer.json&gt;&#39;);
+        console.log(&#39;\nAvailable snapshots:&#39;);
+        listSnapshots();
+        process.exit(1);
+      }
+      compareSnapshots(args[1], args[2]);
+      break;
+      
+    case &#39;check&#39;:
+      if (!args[1]) {
+        console.log(&#39;Usage: node detect-unfollowers.js check &lt;username&gt;&#39;);
+        process.exit(1);
+      }
+      await quickCheck(args[1].replace(&#39;@&#39;, &#39;&#39;));
+      break;
+      
+    case &#39;list&#39;:
+      listSnapshots(args[1]?.replace(&#39;@&#39;, &#39;&#39;));
+      break;
+      
+    default:
+      console.log(&#39;Commands:&#39;);
+      console.log(&#39;  scrape &lt;username&gt;           Scrape and save followers&#39;);
+      console.log(&#39;  compare &lt;file1&gt; &lt;file2&gt;     Compare two snapshots&#39;);
+      console.log(&#39;  check &lt;username&gt;            Scrape and compare with latest&#39;);
+      console.log(&#39;  list [username]             List saved snapshots&#39;);
+      console.log(&#39;&#39;);
+      console.log(&#39;Examples:&#39;);
+      console.log(&#39;  node detect-unfollowers.js scrape nichxbt&#39;);
+      console.log(&#39;  node detect-unfollowers.js check nichxbt&#39;);
+      console.log(&#39;  node detect-unfollowers.js compare nichxbt-2025-12-25.json nichxbt-2026-01-01.json&#39;);
+  }
+}
+
+main().catch(console.error);
+</code></pre>
+<h3>Usage Examples</h3>
+<pre><code class="language-bash"># First run - scrape and save your followers
+node detect-unfollowers.js scrape nichxbt
+
+# Output:
+# 🔍 Scraping followers for @nichxbt
+# ──────────────────────────────────────────────────
+# ✅ Logged in to X/Twitter
+# 📍 Navigating to @nichxbt/followers...
+# 📜 Scanning followers list...
+#    📊 Found 156 followers...
+#    📊 Found 312 followers...
+#    📊 Found 489 followers...
+# 
+# ✅ Scraping complete! Found 489 followers
+# 💾 Saved snapshot: ./snapshots/nichxbt-2026-01-01.json
+</code></pre>
+<pre><code class="language-bash"># Later - quick check (scrapes and compares automatically)
+node detect-unfollowers.js check nichxbt
+
+# Output includes unfollowers and new followers!
+</code></pre>
+<pre><code class="language-bash"># Compare two specific snapshots
+node detect-unfollowers.js compare nichxbt-2025-12-25.json nichxbt-2026-01-01.json
+</code></pre>
+<pre><code class="language-bash"># List all saved snapshots
+node detect-unfollowers.js list nichxbt
+</code></pre>
+<hr>
+<h2>⏰ Scheduling Tips</h2>
+<p>Run the script automatically to track changes over time.</p>
+<h3>Linux/Mac (Cron)</h3>
+<pre><code class="language-bash"># Edit crontab
+crontab -e
+
+# Add daily check at 9am
+0 9 * * * cd /path/to/unfollower-tracker &amp;&amp; node detect-unfollowers.js check nichxbt &gt;&gt; /var/log/unfollowers.log 2&gt;&amp;1
+
+# Add weekly check every Monday at 9am
+0 9 * * 1 cd /path/to/unfollower-tracker &amp;&amp; node detect-unfollowers.js check nichxbt &gt;&gt; /var/log/unfollowers.log 2&gt;&amp;1
+</code></pre>
+<h3>Windows (Task Scheduler)</h3>
+<ol>
+<li>Open Task Scheduler</li>
+<li>Create Basic Task → &quot;Unfollower Check&quot;</li>
+<li>Trigger: Daily or Weekly</li>
+<li>Action: Start a program<ul>
+<li>Program: <code>node</code></li>
+<li>Arguments: <code>detect-unfollowers.js check nichxbt</code></li>
+<li>Start in: <code>C:\path\to\unfollower-tracker</code></li>
+</ul>
+</li>
+</ol>
+<h3>Using PM2 (Node.js Process Manager)</h3>
+<pre><code class="language-bash"># Install PM2
+npm install -g pm2
+
+# Create ecosystem file
+cat &gt; ecosystem.config.js &lt;&lt; &#39;EOF&#39;
+module.exports = {
+  apps: [{
+    name: &#39;unfollower-check&#39;,
+    script: &#39;detect-unfollowers.js&#39;,
+    args: &#39;check nichxbt&#39;,
+    cron_restart: &#39;0 9 * * *&#39;,  // Daily at 9am
+    autorestart: false
+  }]
+};
+EOF
+
+# Start the scheduled job
+pm2 start ecosystem.config.js
+pm2 save
+</code></pre>
+<hr>
+<h2>🌐 Website Alternative</h2>
+<p>Don&#39;t want to run scripts? Use <strong><a href="https://xactions.app">xactions.app</a></strong> instead!</p>
+<h3>Features:</h3>
+<ul>
+<li>✅ No coding required</li>
+<li>✅ Automatic daily monitoring</li>
+<li>✅ Email/push notifications for unfollowers</li>
+<li>✅ Historical charts and analytics</li>
+<li>✅ Works on mobile and desktop</li>
+<li>✅ Secure OAuth login (no password needed)</li>
+</ul>
+<h3>How It Works:</h3>
+<ol>
+<li>Visit <a href="https://xactions.app">xactions.app</a></li>
+<li>Connect your X/Twitter account</li>
+<li>Enable &quot;Unfollower Detection&quot;</li>
+<li>Get notified whenever someone unfollows!</li>
+</ol>
+<hr>
+<h2>💡 Pro Tips</h2>
+<ol>
+<li><strong>Run consistently</strong> - Same time daily/weekly for accurate tracking</li>
+<li><strong>Keep snapshots</strong> - Don&#39;t delete old files, they&#39;re useful for long-term analysis</li>
+<li><strong>Check after tweets</strong> - Controversial posts often trigger unfollows</li>
+<li><strong>Look for patterns</strong> - Mass unfollows might indicate bot cleanups by Twitter</li>
+<li><strong>Export to spreadsheet</strong> - JSON files can be imported into Excel/Google Sheets</li>
+</ol>
+<hr>
+<h2>⚠️ Rate Limits &amp; Safety</h2>
+<ul>
+<li><strong>Browser console:</strong> Safe for up to ~2,000 followers per session</li>
+<li><strong>Puppeteer:</strong> Can handle 10,000+ with proper delays</li>
+<li><strong>Don&#39;t run too often:</strong> Once daily is plenty, hourly is excessive</li>
+<li><strong>Account safety:</strong> These scripts only READ data, never write/post</li>
+</ul>
+<hr>
+<h2>📚 Related Features</h2>
+<ul>
+<li><a href="followers-scraping.md">Followers Scraping</a> - Export your complete followers list</li>
+<li><a href="following-scraping.md">Following Scraping</a> - Export who you follow</li>
+<li><a href="unfollow-non-followers.md">Unfollow Non-Followers</a> - Clean up your following list</li>
+</ul>
+<hr>
+<p><strong>Author:</strong> nich (<a href="https://x.com/nichxbt">@nichxbt</a>)<br><strong>Repository:</strong> <a href="https://github.com/nirholas/XActions">github.com/nirholas/XActions</a></p>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try Detect Unfollowers?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/audit-followers">📊 Audit Followers</a>
+        <a href="/docs/new-follower-alerts">🔔 New Follower Alerts</a>
+        <a href="/docs/remove-followers">🚫 Remove Followers</a>
+        <a href="/docs/smart-unfollow">🧠 Smart Unfollow</a>
+        <a href="/docs/video-downloader">🎬 Video Downloader</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

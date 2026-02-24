@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Unfollow — Free X/Twitter Unfollow Tools Tool | XActions</title>
+  <meta name="description" content="Intelligently unfollow users who haven't followed you back after a configurable grace period.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, smart, unfollow, unfollow tools, smart unfollow twitter, twitter smart unfollow">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Smart Unfollow — XActions">
+  <meta property="og:description" content="Intelligently unfollow users who haven't followed you back after a configurable grace period.">
+  <meta property="og:url" content="https://xactions.app/docs/smart-unfollow">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Smart Unfollow — Free X/Twitter Tool">
+  <meta name="twitter:description" content="Intelligently unfollow users who haven't followed you back after a configurable grace period.">
+
+  <link rel="canonical" href="https://xactions.app/docs/smart-unfollow">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Smart Unfollow — Free X/Twitter Unfollow Tools Tool | XActions",
+    "description": "Intelligently unfollow users who haven't followed you back after a configurable grace period.",
+    "url": "https://xactions.app/docs/smart-unfollow",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/smart-unfollow",
+    "articleSection": "Unfollow Tools",
+    "keywords": "xactions, twitter automation, x automation, free, smart, unfollow, unfollow tools, smart unfollow twitter, twitter smart unfollow"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Smart Unfollow", "item": "https://xactions.app/docs/smart-unfollow" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use Smart Unfollow",
+    "description": "Intelligently unfollow users who haven't followed you back after a configurable grace period.",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions Smart Unfollow script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>🧠 Smart Unfollow</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › Smart Unfollow
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Unfollow Tools</span>
+        <h1>🧠 Smart Unfollow</h1>
+<blockquote>
+<p>Intelligently unfollow users who haven&#39;t followed you back after a configurable grace period.</p>
+</blockquote>
+<p><strong>Author:</strong> nich (<a href="https://x.com/nichxbt">@nichxbt</a>)</p>
+<hr>
+<h2>📖 What It Does</h2>
+<p>Smart Unfollow is an intelligent unfollowing system that:</p>
+<ol>
+<li><strong>Tracks when you follow someone</strong> - Maintains a log of all follow actions with timestamps</li>
+<li><strong>Respects a grace period</strong> - Gives users X days to follow you back before considering them for unfollow</li>
+<li><strong>Identifies non-reciprocal follows</strong> - Finds users who haven&#39;t followed back after the grace period expires</li>
+<li><strong>Safely unfollows</strong> - Removes these users with rate limiting and detailed logging</li>
+<li><strong>Supports dry-run mode</strong> - Preview what would happen without making actual changes</li>
+</ol>
+<p>This approach is smarter than a simple &quot;unfollow non-followers&quot; script because it accounts for the fact that people need time to see your follow and decide to follow back.</p>
+<hr>
+<h2>⚙️ Example 1: Configuration Approach</h2>
+<p>The simplest way to use Smart Unfollow is through the xactions configuration:</p>
+<pre><code class="language-javascript">const { xactions } = require(&#39;xactions&#39;);
+
+const client = new xactions({
+  username: process.env.X_USERNAME,
+  password: process.env.X_PASSWORD,
+});
+
+await client.smartUnfollow({
+  gracePeriodDays: 3,        // Wait 3 days before unfollowing
+  maxUnfollows: 50,          // Limit per session
+  dryRun: false,             // Set to true to preview
+  excludeVerified: true,     // Don&#39;t unfollow verified accounts
+  excludeList: [&#39;nichxbt&#39;],  // Never unfollow these users
+});
+</code></pre>
+<h3>Configuration Options</h3>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>gracePeriodDays</code></td>
+<td>number</td>
+<td>3</td>
+<td>Days to wait before unfollowing</td>
+</tr>
+<tr>
+<td><code>maxUnfollows</code></td>
+<td>number</td>
+<td>100</td>
+<td>Maximum unfollows per session</td>
+</tr>
+<tr>
+<td><code>dryRun</code></td>
+<td>boolean</td>
+<td>false</td>
+<td>Preview mode without actual unfollows</td>
+</tr>
+<tr>
+<td><code>excludeVerified</code></td>
+<td>boolean</td>
+<td>true</td>
+<td>Skip verified accounts</td>
+</tr>
+<tr>
+<td><code>excludeList</code></td>
+<td>string[]</td>
+<td>[]</td>
+<td>Usernames to never unfollow</td>
+</tr>
+<tr>
+<td><code>logFile</code></td>
+<td>string</td>
+<td><code>./follow_log.json</code></td>
+<td>Path to the follow tracking log</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>🚀 Example 2: Node.js with Puppeteer</h2>
+<p>Here&#39;s a complete, production-ready implementation:</p>
+<h3>Project Structure</h3>
+<pre><code>smart-unfollow/
+├── smart-unfollow.js      # Main script
+├── follow_log.json        # Auto-generated follow tracking
+├── unfollow_log.json      # Auto-generated unfollow history
+├── .env                   # Your credentials
+└── package.json
+</code></pre>
+<h3>package.json</h3>
+<pre><code class="language-json">{
+  &quot;name&quot;: &quot;smart-unfollow&quot;,
+  &quot;version&quot;: &quot;1.0.0&quot;,
+  &quot;description&quot;: &quot;Intelligently unfollow non-followers after grace period&quot;,
+  &quot;main&quot;: &quot;smart-unfollow.js&quot;,
+  &quot;scripts&quot;: {
+    &quot;start&quot;: &quot;node smart-unfollow.js&quot;,
+    &quot;dry-run&quot;: &quot;node smart-unfollow.js --dry-run&quot;,
+    &quot;log-follow&quot;: &quot;node smart-unfollow.js --log-follow&quot;
+  },
+  &quot;dependencies&quot;: {
+    &quot;puppeteer&quot;: &quot;^21.0.0&quot;,
+    &quot;dotenv&quot;: &quot;^16.0.0&quot;
+  }
+}
+</code></pre>
+<h3>.env</h3>
+<pre><code class="language-env">X_USERNAME=your_username
+X_PASSWORD=your_password
+X_EMAIL=your_email@example.com
+GRACE_PERIOD_DAYS=3
+MAX_UNFOLLOWS_PER_SESSION=50
+</code></pre>
+<h3>smart-unfollow.js</h3>
+<pre><code class="language-javascript">/**
+ * Smart Unfollow - Intelligent Non-Follower Removal
+ * 
+ * Unfollows users who haven&#39;t followed back after a configurable grace period.
+ * Maintains persistent logs to track follow dates and unfollow history.
+ * 
+ * @author nich (@nichxbt)
+ * @license MIT
+ */
+
+require(&#39;dotenv&#39;).config();
+const puppeteer = require(&#39;puppeteer&#39;);
+const fs = require(&#39;fs&#39;);
+const path = require(&#39;path&#39;);
+
+// ============================================================================
+// CONFIGURATION
+// ============================================================================
+
+const CONFIG = {
+  // Credentials
+  username: process.env.X_USERNAME,
+  password: process.env.X_PASSWORD,
+  email: process.env.X_EMAIL,
+
+  // Grace period settings
+  gracePeriodDays: parseInt(process.env.GRACE_PERIOD_DAYS) || 3,
+  maxUnfollowsPerSession: parseInt(process.env.MAX_UNFOLLOWS_PER_SESSION) || 50,
+
+  // File paths
+  followLogPath: path.join(__dirname, &#39;follow_log.json&#39;),
+  unfollowLogPath: path.join(__dirname, &#39;unfollow_log.json&#39;),
+
+  // Rate limiting (milliseconds)
+  delayBetweenActions: 3000,
+  delayBetweenScrolls: 2000,
+  pageLoadDelay: 5000,
+
+  // Browser settings
+  headless: false,
+  slowMo: 50,
+
+  // Safety settings
+  excludeVerified: true,
+  excludeUsernames: [&#39;nichxbt&#39;, &#39;elonmusk&#39;], // Never unfollow these
+
+  // Selectors (may need updates if X changes their UI)
+  selectors: {
+    usernameInput: &#39;input[autocomplete=&quot;username&quot;]&#39;,
+    passwordInput: &#39;input[name=&quot;password&quot;]&#39;,
+    nextButton: &#39;[role=&quot;button&quot;]:has-text(&quot;Next&quot;)&#39;,
+    loginButton: &#39;[data-testid=&quot;LoginForm_Login_Button&quot;]&#39;,
+    followingLink: &#39;a[href$=&quot;/following&quot;]&#39;,
+    userCell: &#39;[data-testid=&quot;UserCell&quot;]&#39;,
+    unfollowButton: &#39;[data-testid=&quot;placementTracking&quot;] [role=&quot;button&quot;]&#39;,
+    confirmUnfollow: &#39;[data-testid=&quot;confirmationSheetConfirm&quot;]&#39;,
+    verifiedBadge: &#39;svg[aria-label=&quot;Verified account&quot;]&#39;,
+  },
+};
+
+// ============================================================================
+// LOGGING UTILITIES
+// ============================================================================
+
+class Logger {
+  static colors = {
+    reset: &#39;\x1b[0m&#39;,
+    bright: &#39;\x1b[1m&#39;,
+    red: &#39;\x1b[31m&#39;,
+    green: &#39;\x1b[32m&#39;,
+    yellow: &#39;\x1b[33m&#39;,
+    blue: &#39;\x1b[34m&#39;,
+    magenta: &#39;\x1b[35m&#39;,
+    cyan: &#39;\x1b[36m&#39;,
+  };
+
+  static timestamp() {
+    return new Date().toISOString();
+  }
+
+  static log(message, color = &#39;reset&#39;) {
+    console.log(`${this.colors[color]}[${this.timestamp()}] ${message}${this.colors.reset}`);
+  }
+
+  static info(message) { this.log(`ℹ️  ${message}`, &#39;blue&#39;); }
+  static success(message) { this.log(`✅ ${message}`, &#39;green&#39;); }
+  static warning(message) { this.log(`⚠️  ${message}`, &#39;yellow&#39;); }
+  static error(message) { this.log(`❌ ${message}`, &#39;red&#39;); }
+  static action(message) { this.log(`🔄 ${message}`, &#39;cyan&#39;); }
+  static dry(message) { this.log(`🧪 [DRY-RUN] ${message}`, &#39;magenta&#39;); }
+}
+
+// ============================================================================
+// FOLLOW LOG MANAGEMENT
+// ============================================================================
+
+class FollowLog {
+  constructor(filePath) {
+    this.filePath = filePath;
+    this.data = this.load();
+  }
+
+  load() {
+    try {
+      if (fs.existsSync(this.filePath)) {
+        const content = fs.readFileSync(this.filePath, &#39;utf8&#39;);
+        return JSON.parse(content);
+      }
+    } catch (error) {
+      Logger.warning(`Could not load follow log: ${error.message}`);
+    }
+    return { follows: {}, metadata: { created: new Date().toISOString() } };
+  }
+
+  save() {
+    try {
+      this.data.metadata.lastUpdated = new Date().toISOString();
+      fs.writeFileSync(this.filePath, JSON.stringify(this.data, null, 2));
+      Logger.success(`Follow log saved with ${Object.keys(this.data.follows).length} entries`);
+    } catch (error) {
+      Logger.error(`Could not save follow log: ${error.message}`);
+    }
+  }
+
+  addFollow(username) {
+    const normalizedUsername = username.toLowerCase().replace(&#39;@&#39;, &#39;&#39;);
+    if (!this.data.follows[normalizedUsername]) {
+      this.data.follows[normalizedUsername] = {
+        username: normalizedUsername,
+        followedAt: new Date().toISOString(),
+        status: &#39;following&#39;,
+      };
+      Logger.success(`Logged follow: @${normalizedUsername}`);
+      return true;
+    }
+    Logger.warning(`@${normalizedUsername} already in log`);
+    return false;
+  }
+
+  markUnfollowed(username, reason = &#39;manual&#39;) {
+    const normalizedUsername = username.toLowerCase().replace(&#39;@&#39;, &#39;&#39;);
+    if (this.data.follows[normalizedUsername]) {
+      this.data.follows[normalizedUsername].status = &#39;unfollowed&#39;;
+      this.data.follows[normalizedUsername].unfollowedAt = new Date().toISOString();
+      this.data.follows[normalizedUsername].unfollowReason = reason;
+    }
+  }
+
+  getExpiredNonFollowers(gracePeriodDays) {
+    const now = new Date();
+    const expired = [];
+
+    for (const [username, entry] of Object.entries(this.data.follows)) {
+      if (entry.status !== &#39;following&#39;) continue;
+
+      const followedAt = new Date(entry.followedAt);
+      const daysSinceFollow = (now - followedAt) / (1000 * 60 * 60 * 24);
+
+      if (daysSinceFollow &gt;= gracePeriodDays) {
+        expired.push({
+          username,
+          followedAt: entry.followedAt,
+          daysSinceFollow: Math.floor(daysSinceFollow),
+        });
+      }
+    }
+
+    return expired.sort((a, b) =&gt; b.daysSinceFollow - a.daysSinceFollow);
+  }
+
+  getStats() {
+    const follows = Object.values(this.data.follows);
+    return {
+      total: follows.length,
+      following: follows.filter(f =&gt; f.status === &#39;following&#39;).length,
+      unfollowed: follows.filter(f =&gt; f.status === &#39;unfollowed&#39;).length,
+    };
+  }
+}
+
+// ============================================================================
+// UNFOLLOW LOG MANAGEMENT
+// ============================================================================
+
+class UnfollowLog {
+  constructor(filePath) {
+    this.filePath = filePath;
+    this.data = this.load();
+  }
+
+  load() {
+    try {
+      if (fs.existsSync(this.filePath)) {
+        return JSON.parse(fs.readFileSync(this.filePath, &#39;utf8&#39;));
+      }
+    } catch (error) {
+      Logger.warning(`Could not load unfollow log: ${error.message}`);
+    }
+    return { sessions: [], totalUnfollowed: 0 };
+  }
+
+  save() {
+    try {
+      fs.writeFileSync(this.filePath, JSON.stringify(this.data, null, 2));
+    } catch (error) {
+      Logger.error(`Could not save unfollow log: ${error.message}`);
+    }
+  }
+
+  logSession(unfollowed, dryRun = false) {
+    const session = {
+      timestamp: new Date().toISOString(),
+      dryRun,
+      count: unfollowed.length,
+      users: unfollowed,
+    };
+    this.data.sessions.push(session);
+    if (!dryRun) {
+      this.data.totalUnfollowed += unfollowed.length;
+    }
+    this.save();
+  }
+}
+
+// ============================================================================
+// SMART UNFOLLOW ENGINE
+// ============================================================================
+
+class SmartUnfollower {
+  constructor(config) {
+    this.config = config;
+    this.browser = null;
+    this.page = null;
+    this.followLog = new FollowLog(config.followLogPath);
+    this.unfollowLog = new UnfollowLog(config.unfollowLogPath);
+    this.sessionUnfollowed = [];
+  }
+
+  async initialize() {
+    Logger.info(&#39;Launching browser...&#39;);
+    this.browser = await puppeteer.launch({
+      headless: this.config.headless,
+      slowMo: this.config.slowMo,
+      args: [
+        &#39;--no-sandbox&#39;,
+        &#39;--disable-setuid-sandbox&#39;,
+        &#39;--disable-dev-shm-usage&#39;,
+        &#39;--disable-accelerated-2d-canvas&#39;,
+        &#39;--disable-gpu&#39;,
+        &#39;--window-size=1280,800&#39;,
+      ],
+    });
+    this.page = await this.browser.newPage();
+    await this.page.setViewport({ width: 1280, height: 800 });
+    await this.page.setUserAgent(
+      &#39;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36&#39;
+    );
+    Logger.success(&#39;Browser initialized&#39;);
+  }
+
+  async login() {
+    Logger.action(&#39;Navigating to X login...&#39;);
+    await this.page.goto(&#39;https://x.com/i/flow/login&#39;, { 
+      waitUntil: &#39;networkidle2&#39;,
+      timeout: 60000 
+    });
+
+    await this.delay(this.config.pageLoadDelay);
+
+    // Enter username
+    Logger.action(&#39;Entering username...&#39;);
+    await this.page.waitForSelector(this.config.selectors.usernameInput, { timeout: 30000 });
+    await this.page.type(this.config.selectors.usernameInput, this.config.username, { delay: 100 });
+    
+    // Click Next
+    await this.page.evaluate(() =&gt; {
+      const buttons = Array.from(document.querySelectorAll(&#39;[role=&quot;button&quot;]&#39;));
+      const nextButton = buttons.find(b =&gt; b.textContent.includes(&#39;Next&#39;));
+      if (nextButton) nextButton.click();
+    });
+
+    await this.delay(3000);
+
+    // Check for email verification challenge
+    const emailInput = await this.page.$(&#39;input[data-testid=&quot;ocfEnterTextTextInput&quot;]&#39;);
+    if (emailInput) {
+      Logger.warning(&#39;Email verification required...&#39;);
+      await emailInput.type(this.config.email, { delay: 100 });
+      await this.page.evaluate(() =&gt; {
+        const buttons = Array.from(document.querySelectorAll(&#39;[role=&quot;button&quot;]&#39;));
+        const nextButton = buttons.find(b =&gt; b.textContent.includes(&#39;Next&#39;));
+        if (nextButton) nextButton.click();
+      });
+      await this.delay(3000);
+    }
+
+    // Enter password
+    Logger.action(&#39;Entering password...&#39;);
+    await this.page.waitForSelector(this.config.selectors.passwordInput, { timeout: 30000 });
+    await this.page.type(this.config.selectors.passwordInput, this.config.password, { delay: 100 });
+
+    // Click Login
+    await this.page.waitForSelector(this.config.selectors.loginButton, { timeout: 10000 });
+    await this.page.click(this.config.selectors.loginButton);
+
+    await this.delay(this.config.pageLoadDelay);
+    Logger.success(&#39;Login successful&#39;);
+  }
+
+  async getFollowers() {
+    Logger.action(&#39;Fetching your followers list...&#39;);
+    await this.page.goto(`https://x.com/${this.config.username}/followers`, {
+      waitUntil: &#39;networkidle2&#39;,
+      timeout: 60000,
+    });
+
+    await this.delay(this.config.pageLoadDelay);
+
+    const followers = new Set();
+    let previousSize = 0;
+    let scrollAttempts = 0;
+    const maxScrollAttempts = 50;
+
+    while (scrollAttempts &lt; maxScrollAttempts) {
+      // Extract usernames from current view
+      const usernames = await this.page.evaluate(() =&gt; {
+        const cells = document.querySelectorAll(&#39;[data-testid=&quot;UserCell&quot;]&#39;);
+        return Array.from(cells).map(cell =&gt; {
+          const link = cell.querySelector(&#39;a[href^=&quot;/&quot;]&#39;);
+          if (link) {
+            const href = link.getAttribute(&#39;href&#39;);
+            return href.replace(&#39;/&#39;, &#39;&#39;).toLowerCase();
+          }
+          return null;
+        }).filter(Boolean);
+      });
+
+      usernames.forEach(u =&gt; followers.add(u));
+
+      // Check if we got new followers
+      if (followers.size === previousSize) {
+        scrollAttempts++;
+      } else {
+        scrollAttempts = 0;
+        previousSize = followers.size;
+      }
+
+      // Scroll down
+      await this.page.evaluate(() =&gt; window.scrollBy(0, 800));
+      await this.delay(this.config.delayBetweenScrolls);
+
+      Logger.info(`Found ${followers.size} followers so far...`);
+
+      // Stop if no new followers after several attempts
+      if (scrollAttempts &gt;= 5) break;
+    }
+
+    Logger.success(`Total followers found: ${followers.size}`);
+    return followers;
+  }
+
+  async getFollowing() {
+    Logger.action(&#39;Fetching your following list...&#39;);
+    await this.page.goto(`https://x.com/${this.config.username}/following`, {
+      waitUntil: &#39;networkidle2&#39;,
+      timeout: 60000,
+    });
+
+    await this.delay(this.config.pageLoadDelay);
+
+    const following = new Map(); // username -&gt; { verified, displayName }
+    let previousSize = 0;
+    let scrollAttempts = 0;
+    const maxScrollAttempts = 50;
+
+    while (scrollAttempts &lt; maxScrollAttempts) {
+      // Extract user info from current view
+      const users = await this.page.evaluate(() =&gt; {
+        const cells = document.querySelectorAll(&#39;[data-testid=&quot;UserCell&quot;]&#39;);
+        return Array.from(cells).map(cell =&gt; {
+          const link = cell.querySelector(&#39;a[href^=&quot;/&quot;]&#39;);
+          const verified = cell.querySelector(&#39;svg[aria-label*=&quot;Verified&quot;]&#39;) !== null;
+          const displayNameEl = cell.querySelector(&#39;[dir=&quot;ltr&quot;] &gt; span&#39;);
+          
+          if (link) {
+            const href = link.getAttribute(&#39;href&#39;);
+            return {
+              username: href.replace(&#39;/&#39;, &#39;&#39;).toLowerCase(),
+              verified,
+              displayName: displayNameEl ? displayNameEl.textContent : &#39;&#39;,
+            };
+          }
+          return null;
+        }).filter(Boolean);
+      });
+
+      users.forEach(u =&gt; following.set(u.username, u));
+
+      if (following.size === previousSize) {
+        scrollAttempts++;
+      } else {
+        scrollAttempts = 0;
+        previousSize = following.size;
+      }
+
+      await this.page.evaluate(() =&gt; window.scrollBy(0, 800));
+      await this.delay(this.config.delayBetweenScrolls);
+
+      Logger.info(`Found ${following.size} following so far...`);
+
+      if (scrollAttempts &gt;= 5) break;
+    }
+
+    Logger.success(`Total following found: ${following.size}`);
+    return following;
+  }
+
+  async unfollowUser(username) {
+    try {
+      await this.page.goto(`https://x.com/${username}`, {
+        waitUntil: &#39;networkidle2&#39;,
+        timeout: 30000,
+      });
+
+      await this.delay(2000);
+
+      // Find and click the Following button (which will show unfollow option)
+      const unfollowed = await this.page.evaluate(() =&gt; {
+        // Look for the &quot;Following&quot; button
+        const buttons = Array.from(document.querySelectorAll(&#39;[role=&quot;button&quot;]&#39;));
+        const followingBtn = buttons.find(b =&gt; {
+          const text = b.textContent || &#39;&#39;;
+          return text.includes(&#39;Following&#39;) &amp;&amp; !text.includes(&#39;Followers&#39;);
+        });
+
+        if (followingBtn) {
+          followingBtn.click();
+          return true;
+        }
+        return false;
+      });
+
+      if (!unfollowed) {
+        Logger.warning(`Could not find Following button for @${username}`);
+        return false;
+      }
+
+      await this.delay(1000);
+
+      // Confirm unfollow in the dialog
+      await this.page.evaluate(() =&gt; {
+        const confirmBtn = document.querySelector(&#39;[data-testid=&quot;confirmationSheetConfirm&quot;]&#39;);
+        if (confirmBtn) confirmBtn.click();
+      });
+
+      await this.delay(1000);
+      return true;
+    } catch (error) {
+      Logger.error(`Failed to unfollow @${username}: ${error.message}`);
+      return false;
+    }
+  }
+
+  async runSmartUnfollow(dryRun = false) {
+    Logger.info(&#39;=&#39;.repeat(60));
+    Logger.info(&#39;🧠 SMART UNFOLLOW - Starting Session&#39;);
+    Logger.info(`   Grace Period: ${this.config.gracePeriodDays} days`);
+    Logger.info(`   Max Unfollows: ${this.config.maxUnfollowsPerSession}`);
+    Logger.info(`   Dry Run: ${dryRun ? &#39;YES&#39; : &#39;NO&#39;}`);
+    Logger.info(&#39;=&#39;.repeat(60));
+
+    await this.initialize();
+
+    try {
+      await this.login();
+
+      // Get current followers and following
+      const followers = await this.getFollowers();
+      const following = await this.getFollowing();
+
+      // Find non-followers
+      const nonFollowers = [];
+      for (const [username, userData] of following) {
+        if (!followers.has(username)) {
+          nonFollowers.push({ username, ...userData });
+        }
+      }
+
+      Logger.info(`Found ${nonFollowers.length} non-followers out of ${following.size} following`);
+
+      // Get expired entries from our log
+      const expiredFromLog = this.followLog.getExpiredNonFollowers(this.config.gracePeriodDays);
+      Logger.info(`Found ${expiredFromLog.length} users past grace period in follow log`);
+
+      // Cross-reference: only unfollow if they&#39;re in our log AND still non-followers
+      const toUnfollow = [];
+      for (const entry of expiredFromLog) {
+        const nonFollower = nonFollowers.find(nf =&gt; nf.username === entry.username);
+        if (nonFollower) {
+          // Check exclusions
+          if (this.config.excludeUsernames.includes(entry.username)) {
+            Logger.warning(`Skipping @${entry.username} (in exclude list)`);
+            continue;
+          }
+          if (this.config.excludeVerified &amp;&amp; nonFollower.verified) {
+            Logger.warning(`Skipping @${entry.username} (verified account)`);
+            continue;
+          }
+
+          toUnfollow.push({
+            ...entry,
+            verified: nonFollower.verified,
+          });
+        }
+      }
+
+      Logger.info(&#39;=&#39;.repeat(60));
+      Logger.info(`📋 UNFOLLOW CANDIDATES: ${toUnfollow.length}`);
+      Logger.info(&#39;=&#39;.repeat(60));
+
+      if (toUnfollow.length === 0) {
+        Logger.success(&#39;No users to unfollow! Everyone is either:&#39;);
+        Logger.info(&#39;  - Following you back&#39;);
+        Logger.info(&#39;  - Still within grace period&#39;);
+        Logger.info(&#39;  - In your exclude list&#39;);
+        return;
+      }
+
+      // Limit to max per session
+      const batch = toUnfollow.slice(0, this.config.maxUnfollowsPerSession);
+      
+      Logger.info(`Processing ${batch.length} users (limited to ${this.config.maxUnfollowsPerSession} per session)`);
+      Logger.info(&#39;&#39;);
+
+      for (const user of batch) {
+        Logger.info(`@${user.username} - followed ${user.daysSinceFollow} days ago`);
+      }
+
+      Logger.info(&#39;&#39;);
+
+      if (dryRun) {
+        Logger.dry(&#39;=&#39;.repeat(60));
+        Logger.dry(&#39;DRY RUN COMPLETE - No actual unfollows performed&#39;);
+        Logger.dry(`Would have unfollowed ${batch.length} users`);
+        Logger.dry(&#39;=&#39;.repeat(60));
+        
+        this.unfollowLog.logSession(batch.map(u =&gt; u.username), true);
+        return;
+      }
+
+      // Perform actual unfollows
+      Logger.action(&#39;Starting unfollow process...&#39;);
+      let successCount = 0;
+
+      for (let i = 0; i &lt; batch.length; i++) {
+        const user = batch[i];
+        Logger.action(`[${i + 1}/${batch.length}] Unfollowing @${user.username}...`);
+
+        const success = await this.unfollowUser(user.username);
+        
+        if (success) {
+          successCount++;
+          this.sessionUnfollowed.push(user.username);
+          this.followLog.markUnfollowed(user.username, &#39;smart-unfollow&#39;);
+          Logger.success(`Unfollowed @${user.username}`);
+        } else {
+          Logger.error(`Failed to unfollow @${user.username}`);
+        }
+
+        // Rate limiting
+        if (i &lt; batch.length - 1) {
+          Logger.info(`Waiting ${this.config.delayBetweenActions / 1000}s before next action...`);
+          await this.delay(this.config.delayBetweenActions);
+        }
+      }
+
+      // Save logs
+      this.followLog.save();
+      this.unfollowLog.logSession(this.sessionUnfollowed, false);
+
+      // Summary
+      Logger.info(&#39;=&#39;.repeat(60));
+      Logger.success(&#39;SESSION COMPLETE&#39;);
+      Logger.info(`   Attempted: ${batch.length}`);
+      Logger.info(`   Successful: ${successCount}`);
+      Logger.info(`   Failed: ${batch.length - successCount}`);
+      Logger.info(&#39;=&#39;.repeat(60));
+
+    } catch (error) {
+      Logger.error(`Session error: ${error.message}`);
+      throw error;
+    } finally {
+      await this.cleanup();
+    }
+  }
+
+  async logNewFollow(username) {
+    const added = this.followLog.addFollow(username);
+    if (added) {
+      this.followLog.save();
+    }
+    
+    const stats = this.followLog.getStats();
+    Logger.info(`Follow log stats: ${stats.following} following, ${stats.unfollowed} unfollowed`);
+  }
+
+  async showStats() {
+    const stats = this.followLog.getStats();
+    const expired = this.followLog.getExpiredNonFollowers(this.config.gracePeriodDays);
+
+    Logger.info(&#39;=&#39;.repeat(60));
+    Logger.info(&#39;📊 SMART UNFOLLOW STATISTICS&#39;);
+    Logger.info(&#39;=&#39;.repeat(60));
+    Logger.info(`Total logged follows: ${stats.total}`);
+    Logger.info(`Currently following: ${stats.following}`);
+    Logger.info(`Unfollowed: ${stats.unfollowed}`);
+    Logger.info(`Past grace period: ${expired.length}`);
+    Logger.info(`Grace period: ${this.config.gracePeriodDays} days`);
+    Logger.info(&#39;=&#39;.repeat(60));
+
+    if (expired.length &gt; 0) {
+      Logger.info(&#39;Users past grace period:&#39;);
+      expired.slice(0, 10).forEach(u =&gt; {
+        Logger.info(`  @${u.username} - ${u.daysSinceFollow} days ago`);
+      });
+      if (expired.length &gt; 10) {
+        Logger.info(`  ... and ${expired.length - 10} more`);
+      }
+    }
+  }
+
+  delay(ms) {
+    return new Promise(resolve =&gt; setTimeout(resolve, ms));
+  }
+
+  async cleanup() {
+    if (this.browser) {
+      await this.browser.close();
+      Logger.info(&#39;Browser closed&#39;);
+    }
+  }
+}
+
+// ============================================================================
+// CLI INTERFACE
+// ============================================================================
+
+async function main() {
+  const args = process.argv.slice(2);
+  const dryRun = args.includes(&#39;--dry-run&#39;);
+  const logFollow = args.includes(&#39;--log-follow&#39;);
+  const showStats = args.includes(&#39;--stats&#39;);
+  const username = args.find(a =&gt; !a.startsWith(&#39;--&#39;));
+
+  const unfollower = new SmartUnfollower(CONFIG);
+
+  try {
+    if (showStats) {
+      await unfollower.showStats();
+    } else if (logFollow &amp;&amp; username) {
+      await unfollower.logNewFollow(username);
+    } else if (logFollow) {
+      Logger.error(&#39;Usage: node smart-unfollow.js --log-follow &lt;username&gt;&#39;);
+      process.exit(1);
+    } else {
+      await unfollower.runSmartUnfollow(dryRun);
+    }
+  } catch (error) {
+    Logger.error(`Fatal error: ${error.message}`);
+    console.error(error);
+    process.exit(1);
+  }
+}
+
+main();
+</code></pre>
+<h3>Usage</h3>
+<pre><code class="language-bash"># Install dependencies
+npm install
+
+# Run dry-run first to see what would be unfollowed
+npm run dry-run
+
+# Run actual unfollow
+npm start
+
+# Log a new follow (when you follow someone)
+node smart-unfollow.js --log-follow username123
+
+# View statistics
+node smart-unfollow.js --stats
+</code></pre>
+<h3>Sample Output</h3>
+<pre><code>[2026-01-01T12:00:00.000Z] ℹ️  ============================================================
+[2026-01-01T12:00:00.000Z] ℹ️  🧠 SMART UNFOLLOW - Starting Session
+[2026-01-01T12:00:00.000Z] ℹ️     Grace Period: 3 days
+[2026-01-01T12:00:00.000Z] ℹ️     Max Unfollows: 50
+[2026-01-01T12:00:00.000Z] ℹ️     Dry Run: NO
+[2026-01-01T12:00:00.000Z] ℹ️  ============================================================
+[2026-01-01T12:00:01.000Z] ✅ Browser initialized
+[2026-01-01T12:00:05.000Z] ✅ Login successful
+[2026-01-01T12:00:30.000Z] ✅ Total followers found: 1,523
+[2026-01-01T12:00:55.000Z] ✅ Total following found: 892
+[2026-01-01T12:00:55.000Z] ℹ️  Found 156 non-followers out of 892 following
+[2026-01-01T12:00:55.000Z] ℹ️  Found 23 users past grace period in follow log
+[2026-01-01T12:00:56.000Z] 🔄 [1/23] Unfollowing @inactive_user...
+[2026-01-01T12:00:58.000Z] ✅ Unfollowed @inactive_user
+...
+</code></pre>
+<hr>
+<h2>⏰ Why Grace Period Matters</h2>
+<h3>The Problem with Instant Unfollowing</h3>
+<p>When you follow someone, they might not see your follow immediately:</p>
+<ul>
+<li>They could be offline or busy</li>
+<li>They might have notifications turned off</li>
+<li>They could be in a different timezone</li>
+<li>They might check Twitter/X only weekly</li>
+<li>Your follow could get lost in a sea of notifications</li>
+</ul>
+<h3>The Grace Period Solution</h3>
+<p>A grace period (typically 3-7 days) gives people fair time to:</p>
+<ol>
+<li><strong>See your follow notification</strong> - Not everyone checks social media daily</li>
+<li><strong>Check out your profile</strong> - They need time to review your content</li>
+<li><strong>Make a decision</strong> - Following back isn&#39;t always instant</li>
+<li><strong>Actually follow back</strong> - Technical issues happen</li>
+</ol>
+<h3>Recommended Grace Periods</h3>
+<table>
+<thead>
+<tr>
+<th>Audience Type</th>
+<th>Recommended Grace Period</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Active users</td>
+<td>3 days</td>
+</tr>
+<tr>
+<td>General audience</td>
+<td>5-7 days</td>
+</tr>
+<tr>
+<td>Business/Professional</td>
+<td>7-14 days</td>
+</tr>
+<tr>
+<td>Celebrities/Influencers</td>
+<td>Never (don&#39;t expect follow-back)</td>
+</tr>
+</tbody></table>
+<h3>Best Practices</h3>
+<ol>
+<li><strong>Start with 7 days</strong> - This is a fair window for most users</li>
+<li><strong>Track your metrics</strong> - See what grace period works for your audience</li>
+<li><strong>Adjust based on results</strong> - If many people follow back on day 5-7, extend it</li>
+<li><strong>Consider time zones</strong> - International audiences may need more time</li>
+<li><strong>Quality over quantity</strong> - Don&#39;t rush the unfollow process</li>
+</ol>
+<hr>
+<h2>🌐 Website Alternative</h2>
+<p>Don&#39;t want to run code? Use the web dashboard:</p>
+<h3><a href="https://xactions.app">xactions.app</a></h3>
+<p>The xactions.app dashboard provides:</p>
+<ul>
+<li><strong>Visual Smart Unfollow</strong> - Same functionality with a beautiful UI</li>
+<li><strong>Follow Tracking</strong> - Automatic logging of when you follow users</li>
+<li><strong>Grace Period Settings</strong> - Customize your waiting period</li>
+<li><strong>Exclude Lists</strong> - Protect important accounts</li>
+<li><strong>Scheduling</strong> - Set up automated smart unfollow sessions</li>
+<li><strong>Analytics</strong> - Track your follow/unfollow ratio over time</li>
+<li><strong>No Code Required</strong> - Just connect and configure</li>
+</ul>
+<h3>Getting Started with xactions.app</h3>
+<ol>
+<li>Visit <a href="https://xactions.app">xactions.app</a></li>
+<li>Connect your X account</li>
+<li>Navigate to <strong>Tools → Smart Unfollow</strong></li>
+<li>Configure your grace period and exclusions</li>
+<li>Review candidates and start unfollowing</li>
+</ol>
+<hr>
+<h2>🔒 Safety &amp; Best Practices</h2>
+<ol>
+<li><strong>Always use dry-run first</strong> - Preview before taking action</li>
+<li><strong>Set reasonable limits</strong> - Don&#39;t unfollow too many at once</li>
+<li><strong>Maintain your follow log</strong> - The system is only as good as your data</li>
+<li><strong>Exclude important accounts</strong> - Protect business relationships</li>
+<li><strong>Respect rate limits</strong> - Don&#39;t get your account restricted</li>
+<li><strong>Regular backups</strong> - Keep copies of your follow_log.json</li>
+</ol>
+<hr>
+<h2>📚 Related Documentation</h2>
+<ul>
+<li><a href="./unfollow-non-followers.md">Unfollow Non-Followers</a> - Simple non-follower removal</li>
+<li><a href="./unfollow-everyone.md">Unfollow Everyone</a> - Mass unfollow tool</li>
+<li><a href="./followers-scraping.md">Followers Scraping</a> - Get your followers list</li>
+<li><a href="./following-scraping.md">Following Scraping</a> - Get your following list</li>
+</ul>
+<hr>
+<div align="center">
+
+<p><strong>Built with ❤️ by <a href="https://x.com/nichxbt">@nichxbt</a></strong></p>
+<p><a href="https://github.com/nichxbt/xactions/issues">Report Bug</a> · <a href="https://github.com/nichxbt/xactions/issues">Request Feature</a></p>
+</div>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try Smart Unfollow?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/unfollow-everyone">👋 Unfollow Everyone</a>
+        <a href="/docs/unfollow-non-followers">🧹 Unfollow Non Followers</a>
+        <a href="/docs/detect-unfollowers">🔍 Detect Unfollowers</a>
+        <a href="/docs/video-downloader">🎬 Video Downloader</a>
+        <a href="/docs/followers-scraping">📋 Followers Scraping</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

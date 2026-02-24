@@ -12,7 +12,8 @@ Paste each prompt into a **fresh Claude Opus 4.6 chat**. Work through them in or
 | 06 | `06-add-progressive-disclosure.md` | Adds reference files for complex skills (selectors, API, patterns) | #04 + #05 done |
 | 07 | `07-create-agent-prompts-skills.md` | Converts AGENT_PROMPTS.md monolith into individual skill-based prompts | #01-#06 done |
 | 08 | `08-validation-and-testing.md` | Validates all SKILL.md files, checks frontmatter, tests discovery | Everything done |
-| 09 | `09-competitive-features.md` | **16 prompts (09-A—09-P)** building features to beat Phantombuster, Apify, Circleboom, Hypefury, Taplio, Followerwonk, Typefully, Social Blade | None (all independent) |
+| 09 | `09-algorithm-cultivation-system.md` | 14 prompts building the 24/7 LLM-powered thought leadership agent system | None |
+| 10 | `09-competitive-features.md` | **16 prompts (09-A—09-P)** building features to beat Phantombuster, Apify, Circleboom, Hypefury, Taplio, Followerwonk, Typefully, Social Blade | None (all independent) |
 
 ### Prompt 09 Sub-prompts
 

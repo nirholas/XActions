@@ -44,11 +44,17 @@ function registerBuiltin(name, importFn) {
 registerBuiltin('puppeteer', () => import('./puppeteer.js'));
 registerBuiltin('playwright', () => import('./playwright.js'));
 registerBuiltin('cheerio', () => import('./cheerio.js'));
+registerBuiltin('crawlee', () => import('./crawlee.js'));
+registerBuiltin('got-jsdom', () => import('./got-jsdom.js'));
+registerBuiltin('selenium', () => import('./selenium.js'));
 
 // Aliases
 registerBuiltin('http', () => import('./cheerio.js'));
 registerBuiltin('pw', () => import('./playwright.js'));
 registerBuiltin('pptr', () => import('./puppeteer.js'));
+registerBuiltin('got', () => import('./got-jsdom.js'));
+registerBuiltin('jsdom', () => import('./got-jsdom.js'));
+registerBuiltin('apify', () => import('./crawlee.js'));
 
 // ============================================================================
 // Public API
@@ -90,7 +96,7 @@ export async function getAdapter(name) {
  * @returns {Promise<BaseAdapter>} First available adapter
  */
 export async function getAvailableAdapter(preferred) {
-  const candidates = [preferred, defaultAdapterName, 'puppeteer', 'playwright', 'cheerio'].filter(Boolean);
+  const candidates = [preferred, defaultAdapterName, 'puppeteer', 'playwright', 'crawlee', 'got-jsdom', 'selenium', 'cheerio'].filter(Boolean);
   const tried = new Set();
 
   for (const name of candidates) {
@@ -112,6 +118,9 @@ export async function getAvailableAdapter(preferred) {
     'No scraper adapter available. Install at least one:\n' +
     '  npm install puppeteer puppeteer-extra puppeteer-extra-plugin-stealth\n' +
     '  npm install playwright\n' +
+    '  npm install crawlee\n' +
+    '  npm install got-scraping jsdom\n' +
+    '  npm install selenium-webdriver chromedriver\n' +
     '  npm install cheerio'
   );
 }

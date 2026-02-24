@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thread Scraping — Free X/Twitter Scrapers Tool | XActions</title>
+  <meta name="description" content="Scrape complete tweet threads from X/Twitter with proper ordering and full metadata extraction.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, thread, scraping, scrapers, thread scraping twitter, twitter thread scraping">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Thread Scraping — XActions">
+  <meta property="og:description" content="Scrape complete tweet threads from X/Twitter with proper ordering and full metadata extraction.">
+  <meta property="og:url" content="https://xactions.app/docs/thread-scraping">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Thread Scraping — Free X/Twitter Tool">
+  <meta name="twitter:description" content="Scrape complete tweet threads from X/Twitter with proper ordering and full metadata extraction.">
+
+  <link rel="canonical" href="https://xactions.app/docs/thread-scraping">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Thread Scraping — Free X/Twitter Scrapers Tool | XActions",
+    "description": "Scrape complete tweet threads from X/Twitter with proper ordering and full metadata extraction.",
+    "url": "https://xactions.app/docs/thread-scraping",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/thread-scraping",
+    "articleSection": "Scrapers",
+    "keywords": "xactions, twitter automation, x automation, free, thread, scraping, scrapers, thread scraping twitter, twitter thread scraping"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Thread Scraping", "item": "https://xactions.app/docs/thread-scraping" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use Thread Scraping",
+    "description": "Scrape complete tweet threads from X/Twitter with proper ordering and full metadata extraction.",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions Thread Scraping script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>🧵 Thread Scraping</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › Thread Scraping
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Scrapers</span>
+        <h1>🧵 Thread Scraping</h1>
+<p>Scrape complete tweet threads from X/Twitter with proper ordering and full metadata extraction.</p>
+<h2>📦 What You Get</h2>
+<ul>
+<li><strong>Full thread extraction</strong> - All tweets from the thread author in order</li>
+<li>Tweet text content with proper sequence</li>
+<li>Timestamps (posted date/time)</li>
+<li>Engagement metrics (likes, retweets, replies, views)</li>
+<li>Media URLs (images, videos, GIFs)</li>
+<li>Thread position/index</li>
+<li>Reply chain structure</li>
+<li>Quote tweet references</li>
+<li>Export to JSON or CSV</li>
+</ul>
+<hr>
+<h2>💡 Use Cases</h2>
+<ul>
+<li><strong>Save viral threads</strong> - Archive valuable thread content before deletion</li>
+<li><strong>Analyze thread structure</strong> - Study how authors build engaging threads</li>
+<li><strong>Content repurposing</strong> - Extract threads for newsletters or blogs</li>
+<li><strong>Research &amp; archival</strong> - Preserve important discussions and tutorials</li>
+<li><strong>Thread analytics</strong> - Compare engagement across thread positions</li>
+</ul>
+<hr>
+<h2>📖 Example 1: Browser Console (Quick)</h2>
+<p><strong>Best for:</strong> Quickly scraping a thread you&#39;re currently viewing</p>
+<p><strong>Instructions:</strong></p>
+<ol>
+<li>Navigate to any tweet in a thread (e.g., <code>x.com/username/status/123456789</code>)</li>
+<li>Open browser console (F12 → Console tab)</li>
+<li>Paste the code below and press Enter</li>
+</ol>
+<pre><code class="language-javascript">// ============================================
+// XActions - Thread Scraper (Browser Console)
+// Go to: x.com/USERNAME/status/TWEET_ID
+// Open console (F12), paste this
+// Author: nich (@nichxbt)
+// ============================================
+
+(async () =&gt; {
+  const SCROLL_DELAY = 1500; // ms between scrolls
+  const MAX_SCROLL_ATTEMPTS = 20; // Max scrolls to find all thread tweets
+  
+  console.log(&#39;🧵 Starting thread scrape...&#39;);
+  
+  // Get the main tweet author from the page
+  const getThreadAuthor = () =&gt; {
+    // Get author from the main/focused tweet
+    const mainTweet = document.querySelector(&#39;[data-testid=&quot;tweet&quot;][tabindex=&quot;-1&quot;]&#39;) 
+                   || document.querySelector(&#39;article[data-testid=&quot;tweet&quot;]&#39;);
+    if (!mainTweet) return null;
+    
+    const userLink = mainTweet.querySelector(&#39;a[href^=&quot;/&quot;][role=&quot;link&quot;][tabindex=&quot;-1&quot;]&#39;);
+    if (!userLink) return null;
+    
+    const href = userLink.getAttribute(&#39;href&#39;) || &#39;&#39;;
+    return href.split(&#39;/&#39;)[1] || null;
+  };
+  
+  const threadAuthor = getThreadAuthor();
+  
+  if (!threadAuthor) {
+    console.error(&#39;❌ Could not detect thread author. Make sure you are on a tweet page.&#39;);
+    return;
+  }
+  
+  console.log(`👤 Thread author: @${threadAuthor}`);
+  
+  // Helper to parse count strings like &quot;1.2K&quot;, &quot;45M&quot;
+  const parseCount = (str) =&gt; {
+    if (!str) return 0;
+    str = str.trim().replace(/,/g, &#39;&#39;);
+    if (str.endsWith(&#39;K&#39;)) return Math.round(parseFloat(str) * 1000);
+    if (str.endsWith(&#39;M&#39;)) return Math.round(parseFloat(str) * 1000000);
+    if (str.endsWith(&#39;B&#39;)) return Math.round(parseFloat(str) * 1000000000);
+    return parseInt(str) || 0;
+  };
+  
+  // Extract thread tweets from visible articles
+  const extractThreadTweets = () =&gt; {
+    const articles = document.querySelectorAll(&#39;article[data-testid=&quot;tweet&quot;]&#39;);
+    const threadTweets = [];
+    
+    articles.forEach(article =&gt; {
+      try {
+        // Get tweet ID from the tweet link
+        const tweetLinks = article.querySelectorAll(&#39;a[href*=&quot;/status/&quot;]&#39;);
+        let tweetId = null;
+        let tweetHref = null;
+        
+        for (const link of tweetLinks) {
+          const href = link.getAttribute(&#39;href&#39;) || &#39;&#39;;
+          const match = href.match(/\/([^/]+)\/status\/(\d+)/);
+          if (match &amp;&amp; match[1].toLowerCase() === threadAuthor.toLowerCase()) {
+            tweetId = match[2];
+            tweetHref = href;
+            break;
+          }
+        }
+        
+        if (!tweetId) return;
+        
+        // Get author info
+        const userLink = article.querySelector(&#39;a[href^=&quot;/&quot;][role=&quot;link&quot;]&#39;);
+        const authorHref = userLink?.getAttribute(&#39;href&#39;) || &#39;&#39;;
+        const author = authorHref.split(&#39;/&#39;)[1] || null;
+        
+        // Only include tweets from thread author
+        if (author?.toLowerCase() !== threadAuthor.toLowerCase()) return;
+        
+        // Get display name
+        const nameEl = article.querySelector(&#39;[data-testid=&quot;User-Name&quot;]&#39;);
+        const displayName = nameEl?.querySelector(&#39;span&#39;)?.textContent?.trim() || null;
+        
+        // Get tweet text
+        const textEl = article.querySelector(&#39;[data-testid=&quot;tweetText&quot;]&#39;);
+        const text = textEl?.textContent?.trim() || &#39;&#39;;
+        
+        // Get timestamp
+        const timeEl = article.querySelector(&#39;time&#39;);
+        const timestamp = timeEl?.getAttribute(&#39;datetime&#39;) || null;
+        const displayTime = timeEl?.textContent?.trim() || null;
+        
+        // Get engagement metrics
+        const replyBtn = article.querySelector(&#39;[data-testid=&quot;reply&quot;]&#39;);
+        const retweetBtn = article.querySelector(&#39;[data-testid=&quot;retweet&quot;]&#39;);
+        const likeBtn = article.querySelector(&#39;[data-testid=&quot;like&quot;]&#39;);
+        const viewsEl = article.querySelector(&#39;a[href*=&quot;/analytics&quot;]&#39;);
+        
+        const replies = parseCount(replyBtn?.textContent);
+        const retweets = parseCount(retweetBtn?.textContent);
+        const likes = parseCount(likeBtn?.textContent);
+        const views = parseCount(viewsEl?.textContent);
+        
+        // Get media (images, videos, GIFs)
+        const mediaUrls = [];
+        
+        // Images
+        const images = article.querySelectorAll(&#39;[data-testid=&quot;tweetPhoto&quot;] img&#39;);
+        images.forEach(img =&gt; {
+          const src = img.getAttribute(&#39;src&#39;);
+          if (src &amp;&amp; src.includes(&#39;pbs.twimg.com/media&#39;)) {
+            const highRes = src.replace(/&amp;name=\w+/, &#39;&amp;name=large&#39;);
+            mediaUrls.push({
+              type: &#39;image&#39;,
+              url: highRes,
+            });
+          }
+        });
+        
+        // Videos/GIFs
+        const videos = article.querySelectorAll(&#39;video&#39;);
+        videos.forEach(video =&gt; {
+          const poster = video.getAttribute(&#39;poster&#39;);
+          const src = video.querySelector(&#39;source&#39;)?.getAttribute(&#39;src&#39;);
+          mediaUrls.push({
+            type: video.closest(&#39;[data-testid=&quot;videoPlayer&quot;]&#39;) ? &#39;video&#39; : &#39;gif&#39;,
+            url: src || poster || null,
+            thumbnail: poster,
+          });
+        });
+        
+        // Check for &quot;Show this thread&quot; indicator (confirms it&#39;s part of a thread)
+        const isThreaded = !!article.querySelector(&#39;[data-testid=&quot;tweet-text-show-more-link&quot;]&#39;) 
+                        || document.querySelectorAll(`a[href*=&quot;/${threadAuthor}/status/&quot;]`).length &gt; 1;
+        
+        threadTweets.push({
+          id: tweetId,
+          author,
+          displayName,
+          text,
+          timestamp,
+          displayTime,
+          replies,
+          retweets,
+          likes,
+          views,
+          media: mediaUrls,
+          url: `https://x.com/${author}/status/${tweetId}`,
+        });
+      } catch (e) {
+        // Skip malformed tweets
+      }
+    });
+    
+    return threadTweets;
+  };
+  
+  // Sleep helper
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+  
+  // Scroll to top first to get the start of the thread
+  console.log(&#39;⬆️ Scrolling to top of thread...&#39;);
+  window.scrollTo(0, 0);
+  await sleep(1000);
+  
+  // Collect all thread tweets
+  const threadTweets = new Map();
+  let scrollAttempts = 0;
+  let lastCount = 0;
+  let stableCount = 0;
+  
+  // First scroll up to find thread start
+  let prevScrollTop = window.scrollY;
+  while (scrollAttempts &lt; 10) {
+    window.scrollBy(0, -1000);
+    await sleep(800);
+    if (window.scrollY === prevScrollTop) break;
+    prevScrollTop = window.scrollY;
+    scrollAttempts++;
+  }
+  
+  await sleep(1000);
+  console.log(&#39;⬇️ Scrolling through thread...&#39;);
+  
+  // Now scroll down and collect all tweets
+  scrollAttempts = 0;
+  while (scrollAttempts &lt; MAX_SCROLL_ATTEMPTS) {
+    const extracted = extractThreadTweets();
+    
+    extracted.forEach(tweet =&gt; {
+      if (!threadTweets.has(tweet.id)) {
+        threadTweets.set(tweet.id, tweet);
+      }
+    });
+    
+    console.log(`📈 Found: ${threadTweets.size} thread tweets`);
+    
+    // Check if we&#39;ve stopped finding new tweets
+    if (threadTweets.size === lastCount) {
+      stableCount++;
+      if (stableCount &gt;= 3) {
+        console.log(&#39;✓ No more thread tweets found&#39;);
+        break;
+      }
+    } else {
+      stableCount = 0;
+      lastCount = threadTweets.size;
+    }
+    
+    // Scroll down
+    window.scrollBy(0, 600);
+    await sleep(SCROLL_DELAY);
+    scrollAttempts++;
+  }
+  
+  // Convert to array and sort by timestamp (oldest first for thread order)
+  const result = Array.from(threadTweets.values())
+    .sort((a, b) =&gt; new Date(a.timestamp) - new Date(b.timestamp))
+    .map((tweet, index) =&gt; ({
+      ...tweet,
+      threadPosition: index + 1,
+      isFirstTweet: index === 0,
+      isLastTweet: index === threadTweets.size - 1,
+    }));
+  
+  // Build thread summary
+  const threadText = result.map((t, i) =&gt; `[${i + 1}/${result.length}] ${t.text}`).join(&#39;\n\n&#39;);
+  
+  // Summary
+  console.log(&#39;\n✅ Thread scraping complete!&#39;);
+  console.log(`🧵 Thread length: ${result.length} tweets`);
+  console.log(`👤 Author: @${threadAuthor}`);
+  console.log(`❤️ Total likes: ${result.reduce((sum, t) =&gt; sum + t.likes, 0).toLocaleString()}`);
+  console.log(`🔄 Total retweets: ${result.reduce((sum, t) =&gt; sum + t.retweets, 0).toLocaleString()}`);
+  console.log(`👁️ Total views: ${result.reduce((sum, t) =&gt; sum + t.views, 0).toLocaleString()}`);
+  console.log(`🖼️ Total media items: ${result.reduce((sum, t) =&gt; sum + t.media.length, 0)}`);
+  
+  // Copy to clipboard
+  const output = {
+    thread: {
+      author: threadAuthor,
+      tweetCount: result.length,
+      scrapedAt: new Date().toISOString(),
+      firstTweetUrl: result[0]?.url || null,
+      totalLikes: result.reduce((sum, t) =&gt; sum + t.likes, 0),
+      totalRetweets: result.reduce((sum, t) =&gt; sum + t.retweets, 0),
+      totalViews: result.reduce((sum, t) =&gt; sum + t.views, 0),
+    },
+    tweets: result,
+    threadText: threadText,
+  };
+  
+  const json = JSON.stringify(output, null, 2);
+  await navigator.clipboard.writeText(json);
+  console.log(&#39;\n📋 Copied to clipboard!&#39;);
+  
+  // Also log for download
+  console.log(&#39;\n💾 Data (right-click → Copy object):&#39;);
+  console.log(output);
+  
+  // Create downloadable file
+  const blob = new Blob([json], { type: &#39;application/json&#39; });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement(&#39;a&#39;);
+  a.href = url;
+  a.download = `thread-${threadAuthor}-${result[0]?.id || &#39;unknown&#39;}-${new Date().toISOString().split(&#39;T&#39;)[0]}.json`;
+  a.click();
+  console.log(&#39;📥 Download started!&#39;);
+  
+  // Also create a plain text version of the thread
+  const textBlob = new Blob([`Thread by @${threadAuthor}\n${&#39;=&#39;.repeat(40)}\n\n${threadText}`], { type: &#39;text/plain&#39; });
+  const textUrl = URL.createObjectURL(textBlob);
+  const textLink = document.createElement(&#39;a&#39;);
+  textLink.href = textUrl;
+  textLink.download = `thread-${threadAuthor}-${result[0]?.id || &#39;unknown&#39;}.txt`;
+  textLink.click();
+  console.log(&#39;📝 Text version downloaded!&#39;);
+  
+  return output;
+})();
+</code></pre>
+<p><strong>What happens:</strong></p>
+<ol>
+<li>Detects the thread author from the current tweet</li>
+<li>Scrolls up to find the thread start</li>
+<li>Scrolls down to collect all thread tweets</li>
+<li>Extracts only tweets from the thread author (filters out replies from others)</li>
+<li>Sorts tweets in chronological order (thread sequence)</li>
+<li>Downloads JSON file with full metadata</li>
+<li>Downloads plain text version for easy reading</li>
+</ol>
+<p><strong>Sample Output:</strong></p>
+<pre><code class="language-json">{
+  &quot;thread&quot;: {
+    &quot;author&quot;: &quot;naval&quot;,
+    &quot;tweetCount&quot;: 39,
+    &quot;scrapedAt&quot;: &quot;2026-01-01T12:00:00.000Z&quot;,
+    &quot;firstTweetUrl&quot;: &quot;https://x.com/naval/status/1002103360646823936&quot;,
+    &quot;totalLikes&quot;: 245000,
+    &quot;totalRetweets&quot;: 89000,
+    &quot;totalViews&quot;: 12500000
+  },
+  &quot;tweets&quot;: [
+    {
+      &quot;id&quot;: &quot;1002103360646823936&quot;,
+      &quot;author&quot;: &quot;naval&quot;,
+      &quot;displayName&quot;: &quot;Naval&quot;,
+      &quot;text&quot;: &quot;How to Get Rich (without getting lucky):&quot;,
+      &quot;timestamp&quot;: &quot;2018-05-31T18:09:08.000Z&quot;,
+      &quot;threadPosition&quot;: 1,
+      &quot;isFirstTweet&quot;: true,
+      &quot;isLastTweet&quot;: false,
+      &quot;replies&quot;: 1234,
+      &quot;retweets&quot;: 15000,
+      &quot;likes&quot;: 45000,
+      &quot;views&quot;: 2100000,
+      &quot;media&quot;: [],
+      &quot;url&quot;: &quot;https://x.com/naval/status/1002103360646823936&quot;
+    },
+    {
+      &quot;id&quot;: &quot;1002103497725173760&quot;,
+      &quot;author&quot;: &quot;naval&quot;,
+      &quot;text&quot;: &quot;Seek wealth, not money or status...&quot;,
+      &quot;threadPosition&quot;: 2,
+      &quot;isFirstTweet&quot;: false,
+      &quot;isLastTweet&quot;: false
+    }
+  ],
+  &quot;threadText&quot;: &quot;[1/39] How to Get Rich (without getting lucky):\n\n[2/39] Seek wealth, not money or status...&quot;
+}
+</code></pre>
+<hr>
+<h2>🚀 Example 2: Node.js with Puppeteer (Production-Ready)</h2>
+<p><strong>Best for:</strong> Automated thread archiving, scheduled jobs, batch processing, building thread databases</p>
+<p><strong>Prerequisites:</strong></p>
+<pre><code class="language-bash">npm install puppeteer puppeteer-extra puppeteer-extra-plugin-stealth
+</code></pre>
+<p><strong>Save as:</strong> <code>scrape-thread.js</code></p>
+<pre><code class="language-javascript">// ============================================
+// XActions - Thread Scraper (Node.js + Puppeteer)
+// Save as: scrape-thread.js
+// Run: node scrape-thread.js https://x.com/naval/status/1002103360646823936
+// Author: nich (@nichxbt)
+// ============================================
+
+import puppeteer from &#39;puppeteer-extra&#39;;
+import StealthPlugin from &#39;puppeteer-extra-plugin-stealth&#39;;
+import fs from &#39;fs/promises&#39;;
+import path from &#39;path&#39;;
+
+// Use stealth plugin to avoid detection
+puppeteer.use(StealthPlugin());
+
+/**
+ * Parse count strings like &quot;1.2K&quot;, &quot;45M&quot; to numbers
+ */
+function parseCount(str) {
+  if (!str) return 0;
+  str = str.trim().replace(/,/g, &#39;&#39;);
+  if (str.endsWith(&#39;K&#39;)) return Math.round(parseFloat(str) * 1000);
+  if (str.endsWith(&#39;M&#39;)) return Math.round(parseFloat(str) * 1000000);
+  if (str.endsWith(&#39;B&#39;)) return Math.round(parseFloat(str) * 1000000000);
+  return parseInt(str) || 0;
+}
+
+/**
+ * Extract username and tweet ID from a Twitter URL
+ */
+function parseTweetUrl(url) {
+  const match = url.match(/(?:twitter\.com|x\.com)\/([^/]+)\/status\/(\d+)/);
+  if (!match) {
+    throw new Error(&#39;Invalid tweet URL. Expected format: https://x.com/username/status/1234567890&#39;);
+  }
+  return { username: match[1], tweetId: match[2] };
+}
+
+/**
+ * Scrape a complete thread from X/Twitter
+ * @param {string} tweetUrl - URL to any tweet in the thread
+ * @param {Object} options - Configuration options
+ * @returns {Object} Thread data with all tweets
+ */
+async function scrapeThread(tweetUrl, options = {}) {
+  const {
+    headless = true,
+    authToken = null,
+    scrollDelay = 1500,
+    maxScrollAttempts = 25,
+    outputDir = &#39;./threads&#39;,
+    onProgress = null,
+  } = options;
+
+  const { username, tweetId } = parseTweetUrl(tweetUrl);
+  
+  console.log(`🧵 Scraping thread from @${username}`);
+  console.log(`🔗 Starting tweet: ${tweetId}`);
+
+  // Launch browser
+  const browser = await puppeteer.launch({
+    headless: headless ? &#39;new&#39; : false,
+    args: [
+      &#39;--no-sandbox&#39;,
+      &#39;--disable-setuid-sandbox&#39;,
+      &#39;--disable-blink-features=AutomationControlled&#39;,
+      &#39;--disable-web-security&#39;,
+    ],
+  });
+
+  try {
+    const page = await browser.newPage();
+    
+    // Set realistic viewport and user agent
+    await page.setViewport({ 
+      width: 1280 + Math.floor(Math.random() * 100), 
+      height: 900 + Math.floor(Math.random() * 100),
+    });
+    
+    await page.setUserAgent(
+      &#39;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36&#39;
+    );
+
+    // Optional: Set auth cookie for logged-in view (recommended for threads)
+    if (authToken) {
+      await page.setCookie({
+        name: &#39;auth_token&#39;,
+        value: authToken,
+        domain: &#39;.x.com&#39;,
+        path: &#39;/&#39;,
+        httpOnly: true,
+        secure: true,
+      });
+      console.log(&#39;🔐 Using authenticated session&#39;);
+    }
+
+    // Navigate to the tweet
+    console.log(&#39;📄 Loading tweet page...&#39;);
+    await page.goto(tweetUrl, {
+      waitUntil: &#39;networkidle2&#39;,
+      timeout: 30000,
+    });
+
+    // Wait for tweets to load
+    await page.waitForSelector(&#39;article[data-testid=&quot;tweet&quot;]&#39;, { timeout: 15000 });
+    
+    // Random human-like delay
+    await new Promise(r =&gt; setTimeout(r, 1500 + Math.random() * 1000));
+
+    // Get the thread author
+    const threadAuthor = await page.evaluate(() =&gt; {
+      const mainTweet = document.querySelector(&#39;[data-testid=&quot;tweet&quot;][tabindex=&quot;-1&quot;]&#39;) 
+                     || document.querySelector(&#39;article[data-testid=&quot;tweet&quot;]&#39;);
+      if (!mainTweet) return null;
+      
+      const userLink = mainTweet.querySelector(&#39;a[href^=&quot;/&quot;][role=&quot;link&quot;][tabindex=&quot;-1&quot;]&#39;);
+      if (!userLink) return null;
+      
+      const href = userLink.getAttribute(&#39;href&#39;) || &#39;&#39;;
+      return href.split(&#39;/&#39;)[1] || null;
+    });
+
+    if (!threadAuthor) {
+      throw new Error(&#39;Could not detect thread author&#39;);
+    }
+
+    console.log(`👤 Thread author: @${threadAuthor}`);
+
+    // Function to extract thread tweets from the page
+    const extractThreadTweets = async () =&gt; {
+      return await page.evaluate((authorName) =&gt; {
+        const parseCountInPage = (str) =&gt; {
+          if (!str) return 0;
+          str = str.trim().replace(/,/g, &#39;&#39;);
+          if (str.endsWith(&#39;K&#39;)) return Math.round(parseFloat(str) * 1000);
+          if (str.endsWith(&#39;M&#39;)) return Math.round(parseFloat(str) * 1000000);
+          if (str.endsWith(&#39;B&#39;)) return Math.round(parseFloat(str) * 1000000000);
+          return parseInt(str) || 0;
+        };
+
+        const articles = document.querySelectorAll(&#39;article[data-testid=&quot;tweet&quot;]&#39;);
+        const threadTweets = [];
+        
+        articles.forEach(article =&gt; {
+          try {
+            // Get tweet ID
+            const tweetLinks = article.querySelectorAll(&#39;a[href*=&quot;/status/&quot;]&#39;);
+            let tweetId = null;
+            
+            for (const link of tweetLinks) {
+              const href = link.getAttribute(&#39;href&#39;) || &#39;&#39;;
+              const match = href.match(/\/([^/]+)\/status\/(\d+)/);
+              if (match) {
+                tweetId = match[2];
+                break;
+              }
+            }
+            
+            if (!tweetId) return;
+            
+            // Get author info
+            const userLink = article.querySelector(&#39;a[href^=&quot;/&quot;][role=&quot;link&quot;]&#39;);
+            const authorHref = userLink?.getAttribute(&#39;href&#39;) || &#39;&#39;;
+            const author = authorHref.split(&#39;/&#39;)[1] || null;
+            
+            // Only include tweets from thread author
+            if (author?.toLowerCase() !== authorName.toLowerCase()) return;
+            
+            // Get display name
+            const nameEl = article.querySelector(&#39;[data-testid=&quot;User-Name&quot;]&#39;);
+            const displayName = nameEl?.querySelector(&#39;span&#39;)?.textContent?.trim() || null;
+            
+            // Get tweet text
+            const textEl = article.querySelector(&#39;[data-testid=&quot;tweetText&quot;]&#39;);
+            const text = textEl?.textContent?.trim() || &#39;&#39;;
+            
+            // Get timestamp
+            const timeEl = article.querySelector(&#39;time&#39;);
+            const timestamp = timeEl?.getAttribute(&#39;datetime&#39;) || null;
+            const displayTime = timeEl?.textContent?.trim() || null;
+            
+            // Get engagement metrics
+            const replyBtn = article.querySelector(&#39;[data-testid=&quot;reply&quot;]&#39;);
+            const retweetBtn = article.querySelector(&#39;[data-testid=&quot;retweet&quot;]&#39;);
+            const likeBtn = article.querySelector(&#39;[data-testid=&quot;like&quot;]&#39;);
+            const viewsEl = article.querySelector(&#39;a[href*=&quot;/analytics&quot;]&#39;);
+            
+            const replies = parseCountInPage(replyBtn?.textContent);
+            const retweets = parseCountInPage(retweetBtn?.textContent);
+            const likes = parseCountInPage(likeBtn?.textContent);
+            const views = parseCountInPage(viewsEl?.textContent);
+            
+            // Get media
+            const media = [];
+            
+            // Images
+            const images = article.querySelectorAll(&#39;[data-testid=&quot;tweetPhoto&quot;] img&#39;);
+            images.forEach(img =&gt; {
+              const src = img.getAttribute(&#39;src&#39;);
+              if (src &amp;&amp; src.includes(&#39;pbs.twimg.com/media&#39;)) {
+                media.push({
+                  type: &#39;image&#39;,
+                  url: src.replace(/&amp;name=\w+/, &#39;&amp;name=large&#39;),
+                });
+              }
+            });
+            
+            // Videos
+            const videos = article.querySelectorAll(&#39;video&#39;);
+            videos.forEach(video =&gt; {
+              const poster = video.getAttribute(&#39;poster&#39;);
+              const src = video.querySelector(&#39;source&#39;)?.getAttribute(&#39;src&#39;);
+              media.push({
+                type: video.closest(&#39;[data-testid=&quot;videoPlayer&quot;]&#39;) ? &#39;video&#39; : &#39;gif&#39;,
+                url: src || null,
+                thumbnail: poster,
+              });
+            });
+            
+            threadTweets.push({
+              id: tweetId,
+              author,
+              displayName,
+              text,
+              timestamp,
+              displayTime,
+              replies,
+              retweets,
+              likes,
+              views,
+              media,
+              url: `https://x.com/${author}/status/${tweetId}`,
+            });
+          } catch (e) {
+            // Skip malformed tweets
+          }
+        });
+        
+        return threadTweets;
+      }, threadAuthor);
+    };
+
+    // Scroll to top first to get thread start
+    console.log(&#39;⬆️ Finding thread start...&#39;);
+    await page.evaluate(() =&gt; window.scrollTo(0, 0));
+    await new Promise(r =&gt; setTimeout(r, 1000));
+
+    // Scroll up to find the beginning of the thread
+    let scrollUpAttempts = 0;
+    while (scrollUpAttempts &lt; 10) {
+      const prevPos = await page.evaluate(() =&gt; window.scrollY);
+      await page.evaluate(() =&gt; window.scrollBy(0, -800));
+      await new Promise(r =&gt; setTimeout(r, 800));
+      const newPos = await page.evaluate(() =&gt; window.scrollY);
+      if (newPos === prevPos) break;
+      scrollUpAttempts++;
+    }
+
+    await new Promise(r =&gt; setTimeout(r, 1000));
+    console.log(&#39;⬇️ Collecting thread tweets...&#39;);
+
+    // Collect all thread tweets
+    const threadTweets = new Map();
+    let scrollAttempts = 0;
+    let lastCount = 0;
+    let stableCount = 0;
+
+    while (scrollAttempts &lt; maxScrollAttempts) {
+      const extracted = await extractThreadTweets();
+      
+      extracted.forEach(tweet =&gt; {
+        if (!threadTweets.has(tweet.id)) {
+          threadTweets.set(tweet.id, tweet);
+        }
+      });
+
+      if (onProgress) {
+        onProgress({ found: threadTweets.size, scrollAttempts });
+      }
+
+      console.log(`📈 Found: ${threadTweets.size} thread tweets`);
+
+      // Check if we&#39;ve stopped finding new tweets
+      if (threadTweets.size === lastCount) {
+        stableCount++;
+        if (stableCount &gt;= 4) {
+          console.log(&#39;✓ Thread collection complete&#39;);
+          break;
+        }
+      } else {
+        stableCount = 0;
+        lastCount = threadTweets.size;
+      }
+
+      // Scroll down
+      await page.evaluate(() =&gt; window.scrollBy(0, 500));
+      await new Promise(r =&gt; setTimeout(r, scrollDelay));
+      scrollAttempts++;
+    }
+
+    // Sort by timestamp (oldest first = thread order)
+    const tweets = Array.from(threadTweets.values())
+      .sort((a, b) =&gt; new Date(a.timestamp) - new Date(b.timestamp))
+      .map((tweet, index, arr) =&gt; ({
+        ...tweet,
+        threadPosition: index + 1,
+        isFirstTweet: index === 0,
+        isLastTweet: index === arr.length - 1,
+      }));
+
+    // Build thread text
+    const threadText = tweets
+      .map((t, i) =&gt; `[${i + 1}/${tweets.length}] ${t.text}`)
+      .join(&#39;\n\n&#39;);
+
+    // Build result
+    const result = {
+      thread: {
+        author: threadAuthor,
+        tweetCount: tweets.length,
+        scrapedAt: new Date().toISOString(),
+        sourceUrl: tweetUrl,
+        firstTweetId: tweets[0]?.id || null,
+        firstTweetUrl: tweets[0]?.url || null,
+        lastTweetUrl: tweets[tweets.length - 1]?.url || null,
+        totalLikes: tweets.reduce((sum, t) =&gt; sum + t.likes, 0),
+        totalRetweets: tweets.reduce((sum, t) =&gt; sum + t.retweets, 0),
+        totalReplies: tweets.reduce((sum, t) =&gt; sum + t.replies, 0),
+        totalViews: tweets.reduce((sum, t) =&gt; sum + t.views, 0),
+        totalMedia: tweets.reduce((sum, t) =&gt; sum + t.media.length, 0),
+      },
+      tweets,
+      threadText,
+    };
+
+    // Save to files
+    await fs.mkdir(outputDir, { recursive: true });
+    
+    const baseFilename = `thread-${threadAuthor}-${tweets[0]?.id || tweetId}`;
+    
+    // Save JSON
+    const jsonPath = path.join(outputDir, `${baseFilename}.json`);
+    await fs.writeFile(jsonPath, JSON.stringify(result, null, 2));
+    console.log(`💾 Saved JSON: ${jsonPath}`);
+    
+    // Save plain text
+    const textContent = `Thread by @${threadAuthor}
+${&#39;=&#39;.repeat(50)}
+Scraped: ${result.thread.scrapedAt}
+Tweets: ${result.thread.tweetCount}
+Total Likes: ${result.thread.totalLikes.toLocaleString()}
+Total Retweets: ${result.thread.totalRetweets.toLocaleString()}
+Total Views: ${result.thread.totalViews.toLocaleString()}
+${&#39;=&#39;.repeat(50)}
+
+${threadText}
+
+${&#39;=&#39;.repeat(50)}
+Source: ${tweetUrl}
+`;
+    
+    const textPath = path.join(outputDir, `${baseFilename}.txt`);
+    await fs.writeFile(textPath, textContent);
+    console.log(`📝 Saved text: ${textPath}`);
+
+    // Summary
+    console.log(&#39;\n✅ Thread scraping complete!&#39;);
+    console.log(`🧵 Thread length: ${tweets.length} tweets`);
+    console.log(`👤 Author: @${threadAuthor}`);
+    console.log(`❤️ Total likes: ${result.thread.totalLikes.toLocaleString()}`);
+    console.log(`🔄 Total retweets: ${result.thread.totalRetweets.toLocaleString()}`);
+    console.log(`👁️ Total views: ${result.thread.totalViews.toLocaleString()}`);
+
+    return result;
+
+  } finally {
+    await browser.close();
+  }
+}
+
+/**
+ * Batch scrape multiple threads
+ */
+async function scrapeMultipleThreads(urls, options = {}) {
+  const results = [];
+  
+  for (let i = 0; i &lt; urls.length; i++) {
+    console.log(`\n${&#39;=&#39;.repeat(50)}`);
+    console.log(`Processing thread ${i + 1}/${urls.length}`);
+    console.log(`${&#39;=&#39;.repeat(50)}\n`);
+    
+    try {
+      const result = await scrapeThread(urls[i], options);
+      results.push({ url: urls[i], success: true, data: result });
+    } catch (error) {
+      console.error(`❌ Failed to scrape ${urls[i]}: ${error.message}`);
+      results.push({ url: urls[i], success: false, error: error.message });
+    }
+    
+    // Delay between threads to avoid rate limiting
+    if (i &lt; urls.length - 1) {
+      const delay = 5000 + Math.random() * 3000;
+      console.log(`⏳ Waiting ${Math.round(delay / 1000)}s before next thread...`);
+      await new Promise(r =&gt; setTimeout(r, delay));
+    }
+  }
+  
+  return results;
+}
+
+// ============================================
+// CLI Usage
+// ============================================
+
+const args = process.argv.slice(2);
+
+if (args.length === 0) {
+  console.log(`
+🧵 XActions Thread Scraper
+==========================
+
+Usage:
+  node scrape-thread.js &lt;tweet-url&gt; [options]
+
+Examples:
+  node scrape-thread.js https://x.com/naval/status/1002103360646823936
+  node scrape-thread.js https://x.com/sahaboramanaz/status/1671589652076371968 --visible
+
+Options:
+  --visible     Run browser in visible mode (not headless)
+  --auth=TOKEN  Use auth token for authenticated access
+  --output=DIR  Output directory (default: ./threads)
+
+Note: Any tweet in the thread works - the scraper finds the full thread automatically.
+`);
+  process.exit(0);
+}
+
+// Parse CLI arguments
+const tweetUrl = args.find(arg =&gt; arg.startsWith(&#39;http&#39;));
+const isVisible = args.includes(&#39;--visible&#39;);
+const authArg = args.find(arg =&gt; arg.startsWith(&#39;--auth=&#39;));
+const authToken = authArg ? authArg.split(&#39;=&#39;)[1] : null;
+const outputArg = args.find(arg =&gt; arg.startsWith(&#39;--output=&#39;));
+const outputDir = outputArg ? outputArg.split(&#39;=&#39;)[1] : &#39;./threads&#39;;
+
+if (!tweetUrl) {
+  console.error(&#39;❌ Please provide a tweet URL&#39;);
+  process.exit(1);
+}
+
+// Run the scraper
+scrapeThread(tweetUrl, {
+  headless: !isVisible,
+  authToken,
+  outputDir,
+})
+  .then(result =&gt; {
+    console.log(&#39;\n🎉 Done!&#39;);
+    process.exit(0);
+  })
+  .catch(error =&gt; {
+    console.error(&#39;\n❌ Error:&#39;, error.message);
+    process.exit(1);
+  });
+
+// Export for use as module
+export { scrapeThread, scrapeMultipleThreads, parseTweetUrl };
+</code></pre>
+<p><strong>Run the scraper:</strong></p>
+<pre><code class="language-bash"># Scrape a thread
+node scrape-thread.js https://x.com/naval/status/1002103360646823936
+
+# Run with visible browser (for debugging)
+node scrape-thread.js https://x.com/sahil/status/1234567890 --visible
+
+# Specify output directory
+node scrape-thread.js https://x.com/naval/status/1002103360646823936 --output=./my-threads
+
+# With authentication (optional, for better access)
+node scrape-thread.js https://x.com/naval/status/1002103360646823936 --auth=YOUR_AUTH_TOKEN
+</code></pre>
+<p><strong>What happens:</strong></p>
+<ol>
+<li>Opens browser and navigates to the tweet URL</li>
+<li>Detects the thread author automatically</li>
+<li>Scrolls up to find the thread start</li>
+<li>Scrolls down collecting all author tweets</li>
+<li>Filters out replies from other users</li>
+<li>Sorts tweets in chronological order</li>
+<li>Saves JSON with full metadata</li>
+<li>Saves plain text version for easy reading</li>
+<li>Reports engagement statistics</li>
+</ol>
+<hr>
+<h2>📊 Output Files</h2>
+<p>The scraper generates two files:</p>
+<h3>JSON File (<code>thread-username-tweetid.json</code>)</h3>
+<p>Complete structured data with:</p>
+<ul>
+<li>Thread metadata (author, total engagement, tweet count)</li>
+<li>Array of all tweets with full details</li>
+<li>Plain text version of the thread</li>
+</ul>
+<h3>Text File (<code>thread-username-tweetid.txt</code>)</h3>
+<p>Human-readable format:</p>
+<pre><code>Thread by @naval
+==================================================
+Scraped: 2026-01-01T12:00:00.000Z
+Tweets: 39
+Total Likes: 245,000
+Total Retweets: 89,000
+Total Views: 12,500,000
+==================================================
+
+[1/39] How to Get Rich (without getting lucky):
+
+[2/39] Seek wealth, not money or status. Wealth is having assets that earn while you sleep...
+
+[3/39] Understand that ethical wealth creation is possible...
+
+...
+</code></pre>
+<hr>
+<h2>🎯 Tips &amp; Best Practices</h2>
+<h3>1. Finding the Thread Start</h3>
+<p>You can paste the URL of <strong>any tweet in a thread</strong> - the scraper automatically finds and collects the full thread.</p>
+<h3>2. Authentication (Recommended)</h3>
+<p>For better reliability and access to sensitive content:</p>
+<pre><code class="language-javascript">// Get your auth_token from browser cookies
+// In Chrome: DevTools → Application → Cookies → x.com → auth_token
+
+const result = await scrapeThread(url, {
+  authToken: &#39;your_auth_token_here&#39;
+});
+</code></pre>
+<h3>3. Rate Limiting</h3>
+<p>When scraping multiple threads:</p>
+<ul>
+<li>Add delays between requests (5-10 seconds)</li>
+<li>Don&#39;t scrape more than 50 threads per hour</li>
+<li>Use the batch function with built-in delays</li>
+</ul>
+<h3>4. Long Threads</h3>
+<p>For very long threads (100+ tweets):</p>
+<pre><code class="language-javascript">await scrapeThread(url, {
+  maxScrollAttempts: 50, // Increase scroll attempts
+  scrollDelay: 2000,     // Slower scrolling
+});
+</code></pre>
+<h3>5. Handling Errors</h3>
+<p>Common issues and solutions:</p>
+<ul>
+<li><strong>&quot;Could not detect thread author&quot;</strong> - Page may not have loaded. Try increasing timeout.</li>
+<li><strong>Empty results</strong> - Account may be private or suspended.</li>
+<li><strong>Incomplete thread</strong> - Increase <code>maxScrollAttempts</code>.</li>
+</ul>
+<hr>
+<h2>🌐 Website Alternative: XActions.app</h2>
+<p>Don&#39;t want to run code? Use our web interface:</p>
+<p><strong><a href="https://xactions.app">xactions.app</a></strong></p>
+<ol>
+<li>Visit <a href="https://xactions.app">xactions.app</a></li>
+<li>Paste any tweet URL from a thread</li>
+<li>Click &quot;Scrape Thread&quot;</li>
+<li>Download JSON or copy to clipboard</li>
+<li>No code required!</li>
+</ol>
+<p><strong>Features:</strong></p>
+<ul>
+<li>✅ No installation required</li>
+<li>✅ Works on any device</li>
+<li>✅ Export to JSON, CSV, or plain text</li>
+<li>✅ Thread analytics dashboard</li>
+<li>✅ Bookmark threads for later</li>
+</ul>
+<hr>
+<h2>📚 Related Examples</h2>
+<ul>
+<li><a href="tweet-scraping.md">Tweet Scraping</a> - Scrape individual tweets from profiles</li>
+<li><a href="profile-scraping.md">Profile Scraping</a> - Get user profile information</li>
+<li><a href="search-tweets.md">Search Tweets</a> - Search and scrape tweets by keyword</li>
+<li><a href="followers-scraping.md">Followers Scraping</a> - Scrape follower lists</li>
+</ul>
+<hr>
+<h2>⚠️ Important Notes</h2>
+<ul>
+<li>Respect X/Twitter&#39;s Terms of Service</li>
+<li>Don&#39;t scrape private accounts without permission</li>
+<li>Use reasonable delays to avoid rate limiting</li>
+<li>Consider API alternatives for high-volume needs</li>
+<li>Thread data is point-in-time (engagement metrics may change)</li>
+</ul>
+<hr>
+<p><em>Author: nich (<a href="https://x.com/nichxbt">@nichxbt</a>)</em><br><em>Part of the <a href="https://xactions.app">XActions</a> toolkit</em></p>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try Thread Scraping?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/followers-scraping">📋 Followers Scraping</a>
+        <a href="/docs/following-scraping">📋 Following Scraping</a>
+        <a href="/docs/hashtag-scraping">#️⃣ Hashtag Scraping</a>
+        <a href="/docs/likes-scraping">❤️ Likes Scraping</a>
+        <a href="/docs/link-scraper">🔗 Link Scraper</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

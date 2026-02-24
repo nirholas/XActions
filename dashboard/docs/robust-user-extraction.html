@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Robust User Extraction from Twitter DOM — Free X/Twitter Scrapers Tool | XActions</title>
+  <meta name="description" content="How to reliably extract user information from X/Twitter's UserCell elements using a cascading fallback strategy.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, robust, user, extraction, twitter, scrapers, robust user extraction twitter, twitter robust user extraction">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Robust User Extraction from Twitter DOM — XActions">
+  <meta property="og:description" content="How to reliably extract user information from X/Twitter's UserCell elements using a cascading fallback strategy.">
+  <meta property="og:url" content="https://xactions.app/docs/robust-user-extraction">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Robust User Extraction from Twitter DOM — Free X/Twitter Tool">
+  <meta name="twitter:description" content="How to reliably extract user information from X/Twitter's UserCell elements using a cascading fallback strategy.">
+
+  <link rel="canonical" href="https://xactions.app/docs/robust-user-extraction">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Robust User Extraction from Twitter DOM — Free X/Twitter Scrapers Tool | XActions",
+    "description": "How to reliably extract user information from X/Twitter's UserCell elements using a cascading fallback strategy.",
+    "url": "https://xactions.app/docs/robust-user-extraction",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/robust-user-extraction",
+    "articleSection": "Scrapers",
+    "keywords": "xactions, twitter automation, x automation, free, robust, user, extraction, twitter, scrapers, robust user extraction twitter, twitter robust user extraction"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Robust User Extraction from Twitter DOM", "item": "https://xactions.app/docs/robust-user-extraction" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use Robust User Extraction from Twitter DOM",
+    "description": "How to reliably extract user information from X/Twitter's UserCell elements using a cascading fallback strategy.",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions Robust User Extraction from Twitter DOM script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>⚙️ Robust User Extraction from Twitter DOM</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › Robust User Extraction from Twitter DOM
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Scrapers</span>
+        <h1>🎯 Robust User Extraction from Twitter DOM</h1>
+<p>How to reliably extract user information from X/Twitter&#39;s UserCell elements using a cascading fallback strategy.</p>
+<p><strong>Author:</strong> nich (<a href="https://x.com/nichxbt">@nichxbt</a>)</p>
+<hr>
+<h2>📋 What It Does</h2>
+<ol>
+<li><strong>Extracts rich user data</strong> — Username, display name, bio, follower count, and status flags (verified, protected, follows you) from any <code>[data-testid=&quot;UserCell&quot;]</code> element</li>
+<li><strong>Uses 4-strategy cascading fallback</strong> — Bio extraction tries multiple DOM strategies in priority order, so scripts keep working when X/Twitter changes their markup</li>
+<li><strong>Includes extraction metadata</strong> — The <code>_meta</code> field tells you which strategy was used, making it easy to debug when selectors break</li>
+</ol>
+<p><strong>Use cases:</strong></p>
+<ul>
+<li>Building follower/following scraping scripts</li>
+<li>Filtering users by bio keywords (keyword follow, block bots)</li>
+<li>Auditing your audience composition</li>
+<li>Any automation that needs to read user data from a list page</li>
+</ul>
+<hr>
+<h2>🔧 Using the Core Module</h2>
+<p>The canonical extraction function lives in <code>src/automation/core.js</code>. Load it first, then use <code>extractUserFromCell</code> on any page that renders UserCell elements.</p>
+<p><strong>Steps:</strong></p>
+<ol>
+<li>Go to any X/Twitter page with user lists (e.g. <code>x.com/YOUR_USERNAME/following</code>)</li>
+<li>Open browser console (F12 → Console tab)</li>
+<li>Paste the contents of <code>src/automation/core.js</code></li>
+<li>Run the extraction code below</li>
+</ol>
+<pre><code class="language-javascript">// ============================================
+// XActions - Robust User Extraction (Core Module)
+// Author: nich (@nichxbt)
+// Prerequisite: paste src/automation/core.js first
+// ============================================
+
+(() =&gt; {
+  const { extractUserFromCell, SELECTORS } = window.XActions.Core;
+
+  // Get all user cells currently rendered on the page
+  const cells = document.querySelectorAll(SELECTORS.userCell);
+  console.log(`📋 Found ${cells.length} UserCell elements`);
+
+  // Extract user info from each cell
+  const users = Array.from(cells).map(extractUserFromCell).filter(Boolean);
+  console.log(`✅ Successfully extracted ${users.length} users`);
+
+  // Display results
+  users.forEach(user =&gt; {
+    console.log(`@${user.username} — ${user.bio.substring(0, 60)}${user.bio.length &gt; 60 ? &#39;...&#39; : &#39;&#39;}`);
+    console.log(`  Display name: ${user.displayName}`);
+    console.log(`  Followers: ${user.followers}`);
+    console.log(`  Follows you: ${user.followsYou}`);
+    console.log(`  Verified: ${user.isVerified}`);
+    console.log(`  Bio strategy: ${user._meta.bioStrategy}`);
+    console.log(&#39;&#39;);
+  });
+
+  // Copy to clipboard as JSON
+  const json = JSON.stringify(users, null, 2);
+  copy(json);
+  console.log(&#39;📋 Copied full results to clipboard as JSON&#39;);
+})();
+</code></pre>
+<h3>Return Value Shape</h3>
+<p>Each extracted user object looks like this:</p>
+<pre><code class="language-javascript">{
+  username: &quot;nichxbt&quot;,          // handle (lowercase, no @)
+  displayName: &quot;nich&quot;,          // display name
+  bio: &quot;Building XActions...&quot;,  // bio text (may be empty)
+  followers: 12500,             // parsed follower count (number)
+  isFollowing: true,            // you follow this user
+  followsYou: true,             // this user follows you
+  isVerified: false,            // has verified badge
+  isProtected: false,           // has protected/locked account
+  _meta: {
+    bioStrategy: &quot;testid&quot;,      // which strategy found the bio
+    nameStrategy: &quot;testid&quot;      // which strategy found the name
+  }
+}
+</code></pre>
+<hr>
+<h2>🌐 Standalone Version (No Core Dependency)</h2>
+<p>If you don&#39;t want to load the full core module, here&#39;s a self-contained extraction script you can paste directly into the browser console.</p>
+<pre><code class="language-javascript">// ============================================
+// XActions - Standalone User Extraction
+// Author: nich (@nichxbt)
+// Go to: x.com/YOUR_USERNAME/following (or /followers)
+// Open console (F12), paste this
+// ============================================
+
+(async () =&gt; {
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+
+  // Bio extraction with 4-strategy fallback chain
+  // (Standalone copy of the logic in src/automation/core.js)
+  const extractBio = (cell, displayName) =&gt; {
+    // Strategy 1: data-testid=&quot;UserDescription&quot; (most reliable)
+    const testId = cell.querySelector(&#39;[data-testid=&quot;UserDescription&quot;]&#39;);
+    if (testId?.textContent?.trim()) return { bio: testId.textContent.trim(), strategy: &#39;testid&#39; };
+
+    // Strategy 2: dir=&quot;auto&quot; excluding testid elements
+    const autoDir = cell.querySelector(&#39;[dir=&quot;auto&quot;]:not([data-testid])&#39;);
+    if (autoDir?.textContent?.trim()?.length &gt;= 10) {
+      const text = autoDir.textContent.trim();
+      if (!text.startsWith(&#39;@&#39;) &amp;&amp; text !== displayName) {
+        return { bio: text, strategy: &#39;dir-auto&#39; };
+      }
+    }
+
+    // Strategy 3: dir=&quot;auto&quot; excluding role attributes
+    const candidates = cell.querySelectorAll(&#39;[dir=&quot;auto&quot;]:not([role])&#39;);
+    for (const el of candidates) {
+      if (el.closest(&#39;a&#39;)) continue;
+      const text = el.textContent.trim();
+      if (text &amp;&amp; !text.startsWith(&#39;@&#39;) &amp;&amp; text.length &gt;= 10 &amp;&amp; text !== displayName) {
+        return { bio: text, strategy: &#39;dir-no-role&#39; };
+      }
+    }
+
+    // Strategy 4: span scan (last resort)
+    const spans = cell.querySelectorAll(&#39;span&#39;);
+    for (const span of spans) {
+      if (span.closest(&#39;a&#39;)) continue;
+      const text = span.textContent.trim();
+      if (text.startsWith(&#39;@&#39;) || text.length &lt; 15) continue;
+      if (text === displayName) continue;
+      if (/^\d[\d,.]*[KMB]?\s*(followers?|following)/i.test(text)) continue;
+      return { bio: text, strategy: &#39;span-scan&#39; };
+    }
+
+    return { bio: &#39;&#39;, strategy: &#39;none&#39; };
+  };
+
+  // Parse follower counts like &quot;12.5K&quot; → 12500
+  const parseCount = (str) =&gt; {
+    if (!str) return 0;
+    str = str.replace(/,/g, &#39;&#39;);
+    const num = parseFloat(str);
+    if (str.endsWith(&#39;K&#39;)) return Math.round(num * 1000);
+    if (str.endsWith(&#39;M&#39;)) return Math.round(num * 1000000);
+    if (str.endsWith(&#39;B&#39;)) return Math.round(num * 1000000000);
+    return Math.round(num) || 0;
+  };
+
+  // Extract all data from a single UserCell
+  const extractUser = (cell) =&gt; {
+    if (!cell) return null;
+    try {
+      // Username from first link href
+      let username = &#39;&#39;;
+      const link = cell.querySelector(&#39;a[href^=&quot;/&quot;]&#39;);
+      if (link) {
+        const match = link.getAttribute(&#39;href&#39;).match(/^\/([^/]+)$/);
+        if (match) username = match[1].toLowerCase();
+      }
+      if (!username) return null;
+
+      // Display name
+      let displayName = &#39;&#39;;
+      const nameEl = cell.querySelector(&#39;[data-testid=&quot;User-Name&quot;]&#39;);
+      if (nameEl) {
+        for (const span of nameEl.querySelectorAll(&#39;span&#39;)) {
+          const text = span.textContent.trim();
+          if (text &amp;&amp; !text.startsWith(&#39;@&#39;) &amp;&amp; text.length &gt; 0) {
+            displayName = text;
+            break;
+          }
+        }
+      }
+      if (!displayName) displayName = username;
+
+      // Bio (4-strategy fallback)
+      const { bio, strategy: bioStrategy } = extractBio(cell, displayName);
+
+      // Follower count
+      let followers = 0;
+      const followerMatch = (cell.textContent || &#39;&#39;).match(/(\d[\d,]*\.?\d*[KMB]?)\s*Follower/i);
+      if (followerMatch) followers = parseCount(followerMatch[1]);
+
+      // Status flags
+      const isFollowing = !!cell.querySelector(&#39;[data-testid$=&quot;-unfollow&quot;]&#39;);
+      const followsYou = !!cell.querySelector(&#39;[data-testid=&quot;userFollowIndicator&quot;]&#39;);
+      const isVerified = !!cell.querySelector(&#39;[data-testid=&quot;icon-verified&quot;]&#39;) ||
+                         !!cell.querySelector(&#39;svg[aria-label*=&quot;Verified&quot;]&#39;);
+
+      return { username, displayName, bio, followers, isFollowing, followsYou, isVerified, _meta: { bioStrategy } };
+    } catch (e) {
+      console.error(`❌ Extraction error: ${e.message}`);
+      return null;
+    }
+  };
+
+  // --- Main ---
+  console.log(&#39;🎯 XActions - Standalone User Extraction&#39;);
+  console.log(&#39;=========================================&#39;);
+
+  const cells = document.querySelectorAll(&#39;[data-testid=&quot;UserCell&quot;]&#39;);
+  const users = Array.from(cells).map(extractUser).filter(Boolean);
+
+  console.log(`✅ Extracted ${users.length} users from ${cells.length} cells\n`);
+
+  // Summary table
+  const strategyCount = {};
+  users.forEach(u =&gt; {
+    const s = u._meta.bioStrategy;
+    strategyCount[s] = (strategyCount[s] || 0) + 1;
+  });
+  console.log(&#39;📊 Bio extraction strategies used:&#39;);
+  Object.entries(strategyCount).forEach(([s, n]) =&gt; console.log(`   ${s}: ${n}`));
+  console.log(&#39;&#39;);
+
+  // Print each user
+  users.forEach(u =&gt; {
+    console.log(`@${u.username} (${u.displayName}) — ${u.bio.substring(0, 60)}${u.bio.length &gt; 60 ? &#39;...&#39; : &#39;&#39;}`);
+  });
+
+  // Copy to clipboard
+  try {
+    copy(JSON.stringify(users, null, 2));
+    console.log(&#39;\n📋 Results copied to clipboard!&#39;);
+  } catch {
+    console.log(&#39;\n💡 Tip: run copy(JSON.stringify(users)) to copy results&#39;);
+  }
+})();
+</code></pre>
+<hr>
+<h2>🧪 Testing Your Extraction</h2>
+<p>Follow these steps to verify extraction is working on your account:</p>
+<h3>Quick Test (Core Module)</h3>
+<pre><code>1. Go to x.com/YOUR_USERNAME/following
+2. Open console (F12 → Console tab)
+3. Paste the contents of src/automation/core.js → you should see &quot;✅ XActions Core loaded!&quot;
+4. Run:
+</code></pre>
+<pre><code class="language-javascript">const cells = document.querySelectorAll(window.XActions.Core.SELECTORS.userCell);
+const sample = window.XActions.Core.extractUserFromCell(cells[0]);
+console.log(JSON.stringify(sample, null, 2));
+</code></pre>
+<p><strong>What to check:</strong></p>
+<ul>
+<li><code>username</code> should be a valid handle (lowercase, no <code>@</code>)</li>
+<li><code>displayName</code> should match what you see on the page</li>
+<li><code>bio</code> should contain actual bio text (not empty, not a username)</li>
+<li><code>_meta.bioStrategy</code> should be <code>&quot;testid&quot;</code> for most cells — if you see <code>&quot;fallback&quot;</code> frequently, Twitter may have changed their DOM</li>
+</ul>
+<h3>Quick Test (Standalone)</h3>
+<pre><code>1. Go to x.com/YOUR_USERNAME/followers
+2. Paste the standalone script above
+3. Check console output for strategy breakdown
+4. If most bios show strategy &quot;none&quot;, selectors may need updating
+</code></pre>
+<hr>
+<h2>📊 Strategy Reference Table</h2>
+<p>The bio extraction uses a cascading fallback — it tries each strategy in order and stops at the first successful match.</p>
+<table>
+<thead>
+<tr>
+<th>Priority</th>
+<th>Strategy</th>
+<th>Selector</th>
+<th>When It Works</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><code>testid</code></td>
+<td><code>[data-testid=&quot;UserDescription&quot;]</code></td>
+<td>Standard UserCell rendering (most common)</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>dir-auto</code></td>
+<td><code>[dir=&quot;auto&quot;]:not([data-testid])</code></td>
+<td>Variant DOM without testids</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>dir-no-role</code></td>
+<td><code>[dir=&quot;auto&quot;]:not([role])</code></td>
+<td>Further variant DOMs (skips link elements)</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>span-scan</code></td>
+<td>All <code>span</code> elements</td>
+<td>Last resort — major DOM changes</td>
+</tr>
+</tbody></table>
+<p><strong>How to interpret <code>_meta.bioStrategy</code>:</strong></p>
+<ul>
+<li><strong><code>testid</code></strong> — Everything is normal, Twitter&#39;s standard test IDs are present</li>
+<li><strong><code>dir-auto</code></strong> or <strong><code>dir-no-role</code></strong> — Variant rendering detected, but extraction succeeded</li>
+<li><strong><code>span-scan</code></strong> — Fallback mode; extraction worked but DOM has changed significantly</li>
+<li><strong><code>none</code></strong> — No bio found (user may genuinely have no bio, or all strategies failed)</li>
+</ul>
+<hr>
+<h2>⚠️ Notes</h2>
+<ul>
+<li>Always load <code>core.js</code> before other automation scripts — it sets up <code>window.XActions.Core</code> which other modules depend on</li>
+<li>The <code>_meta</code> field is for debugging only — if you see <code>&quot;fallback&quot;</code> or <code>&quot;span-scan&quot;</code> frequently, Twitter may have changed their DOM and selectors may need updating</li>
+<li>Test with small samples first before running on large lists</li>
+<li>Results may vary across different X/Twitter page types (following, followers, search results, list members)</li>
+<li>The standalone version is a snapshot of the core logic — for the latest strategies, always prefer loading <code>core.js</code> directly</li>
+<li>Scroll the page to load more UserCells before extraction — only visible/rendered cells can be extracted</li>
+</ul>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try Robust User Extraction from Twitter DOM?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/followers-scraping">📋 Followers Scraping</a>
+        <a href="/docs/following-scraping">📋 Following Scraping</a>
+        <a href="/docs/hashtag-scraping">#️⃣ Hashtag Scraping</a>
+        <a href="/docs/likes-scraping">❤️ Likes Scraping</a>
+        <a href="/docs/link-scraper">🔗 Link Scraper</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

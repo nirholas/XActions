@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multi-Account Management — Free X/Twitter Account Management Tool | XActions</title>
+  <meta name="description" content="Manage and automate multiple X (Twitter) accounts from a single interface with intelligent rotation, per-account rate limiting, and comprehensive logging.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, multi, account, multi-account, management, account management, multi account twitter, twitter multi account">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Multi-Account Management — XActions">
+  <meta property="og:description" content="Manage and automate multiple X (Twitter) accounts from a single interface with intelligent rotation, per-account rate limiting, and comprehensive logging.">
+  <meta property="og:url" content="https://xactions.app/docs/multi-account">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Multi-Account Management — Free X/Twitter Tool">
+  <meta name="twitter:description" content="Manage and automate multiple X (Twitter) accounts from a single interface with intelligent rotation, per-account rate limiting, and comprehensive logging.">
+
+  <link rel="canonical" href="https://xactions.app/docs/multi-account">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Multi-Account Management — Free X/Twitter Account Management Tool | XActions",
+    "description": "Manage and automate multiple X (Twitter) accounts from a single interface with intelligent rotation, per-account rate limiting, and comprehensive logging.",
+    "url": "https://xactions.app/docs/multi-account",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/multi-account",
+    "articleSection": "Account Management",
+    "keywords": "xactions, twitter automation, x automation, free, multi, account, multi-account, management, account management, multi account twitter, twitter multi account"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Multi-Account Management", "item": "https://xactions.app/docs/multi-account" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use Multi-Account Management",
+    "description": "Manage and automate multiple X (Twitter) accounts from a single interface with intelligent rotation, per-account rate limiting, and comprehensive logging.",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions Multi-Account Management script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>👥 Multi-Account Management</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › Multi-Account Management
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Account Management</span>
+        <h1>👥 Multi-Account Management</h1>
+<p>Manage and automate multiple X (Twitter) accounts from a single interface with intelligent rotation, per-account rate limiting, and comprehensive logging.</p>
+<hr>
+<h2>📋 What It Does</h2>
+<p>Multi-Account Management enables you to:</p>
+<ol>
+<li><strong>Manage Multiple Accounts</strong> - Store and organize credentials for multiple X accounts</li>
+<li><strong>Rotate Between Accounts</strong> - Automatically switch between accounts for distributed automation</li>
+<li><strong>Per-Account Rate Limits</strong> - Respect individual rate limits to avoid suspensions</li>
+<li><strong>Session Management</strong> - Handle authentication cookies and sessions for each account</li>
+<li><strong>Centralized Logging</strong> - Track actions and stats per account</li>
+<li><strong>Account Health Monitoring</strong> - Detect and pause limited/suspended accounts</li>
+</ol>
+<p><strong>Use cases:</strong></p>
+<ul>
+<li>Social media agencies managing client accounts</li>
+<li>Brand accounts across multiple regions</li>
+<li>Personal + business account management</li>
+<li>Growth automation across account networks</li>
+<li>A/B testing engagement strategies</li>
+</ul>
+<p><strong>⚠️ Important Considerations:</strong></p>
+<ul>
+<li>Always comply with X&#39;s Terms of Service</li>
+<li>Use different IPs/proxies for each account</li>
+<li>Never link accounts through similar behavior patterns</li>
+<li>This is an advanced feature for professional users</li>
+</ul>
+<hr>
+<h2>🗂️ Example 1: Configuration File Format</h2>
+<p>Create an <code>accounts.json</code> file to store your account configurations:</p>
+<pre><code class="language-json">{
+  &quot;accounts&quot;: [
+    {
+      &quot;username&quot;: &quot;brand_official&quot;,
+      &quot;displayName&quot;: &quot;Brand Official&quot;,
+      &quot;cookies&quot;: [
+        {
+          &quot;name&quot;: &quot;auth_token&quot;,
+          &quot;value&quot;: &quot;YOUR_AUTH_TOKEN_HERE&quot;,
+          &quot;domain&quot;: &quot;.x.com&quot;,
+          &quot;path&quot;: &quot;/&quot;,
+          &quot;secure&quot;: true,
+          &quot;httpOnly&quot;: true
+        },
+        {
+          &quot;name&quot;: &quot;ct0&quot;,
+          &quot;value&quot;: &quot;YOUR_CSRF_TOKEN_HERE&quot;,
+          &quot;domain&quot;: &quot;.x.com&quot;,
+          &quot;path&quot;: &quot;/&quot;,
+          &quot;secure&quot;: true,
+          &quot;httpOnly&quot;: false
+        }
+      ],
+      &quot;proxy&quot;: &quot;http://user:pass@proxy1.example.com:8080&quot;,
+      &quot;status&quot;: &quot;active&quot;,
+      &quot;dailyLimits&quot;: {
+        &quot;follows&quot;: 50,
+        &quot;unfollows&quot;: 100,
+        &quot;likes&quot;: 200,
+        &quot;comments&quot;: 30
+      },
+      &quot;notes&quot;: &quot;Main brand account - be conservative&quot;
+    },
+    {
+      &quot;username&quot;: &quot;brand_support&quot;,
+      &quot;displayName&quot;: &quot;Brand Support&quot;,
+      &quot;cookies&quot;: [
+        {
+          &quot;name&quot;: &quot;auth_token&quot;,
+          &quot;value&quot;: &quot;YOUR_AUTH_TOKEN_HERE&quot;,
+          &quot;domain&quot;: &quot;.x.com&quot;,
+          &quot;path&quot;: &quot;/&quot;,
+          &quot;secure&quot;: true,
+          &quot;httpOnly&quot;: true
+        },
+        {
+          &quot;name&quot;: &quot;ct0&quot;,
+          &quot;value&quot;: &quot;YOUR_CSRF_TOKEN_HERE&quot;,
+          &quot;domain&quot;: &quot;.x.com&quot;,
+          &quot;path&quot;: &quot;/&quot;,
+          &quot;secure&quot;: true,
+          &quot;httpOnly&quot;: false
+        }
+      ],
+      &quot;proxy&quot;: &quot;http://user:pass@proxy2.example.com:8080&quot;,
+      &quot;status&quot;: &quot;active&quot;,
+      &quot;dailyLimits&quot;: {
+        &quot;follows&quot;: 100,
+        &quot;unfollows&quot;: 150,
+        &quot;likes&quot;: 300,
+        &quot;comments&quot;: 50
+      },
+      &quot;notes&quot;: &quot;Support account - can be more active&quot;
+    },
+    {
+      &quot;username&quot;: &quot;founder_personal&quot;,
+      &quot;displayName&quot;: &quot;Founder Personal&quot;,
+      &quot;cookies&quot;: [],
+      &quot;proxy&quot;: null,
+      &quot;status&quot;: &quot;paused&quot;,
+      &quot;dailyLimits&quot;: {
+        &quot;follows&quot;: 30,
+        &quot;unfollows&quot;: 50,
+        &quot;likes&quot;: 100,
+        &quot;comments&quot;: 20
+      },
+      &quot;notes&quot;: &quot;Personal account - currently paused&quot;
+    }
+  ],
+  &quot;globalSettings&quot;: {
+    &quot;rotationStrategy&quot;: &quot;round-robin&quot;,
+    &quot;delayBetweenAccounts&quot;: 30000,
+    &quot;pauseOnRateLimit&quot;: true,
+    &quot;logLevel&quot;: &quot;info&quot;
+  }
+}
+</code></pre>
+<h3>🔐 How to Get Your Cookies</h3>
+<ol>
+<li>Log into X in your browser</li>
+<li>Open Developer Tools (F12)</li>
+<li>Go to <strong>Application</strong> → <strong>Cookies</strong> → <code>https://x.com</code></li>
+<li>Copy the values for <code>auth_token</code> and <code>ct0</code></li>
+<li>These cookies authenticate your session without storing passwords</li>
+</ol>
+<blockquote>
+<p><strong>⚠️ Security Warning:</strong> Never share your <code>auth_token</code> cookie. It provides full access to your account!</p>
+</blockquote>
+<hr>
+<h2>💻 Example 2: Node.js with Puppeteer</h2>
+<p>Production-ready multi-account automation with account rotation, rate limiting, and logging:</p>
+<pre><code class="language-javascript">// ============================================
+// XActions - Multi-Account Manager (Puppeteer)
+// Author: nich (@nichxbt)
+// Production-ready multi-account automation
+// ============================================
+
+const puppeteer = require(&#39;puppeteer&#39;);
+const fs = require(&#39;fs&#39;);
+const path = require(&#39;path&#39;);
+
+// ============================================
+// CONFIGURATION
+// ============================================
+const CONFIG = {
+  accountsFile: &#39;./accounts.json&#39;,
+  logsDir: &#39;./logs&#39;,
+  stateDir: &#39;./state&#39;,
+  headless: true,
+  
+  // Timing (in milliseconds)
+  actionDelay: { min: 3000, max: 7000 },
+  accountCooldown: 30000,           // Delay between switching accounts
+  rateLimitPause: 15 * 60 * 1000,   // 15 min pause on rate limit
+  
+  // Viewport settings
+  viewport: { width: 1280, height: 800 },
+};
+
+// ============================================
+// UTILITIES
+// ============================================
+const sleep = (ms) =&gt; new Promise(resolve =&gt; setTimeout(resolve, ms));
+const randomDelay = (min, max) =&gt; sleep(min + Math.random() * (max - min));
+const timestamp = () =&gt; new Date().toISOString();
+
+// Ensure directories exist
+const ensureDir = (dir) =&gt; {
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+};
+
+// ============================================
+// LOGGER - Per-Account Logging
+// ============================================
+class AccountLogger {
+  constructor(username) {
+    this.username = username;
+    this.logFile = path.join(CONFIG.logsDir, `${username}.log`);
+    this.statsFile = path.join(CONFIG.stateDir, `${username}-stats.json`);
+    ensureDir(CONFIG.logsDir);
+    ensureDir(CONFIG.stateDir);
+  }
+
+  log(level, message, data = {}) {
+    const entry = {
+      timestamp: timestamp(),
+      level,
+      message,
+      ...data,
+    };
+
+    const logLine = `[${entry.timestamp}] [${level.toUpperCase()}] ${message}`;
+    console.log(`[@${this.username}] ${logLine}`);
+    
+    fs.appendFileSync(this.logFile, logLine + &#39;\n&#39;);
+    return entry;
+  }
+
+  info(message, data) { return this.log(&#39;info&#39;, message, data); }
+  warn(message, data) { return this.log(&#39;warn&#39;, message, data); }
+  error(message, data) { return this.log(&#39;error&#39;, message, data); }
+  success(message, data) { return this.log(&#39;success&#39;, message, data); }
+
+  // Load/save daily stats
+  getStats() {
+    try {
+      if (fs.existsSync(this.statsFile)) {
+        const data = JSON.parse(fs.readFileSync(this.statsFile, &#39;utf8&#39;));
+        // Reset stats if it&#39;s a new day
+        if (data.date !== new Date().toDateString()) {
+          return this.resetStats();
+        }
+        return data;
+      }
+    } catch (e) {}
+    return this.resetStats();
+  }
+
+  resetStats() {
+    const stats = {
+      date: new Date().toDateString(),
+      follows: 0,
+      unfollows: 0,
+      likes: 0,
+      comments: 0,
+      errors: 0,
+    };
+    this.saveStats(stats);
+    return stats;
+  }
+
+  saveStats(stats) {
+    fs.writeFileSync(this.statsFile, JSON.stringify(stats, null, 2));
+  }
+
+  incrementStat(action, count = 1) {
+    const stats = this.getStats();
+    stats[action] = (stats[action] || 0) + count;
+    this.saveStats(stats);
+    return stats;
+  }
+}
+
+// ============================================
+// RATE LIMITER - Per-Account Limits
+// ============================================
+class RateLimiter {
+  constructor(account, logger) {
+    this.account = account;
+    this.logger = logger;
+    this.limits = account.dailyLimits || {
+      follows: 50,
+      unfollows: 100,
+      likes: 200,
+      comments: 30,
+    };
+  }
+
+  canPerform(action) {
+    const stats = this.logger.getStats();
+    const current = stats[action] || 0;
+    const limit = this.limits[action] || 100;
+    
+    if (current &gt;= limit) {
+      this.logger.warn(`Daily limit reached for ${action}: ${current}/${limit}`);
+      return false;
+    }
+    
+    return true;
+  }
+
+  record(action) {
+    this.logger.incrementStat(action);
+  }
+
+  getRemaining(action) {
+    const stats = this.logger.getStats();
+    const current = stats[action] || 0;
+    const limit = this.limits[action] || 100;
+    return Math.max(0, limit - current);
+  }
+
+  printStatus() {
+    const stats = this.logger.getStats();
+    console.log(`\n📊 Rate Limit Status for @${this.account.username}:`);
+    for (const [action, limit] of Object.entries(this.limits)) {
+      const current = stats[action] || 0;
+      const remaining = limit - current;
+      const bar = &#39;█&#39;.repeat(Math.round((current / limit) * 20)).padEnd(20, &#39;░&#39;);
+      console.log(`   ${action}: [${bar}] ${current}/${limit} (${remaining} remaining)`);
+    }
+  }
+}
+
+// ============================================
+// ACCOUNT MANAGER
+// ============================================
+class MultiAccountManager {
+  constructor() {
+    this.accounts = [];
+    this.browsers = new Map();  // username -&gt; browser instance
+    this.currentIndex = 0;
+    this.loadAccounts();
+  }
+
+  loadAccounts() {
+    try {
+      const data = JSON.parse(fs.readFileSync(CONFIG.accountsFile, &#39;utf8&#39;));
+      this.accounts = data.accounts.filter(a =&gt; a.status === &#39;active&#39;);
+      this.settings = data.globalSettings || {};
+      console.log(`✅ Loaded ${this.accounts.length} active accounts`);
+    } catch (error) {
+      console.error(&#39;❌ Failed to load accounts:&#39;, error.message);
+      this.accounts = [];
+    }
+  }
+
+  // Get next account in rotation
+  getNextAccount() {
+    if (this.accounts.length === 0) return null;
+    
+    const account = this.accounts[this.currentIndex];
+    this.currentIndex = (this.currentIndex + 1) % this.accounts.length;
+    return account;
+  }
+
+  // Get all active accounts
+  getActiveAccounts() {
+    return this.accounts.filter(a =&gt; a.status === &#39;active&#39;);
+  }
+
+  // Update account status
+  updateAccountStatus(username, status) {
+    const account = this.accounts.find(a =&gt; a.username === username);
+    if (account) {
+      account.status = status;
+      console.log(`📝 Updated @${username} status to: ${status}`);
+    }
+  }
+
+  // Initialize browser for an account
+  async initBrowser(account) {
+    if (this.browsers.has(account.username)) {
+      return this.browsers.get(account.username);
+    }
+
+    const launchOptions = {
+      headless: CONFIG.headless ? &#39;new&#39; : false,
+      args: [
+        &#39;--no-sandbox&#39;,
+        &#39;--disable-setuid-sandbox&#39;,
+        &#39;--disable-dev-shm-usage&#39;,
+        &#39;--disable-blink-features=AutomationControlled&#39;,
+      ],
+    };
+
+    // Add proxy if configured
+    if (account.proxy) {
+      launchOptions.args.push(`--proxy-server=${account.proxy}`);
+    }
+
+    const browser = await puppeteer.launch(launchOptions);
+    const page = await browser.newPage();
+
+    // Set viewport
+    await page.setViewport(CONFIG.viewport);
+
+    // Set user agent
+    await page.setUserAgent(
+      &#39;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 &#39; +
+      &#39;(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36&#39;
+    );
+
+    // Inject cookies
+    if (account.cookies &amp;&amp; account.cookies.length &gt; 0) {
+      await page.setCookie(...account.cookies);
+    }
+
+    this.browsers.set(account.username, { browser, page });
+    return { browser, page };
+  }
+
+  // Close browser for an account
+  async closeBrowser(username) {
+    const instance = this.browsers.get(username);
+    if (instance) {
+      await instance.browser.close();
+      this.browsers.delete(username);
+    }
+  }
+
+  // Close all browsers
+  async closeAll() {
+    for (const [username, { browser }] of this.browsers) {
+      await browser.close();
+      console.log(`🔒 Closed browser for @${username}`);
+    }
+    this.browsers.clear();
+  }
+}
+
+// ============================================
+// ACTION EXECUTOR
+// ============================================
+class ActionExecutor {
+  constructor(account, page, logger, rateLimiter) {
+    this.account = account;
+    this.page = page;
+    this.logger = logger;
+    this.rateLimiter = rateLimiter;
+  }
+
+  // Navigate to X
+  async goToX() {
+    await this.page.goto(&#39;https://x.com/home&#39;, { 
+      waitUntil: &#39;networkidle2&#39;,
+      timeout: 30000,
+    });
+    await sleep(2000);
+    
+    // Check if logged in
+    const isLoggedIn = await this.page.evaluate(() =&gt; {
+      return !!document.querySelector(&#39;[data-testid=&quot;SideNav_AccountSwitcher_Button&quot;]&#39;);
+    });
+
+    if (!isLoggedIn) {
+      this.logger.error(&#39;Not logged in - cookies may be expired&#39;);
+      return false;
+    }
+
+    this.logger.success(&#39;Successfully authenticated&#39;);
+    return true;
+  }
+
+  // Like a tweet by URL
+  async likeTweet(tweetUrl) {
+    if (!this.rateLimiter.canPerform(&#39;likes&#39;)) {
+      return { success: false, reason: &#39;rate_limit&#39; };
+    }
+
+    try {
+      await this.page.goto(tweetUrl, { waitUntil: &#39;networkidle2&#39; });
+      await randomDelay(CONFIG.actionDelay.min, CONFIG.actionDelay.max);
+
+      // Find and click the like button
+      const likeButton = await this.page.$(&#39;[data-testid=&quot;like&quot;]&#39;);
+      if (!likeButton) {
+        // Already liked or not found
+        const unlikeButton = await this.page.$(&#39;[data-testid=&quot;unlike&quot;]&#39;);
+        if (unlikeButton) {
+          this.logger.info(&#39;Tweet already liked&#39;);
+          return { success: true, reason: &#39;already_liked&#39; };
+        }
+        return { success: false, reason: &#39;button_not_found&#39; };
+      }
+
+      await likeButton.click();
+      await sleep(1000);
+
+      this.rateLimiter.record(&#39;likes&#39;);
+      this.logger.success(`Liked tweet: ${tweetUrl}`);
+      return { success: true };
+    } catch (error) {
+      this.logger.error(`Failed to like tweet: ${error.message}`);
+      return { success: false, reason: error.message };
+    }
+  }
+
+  // Follow a user
+  async followUser(username) {
+    if (!this.rateLimiter.canPerform(&#39;follows&#39;)) {
+      return { success: false, reason: &#39;rate_limit&#39; };
+    }
+
+    try {
+      await this.page.goto(`https://x.com/${username}`, { waitUntil: &#39;networkidle2&#39; });
+      await randomDelay(CONFIG.actionDelay.min, CONFIG.actionDelay.max);
+
+      // Check for follow button
+      const followButton = await this.page.$(&#39;[data-testid$=&quot;-follow&quot;]&#39;);
+      if (!followButton) {
+        const followingButton = await this.page.$(&#39;[data-testid$=&quot;-unfollow&quot;]&#39;);
+        if (followingButton) {
+          this.logger.info(`Already following @${username}`);
+          return { success: true, reason: &#39;already_following&#39; };
+        }
+        return { success: false, reason: &#39;button_not_found&#39; };
+      }
+
+      await followButton.click();
+      await sleep(1000);
+
+      this.rateLimiter.record(&#39;follows&#39;);
+      this.logger.success(`Followed @${username}`);
+      return { success: true };
+    } catch (error) {
+      this.logger.error(`Failed to follow @${username}: ${error.message}`);
+      return { success: false, reason: error.message };
+    }
+  }
+
+  // Unfollow a user
+  async unfollowUser(username) {
+    if (!this.rateLimiter.canPerform(&#39;unfollows&#39;)) {
+      return { success: false, reason: &#39;rate_limit&#39; };
+    }
+
+    try {
+      await this.page.goto(`https://x.com/${username}`, { waitUntil: &#39;networkidle2&#39; });
+      await randomDelay(CONFIG.actionDelay.min, CONFIG.actionDelay.max);
+
+      // Look for Following/Unfollow button
+      const followingButton = await this.page.$(&#39;[data-testid$=&quot;-unfollow&quot;]&#39;);
+      if (!followingButton) {
+        this.logger.info(`Not following @${username}`);
+        return { success: true, reason: &#39;not_following&#39; };
+      }
+
+      await followingButton.click();
+      await sleep(500);
+
+      // Confirm unfollow in modal
+      const confirmButton = await this.page.$(&#39;[data-testid=&quot;confirmationSheetConfirm&quot;]&#39;);
+      if (confirmButton) {
+        await confirmButton.click();
+        await sleep(1000);
+      }
+
+      this.rateLimiter.record(&#39;unfollows&#39;);
+      this.logger.success(`Unfollowed @${username}`);
+      return { success: true };
+    } catch (error) {
+      this.logger.error(`Failed to unfollow @${username}: ${error.message}`);
+      return { success: false, reason: error.message };
+    }
+  }
+}
+
+// ============================================
+// MAIN ORCHESTRATOR
+// ============================================
+async function runMultiAccountAutomation(tasks) {
+  console.log(&#39;\n&#39; + &#39;═&#39;.repeat(60));
+  console.log(&#39;👥 XActions Multi-Account Manager&#39;);
+  console.log(&#39;═&#39;.repeat(60));
+
+  const manager = new MultiAccountManager();
+  const accounts = manager.getActiveAccounts();
+
+  if (accounts.length === 0) {
+    console.error(&#39;❌ No active accounts found. Check your accounts.json file.&#39;);
+    return;
+  }
+
+  console.log(`\n📋 Found ${accounts.length} active accounts:`);
+  accounts.forEach((a, i) =&gt; console.log(`   ${i + 1}. @${a.username}`));
+
+  // Process each account
+  for (const account of accounts) {
+    console.log(`\n${&#39;─&#39;.repeat(50)}`);
+    console.log(`🔄 Switching to @${account.username}`);
+    console.log(`${&#39;─&#39;.repeat(50)}`);
+
+    const logger = new AccountLogger(account.username);
+    const rateLimiter = new RateLimiter(account, logger);
+
+    try {
+      // Initialize browser with account
+      const { browser, page } = await manager.initBrowser(account);
+      const executor = new ActionExecutor(account, page, logger, rateLimiter);
+
+      // Authenticate
+      const loggedIn = await executor.goToX();
+      if (!loggedIn) {
+        manager.updateAccountStatus(account.username, &#39;auth_failed&#39;);
+        continue;
+      }
+
+      // Execute tasks for this account
+      if (tasks &amp;&amp; tasks.length &gt; 0) {
+        for (const task of tasks) {
+          logger.info(`Executing task: ${task.type}`);
+
+          switch (task.type) {
+            case &#39;follow&#39;:
+              for (const username of task.targets || []) {
+                await executor.followUser(username);
+                await randomDelay(CONFIG.actionDelay.min, CONFIG.actionDelay.max);
+              }
+              break;
+
+            case &#39;unfollow&#39;:
+              for (const username of task.targets || []) {
+                await executor.unfollowUser(username);
+                await randomDelay(CONFIG.actionDelay.min, CONFIG.actionDelay.max);
+              }
+              break;
+
+            case &#39;like&#39;:
+              for (const tweetUrl of task.targets || []) {
+                await executor.likeTweet(tweetUrl);
+                await randomDelay(CONFIG.actionDelay.min, CONFIG.actionDelay.max);
+              }
+              break;
+
+            default:
+              logger.warn(`Unknown task type: ${task.type}`);
+          }
+        }
+      }
+
+      // Print rate limit status
+      rateLimiter.printStatus();
+
+    } catch (error) {
+      logger.error(`Account error: ${error.message}`);
+      manager.updateAccountStatus(account.username, &#39;error&#39;);
+    }
+
+    // Cooldown before next account
+    if (accounts.indexOf(account) &lt; accounts.length - 1) {
+      console.log(`\n⏳ Cooling down for ${CONFIG.accountCooldown / 1000}s before next account...`);
+      await sleep(CONFIG.accountCooldown);
+    }
+  }
+
+  // Cleanup
+  await manager.closeAll();
+
+  console.log(&#39;\n&#39; + &#39;═&#39;.repeat(60));
+  console.log(&#39;✅ Multi-account automation complete!&#39;);
+  console.log(&#39;═&#39;.repeat(60) + &#39;\n&#39;);
+}
+
+// ============================================
+// EXAMPLE USAGE
+// ============================================
+
+// Example: Run tasks across all accounts
+const exampleTasks = [
+  {
+    type: &#39;follow&#39;,
+    targets: [&#39;elonmusk&#39;, &#39;naval&#39;, &#39;paulg&#39;],
+  },
+  {
+    type: &#39;like&#39;,
+    targets: [
+      &#39;https://x.com/user/status/123456789&#39;,
+    ],
+  },
+];
+
+// Run the automation
+// runMultiAccountAutomation(exampleTasks);
+
+// ============================================
+// EXPORTS
+// ============================================
+module.exports = {
+  MultiAccountManager,
+  AccountLogger,
+  RateLimiter,
+  ActionExecutor,
+  runMultiAccountAutomation,
+  CONFIG,
+};
+</code></pre>
+<h3>📁 Directory Structure</h3>
+<p>After running the multi-account script, your project will look like:</p>
+<pre><code>project/
+├── accounts.json          # Account configurations
+├── multi-account.js       # The script above
+├── logs/
+│   ├── brand_official.log
+│   ├── brand_support.log
+│   └── founder_personal.log
+└── state/
+    ├── brand_official-stats.json
+    ├── brand_support-stats.json
+    └── founder_personal-stats.json
+</code></pre>
+<hr>
+<h2>🛡️ Safety Tips</h2>
+<p>Managing multiple accounts requires careful attention to avoid detection and account suspensions:</p>
+<h3>🌐 Use Different IPs/Proxies</h3>
+<pre><code class="language-javascript">// Each account should use a unique proxy
+const accounts = [
+  {
+    username: &#39;account1&#39;,
+    proxy: &#39;http://user:pass@us-proxy.example.com:8080&#39;,   // US IP
+  },
+  {
+    username: &#39;account2&#39;,
+    proxy: &#39;http://user:pass@uk-proxy.example.com:8080&#39;,   // UK IP
+  },
+  {
+    username: &#39;account3&#39;,
+    proxy: &#39;http://user:pass@de-proxy.example.com:8080&#39;,   // Germany IP
+  },
+];
+</code></pre>
+<p><strong>Recommended proxy types:</strong></p>
+<ul>
+<li>✅ Residential proxies (best, looks like real users)</li>
+<li>✅ Mobile proxies (excellent, uses mobile carrier IPs)</li>
+<li>⚠️ Datacenter proxies (risky, easily detected)</li>
+</ul>
+<h3>🔗 Don&#39;t Link Accounts</h3>
+<p><strong>Never do these things that link accounts:</strong></p>
+<ul>
+<li>❌ Follow the same accounts from multiple accounts</li>
+<li>❌ Like/retweet the same content from all accounts</li>
+<li>❌ Use similar usernames, bios, or profile pictures</li>
+<li>❌ Post similar content or at similar times</li>
+<li>❌ Use the same device/browser fingerprint</li>
+<li>❌ Access from the same IP address</li>
+</ul>
+<p><strong>Instead:</strong></p>
+<ul>
+<li>✅ Give each account unique behavior patterns</li>
+<li>✅ Use different niches/interests per account</li>
+<li>✅ Randomize action timing significantly</li>
+<li>✅ Use different browser profiles/fingerprints</li>
+</ul>
+<h3>⏱️ Proper Delays</h3>
+<pre><code class="language-javascript">// Conservative delay configuration
+const SAFE_DELAYS = {
+  // Between individual actions
+  actionDelay: { min: 5000, max: 15000 },    // 5-15 seconds
+  
+  // Between switching accounts  
+  accountCooldown: 60000,                     // 1 minute
+  
+  // Daily limits per account
+  dailyLimits: {
+    follows: 30,      // Very conservative
+    unfollows: 50,
+    likes: 100,
+    comments: 15,
+  },
+  
+  // Working hours (to appear human)
+  activeHours: { start: 8, end: 22 },        // 8 AM - 10 PM
+  
+  // Rest days
+  restDaysPerWeek: 2,                         // Take 2 random days off
+};
+</code></pre>
+<h3>🚨 Handle Rate Limits Gracefully</h3>
+<pre><code class="language-javascript">// Detect and handle rate limits
+async function handleRateLimitDetection(page, logger, account) {
+  // Check for rate limit indicators
+  const rateLimited = await page.evaluate(() =&gt; {
+    const text = document.body.innerText.toLowerCase();
+    return text.includes(&#39;rate limit&#39;) || 
+           text.includes(&#39;try again later&#39;) ||
+           text.includes(&#39;temporarily restricted&#39;);
+  });
+
+  if (rateLimited) {
+    logger.warn(&#39;Rate limit detected! Pausing account...&#39;);
+    
+    // Mark account as limited
+    account.status = &#39;limited&#39;;
+    account.limitedUntil = Date.now() + (60 * 60 * 1000); // 1 hour pause
+    
+    // Save state
+    saveAccountState(account);
+    
+    return true;
+  }
+  
+  return false;
+}
+</code></pre>
+<h3>📊 Monitor Account Health</h3>
+<pre><code class="language-javascript">// Regular health checks
+async function checkAccountHealth(page, username, logger) {
+  try {
+    await page.goto(`https://x.com/${username}`, { waitUntil: &#39;networkidle2&#39; });
+    
+    // Check if account is suspended
+    const suspended = await page.evaluate(() =&gt; {
+      return document.body.innerText.includes(&#39;Account suspended&#39;);
+    });
+    
+    if (suspended) {
+      logger.error(&#39;Account is SUSPENDED!&#39;);
+      return { status: &#39;suspended&#39;, healthy: false };
+    }
+    
+    // Check if account is restricted
+    const restricted = await page.evaluate(() =&gt; {
+      return document.body.innerText.includes(&#39;temporarily restricted&#39;);
+    });
+    
+    if (restricted) {
+      logger.warn(&#39;Account is temporarily restricted&#39;);
+      return { status: &#39;restricted&#39;, healthy: false };
+    }
+    
+    return { status: &#39;active&#39;, healthy: true };
+  } catch (error) {
+    logger.error(`Health check failed: ${error.message}`);
+    return { status: &#39;error&#39;, healthy: false };
+  }
+}
+</code></pre>
+<hr>
+<h2>🌐 Website Alternative</h2>
+<p>Don&#39;t want to run scripts? <strong><a href="https://xactions.app">xactions.app</a></strong> Pro tier includes multi-account management with a visual dashboard:</p>
+<h3>✨ Pro Tier Features</h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Script</th>
+<th>xactions.app Pro</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Multi-account support</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Visual dashboard</td>
+<td>❌</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Automatic proxy rotation</td>
+<td>❌</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Account health monitoring</td>
+<td>Manual</td>
+<td>✅ Automatic</td>
+</tr>
+<tr>
+<td>Scheduled automation</td>
+<td>Cron jobs</td>
+<td>✅ Built-in</td>
+</tr>
+<tr>
+<td>Team collaboration</td>
+<td>❌</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Analytics &amp; reports</td>
+<td>Basic logs</td>
+<td>✅ Advanced</td>
+</tr>
+<tr>
+<td>Priority support</td>
+<td>Community</td>
+<td>✅ 24/7</td>
+</tr>
+</tbody></table>
+<h3>🚀 Getting Started with xactions.app</h3>
+<ol>
+<li>Go to <a href="https://xactions.app/pricing">xactions.app/pricing</a></li>
+<li>Sign up for Pro tier</li>
+<li>Connect your accounts via secure OAuth</li>
+<li>Configure automation rules in the dashboard</li>
+<li>Monitor everything from a single interface</li>
+</ol>
+<p><strong>Pro tier is ideal for:</strong></p>
+<ul>
+<li>Agencies managing 5+ accounts</li>
+<li>Teams needing collaboration features</li>
+<li>Users who prefer GUI over code</li>
+<li>Those needing 24/7 automated monitoring</li>
+</ul>
+<hr>
+<h2>📚 Related Examples</h2>
+<ul>
+<li><a href="unfollow-everyone.md">unfollow-everyone.md</a> - Unfollow all accounts</li>
+<li><a href="unfollow-non-followers.md">unfollow-non-followers.md</a> - Unfollow non-followers</li>
+<li><a href="auto-liker.md">auto-liker.md</a> - Automated liking</li>
+<li><a href="followers-scraping.md">followers-scraping.md</a> - Scrape follower lists</li>
+<li><a href="monitor-account.md">monitor-account.md</a> - Account monitoring</li>
+</ul>
+<hr>
+<h2>📄 License</h2>
+<p>MIT License - See <a href="../../LICENSE">LICENSE</a></p>
+<hr>
+<p><em>Author: nich (<a href="https://x.com/nichxbt">@nichxbt</a>)</em><br><em>Part of the <a href="https://github.com/nirholas/XActions">XActions</a> toolkit</em></p>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try Multi-Account Management?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/backup-account">💾 Backup Account</a>
+        <a href="/docs/download-account-data">📥 Download Account Data</a>
+        <a href="/docs/profile-management">👤 Profile Management</a>
+        <a href="/docs/qr-code-sharing">📱 Qr Code Sharing</a>
+        <a href="/docs/update-profile">✏️ Update Profile</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

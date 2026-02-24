@@ -31,27 +31,57 @@
     onboardingModal: $('#onboardingModal'),
     btnOnboardingStart: $('#btnOnboardingStart'),
     onboardingEnablePopular: $('#onboardingEnablePopular'),
+    disconnectedBanner: $('#disconnectedBanner'),
+    toastContainer: $('#toastContainer'),
+    dashRunning: $('#dashRunning'),
+    dashTodayActions: $('#dashTodayActions'),
+    dashTotalActions: $('#dashTotalActions'),
+    dashSessionTime: $('#dashSessionTime'),
+    automationSearch: $('#automationSearch'),
+    logFilter: $('#logFilter'),
   };
 
   // ============================================
   // STATE
   // ============================================
-  let automationState = {};  // { autoLiker: { running, actionCount, ... } }
+  let automationState = {};
   let activityEntries = [];
+  let currentCategory = 'all';
+  let currentLogFilter = 'all';
+  let sessionTimerInterval = null;
+  let earliestStartTime = null;
 
   // ============================================
   // INITIALIZATION
   // ============================================
   async function init() {
     setupTabs();
+    setupCategoryFilters();
+    setupSearch();
     setupAutomationCards();
+    setupSpeedPresets();
+    setupDelaySliders();
     setupGlobalControls();
     setupSettings();
+    setupLogFilter();
     await loadState();
     await checkConnection();
     await checkFirstRun();
     await checkRateLimit();
     startActivityPolling();
+    startSessionTimer();
+  }
+
+  // ============================================
+  // TOAST NOTIFICATIONS
+  // ============================================
+  function showToast(message, type = 'info') {
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    const icons = { success: '✅', error: '❌', warning: '⚠️', info: '📘' };
+    toast.innerHTML = `<span class="toast-icon">${icons[type] || icons.info}</span><span class="toast-msg">${escapeHtml(message)}</span>`;
+    DOM.toastContainer.appendChild(toast);
+    setTimeout(() => toast.remove(), 3200);
   }
 
   // ============================================
@@ -66,6 +96,37 @@
         $(`#tab-${tab.dataset.tab}`).classList.add('active');
       });
     });
+  }
+
+  // ============================================
+  // CATEGORY FILTERS
+  // ============================================
+  function setupCategoryFilters() {
+    $$('.cat-filter').forEach(btn => {
+      btn.addEventListener('click', () => {
+        $$('.cat-filter').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentCategory = btn.dataset.category;
+        filterCards();
+      });
+    });
+  }
+
+  function filterCards() {
+    const searchTerm = DOM.automationSearch.value.toLowerCase().trim();
+    $$('.automation-card').forEach(card => {
+      const catMatch = currentCategory === 'all' || card.dataset.category === currentCategory;
+      const searchMatch = !searchTerm || (card.dataset.searchable || '').toLowerCase().includes(searchTerm)
+        || card.querySelector('.card-title')?.textContent.toLowerCase().includes(searchTerm);
+      card.classList.toggle('card-hidden', !(catMatch && searchMatch));
+    });
+  }
+
+  // ============================================
+  // SEARCH
+  // ============================================
+  function setupSearch() {
+    DOM.automationSearch.addEventListener('input', filterCards);
   }
 
   // ============================================
@@ -97,6 +158,46 @@
     });
   }
 
+  // ============================================
+  // SPEED PRESETS
+  // ============================================
+  function setupSpeedPresets() {
+    $$('.speed-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const row = btn.closest('.speed-preset-row');
+        row.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        // Update the delay slider if it exists in same card
+        const card = btn.closest('.card-settings');
+        const slider = card?.querySelector('.delay-slider');
+        if (slider) {
+          slider.value = btn.dataset.min;
+          updateDelayDisplay(slider);
+        }
+      });
+    });
+  }
+
+  // ============================================
+  // DELAY SLIDERS
+  // ============================================
+  function setupDelaySliders() {
+    $$('.delay-slider').forEach(slider => {
+      updateDelayDisplay(slider);
+      slider.addEventListener('input', () => updateDelayDisplay(slider));
+    });
+  }
+
+  function updateDelayDisplay(slider) {
+    const label = slider.closest('label');
+    const display = label?.querySelector('.delay-display');
+    if (!display) return;
+    const minMs = parseInt(slider.value);
+    const maxMs = Math.round(minMs * 2.5);
+    display.textContent = `${(minMs / 1000).toFixed(1)}s — ${(maxMs / 1000).toFixed(1)}s`;
+  }
+
   function getCardSettings(card) {
     const settings = {};
     card.querySelectorAll('[data-setting]').forEach(input => {
@@ -105,10 +206,14 @@
         settings[key] = input.checked;
       } else if (input.type === 'number') {
         settings[key] = parseInt(input.value, 10) || 0;
+      } else if (input.type === 'range') {
+        // Delay slider — also compute maxDelay
+        const min = parseInt(input.value, 10) || 2000;
+        settings[key] = min;
+        settings['maxDelay'] = Math.round(min * 2.5);
       } else if (input.tagName === 'SELECT') {
         settings[key] = input.value;
       } else {
-        // Text fields — parse as comma-separated array for keywords/comments/whitelist
         const val = input.value.trim();
         if (['keywords', 'comments', 'whitelist'].includes(key)) {
           settings[key] = val ? val.split(',').map(s => s.trim()).filter(Boolean) : [];
@@ -131,6 +236,9 @@
         if (saved[key] === undefined) return;
         if (input.type === 'checkbox') {
           input.checked = saved[key];
+        } else if (input.type === 'range') {
+          input.value = saved[key];
+          updateDelayDisplay(input);
         } else if (Array.isArray(saved[key])) {
           input.value = saved[key].join(', ');
         } else {
@@ -150,10 +258,8 @@
   // START / STOP AUTOMATIONS
   // ============================================
   async function startAutomation(automationId, settings) {
-    // Save settings
     await saveCardSettings(automationId, settings);
 
-    // Send to background
     const response = await chrome.runtime.sendMessage({
       type: 'START_AUTOMATION',
       automationId,
@@ -161,9 +267,11 @@
     });
 
     if (response?.success) {
-      automationState[automationId] = { running: true, actionCount: 0 };
+      automationState[automationId] = { running: true, actionCount: 0, startedAt: Date.now() };
       updateCardUI(automationId, true, 0);
       addLocalLog('start', automationId, `Started ${automationId}`);
+      showToast(`${automationId} started`, 'success');
+      updateDashboard();
     }
   }
 
@@ -174,11 +282,14 @@
     });
 
     if (response?.success) {
+      const count = automationState[automationId]?.actionCount || 0;
       if (automationState[automationId]) {
         automationState[automationId].running = false;
       }
       updateCardUI(automationId, false);
-      addLocalLog('stop', automationId, `Stopped ${automationId}`);
+      addLocalLog('stop', automationId, `Stopped ${automationId} (${count} actions)`);
+      showToast(`${automationId} stopped — ${count} actions`, 'info');
+      updateDashboard();
     }
   }
 
@@ -192,6 +303,10 @@
     const badge = card.querySelector('.status-badge');
     const toggle = card.querySelector('.btn-toggle');
     const countEl = card.querySelector('.action-count');
+    const progress = card.querySelector('.card-progress');
+    const progressBar = card.querySelector('.progress-bar');
+    const progressText = card.querySelector('.progress-text');
+    const timer = card.querySelector('.session-timer');
 
     if (running) {
       card.classList.add('running');
@@ -199,25 +314,92 @@
       badge.textContent = 'Running';
       toggle.textContent = '⏹';
       toggle.title = 'Stop';
+      if (progress) progress.classList.remove('hidden');
+      if (timer) timer.classList.remove('hidden');
     } else {
       card.classList.remove('running');
       badge.className = 'status-badge stopped';
       badge.textContent = 'Stopped';
       toggle.textContent = '▶️';
       toggle.title = 'Start';
+      if (progress) progress.classList.add('hidden');
+      if (timer) timer.classList.add('hidden');
     }
 
     if (actionCount !== undefined) {
       countEl.textContent = `${actionCount} action${actionCount !== 1 ? 's' : ''}`;
+
+      // Update progress bar (estimate based on maxActions setting)
+      if (running && progressBar && progressText) {
+        const maxSetting = card.querySelector('[data-setting="maxActions"]');
+        const max = maxSetting ? parseInt(maxSetting.value) || 100 : 100;
+        const pct = Math.min((actionCount / max) * 100, 100);
+        progressBar.style.width = `${pct}%`;
+        progressText.textContent = `${actionCount}/${max}`;
+      }
     }
+  }
+
+  // ============================================
+  // SESSION TIMER
+  // ============================================
+  function startSessionTimer() {
+    sessionTimerInterval = setInterval(() => {
+      $$('.automation-card.running').forEach(card => {
+        const id = card.dataset.automation;
+        const state = automationState[id];
+        if (!state?.startedAt) return;
+        const elapsed = Date.now() - state.startedAt;
+        const timer = card.querySelector('.session-timer');
+        if (timer) timer.textContent = formatDuration(elapsed);
+      });
+      updateDashboardUptime();
+    }, 1000);
+  }
+
+  function formatDuration(ms) {
+    const s = Math.floor(ms / 1000);
+    if (s < 60) return `${s}s`;
+    const m = Math.floor(s / 60);
+    const sec = s % 60;
+    if (m < 60) return `${m}m ${sec}s`;
+    const h = Math.floor(m / 60);
+    return `${h}h ${m % 60}m`;
+  }
+
+  // ============================================
+  // DASHBOARD
+  // ============================================
+  function updateDashboard() {
+    const running = Object.values(automationState).filter(s => s.running).length;
+    const total = Object.values(automationState).reduce((sum, s) => sum + (s.actionCount || 0), 0);
+
+    DOM.dashRunning.textContent = running;
+    DOM.dashRunning.style.color = running > 0 ? 'var(--success)' : 'var(--accent)';
+    DOM.dashTotalActions.textContent = total > 999 ? `${(total / 1000).toFixed(1)}k` : total;
+
+    // Today's actions from activity log
+    const todayStart = new Date(); todayStart.setHours(0, 0, 0, 0);
+    const todayActions = activityEntries.filter(e => e.type === 'action' && e.time >= todayStart.getTime()).length;
+    DOM.dashTodayActions.textContent = todayActions;
+  }
+
+  function updateDashboardUptime() {
+    const runningStates = Object.values(automationState).filter(s => s.running && s.startedAt);
+    if (runningStates.length === 0) {
+      DOM.dashSessionTime.textContent = '—';
+      return;
+    }
+    const earliest = Math.min(...runningStates.map(s => s.startedAt));
+    DOM.dashSessionTime.textContent = formatDuration(Date.now() - earliest);
   }
 
   // ============================================
   // GLOBAL CONTROLS
   // ============================================
   function setupGlobalControls() {
+    // Emergency stop — NO confirm dialog (it's an emergency)
     DOM.btnEmergencyStop.addEventListener('click', async () => {
-      if (!confirm('Stop ALL running automations?')) return;
       const response = await chrome.runtime.sendMessage({ type: 'STOP_ALL' });
       if (response?.success) {
         Object.keys(automationState).forEach(id => {
@@ -225,7 +407,19 @@
           updateCardUI(id, false);
         });
         addLocalLog('stop', 'all', 'Emergency stop — all automations halted');
+        showToast('All automations stopped', 'warning');
+        updateDashboard();
       }
+    });
+  }
+
+  // ============================================
+  // LOG FILTER
+  // ============================================
+  function setupLogFilter() {
+    DOM.logFilter.addEventListener('change', () => {
+      currentLogFilter = DOM.logFilter.value;
+      renderActivityLog();
     });
   }
 
@@ -233,7 +427,6 @@
   // SETTINGS TAB
   // ============================================
   function setupSettings() {
-    // Load global settings
     chrome.storage.local.get('globalSettings').then(data => {
       const gs = data.globalSettings || {};
       if (gs.minDelay) DOM.globalMinDelay.value = gs.minDelay;
@@ -241,7 +434,6 @@
       if (gs.debug !== undefined) DOM.globalDebug.checked = gs.debug;
     });
 
-    // Save on change
     const saveGlobal = () => {
       chrome.storage.local.set({
         globalSettings: {
@@ -250,6 +442,7 @@
           debug: DOM.globalDebug.checked,
         }
       });
+      showToast('Settings saved', 'success');
     };
     DOM.globalMinDelay.addEventListener('change', saveGlobal);
     DOM.globalMaxDelay.addEventListener('change', saveGlobal);
@@ -266,14 +459,15 @@
       a.download = `xactions-settings-${new Date().toISOString().slice(0, 10)}.json`;
       a.click();
       URL.revokeObjectURL(url);
+      showToast('Settings exported', 'success');
     });
 
     // Reset
     DOM.btnResetAll.addEventListener('click', async () => {
       if (!confirm('This will delete ALL XActions data and settings. Continue?')) return;
       await chrome.storage.local.clear();
-      addLocalLog('stop', 'system', 'All data reset');
-      location.reload();
+      showToast('All data reset', 'warning');
+      setTimeout(() => location.reload(), 500);
     });
 
     // Import
@@ -287,10 +481,10 @@
         const text = await file.text();
         const data = JSON.parse(text);
         await chrome.storage.local.set(data);
-        addLocalLog('start', 'system', 'Settings imported successfully');
-        location.reload();
+        showToast('Settings imported — reloading...', 'success');
+        setTimeout(() => location.reload(), 800);
       } catch (err) {
-        alert('Failed to import settings: ' + err.message);
+        showToast(`Import failed: ${err.message}`, 'error');
       }
     });
 
@@ -299,6 +493,7 @@
       await chrome.storage.local.set({ activityLog: [] });
       activityEntries = [];
       renderActivityLog();
+      showToast('Activity log cleared', 'info');
     });
   }
 
@@ -317,17 +512,17 @@
       if (isXTab) {
         DOM.connectionStatus.className = 'status-dot connected';
         DOM.connectionStatus.title = 'Connected to X';
+        DOM.disconnectedBanner.classList.add('hidden');
 
-        // Request account info
         try {
           await chrome.tabs.sendMessage(tab.id, { type: 'GET_ACCOUNT_INFO' });
-          // Response comes async via message listener below
         } catch { /* content script not ready */ }
       } else {
         DOM.connectionStatus.className = 'status-dot disconnected';
         DOM.connectionStatus.title = 'Not on X — open x.com';
         DOM.accountName.textContent = 'Not on X';
         DOM.accountHandle.textContent = 'Open x.com to use automations';
+        DOM.disconnectedBanner.classList.remove('hidden');
       }
     } catch { /* noop */ }
   }
@@ -340,14 +535,13 @@
       const data = await chrome.storage.local.get(['automations', 'activityLog', 'totalActions']);
       automationState = data.automations || {};
 
-      // Update card UIs
       Object.entries(automationState).forEach(([id, state]) => {
         updateCardUI(id, state.running, state.actionCount);
       });
 
-      // Load activity log
       activityEntries = data.activityLog || [];
       renderActivityLog();
+      updateDashboard();
     } catch { /* noop */ }
   }
 
@@ -355,12 +549,19 @@
   // ACTIVITY LOG
   // ============================================
   function renderActivityLog() {
-    if (activityEntries.length === 0) {
-      DOM.activityLog.innerHTML = '<div class="log-empty">No activity yet. Start an automation to see logs here.</div>';
+    const filtered = currentLogFilter === 'all'
+      ? activityEntries
+      : activityEntries.filter(e => e.automation === currentLogFilter);
+
+    if (filtered.length === 0) {
+      const msg = currentLogFilter === 'all'
+        ? 'No activity yet. Start an automation to see logs here.'
+        : `No activity for this filter.`;
+      DOM.activityLog.innerHTML = `<div class="log-empty">${msg}</div>`;
       return;
     }
 
-    const html = activityEntries.slice(0, 100).map(entry => {
+    const html = filtered.slice(0, 100).map(entry => {
       const time = new Date(entry.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
       const icon = {
         action: '🔧',
@@ -402,14 +603,11 @@
       try {
         const data = await chrome.storage.local.get(['automations', 'activityLog']);
 
-        // Update automation states
         const newState = data.automations || {};
         Object.entries(newState).forEach(([id, s]) => {
-          const wasRunning = automationState[id]?.running;
           automationState[id] = s;
           updateCardUI(id, s.running, s.actionCount);
         });
-        // Check for automations that were removed (stopped from elsewhere)
         Object.keys(automationState).forEach(id => {
           if (!newState[id]) {
             automationState[id] = { running: false };
@@ -417,12 +615,13 @@
           }
         });
 
-        // Update activity log
         const newLog = data.activityLog || [];
         if (newLog.length !== activityEntries.length || (newLog[0]?.time !== activityEntries[0]?.time)) {
           activityEntries = newLog;
           renderActivityLog();
         }
+
+        updateDashboard();
       } catch { /* noop */ }
     }, 1000);
   }
@@ -440,12 +639,12 @@
           DOM.onboardingModal.classList.add('hidden');
           await chrome.storage.local.set({ firstRun: false });
 
-          // Enable popular features if checked
           if (DOM.onboardingEnablePopular.checked) {
             await chrome.storage.local.set({
               settings_videoDownloader: { quality: 'highest', showButton: true, autoDownload: false },
               settings_threadReader: { showUnrollBtn: true, autoDetect: true, maxTweets: 50 },
             });
+            showToast('Popular features enabled!', 'success');
             addLocalLog('start', 'system', 'Popular features enabled: Video Downloader, Thread Reader');
           }
         });

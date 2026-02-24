@@ -482,6 +482,9 @@ body::-webkit-scrollbar-thumb {
 .automation-card.running {
   border-color: var(--accent);
 }
+.automation-card.card-hidden {
+  display: none;
+}
 
 .card-header {
   display: flex;

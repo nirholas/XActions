@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Media Scraping — Free X/Twitter Scrapers Tool | XActions</title>
+  <meta name="description" content="Extract images and videos from any X/Twitter user's media tab with full resolution support.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, media, scraping, scrapers, media scraping twitter, twitter media scraping">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Media Scraping — XActions">
+  <meta property="og:description" content="Extract images and videos from any X/Twitter user's media tab with full resolution support.">
+  <meta property="og:url" content="https://xactions.app/docs/media-scraping">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Media Scraping — Free X/Twitter Tool">
+  <meta name="twitter:description" content="Extract images and videos from any X/Twitter user's media tab with full resolution support.">
+
+  <link rel="canonical" href="https://xactions.app/docs/media-scraping">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Media Scraping — Free X/Twitter Scrapers Tool | XActions",
+    "description": "Extract images and videos from any X/Twitter user's media tab with full resolution support.",
+    "url": "https://xactions.app/docs/media-scraping",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/media-scraping",
+    "articleSection": "Scrapers",
+    "keywords": "xactions, twitter automation, x automation, free, media, scraping, scrapers, media scraping twitter, twitter media scraping"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Media Scraping", "item": "https://xactions.app/docs/media-scraping" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use Media Scraping",
+    "description": "Extract images and videos from any X/Twitter user's media tab with full resolution support.",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions Media Scraping script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>🖼️ Media Scraping</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › Media Scraping
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Scrapers</span>
+        <h1>Media Scraping</h1>
+<p>Extract images and videos from any X/Twitter user&#39;s media tab with full resolution support.</p>
+<h2>📸 What You Get</h2>
+<ul>
+<li>All images from user&#39;s media tab (photos, infographics, screenshots)</li>
+<li>Full resolution image URLs (<code>&amp;name=large</code> or <code>&amp;name=orig</code>)</li>
+<li>Video tweet URLs and thumbnail images</li>
+<li>GIF URLs and previews</li>
+<li>Media metadata (dimensions, tweet source)</li>
+<li>Export to JSON for archival or analysis</li>
+<li>Optional: Download images directly to disk</li>
+</ul>
+<hr>
+<h2>🖥️ Example 1: Browser Console (Quick)</h2>
+<p><strong>Best for:</strong> Quick media extraction from any profile&#39;s media tab</p>
+<pre><code class="language-javascript">// ============================================
+// XActions - Media Scraper (Browser Console)
+// Go to: x.com/USERNAME/media
+// Open console (F12), paste this, press Enter
+// Author: nich (@nichxbt)
+// ============================================
+
+(async () =&gt; {
+  const TARGET_COUNT = 100; // Number of media items to scrape
+  const SCROLL_DELAY = 2000; // ms between scrolls
+  
+  console.log(&#39;📸 Starting media scrape...&#39;);
+  console.log(`🎯 Target: ${TARGET_COUNT} media items`);
+  
+  // Verify we&#39;re on a media tab
+  if (!window.location.pathname.includes(&#39;/media&#39;)) {
+    console.warn(&#39;⚠️ Navigate to x.com/USERNAME/media first!&#39;);
+    console.log(&#39;💡 Current URL:&#39;, window.location.href);
+    return;
+  }
+  
+  const username = window.location.pathname.split(&#39;/&#39;)[1];
+  console.log(`👤 Scraping media from: @${username}`);
+  
+  const mediaItems = new Map();
+  let retries = 0;
+  const maxRetries = 15;
+  
+  // Helper: Get full resolution image URL
+  const getFullResUrl = (url) =&gt; {
+    if (!url) return null;
+    // Replace any existing name parameter with &#39;large&#39; or &#39;orig&#39;
+    if (url.includes(&#39;pbs.twimg.com/media&#39;)) {
+      // Remove existing name param and add large
+      return url.replace(/&amp;name=\w+/, &#39;&#39;) + &#39;&amp;name=large&#39;;
+    }
+    return url;
+  };
+  
+  // Helper: Get original (highest) resolution
+  const getOriginalUrl = (url) =&gt; {
+    if (!url) return null;
+    if (url.includes(&#39;pbs.twimg.com/media&#39;)) {
+      return url.replace(/&amp;name=\w+/, &#39;&#39;) + &#39;&amp;name=orig&#39;;
+    }
+    return url;
+  };
+  
+  // Extract media from visible tweets
+  const extractMedia = () =&gt; {
+    const articles = document.querySelectorAll(&#39;article[data-testid=&quot;tweet&quot;]&#39;);
+    const extracted = [];
+    
+    articles.forEach(article =&gt; {
+      try {
+        // Get tweet ID from link
+        const tweetLink = article.querySelector(&#39;a[href*=&quot;/status/&quot;]&#39;);
+        const href = tweetLink?.getAttribute(&#39;href&#39;) || &#39;&#39;;
+        const statusMatch = href.match(/\/status\/(\d+)/);
+        const tweetId = statusMatch ? statusMatch[1] : null;
+        
+        if (!tweetId) return;
+        
+        // Get timestamp
+        const timeEl = article.querySelector(&#39;time&#39;);
+        const timestamp = timeEl?.getAttribute(&#39;datetime&#39;) || null;
+        
+        // Extract IMAGES
+        const images = article.querySelectorAll(&#39;[data-testid=&quot;tweetPhoto&quot;] img&#39;);
+        images.forEach((img, index) =&gt; {
+          const src = img.getAttribute(&#39;src&#39;);
+          if (src &amp;&amp; src.includes(&#39;pbs.twimg.com/media&#39;)) {
+            const mediaId = `${tweetId}_img_${index}`;
+            if (!mediaItems.has(mediaId)) {
+              extracted.push({
+                id: mediaId,
+                type: &#39;image&#39;,
+                tweetId,
+                tweetUrl: `https://x.com/${username}/status/${tweetId}`,
+                url: getFullResUrl(src),
+                urlOriginal: getOriginalUrl(src),
+                urlThumbnail: src.replace(/&amp;name=\w+/, &#39;&amp;name=small&#39;),
+                timestamp,
+                author: username,
+              });
+            }
+          }
+        });
+        
+        // Extract VIDEOS
+        const videos = article.querySelectorAll(&#39;video&#39;);
+        videos.forEach((video, index) =&gt; {
+          const mediaId = `${tweetId}_vid_${index}`;
+          if (!mediaItems.has(mediaId)) {
+            const poster = video.getAttribute(&#39;poster&#39;);
+            const source = video.querySelector(&#39;source&#39;);
+            const videoSrc = source?.getAttribute(&#39;src&#39;) || null;
+            
+            // Determine if it&#39;s a GIF or video
+            const isGif = !!article.querySelector(&#39;[data-testid=&quot;videoPlayer&quot;] [aria-label*=&quot;GIF&quot;]&#39;) ||
+                          !!article.querySelector(&#39;[data-testid=&quot;tweetPhoto&quot;]&#39;)?.closest(&#39;div&#39;)?.querySelector(&#39;[aria-label*=&quot;GIF&quot;]&#39;);
+            
+            extracted.push({
+              id: mediaId,
+              type: isGif ? &#39;gif&#39; : &#39;video&#39;,
+              tweetId,
+              tweetUrl: `https://x.com/${username}/status/${tweetId}`,
+              url: videoSrc, // Direct video URL (may require auth)
+              thumbnail: poster ? getFullResUrl(poster) : null,
+              timestamp,
+              author: username,
+              note: &#39;For video downloads, visit the tweet URL directly&#39;,
+            });
+          }
+        });
+        
+      } catch (e) {
+        // Skip malformed elements
+      }
+    });
+    
+    return extracted;
+  };
+  
+  // Sleep helper
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+  
+  // Main scraping loop
+  while (mediaItems.size &lt; TARGET_COUNT &amp;&amp; retries &lt; maxRetries) {
+    const extracted = extractMedia();
+    const prevSize = mediaItems.size;
+    
+    // Add new items to map (auto-dedupes)
+    extracted.forEach(item =&gt; {
+      if (!mediaItems.has(item.id)) {
+        mediaItems.set(item.id, item);
+      }
+    });
+    
+    // Progress update
+    console.log(`📈 Collected: ${mediaItems.size} media items`);
+    
+    // Check if stuck
+    if (mediaItems.size === prevSize) {
+      retries++;
+      console.log(`⏳ No new media found (retry ${retries}/${maxRetries})`);
+    } else {
+      retries = 0;
+    }
+    
+    // Scroll down for more content
+    window.scrollTo(0, document.body.scrollHeight);
+    await sleep(SCROLL_DELAY);
+  }
+  
+  // Convert to arrays by type
+  const allMedia = Array.from(mediaItems.values());
+  const images = allMedia.filter(m =&gt; m.type === &#39;image&#39;);
+  const videos = allMedia.filter(m =&gt; m.type === &#39;video&#39;);
+  const gifs = allMedia.filter(m =&gt; m.type === &#39;gif&#39;);
+  
+  // Summary
+  console.log(&#39;\n&#39; + &#39;=&#39;.repeat(50));
+  console.log(&#39;📊 MEDIA SCRAPE COMPLETE&#39;);
+  console.log(&#39;=&#39;.repeat(50));
+  console.log(`📸 Images: ${images.length}`);
+  console.log(`🎬 Videos: ${videos.length}`);
+  console.log(`🔄 GIFs:   ${gifs.length}`);
+  console.log(`📦 Total:  ${allMedia.length}`);
+  console.log(&#39;=&#39;.repeat(50));
+  
+  // Prepare result object
+  const result = {
+    username,
+    scrapedAt: new Date().toISOString(),
+    profileUrl: `https://x.com/${username}`,
+    mediaTabUrl: `https://x.com/${username}/media`,
+    stats: {
+      total: allMedia.length,
+      images: images.length,
+      videos: videos.length,
+      gifs: gifs.length,
+    },
+    media: allMedia,
+  };
+  
+  // Copy to clipboard
+  const json = JSON.stringify(result, null, 2);
+  await navigator.clipboard.writeText(json);
+  console.log(&#39;\n✅ Copied to clipboard!&#39;);
+  
+  // Log image URLs for quick access
+  console.log(&#39;\n🖼️ IMAGE URLs (full resolution):&#39;);
+  images.forEach((img, i) =&gt; console.log(`${i + 1}. ${img.url}`));
+  
+  if (videos.length &gt; 0) {
+    console.log(&#39;\n🎬 VIDEO TWEET URLs:&#39;);
+    videos.forEach((vid, i) =&gt; console.log(`${i + 1}. ${vid.tweetUrl}`));
+  }
+  
+  // Return for further use in console
+  return result;
+})();
+</code></pre>
+<p><strong>Sample Output:</strong></p>
+<pre><code class="language-json">{
+  &quot;username&quot;: &quot;NASA&quot;,
+  &quot;scrapedAt&quot;: &quot;2026-01-01T12:00:00.000Z&quot;,
+  &quot;profileUrl&quot;: &quot;https://x.com/NASA&quot;,
+  &quot;mediaTabUrl&quot;: &quot;https://x.com/NASA/media&quot;,
+  &quot;stats&quot;: {
+    &quot;total&quot;: 47,
+    &quot;images&quot;: 42,
+    &quot;videos&quot;: 4,
+    &quot;gifs&quot;: 1
+  },
+  &quot;media&quot;: [
+    {
+      &quot;id&quot;: &quot;1874523697_img_0&quot;,
+      &quot;type&quot;: &quot;image&quot;,
+      &quot;tweetId&quot;: &quot;1874523697&quot;,
+      &quot;tweetUrl&quot;: &quot;https://x.com/NASA/status/1874523697&quot;,
+      &quot;url&quot;: &quot;https://pbs.twimg.com/media/GfXy123.jpg&amp;name=large&quot;,
+      &quot;urlOriginal&quot;: &quot;https://pbs.twimg.com/media/GfXy123.jpg&amp;name=orig&quot;,
+      &quot;urlThumbnail&quot;: &quot;https://pbs.twimg.com/media/GfXy123.jpg&amp;name=small&quot;,
+      &quot;timestamp&quot;: &quot;2026-01-01T10:30:00.000Z&quot;,
+      &quot;author&quot;: &quot;NASA&quot;
+    }
+  ]
+}
+</code></pre>
+<hr>
+<h2>🚀 Example 2: Node.js with Puppeteer (Production-Ready)</h2>
+<p><strong>Best for:</strong> Automation, batch processing, scheduled archival, image downloading</p>
+<pre><code class="language-javascript">// ============================================
+// XActions - Media Scraper (Node.js + Puppeteer)
+// Save as: scrape-media.js
+// Run: node scrape-media.js NASA
+// Run: node scrape-media.js NASA --download
+// Author: nich (@nichxbt)
+// ============================================
+
+import puppeteer from &#39;puppeteer-extra&#39;;
+import StealthPlugin from &#39;puppeteer-extra-plugin-stealth&#39;;
+import fs from &#39;fs/promises&#39;;
+import { createWriteStream } from &#39;fs&#39;;
+import path from &#39;path&#39;;
+import https from &#39;https&#39;;
+import http from &#39;http&#39;;
+
+// Use stealth plugin to avoid detection
+puppeteer.use(StealthPlugin());
+
+/**
+ * Download a file from URL
+ */
+async function downloadFile(url, filepath) {
+  return new Promise((resolve, reject) =&gt; {
+    const protocol = url.startsWith(&#39;https&#39;) ? https : http;
+    const file = createWriteStream(filepath);
+    
+    protocol.get(url, (response) =&gt; {
+      if (response.statusCode === 301 || response.statusCode === 302) {
+        // Follow redirect
+        downloadFile(response.headers.location, filepath)
+          .then(resolve)
+          .catch(reject);
+        return;
+      }
+      
+      response.pipe(file);
+      file.on(&#39;finish&#39;, () =&gt; {
+        file.close();
+        resolve(filepath);
+      });
+    }).on(&#39;error&#39;, (err) =&gt; {
+      fs.unlink(filepath).catch(() =&gt; {});
+      reject(err);
+    });
+  });
+}
+
+/**
+ * Get full resolution image URL
+ */
+function getFullResUrl(url) {
+  if (!url) return null;
+  if (url.includes(&#39;pbs.twimg.com/media&#39;)) {
+    return url.replace(/&amp;name=\w+/, &#39;&#39;) + &#39;&amp;name=large&#39;;
+  }
+  return url;
+}
+
+/**
+ * Get original (highest) resolution URL
+ */
+function getOriginalUrl(url) {
+  if (!url) return null;
+  if (url.includes(&#39;pbs.twimg.com/media&#39;)) {
+    return url.replace(/&amp;name=\w+/, &#39;&#39;) + &#39;&amp;name=orig&#39;;
+  }
+  return url;
+}
+
+/**
+ * Scrape media from a user&#39;s media tab
+ */
+async function scrapeMedia(username, options = {}) {
+  const {
+    headless = true,
+    authToken = null,
+    targetCount = 100,
+    scrollDelay = 2000,
+    timeout = 30000,
+    downloadImages = false,
+    outputDir = &#39;./downloads&#39;,
+  } = options;
+
+  console.log(`\n📸 Starting media scrape for @${username}`);
+  console.log(`🎯 Target: ${targetCount} media items`);
+  console.log(`📥 Download images: ${downloadImages ? &#39;Yes&#39; : &#39;No&#39;}\n`);
+
+  const browser = await puppeteer.launch({
+    headless: headless ? &#39;new&#39; : false,
+    args: [
+      &#39;--no-sandbox&#39;,
+      &#39;--disable-setuid-sandbox&#39;,
+      &#39;--disable-blink-features=AutomationControlled&#39;,
+      &#39;--disable-web-security&#39;,
+    ],
+  });
+
+  const mediaItems = new Map();
+
+  try {
+    const page = await browser.newPage();
+    
+    // Set realistic viewport
+    await page.setViewport({ 
+      width: 1280 + Math.floor(Math.random() * 100), 
+      height: 900 + Math.floor(Math.random() * 100),
+    });
+    
+    // Set user agent
+    await page.setUserAgent(
+      &#39;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36&#39;
+    );
+
+    // Optional: Set auth cookie for logged-in access
+    if (authToken) {
+      await page.setCookie({
+        name: &#39;auth_token&#39;,
+        value: authToken,
+        domain: &#39;.x.com&#39;,
+        path: &#39;/&#39;,
+        httpOnly: true,
+        secure: true,
+      });
+      console.log(&#39;🔐 Using authentication token&#39;);
+    }
+
+    // Navigate to media tab
+    const mediaUrl = `https://x.com/${username}/media`;
+    console.log(`🌐 Navigating to ${mediaUrl}`);
+    
+    await page.goto(mediaUrl, {
+      waitUntil: &#39;networkidle2&#39;,
+      timeout,
+    });
+
+    // Wait for content to load
+    await page.waitForSelector(&#39;article[data-testid=&quot;tweet&quot;]&#39;, { 
+      timeout: 15000 
+    }).catch(() =&gt; {
+      console.log(&#39;⚠️ No media found or profile may be private/protected&#39;);
+    });
+
+    // Add human-like delay
+    await new Promise(r =&gt; setTimeout(r, 1500 + Math.random() * 1500));
+
+    let retries = 0;
+    const maxRetries = 15;
+
+    // Main scraping loop
+    while (mediaItems.size &lt; targetCount &amp;&amp; retries &lt; maxRetries) {
+      // Extract media from page
+      const extracted = await page.evaluate((user) =&gt; {
+        const items = [];
+        const articles = document.querySelectorAll(&#39;article[data-testid=&quot;tweet&quot;]&#39;);
+        
+        articles.forEach(article =&gt; {
+          try {
+            // Get tweet ID
+            const tweetLink = article.querySelector(&#39;a[href*=&quot;/status/&quot;]&#39;);
+            const href = tweetLink?.getAttribute(&#39;href&#39;) || &#39;&#39;;
+            const statusMatch = href.match(/\/status\/(\d+)/);
+            const tweetId = statusMatch ? statusMatch[1] : null;
+            
+            if (!tweetId) return;
+            
+            // Timestamp
+            const timeEl = article.querySelector(&#39;time&#39;);
+            const timestamp = timeEl?.getAttribute(&#39;datetime&#39;) || null;
+            
+            // IMAGES
+            const images = article.querySelectorAll(&#39;[data-testid=&quot;tweetPhoto&quot;] img&#39;);
+            images.forEach((img, idx) =&gt; {
+              const src = img.getAttribute(&#39;src&#39;);
+              if (src &amp;&amp; src.includes(&#39;pbs.twimg.com/media&#39;)) {
+                items.push({
+                  id: `${tweetId}_img_${idx}`,
+                  type: &#39;image&#39;,
+                  tweetId,
+                  rawUrl: src,
+                  timestamp,
+                  author: user,
+                });
+              }
+            });
+            
+            // VIDEOS
+            const videos = article.querySelectorAll(&#39;video&#39;);
+            videos.forEach((video, idx) =&gt; {
+              const poster = video.getAttribute(&#39;poster&#39;);
+              const source = video.querySelector(&#39;source&#39;);
+              const videoSrc = source?.getAttribute(&#39;src&#39;) || null;
+              
+              // Check if GIF
+              const isGif = !!article.querySelector(&#39;[aria-label*=&quot;GIF&quot;]&#39;);
+              
+              items.push({
+                id: `${tweetId}_vid_${idx}`,
+                type: isGif ? &#39;gif&#39; : &#39;video&#39;,
+                tweetId,
+                rawUrl: videoSrc,
+                thumbnail: poster,
+                timestamp,
+                author: user,
+              });
+            });
+            
+          } catch (e) {
+            // Skip errors
+          }
+        });
+        
+        return items;
+      }, username);
+
+      const prevSize = mediaItems.size;
+
+      // Add to collection
+      extracted.forEach(item =&gt; {
+        if (!mediaItems.has(item.id)) {
+          // Process URLs
+          if (item.type === &#39;image&#39;) {
+            item.url = getFullResUrl(item.rawUrl);
+            item.urlOriginal = getOriginalUrl(item.rawUrl);
+            item.urlThumbnail = item.rawUrl.replace(/&amp;name=\w+/, &#39;&amp;name=small&#39;);
+          } else {
+            item.url = item.rawUrl;
+            if (item.thumbnail) {
+              item.thumbnail = getFullResUrl(item.thumbnail);
+            }
+          }
+          item.tweetUrl = `https://x.com/${username}/status/${item.tweetId}`;
+          delete item.rawUrl;
+          
+          mediaItems.set(item.id, item);
+        }
+      });
+
+      // Progress
+      console.log(`📈 Collected: ${mediaItems.size} media items`);
+
+      // Check if stuck
+      if (mediaItems.size === prevSize) {
+        retries++;
+        console.log(`⏳ No new media (retry ${retries}/${maxRetries})`);
+      } else {
+        retries = 0;
+      }
+
+      // Scroll for more content
+      await page.evaluate(() =&gt; {
+        window.scrollTo(0, document.body.scrollHeight);
+      });
+      
+      await new Promise(r =&gt; setTimeout(r, scrollDelay));
+    }
+
+  } finally {
+    await browser.close();
+  }
+
+  // Convert to array
+  const allMedia = Array.from(mediaItems.values());
+  const images = allMedia.filter(m =&gt; m.type === &#39;image&#39;);
+  const videos = allMedia.filter(m =&gt; m.type === &#39;video&#39;);
+  const gifs = allMedia.filter(m =&gt; m.type === &#39;gif&#39;);
+
+  // Summary
+  console.log(&#39;\n&#39; + &#39;=&#39;.repeat(50));
+  console.log(&#39;📊 MEDIA SCRAPE COMPLETE&#39;);
+  console.log(&#39;=&#39;.repeat(50));
+  console.log(`📸 Images: ${images.length}`);
+  console.log(`🎬 Videos: ${videos.length}`);
+  console.log(`🔄 GIFs:   ${gifs.length}`);
+  console.log(`📦 Total:  ${allMedia.length}`);
+  console.log(&#39;=&#39;.repeat(50));
+
+  // Download images if requested
+  if (downloadImages &amp;&amp; images.length &gt; 0) {
+    console.log(`\n📥 Downloading ${images.length} images...`);
+    
+    // Create output directory
+    const userDir = path.join(outputDir, username);
+    await fs.mkdir(userDir, { recursive: true });
+    
+    let downloaded = 0;
+    let failed = 0;
+    
+    for (const img of images) {
+      try {
+        // Extract filename from URL
+        const urlMatch = img.url.match(/\/([^/?]+)\?/) || img.url.match(/\/([^/]+)$/);
+        const filename = urlMatch ? urlMatch[1] : `${img.id}.jpg`;
+        const filepath = path.join(userDir, filename);
+        
+        // Use original resolution for downloads
+        const downloadUrl = img.urlOriginal || img.url;
+        
+        await downloadFile(downloadUrl, filepath);
+        downloaded++;
+        
+        // Progress every 10 images
+        if (downloaded % 10 === 0) {
+          console.log(`   Downloaded: ${downloaded}/${images.length}`);
+        }
+        
+        // Rate limit downloads
+        await new Promise(r =&gt; setTimeout(r, 200));
+        
+      } catch (err) {
+        failed++;
+        console.error(`   ❌ Failed: ${img.id}`);
+      }
+    }
+    
+    console.log(`\n✅ Downloaded: ${downloaded} images`);
+    if (failed &gt; 0) {
+      console.log(`⚠️ Failed: ${failed} images`);
+    }
+    console.log(`📁 Saved to: ${userDir}`);
+  }
+
+  // Prepare result
+  const result = {
+    username,
+    scrapedAt: new Date().toISOString(),
+    profileUrl: `https://x.com/${username}`,
+    mediaTabUrl: `https://x.com/${username}/media`,
+    stats: {
+      total: allMedia.length,
+      images: images.length,
+      videos: videos.length,
+      gifs: gifs.length,
+    },
+    media: allMedia,
+  };
+
+  return result;
+}
+
+/**
+ * Save results to JSON file
+ */
+async function saveResults(data, filename) {
+  const json = JSON.stringify(data, null, 2);
+  await fs.writeFile(filename, json);
+  console.log(`💾 Saved JSON to: ${filename}`);
+}
+
+// ============================================
+// CLI Interface
+// ============================================
+
+const args = process.argv.slice(2);
+const username = args[0];
+const shouldDownload = args.includes(&#39;--download&#39;) || args.includes(&#39;-d&#39;);
+const targetCount = (() =&gt; {
+  const countIdx = args.indexOf(&#39;--count&#39;);
+  if (countIdx !== -1 &amp;&amp; args[countIdx + 1]) {
+    return parseInt(args[countIdx + 1]) || 100;
+  }
+  return 100;
+})();
+
+if (!username) {
+  console.log(`
+📸 XActions Media Scraper
+========================
+
+Usage: node scrape-media.js &lt;username&gt; [options]
+
+Options:
+  --download, -d     Download images to ./downloads/&lt;username&gt;/
+  --count &lt;number&gt;   Number of media items to scrape (default: 100)
+
+Examples:
+  node scrape-media.js NASA
+  node scrape-media.js elonmusk --download
+  node scrape-media.js SpaceX --count 500 --download
+
+Output:
+  - Prints media URLs to console
+  - Saves JSON to &lt;username&gt;-media.json
+  - If --download: saves images to ./downloads/&lt;username&gt;/
+`);
+  process.exit(1);
+}
+
+// Run the scraper
+scrapeMedia(username, {
+  targetCount,
+  downloadImages: shouldDownload,
+  headless: true,
+})
+  .then(async (result) =&gt; {
+    // Save to JSON
+    await saveResults(result, `${username}-media.json`);
+    
+    // Print URLs for quick access
+    console.log(&#39;\n🖼️ Image URLs (showing first 10):&#39;);
+    result.media
+      .filter(m =&gt; m.type === &#39;image&#39;)
+      .slice(0, 10)
+      .forEach((img, i) =&gt; console.log(`${i + 1}. ${img.url}`));
+    
+    if (result.stats.videos &gt; 0) {
+      console.log(&#39;\n🎬 Video Tweet URLs:&#39;);
+      result.media
+        .filter(m =&gt; m.type === &#39;video&#39;)
+        .forEach((vid, i) =&gt; console.log(`${i + 1}. ${vid.tweetUrl}`));
+    }
+    
+    console.log(&#39;\n✅ Done!&#39;);
+  })
+  .catch((error) =&gt; {
+    console.error(&#39;\n❌ Error:&#39;, error.message);
+    process.exit(1);
+  });
+</code></pre>
+<p><strong>Install dependencies:</strong></p>
+<pre><code class="language-bash">npm install puppeteer puppeteer-extra puppeteer-extra-plugin-stealth
+</code></pre>
+<p><strong>Run it:</strong></p>
+<pre><code class="language-bash"># Basic: scrape and export JSON
+node scrape-media.js NASA
+
+# Download images to disk
+node scrape-media.js NASA --download
+
+# Scrape 500 items with downloads
+node scrape-media.js SpaceX --count 500 --download
+</code></pre>
+<p><strong>Output files:</strong></p>
+<pre><code>./NASA-media.json          # Full JSON export
+./downloads/NASA/          # Downloaded images (if --download)
+  ├── GfXy123.jpg
+  ├── GfXy456.jpg
+  └── ...
+</code></pre>
+<hr>
+<h2>🔍 Tips: Getting Full Resolution Images</h2>
+<p>X/Twitter images support multiple resolution parameters:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Resolution</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>&amp;name=thumb</code></td>
+<td>150x150</td>
+<td>Thumbnails</td>
+</tr>
+<tr>
+<td><code>&amp;name=small</code></td>
+<td>680px width</td>
+<td>Quick preview</td>
+</tr>
+<tr>
+<td><code>&amp;name=medium</code></td>
+<td>1200px width</td>
+<td>Standard quality</td>
+</tr>
+<tr>
+<td><code>&amp;name=large</code></td>
+<td>2048px width</td>
+<td>High quality</td>
+</tr>
+<tr>
+<td><code>&amp;name=orig</code></td>
+<td>Original upload</td>
+<td>Maximum quality</td>
+</tr>
+</tbody></table>
+<h3>URL Examples</h3>
+<pre><code># Thumbnail
+https://pbs.twimg.com/media/GfXy123.jpg?format=jpg&amp;name=thumb
+
+# Standard (what you see by default)
+https://pbs.twimg.com/media/GfXy123.jpg?format=jpg&amp;name=medium
+
+# High resolution
+https://pbs.twimg.com/media/GfXy123.jpg?format=jpg&amp;name=large
+
+# Original (highest available)
+https://pbs.twimg.com/media/GfXy123.jpg?format=jpg&amp;name=orig
+</code></pre>
+<h3>Quick URL Transformation</h3>
+<pre><code class="language-javascript">// Get any image URL and convert to full resolution
+const getHighRes = (url) =&gt; url.replace(/&amp;name=\w+/, &#39;&amp;name=large&#39;);
+const getOriginal = (url) =&gt; url.replace(/&amp;name=\w+/, &#39;&amp;name=orig&#39;);
+
+// Example
+const thumb = &#39;https://pbs.twimg.com/media/GfXy123.jpg?format=jpg&amp;name=small&#39;;
+console.log(getOriginal(thumb));
+// → https://pbs.twimg.com/media/GfXy123.jpg?format=jpg&amp;name=orig
+</code></pre>
+<h3>Note on Video Downloads</h3>
+<p>Videos on X require different handling:</p>
+<ul>
+<li>The <code>video</code> tag source URLs often require authentication</li>
+<li>For videos, save the <strong>tweet URL</strong> and use a dedicated video downloader</li>
+<li>Third-party tools like <code>yt-dlp</code> work well: <code>yt-dlp https://x.com/user/status/123</code></li>
+</ul>
+<hr>
+<h2>⚠️ Best Practices</h2>
+<h3>Rate Limiting</h3>
+<ul>
+<li>Add 2-3 second delays between scroll operations</li>
+<li>Don&#39;t scrape thousands of images too quickly</li>
+<li>Consider running in non-headless mode to debug issues</li>
+</ul>
+<h3>Authentication (Optional)</h3>
+<p>For private accounts you follow, pass your <code>auth_token</code>:</p>
+<pre><code class="language-javascript">const result = await scrapeMedia(&#39;private_user&#39;, {
+  authToken: &#39;your_auth_token_here&#39;
+});
+</code></pre>
+<h3>Error Handling</h3>
+<pre><code class="language-javascript">try {
+  const result = await scrapeMedia(username);
+} catch (error) {
+  if (error.message.includes(&#39;timeout&#39;)) {
+    console.log(&#39;Page took too long to load&#39;);
+  } else if (error.message.includes(&#39;tweet&#39;)) {
+    console.log(&#39;No media found - profile may be private or empty&#39;);
+  }
+}
+</code></pre>
+<h3>Storage Considerations</h3>
+<ul>
+<li>Original resolution images can be 5-20MB each</li>
+<li>Estimate storage needs before bulk downloads</li>
+<li>Consider using <code>&amp;name=large</code> instead of <code>&amp;name=orig</code> for balance</li>
+</ul>
+<hr>
+<h2>🌐 Website Alternative</h2>
+<p>Don&#39;t want to code? Use <a href="https://xactions.app">xactions.app</a>:</p>
+<ol>
+<li>🔐 Login with your X account</li>
+<li>👤 Enter any username</li>
+<li>📸 Click &quot;Scrape Media&quot;</li>
+<li>📥 Download all images as ZIP or export URLs to JSON</li>
+<li>🎬 Get direct links to video tweets</li>
+</ol>
+<p><strong>Features:</strong></p>
+<ul>
+<li>One-click media extraction</li>
+<li>Bulk image downloads</li>
+<li>Full resolution support</li>
+<li>No coding required</li>
+<li>Works with any public profile</li>
+</ul>
+<hr>
+<h2>📚 Related Examples</h2>
+<ul>
+<li><a href="tweet-scraping.md">Tweet Scraping</a> - Extract tweets with full metadata</li>
+<li><a href="profile-scraping.md">Profile Scraping</a> - Get user profile information</li>
+<li><a href="followers-scraping.md">Followers Scraping</a> - Extract follower lists</li>
+<li><a href="hashtag-scraping.md">Hashtag Scraping</a> - Search hashtag content</li>
+</ul>
+<hr>
+<p><em>Author: nich (<a href="https://x.com/nichxbt">@nichxbt</a>)</em></p>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try Media Scraping?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/followers-scraping">📋 Followers Scraping</a>
+        <a href="/docs/following-scraping">📋 Following Scraping</a>
+        <a href="/docs/hashtag-scraping">#️⃣ Hashtag Scraping</a>
+        <a href="/docs/likes-scraping">❤️ Likes Scraping</a>
+        <a href="/docs/link-scraper">🔗 Link Scraper</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

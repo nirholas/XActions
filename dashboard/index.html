@@ -1453,7 +1453,7 @@
       const modal = document.createElement('div');
       modal.id = 'agent-script-modal';
       modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);z-index:9999;display:flex;align-items:center;justify-content:center;padding:24px;';
-      modal.innerHTML = \`
+      modal.innerHTML = `
         <div style="background:var(--bg-secondary);border-radius:16px;max-width:600px;width:100%;max-height:90vh;overflow:auto;padding:24px;">
           <h2 style="margin-bottom:16px;display:flex;align-items:center;gap:12px;">
             <span>🔗</span> Connect Your Browser
@@ -1465,7 +1465,7 @@
             <li style="margin-bottom:8px;">Paste the script below and press Enter</li>
           </ol>
           <div style="position:relative;">
-            <pre style="background:var(--bg-primary);padding:16px;border-radius:8px;overflow-x:auto;font-size:0.75rem;max-height:200px;overflow-y:auto;"><code id="agent-script-code">\${window.agentScript}</code></pre>
+            <pre style="background:var(--bg-primary);padding:16px;border-radius:8px;overflow-x:auto;font-size:0.75rem;max-height:200px;overflow-y:auto;"><code id="agent-script-code">${window.agentScript}</code></pre>
             <button onclick="copyAgentScript()" style="position:absolute;top:8px;right:8px;background:var(--accent);color:white;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:600;">Copy</button>
           </div>
           <div style="margin-top:20px;display:flex;gap:12px;">
@@ -1473,7 +1473,7 @@
           </div>
           <p style="margin-top:16px;text-align:center;color:var(--text-secondary);font-size:0.8125rem;">The page will update automatically when connected</p>
         </div>
-      \`;
+      `;
       document.body.appendChild(modal);
       modal.addEventListener('click', (e) => {
         if (e.target === modal) modal.remove();
@@ -1499,7 +1499,7 @@
     function updateProgress(data) {
       document.getElementById('progress-bar').style.width = (data.percent || 0) + '%';
       document.getElementById('progress-message').textContent = data.message || '';
-      document.getElementById('progress-count').textContent = \`\${data.current || 0}/\${data.max || '?'}\`;
+      document.getElementById('progress-count').textContent = `${data.current || 0}/${data.max || '?'}`;
       document.getElementById('operation-status').textContent = data.status || '';
     }
 
@@ -1507,11 +1507,11 @@
       const log = document.getElementById('live-log');
       const entry = document.createElement('div');
       entry.style.cssText = 'padding:4px 0;border-bottom:1px solid var(--border);display:flex;gap:8px;';
-      entry.innerHTML = \`
-        <span style="color:var(--text-secondary);">\${new Date().toLocaleTimeString()}</span>
-        <span style="color:var(--success);">\${data.type}</span>
-        \${data.handle ? \`<span style="color:var(--accent);">@\${data.handle}</span>\` : ''}
-      \`;
+      entry.innerHTML = `
+        <span style="color:var(--text-secondary);">${new Date().toLocaleTimeString()}</span>
+        <span style="color:var(--success);">${data.type}</span>
+        ${data.handle ? `<span style="color:var(--accent);">@${data.handle}</span>` : ''}
+      `;
       log.insertBefore(entry, log.firstChild);
     }
 
@@ -1522,7 +1522,7 @@
       
       // Show summary
       setTimeout(() => {
-        alert(\`Operation complete!\\n\\n\${JSON.stringify(data, null, 2)}\`);
+        alert(`Operation complete!\n\n${JSON.stringify(data, null, 2)}`);
       }, 500);
     }
 

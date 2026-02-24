@@ -10,7 +10,7 @@
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Docker](https://img.shields.io/badge/Docker-ready-blue?logo=docker)](Dockerfile)
 [![TypeScript](https://img.shields.io/badge/Types-included-blue?logo=typescript)](types/index.d.ts)
-[![MCP](https://img.shields.io/badge/MCP-50%2B%20tools-purple?logo=data:image/svg+xml;base64,PHN2Zz48L3N2Zz4=)](docs/mcp-setup.md)
+[![MCP](https://img.shields.io/badge/MCP-75%2B%20tools-purple?logo=data:image/svg+xml;base64,PHN2Zz48L3N2Zz4=)](docs/mcp-setup.md)
 [![Smithery](https://smithery.ai/badge/xactions)](https://smithery.ai/server/xactions)
 [![Glama](https://glama.ai/mcp/servers/badge)](https://glama.ai/mcp/servers)
 [![Built with Grok](https://img.shields.io/badge/Built%20with-Grok%20🤖-blue)](https://x.ai)
@@ -999,6 +999,14 @@ Commercial use allowed. Attribution appreciated but not required.
 - GitHub: [github.com/nirholas](https://github.com/nirholas)
 - Twitter: [@nichxbt](https://x.com/nichxbt)
 - Website: [xactions.app](https://xactions.app)
+
+---
+
+## 🙏 Community & Credits
+
+| Project | Description |
+|---------|-------------|
+| [tweet-price-charts](https://github.com/rohunvora/tweet-price-charts) | Comparing price charts to frequency of founders tweeting — by [@rohunvora](https://github.com/rohunvora) |
 
 ---
 

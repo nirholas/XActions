@@ -1,0 +1,1708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Keyword Follow — Free X/Twitter Growth Tool | XActions</title>
+  <meta name="description" content="Automatically search for keywords and follow users who tweet about topics you care about on X (Twitter).">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, keyword, follow, growth, keyword follow twitter, twitter keyword follow">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Keyword Follow — XActions">
+  <meta property="og:description" content="Automatically search for keywords and follow users who tweet about topics you care about on X (Twitter).">
+  <meta property="og:url" content="https://xactions.app/docs/keyword-follow">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Keyword Follow — Free X/Twitter Tool">
+  <meta name="twitter:description" content="Automatically search for keywords and follow users who tweet about topics you care about on X (Twitter).">
+
+  <link rel="canonical" href="https://xactions.app/docs/keyword-follow">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Keyword Follow — Free X/Twitter Growth Tool | XActions",
+    "description": "Automatically search for keywords and follow users who tweet about topics you care about on X (Twitter).",
+    "url": "https://xactions.app/docs/keyword-follow",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/keyword-follow",
+    "articleSection": "Growth",
+    "keywords": "xactions, twitter automation, x automation, free, keyword, follow, growth, keyword follow twitter, twitter keyword follow"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Keyword Follow", "item": "https://xactions.app/docs/keyword-follow" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use Keyword Follow",
+    "description": "Automatically search for keywords and follow users who tweet about topics you care about on X (Twitter).",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions Keyword Follow script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>🔑 Keyword Follow</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › Keyword Follow
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Growth</span>
+        <h1>🔍 Keyword Follow</h1>
+<p>Automatically search for keywords and follow users who tweet about topics you care about on X (Twitter).</p>
+<hr>
+<h2>📋 What It Does</h2>
+<p>This feature helps you grow your network strategically by:</p>
+<ol>
+<li><strong>Searching keywords</strong> - Finds users tweeting about specific topics, hashtags, or interests</li>
+<li><strong>Smart filtering</strong> - Filters by follower count, bio content, and engagement signals</li>
+<li><strong>Targeted following</strong> - Follows users likely to be interested in your content</li>
+<li><strong>Duplicate prevention</strong> - Tracks who you&#39;ve followed to avoid repeat actions</li>
+<li><strong>Rate limiting</strong> - Uses random delays to mimic human behavior and avoid detection</li>
+</ol>
+<p><strong>Use cases:</strong></p>
+<ul>
+<li>Find and follow people in your niche (crypto, AI, startups, etc.)</li>
+<li>Connect with users discussing specific topics or events</li>
+<li>Build a targeted audience around hashtags</li>
+<li>Grow followers who are likely to engage with your content</li>
+<li>Discover potential collaborators, customers, or community members</li>
+</ul>
+<hr>
+<h2>⚠️ IMPORTANT WARNINGS</h2>
+<blockquote>
+<p><strong>🚨 USE RESPONSIBLY!</strong> Automated following can get your account restricted or permanently suspended if overdone. X (Twitter) has strict limits on follow actions.</p>
+</blockquote>
+<p><strong>Before you start:</strong></p>
+<ul>
+<li>❌ <strong>DON&#39;T</strong> follow more than 50-100 accounts per day</li>
+<li>❌ <strong>DON&#39;T</strong> run this continuously or multiple times per day</li>
+<li>❌ <strong>DON&#39;T</strong> use obvious bot-like patterns (identical delays)</li>
+<li>❌ <strong>DON&#39;T</strong> follow random accounts—target your niche</li>
+<li>✅ <strong>DO</strong> use random delays between actions (5-15 seconds minimum)</li>
+<li>✅ <strong>DO</strong> take breaks between sessions (hours, not minutes)</li>
+<li>✅ <strong>DO</strong> mix automated and manual following</li>
+<li>✅ <strong>DO</strong> start with low limits (10-20) and increase gradually</li>
+<li>✅ <strong>DO</strong> unfollow non-followers after 7-14 days to maintain ratio</li>
+</ul>
+<p><strong>X/Twitter Follow Limits:</strong></p>
+<ul>
+<li>~400 follows per day (hard limit)</li>
+<li>~100-200 follows recommended for safety</li>
+<li>Account age matters (new accounts get stricter limits)</li>
+<li>Following/follower ratio is monitored</li>
+</ul>
+<hr>
+<h2>🌐 Example 1: Browser Console (Quick)</h2>
+<p><strong>Best for:</strong> Quick follow sessions, targeting up to ~30 users from search results</p>
+<p><strong>Steps:</strong></p>
+<ol>
+<li>Go to <code>x.com/search?q=YOUR_KEYWORD</code> (e.g., <code>x.com/search?q=web3%20developer</code>)</li>
+<li>Click on &quot;People&quot; tab to show user results, or stay on &quot;Top&quot; for tweet authors</li>
+<li>Open browser console (F12 → Console tab)</li>
+<li>Paste the script below and press Enter</li>
+</ol>
+<pre><code class="language-javascript">// ============================================
+// XActions - Keyword Follow (Browser Console)
+// Author: nich (@nichxbt)
+// Go to: x.com/search?q=YOUR_KEYWORD
+// Open console (F12), paste this
+// ============================================
+
+(async () =&gt; {
+  // ==========================================
+  // CONFIGURATION - Customize these settings!
+  // ==========================================
+  const CONFIG = {
+    // Follow limits (KEEP THESE LOW!)
+    MAX_FOLLOWS: 20,                    // Maximum users to follow per session
+    MAX_SCROLLS: 25,                    // Maximum times to scroll for more users
+    
+    // Filters
+    MIN_FOLLOWERS: 50,                  // Skip users with fewer followers
+    MAX_FOLLOWERS: 500000,              // Skip mega accounts (unlikely to follow back)
+    MUST_HAVE_BIO: false,               // Only follow users with a bio
+    SKIP_VERIFIED: false,               // Skip verified accounts
+    SKIP_IF_FOLLOWING_YOU: false,       // Skip if they already follow you
+    
+    // Delays (in milliseconds) - Randomized to seem human
+    MIN_DELAY: 5000,                    // Minimum delay between follows (5 seconds)
+    MAX_DELAY: 12000,                   // Maximum delay between follows (12 seconds)
+    SCROLL_DELAY: 2000,                 // Delay after scrolling
+    
+    // Safety
+    PAUSE_EVERY: 8,                     // Pause every N follows
+    PAUSE_DURATION: 20000,              // Pause duration (20 seconds)
+  };
+
+  // ==========================================
+  // SCRIPT - Don&#39;t modify below this line
+  // ==========================================
+  
+  console.log(&#39;🔍 XActions - Keyword Follow&#39;);
+  console.log(&#39;=&#39;.repeat(50));
+  console.log(&#39;⚙️  Settings:&#39;);
+  console.log(`   • Max follows: ${CONFIG.MAX_FOLLOWS}`);
+  console.log(`   • Delay: ${CONFIG.MIN_DELAY/1000}s - ${CONFIG.MAX_DELAY/1000}s`);
+  console.log(`   • Min followers: ${CONFIG.MIN_FOLLOWERS}`);
+  console.log(`   • Max followers: ${CONFIG.MAX_FOLLOWERS}`);
+  console.log(&#39;&#39;);
+  console.log(&#39;⚠️  Press Ctrl+C in console to stop at any time&#39;);
+  console.log(&#39;=&#39;.repeat(50));
+  console.log(&#39;&#39;);
+
+  // Helpers
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+  const randomDelay = (min, max) =&gt; Math.floor(Math.random() * (max - min + 1)) + min;
+  
+  // State - track who we&#39;ve followed to avoid duplicates
+  const followedUsers = new Set();
+  const processedUsers = new Set();
+  let followCount = 0;
+  let scrollCount = 0;
+  let skippedCount = 0;
+
+  // Parse follower count strings like &quot;10.5K&quot; or &quot;1.2M&quot;
+  const parseFollowerCount = (str) =&gt; {
+    if (!str) return 0;
+    str = str.trim().replace(/,/g, &#39;&#39;);
+    const num = parseFloat(str);
+    if (str.toUpperCase().includes(&#39;K&#39;)) return num * 1000;
+    if (str.toUpperCase().includes(&#39;M&#39;)) return num * 1000000;
+    if (str.toUpperCase().includes(&#39;B&#39;)) return num * 1000000000;
+    return num || 0;
+  };
+
+  // Extract user info from a user cell or tweet article
+  const extractUserFromCell = (element) =&gt; {
+    try {
+      // Try to find the username link
+      const userLink = element.querySelector(&#39;a[href^=&quot;/&quot;][role=&quot;link&quot;]&#39;) ||
+                       element.querySelector(&#39;a[href^=&quot;/&quot;]&#39;);
+      if (!userLink) return null;
+      
+      const href = userLink.getAttribute(&#39;href&#39;) || &#39;&#39;;
+      const username = href.split(&#39;/&#39;)[1]?.split(&#39;?&#39;)[0];
+      
+      // Skip invalid usernames
+      if (!username || username.includes(&#39;/&#39;) || 
+          [&#39;search&#39;, &#39;explore&#39;, &#39;home&#39;, &#39;notifications&#39;, &#39;messages&#39;, &#39;i&#39;, &#39;settings&#39;].includes(username)) {
+        return null;
+      }
+      
+      // Get display name
+      const nameSpan = element.querySelector(&#39;[dir=&quot;ltr&quot;] &gt; span &gt; span&#39;) ||
+                       element.querySelector(&#39;[dir=&quot;ltr&quot;] &gt; span&#39;);
+      const displayName = nameSpan?.textContent?.trim() || username;
+      
+      // Get bio if available
+      const bioEl = element.querySelector(&#39;[data-testid=&quot;UserDescription&quot;]&#39;);
+      const bio = bioEl?.textContent?.trim() || &#39;&#39;;
+      
+      // Check if verified
+      const isVerified = !!element.querySelector(&#39;svg[aria-label*=&quot;Verified&quot;]&#39;) ||
+                         !!element.querySelector(&#39;[data-testid=&quot;icon-verified&quot;]&#39;);
+      
+      // Try to get follower count from user cells
+      let followers = 0;
+      const statsText = element.textContent || &#39;&#39;;
+      
+      // Look for patterns like &quot;10.5K Followers&quot; or &quot;followers&quot; nearby
+      const followerPatterns = [
+        /(\d+(?:,\d+)*(?:\.\d+)?[KMB]?)\s*[Ff]ollowers/i,
+        /[Ff]ollowers\s*(\d+(?:,\d+)*(?:\.\d+)?[KMB]?)/i
+      ];
+      
+      for (const pattern of followerPatterns) {
+        const match = statsText.match(pattern);
+        if (match) {
+          followers = parseFollowerCount(match[1]);
+          break;
+        }
+      }
+      
+      // Check if already following
+      const isFollowing = !!element.querySelector(&#39;[data-testid=&quot;userActions&quot;] [data-testid*=&quot;unfollow&quot;]&#39;) ||
+                          !!element.querySelector(&#39;button[data-testid*=&quot;unfollow&quot;]&#39;) ||
+                          element.textContent?.includes(&#39;Following&#39;);
+      
+      // Check if follows you
+      const followsYou = element.textContent?.includes(&#39;Follows you&#39;) || false;
+      
+      return {
+        username,
+        displayName,
+        bio,
+        followers,
+        isVerified,
+        isFollowing,
+        followsYou
+      };
+    } catch (e) {
+      return null;
+    }
+  };
+
+  // Extract user from tweet article
+  const extractUserFromTweet = (article) =&gt; {
+    try {
+      const userLink = article.querySelector(&#39;a[href^=&quot;/&quot;][role=&quot;link&quot;]&#39;);
+      if (!userLink) return null;
+      
+      const href = userLink.getAttribute(&#39;href&#39;) || &#39;&#39;;
+      const username = href.split(&#39;/&#39;)[1]?.split(&#39;?&#39;)[0];
+      
+      if (!username || username.includes(&#39;/&#39;) || 
+          [&#39;search&#39;, &#39;explore&#39;, &#39;home&#39;, &#39;notifications&#39;, &#39;messages&#39;, &#39;i&#39;, &#39;settings&#39;].includes(username)) {
+        return null;
+      }
+      
+      const nameSpan = article.querySelector(&#39;[data-testid=&quot;User-Name&quot;] [dir=&quot;ltr&quot;] &gt; span&#39;);
+      const displayName = nameSpan?.textContent?.trim() || username;
+      
+      const isVerified = !!article.querySelector(&#39;svg[aria-label*=&quot;Verified&quot;]&#39;);
+      
+      return {
+        username,
+        displayName,
+        bio: &#39;&#39;,
+        followers: 0, // Can&#39;t get from tweet view
+        isVerified,
+        isFollowing: false,
+        followsYou: false
+      };
+    } catch (e) {
+      return null;
+    }
+  };
+
+  // Check if user passes filters
+  const passesFilters = (userInfo) =&gt; {
+    if (!userInfo || !userInfo.username) return false;
+    
+    // Skip if already processed
+    if (processedUsers.has(userInfo.username.toLowerCase())) return false;
+    
+    // Skip if already following
+    if (userInfo.isFollowing) return false;
+    
+    // Bio requirement
+    if (CONFIG.MUST_HAVE_BIO &amp;&amp; !userInfo.bio) return false;
+    
+    // Verified filter
+    if (CONFIG.SKIP_VERIFIED &amp;&amp; userInfo.isVerified) return false;
+    
+    // Already follows you
+    if (CONFIG.SKIP_IF_FOLLOWING_YOU &amp;&amp; userInfo.followsYou) return false;
+    
+    // Follower count (only check if we have the data)
+    if (userInfo.followers &gt; 0) {
+      if (userInfo.followers &lt; CONFIG.MIN_FOLLOWERS) return false;
+      if (userInfo.followers &gt; CONFIG.MAX_FOLLOWERS) return false;
+    }
+    
+    return true;
+  };
+
+  // Follow a user by clicking their follow button
+  const followUser = async (element, userInfo) =&gt; {
+    // Find the follow button
+    const followBtn = element.querySelector(&#39;button[data-testid$=&quot;-follow&quot;]&#39;) ||
+                      element.querySelector(&#39;[role=&quot;button&quot;][aria-label*=&quot;Follow @&quot;]&#39;) ||
+                      Array.from(element.querySelectorAll(&#39;button&#39;)).find(btn =&gt; 
+                        btn.textContent === &#39;Follow&#39; &amp;&amp; !btn.textContent.includes(&#39;Following&#39;)
+                      );
+    
+    if (!followBtn) return false;
+    
+    // Check if button says &quot;Follow&quot; (not &quot;Following&quot; or &quot;Pending&quot;)
+    const buttonText = followBtn.textContent?.trim() || &#39;&#39;;
+    if (buttonText !== &#39;Follow&#39;) return false;
+    
+    // Scroll into view
+    element.scrollIntoView({ behavior: &#39;smooth&#39;, block: &#39;center&#39; });
+    await sleep(500);
+    
+    // Click the button
+    followBtn.click();
+    
+    followCount++;
+    followedUsers.add(userInfo.username.toLowerCase());
+    processedUsers.add(userInfo.username.toLowerCase());
+    
+    console.log(`✅ [${followCount}/${CONFIG.MAX_FOLLOWS}] Followed @${userInfo.username}` +
+                (userInfo.followers ? ` (${userInfo.followers.toLocaleString()} followers)` : &#39;&#39;));
+    
+    return true;
+  };
+
+  // Process user cells (People tab)
+  const processUserCells = async () =&gt; {
+    const userCells = document.querySelectorAll(&#39;[data-testid=&quot;UserCell&quot;]&#39;);
+    
+    for (const cell of userCells) {
+      if (followCount &gt;= CONFIG.MAX_FOLLOWS) return false;
+      
+      const userInfo = extractUserFromCell(cell);
+      if (!passesFilters(userInfo)) {
+        if (userInfo?.username) {
+          processedUsers.add(userInfo.username.toLowerCase());
+        }
+        skippedCount++;
+        continue;
+      }
+      
+      const followed = await followUser(cell, userInfo);
+      
+      if (followed) {
+        // Random delay
+        const delay = randomDelay(CONFIG.MIN_DELAY, CONFIG.MAX_DELAY);
+        console.log(`   ⏳ Waiting ${(delay/1000).toFixed(1)}s...`);
+        await sleep(delay);
+        
+        // Periodic pause
+        if (followCount &gt; 0 &amp;&amp; followCount % CONFIG.PAUSE_EVERY === 0) {
+          console.log(&#39;&#39;);
+          console.log(`☕ Taking a ${CONFIG.PAUSE_DURATION/1000}s break for safety...`);
+          await sleep(CONFIG.PAUSE_DURATION);
+          console.log(&#39;🔄 Resuming...&#39;);
+          console.log(&#39;&#39;);
+        }
+      }
+    }
+    
+    return true;
+  };
+
+  // Process tweet articles (Top/Latest tabs)
+  const processTweets = async () =&gt; {
+    const articles = document.querySelectorAll(&#39;article[data-testid=&quot;tweet&quot;]&#39;);
+    
+    for (const article of articles) {
+      if (followCount &gt;= CONFIG.MAX_FOLLOWS) return false;
+      
+      const userInfo = extractUserFromTweet(article);
+      if (!passesFilters(userInfo)) {
+        if (userInfo?.username) {
+          processedUsers.add(userInfo.username.toLowerCase());
+        }
+        continue;
+      }
+      
+      // Need to hover to reveal follow button on tweets
+      // Try to find parent cell with follow button
+      const userCell = article.querySelector(&#39;[data-testid=&quot;User-Name&quot;]&#39;)?.closest(&#39;[data-testid=&quot;UserCell&quot;]&#39;);
+      
+      if (userCell) {
+        const followed = await followUser(userCell, userInfo);
+        if (followed) {
+          const delay = randomDelay(CONFIG.MIN_DELAY, CONFIG.MAX_DELAY);
+          console.log(`   ⏳ Waiting ${(delay/1000).toFixed(1)}s...`);
+          await sleep(delay);
+        }
+      } else {
+        // Mark as processed so we don&#39;t try again
+        processedUsers.add(userInfo.username.toLowerCase());
+        console.log(`ℹ️  Found @${userInfo.username} - visit profile to follow`);
+      }
+    }
+    
+    return true;
+  };
+
+  // Main loop
+  console.log(&#39;🔍 Scanning for users to follow...&#39;);
+  console.log(&#39;&#39;);
+
+  while (scrollCount &lt; CONFIG.MAX_SCROLLS &amp;&amp; followCount &lt; CONFIG.MAX_FOLLOWS) {
+    // Process both user cells and tweets
+    await processUserCells();
+    await processTweets();
+    
+    if (followCount &gt;= CONFIG.MAX_FOLLOWS) break;
+
+    // Scroll down to load more
+    window.scrollBy({ top: 800, behavior: &#39;smooth&#39; });
+    scrollCount++;
+    
+    // Progress update every 5 scrolls
+    if (scrollCount % 5 === 0) {
+      console.log(`📊 Progress: ${followCount} followed, ${skippedCount} skipped, ${scrollCount} scrolls`);
+    }
+
+    await sleep(CONFIG.SCROLL_DELAY);
+  }
+
+  // Final summary
+  console.log(&#39;&#39;);
+  console.log(&#39;=&#39;.repeat(50));
+  console.log(&#39;✅ KEYWORD FOLLOW COMPLETE&#39;);
+  console.log(&#39;=&#39;.repeat(50));
+  console.log(`👥 Users followed: ${followCount}`);
+  console.log(`⏭️  Users skipped: ${skippedCount}`);
+  console.log(`📜 Total scrolls: ${scrollCount}`);
+  console.log(`🕐 Session ended: ${new Date().toLocaleTimeString()}`);
+  console.log(&#39;&#39;);
+  console.log(&#39;📝 Users followed this session:&#39;);
+  console.log(`   ${Array.from(followedUsers).map(u =&gt; &#39;@&#39; + u).join(&#39;, &#39;) || &#39;None&#39;}`);
+  console.log(&#39;&#39;);
+  console.log(&#39;💡 Tips:&#39;);
+  console.log(&#39;   • Wait at least 2-4 hours before running again&#39;);
+  console.log(&#39;   • Unfollow non-followers after 7-14 days&#39;);
+  console.log(&#39;   • Keep daily follows under 100 for safety&#39;);
+  console.log(&#39;=&#39;.repeat(50));
+
+  // Store followed users in localStorage for persistence
+  const storedFollows = JSON.parse(localStorage.getItem(&#39;xactions_followed&#39;) || &#39;[]&#39;);
+  const newFollows = Array.from(followedUsers).map(username =&gt; ({
+    username,
+    followedAt: new Date().toISOString(),
+    source: window.location.href
+  }));
+  localStorage.setItem(&#39;xactions_followed&#39;, JSON.stringify([...storedFollows, ...newFollows]));
+
+  // Return results
+  return {
+    followed: followCount,
+    skipped: skippedCount,
+    scrolls: scrollCount,
+    users: Array.from(followedUsers)
+  };
+})();
+</code></pre>
+<p><strong>What happens:</strong></p>
+<ol>
+<li>Script scans visible users on the search results page</li>
+<li>Filters users based on your settings (followers, bio, etc.)</li>
+<li>Clicks the Follow button with random delays</li>
+<li>Scrolls down to find more users</li>
+<li>Takes periodic breaks for safety</li>
+<li>Saves followed users to localStorage</li>
+</ol>
+<p><strong>Output example:</strong></p>
+<pre><code>🔍 XActions - Keyword Follow
+==================================================
+⚙️  Settings:
+   • Max follows: 20
+   • Delay: 5s - 12s
+   • Min followers: 50
+   • Max followers: 500000
+
+⚠️  Press Ctrl+C in console to stop at any time
+==================================================
+
+🔍 Scanning for users to follow...
+
+✅ [1/20] Followed @cryptobuilder (12,450 followers)
+   ⏳ Waiting 7.3s...
+✅ [2/20] Followed @web3dev_sarah (8,200 followers)
+   ⏳ Waiting 5.8s...
+✅ [3/20] Followed @defi_researcher (45,100 followers)
+   ⏳ Waiting 9.2s...
+📊 Progress: 3 followed, 12 skipped, 5 scrolls
+...
+
+☕ Taking a 20s break for safety...
+🔄 Resuming...
+
+...
+
+==================================================
+✅ KEYWORD FOLLOW COMPLETE
+==================================================
+👥 Users followed: 20
+⏭️  Users skipped: 87
+📜 Total scrolls: 18
+🕐 Session ended: 2:45:32 PM
+
+📝 Users followed this session:
+   @cryptobuilder, @web3dev_sarah, @defi_researcher, ...
+
+💡 Tips:
+   • Wait at least 2-4 hours before running again
+   • Unfollow non-followers after 7-14 days
+   • Keep daily follows under 100 for safety
+==================================================
+</code></pre>
+<hr>
+<h2>🖥️ Example 2: Node.js with Puppeteer (Production)</h2>
+<p><strong>Best for:</strong> Scheduled keyword campaigns, persistent tracking, detailed logging</p>
+<p><strong>Features:</strong></p>
+<ul>
+<li>Search for multiple keywords and follow matching users</li>
+<li>Filter by minimum follower count</li>
+<li>Persistent file-based tracking (never follow same user twice)</li>
+<li>Configurable daily limits with built-in enforcement</li>
+<li>Comprehensive logging with timestamps</li>
+<li>Human-like random delays</li>
+<li>Graceful error handling</li>
+<li>Resume support</li>
+</ul>
+<h3>Setup</h3>
+<pre><code class="language-bash"># Create project folder
+mkdir keyword-follow &amp;&amp; cd keyword-follow
+
+# Initialize and install dependencies
+npm init -y
+npm install puppeteer
+
+# Create the script
+touch keyword-follow.js
+</code></pre>
+<h3>Main Script: <code>keyword-follow.js</code></h3>
+<pre><code class="language-javascript">// ============================================
+// XActions - Keyword Follow (Node.js + Puppeteer)
+// Author: nich (@nichxbt)
+//
+// Usage:
+//   node keyword-follow.js &quot;web3 developer&quot;           # Search and follow
+//   node keyword-follow.js &quot;AI startup&quot; --limit 15   # Custom limit
+//   node keyword-follow.js --keywords &quot;crypto,defi&quot;  # Multiple keywords
+//
+// ============================================
+
+const puppeteer = require(&#39;puppeteer&#39;);
+const fs = require(&#39;fs&#39;);
+const path = require(&#39;path&#39;);
+
+// ==========================================
+// CONFIGURATION
+// ==========================================
+const CONFIG = {
+  // Keywords to search (command line overrides this)
+  keywords: [&#39;web3 developer&#39;, &#39;crypto founder&#39;, &#39;blockchain engineer&#39;],
+  
+  // Browser settings
+  headless: true,                       // Set to false to watch the browser
+  userDataDir: &#39;./browser-data&#39;,        // Persistent login session
+  viewport: { width: 1280, height: 900 },
+  
+  // Follow limits (KEEP THESE CONSERVATIVE!)
+  maxFollowsPerKeyword: 10,             // Max follows per keyword search
+  maxFollowsPerSession: 30,             // Max follows per script run
+  maxFollowsPerDay: 80,                 // Max follows per 24 hours
+  maxScrollsPerKeyword: 20,             // Max scrolls per keyword
+  
+  // Filters
+  minFollowers: 100,                    // Minimum follower count
+  maxFollowers: 500000,                 // Maximum follower count
+  mustHaveBio: false,                   // Require bio
+  skipVerified: false,                  // Skip verified accounts
+  bioKeywords: [],                      // Bio must contain one of these (empty = any)
+  
+  // Delays (milliseconds) - IMPORTANT FOR SAFETY
+  minDelay: 5000,                       // Min delay between follows (5 seconds)
+  maxDelay: 15000,                      // Max delay between follows (15 seconds)
+  scrollDelay: 2500,                    // Delay after scrolling
+  pageLoadDelay: 5000,                  // Wait for page to load
+  keywordDelay: 30000,                  // Delay between keyword searches
+  
+  // Safety pauses
+  pauseEvery: 8,                        // Take a break every N follows
+  pauseDuration: 30000,                 // Break duration (30 seconds)
+  
+  // File paths
+  followedFile: &#39;./followed-users.json&#39;,   // Persistent follow tracking
+  logDir: &#39;./logs&#39;,                         // Log directory
+  statsFile: &#39;./follow-stats.json&#39;,         // Daily stats
+};
+
+// ==========================================
+// UTILITY FUNCTIONS
+// ==========================================
+
+const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+
+const randomDelay = (min, max) =&gt; {
+  const delay = Math.floor(Math.random() * (max - min + 1)) + min;
+  return delay + Math.floor(Math.random() * 1000);
+};
+
+const getTimestamp = () =&gt; new Date().toISOString();
+const getDateKey = () =&gt; new Date().toISOString().split(&#39;T&#39;)[0];
+
+// Ensure directories exist
+const ensureDirectories = () =&gt; {
+  if (!fs.existsSync(CONFIG.userDataDir)) {
+    fs.mkdirSync(CONFIG.userDataDir, { recursive: true });
+  }
+  if (!fs.existsSync(CONFIG.logDir)) {
+    fs.mkdirSync(CONFIG.logDir, { recursive: true });
+  }
+};
+
+// ==========================================
+// LOGGER CLASS
+// ==========================================
+
+class Logger {
+  constructor(sessionId) {
+    this.sessionId = sessionId;
+    this.logFile = path.join(CONFIG.logDir, `keyword-follow-${getDateKey()}.log`);
+  }
+
+  log(level, message) {
+    const timestamp = getTimestamp();
+    const line = `[${timestamp}] [${level.toUpperCase()}] ${message}`;
+    console.log(line);
+    fs.appendFileSync(this.logFile, line + &#39;\n&#39;);
+  }
+
+  info(message) { this.log(&#39;info&#39;, message); }
+  success(message) { this.log(&#39;success&#39;, `✅ ${message}`); }
+  warning(message) { this.log(&#39;warning&#39;, `⚠️  ${message}`); }
+  error(message) { this.log(&#39;error&#39;, `❌ ${message}`); }
+  follow(message) { this.log(&#39;follow&#39;, `👥 ${message}`); }
+}
+
+// ==========================================
+// FOLLOWED USERS TRACKER
+// ==========================================
+
+class FollowedUsersTracker {
+  constructor() {
+    this.loadData();
+  }
+
+  loadData() {
+    try {
+      if (fs.existsSync(CONFIG.followedFile)) {
+        this.users = JSON.parse(fs.readFileSync(CONFIG.followedFile, &#39;utf8&#39;));
+      } else {
+        this.users = {};
+      }
+    } catch (e) {
+      this.users = {};
+    }
+  }
+
+  save() {
+    fs.writeFileSync(CONFIG.followedFile, JSON.stringify(this.users, null, 2));
+  }
+
+  hasFollowed(username) {
+    return !!this.users[username.toLowerCase()];
+  }
+
+  addFollow(username, keyword, extraData = {}) {
+    this.users[username.toLowerCase()] = {
+      username: username,
+      followedAt: new Date().toISOString(),
+      keyword: keyword,
+      followedBack: null,
+      checkedAt: null,
+      ...extraData
+    };
+    this.save();
+  }
+
+  getCount() {
+    return Object.keys(this.users).length;
+  }
+
+  getFollowedToday() {
+    const today = getDateKey();
+    return Object.values(this.users).filter(u =&gt; 
+      u.followedAt &amp;&amp; u.followedAt.startsWith(today)
+    ).length;
+  }
+
+  canFollowMore() {
+    return this.getFollowedToday() &lt; CONFIG.maxFollowsPerDay;
+  }
+
+  getRemainingToday() {
+    return Math.max(0, CONFIG.maxFollowsPerDay - this.getFollowedToday());
+  }
+
+  // Export to CSV
+  exportCSV(filename = &#39;followed-users.csv&#39;) {
+    const headers = [&#39;username&#39;, &#39;followedAt&#39;, &#39;keyword&#39;, &#39;followedBack&#39;, &#39;checkedAt&#39;];
+    const rows = Object.values(this.users).map(u =&gt; 
+      headers.map(h =&gt; u[h] || &#39;&#39;).join(&#39;,&#39;)
+    );
+    const csv = [headers.join(&#39;,&#39;), ...rows].join(&#39;\n&#39;);
+    fs.writeFileSync(filename, csv);
+    return filename;
+  }
+}
+
+// ==========================================
+// STATS TRACKER
+// ==========================================
+
+class StatsTracker {
+  constructor() {
+    this.loadStats();
+  }
+
+  loadStats() {
+    try {
+      if (fs.existsSync(CONFIG.statsFile)) {
+        this.stats = JSON.parse(fs.readFileSync(CONFIG.statsFile, &#39;utf8&#39;));
+      } else {
+        this.stats = {};
+      }
+    } catch (e) {
+      this.stats = {};
+    }
+  }
+
+  saveStats() {
+    fs.writeFileSync(CONFIG.statsFile, JSON.stringify(this.stats, null, 2));
+  }
+
+  recordSession(keyword, followCount) {
+    const today = getDateKey();
+    if (!this.stats[today]) {
+      this.stats[today] = { totalFollows: 0, sessions: [], keywords: {} };
+    }
+    
+    this.stats[today].totalFollows += followCount;
+    this.stats[today].sessions.push({
+      time: getTimestamp(),
+      keyword,
+      follows: followCount
+    });
+    
+    if (!this.stats[today].keywords[keyword]) {
+      this.stats[today].keywords[keyword] = 0;
+    }
+    this.stats[today].keywords[keyword] += followCount;
+    
+    this.saveStats();
+  }
+}
+
+// ==========================================
+// BROWSER AUTOMATION
+// ==========================================
+
+async function launchBrowser(headless = CONFIG.headless) {
+  return await puppeteer.launch({
+    headless,
+    userDataDir: CONFIG.userDataDir,
+    args: [
+      &#39;--no-sandbox&#39;,
+      &#39;--disable-setuid-sandbox&#39;,
+      &#39;--disable-dev-shm-usage&#39;,
+      &#39;--disable-accelerated-2d-canvas&#39;,
+      &#39;--disable-gpu&#39;,
+      &#39;--window-size=1280,900&#39;
+    ]
+  });
+}
+
+async function checkLogin(page, logger) {
+  logger.info(&#39;Checking login status...&#39;);
+  
+  await page.goto(&#39;https://x.com/home&#39;, { 
+    waitUntil: &#39;networkidle2&#39;,
+    timeout: 30000 
+  });
+  
+  await sleep(3000);
+  
+  const isLoggedIn = await page.evaluate(() =&gt; {
+    return !!document.querySelector(&#39;[data-testid=&quot;SideNav_NewTweet_Button&quot;]&#39;) ||
+           !!document.querySelector(&#39;[data-testid=&quot;AppTabBar_Profile_Link&quot;]&#39;) ||
+           !!document.querySelector(&#39;[aria-label=&quot;Post&quot;]&#39;);
+  });
+  
+  return isLoggedIn;
+}
+
+async function promptLogin(logger) {
+  logger.warning(&#39;Not logged in to X/Twitter&#39;);
+  logger.info(&#39;Opening browser for manual login...&#39;);
+  
+  console.log(&#39;\n&#39; + &#39;=&#39;.repeat(50));
+  console.log(&#39;🔐 LOGIN REQUIRED&#39;);
+  console.log(&#39;=&#39;.repeat(50));
+  console.log(&#39;1. A browser window will open&#39;);
+  console.log(&#39;2. Log in to your X/Twitter account&#39;);
+  console.log(&#39;3. Complete any 2FA if prompted&#39;);
+  console.log(&#39;4. Press ENTER here when done&#39;);
+  console.log(&#39;=&#39;.repeat(50) + &#39;\n&#39;);
+  
+  const browser = await launchBrowser(false);
+  const page = await browser.newPage();
+  await page.goto(&#39;https://x.com/login&#39;, { waitUntil: &#39;networkidle2&#39; });
+  
+  await new Promise(resolve =&gt; {
+    process.stdin.once(&#39;data&#39;, resolve);
+  });
+  
+  await browser.close();
+  logger.success(&#39;Login saved! Session will persist for future runs.&#39;);
+}
+
+// ==========================================
+// USER EXTRACTION &amp; FOLLOWING
+// ==========================================
+
+async function searchForKeyword(page, keyword, logger) {
+  logger.info(`Searching for: &quot;${keyword}&quot;`);
+  
+  // Navigate to people search
+  const searchUrl = `https://x.com/search?q=${encodeURIComponent(keyword)}&amp;src=typed_query&amp;f=user`;
+  await page.goto(searchUrl, { waitUntil: &#39;networkidle2&#39;, timeout: 30000 });
+  
+  await sleep(CONFIG.pageLoadDelay);
+  
+  // Wait for user cells to appear
+  try {
+    await page.waitForSelector(&#39;[data-testid=&quot;UserCell&quot;]&#39;, { timeout: 10000 });
+  } catch (e) {
+    logger.warning(&#39;No user results found for this keyword&#39;);
+    return false;
+  }
+  
+  return true;
+}
+
+async function extractUsersFromPage(page) {
+  return await page.evaluate((config) =&gt; {
+    const users = [];
+    const cells = document.querySelectorAll(&#39;[data-testid=&quot;UserCell&quot;]&#39;);
+    
+    cells.forEach(cell =&gt; {
+      try {
+        // Get username
+        const link = cell.querySelector(&#39;a[href^=&quot;/&quot;][role=&quot;link&quot;]&#39;);
+        const href = link?.getAttribute(&#39;href&#39;) || &#39;&#39;;
+        const username = href.split(&#39;/&#39;)[1]?.split(&#39;?&#39;)[0];
+        
+        if (!username || username.includes(&#39;/&#39;)) return;
+        
+        // Get display name
+        const nameSpan = cell.querySelector(&#39;[dir=&quot;ltr&quot;] &gt; span &gt; span&#39;) ||
+                         cell.querySelector(&#39;[dir=&quot;ltr&quot;] &gt; span&#39;);
+        const displayName = nameSpan?.textContent?.trim() || username;
+        
+        // Get bio
+        const bioEl = cell.querySelector(&#39;[data-testid=&quot;UserDescription&quot;]&#39;);
+        const bio = bioEl?.textContent?.trim() || &#39;&#39;;
+        
+        // Check verified
+        const isVerified = !!cell.querySelector(&#39;svg[aria-label*=&quot;Verified&quot;]&#39;);
+        
+        // Check if already following
+        const isFollowing = !!cell.querySelector(&#39;[data-testid*=&quot;unfollow&quot;]&#39;) ||
+                            cell.textContent?.includes(&#39;Following&#39;);
+        
+        // Check follows you
+        const followsYou = cell.textContent?.includes(&#39;Follows you&#39;);
+        
+        // Try to get follower count
+        let followers = 0;
+        const statsText = cell.textContent || &#39;&#39;;
+        const match = statsText.match(/(\d+(?:,\d+)*(?:\.\d+)?[KMB]?)\s*[Ff]ollowers/i);
+        if (match) {
+          let str = match[1].replace(/,/g, &#39;&#39;);
+          const num = parseFloat(str);
+          if (str.toUpperCase().includes(&#39;K&#39;)) followers = num * 1000;
+          else if (str.toUpperCase().includes(&#39;M&#39;)) followers = num * 1000000;
+          else followers = num;
+        }
+        
+        // Check if follow button is available
+        const followBtn = cell.querySelector(&#39;button[data-testid$=&quot;-follow&quot;]&#39;) ||
+                          Array.from(cell.querySelectorAll(&#39;button&#39;)).find(btn =&gt; 
+                            btn.textContent === &#39;Follow&#39;
+                          );
+        const canFollow = !!followBtn &amp;&amp; !isFollowing;
+        
+        users.push({
+          username,
+          displayName,
+          bio,
+          followers,
+          isVerified,
+          isFollowing,
+          followsYou,
+          canFollow
+        });
+      } catch (e) {
+        // Skip
+      }
+    });
+    
+    return users;
+  }, CONFIG);
+}
+
+async function followUserOnPage(page, username, logger) {
+  return await page.evaluate((targetUsername) =&gt; {
+    const cells = document.querySelectorAll(&#39;[data-testid=&quot;UserCell&quot;]&#39;);
+    
+    for (const cell of cells) {
+      const link = cell.querySelector(&#39;a[href^=&quot;/&quot;][role=&quot;link&quot;]&#39;);
+      const href = link?.getAttribute(&#39;href&#39;) || &#39;&#39;;
+      const cellUsername = href.split(&#39;/&#39;)[1]?.split(&#39;?&#39;)[0];
+      
+      if (cellUsername?.toLowerCase() === targetUsername.toLowerCase()) {
+        const followBtn = cell.querySelector(&#39;button[data-testid$=&quot;-follow&quot;]&#39;) ||
+                          Array.from(cell.querySelectorAll(&#39;button&#39;)).find(btn =&gt; 
+                            btn.textContent === &#39;Follow&#39; &amp;&amp; !btn.textContent.includes(&#39;Following&#39;)
+                          );
+        
+        if (followBtn) {
+          followBtn.click();
+          return true;
+        }
+      }
+    }
+    
+    return false;
+  }, username);
+}
+
+function passesFilters(user, followedTracker) {
+  if (!user || !user.username) return false;
+  
+  // Already followed before
+  if (followedTracker.hasFollowed(user.username)) return false;
+  
+  // Already following
+  if (user.isFollowing) return false;
+  
+  // Can&#39;t follow
+  if (!user.canFollow) return false;
+  
+  // Bio requirement
+  if (CONFIG.mustHaveBio &amp;&amp; !user.bio) return false;
+  
+  // Verified filter
+  if (CONFIG.skipVerified &amp;&amp; user.isVerified) return false;
+  
+  // Bio keywords
+  if (CONFIG.bioKeywords.length &gt; 0) {
+    const bioLower = user.bio.toLowerCase();
+    if (!CONFIG.bioKeywords.some(kw =&gt; bioLower.includes(kw.toLowerCase()))) {
+      return false;
+    }
+  }
+  
+  // Follower count
+  if (user.followers &gt; 0) {
+    if (user.followers &lt; CONFIG.minFollowers) return false;
+    if (user.followers &gt; CONFIG.maxFollowers) return false;
+  }
+  
+  return true;
+}
+
+// ==========================================
+// MAIN KEYWORD FOLLOW FUNCTION
+// ==========================================
+
+async function keywordFollow(keywords = CONFIG.keywords, options = {}) {
+  const sessionId = Date.now().toString(36);
+  const logger = new Logger(sessionId);
+  const followedTracker = new FollowedUsersTracker();
+  const statsTracker = new StatsTracker();
+  
+  ensureDirectories();
+  
+  // Session stats
+  let totalFollowed = 0;
+  let totalSkipped = 0;
+  const sessionFollows = [];
+  
+  logger.info(&#39;=&#39;.repeat(50));
+  logger.info(&#39;🔍 XActions - Keyword Follow&#39;);
+  logger.info(&#39;=&#39;.repeat(50));
+  logger.info(`Keywords: ${keywords.join(&#39;, &#39;)}`);
+  logger.info(`Max follows per keyword: ${CONFIG.maxFollowsPerKeyword}`);
+  logger.info(`Max follows per session: ${CONFIG.maxFollowsPerSession}`);
+  logger.info(`Already tracked: ${followedTracker.getCount()} users`);
+  logger.info(`Followed today: ${followedTracker.getFollowedToday()}/${CONFIG.maxFollowsPerDay}`);
+  logger.info(&#39;=&#39;.repeat(50));
+  
+  // Check daily limit
+  if (!followedTracker.canFollowMore()) {
+    logger.warning(`Daily limit reached! Followed ${followedTracker.getFollowedToday()} today.`);
+    logger.info(&#39;Try again tomorrow or increase maxFollowsPerDay.&#39;);
+    return { followed: 0, message: &#39;Daily limit reached&#39; };
+  }
+  
+  let browser;
+  let page;
+  
+  try {
+    // Launch browser
+    logger.info(&#39;Launching browser...&#39;);
+    browser = await launchBrowser();
+    page = await browser.newPage();
+    await page.setViewport(CONFIG.viewport);
+    
+    // Check login
+    const isLoggedIn = await checkLogin(page, logger);
+    
+    if (!isLoggedIn) {
+      await browser.close();
+      await promptLogin(logger);
+      
+      // Relaunch
+      browser = await launchBrowser();
+      page = await browser.newPage();
+      await page.setViewport(CONFIG.viewport);
+      
+      const stillNotLoggedIn = !(await checkLogin(page, logger));
+      if (stillNotLoggedIn) {
+        throw new Error(&#39;Login failed. Please try again.&#39;);
+      }
+    }
+    
+    logger.success(&#39;Logged in successfully!&#39;);
+    
+    // Process each keyword
+    for (const keyword of keywords) {
+      if (totalFollowed &gt;= CONFIG.maxFollowsPerSession) {
+        logger.info(&#39;Session follow limit reached&#39;);
+        break;
+      }
+      
+      if (!followedTracker.canFollowMore()) {
+        logger.warning(&#39;Daily follow limit reached&#39;);
+        break;
+      }
+      
+      logger.info(&#39;&#39;);
+      logger.info(`━━━ Searching: &quot;${keyword}&quot; ━━━`);
+      
+      const hasResults = await searchForKeyword(page, keyword, logger);
+      if (!hasResults) continue;
+      
+      let keywordFollows = 0;
+      let scrolls = 0;
+      const processedThisKeyword = new Set();
+      
+      while (
+        keywordFollows &lt; CONFIG.maxFollowsPerKeyword &amp;&amp;
+        totalFollowed &lt; CONFIG.maxFollowsPerSession &amp;&amp;
+        scrolls &lt; CONFIG.maxScrollsPerKeyword &amp;&amp;
+        followedTracker.canFollowMore()
+      ) {
+        // Extract users
+        const users = await extractUsersFromPage(page);
+        
+        for (const user of users) {
+          if (processedThisKeyword.has(user.username.toLowerCase())) continue;
+          processedThisKeyword.add(user.username.toLowerCase());
+          
+          if (!passesFilters(user, followedTracker)) {
+            totalSkipped++;
+            continue;
+          }
+          
+          if (keywordFollows &gt;= CONFIG.maxFollowsPerKeyword) break;
+          if (totalFollowed &gt;= CONFIG.maxFollowsPerSession) break;
+          
+          // Follow the user
+          const success = await followUserOnPage(page, user.username, logger);
+          
+          if (success) {
+            keywordFollows++;
+            totalFollowed++;
+            
+            followedTracker.addFollow(user.username, keyword, {
+              displayName: user.displayName,
+              followers: user.followers,
+              bio: user.bio?.substring(0, 200)
+            });
+            
+            sessionFollows.push(user.username);
+            
+            logger.follow(
+              `[${totalFollowed}/${CONFIG.maxFollowsPerSession}] @${user.username}` +
+              (user.followers ? ` (${user.followers.toLocaleString()} followers)` : &#39;&#39;)
+            );
+            
+            // Random delay
+            const delay = randomDelay(CONFIG.minDelay, CONFIG.maxDelay);
+            logger.info(`   Waiting ${(delay/1000).toFixed(1)}s...`);
+            await sleep(delay);
+            
+            // Periodic pause
+            if (totalFollowed &gt; 0 &amp;&amp; totalFollowed % CONFIG.pauseEvery === 0) {
+              logger.info(&#39;&#39;);
+              logger.info(`☕ Safety pause: ${CONFIG.pauseDuration/1000}s...`);
+              await sleep(CONFIG.pauseDuration);
+              logger.info(&#39;Resuming...&#39;);
+            }
+          }
+        }
+        
+        // Scroll for more
+        await page.evaluate(() =&gt; window.scrollBy(0, 600));
+        scrolls++;
+        await sleep(CONFIG.scrollDelay);
+        
+        if (scrolls % 5 === 0) {
+          logger.info(`   Scrolled ${scrolls}x, found ${keywordFollows} for &quot;${keyword}&quot;`);
+        }
+      }
+      
+      logger.info(`   ✓ Followed ${keywordFollows} users from &quot;${keyword}&quot;`);
+      statsTracker.recordSession(keyword, keywordFollows);
+      
+      // Delay between keywords
+      if (keywords.indexOf(keyword) &lt; keywords.length - 1 &amp;&amp; keywordFollows &gt; 0) {
+        logger.info(`   Waiting ${CONFIG.keywordDelay/1000}s before next keyword...`);
+        await sleep(CONFIG.keywordDelay);
+      }
+    }
+    
+  } catch (error) {
+    logger.error(`Error: ${error.message}`);
+    throw error;
+  } finally {
+    if (browser) {
+      await browser.close();
+    }
+  }
+  
+  // Final summary
+  logger.info(&#39;&#39;);
+  logger.info(&#39;=&#39;.repeat(50));
+  logger.success(&#39;KEYWORD FOLLOW COMPLETE&#39;);
+  logger.info(&#39;=&#39;.repeat(50));
+  logger.info(`👥 Users followed: ${totalFollowed}`);
+  logger.info(`⏭️  Users skipped: ${totalSkipped}`);
+  logger.info(`📅 Total followed today: ${followedTracker.getFollowedToday()}/${CONFIG.maxFollowsPerDay}`);
+  logger.info(`📊 All-time tracked: ${followedTracker.getCount()} users`);
+  logger.info(&#39;&#39;);
+  logger.info(&#39;Users followed this session:&#39;);
+  sessionFollows.forEach(u =&gt; logger.info(`   • @${u}`));
+  logger.info(&#39;&#39;);
+  logger.info(&#39;💾 Data saved to:&#39;);
+  logger.info(`   • ${CONFIG.followedFile}`);
+  logger.info(`   • ${CONFIG.statsFile}`);
+  logger.info(&#39;=&#39;.repeat(50));
+  
+  return {
+    followed: totalFollowed,
+    skipped: totalSkipped,
+    users: sessionFollows,
+    todayTotal: followedTracker.getFollowedToday()
+  };
+}
+
+// ==========================================
+// CLI INTERFACE
+// ==========================================
+
+async function main() {
+  const args = process.argv.slice(2);
+  let keywords = CONFIG.keywords;
+  let limit = CONFIG.maxFollowsPerSession;
+  
+  // Parse arguments
+  for (let i = 0; i &lt; args.length; i++) {
+    if (args[i] === &#39;--keywords&#39; &amp;&amp; args[i + 1]) {
+      keywords = args[i + 1].split(&#39;,&#39;).map(k =&gt; k.trim());
+      i++;
+    } else if (args[i] === &#39;--limit&#39; &amp;&amp; args[i + 1]) {
+      limit = parseInt(args[i + 1], 10);
+      CONFIG.maxFollowsPerSession = limit;
+      i++;
+    } else if (args[i] === &#39;--min-followers&#39; &amp;&amp; args[i + 1]) {
+      CONFIG.minFollowers = parseInt(args[i + 1], 10);
+      i++;
+    } else if (args[i] === &#39;--headless&#39;) {
+      CONFIG.headless = true;
+    } else if (args[i] === &#39;--visible&#39;) {
+      CONFIG.headless = false;
+    } else if (args[i] === &#39;--export-csv&#39;) {
+      const tracker = new FollowedUsersTracker();
+      const file = tracker.exportCSV();
+      console.log(`✅ Exported to ${file}`);
+      return;
+    } else if (args[i] === &#39;--stats&#39;) {
+      const tracker = new FollowedUsersTracker();
+      console.log(&#39;📊 Keyword Follow Stats:&#39;);
+      console.log(`   Total followed: ${tracker.getCount()}`);
+      console.log(`   Followed today: ${tracker.getFollowedToday()}`);
+      console.log(`   Remaining today: ${tracker.getRemainingToday()}`);
+      return;
+    } else if (args[i] === &#39;--help&#39;) {
+      console.log(`
+🔍 XActions - Keyword Follow
+
+Usage:
+  node keyword-follow.js [keyword]                    Search and follow
+  node keyword-follow.js --keywords &quot;crypto,defi&quot;    Multiple keywords
+  node keyword-follow.js &quot;AI startup&quot; --limit 15     Custom limit
+  node keyword-follow.js --min-followers 500         Filter by followers
+  node keyword-follow.js --visible                   Show browser window
+  node keyword-follow.js --export-csv                Export follows to CSV
+  node keyword-follow.js --stats                     Show statistics
+  node keyword-follow.js --help                      Show this help
+
+Examples:
+  node keyword-follow.js &quot;web3 developer&quot;
+  node keyword-follow.js --keywords &quot;crypto,nft,defi&quot; --limit 20
+  node keyword-follow.js &quot;AI researcher&quot; --min-followers 1000 --visible
+      `);
+      return;
+    } else if (!args[i].startsWith(&#39;--&#39;)) {
+      // Single keyword as positional argument
+      keywords = [args[i]];
+    }
+  }
+  
+  await keywordFollow(keywords);
+}
+
+// Run if called directly
+if (require.main === module) {
+  main().catch(console.error);
+}
+
+module.exports = { keywordFollow, FollowedUsersTracker, CONFIG };
+</code></pre>
+<h3>Running the Script</h3>
+<pre><code class="language-bash"># First run (will prompt for login)
+node keyword-follow.js &quot;web3 developer&quot;
+
+# With custom limit
+node keyword-follow.js &quot;crypto founder&quot; --limit 15
+
+# Multiple keywords
+node keyword-follow.js --keywords &quot;AI,machine learning,deep learning&quot;
+
+# With minimum follower filter
+node keyword-follow.js &quot;startup&quot; --min-followers 500
+
+# Watch the browser (not headless)
+node keyword-follow.js &quot;defi&quot; --visible
+
+# Check your stats
+node keyword-follow.js --stats
+
+# Export followed users to CSV
+node keyword-follow.js --export-csv
+</code></pre>
+<h3>Output Example</h3>
+<pre><code>[2026-01-15T10:30:00.000Z] [INFO] ==================================================
+[2026-01-15T10:30:00.001Z] [INFO] 🔍 XActions - Keyword Follow
+[2026-01-15T10:30:00.002Z] [INFO] ==================================================
+[2026-01-15T10:30:00.003Z] [INFO] Keywords: web3 developer, crypto founder
+[2026-01-15T10:30:00.004Z] [INFO] Max follows per keyword: 10
+[2026-01-15T10:30:00.005Z] [INFO] Max follows per session: 30
+[2026-01-15T10:30:00.006Z] [INFO] Already tracked: 156 users
+[2026-01-15T10:30:00.007Z] [INFO] Followed today: 12/80
+[2026-01-15T10:30:00.008Z] [INFO] ==================================================
+[2026-01-15T10:30:00.009Z] [INFO] Launching browser...
+[2026-01-15T10:30:02.500Z] [INFO] Checking login status...
+[2026-01-15T10:30:05.800Z] [SUCCESS] ✅ Logged in successfully!
+[2026-01-15T10:30:05.801Z] [INFO] 
+[2026-01-15T10:30:05.802Z] [INFO] ━━━ Searching: &quot;web3 developer&quot; ━━━
+[2026-01-15T10:30:08.100Z] [INFO] Searching for: &quot;web3 developer&quot;
+[2026-01-15T10:30:13.500Z] [FOLLOW] 👥 [1/30] @cryptobuilder (15,200 followers)
+[2026-01-15T10:30:13.501Z] [INFO]    Waiting 7.3s...
+[2026-01-15T10:30:21.000Z] [FOLLOW] 👥 [2/30] @web3_sarah (8,400 followers)
+[2026-01-15T10:30:21.001Z] [INFO]    Waiting 9.1s...
+...
+
+[2026-01-15T10:45:30.000Z] [INFO] ==================================================
+[2026-01-15T10:45:30.001Z] [SUCCESS] ✅ KEYWORD FOLLOW COMPLETE
+[2026-01-15T10:45:30.002Z] [INFO] ==================================================
+[2026-01-15T10:45:30.003Z] [INFO] 👥 Users followed: 20
+[2026-01-15T10:45:30.004Z] [INFO] ⏭️  Users skipped: 85
+[2026-01-15T10:45:30.005Z] [INFO] 📅 Total followed today: 32/80
+[2026-01-15T10:45:30.006Z] [INFO] 📊 All-time tracked: 176 users
+[2026-01-15T10:45:30.007Z] [INFO] 
+[2026-01-15T10:45:30.008Z] [INFO] Users followed this session:
+[2026-01-15T10:45:30.009Z] [INFO]    • @cryptobuilder
+[2026-01-15T10:45:30.010Z] [INFO]    • @web3_sarah
+[2026-01-15T10:45:30.011Z] [INFO]    • @defi_dev_mike
+...
+</code></pre>
+<hr>
+<h2>📂 Data Files</h2>
+<p>The script creates these files:</p>
+<h3><code>followed-users.json</code></h3>
+<pre><code class="language-json">{
+  &quot;cryptobuilder&quot;: {
+    &quot;username&quot;: &quot;cryptobuilder&quot;,
+    &quot;followedAt&quot;: &quot;2026-01-15T10:30:13.500Z&quot;,
+    &quot;keyword&quot;: &quot;web3 developer&quot;,
+    &quot;displayName&quot;: &quot;Crypto Builder 🛠️&quot;,
+    &quot;followers&quot;: 15200,
+    &quot;bio&quot;: &quot;Building the future of web3. Smart contracts, DeFi, NFTs.&quot;,
+    &quot;followedBack&quot;: null,
+    &quot;checkedAt&quot;: null
+  },
+  &quot;web3_sarah&quot;: {
+    &quot;username&quot;: &quot;web3_sarah&quot;,
+    &quot;followedAt&quot;: &quot;2026-01-15T10:30:21.000Z&quot;,
+    &quot;keyword&quot;: &quot;web3 developer&quot;,
+    &quot;displayName&quot;: &quot;Sarah | Web3 Dev&quot;,
+    &quot;followers&quot;: 8400,
+    &quot;bio&quot;: &quot;Full-stack blockchain developer. Solidity / Rust / TypeScript.&quot;,
+    &quot;followedBack&quot;: null,
+    &quot;checkedAt&quot;: null
+  }
+}
+</code></pre>
+<h3><code>follow-stats.json</code></h3>
+<pre><code class="language-json">{
+  &quot;2026-01-15&quot;: {
+    &quot;totalFollows&quot;: 32,
+    &quot;sessions&quot;: [
+      { &quot;time&quot;: &quot;2026-01-15T10:30:00.000Z&quot;, &quot;keyword&quot;: &quot;web3 developer&quot;, &quot;follows&quot;: 10 },
+      { &quot;time&quot;: &quot;2026-01-15T10:42:00.000Z&quot;, &quot;keyword&quot;: &quot;crypto founder&quot;, &quot;follows&quot;: 10 }
+    ],
+    &quot;keywords&quot;: {
+      &quot;web3 developer&quot;: 10,
+      &quot;crypto founder&quot;: 10
+    }
+  }
+}
+</code></pre>
+<hr>
+<h2>💡 Strategy Tips</h2>
+<h3>🎯 Best Keywords to Target</h3>
+<p><strong>Tech &amp; Crypto:</strong></p>
+<ul>
+<li><code>web3 developer</code>, <code>blockchain engineer</code>, <code>solidity dev</code></li>
+<li><code>crypto founder</code>, <code>defi builder</code>, <code>nft creator</code></li>
+<li><code>AI researcher</code>, <code>machine learning engineer</code></li>
+<li><code>startup founder</code>, <code>indie hacker</code>, <code>solopreneur</code></li>
+</ul>
+<p><strong>Business &amp; Marketing:</strong></p>
+<ul>
+<li><code>growth hacker</code>, <code>content creator</code>, <code>digital marketer</code></li>
+<li><code>saas founder</code>, <code>product manager</code>, <code>ux designer</code></li>
+<li><code>entrepreneur</code>, <code>business coach</code>, <code>sales leader</code></li>
+</ul>
+<p><strong>Creative:</strong></p>
+<ul>
+<li><code>digital artist</code>, <code>graphic designer</code>, <code>video creator</code></li>
+<li><code>photographer</code>, <code>music producer</code>, <code>game developer</code></li>
+</ul>
+<p><strong>Niche-specific:</strong></p>
+<ul>
+<li>Use hashtags: <code>#buildinpublic</code>, <code>#indiehackers</code>, <code>#100DaysOfCode</code></li>
+<li>Use events: <code>ETHDenver</code>, <code>Consensus</code>, <code>TechCrunch</code></li>
+<li>Use tools: <code>Figma designer</code>, <code>Notion expert</code>, <code>Airtable</code></li>
+</ul>
+<h3>📊 Recommended Limits</h3>
+<table>
+<thead>
+<tr>
+<th>Account Age</th>
+<th>Daily Follows</th>
+<th>Session Follows</th>
+<th>Delay Between</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&lt; 1 month</td>
+<td>20-30</td>
+<td>10-15</td>
+<td>15-30 seconds</td>
+</tr>
+<tr>
+<td>1-6 months</td>
+<td>40-60</td>
+<td>15-25</td>
+<td>10-20 seconds</td>
+</tr>
+<tr>
+<td>6+ months</td>
+<td>60-100</td>
+<td>20-30</td>
+<td>5-15 seconds</td>
+</tr>
+<tr>
+<td>1+ year</td>
+<td>80-150</td>
+<td>25-40</td>
+<td>5-12 seconds</td>
+</tr>
+</tbody></table>
+<h3>🔄 Follow-Back Strategy</h3>
+<ol>
+<li><strong>Follow targeted users</strong> with this script</li>
+<li><strong>Wait 7-14 days</strong> for follow-backs</li>
+<li><strong>Check who followed back</strong> using the detect-unfollowers script</li>
+<li><strong>Unfollow non-followers</strong> using the unfollow-non-followers script</li>
+<li><strong>Repeat</strong> with new keywords</li>
+</ol>
+<h3>⚠️ Avoid These Mistakes</h3>
+<ul>
+<li>❌ Following hundreds of accounts in one day</li>
+<li>❌ Using the same keywords everyone else uses</li>
+<li>❌ Following accounts with 0 tweets (likely bots)</li>
+<li>❌ Following private accounts (waste of follow)</li>
+<li>❌ Running multiple automation scripts at once</li>
+<li>❌ Identical timing patterns (no randomization)</li>
+</ul>
+<h3>✅ Best Practices</h3>
+<ul>
+<li>✅ Target users with 100-50K followers (more likely to follow back)</li>
+<li>✅ Focus on users who tweet regularly (active accounts)</li>
+<li>✅ Mix automated follows with genuine engagement (likes, replies)</li>
+<li>✅ Run the script at different times of day</li>
+<li>✅ Keep your following/follower ratio reasonable (&lt;1.5x)</li>
+<li>✅ Engage with content from people you follow</li>
+</ul>
+<hr>
+<h2>🌐 Website Alternative</h2>
+<p>Don&#39;t want to run scripts? Use the web dashboard at <strong><a href="https://xactions.app">xactions.app</a></strong>:</p>
+<h3>Features:</h3>
+<ul>
+<li>✨ <strong>No coding required</strong> - Just enter keywords and click</li>
+<li>🔐 <strong>Secure authentication</strong> - OAuth with X/Twitter</li>
+<li>📊 <strong>Visual dashboard</strong> - Track follows, follow-backs, and growth</li>
+<li>⏰ <strong>Scheduled campaigns</strong> - Set it and forget it</li>
+<li>🎯 <strong>Advanced filters</strong> - Filter by bio, location, verified status</li>
+<li>📈 <strong>Analytics</strong> - See which keywords bring the best results</li>
+<li>🔄 <strong>Auto-unfollow</strong> - Automatically unfollow non-followers after X days</li>
+</ul>
+<h3>Pricing:</h3>
+<ul>
+<li><strong>Free tier</strong>: 20 follows/day, 1 keyword</li>
+<li><strong>Pro ($9/mo)</strong>: 100 follows/day, unlimited keywords, scheduling</li>
+<li><strong>Business ($29/mo)</strong>: 300 follows/day, multi-account, API access</li>
+</ul>
+<p><a href="https://xactions.app">Get started at xactions.app →</a></p>
+<hr>
+<h2>📚 Related Guides</h2>
+<ul>
+<li><a href="detect-unfollowers.md">🔍 Detect Unfollowers</a> - Find who doesn&#39;t follow you back</li>
+<li><a href="unfollow-non-followers.md">👋 Unfollow Non-Followers</a> - Clean up your following list</li>
+<li><a href="auto-liker.md">❤️ Auto-Liker</a> - Automatically like tweets</li>
+<li><a href="followers-scraping.md">👥 Followers Scraping</a> - Export follower lists</li>
+<li><a href="growth-suite.md">📊 Growth Suite</a> - Complete growth automation</li>
+</ul>
+<hr>
+<p><strong>Author:</strong> nich (<a href="https://x.com/nichxbt">@nichxbt</a>)</p>
+<p><strong>License:</strong> MIT - Use responsibly!</p>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try Keyword Follow?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/follow-engagers">🎯 Follow Engagers</a>
+        <a href="/docs/follow-target-followers">🎯 Follow Target Followers</a>
+        <a href="/docs/growth-suite">🚀 Growth Suite</a>
+        <a href="/docs/natural-flow">🌊 Natural Flow</a>
+        <a href="/docs/smart-unfollow">🧠 Smart Unfollow</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

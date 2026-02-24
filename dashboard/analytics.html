@@ -810,6 +810,27 @@
       .sidebar { display: none; }
       .main { padding: 16px; }
       .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .comparison-grid { grid-template-columns: 1fr; }
+      .gauge-container { transform: scale(0.85); }
+      .page-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+      .input-group { flex-wrap: wrap; }
+      .tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      .tab { white-space: nowrap; padding: 12px 14px; font-size: 14px; }
+      .card-title { flex-wrap: wrap; gap: 8px; }
+      .filter-bar { flex-wrap: wrap; }
+      .form-row { flex-wrap: wrap; }
+      .btn { padding: 8px 16px; }
+      .donut-container { flex-direction: column; }
+      .toast { max-width: calc(100vw - 40px); }
+      .monitors-table { font-size: 13px; }
+      .monitors-table th, .monitors-table td { padding: 8px 6px; }
+    }
+
+    @media (max-width: 480px) {
+      .main { padding: 12px; }
+      .card { padding: 14px; border-radius: 12px; }
+      .stat-value { font-size: 22px; }
+      .page-title { font-size: 20px; }
     }
     /* Skip Navigation */
     .skip-nav {
@@ -874,30 +895,129 @@
       <!-- Tab: Analyze -->
       <div class="tab-content active" id="tab-analyze" role="tabpanel">
         <div class="card">
-          <div class="card-title">🔍 Quick Sentiment Analysis</div>
-          <textarea class="sentiment-textarea" id="sentimentInput" aria-label="Text to analyze" placeholder="Paste tweet text, any text, or multiple lines to analyze sentiment..."></textarea>
-          <div style="display: flex; gap: 8px; margin-top: 12px;">
+          <div class="card-title" style="justify-content: space-between;">
+            <span>🔍 Quick Sentiment Analysis</span>
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div class="toggle-row">
+                <span>Compare mode</span>
+                <div class="toggle" id="compareModeToggle" onclick="toggleCompareMode()" title="Compare two texts side-by-side"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Single mode -->
+          <div id="singleMode">
+            <textarea class="sentiment-textarea" id="sentimentInput" aria-label="Text to analyze" placeholder="Paste tweet text, any text, or multiple lines to analyze sentiment...&#10;&#10;Tip: Ctrl+Enter to analyze, multiple lines = batch mode"></textarea>
+          </div>
+
+          <!-- Compare mode -->
+          <div id="compareMode" style="display: none;">
+            <div class="comparison-grid">
+              <div class="comparison-panel">
+                <div class="panel-label">Text A</div>
+                <textarea class="sentiment-textarea" id="compareInputA" aria-label="Text A to compare" placeholder="Enter first text..." style="min-height: 60px;"></textarea>
+              </div>
+              <div class="comparison-panel">
+                <div class="panel-label">Text B</div>
+                <textarea class="sentiment-textarea" id="compareInputB" aria-label="Text B to compare" placeholder="Enter second text..." style="min-height: 60px;"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 8px; margin-top: 12px; align-items: center;">
             <select class="select" id="sentimentMode" aria-label="Analysis mode">
               <option value="rules">🧠 Rule-based (offline)</option>
               <option value="llm">🤖 LLM (OpenRouter)</option>
             </select>
-            <button class="btn btn-primary" id="analyzeBtn" onclick="analyzeSentiment()">Analyze Sentiment</button>
+            <button class="btn btn-primary" id="analyzeBtn" onclick="analyzeSentiment()">
+              <span id="analyzeBtnIcon">🔍</span>
+              <span id="analyzeBtnText">Analyze</span>
+            </button>
+            <div class="export-menu" id="resultExportMenu" style="display: none;">
+              <button class="btn btn-outline btn-sm" onclick="toggleExportMenu('resultExport')">📥 Export</button>
+              <div class="export-dropdown" id="resultExportDropdown">
+                <button class="export-option" onclick="exportResults('json')">📋 Copy as JSON</button>
+                <button class="export-option" onclick="exportResults('csv')">📊 Download CSV</button>
+                <button class="export-option" onclick="exportResults('text')">📝 Copy as text</button>
+              </div>
+            </div>
           </div>
 
+          <!-- Loading skeleton -->
+          <div id="analyzeLoading" style="display: none; margin-top: 16px;">
+            <div class="skeleton skeleton-line"></div>
+            <div class="skeleton skeleton-line medium"></div>
+            <div class="skeleton skeleton-line short"></div>
+          </div>
+
+          <!-- Single result with gauge -->
           <div class="sentiment-result" id="sentimentResult">
-            <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 12px;">
-              <span class="score-badge" id="resultBadge"></span>
-              <span style="color: var(--text-secondary); font-size: 14px;">Score: <strong id="resultScore"></strong> | Confidence: <strong id="resultConfidence"></strong></span>
+            <div style="display: flex; align-items: center; gap: 24px;">
+              <div class="gauge-container">
+                <div class="gauge">
+                  <div class="gauge-bg">
+                    <div class="gauge-needle" id="gaugeNeedle"></div>
+                  </div>
+                  <div class="gauge-value" id="gaugeValue">0.000</div>
+                  <div class="gauge-labels">
+                    <span>-1.0</span>
+                    <span>0</span>
+                    <span>+1.0</span>
+                  </div>
+                </div>
+              </div>
+              <div style="flex: 1;">
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+                  <span class="score-badge" id="resultBadge"></span>
+                </div>
+                <div style="color: var(--text-secondary); font-size: 14px; margin-bottom: 8px;">
+                  Score: <strong id="resultScore"></strong> &nbsp;|&nbsp; Confidence: <strong id="resultConfidence"></strong>
+                </div>
+                <div class="confidence-bar">
+                  <div class="confidence-fill" id="confidenceFill" style="width: 0%; background: var(--accent);"></div>
+                </div>
+                <div id="resultKeywords" style="margin-top: 10px;"></div>
+              </div>
             </div>
-            <div id="resultKeywords"></div>
+          </div>
+
+          <!-- Comparison result -->
+          <div id="comparisonResult" style="display: none; margin-top: 16px;">
+            <div class="comparison-grid">
+              <div class="comparison-panel" id="compareResultA"></div>
+              <div class="comparison-panel" id="compareResultB"></div>
+            </div>
           </div>
         </div>
 
         <!-- Batch results -->
         <div class="card" id="batchResultsCard" style="display: none;">
-          <div class="card-title">📋 Batch Results</div>
+          <div class="card-title" style="justify-content: space-between;">
+            <span>📋 Batch Results</span>
+            <div class="export-menu">
+              <button class="btn btn-outline btn-sm" onclick="toggleExportMenu('batchExport')">📥 Export</button>
+              <div class="export-dropdown" id="batchExportDropdown">
+                <button class="export-option" onclick="exportResults('json')">📋 Copy as JSON</button>
+                <button class="export-option" onclick="exportResults('csv')">📊 Download CSV</button>
+              </div>
+            </div>
+          </div>
           <div class="grid-3" id="batchStats"></div>
-          <div id="batchList" style="margin-top: 16px; max-height: 400px; overflow-y: auto;"></div>
+          <!-- Donut chart for distribution -->
+          <div class="donut-container" id="batchDonutContainer" style="display: none;">
+            <canvas id="batchDonutChart" width="140" height="140"></canvas>
+            <div class="donut-legend" id="batchDonutLegend"></div>
+          </div>
+          <div class="filter-bar" id="batchFilter" style="display: none;">
+            <input class="search-input" id="batchSearchInput" placeholder="Filter results..." oninput="filterBatchResults()">
+            <select class="select" id="batchFilterLabel" style="padding: 6px 12px; font-size: 13px;" onchange="filterBatchResults()">
+              <option value="all">All</option>
+              <option value="positive">🟢 Positive</option>
+              <option value="neutral">⚪ Neutral</option>
+              <option value="negative">🔴 Negative</option>
+            </select>
+          </div>
+          <div id="batchList" style="margin-top: 12px; max-height: 400px; overflow-y: auto;"></div>
         </div>
       </div>
 
@@ -908,35 +1028,44 @@
           <div class="input-group">
             <input class="input" id="monitorTarget" aria-label="Monitor target" placeholder="@username or keyword" />
             <select class="select" id="monitorType" aria-label="Monitor type">
-              <option value="mentions">Mentions</option>
-              <option value="keyword">Keyword</option>
-              <option value="replies">Replies</option>
+              <option value="mentions">📬 Mentions</option>
+              <option value="keyword">🔑 Keyword</option>
+              <option value="replies">💬 Replies</option>
             </select>
             <button class="btn btn-primary" onclick="startMonitor()">Start Monitor</button>
           </div>
 
-          <div class="alert-form">
-            <div class="form-row">
-              <span class="form-label">Poll interval (sec)</span>
-              <input class="input" id="monitorInterval" type="number" value="900" min="60" style="max-width: 120px;" />
+          <details style="margin-top: 8px;">
+            <summary style="cursor: pointer; color: var(--text-secondary); font-size: 14px; user-select: none;">⚙️ Advanced settings</summary>
+            <div class="alert-form" style="margin-top: 12px;">
+              <div class="form-row">
+                <span class="form-label">Poll interval (sec)</span>
+                <input class="input" id="monitorInterval" type="number" value="900" min="60" style="max-width: 120px;" />
+                <span style="font-size: 12px; color: var(--text-secondary);">min: 60s</span>
+              </div>
+              <div class="form-row">
+                <span class="form-label">Alert threshold</span>
+                <input class="input" id="alertThreshold" type="number" value="-0.3" step="0.1" min="-1" max="1" style="max-width: 120px;" />
+                <span style="font-size: 12px; color: var(--text-secondary);">-1.0 to 1.0</span>
+              </div>
+              <div class="form-row">
+                <span class="form-label">Webhook URL</span>
+                <input class="input" id="webhookUrl" placeholder="https://hooks.slack.com/..." />
+              </div>
             </div>
-            <div class="form-row">
-              <span class="form-label">Alert threshold</span>
-              <input class="input" id="alertThreshold" type="number" value="-0.3" step="0.1" min="-1" max="1" style="max-width: 120px;" />
-            </div>
-            <div class="form-row">
-              <span class="form-label">Webhook URL</span>
-              <input class="input" id="webhookUrl" placeholder="https://hooks.example.com/..." />
-            </div>
-          </div>
+          </details>
         </div>
 
         <div class="card">
-          <div class="card-title">📡 Active Monitors</div>
+          <div class="card-title" style="justify-content: space-between;">
+            <span>📡 Active Monitors</span>
+            <button class="btn btn-outline btn-sm" onclick="loadMonitors()" title="Refresh">🔄 Refresh</button>
+          </div>
           <div id="monitorsContainer">
             <div class="empty-state">
               <div class="empty-state-icon">📡</div>
-              <div class="empty-state-text">No active monitors. Start one above.</div>
+              <div class="empty-state-text">No active monitors yet</div>
+              <p style="color: var(--text-secondary); font-size: 13px; margin-top: 8px;">Enter a @username or keyword above and click Start Monitor to begin tracking sentiment in real-time.</p>
             </div>
           </div>
         </div>
@@ -945,7 +1074,23 @@
       <!-- Tab: Timeline -->
       <div class="tab-content" id="tab-timeline" role="tabpanel">
         <div class="card">
-          <div class="card-title">📈 Sentiment Timeline</div>
+          <div class="card-title" style="justify-content: space-between;">
+            <span>📈 Sentiment Timeline</span>
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div class="toggle-row">
+                <span>Auto-refresh</span>
+                <div class="toggle" id="autoRefreshToggle" onclick="toggleAutoRefresh()" title="Refresh timeline every 30 seconds"></div>
+              </div>
+              <div class="export-menu">
+                <button class="btn btn-outline btn-sm" onclick="toggleExportMenu('timelineExport')">📥 Export</button>
+                <div class="export-dropdown" id="timelineExportDropdown">
+                  <button class="export-option" onclick="exportTimeline('csv')">📊 Download CSV</button>
+                  <button class="export-option" onclick="exportTimeline('json')">📋 Copy as JSON</button>
+                  <button class="export-option" onclick="exportTimeline('markdown')">📝 Download Markdown Report</button>
+                </div>
+              </div>
+            </div>
+          </div>
           <div class="input-group">
             <select class="select" id="timelineMonitor" aria-label="Select monitor" onchange="loadTimeline()">
               <option value="">Select a monitor...</option>
@@ -961,10 +1106,29 @@
           </div>
         </div>
 
+        <!-- Stats row above mentions -->
+        <div class="grid-3" id="timelineStats" style="display: none; margin-bottom: 16px;">
+          <div class="stat-card">
+            <div class="stat-value stat-positive" id="statPositive">0</div>
+            <div class="stat-label">🟢 Positive</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value stat-neutral" id="statNeutral">0</div>
+            <div class="stat-label">⚪ Neutral</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value stat-negative" id="statNegative">0</div>
+            <div class="stat-label">🔴 Negative</div>
+          </div>
+        </div>
+
         <div class="grid-2">
           <div class="card">
             <div class="card-title">💬 Recent Mentions</div>
-            <div id="mentionsFeed">
+            <div class="filter-bar">
+              <input class="search-input" id="mentionsSearch" placeholder="Search mentions..." oninput="filterMentions()">
+            </div>
+            <div id="mentionsFeed" style="max-height: 400px; overflow-y: auto;">
               <div class="empty-state">
                 <div class="empty-state-text">Select a monitor to see mentions</div>
               </div>
@@ -980,32 +1144,28 @@
             </div>
           </div>
         </div>
-
-        <!-- Stats row -->
-        <div class="grid-3" id="timelineStats" style="display: none;">
-          <div class="stat-card">
-            <div class="stat-value stat-positive" id="statPositive">0</div>
-            <div class="stat-label">🟢 Positive</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value stat-neutral" id="statNeutral">0</div>
-            <div class="stat-label">⚪ Neutral</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value stat-negative" id="statNegative">0</div>
-            <div class="stat-label">🔴 Negative</div>
-          </div>
-        </div>
       </div>
 
       <!-- Tab: Alerts -->
       <div class="tab-content" id="tab-alerts" role="tabpanel">
         <div class="card">
-          <div class="card-title">🚨 Alert History</div>
+          <div class="card-title" style="justify-content: space-between;">
+            <span>🚨 Alert History</span>
+            <div style="display: flex; gap: 8px;">
+              <select class="select" id="alertSeverityFilter" style="padding: 6px 12px; font-size: 13px;" onchange="loadAlerts()">
+                <option value="">All severities</option>
+                <option value="critical">🚨 Critical</option>
+                <option value="warning">⚠️ Warning</option>
+                <option value="info">ℹ️ Info</option>
+              </select>
+              <button class="btn btn-outline btn-sm" onclick="loadAlerts()">🔄 Refresh</button>
+            </div>
+          </div>
           <div id="alertsContainer">
             <div class="empty-state">
               <div class="empty-state-icon">🔔</div>
-              <div class="empty-state-text">No alerts yet. Alerts trigger when sentiment drops below threshold or mention volume spikes.</div>
+              <div class="empty-state-text">No alerts yet</div>
+              <p style="color: var(--text-secondary); font-size: 13px; margin-top: 8px;">Alerts trigger automatically when sentiment drops below your configured threshold, mention volume spikes, or an anomaly is detected.</p>
             </div>
           </div>
         </div>
@@ -1013,6 +1173,7 @@
     </main>
   </div>
 
+  <div class="toast-container" id="toastContainer"></div>
   <script src="/js/analytics.js"></script>
 </body>
 </html>

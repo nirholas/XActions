@@ -51,18 +51,24 @@
       reply: false,
       retweet: false,
       bookmark: false,
+      follow: false,
     },
 
+    // Topic-aware reply templates: templates with `topics` match tweets containing those words
     replyTemplates: [
-      '🔥 Great point!',
-      '💯 Couldn\'t agree more.',
-      '📌 Bookmarking this.',
-      'Really useful, thanks for sharing! 🙌',
+      { text: '🔥 Great point!', topics: [] },
+      { text: '💯 Couldn\'t agree more.', topics: [] },
+      { text: '📌 Bookmarking this.', topics: [] },
+      { text: 'Really useful, thanks for sharing! 🙌', topics: [] },
+      { text: 'Solid alpha 🧠', topics: ['alpha', 'insight', 'thread', 'deep dive'] },
+      { text: 'This is the kind of content I come here for 👏', topics: ['guide', 'tutorial', 'explained', 'breakdown'] },
+      { text: 'Great data — appreciate the transparency 📊', topics: ['data', 'stats', 'numbers', 'chart', 'graph'] },
     ],
 
     targetUsers: [],
+    blockUsers: [],           // Never interact with these accounts
     onlyKeywords: [],
-    skipKeywords: ['promoted', 'ad', 'giveaway'],
+    skipKeywords: ['promoted', 'ad', 'giveaway', 'nsfw'],
     skipLiked: true,
     minLikes: 0,
     maxLikes: 0,              // 0 = no max — helps target smaller accounts
@@ -410,6 +416,18 @@
             <div class="xeb-toggle-row"><span>🔁 Retweet</span><label class="xeb-toggle"><input type="checkbox" id="xeb-actRetweet" /><span class="xeb-slider"></span></label></div>
             <div class="xeb-toggle-row"><span>🔖 Bookmark</span><label class="xeb-toggle"><input type="checkbox" id="xeb-actBookmark" /><span class="xeb-slider"></span></label></div>
             <div class="xeb-toggle-row"><span>💬 Reply</span><label class="xeb-toggle"><input type="checkbox" id="xeb-actReply" /><span class="xeb-slider"></span></label></div>
+            <div class="xeb-toggle-row"><span>👤 Follow</span><label class="xeb-toggle"><input type="checkbox" id="xeb-actFollow" /><span class="xeb-slider"></span></label></div>
+          </div>
+
+          <div style="border-top:1px solid #2f3336; margin:8px 0; padding-top:8px;">
+            <div class="xeb-field">
+              <label>BLOCK USERS (never engage, comma-separated)</label>
+              <input type="text" id="xeb-blockUsers" placeholder="@spammer1, @bot2" />
+            </div>
+            <div class="xeb-field">
+              <label>SKIP KEYWORDS (comma-separated)</label>
+              <input type="text" id="xeb-skipKeywords" value="promoted, ad, giveaway, nsfw" />
+            </div>
           </div>
 
           <div style="border-top:1px solid #2f3336; margin:8px 0; padding-top:8px;">
@@ -439,6 +457,7 @@
           <div class="xeb-progress-bar"><div class="xeb-progress-fill" id="xeb-progressFill" style="width:0%"></div></div>
           <div style="display:flex;justify-content:space-between;font-size:11px;color:#71767b;">
             <span id="xeb-progressText">0 / 0</span>
+            <span id="xeb-eta" style="color:#1d9bf0;"></span>
             <span id="xeb-elapsed">0:00</span>
           </div>
 
@@ -631,6 +650,9 @@
     CONFIG.actions.retweet = chk('xeb-actRetweet');
     CONFIG.actions.bookmark = chk('xeb-actBookmark');
     CONFIG.actions.reply = chk('xeb-actReply');
+    CONFIG.actions.follow = chk('xeb-actFollow');
+    CONFIG.blockUsers = val('xeb-blockUsers').split(',').map(u => u.trim().replace(/^@/, '')).filter(Boolean);
+    CONFIG.skipKeywords = val('xeb-skipKeywords').split(',').map(k => k.trim()).filter(Boolean);
 
     CONFIG.scoring.enabled = chk('xeb-scoring');
     CONFIG.dryRun = chk('xeb-dryRun');

@@ -19,7 +19,7 @@ bin/           → CLI entry point (unfollowx)
 
 ## Skills
 
-25 skills in `skills/*/SKILL.md`: unfollow-management, analytics-insights, content-posting, twitter-scraping, growth-automation, community-management, follower-monitoring, blocking-muting-management, content-cleanup, direct-messages, bookmarks-management, lists-management, profile-management, settings-privacy, notifications-management, premium-subscriptions, spaces-live, discovery-explore, engagement-interaction, grok-ai, articles-longform, business-ads, creator-monetization, xactions-cli, xactions-mcp-server.
+26 skills in `skills/*/SKILL.md`: unfollow-management, analytics-insights, content-posting, twitter-scraping, growth-automation, algorithm-cultivation, community-management, follower-monitoring, blocking-muting-management, content-cleanup, direct-messages, bookmarks-management, lists-management, profile-management, settings-privacy, notifications-management, premium-subscriptions, spaces-live, discovery-explore, engagement-interaction, grok-ai, articles-longform, business-ads, creator-monetization, xactions-cli, xactions-mcp-server.
 
 Read the relevant SKILL.md when a request matches a skill category.
 

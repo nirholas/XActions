@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Likes Scraping — Free X/Twitter Scrapers Tool | XActions</title>
+  <meta name="description" content="Extract the complete list of users who liked a specific tweet on X/Twitter.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, likes, scraping, scrapers, likes scraping twitter, twitter likes scraping">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Likes Scraping — XActions">
+  <meta property="og:description" content="Extract the complete list of users who liked a specific tweet on X/Twitter.">
+  <meta property="og:url" content="https://xactions.app/docs/likes-scraping">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Likes Scraping — Free X/Twitter Tool">
+  <meta name="twitter:description" content="Extract the complete list of users who liked a specific tweet on X/Twitter.">
+
+  <link rel="canonical" href="https://xactions.app/docs/likes-scraping">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Likes Scraping — Free X/Twitter Scrapers Tool | XActions",
+    "description": "Extract the complete list of users who liked a specific tweet on X/Twitter.",
+    "url": "https://xactions.app/docs/likes-scraping",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/likes-scraping",
+    "articleSection": "Scrapers",
+    "keywords": "xactions, twitter automation, x automation, free, likes, scraping, scrapers, likes scraping twitter, twitter likes scraping"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Likes Scraping", "item": "https://xactions.app/docs/likes-scraping" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use Likes Scraping",
+    "description": "Extract the complete list of users who liked a specific tweet on X/Twitter.",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions Likes Scraping script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>❤️ Likes Scraping</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › Likes Scraping
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Scrapers</span>
+        <h1>❤️ Likes Scraping</h1>
+<p>Extract the complete list of users who liked a specific tweet on X/Twitter.</p>
+<hr>
+<h2>📋 What You Get</h2>
+<p>See exactly who engaged with any tweet by liking it:</p>
+<ul>
+<li><strong>Username</strong> and display name of each user who liked the tweet</li>
+<li><strong>Bio/description</strong> - what they write about themselves</li>
+<li><strong>Verified status</strong> - blue checkmarks and verification badges</li>
+<li><strong>Avatar URL</strong> - profile picture links</li>
+<li><strong>Follower indicators</strong> - identify high-value engagers</li>
+<li><strong>Export to JSON or CSV</strong> - for further analysis</li>
+</ul>
+<p><strong>Perfect for:</strong></p>
+<ul>
+<li>Finding users interested in specific topics</li>
+<li>Analyzing engagement on your own tweets</li>
+<li>Discovering potential followers or customers</li>
+<li>Competitive research on viral content</li>
+<li>Building targeted outreach lists</li>
+</ul>
+<hr>
+<h2>🖥️ Example 1: Browser Console (Quick)</h2>
+<p><strong>Best for:</strong> Quick scraping of up to ~500 likers directly in your browser</p>
+<p><strong>Steps:</strong></p>
+<ol>
+<li>Go to the tweet you want to analyze</li>
+<li>Click on the &quot;Likes&quot; count to open the likes modal</li>
+<li>Open browser console (F12 → Console tab)</li>
+<li>Paste the script below and press Enter</li>
+</ol>
+<pre><code class="language-javascript">// ============================================
+// XActions - Tweet Likes Scraper (Browser Console)
+// Step 1: Go to any tweet on x.com
+// Step 2: Click on the &quot;Likes&quot; count to open likes modal
+// Step 3: Open console (F12), paste this, press Enter
+// Author: nich (@nichxbt)
+// ============================================
+
+(async () =&gt; {
+  const TARGET_COUNT = 500;    // Number of likers to scrape (adjust as needed)
+  const SCROLL_DELAY = 1500;   // ms between scrolls
+  const MAX_RETRIES = 15;      // Stop if no new users found after this many tries
+  
+  console.log(&#39;&#39;);
+  console.log(&#39;❤️  XActions - Tweet Likes Scraper&#39;);
+  console.log(&#39;====================================&#39;);
+  console.log(`🎯 Target: ${TARGET_COUNT} likers`);
+  console.log(&#39;&#39;);
+  
+  // Verify we&#39;re on a tweet page or likes modal is open
+  const isOnTweet = window.location.pathname.includes(&#39;/status/&#39;);
+  const likesModal = document.querySelector(&#39;[aria-label=&quot;Timeline: Liked by&quot;]&#39;) ||
+                     document.querySelector(&#39;[data-testid=&quot;sheetDialog&quot;]&#39;);
+  
+  if (!isOnTweet &amp;&amp; !likesModal) {
+    console.error(&#39;❌ Please navigate to a tweet first!&#39;);
+    console.log(&#39;👉 Go to: x.com/username/status/tweet_id&#39;);
+    console.log(&#39;👉 Then click on the &quot;Likes&quot; count&#39;);
+    return;
+  }
+  
+  // Check if likes modal is visible
+  const scrollContainer = document.querySelector(&#39;[aria-label=&quot;Timeline: Liked by&quot;]&#39;) ||
+                          document.querySelector(&#39;[data-testid=&quot;sheetDialog&quot;]&#39;) ||
+                          document.querySelector(&#39;[aria-modal=&quot;true&quot;]&#39;);
+  
+  if (!scrollContainer) {
+    console.warn(&#39;⚠️  Likes modal not detected. Click on the likes count first!&#39;);
+    console.log(&#39;💡 The number next to the heart icon - click it to open the modal&#39;);
+    return;
+  }
+  
+  // Extract tweet ID from URL
+  const tweetIdMatch = window.location.pathname.match(/\/status\/(\d+)/);
+  const tweetId = tweetIdMatch ? tweetIdMatch[1] : &#39;unknown&#39;;
+  console.log(`📍 Tweet ID: ${tweetId}`);
+  console.log(&#39;&#39;);
+  
+  const likers = new Map();
+  let retries = 0;
+  
+  // Helper: Sleep function
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+  
+  // Helper: Extract user data from visible user cells
+  const extractUsers = () =&gt; {
+    const cells = document.querySelectorAll(&#39;[data-testid=&quot;UserCell&quot;]&#39;);
+    const users = [];
+    
+    cells.forEach(cell =&gt; {
+      try {
+        // Get username from link
+        const link = cell.querySelector(&#39;a[href^=&quot;/&quot;]&#39;);
+        const href = link?.getAttribute(&#39;href&#39;) || &#39;&#39;;
+        const username = href.split(&#39;/&#39;)[1];
+        
+        // Skip if invalid or has query params
+        if (!username || username.includes(&#39;?&#39;) || username.includes(&#39;/&#39;)) return;
+        
+        // Get display name
+        const nameEl = cell.querySelector(&#39;[dir=&quot;ltr&quot;] &gt; span&#39;);
+        const name = nameEl?.textContent?.trim() || null;
+        
+        // Get bio/description
+        const bioEl = cell.querySelector(&#39;[data-testid=&quot;UserDescription&quot;]&#39;);
+        const bio = bioEl?.textContent?.trim() || null;
+        
+        // Check verified status (blue checkmark)
+        const verified = !!cell.querySelector(&#39;svg[aria-label*=&quot;Verified&quot;]&#39;) ||
+                        !!cell.querySelector(&#39;[data-testid=&quot;icon-verified&quot;]&#39;);
+        
+        // Get avatar URL
+        const avatarEl = cell.querySelector(&#39;img[src*=&quot;profile_images&quot;]&#39;);
+        const avatar = avatarEl?.src || null;
+        
+        // Check if they follow you (if visible)
+        const followsYou = !!cell.querySelector(&#39;[data-testid=&quot;userFollowIndicator&quot;]&#39;);
+        
+        users.push({
+          username,
+          name,
+          bio,
+          verified,
+          avatar,
+          followsYou,
+          scrapedAt: new Date().toISOString(),
+        });
+      } catch (e) {
+        // Skip malformed cells
+      }
+    });
+    
+    return users;
+  };
+  
+  // Helper: Scroll within the modal
+  const scrollModal = () =&gt; {
+    const modalContent = document.querySelector(&#39;[aria-label=&quot;Timeline: Liked by&quot;]&#39;) ||
+                        document.querySelector(&#39;[data-testid=&quot;sheetDialog&quot;]&#39;) ||
+                        document.querySelector(&#39;[aria-modal=&quot;true&quot;] [data-testid=&quot;primaryColumn&quot;]&#39;);
+    
+    if (modalContent) {
+      modalContent.scrollTop = modalContent.scrollHeight;
+    } else {
+      // Fallback: scroll the page
+      window.scrollTo(0, document.body.scrollHeight);
+    }
+  };
+  
+  console.log(&#39;📜 Scanning users who liked this tweet...&#39;);
+  console.log(&#39;&#39;);
+  
+  // Main scraping loop
+  while (likers.size &lt; TARGET_COUNT &amp;&amp; retries &lt; MAX_RETRIES) {
+    // Extract visible users
+    const users = extractUsers();
+    const prevSize = likers.size;
+    
+    // Add to map (automatically deduplicates by username)
+    users.forEach(user =&gt; {
+      if (!likers.has(user.username)) {
+        likers.set(user.username, user);
+      }
+    });
+    
+    // Progress update
+    const progress = Math.round((likers.size / TARGET_COUNT) * 100);
+    console.log(`❤️  Scraped: ${likers.size} likers (${Math.min(progress, 100)}%)`);
+    
+    // Check if we&#39;re stuck (no new users found)
+    if (likers.size === prevSize) {
+      retries++;
+      if (retries &gt;= MAX_RETRIES) {
+        console.log(&#39;&#39;);
+        console.log(&#39;📍 Reached end of likes list or rate limit&#39;);
+        break;
+      }
+    } else {
+      retries = 0;
+    }
+    
+    // Scroll to load more
+    scrollModal();
+    await sleep(SCROLL_DELAY);
+  }
+  
+  // Convert to array
+  const result = Array.from(likers.values());
+  
+  // Summary statistics
+  console.log(&#39;&#39;);
+  console.log(&#39;✅ Scraping complete!&#39;);
+  console.log(&#39;====================================&#39;);
+  console.log(`📊 Total likers scraped: ${result.length}`);
+  console.log(`✓  Verified users: ${result.filter(u =&gt; u.verified).length}`);
+  console.log(`✓  With bio: ${result.filter(u =&gt; u.bio).length}`);
+  console.log(`✓  Follow you: ${result.filter(u =&gt; u.followsYou).length}`);
+  console.log(&#39;&#39;);
+  
+  // Prepare JSON
+  const exportData = {
+    tweetId,
+    tweetUrl: window.location.href.split(&#39;?&#39;)[0],
+    scrapedAt: new Date().toISOString(),
+    totalLikers: result.length,
+    likers: result,
+  };
+  
+  const json = JSON.stringify(exportData, null, 2);
+  
+  // Copy to clipboard
+  try {
+    await navigator.clipboard.writeText(json);
+    console.log(&#39;📋 Copied to clipboard!&#39;);
+  } catch (e) {
+    console.log(&#39;⚠️  Could not copy to clipboard (browser restriction)&#39;);
+  }
+  
+  // Create downloadable file
+  const blob = new Blob([json], { type: &#39;application/json&#39; });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement(&#39;a&#39;);
+  a.href = url;
+  a.download = `tweet-${tweetId}-likers-${new Date().toISOString().split(&#39;T&#39;)[0]}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  
+  console.log(&#39;📥 Download started!&#39;);
+  console.log(&#39;&#39;);
+  console.log(&#39;💾 Data preview (first 5 users):&#39;);
+  result.slice(0, 5).forEach(u =&gt; {
+    const badge = u.verified ? &#39; ✓&#39; : &#39;&#39;;
+    console.log(`   @${u.username}${badge} - ${u.name || &#39;(no name)&#39;}`);
+  });
+  
+  // Also expose in console for inspection
+  console.log(&#39;&#39;);
+  console.log(&#39;🔍 Full data (right-click → Copy object):&#39;);
+  console.log(exportData);
+  
+  return exportData;
+})();
+</code></pre>
+<p><strong>What happens:</strong></p>
+<ol>
+<li>Script detects the likes modal and starts scrolling</li>
+<li>Extracts user data from each visible user card</li>
+<li>Automatically deduplicates by username</li>
+<li>Shows real-time progress in console</li>
+<li>Downloads JSON file with all likers</li>
+<li>Copies data to clipboard for easy pasting</li>
+</ol>
+<p><strong>Output file structure:</strong></p>
+<pre><code class="language-json">{
+  &quot;tweetId&quot;: &quot;1234567890123456789&quot;,
+  &quot;tweetUrl&quot;: &quot;https://x.com/username/status/1234567890123456789&quot;,
+  &quot;scrapedAt&quot;: &quot;2026-01-01T12:00:00.000Z&quot;,
+  &quot;totalLikers&quot;: 342,
+  &quot;likers&quot;: [
+    {
+      &quot;username&quot;: &quot;user1&quot;,
+      &quot;name&quot;: &quot;John Doe&quot;,
+      &quot;bio&quot;: &quot;Tech enthusiast | Builder&quot;,
+      &quot;verified&quot;: true,
+      &quot;avatar&quot;: &quot;https://pbs.twimg.com/profile_images/...&quot;,
+      &quot;followsYou&quot;: false,
+      &quot;scrapedAt&quot;: &quot;2026-01-01T12:00:00.000Z&quot;
+    }
+  ]
+}
+</code></pre>
+<hr>
+<h2>🚀 Example 2: Node.js with Puppeteer (Production-Ready)</h2>
+<p><strong>Best for:</strong> Large-scale scraping, automation, scheduled jobs, API integration</p>
+<p>Save as <code>scrape-tweet-likes.js</code>:</p>
+<pre><code class="language-javascript">// ============================================
+// XActions - Tweet Likes Scraper (Node.js)
+// Save as: scrape-tweet-likes.js
+// Run: node scrape-tweet-likes.js https://x.com/username/status/123456
+// Author: nich (@nichxbt)
+// ============================================
+
+import puppeteer from &#39;puppeteer-extra&#39;;
+import StealthPlugin from &#39;puppeteer-extra-plugin-stealth&#39;;
+import fs from &#39;fs/promises&#39;;
+import path from &#39;path&#39;;
+
+// Use stealth plugin to avoid detection
+puppeteer.use(StealthPlugin());
+
+/**
+ * Scrape users who liked a specific tweet
+ * @param {string} tweetUrl - Full URL to the tweet
+ * @param {Object} options - Configuration options
+ * @returns {Promise&lt;Object&gt;} Object containing tweet info and likers array
+ */
+async function scrapeTweetLikes(tweetUrl, options = {}) {
+  const {
+    limit = 1000,
+    headless = true,
+    authToken = null,
+    scrollDelay = 1500,
+    maxRetries = 15,
+    onProgress = null,
+    outputDir = &#39;.&#39;,
+  } = options;
+
+  // Extract tweet ID from URL
+  const tweetIdMatch = tweetUrl.match(/status\/(\d+)/);
+  if (!tweetIdMatch) {
+    throw new Error(&#39;Invalid tweet URL. Expected format: https://x.com/username/status/123456789&#39;);
+  }
+  const tweetId = tweetIdMatch[1];
+
+  console.log(&#39;&#39;);
+  console.log(&#39;❤️  XActions - Tweet Likes Scraper&#39;);
+  console.log(&#39;====================================&#39;);
+  console.log(`🔗 Tweet: ${tweetUrl}`);
+  console.log(`🆔 Tweet ID: ${tweetId}`);
+  console.log(`🎯 Limit: ${limit} likers`);
+  console.log(&#39;&#39;);
+
+  // Launch browser
+  const browser = await puppeteer.launch({
+    headless: headless ? &#39;new&#39; : false,
+    args: [
+      &#39;--no-sandbox&#39;,
+      &#39;--disable-setuid-sandbox&#39;,
+      &#39;--disable-blink-features=AutomationControlled&#39;,
+      &#39;--disable-dev-shm-usage&#39;,
+      &#39;--window-size=1280,900&#39;,
+    ],
+  });
+
+  try {
+    const page = await browser.newPage();
+
+    // Set realistic viewport with slight randomization
+    await page.setViewport({
+      width: 1280 + Math.floor(Math.random() * 100),
+      height: 800 + Math.floor(Math.random() * 100),
+    });
+
+    // Set realistic user agent
+    await page.setUserAgent(
+      &#39;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36&#39;
+    );
+
+    // Set auth cookie if provided (required for some tweets)
+    if (authToken) {
+      await page.setCookie({
+        name: &#39;auth_token&#39;,
+        value: authToken,
+        domain: &#39;.x.com&#39;,
+        path: &#39;/&#39;,
+        httpOnly: true,
+        secure: true,
+      });
+      console.log(&#39;🔐 Authentication token set&#39;);
+    }
+
+    // Navigate to the tweet
+    console.log(&#39;📍 Loading tweet...&#39;);
+    await page.goto(tweetUrl, {
+      waitUntil: &#39;networkidle2&#39;,
+      timeout: 30000,
+    });
+
+    // Wait for tweet to load
+    await page.waitForSelector(&#39;article[data-testid=&quot;tweet&quot;]&#39;, { timeout: 15000 });
+    
+    // Small random delay to appear human
+    await new Promise(r =&gt; setTimeout(r, 1000 + Math.random() * 1000));
+
+    // Find and click the likes button/count
+    console.log(&#39;🖱️  Opening likes modal...&#39;);
+    
+    // Try multiple selectors for the likes button
+    const likesClicked = await page.evaluate(() =&gt; {
+      // Method 1: Look for the likes link directly
+      const likesLinks = Array.from(document.querySelectorAll(&#39;a[href*=&quot;/likes&quot;]&#39;));
+      for (const link of likesLinks) {
+        if (link.href.includes(&#39;/status/&#39;) &amp;&amp; link.href.includes(&#39;/likes&#39;)) {
+          link.click();
+          return true;
+        }
+      }
+      
+      // Method 2: Look for the heart icon group with count
+      const groups = document.querySelectorAll(&#39;[role=&quot;group&quot;]&#39;);
+      for (const group of groups) {
+        const heartBtn = group.querySelector(&#39;[data-testid=&quot;like&quot;]&#39;) || 
+                        group.querySelector(&#39;[data-testid=&quot;unlike&quot;]&#39;);
+        if (heartBtn) {
+          // Find the parent link or nearby likes count
+          const likesCount = group.querySelector(&#39;a[href*=&quot;/likes&quot;]&#39;);
+          if (likesCount) {
+            likesCount.click();
+            return true;
+          }
+        }
+      }
+      
+      return false;
+    });
+
+    if (!likesClicked) {
+      // Try navigating directly to likes URL
+      const likesUrl = tweetUrl.replace(/\/?$/, &#39;/likes&#39;);
+      console.log(&#39;📍 Navigating directly to likes page...&#39;);
+      await page.goto(likesUrl, {
+        waitUntil: &#39;networkidle2&#39;,
+        timeout: 30000,
+      });
+    }
+
+    // Wait for user cells to appear
+    await page.waitForSelector(&#39;[data-testid=&quot;UserCell&quot;]&#39;, { timeout: 15000 });
+    console.log(&#39;✓  Likes modal opened&#39;);
+    console.log(&#39;&#39;);
+
+    // Small delay before starting
+    await new Promise(r =&gt; setTimeout(r, 1500));
+
+    const likers = new Map();
+    let retries = 0;
+    let lastLogTime = Date.now();
+
+    // Main scraping loop
+    console.log(&#39;📜 Scraping likers...&#39;);
+    
+    while (likers.size &lt; limit &amp;&amp; retries &lt; maxRetries) {
+      // Extract users from page
+      const users = await page.evaluate(() =&gt; {
+        const cells = document.querySelectorAll(&#39;[data-testid=&quot;UserCell&quot;]&#39;);
+        return Array.from(cells).map(cell =&gt; {
+          try {
+            const link = cell.querySelector(&#39;a[href^=&quot;/&quot;]&#39;);
+            const href = link?.getAttribute(&#39;href&#39;) || &#39;&#39;;
+            const username = href.split(&#39;/&#39;)[1];
+
+            if (!username || username.includes(&#39;?&#39;) || username.includes(&#39;/&#39;)) {
+              return null;
+            }
+
+            const nameEl = cell.querySelector(&#39;[dir=&quot;ltr&quot;] &gt; span&#39;);
+            const name = nameEl?.textContent?.trim() || null;
+
+            const bioEl = cell.querySelector(&#39;[data-testid=&quot;UserDescription&quot;]&#39;);
+            const bio = bioEl?.textContent?.trim() || null;
+
+            const verified = !!cell.querySelector(&#39;svg[aria-label*=&quot;Verified&quot;]&#39;) ||
+                           !!cell.querySelector(&#39;[data-testid=&quot;icon-verified&quot;]&#39;);
+
+            const avatarEl = cell.querySelector(&#39;img[src*=&quot;profile_images&quot;]&#39;);
+            const avatar = avatarEl?.src || null;
+
+            const followsYou = !!cell.querySelector(&#39;[data-testid=&quot;userFollowIndicator&quot;]&#39;);
+
+            return { username, name, bio, verified, avatar, followsYou };
+          } catch (e) {
+            return null;
+          }
+        }).filter(Boolean);
+      });
+
+      const prevSize = likers.size;
+
+      // Add to map (deduplicates automatically)
+      for (const user of users) {
+        if (!likers.has(user.username)) {
+          likers.set(user.username, {
+            ...user,
+            scrapedAt: new Date().toISOString(),
+          });
+        }
+      }
+
+      // Progress logging (throttled to every 2 seconds)
+      if (Date.now() - lastLogTime &gt; 2000 || likers.size &gt;= limit) {
+        const pct = Math.min(100, Math.round((likers.size / limit) * 100));
+        console.log(`❤️  Progress: ${likers.size}/${limit} (${pct}%)`);
+        lastLogTime = Date.now();
+        
+        // Call progress callback if provided
+        if (onProgress) {
+          onProgress({ current: likers.size, limit, percentage: pct });
+        }
+      }
+
+      // Check if stuck
+      if (likers.size === prevSize) {
+        retries++;
+        if (retries &gt;= maxRetries) {
+          console.log(&#39;&#39;);
+          console.log(&#39;📍 Reached end of likes list&#39;);
+          break;
+        }
+      } else {
+        retries = 0;
+      }
+
+      // Scroll to load more users
+      await page.evaluate(() =&gt; {
+        // Try scrolling within modal first
+        const modal = document.querySelector(&#39;[aria-label=&quot;Timeline: Liked by&quot;]&#39;) ||
+                     document.querySelector(&#39;[data-testid=&quot;sheetDialog&quot;]&#39;) ||
+                     document.querySelector(&#39;[aria-modal=&quot;true&quot;]&#39;);
+        if (modal) {
+          modal.scrollTop = modal.scrollHeight;
+        } else {
+          window.scrollTo(0, document.body.scrollHeight);
+        }
+      });
+
+      // Random delay between scrolls
+      await new Promise(r =&gt; setTimeout(r, scrollDelay + Math.random() * 500));
+    }
+
+    // Convert to array
+    const likersArray = Array.from(likers.values());
+
+    // Build result object
+    const result = {
+      tweetId,
+      tweetUrl,
+      scrapedAt: new Date().toISOString(),
+      totalLikers: likersArray.length,
+      stats: {
+        verified: likersArray.filter(u =&gt; u.verified).length,
+        withBio: likersArray.filter(u =&gt; u.bio).length,
+        followsYou: likersArray.filter(u =&gt; u.followsYou).length,
+      },
+      likers: likersArray,
+    };
+
+    // Summary
+    console.log(&#39;&#39;);
+    console.log(&#39;✅ Scraping complete!&#39;);
+    console.log(&#39;====================================&#39;);
+    console.log(`📊 Total likers scraped: ${result.totalLikers}`);
+    console.log(`✓  Verified users: ${result.stats.verified}`);
+    console.log(`✓  With bio: ${result.stats.withBio}`);
+    console.log(`✓  Follow you: ${result.stats.followsYou}`);
+
+    // Save to files
+    const dateStr = new Date().toISOString().split(&#39;T&#39;)[0];
+    const baseFilename = `tweet-${tweetId}-likers-${dateStr}`;
+
+    // Save JSON
+    const jsonPath = path.join(outputDir, `${baseFilename}.json`);
+    await fs.writeFile(jsonPath, JSON.stringify(result, null, 2));
+    console.log(`💾 Saved: ${jsonPath}`);
+
+    // Save CSV
+    const csvPath = path.join(outputDir, `${baseFilename}.csv`);
+    const csvHeader = &#39;username,name,bio,verified,avatar,follows_you,scraped_at\n&#39;;
+    const csvRows = likersArray.map(u =&gt; {
+      const escapeCsv = (str) =&gt; str ? `&quot;${String(str).replace(/&quot;/g, &#39;&quot;&quot;&#39;)}&quot;` : &#39;&#39;;
+      return [
+        u.username,
+        escapeCsv(u.name),
+        escapeCsv(u.bio),
+        u.verified,
+        u.avatar || &#39;&#39;,
+        u.followsYou,
+        u.scrapedAt,
+      ].join(&#39;,&#39;);
+    }).join(&#39;\n&#39;);
+    await fs.writeFile(csvPath, csvHeader + csvRows);
+    console.log(`💾 Saved: ${csvPath}`);
+
+    // Show sample
+    console.log(&#39;&#39;);
+    console.log(&#39;📋 Sample (first 5):&#39;);
+    likersArray.slice(0, 5).forEach(u =&gt; {
+      const badge = u.verified ? &#39; ✓&#39; : &#39;&#39;;
+      console.log(`   @${u.username}${badge} - ${u.name || &#39;(no name)&#39;}`);
+    });
+
+    return result;
+
+  } finally {
+    await browser.close();
+  }
+}
+
+/**
+ * Scrape likers from multiple tweets
+ * @param {string[]} tweetUrls - Array of tweet URLs
+ * @param {Object} options - Configuration options
+ * @returns {Promise&lt;Object[]&gt;} Array of results for each tweet
+ */
+async function scrapeMultipleTweets(tweetUrls, options = {}) {
+  const results = [];
+  const { delayBetweenTweets = 5000, ...scraperOptions } = options;
+
+  console.log(`📋 Scraping likers from ${tweetUrls.length} tweets`);
+  console.log(&#39;&#39;);
+
+  for (let i = 0; i &lt; tweetUrls.length; i++) {
+    console.log(`\n[${ i + 1}/${tweetUrls.length}] Processing tweet...`);
+    console.log(&#39;─&#39;.repeat(40));
+
+    try {
+      const result = await scrapeTweetLikes(tweetUrls[i], scraperOptions);
+      results.push({ success: true, url: tweetUrls[i], data: result });
+    } catch (error) {
+      console.error(`❌ Failed: ${error.message}`);
+      results.push({ success: false, url: tweetUrls[i], error: error.message });
+    }
+
+    // Delay between tweets (except for last one)
+    if (i &lt; tweetUrls.length - 1) {
+      console.log(`\n⏳ Waiting ${delayBetweenTweets / 1000}s before next tweet...`);
+      await new Promise(r =&gt; setTimeout(r, delayBetweenTweets));
+    }
+  }
+
+  // Summary
+  const successful = results.filter(r =&gt; r.success).length;
+  console.log(&#39;&#39;);
+  console.log(&#39;====================================&#39;);
+  console.log(`📊 Batch complete: ${successful}/${tweetUrls.length} successful`);
+
+  return results;
+}
+
+// ============================================
+// CLI Interface
+// ============================================
+
+const args = process.argv.slice(2);
+
+if (args.length === 0) {
+  console.log(&#39;&#39;);
+  console.log(&#39;❤️  XActions - Tweet Likes Scraper&#39;);
+  console.log(&#39;====================================&#39;);
+  console.log(&#39;&#39;);
+  console.log(&#39;Usage:&#39;);
+  console.log(&#39;  node scrape-tweet-likes.js &lt;tweet_url&gt; [limit]&#39;);
+  console.log(&#39;&#39;);
+  console.log(&#39;Examples:&#39;);
+  console.log(&#39;  node scrape-tweet-likes.js https://x.com/elonmusk/status/1234567890&#39;);
+  console.log(&#39;  node scrape-tweet-likes.js https://x.com/elonmusk/status/1234567890 500&#39;);
+  console.log(&#39;&#39;);
+  console.log(&#39;Options:&#39;);
+  console.log(&#39;  tweet_url  Full URL to the tweet&#39;);
+  console.log(&#39;  limit      Maximum number of likers to scrape (default: 1000)&#39;);
+  console.log(&#39;&#39;);
+  console.log(&#39;Environment Variables:&#39;);
+  console.log(&#39;  X_AUTH_TOKEN  Your X/Twitter auth token (for private accounts)&#39;);
+  console.log(&#39;&#39;);
+  process.exit(0);
+}
+
+const tweetUrl = args[0];
+const limit = parseInt(args[1]) || 1000;
+const authToken = process.env.X_AUTH_TOKEN || null;
+
+scrapeTweetLikes(tweetUrl, {
+  limit,
+  authToken,
+  headless: true,
+  scrollDelay: 1500,
+})
+  .then(result =&gt; {
+    console.log(&#39;&#39;);
+    console.log(&#39;🎉 Done!&#39;);
+    process.exit(0);
+  })
+  .catch(error =&gt; {
+    console.error(&#39;&#39;);
+    console.error(&#39;❌ Error:&#39;, error.message);
+    process.exit(1);
+  });
+
+// Export for use as module
+export { scrapeTweetLikes, scrapeMultipleTweets };
+</code></pre>
+<p><strong>Installation:</strong></p>
+<pre><code class="language-bash"># Install dependencies
+npm install puppeteer puppeteer-extra puppeteer-extra-plugin-stealth
+</code></pre>
+<p><strong>Run it:</strong></p>
+<pre><code class="language-bash"># Scrape up to 1000 likers from a tweet
+node scrape-tweet-likes.js https://x.com/elonmusk/status/1234567890123456789
+
+# Scrape with custom limit
+node scrape-tweet-likes.js https://x.com/username/status/1234567890 500
+
+# With authentication (for viewing likes on protected content)
+X_AUTH_TOKEN=your_token_here node scrape-tweet-likes.js https://x.com/user/status/123
+</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>❤️  XActions - Tweet Likes Scraper
+====================================
+🔗 Tweet: https://x.com/elonmusk/status/1234567890123456789
+🆔 Tweet ID: 1234567890123456789
+🎯 Limit: 1000 likers
+
+📍 Loading tweet...
+🖱️  Opening likes modal...
+✓  Likes modal opened
+
+📜 Scraping likers...
+❤️  Progress: 250/1000 (25%)
+❤️  Progress: 500/1000 (50%)
+❤️  Progress: 750/1000 (75%)
+❤️  Progress: 1000/1000 (100%)
+
+✅ Scraping complete!
+====================================
+📊 Total likers scraped: 1000
+✓  Verified users: 47
+✓  With bio: 823
+✓  Follow you: 12
+
+💾 Saved: tweet-1234567890123456789-likers-2026-01-01.json
+💾 Saved: tweet-1234567890123456789-likers-2026-01-01.csv
+
+📋 Sample (first 5):
+   @user1 ✓ - John Doe
+   @user2 - Jane Smith  
+   @user3 ✓ - Tech Guy
+   @user4 - Crypto Enthusiast
+   @user5 - Marketing Pro
+
+🎉 Done!
+</code></pre>
+<hr>
+<h2>💡 Use Cases</h2>
+<h3>1. Engagement Analysis</h3>
+<p>Understand who engages with your content:</p>
+<pre><code class="language-javascript">// Analyze engagement patterns
+const result = await scrapeTweetLikes(myTweetUrl, { limit: 500 });
+
+// Find verified users who liked your tweet
+const verifiedLikers = result.likers.filter(u =&gt; u.verified);
+console.log(`${verifiedLikers.length} verified accounts liked this tweet!`);
+
+// Identify potential collaborators
+const influencers = result.likers.filter(u =&gt; 
+  u.verified || (u.bio &amp;&amp; u.bio.toLowerCase().includes(&#39;founder&#39;))
+);
+</code></pre>
+<h3>2. Finding Interested Users</h3>
+<p>Build targeted lists of users interested in specific topics:</p>
+<pre><code class="language-javascript">// Scrape likers from viral tweets in your niche
+const nicheTopics = [
+  &#39;https://x.com/user1/status/111...&#39;,  // Popular AI tweet
+  &#39;https://x.com/user2/status/222...&#39;,  // Trending tech post
+];
+
+const allLikers = new Map();
+
+for (const url of nicheTopics) {
+  const result = await scrapeTweetLikes(url, { limit: 500 });
+  result.likers.forEach(u =&gt; {
+    if (!allLikers.has(u.username)) {
+      allLikers.set(u.username, { ...u, likedTweets: 1 });
+    } else {
+      allLikers.get(u.username).likedTweets++;
+    }
+  });
+}
+
+// Find users who liked multiple tweets (highly interested!)
+const superFans = Array.from(allLikers.values())
+  .filter(u =&gt; u.likedTweets &gt;= 2)
+  .sort((a, b) =&gt; b.likedTweets - a.likedTweets);
+
+console.log(&#39;Super engaged users:&#39;, superFans);
+</code></pre>
+<h3>3. Competitive Research</h3>
+<p>See who engages with competitor content:</p>
+<pre><code class="language-javascript">// Analyze competitor engagement
+const competitorTweet = &#39;https://x.com/competitor/status/...&#39;;
+const result = await scrapeTweetLikes(competitorTweet, { limit: 1000 });
+
+// Export for CRM or outreach
+const prospects = result.likers
+  .filter(u =&gt; u.bio &amp;&amp; !u.bio.includes(&#39;bot&#39;))
+  .map(u =&gt; ({
+    handle: `@${u.username}`,
+    name: u.name,
+    interests: u.bio,
+    verified: u.verified,
+  }));
+
+console.log(`Found ${prospects.length} potential prospects`);
+</code></pre>
+<h3>4. Content Strategy</h3>
+<p>Analyze what type of users engage with different content:</p>
+<pre><code class="language-javascript">// Compare likers across different tweet types
+const technicalTweet = await scrapeTweetLikes(techUrl);
+const casualTweet = await scrapeTweetLikes(casualUrl);
+
+const techVerified = technicalTweet.likers.filter(u =&gt; u.verified).length;
+const casualVerified = casualTweet.likers.filter(u =&gt; u.verified).length;
+
+console.log(`Technical content: ${techVerified} verified likers`);
+console.log(`Casual content: ${casualVerified} verified likers`);
+</code></pre>
+<hr>
+<h2>⚡ Tips</h2>
+<h3>Performance Expectations</h3>
+<table>
+<thead>
+<tr>
+<th>Likes Count</th>
+<th>Estimated Time</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>100 likers</td>
+<td>~30 seconds</td>
+</tr>
+<tr>
+<td>500 likers</td>
+<td>~2 minutes</td>
+</tr>
+<tr>
+<td>1000 likers</td>
+<td>~4 minutes</td>
+</tr>
+<tr>
+<td>5000 likers</td>
+<td>~15-20 minutes</td>
+</tr>
+</tbody></table>
+<h3>Rate Limiting Best Practices</h3>
+<ul>
+<li><strong>Don&#39;t scrape too frequently</strong> - Wait at least 5 minutes between scraping the same tweet</li>
+<li><strong>Add delays for batch jobs</strong> - Use <code>delayBetweenTweets: 10000</code> (10s) for multiple tweets</li>
+<li><strong>Respect X&#39;s limits</strong> - Slow down if you encounter errors</li>
+</ul>
+<h3>Getting Your Auth Token</h3>
+<p>For accessing likes on protected tweets or when logged in:</p>
+<ol>
+<li>Open X.com and log in</li>
+<li>Open Developer Tools (F12)</li>
+<li>Go to Application → Cookies → x.com</li>
+<li>Find <code>auth_token</code> and copy the value</li>
+<li>Use it: <code>X_AUTH_TOKEN=your_token node scrape-tweet-likes.js ...</code></li>
+</ol>
+<h3>Handling Large Like Counts</h3>
+<p>For viral tweets with 10K+ likes:</p>
+<pre><code class="language-javascript">const result = await scrapeTweetLikes(viralTweetUrl, {
+  limit: 10000,
+  scrollDelay: 2000,  // Slower scrolling
+  maxRetries: 25,     // More patience
+});
+</code></pre>
+<h3>Filtering Results</h3>
+<pre><code class="language-javascript">// Only verified users
+const verified = result.likers.filter(u =&gt; u.verified);
+
+// Users with bios containing keywords
+const devs = result.likers.filter(u =&gt; 
+  u.bio &amp;&amp; /developer|engineer|coding/i.test(u.bio)
+);
+
+// Remove likely bots
+const humans = result.likers.filter(u =&gt; 
+  u.bio &amp;&amp; u.bio.length &gt; 20 &amp;&amp; !/follow.?back|dm.?promo/i.test(u.bio)
+);
+</code></pre>
+<hr>
+<h2>🌐 Website Alternative</h2>
+<p>Don&#39;t want to code? Use <a href="https://xactions.app">xactions.app</a>:</p>
+<ol>
+<li>🔐 Login with your X account</li>
+<li>🔗 Paste any tweet URL</li>
+<li>❤️ Click &quot;Scrape Likes&quot;</li>
+<li>⏳ Wait for completion</li>
+<li>📥 Download CSV or JSON</li>
+</ol>
+<p><strong>Features:</strong></p>
+<ul>
+<li>One-click like extraction</li>
+<li>Bulk tweet support</li>
+<li>No coding required</li>
+<li>Automatic deduplication</li>
+<li>Export in multiple formats</li>
+<li>Works with any public tweet</li>
+</ul>
+<hr>
+<h2>📚 Related Examples</h2>
+<ul>
+<li><a href="tweet-scraping.md">Tweet Scraping</a> - Extract tweet content and metadata</li>
+<li><a href="followers-scraping.md">Followers Scraping</a> - Get complete follower lists</li>
+<li><a href="following-scraping.md">Following Scraping</a> - See who an account follows</li>
+<li><a href="profile-scraping.md">Profile Scraping</a> - Extract user profile information</li>
+</ul>
+<hr>
+<p><em>Author: nich (<a href="https://x.com/nichxbt">@nichxbt</a>)</em></p>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try Likes Scraping?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/followers-scraping">📋 Followers Scraping</a>
+        <a href="/docs/following-scraping">📋 Following Scraping</a>
+        <a href="/docs/hashtag-scraping">#️⃣ Hashtag Scraping</a>
+        <a href="/docs/link-scraper">🔗 Link Scraper</a>
+        <a href="/docs/list-scraping">📝 List Scraping</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

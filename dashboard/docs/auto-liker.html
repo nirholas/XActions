@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auto-Liker — Free X/Twitter Engagement Tool | XActions</title>
+  <meta name="description" content="Automatically like tweets matching your criteria on X (Twitter).">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, auto, liker, auto-liker, engagement, auto liker twitter, twitter auto liker">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Auto-Liker — XActions">
+  <meta property="og:description" content="Automatically like tweets matching your criteria on X (Twitter).">
+  <meta property="og:url" content="https://xactions.app/docs/auto-liker">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Auto-Liker — Free X/Twitter Tool">
+  <meta name="twitter:description" content="Automatically like tweets matching your criteria on X (Twitter).">
+
+  <link rel="canonical" href="https://xactions.app/docs/auto-liker">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Auto-Liker — Free X/Twitter Engagement Tool | XActions",
+    "description": "Automatically like tweets matching your criteria on X (Twitter).",
+    "url": "https://xactions.app/docs/auto-liker",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/auto-liker",
+    "articleSection": "Engagement",
+    "keywords": "xactions, twitter automation, x automation, free, auto, liker, auto-liker, engagement, auto liker twitter, twitter auto liker"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Auto-Liker", "item": "https://xactions.app/docs/auto-liker" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use Auto-Liker",
+    "description": "Automatically like tweets matching your criteria on X (Twitter).",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions Auto-Liker script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>❤️ Auto-Liker</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › Auto-Liker
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Engagement</span>
+        <h1>❤️ Auto-Liker</h1>
+<p>Automatically like tweets matching your criteria on X (Twitter).</p>
+<hr>
+<h2>📋 What It Does</h2>
+<p>This feature helps you engage with content automatically by:</p>
+<ol>
+<li><strong>Scanning tweets</strong> - Monitors your timeline, search results, or user profiles</li>
+<li><strong>Keyword matching</strong> - Only likes tweets containing specific keywords (optional)</li>
+<li><strong>Smart filtering</strong> - Skips replies, ads, and already-liked tweets</li>
+<li><strong>Rate limiting</strong> - Uses random delays to mimic human behavior</li>
+<li><strong>Progress tracking</strong> - Shows real-time stats and logs all actions</li>
+</ol>
+<p><strong>Use cases:</strong></p>
+<ul>
+<li>Engage with tweets about topics you care about</li>
+<li>Support accounts you follow with automated likes</li>
+<li>Build engagement on specific hashtags or keywords</li>
+<li>Save time while maintaining an active presence</li>
+<li>Grow your network through consistent engagement</li>
+</ul>
+<hr>
+<h2>⚠️ IMPORTANT WARNINGS</h2>
+<blockquote>
+<p><strong>🚨 USE RESPONSIBLY!</strong> Automated liking can get your account restricted or permanently suspended if overdone. X (Twitter) actively detects and penalizes bot-like behavior.</p>
+</blockquote>
+<p><strong>Before you start:</strong></p>
+<ul>
+<li>❌ <strong>DON&#39;T</strong> run this 24/7</li>
+<li>❌ <strong>DON&#39;T</strong> like more than 50-100 tweets per day</li>
+<li>❌ <strong>DON&#39;T</strong> use identical delays every time</li>
+<li>❌ <strong>DON&#39;T</strong> run multiple automation scripts simultaneously</li>
+<li>✅ <strong>DO</strong> use random delays between actions</li>
+<li>✅ <strong>DO</strong> take breaks between sessions</li>
+<li>✅ <strong>DO</strong> mix automated and manual activity</li>
+<li>✅ <strong>DO</strong> start with low limits and increase gradually</li>
+</ul>
+<hr>
+<h2>🌐 Example 1: Browser Console (Quick)</h2>
+<p><strong>Best for:</strong> Quick engagement sessions, liking up to ~30 tweets</p>
+<p><strong>Steps:</strong></p>
+<ol>
+<li>Go to <code>x.com/search?q=your-keyword</code> or your timeline</li>
+<li>Open browser console (F12 → Console tab)</li>
+<li>Paste the script below and press Enter</li>
+</ol>
+<pre><code class="language-javascript">// ============================================
+// XActions - Auto-Liker (Browser Console)
+// Author: nich (@nichxbt)
+// Go to: x.com/search or your timeline
+// Open console (F12), paste this
+// ============================================
+
+(async () =&gt; {
+  // ==========================================
+  // CONFIGURATION - Customize these settings!
+  // ==========================================
+  const CONFIG = {
+    // Targeting
+    KEYWORDS: [],                       // Keywords to match (empty = like ALL visible tweets)
+    SKIP_REPLIES: true,                 // Skip tweets that are replies
+    SKIP_RETWEETS: true,                // Skip retweets
+    SKIP_ADS: true,                     // Skip promoted tweets
+    
+    // Limits (KEEP THESE LOW!)
+    MAX_LIKES: 25,                      // Maximum tweets to like per session
+    MAX_SCROLLS: 30,                    // Maximum times to scroll down
+    
+    // Delays (in milliseconds) - Randomized to seem human
+    MIN_DELAY: 3000,                    // Minimum delay between likes (3 seconds)
+    MAX_DELAY: 8000,                    // Maximum delay between likes (8 seconds)
+    SCROLL_DELAY: 2000,                 // Delay after scrolling
+    
+    // Safety
+    PAUSE_EVERY: 10,                    // Pause every N likes
+    PAUSE_DURATION: 15000,              // Pause duration (15 seconds)
+  };
+
+  // ==========================================
+  // SCRIPT - Don&#39;t modify below this line
+  // ==========================================
+  
+  console.log(&#39;❤️  XActions - Auto-Liker&#39;);
+  console.log(&#39;=&#39;.repeat(50));
+  console.log(&#39;⚙️  Settings:&#39;);
+  console.log(`   • Keywords: ${CONFIG.KEYWORDS.length ? CONFIG.KEYWORDS.join(&#39;, &#39;) : &#39;ALL TWEETS&#39;}`);
+  console.log(`   • Max likes: ${CONFIG.MAX_LIKES}`);
+  console.log(`   • Delay: ${CONFIG.MIN_DELAY/1000}s - ${CONFIG.MAX_DELAY/1000}s`);
+  console.log(`   • Skip replies: ${CONFIG.SKIP_REPLIES ? &#39;Yes&#39; : &#39;No&#39;}`);
+  console.log(`   • Skip retweets: ${CONFIG.SKIP_RETWEETS ? &#39;Yes&#39; : &#39;No&#39;}`);
+  console.log(&#39;&#39;);
+  console.log(&#39;⚠️  Press Ctrl+C in console to stop at any time&#39;);
+  console.log(&#39;=&#39;.repeat(50));
+  console.log(&#39;&#39;);
+
+  // Helpers
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+  const randomDelay = (min, max) =&gt; Math.floor(Math.random() * (max - min + 1)) + min;
+  
+  // State
+  let likeCount = 0;
+  let scrollCount = 0;
+  let skippedCount = 0;
+  const likedTweetIds = new Set();
+  const processedTweets = new Set();
+
+  // Check if tweet matches keywords
+  const matchesKeywords = (text) =&gt; {
+    if (CONFIG.KEYWORDS.length === 0) return true;
+    const lowerText = text.toLowerCase();
+    return CONFIG.KEYWORDS.some(kw =&gt; lowerText.includes(kw.toLowerCase()));
+  };
+
+  // Get unique tweet identifier
+  const getTweetId = (article) =&gt; {
+    const link = article.querySelector(&#39;a[href*=&quot;/status/&quot;]&#39;);
+    if (link) {
+      const match = link.href.match(/\/status\/(\d+)/);
+      return match ? match[1] : null;
+    }
+    // Fallback: use text content hash
+    const text = article.querySelector(&#39;[data-testid=&quot;tweetText&quot;]&#39;)?.textContent || &#39;&#39;;
+    return text.substring(0, 100);
+  };
+
+  // Check if tweet is a reply
+  const isReply = (article) =&gt; {
+    const text = article.innerText || &#39;&#39;;
+    return text.includes(&#39;Replying to @&#39;) || 
+           !!article.querySelector(&#39;[data-testid=&quot;Tweet-User-Avatar&quot;]&#39;)?.closest(&#39;article&#39;)?.innerHTML?.includes(&#39;Replying to&#39;);
+  };
+
+  // Check if tweet is a retweet
+  const isRetweet = (article) =&gt; {
+    const socialContext = article.querySelector(&#39;[data-testid=&quot;socialContext&quot;]&#39;);
+    return socialContext?.textContent?.includes(&#39;reposted&#39;) || 
+           socialContext?.textContent?.includes(&#39;Retweeted&#39;);
+  };
+
+  // Check if tweet is an ad
+  const isAd = (article) =&gt; {
+    return !!article.querySelector(&#39;[data-testid=&quot;placementTracking&quot;]&#39;) ||
+           article.innerText?.includes(&#39;Promoted&#39;) ||
+           article.innerText?.includes(&#39;Ad&#39;);
+  };
+
+  // Check if already liked
+  const isAlreadyLiked = (article) =&gt; {
+    const unlikeBtn = article.querySelector(&#39;[data-testid=&quot;unlike&quot;]&#39;);
+    return !!unlikeBtn;
+  };
+
+  // Like a single tweet
+  const likeTweet = async (article, tweetId) =&gt; {
+    const likeBtn = article.querySelector(&#39;[data-testid=&quot;like&quot;]&#39;);
+    if (!likeBtn) return false;
+
+    // Scroll tweet into view
+    article.scrollIntoView({ behavior: &#39;smooth&#39;, block: &#39;center&#39; });
+    await sleep(500);
+
+    // Click like button
+    likeBtn.click();
+    likeCount++;
+    likedTweetIds.add(tweetId);
+
+    // Get tweet preview for logging
+    const textEl = article.querySelector(&#39;[data-testid=&quot;tweetText&quot;]&#39;);
+    const preview = textEl?.textContent?.substring(0, 50) || &#39;[No text]&#39;;
+    
+    console.log(`❤️  [${likeCount}/${CONFIG.MAX_LIKES}] Liked: &quot;${preview}...&quot;`);
+    
+    return true;
+  };
+
+  // Process all visible tweets
+  const processVisibleTweets = async () =&gt; {
+    const articles = document.querySelectorAll(&#39;article[data-testid=&quot;tweet&quot;]&#39;);
+    
+    for (const article of articles) {
+      // Check if we&#39;ve hit our limit
+      if (likeCount &gt;= CONFIG.MAX_LIKES) {
+        console.log(&#39;&#39;);
+        console.log(&#39;🎯 Reached maximum likes limit!&#39;);
+        return false;
+      }
+
+      const tweetId = getTweetId(article);
+      if (!tweetId || processedTweets.has(tweetId)) continue;
+      processedTweets.add(tweetId);
+
+      // Skip already liked
+      if (isAlreadyLiked(article)) {
+        continue;
+      }
+
+      // Skip based on settings
+      if (CONFIG.SKIP_REPLIES &amp;&amp; isReply(article)) {
+        skippedCount++;
+        continue;
+      }
+
+      if (CONFIG.SKIP_RETWEETS &amp;&amp; isRetweet(article)) {
+        skippedCount++;
+        continue;
+      }
+
+      if (CONFIG.SKIP_ADS &amp;&amp; isAd(article)) {
+        skippedCount++;
+        continue;
+      }
+
+      // Check keyword match
+      const textEl = article.querySelector(&#39;[data-testid=&quot;tweetText&quot;]&#39;);
+      const tweetText = textEl?.textContent || &#39;&#39;;
+      
+      if (!matchesKeywords(tweetText)) {
+        skippedCount++;
+        continue;
+      }
+
+      // Like this tweet!
+      const liked = await likeTweet(article, tweetId);
+      
+      if (liked) {
+        // Random delay between likes
+        const delay = randomDelay(CONFIG.MIN_DELAY, CONFIG.MAX_DELAY);
+        console.log(`   ⏳ Waiting ${(delay/1000).toFixed(1)}s...`);
+        await sleep(delay);
+
+        // Periodic pause for safety
+        if (likeCount &gt; 0 &amp;&amp; likeCount % CONFIG.PAUSE_EVERY === 0) {
+          console.log(&#39;&#39;);
+          console.log(`☕ Taking a ${CONFIG.PAUSE_DURATION/1000}s break for safety...`);
+          await sleep(CONFIG.PAUSE_DURATION);
+          console.log(&#39;🔄 Resuming...&#39;);
+          console.log(&#39;&#39;);
+        }
+      }
+    }
+
+    return true;
+  };
+
+  // Main loop
+  console.log(&#39;🔍 Scanning for tweets to like...&#39;);
+  console.log(&#39;&#39;);
+
+  while (scrollCount &lt; CONFIG.MAX_SCROLLS &amp;&amp; likeCount &lt; CONFIG.MAX_LIKES) {
+    const shouldContinue = await processVisibleTweets();
+    if (!shouldContinue) break;
+
+    // Scroll down to load more tweets
+    window.scrollBy({ top: 800, behavior: &#39;smooth&#39; });
+    scrollCount++;
+    
+    // Progress update every 5 scrolls
+    if (scrollCount % 5 === 0) {
+      console.log(`📊 Progress: ${likeCount} liked, ${skippedCount} skipped, ${scrollCount} scrolls`);
+    }
+
+    await sleep(CONFIG.SCROLL_DELAY);
+  }
+
+  // Final summary
+  console.log(&#39;&#39;);
+  console.log(&#39;=&#39;.repeat(50));
+  console.log(&#39;✅ AUTO-LIKER COMPLETE&#39;);
+  console.log(&#39;=&#39;.repeat(50));
+  console.log(`❤️  Tweets liked: ${likeCount}`);
+  console.log(`⏭️  Tweets skipped: ${skippedCount}`);
+  console.log(`📜 Total scrolls: ${scrollCount}`);
+  console.log(`🕐 Session ended: ${new Date().toLocaleTimeString()}`);
+  console.log(&#39;&#39;);
+  console.log(&#39;💡 Tip: Wait at least 1-2 hours before running again!&#39;);
+  console.log(&#39;=&#39;.repeat(50));
+
+  // Return results
+  return {
+    liked: likeCount,
+    skipped: skippedCount,
+    scrolls: scrollCount,
+    tweetIds: Array.from(likedTweetIds)
+  };
+})();
+</code></pre>
+<p><strong>What happens:</strong></p>
+<ol>
+<li>Script scans visible tweets on the page</li>
+<li>Filters based on your settings (keywords, replies, retweets, ads)</li>
+<li>Likes matching tweets with random delays</li>
+<li>Scrolls down to find more tweets</li>
+<li>Takes periodic breaks for safety</li>
+<li>Stops when reaching your limit</li>
+</ol>
+<p><strong>Output example:</strong></p>
+<pre><code>❤️  XActions - Auto-Liker
+==================================================
+⚙️  Settings:
+   • Keywords: ALL TWEETS
+   • Max likes: 25
+   • Delay: 3s - 8s
+   • Skip replies: Yes
+   • Skip retweets: Yes
+
+⚠️  Press Ctrl+C in console to stop at any time
+==================================================
+
+🔍 Scanning for tweets to like...
+
+❤️  [1/25] Liked: &quot;Just launched my new project! Check it out...&quot;
+   ⏳ Waiting 4.2s...
+❤️  [2/25] Liked: &quot;Great thread on web development best practi...&quot;
+   ⏳ Waiting 6.1s...
+❤️  [3/25] Liked: &quot;The future of AI is looking incredible...&quot;
+   ⏳ Waiting 3.8s...
+📊 Progress: 3 liked, 5 skipped, 5 scrolls
+...
+
+☕ Taking a 15s break for safety...
+🔄 Resuming...
+
+...
+
+==================================================
+✅ AUTO-LIKER COMPLETE
+==================================================
+❤️  Tweets liked: 25
+⏭️  Tweets skipped: 47
+📜 Total scrolls: 18
+🕐 Session ended: 2:45:32 PM
+
+💡 Tip: Wait at least 1-2 hours before running again!
+==================================================
+</code></pre>
+<hr>
+<h2>🖥️ Example 2: Node.js with Puppeteer (Production)</h2>
+<p><strong>Best for:</strong> Scheduled engagement, keyword-based campaigns, detailed logging</p>
+<p><strong>Features:</strong></p>
+<ul>
+<li>Search for specific keywords and like matching tweets</li>
+<li>Persistent browser session (stay logged in)</li>
+<li>Comprehensive logging with timestamps</li>
+<li>Configurable daily limits with built-in tracking</li>
+<li>Human-like random delays</li>
+<li>Graceful error handling</li>
+</ul>
+<h3>Setup</h3>
+<pre><code class="language-bash"># Create project folder
+mkdir auto-liker &amp;&amp; cd auto-liker
+
+# Initialize and install dependencies
+npm init -y
+npm install puppeteer
+
+# Create the script
+touch auto-liker.js
+</code></pre>
+<h3>Main Script: <code>auto-liker.js</code></h3>
+<pre><code class="language-javascript">// ============================================
+// XActions - Auto-Liker (Node.js + Puppeteer)
+// Author: nich (@nichxbt)
+//
+// Usage:
+//   node auto-liker.js &quot;web3&quot;              # Like tweets about web3
+//   node auto-liker.js &quot;AI&quot; --limit 20     # Like 20 tweets about AI
+//   node auto-liker.js --timeline          # Like from your timeline
+//
+// ============================================
+
+const puppeteer = require(&#39;puppeteer&#39;);
+const fs = require(&#39;fs&#39;);
+const path = require(&#39;path&#39;);
+
+// ==========================================
+// CONFIGURATION
+// ==========================================
+const CONFIG = {
+  // Browser settings
+  headless: true,                       // Set to false to watch the browser
+  userDataDir: &#39;./browser-data&#39;,        // Persistent login session
+  viewport: { width: 1280, height: 900 },
+  
+  // Limits (KEEP THESE CONSERVATIVE!)
+  maxLikesPerSession: 30,               // Max likes per script run
+  maxLikesPerDay: 100,                  // Max likes per 24 hours
+  maxScrolls: 50,                       // Max page scrolls
+  
+  // Delays (milliseconds) - IMPORTANT FOR SAFETY
+  minDelay: 4000,                       // Min delay between likes (4 seconds)
+  maxDelay: 10000,                      // Max delay between likes (10 seconds)
+  scrollDelay: 2500,                    // Delay after scrolling
+  pageLoadDelay: 5000,                  // Wait for page to load
+  
+  // Safety pauses
+  pauseEvery: 8,                        // Take a break every N likes
+  pauseDuration: 20000,                 // Break duration (20 seconds)
+  
+  // Filters
+  skipReplies: true,                    // Skip reply tweets
+  skipRetweets: true,                   // Skip retweets
+  skipAds: true,                        // Skip promoted content
+  
+  // Logging
+  logDir: &#39;./logs&#39;,                     // Where to save logs
+  statsFile: &#39;./like-stats.json&#39;,       // Daily stats tracking
+};
+
+// ==========================================
+// UTILITY FUNCTIONS
+// ==========================================
+
+const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+
+const randomDelay = (min, max) =&gt; {
+  const delay = Math.floor(Math.random() * (max - min + 1)) + min;
+  // Add small random variation for more human-like behavior
+  return delay + Math.floor(Math.random() * 1000);
+};
+
+const getTimestamp = () =&gt; new Date().toISOString();
+
+const getDateKey = () =&gt; new Date().toISOString().split(&#39;T&#39;)[0];
+
+// Ensure directories exist
+const ensureDirectories = () =&gt; {
+  if (!fs.existsSync(CONFIG.userDataDir)) {
+    fs.mkdirSync(CONFIG.userDataDir, { recursive: true });
+  }
+  if (!fs.existsSync(CONFIG.logDir)) {
+    fs.mkdirSync(CONFIG.logDir, { recursive: true });
+  }
+};
+
+// Logger with file output
+class Logger {
+  constructor(sessionId) {
+    this.sessionId = sessionId;
+    this.logFile = path.join(CONFIG.logDir, `auto-liker-${getDateKey()}.log`);
+  }
+
+  log(level, message) {
+    const timestamp = getTimestamp();
+    const line = `[${timestamp}] [${level.toUpperCase()}] ${message}`;
+    console.log(line);
+    fs.appendFileSync(this.logFile, line + &#39;\n&#39;);
+  }
+
+  info(message) { this.log(&#39;info&#39;, message); }
+  success(message) { this.log(&#39;success&#39;, `✅ ${message}`); }
+  warning(message) { this.log(&#39;warning&#39;, `⚠️  ${message}`); }
+  error(message) { this.log(&#39;error&#39;, `❌ ${message}`); }
+  action(message) { this.log(&#39;action&#39;, `❤️  ${message}`); }
+}
+
+// Daily stats tracker
+class StatsTracker {
+  constructor() {
+    this.loadStats();
+  }
+
+  loadStats() {
+    try {
+      if (fs.existsSync(CONFIG.statsFile)) {
+        this.stats = JSON.parse(fs.readFileSync(CONFIG.statsFile, &#39;utf8&#39;));
+      } else {
+        this.stats = {};
+      }
+    } catch (e) {
+      this.stats = {};
+    }
+  }
+
+  saveStats() {
+    fs.writeFileSync(CONFIG.statsFile, JSON.stringify(this.stats, null, 2));
+  }
+
+  getTodayLikes() {
+    const today = getDateKey();
+    return this.stats[today]?.likes || 0;
+  }
+
+  addLike() {
+    const today = getDateKey();
+    if (!this.stats[today]) {
+      this.stats[today] = { likes: 0, sessions: 0 };
+    }
+    this.stats[today].likes++;
+    this.saveStats();
+  }
+
+  startSession() {
+    const today = getDateKey();
+    if (!this.stats[today]) {
+      this.stats[today] = { likes: 0, sessions: 0 };
+    }
+    this.stats[today].sessions++;
+    this.saveStats();
+  }
+
+  canLikeMore() {
+    return this.getTodayLikes() &lt; CONFIG.maxLikesPerDay;
+  }
+
+  getRemainingLikes() {
+    return Math.max(0, CONFIG.maxLikesPerDay - this.getTodayLikes());
+  }
+}
+
+// ==========================================
+// BROWSER AUTOMATION
+// ==========================================
+
+async function launchBrowser() {
+  return await puppeteer.launch({
+    headless: CONFIG.headless,
+    userDataDir: CONFIG.userDataDir,
+    args: [
+      &#39;--no-sandbox&#39;,
+      &#39;--disable-setuid-sandbox&#39;,
+      &#39;--disable-dev-shm-usage&#39;,
+      &#39;--disable-accelerated-2d-canvas&#39;,
+      &#39;--disable-gpu&#39;,
+      &#39;--window-size=1280,900&#39;
+    ]
+  });
+}
+
+async function checkLogin(page, logger) {
+  logger.info(&#39;Checking login status...&#39;);
+  
+  await page.goto(&#39;https://x.com/home&#39;, { 
+    waitUntil: &#39;networkidle2&#39;,
+    timeout: 30000 
+  });
+  
+  await sleep(3000);
+  
+  const isLoggedIn = await page.evaluate(() =&gt; {
+    return !!document.querySelector(&#39;[data-testid=&quot;SideNav_NewTweet_Button&quot;]&#39;) ||
+           !!document.querySelector(&#39;[data-testid=&quot;AppTabBar_Profile_Link&quot;]&#39;) ||
+           !!document.querySelector(&#39;[aria-label=&quot;Post&quot;]&#39;);
+  });
+  
+  return isLoggedIn;
+}
+
+async function promptLogin(logger) {
+  logger.warning(&#39;Not logged in to X/Twitter&#39;);
+  logger.info(&#39;Opening browser for manual login...&#39;);
+  
+  console.log(&#39;\n&#39; + &#39;=&#39;.repeat(50));
+  console.log(&#39;🔐 LOGIN REQUIRED&#39;);
+  console.log(&#39;=&#39;.repeat(50));
+  console.log(&#39;1. A browser window will open&#39;);
+  console.log(&#39;2. Log in to your X/Twitter account&#39;);
+  console.log(&#39;3. Complete any 2FA if prompted&#39;);
+  console.log(&#39;4. Press ENTER here when done&#39;);
+  console.log(&#39;=&#39;.repeat(50) + &#39;\n&#39;);
+  
+  const browser = await puppeteer.launch({
+    headless: false,
+    userDataDir: CONFIG.userDataDir,
+    args: [&#39;--no-sandbox&#39;, &#39;--window-size=1280,900&#39;]
+  });
+  
+  const page = await browser.newPage();
+  await page.goto(&#39;https://x.com/login&#39;, { waitUntil: &#39;networkidle2&#39; });
+  
+  // Wait for user input
+  await new Promise(resolve =&gt; {
+    process.stdin.once(&#39;data&#39;, resolve);
+  });
+  
+  await browser.close();
+  logger.success(&#39;Login saved! Session will persist for future runs.&#39;);
+}
+
+// ==========================================
+// AUTO-LIKER LOGIC
+// ==========================================
+
+async function autoLike(searchQuery, options = {}) {
+  const sessionId = Date.now().toString(36);
+  const logger = new Logger(sessionId);
+  const stats = new StatsTracker();
+  
+  ensureDirectories();
+  
+  // Log session start
+  console.log(&#39;\n&#39; + &#39;=&#39;.repeat(60));
+  console.log(&#39;❤️  XACTIONS AUTO-LIKER&#39;);
+  console.log(&#39;=&#39;.repeat(60));
+  
+  logger.info(`Session ID: ${sessionId}`);
+  logger.info(`Search query: ${searchQuery || &#39;Timeline&#39;}`);
+  logger.info(`Max likes this session: ${options.limit || CONFIG.maxLikesPerSession}`);
+  
+  // Check daily limit
+  const todayLikes = stats.getTodayLikes();
+  const remainingLikes = stats.getRemainingLikes();
+  
+  logger.info(`Today&#39;s likes so far: ${todayLikes}/${CONFIG.maxLikesPerDay}`);
+  
+  if (!stats.canLikeMore()) {
+    logger.warning(`Daily limit reached (${CONFIG.maxLikesPerDay} likes)`);
+    logger.info(&#39;Try again tomorrow to avoid account restrictions.&#39;);
+    return { success: false, reason: &#39;daily_limit_reached&#39; };
+  }
+  
+  // Adjust session limit based on daily remaining
+  const sessionLimit = Math.min(
+    options.limit || CONFIG.maxLikesPerSession,
+    remainingLikes
+  );
+  
+  logger.info(`Adjusted session limit: ${sessionLimit} likes`);
+  stats.startSession();
+  
+  // Launch browser
+  const browser = await launchBrowser();
+  const page = await browser.newPage();
+  await page.setViewport(CONFIG.viewport);
+  
+  // Set a realistic user agent
+  await page.setUserAgent(
+    &#39;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36&#39;
+  );
+  
+  let likeCount = 0;
+  let skippedCount = 0;
+  let scrollCount = 0;
+  const likedTweets = [];
+  
+  try {
+    // Check login
+    const isLoggedIn = await checkLogin(page, logger);
+    
+    if (!isLoggedIn) {
+      await browser.close();
+      await promptLogin(logger);
+      return await autoLike(searchQuery, options); // Retry
+    }
+    
+    logger.success(&#39;Logged in to X/Twitter&#39;);
+    
+    // Navigate to search or timeline
+    let targetUrl;
+    if (searchQuery) {
+      const encodedQuery = encodeURIComponent(searchQuery);
+      targetUrl = `https://x.com/search?q=${encodedQuery}&amp;src=typed_query&amp;f=live`;
+      logger.info(`Searching for: &quot;${searchQuery}&quot;`);
+    } else {
+      targetUrl = &#39;https://x.com/home&#39;;
+      logger.info(&#39;Using home timeline&#39;);
+    }
+    
+    await page.goto(targetUrl, { waitUntil: &#39;networkidle2&#39;, timeout: 30000 });
+    await sleep(CONFIG.pageLoadDelay);
+    
+    logger.info(&#39;Page loaded, starting to scan tweets...\n&#39;);
+    
+    const processedIds = new Set();
+    
+    // Main loop
+    while (scrollCount &lt; CONFIG.maxScrolls &amp;&amp; likeCount &lt; sessionLimit) {
+      // Get all visible tweets
+      const tweets = await page.evaluate(() =&gt; {
+        const articles = document.querySelectorAll(&#39;article[data-testid=&quot;tweet&quot;]&#39;);
+        const results = [];
+        
+        articles.forEach((article, index) =&gt; {
+          // Get tweet ID
+          const statusLink = article.querySelector(&#39;a[href*=&quot;/status/&quot;]&#39;);
+          const href = statusLink?.getAttribute(&#39;href&#39;) || &#39;&#39;;
+          const idMatch = href.match(/\/status\/(\d+)/);
+          const tweetId = idMatch ? idMatch[1] : `temp-${index}-${Date.now()}`;
+          
+          // Get tweet text
+          const textEl = article.querySelector(&#39;[data-testid=&quot;tweetText&quot;]&#39;);
+          const text = textEl?.textContent || &#39;&#39;;
+          
+          // Get author
+          const userLink = article.querySelector(&#39;a[href^=&quot;/&quot;][role=&quot;link&quot;]&#39;);
+          const authorHref = userLink?.getAttribute(&#39;href&#39;) || &#39;&#39;;
+          const author = authorHref.replace(&#39;/&#39;, &#39;&#39;).split(&#39;/&#39;)[0] || &#39;unknown&#39;;
+          
+          // Check states
+          const isLiked = !!article.querySelector(&#39;[data-testid=&quot;unlike&quot;]&#39;);
+          const hasLikeBtn = !!article.querySelector(&#39;[data-testid=&quot;like&quot;]&#39;);
+          
+          // Check if reply
+          const isReply = article.innerText?.includes(&#39;Replying to @&#39;) || false;
+          
+          // Check if retweet
+          const socialContext = article.querySelector(&#39;[data-testid=&quot;socialContext&quot;]&#39;);
+          const isRetweet = socialContext?.textContent?.includes(&#39;reposted&#39;) || 
+                           socialContext?.textContent?.includes(&#39;Retweeted&#39;) || false;
+          
+          // Check if ad
+          const isAd = !!article.querySelector(&#39;[data-testid=&quot;placementTracking&quot;]&#39;) ||
+                       article.innerText?.includes(&#39;Promoted&#39;) || false;
+          
+          results.push({
+            tweetId,
+            text: text.substring(0, 100),
+            author,
+            isLiked,
+            hasLikeBtn,
+            isReply,
+            isRetweet,
+            isAd
+          });
+        });
+        
+        return results;
+      });
+      
+      // Process each tweet
+      for (const tweet of tweets) {
+        if (likeCount &gt;= sessionLimit) break;
+        if (processedIds.has(tweet.tweetId)) continue;
+        
+        processedIds.add(tweet.tweetId);
+        
+        // Skip conditions
+        if (tweet.isLiked || !tweet.hasLikeBtn) continue;
+        if (CONFIG.skipReplies &amp;&amp; tweet.isReply) {
+          skippedCount++;
+          continue;
+        }
+        if (CONFIG.skipRetweets &amp;&amp; tweet.isRetweet) {
+          skippedCount++;
+          continue;
+        }
+        if (CONFIG.skipAds &amp;&amp; tweet.isAd) {
+          skippedCount++;
+          continue;
+        }
+        
+        // Like this tweet!
+        const liked = await page.evaluate((tweetId) =&gt; {
+          const articles = document.querySelectorAll(&#39;article[data-testid=&quot;tweet&quot;]&#39;);
+          for (const article of articles) {
+            const link = article.querySelector(&#39;a[href*=&quot;/status/&quot;]&#39;);
+            const href = link?.getAttribute(&#39;href&#39;) || &#39;&#39;;
+            if (href.includes(tweetId)) {
+              const likeBtn = article.querySelector(&#39;[data-testid=&quot;like&quot;]&#39;);
+              if (likeBtn) {
+                // Scroll into view
+                article.scrollIntoView({ behavior: &#39;smooth&#39;, block: &#39;center&#39; });
+                return true;
+              }
+            }
+          }
+          return false;
+        }, tweet.tweetId);
+        
+        if (liked) {
+          await sleep(500); // Wait for scroll
+          
+          // Click the like button
+          const success = await page.evaluate((tweetId) =&gt; {
+            const articles = document.querySelectorAll(&#39;article[data-testid=&quot;tweet&quot;]&#39;);
+            for (const article of articles) {
+              const link = article.querySelector(&#39;a[href*=&quot;/status/&quot;]&#39;);
+              const href = link?.getAttribute(&#39;href&#39;) || &#39;&#39;;
+              if (href.includes(tweetId)) {
+                const likeBtn = article.querySelector(&#39;[data-testid=&quot;like&quot;]&#39;);
+                if (likeBtn) {
+                  likeBtn.click();
+                  return true;
+                }
+              }
+            }
+            return false;
+          }, tweet.tweetId);
+          
+          if (success) {
+            likeCount++;
+            stats.addLike();
+            
+            const preview = tweet.text.substring(0, 40);
+            logger.action(`[${likeCount}/${sessionLimit}] @${tweet.author}: &quot;${preview}...&quot;`);
+            
+            likedTweets.push({
+              tweetId: tweet.tweetId,
+              author: tweet.author,
+              text: tweet.text,
+              timestamp: getTimestamp()
+            });
+            
+            // Random delay
+            const delay = randomDelay(CONFIG.minDelay, CONFIG.maxDelay);
+            logger.info(`   Waiting ${(delay/1000).toFixed(1)}s...`);
+            await sleep(delay);
+            
+            // Periodic break
+            if (likeCount &gt; 0 &amp;&amp; likeCount % CONFIG.pauseEvery === 0) {
+              logger.warning(`Taking a ${CONFIG.pauseDuration/1000}s safety break...`);
+              await sleep(CONFIG.pauseDuration);
+              logger.info(&#39;Resuming...\n&#39;);
+            }
+          }
+        }
+      }
+      
+      // Scroll for more tweets
+      await page.evaluate(() =&gt; {
+        window.scrollBy({ top: 800, behavior: &#39;smooth&#39; });
+      });
+      scrollCount++;
+      
+      // Progress update
+      if (scrollCount % 5 === 0) {
+        logger.info(`Progress: ${likeCount} liked, ${skippedCount} skipped, ${scrollCount} scrolls`);
+      }
+      
+      await sleep(CONFIG.scrollDelay);
+    }
+    
+    // Final report
+    console.log(&#39;\n&#39; + &#39;=&#39;.repeat(60));
+    console.log(&#39;✅ SESSION COMPLETE&#39;);
+    console.log(&#39;=&#39;.repeat(60));
+    logger.success(`Tweets liked: ${likeCount}`);
+    logger.info(`Tweets skipped: ${skippedCount}`);
+    logger.info(`Total scrolls: ${scrollCount}`);
+    logger.info(`Today&#39;s total likes: ${stats.getTodayLikes()}/${CONFIG.maxLikesPerDay}`);
+    logger.info(`Remaining today: ${stats.getRemainingLikes()}`);
+    console.log(&#39;=&#39;.repeat(60));
+    
+    // Save session log
+    const sessionLog = {
+      sessionId,
+      query: searchQuery || &#39;timeline&#39;,
+      startTime: new Date(parseInt(sessionId, 36)).toISOString(),
+      endTime: getTimestamp(),
+      likesCount: likeCount,
+      skippedCount,
+      tweets: likedTweets
+    };
+    
+    const logPath = path.join(CONFIG.logDir, `session-${sessionId}.json`);
+    fs.writeFileSync(logPath, JSON.stringify(sessionLog, null, 2));
+    logger.info(`Session log saved: ${logPath}`);
+    
+    console.log(&#39;\n💡 Wait at least 1-2 hours before running again!\n&#39;);
+    
+    return {
+      success: true,
+      liked: likeCount,
+      skipped: skippedCount,
+      tweets: likedTweets
+    };
+    
+  } catch (error) {
+    logger.error(`Error: ${error.message}`);
+    console.error(error);
+    return { success: false, error: error.message };
+    
+  } finally {
+    await browser.close();
+  }
+}
+
+// ==========================================
+// CLI INTERFACE
+// ==========================================
+
+async function main() {
+  const args = process.argv.slice(2);
+  
+  if (args.includes(&#39;--help&#39;) || args.includes(&#39;-h&#39;)) {
+    console.log(`
+❤️  XActions Auto-Liker
+======================
+
+Usage:
+  node auto-liker.js &lt;keyword&gt;           Search and like tweets about keyword
+  node auto-liker.js --timeline          Like from your home timeline
+  node auto-liker.js &lt;keyword&gt; --limit N Like max N tweets (default: ${CONFIG.maxLikesPerSession})
+
+Options:
+  --timeline    Use home timeline instead of search
+  --limit N     Maximum tweets to like (default: ${CONFIG.maxLikesPerSession})
+  --help, -h    Show this help message
+
+Examples:
+  node auto-liker.js &quot;web3&quot;
+  node auto-liker.js &quot;AI&quot; --limit 15
+  node auto-liker.js --timeline --limit 20
+
+⚠️  Safety Notes:
+  • Daily limit: ${CONFIG.maxLikesPerDay} likes per day
+  • Delays: ${CONFIG.minDelay/1000}s - ${CONFIG.maxDelay/1000}s between actions
+  • Takes ${CONFIG.pauseDuration/1000}s break every ${CONFIG.pauseEvery} likes
+    `);
+    return;
+  }
+  
+  // Parse arguments
+  const useTimeline = args.includes(&#39;--timeline&#39;);
+  const limitIndex = args.indexOf(&#39;--limit&#39;);
+  const limit = limitIndex !== -1 ? parseInt(args[limitIndex + 1]) : CONFIG.maxLikesPerSession;
+  
+  // Get search query (first non-flag argument)
+  const searchQuery = args.find(arg =&gt; !arg.startsWith(&#39;--&#39;) &amp;&amp; !arg.startsWith(&#39;-&#39;) &amp;&amp; isNaN(arg));
+  
+  if (!useTimeline &amp;&amp; !searchQuery) {
+    console.log(&#39;❌ Please provide a search keyword or use --timeline&#39;);
+    console.log(&#39;   Example: node auto-liker.js &quot;web3&quot;&#39;);
+    console.log(&#39;   Run with --help for more options&#39;);
+    return;
+  }
+  
+  // Run the auto-liker
+  await autoLike(useTimeline ? null : searchQuery, { limit });
+}
+
+main().catch(console.error);
+</code></pre>
+<h3>Running the Script</h3>
+<pre><code class="language-bash"># First run (will prompt for login)
+node auto-liker.js &quot;javascript&quot;
+
+# Like tweets about AI (max 15)
+node auto-liker.js &quot;AI&quot; --limit 15
+
+# Like from your timeline
+node auto-liker.js --timeline --limit 20
+
+# Show help
+node auto-liker.js --help
+</code></pre>
+<p><strong>Output example:</strong></p>
+<pre><code>============================================================
+❤️  XACTIONS AUTO-LIKER
+============================================================
+[2026-01-01T14:30:00.000Z] [INFO] Session ID: abc123
+[2026-01-01T14:30:00.001Z] [INFO] Search query: javascript
+[2026-01-01T14:30:00.002Z] [INFO] Max likes this session: 30
+[2026-01-01T14:30:00.003Z] [INFO] Today&#39;s likes so far: 15/100
+[2026-01-01T14:30:00.004Z] [INFO] Adjusted session limit: 30 likes
+[2026-01-01T14:30:02.000Z] [SUCCESS] ✅ Logged in to X/Twitter
+[2026-01-01T14:30:03.000Z] [INFO] Searching for: &quot;javascript&quot;
+[2026-01-01T14:30:08.000Z] [INFO] Page loaded, starting to scan tweets...
+
+[2026-01-01T14:30:10.000Z] [ACTION] ❤️  [1/30] @devguy: &quot;Just released my new JS library...&quot;
+[2026-01-01T14:30:10.001Z] [INFO]    Waiting 5.2s...
+[2026-01-01T14:30:16.000Z] [ACTION] ❤️  [2/30] @coder123: &quot;The new JavaScript features in...&quot;
+[2026-01-01T14:30:16.001Z] [INFO]    Waiting 7.8s...
+...
+[2026-01-01T14:32:00.000Z] [WARNING] ⚠️  Taking a 20s safety break...
+[2026-01-01T14:32:20.000Z] [INFO] Resuming...
+...
+
+============================================================
+✅ SESSION COMPLETE
+============================================================
+[2026-01-01T14:45:00.000Z] [SUCCESS] ✅ Tweets liked: 30
+[2026-01-01T14:45:00.001Z] [INFO] Tweets skipped: 22
+[2026-01-01T14:45:00.002Z] [INFO] Total scrolls: 15
+[2026-01-01T14:45:00.003Z] [INFO] Today&#39;s total likes: 45/100
+[2026-01-01T14:45:00.004Z] [INFO] Remaining today: 55
+============================================================
+[2026-01-01T14:45:00.005Z] [INFO] Session log saved: ./logs/session-abc123.json
+
+💡 Wait at least 1-2 hours before running again!
+</code></pre>
+<hr>
+<h2>🛡️ Safety &amp; Rate Limits</h2>
+<h3>⚠️ X (Twitter) Rate Limits</h3>
+<p>X doesn&#39;t publish exact limits for likes, but based on community experience:</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Soft Limit</th>
+<th>Hard Limit</th>
+<th>Recommended</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Likes per hour</td>
+<td>~50</td>
+<td>~100</td>
+<td><strong>20-30</strong></td>
+</tr>
+<tr>
+<td>Likes per day</td>
+<td>~500</td>
+<td>~1000</td>
+<td><strong>50-100</strong></td>
+</tr>
+<tr>
+<td>Likes per 15 min</td>
+<td>~25</td>
+<td>~50</td>
+<td><strong>10-15</strong></td>
+</tr>
+</tbody></table>
+<h3>🚫 Ban Prevention Tips</h3>
+<ol>
+<li><strong>Start slow</strong>: Begin with 10-20 likes per session for the first week</li>
+<li><strong>Use random delays</strong>: Always vary timing between 3-10 seconds</li>
+<li><strong>Take breaks</strong>: Pause every 8-10 likes for 15-30 seconds</li>
+<li><strong>Limit daily usage</strong>: Stay under 100 likes per day</li>
+<li><strong>Mix it up</strong>: Alternate between manual and automated activity</li>
+<li><strong>Avoid patterns</strong>: Don&#39;t run at the exact same time every day</li>
+<li><strong>Watch for warnings</strong>: If you get a &quot;slow down&quot; message, stop immediately</li>
+</ol>
+<h3>📊 Recommended Daily Limits</h3>
+<table>
+<thead>
+<tr>
+<th>Account Age</th>
+<th>Max Likes/Day</th>
+<th>Max Sessions</th>
+<th>Wait Between</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&lt; 1 month</td>
+<td>30</td>
+<td>1-2</td>
+<td>4+ hours</td>
+</tr>
+<tr>
+<td>1-6 months</td>
+<td>50</td>
+<td>2-3</td>
+<td>2+ hours</td>
+</tr>
+<tr>
+<td>6+ months</td>
+<td>100</td>
+<td>3-4</td>
+<td>1+ hours</td>
+</tr>
+<tr>
+<td>Verified</td>
+<td>150</td>
+<td>4-5</td>
+<td>1+ hours</td>
+</tr>
+</tbody></table>
+<h3>🔴 Signs of Trouble</h3>
+<p>Stop immediately if you see:</p>
+<ul>
+<li>&quot;You&#39;ve reached the limit&quot; message</li>
+<li>Temporary restriction notice</li>
+<li>CAPTCHAs appearing frequently</li>
+<li>Likes not registering</li>
+<li>Account locked warning</li>
+</ul>
+<hr>
+<h2>🌐 Website Alternative</h2>
+<h3>Use XActions.app</h3>
+<p>Don&#39;t want to run scripts? Use our web dashboard instead!</p>
+<p><strong><a href="https://xactions.app">👉 xactions.app</a></strong></p>
+<p><strong>Features:</strong></p>
+<ul>
+<li>✅ No coding required</li>
+<li>✅ Visual configuration</li>
+<li>✅ Built-in safety limits</li>
+<li>✅ Real-time progress tracking</li>
+<li>✅ Automatic rate limit protection</li>
+<li>✅ Session history and analytics</li>
+<li>✅ Multi-account support (Pro)</li>
+</ul>
+<p><strong>How it works:</strong></p>
+<ol>
+<li>Sign in with your X account at <a href="https://xactions.app">xactions.app</a></li>
+<li>Navigate to <strong>Automation</strong> → <strong>Auto-Liker</strong></li>
+<li>Configure your keywords and limits</li>
+<li>Click &quot;Start&quot; and watch the magic happen!</li>
+</ol>
+<p>The web version includes additional safety features and is easier to use for non-technical users.</p>
+<hr>
+<h2>📚 Related Examples</h2>
+<ul>
+<li><a href="detect-unfollowers.md">🔍 Detect Unfollowers</a> - Track who unfollowed you</li>
+<li><a href="unfollow-non-followers.md">🚫 Unfollow Non-Followers</a> - Clean up your following list</li>
+<li><a href="tweet-scraping.md">🐦 Tweet Scraping</a> - Extract tweets and data</li>
+<li><a href="followers-scraping.md">👥 Followers Scraping</a> - Get follower lists</li>
+</ul>
+<hr>
+<h2>📄 License</h2>
+<p>MIT License - Use at your own risk. The author is not responsible for any account restrictions resulting from the use of these scripts.</p>
+<hr>
+<p><strong>Author:</strong> nich (<a href="https://x.com/nichxbt">@nichxbt</a>)</p>
+<p><strong>Last Updated:</strong> January 2026</p>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try Auto-Liker?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/auto-commenter">💬 Auto Commenter</a>
+        <a href="/docs/auto-repost">🔁 Auto Repost</a>
+        <a href="/docs/smart-unfollow">🧠 Smart Unfollow</a>
+        <a href="/docs/detect-unfollowers">🔍 Detect Unfollowers</a>
+        <a href="/docs/video-downloader">🎬 Video Downloader</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

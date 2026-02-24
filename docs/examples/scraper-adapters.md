@@ -8,7 +8,12 @@ XActions scrapers support multiple scraping frameworks via a pluggable adapter s
 |---------|---------|:---:|:---:|----------|
 | **Puppeteer** (default) | `puppeteer-extra` | ✅ | ✅ | Anti-detection, stealth scraping on x.com |
 | **Playwright** | `playwright` | ✅ | ✅ | Multi-browser, CI/CD, auto-wait, tracing |
+| **Crawlee** | `crawlee` | ✅ | ✅ | Production-scale crawling, proxy rotation, auto-retry |
+| **Got-Scraping + JSDOM** | `got-scraping` + `jsdom` | ✅* | ❌ | TLS fingerprint bypass, DOM API without a browser |
+| **Selenium** | `selenium-webdriver` | ✅ | ✅ | Enterprise environments, cross-language, Selenium Grid |
 | **Cheerio** | `cheerio` | ❌ | ❌ | Lightweight parsing, APIs, static pages |
+
+\* *JSDOM supports basic inline JS — not full browser rendering*
 
 ## Quick Start
 
@@ -73,6 +78,127 @@ const data = await adapter.fetchJSON('https://api.example.com/data');
 > **Note:** Cheerio cannot execute JavaScript. Most x.com pages require JS rendering,
 > so Cheerio is best for pre-rendered content, RSS feeds, APIs, or pages you've cached.
 
+### Using Crawlee (Production Crawling)
+
+```bash
+npm install crawlee puppeteer  # or: npm install crawlee playwright
+```
+
+```js
+import { getAdapter } from 'xactions/scrapers';
+
+// Simple adapter usage (like other adapters)
+const adapter = await getAdapter('crawlee');
+const browser = await adapter.launch({ browserPlugin: 'puppeteer' });
+const page = await adapter.newPage(browser);
+await adapter.goto(page, 'https://x.com/nichxbt');
+const html = await adapter.getContent(page);
+await adapter.closeBrowser(browser);
+
+// Crawlee-native mode: use the full crawling framework
+// with auto-retry, proxy rotation, request queuing
+const crawler = await adapter.createCrawler({
+  maxRequestsPerCrawl: 50,
+  maxConcurrency: 3,
+  proxyUrls: ['http://proxy1:8080', 'http://proxy2:8080'],
+  requestHandler: async ({ page, request }) => {
+    const title = await page.title();
+    console.log(`[${request.url}] ${title}`);
+  },
+});
+await crawler.run(['https://x.com/user1', 'https://x.com/user2']);
+```
+
+Crawlee benefits:
+- Auto-retry with exponential backoff on failures
+- Proxy rotation across a pool of proxies
+- Session management: rotate identities automatically
+- Request queue: crawl thousands of URLs reliably
+- Uses Puppeteer or Playwright under the hood
+
+### Using Got-Scraping + JSDOM (TLS Fingerprinting)
+
+```bash
+npm install got-scraping jsdom
+```
+
+```js
+import { getAdapter } from 'xactions/scrapers';
+
+const adapter = await getAdapter('got-jsdom');
+const browser = await adapter.launch({
+  fingerprint: 'chrome',     // Mimic Chrome's TLS fingerprint
+  runScripts: false,          // Set to 'dangerously' for JS execution
+});
+const page = await adapter.newPage(browser);
+await adapter.goto(page, 'https://example.com');
+
+// Full DOM API — querySelector, textContent, etc.
+const titles = await adapter.queryAll(page, 'h1',
+  (elements) => elements.map(el => el.textContent)
+);
+
+// Evaluate JS against the JSDOM window
+const count = await adapter.evaluate(page,
+  () => document.querySelectorAll('a').length
+);
+
+// Raw HTTP with browser TLS fingerprints (bypass bot detection)
+const data = await adapter.fetchJSON('https://api.example.com/data');
+
+// Switch fingerprint mid-session
+adapter.setFingerprint(browser, 'firefox');
+```
+
+Got-JSDOM benefits:
+- Browser-like TLS/HTTP2 fingerprints without launching a browser
+- Much lighter than Puppeteer/Playwright (~50MB vs ~300MB+)
+- JSDOM provides full DOM API (querySelector, innerHTML, etc.)
+- Optional inline JS execution
+- Perfect for APIs that inspect TLS handshake signatures
+
+### Using Selenium
+
+```bash
+npm install selenium-webdriver chromedriver
+# For Firefox: npm install selenium-webdriver geckodriver
+```
+
+```js
+import { getAdapter } from 'xactions/scrapers';
+
+const adapter = await getAdapter('selenium');
+const browser = await adapter.launch({
+  browser: 'chrome',          // 'chrome', 'firefox', 'edge', 'safari'
+  headless: true,
+  // seleniumServer: 'http://grid:4444/wd/hub',  // Remote Selenium Grid
+});
+const page = await adapter.newPage(browser);
+await adapter.goto(page, 'https://x.com/nichxbt');
+
+// Works like other adapters
+const title = await adapter.evaluate(page, () => document.title);
+await adapter.screenshot(page, { path: 'screenshot.png' });
+
+// Selenium-specific: open multiple tabs
+const tab2 = await adapter.newTab(browser);
+await adapter.goto(tab2, 'https://x.com/another_user');
+
+// Selenium-specific: async script execution
+const result = await adapter.executeAsyncScript(page, `
+  const callback = arguments[arguments.length - 1];
+  setTimeout(() => callback(document.title), 1000);
+`);
+
+await adapter.closeBrowser(browser);
+```
+
+Selenium benefits:
+- Works with Selenium Grid for distributed scraping
+- Cross-browser: Chrome, Firefox, Edge, Safari
+- Enterprise-standard: familiar to QA/testing teams
+- Cross-language ecosystem (same Grid, different clients)
+
 ## Global Configuration
 
 ### Environment Variable
@@ -135,7 +261,7 @@ const info = await getAdapterInfo();
 ```js
 import { getAvailableAdapter } from 'xactions/scrapers';
 
-// Tries: preferred → default → puppeteer → playwright → cheerio
+// Tries: preferred → default → puppeteer → playwright → crawlee → got-jsdom → selenium → cheerio
 const adapter = await getAvailableAdapter('playwright');
 ```
 
@@ -146,18 +272,18 @@ Create your own adapter by extending `BaseAdapter`:
 ```js
 import { BaseAdapter, registerAdapter } from 'xactions/scrapers';
 
-class SeleniumAdapter extends BaseAdapter {
-  name = 'selenium';
-  description = 'Selenium WebDriver adapter';
+class MyCustomAdapter extends BaseAdapter {
+  name = 'my-custom';
+  description = 'My custom scraping adapter';
   supportsJavaScript = true;
-  requiresBrowser = true;
+  requiresBrowser = false;
 
   async checkDependencies() {
     try {
-      await import('selenium-webdriver');
+      await import('my-scraping-lib');
       return { available: true };
     } catch {
-      return { available: false, message: 'npm install selenium-webdriver' };
+      return { available: false, message: 'npm install my-scraping-lib' };
     }
   }
 
@@ -165,10 +291,13 @@ class SeleniumAdapter extends BaseAdapter {
   async newPage(browser) { /* ... */ }
   async goto(page, url, options) { /* ... */ }
   async evaluate(page, fn, ...args) { /* ... */ }
+  async queryAll(page, selector, mapFn) { /* ... */ }
+  async closePage(page) { /* ... */ }
+  async closeBrowser(browser) { /* ... */ }
   // ... implement all methods from BaseAdapter
 }
 
-registerAdapter('selenium', SeleniumAdapter);
+registerAdapter('my-custom', MyCustomAdapter);
 ```
 
 ## Adapter Comparison
@@ -191,6 +320,37 @@ registerAdapter('selenium', SeleniumAdapter);
 - ❌ No stealth plugin (though you can configure it manually)
 - ❌ Separate install: `npx playwright install`
 
+### Crawlee (Apify)
+
+- ✅ Best-in-class crawling framework
+- ✅ Auto-retry with backoff on errors
+- ✅ Proxy rotation built in
+- ✅ Session management (rotate identities)
+- ✅ Request queuing for large crawl jobs
+- ✅ Uses Puppeteer or Playwright under the hood
+- ❌ Heavier dependency
+- ❌ Learning curve if you want native Crawlee features
+
+### Got-Scraping + JSDOM
+
+- ✅ Browser TLS fingerprints without a browser
+- ✅ Bypasses TLS-based bot detection
+- ✅ Full DOM API (querySelector, etc.) via JSDOM
+- ✅ Much lighter than browser-based adapters
+- ✅ Optional inline JS execution
+- ❌ JSDOM JS execution is limited (no canvas, webgl, etc.)
+- ❌ Cannot render complex SPAs
+
+### Selenium
+
+- ✅ Enterprise standard, industry-proven
+- ✅ Selenium Grid for distributed/remote scraping
+- ✅ Cross-browser: Chrome, Firefox, Edge, Safari
+- ✅ Cross-language: same Grid works with Python/Java/C# clients
+- ❌ Slower than Puppeteer/Playwright
+- ❌ No stealth/anti-detection built in
+- ❌ More setup required (drivers)
+
 ### Cheerio/HTTP
 
 - ✅ Extremely fast (no browser)
@@ -200,6 +360,35 @@ registerAdapter('selenium', SeleniumAdapter);
 - ❌ No JavaScript execution
 - ❌ Cannot scrape JS-rendered pages (most of x.com)
 
+## Choosing an Adapter
+
+```
+Do you need to scrape x.com (JavaScript-heavy)?
+├── Yes → Do you need proxy rotation or large-scale crawling?
+│   ├── Yes → Use Crawlee
+│   └── No → Do you need multi-browser support?
+│       ├── Yes → Use Playwright
+│       └── No → Use Puppeteer (default, best anti-detection)
+└── No → Does the target check TLS fingerprints?
+    ├── Yes → Use Got-Scraping + JSDOM
+    └── No → Is it a JSON API or static HTML?
+        ├── Yes → Use Cheerio (fastest)
+        └── No → Use Got-Scraping + JSDOM
+
+Using Selenium Grid or enterprise infra? → Use Selenium
+```
+
+## Aliases
+
+| Alias | Resolves To |
+|-------|-------------|
+| `pptr` | Puppeteer |
+| `pw` | Playwright |
+| `http` | Cheerio |
+| `got` | Got-JSDOM |
+| `jsdom` | Got-JSDOM |
+| `apify` | Crawlee |
+
 ## File Structure
 
 ```
@@ -207,9 +396,12 @@ src/scrapers/
 ├── adapters/
 │   ├── index.js          # Adapter registry & factory
 │   ├── base.js           # Abstract base adapter interface
-│   ├── puppeteer.js      # Puppeteer adapter
-│   ├── playwright.js     # Playwright adapter
-│   └── cheerio.js        # HTTP/Cheerio adapter
+│   ├── puppeteer.js      # Puppeteer + stealth
+│   ├── playwright.js     # Playwright (Chromium/Firefox/WebKit)
+│   ├── crawlee.js        # Crawlee (Apify) smart crawling
+│   ├── got-jsdom.js      # Got-Scraping + JSDOM
+│   ├── selenium.js       # Selenium WebDriver
+│   └── cheerio.js        # HTTP/Cheerio (lightweight)
 ├── index.js              # Main scraper module (backward compatible)
 ├── bookmarkExporter.js
 ├── threadUnroller.js

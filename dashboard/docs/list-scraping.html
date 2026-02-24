@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>List Members Scraping — Free X/Twitter Scrapers Tool | XActions</title>
+  <meta name="description" content="Extract all members from any Twitter/X list - curated collections of accounts organized by topic, industry, or interest.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, list, scraping, members, scrapers, list scraping twitter, twitter list scraping">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="List Members Scraping — XActions">
+  <meta property="og:description" content="Extract all members from any Twitter/X list - curated collections of accounts organized by topic, industry, or interest.">
+  <meta property="og:url" content="https://xactions.app/docs/list-scraping">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="List Members Scraping — Free X/Twitter Tool">
+  <meta name="twitter:description" content="Extract all members from any Twitter/X list - curated collections of accounts organized by topic, industry, or interest.">
+
+  <link rel="canonical" href="https://xactions.app/docs/list-scraping">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "List Members Scraping — Free X/Twitter Scrapers Tool | XActions",
+    "description": "Extract all members from any Twitter/X list - curated collections of accounts organized by topic, industry, or interest.",
+    "url": "https://xactions.app/docs/list-scraping",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/list-scraping",
+    "articleSection": "Scrapers",
+    "keywords": "xactions, twitter automation, x automation, free, list, scraping, members, scrapers, list scraping twitter, twitter list scraping"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "List Members Scraping", "item": "https://xactions.app/docs/list-scraping" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use List Members Scraping",
+    "description": "Extract all members from any Twitter/X list - curated collections of accounts organized by topic, industry, or interest.",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions List Members Scraping script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>📝 List Members Scraping</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › List Members Scraping
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Scrapers</span>
+        <h1>📋 List Members Scraping</h1>
+<p>Extract all members from any Twitter/X list - curated collections of accounts organized by topic, industry, or interest.</p>
+<hr>
+<h2>📦 What You Get</h2>
+<p>Scrape complete member data from any public X/Twitter list:</p>
+<ul>
+<li><strong>Username</strong> - The @handle of each list member</li>
+<li><strong>Display name</strong> - Full name as shown on profile</li>
+<li><strong>Bio/Description</strong> - Profile bio text</li>
+<li><strong>Verified status</strong> - Blue checkmark indicator</li>
+<li><strong>Avatar URL</strong> - Profile image link</li>
+<li><strong>Follower count</strong> - Number of followers (when available)</li>
+<li><strong>Export formats</strong> - JSON and CSV ready for analysis</li>
+</ul>
+<p><strong>Why scrape lists?</strong></p>
+<ul>
+<li>Lists are manually curated by users, often higher quality than random followers</li>
+<li>Find niche communities organized by experts</li>
+<li>Discover industry leaders grouped by topic</li>
+<li>Build targeted outreach lists</li>
+<li>Research competitor audiences</li>
+</ul>
+<hr>
+<h2>🌐 Example 1: Browser Console (Quick)</h2>
+<p><strong>Best for:</strong> Scraping lists with up to ~500 members quickly</p>
+<p><strong>Steps:</strong></p>
+<ol>
+<li>Go to any X/Twitter list page (e.g., <code>x.com/i/lists/123456789</code> or <code>x.com/username/lists/listname</code>)</li>
+<li>Click on &quot;Members&quot; tab to view list members</li>
+<li>Open browser console (F12 → Console tab)</li>
+<li>Paste the script below and press Enter</li>
+</ol>
+<pre><code class="language-javascript">// ============================================
+// XActions - List Members Scraper (Browser Console)
+// Author: nich (@nichxbt)
+// Go to: x.com/i/lists/LIST_ID (then click Members)
+// Open console (F12), paste this
+// ============================================
+
+(async () =&gt; {
+  // Configuration
+  const TARGET_COUNT = 1000;        // Maximum members to scrape
+  const SCROLL_DELAY = 1500;        // Delay between scrolls (ms)
+  const MAX_RETRIES = 15;           // Stop if no new members found
+  
+  console.log(&#39;&#39;);
+  console.log(&#39;📋 XActions - List Members Scraper&#39;);
+  console.log(&#39;====================================&#39;);
+  console.log(`🎯 Target: ${TARGET_COUNT} members`);
+  console.log(&#39;&#39;);
+  
+  // Verify we&#39;re on a list page
+  const isListPage = window.location.pathname.includes(&#39;/lists/&#39;) || 
+                     window.location.pathname.includes(&#39;/i/lists/&#39;);
+  
+  if (!isListPage) {
+    console.error(&#39;❌ Please navigate to a Twitter/X list page first!&#39;);
+    console.log(&#39;👉 Example: x.com/i/lists/123456789&#39;);
+    console.log(&#39;👉 Then click on the &quot;Members&quot; tab&#39;);
+    return;
+  }
+  
+  // Extract list info from page
+  const listTitle = document.querySelector(&#39;h2[role=&quot;heading&quot;]&#39;)?.textContent || &#39;Unknown List&#39;;
+  console.log(`📌 List: ${listTitle}`);
+  console.log(&#39;&#39;);
+  
+  const members = new Map();
+  let retries = 0;
+  
+  // Helper to extract user data from cells
+  const extractUsers = () =&gt; {
+    const cells = document.querySelectorAll(&#39;[data-testid=&quot;UserCell&quot;]&#39;);
+    const users = [];
+    
+    cells.forEach(cell =&gt; {
+      try {
+        // Get username from link
+        const link = cell.querySelector(&#39;a[href^=&quot;/&quot;]&#39;);
+        const href = link?.getAttribute(&#39;href&#39;) || &#39;&#39;;
+        const username = href.split(&#39;/&#39;)[1];
+        
+        // Skip if invalid or contains query params
+        if (!username || username.includes(&#39;?&#39;) || username === &#39;i&#39;) return;
+        
+        // Get display name
+        const nameEl = cell.querySelector(&#39;[dir=&quot;ltr&quot;] &gt; span&#39;);
+        const name = nameEl?.textContent?.trim() || null;
+        
+        // Get bio/description
+        const bioEl = cell.querySelector(&#39;[data-testid=&quot;UserDescription&quot;]&#39;);
+        const bio = bioEl?.textContent?.trim() || null;
+        
+        // Check verified status (blue checkmark)
+        const verified = !!cell.querySelector(&#39;svg[aria-label*=&quot;Verified&quot;]&#39;) ||
+                        !!cell.querySelector(&#39;[data-testid=&quot;icon-verified&quot;]&#39;);
+        
+        // Get avatar URL
+        const avatarEl = cell.querySelector(&#39;img[src*=&quot;profile_images&quot;]&#39;);
+        const avatar = avatarEl?.src || null;
+        
+        // Try to get follower count if visible
+        const statsText = cell.textContent || &#39;&#39;;
+        const followerMatch = statsText.match(/(\d+(?:\.\d+)?[KMB]?)\s*[Ff]ollowers?/);
+        const followers = followerMatch ? followerMatch[1] : null;
+        
+        users.push({
+          username,
+          name,
+          bio,
+          verified,
+          avatar,
+          followers,
+          scrapedAt: new Date().toISOString(),
+        });
+      } catch (e) {
+        // Skip malformed cells
+      }
+    });
+    
+    return users;
+  };
+  
+  // Sleep helper
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+  
+  console.log(&#39;🔄 Scrolling and extracting members...&#39;);
+  console.log(&#39;&#39;);
+  
+  // Main scraping loop
+  while (members.size &lt; TARGET_COUNT &amp;&amp; retries &lt; MAX_RETRIES) {
+    // Extract visible users
+    const users = extractUsers();
+    const prevSize = members.size;
+    
+    // Add to map (dedupes automatically by username)
+    users.forEach(user =&gt; {
+      if (!members.has(user.username)) {
+        members.set(user.username, user);
+      }
+    });
+    
+    // Progress update
+    if (members.size !== prevSize) {
+      console.log(`📈 Scraped: ${members.size} members`);
+    }
+    
+    // Check if we&#39;re stuck (no new members found)
+    if (members.size === prevSize) {
+      retries++;
+      if (retries % 3 === 0) {
+        console.log(`⏳ No new members found (retry ${retries}/${MAX_RETRIES})`);
+      }
+    } else {
+      retries = 0;
+    }
+    
+    // Scroll to load more
+    window.scrollTo(0, document.body.scrollHeight);
+    await sleep(SCROLL_DELAY);
+  }
+  
+  // Convert to array
+  const result = Array.from(members.values());
+  
+  // Summary statistics
+  console.log(&#39;&#39;);
+  console.log(&#39;✅ Scraping complete!&#39;);
+  console.log(&#39;====================================&#39;);
+  console.log(`📊 Total members scraped: ${result.length}`);
+  console.log(`✓ Verified accounts: ${result.filter(u =&gt; u.verified).length}`);
+  console.log(`✓ With bio: ${result.filter(u =&gt; u.bio).length}`);
+  console.log(&#39;&#39;);
+  
+  // Copy to clipboard
+  const json = JSON.stringify(result, null, 2);
+  try {
+    await navigator.clipboard.writeText(json);
+    console.log(&#39;📋 Copied to clipboard!&#39;);
+  } catch (e) {
+    console.log(&#39;⚠️ Could not copy to clipboard (clipboard API blocked)&#39;);
+  }
+  
+  // Create downloadable JSON file
+  const blob = new Blob([json], { type: &#39;application/json&#39; });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement(&#39;a&#39;);
+  a.href = url;
+  const safeListTitle = listTitle.replace(/[^a-z0-9]/gi, &#39;-&#39;).toLowerCase();
+  a.download = `list-${safeListTitle}-${new Date().toISOString().split(&#39;T&#39;)[0]}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  console.log(&#39;📥 JSON download started!&#39;);
+  
+  // Create downloadable CSV file
+  const csvHeaders = [&#39;username&#39;, &#39;name&#39;, &#39;bio&#39;, &#39;verified&#39;, &#39;followers&#39;, &#39;avatar&#39;];
+  const csvRows = result.map(row =&gt; 
+    csvHeaders.map(h =&gt; {
+      const val = row[h];
+      if (typeof val === &#39;string&#39;) {
+        return `&quot;${val.replace(/&quot;/g, &#39;&quot;&quot;&#39;).replace(/\n/g, &#39; &#39;)}&quot;`;
+      }
+      return val ?? &#39;&#39;;
+    }).join(&#39;,&#39;)
+  );
+  const csv = [csvHeaders.join(&#39;,&#39;), ...csvRows].join(&#39;\n&#39;);
+  
+  const csvBlob = new Blob([csv], { type: &#39;text/csv&#39; });
+  const csvUrl = URL.createObjectURL(csvBlob);
+  const csvLink = document.createElement(&#39;a&#39;);
+  csvLink.href = csvUrl;
+  csvLink.download = `list-${safeListTitle}-${new Date().toISOString().split(&#39;T&#39;)[0]}.csv`;
+  csvLink.click();
+  URL.revokeObjectURL(csvUrl);
+  console.log(&#39;📥 CSV download started!&#39;);
+  
+  // Log data for manual access
+  console.log(&#39;&#39;);
+  console.log(&#39;💾 Data (right-click → Copy object):&#39;);
+  console.log(result);
+  
+  // Show sample
+  console.log(&#39;&#39;);
+  console.log(&#39;📋 Sample (first 5 members):&#39;);
+  result.slice(0, 5).forEach(m =&gt; {
+    const badge = m.verified ? &#39; ✓&#39; : &#39;&#39;;
+    console.log(`   @${m.username}${badge} - ${m.name || &#39;No name&#39;}`);
+  });
+  
+  return result;
+})();
+</code></pre>
+<p><strong>What happens:</strong></p>
+<ol>
+<li>Script scrolls through the list members page</li>
+<li>Extracts data from each user card</li>
+<li>Deduplicates automatically by username</li>
+<li>Shows real-time progress in console</li>
+<li>Downloads both JSON and CSV files</li>
+<li>Copies data to clipboard</li>
+</ol>
+<hr>
+<h2>🖥️ Example 2: Node.js with Puppeteer (Production-Ready)</h2>
+<p><strong>Best for:</strong> Large lists, automation, scheduled scraping, batch processing</p>
+<pre><code class="language-javascript">// ============================================
+// XActions - List Members Scraper (Node.js)
+// Author: nich (@nichxbt)
+// Save as: scrape-list.js
+// Run: node scrape-list.js &quot;https://x.com/i/lists/123456789&quot;
+// ============================================
+
+import puppeteer from &#39;puppeteer-extra&#39;;
+import StealthPlugin from &#39;puppeteer-extra-plugin-stealth&#39;;
+import fs from &#39;fs/promises&#39;;
+import path from &#39;path&#39;;
+
+puppeteer.use(StealthPlugin());
+
+/**
+ * Parse list URL to extract list ID
+ * @param {string} listUrl - Full list URL
+ * @returns {string} List ID
+ */
+function parseListUrl(listUrl) {
+  // Handle various list URL formats:
+  // https://x.com/i/lists/123456789
+  // https://x.com/i/lists/123456789
+  // https://x.com/username/lists/listname
+  
+  const url = new URL(listUrl);
+  const pathParts = url.pathname.split(&#39;/&#39;).filter(Boolean);
+  
+  // Format: /i/lists/LIST_ID
+  if (pathParts[0] === &#39;i&#39; &amp;&amp; pathParts[1] === &#39;lists&#39;) {
+    return pathParts[2];
+  }
+  
+  // Format: /username/lists/LIST_NAME
+  if (pathParts[1] === &#39;lists&#39;) {
+    return pathParts[2];
+  }
+  
+  throw new Error(`Invalid list URL format: ${listUrl}`);
+}
+
+/**
+ * Scrape all members from a Twitter/X list
+ * @param {string} listUrl - Full URL to the list
+ * @param {Object} options - Configuration options
+ * @returns {Promise&lt;Array&gt;} Array of member objects
+ */
+async function scrapeListMembers(listUrl, options = {}) {
+  const {
+    limit = 5000,
+    headless = true,
+    authToken = null,
+    onProgress = null,
+    scrollDelay = 1500,
+    maxRetries = 15,
+    timeout = 30000,
+  } = options;
+
+  console.log(&#39;📋 XActions - List Members Scraper&#39;);
+  console.log(&#39;====================================&#39;);
+  console.log(`🔗 URL: ${listUrl}`);
+  console.log(`📊 Limit: ${limit}`);
+  console.log(&#39;&#39;);
+
+  const browser = await puppeteer.launch({
+    headless: headless ? &#39;new&#39; : false,
+    args: [
+      &#39;--no-sandbox&#39;,
+      &#39;--disable-setuid-sandbox&#39;,
+      &#39;--disable-blink-features=AutomationControlled&#39;,
+      &#39;--disable-dev-shm-usage&#39;,
+      &#39;--disable-accelerated-2d-canvas&#39;,
+      &#39;--disable-gpu&#39;,
+    ],
+  });
+
+  try {
+    const page = await browser.newPage();
+    
+    // Set realistic viewport with slight randomization
+    await page.setViewport({ 
+      width: 1280 + Math.floor(Math.random() * 100), 
+      height: 800 + Math.floor(Math.random() * 100),
+    });
+    
+    // Set realistic user agent
+    await page.setUserAgent(
+      &#39;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36&#39;
+    );
+
+    // Set auth cookie if provided (required for private lists)
+    if (authToken) {
+      await page.setCookie({
+        name: &#39;auth_token&#39;,
+        value: authToken,
+        domain: &#39;.x.com&#39;,
+        path: &#39;/&#39;,
+        httpOnly: true,
+        secure: true,
+      });
+      console.log(&#39;🔐 Auth token set&#39;);
+    }
+
+    // Navigate to list page
+    console.log(&#39;🌐 Loading list page...&#39;);
+    await page.goto(listUrl, {
+      waitUntil: &#39;networkidle2&#39;,
+      timeout,
+    });
+
+    // Wait for page to stabilize
+    await new Promise(r =&gt; setTimeout(r, 2000));
+
+    // Extract list title
+    const listTitle = await page.evaluate(() =&gt; {
+      const heading = document.querySelector(&#39;h2[role=&quot;heading&quot;]&#39;);
+      return heading?.textContent || &#39;Unknown List&#39;;
+    });
+    console.log(`📌 List: ${listTitle}`);
+
+    // Try to click on Members tab if not already on members view
+    try {
+      const membersTab = await page.$(&#39;a[href*=&quot;/members&quot;]&#39;);
+      if (membersTab) {
+        await membersTab.click();
+        await new Promise(r =&gt; setTimeout(r, 2000));
+        console.log(&#39;👥 Navigated to Members tab&#39;);
+      }
+    } catch (e) {
+      // May already be on members view
+    }
+
+    // Wait for user cells to appear
+    try {
+      await page.waitForSelector(&#39;[data-testid=&quot;UserCell&quot;]&#39;, { timeout: 10000 });
+    } catch (e) {
+      console.log(&#39;⚠️ No members found or list is empty&#39;);
+      return [];
+    }
+    
+    console.log(&#39;🔄 Scraping members...&#39;);
+    console.log(&#39;&#39;);
+
+    const members = new Map();
+    let retries = 0;
+
+    // Main scraping loop
+    while (members.size &lt; limit &amp;&amp; retries &lt; maxRetries) {
+      // Extract users from current view
+      const users = await page.evaluate(() =&gt; {
+        const cells = document.querySelectorAll(&#39;[data-testid=&quot;UserCell&quot;]&#39;);
+        return Array.from(cells).map(cell =&gt; {
+          try {
+            const link = cell.querySelector(&#39;a[href^=&quot;/&quot;]&#39;);
+            const href = link?.getAttribute(&#39;href&#39;) || &#39;&#39;;
+            const username = href.split(&#39;/&#39;)[1];
+            
+            // Skip invalid usernames
+            if (!username || username.includes(&#39;?&#39;) || username === &#39;i&#39;) return null;
+            
+            const nameEl = cell.querySelector(&#39;[dir=&quot;ltr&quot;] &gt; span&#39;);
+            const bioEl = cell.querySelector(&#39;[data-testid=&quot;UserDescription&quot;]&#39;);
+            const avatarEl = cell.querySelector(&#39;img[src*=&quot;profile_images&quot;]&#39;);
+            const verifiedEl = cell.querySelector(&#39;svg[aria-label*=&quot;Verified&quot;]&#39;) ||
+                              cell.querySelector(&#39;[data-testid=&quot;icon-verified&quot;]&#39;);
+            
+            return {
+              username,
+              name: nameEl?.textContent?.trim() || null,
+              bio: bioEl?.textContent?.trim() || null,
+              verified: !!verifiedEl,
+              avatar: avatarEl?.src || null,
+            };
+          } catch {
+            return null;
+          }
+        }).filter(Boolean);
+      });
+
+      const prevSize = members.size;
+      
+      // Add new members to map (deduplication)
+      users.forEach(user =&gt; {
+        if (!members.has(user.username)) {
+          members.set(user.username, {
+            ...user,
+            scrapedAt: new Date().toISOString(),
+          });
+        }
+      });
+
+      // Progress callback
+      if (onProgress &amp;&amp; members.size !== prevSize) {
+        onProgress({
+          scraped: members.size,
+          limit,
+          percent: Math.min(100, Math.round((members.size / limit) * 100)),
+          listTitle,
+        });
+      }
+
+      // Check if stuck (no new members)
+      if (members.size === prevSize) {
+        retries++;
+      } else {
+        retries = 0;
+      }
+
+      // Scroll down to load more
+      await page.evaluate(() =&gt; {
+        window.scrollTo(0, document.body.scrollHeight);
+      });
+      
+      // Random delay to avoid detection
+      await new Promise(r =&gt; setTimeout(r, scrollDelay + Math.random() * 500));
+    }
+
+    const result = Array.from(members.values()).slice(0, limit);
+    
+    console.log(&#39;&#39;);
+    console.log(`✅ Scraped ${result.length} members from &quot;${listTitle}&quot;`);
+    
+    return {
+      listTitle,
+      listUrl,
+      members: result,
+      scrapedAt: new Date().toISOString(),
+      totalScraped: result.length,
+    };
+
+  } finally {
+    await browser.close();
+  }
+}
+
+/**
+ * Export data to JSON file
+ */
+async function exportJSON(data, filename) {
+  await fs.writeFile(filename, JSON.stringify(data, null, 2));
+  console.log(`💾 Saved JSON: ${filename}`);
+}
+
+/**
+ * Export members to CSV file
+ */
+async function exportCSV(members, filename) {
+  const headers = [&#39;username&#39;, &#39;name&#39;, &#39;bio&#39;, &#39;verified&#39;, &#39;avatar&#39;, &#39;scrapedAt&#39;];
+  const rows = members.map(row =&gt; 
+    headers.map(h =&gt; {
+      const val = row[h];
+      if (typeof val === &#39;string&#39;) {
+        // Escape quotes and remove newlines for CSV compatibility
+        return `&quot;${val.replace(/&quot;/g, &#39;&quot;&quot;&#39;).replace(/[\n\r]/g, &#39; &#39;)}&quot;`;
+      }
+      return val ?? &#39;&#39;;
+    }).join(&#39;,&#39;)
+  );
+  
+  const csv = [headers.join(&#39;,&#39;), ...rows].join(&#39;\n&#39;);
+  await fs.writeFile(filename, csv);
+  console.log(`💾 Saved CSV: ${filename}`);
+}
+
+/**
+ * Generate safe filename from list title
+ */
+function safeFilename(title) {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, &#39;-&#39;)
+    .replace(/^-+|-+$/g, &#39;&#39;)
+    .substring(0, 50);
+}
+
+// ============================================
+// CLI Entry Point
+// ============================================
+
+const args = process.argv.slice(2);
+const listUrl = args[0];
+const limit = parseInt(args[1]) || 1000;
+
+if (!listUrl) {
+  console.log(`
+📋 XActions - List Members Scraper
+====================================
+
+Usage: node scrape-list.js &lt;list-url&gt; [limit]
+
+Arguments:
+  list-url  - Full URL to the Twitter/X list
+  limit     - Maximum members to scrape (default: 1000)
+
+Examples:
+  node scrape-list.js &quot;https://x.com/i/lists/123456789&quot; 500
+  node scrape-list.js &quot;https://x.com/elonmusk/lists/spacex-team&quot;
+  node scrape-list.js &quot;https://x.com/i/lists/87654321&quot; 2000
+
+Supported URL formats:
+  - https://x.com/i/lists/LIST_ID
+  - https://x.com/i/lists/LIST_ID
+  - https://x.com/username/lists/listname
+
+Output:
+  - list-{name}-{date}.json - Full data with metadata
+  - list-{name}-{date}.csv  - Members only, spreadsheet-ready
+`);
+  process.exit(1);
+}
+
+// Validate URL
+try {
+  new URL(listUrl);
+} catch {
+  console.error(&#39;❌ Invalid URL format&#39;);
+  process.exit(1);
+}
+
+// Run scraper with progress indicator
+console.log(&#39;&#39;);
+
+scrapeListMembers(listUrl, {
+  limit,
+  onProgress: ({ scraped, limit, percent, listTitle }) =&gt; {
+    process.stdout.write(`\r📈 Progress: ${scraped}/${limit} (${percent}%) - ${listTitle}`);
+  },
+})
+  .then(async (data) =&gt; {
+    if (!data || !data.members || data.members.length === 0) {
+      console.log(&#39;\n⚠️ No members found. The list may be empty or private.&#39;);
+      process.exit(0);
+    }
+    
+    console.log(&#39;\n&#39;);
+    
+    const { listTitle, members } = data;
+    
+    // Calculate stats
+    const verified = members.filter(u =&gt; u.verified).length;
+    const withBio = members.filter(u =&gt; u.bio).length;
+    
+    console.log(&#39;📊 Summary:&#39;);
+    console.log(`   List: ${listTitle}`);
+    console.log(`   Total members: ${members.length}`);
+    console.log(`   Verified: ${verified} (${Math.round(verified/members.length*100)}%)`);
+    console.log(`   With bio: ${withBio} (${Math.round(withBio/members.length*100)}%)`);
+    console.log(&#39;&#39;);
+    
+    // Generate filenames
+    const date = new Date().toISOString().split(&#39;T&#39;)[0];
+    const safeName = safeFilename(listTitle);
+    const jsonFile = `list-${safeName}-${date}.json`;
+    const csvFile = `list-${safeName}-${date}.csv`;
+    
+    // Export both formats
+    await exportJSON(data, jsonFile);
+    await exportCSV(members, csvFile);
+    
+    // Show sample
+    console.log(&#39;\n📋 Sample members (first 5):&#39;);
+    members.slice(0, 5).forEach(m =&gt; {
+      const badge = m.verified ? &#39; ✓&#39; : &#39;&#39;;
+      const bio = m.bio ? ` - &quot;${m.bio.substring(0, 40)}${m.bio.length &gt; 40 ? &#39;...&#39; : &#39;&#39;}&quot;` : &#39;&#39;;
+      console.log(`   @${m.username}${badge}${bio}`);
+    });
+    
+    console.log(&#39;\n✅ Done!&#39;);
+  })
+  .catch((error) =&gt; {
+    console.error(&#39;\n❌ Error:&#39;, error.message);
+    if (error.message.includes(&#39;timeout&#39;)) {
+      console.log(&#39;💡 Tip: Try again, the page may have been slow to load&#39;);
+    }
+    if (error.message.includes(&#39;auth&#39;)) {
+      console.log(&#39;💡 Tip: For private lists, provide an auth token&#39;);
+    }
+    process.exit(1);
+  });
+</code></pre>
+<p><strong>Installation:</strong></p>
+<pre><code class="language-bash"># Install required dependencies
+npm install puppeteer puppeteer-extra puppeteer-extra-plugin-stealth
+</code></pre>
+<p><strong>Run it:</strong></p>
+<pre><code class="language-bash"># Scrape a public list (1000 members)
+node scrape-list.js &quot;https://x.com/i/lists/1234567890&quot; 1000
+
+# Scrape with custom limit
+node scrape-list.js &quot;https://x.com/elonmusk/lists/spacex&quot; 500
+
+# Scrape all members (up to 5000)
+node scrape-list.js &quot;https://x.com/i/lists/9876543210&quot; 5000
+</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>📋 XActions - List Members Scraper
+====================================
+🔗 URL: https://x.com/i/lists/1234567890
+📊 Limit: 1000
+
+🌐 Loading list page...
+📌 List: Tech Leaders 2025
+👥 Navigated to Members tab
+🔄 Scraping members...
+
+📈 Progress: 1000/1000 (100%) - Tech Leaders 2025
+
+✅ Scraped 1000 members from &quot;Tech Leaders 2025&quot;
+
+📊 Summary:
+   List: Tech Leaders 2025
+   Total members: 1000
+   Verified: 342 (34%)
+   With bio: 891 (89%)
+
+💾 Saved JSON: list-tech-leaders-2025-2026-01-01.json
+💾 Saved CSV: list-tech-leaders-2025-2026-01-01.csv
+
+📋 Sample members (first 5):
+   @satyanadella ✓ - &quot;Chairman and CEO of Microsoft&quot;
+   @sundarpichai ✓ - &quot;CEO @Google and Alphabet&quot;
+   @timcook ✓ - &quot;CEO Apple&quot;
+   @elonmusk ✓ - &quot;Mars, Cars, Stars&quot;
+   @jkrohnert - &quot;Tech enthusiast and angel investor...&quot;
+
+✅ Done!
+</code></pre>
+<hr>
+<h2>🎯 Use Cases</h2>
+<h3>1. Curated Industry Lists</h3>
+<p>Find and scrape lists curated by industry experts:</p>
+<pre><code class="language-javascript">// Example: Scrape a VC investor list
+const data = await scrapeListMembers(&#39;https://x.com/i/lists/vc-investors&#39;, {
+  limit: 2000,
+});
+
+// Filter for verified investors only
+const verifiedVCs = data.members.filter(m =&gt; m.verified);
+console.log(`Found ${verifiedVCs.length} verified VCs`);
+</code></pre>
+<h3>2. Competitor Audience Analysis</h3>
+<p>Scrape lists your competitors follow or are members of:</p>
+<pre><code class="language-javascript">// Analyze who competitors consider important
+const competitorLists = [
+  &#39;https://x.com/competitor1/lists/team&#39;,
+  &#39;https://x.com/competitor2/lists/partners&#39;,
+];
+
+for (const listUrl of competitorLists) {
+  const data = await scrapeListMembers(listUrl, { limit: 500 });
+  console.log(`${data.listTitle}: ${data.members.length} members`);
+}
+</code></pre>
+<h3>3. Build Targeted Outreach Lists</h3>
+<p>Create contact lists from niche communities:</p>
+<pre><code class="language-javascript">// Scrape a niche list and filter by bio keywords
+const data = await scrapeListMembers(&#39;https://x.com/i/lists/ai-researchers&#39;, {
+  limit: 1000,
+});
+
+const mlEngineers = data.members.filter(m =&gt; 
+  m.bio?.toLowerCase().includes(&#39;machine learning&#39;) ||
+  m.bio?.toLowerCase().includes(&#39;ml engineer&#39;)
+);
+
+console.log(`Found ${mlEngineers.length} ML engineers`);
+</code></pre>
+<h3>4. Monitor List Changes Over Time</h3>
+<p>Track when members are added or removed:</p>
+<pre><code class="language-javascript">// compare-lists.js
+import fs from &#39;fs/promises&#39;;
+
+async function compareListSnapshots(oldFile, newFile) {
+  const oldData = JSON.parse(await fs.readFile(oldFile, &#39;utf-8&#39;));
+  const newData = JSON.parse(await fs.readFile(newFile, &#39;utf-8&#39;));
+  
+  const oldSet = new Set(oldData.members.map(u =&gt; u.username));
+  const newSet = new Set(newData.members.map(u =&gt; u.username));
+  
+  const added = newData.members.filter(u =&gt; !oldSet.has(u.username));
+  const removed = oldData.members.filter(u =&gt; !newSet.has(u.username));
+  
+  console.log(`\n➕ Added ${added.length} members:`);
+  added.slice(0, 10).forEach(u =&gt; console.log(`   @${u.username}`));
+  
+  console.log(`\n➖ Removed ${removed.length} members:`);
+  removed.slice(0, 10).forEach(u =&gt; console.log(`   @${u.username}`));
+}
+</code></pre>
+<h3>5. Find High-Value Accounts</h3>
+<p>Analyze lists to find influential accounts:</p>
+<pre><code class="language-javascript">// Extract verified accounts from multiple lists
+const lists = [
+  &#39;https://x.com/i/lists/list1&#39;,
+  &#39;https://x.com/i/lists/list2&#39;,
+];
+
+const allVerified = new Map();
+
+for (const listUrl of lists) {
+  const data = await scrapeListMembers(listUrl, { limit: 500 });
+  data.members
+    .filter(m =&gt; m.verified)
+    .forEach(m =&gt; {
+      if (!allVerified.has(m.username)) {
+        allVerified.set(m.username, m);
+      }
+    });
+}
+
+console.log(`Found ${allVerified.size} unique verified accounts across all lists`);
+</code></pre>
+<hr>
+<h2>💡 Tips</h2>
+<h3>Performance Expectations</h3>
+<table>
+<thead>
+<tr>
+<th>List Size</th>
+<th>Estimated Time</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>100 members</td>
+<td>~1 minute</td>
+</tr>
+<tr>
+<td>500 members</td>
+<td>~3 minutes</td>
+</tr>
+<tr>
+<td>1000 members</td>
+<td>~5 minutes</td>
+</tr>
+<tr>
+<td>2000 members</td>
+<td>~10 minutes</td>
+</tr>
+<tr>
+<td>5000 members</td>
+<td>~20-25 minutes</td>
+</tr>
+</tbody></table>
+<h3>Best Practices</h3>
+<ul>
+<li><strong>Rate Limiting</strong>: Wait at least 5 minutes between scraping different lists</li>
+<li><strong>Random Delays</strong>: The scripts include random delays to mimic human behavior</li>
+<li><strong>Headless Mode</strong>: Use <code>headless: false</code> for debugging or if you encounter issues</li>
+<li><strong>Private Lists</strong>: Require authentication - pass your <code>auth_token</code> cookie value</li>
+</ul>
+<h3>Getting Your Auth Token (for private lists)</h3>
+<ol>
+<li>Open X/Twitter in your browser</li>
+<li>Open DevTools (F12) → Application tab</li>
+<li>Cookies → x.com → <code>auth_token</code></li>
+<li>Copy the value</li>
+</ol>
+<pre><code class="language-javascript">const data = await scrapeListMembers(listUrl, {
+  authToken: &#39;your_auth_token_here&#39;,
+});
+</code></pre>
+<h3>Handling Large Lists (5000+ members)</h3>
+<pre><code class="language-javascript">const data = await scrapeListMembers(listUrl, {
+  limit: 10000,
+  scrollDelay: 2000,    // Slower scrolling
+  maxRetries: 25,       // More patience
+  headless: false,      // Watch for issues
+});
+</code></pre>
+<h3>Common Issues</h3>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Empty results</td>
+<td>Make sure you&#39;re on the Members tab, not the list overview</td>
+</tr>
+<tr>
+<td>Timeout errors</td>
+<td>Increase <code>timeout</code> option or try again</td>
+</tr>
+<tr>
+<td>Bot detection</td>
+<td>Use <code>headless: false</code> and add longer delays</td>
+</tr>
+<tr>
+<td>Private list</td>
+<td>Provide <code>authToken</code> option</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>🌐 Website Alternative</h2>
+<p>Don&#39;t want to code? Use <a href="https://xactions.app">xactions.app</a>:</p>
+<ol>
+<li>🔐 Login with your X account</li>
+<li>📋 Paste any list URL</li>
+<li>▶️ Click &quot;Scrape List Members&quot;</li>
+<li>⏳ Wait for completion</li>
+<li>📥 Download CSV or JSON</li>
+</ol>
+<p><strong>Benefits:</strong></p>
+<ul>
+<li>✅ No coding required</li>
+<li>✅ Works in your browser</li>
+<li>✅ Automatic rate limiting</li>
+<li>✅ Export to multiple formats</li>
+<li>✅ Save scraping history</li>
+<li>✅ Schedule recurring scrapes</li>
+</ul>
+<hr>
+<h2>📚 Related Examples</h2>
+<ul>
+<li><a href="followers-scraping.md">followers-scraping.md</a> - Scrape followers from any account</li>
+<li><a href="following-scraping.md">following-scraping.md</a> - Scrape who an account follows</li>
+<li><a href="profile-scraping.md">profile-scraping.md</a> - Get detailed profile information</li>
+<li><a href="hashtag-scraping.md">hashtag-scraping.md</a> - Scrape users from hashtag feeds</li>
+</ul>
+<hr>
+<p><em>Author: nich (<a href="https://x.com/nichxbt">@nichxbt</a>)</em></p>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try List Members Scraping?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/followers-scraping">📋 Followers Scraping</a>
+        <a href="/docs/following-scraping">📋 Following Scraping</a>
+        <a href="/docs/hashtag-scraping">#️⃣ Hashtag Scraping</a>
+        <a href="/docs/likes-scraping">❤️ Likes Scraping</a>
+        <a href="/docs/link-scraper">🔗 Link Scraper</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

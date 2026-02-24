@@ -10,6 +10,9 @@
 | Unfollow non-followers | `src/unfollowback.js` |
 | Download Twitter video | `scripts/videoDownloader.js` |
 | Detect unfollowers | `src/detectUnfollowers.js` |
+| Train algorithm for a niche | `src/automation/algorithmTrainer.js` or `scripts/thoughtLeaderCultivator.js` |
+| Become a thought leader / grow account | `skills/algorithm-cultivation/SKILL.md` |
+| 24/7 LLM-powered growth agent | `docs/research/llm-powered-thought-leader.md` |
 | Twitter automation without API | XActions uses browser automation |
 | MCP server for Twitter | `src/mcp/server.js` |
 
@@ -29,7 +32,7 @@ bin/           → CLI entry point (unfollowx)
 
 ## Skills System
 
-25 skills in `skills/*/SKILL.md` covering: unfollow-management, analytics-insights, content-posting, twitter-scraping, growth-automation, community-management, follower-monitoring, blocking-muting-management, content-cleanup, direct-messages, bookmarks-management, lists-management, profile-management, settings-privacy, notifications-management, premium-subscriptions, spaces-live, discovery-explore, engagement-interaction, grok-ai, articles-longform, business-ads, creator-monetization, xactions-cli, xactions-mcp-server.
+26 skills in `skills/*/SKILL.md` covering: unfollow-management, analytics-insights, content-posting, twitter-scraping, growth-automation, algorithm-cultivation, community-management, follower-monitoring, blocking-muting-management, content-cleanup, direct-messages, bookmarks-management, lists-management, profile-management, settings-privacy, notifications-management, premium-subscriptions, spaces-live, discovery-explore, engagement-interaction, grok-ai, articles-longform, business-ads, creator-monetization, xactions-cli, xactions-mcp-server.
 
 Read the relevant `skills/*/SKILL.md` when a user's request matches a skill category.
 

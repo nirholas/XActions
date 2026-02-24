@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Following Scraping — Free X/Twitter Scrapers Tool | XActions</title>
+  <meta name="description" content="Scrape the complete list of accounts that any public X/Twitter user follows — with mutual follow detection.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, following, scraping, scrapers, following scraping twitter, twitter following scraping">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Following Scraping — XActions">
+  <meta property="og:description" content="Scrape the complete list of accounts that any public X/Twitter user follows — with mutual follow detection.">
+  <meta property="og:url" content="https://xactions.app/docs/following-scraping">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Following Scraping — Free X/Twitter Tool">
+  <meta name="twitter:description" content="Scrape the complete list of accounts that any public X/Twitter user follows — with mutual follow detection.">
+
+  <link rel="canonical" href="https://xactions.app/docs/following-scraping">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Following Scraping — Free X/Twitter Scrapers Tool | XActions",
+    "description": "Scrape the complete list of accounts that any public X/Twitter user follows — with mutual follow detection.",
+    "url": "https://xactions.app/docs/following-scraping",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/following-scraping",
+    "articleSection": "Scrapers",
+    "keywords": "xactions, twitter automation, x automation, free, following, scraping, scrapers, following scraping twitter, twitter following scraping"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Following Scraping", "item": "https://xactions.app/docs/following-scraping" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use Following Scraping",
+    "description": "Scrape the complete list of accounts that any public X/Twitter user follows — with mutual follow detection.",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions Following Scraping script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>📋 Following Scraping</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › Following Scraping
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Scrapers</span>
+        <h1>👥 Following Scraping</h1>
+<p>Scrape the complete list of accounts that any public X/Twitter user follows — with mutual follow detection.</p>
+<blockquote>
+<p><strong>Author:</strong> nich (<a href="https://x.com/nichxbt">@nichxbt</a>)</p>
+</blockquote>
+<hr>
+<h2>📦 What You Get</h2>
+<p>When you scrape a user&#39;s following list, you get:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>username</code></td>
+<td>The @handle of the followed account</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>Display name</td>
+</tr>
+<tr>
+<td><code>bio</code></td>
+<td>Profile bio/description</td>
+</tr>
+<tr>
+<td><code>verified</code></td>
+<td>Blue checkmark status</td>
+</tr>
+<tr>
+<td><code>avatar</code></td>
+<td>Profile image URL</td>
+</tr>
+<tr>
+<td><code>followsBack</code></td>
+<td>Whether this account follows the target user back</td>
+</tr>
+</tbody></table>
+<p>The <strong><code>followsBack</code></strong> indicator is powerful — it lets you instantly identify:</p>
+<ul>
+<li>✅ <strong>Mutual follows</strong> (they follow each other)</li>
+<li>❌ <strong>One-way follows</strong> (target follows them, but they don&#39;t follow back)</li>
+</ul>
+<hr>
+<h2>🖥️ Example 1: Browser Console (Quick)</h2>
+<p><strong>Best for:</strong> Scraping up to ~500 following quickly from your browser</p>
+<h3>Instructions</h3>
+<ol>
+<li>Go to <code>x.com/USERNAME/following</code> (replace USERNAME with target)</li>
+<li>Open DevTools (F12 or Cmd+Opt+I)</li>
+<li>Go to Console tab</li>
+<li>Paste the code below and press Enter</li>
+</ol>
+<pre><code class="language-javascript">// ============================================
+// XActions - Following Scraper (Browser Console)
+// Author: nich (@nichxbt)
+// Go to: x.com/USERNAME/following
+// Open console (F12), paste this entire script
+// ============================================
+
+(async () =&gt; {
+  const TARGET_COUNT = 500; // Adjust as needed
+  const SCROLL_DELAY = 1500; // ms between scrolls
+  
+  console.log(&#39;🔍 Starting following scrape...&#39;);
+  console.log(`📊 Target: ${TARGET_COUNT} accounts`);
+  
+  const following = new Map();
+  let retries = 0;
+  const maxRetries = 10;
+  
+  // Helper to extract user data from cells
+  const extractUsers = () =&gt; {
+    const cells = document.querySelectorAll(&#39;[data-testid=&quot;UserCell&quot;]&#39;);
+    const users = [];
+    
+    cells.forEach(cell =&gt; {
+      try {
+        // Get username from link
+        const link = cell.querySelector(&#39;a[href^=&quot;/&quot;]&#39;);
+        const href = link?.getAttribute(&#39;href&#39;) || &#39;&#39;;
+        const username = href.split(&#39;/&#39;)[1];
+        
+        // Skip if invalid or query params
+        if (!username || username.includes(&#39;?&#39;)) return;
+        
+        // Get display name
+        const nameEl = cell.querySelector(&#39;[dir=&quot;ltr&quot;] &gt; span&#39;);
+        const name = nameEl?.textContent?.trim() || null;
+        
+        // Get bio
+        const bioEl = cell.querySelector(&#39;[data-testid=&quot;UserDescription&quot;]&#39;);
+        const bio = bioEl?.textContent?.trim() || null;
+        
+        // Check verified status
+        const verified = !!cell.querySelector(&#39;svg[aria-label*=&quot;Verified&quot;]&#39;);
+        
+        // Get avatar
+        const avatarEl = cell.querySelector(&#39;img[src*=&quot;profile_images&quot;]&#39;);
+        const avatar = avatarEl?.src || null;
+        
+        // Check if they follow back (look for &quot;Follows you&quot; badge)
+        const followsBackEl = cell.querySelector(&#39;[data-testid=&quot;userFollowIndicator&quot;]&#39;);
+        const followsBackText = cell.textContent?.includes(&#39;Follows you&#39;);
+        const followsBack = !!(followsBackEl || followsBackText);
+        
+        users.push({
+          username,
+          name,
+          bio,
+          verified,
+          avatar,
+          followsBack,
+        });
+      } catch (e) {
+        // Skip malformed cells
+      }
+    });
+    
+    return users;
+  };
+  
+  // Sleep helper
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+  
+  // Main scraping loop
+  while (following.size &lt; TARGET_COUNT &amp;&amp; retries &lt; maxRetries) {
+    // Extract visible users
+    const users = extractUsers();
+    const prevSize = following.size;
+    
+    // Add to map (dedupes automatically)
+    users.forEach(user =&gt; {
+      if (!following.has(user.username)) {
+        following.set(user.username, user);
+      }
+    });
+    
+    // Progress update
+    const mutualCount = Array.from(following.values()).filter(u =&gt; u.followsBack).length;
+    console.log(`📈 Scraped: ${following.size} following (${mutualCount} mutual)`);
+    
+    // Check if we&#39;re stuck
+    if (following.size === prevSize) {
+      retries++;
+      console.log(`⏳ No new users found (retry ${retries}/${maxRetries})`);
+    } else {
+      retries = 0;
+    }
+    
+    // Scroll to load more
+    window.scrollTo(0, document.body.scrollHeight);
+    await sleep(SCROLL_DELAY);
+  }
+  
+  // Convert to array
+  const result = Array.from(following.values());
+  
+  // Calculate stats
+  const mutualFollows = result.filter(u =&gt; u.followsBack);
+  const oneWayFollows = result.filter(u =&gt; !u.followsBack);
+  const verifiedCount = result.filter(u =&gt; u.verified).length;
+  const withBioCount = result.filter(u =&gt; u.bio).length;
+  
+  // Summary
+  console.log(&#39;\n✅ Scraping complete!&#39;);
+  console.log(&#39;━&#39;.repeat(40));
+  console.log(`📊 Total following scraped: ${result.length}`);
+  console.log(`🤝 Mutual follows: ${mutualFollows.length} (${Math.round(mutualFollows.length / result.length * 100)}%)`);
+  console.log(`➡️  One-way follows: ${oneWayFollows.length} (${Math.round(oneWayFollows.length / result.length * 100)}%)`);
+  console.log(`✓ Verified: ${verifiedCount}`);
+  console.log(`✓ With bio: ${withBioCount}`);
+  console.log(&#39;━&#39;.repeat(40));
+  
+  // Copy to clipboard
+  const json = JSON.stringify(result, null, 2);
+  await navigator.clipboard.writeText(json);
+  console.log(&#39;\n📋 Full data copied to clipboard!&#39;);
+  
+  // Also expose data for inspection
+  console.log(&#39;\n💾 Data objects (right-click → Copy object):&#39;);
+  console.log(&#39;All following:&#39;, result);
+  console.log(&#39;Mutual follows:&#39;, mutualFollows);
+  console.log(&#39;One-way follows:&#39;, oneWayFollows);
+  
+  // Create downloadable file
+  const blob = new Blob([json], { type: &#39;application/json&#39; });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement(&#39;a&#39;);
+  a.href = url;
+  a.download = `following-${new Date().toISOString().split(&#39;T&#39;)[0]}.json`;
+  a.click();
+  console.log(&#39;\n📥 Download started!&#39;);
+  
+  // Return for further use in console
+  return {
+    all: result,
+    mutual: mutualFollows,
+    oneWay: oneWayFollows,
+    stats: {
+      total: result.length,
+      mutual: mutualFollows.length,
+      oneWay: oneWayFollows.length,
+      verified: verifiedCount,
+      withBio: withBioCount,
+    }
+  };
+})();
+</code></pre>
+<h3>What Happens</h3>
+<ol>
+<li>🔄 Script scrolls through the following list automatically</li>
+<li>📊 Extracts data from each user card</li>
+<li>🔍 Detects &quot;Follows you&quot; badge for each account</li>
+<li>🔁 Deduplicates automatically</li>
+<li>📈 Shows live progress with mutual follow count</li>
+<li>📥 Downloads JSON file automatically</li>
+<li>📋 Copies data to clipboard</li>
+</ol>
+<h3>Sample Output</h3>
+<pre><code>🔍 Starting following scrape...
+📊 Target: 500 accounts
+📈 Scraped: 47 following (12 mutual)
+📈 Scraped: 89 following (31 mutual)
+📈 Scraped: 156 following (52 mutual)
+...
+📈 Scraped: 500 following (187 mutual)
+
+✅ Scraping complete!
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 Total following scraped: 500
+🤝 Mutual follows: 187 (37%)
+➡️  One-way follows: 313 (63%)
+✓ Verified: 45
+✓ With bio: 412
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 Full data copied to clipboard!
+
+📥 Download started!
+</code></pre>
+<hr>
+<h2>🚀 Example 2: Node.js with Puppeteer (Production-Ready)</h2>
+<p><strong>Best for:</strong> Large following lists, automation, scheduled jobs, exporting to JSON/CSV</p>
+<h3>Installation</h3>
+<pre><code class="language-bash">npm install puppeteer puppeteer-extra puppeteer-extra-plugin-stealth
+</code></pre>
+<h3>Full Script</h3>
+<p>Save as <code>scrape-following.js</code>:</p>
+<pre><code class="language-javascript">// ============================================
+// XActions - Following Scraper (Node.js)
+// Author: nich (@nichxbt)
+// 
+// Save as: scrape-following.js
+// Run: node scrape-following.js &lt;username&gt; [limit]
+// Example: node scrape-following.js elonmusk 1000
+// ============================================
+
+import puppeteer from &#39;puppeteer-extra&#39;;
+import StealthPlugin from &#39;puppeteer-extra-plugin-stealth&#39;;
+import fs from &#39;fs/promises&#39;;
+import path from &#39;path&#39;;
+
+// Apply stealth plugin to avoid detection
+puppeteer.use(StealthPlugin());
+
+/**
+ * Scrape the accounts that a Twitter/X user follows
+ * @param {string} username - Account to scrape following from
+ * @param {Object} options - Configuration options
+ * @returns {Promise&lt;Array&gt;} Array of following user objects
+ */
+async function scrapeFollowing(username, options = {}) {
+  const {
+    limit = 1000,
+    headless = true,
+    authToken = null,
+    onProgress = null,
+    scrollDelay = 1500,
+    maxRetries = 10,
+    timeout = 30000,
+  } = options;
+
+  console.log(`\n🔍 Scraping following for @${username}`);
+  console.log(`📊 Limit: ${limit}`);
+  console.log(`🕐 Started: ${new Date().toLocaleTimeString()}\n`);
+
+  const browser = await puppeteer.launch({
+    headless: headless ? &#39;new&#39; : false,
+    args: [
+      &#39;--no-sandbox&#39;,
+      &#39;--disable-setuid-sandbox&#39;,
+      &#39;--disable-blink-features=AutomationControlled&#39;,
+      &#39;--disable-web-security&#39;,
+      &#39;--disable-features=IsolateOrigins,site-per-process&#39;,
+    ],
+  });
+
+  try {
+    const page = await browser.newPage();
+    
+    // Set realistic viewport with slight randomization
+    await page.setViewport({ 
+      width: 1280 + Math.floor(Math.random() * 100), 
+      height: 800 + Math.floor(Math.random() * 100),
+    });
+    
+    // Set realistic user agent
+    await page.setUserAgent(
+      &#39;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36&#39;
+    );
+
+    // Set auth cookie if provided (for private accounts or rate limit bypass)
+    if (authToken) {
+      await page.setCookie({
+        name: &#39;auth_token&#39;,
+        value: authToken,
+        domain: &#39;.x.com&#39;,
+        path: &#39;/&#39;,
+        httpOnly: true,
+        secure: true,
+      });
+      console.log(&#39;🔐 Auth token set&#39;);
+    }
+
+    // Navigate to following page
+    const url = `https://x.com/${username}/following`;
+    console.log(`🌐 Navigating to ${url}`);
+    
+    await page.goto(url, {
+      waitUntil: &#39;networkidle2&#39;,
+      timeout,
+    });
+
+    // Wait for user cells to appear
+    try {
+      await page.waitForSelector(&#39;[data-testid=&quot;UserCell&quot;]&#39;, { timeout: 10000 });
+    } catch (e) {
+      // Check if account exists or is private
+      const pageContent = await page.content();
+      if (pageContent.includes(&#39;This account doesn&#39;t exist&#39;)) {
+        throw new Error(`Account @${username} does not exist`);
+      }
+      if (pageContent.includes(&#39;These posts are protected&#39;)) {
+        throw new Error(`Account @${username} is private. Provide authToken to access.`);
+      }
+      throw new Error(&#39;Could not load following list. Page may have changed or be rate limited.&#39;);
+    }
+    
+    // Small random delay to mimic human behavior
+    await new Promise(r =&gt; setTimeout(r, 1000 + Math.random() * 1000));
+
+    const following = new Map();
+    let retries = 0;
+
+    // Main scraping loop
+    while (following.size &lt; limit &amp;&amp; retries &lt; maxRetries) {
+      // Extract users from page
+      const users = await page.evaluate(() =&gt; {
+        const cells = document.querySelectorAll(&#39;[data-testid=&quot;UserCell&quot;]&#39;);
+        return Array.from(cells).map(cell =&gt; {
+          try {
+            // Get username from profile link
+            const link = cell.querySelector(&#39;a[href^=&quot;/&quot;]&#39;);
+            const href = link?.getAttribute(&#39;href&#39;) || &#39;&#39;;
+            const username = href.split(&#39;/&#39;)[1];
+            
+            // Skip if invalid username
+            if (!username || username.includes(&#39;?&#39;) || username.includes(&#39;/&#39;)) return null;
+            
+            // Get display name
+            const nameEl = cell.querySelector(&#39;[dir=&quot;ltr&quot;] &gt; span&#39;);
+            const name = nameEl?.textContent?.trim() || null;
+            
+            // Get bio
+            const bioEl = cell.querySelector(&#39;[data-testid=&quot;UserDescription&quot;]&#39;);
+            const bio = bioEl?.textContent?.trim() || null;
+            
+            // Get avatar URL
+            const avatarEl = cell.querySelector(&#39;img[src*=&quot;profile_images&quot;]&#39;);
+            const avatar = avatarEl?.src || null;
+            
+            // Check verified status
+            const verifiedEl = cell.querySelector(&#39;svg[aria-label*=&quot;Verified&quot;]&#39;);
+            const verified = !!verifiedEl;
+            
+            // Check if they follow back
+            // Look for &quot;Follows you&quot; indicator
+            const followsBackIndicator = cell.querySelector(&#39;[data-testid=&quot;userFollowIndicator&quot;]&#39;);
+            const cellText = cell.textContent || &#39;&#39;;
+            const followsBack = !!(followsBackIndicator || cellText.includes(&#39;Follows you&#39;));
+            
+            return {
+              username,
+              name,
+              bio,
+              verified,
+              avatar,
+              followsBack,
+              scrapedAt: new Date().toISOString(),
+            };
+          } catch {
+            return null;
+          }
+        }).filter(Boolean);
+      });
+
+      const prevSize = following.size;
+      
+      // Add to map (automatically dedupes by username)
+      users.forEach(user =&gt; {
+        if (!following.has(user.username)) {
+          following.set(user.username, user);
+        }
+      });
+
+      // Fire progress callback if provided
+      if (onProgress) {
+        const current = Array.from(following.values());
+        const mutualCount = current.filter(u =&gt; u.followsBack).length;
+        onProgress({
+          scraped: following.size,
+          limit,
+          percent: Math.round((following.size / limit) * 100),
+          mutual: mutualCount,
+        });
+      }
+
+      // Check if we&#39;re stuck (no new users found)
+      if (following.size === prevSize) {
+        retries++;
+        // Longer wait when stuck
+        await new Promise(r =&gt; setTimeout(r, scrollDelay + 1000));
+      } else {
+        retries = 0;
+      }
+
+      // Scroll down to trigger lazy loading
+      await page.evaluate(() =&gt; {
+        window.scrollTo(0, document.body.scrollHeight);
+      });
+      
+      // Random delay between scrolls
+      await new Promise(r =&gt; setTimeout(r, scrollDelay + Math.random() * 500));
+    }
+
+    // Convert to array and limit
+    const result = Array.from(following.values()).slice(0, limit);
+    
+    // Calculate final stats
+    const mutualCount = result.filter(u =&gt; u.followsBack).length;
+    const oneWayCount = result.length - mutualCount;
+    
+    console.log(`\n✅ Scraped ${result.length} following`);
+    console.log(`🤝 Mutual: ${mutualCount} | ➡️  One-way: ${oneWayCount}`);
+    
+    return result;
+
+  } finally {
+    await browser.close();
+  }
+}
+
+/**
+ * Export data to JSON file
+ * @param {Array} data - Data to export
+ * @param {string} filename - Output filename
+ */
+async function exportJSON(data, filename) {
+  const output = {
+    exportedAt: new Date().toISOString(),
+    count: data.length,
+    mutualCount: data.filter(u =&gt; u.followsBack).length,
+    oneWayCount: data.filter(u =&gt; !u.followsBack).length,
+    data,
+  };
+  
+  await fs.writeFile(filename, JSON.stringify(output, null, 2));
+  console.log(`💾 Saved JSON to ${filename}`);
+}
+
+/**
+ * Export data to CSV file
+ * @param {Array} data - Data to export
+ * @param {string} filename - Output filename
+ */
+async function exportCSV(data, filename) {
+  const headers = [&#39;username&#39;, &#39;name&#39;, &#39;bio&#39;, &#39;verified&#39;, &#39;followsBack&#39;, &#39;avatar&#39;, &#39;scrapedAt&#39;];
+  
+  const escapeCSV = (val) =&gt; {
+    if (val === null || val === undefined) return &#39;&#39;;
+    if (typeof val === &#39;boolean&#39;) return val ? &#39;true&#39; : &#39;false&#39;;
+    if (typeof val === &#39;string&#39;) {
+      // Escape quotes and wrap in quotes if contains comma, quote, or newline
+      const escaped = val.replace(/&quot;/g, &#39;&quot;&quot;&#39;).replace(/\n/g, &#39; &#39;);
+      if (escaped.includes(&#39;,&#39;) || escaped.includes(&#39;&quot;&#39;) || escaped.includes(&#39;\n&#39;)) {
+        return `&quot;${escaped}&quot;`;
+      }
+      return escaped;
+    }
+    return String(val);
+  };
+  
+  const rows = data.map(row =&gt; 
+    headers.map(h =&gt; escapeCSV(row[h])).join(&#39;,&#39;)
+  );
+  
+  const csv = [headers.join(&#39;,&#39;), ...rows].join(&#39;\n&#39;);
+  await fs.writeFile(filename, csv);
+  console.log(`💾 Saved CSV to ${filename}`);
+}
+
+/**
+ * Export only mutual follows
+ */
+async function exportMutualOnly(data, baseFilename) {
+  const mutuals = data.filter(u =&gt; u.followsBack);
+  const jsonFile = `${baseFilename}-mutuals.json`;
+  const csvFile = `${baseFilename}-mutuals.csv`;
+  
+  await exportJSON(mutuals, jsonFile);
+  await exportCSV(mutuals, csvFile);
+  
+  console.log(`\n🤝 Exported ${mutuals.length} mutual follows separately`);
+}
+
+/**
+ * Export only one-way follows (they don&#39;t follow back)
+ */
+async function exportOneWayOnly(data, baseFilename) {
+  const oneWay = data.filter(u =&gt; !u.followsBack);
+  const jsonFile = `${baseFilename}-oneway.json`;
+  const csvFile = `${baseFilename}-oneway.csv`;
+  
+  await exportJSON(oneWay, jsonFile);
+  await exportCSV(oneWay, csvFile);
+  
+  console.log(`\n➡️  Exported ${oneWay.length} one-way follows separately`);
+}
+
+// ============================================
+// CLI Execution
+// ============================================
+
+const args = process.argv.slice(2);
+const username = args[0];
+const limit = parseInt(args[1]) || 500;
+const exportType = args[2] || &#39;all&#39;; // &#39;all&#39;, &#39;mutual&#39;, &#39;oneway&#39;
+
+if (!username) {
+  console.log(`
+╔══════════════════════════════════════════════════════════════╗
+║           XActions - Following Scraper                       ║
+║           Author: nich (@nichxbt)                            ║
+╚══════════════════════════════════════════════════════════════╝
+
+Usage: node scrape-following.js &lt;username&gt; [limit] [export-type]
+
+Arguments:
+  username     Twitter/X username (without @)
+  limit        Maximum accounts to scrape (default: 500)
+  export-type  What to export: &#39;all&#39;, &#39;mutual&#39;, &#39;oneway&#39; (default: all)
+
+Examples:
+  node scrape-following.js elonmusk 1000
+  node scrape-following.js naval 500 mutual
+  node scrape-following.js pmarca 200 oneway
+  node scrape-following.js vitalikbuterin
+
+Output Files:
+  {username}-following-{date}.json     Full data as JSON
+  {username}-following-{date}.csv      Full data as CSV
+  {username}-following-{date}-mutuals.json   Mutual follows only
+  {username}-following-{date}-oneway.json    One-way follows only
+
+Environment Variables:
+  X_AUTH_TOKEN    Your X auth token for private accounts
+`);
+  process.exit(1);
+}
+
+// Get auth token from environment if available
+const authToken = process.env.X_AUTH_TOKEN || null;
+
+// Run the scraper with progress indicator
+console.log(&#39;&#39;);
+console.log(&#39;═&#39;.repeat(60));
+
+scrapeFollowing(username, {
+  limit,
+  authToken,
+  onProgress: ({ scraped, limit, percent, mutual }) =&gt; {
+    process.stdout.write(`\r📈 Progress: ${scraped}/${limit} (${percent}%) | 🤝 Mutual: ${mutual}`);
+  },
+})
+  .then(async (following) =&gt; {
+    console.log(&#39;\n&#39;);
+    console.log(&#39;═&#39;.repeat(60));
+    
+    // Calculate detailed stats
+    const mutualFollows = following.filter(u =&gt; u.followsBack);
+    const oneWayFollows = following.filter(u =&gt; !u.followsBack);
+    const verified = following.filter(u =&gt; u.verified);
+    const withBio = following.filter(u =&gt; u.bio);
+    
+    // Print summary
+    console.log(&#39;\n📊 Summary:&#39;);
+    console.log(&#39;─&#39;.repeat(40));
+    console.log(`   Total scraped:    ${following.length}`);
+    console.log(`   🤝 Mutual follows: ${mutualFollows.length} (${Math.round(mutualFollows.length / following.length * 100)}%)`);
+    console.log(`   ➡️  One-way:        ${oneWayFollows.length} (${Math.round(oneWayFollows.length / following.length * 100)}%)`);
+    console.log(`   ✓ Verified:       ${verified.length}`);
+    console.log(`   ✓ With bio:       ${withBio.length}`);
+    console.log(&#39;─&#39;.repeat(40));
+    
+    // Generate base filename
+    const date = new Date().toISOString().split(&#39;T&#39;)[0];
+    const baseFilename = `${username}-following-${date}`;
+    
+    // Export based on type
+    console.log(&#39;\n📁 Exporting files...\n&#39;);
+    
+    await exportJSON(following, `${baseFilename}.json`);
+    await exportCSV(following, `${baseFilename}.csv`);
+    
+    if (exportType === &#39;all&#39; || exportType === &#39;mutual&#39;) {
+      await exportMutualOnly(following, baseFilename);
+    }
+    
+    if (exportType === &#39;all&#39; || exportType === &#39;oneway&#39;) {
+      await exportOneWayOnly(following, baseFilename);
+    }
+    
+    // Show sample data
+    console.log(&#39;\n📋 Sample mutual follows (first 5):&#39;);
+    mutualFollows.slice(0, 5).forEach(f =&gt; {
+      console.log(`   @${f.username} ${f.verified ? &#39;✓&#39; : &#39;&#39;} - ${f.name || &#39;No name&#39;}`);
+    });
+    
+    console.log(&#39;\n📋 Sample one-way follows (first 5):&#39;);
+    oneWayFollows.slice(0, 5).forEach(f =&gt; {
+      console.log(`   @${f.username} ${f.verified ? &#39;✓&#39; : &#39;&#39;} - ${f.name || &#39;No name&#39;}`);
+    });
+    
+    console.log(&#39;\n✨ Done!\n&#39;);
+  })
+  .catch((error) =&gt; {
+    console.error(&#39;\n❌ Error:&#39;, error.message);
+    process.exit(1);
+  });
+</code></pre>
+<h3>Usage</h3>
+<pre><code class="language-bash"># Basic usage - scrape 500 following
+node scrape-following.js elonmusk
+
+# Scrape 1000 following
+node scrape-following.js elonmusk 1000
+
+# Scrape and export only mutual follows
+node scrape-following.js naval 500 mutual
+
+# Scrape and export only one-way follows
+node scrape-following.js pmarca 200 oneway
+
+# Use with auth token for private accounts
+X_AUTH_TOKEN=&quot;your_token_here&quot; node scrape-following.js username 500
+</code></pre>
+<h3>Output</h3>
+<pre><code>═══════════════════════════════════════════════════════════════
+
+🔍 Scraping following for @elonmusk
+📊 Limit: 1000
+🕐 Started: 2:30:45 PM
+
+🌐 Navigating to https://x.com/elonmusk/following
+📈 Progress: 1000/1000 (100%) | 🤝 Mutual: 342
+
+═══════════════════════════════════════════════════════════════
+
+✅ Scraped 1000 following
+🤝 Mutual: 342 | ➡️  One-way: 658
+
+📊 Summary:
+────────────────────────────────────────
+   Total scraped:    1000
+   🤝 Mutual follows: 342 (34%)
+   ➡️  One-way:        658 (66%)
+   ✓ Verified:       156
+   ✓ With bio:       891
+────────────────────────────────────────
+
+📁 Exporting files...
+
+💾 Saved JSON to elonmusk-following-2026-01-01.json
+💾 Saved CSV to elonmusk-following-2026-01-01.csv
+
+🤝 Exported 342 mutual follows separately
+💾 Saved JSON to elonmusk-following-2026-01-01-mutuals.json
+💾 Saved CSV to elonmusk-following-2026-01-01-mutuals.csv
+
+➡️  Exported 658 one-way follows separately
+💾 Saved JSON to elonmusk-following-2026-01-01-oneway.json
+💾 Saved CSV to elonmusk-following-2026-01-01-oneway.csv
+
+📋 Sample mutual follows (first 5):
+   @kloris ✓ - Kloris Wong
+   @jason ✓ - Jason Calacanis
+   @pmarca ✓ - Marc Andreessen
+   @naval - Naval Ravikant
+   @balajis ✓ - Balaji Srinivasan
+
+📋 Sample one-way follows (first 5):
+   @SpaceX ✓ - SpaceX
+   @Tesla ✓ - Tesla
+   @boring_company - The Boring Company
+   @neuralink ✓ - Neuralink
+   @xAI ✓ - xAI
+
+✨ Done!
+</code></pre>
+<hr>
+<h2>💡 Use Cases</h2>
+<h3>1. Finding Mutual Follows</h3>
+<p>Identify who has a reciprocal relationship:</p>
+<pre><code class="language-javascript">// After scraping, filter mutual follows
+const mutuals = following.filter(u =&gt; u.followsBack);
+console.log(`Found ${mutuals.length} mutual follows!`);
+
+// Export just the usernames
+const mutualUsernames = mutuals.map(u =&gt; `@${u.username}`);
+</code></pre>
+<h3>2. Analyzing Someone&#39;s Network</h3>
+<p>Understand who an influencer or competitor follows:</p>
+<pre><code class="language-javascript">// Analyze verified accounts they follow
+const verifiedFollowing = following.filter(u =&gt; u.verified);
+console.log(`They follow ${verifiedFollowing.length} verified accounts`);
+
+// Find accounts with specific keywords in bio
+const cryptoAccounts = following.filter(u =&gt; 
+  u.bio?.toLowerCase().includes(&#39;crypto&#39;) ||
+  u.bio?.toLowerCase().includes(&#39;bitcoin&#39;) ||
+  u.bio?.toLowerCase().includes(&#39;web3&#39;)
+);
+</code></pre>
+<h3>3. Find Potential Unfollows</h3>
+<p>Identify accounts that don&#39;t follow back (candidates for cleanup):</p>
+<pre><code class="language-javascript">// Get accounts that don&#39;t follow back
+const notFollowingBack = following.filter(u =&gt; !u.followsBack);
+
+console.log(`${notFollowingBack.length} accounts don&#39;t follow back`);
+console.log(&#39;Consider unfollowing:&#39;);
+notFollowingBack.forEach(u =&gt; console.log(`  @${u.username}`));
+</code></pre>
+<h3>4. Compare Following Lists</h3>
+<p>Track changes over time:</p>
+<pre><code class="language-javascript">// compare-following.js
+import fs from &#39;fs/promises&#39;;
+
+async function compareFollowing(oldFile, newFile) {
+  const oldData = JSON.parse(await fs.readFile(oldFile, &#39;utf-8&#39;));
+  const newData = JSON.parse(await fs.readFile(newFile, &#39;utf-8&#39;));
+  
+  const oldSet = new Set(oldData.data.map(u =&gt; u.username));
+  const newSet = new Set(newData.data.map(u =&gt; u.username));
+  
+  const unfollowed = oldData.data.filter(u =&gt; !newSet.has(u.username));
+  const newlyFollowed = newData.data.filter(u =&gt; !oldSet.has(u.username));
+  
+  console.log(`\n🔴 Unfollowed ${unfollowed.length} accounts:`);
+  unfollowed.forEach(u =&gt; console.log(`   @${u.username}`));
+  
+  console.log(`\n🟢 Newly followed ${newlyFollowed.length} accounts:`);
+  newlyFollowed.forEach(u =&gt; console.log(`   @${u.username}`));
+  
+  // Check for mutual status changes
+  const bothHave = newData.data.filter(u =&gt; oldSet.has(u.username));
+  const lostMutual = bothHave.filter(newU =&gt; {
+    const oldU = oldData.data.find(o =&gt; o.username === newU.username);
+    return oldU?.followsBack &amp;&amp; !newU.followsBack;
+  });
+  
+  if (lostMutual.length &gt; 0) {
+    console.log(`\n⚠️  ${lostMutual.length} accounts stopped following back:`);
+    lostMutual.forEach(u =&gt; console.log(`   @${u.username}`));
+  }
+}
+
+// Usage: node compare-following.js old.json new.json
+</code></pre>
+<h3>5. Build a Follow Recommendation Engine</h3>
+<p>Find accounts followed by multiple people you track:</p>
+<pre><code class="language-javascript">// Scrape following for multiple accounts, then find overlap
+const followingLists = {
+  &#39;naval&#39;: navalFollowing,
+  &#39;balajis&#39;: balajiFollowing,
+  &#39;pmarca&#39;: pmarcaFollowing,
+};
+
+const followCounts = new Map();
+
+Object.values(followingLists).forEach(list =&gt; {
+  list.forEach(user =&gt; {
+    const count = followCounts.get(user.username) || 0;
+    followCounts.set(user.username, count + 1);
+  });
+});
+
+// Find accounts followed by all three
+const followedByAll = Array.from(followCounts.entries())
+  .filter(([_, count]) =&gt; count === 3)
+  .map(([username]) =&gt; username);
+
+console.log(&#39;Accounts followed by all three:&#39;, followedByAll);
+</code></pre>
+<hr>
+<h2>📊 Performance Tips</h2>
+<table>
+<thead>
+<tr>
+<th>Following Count</th>
+<th>Estimated Time</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>100</td>
+<td>~30 seconds</td>
+</tr>
+<tr>
+<td>500</td>
+<td>~2-3 minutes</td>
+</tr>
+<tr>
+<td>1,000</td>
+<td>~5-6 minutes</td>
+</tr>
+<tr>
+<td>5,000</td>
+<td>~20-25 minutes</td>
+</tr>
+<tr>
+<td>10,000+</td>
+<td>~45+ minutes</td>
+</tr>
+</tbody></table>
+<h3>Optimizations</h3>
+<pre><code class="language-javascript">// For large accounts, increase scroll delay to avoid rate limits
+const following = await scrapeFollowing(&#39;largAccount&#39;, {
+  limit: 10000,
+  scrollDelay: 2500, // Slower, safer
+});
+
+// For faster scraping of smaller accounts
+const following = await scrapeFollowing(&#39;smallAccount&#39;, {
+  limit: 200,
+  scrollDelay: 1000, // Faster
+});
+</code></pre>
+<h3>Rate Limit Tips</h3>
+<ul>
+<li>⏱️ Don&#39;t scrape the same account more than once per hour</li>
+<li>🔄 Add 5-10 second delays between different account scrapes</li>
+<li>🔐 Use auth token for higher limits</li>
+<li>🌙 Run large scrapes during off-peak hours</li>
+</ul>
+<hr>
+<h2>🌐 Website Alternative</h2>
+<p>Don&#39;t want to code? Use <strong><a href="https://xactions.app">xactions.app</a></strong>:</p>
+<ol>
+<li>🔐 Login with your X account</li>
+<li>👤 Enter any public username</li>
+<li>📋 Click &quot;Scrape Following&quot;</li>
+<li>⏳ Wait for completion</li>
+<li>📥 Download as CSV or JSON</li>
+<li>🤝 Filter by mutual/one-way directly in the UI</li>
+</ol>
+<p><strong>Features on xactions.app:</strong></p>
+<ul>
+<li>✅ No coding required</li>
+<li>✅ Cloud-based processing</li>
+<li>✅ Automatic mutual detection</li>
+<li>✅ Export to multiple formats</li>
+<li>✅ Schedule recurring scrapes</li>
+<li>✅ Compare historical data</li>
+</ul>
+<hr>
+<h2>🔗 Related Guides</h2>
+<ul>
+<li><a href="followers-scraping.md">Followers Scraping</a> - Scrape who follows an account</li>
+<li><a href="unfollow-non-followers.md">Unfollow Non-Followers</a> - Clean up your following list</li>
+<li><a href="profile-scraping.md">Profile Scraping</a> - Get detailed profile information</li>
+</ul>
+<hr>
+<p align="center">
+  <b>Built with ❤️ by <a href="https://x.com/nichxbt">@nichxbt</a></b><br>
+  <sub>Part of the <a href="https://github.com/nirholas/xactions">XActions</a> toolkit</sub>
+</p>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try Following Scraping?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/followers-scraping">📋 Followers Scraping</a>
+        <a href="/docs/hashtag-scraping">#️⃣ Hashtag Scraping</a>
+        <a href="/docs/likes-scraping">❤️ Likes Scraping</a>
+        <a href="/docs/link-scraper">🔗 Link Scraper</a>
+        <a href="/docs/list-scraping">📝 List Scraping</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

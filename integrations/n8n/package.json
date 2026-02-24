@@ -1,0 +1,57 @@
+{
+  "name": "n8n-nodes-xactions",
+  "version": "1.0.0",
+  "description": "n8n community node for XActions — X/Twitter automation without API fees",
+  "keywords": [
+    "n8n-community-node-package",
+    "n8n",
+    "xactions",
+    "twitter",
+    "x",
+    "bluesky",
+    "mastodon",
+    "threads",
+    "social-media",
+    "automation",
+    "scraping"
+  ],
+  "license": "MIT",
+  "author": "nichxbt",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nirholas/XActions"
+  },
+  "main": "index.js",
+  "type": "module",
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "credentials": [
+      "dist/credentials/XActionsApi.credentials.js"
+    ],
+    "nodes": [
+      "dist/nodes/XActions/XActions.node.js",
+      "dist/nodes/XActions/XActionsTrigger.node.js"
+    ]
+  },
+  "scripts": {
+    "build": "cp -r credentials nodes dist/ 2>/dev/null; echo 'Build complete'",
+    "dev": "node --check nodes/XActions/XActions.node.js && node --check nodes/XActions/XActionsTrigger.node.js && echo 'Syntax OK'",
+    "lint": "node --check credentials/XActionsApi.credentials.js && node --check nodes/XActions/XActions.node.js && node --check nodes/XActions/XActionsTrigger.node.js && node --check index.js"
+  },
+  "peerDependencies": {
+    "n8n-workflow": ">=1.0.0"
+  },
+  "dependencies": {
+    "xactions": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "dist/",
+    "credentials/",
+    "nodes/",
+    "index.js",
+    "README.md"
+  ]
+}

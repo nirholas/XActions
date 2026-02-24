@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tweet Scraping — Free X/Twitter Scrapers Tool | XActions</title>
+  <meta name="description" content="Scrape tweets from any public X/Twitter profile with full metadata extraction.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, tweet, scraping, scrapers, tweet scraping twitter, twitter tweet scraping">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Tweet Scraping — XActions">
+  <meta property="og:description" content="Scrape tweets from any public X/Twitter profile with full metadata extraction.">
+  <meta property="og:url" content="https://xactions.app/docs/tweet-scraping">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Tweet Scraping — Free X/Twitter Tool">
+  <meta name="twitter:description" content="Scrape tweets from any public X/Twitter profile with full metadata extraction.">
+
+  <link rel="canonical" href="https://xactions.app/docs/tweet-scraping">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Tweet Scraping — Free X/Twitter Scrapers Tool | XActions",
+    "description": "Scrape tweets from any public X/Twitter profile with full metadata extraction.",
+    "url": "https://xactions.app/docs/tweet-scraping",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/tweet-scraping",
+    "articleSection": "Scrapers",
+    "keywords": "xactions, twitter automation, x automation, free, tweet, scraping, scrapers, tweet scraping twitter, twitter tweet scraping"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Tweet Scraping", "item": "https://xactions.app/docs/tweet-scraping" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use Tweet Scraping",
+    "description": "Scrape tweets from any public X/Twitter profile with full metadata extraction.",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions Tweet Scraping script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>🐦 Tweet Scraping</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › Tweet Scraping
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Scrapers</span>
+        <h1>Tweet Scraping</h1>
+<p>Scrape tweets from any public X/Twitter profile with full metadata extraction.</p>
+<h2>What You Get</h2>
+<ul>
+<li>Tweet text content</li>
+<li>Timestamps (posted date/time)</li>
+<li>Engagement metrics (likes, retweets, replies, views)</li>
+<li>Media URLs (images, videos, GIFs)</li>
+<li>Quote tweet references</li>
+<li>Reply-to information</li>
+<li>Export to JSON or CSV</li>
+</ul>
+<hr>
+<h2>Example 1: Browser Console (Quick)</h2>
+<p><strong>Best for:</strong> Scraping up to ~100 tweets quickly from any profile</p>
+<pre><code class="language-javascript">// ============================================
+// XActions - Tweet Scraper (Browser Console)
+// Go to: x.com/USERNAME (any profile page)
+// Open console (F12), paste this
+// Author: nich (@nichxbt)
+// ============================================
+
+(async () =&gt; {
+  const TARGET_COUNT = 100; // Adjust as needed
+  const SCROLL_DELAY = 2000; // ms between scrolls
+  
+  console.log(&#39;🐦 Starting tweet scrape...&#39;);
+  console.log(`📊 Target: ${TARGET_COUNT} tweets`);
+  
+  const tweets = new Map();
+  let retries = 0;
+  const maxRetries = 15;
+  
+  // Helper to parse count strings like &quot;1.2K&quot;, &quot;45M&quot;
+  const parseCount = (str) =&gt; {
+    if (!str) return 0;
+    str = str.trim().replace(/,/g, &#39;&#39;);
+    if (str.endsWith(&#39;K&#39;)) return Math.round(parseFloat(str) * 1000);
+    if (str.endsWith(&#39;M&#39;)) return Math.round(parseFloat(str) * 1000000);
+    if (str.endsWith(&#39;B&#39;)) return Math.round(parseFloat(str) * 1000000000);
+    return parseInt(str) || 0;
+  };
+  
+  // Extract tweet data from article elements
+  const extractTweets = () =&gt; {
+    const articles = document.querySelectorAll(&#39;article[data-testid=&quot;tweet&quot;]&#39;);
+    const extracted = [];
+    
+    articles.forEach(article =&gt; {
+      try {
+        // Get tweet ID from the tweet link
+        const tweetLink = article.querySelector(&#39;a[href*=&quot;/status/&quot;]&#39;);
+        const href = tweetLink?.getAttribute(&#39;href&#39;) || &#39;&#39;;
+        const statusMatch = href.match(/\/status\/(\d+)/);
+        const tweetId = statusMatch ? statusMatch[1] : null;
+        
+        if (!tweetId) return;
+        
+        // Get author info
+        const userLink = article.querySelector(&#39;a[href^=&quot;/&quot;][role=&quot;link&quot;]&#39;);
+        const authorHref = userLink?.getAttribute(&#39;href&#39;) || &#39;&#39;;
+        const author = authorHref.split(&#39;/&#39;)[1] || null;
+        
+        // Get display name
+        const nameEl = article.querySelector(&#39;[data-testid=&quot;User-Name&quot;]&#39;);
+        const displayName = nameEl?.querySelector(&#39;span&#39;)?.textContent?.trim() || null;
+        
+        // Get tweet text
+        const textEl = article.querySelector(&#39;[data-testid=&quot;tweetText&quot;]&#39;);
+        const text = textEl?.textContent?.trim() || &#39;&#39;;
+        
+        // Get timestamp
+        const timeEl = article.querySelector(&#39;time&#39;);
+        const timestamp = timeEl?.getAttribute(&#39;datetime&#39;) || null;
+        const displayTime = timeEl?.textContent?.trim() || null;
+        
+        // Get engagement metrics
+        const replyBtn = article.querySelector(&#39;[data-testid=&quot;reply&quot;]&#39;);
+        const retweetBtn = article.querySelector(&#39;[data-testid=&quot;retweet&quot;]&#39;);
+        const likeBtn = article.querySelector(&#39;[data-testid=&quot;like&quot;]&#39;);
+        const viewsEl = article.querySelector(&#39;a[href*=&quot;/analytics&quot;]&#39;);
+        
+        const replies = parseCount(replyBtn?.textContent);
+        const retweets = parseCount(retweetBtn?.textContent);
+        const likes = parseCount(likeBtn?.textContent);
+        const views = parseCount(viewsEl?.textContent);
+        
+        // Get media (images, videos, GIFs)
+        const mediaUrls = [];
+        
+        // Images
+        const images = article.querySelectorAll(&#39;[data-testid=&quot;tweetPhoto&quot;] img&#39;);
+        images.forEach(img =&gt; {
+          const src = img.getAttribute(&#39;src&#39;);
+          if (src &amp;&amp; src.includes(&#39;pbs.twimg.com/media&#39;)) {
+            // Get high-res version
+            const highRes = src.replace(/&amp;name=\w+/, &#39;&amp;name=large&#39;);
+            mediaUrls.push({
+              type: &#39;image&#39;,
+              url: highRes,
+            });
+          }
+        });
+        
+        // Videos/GIFs
+        const videos = article.querySelectorAll(&#39;video&#39;);
+        videos.forEach(video =&gt; {
+          const poster = video.getAttribute(&#39;poster&#39;);
+          const src = video.querySelector(&#39;source&#39;)?.getAttribute(&#39;src&#39;);
+          mediaUrls.push({
+            type: video.closest(&#39;[data-testid=&quot;videoPlayer&quot;]&#39;) ? &#39;video&#39; : &#39;gif&#39;,
+            url: src || poster || null,
+            thumbnail: poster,
+          });
+        });
+        
+        // Check if it&#39;s a retweet
+        const retweetIndicator = article.querySelector(&#39;[data-testid=&quot;socialContext&quot;]&#39;);
+        const isRetweet = retweetIndicator?.textContent?.includes(&#39;reposted&#39;) || false;
+        
+        // Check if it&#39;s a reply
+        const replyIndicator = article.querySelector(&#39;[data-testid=&quot;tweet&quot;] &gt; div &gt; div &gt; div &gt; div &gt; a[href*=&quot;/status/&quot;]&#39;);
+        const isReply = !!article.querySelector(&#39;[data-testid=&quot;tweet&quot;] [data-testid=&quot;tweetText&quot;]&#39;)?.closest(&#39;div&#39;)?.querySelector(&#39;a[href*=&quot;/status/&quot;]&#39;);
+        
+        // Get quoted tweet if any
+        const quotedTweet = article.querySelector(&#39;[data-testid=&quot;tweet&quot;] [role=&quot;link&quot;][href*=&quot;/status/&quot;]&#39;);
+        let quotedTweetId = null;
+        if (quotedTweet) {
+          const quotedHref = quotedTweet.getAttribute(&#39;href&#39;) || &#39;&#39;;
+          const quotedMatch = quotedHref.match(/\/status\/(\d+)/);
+          quotedTweetId = quotedMatch ? quotedMatch[1] : null;
+        }
+        
+        extracted.push({
+          id: tweetId,
+          author,
+          displayName,
+          text,
+          timestamp,
+          displayTime,
+          replies,
+          retweets,
+          likes,
+          views,
+          media: mediaUrls,
+          isRetweet,
+          quotedTweetId,
+          url: `https://x.com/${author}/status/${tweetId}`,
+        });
+      } catch (e) {
+        // Skip malformed tweets
+      }
+    });
+    
+    return extracted;
+  };
+  
+  // Sleep helper
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+  
+  // Main scraping loop
+  while (tweets.size &lt; TARGET_COUNT &amp;&amp; retries &lt; maxRetries) {
+    // Extract visible tweets
+    const extracted = extractTweets();
+    const prevSize = tweets.size;
+    
+    // Add to map (dedupes automatically by tweet ID)
+    extracted.forEach(tweet =&gt; {
+      if (!tweets.has(tweet.id)) {
+        tweets.set(tweet.id, tweet);
+      }
+    });
+    
+    // Progress update
+    console.log(`📈 Scraped: ${tweets.size} tweets`);
+    
+    // Check if we&#39;re stuck
+    if (tweets.size === prevSize) {
+      retries++;
+      console.log(`⏳ No new tweets found (retry ${retries}/${maxRetries})`);
+    } else {
+      retries = 0;
+    }
+    
+    // Scroll to load more
+    window.scrollTo(0, document.body.scrollHeight);
+    await sleep(SCROLL_DELAY);
+  }
+  
+  // Convert to array and sort by timestamp (newest first)
+  const result = Array.from(tweets.values())
+    .sort((a, b) =&gt; new Date(b.timestamp) - new Date(a.timestamp));
+  
+  // Summary
+  console.log(&#39;\n✅ Scraping complete!&#39;);
+  console.log(`📊 Total tweets scraped: ${result.length}`);
+  console.log(`🖼️ With media: ${result.filter(t =&gt; t.media.length &gt; 0).length}`);
+  console.log(`🔁 Retweets: ${result.filter(t =&gt; t.isRetweet).length}`);
+  console.log(`❤️ Total likes: ${result.reduce((sum, t) =&gt; sum + t.likes, 0).toLocaleString()}`);
+  console.log(`🔄 Total retweets: ${result.reduce((sum, t) =&gt; sum + t.retweets, 0).toLocaleString()}`);
+  
+  // Copy to clipboard
+  const json = JSON.stringify(result, null, 2);
+  await navigator.clipboard.writeText(json);
+  console.log(&#39;\n📋 Copied to clipboard!&#39;);
+  
+  // Also log for inspection
+  console.log(&#39;\n💾 Data (right-click → Copy object):&#39;);
+  console.log(result);
+  
+  // Create downloadable file
+  const blob = new Blob([json], { type: &#39;application/json&#39; });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement(&#39;a&#39;);
+  a.href = url;
+  a.download = `tweets-${new Date().toISOString().split(&#39;T&#39;)[0]}.json`;
+  a.click();
+  console.log(&#39;📥 Download started!&#39;);
+  
+  return result;
+})();
+</code></pre>
+<p><strong>What happens:</strong></p>
+<ol>
+<li>Script scrolls through the user&#39;s tweet timeline</li>
+<li>Extracts full tweet data including text, metrics, media</li>
+<li>Deduplicates automatically by tweet ID</li>
+<li>Shows progress in console</li>
+<li>Downloads JSON file automatically</li>
+<li>Copies data to clipboard</li>
+</ol>
+<p><strong>Sample Output:</strong></p>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;1234567890123456789&quot;,
+  &quot;author&quot;: &quot;elonmusk&quot;,
+  &quot;displayName&quot;: &quot;Elon Musk&quot;,
+  &quot;text&quot;: &quot;The future is here! 🚀&quot;,
+  &quot;timestamp&quot;: &quot;2026-01-01T15:30:00.000Z&quot;,
+  &quot;displayTime&quot;: &quot;3h&quot;,
+  &quot;replies&quot;: 5432,
+  &quot;retweets&quot;: 12000,
+  &quot;likes&quot;: 98000,
+  &quot;views&quot;: 5400000,
+  &quot;media&quot;: [
+    {
+      &quot;type&quot;: &quot;image&quot;,
+      &quot;url&quot;: &quot;https://pbs.twimg.com/media/...&quot;
+    }
+  ],
+  &quot;isRetweet&quot;: false,
+  &quot;quotedTweetId&quot;: null,
+  &quot;url&quot;: &quot;https://x.com/elonmusk/status/1234567890123456789&quot;
+}
+</code></pre>
+<hr>
+<h2>Example 2: Node.js with Puppeteer (Production-Ready)</h2>
+<p><strong>Best for:</strong> Large tweet archives, automation, scheduled jobs, data analysis</p>
+<pre><code class="language-javascript">// ============================================
+// XActions - Tweet Scraper (Node.js)
+// Save as: scrape-tweets.js
+// Run: node scrape-tweets.js elonmusk 200
+// Author: nich (@nichxbt)
+// ============================================
+
+import puppeteer from &#39;puppeteer-extra&#39;;
+import StealthPlugin from &#39;puppeteer-extra-plugin-stealth&#39;;
+import fs from &#39;fs/promises&#39;;
+
+// Use stealth plugin to avoid detection
+puppeteer.use(StealthPlugin());
+
+/**
+ * Parse count strings like &quot;1.2K&quot;, &quot;45M&quot; to numbers
+ */
+function parseCount(str) {
+  if (!str) return 0;
+  str = str.trim().replace(/,/g, &#39;&#39;);
+  if (str.endsWith(&#39;K&#39;)) return Math.round(parseFloat(str) * 1000);
+  if (str.endsWith(&#39;M&#39;)) return Math.round(parseFloat(str) * 1000000);
+  if (str.endsWith(&#39;B&#39;)) return Math.round(parseFloat(str) * 1000000000);
+  return parseInt(str) || 0;
+}
+
+/**
+ * Scrape tweets from a Twitter/X profile
+ * @param {string} username - Twitter username (without @)
+ * @param {Object} options - Configuration options
+ * @returns {Array} Array of tweet objects
+ */
+async function scrapeTweets(username, options = {}) {
+  const {
+    limit = 100,
+    headless = true,
+    authToken = null,
+    onProgress = null,
+    scrollDelay = 2000,
+    maxRetries = 15,
+    includeReplies = false,
+  } = options;
+
+  console.log(`🐦 Scraping tweets from @${username}`);
+  console.log(`📊 Limit: ${limit} tweets`);
+
+  // Launch browser
+  const browser = await puppeteer.launch({
+    headless: headless ? &#39;new&#39; : false,
+    args: [
+      &#39;--no-sandbox&#39;,
+      &#39;--disable-setuid-sandbox&#39;,
+      &#39;--disable-blink-features=AutomationControlled&#39;,
+    ],
+  });
+
+  try {
+    const page = await browser.newPage();
+    
+    // Set realistic viewport and user agent
+    await page.setViewport({ 
+      width: 1280 + Math.floor(Math.random() * 100), 
+      height: 900 + Math.floor(Math.random() * 100),
+    });
+    
+    await page.setUserAgent(
+      &#39;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36&#39;
+    );
+
+    // Optional: Set auth cookie for logged-in view
+    if (authToken) {
+      await page.setCookie({
+        name: &#39;auth_token&#39;,
+        value: authToken,
+        domain: &#39;.x.com&#39;,
+        path: &#39;/&#39;,
+        httpOnly: true,
+        secure: true,
+      });
+    }
+
+    // Navigate to profile (with or without replies)
+    const profileUrl = includeReplies 
+      ? `https://x.com/${username}/with_replies`
+      : `https://x.com/${username}`;
+      
+    await page.goto(profileUrl, {
+      waitUntil: &#39;networkidle2&#39;,
+      timeout: 30000,
+    });
+
+    // Wait for tweets to load
+    await page.waitForSelector(&#39;article[data-testid=&quot;tweet&quot;]&#39;, { timeout: 15000 });
+    
+    // Add a small random delay (human-like)
+    await new Promise(r =&gt; setTimeout(r, 1500 + Math.random() * 1000));
+
+    const tweets = new Map();
+    let retries = 0;
+
+    // Main scraping loop
+    while (tweets.size &lt; limit &amp;&amp; retries &lt; maxRetries) {
+      // Extract tweets from page
+      const extracted = await page.evaluate(() =&gt; {
+        const parseCountInPage = (str) =&gt; {
+          if (!str) return 0;
+          str = str.trim().replace(/,/g, &#39;&#39;);
+          if (str.endsWith(&#39;K&#39;)) return Math.round(parseFloat(str) * 1000);
+          if (str.endsWith(&#39;M&#39;)) return Math.round(parseFloat(str) * 1000000);
+          if (str.endsWith(&#39;B&#39;)) return Math.round(parseFloat(str) * 1000000000);
+          return parseInt(str) || 0;
+        };
+
+        const articles = document.querySelectorAll(&#39;article[data-testid=&quot;tweet&quot;]&#39;);
+        const results = [];
+        
+        articles.forEach(article =&gt; {
+          try {
+            // Get tweet ID
+            const tweetLink = article.querySelector(&#39;a[href*=&quot;/status/&quot;]&#39;);
+            const href = tweetLink?.getAttribute(&#39;href&#39;) || &#39;&#39;;
+            const statusMatch = href.match(/\/status\/(\d+)/);
+            const tweetId = statusMatch ? statusMatch[1] : null;
+            
+            if (!tweetId) return;
+            
+            // Author info
+            const userLink = article.querySelector(&#39;a[href^=&quot;/&quot;][role=&quot;link&quot;]&#39;);
+            const authorHref = userLink?.getAttribute(&#39;href&#39;) || &#39;&#39;;
+            const author = authorHref.split(&#39;/&#39;)[1] || null;
+            
+            const nameEl = article.querySelector(&#39;[data-testid=&quot;User-Name&quot;]&#39;);
+            const displayName = nameEl?.querySelector(&#39;span&#39;)?.textContent?.trim() || null;
+            
+            // Tweet text
+            const textEl = article.querySelector(&#39;[data-testid=&quot;tweetText&quot;]&#39;);
+            const text = textEl?.textContent?.trim() || &#39;&#39;;
+            
+            // Timestamp
+            const timeEl = article.querySelector(&#39;time&#39;);
+            const timestamp = timeEl?.getAttribute(&#39;datetime&#39;) || null;
+            const displayTime = timeEl?.textContent?.trim() || null;
+            
+            // Engagement metrics
+            const replyBtn = article.querySelector(&#39;[data-testid=&quot;reply&quot;]&#39;);
+            const retweetBtn = article.querySelector(&#39;[data-testid=&quot;retweet&quot;]&#39;);
+            const likeBtn = article.querySelector(&#39;[data-testid=&quot;like&quot;]&#39;);
+            const viewsEl = article.querySelector(&#39;a[href*=&quot;/analytics&quot;]&#39;);
+            
+            const replies = parseCountInPage(replyBtn?.textContent);
+            const retweets = parseCountInPage(retweetBtn?.textContent);
+            const likes = parseCountInPage(likeBtn?.textContent);
+            const views = parseCountInPage(viewsEl?.textContent);
+            
+            // Media extraction
+            const media = [];
+            
+            // Images
+            const images = article.querySelectorAll(&#39;[data-testid=&quot;tweetPhoto&quot;] img&#39;);
+            images.forEach(img =&gt; {
+              const src = img.getAttribute(&#39;src&#39;);
+              if (src &amp;&amp; src.includes(&#39;pbs.twimg.com/media&#39;)) {
+                media.push({
+                  type: &#39;image&#39;,
+                  url: src.replace(/&amp;name=\w+/, &#39;&amp;name=large&#39;),
+                });
+              }
+            });
+            
+            // Videos
+            const videos = article.querySelectorAll(&#39;video&#39;);
+            videos.forEach(video =&gt; {
+              const poster = video.getAttribute(&#39;poster&#39;);
+              const src = video.querySelector(&#39;source&#39;)?.getAttribute(&#39;src&#39;);
+              media.push({
+                type: &#39;video&#39;,
+                url: src || null,
+                thumbnail: poster,
+              });
+            });
+            
+            // Retweet check
+            const socialContext = article.querySelector(&#39;[data-testid=&quot;socialContext&quot;]&#39;);
+            const isRetweet = socialContext?.textContent?.includes(&#39;reposted&#39;) || false;
+            
+            // Quote tweet
+            let quotedTweetId = null;
+            const quotedTweet = article.querySelector(&#39;[role=&quot;link&quot;][href*=&quot;/status/&quot;]&#39;);
+            if (quotedTweet &amp;&amp; quotedTweet !== tweetLink) {
+              const quotedHref = quotedTweet.getAttribute(&#39;href&#39;) || &#39;&#39;;
+              const quotedMatch = quotedHref.match(/\/status\/(\d+)/);
+              quotedTweetId = quotedMatch ? quotedMatch[1] : null;
+            }
+            
+            results.push({
+              id: tweetId,
+              author,
+              displayName,
+              text,
+              timestamp,
+              displayTime,
+              replies,
+              retweets,
+              likes,
+              views,
+              media,
+              isRetweet,
+              quotedTweetId,
+              url: `https://x.com/${author}/status/${tweetId}`,
+            });
+          } catch (e) {
+            // Skip malformed tweets
+          }
+        });
+        
+        return results;
+      });
+
+      const prevSize = tweets.size;
+      
+      // Add to map (dedupes by ID)
+      extracted.forEach(tweet =&gt; {
+        if (!tweets.has(tweet.id)) {
+          tweets.set(tweet.id, tweet);
+        }
+      });
+
+      // Progress callback
+      if (onProgress) {
+        onProgress({
+          scraped: tweets.size,
+          limit,
+          percent: Math.round((tweets.size / limit) * 100),
+        });
+      }
+
+      // Check if stuck
+      if (tweets.size === prevSize) {
+        retries++;
+      } else {
+        retries = 0;
+      }
+
+      // Scroll down
+      await page.evaluate(() =&gt; {
+        window.scrollTo(0, document.body.scrollHeight);
+      });
+      
+      // Random delay between scrolls
+      await new Promise(r =&gt; setTimeout(r, scrollDelay + Math.random() * 1000));
+    }
+
+    // Convert to array and sort by timestamp
+    const result = Array.from(tweets.values())
+      .sort((a, b) =&gt; new Date(b.timestamp) - new Date(a.timestamp))
+      .slice(0, limit);
+    
+    console.log(`\n✅ Scraped ${result.length} tweets`);
+    return result;
+
+  } finally {
+    await browser.close();
+  }
+}
+
+/**
+ * Export tweets to JSON file
+ */
+async function exportJSON(data, filename) {
+  const json = JSON.stringify(data, null, 2);
+  await fs.writeFile(filename, json);
+  console.log(`💾 Saved to ${filename}`);
+}
+
+/**
+ * Export tweets to CSV file
+ */
+async function exportCSV(data, filename) {
+  const headers = [
+    &#39;id&#39;,
+    &#39;author&#39;,
+    &#39;displayName&#39;,
+    &#39;text&#39;,
+    &#39;timestamp&#39;,
+    &#39;replies&#39;,
+    &#39;retweets&#39;,
+    &#39;likes&#39;,
+    &#39;views&#39;,
+    &#39;mediaCount&#39;,
+    &#39;isRetweet&#39;,
+    &#39;url&#39;
+  ];
+  
+  const escapeCSV = (val) =&gt; {
+    if (val === null || val === undefined) return &#39;&#39;;
+    const str = String(val);
+    if (str.includes(&#39;,&#39;) || str.includes(&#39;&quot;&#39;) || str.includes(&#39;\n&#39;)) {
+      return `&quot;${str.replace(/&quot;/g, &#39;&quot;&quot;&#39;).replace(/\n/g, &#39; &#39;)}&quot;`;
+    }
+    return str;
+  };
+  
+  const rows = data.map(tweet =&gt; 
+    headers.map(h =&gt; {
+      if (h === &#39;mediaCount&#39;) return tweet.media?.length || 0;
+      return escapeCSV(tweet[h]);
+    }).join(&#39;,&#39;)
+  );
+  
+  const csv = [headers.join(&#39;,&#39;), ...rows].join(&#39;\n&#39;);
+  await fs.writeFile(filename, csv);
+  console.log(`💾 Saved to ${filename}`);
+}
+
+/**
+ * Export media URLs to a separate file
+ */
+async function exportMedia(data, filename) {
+  const mediaList = [];
+  
+  data.forEach(tweet =&gt; {
+    if (tweet.media &amp;&amp; tweet.media.length &gt; 0) {
+      tweet.media.forEach((m, idx) =&gt; {
+        mediaList.push({
+          tweetId: tweet.id,
+          tweetUrl: tweet.url,
+          mediaIndex: idx + 1,
+          type: m.type,
+          url: m.url,
+          thumbnail: m.thumbnail || null,
+        });
+      });
+    }
+  });
+  
+  if (mediaList.length &gt; 0) {
+    await fs.writeFile(filename, JSON.stringify(mediaList, null, 2));
+    console.log(`🖼️ Saved ${mediaList.length} media items to ${filename}`);
+  }
+  
+  return mediaList;
+}
+
+// ============================================
+// CLI Usage
+// ============================================
+
+const args = process.argv.slice(2);
+const username = args[0];
+const limit = parseInt(args[1]) || 100;
+
+if (!username) {
+  console.log(`
+╔══════════════════════════════════════════════════════════════╗
+║          XActions - Tweet Scraper (Node.js)                 ║
+║          Author: nich (@nichxbt)                            ║
+╚══════════════════════════════════════════════════════════════╝
+
+Usage: node scrape-tweets.js &lt;username&gt; [limit]
+
+Arguments:
+  username    Twitter/X username (without @)
+  limit       Maximum tweets to scrape (default: 100)
+
+Examples:
+  node scrape-tweets.js elonmusk 200
+  node scrape-tweets.js naval 50
+  node scrape-tweets.js pmarca
+
+Output:
+  {username}-tweets-{date}.json    Full tweet data
+  {username}-tweets-{date}.csv     Spreadsheet format
+  {username}-media-{date}.json     Media URLs only
+`);
+  process.exit(1);
+}
+
+// Run the scraper
+console.log(&#39;&#39;);
+console.log(&#39;═&#39;.repeat(50));
+
+scrapeTweets(username, {
+  limit,
+  onProgress: ({ scraped, limit, percent }) =&gt; {
+    process.stdout.write(`\r📈 Progress: ${scraped}/${limit} (${percent}%)`);
+  },
+})
+  .then(async (tweets) =&gt; {
+    console.log(&#39;\n&#39; + &#39;═&#39;.repeat(50));
+    
+    // Calculate stats
+    const withMedia = tweets.filter(t =&gt; t.media.length &gt; 0).length;
+    const retweetCount = tweets.filter(t =&gt; t.isRetweet).length;
+    const totalLikes = tweets.reduce((sum, t) =&gt; sum + t.likes, 0);
+    const totalRetweets = tweets.reduce((sum, t) =&gt; sum + t.retweets, 0);
+    const totalViews = tweets.reduce((sum, t) =&gt; sum + t.views, 0);
+    const avgEngagement = tweets.length &gt; 0 
+      ? Math.round((totalLikes + totalRetweets) / tweets.length) 
+      : 0;
+    
+    // Display stats
+    console.log(&#39;\n📊 Summary:&#39;);
+    console.log(`   Total tweets: ${tweets.length}`);
+    console.log(`   With media: ${withMedia}`);
+    console.log(`   Retweets: ${retweetCount}`);
+    console.log(`   Original: ${tweets.length - retweetCount}`);
+    console.log(&#39;&#39;);
+    console.log(&#39;📈 Engagement:&#39;);
+    console.log(`   Total likes: ${totalLikes.toLocaleString()}`);
+    console.log(`   Total retweets: ${totalRetweets.toLocaleString()}`);
+    console.log(`   Total views: ${totalViews.toLocaleString()}`);
+    console.log(`   Avg engagement/tweet: ${avgEngagement.toLocaleString()}`);
+    console.log(&#39;&#39;);
+    
+    // Export files
+    const date = new Date().toISOString().split(&#39;T&#39;)[0];
+    await exportJSON(tweets, `${username}-tweets-${date}.json`);
+    await exportCSV(tweets, `${username}-tweets-${date}.csv`);
+    await exportMedia(tweets, `${username}-media-${date}.json`);
+    
+    // Show sample tweets
+    console.log(&#39;\n📋 Sample tweets (first 3):&#39;);
+    console.log(&#39;─&#39;.repeat(50));
+    tweets.slice(0, 3).forEach((t, i) =&gt; {
+      const preview = t.text.length &gt; 80 ? t.text.slice(0, 80) + &#39;...&#39; : t.text;
+      console.log(`${i + 1}. ${preview}`);
+      console.log(`   ❤️ ${t.likes.toLocaleString()} · 🔁 ${t.retweets.toLocaleString()} · 💬 ${t.replies.toLocaleString()}`);
+      console.log(&#39;&#39;);
+    });
+  })
+  .catch((error) =&gt; {
+    console.error(&#39;\n❌ Error:&#39;, error.message);
+    process.exit(1);
+  });
+</code></pre>
+<p><strong>Installation:</strong></p>
+<pre><code class="language-bash"># Install dependencies
+npm install puppeteer puppeteer-extra puppeteer-extra-plugin-stealth
+</code></pre>
+<p><strong>Run it:</strong></p>
+<pre><code class="language-bash"># Scrape 200 tweets from a user
+node scrape-tweets.js elonmusk 200
+</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code>═══════════════════════════════════════════════════
+🐦 Scraping tweets from @elonmusk
+📊 Limit: 200 tweets
+
+📈 Progress: 200/200 (100%)
+═══════════════════════════════════════════════════
+
+📊 Summary:
+   Total tweets: 200
+   With media: 45
+   Retweets: 12
+   Original: 188
+
+📈 Engagement:
+   Total likes: 2,450,000
+   Total retweets: 342,000
+   Total views: 89,000,000
+   Avg engagement/tweet: 13,960
+
+💾 Saved to elonmusk-tweets-2026-01-01.json
+💾 Saved to elonmusk-tweets-2026-01-01.csv
+🖼️ Saved 67 media items to elonmusk-media-2026-01-01.json
+
+📋 Sample tweets (first 3):
+──────────────────────────────────────────────────
+1. The future is here! 🚀
+   ❤️ 98,000 · 🔁 12,000 · 💬 5,432
+
+2. Working on something exciting. More details coming soon...
+   ❤️ 45,000 · 🔁 3,200 · 💬 2,100
+
+3. Good morning everyone!
+   ❤️ 120,000 · 🔁 8,500 · 💬 15,000
+</code></pre>
+<hr>
+<h2>Tips</h2>
+<h3>🚦 Rate Limiting</h3>
+<ul>
+<li><strong>Browser Console</strong>: Wait 2-3 seconds between scrolls to avoid rate limits</li>
+<li><strong>Node.js</strong>: Use <code>scrollDelay: 2500</code> or higher for large scrapes</li>
+<li>Don&#39;t scrape the same profile more than once per hour</li>
+<li>For 500+ tweets, consider breaking into multiple sessions</li>
+</ul>
+<pre><code class="language-javascript">// Safe configuration for large scrapes
+const tweets = await scrapeTweets(&#39;username&#39;, {
+  limit: 500,
+  scrollDelay: 3000, // 3 seconds between scrolls
+});
+</code></pre>
+<h3>🔐 Authentication</h3>
+<p>For better results (view counts, etc.), use your auth token:</p>
+<pre><code class="language-javascript">const tweets = await scrapeTweets(&#39;username&#39;, {
+  authToken: &#39;your_auth_token_here&#39;, // From browser cookies
+});
+</code></pre>
+<p><strong>How to get auth_token:</strong></p>
+<ol>
+<li>Go to x.com and login</li>
+<li>Open DevTools (F12) → Application → Cookies</li>
+<li>Find <code>auth_token</code> and copy the value</li>
+</ol>
+<h3>📊 Best Practices</h3>
+<ol>
+<li><strong>Start small</strong>: Test with 20-50 tweets first</li>
+<li><strong>Add delays</strong>: More delay = less chance of rate limiting</li>
+<li><strong>Rotate IPs</strong>: For heavy scraping, use proxies</li>
+<li><strong>Save incrementally</strong>: For long scrapes, save progress periodically</li>
+<li><strong>Respect the platform</strong>: Don&#39;t abuse scraping capabilities</li>
+</ol>
+<h3>🐛 Error Handling</h3>
+<pre><code class="language-javascript">try {
+  const tweets = await scrapeTweets(username, { limit: 100 });
+} catch (error) {
+  if (error.message.includes(&#39;timeout&#39;)) {
+    console.log(&#39;Profile took too long to load - try again&#39;);
+  } else if (error.message.includes(&#39;tweet&#39;)) {
+    console.log(&#39;No tweets found - account may be private or suspended&#39;);
+  } else {
+    console.log(&#39;Unknown error:&#39;, error.message);
+  }
+}
+</code></pre>
+<h3>📁 Working with the Data</h3>
+<pre><code class="language-javascript">// Filter to only original tweets (no retweets)
+const original = tweets.filter(t =&gt; !t.isRetweet);
+
+// Find most liked tweet
+const mostLiked = tweets.reduce((a, b) =&gt; a.likes &gt; b.likes ? a : b);
+
+// Get all image URLs
+const allImages = tweets
+  .flatMap(t =&gt; t.media)
+  .filter(m =&gt; m.type === &#39;image&#39;)
+  .map(m =&gt; m.url);
+
+// Filter tweets with high engagement
+const viral = tweets.filter(t =&gt; t.likes &gt; 10000 || t.retweets &gt; 1000);
+</code></pre>
+<hr>
+<h2>Website Alternative</h2>
+<p>Don&#39;t want to code? Use <a href="https://xactions.app">xactions.app</a>:</p>
+<ol>
+<li>Login with your X account</li>
+<li>Enter any username</li>
+<li>Click &quot;Scrape Tweets&quot;</li>
+<li>Select date range and filters</li>
+<li>Download JSON, CSV, or view in dashboard</li>
+</ol>
+<p><strong>Features:</strong></p>
+<ul>
+<li>No coding required</li>
+<li>Scheduled scraping</li>
+<li>Historical data storage</li>
+<li>Export to multiple formats</li>
+<li>Analytics dashboard</li>
+</ul>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try Tweet Scraping?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/followers-scraping">📋 Followers Scraping</a>
+        <a href="/docs/following-scraping">📋 Following Scraping</a>
+        <a href="/docs/hashtag-scraping">#️⃣ Hashtag Scraping</a>
+        <a href="/docs/likes-scraping">❤️ Likes Scraping</a>
+        <a href="/docs/link-scraper">🔗 Link Scraper</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

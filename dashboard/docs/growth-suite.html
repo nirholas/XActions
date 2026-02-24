@@ -1,0 +1,1522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Growth Suite — Free X/Twitter Growth Tool | XActions</title>
+  <meta name="description" content="All-in-one growth automation combining follow + like + smart unfollow for X (Twitter).">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, growth, suite, growth suite twitter, twitter growth suite">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Growth Suite — XActions">
+  <meta property="og:description" content="All-in-one growth automation combining follow + like + smart unfollow for X (Twitter).">
+  <meta property="og:url" content="https://xactions.app/docs/growth-suite">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Growth Suite — Free X/Twitter Tool">
+  <meta name="twitter:description" content="All-in-one growth automation combining follow + like + smart unfollow for X (Twitter).">
+
+  <link rel="canonical" href="https://xactions.app/docs/growth-suite">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Growth Suite — Free X/Twitter Growth Tool | XActions",
+    "description": "All-in-one growth automation combining follow + like + smart unfollow for X (Twitter).",
+    "url": "https://xactions.app/docs/growth-suite",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/growth-suite",
+    "articleSection": "Growth",
+    "keywords": "xactions, twitter automation, x automation, free, growth, suite, growth suite twitter, twitter growth suite"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Growth Suite", "item": "https://xactions.app/docs/growth-suite" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use Growth Suite",
+    "description": "All-in-one growth automation combining follow + like + smart unfollow for X (Twitter).",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions Growth Suite script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>🚀 Growth Suite</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › Growth Suite
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Growth</span>
+        <h1>🚀 Growth Suite</h1>
+<p>All-in-one growth automation combining follow + like + smart unfollow for X (Twitter).</p>
+<hr>
+<h2>⭐ Pro Feature</h2>
+<blockquote>
+<p><strong>This is an advanced feature available in XActions Pro tier.</strong> Growth Suite combines multiple automation strategies into a single, intelligent workflow that grows your account organically while you focus on creating content.</p>
+</blockquote>
+<hr>
+<h2>📋 What It Does</h2>
+<p>The Growth Suite is your <strong>complete growth automation engine</strong> that:</p>
+<ol>
+<li><strong>Keyword-Based Following</strong> - Searches for users by niche keywords and follows promising accounts</li>
+<li><strong>Auto-Liking</strong> - Engages with content in your timeline to boost visibility</li>
+<li><strong>Smart Unfollowing</strong> - Automatically unfollows users who don&#39;t follow back after a grace period</li>
+<li><strong>Engagement Tracking</strong> - Remembers who you&#39;ve followed/liked to avoid duplicates</li>
+<li><strong>Session Management</strong> - Runs for configurable time periods with proper breaks</li>
+<li><strong>Rate Limiting</strong> - Built-in delays and limits to protect your account</li>
+</ol>
+<p><strong>The Growth Flywheel:</strong></p>
+<pre><code>┌─────────────────────────────────────────────────────────────┐
+│                                                             │
+│   🔍 Search Keywords  ──▶  👤 Follow Users  ──▶  ❤️ Like    │
+│         ▲                                         Content   │
+│         │                                            │      │
+│         │                                            ▼      │
+│    📊 Track &amp;     ◀──  🔄 Smart Unfollow  ◀──  ⏰ Wait     │
+│       Analyze              Non-Followers        X Days      │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>Use cases:</strong></p>
+<ul>
+<li>📈 Grow a new account from zero to 10K followers</li>
+<li>🎯 Build a niche-targeted audience (crypto, tech, marketing, etc.)</li>
+<li>🤝 Increase engagement through strategic follows and likes</li>
+<li>🧹 Maintain a healthy following/follower ratio</li>
+<li>⏰ Save hours of daily manual engagement work</li>
+<li>🔄 Run consistent growth campaigns on autopilot</li>
+</ul>
+<hr>
+<h2>⚠️ CRITICAL SAFETY WARNINGS</h2>
+<blockquote>
+<p><strong>🚨 ACCOUNT SAFETY FIRST!</strong></p>
+<p>Aggressive automation WILL get your account restricted or permanently suspended.<br>X (Twitter) actively detects and penalizes bot-like behavior.</p>
+</blockquote>
+<p><strong>Before you start:</strong></p>
+<table>
+<thead>
+<tr>
+<th>❌ DON&#39;T</th>
+<th>✅ DO</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Run 24/7 without breaks</td>
+<td>Run 1-2 sessions per day max</td>
+</tr>
+<tr>
+<td>Follow/unfollow hundreds per day</td>
+<td>Stay under 30 follows per day</td>
+</tr>
+<tr>
+<td>Use identical timing patterns</td>
+<td>Randomize all delays</td>
+</tr>
+<tr>
+<td>Run multiple scripts at once</td>
+<td>Run one automation at a time</td>
+</tr>
+<tr>
+<td>Start with high limits</td>
+<td>Start LOW, increase gradually</td>
+</tr>
+<tr>
+<td>Ignore warning signs</td>
+<td>Stop immediately if rate limited</td>
+</tr>
+</tbody></table>
+<p><strong>Warning Signs to Watch For:</strong></p>
+<ul>
+<li>🔴 &quot;You&#39;ve reached your daily limit&quot; messages</li>
+<li>🔴 Temporary restrictions on following/liking</li>
+<li>🔴 Account locked for suspicious activity</li>
+<li>🔴 Captcha challenges appearing frequently</li>
+</ul>
+<p><strong>If you see these signs, STOP all automation for 24-48 hours!</strong></p>
+<hr>
+<h2>⚙️ Configuration Options</h2>
+<h3>Targeting</h3>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>KEYWORDS</code></td>
+<td><code>string[]</code></td>
+<td><code>[]</code></td>
+<td>Keywords to search for (niche targeting)</td>
+</tr>
+<tr>
+<td><code>TARGET_ACCOUNTS</code></td>
+<td><code>string[]</code></td>
+<td><code>[]</code></td>
+<td>Accounts whose followers you want to target</td>
+</tr>
+</tbody></table>
+<h3>Actions</h3>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>FOLLOW</code></td>
+<td><code>boolean</code></td>
+<td><code>true</code></td>
+<td>Enable following users from search</td>
+</tr>
+<tr>
+<td><code>LIKE</code></td>
+<td><code>boolean</code></td>
+<td><code>true</code></td>
+<td>Enable liking tweets in timeline</td>
+</tr>
+<tr>
+<td><code>UNFOLLOW</code></td>
+<td><code>boolean</code></td>
+<td><code>true</code></td>
+<td>Enable smart unfollowing</td>
+</tr>
+</tbody></table>
+<h3>Limits (Per Session)</h3>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>FOLLOWS</code></td>
+<td><code>number</code></td>
+<td><code>20</code></td>
+<td>Maximum follows per session</td>
+</tr>
+<tr>
+<td><code>LIKES</code></td>
+<td><code>number</code></td>
+<td><code>30</code></td>
+<td>Maximum likes per session</td>
+</tr>
+<tr>
+<td><code>UNFOLLOWS</code></td>
+<td><code>number</code></td>
+<td><code>15</code></td>
+<td>Maximum unfollows per session</td>
+</tr>
+</tbody></table>
+<h3>Timing</h3>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>UNFOLLOW_AFTER_DAYS</code></td>
+<td><code>number</code></td>
+<td><code>3</code></td>
+<td>Days to wait before unfollowing non-followers</td>
+</tr>
+<tr>
+<td><code>DELAY_BETWEEN_ACTIONS</code></td>
+<td><code>number</code></td>
+<td><code>3000</code></td>
+<td>Milliseconds between actions</td>
+</tr>
+<tr>
+<td><code>SESSION_DURATION_MINUTES</code></td>
+<td><code>number</code></td>
+<td><code>30</code></td>
+<td>How long each session runs</td>
+</tr>
+</tbody></table>
+<h3>Filters</h3>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>MIN_FOLLOWERS</code></td>
+<td><code>number</code></td>
+<td><code>50</code></td>
+<td>Skip accounts with fewer followers</td>
+</tr>
+<tr>
+<td><code>MAX_FOLLOWERS</code></td>
+<td><code>number</code></td>
+<td><code>50000</code></td>
+<td>Skip accounts with more followers</td>
+</tr>
+<tr>
+<td><code>MUST_HAVE_BIO</code></td>
+<td><code>boolean</code></td>
+<td><code>true</code></td>
+<td>Only follow accounts with bios</td>
+</tr>
+<tr>
+<td><code>SKIP_PRIVATE</code></td>
+<td><code>boolean</code></td>
+<td><code>true</code></td>
+<td>Skip private/protected accounts</td>
+</tr>
+<tr>
+<td><code>LANGUAGE</code></td>
+<td><code>string | null</code></td>
+<td><code>null</code></td>
+<td>Filter by language (<code>&#39;en&#39;</code>, <code>&#39;es&#39;</code>, etc.)</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>🖥️ Example 1: Browser Console</h2>
+<p><strong>Best for:</strong> Quick growth sessions, testing your strategy</p>
+<p><strong>Steps:</strong></p>
+<ol>
+<li>Go to <code>x.com/home</code></li>
+<li>Open browser console (F12 → Console tab)</li>
+<li>First paste <code>core.js</code> from the XActions repository</li>
+<li>Then paste the growth script below</li>
+<li>Watch the magic happen!</li>
+</ol>
+<pre><code class="language-javascript">// ============================================
+// XActions - Growth Suite (Browser Console)
+// Author: nich (@nichxbt)
+// REQUIRES: Paste core.js first!
+// ============================================
+
+(() =&gt; {
+  if (!window.XActions?.Core) {
+    console.error(&#39;❌ Core module not loaded! Paste core.js first.&#39;);
+    return;
+  }
+
+  const { log, sleep, randomDelay, scrollBy, clickElement, waitForElement, storage, SELECTORS } = window.XActions.Core;
+
+  // ============================================
+  // 🎯 CONFIGURE YOUR GROWTH STRATEGY
+  // ============================================
+  const STRATEGY = {
+    // Keywords to search for (your niche)
+    KEYWORDS: [
+      &#39;javascript developer&#39;,
+      &#39;web developer&#39;,
+      &#39;react developer&#39;,
+    ],
+    
+    // Enable/disable actions
+    ACTIONS: {
+      FOLLOW: true,
+      LIKE: true,
+      UNFOLLOW: true,
+    },
+    
+    // ⚠️ KEEP THESE LOW for safety!
+    LIMITS: {
+      FOLLOWS: 15,     // Per session
+      LIKES: 20,       // Per session
+      UNFOLLOWS: 10,   // Per session
+    },
+    
+    // Timing settings
+    TIMING: {
+      UNFOLLOW_AFTER_DAYS: 3,
+      DELAY_BETWEEN_ACTIONS: 4000,
+      SESSION_DURATION_MINUTES: 25,
+    },
+    
+    // User filters
+    FILTERS: {
+      MIN_FOLLOWERS: 50,
+      MAX_FOLLOWERS: 50000,
+      MUST_HAVE_BIO: true,
+      SKIP_PRIVATE: true,
+    },
+  };
+
+  // ============================================
+  // STATE &amp; TRACKING
+  // ============================================
+  const state = { follows: 0, likes: 0, unfollows: 0, startTime: Date.now(), isRunning: true };
+  const tracked = {
+    followed: new Map(Object.entries(storage.get(&#39;growth_followed&#39;) || {})),
+    liked: new Set(storage.get(&#39;growth_liked&#39;) || []),
+  };
+
+  const saveTracked = () =&gt; {
+    storage.set(&#39;growth_followed&#39;, Object.fromEntries(tracked.followed));
+    storage.set(&#39;growth_liked&#39;, Array.from(tracked.liked));
+  };
+
+  const checkLimits = () =&gt; ({
+    canFollow: state.follows &lt; STRATEGY.LIMITS.FOLLOWS,
+    canLike: state.likes &lt; STRATEGY.LIMITS.LIKES,
+    canUnfollow: state.unfollows &lt; STRATEGY.LIMITS.UNFOLLOWS,
+  });
+
+  const isSessionExpired = () =&gt; {
+    return (Date.now() - state.startTime) / 60000 &gt;= STRATEGY.TIMING.SESSION_DURATION_MINUTES;
+  };
+
+  // ============================================
+  // ACTIONS
+  // ============================================
+  const doFollow = async (userCell) =&gt; {
+    if (!checkLimits().canFollow) return false;
+    const followBtn = userCell.querySelector(SELECTORS.followButton);
+    if (!followBtn) return false;
+
+    const link = userCell.querySelector(&#39;a[href^=&quot;/&quot;]&#39;);
+    const username = link?.getAttribute(&#39;href&#39;)?.replace(&#39;/&#39;, &#39;&#39;).toLowerCase();
+    if (!username || tracked.followed.has(username)) return false;
+
+    await clickElement(followBtn);
+    state.follows++;
+    tracked.followed.set(username, { at: Date.now(), source: &#39;growth&#39; });
+    saveTracked();
+    log(`✅ Followed @${username} (${state.follows}/${STRATEGY.LIMITS.FOLLOWS})`, &#39;success&#39;);
+    return true;
+  };
+
+  const doLike = async (tweet) =&gt; {
+    if (!checkLimits().canLike) return false;
+    const likeBtn = tweet.querySelector(SELECTORS.likeButton);
+    if (!likeBtn) return false;
+
+    const tweetLink = tweet.querySelector(&#39;a[href*=&quot;/status/&quot;]&#39;);
+    const tweetId = tweetLink?.href?.match(/status\/(\d+)/)?.[1];
+    if (!tweetId || tracked.liked.has(tweetId)) return false;
+
+    await clickElement(likeBtn);
+    state.likes++;
+    tracked.liked.add(tweetId);
+    saveTracked();
+    log(`❤️ Liked tweet (${state.likes}/${STRATEGY.LIMITS.LIKES})`, &#39;success&#39;);
+    return true;
+  };
+
+  // ============================================
+  // RUN
+  // ============================================
+  const run = async () =&gt; {
+    console.log(`
+╔═══════════════════════════════════════════════════════════╗
+║  🚀 XActions Growth Suite - Pro                          ║
+╠═══════════════════════════════════════════════════════════╣
+║  Keywords: ${STRATEGY.KEYWORDS.slice(0, 2).join(&#39;, &#39;).substring(0, 35).padEnd(35)}   ║
+║  Session: ${STRATEGY.TIMING.SESSION_DURATION_MINUTES} minutes                                 ║
+║                                                           ║
+║  Limits: ${STRATEGY.LIMITS.FOLLOWS} follows | ${STRATEGY.LIMITS.LIKES} likes | ${STRATEGY.LIMITS.UNFOLLOWS} unfollows         ║
+║  Grace period: ${STRATEGY.TIMING.UNFOLLOW_AFTER_DAYS} days                                  ║
+║                                                           ║
+║  Run: stopGrowth() to stop early                          ║
+╚═══════════════════════════════════════════════════════════╝
+    `);
+
+    log(`📊 Tracking ${tracked.followed.size} previously followed users`, &#39;info&#39;);
+
+    // Phase 1: Follow
+    if (STRATEGY.ACTIONS.FOLLOW) {
+      log(&#39;📍 Phase 1: Keyword Search &amp; Follow&#39;, &#39;info&#39;);
+      for (const keyword of STRATEGY.KEYWORDS) {
+        if (!state.isRunning || !checkLimits().canFollow) break;
+        log(`🔍 Searching: &quot;${keyword}&quot;`, &#39;action&#39;);
+        window.location.href = `https://x.com/search?q=${encodeURIComponent(keyword)}&amp;f=user`;
+        await sleep(3000);
+        await waitForElement(SELECTORS.userCell, 10000);
+        
+        for (let scroll = 0; scroll &lt; 8 &amp;&amp; checkLimits().canFollow; scroll++) {
+          const cells = document.querySelectorAll(SELECTORS.userCell);
+          for (const cell of cells) {
+            if (!checkLimits().canFollow) break;
+            if (cell.querySelector(SELECTORS.unfollowButton)) continue;
+            await doFollow(cell);
+            await randomDelay(STRATEGY.TIMING.DELAY_BETWEEN_ACTIONS, STRATEGY.TIMING.DELAY_BETWEEN_ACTIONS * 1.5);
+          }
+          scrollBy(600);
+          await sleep(2000);
+        }
+      }
+    }
+
+    // Phase 2: Like
+    if (STRATEGY.ACTIONS.LIKE &amp;&amp; state.isRunning &amp;&amp; !isSessionExpired()) {
+      log(&#39;📍 Phase 2: Timeline Engagement&#39;, &#39;info&#39;);
+      window.location.href = &#39;https://x.com/home&#39;;
+      await sleep(3000);
+      
+      for (let scroll = 0; scroll &lt; 15 &amp;&amp; checkLimits().canLike; scroll++) {
+        const tweets = document.querySelectorAll(SELECTORS.tweet);
+        for (const tweet of tweets) {
+          if (!checkLimits().canLike) break;
+          if (tweet.querySelector(SELECTORS.unlikeButton)) continue;
+          await doLike(tweet);
+          await randomDelay(STRATEGY.TIMING.DELAY_BETWEEN_ACTIONS, STRATEGY.TIMING.DELAY_BETWEEN_ACTIONS * 1.5);
+        }
+        scrollBy(600);
+        await sleep(2000);
+      }
+    }
+
+    // Summary
+    console.log(`
+╔═══════════════════════════════════════════════════════════╗
+║  ✅ SESSION COMPLETE                                      ║
+╠═══════════════════════════════════════════════════════════╣
+║  Follows:   ${String(state.follows).padEnd(5)}                                      ║
+║  Likes:     ${String(state.likes).padEnd(5)}                                      ║
+║  Unfollows: ${String(state.unfollows).padEnd(5)}                                      ║
+║                                                           ║
+║  Total tracked: ${String(tracked.followed.size).padEnd(5)} users                        ║
+╚═══════════════════════════════════════════════════════════╝
+    `);
+  };
+
+  run();
+  window.stopGrowth = () =&gt; { state.isRunning = false; log(&#39;⏹️ Stopping...&#39;, &#39;warning&#39;); };
+})();
+</code></pre>
+<hr>
+<h2>🖥️ Example 2: Node.js (Production-Ready)</h2>
+<p><strong>Best for:</strong> Scheduled automation, long-term growth campaigns, server deployment</p>
+<p>This production-ready script includes:</p>
+<ul>
+<li>✅ Scheduled execution (runs automatically)</li>
+<li>✅ Comprehensive logging with timestamps</li>
+<li>✅ Persistent tracking across sessions</li>
+<li>✅ Error handling and recovery</li>
+<li>✅ Rate limit protection</li>
+<li>✅ Progress reporting</li>
+</ul>
+<pre><code class="language-javascript">// ============================================
+// XActions Growth Suite - Node.js Production Script
+// Author: nich (@nichxbt)
+// 
+// Features:
+// - Searches for users by keywords
+// - Follows promising accounts
+// - Likes their recent tweets
+// - Unfollows non-followers after X days
+// - Runs on schedule
+// - Comprehensive logging
+// ============================================
+
+const { XActions } = require(&#39;xactions&#39;);
+const fs = require(&#39;fs&#39;);
+const path = require(&#39;path&#39;);
+
+// ============================================
+// 🎯 GROWTH STRATEGY CONFIGURATION
+// ============================================
+const STRATEGY = {
+  // Your niche keywords - be specific!
+  KEYWORDS: [
+    &#39;web3 developer&#39;,
+    &#39;solidity engineer&#39;,
+    &#39;defi builder&#39;,
+    &#39;ethereum dev&#39;,
+    &#39;smart contract developer&#39;,
+  ],
+
+  // Target accounts (follow their followers)
+  TARGET_ACCOUNTS: [
+    // Add usernames without @
+  ],
+
+  // Daily limits - STAY CONSERVATIVE!
+  DAILY_LIMITS: {
+    FOLLOWS: 25,
+    LIKES: 40,
+    UNFOLLOWS: 20,
+  },
+
+  // Session settings
+  SESSION: {
+    DURATION_MINUTES: 30,
+    SESSIONS_PER_DAY: 2,
+  },
+
+  // Smart unfollow settings
+  UNFOLLOW: {
+    GRACE_PERIOD_DAYS: 3,      // Wait this long before unfollowing
+    PROTECT_VERIFIED: true,    // Don&#39;t unfollow verified accounts
+    PROTECT_ACTIVE: true,      // Don&#39;t unfollow accounts that engage with you
+  },
+
+  // User filters
+  FILTERS: {
+    MIN_FOLLOWERS: 50,
+    MAX_FOLLOWERS: 50000,
+    MIN_FOLLOWING: 20,
+    MAX_FOLLOWING: 5000,
+    MUST_HAVE_BIO: true,
+    MUST_HAVE_AVATAR: true,
+    SKIP_PRIVATE: true,
+    ACCOUNT_AGE_DAYS: 30,      // Skip accounts younger than this
+    LANGUAGE: &#39;en&#39;,            // null for any language
+  },
+
+  // Timing (milliseconds)
+  DELAYS: {
+    BETWEEN_ACTIONS: { MIN: 3000, MAX: 6000 },
+    BETWEEN_USERS: { MIN: 2000, MAX: 4000 },
+    BATCH_PAUSE: { EVERY: 10, DURATION: 30000 },
+    SCROLL: 2000,
+  },
+
+  // Schedule (using cron syntax)
+  SCHEDULE: {
+    ENABLED: true,
+    // Run at 9 AM and 6 PM
+    CRON: &#39;0 9,18 * * *&#39;,
+  },
+};
+
+// ============================================
+// 📁 DATA STORAGE
+// ============================================
+const DATA_DIR = path.join(__dirname, &#39;.growth-data&#39;);
+const TRACKING_FILE = path.join(DATA_DIR, &#39;tracking.json&#39;);
+const LOG_FILE = path.join(DATA_DIR, &#39;growth.log&#39;);
+
+// Ensure data directory exists
+if (!fs.existsSync(DATA_DIR)) {
+  fs.mkdirSync(DATA_DIR, { recursive: true });
+}
+
+// Load/save tracking data
+const loadTracking = () =&gt; {
+  try {
+    if (fs.existsSync(TRACKING_FILE)) {
+      const data = JSON.parse(fs.readFileSync(TRACKING_FILE, &#39;utf8&#39;));
+      return {
+        followed: new Map(Object.entries(data.followed || {})),
+        liked: new Set(data.liked || []),
+        unfollowed: new Set(data.unfollowed || []),
+        dailyStats: data.dailyStats || {},
+      };
+    }
+  } catch (err) {
+    console.error(&#39;Failed to load tracking data:&#39;, err);
+  }
+  return { followed: new Map(), liked: new Set(), unfollowed: new Set(), dailyStats: {} };
+};
+
+const saveTracking = (tracking) =&gt; {
+  const data = {
+    followed: Object.fromEntries(tracking.followed),
+    liked: Array.from(tracking.liked),
+    unfollowed: Array.from(tracking.unfollowed),
+    dailyStats: tracking.dailyStats,
+  };
+  fs.writeFileSync(TRACKING_FILE, JSON.stringify(data, null, 2));
+};
+
+// ============================================
+// 📝 LOGGING
+// ============================================
+const log = (message, level = &#39;INFO&#39;) =&gt; {
+  const timestamp = new Date().toISOString();
+  const logLine = `[${timestamp}] [${level}] ${message}`;
+  console.log(logLine);
+  fs.appendFileSync(LOG_FILE, logLine + &#39;\n&#39;);
+};
+
+// ============================================
+// 🔧 HELPER FUNCTIONS
+// ============================================
+const sleep = (ms) =&gt; new Promise((r) =&gt; setTimeout(r, ms));
+
+const randomDelay = async (min, max) =&gt; {
+  const delay = min + Math.random() * (max - min);
+  await sleep(delay);
+};
+
+const getTodayKey = () =&gt; new Date().toISOString().split(&#39;T&#39;)[0];
+
+const getDailyStats = (tracking) =&gt; {
+  const today = getTodayKey();
+  if (!tracking.dailyStats[today]) {
+    tracking.dailyStats[today] = { follows: 0, likes: 0, unfollows: 0 };
+  }
+  return tracking.dailyStats[today];
+};
+
+const canPerformAction = (tracking, action) =&gt; {
+  const stats = getDailyStats(tracking);
+  switch (action) {
+    case &#39;follow&#39;: return stats.follows &lt; STRATEGY.DAILY_LIMITS.FOLLOWS;
+    case &#39;like&#39;: return stats.likes &lt; STRATEGY.DAILY_LIMITS.LIKES;
+    case &#39;unfollow&#39;: return stats.unfollows &lt; STRATEGY.DAILY_LIMITS.UNFOLLOWS;
+    default: return false;
+  }
+};
+
+const passesFilters = (user) =&gt; {
+  const f = STRATEGY.FILTERS;
+  
+  if (user.followers &lt; f.MIN_FOLLOWERS || user.followers &gt; f.MAX_FOLLOWERS) return false;
+  if (user.following &lt; f.MIN_FOLLOWING || user.following &gt; f.MAX_FOLLOWING) return false;
+  if (f.MUST_HAVE_BIO &amp;&amp; !user.bio) return false;
+  if (f.MUST_HAVE_AVATAR &amp;&amp; user.hasDefaultAvatar) return false;
+  if (f.SKIP_PRIVATE &amp;&amp; user.isProtected) return false;
+  if (f.LANGUAGE &amp;&amp; user.language !== f.LANGUAGE) return false;
+  
+  // Check account age
+  if (f.ACCOUNT_AGE_DAYS) {
+    const accountAge = (Date.now() - new Date(user.createdAt).getTime()) / (1000 * 60 * 60 * 24);
+    if (accountAge &lt; f.ACCOUNT_AGE_DAYS) return false;
+  }
+  
+  return true;
+};
+
+// ============================================
+// 🚀 MAIN GROWTH CLASS
+// ============================================
+class GrowthSuite {
+  constructor(options = {}) {
+    this.auth = options.auth;
+    this.x = null;
+    this.tracking = loadTracking();
+    this.sessionStats = { follows: 0, likes: 0, unfollows: 0 };
+    this.isRunning = false;
+  }
+
+  async init() {
+    log(&#39;Initializing XActions Growth Suite...&#39;, &#39;INFO&#39;);
+    
+    this.x = new XActions({
+      auth: this.auth,
+      rateLimit: {
+        enabled: true,
+        maxRetries: 3,
+        backoff: &#39;exponential&#39;,
+      },
+    });
+
+    await this.x.init();
+    log(&#39;XActions initialized successfully&#39;, &#39;INFO&#39;);
+  }
+
+  async searchAndFollow() {
+    log(&#39;📍 Phase 1: Keyword Search &amp; Follow&#39;, &#39;INFO&#39;);
+
+    for (const keyword of STRATEGY.KEYWORDS) {
+      if (!this.isRunning || !canPerformAction(this.tracking, &#39;follow&#39;)) break;
+
+      log(`🔍 Searching for: &quot;${keyword}&quot;`, &#39;INFO&#39;);
+
+      try {
+        const users = await this.x.searchUsers(keyword, { limit: 50 });
+        log(`Found ${users.length} users for &quot;${keyword}&quot;`, &#39;INFO&#39;);
+
+        for (const user of users) {
+          if (!this.isRunning || !canPerformAction(this.tracking, &#39;follow&#39;)) break;
+
+          // Skip if already followed or doesn&#39;t pass filters
+          if (this.tracking.followed.has(user.username)) continue;
+          if (this.tracking.unfollowed.has(user.username)) continue;
+          if (!passesFilters(user)) continue;
+
+          try {
+            await this.x.follow(user.username);
+            
+            this.tracking.followed.set(user.username, {
+              at: Date.now(),
+              source: &#39;keyword&#39;,
+              keyword: keyword,
+              followers: user.followers,
+            });
+            
+            getDailyStats(this.tracking).follows++;
+            this.sessionStats.follows++;
+            saveTracking(this.tracking);
+
+            log(`✅ Followed @${user.username} (${user.followers} followers)`, &#39;SUCCESS&#39;);
+
+            // Batch pause
+            if (this.sessionStats.follows % STRATEGY.DELAYS.BATCH_PAUSE.EVERY === 0) {
+              log(`⏸️ Pausing for ${STRATEGY.DELAYS.BATCH_PAUSE.DURATION / 1000}s...`, &#39;INFO&#39;);
+              await sleep(STRATEGY.DELAYS.BATCH_PAUSE.DURATION);
+            }
+
+            await randomDelay(
+              STRATEGY.DELAYS.BETWEEN_ACTIONS.MIN,
+              STRATEGY.DELAYS.BETWEEN_ACTIONS.MAX
+            );
+
+          } catch (err) {
+            log(`Failed to follow @${user.username}: ${err.message}`, &#39;ERROR&#39;);
+            
+            if (err.message.includes(&#39;rate limit&#39;)) {
+              log(&#39;Rate limited! Pausing for 5 minutes...&#39;, &#39;WARN&#39;);
+              await sleep(5 * 60 * 1000);
+            }
+          }
+        }
+
+        await randomDelay(
+          STRATEGY.DELAYS.BETWEEN_USERS.MIN,
+          STRATEGY.DELAYS.BETWEEN_USERS.MAX
+        );
+
+      } catch (err) {
+        log(`Search failed for &quot;${keyword}&quot;: ${err.message}`, &#39;ERROR&#39;);
+      }
+    }
+  }
+
+  async likeTimeline() {
+    log(&#39;📍 Phase 2: Timeline Engagement&#39;, &#39;INFO&#39;);
+
+    if (!canPerformAction(this.tracking, &#39;like&#39;)) {
+      log(&#39;Daily like limit reached, skipping...&#39;, &#39;INFO&#39;);
+      return;
+    }
+
+    try {
+      const tweets = await this.x.getTimeline({ limit: 100 });
+      log(`Found ${tweets.length} tweets in timeline`, &#39;INFO&#39;);
+
+      for (const tweet of tweets) {
+        if (!this.isRunning || !canPerformAction(this.tracking, &#39;like&#39;)) break;
+
+        // Skip if already liked
+        if (this.tracking.liked.has(tweet.id)) continue;
+        if (tweet.isRetweet || tweet.isAd) continue;
+
+        try {
+          await this.x.likeTweet(tweet.id);
+          
+          this.tracking.liked.add(tweet.id);
+          getDailyStats(this.tracking).likes++;
+          this.sessionStats.likes++;
+          saveTracking(this.tracking);
+
+          log(`❤️ Liked tweet from @${tweet.author.username}`, &#39;SUCCESS&#39;);
+
+          await randomDelay(
+            STRATEGY.DELAYS.BETWEEN_ACTIONS.MIN,
+            STRATEGY.DELAYS.BETWEEN_ACTIONS.MAX
+          );
+
+        } catch (err) {
+          log(`Failed to like tweet: ${err.message}`, &#39;ERROR&#39;);
+        }
+      }
+
+    } catch (err) {
+      log(`Timeline fetch failed: ${err.message}`, &#39;ERROR&#39;);
+    }
+  }
+
+  async smartUnfollow() {
+    log(&#39;📍 Phase 3: Smart Unfollow&#39;, &#39;INFO&#39;);
+
+    if (!canPerformAction(this.tracking, &#39;unfollow&#39;)) {
+      log(&#39;Daily unfollow limit reached, skipping...&#39;, &#39;INFO&#39;);
+      return;
+    }
+
+    const now = Date.now();
+    const gracePeriod = STRATEGY.UNFOLLOW.GRACE_PERIOD_DAYS * 24 * 60 * 60 * 1000;
+    const expired = [];
+
+    // Find users past grace period who haven&#39;t followed back
+    for (const [username, data] of this.tracking.followed) {
+      if (now - data.at &gt; gracePeriod) {
+        expired.push({ username, data });
+      }
+    }
+
+    log(`Found ${expired.length} users past ${STRATEGY.UNFOLLOW.GRACE_PERIOD_DAYS}-day grace period`, &#39;INFO&#39;);
+
+    for (const { username, data } of expired) {
+      if (!this.isRunning || !canPerformAction(this.tracking, &#39;unfollow&#39;)) break;
+
+      try {
+        // Check if they follow us back
+        const followsBack = await this.x.checkFollowing(username);
+        
+        if (followsBack) {
+          // They followed back! Update tracking
+          this.tracking.followed.set(username, { ...data, followedBack: true });
+          saveTracking(this.tracking);
+          log(`🤝 @${username} follows back - keeping!`, &#39;INFO&#39;);
+          continue;
+        }
+
+        // Check if verified and we should protect
+        if (STRATEGY.UNFOLLOW.PROTECT_VERIFIED) {
+          const user = await this.x.getUser(username);
+          if (user.isVerified) {
+            log(`✓ @${username} is verified - keeping!`, &#39;INFO&#39;);
+            continue;
+          }
+        }
+
+        // Unfollow
+        await this.x.unfollow(username);
+        
+        this.tracking.followed.delete(username);
+        this.tracking.unfollowed.add(username);
+        getDailyStats(this.tracking).unfollows++;
+        this.sessionStats.unfollows++;
+        saveTracking(this.tracking);
+
+        log(`🔄 Unfollowed @${username} (no follow-back after ${STRATEGY.UNFOLLOW.GRACE_PERIOD_DAYS} days)`, &#39;SUCCESS&#39;);
+
+        await randomDelay(
+          STRATEGY.DELAYS.BETWEEN_ACTIONS.MIN,
+          STRATEGY.DELAYS.BETWEEN_ACTIONS.MAX
+        );
+
+      } catch (err) {
+        log(`Failed to process @${username}: ${err.message}`, &#39;ERROR&#39;);
+      }
+    }
+  }
+
+  async runSession() {
+    this.isRunning = true;
+    this.sessionStats = { follows: 0, likes: 0, unfollows: 0 };
+    const startTime = Date.now();
+
+    log(&#39;═&#39;.repeat(60), &#39;INFO&#39;);
+    log(&#39;🚀 GROWTH SESSION STARTED&#39;, &#39;INFO&#39;);
+    log(&#39;═&#39;.repeat(60), &#39;INFO&#39;);
+    log(`Keywords: ${STRATEGY.KEYWORDS.join(&#39;, &#39;)}`, &#39;INFO&#39;);
+    log(`Daily limits: ${STRATEGY.DAILY_LIMITS.FOLLOWS} follows, ${STRATEGY.DAILY_LIMITS.LIKES} likes, ${STRATEGY.DAILY_LIMITS.UNFOLLOWS} unfollows`, &#39;INFO&#39;);
+    log(`Session duration: ${STRATEGY.SESSION.DURATION_MINUTES} minutes`, &#39;INFO&#39;);
+    log(`Tracked users: ${this.tracking.followed.size}`, &#39;INFO&#39;);
+    log(&#39;═&#39;.repeat(60), &#39;INFO&#39;);
+
+    try {
+      // Phase 1: Search and Follow
+      await this.searchAndFollow();
+
+      // Check if session expired
+      const elapsed = (Date.now() - startTime) / 60000;
+      if (elapsed &lt; STRATEGY.SESSION.DURATION_MINUTES &amp;&amp; this.isRunning) {
+        // Phase 2: Like Timeline
+        await this.likeTimeline();
+      }
+
+      // Phase 3: Smart Unfollow
+      if (this.isRunning) {
+        await this.smartUnfollow();
+      }
+
+    } catch (err) {
+      log(`Session error: ${err.message}`, &#39;ERROR&#39;);
+    }
+
+    // Session summary
+    const duration = Math.round((Date.now() - startTime) / 60000);
+    log(&#39;═&#39;.repeat(60), &#39;INFO&#39;);
+    log(&#39;✅ SESSION COMPLETE&#39;, &#39;INFO&#39;);
+    log(&#39;═&#39;.repeat(60), &#39;INFO&#39;);
+    log(`Duration: ${duration} minutes`, &#39;INFO&#39;);
+    log(`Follows: ${this.sessionStats.follows}`, &#39;INFO&#39;);
+    log(`Likes: ${this.sessionStats.likes}`, &#39;INFO&#39;);
+    log(`Unfollows: ${this.sessionStats.unfollows}`, &#39;INFO&#39;);
+    log(`Total tracked: ${this.tracking.followed.size} users`, &#39;INFO&#39;);
+    log(&#39;═&#39;.repeat(60), &#39;INFO&#39;);
+
+    this.isRunning = false;
+  }
+
+  stop() {
+    log(&#39;⏹️ Stopping growth session...&#39;, &#39;WARN&#39;);
+    this.isRunning = false;
+  }
+}
+
+// ============================================
+// 🕐 SCHEDULER
+// ============================================
+const runScheduled = async () =&gt; {
+  const growth = new GrowthSuite({
+    auth: {
+      // Use environment variables!
+      username: process.env.X_USERNAME,
+      password: process.env.X_PASSWORD,
+      email: process.env.X_EMAIL,
+    },
+  });
+
+  await growth.init();
+
+  if (STRATEGY.SCHEDULE.ENABLED) {
+    const cron = require(&#39;node-cron&#39;);
+    
+    log(`📅 Scheduler enabled: ${STRATEGY.SCHEDULE.CRON}`, &#39;INFO&#39;);
+    
+    cron.schedule(STRATEGY.SCHEDULE.CRON, async () =&gt; {
+      log(&#39;⏰ Scheduled session triggered&#39;, &#39;INFO&#39;);
+      await growth.runSession();
+    });
+
+    // Run immediately on start
+    await growth.runSession();
+  } else {
+    // Run once
+    await growth.runSession();
+    process.exit(0);
+  }
+};
+
+// Handle graceful shutdown
+process.on(&#39;SIGINT&#39;, () =&gt; {
+  log(&#39;Received SIGINT, shutting down...&#39;, &#39;WARN&#39;);
+  process.exit(0);
+});
+
+process.on(&#39;SIGTERM&#39;, () =&gt; {
+  log(&#39;Received SIGTERM, shutting down...&#39;, &#39;WARN&#39;);
+  process.exit(0);
+});
+
+// Start
+runScheduled().catch((err) =&gt; {
+  log(`Fatal error: ${err.message}`, &#39;ERROR&#39;);
+  process.exit(1);
+});
+</code></pre>
+<h3>Running the Node.js Script</h3>
+<p><strong>Install dependencies:</strong></p>
+<pre><code class="language-bash">npm install xactions node-cron
+</code></pre>
+<p><strong>Set environment variables:</strong></p>
+<pre><code class="language-bash">export X_USERNAME=&quot;your_username&quot;
+export X_PASSWORD=&quot;your_password&quot;
+export X_EMAIL=&quot;your_email&quot;
+</code></pre>
+<p><strong>Run:</strong></p>
+<pre><code class="language-bash">node growth-suite.js
+</code></pre>
+<p><strong>Run with PM2 (production):</strong></p>
+<pre><code class="language-bash">npm install -g pm2
+pm2 start growth-suite.js --name &quot;xactions-growth&quot;
+pm2 save
+pm2 startup
+</code></pre>
+<hr>
+<h2>📊 Safety Limits Reference</h2>
+<h3>Recommended Daily Limits</h3>
+<table>
+<thead>
+<tr>
+<th>Account Age</th>
+<th>Followers</th>
+<th>Max Follows/Day</th>
+<th>Max Unfollows/Day</th>
+<th>Max Likes/Day</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&lt; 1 month</td>
+<td>&lt; 100</td>
+<td><strong>5-10</strong></td>
+<td><strong>5</strong></td>
+<td><strong>15-20</strong></td>
+</tr>
+<tr>
+<td>1-3 months</td>
+<td>100-500</td>
+<td><strong>10-15</strong></td>
+<td><strong>10</strong></td>
+<td><strong>25-30</strong></td>
+</tr>
+<tr>
+<td>3-6 months</td>
+<td>500-1K</td>
+<td><strong>15-25</strong></td>
+<td><strong>15</strong></td>
+<td><strong>40-50</strong></td>
+</tr>
+<tr>
+<td>6-12 months</td>
+<td>1K-5K</td>
+<td><strong>25-40</strong></td>
+<td><strong>25</strong></td>
+<td><strong>60-80</strong></td>
+</tr>
+<tr>
+<td>&gt; 1 year</td>
+<td>5K+</td>
+<td><strong>40-50</strong></td>
+<td><strong>40</strong></td>
+<td><strong>100</strong></td>
+</tr>
+</tbody></table>
+<h3>Session Limits</h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Conservative</th>
+<th>Moderate</th>
+<th>Aggressive ⚠️</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Follows per session</td>
+<td>10-15</td>
+<td>20-30</td>
+<td>40-50</td>
+</tr>
+<tr>
+<td>Likes per session</td>
+<td>15-20</td>
+<td>30-40</td>
+<td>50-70</td>
+</tr>
+<tr>
+<td>Unfollows per session</td>
+<td>10-15</td>
+<td>20-30</td>
+<td>40-50</td>
+</tr>
+<tr>
+<td>Sessions per day</td>
+<td>1-2</td>
+<td>2-3</td>
+<td>3-4</td>
+</tr>
+<tr>
+<td>Session duration</td>
+<td>20-30 min</td>
+<td>30-45 min</td>
+<td>45-60 min</td>
+</tr>
+<tr>
+<td>Delay between actions</td>
+<td>4-8 sec</td>
+<td>3-5 sec</td>
+<td>2-4 sec</td>
+</tr>
+</tbody></table>
+<h3>⚠️ Hard Limits (Never Exceed!)</h3>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Absolute Maximum</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Follows/day</td>
+<td><strong>50</strong></td>
+<td>X suspends aggressive followers</td>
+</tr>
+<tr>
+<td>Unfollows/day</td>
+<td><strong>50</strong></td>
+<td>Pattern detection triggers</td>
+</tr>
+<tr>
+<td>Likes/day</td>
+<td><strong>100</strong></td>
+<td>Rate limiting kicks in</td>
+</tr>
+<tr>
+<td>Actions/hour</td>
+<td><strong>30</strong></td>
+<td>Velocity detection</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>🎯 Growth Strategy Best Practices</h2>
+<h3>1. Keyword Selection</h3>
+<p><strong>DO:</strong></p>
+<ul>
+<li>✅ Use specific niche keywords (<code>&quot;solidity engineer&quot;</code> not <code>&quot;developer&quot;</code>)</li>
+<li>✅ Include job titles, technologies, interests</li>
+<li>✅ Test different keywords and track results</li>
+<li>✅ Focus on 3-5 high-quality keywords</li>
+</ul>
+<p><strong>DON&#39;T:</strong></p>
+<ul>
+<li>❌ Use generic terms with millions of results</li>
+<li>❌ Target unrelated niches for bigger numbers</li>
+<li>❌ Change keywords too frequently</li>
+</ul>
+<h3>2. Timing Strategy</h3>
+<p><strong>Optimal schedule:</strong></p>
+<pre><code>Morning (9-10 AM):   Session 1 - Focus on following
+Evening (6-7 PM):    Session 2 - Focus on engagement
+</code></pre>
+<p><strong>Why this works:</strong></p>
+<ul>
+<li>People are most active during these times</li>
+<li>Your follows/likes appear in their notifications when they&#39;re online</li>
+<li>Better chance of immediate engagement</li>
+</ul>
+<h3>3. The 3-Day Grace Period</h3>
+<p>The default 3-day unfollow window is strategic:</p>
+<ul>
+<li><strong>Day 1-2:</strong> New follows see your profile, may check your content</li>
+<li><strong>Day 3:</strong> Decision time - if they haven&#39;t followed back, they likely won&#39;t</li>
+<li><strong>Day 4+:</strong> Unfollow to maintain ratio and free up capacity</li>
+</ul>
+<h3>4. Content Quality Matters</h3>
+<blockquote>
+<p><strong>Automation amplifies your content, it doesn&#39;t replace it.</strong></p>
+</blockquote>
+<p>For best results:</p>
+<ul>
+<li>📝 Post valuable content daily (2-3 tweets minimum)</li>
+<li>🧵 Create threads on topics your target audience cares about</li>
+<li>💬 Engage manually with replies that bring value</li>
+<li>🎯 Have a clear bio and profile that explains who you are</li>
+</ul>
+<h3>5. The Follow-Back Flywheel</h3>
+<pre><code>Better Content → More Follow-Backs → Better Ratio
+      ↑                                    ↓
+      └──────── More Credibility ←─────────┘
+</code></pre>
+<hr>
+<h2>🌐 Website Alternative</h2>
+<p><strong>Prefer a no-code solution?</strong> The Growth Suite is available in the <a href="https://xactions.app">xactions.app</a> Pro tier:</p>
+<h3>What&#39;s Included in Pro:</h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>🎯 Visual Strategy Builder</td>
+<td>Configure growth campaigns with a simple UI</td>
+</tr>
+<tr>
+<td>📊 Analytics Dashboard</td>
+<td>Track follower growth, engagement rates, best times</td>
+</tr>
+<tr>
+<td>📅 Smart Scheduler</td>
+<td>AI-optimized timing for maximum engagement</td>
+</tr>
+<tr>
+<td>🔄 Auto-Unfollow</td>
+<td>Automatic cleanup of non-followers</td>
+</tr>
+<tr>
+<td>📈 Progress Reports</td>
+<td>Weekly email reports on your growth</td>
+</tr>
+<tr>
+<td>🛡️ Safety Monitoring</td>
+<td>Automatic pausing when rate limits detected</td>
+</tr>
+<tr>
+<td>💾 Cloud Sync</td>
+<td>Your data synced across devices</td>
+</tr>
+<tr>
+<td>🎧 Priority Support</td>
+<td>Direct access to the team</td>
+</tr>
+</tbody></table>
+<h3>Getting Started with Pro:</h3>
+<ol>
+<li>Visit <a href="https://xactions.app/pricing">xactions.app/pricing</a></li>
+<li>Sign up for Pro tier ($19/month)</li>
+<li>Connect your X account</li>
+<li>Configure your growth strategy</li>
+<li>Let it run on autopilot!</li>
+</ol>
+<p><strong>Pro Tip:</strong> Use the web app for daily automation and the scripts for more advanced customization.</p>
+<hr>
+<h2>🔧 Troubleshooting</h2>
+<h3>&quot;Rate limited&quot; errors</h3>
+<p><strong>Solution:</strong></p>
+<ol>
+<li>Stop all automation immediately</li>
+<li>Wait 24-48 hours before resuming</li>
+<li>Reduce your limits by 50%</li>
+<li>Increase delays between actions</li>
+</ol>
+<h3>&quot;Account locked&quot; message</h3>
+<p><strong>Solution:</strong></p>
+<ol>
+<li>Complete any verification challenges</li>
+<li>Wait 48-72 hours before any automation</li>
+<li>Start with very conservative limits (5 follows/day)</li>
+<li>Mix in manual activity</li>
+</ol>
+<h3>Script stops unexpectedly</h3>
+<p><strong>Possible causes:</strong></p>
+<ul>
+<li>Session timeout - restart the script</li>
+<li>DOM changes - check for XActions updates</li>
+<li>Rate limiting - wait and retry</li>
+<li>Network issues - check your connection</li>
+</ul>
+<h3>Not finding users to follow</h3>
+<p><strong>Solutions:</strong></p>
+<ul>
+<li>Broaden your keywords</li>
+<li>Check if search is working manually</li>
+<li>Verify you&#39;re not shadow-banned</li>
+<li>Try different keyword combinations</li>
+</ul>
+<hr>
+<h2>📚 Related Documentation</h2>
+<ul>
+<li><a href="auto-liker.md">Auto-Liker</a> - Standalone liking automation</li>
+<li><a href="keyword-follow.md">Keyword Follow</a> - Focused following by keyword</li>
+<li><a href="unfollow-non-followers.md">Unfollow Non-Followers</a> - Cleanup non-followers</li>
+<li><a href="multi-account.md">Multi-Account</a> - Run across multiple accounts</li>
+</ul>
+<hr>
+<h2>📜 License &amp; Disclaimer</h2>
+<p><strong>Author:</strong> nich (@nichxbt)</p>
+<p><strong>Disclaimer:</strong> This tool is for educational purposes. You are responsible for how you use it. Aggressive automation violates X&#39;s Terms of Service and can result in account suspension. Always use conservative limits and monitor your account&#39;s health.</p>
+<p><strong>License:</strong> MIT - See <a href="../../LICENSE">LICENSE</a> for details.</p>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try Growth Suite?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/follow-engagers">🎯 Follow Engagers</a>
+        <a href="/docs/follow-target-followers">🎯 Follow Target Followers</a>
+        <a href="/docs/keyword-follow">🔑 Keyword Follow</a>
+        <a href="/docs/natural-flow">🌊 Natural Flow</a>
+        <a href="/docs/smart-unfollow">🧠 Smart Unfollow</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>
