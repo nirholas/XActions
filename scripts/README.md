@@ -69,7 +69,12 @@ Watch the console for progress messages and results!
 | `keyword-follow.js` | Follow users from keyword search results |
 | `protect-active-users.js` | Find engaged users to protect from unfollow |
 
-#### 📊 Scrapers
+#### � Analytics
+| Script | Description |
+|--------|-------------|
+| `tweet-price-correlation.js` | Correlate founder tweets with token price movements (CoinGecko/GeckoTerminal) |
+
+#### �📊 Scrapers
 | Script | Description |
 |--------|-------------|
 | `scrape-profile-posts.js` | Advanced tweet scraper with filtering, analytics, multi-format export |

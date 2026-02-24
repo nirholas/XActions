@@ -16,6 +16,18 @@
       "dest": "/dashboard/$1"
     },
     {
+      "src": "/js/(.*)",
+      "dest": "/dashboard/js/$1"
+    },
+    {
+      "src": "/css/(.*)",
+      "dest": "/dashboard/css/$1"
+    },
+    {
+      "src": "/api/(.*)",
+      "dest": "https://xactions-api.up.railway.app/api/$1"
+    },
+    {
       "src": "/tutorials/unfollow",
       "dest": "/dashboard/tutorials/unfollow.html"
     },
@@ -53,7 +65,7 @@
     },
     {
       "src": "/pricing",
-      "dest": "/dashboard/pricing.html"
+      "dest": "/dashboard/docs.html"
     },
     {
       "src": "/about",
@@ -94,6 +106,38 @@
     {
       "src": "/mcp",
       "dest": "/dashboard/mcp.html"
+    },
+    {
+      "src": "/analytics",
+      "dest": "/dashboard/analytics.html"
+    },
+    {
+      "src": "/automations",
+      "dest": "/dashboard/automations.html"
+    },
+    {
+      "src": "/monitor",
+      "dest": "/dashboard/monitor.html"
+    },
+    {
+      "src": "/unfollowers",
+      "dest": "/dashboard/unfollowers.html"
+    },
+    {
+      "src": "/workflows",
+      "dest": "/dashboard/workflows.html"
+    },
+    {
+      "src": "/thread/(.*)",
+      "dest": "/dashboard/thread.html"
+    },
+    {
+      "src": "/thread",
+      "dest": "/dashboard/thread.html"
+    },
+    {
+      "src": "/video",
+      "dest": "/dashboard/video.html"
     },
     {
       "src": "/404",

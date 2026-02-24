@@ -11,7 +11,7 @@
  * @license MIT
  */
 
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
+import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, unlinkSync } from 'fs';
 import { join } from 'path';
 import { homedir } from 'os';
 
@@ -441,7 +441,6 @@ function loadPersona(id) {
  */
 function listPersonas() {
   ensureDir();
-  const { readdirSync } = await_import_fs();
   const files = readdirSync(PERSONAS_DIR).filter(f => f.endsWith('.json'));
   return files.map(f => {
     try {
@@ -473,41 +472,8 @@ function deletePersona(id) {
   if (!existsSync(filePath)) {
     throw new Error(`Persona not found: ${id}`);
   }
-  const { unlinkSync } = await_import_fs();
   unlinkSync(filePath);
   return true;
-}
-
-// Lazy fs import helper (for functions that need extra fs methods)
-function await_import_fs() {
-  // eslint-disable-next-line no-eval
-  return eval('require("fs")');
-}
-
-/**
- * List personas using only already-imported fs methods
- */
-function listPersonasSync() {
-  ensureDir();
-  // Use readdirSync from fs (already available via top-level import pattern)
-  const fs = await_import_fs();
-  const files = fs.readdirSync(PERSONAS_DIR).filter(f => f.endsWith('.json'));
-  return files.map(f => {
-    try {
-      const data = JSON.parse(readFileSync(join(PERSONAS_DIR, f), 'utf-8'));
-      return {
-        id: data.id,
-        name: data.name,
-        preset: data.preset,
-        strategy: data.strategy?.preset,
-        totalSessions: data.state?.totalSessions || 0,
-        createdAt: data.createdAt,
-        lastSessionAt: data.state?.lastSessionAt,
-      };
-    } catch {
-      return { id: f.replace('.json', ''), name: '(corrupted)', error: true };
-    }
-  });
 }
 
 // ============================================================================
@@ -686,7 +652,6 @@ export {
   savePersona,
   loadPersona,
   listPersonas,
-  listPersonasSync,
   deletePersona,
 
   // Prompt building

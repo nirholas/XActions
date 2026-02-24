@@ -20,6 +20,8 @@
     "./scrapers/bluesky": "./src/scrapers/bluesky/index.js",
     "./scrapers/mastodon": "./src/scrapers/mastodon/index.js",
     "./scrapers/threads": "./src/scrapers/threads/index.js",
+    "./streaming": "./src/streaming/index.js",
+    "./analytics": "./src/analytics/index.js",
     "./plugins": "./src/plugins/index.js",
     "./mcp": "./src/mcp/server.js",
     "./cli": "./src/cli/index.js"

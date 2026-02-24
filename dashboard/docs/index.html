@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>X/Twitter Automation Documentation — 71 Free Scripts & Tools | XActions</title>
+  <meta name="description" content="Complete documentation for 71+ free X/Twitter automation scripts. Unfollow tools, scrapers, analytics, growth automation, AI integration, and more. No API keys required.">
+  <meta name="keywords" content="xactions documentation, twitter automation scripts, x automation tools, free twitter tools, mass unfollow, twitter scraper, follower analytics, growth automation, mcp server, twitter bot">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="XActions Documentation — 71+ Free X/Twitter Tools">
+  <meta property="og:description" content="Complete documentation for 71+ free X/Twitter automation scripts. No API keys, no fees.">
+  <meta property="og:url" content="https://xactions.app/docs">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="XActions Docs — 71+ Free Twitter Automation Scripts">
+  <meta name="twitter:description" content="Complete documentation for every XActions tool. Unfollow, scrape, grow, analyze — all free.">
+
+  <link rel="canonical" href="https://xactions.app/docs">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - CollectionPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "XActions Documentation",
+    "description": "Complete documentation for 71+ free X/Twitter automation scripts and tools.",
+    "url": "https://xactions.app/docs",
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "mainEntity": {
+      "@type": "ItemList",
+      "numberOfItems": 71,
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Smart Unfollow", "url": "https://xactions.app/docs/smart-unfollow" },
+        { "@type": "ListItem", "position": 2, "name": "Detect Unfollowers", "url": "https://xactions.app/docs/detect-unfollowers" },
+        { "@type": "ListItem", "position": 3, "name": "Video Downloader", "url": "https://xactions.app/docs/video-downloader" },
+        { "@type": "ListItem", "position": 4, "name": "Growth Suite", "url": "https://xactions.app/docs/growth-suite" },
+        { "@type": "ListItem", "position": 5, "name": "Followers Scraping", "url": "https://xactions.app/docs/followers-scraping" },
+        { "@type": "ListItem", "position": 6, "name": "Auto Liker", "url": "https://xactions.app/docs/auto-liker" },
+        { "@type": "ListItem", "position": 7, "name": "MCP Server", "url": "https://xactions.app/docs/mcp-server" },
+        { "@type": "ListItem", "position": 8, "name": "DM Automation", "url": "https://xactions.app/docs/dm-automation" }
+      ]
+    }
+  }
+  </script>
+  <!-- BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+
+    /* Search */
+    .search-bar { padding: 12px 20px; border-bottom: 1px solid var(--border); }
+    .search-bar input { width: 100%; padding: 12px 16px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 9999px; color: var(--text-primary); font-size: 0.9375rem; outline: none; transition: border-color .2s; }
+    .search-bar input:focus { border-color: var(--accent); }
+    .search-bar input::placeholder { color: var(--text-secondary); }
+
+    /* Stats */
+    .stats-row { display: flex; gap: 12px; padding: 12px 20px; border-bottom: 1px solid var(--border); overflow-x: auto; }
+    .stat-chip { display: flex; align-items: center; gap: 6px; padding: 8px 16px; background: var(--bg-secondary); border-radius: 9999px; font-size: 0.8125rem; white-space: nowrap; }
+    .stat-chip .num { font-weight: 700; color: var(--accent); }
+
+    /* Category Section */
+    .category-section { padding: 0 20px; }
+    .category-header { display: flex; align-items: center; gap: 8px; padding: 16px 0 8px; border-bottom: 1px solid var(--border); }
+    .category-header h2 { font-size: 1.125rem; font-weight: 700; }
+    .category-count { background: var(--bg-tertiary); padding: 2px 8px; border-radius: 9999px; font-size: 0.75rem; color: var(--text-secondary); }
+
+    /* Doc Card */
+    .doc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 12px 0; }
+    .doc-card { display: block; padding: 12px 16px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; text-decoration: none; transition: all .2s; }
+    .doc-card:hover { border-color: var(--accent); background: var(--bg-tertiary); transform: translateY(-1px); }
+    .doc-card-title { font-size: 0.875rem; font-weight: 600; color: var(--text-primary); display: flex; align-items: center; gap: 6px; }
+    .doc-card-desc { font-size: 0.75rem; color: var(--text-secondary); margin-top: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .doc-card .priority-high { color: var(--accent); }
+    .doc-card .priority-med { color: var(--success); }
+
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .doc-grid { grid-template-columns: 1fr; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>📖 Documentation — 71 Scripts & Tools</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › Documentation
+        </div>
+      </header>
+
+      <div class="search-bar">
+        <input type="text" id="docSearch" placeholder="🔍 Search documentation (e.g., unfollow, scraper, analytics...)" aria-label="Search documentation">
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-chip"><span class="num">71</span> Scripts</div>
+        <div class="stat-chip"><span class="num">12</span> Categories</div>
+        <div class="stat-chip"><span class="num">0</span> API Keys Needed</div>
+        <div class="stat-chip"><span class="num">$0</span> Cost</div>
+      </div>
+
+      <div id="docsList">
+        <!-- Unfollow Tools -->
+        <section class="category-section" data-category="unfollow">
+          <div class="category-header">
+            <h2>👋 Unfollow Tools</h2>
+            <span class="category-count">3</span>
+          </div>
+          <div class="doc-grid">
+            <a href="/docs/smart-unfollow" class="doc-card"><div class="doc-card-title">🧠 Smart Unfollow</div><div class="doc-card-desc">Intelligently unfollow inactive accounts with safety filters and whitelist support</div></a>
+            <a href="/docs/unfollow-everyone" class="doc-card"><div class="doc-card-title">👋 Unfollow Everyone</div><div class="doc-card-desc">Mass unfollow all accounts you follow with rate-limit protection</div></a>
+            <a href="/docs/unfollow-non-followers" class="doc-card"><div class="doc-card-title">🧹 Unfollow Non-Followers</div><div class="doc-card-desc">Remove people who don't follow you back automatically</div></a>
+          </div>
+        </section>
+
+        <!-- Follower Monitoring -->
+        <section class="category-section" data-category="followers">
+          <div class="category-header">
+            <h2>🔍 Follower Monitoring</h2>
+            <span class="category-count">4</span>
+          </div>
+          <div class="doc-grid">
+            <a href="/docs/detect-unfollowers" class="doc-card"><div class="doc-card-title">🔍 Detect Unfollowers</div><div class="doc-card-desc">Find out who unfollowed you with real-time detection</div></a>
+            <a href="/docs/new-follower-alerts" class="doc-card"><div class="doc-card-title">🔔 New Follower Alerts</div><div class="doc-card-desc">Get notified when new people follow your account</div></a>
+            <a href="/docs/audit-followers" class="doc-card"><div class="doc-card-title">📊 Audit Followers</div><div class="doc-card-desc">Analyze your follower list for bots, inactive accounts, and quality</div></a>
+            <a href="/docs/remove-followers" class="doc-card"><div class="doc-card-title">🚫 Remove Followers</div><div class="doc-card-desc">Remove specific followers without blocking them</div></a>
+          </div>
+        </section>
+
+        <!-- Growth -->
+        <section class="category-section" data-category="growth">
+          <div class="category-header">
+            <h2>🚀 Growth Automation</h2>
+            <span class="category-count">5</span>
+          </div>
+          <div class="doc-grid">
+            <a href="/docs/growth-suite" class="doc-card"><div class="doc-card-title">🚀 Growth Suite</div><div class="doc-card-desc">Complete automated growth pipeline — follow, engage, and grow your audience</div></a>
+            <a href="/docs/follow-engagers" class="doc-card"><div class="doc-card-title">🎯 Follow Engagers</div><div class="doc-card-desc">Automatically follow users who engage with specific tweets</div></a>
+            <a href="/docs/follow-target-followers" class="doc-card"><div class="doc-card-title">🎯 Follow Target Followers</div><div class="doc-card-desc">Follow the followers of any target account</div></a>
+            <a href="/docs/keyword-follow" class="doc-card"><div class="doc-card-title">🔑 Keyword Follow</div><div class="doc-card-desc">Follow users who tweet about specific keywords or topics</div></a>
+            <a href="/docs/natural-flow" class="doc-card"><div class="doc-card-title">🌊 Natural Flow</div><div class="doc-card-desc">Human-like growth automation with random delays and patterns</div></a>
+          </div>
+        </section>
+
+        <!-- Engagement -->
+        <section class="category-section" data-category="engagement">
+          <div class="category-header">
+            <h2>❤️ Engagement</h2>
+            <span class="category-count">3</span>
+          </div>
+          <div class="doc-grid">
+            <a href="/docs/auto-liker" class="doc-card"><div class="doc-card-title">❤️ Auto Liker</div><div class="doc-card-desc">Automatically like tweets from your timeline or specific users</div></a>
+            <a href="/docs/auto-commenter" class="doc-card"><div class="doc-card-title">💬 Auto Commenter</div><div class="doc-card-desc">Auto-reply to tweets with customizable templates</div></a>
+            <a href="/docs/auto-repost" class="doc-card"><div class="doc-card-title">🔁 Auto Repost</div><div class="doc-card-desc">Automatically retweet/repost content matching your criteria</div></a>
+          </div>
+        </section>
+
+        <!-- Scrapers -->
+        <section class="category-section" data-category="scrapers">
+          <div class="category-header">
+            <h2>📋 Scrapers & Data Extraction</h2>
+            <span class="category-count">14</span>
+          </div>
+          <div class="doc-grid">
+            <a href="/docs/followers-scraping" class="doc-card"><div class="doc-card-title">📋 Followers Scraping</div><div class="doc-card-desc">Extract complete follower lists with profile data</div></a>
+            <a href="/docs/following-scraping" class="doc-card"><div class="doc-card-title">📋 Following Scraping</div><div class="doc-card-desc">Scrape who any account is following</div></a>
+            <a href="/docs/tweet-scraping" class="doc-card"><div class="doc-card-title">🐦 Tweet Scraping</div><div class="doc-card-desc">Extract tweets from any user's timeline</div></a>
+            <a href="/docs/likes-scraping" class="doc-card"><div class="doc-card-title">❤️ Likes Scraping</div><div class="doc-card-desc">Scrape liked tweets from any profile</div></a>
+            <a href="/docs/profile-scraping" class="doc-card"><div class="doc-card-title">👤 Profile Scraping</div><div class="doc-card-desc">Extract detailed profile information from any user</div></a>
+            <a href="/docs/hashtag-scraping" class="doc-card"><div class="doc-card-title">#️⃣ Hashtag Scraping</div><div class="doc-card-desc">Scrape all tweets using a specific hashtag</div></a>
+            <a href="/docs/search-tweets" class="doc-card"><div class="doc-card-title">🔍 Search Tweets</div><div class="doc-card-desc">Search and extract tweets matching any query</div></a>
+            <a href="/docs/thread-scraping" class="doc-card"><div class="doc-card-title">🧵 Thread Scraping</div><div class="doc-card-desc">Extract complete Twitter threads and conversations</div></a>
+            <a href="/docs/list-scraping" class="doc-card"><div class="doc-card-title">📝 List Scraping</div><div class="doc-card-desc">Scrape members and tweets from Twitter lists</div></a>
+            <a href="/docs/media-scraping" class="doc-card"><div class="doc-card-title">🖼️ Media Scraping</div><div class="doc-card-desc">Download images, videos, and GIFs from tweets</div></a>
+            <a href="/docs/link-scraper" class="doc-card"><div class="doc-card-title">🔗 Link Scraper</div><div class="doc-card-desc">Extract all external links shared in tweets</div></a>
+            <a href="/docs/viral-tweet-scraper" class="doc-card"><div class="doc-card-title">📈 Viral Tweet Scraper</div><div class="doc-card-desc">Find trending and viral tweets in any niche</div></a>
+            <a href="/docs/robust-user-extraction" class="doc-card"><div class="doc-card-title">⚙️ Robust User Extraction</div><div class="doc-card-desc">Advanced user data extraction with retry logic</div></a>
+            <a href="/docs/scraper-adapters" class="doc-card"><div class="doc-card-title">🔌 Scraper Adapters</div><div class="doc-card-desc">Pluggable adapter system for custom scraping pipelines</div></a>
+          </div>
+        </section>
+
+        <!-- Content Tools -->
+        <section class="category-section" data-category="content">
+          <div class="category-header">
+            <h2>🎬 Content Tools</h2>
+            <span class="category-count">6</span>
+          </div>
+          <div class="doc-grid">
+            <a href="/docs/video-downloader" class="doc-card"><div class="doc-card-title">🎬 Video Downloader</div><div class="doc-card-desc">Download Twitter/X videos in highest quality</div></a>
+            <a href="/docs/thread-unroller" class="doc-card"><div class="doc-card-title">🧵 Thread Unroller</div><div class="doc-card-desc">Convert long threads into readable single documents</div></a>
+            <a href="/docs/bookmark-exporter" class="doc-card"><div class="doc-card-title">📚 Bookmark Exporter</div><div class="doc-card-desc">Export all your bookmarked tweets to JSON/CSV</div></a>
+            <a href="/docs/bookmark-organizer" class="doc-card"><div class="doc-card-title">📂 Bookmark Organizer</div><div class="doc-card-desc">Organize and categorize saved bookmarks</div></a>
+            <a href="/docs/clear-all-bookmarks" class="doc-card"><div class="doc-card-title">🗑️ Clear All Bookmarks</div><div class="doc-card-desc">Remove all bookmarks at once</div></a>
+            <a href="/docs/clear-all-reposts" class="doc-card"><div class="doc-card-title">🗑️ Clear All Reposts</div><div class="doc-card-desc">Undo all your retweets/reposts in bulk</div></a>
+          </div>
+        </section>
+
+        <!-- Posting -->
+        <section class="category-section" data-category="posting">
+          <div class="category-header">
+            <h2>✏️ Posting & Scheduling</h2>
+            <span class="category-count">4</span>
+          </div>
+          <div class="doc-grid">
+            <a href="/docs/post-thread" class="doc-card"><div class="doc-card-title">🧵 Post Thread</div><div class="doc-card-desc">Create and publish multi-tweet threads automatically</div></a>
+            <a href="/docs/schedule-posts" class="doc-card"><div class="doc-card-title">⏰ Schedule Posts</div><div class="doc-card-desc">Schedule tweets to publish at optimal times</div></a>
+            <a href="/docs/create-poll" class="doc-card"><div class="doc-card-title">📊 Create Poll</div><div class="doc-card-desc">Create Twitter polls programmatically</div></a>
+            <a href="/docs/unlike-all-posts" class="doc-card"><div class="doc-card-title">💔 Unlike All Posts</div><div class="doc-card-desc">Remove all your likes in bulk</div></a>
+          </div>
+        </section>
+
+        <!-- Analytics -->
+        <section class="category-section" data-category="analytics">
+          <div class="category-header">
+            <h2>📊 Analytics & Monitoring</h2>
+            <span class="category-count">6</span>
+          </div>
+          <div class="doc-grid">
+            <a href="/docs/monitor-account" class="doc-card"><div class="doc-card-title">📊 Monitor Account</div><div class="doc-card-desc">Track real-time follower and engagement metrics</div></a>
+            <a href="/docs/engagement-analytics" class="doc-card"><div class="doc-card-title">📈 Engagement Analytics</div><div class="doc-card-desc">Analyze likes, replies, retweets, and impressions</div></a>
+            <a href="/docs/hashtag-analytics" class="doc-card"><div class="doc-card-title">#️⃣ Hashtag Analytics</div><div class="doc-card-desc">Track hashtag performance and trending metrics</div></a>
+            <a href="/docs/best-time-to-post" class="doc-card"><div class="doc-card-title">⏰ Best Time To Post</div><div class="doc-card-desc">Find optimal posting times based on audience activity</div></a>
+            <a href="/docs/competitor-analysis" class="doc-card"><div class="doc-card-title">🔍 Competitor Analysis</div><div class="doc-card-desc">Analyze competitor accounts, strategies, and growth</div></a>
+            <a href="/docs/streaming" class="doc-card"><div class="doc-card-title">📡 Streaming</div><div class="doc-card-desc">Real-time tweet streaming and event monitoring</div></a>
+          </div>
+        </section>
+
+        <!-- Messaging -->
+        <section class="category-section" data-category="messaging">
+          <div class="category-header">
+            <h2>✉️ Messaging</h2>
+            <span class="category-count">2</span>
+          </div>
+          <div class="doc-grid">
+            <a href="/docs/dm-automation" class="doc-card"><div class="doc-card-title">✉️ DM Automation</div><div class="doc-card-desc">Automate direct messages with templates and triggers</div></a>
+            <a href="/docs/send-direct-message" class="doc-card"><div class="doc-card-title">📬 Send Direct Message</div><div class="doc-card-desc">Send DMs programmatically to users</div></a>
+          </div>
+        </section>
+
+        <!-- Safety -->
+        <section class="category-section" data-category="safety">
+          <div class="category-header">
+            <h2>🔒 Safety & Privacy</h2>
+            <span class="category-count">6</span>
+          </div>
+          <div class="doc-grid">
+            <a href="/docs/block-bots" class="doc-card"><div class="doc-card-title">🤖 Block Bots</div><div class="doc-card-desc">Identify and mass-block bot accounts</div></a>
+            <a href="/docs/mass-block-unblock" class="doc-card"><div class="doc-card-title">🚫 Mass Block/Unblock</div><div class="doc-card-desc">Block or unblock users in bulk from a list</div></a>
+            <a href="/docs/mass-unmute" class="doc-card"><div class="doc-card-title">🔊 Mass Unmute</div><div class="doc-card-desc">Unmute all previously muted accounts</div></a>
+            <a href="/docs/mute-keywords-words" class="doc-card"><div class="doc-card-title">🔇 Mute Keywords</div><div class="doc-card-desc">Mute specific words and phrases from your timeline</div></a>
+            <a href="/docs/report-spam" class="doc-card"><div class="doc-card-title">⚠️ Report Spam</div><div class="doc-card-desc">Report spam and abusive accounts in bulk</div></a>
+            <a href="/docs/settings-privacy" class="doc-card"><div class="doc-card-title">🔒 Settings & Privacy</div><div class="doc-card-desc">Manage account settings and privacy controls</div></a>
+          </div>
+        </section>
+
+        <!-- Account Management -->
+        <section class="category-section" data-category="account">
+          <div class="category-header">
+            <h2>👤 Account Management</h2>
+            <span class="category-count">6</span>
+          </div>
+          <div class="doc-grid">
+            <a href="/docs/backup-account" class="doc-card"><div class="doc-card-title">💾 Backup Account</div><div class="doc-card-desc">Full account backup — tweets, followers, DMs, settings</div></a>
+            <a href="/docs/download-account-data" class="doc-card"><div class="doc-card-title">📥 Download Account Data</div><div class="doc-card-desc">Download your complete Twitter data archive</div></a>
+            <a href="/docs/profile-management" class="doc-card"><div class="doc-card-title">👤 Profile Management</div><div class="doc-card-desc">Manage your profile bio, name, and avatar</div></a>
+            <a href="/docs/update-profile" class="doc-card"><div class="doc-card-title">✏️ Update Profile</div><div class="doc-card-desc">Programmatically update profile details</div></a>
+            <a href="/docs/multi-account" class="doc-card"><div class="doc-card-title">👥 Multi-Account</div><div class="doc-card-desc">Manage multiple Twitter accounts seamlessly</div></a>
+            <a href="/docs/qr-code-sharing" class="doc-card"><div class="doc-card-title">📱 QR Code Sharing</div><div class="doc-card-desc">Generate QR codes for your profile</div></a>
+          </div>
+        </section>
+
+        <!-- Lists & Communities -->
+        <section class="category-section" data-category="lists">
+          <div class="category-header">
+            <h2>📝 Lists & Communities</h2>
+            <span class="category-count">3</span>
+          </div>
+          <div class="doc-grid">
+            <a href="/docs/list-manager" class="doc-card"><div class="doc-card-title">📝 List Manager</div><div class="doc-card-desc">Create, manage, and curate Twitter lists</div></a>
+            <a href="/docs/join-communities" class="doc-card"><div class="doc-card-title">🏘️ Join Communities</div><div class="doc-card-desc">Find and join relevant Twitter communities</div></a>
+            <a href="/docs/leave-all-communities" class="doc-card"><div class="doc-card-title">🚪 Leave All Communities</div><div class="doc-card-desc">Leave all Twitter communities at once</div></a>
+          </div>
+        </section>
+
+        <!-- AI & Developer -->
+        <section class="category-section" data-category="ai">
+          <div class="category-header">
+            <h2>🤖 AI & Developer</h2>
+            <span class="category-count">2</span>
+          </div>
+          <div class="doc-grid">
+            <a href="/docs/mcp-server" class="doc-card"><div class="doc-card-title">🤖 MCP Server</div><div class="doc-card-desc">Model Context Protocol server for Claude, GPT, and other AI agents</div></a>
+            <a href="/docs/grok-ai" class="doc-card"><div class="doc-card-title">🧠 Grok AI</div><div class="doc-card-desc">Integrate with X's built-in Grok AI assistant</div></a>
+          </div>
+        </section>
+
+        <!-- Spaces & Live -->
+        <section class="category-section" data-category="spaces">
+          <div class="category-header">
+            <h2>🎙️ Spaces & Live</h2>
+            <span class="category-count">2</span>
+          </div>
+          <div class="doc-grid">
+            <a href="/docs/scrape-spaces" class="doc-card"><div class="doc-card-title">🎙️ Scrape Spaces</div><div class="doc-card-desc">Extract data from Twitter Spaces and live audio</div></a>
+            <a href="/docs/spaces-live-audio" class="doc-card"><div class="doc-card-title">🎙️ Spaces & Live Audio</div><div class="doc-card-desc">Monitor and interact with Spaces events</div></a>
+          </div>
+        </section>
+
+        <!-- Premium & Business -->
+        <section class="category-section" data-category="business">
+          <div class="category-header">
+            <h2>💼 Premium & Business</h2>
+            <span class="category-count">5</span>
+          </div>
+          <div class="doc-grid">
+            <a href="/docs/premium-features" class="doc-card"><div class="doc-card-title">⭐ Premium Features</div><div class="doc-card-desc">Tools for X Premium subscribers</div></a>
+            <a href="/docs/articles-longform" class="doc-card"><div class="doc-card-title">📰 Articles & Longform</div><div class="doc-card-desc">Create and manage long-form articles on X</div></a>
+            <a href="/docs/business-ads" class="doc-card"><div class="doc-card-title">💼 Business & Ads</div><div class="doc-card-desc">Manage X Ads campaigns and business features</div></a>
+            <a href="/docs/creator-monetization" class="doc-card"><div class="doc-card-title">💰 Creator Monetization</div><div class="doc-card-desc">Set up and manage monetization features</div></a>
+            <a href="/docs/discovery-explore" class="doc-card"><div class="doc-card-title">🔍 Discovery & Explore</div><div class="doc-card-desc">Navigate and automate the Explore tab</div></a>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>⚡ Most Popular</h3>
+        <a href="/docs/smart-unfollow">🧠 Smart Unfollow</a>
+        <a href="/docs/detect-unfollowers">🔍 Detect Unfollowers</a>
+        <a href="/docs/video-downloader">🎬 Video Downloader</a>
+        <a href="/docs/growth-suite">🚀 Growth Suite</a>
+        <a href="/docs/followers-scraping">📋 Followers Scraping</a>
+        <a href="/docs/auto-liker">❤️ Auto Liker</a>
+        <a href="/docs/mcp-server">🤖 MCP Server</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Step-by-Step Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server Guide</a>
+        <a href="/run">Run Scripts Now</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>📚 Getting Started</h3>
+        <a href="/tutorials/unfollow">Unfollow Tutorial</a>
+        <a href="/tutorials/scrapers">Scraping Tutorial</a>
+        <a href="/tutorials/automation">Automation Guide</a>
+        <a href="/tutorials/mcp">MCP Setup Guide</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Client-side search filter
+    const searchInput = document.getElementById('docSearch');
+    const sections = document.querySelectorAll('.category-section');
+
+    searchInput.addEventListener('input', function() {
+      const query = this.value.toLowerCase().trim();
+      if (!query) {
+        sections.forEach(s => { s.style.display = ''; s.querySelectorAll('.doc-card').forEach(c => c.style.display = ''); });
+        return;
+      }
+      sections.forEach(section => {
+        const cards = section.querySelectorAll('.doc-card');
+        let visible = 0;
+        cards.forEach(card => {
+          const text = card.textContent.toLowerCase();
+          const href = card.getAttribute('href').toLowerCase();
+          const match = text.includes(query) || href.includes(query);
+          card.style.display = match ? '' : 'none';
+          if (match) visible++;
+        });
+        section.style.display = visible > 0 ? '' : 'none';
+      });
+    });
+  </script>
+</body>
+</html>

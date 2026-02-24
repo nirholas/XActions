@@ -25,6 +25,7 @@ import {
   removeMonitor,
   getAlerts,
   generateReport,
+  analyzeTweetPriceCorrelation,
 } from '../../src/analytics/index.js';
 
 const router = express.Router();
@@ -214,6 +215,59 @@ router.get('/alerts', (req, res) => {
   });
 
   return res.json({ alerts, count: alerts.length });
+});
+
+// ============================================================================
+// Tweet-Price Correlation (inspired by tweet-price-charts)
+// ============================================================================
+
+/**
+ * POST /api/analytics/price-correlation
+ * Analyze correlation between tweet activity and token price movements.
+ *
+ * Body: {
+ *   tweets: [{ timestamp: number (ms), text: string, url?: string }, ...],
+ *   tokenId?: string,            // CoinGecko coin ID (e.g. 'solana', 'bitcoin')
+ *   network?: string,            // GeckoTerminal network (e.g. 'solana', 'eth')
+ *   poolAddress?: string,        // GeckoTerminal pool address
+ *   windows?: number[]           // impact windows in hours (default: [1, 24])
+ * }
+ *
+ * Credit: Inspired by https://github.com/rohunvora/tweet-price-charts
+ */
+router.post('/price-correlation', async (req, res) => {
+  try {
+    const { tweets, tokenId, network, poolAddress, windows } = req.body;
+
+    if (!tweets || !Array.isArray(tweets) || tweets.length === 0) {
+      return res.status(400).json({
+        error: '"tweets" (array of { timestamp, text }) is required. Timestamp should be ms since epoch.',
+      });
+    }
+
+    if (!tokenId && !(network && poolAddress)) {
+      return res.status(400).json({
+        error: 'Either "tokenId" (CoinGecko ID) or "network" + "poolAddress" (GeckoTerminal) is required',
+      });
+    }
+
+    if (tweets.length > 5000) {
+      return res.status(400).json({ error: 'Maximum 5000 tweets per request' });
+    }
+
+    const result = await analyzeTweetPriceCorrelation({
+      tweets,
+      tokenId,
+      network,
+      poolAddress,
+      windows: windows || [1, 24],
+    });
+
+    return res.json(result);
+  } catch (error) {
+    console.error('❌ Price correlation error:', error.message);
+    return res.status(500).json({ error: error.message });
+  }
 });
 
 export default router;

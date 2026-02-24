@@ -239,7 +239,18 @@ app.get('/pricing', (req, res) => {
 });
 
 app.get('/docs', (req, res) => {
-  res.sendFile(path.join(__dirname, '../dashboard/docs.html'));
+  res.sendFile(path.join(__dirname, '../dashboard/docs/index.html'));
+});
+
+// Documentation sub-pages (71 auto-generated SEO pages from docs/examples/*.md)
+app.get('/docs/:slug', (req, res) => {
+  const slug = req.params.slug.replace(/[^a-zA-Z0-9-]/g, ''); // Sanitize
+  const filePath = path.join(__dirname, `../dashboard/docs/${slug}.html`);
+  res.sendFile(filePath, (err) => {
+    if (err) {
+      res.status(404).sendFile(path.join(__dirname, '../dashboard/404.html'));
+    }
+  });
 });
 
 app.get('/features', (req, res) => {
