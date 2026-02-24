@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin - XActions Live Sessions</title>
+  <meta name="robots" content="noindex, nofollow">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
   <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
   <style>
@@ -402,26 +403,50 @@
       align-items: center;
       gap: 8px;
     }
+    /* Skip Navigation */
+    .skip-nav {
+      position: absolute;
+      top: -100%;
+      left: 16px;
+      background: var(--accent);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 700;
+      z-index: 9999;
+      text-decoration: none;
+    }
+    .skip-nav:focus {
+      top: 16px;
+    }
+
+    /* Visible focus styles */
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
   </style>
 </head>
 <body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
   <header class="header">
     <h1>
-      <span>⚡</span>
+      <span aria-hidden="true">⚡</span>
       XActions Admin
       <span style="font-weight: 400; font-size: 1rem; color: var(--text-secondary);">Live Sessions</span>
     </h1>
     <a href="/dashboard" style="color: var(--accent); text-decoration: none;">← Back to Dashboard</a>
   </header>
 
+  <main id="main-content">
   <!-- Tab Navigation -->
-  <div class="tab-nav">
-    <button class="tab-btn active" onclick="switchTab('sessions')">📡 Live Sessions</button>
-    <button class="tab-btn" onclick="switchTab('payments')">💰 x402 Payments</button>
+  <div class="tab-nav" role="tablist" aria-label="Admin sections">
+    <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="tab-sessions" id="tab-btn-sessions" onclick="switchTab('sessions')">📡 Live Sessions</button>
+    <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-payments" id="tab-btn-payments" onclick="switchTab('payments')">💰 x402 Payments</button>
   </div>
 
   <!-- Sessions Tab -->
-  <div id="tab-sessions" class="tab-content active">
+  <div id="tab-sessions" class="tab-content active" role="tabpanel" aria-labelledby="tab-btn-sessions">
     <div class="stats-bar">
       <div class="stat-box">
         <div class="stat-value" id="total-sessions">0</div>
@@ -439,7 +464,7 @@
   </div>
 
   <!-- Payments Tab -->
-  <div id="tab-payments" class="tab-content" style="display: none;">
+  <div id="tab-payments" class="tab-content" role="tabpanel" aria-labelledby="tab-btn-payments" style="display: none;">
     <div class="stats-bar">
       <div class="stat-box">
         <div class="stat-value" id="total-payments">0</div>
@@ -503,10 +528,11 @@
     </div>
   </div>
 
-  <div id="connection-status" class="status-badge status-disconnected">
-    <span class="pulse"></span>
-    <span id="connection-text">Connecting...</span>
+  <div id=\"connection-status\" class=\"status-badge status-disconnected\" role=\"status\" aria-live=\"polite\">
+    <span class=\"pulse\" aria-hidden=\"true\"></span>
+    <span id=\"connection-text\">Connecting...</span>
   </div>
+  </main>
 
   <script>
     const API_URL = window.location.origin;

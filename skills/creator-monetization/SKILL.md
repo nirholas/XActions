@@ -1,4 +1,3 @@
-```skill
 ---
 name: creator-monetization
 description: X/Twitter Creator Studio and monetization tools including Media Studio, subscriptions, tips, affiliates, email sharing, partnerships, analytics, and the 2026 X Money in-app transaction system.
@@ -77,4 +76,3 @@ Manage creator tools and monetization features on X/Twitter.
 - X Money launching full rollout in 2026
 - Affiliate commissions vary by partner program
 - Email sharing of subscriber lists requires Premium+
-```

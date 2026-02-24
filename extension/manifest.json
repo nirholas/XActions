@@ -1,0 +1,54 @@
+{
+  "manifest_version": 3,
+  "name": "XActions — X/Twitter Automation Toolkit",
+  "version": "1.0.0",
+  "description": "Run XActions automation scripts on X/Twitter without browser console. Auto-like, smart unfollow, keyword follow, growth suite, and more.",
+  "author": "nichxbt",
+  "homepage_url": "https://github.com/nirholas/XActions",
+
+  "permissions": [
+    "activeTab",
+    "storage",
+    "alarms",
+    "scripting"
+  ],
+
+  "host_permissions": [
+    "https://x.com/*",
+    "https://twitter.com/*"
+  ],
+
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+
+  "background": {
+    "service_worker": "background/service-worker.js"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["https://x.com/*", "https://twitter.com/*"],
+      "js": ["content/bridge.js"],
+      "run_at": "document_idle"
+    }
+  ],
+
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+
+  "web_accessible_resources": [
+    {
+      "resources": ["content/injected.js"],
+      "matches": ["https://x.com/*", "https://twitter.com/*"]
+    }
+  ]
+}

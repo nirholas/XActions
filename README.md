@@ -263,13 +263,16 @@ Your x.com tab does all the work. Nothing gets scraped to our servers. You're in
 
 ## 💰 Pricing
 
-### 🆓 Humans — FREE Forever
+### 🆓 100% Free & Open Source
 
-All browser scripts, CLI, Node.js library, and local MCP server are **completely free**.
+Everything is **completely free** — browser scripts, CLI, Node.js library, MCP server, dashboard, and API.
 
-### 🤖 AI Agents — Pay-per-Request
+No API keys. No subscriptions. No paywalls. Just clone and run.
 
-AI agents pay micropayments via [x402](https://x402.org) protocol:
+<details>
+<summary>🤖 Optional: Remote API for AI Agents</summary>
+
+If you self-host the XActions API for remote AI agent access, you can optionally enable pay-per-request micropayments via the [x402](https://x402.org) protocol. This is entirely optional and disabled by default.
 
 | Operation | Price |
 |-----------|-------|
@@ -282,7 +285,9 @@ AI agents pay micropayments via [x402](https://x402.org) protocol:
 | Auto-like | $0.02 |
 | Video download | $0.005 |
 
-> **Why charge AI?** AI can make thousands of requests per minute. Micropayments ensure fair access.
+This only applies to the hosted remote API. Local mode is always free.
+
+</details>
 
 ---
 
@@ -793,7 +798,7 @@ exportToCSV(data, filename)
 2. Copy-paste console scripts on x.com
 3. View tutorials and documentation
 
-**100% Free for humans.** AI agents pay per request via x402 micropayments.
+**100% Free.** No API keys, no payments, no limits.
 
 ---
 

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Automations — XActions</title>
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <style>
+    :root {
+      --bg-primary: #000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --accent: #1d9bf0;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--font);
+      min-height: 100vh;
+    }
+
+    /* ── Nav ───────────────────────────────────────── */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: 53px;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 24px;
+    }
+    .nav__brand {
+      font-size: 20px; font-weight: 800; color: var(--text-primary);
+      text-decoration: none; display: flex; align-items: center; gap: 8px;
+    }
+    .nav__links { display: flex; gap: 4px; }
+    .nav__link {
+      color: var(--text-secondary); text-decoration: none; font-size: 14px; font-weight: 500;
+      padding: 8px 14px; border-radius: 9999px; transition: all 0.2s;
+    }
+    .nav__link:hover, .nav__link--active { background: var(--bg-tertiary); color: var(--text-primary); }
+    .nav__right { display: flex; align-items: center; gap: 12px; }
+    .conn-badge {
+      font-size: 12px; padding: 4px 10px; border-radius: 9999px;
+      border: 1px solid var(--border);
+    }
+    .conn-badge--on { color: var(--success); border-color: var(--success); }
+    .conn-badge--off { color: var(--error); border-color: var(--error); }
+
+    /* ── Layout ────────────────────────────────────── */
+    .main { max-width: 1200px; margin: 73px auto 40px; padding: 0 20px; }
+
+    .page-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 24px;
+    }
+    .page-header h1 { font-size: 24px; font-weight: 800; }
+
+    .header-stats {
+      display: flex; gap: 20px;
+    }
+    .header-stat {
+      text-align: center;
+    }
+    .header-stat__val {
+      font-size: 24px; font-weight: 700; color: var(--accent);
+    }
+    .header-stat__label {
+      font-size: 11px; color: var(--text-secondary); text-transform: uppercase;
+    }
+
+    /* ── Emergency Button ──────────────────────────── */
+    .btn-emergency {
+      background: var(--error); color: #fff; border: none; cursor: pointer;
+      padding: 10px 24px; border-radius: 9999px; font-weight: 700; font-size: 14px;
+      font-family: var(--font);
+      transition: all 0.2s; display: flex; align-items: center; gap: 6px;
+    }
+    .btn-emergency:hover { background: #d41c26; transform: scale(1.04); }
+
+    /* ── Grid ──────────────────────────────────────── */
+    .auto-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 16px;
+    }
+
+    /* ── Card ──────────────────────────────────────── */
+    .auto-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      transition: all 0.2s;
+    }
+    .auto-card:hover { border-color: #444; }
+    .auto-card--running { border-color: var(--success); box-shadow: 0 0 0 1px var(--success); }
+
+    .auto-card__header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .auto-card__icon { font-size: 28px; }
+    .auto-card__badge {
+      font-size: 11px; font-weight: 600; text-transform: uppercase; padding: 3px 10px;
+      border-radius: 9999px; letter-spacing: 0.5px;
+    }
+    .auto-card__badge--running { background: rgba(0,186,124,0.15); color: var(--success); }
+    .auto-card__badge--stopped { background: rgba(113,118,123,0.15); color: var(--text-secondary); }
+
+    .auto-card__name { font-size: 17px; font-weight: 700; margin-bottom: 4px; }
+    .auto-card__desc { font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; line-height: 1.4; }
+
+    .auto-card__stats { display: flex; gap: 20px; margin-bottom: 16px; }
+    .auto-card__stat { text-align: center; }
+    .auto-card__stat-val { display: block; font-size: 18px; font-weight: 700; }
+    .auto-card__stat-label { font-size: 11px; color: var(--text-secondary); text-transform: uppercase; }
+
+    .auto-card__actions { display: flex; gap: 8px; }
+
+    /* ── Buttons ───────────────────────────────────── */
+    .btn {
+      border: none; cursor: pointer; font-family: var(--font); font-weight: 600;
+      border-radius: 9999px; padding: 8px 18px; font-size: 14px; transition: all 0.15s;
+    }
+    .btn--toggle { flex: 1; }
+    .btn--start { background: var(--accent); color: #fff; }
+    .btn--start:hover { background: #1a8cd8; }
+    .btn--stop { background: var(--error); color: #fff; }
+    .btn--stop:hover { background: #d41c26; }
+    .btn--settings { background: var(--bg-tertiary); color: var(--text-primary); }
+    .btn--settings:hover { background: #2c3035; }
+
+    /* ── Modal ─────────────────────────────────────── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+      z-index: 200; backdrop-filter: blur(4px);
+    }
+    .modal-overlay.visible { display: block; }
+
+    .settings-modal {
+      display: none; position: fixed; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--bg-secondary); border: 1px solid var(--border);
+      border-radius: 20px; width: 90%; max-width: 480px;
+      z-index: 201; overflow: hidden;
+    }
+    .settings-modal.visible { display: block; }
+
+    .modal-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 16px 20px; border-bottom: 1px solid var(--border);
+    }
+    .modal-header h2 { font-size: 18px; font-weight: 700; }
+    .modal-close {
+      background: none; border: none; color: var(--text-secondary); font-size: 22px;
+      cursor: pointer; width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s;
+    }
+    .modal-close:hover { background: var(--bg-tertiary); color: var(--text-primary); }
+
+    .modal-body { padding: 20px; max-height: 60vh; overflow-y: auto; }
+    .modal-footer {
+      padding: 12px 20px; border-top: 1px solid var(--border);
+      display: flex; justify-content: flex-end; gap: 8px;
+    }
+    .btn--save { background: var(--accent); color: #fff; }
+    .btn--save:hover { background: #1a8cd8; }
+    .btn--cancel { background: var(--bg-tertiary); color: var(--text-primary); }
+    .btn--cancel:hover { background: #2c3035; }
+
+    /* ── Form fields ──────────────────────────────── */
+    .form-group { margin-bottom: 14px; }
+    .form-group--inline { display: flex; align-items: center; gap: 10px; }
+    .form-label { display: block; font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; }
+    .form-input {
+      width: 100%; background: var(--bg-primary); border: 1px solid var(--border);
+      border-radius: 8px; padding: 10px 12px; color: var(--text-primary);
+      font-size: 14px; font-family: var(--font); outline: none; transition: border-color 0.15s;
+    }
+    .form-input:focus { border-color: var(--accent); }
+    .form-textarea { resize: vertical; min-height: 80px; }
+    .form-checkbox {
+      width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer;
+    }
+
+    /* ── Responsive ────────────────────────────────── */
+    @media (max-width: 768px) {
+      .auto-grid { grid-template-columns: 1fr; }
+      .page-header { flex-direction: column; gap: 12px; align-items: flex-start; }
+      .nav__links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav class="nav">
+    <a href="/dashboard" class="nav__brand">⚡ XActions</a>
+    <div class="nav__links">
+      <a href="/dashboard" class="nav__link">Dashboard</a>
+      <a href="/automations" class="nav__link nav__link--active">Automations</a>
+      <a href="/monitor" class="nav__link">Monitor</a>
+      <a href="/workflows" class="nav__link">Workflows</a>
+      <a href="/run" class="nav__link">Scripts</a>
+      <a href="/docs" class="nav__link">Docs</a>
+    </div>
+    <div class="nav__right">
+      <span id="conn-status" class="conn-badge conn-badge--off">Disconnected</span>
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <div class="main">
+    <div class="page-header">
+      <div>
+        <h1>⚙️ Automations</h1>
+        <p style="color:var(--text-secondary); font-size:14px; margin-top:4px;">Start, stop, and configure your X/Twitter automations</p>
+      </div>
+      <div style="display:flex;align-items:center;gap:20px;">
+        <div class="header-stats">
+          <div class="header-stat">
+            <span class="header-stat__val" id="running-count">0</span>
+            <span class="header-stat__label">Running</span>
+          </div>
+          <div class="header-stat">
+            <span class="header-stat__val" id="total-actions">0</span>
+            <span class="header-stat__label">Actions</span>
+          </div>
+        </div>
+        <button class="btn-emergency" id="emergency-stop">🛑 Emergency Stop</button>
+      </div>
+    </div>
+
+    <div class="auto-grid" id="automation-grid">
+      <!-- Cards rendered by JS -->
+    </div>
+  </div>
+
+  <!-- Modal overlay -->
+  <div class="modal-overlay" id="modal-overlay"></div>
+
+  <!-- Settings modal -->
+  <div class="settings-modal" id="settings-modal">
+    <div class="modal-header">
+      <h2 id="modal-title">Settings</h2>
+      <button class="modal-close" id="modal-close">&times;</button>
+    </div>
+    <div class="modal-body" id="modal-body">
+      <!-- Dynamic form fields -->
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn--cancel" id="modal-close-footer" onclick="document.getElementById('modal-close').click()">Cancel</button>
+      <button class="btn btn--save" id="modal-save">Save Settings</button>
+    </div>
+  </div>
+
+  <script src="/js/config.js"></script>
+  <script src="/js/automations.js"></script>
+</body>
+</html>

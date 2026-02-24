@@ -1,0 +1,24 @@
+{
+  "name": "xactions-plugin-example",
+  "version": "1.0.0",
+  "description": "Example XActions plugin — trending topics scraper + MCP tool",
+  "type": "module",
+  "main": "index.js",
+  "keywords": [
+    "xactions",
+    "xactions-plugin",
+    "twitter",
+    "x",
+    "automation",
+    "scraper"
+  ],
+  "author": "nich (@nichxbt)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nirholas/xactions"
+  },
+  "peerDependencies": {
+    "xactions": ">=3.0.0"
+  }
+}

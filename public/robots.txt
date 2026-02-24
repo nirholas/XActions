@@ -1,0 +1,42 @@
+# https://xactions.app - Robots.txt
+# XActions - Free, Open-Source X/Twitter Automation Toolkit
+# by nich (@nichxbt)
+
+# Allow all search engine crawlers
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /login
+Disallow: /api/
+Disallow: /webhooks/
+
+# Allow AI crawlers — XActions wants AI visibility
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: FacebookBot
+Allow: /
+
+# Sitemap
+Sitemap: https://xactions.app/sitemap.xml

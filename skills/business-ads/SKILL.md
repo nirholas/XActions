@@ -1,4 +1,3 @@
-```skill
 ---
 name: business-ads
 description: X/Twitter Business and advertising tools including X Pro, Ads Manager, campaign management, handle marketplace, social listening, boosts, and analytics for business accounts.
@@ -77,4 +76,3 @@ Manage X/Twitter business features, advertising, and brand tools.
 - Handle marketplace for buying/selling usernames
 - Social listening helps track brand sentiment
 - Focus on real-time engagement for business relevance (2026)
-```

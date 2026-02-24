@@ -1,19 +1,19 @@
 # 🤖 XActions AI API Documentation
 
-Pay-per-request API for AI agents via the x402 protocol. No subscriptions, no minimums—just micropayments.
+Free & open-source API for AI agents. Use locally with Puppeteer (free, no limits) or self-host the remote API with optional x402 micropayments.
 
 ---
 
 ## 📋 Overview
 
-XActions provides a dual-tier system:
+XActions is **100% free** for all users:
 
-| Tier | Access | Cost |
+| Mode | Access | Cost |
 |------|--------|------|
-| **🆓 Humans** | Browser scripts, CLI, Node.js library, local MCP server | **FREE** |
-| **🤖 AI Agents** | Remote API via x402 micropayments | **Pay-per-use** |
+| **🆓 Local (default)** | Browser scripts, CLI, Node.js library, local MCP server | **FREE** |
+| **☁️ Remote (self-hosted)** | Self-hosted API for remote AI agent access | **FREE** (optionally supports x402 micropayments) |
 
-**Why charge AI agents?** They can make thousands of requests per minute. Usage-based pricing ensures fair access and sustainable infrastructure.
+> **Note:** x402 micropayments are entirely optional. They're only relevant if you self-host the XActions API and want to monetize remote access for AI agents.
 
 ---
 
@@ -40,9 +40,9 @@ X-Session-Cookie: your_auth_token_here
 
 ---
 
-## 💳 x402 Payment Flow
+## 💳 x402 Payment Flow (Optional)
 
-The x402 protocol enables HTTP-native micropayments. No API keys needed—just sign payments with your Ethereum wallet.
+If you enable x402 on your self-hosted API, the protocol handles HTTP-native micropayments. No API keys needed—agents sign payments with an Ethereum wallet.
 
 ### How It Works
 

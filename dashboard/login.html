@@ -7,14 +7,8 @@
   <meta name="description" content="Login to XActions - AI-powered X/Twitter automation platform. Smart unfollow with machine learning, LLM integration, MCP server support. Compatible with GPT & Claude AI agents.">
   <meta name="keywords" content="xactions login, AI Twitter automation, LLM Twitter bot, machine learning Twitter, AI agents for X, GPT Twitter automation, Claude Twitter tools, MCP server Twitter, AI-powered unfollow, smart Twitter automation, twitter automation, mass unfollow, twitter bot">
   <meta name="author" content="nich (@nichxbt)">
-  <meta property="og:title" content="XActions - AI-Powered X/Twitter Automation Platform">
-  <meta property="og:description" content="AI-powered automation with LLM integration, MCP server support. GPT & Claude compatible. Free & open-source.">
-  <meta property="og:url" content="https://xactions.app">
-  <meta property="og:type" content="website">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:creator" content="@nichxbt">
+  <meta name="robots" content="noindex, nofollow">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
-  <link rel="canonical" href="https://xactions.app/login">
   <style>
     :root {
       --bg-primary: #000000;
@@ -124,9 +118,32 @@
     }
 
     .form-input:focus {
-      outline: none;
+      outline: 2px solid var(--accent);
+      outline-offset: -1px;
       border-color: var(--accent);
-      box-shadow: 0 0 0 1px var(--accent);
+    }
+
+    /* Skip Navigation */
+    .skip-nav {
+      position: absolute;
+      top: -100%;
+      left: 16px;
+      background: var(--accent);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 700;
+      z-index: 9999;
+      text-decoration: none;
+    }
+    .skip-nav:focus {
+      top: 16px;
+    }
+
+    /* Visible focus styles */
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
     }
 
     .form-input::placeholder {
@@ -309,6 +326,7 @@
   </style>
 </head>
 <body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
   <header class="header">
     <a href="/" class="logo-link">
       <span class="logo-icon">⚡</span>
@@ -316,7 +334,7 @@
     </a>
   </header>
 
-  <main class="main">
+  <main class="main" id="main-content">
     <div class="login-container">
       <h1 class="title" id="page-title">Sign in to XActions</h1>
       <p class="subtitle">Automate your X/Twitter account management</p>
@@ -329,7 +347,7 @@
       </div>
 
       <!-- Login Card -->
-      <div class="card" id="login-card">
+      <div class="card" id="login-card" role="region" aria-labelledby="page-title">
         <div class="error-message" id="login-error"></div>
         
         <form id="login-form">
@@ -356,7 +374,7 @@
       </div>
 
       <!-- Register Card -->
-      <div class="card" id="register-card" style="display: none;">
+      <div class="card" id="register-card" role="region" aria-label="Create account" style="display: none;">
         <div class="error-message" id="register-error"></div>
         <div class="success-message" id="register-success"></div>
         

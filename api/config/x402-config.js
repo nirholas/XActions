@@ -1,8 +1,10 @@
 /**
- * x402 Payment Configuration
+ * x402 Micropayment Configuration (Optional)
  * 
- * Configure payment requirements for AI agent endpoints.
- * Humans use free browser scripts; AI agents pay per API call.
+ * Optional pay-per-request pricing for self-hosted remote AI API.
+ * All local features (browser scripts, CLI, MCP server) are 100% free.
+ * x402 is only relevant if you self-host the XActions API and want to
+ * monetize remote AI agent access. Most users can ignore this file.
  * 
  * @see https://x402.org for protocol documentation
  */
@@ -10,8 +12,8 @@
 // Determine environment
 const isProduction = process.env.NODE_ENV === 'production';
 
-// Payment receiving address (REQUIRED in production)
-export const PAY_TO_ADDRESS = process.env.X402_PAY_TO_ADDRESS || (isProduction ? null : null);
+// Payment receiving address (optional — only needed if you want to enable x402 payments)
+export const PAY_TO_ADDRESS = process.env.X402_PAY_TO_ADDRESS || null;
 
 // Facilitator URL (testnet for development, mainnet for production)
 export const FACILITATOR_URL = process.env.X402_FACILITATOR_URL || 'https://x402.org/facilitator';
@@ -207,7 +209,7 @@ export function getRouteConfig(payTo) {
  * @param {boolean} throwOnError - If true, throws ConfigurationError on critical issues
  * @returns {{ valid: boolean, errors: string[], warnings: string[] }}
  */
-export function validateConfig(throwOnError = isProduction) {
+export function validateConfig(throwOnError = false) {
   const errors = [];
   const warnings = [];
   

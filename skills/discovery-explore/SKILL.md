@@ -1,4 +1,3 @@
-```skill
 ---
 name: discovery-explore
 description: Automate X/Twitter discovery features including For You feed, Following feed, Trends, Topics, Starterpacks, Advanced Search, Saved Searches, and the 2026 Explore redesign with Grok AI summaries and Radar Search.
@@ -80,4 +79,3 @@ Automate content discovery, trend analysis, and search on X/Twitter.
 - Advanced search operators: from:, to:, since:, until:, filter:media, etc.
 - Radar Search is Premium+ only
 - Grok AI summaries appear on trending topics (2026)
-```

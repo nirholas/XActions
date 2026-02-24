@@ -1,4 +1,3 @@
-```skill
 ---
 name: premium-subscriptions
 description: Manage X Premium tiers (Basic $3/mo, Premium $8/mo, Premium+ $16/mo) and SuperGrok ($60/mo). Features include ad reduction, longer posts/videos, verification, revenue sharing, undo post, custom icons, reply boosts, and the 2026 pay-for-reach emphasis.
@@ -79,4 +78,3 @@ Check Premium status and available features.
 - Verification requires ID or payment
 - Revenue sharing requires 500+ followers and 5M+ impressions in 3 months
 - Pay-for-reach means Premium is increasingly necessary for growth (2026)
-```

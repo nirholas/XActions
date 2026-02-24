@@ -25,6 +25,7 @@
   <meta name="twitter:description" content="AI-powered X/Twitter automation dashboard with LLM & MCP server integration.">
   
   <link rel="canonical" href="https://xactions.app/dashboard">
+  <link rel="manifest" href="/manifest.json">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
   
   <!-- Socket.io for real-time browser-to-browser communication -->
@@ -414,9 +415,9 @@
 
     .input-group textarea:focus,
     .input-group input:focus {
-      outline: none;
+      outline: 2px solid var(--accent);
+      outline-offset: -1px;
       border-color: var(--accent);
-      box-shadow: 0 0 0 1px var(--accent);
     }
 
     .btn-primary {
@@ -650,7 +651,8 @@
     }
 
     .search-input:focus {
-      outline: none;
+      outline: 2px solid var(--accent);
+      outline-offset: -1px;
       background: var(--bg-primary);
       border-color: var(--accent);
     }
@@ -874,9 +876,9 @@
     }
 
     .form-input:focus {
-      outline: none;
+      outline: 2px solid var(--accent);
+      outline-offset: -1px;
       border-color: var(--accent);
-      box-shadow: 0 0 0 1px var(--accent);
     }
 
     .checkbox-group {
@@ -1004,12 +1006,35 @@
     .footer-bottom a:hover { color: var(--accent); }
     @media (max-width: 768px) { .footer-content { grid-template-columns: 1fr 1fr; } }
     @media (max-width: 480px) { .footer-content { grid-template-columns: 1fr; } }
+    /* Skip Navigation */
+    .skip-nav {
+      position: absolute;
+      top: -100%;
+      left: 16px;
+      background: var(--accent);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 700;
+      z-index: 9999;
+      text-decoration: none;
+    }
+    .skip-nav:focus {
+      top: 16px;
+    }
+
+    /* Visible focus styles */
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
   </style>
 </head>
 <body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
   <div class="layout">
     <!-- Left Sidebar -->
-    <aside class="sidebar-left">
+    <aside class="sidebar-left" aria-label="Main navigation">
       <div class="logo">
         <a href="/dashboard">
           <span class="logo-icon">⚡</span>
@@ -1041,7 +1066,7 @@
     </aside>
 
     <!-- Main Content -->
-    <main class="main-content">
+    <main class="main-content" id="main-content">
       <header class="main-header">
         <div class="header-title">
           <h1>Dashboard</h1>
@@ -1073,7 +1098,7 @@
         <div id="browser-connection" style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 16px;">
           <div style="display: flex; justify-content: space-between; align-items: center;">
             <div style="display: flex; align-items: center; gap: 12px;">
-              <span id="connection-indicator" style="width: 12px; height: 12px; border-radius: 50%; background: var(--text-secondary);"></span>
+              <span id="connection-indicator" role="status" aria-label="Connection status: not connected" style="width: 12px; height: 12px; border-radius: 50%; background: var(--text-secondary);"></span>
               <div>
                 <div id="connection-status-text" style="font-weight: 600;">Not Connected</div>
                 <div id="connection-substatus" style="color: var(--text-secondary); font-size: 0.8125rem;">Connect your x.com browser tab to run operations</div>
@@ -1110,9 +1135,9 @@
           </div>
         </div>
 
-        <div class="operation-card" onclick="openOperationModal('unfollowNonFollowers')">
+        <div class="operation-card" role="button" tabindex="0" onclick="openOperationModal('unfollowNonFollowers')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openOperationModal('unfollowNonFollowers')}">
           <div class="operation-header">
-            <span class="operation-icon">🧹</span>
+            <span class="operation-icon" aria-hidden="true">🧹</span>
             <div class="operation-info">
               <div class="operation-title">Unfollow Non-Followers</div>
               <div class="operation-desc">Remove accounts that don't follow you back. Clean up your following list.</div>
@@ -1121,9 +1146,9 @@
           </div>
         </div>
 
-        <div class="operation-card" onclick="openOperationModal('unfollowEveryone')">
+        <div class="operation-card" role="button" tabindex="0" onclick="openOperationModal('unfollowEveryone')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openOperationModal('unfollowEveryone')}">
           <div class="operation-header">
-            <span class="operation-icon">💥</span>
+            <span class="operation-icon" aria-hidden="true">💥</span>
             <div class="operation-info">
               <div class="operation-title">Unfollow Everyone</div>
               <div class="operation-desc">Start fresh — unfollow your entire following list at once.</div>
@@ -1132,9 +1157,9 @@
           </div>
         </div>
 
-        <div class="operation-card" onclick="openOperationModal('detectUnfollowers')">
+        <div class="operation-card" role="button" tabindex="0" onclick="openOperationModal('detectUnfollowers')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openOperationModal('detectUnfollowers')}">
           <div class="operation-header">
-            <span class="operation-icon">🔍</span>
+            <span class="operation-icon" aria-hidden="true">🔍</span>
             <div class="operation-info">
               <div class="operation-title">Detect Unfollowers</div>
               <div class="operation-desc">Find out who stopped following you recently.</div>
@@ -1160,11 +1185,11 @@
     </main>
 
     <!-- Right Sidebar -->
-    <aside class="sidebar-right">
+    <aside class="sidebar-right" aria-label="Supplementary information">
       <div class="search-box">
         <div class="search-input-wrapper">
           <span class="search-icon">🔍</span>
-          <input type="text" class="search-input" placeholder="Search documentation">
+          <input type="text" class="search-input" placeholder="Search documentation" aria-label="Search documentation">
         </div>
       </div>
 
@@ -1226,15 +1251,15 @@
   </div>
 
   <!-- Operation Modal -->
-  <div class="modal-overlay" id="operation-modal">
+  <div class="modal-overlay" id="operation-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
     <div class="modal">
       <div class="modal-header">
-        <button class="modal-close" onclick="closeModal()">✕</button>
+        <button class="modal-close" onclick="closeModal()" aria-label="Close dialog">✕</button>
         <h2 class="modal-title" id="modal-title">Configure Operation</h2>
       </div>
       <div class="modal-body">
         <div class="form-group">
-          <label class="form-label">Maximum Unfollows</label>
+          <label class="form-label" for="max-unfollows">Maximum Unfollows</label>
           <input type="number" class="form-input" id="max-unfollows" value="100" min="1" max="1000">
           <p style="color: var(--text-secondary); font-size: 0.8125rem; margin-top: 8px;">
             Set a limit to control how many accounts to unfollow in this operation.

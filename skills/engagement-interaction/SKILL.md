@@ -1,4 +1,3 @@
-```skill
 ---
 name: engagement-interaction
 description: Automate X/Twitter engagement including likes, replies, bookmarks, mentions, hashtags, reactions, sharing, analytics, reply limits, hidden replies, and video reactions. Manage engagement at scale with rate limiting and smart targeting.
@@ -86,4 +85,3 @@ Manage and automate all forms of X/Twitter engagement.
 - Premium accounts get higher organic reach
 - Bookmark folders require Premium
 - Analytics require Premium
-```

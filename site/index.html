@@ -34,10 +34,11 @@
   <meta name="twitter:image" content="https://xactions.app/og-home.png">
 
   <link rel="canonical" href="https://xactions.app">
+  <link rel="manifest" href="/manifest.json">
   <link rel="icon"
     href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
 
-  <!-- Structured Data -->
+  <!-- Structured Data - SoftwareApplication -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -56,6 +57,26 @@
       "@type": "Person",
       "name": "nich",
       "url": "https://x.com/nichxbt"
+    }
+  }
+  </script>
+  <!-- Structured Data - WebSite (enables Google Sitelinks Search Box) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "XActions",
+    "url": "https://xactions.app",
+    "description": "Free AI-powered X/Twitter automation tools — mass unfollow, scrapers, MCP server, CLI",
+    "publisher": {
+      "@type": "Organization",
+      "name": "XActions",
+      "url": "https://xactions.app"
+    },
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://xactions.app/features?q={search_term_string}",
+      "query-input": "required name=search_term_string"
     }
   }
   </script>
@@ -744,13 +765,36 @@
         grid-template-columns: 1fr;
       }
     }
+    /* Skip Navigation */
+    .skip-nav {
+      position: absolute;
+      top: -100%;
+      left: 16px;
+      background: var(--accent);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 700;
+      z-index: 9999;
+      text-decoration: none;
+    }
+    .skip-nav:focus {
+      top: 16px;
+    }
+
+    /* Visible focus styles */
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
   </style>
 </head>
 
 <body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
   <div class="layout">
     <!-- Left Sidebar -->
-    <aside class="sidebar-left">
+    <aside class="sidebar-left" aria-label="Main navigation">
       <div class="logo">
         <a href="/">
           <span>⚡</span>
@@ -789,7 +833,7 @@
     </aside>
 
     <!-- Main Content -->
-    <main class="main-content">
+    <main class="main-content" id="main-content">
       <header class="main-header">
         <h1>Welcome to XActions</h1>
       </header>
@@ -916,16 +960,16 @@
         <p style="color: var(--text-secondary); margin-bottom: 16px;">Manual scripts for the technically inclined. Paste
           in browser console.</p>
 
-        <div class="script-tabs">
-          <button class="tab-btn active" onclick="showScript('unfollow')">Unfollow Non-Followers</button>
-          <button class="tab-btn" onclick="showScript('monitor')">Detect Unfollowers</button>
-          <button class="tab-btn" onclick="showScript('watch')">Monitor Account</button>
+        <div class="script-tabs" role="tablist" aria-label="Script examples">
+          <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="unfollow-script" onclick="showScript('unfollow')">Unfollow Non-Followers</button>
+          <button class="tab-btn" role="tab" aria-selected="false" aria-controls="monitor-script" onclick="showScript('monitor')">Detect Unfollowers</button>
+          <button class="tab-btn" role="tab" aria-selected="false" aria-controls="watch-script" onclick="showScript('watch')">Monitor Account</button>
         </div>
 
-        <div class="code-section" id="unfollow-script">
+        <div class="code-section" id="unfollow-script" role="tabpanel">
           <div class="code-header">
             <span>Unfollow Non-Followers</span>
-            <button class="copy-btn" onclick="copyCode('unfollow-code')">Copy</button>
+            <button class="copy-btn" onclick="copyCode('unfollow-code')" aria-label="Copy Unfollow Non-Followers script">Copy</button>
           </div>
           <pre id="unfollow-code">(() => {
   const $followButtons = '[data-testid$="-unfollow"]';
@@ -973,10 +1017,10 @@
           </div>
         </div>
 
-        <div class="code-section hidden" id="monitor-script">
+        <div class="code-section hidden" id="monitor-script" role="tabpanel">
           <div class="code-header">
             <span>Detect Who Unfollowed You</span>
-            <button class="copy-btn" onclick="copyCode('monitor-code')">Copy</button>
+            <button class="copy-btn" onclick="copyCode('monitor-code')" aria-label="Copy Detect Unfollowers script">Copy</button>
           </div>
           <pre id="monitor-code">(() => {
   const KEY = 'xactions_followers';
@@ -1039,10 +1083,10 @@
           </div>
         </div>
 
-        <div class="code-section hidden" id="watch-script">
+        <div class="code-section hidden" id="watch-script" role="tabpanel">
           <div class="code-header">
             <span>Monitor Any Account</span>
-            <button class="copy-btn" onclick="copyCode('watch-code')">Copy</button>
+            <button class="copy-btn" onclick="copyCode('watch-code')" aria-label="Copy Monitor Account script">Copy</button>
           </div>
           <pre id="watch-code">(() => {
   const sleep = (ms) => new Promise(r => setTimeout(r, ms));
@@ -1140,7 +1184,7 @@
     </main>
 
     <!-- Right Sidebar -->
-    <aside class="sidebar-right">
+    <aside class="sidebar-right" aria-label="Supplementary information">
       <!-- Free for Humans -->
       <div class="promo-card" style="border: 2px solid var(--accent);">
         <h3 class="promo-header">⚡ Free for Humans</h3>

@@ -92,10 +92,10 @@ public/swe-worker*
 
 # Generated files
 public/*.js
-public/sitemap.xml
-public/sitemap-index.xml
-sitemap*.xml
-robots.txt
+# SEO files (tracked in version control)
+# public/sitemap.xml - tracked
+# public/robots.txt - tracked
+# public/manifest.json - tracked
 
 # Git hooks
 .husky/prepare-commit-msg

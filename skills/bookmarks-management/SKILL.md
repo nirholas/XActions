@@ -1,4 +1,3 @@
-```skill
 ---
 name: bookmarks-management
 description: Advanced bookmark management on X/Twitter including saving posts, organizing into folders (Premium), bulk operations, export, and search within bookmarks.
@@ -74,4 +73,3 @@ Manage, organize, and export X/Twitter bookmarks.
 - Folders require Premium subscription
 - No known limit on number of bookmarks
 - Export supports JSON and CSV formats
-```

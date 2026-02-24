@@ -1,4 +1,3 @@
-```skill
 ---
 name: spaces-live
 description: Manage X/Twitter Spaces (live audio/video), live streams, events, and Circles. Includes hosting, joining, recording, Q&As, and private sharing features.
@@ -92,4 +91,3 @@ Manage live audio/video features on X/Twitter.
 - Events integrate with Spaces for live sessions
 - Circles limited to 150 followers
 - Scheduled Spaces send reminders to followers
-```

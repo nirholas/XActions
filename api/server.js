@@ -47,28 +47,24 @@ import bookmarksRoutes from './routes/bookmarks.js';
 import creatorRoutes from './routes/creator.js';
 import spacesRoutes from './routes/spaces.js';
 import settingsRoutes from './routes/settings.js';
+import streamRoutes from './routes/streams.js';
+import automationsRoutes from './routes/automations.js';
 import { initializeSocketIO } from './realtime/socketHandler.js';
 import { initializeLicensing, brandingMiddleware } from './services/licensing.js';
 
-// x402 Payment Protocol for AI Agents
+// Optional: x402 micropayment support for remote AI API (disabled by default)
 import { x402Middleware, x402HealthCheck, x402Pricing } from './middleware/x402.js';
 import aiDetectorMiddleware from './middleware/ai-detector.js';
 import { validateConfig as validateX402Config } from './config/x402-config.js';
-
-// Payment routes archived - XActions is now 100% free and open-source
-// Archived files moved to: archive/backend/
-// - payments.js (Stripe)
-// - crypto-payments.js (Coinbase, NOWPayments)
-// - webhooks.js (payment webhooks)
-// 
-// NEW: AI agents pay per API call via x402 protocol
-// Humans continue to use free browser scripts
 
 const app = express();
 const httpServer = createServer(app);
 
 // Initialize Socket.io for real-time browser-to-browser communication
 const io = initializeSocketIO(httpServer);
+
+// Make io available to route handlers via app.set
+app.set('io', io);
 
 // 42 is the answer to life, the universe, and everything
 // But 3001 is the answer to local development
@@ -122,8 +118,7 @@ app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 // AI Agent Detection - adds req.isAI and req.agentType
 app.use(aiDetectorMiddleware);
 
-// x402 Payment Middleware - protects /api/ai/* routes with crypto payments
-// Humans use free browser scripts; AI agents pay per API call
+// Optional x402 micropayment middleware (only active if X402_PAY_TO_ADDRESS is set)
 app.use(x402Middleware);
 
 // Health check
@@ -135,11 +130,22 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', service: 'xactions-api', timestamp: new Date().toISOString() });
 });
 
-// x402 AI API endpoints (health check, pricing info - no payment required)
+// SEO files - robots.txt, sitemap.xml, manifest.json
+app.get('/robots.txt', (req, res) => {
+  res.type('text/plain').sendFile(path.join(__dirname, '../public/robots.txt'));
+});
+
+app.get('/sitemap.xml', (req, res) => {
+  res.type('application/xml').sendFile(path.join(__dirname, '../public/sitemap.xml'));
+});
+
+app.get('/manifest.json', (req, res) => {
+  res.type('application/json').sendFile(path.join(__dirname, '../public/manifest.json'));
+});
+
+// AI API endpoints
 app.get('/api/ai/health', x402HealthCheck);
 app.get('/api/ai/pricing', x402Pricing);
-
-// AI Agent paid endpoints (protected by x402 middleware)
 app.use('/api/ai', aiRoutes);
 
 // Serve dashboard static files
@@ -168,6 +174,8 @@ app.use('/api/bookmarks', bookmarksRoutes);
 app.use('/api/creator', creatorRoutes);
 app.use('/api/spaces', spacesRoutes);
 app.use('/api/settings', settingsRoutes);
+app.use('/api/automations', automationsRoutes);
+app.use('/api/streams', streamRoutes);
 
 // Dashboard routes
 app.get('/', (req, res) => {
@@ -242,6 +250,18 @@ app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, '../dashboard/admin.html'));
 });
 
+app.get('/automations', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dashboard/automations.html'));
+});
+
+app.get('/monitor', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dashboard/monitor.html'));
+});
+
+app.get('/workflows', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dashboard/workflows.html'));
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
@@ -264,31 +284,16 @@ httpServer.listen(PORT, async () => {
   console.log(`🔌 WebSocket server ready for real-time connections`);
   console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
   
-  // Validate x402 configuration
-  // In production, this will throw if payment address is not configured
+  // Optional: Validate x402 micropayment config (only relevant if self-hosting with payments)
   try {
-    const x402Validation = validateX402Config();
-    if (!x402Validation.valid) {
-      x402Validation.errors.forEach(e => console.error(`❌ x402: ${e}`));
-      if (process.env.NODE_ENV === 'production') {
-        console.error('\n🚨 FATAL: x402 configuration errors in production - shutting down');
-        console.error('   Set X402_PAY_TO_ADDRESS to your wallet address to receive payments');
-        process.exit(1);
-      }
-    }
-    x402Validation.warnings?.forEach(w => console.warn(`⚠️  x402: ${w}`));
-    
+    const x402Validation = validateX402Config(false);
     if (x402Validation.valid) {
-      console.log(`💰 x402 AI monetization: Humans free, AI agents pay per call`);
-    } else {
-      console.log(`⚠️  x402 AI monetization: DISABLED (payment address not configured)`);
+      console.log(`  ├─ x402 micropayments: enabled`);
     }
+    // Silently skip if not configured — x402 is optional
   } catch (error) {
-    console.error('\n🚨 FATAL: x402 configuration error');
-    console.error(error.message);
-    if (process.env.NODE_ENV === 'production') {
-      process.exit(1);
-    }
+    // x402 is optional — don't crash if not configured
+    if (process.env.DEBUG) console.warn('x402 config:', error.message);
   }
   
   // Initialize licensing and telemetry

@@ -25,6 +25,7 @@
   <meta name="twitter:description" content="AI-powered X/Twitter automation with machine learning, LLM integration & MCP server support.">
   
   <link rel="canonical" href="https://xactions.app/about">
+  <link rel="manifest" href="/manifest.json">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
   
   <!-- Structured Data -->
@@ -418,11 +419,35 @@
     .footer-bottom a:hover { color: var(--accent); }
     @media (max-width: 768px) { .footer-content { grid-template-columns: 1fr 1fr; } }
     @media (max-width: 480px) { .footer-content { grid-template-columns: 1fr; } }
+
+    /* Skip Navigation */
+    .skip-nav {
+      position: absolute;
+      top: -100%;
+      left: 16px;
+      background: var(--accent);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 700;
+      z-index: 9999;
+      text-decoration: none;
+    }
+    .skip-nav:focus {
+      top: 16px;
+    }
+
+    /* Visible focus styles */
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
   </style>
 </head>
 <body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
   <div class="layout">
-    <aside class="sidebar-left">
+    <aside class="sidebar-left" aria-label="Main navigation">
       <div class="logo">
         <a href="/"><span>⚡</span><span>XActions</span></a>
       </div>
@@ -440,7 +465,7 @@
       <a href="https://github.com/nirholas/XActions" class="action-btn" target="_blank">Star on GitHub ⭐</a>
     </aside>
 
-    <main class="main-content">
+    <main class="main-content" id="main-content">
       <header class="main-header">
         <h1>ℹ️ About XActions</h1>
       </header>
@@ -566,7 +591,7 @@
       </div>
     </main>
 
-    <aside class="sidebar-right">
+    <aside class="sidebar-right" aria-label="Supplementary information">
       <div class="legal-nav">
         <h3>📋 Legal Pages</h3>
         <a href="/terms">Terms of Service</a>

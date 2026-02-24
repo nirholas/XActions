@@ -62,13 +62,44 @@ export function initializeSocketIO(httpServer) {
       handleAdminConnection(io, socket);
     }
 
+    // ===== STREAM ROOMS =====
+    // Clients can join/leave stream rooms to receive real-time events
+    socket.on('stream:join', (streamId) => {
+      socket.join(`stream:${streamId}`);
+      socket.join('streams'); // global stream room
+      console.log(`📡 Socket ${socket.id} joined stream room: ${streamId}`);
+    });
+
+    socket.on('stream:leave', (streamId) => {
+      socket.leave(`stream:${streamId}`);
+      console.log(`📡 Socket ${socket.id} left stream room: ${streamId}`);
+    });
+
     socket.on('disconnect', () => {
       console.log(`🔌 Socket disconnected: ${socket.id}`);
       handleDisconnection(io, socket);
     });
   });
 
+  // Wire up the streaming system with this Socket.IO instance
+  initializeStreamIO(io);
+
   return io;
+}
+
+/**
+ * Connect the real-time streaming engine to Socket.IO.
+ * Lazy-loads src/streaming to avoid startup cost if not used.
+ */
+async function initializeStreamIO(io) {
+  try {
+    const { setIO } = await import('../../src/streaming/index.js');
+    setIO(io);
+    console.log('📡 Real-time stream engine connected to Socket.IO');
+  } catch (err) {
+    // Streaming module may not be available (e.g., missing Redis) — non-fatal
+    console.warn('⚠️ Stream engine not loaded:', err.message);
+  }
 }
 
 // ===== AGENT (x.com tab) =====

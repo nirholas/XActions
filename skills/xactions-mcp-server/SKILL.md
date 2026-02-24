@@ -1,6 +1,6 @@
 ---
 name: xactions-mcp-server
-description: MCP server providing 15 tools for AI agents to automate X/Twitter. Scrapes profiles, followers, and tweets. Posts tweets, follows/unfollows users, likes, retweets, downloads videos. Supports free local mode (Puppeteer) and paid remote mode (x402 crypto). Compatible with Claude Desktop, Cursor, and MCP-compatible agents. Use when setting up or configuring AI agent Twitter automation via MCP.
+description: Free MCP server providing 15+ tools for AI agents to automate X/Twitter. Scrapes profiles, followers, and tweets. Posts tweets, follows/unfollows users, likes, retweets, downloads videos. Uses local Puppeteer automation — no API keys or payments required. Compatible with Claude Desktop, Cursor, and MCP-compatible agents. Use when setting up or configuring AI agent Twitter automation via MCP.
 license: MIT
 compatibility: Requires Node.js 18+. Local mode requires puppeteer. Works with Claude Desktop, Cursor, and MCP-compatible clients.
 metadata:
@@ -34,14 +34,14 @@ Entry point: `src/mcp/server.js` — communicates via stdio transport.
 | `XACTIONS_MODE` | No | `local` | `local` (free, Puppeteer) or `remote` (cloud API) |
 | `XACTIONS_SESSION_COOKIE` | Yes (local) | — | `auth_token` cookie from x.com |
 | `XACTIONS_API_URL` | No | `https://api.xactions.app` | Remote mode API URL |
-| `X402_PRIVATE_KEY` | Yes (remote) | — | Wallet private key for x402 payments |
-| `X402_NETWORK` | No | `base-sepolia` | `base-sepolia` (testnet) or `base` (mainnet) |
+| `X402_PRIVATE_KEY` | No | — | Optional wallet key for remote mode micropayments |
+| `X402_NETWORK` | No | `base-sepolia` | Optional: `base-sepolia` or `base` |
 
 ## Modes
 
-**Local** (free): Puppeteer stealth browser automation. Implemented in `src/mcp/local-tools.js`.
+**Local** (default, free): Puppeteer stealth browser automation. No API keys, no payments. Implemented in `src/mcp/local-tools.js`.
 
-**Remote** (paid): XActions cloud API with x402 crypto payments on Base network. Implemented in `src/mcp/x402-client.js`.
+**Remote** (optional): Self-hosted XActions cloud API. Optionally supports x402 micropayments. Implemented in `src/mcp/x402-client.js`.
 
 ## Tool catalog
 

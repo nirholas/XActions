@@ -1,4 +1,3 @@
-```skill
 ---
 name: notifications-management
 description: Manage X/Twitter notifications including alerts, filters, push/email settings, priority notifications tab, muting, and the 2026 Priority tab feature for iOS/web.
@@ -73,4 +72,3 @@ Automate and manage X/Twitter notification settings and monitoring.
 - Muted words/phrases can be temporary or permanent
 - Email notifications have separate per-category settings
 - Push notifications require browser/device permissions
-```

@@ -1,4 +1,3 @@
-```skill
 ---
 name: posting-content
 description: Create and manage X/Twitter posts including tweets, threads, polls, scheduled posts, articles, quote posts, reposts, and media attachments. Supports 2026 features like image polls, audio articles, shuffle choices, and Apple Intelligence writing tools.
@@ -94,4 +93,3 @@ Automate content creation on X/Twitter — from simple tweets to long-form artic
 - Always add alt text for accessibility
 - Thread limit: No hard cap, but engagement drops after ~10 tweets
 - Polls: 2-4 choices, 5min-7day duration
-```

@@ -1,4 +1,3 @@
-```skill
 ---
 name: articles-longform
 description: Publish and manage long-form articles on X/Twitter (Premium+). Features include rich formatting, embeds, audio articles (2026), analytics, and SEO optimization.
@@ -71,4 +70,3 @@ Publish and manage long-form articles on X/Twitter (Premium+ required).
 - Audio articles are a 2026 testing feature
 - No character limit for articles
 - Articles get their own analytics dashboard
-```

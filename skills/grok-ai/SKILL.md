@@ -1,4 +1,3 @@
-```skill
 ---
 name: grok-ai
 description: Integrate with Grok AI features on X/Twitter including chat, content generation, image generation/editing, specialized agents, SuperGrok features, widgets, voice mode, and algorithm integration for post ranking.
@@ -72,4 +71,3 @@ Interact with and automate Grok AI features on X/Twitter.
 - SuperGrok ($60/mo): Separate xAI subscription, unlimited everything
 - Grok now influences post ranking in the algorithm (2026)
 - Users are responsible for AI-generated outputs
-```

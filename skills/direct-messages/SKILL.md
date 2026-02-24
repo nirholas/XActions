@@ -1,4 +1,3 @@
-```skill
 ---
 name: direct-messages
 description: Manage X/Twitter Direct Messages including text DMs, group chats, message requests, vanish mode, end-to-end encryption, audio/video calls, reactions, and DM export. Automate DM workflows and bulk operations.
@@ -76,4 +75,3 @@ Automate and manage X/Twitter Direct Messages.
 - Audio/video calls available in DMs
 - Group chats support up to 50 participants
 - Message requests must be approved for non-followers
-```

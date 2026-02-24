@@ -1,4 +1,3 @@
-```skill
 ---
 name: lists-management
 description: Create and manage X/Twitter Lists including public/private lists, follow/pin lists, custom feeds, member management, and list-based automation.
@@ -79,4 +78,3 @@ Create, manage, and automate X/Twitter Lists.
 - Up to 5000 members per list
 - Pinned lists appear as tabs on home timeline
 - Users are notified when added to public lists (not private)
-```

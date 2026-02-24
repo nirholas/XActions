@@ -1,4 +1,3 @@
-```skill
 ---
 name: settings-privacy
 description: Manage X/Twitter settings and privacy including account security, 2FA, protected accounts, content filters, muting/blocking, discoverability, data downloads, delegate access, suspension appeals, and the 2026 expanded privacy policy for AI/training data collection.
@@ -110,4 +109,3 @@ Automate and manage all X/Twitter settings and privacy controls.
 - Delegate access allows others to post/manage without password
 - 2026 privacy policy significantly expands data collection for AI
 - Shadowban check available in beta settings
-```

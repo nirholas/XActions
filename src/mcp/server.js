@@ -4,17 +4,18 @@
  * Model Context Protocol server for AI agents (Claude, GPT, etc.)
  * 
  * This enables AI assistants to automate X/Twitter tasks directly.
+ * Free and open source. No API keys required.
  * 
  * Modes:
  * - LOCAL (default): Free, uses Puppeteer for browser automation
- * - REMOTE: Paid via x402 protocol, uses XActions cloud API
+ * - REMOTE: Optional cloud API (can self-host)
  * 
  * Environment Variables:
  * - XACTIONS_MODE: 'local' (default) or 'remote'
  * - XACTIONS_API_URL: API URL for remote mode (default: https://api.xactions.app)
- * - X402_PRIVATE_KEY: Wallet private key for x402 payments (remote mode)
- * - X402_NETWORK: 'base-sepolia' (testnet, default) or 'base' (mainnet)
  * - XACTIONS_SESSION_COOKIE: X/Twitter auth_token cookie
+ * - X402_PRIVATE_KEY: (Optional) Wallet key for remote mode micropayments
+ * - X402_NETWORK: (Optional) 'base-sepolia' or 'base'
  * 
  * @author nich (@nichxbt) - https://github.com/nirholas
  * @see https://xactions.app
@@ -685,6 +686,52 @@ const TOOLS = [
       },
     },
   },
+  // ====== Real-Time Streaming ======
+  {
+    name: 'x_stream_start',
+    description: 'Start a real-time stream that polls an X/Twitter account and pushes new events. Types: tweet (new tweets), follower (follow/unfollow events), mention (new mentions). Events are emitted via Socket.IO.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        type: {
+          type: 'string',
+          description: 'Stream type: tweet, follower, or mention',
+          enum: ['tweet', 'follower', 'mention'],
+        },
+        username: {
+          type: 'string',
+          description: 'Target username to watch (without @)',
+        },
+        interval: {
+          type: 'number',
+          description: 'Poll interval in seconds (default: 60, minimum: 15)',
+        },
+      },
+      required: ['type', 'username'],
+    },
+  },
+  {
+    name: 'x_stream_stop',
+    description: 'Stop an active real-time stream by its ID.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        streamId: {
+          type: 'string',
+          description: 'The stream ID returned by x_stream_start',
+        },
+      },
+      required: ['streamId'],
+    },
+  },
+  {
+    name: 'x_stream_list',
+    description: 'List all active real-time streams with their status, poll counts, and browser pool info.',
+    inputSchema: {
+      type: 'object',
+      properties: {},
+    },
+  },
 ];
 
 // ============================================================================
@@ -698,11 +745,9 @@ async function initializeBackend() {
   if (MODE === 'remote') {
     console.error('🌐 XActions MCP Server: Remote mode');
     console.error('   API: ' + API_URL);
-    console.error('   Payments: x402 protocol');
     
     if (!X402_PRIVATE_KEY) {
-      console.error('⚠️  X402_PRIVATE_KEY not set - payment-required requests will fail');
-      console.error('   Set it to enable automatic payments for API calls');
+      console.error('   Payments: disabled (no wallet configured)');
     }
     
     const { createX402Client } = await import('./x402-client.js');
@@ -734,6 +779,11 @@ async function executeTool(name, args) {
   if (SESSION_COOKIE && !args.cookie && name === 'x_login') {
     args.cookie = SESSION_COOKIE;
   }
+
+  // Handle streaming tools directly (they work in both local and remote modes)
+  if (name === 'x_stream_start' || name === 'x_stream_stop' || name === 'x_stream_list') {
+    return await executeStreamTool(name, args);
+  }
   
   if (MODE === 'remote') {
     return await remoteClient.execute(name, args);
@@ -743,6 +793,37 @@ async function executeTool(name, args) {
       throw new Error(`Unknown tool: ${name}`);
     }
     return await toolFn(args);
+  }
+}
+
+/**
+ * Execute streaming-specific tools
+ */
+async function executeStreamTool(name, args) {
+  // Lazy-import to avoid loading streaming deps when not needed
+  const streaming = await import('../streaming/index.js');
+
+  switch (name) {
+    case 'x_stream_start': {
+      const intervalMs = args.interval ? Math.max(15, Number(args.interval)) * 1000 : undefined;
+      const stream = await streaming.createStream({
+        type: args.type,
+        username: args.username,
+        interval: intervalMs,
+        authToken: SESSION_COOKIE || undefined,
+      });
+      return stream;
+    }
+    case 'x_stream_stop': {
+      return await streaming.stopStream(args.streamId);
+    }
+    case 'x_stream_list': {
+      const streams = await streaming.listStreams();
+      const pool = streaming.getPoolStatus();
+      return { streams, pool };
+    }
+    default:
+      throw new Error(`Unknown stream tool: ${name}`);
   }
 }
 
@@ -784,21 +865,17 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     };
     
   } catch (error) {
-    // Handle x402 payment errors specially
+    // Handle payment errors (only relevant in remote mode with x402 enabled)
     if (error.code === 'PAYMENT_REQUIRED') {
       return {
         content: [
           {
             type: 'text',
             text: JSON.stringify({
-              error: 'Payment required',
+              error: 'Payment required by remote API',
               message: error.message,
-              price: error.price,
-              network: error.network || X402_NETWORK,
-              hint: 'Set X402_PRIVATE_KEY with a funded wallet to enable automatic payments',
-              faucet: X402_NETWORK === 'base-sepolia' 
-                ? 'Get testnet USDC: https://faucet.circle.com/' 
-                : 'Ensure wallet has USDC on Base',
+              hint: 'Use local mode (free) or configure X402_PRIVATE_KEY for remote mode',
+              localMode: 'Set XACTIONS_MODE=local to avoid payments entirely',
             }, null, 2),
           },
         ],

@@ -1,4 +1,3 @@
-```skill
 ---
 name: profile-management
 description: Manage X/Twitter profile settings including display name, bio, avatar, header image, theme color, verification status, QR codes, and the new post filtering feature. Automate profile updates, sync contacts, manage labels, and customize appearance.
@@ -96,4 +95,3 @@ Helper to trigger Twitter's official data archive (Settings > Download your data
 - Post filtering (latest/most liked) available for all accounts (2026 feature)
 - QR codes use qrserver.com API
 - Backup only captures visible data; increase maxItems in CONFIG for more
-```

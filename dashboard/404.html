@@ -154,9 +154,33 @@
     .footer a:hover {
       color: var(--accent);
     }
+    /* Skip Navigation */
+    .skip-nav {
+      position: absolute;
+      top: -100%;
+      left: 16px;
+      background: var(--accent);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 700;
+      z-index: 9999;
+      text-decoration: none;
+    }
+    .skip-nav:focus {
+      top: 16px;
+    }
+
+    /* Visible focus styles */
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
   </style>
 </head>
 <body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
+  <main id="main-content">
   <div class="container">
     <div class="error-icon">�</div>
     <div class="error-code">404</div>
@@ -168,7 +192,7 @@
         <span>🏠</span>
         <span>Go Home</span>
       </a>
-      <a href="https://github.com/nirholas/XActions" class="btn btn-secondary" target="_blank">
+      <a href="https://github.com/nirholas/XActions" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">
         <span>⭐</span>
         <span>GitHub</span>
       </a>
@@ -186,9 +210,10 @@
       </div>
     </div>
   </div>
+  </main>
 
-  <div class="footer">
+  <footer class="footer">
     <p>⚡ <a href="/">XActions</a> — Always know where your towel is 🧣</p>
-  </div>
+  </footer>
 </body>
 </html>

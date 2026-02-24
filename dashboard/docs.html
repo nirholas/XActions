@@ -3,9 +3,57 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Documentation - XActions | Free X/Twitter Automation</title>
-  <meta name="description" content="XActions documentation - Quick start guide, CLI reference, API docs. Learn how to use free X/Twitter automation tools.">
+  <title>X/Twitter Automation Docs — CLI, API & Scripts | XActions</title>
+  <meta name="description" content="XActions documentation: quick start guide, CLI reference, API docs, browser scripts. Learn to automate X/Twitter for free in minutes.">
+  <meta name="keywords" content="xactions documentation, twitter automation guide, twitter cli tool, twitter api docs, twitter bot tutorial, mass unfollow guide, twitter scraper docs, MCP server setup, browser console scripts, xactions cli reference">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="XActions Documentation — CLI, API & Scripts Guide">
+  <meta property="og:description" content="Quick start guide, CLI reference, API docs. Automate X/Twitter for free with browser scripts, CLI, or MCP server.">
+  <meta property="og:url" content="https://xactions.app/docs">
+  <meta property="og:site_name" content="XActions">
+  <meta property="og:image" content="https://xactions.app/og-docs.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="en_US">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:creator" content="@nichxbt">
+  <meta name="twitter:title" content="XActions Docs — X/Twitter Automation Guide">
+  <meta name="twitter:description" content="CLI reference, API docs, browser scripts. Get started with free X/Twitter automation.">
+  <meta name="twitter:image" content="https://xactions.app/og-docs.png">
+
+  <link rel="canonical" href="https://xactions.app/docs">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  <link rel="manifest" href="/manifest.json">
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "XActions Documentation",
+    "description": "Complete documentation for XActions X/Twitter automation toolkit. CLI reference, API docs, browser scripts, MCP server setup.",
+    "url": "https://xactions.app/docs",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" }
+    ]
+  }
+  </script>
   <style>
     :root { --bg-primary: #000; --bg-secondary: #16181c; --bg-tertiary: #202327; --accent: #1d9bf0; --accent-hover: #1a8cd8; --accent-light: rgba(29,155,240,0.1); --text-primary: #e7e9ea; --text-secondary: #71767b; --border: #2f3336; --success: #00ba7c; --warning: #ffad1f; }
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -35,11 +83,35 @@
     @media (max-width: 768px) { .sidebar-left { width: 68px; } .logo a span:last-child, .nav-item span:last-child { display: none; } .nav-item { justify-content: center; } .action-btn { width: 50px; height: 50px; padding: 0; font-size: 0; } .action-btn::before { content: '→'; font-size: 1.5rem; } }
     .site-footer { border-top: 1px solid var(--border); padding: 48px 24px; } .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px; } .footer-brand h3 { font-size: 1.25rem; margin-bottom: 8px; } .footer-brand p { color: var(--text-secondary); font-size: 0.875rem; } .footer-links h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 12px; } .footer-links a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 4px 0; } .footer-links a:hover { color: var(--accent); } .footer-bottom { max-width: 1200px; margin: 24px auto 0; padding-top: 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; } .footer-bottom p { color: var(--text-secondary); font-size: 0.8125rem; } .footer-bottom a { color: var(--text-secondary); } .footer-bottom a:hover { color: var(--accent); }
     @media (max-width: 768px) { .footer-content { grid-template-columns: 1fr 1fr; } }
+
+    /* Skip Navigation */
+    .skip-nav {
+      position: absolute;
+      top: -100%;
+      left: 16px;
+      background: var(--accent);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 700;
+      z-index: 9999;
+      text-decoration: none;
+    }
+    .skip-nav:focus {
+      top: 16px;
+    }
+
+    /* Visible focus styles */
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
   </style>
 </head>
 <body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
   <div class="layout">
-    <aside class="sidebar-left">
+    <aside class="sidebar-left" aria-label="Main navigation">
       <div class="logo"><a href="/"><span>⚡</span><span>XActions</span></a></div>
       <nav>
         <a href="/" class="nav-item"><span class="nav-icon">🏠</span><span>Home</span></a>
@@ -54,7 +126,7 @@
       <a href="/dashboard" class="action-btn">Open Dashboard</a>
     </aside>
 
-    <main class="main-content">
+    <main class="main-content" id="main-content">
       <header class="main-header"><h1>📚 XActions Documentation</h1></header>
 
       <div style="background: linear-gradient(90deg, #00ba7c, #1d9bf0); padding: 12px 20px; border-radius: 12px; margin: 16px; text-align: center;">
@@ -415,7 +487,7 @@ const client = xactions.createClient({
       </section>
     </main>
 
-    <aside class="sidebar-right">
+    <aside class="sidebar-right" aria-label="Supplementary information">
       <div class="toc">
         <h3>On This Page</h3>
         <a href="#quick-start">🚀 Quick Start</a>

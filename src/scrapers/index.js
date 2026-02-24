@@ -817,7 +817,7 @@ export async function scrapeCommunityMembers(page, communityUrl, options = {}) {
       cells.map((cell) => {
         const name = cell.querySelector('[dir="ltr"] span')?.innerText || '';
         const handle = cell.querySelector('a[href^="/"]')?.getAttribute('href')?.replace('/', '') || '';
-        const bio = cell.querySelector('[data-testid="userDescription"]')?.innerText || '';
+        const bio = cell.querySelector('[data-testid="UserDescription"]')?.innerText || '';
         return { name, handle, bio };
       })
     );

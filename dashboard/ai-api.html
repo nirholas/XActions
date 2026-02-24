@@ -16,10 +16,15 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="XActions AI API - x402 Micropayments">
+  <meta name="twitter:description" content="Pay-per-request API for AI agents. No subscriptions. x402 micropayments.">
   <link rel="canonical" href="https://xactions.app/ai-api">
+  <link rel="manifest" href="/manifest.json">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"TechArticle","headline":"XActions AI API Documentation","description":"Pay-per-request API for AI agents via x402 protocol","url":"https://xactions.app/ai-api","author":{"@type":"Person","name":"nich"},"publisher":{"@type":"Organization","name":"XActions"}}
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://xactions.app"},{"@type":"ListItem","position":2,"name":"AI API","item":"https://xactions.app/ai-api"}]}
   </script>
   <style>
     :root{--bg-primary:#000;--bg-secondary:#16181c;--bg-tertiary:#202327;--accent:#1d9bf0;--accent-hover:#1a8cd8;--accent-light:rgba(29,155,240,0.1);--text-primary:#e7e9ea;--text-secondary:#71767b;--border:#2f3336;--success:#00ba7c;--warning:#ffad1f;--purple:#a855f7;--orange:#f97316}
@@ -115,11 +120,35 @@
       .tier-banner{grid-template-columns:1fr}
       .pricing-grid{grid-template-columns:1fr}
     }
+
+    /* Skip Navigation */
+    .skip-nav {
+      position: absolute;
+      top: -100%;
+      left: 16px;
+      background: var(--accent);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 700;
+      z-index: 9999;
+      text-decoration: none;
+    }
+    .skip-nav:focus {
+      top: 16px;
+    }
+
+    /* Visible focus styles */
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
   </style>
 </head>
 <body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
   <div class="layout">
-    <aside class="sidebar-left">
+    <aside class="sidebar-left" aria-label="Main navigation">
       <div class="logo"><a href="/"><span>⚡</span><span>XActions</span></a></div>
       <nav>
         <a href="/" class="nav-item"><span class="nav-icon">🏠</span><span>Home</span></a>
@@ -136,7 +165,7 @@
       <a href="https://github.com/nirholas/XActions" class="action-btn" target="_blank">Star on GitHub ⭐</a>
     </aside>
     
-    <main class="main-content">
+    <main class="main-content" id="main-content">
       <header class="main-header"><h1>🤖 XActions AI API</h1></header>
       
       <div class="content">
@@ -387,7 +416,7 @@ const profile = await paidResponse.json();
       </div>
     </main>
     
-    <aside class="sidebar-right">
+    <aside class="sidebar-right" aria-label="Supplementary information">
       <div class="info-sidebar">
         <h3>📖 On This Page</h3>
         <a href="#pricing">Pricing</a>
