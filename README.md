@@ -2,8 +2,6 @@
 
 # ⚡ XActions
 
-### Stop paying $100/mo for Twitter's API. This is free.
-
 [![npm version](https://img.shields.io/npm/v/xactions.svg)](https://www.npmjs.com/package/xactions)
 [![npm downloads](https://img.shields.io/npm/dm/xactions.svg)](https://www.npmjs.com/package/xactions)
 [![GitHub Stars](https://img.shields.io/github/stars/nirholas/xactions?style=social)](https://github.com/nirholas/xactions)
