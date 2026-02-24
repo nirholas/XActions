@@ -1,0 +1,97 @@
+{
+  "name": "xactions",
+  "version": "3.0.42",
+  "description": "Complete X/Twitter automation toolkit — 68 MCP tools for scraping, posting, engagement, analytics, and more. No API fees. Uses Puppeteer browser automation.",
+  "author": "nichxbt",
+  "homepage": "https://xactions.app",
+  "repository": "https://github.com/nirholas/xactions",
+  "license": "MIT",
+  "tags": [
+    "twitter",
+    "x",
+    "social-media",
+    "automation",
+    "scraping",
+    "mcp",
+    "engagement",
+    "analytics"
+  ],
+  "setup": {
+    "install": "npm install xactions",
+    "instructions": "After installing, set XACTIONS_SESSION_COOKIE to your X/Twitter auth_token cookie (DevTools → Application → Cookies → auth_token on x.com)."
+  },
+  "mcpServers": {
+    "xactions": {
+      "command": "node",
+      "args": ["node_modules/xactions/src/mcp/server.js"],
+      "env": {
+        "XACTIONS_MODE": "local"
+      }
+    }
+  },
+  "skills": [
+    {
+      "name": "x-automation",
+      "path": "./skills/x-automation.md"
+    },
+    {
+      "name": "x-scraping",
+      "path": "./skills/x-scraping.md"
+    },
+    {
+      "name": "x-engagement",
+      "path": "./skills/x-engagement.md"
+    },
+    {
+      "name": "x-management",
+      "path": "./skills/x-management.md"
+    }
+  ],
+  "agents": [
+    {
+      "name": "growth",
+      "description": "Automate X/Twitter growth — follow targets, engage with content, analyze performance",
+      "path": "./agents/growth.md"
+    },
+    {
+      "name": "cleanup",
+      "description": "Clean up your X/Twitter account — unfollow non-followers, unlike old posts, clear bookmarks",
+      "path": "./agents/cleanup.md"
+    },
+    {
+      "name": "scrape",
+      "description": "Scrape X/Twitter data — profiles, followers, tweets, trends. Export to JSON/CSV",
+      "path": "./agents/scrape.md"
+    }
+  ],
+  "commands": {
+    "scrape-profile": {
+      "description": "Scrape a user's X/Twitter profile",
+      "agent": "./agents/scrape.md",
+      "args": {
+        "action": "profile"
+      }
+    },
+    "unfollow-nonfollowers": {
+      "description": "Unfollow accounts that don't follow you back",
+      "agent": "./agents/cleanup.md",
+      "args": {
+        "action": "unfollow-nonfollowers"
+      }
+    },
+    "grow": {
+      "description": "Run automated growth engagement on target topics or accounts",
+      "agent": "./agents/growth.md",
+      "args": {
+        "action": "engage"
+      }
+    },
+    "analytics": {
+      "description": "Get engagement analytics for your X/Twitter account",
+      "agent": "./agents/scrape.md",
+      "args": {
+        "action": "analytics"
+      }
+    }
+  }
+}

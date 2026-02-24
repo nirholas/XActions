@@ -3,15 +3,41 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Scraper Tutorials | XActions</title>
+  <title>X/Twitter Scraper Tutorials — Complete Guide to Data Extraction | XActions</title>
+  <meta name="description" content="Complete X/Twitter scraping guide — extract followers, following, likes, replies, profiles, hashtags, and more. Free browser scripts with step-by-step instructions.">
+  <meta name="keywords" content="Twitter scraper, X scraper, scrape Twitter followers, scrape Twitter likes, Twitter data extraction, Twitter scraping tutorial, free Twitter scraper">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="X/Twitter Scraper Tutorials — Complete Guide">
+  <meta property="og:description" content="Extract followers, likes, profiles, and more from X/Twitter. Free browser scripts with detailed instructions.">
+  <meta property="og:url" content="https://xactions.app/tutorials/scrapers-full">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="XActions Scraper Tutorials — Full Guide">
+  <meta name="twitter:description" content="Scrape Twitter/X data: followers, likes, profiles, hashtags. Free scripts.">
+
+  <link rel="canonical" href="https://xactions.app/tutorials/scrapers-full">
+  <link rel="manifest" href="/manifest.json">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://xactions.app"},{"@type":"ListItem","position":2,"name":"Tutorials","item":"https://xactions.app/tutorials"},{"@type":"ListItem","position":3,"name":"Scrapers (Full Guide)","item":"https://xactions.app/tutorials/scrapers-full"}]}
+  </script>
+  <link rel="stylesheet" href="/css/common.css">
   <style>
     :root {
       --bg-primary: #000000;
       --bg-secondary: #16181c;
       --bg-tertiary: #202327;
       --text-primary: #e7e9ea;
-      --text-secondary: #71767b;
+      --text-secondary: #8b8f94;
       --accent: #1d9bf0;
       --success: #00ba7c;
       --warning: #ffad1f;
@@ -505,6 +531,17 @@
       }
       document.body.removeChild(textarea);
     }
+
+    // WCAG 2.4.6: Auto-label copy buttons with context from nearest heading
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      if (btn.getAttribute('aria-label')) return;
+      const block = btn.closest('.code-block, .code-section') || btn.parentElement;
+      const heading = block.querySelector('h2, h3, h4, .code-header span') ||
+        block.previousElementSibling?.querySelector('h2, h3, h4') ||
+        btn.closest('section')?.querySelector('h2, h3');
+      const label = heading ? `Copy ${heading.textContent.trim()} code` : 'Copy code snippet';
+      btn.setAttribute('aria-label', label);
+    });
   </script>
 </body>
 </html>

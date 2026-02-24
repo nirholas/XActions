@@ -61,8 +61,9 @@
     ]
   }
   </script>
+  <link rel="stylesheet" href="/css/common.css">
   <style>
-    :root { --bg-primary: #000; --bg-secondary: #16181c; --bg-tertiary: #202327; --accent: #1d9bf0; --accent-hover: #1a8cd8; --accent-light: rgba(29,155,240,0.1); --text-primary: #e7e9ea; --text-secondary: #71767b; --border: #2f3336; --success: #00ba7c; --warning: #ffad1f; }
+    :root { --bg-primary: #000; --bg-secondary: #16181c; --bg-tertiary: #202327; --accent: #1d9bf0; --accent-hover: #1a8cd8; --accent-light: rgba(29,155,240,0.1); --text-primary: #e7e9ea; --text-secondary: #8b8f94; --border: #2f3336; --success: #00ba7c; --warning: #ffad1f; }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.5; }
     ::-webkit-scrollbar { width: 16px; } ::-webkit-scrollbar-track { background: var(--bg-primary); } ::-webkit-scrollbar-thumb { background: var(--bg-tertiary); border-radius: 8px; border: 4px solid var(--bg-primary); }
@@ -124,6 +125,7 @@
         <a href="/" class="nav-item" aria-label="Home"><span class="nav-icon" aria-hidden="true">🏠</span><span>Home</span></a>
         <a href="/run" class="nav-item" aria-label="One-Click"><span class="nav-icon" aria-hidden="true">🚀</span><span>One-Click</span></a>
         <a href="/dashboard" class="nav-item" aria-label="Dashboard"><span class="nav-icon" aria-hidden="true">📊</span><span>Dashboard</span></a>
+        <a href="/thread" class="nav-item" aria-label="Thread Reader"><span class="nav-icon" aria-hidden="true">🧵</span><span>Thread Reader</span></a>
         <a href="/features" class="nav-item active" aria-label="All Scripts"><span class="nav-icon" aria-hidden="true">⚡</span><span>All Scripts</span></a>
         <a href="/tutorials" class="nav-item" aria-label="Tutorials"><span class="nav-icon" aria-hidden="true">📚</span><span>Tutorials</span></a>
         <a href="/docs" class="nav-item" aria-label="Documentation"><span class="nav-icon" aria-hidden="true">📖</span><span>Documentation</span></a>
@@ -1027,9 +1029,10 @@ npx xactions mcp
   <footer class="site-footer">
     <div class="footer-content">
       <div class="footer-brand"><h3>⚡ XActions</h3><p>Free, open-source X/Twitter automation toolkit. Mass unfollow, detect unfollowers, auto-engage, and grow your audience without expensive API fees.</p></div>
-      <div class="footer-links"><h4>Product</h4><a href="/features">Features</a><a href="/docs">Documentation</a><a href="/dashboard">Dashboard</a><a href="https://github.com/nirholas/XActions" target="_blank" rel="noopener noreferrer">GitHub</a></div>
-      <div class="footer-links"><h4>Company</h4><a href="/about">About</a><a href="https://github.com/nirholas/XActions" target="_blank" rel="noopener noreferrer">GitHub</a><a href="https://x.com/nichxbt" target="_blank" rel="noopener noreferrer">Twitter</a></div>
-      <div class="footer-links"><h4>Legal</h4><a href="/terms">Terms of Service</a><a href="/privacy">Privacy Policy</a></div>
+      <div class="footer-links"><h4>Product</h4><a href="/features">Features</a><a href="/pricing">Pricing</a><a href="/run">Run Scripts</a><a href="/dashboard">Dashboard</a><a href="/automations">Automations</a><a href="/workflows">Workflows</a><a href="/analytics">Analytics</a><a href="/monitor">Monitor</a></div>
+      <div class="footer-links"><h4>AI & Developers</h4><a href="/ai">AI Integration</a><a href="/ai-api">AI API (x402)</a><a href="/mcp">MCP Server</a><a href="/docs">Documentation</a></div>
+      <div class="footer-links"><h4>Tutorials</h4><a href="/tutorials">All Tutorials</a><a href="/tutorials/unfollow">Mass Unfollow</a><a href="/tutorials/scrapers">Scrapers</a><a href="/tutorials/automation">Automation</a><a href="/tutorials/mcp">MCP Setup</a></div>
+      <div class="footer-links"><h4>Company</h4><a href="/about">About</a><a href="https://github.com/nirholas/XActions" target="_blank" rel="noopener noreferrer">GitHub</a><a href="https://x.com/nichxbt" target="_blank" rel="noopener noreferrer">Twitter</a><a href="/terms">Terms</a><a href="/privacy">Privacy</a></div>
     </div>
     <div class="footer-bottom"><p>© 2026 XActions. Not affiliated with X Corp.</p><p>Made with ❤️ by <a href="https://x.com/nichxbt" target="_blank" rel="noopener noreferrer">@nichxbt</a></p></div>
   </footer>
@@ -1069,6 +1072,15 @@ npx xactions mcp
       }
       document.body.removeChild(textarea);
     }
+
+    // WCAG 2.4.6: Auto-label copy buttons with context
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      if (btn.getAttribute('aria-label')) return;
+      const section = btn.closest('.feature-section, .code-block, details');
+      const heading = section?.querySelector('h2, h3, summary');
+      const label = heading ? `Copy ${heading.textContent.trim()} code` : 'Copy code snippet';
+      btn.setAttribute('aria-label', label);
+    });
   </script>
 </body>
 </html>

@@ -1068,10 +1068,199 @@ const TOOLS = [
       required: ['dirA', 'dirB'],
     },
   },
+  // ====== Thread Unrolling ======
+  {
+    name: 'x_get_thread',
+    description: 'Unroll and scrape an entire Twitter/X thread given the URL of the first tweet.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        url: {
+          type: 'string',
+          description: 'URL of the first tweet in the thread',
+        },
+      },
+      required: ['url'],
+    },
+  },
+  // ====== Posting Analytics ======
+  {
+    name: 'x_best_time_to_post',
+    description: 'Analyze a user\'s tweet history to determine the best times and days to post for maximum engagement.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        username: {
+          type: 'string',
+          description: 'Username to analyze (without @)',
+        },
+        limit: {
+          type: 'number',
+          description: 'Number of recent tweets to analyze (default: 100)',
+        },
+      },
+      required: ['username'],
+    },
+  },
+  // ====== AI Tools (require OPENROUTER_API_KEY) ======
+  {
+    name: 'x_analyze_voice',
+    description: 'Analyze a user\'s writing style/voice from their tweets. Returns tone, vocabulary patterns, emoji usage, avg length, and a voice profile. Requires OPENROUTER_API_KEY for full analysis.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        username: {
+          type: 'string',
+          description: 'Username whose voice to analyze (without @)',
+        },
+        limit: {
+          type: 'number',
+          description: 'Number of tweets to analyze (default: 50)',
+        },
+      },
+      required: ['username'],
+    },
+  },
+  {
+    name: 'x_generate_tweet',
+    description: 'Generate a tweet in the style of a user. First analyzes their voice, then generates content matching their tone. Requires OPENROUTER_API_KEY.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        username: {
+          type: 'string',
+          description: 'Username whose style to mimic (without @)',
+        },
+        topic: {
+          type: 'string',
+          description: 'Topic or subject for the generated tweet',
+        },
+        count: {
+          type: 'number',
+          description: 'Number of tweet variations to generate (default: 3)',
+        },
+        style: {
+          type: 'string',
+          description: 'Optional style: hot-take, educational, personal, promotional',
+        },
+        type: {
+          type: 'string',
+          enum: ['tweet', 'thread'],
+          description: 'Generate single tweets or a thread (default: tweet)',
+        },
+      },
+      required: ['username', 'topic'],
+    },
+  },
+  {
+    name: 'x_rewrite_tweet',
+    description: 'Rewrite/improve an existing tweet to be more engaging, shorter, add a hook, etc. Uses a voice profile for style matching. Requires OPENROUTER_API_KEY.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        username: {
+          type: 'string',
+          description: 'Username whose voice to match for the rewrite (without @)',
+        },
+        text: {
+          type: 'string',
+          description: 'The original tweet text to improve',
+        },
+        goal: {
+          type: 'string',
+          enum: ['more_engaging', 'shorter', 'add_hook', 'more_casual', 'more_formal', 'add_cta'],
+          description: 'Improvement goal (default: more_engaging)',
+        },
+        count: {
+          type: 'number',
+          description: 'Number of rewrite variations (default: 3)',
+        },
+      },
+      required: ['username', 'text'],
+    },
+  },
+  {
+    name: 'x_summarize_thread',
+    description: 'AI-powered summarization of a Twitter/X thread. Unrolls the thread and generates a concise summary. Requires OPENROUTER_API_KEY.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        url: {
+          type: 'string',
+          description: 'URL of the first tweet in the thread',
+        },
+        style: {
+          type: 'string',
+          description: 'Summary style: brief, detailed, or bullet (default: brief)',
+          enum: ['brief', 'detailed', 'bullet'],
+        },
+      },
+      required: ['url'],
+    },
+  },
   // ====== Cross-Platform ======
   {
     name: 'x_list_platforms',
     description: 'List all supported social media platforms (Twitter, Bluesky, Mastodon, Threads) and their capabilities.',
+    inputSchema: {
+      type: 'object',
+      properties: {},
+    },
+  },
+  // ====== Social Graph ======
+  {
+    name: 'x_graph_build',
+    description: 'Build a social network graph by crawling an account\'s followers and following. Maps relationships, identifies clusters, bridge accounts, and influence scores. Returns a graph ID for further analysis.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        username: {
+          type: 'string',
+          description: 'Twitter username to start crawling from (without @)',
+        },
+        depth: {
+          type: 'number',
+          description: 'Crawl depth: 1 = direct connections only, 2 = friends-of-friends (default: 2)',
+        },
+        maxNodes: {
+          type: 'number',
+          description: 'Maximum nodes to crawl (default: 500). Lower = faster.',
+        },
+      },
+      required: ['username'],
+    },
+  },
+  {
+    name: 'x_graph_analyze',
+    description: 'Analyze a built social graph. Returns: mutual connections, bridge accounts (betweenness centrality), clusters (label propagation), influence ranking (PageRank), ghost followers, orbit analysis (inner circle vs periphery).',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        graphId: {
+          type: 'string',
+          description: 'Graph ID returned from x_graph_build',
+        },
+      },
+      required: ['graphId'],
+    },
+  },
+  {
+    name: 'x_graph_recommendations',
+    description: 'Get actionable recommendations from a graph: who to follow, who to engage with, competitors to watch, safe accounts to unfollow.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        graphId: {
+          type: 'string',
+          description: 'Graph ID returned from x_graph_build',
+        },
+      },
+      required: ['graphId'],
+    },
+  },
+  {
+    name: 'x_graph_list',
+    description: 'List all saved social graphs with their seed account, node/edge counts, and status.',
     inputSchema: {
       type: 'object',
       properties: {},
@@ -1133,6 +1322,11 @@ async function executeTool(name, args) {
   // Handle analytics/sentiment tools directly
   if (name === 'x_analyze_sentiment' || name === 'x_monitor_reputation' || name === 'x_reputation_report') {
     return await executeAnalyticsTool(name, args);
+  }
+
+  // Handle AI tools (voice, generation, rewrite, summarization)
+  if (name === 'x_analyze_voice' || name === 'x_generate_tweet' || name === 'x_rewrite_tweet' || name === 'x_summarize_thread') {
+    return await executeAITool(name, args);
   }
 
   // Handle workflow tools directly
@@ -1430,6 +1624,152 @@ async function executePortabilityTool(name, args) {
   }
 }
 
+/**
+ * Execute AI-specific tools (voice analysis, tweet generation, thread summarization)
+ */
+async function executeAITool(name, args) {
+  const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
+
+  switch (name) {
+    case 'x_analyze_voice': {
+      const ai = await import('../ai/index.js');
+      const scrapersMod = await import('../scrapers/index.js');
+      const scrapers = scrapersMod.default || scrapersMod;
+      const browser = await scrapers.createBrowser();
+      const page = await scrapers.createPage(browser);
+      if (SESSION_COOKIE) await scrapers.loginWithCookie(page, SESSION_COOKIE);
+      try {
+        const tweets = await scrapers.scrapeTweets(page, args.username, { limit: args.limit || 100 });
+        if (!tweets || tweets.length === 0) return { error: `No tweets found for @${args.username}` };
+        const profile = ai.analyzeVoice(args.username, tweets);
+        const summary = ai.summarizeVoiceProfile(profile);
+        return { username: args.username, voiceProfile: profile, summary };
+      } finally {
+        await browser.close();
+      }
+    }
+
+    case 'x_generate_tweet': {
+      if (!OPENROUTER_API_KEY) {
+        return { error: 'OPENROUTER_API_KEY environment variable required for AI tweet generation. Get one free at https://openrouter.ai' };
+      }
+      const ai = await import('../ai/index.js');
+      const scrapersMod = await import('../scrapers/index.js');
+      const scrapers = scrapersMod.default || scrapersMod;
+      const browser = await scrapers.createBrowser();
+      const page = await scrapers.createPage(browser);
+      if (SESSION_COOKIE) await scrapers.loginWithCookie(page, SESSION_COOKIE);
+      try {
+        const tweets = await scrapers.scrapeTweets(page, args.username, { limit: 100 });
+        if (!tweets || tweets.length === 0) return { error: `No tweets found for @${args.username}` };
+        const voiceProfile = ai.analyzeVoice(args.username, tweets);
+        
+        if (args.type === 'thread') {
+          const result = await ai.generateThread(voiceProfile, {
+            topic: args.topic,
+            length: args.count || 5,
+          });
+          return { username: args.username, topic: args.topic, ...result };
+        }
+        
+        const result = await ai.generateTweet(voiceProfile, {
+          topic: args.topic,
+          count: args.count || 3,
+          style: args.style,
+        });
+        return { username: args.username, topic: args.topic, ...result };
+      } finally {
+        await browser.close();
+      }
+    }
+
+    case 'x_rewrite_tweet': {
+      if (!OPENROUTER_API_KEY) {
+        return { error: 'OPENROUTER_API_KEY environment variable required for AI tweet rewriting. Get one free at https://openrouter.ai' };
+      }
+      const ai = await import('../ai/index.js');
+      const scrapersMod = await import('../scrapers/index.js');
+      const scrapers = scrapersMod.default || scrapersMod;
+      const browser = await scrapers.createBrowser();
+      const page = await scrapers.createPage(browser);
+      if (SESSION_COOKIE) await scrapers.loginWithCookie(page, SESSION_COOKIE);
+      try {
+        const tweets = await scrapers.scrapeTweets(page, args.username, { limit: 100 });
+        if (!tweets || tweets.length === 0) return { error: `No tweets found for @${args.username}` };
+        const voiceProfile = ai.analyzeVoice(args.username, tweets);
+        const result = await ai.rewriteTweet(voiceProfile, args.text, {
+          goal: args.goal || 'more_engaging',
+          count: args.count || 3,
+        });
+        return { username: args.username, ...result };
+      } finally {
+        await browser.close();
+      }
+    }
+
+    case 'x_summarize_thread': {
+      if (!OPENROUTER_API_KEY) {
+        return { error: 'OPENROUTER_API_KEY environment variable required for AI thread summarization. Get one free at https://openrouter.ai' };
+      }
+      const scrapersMod = await import('../scrapers/index.js');
+      const scrapers = scrapersMod.default || scrapersMod;
+      const browser = await scrapers.createBrowser();
+      const page = await scrapers.createPage(browser);
+      if (SESSION_COOKIE) await scrapers.loginWithCookie(page, SESSION_COOKIE);
+      try {
+        const thread = await scrapers.scrapeThread(page, args.url);
+        const threadTexts = (thread || []).map(t => t.text || t.content || '').filter(Boolean);
+        if (!threadTexts.length) return { error: 'Could not unroll thread or no text found' };
+
+        const fullThread = threadTexts.join('\n\n---\n\n');
+        const style = args.style || 'brief';
+        const stylePrompts = {
+          brief: 'Provide a concise 2-3 sentence summary.',
+          detailed: 'Provide a detailed summary covering all key points.',
+          bullet: 'Provide a bullet-point summary with key takeaways.',
+        };
+
+        const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+            'HTTP-Referer': 'https://xactions.app',
+            'X-Title': 'XActions MCP',
+          },
+          body: JSON.stringify({
+            model: 'meta-llama/llama-3-8b-instruct:free',
+            messages: [
+              { role: 'system', content: `You are a thread summarizer. ${stylePrompts[style]}` },
+              { role: 'user', content: `Summarize this Twitter/X thread:\n\n${fullThread}` },
+            ],
+          }),
+        });
+
+        if (!response.ok) {
+          const err = await response.text();
+          return { error: `OpenRouter API error: ${err}` };
+        }
+
+        const data = await response.json();
+        const summary = data.choices?.[0]?.message?.content || 'No summary generated';
+        return {
+          url: args.url,
+          tweetCount: threadTexts.length,
+          style,
+          summary,
+          thread: threadTexts,
+        };
+      } finally {
+        await browser.close();
+      }
+    }
+
+    default:
+      throw new Error(`Unknown AI tool: ${name}`);
+  }
+}
+
 // ============================================================================
 // MCP Server Setup
 // ============================================================================
@@ -1541,8 +1881,11 @@ process.on('SIGTERM', async () => {
 
 // Start server
 async function main() {
+  const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
+
   console.error('');
   console.error('⚡ XActions MCP Server v3.0.0');
+  console.error('   The free, open-source Twitter/X MCP server');
   console.error('   https://github.com/nirholas/XActions');
   console.error('');
   
@@ -1552,18 +1895,63 @@ async function main() {
   const pluginCount = await initializePlugins();
   const pluginToolCount = getPluginTools().length;
   
-  console.error('');
-  console.error('📋 Available tools: ' + (TOOLS.length + pluginToolCount));
-  if (pluginCount > 0) {
-    console.error('   Plugins loaded: ' + pluginCount + ' (' + pluginToolCount + ' tools)');
+  // ── Setup Wizard: Auth Detection ──
+  if (SESSION_COOKIE) {
+    console.error('✅ Authenticated (XACTIONS_SESSION_COOKIE set)');
+  } else {
+    console.error('⚠️  No auth_token configured. Some tools require authentication.');
+    console.error('');
+    console.error('   To authenticate, set the XACTIONS_SESSION_COOKIE env var:');
+    console.error('');
+    console.error('   1. Go to x.com and log in');
+    console.error('   2. Open DevTools (F12) → Application → Cookies → https://x.com');
+    console.error('   3. Copy the value of the "auth_token" cookie');
+    console.error('   4. Add to your MCP config:');
+    console.error('');
+    console.error('      "env": { "XACTIONS_SESSION_COOKIE": "your_auth_token_here" }');
+    console.error('');
   }
+
+  // ── AI Tools Status ──
+  if (OPENROUTER_API_KEY) {
+    console.error('✅ AI tools enabled (OPENROUTER_API_KEY set)');
+    console.error('   x_analyze_voice, x_generate_tweet, x_summarize_thread');
+  } else {
+    console.error('ℹ️  AI tools disabled. Set OPENROUTER_API_KEY for voice analysis & tweet generation.');
+    console.error('   Get a free key at https://openrouter.ai');
+  }
+
+  console.error('');
+
+  // ── Tool Summary ──
+  const totalTools = TOOLS.length + pluginToolCount;
+  console.error(`📋 Tools available: ${totalTools}`);
+  if (pluginCount > 0) {
+    console.error(`   Plugins loaded: ${pluginCount} (${pluginToolCount} tools)`);
+  }
+
+  // Group tools by category for display
+  const categories = {
+    'Scraping':  ['x_get_profile', 'x_get_followers', 'x_get_following', 'x_get_tweets', 'x_search_tweets', 'x_get_thread', 'x_download_video'],
+    'Analysis':  ['x_detect_unfollowers', 'x_analyze_sentiment', 'x_best_time_to_post', 'x_competitor_analysis', 'x_brand_monitor'],
+    'Actions':   ['x_follow', 'x_unfollow', 'x_like', 'x_post_tweet', 'x_post_thread', 'x_reply'],
+    'AI':        ['x_analyze_voice', 'x_generate_tweet', 'x_summarize_thread'],
+  };
+
+  for (const [cat, tools] of Object.entries(categories)) {
+    const available = tools.filter(t => TOOLS.some(td => td.name === t));
+    if (available.length) {
+      console.error(`   ${cat}: ${available.join(', ')}`);
+    }
+  }
+
   console.error('');
   
   const transport = new StdioServerTransport();
   await server.connect(transport);
   
   console.error('✅ Server running on stdio');
-  console.error('   Ready for connections from Claude, Cursor, etc.');
+  console.error('   Ready for connections from Claude, Cursor, Windsurf, and any MCP client.');
   console.error('');
 }
 

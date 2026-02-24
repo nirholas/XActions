@@ -17,7 +17,7 @@
       --accent: #1d9bf0;
       --accent-hover: #1a8cd8;
       --text-primary: #e7e9ea;
-      --text-secondary: #71767b;
+      --text-secondary: #8b8f94;
       --border: #2f3336;
       --error: #f4212e;
       --success: #00ba7c;
@@ -27,6 +27,15 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+    }
+
+    /* WCAG 1.4.1: Links distinguishable by more than color */
+    main a:not(.btn):not(.logo-link),
+    .footer-links a,
+    footer a {
+      text-decoration: underline;
+      text-decoration-color: var(--accent);
+      text-underline-offset: 2px;
     }
 
     body {

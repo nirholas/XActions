@@ -1,0 +1,40 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# XActions — Deploy API to Railway
+# Triggers on push to main (auto-deploy)
+# by nichxbt
+# ═══════════════════════════════════════════════════════════════════════════════
+
+name: Deploy API (Railway)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'api/**'
+      - 'src/**'
+      - 'prisma/**'
+      - 'package.json'
+      - 'package-lock.json'
+
+concurrency:
+  group: deploy-railway
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Deploy to Railway
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
+      - name: Deploy to Railway
+        run: railway up --service xactions-api
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}

@@ -18,6 +18,7 @@ import {
   scrapeFollowing,
   scrapeTweets,
   searchTweets,
+  scrapeThread,
   scrapeLikes,
   scrapeMedia,
   scrapeListMembers,
@@ -185,6 +186,65 @@ export async function x_get_tweets({ username, limit = 50 }) {
 export async function x_search_tweets({ query, limit = 50 }) {
   const { page: pg } = await ensureBrowser();
   return searchTweets(pg, query, { limit });
+}
+
+// ============================================================================
+// 7b. Thread / Best Time to Post
+// ============================================================================
+
+export async function x_get_thread({ url }) {
+  const { page: pg } = await ensureBrowser();
+  return scrapeThread(pg, url);
+}
+
+export async function x_best_time_to_post({ username, limit = 100 }) {
+  const { page: pg } = await ensureBrowser();
+  const tweets = await scrapeTweets(pg, username, { limit });
+
+  if (!tweets || !tweets.length) {
+    return { error: `No tweets found for @${username}` };
+  }
+
+  const hourBuckets = Array.from({ length: 24 }, () => ({ count: 0, totalEngagement: 0 }));
+  const dayBuckets = Array.from({ length: 7 }, () => ({ count: 0, totalEngagement: 0 }));
+  const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+  for (const tweet of tweets) {
+    const dateStr = tweet.time || tweet.timestamp || tweet.date;
+    if (!dateStr) continue;
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) continue;
+
+    const hour = d.getUTCHours();
+    const day = d.getUTCDay();
+    const engagement = (parseInt(tweet.likes) || 0) + (parseInt(tweet.retweets) || 0) + (parseInt(tweet.replies) || 0);
+
+    hourBuckets[hour].count++;
+    hourBuckets[hour].totalEngagement += engagement;
+    dayBuckets[day].count++;
+    dayBuckets[day].totalEngagement += engagement;
+  }
+
+  const bestHours = hourBuckets
+    .map((b, i) => ({ hour: i, ...b, avgEngagement: b.count ? (b.totalEngagement / b.count) : 0 }))
+    .filter(b => b.count > 0)
+    .sort((a, b) => b.avgEngagement - a.avgEngagement)
+    .slice(0, 5);
+
+  const bestDays = dayBuckets
+    .map((b, i) => ({ day: dayNames[i], ...b, avgEngagement: b.count ? (b.totalEngagement / b.count) : 0 }))
+    .filter(b => b.count > 0)
+    .sort((a, b) => b.avgEngagement - a.avgEngagement);
+
+  return {
+    username,
+    tweetsAnalyzed: tweets.length,
+    bestHoursUTC: bestHours.map(h => ({ hour: `${h.hour}:00 UTC`, posts: h.count, avgEngagement: Math.round(h.avgEngagement) })),
+    bestDays: bestDays.map(d => ({ day: d.day, posts: d.count, avgEngagement: Math.round(d.avgEngagement) })),
+    recommendation: bestHours.length
+      ? `Post around ${bestHours[0].hour}:00 UTC on ${bestDays[0]?.day || 'any day'} for best engagement`
+      : 'Not enough data to recommend',
+  };
 }
 
 // ============================================================================
@@ -1214,6 +1274,8 @@ export const toolMap = {
   x_get_non_followers,
   x_get_tweets,
   x_search_tweets,
+  x_get_thread,
+  x_best_time_to_post,
   // Core actions
   x_follow,
   x_unfollow,

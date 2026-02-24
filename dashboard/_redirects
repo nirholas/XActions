@@ -1,0 +1,32 @@
+# Cloudflare Pages redirects
+# Format: /from /to [status]
+
+# Tutorial routes
+/tutorials/unfollow /tutorials/unfollow.html 200
+/tutorials/automation /tutorials/automation.html 200
+/tutorials/monitoring /tutorials/monitoring.html 200
+/tutorials/scrapers /tutorials/scrapers.html 200
+/tutorials/scrapers-full /tutorials/scrapers-full.html 200
+/tutorials/mcp /tutorials/mcp.html 200
+/tutorials/communities /tutorials/communities.html 200
+/tutorials /tutorials/index.html 200
+
+# Clean URL routes
+/login /login.html 200
+/pricing /pricing.html 200
+/about /about.html 200
+/docs /docs.html 200
+/privacy /privacy.html 200
+/terms /terms.html 200
+/features /features.html 200
+/run /run.html 200
+/admin /admin.html 200
+/ai /ai.html 200
+/ai-api /ai-api.html 200
+/mcp /mcp.html 200
+/monitor /monitor.html 200
+/automations /automations.html 200
+/workflows /workflows.html 200
+
+# API proxy to backend (set XACTIONS_API_URL in Cloudflare Pages env)
+# /api/* https://your-railway-app.up.railway.app/api/:splat 200

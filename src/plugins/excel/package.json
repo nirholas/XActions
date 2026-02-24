@@ -1,0 +1,27 @@
+{
+  "name": "xactions-plugin-excel",
+  "version": "1.0.0",
+  "description": "XActions plugin — export scraped X/Twitter data to Excel (.xlsx) files",
+  "type": "module",
+  "main": "index.js",
+  "keywords": [
+    "xactions",
+    "xactions-plugin",
+    "twitter",
+    "x",
+    "excel",
+    "xlsx",
+    "spreadsheet",
+    "export",
+    "automation"
+  ],
+  "author": "nich (@nichxbt)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nirholas/xactions"
+  },
+  "peerDependencies": {
+    "exceljs": ">=4.0.0"
+  }
+}

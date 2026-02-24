@@ -52,7 +52,7 @@
       --bg-secondary: #16181c;
       --bg-tertiary: #202327;
       --text-primary: #e7e9ea;
-      --text-secondary: #71767b;
+      --text-secondary: #8b8f94;
       --accent: #1d9bf0;
       --border: #2f3336;
       --success: #00ba7c;
@@ -249,6 +249,7 @@
     <div class="nav__links">
       <a href="/dashboard" class="nav__link">Dashboard</a>
       <a href="/automations" class="nav__link nav__link--active">Automations</a>
+      <a href="/unfollowers" class="nav__link">Unfollowers</a>
       <a href="/monitor" class="nav__link">Monitor</a>
       <a href="/workflows" class="nav__link">Workflows</a>
       <a href="/run" class="nav__link">Scripts</a>
@@ -281,7 +282,7 @@
       </div>
     </div>
 
-    <div class="auto-grid" id="automation-grid">
+    <div class="auto-grid" id="automation-grid" aria-live="polite" aria-atomic="false">
       <!-- Cards rendered by JS -->
     </div>
   </div>

@@ -139,7 +139,7 @@
       --accent-hover: #1a8cd8;
       --accent-light: rgba(29, 155, 240, 0.1);
       --text-primary: #e7e9ea;
-      --text-secondary: #71767b;
+      --text-secondary: #8b8f94;
       --border: #2f3336;
       --success: #00ba7c;
       --warning: #ffad1f;
@@ -149,6 +149,15 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+    }
+
+    /* WCAG 1.4.1: Links distinguishable by more than color */
+    main a:not(.nav-item):not(.action-btn):not(.btn-primary):not(.btn-secondary):not(.promo-link):not(.tutorial-card),
+    .legal-banner a,
+    footer a {
+      text-decoration: underline;
+      text-decoration-color: var(--accent);
+      text-underline-offset: 2px;
     }
 
     body {
@@ -742,7 +751,7 @@
       max-width: 1200px;
       margin: 0 auto;
       display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr;
+      grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
       gap: 32px;
     }
 
@@ -1395,24 +1404,41 @@
         <h4>Product</h4>
         <a href="/features">Features</a>
         <a href="/pricing">Pricing</a>
-        <a href="/docs">Documentation</a>
+        <a href="/run">Run Scripts</a>
         <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/workflows">Workflow Builder</a>
+        <a href="/analytics">Analytics</a>
+        <a href="/monitor">Monitor</a>
+      </div>
+      <div class="footer-links">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a>
+      </div>
+      <div class="footer-links">
+        <h4>Tutorials</h4>
+        <a href="/tutorials">All Tutorials</a>
+        <a href="/tutorials/unfollow">Mass Unfollow</a>
+        <a href="/tutorials/scrapers">Scrapers</a>
+        <a href="/tutorials/automation">Automation</a>
+        <a href="/tutorials/mcp">MCP Setup</a>
+        <a href="/tutorials/monitoring">Monitoring</a>
       </div>
       <div class="footer-links">
         <h4>Company</h4>
         <a href="/about">About</a>
-        <a href="https://github.com/nirholas/XActions" target="_blank">GitHub</a>
-        <a href="https://x.com/nichxbt" target="_blank">Twitter</a>
-      </div>
-      <div class="footer-links">
-        <h4>Legal</h4>
+        <a href="https://github.com/nirholas/XActions" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://x.com/nichxbt" target="_blank" rel="noopener">Twitter</a>
         <a href="/terms">Terms of Service</a>
         <a href="/privacy">Privacy Policy</a>
       </div>
     </div>
     <div class="footer-bottom">
       <p>© 2026 XActions. Not affiliated with X Corp.</p>
-      <p>Made with ❤️ by <a href="https://x.com/nichxbt" target="_blank">@nichxbt</a></p>
+      <p>Made with ❤️ by <a href="https://x.com/nichxbt" target="_blank" rel="noopener">@nichxbt</a></p>
     </div>
   </footer>
 </body>

@@ -1,0 +1,134 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# XActions — Render.com Blueprint
+# Free tier: 750 hours/month web services, free PostgreSQL (90 days)
+# Deploy: Connect GitHub repo → Render auto-detects this file
+# by nichxbt
+# ═══════════════════════════════════════════════════════════════════════════════
+
+services:
+  # ─────────────────────────────────────────────────────────────────────────────
+  # API Server
+  # ─────────────────────────────────────────────────────────────────────────────
+  - type: web
+    name: xactions-api
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    region: oregon
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "3001"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: xactions-db
+          property: connectionString
+      - key: REDIS_HOST
+        fromService:
+          name: xactions-redis
+          type: redis
+          property: host
+      - key: REDIS_PORT
+        fromService:
+          name: xactions-redis
+          type: redis
+          property: port
+      - key: JWT_SECRET
+        generateValue: true
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: PUPPETEER_EXECUTABLE_PATH
+        value: /usr/bin/chromium
+      - key: PUPPETEER_HEADLESS
+        value: "true"
+      - key: PUPPETEER_NO_SANDBOX
+        value: "true"
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # Background Worker
+  # ─────────────────────────────────────────────────────────────────────────────
+  - type: worker
+    name: xactions-worker
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerCommand: node api/services/jobQueue.js
+    plan: free
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: xactions-db
+          property: connectionString
+      - key: REDIS_HOST
+        fromService:
+          name: xactions-redis
+          type: redis
+          property: host
+      - key: REDIS_PORT
+        fromService:
+          name: xactions-redis
+          type: redis
+          property: port
+      - key: JWT_SECRET
+        sync: false
+      - key: PUPPETEER_EXECUTABLE_PATH
+        value: /usr/bin/chromium
+      - key: PUPPETEER_HEADLESS
+        value: "true"
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # Static Frontend (Dashboard)
+  # ─────────────────────────────────────────────────────────────────────────────
+  - type: web
+    name: xactions-dashboard
+    runtime: static
+    buildCommand: echo "Static site — no build needed"
+    staticPublishPath: ./dashboard
+    plan: free
+    headers:
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+    routes:
+      - type: rewrite
+        source: /login
+        destination: /login.html
+      - type: rewrite
+        source: /pricing
+        destination: /pricing.html
+      - type: rewrite
+        source: /about
+        destination: /about.html
+      - type: rewrite
+        source: /docs
+        destination: /docs.html
+      - type: rewrite
+        source: /features
+        destination: /features.html
+      - type: rewrite
+        source: /privacy
+        destination: /privacy.html
+      - type: rewrite
+        source: /terms
+        destination: /terms.html
+      - type: rewrite
+        source: /ai
+        destination: /ai.html
+      - type: rewrite
+        source: /mcp
+        destination: /mcp.html
+
+databases:
+  - name: xactions-db
+    plan: free
+    databaseName: xactions
+    postgresMajorVersion: "16"
+
+# Note: Render Redis requires paid plan ($7/mo) or use Upstash free tier
+# To use Upstash instead, remove redis fromService refs and set REDIS_HOST/PORT manually

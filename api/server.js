@@ -54,6 +54,7 @@ import analyticsRoutes from './routes/analytics.js';
 import workflowRoutes from './routes/workflows.js';
 import portabilityRoutes from './routes/portability.js';
 import threadRoutes from './routes/thread.js';
+import unfollowersRoutes from './routes/unfollowers.js';
 import { initializeSocketIO } from './realtime/socketHandler.js';
 import { initializeLicensing, brandingMiddleware } from './services/licensing.js';
 
@@ -202,6 +203,7 @@ app.use('/api/settings', settingsRoutes);
 app.use('/api/workflows', workflowRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/portability', portabilityRoutes);
+app.use('/api/unfollowers', unfollowersRoutes);
 app.use('/api/thread', threadRoutes);
 
 // Plugin routes — mounted under /api/plugins/<plugin-name>/

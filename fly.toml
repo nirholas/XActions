@@ -1,0 +1,56 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# XActions — Fly.io Configuration
+# Free tier: 3 shared-cpu VMs, 256MB RAM, 3GB storage
+# Deploy: fly launch --no-deploy && fly deploy
+# by nichxbt
+# ═══════════════════════════════════════════════════════════════════════════════
+
+app = 'xactions'
+primary_region = 'iad'
+
+[build]
+  dockerfile = 'Dockerfile'
+
+[env]
+  NODE_ENV = 'production'
+  PORT = '3001'
+  PUPPETEER_EXECUTABLE_PATH = '/usr/bin/chromium'
+  PUPPETEER_HEADLESS = 'true'
+  PUPPETEER_NO_SANDBOX = 'true'
+
+[http_service]
+  internal_port = 3001
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+  [http_service.concurrency]
+    type = 'connections'
+    hard_limit = 100
+    soft_limit = 80
+
+[[vm]]
+  memory = '512mb'
+  cpu_kind = 'shared'
+  cpus = 1
+
+[checks]
+  [checks.health]
+    type = 'http'
+    port = 3001
+    path = '/api/health'
+    interval = '30s'
+    timeout = '10s'
+    grace_period = '15s'
+
+# Secrets (set via CLI, not in config):
+#   fly secrets set DATABASE_URL="postgresql://..." JWT_SECRET="..." REDIS_HOST="..."
+#
+# Fly Postgres (free):
+#   fly postgres create --name xactions-db
+#   fly postgres attach xactions-db
+#
+# Fly Redis (Upstash, free tier):
+#   fly redis create --name xactions-redis

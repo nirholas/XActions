@@ -43,7 +43,15 @@
     "test:x402:integration": "vitest run tests/x402-integration.test.js",
     "test:x402:all": "vitest run tests/x402*.test.js",
     "verify:x402": "node scripts/verify-x402.js",
-    "test:payment": "node scripts/test-x402-payment.js"
+    "test:payment": "node scripts/test-x402-payment.js",
+    "deploy": "bash scripts/deploy.sh",
+    "deploy:railway": "bash scripts/deploy.sh railway",
+    "deploy:cloudflare": "bash scripts/deploy.sh cloudflare",
+    "deploy:fly": "bash scripts/deploy.sh fly",
+    "deploy:docker": "bash scripts/deploy.sh docker",
+    "docker:up": "docker compose up -d --build",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f api"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",

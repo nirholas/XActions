@@ -1,0 +1,26 @@
+{
+  "name": "xactions-plugin-google-sheets",
+  "version": "1.0.0",
+  "description": "XActions plugin — export scraped X/Twitter data directly to Google Sheets",
+  "type": "module",
+  "main": "index.js",
+  "keywords": [
+    "xactions",
+    "xactions-plugin",
+    "twitter",
+    "x",
+    "google-sheets",
+    "spreadsheet",
+    "export",
+    "automation"
+  ],
+  "author": "nich (@nichxbt)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nirholas/xactions"
+  },
+  "peerDependencies": {
+    "googleapis": ">=100.0.0"
+  }
+}

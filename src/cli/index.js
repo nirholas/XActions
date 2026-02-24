@@ -1002,6 +1002,221 @@ workflowCmd
   });
 
 // ============================================================================
+// Social Graph Commands
+// ============================================================================
+
+const graphCmd = program
+  .command('graph')
+  .description('Build and analyze social network graphs');
+
+graphCmd
+  .command('build <username>')
+  .description('Build a social graph by crawling an account\'s network')
+  .option('-d, --depth <number>', 'Crawl depth (1 = direct only, 2 = friends-of-friends)', '2')
+  .option('-n, --max-nodes <number>', 'Maximum nodes to crawl', '500')
+  .option('--auth <token>', 'X/Twitter session cookie')
+  .action(async (username, options) => {
+    const spinner = ora(`Building social graph for @${username.replace(/^@/, '')}...`).start();
+    try {
+      const graph = (await import('../graph/index.js')).default;
+      const config = await loadConfig();
+
+      const result = await graph.build(username, {
+        depth: parseInt(options.depth, 10),
+        maxNodes: parseInt(options.maxNodes, 10),
+        authToken: options.auth || config.authToken,
+        onProgress: (event) => {
+          if (event.phase === 'crawling') {
+            spinner.text = `Crawling @${event.username} (depth ${event.depth}) — ${event.nodesCount} nodes, ${event.edgesCount} edges`;
+          }
+        },
+      });
+
+      spinner.succeed(`Graph built: ${result.nodes?.length || 0} nodes, ${result.edges?.length || 0} edges (ID: ${result.id?.slice(0, 8)}...)`);
+      console.log(chalk.gray(`  Saved to ~/.xactions/graphs/${result.id}.json`));
+    } catch (error) {
+      spinner.fail('Failed to build graph');
+      console.error(chalk.red(error.message));
+    }
+  });
+
+graphCmd
+  .command('analyze <graphId>')
+  .description('Run analysis on an existing graph (clusters, influence, bridges)')
+  .action(async (graphId) => {
+    const spinner = ora('Analyzing graph...').start();
+    try {
+      const graph = (await import('../graph/index.js')).default;
+      const data = await graph.get(graphId);
+      if (!data) {
+        spinner.fail(`Graph not found: ${graphId}`);
+        return;
+      }
+
+      const analysis = graph.analyze(data);
+      spinner.succeed('Analysis complete');
+
+      console.log(chalk.bold.cyan('\n📊 Graph Analysis\n'));
+      console.log(`  Nodes: ${chalk.bold(analysis.nodesCount)}  Edges: ${chalk.bold(analysis.edgesCount)}`);
+
+      if (analysis.clusters.length > 0) {
+        console.log(chalk.bold('\n  Clusters:'));
+        for (const c of analysis.clusters.slice(0, 5)) {
+          console.log(`    ${chalk.cyan(c.label)} — ${c.size} members: ${c.members.slice(0, 5).join(', ')}${c.size > 5 ? '...' : ''}`);
+        }
+      }
+
+      if (analysis.influenceRanking.length > 0) {
+        console.log(chalk.bold('\n  Top Influencers:'));
+        for (const u of analysis.influenceRanking.slice(0, 10)) {
+          console.log(`    ${chalk.yellow(u.influenceScore.toFixed(1).padStart(5))}  @${u.username}`);
+        }
+      }
+
+      if (analysis.bridgeAccounts.length > 0) {
+        console.log(chalk.bold('\n  Bridge Accounts:'));
+        for (const b of analysis.bridgeAccounts.slice(0, 5)) {
+          console.log(`    @${chalk.cyan(b.username)} — betweenness: ${b.betweenness}`);
+        }
+      }
+
+      if (analysis.orbits) {
+        const o = analysis.orbits.summary;
+        console.log(chalk.bold('\n  Orbit Analysis:'));
+        console.log(`    Inner circle: ${o.innerCircle}  Active: ${o.active}  Outer ring: ${o.outerRing}  Periphery: ${o.periphery}`);
+      }
+
+      console.log('');
+    } catch (error) {
+      spinner.fail('Analysis failed');
+      console.error(chalk.red(error.message));
+    }
+  });
+
+graphCmd
+  .command('recommend <graphId>')
+  .description('Get follow/engage/unfollow recommendations from a graph')
+  .action(async (graphId) => {
+    try {
+      const graph = (await import('../graph/index.js')).default;
+      const data = await graph.get(graphId);
+      if (!data) {
+        console.error(chalk.red(`Graph not found: ${graphId}`));
+        return;
+      }
+
+      const recs = graph.recommend(data, data.seed);
+
+      console.log(chalk.bold.cyan(`\n💡 Recommendations for @${recs.seed}\n`));
+
+      if (recs.followSuggestions.length > 0) {
+        console.log(chalk.bold('  Follow these:'));
+        for (const s of recs.followSuggestions.slice(0, 8)) {
+          console.log(`    ${chalk.green('+')} @${s.username} — ${s.reason}`);
+        }
+      }
+
+      if (recs.engageSuggestions.length > 0) {
+        console.log(chalk.bold('\n  Engage with:'));
+        for (const s of recs.engageSuggestions.slice(0, 8)) {
+          console.log(`    ${chalk.yellow('★')} @${s.username} — ${s.reason}`);
+        }
+      }
+
+      if (recs.competitorWatch.length > 0) {
+        console.log(chalk.bold('\n  Watch these:'));
+        for (const s of recs.competitorWatch.slice(0, 5)) {
+          console.log(`    ${chalk.cyan('◉')} @${s.username} — ${s.reason}`);
+        }
+      }
+
+      if (recs.safeToUnfollow.length > 0) {
+        console.log(chalk.bold('\n  Safe to unfollow:'));
+        for (const s of recs.safeToUnfollow.slice(0, 8)) {
+          console.log(`    ${chalk.gray('−')} @${s.username} — ${s.reason}`);
+        }
+      }
+
+      console.log('');
+    } catch (error) {
+      console.error(chalk.red('Failed to get recommendations: ' + error.message));
+    }
+  });
+
+graphCmd
+  .command('export <graphId>')
+  .description('Export a graph for visualization')
+  .option('-f, --format <format>', 'Output format: html, gexf, d3', 'html')
+  .option('-o, --output <path>', 'Output file path')
+  .action(async (graphId, options) => {
+    try {
+      const graphMod = (await import('../graph/index.js')).default;
+      const data = await graphMod.get(graphId);
+      if (!data) {
+        console.error(chalk.red(`Graph not found: ${graphId}`));
+        return;
+      }
+
+      const format = options.format || 'html';
+      const result = graphMod.visualize(data, format);
+
+      const ext = format === 'gexf' || format === 'gephi' ? 'gexf' : format === 'html' ? 'html' : 'json';
+      const defaultPath = `graph-${data.seed}-${Date.now()}.${ext}`;
+      const outPath = options.output || defaultPath;
+
+      const { default: fsPromises } = await import('fs/promises');
+      const content = typeof result === 'string' ? result : JSON.stringify(result, null, 2);
+      await fsPromises.writeFile(outPath, content);
+
+      console.log(chalk.green(`✓ Graph exported to ${outPath} (${format})`));
+    } catch (error) {
+      console.error(chalk.red('Failed to export graph: ' + error.message));
+    }
+  });
+
+graphCmd
+  .command('list')
+  .description('List all saved graphs')
+  .action(async () => {
+    try {
+      const graph = (await import('../graph/index.js')).default;
+      const graphs = await graph.list();
+
+      if (graphs.length === 0) {
+        console.log(chalk.gray('\n  No graphs found. Build one with: xactions graph build @username\n'));
+        return;
+      }
+
+      console.log(chalk.bold.cyan('\n📊 Saved Graphs\n'));
+      for (const g of graphs) {
+        const status = g.status === 'complete' ? chalk.green('● complete') : g.status === 'crawling' ? chalk.yellow('● crawling') : chalk.gray(`● ${g.status}`);
+        console.log(`  ${status}  ${chalk.bold('@' + g.seed)} ${chalk.gray(`(${g.id?.slice(0, 8)}...)`)}`);
+        console.log(`         ${g.nodesCount} nodes, ${g.edgesCount} edges  ${chalk.gray(g.createdAt || '')}`);
+        console.log('');
+      }
+    } catch (error) {
+      console.error(chalk.red('Failed to list graphs: ' + error.message));
+    }
+  });
+
+graphCmd
+  .command('delete <graphId>')
+  .description('Delete a saved graph')
+  .action(async (graphId) => {
+    try {
+      const graph = (await import('../graph/index.js')).default;
+      const deleted = await graph.delete(graphId);
+      if (deleted) {
+        console.log(chalk.green(`✓ Graph deleted: ${graphId}`));
+      } else {
+        console.log(chalk.red(`Graph not found: ${graphId}`));
+      }
+    } catch (error) {
+      console.error(chalk.red('Failed to delete graph: ' + error.message));
+    }
+  });
+
+// ============================================================================
 // Portability Commands (export, migrate, diff)
 // ============================================================================
 
@@ -1444,6 +1659,259 @@ program
     console.log(chalk.gray('Example: xactions scrape profile user.bsky.social --platform bluesky'));
     console.log(chalk.gray('Example: xactions scrape tweets Gargron --platform mastodon --instance https://mastodon.social'));
     console.log();
+  });
+
+// ============================================================================
+// AI Tweet Writer Commands
+// ============================================================================
+
+const ai = program
+  .command('ai')
+  .description('AI Tweet Writer — analyze voice, generate & rewrite tweets');
+
+ai
+  .command('analyze <username>')
+  .description('Analyze a user\'s writing voice from their tweets')
+  .option('-l, --limit <n>', 'Number of tweets to analyze', '100')
+  .option('-o, --output <file>', 'Save voice profile to file')
+  .option('--json', 'Output as JSON')
+  .action(async (username, options) => {
+    const config = await loadConfig();
+    const token = config.auth_token || process.env.TWITTER_AUTH_TOKEN;
+    if (!token) {
+      console.error(chalk.red('✗ Auth token required. Run: xactions config --token <auth_token>'));
+      process.exit(1);
+    }
+    const spinner = ora(`Analyzing @${username}'s writing voice...`).start();
+    try {
+      const { scrapeTweets, createBrowser, createPage, loginWithCookie } = scrapers;
+      const { analyzeVoice, summarizeVoiceProfile } = await import('../ai/index.js');
+      const browser = await createBrowser();
+      const page = await createPage(browser);
+      await loginWithCookie(page, token);
+      const tweets = await scrapeTweets(page, username, { limit: parseInt(options.limit) });
+      await browser.close();
+      if (!tweets || tweets.length === 0) {
+        spinner.fail(`No tweets found for @${username}`);
+        return;
+      }
+      spinner.text = `Analyzing ${tweets.length} tweets...`;
+      const profile = analyzeVoice(username, tweets);
+      spinner.succeed(`Voice analysis complete for @${username}`);
+
+      if (options.json) {
+        console.log(JSON.stringify(profile, null, 2));
+      } else {
+        const summary = summarizeVoiceProfile(profile);
+        console.log(chalk.bold(`\n🎤 Voice Profile: @${username}\n`));
+        console.log(summary);
+      }
+
+      if (options.output) {
+        await fs.writeFile(options.output, JSON.stringify(profile, null, 2));
+        console.log(chalk.green(`\n✓ Voice profile saved to ${options.output}`));
+      }
+    } catch (error) {
+      spinner.fail('Voice analysis failed');
+      console.error(chalk.red(error.message));
+    }
+  });
+
+ai
+  .command('generate <topic>')
+  .description('Generate tweets in a user\'s voice')
+  .option('-v, --voice <username>', 'Username whose voice to mimic (required)')
+  .option('-c, --count <n>', 'Number of tweets to generate', '3')
+  .option('-s, --style <style>', 'Style: casual, professional, provocative')
+  .option('-t, --type <type>', 'Type: tweet or thread', 'tweet')
+  .option('-m, --model <model>', 'OpenRouter model to use')
+  .option('-k, --api-key <key>', 'OpenRouter API key (or set OPENROUTER_API_KEY)')
+  .action(async (topic, options) => {
+    if (!options.voice) {
+      console.error(chalk.red('✗ --voice <username> is required'));
+      process.exit(1);
+    }
+    const config = await loadConfig();
+    const token = config.auth_token || process.env.TWITTER_AUTH_TOKEN;
+    const apiKey = options.apiKey || config.openrouter_api_key || process.env.OPENROUTER_API_KEY;
+    if (!token) {
+      console.error(chalk.red('✗ Auth token required. Run: xactions config --token <auth_token>'));
+      process.exit(1);
+    }
+    if (!apiKey) {
+      console.error(chalk.red('✗ OpenRouter API key required. Set OPENROUTER_API_KEY or use --api-key'));
+      process.exit(1);
+    }
+    process.env.OPENROUTER_API_KEY = apiKey;
+    if (options.model) process.env.OPENROUTER_MODEL = options.model;
+
+    const spinner = ora(`Scraping @${options.voice}'s tweets...`).start();
+    try {
+      const { scrapeTweets, createBrowser, createPage, loginWithCookie } = scrapers;
+      const { analyzeVoice, generateTweet, generateThread } = await import('../ai/index.js');
+      const browser = await createBrowser();
+      const page = await createPage(browser);
+      await loginWithCookie(page, token);
+      const tweets = await scrapeTweets(page, options.voice, { limit: 100 });
+      await browser.close();
+      if (!tweets || tweets.length === 0) {
+        spinner.fail(`No tweets found for @${options.voice}`);
+        return;
+      }
+      const voiceProfile = analyzeVoice(options.voice, tweets);
+      spinner.text = `Generating ${options.type === 'thread' ? 'thread' : 'tweets'} about "${topic}"...`;
+
+      if (options.type === 'thread') {
+        const result = await generateThread(voiceProfile, { topic, length: parseInt(options.count) });
+        spinner.succeed('Thread generated!');
+        console.log(chalk.bold(`\n🧵 Thread: ${topic}\n`));
+        result.thread.forEach((t, i) => {
+          console.log(chalk.cyan(`  ${i + 1}/${result.thread.length}`) + ` ${t}`);
+          console.log();
+        });
+      } else {
+        const result = await generateTweet(voiceProfile, {
+          topic,
+          count: parseInt(options.count),
+          style: options.style,
+        });
+        spinner.succeed('Tweets generated!');
+        console.log(chalk.bold(`\n✍️  Generated Tweets: ${topic}\n`));
+        result.tweets.forEach((t, i) => {
+          console.log(chalk.cyan(`  ${i + 1}.`) + ` ${t}`);
+          console.log();
+        });
+      }
+    } catch (error) {
+      spinner.fail('Generation failed');
+      console.error(chalk.red(error.message));
+    }
+  });
+
+ai
+  .command('rewrite <text>')
+  .description('Rewrite a tweet in a user\'s voice')
+  .option('-v, --voice <username>', 'Username whose voice to mimic (required)')
+  .option('-g, --goal <goal>', 'Goal: more_engaging, shorter, more_professional, funnier', 'more_engaging')
+  .option('-c, --count <n>', 'Number of variations', '3')
+  .option('-m, --model <model>', 'OpenRouter model to use')
+  .option('-k, --api-key <key>', 'OpenRouter API key (or set OPENROUTER_API_KEY)')
+  .action(async (text, options) => {
+    if (!options.voice) {
+      console.error(chalk.red('✗ --voice <username> is required'));
+      process.exit(1);
+    }
+    const config = await loadConfig();
+    const token = config.auth_token || process.env.TWITTER_AUTH_TOKEN;
+    const apiKey = options.apiKey || config.openrouter_api_key || process.env.OPENROUTER_API_KEY;
+    if (!token) {
+      console.error(chalk.red('✗ Auth token required. Run: xactions config --token <auth_token>'));
+      process.exit(1);
+    }
+    if (!apiKey) {
+      console.error(chalk.red('✗ OpenRouter API key required. Set OPENROUTER_API_KEY or use --api-key'));
+      process.exit(1);
+    }
+    process.env.OPENROUTER_API_KEY = apiKey;
+    if (options.model) process.env.OPENROUTER_MODEL = options.model;
+
+    const spinner = ora(`Scraping @${options.voice}'s tweets...`).start();
+    try {
+      const { scrapeTweets, createBrowser, createPage, loginWithCookie } = scrapers;
+      const { analyzeVoice, rewriteTweet } = await import('../ai/index.js');
+      const browser = await createBrowser();
+      const page = await createPage(browser);
+      await loginWithCookie(page, token);
+      const tweets = await scrapeTweets(page, options.voice, { limit: 100 });
+      await browser.close();
+      if (!tweets || tweets.length === 0) {
+        spinner.fail(`No tweets found for @${options.voice}`);
+        return;
+      }
+      const voiceProfile = analyzeVoice(options.voice, tweets);
+      spinner.text = 'Rewriting tweet...';
+      const result = await rewriteTweet(voiceProfile, text, {
+        goal: options.goal,
+        count: parseInt(options.count),
+      });
+      spinner.succeed('Tweet rewritten!');
+      console.log(chalk.bold('\n✏️  Rewritten Variations:\n'));
+      console.log(chalk.gray(`  Original: ${text}\n`));
+      result.rewrites.forEach((t, i) => {
+        console.log(chalk.cyan(`  ${i + 1}.`) + ` ${t}`);
+        console.log();
+      });
+    } catch (error) {
+      spinner.fail('Rewrite failed');
+      console.error(chalk.red(error.message));
+    }
+  });
+
+ai
+  .command('calendar <username>')
+  .description('Generate a content calendar for the week')
+  .option('-d, --days <n>', 'Number of days', '7')
+  .option('-p, --posts-per-day <n>', 'Posts per day', '3')
+  .option('-t, --topics <topics>', 'Comma-separated topics')
+  .option('-o, --output <file>', 'Save calendar to file')
+  .option('-m, --model <model>', 'OpenRouter model to use')
+  .option('-k, --api-key <key>', 'OpenRouter API key (or set OPENROUTER_API_KEY)')
+  .action(async (username, options) => {
+    const config = await loadConfig();
+    const token = config.auth_token || process.env.TWITTER_AUTH_TOKEN;
+    const apiKey = options.apiKey || config.openrouter_api_key || process.env.OPENROUTER_API_KEY;
+    if (!token) {
+      console.error(chalk.red('✗ Auth token required. Run: xactions config --token <auth_token>'));
+      process.exit(1);
+    }
+    if (!apiKey) {
+      console.error(chalk.red('✗ OpenRouter API key required. Set OPENROUTER_API_KEY or use --api-key'));
+      process.exit(1);
+    }
+    process.env.OPENROUTER_API_KEY = apiKey;
+    if (options.model) process.env.OPENROUTER_MODEL = options.model;
+
+    const spinner = ora(`Scraping @${username}'s tweets...`).start();
+    try {
+      const { scrapeTweets, createBrowser, createPage, loginWithCookie } = scrapers;
+      const { analyzeVoice, generateWeek } = await import('../ai/index.js');
+      const browser = await createBrowser();
+      const page = await createPage(browser);
+      await loginWithCookie(page, token);
+      const tweets = await scrapeTweets(page, username, { limit: 100 });
+      await browser.close();
+      if (!tweets || tweets.length === 0) {
+        spinner.fail(`No tweets found for @${username}`);
+        return;
+      }
+      const voiceProfile = analyzeVoice(username, tweets);
+      const topics = options.topics ? options.topics.split(',').map(t => t.trim()) : undefined;
+      spinner.text = `Generating ${options.days}-day content calendar...`;
+      const result = await generateWeek(voiceProfile, {
+        topics,
+        postsPerDay: parseInt(options.postsPerDay),
+        days: parseInt(options.days),
+      });
+      spinner.succeed('Content calendar generated!');
+      console.log(chalk.bold(`\n📅 Content Calendar for @${username}\n`));
+      for (const day of result.calendar) {
+        console.log(chalk.cyan.bold(`  ${day.day}`));
+        day.posts.forEach((post, i) => {
+          const typeIcon = post.type === 'thread' ? '🧵' : '📝';
+          console.log(`    ${typeIcon} ${chalk.gray(post.time || '')} ${post.topic}`);
+          console.log(`       ${post.content}`);
+          console.log();
+        });
+      }
+
+      if (options.output) {
+        await fs.writeFile(options.output, JSON.stringify(result.calendar, null, 2));
+        console.log(chalk.green(`✓ Calendar saved to ${options.output}`));
+      }
+    } catch (error) {
+      spinner.fail('Calendar generation failed');
+      console.error(chalk.red(error.message));
+    }
   });
 
 // ============================================================================

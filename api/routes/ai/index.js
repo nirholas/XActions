@@ -16,6 +16,7 @@ import scrapeRoutes from './scrape.js';
 import actionRoutes from './actions.js';
 import monitorRoutes from './monitor.js';
 import utilityRoutes from './utility.js';
+import writerRoutes from './writer.js';
 
 const router = express.Router();
 
@@ -60,6 +61,15 @@ router.get('/', (req, res) => {
         'POST /api/ai/export/bookmarks': 'Export bookmarks',
         'POST /api/ai/unroll/thread': 'Unroll thread to text',
         'POST /api/ai/analyze/profile': 'Analyze profile engagement',
+      },
+      writer: {
+        'POST /api/ai/writer/analyze-voice': 'Analyze a user\'s writing voice from tweets',
+        'POST /api/ai/writer/generate': 'Generate tweets in a user\'s voice',
+        'POST /api/ai/writer/rewrite': 'Rewrite/improve an existing tweet',
+        'POST /api/ai/writer/calendar': 'Generate weekly content calendar',
+        'POST /api/ai/writer/reply': 'Generate a reply to a tweet',
+        'GET /api/ai/writer/voice-profiles': 'List saved voice profiles',
+        'GET /api/ai/writer/voice-profiles/:username': 'Get a specific voice profile',
       },
     },
     
@@ -137,6 +147,7 @@ router.use('/download', utilityRoutes);
 router.use('/export', utilityRoutes);
 router.use('/unroll', utilityRoutes);
 router.use('/analyze', utilityRoutes);
+router.use('/writer', writerRoutes);
 
 // Catch-all for undefined routes
 router.all('*', (req, res) => {

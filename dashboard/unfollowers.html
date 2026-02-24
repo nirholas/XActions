@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Who Unfollowed You — XActions</title>
+  <link rel="preconnect" href="https://cdn.socket.io" crossorigin>
+  <link rel="dns-prefetch" href="//cdn.socket.io">
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg-primary: #000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --accent: #1d9bf0;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg-primary); color: var(--text-primary); font-family: var(--font); min-height: 100vh; }
+
+    /* ── Nav ───────────────────────────────────────── */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 53px;
+      background: rgba(0,0,0,0.75); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between; padding: 0 24px;
+    }
+    .nav__brand { font-size: 20px; font-weight: 800; color: var(--text-primary); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+    .nav__links { display: flex; gap: 4px; }
+    .nav__link { color: var(--text-secondary); text-decoration: none; font-size: 14px; font-weight: 500; padding: 8px 14px; border-radius: 9999px; transition: all 0.2s; }
+    .nav__link:hover, .nav__link--active { background: var(--bg-tertiary); color: var(--text-primary); }
+    .nav__right { display: flex; align-items: center; gap: 12px; }
+    .conn-badge { font-size: 12px; padding: 4px 10px; border-radius: 9999px; border: 1px solid var(--border); }
+    .conn-badge--on { color: var(--success); border-color: var(--success); }
+    .conn-badge--off { color: var(--error); border-color: var(--error); }
+
+    /* ── Layout ────────────────────────────────────── */
+    .main { max-width: 1200px; margin: 73px auto 40px; padding: 0 20px; }
+
+    /* ── Header ────────────────────────────────────── */
+    .page-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 20px; flex-wrap: wrap; gap: 12px;
+    }
+    .page-header__left h1 { font-size: 22px; font-weight: 800; }
+    .page-header__left .last-scan { font-size: 13px; color: var(--text-secondary); margin-top: 4px; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 10px 20px; border-radius: 9999px; border: none; cursor: pointer;
+      font-family: var(--font); font-size: 14px; font-weight: 700; transition: all 0.15s;
+    }
+    .btn--primary { background: var(--accent); color: #fff; }
+    .btn--primary:hover { background: #1a8cd8; }
+    .btn--primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn--sm { padding: 6px 14px; font-size: 12px; font-weight: 600; }
+    .btn--outline { background: transparent; border: 1px solid var(--border); color: var(--text-primary); }
+    .btn--outline:hover { border-color: var(--text-secondary); }
+    .btn--danger { background: transparent; border: 1px solid var(--error); color: var(--error); }
+    .btn--danger:hover { background: var(--error); color: #fff; }
+    .btn--success { background: transparent; border: 1px solid var(--success); color: var(--success); }
+    .btn--success:hover { background: var(--success); color: #fff; }
+
+    /* ── Stats Bar ─────────────────────────────────── */
+    .stats-bar {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px; margin-bottom: 24px;
+    }
+    .stat-card {
+      background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 16px;
+      padding: 16px; text-align: center;
+    }
+    .stat-card__value { font-size: 28px; font-weight: 800; line-height: 1.2; }
+    .stat-card__value--positive { color: var(--success); }
+    .stat-card__value--negative { color: var(--error); }
+    .stat-card__value--neutral { color: var(--text-primary); }
+    .stat-card__label { font-size: 12px; color: var(--text-secondary); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+    /* ── Two Columns ───────────────────────────────── */
+    .columns { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+
+    .column-card {
+      background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 16px;
+      overflow: hidden;
+    }
+    .column-card__header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 14px 16px; border-bottom: 1px solid var(--border);
+    }
+    .column-card__title { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .column-card__count { font-size: 12px; color: var(--text-secondary); background: var(--bg-tertiary); padding: 2px 8px; border-radius: 9999px; }
+    .column-card--lost .column-card__title { color: var(--error); }
+    .column-card--gained .column-card__title { color: var(--success); }
+
+    .user-list { max-height: 500px; overflow-y: auto; }
+    .user-list::-webkit-scrollbar { width: 6px; }
+    .user-list::-webkit-scrollbar-track { background: transparent; }
+    .user-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    .user-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 16px; border-bottom: 1px solid rgba(47,51,54,0.4);
+      transition: background 0.1s;
+    }
+    .user-item:hover { background: rgba(255,255,255,0.03); }
+    .user-item:last-child { border-bottom: none; }
+
+    .user-avatar {
+      width: 44px; height: 44px; border-radius: 50%; background: var(--bg-tertiary);
+      flex-shrink: 0; object-fit: cover;
+    }
+    .user-info { flex: 1; min-width: 0; }
+    .user-info__name { font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .user-info__username { font-size: 13px; color: var(--text-secondary); }
+    .user-info__meta { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+
+    .user-actions { display: flex; gap: 6px; flex-shrink: 0; }
+
+    .empty-state {
+      padding: 40px 20px; text-align: center; color: var(--text-secondary);
+    }
+    .empty-state__icon { font-size: 32px; margin-bottom: 8px; }
+    .empty-state__text { font-size: 14px; }
+
+    /* ── Chart ──────────────────────────────────────── */
+    .chart-section {
+      background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 16px;
+      padding: 20px; margin-bottom: 24px;
+    }
+    .chart-section__title { font-size: 15px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .chart-wrap { position: relative; height: 250px; }
+
+    /* ── Settings Panel ────────────────────────────── */
+    .settings-panel {
+      background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 16px;
+      padding: 20px;
+    }
+    .settings-panel__title { font-size: 15px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .setting-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 0; border-bottom: 1px solid rgba(47,51,54,0.4);
+    }
+    .setting-row:last-child { border-bottom: none; }
+    .setting-label { font-size: 14px; }
+    .setting-label__desc { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+
+    select, input[type="url"] {
+      background: var(--bg-tertiary); color: var(--text-primary); border: 1px solid var(--border);
+      border-radius: 8px; padding: 8px 12px; font-size: 13px; font-family: var(--font);
+      outline: none; transition: border-color 0.2s;
+    }
+    select:focus, input[type="url"]:focus { border-color: var(--accent); }
+    input[type="url"] { width: 280px; }
+
+    /* ── Scanning overlay ──────────────────────────── */
+    .scanning-overlay {
+      display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
+      z-index: 200; align-items: center; justify-content: center;
+    }
+    .scanning-overlay.active { display: flex; }
+    .scanning-box {
+      background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 20px;
+      padding: 40px; text-align: center; max-width: 360px;
+    }
+    .scanning-box__spinner { font-size: 48px; animation: pulse 1.5s infinite; margin-bottom: 16px; }
+    .scanning-box__title { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+    .scanning-box__desc { font-size: 13px; color: var(--text-secondary); }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+    /* ── Alert toast ───────────────────────────────── */
+    .toast {
+      position: fixed; bottom: 24px; right: 24px; z-index: 300;
+      background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px;
+      padding: 14px 20px; max-width: 380px; box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+      transform: translateY(100px); opacity: 0; transition: all 0.3s;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast__title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+    .toast__message { font-size: 13px; color: var(--text-secondary); }
+
+    /* ── Responsive ────────────────────────────────── */
+    @media (max-width: 900px) {
+      .columns { grid-template-columns: 1fr; }
+      .stats-bar { grid-template-columns: repeat(2, 1fr); }
+      .nav__links { display: none; }
+      input[type="url"] { width: 100%; }
+      .setting-row { flex-direction: column; align-items: flex-start; gap: 8px; }
+    }
+    @media (max-width: 480px) {
+      .stats-bar { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav class="nav">
+    <a href="/dashboard" class="nav__brand">⚡ XActions</a>
+    <div class="nav__links">
+      <a href="/dashboard" class="nav__link">Dashboard</a>
+      <a href="/automations" class="nav__link">Automations</a>
+      <a href="/unfollowers" class="nav__link nav__link--active">Unfollowers</a>
+      <a href="/monitor" class="nav__link">Monitor</a>
+      <a href="/workflows" class="nav__link">Workflows</a>
+      <a href="/run" class="nav__link">Scripts</a>
+      <a href="/docs" class="nav__link">Docs</a>
+    </div>
+    <div class="nav__right">
+      <span id="conn-status" class="conn-badge conn-badge--off">Disconnected</span>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="main">
+
+    <!-- Header -->
+    <div class="page-header">
+      <div class="page-header__left">
+        <h1>👀 Who Unfollowed You</h1>
+        <div class="last-scan" id="last-scan-time">Last scan: Never</div>
+      </div>
+      <button class="btn btn--primary" id="scan-btn" onclick="startScan()">
+        🔍 Scan Now
+      </button>
+    </div>
+
+    <!-- Stats Bar -->
+    <div class="stats-bar">
+      <div class="stat-card">
+        <div class="stat-card__value stat-card__value--neutral" id="stat-total">—</div>
+        <div class="stat-card__label">Total Followers</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card__value stat-card__value--positive" id="stat-gained">—</div>
+        <div class="stat-card__label">New Today</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card__value stat-card__value--negative" id="stat-lost">—</div>
+        <div class="stat-card__label">Lost Today</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card__value" id="stat-net">—</div>
+        <div class="stat-card__label">Net Change (7d)</div>
+      </div>
+    </div>
+
+    <!-- Two Columns: Unfollowers & New Followers -->
+    <div class="columns">
+      <!-- LEFT: Recent Unfollowers -->
+      <div class="column-card column-card--lost">
+        <div class="column-card__header">
+          <div class="column-card__title">🔴 Recent Unfollowers</div>
+          <span class="column-card__count" id="lost-count">0</span>
+        </div>
+        <div class="user-list" id="lost-list">
+          <div class="empty-state">
+            <div class="empty-state__icon">🔍</div>
+            <div class="empty-state__text">Run your first scan to detect unfollowers</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: New Followers -->
+      <div class="column-card column-card--gained">
+        <div class="column-card__header">
+          <div class="column-card__title">🟢 New Followers</div>
+          <span class="column-card__count" id="gained-count">0</span>
+        </div>
+        <div class="user-list" id="gained-list">
+          <div class="empty-state">
+            <div class="empty-state__icon">👋</div>
+            <div class="empty-state__text">New followers will appear here after scanning</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Follower Count Chart -->
+    <div class="chart-section">
+      <div class="chart-section__title">📈 Follower Count — Last 30 Days</div>
+      <div class="chart-wrap">
+        <canvas id="follower-chart"></canvas>
+      </div>
+    </div>
+
+    <!-- Settings -->
+    <div class="settings-panel">
+      <div class="settings-panel__title">⚙️ Auto-Scan Settings</div>
+
+      <div class="setting-row">
+        <div class="setting-label">
+          Scan Interval
+          <div class="setting-label__desc">How often to automatically check for unfollowers</div>
+        </div>
+        <select id="scan-interval" onchange="updateSchedule()">
+          <option value="">Disabled</option>
+          <option value="hourly">Every Hour</option>
+          <option value="every6h">Every 6 Hours</option>
+          <option value="daily">Daily</option>
+        </select>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-label">
+          Webhook URL
+          <div class="setting-label__desc">Receive scan results via HTTP POST (optional)</div>
+        </div>
+        <input type="url" id="webhook-url" placeholder="https://hooks.example.com/unfollowers" onblur="updateSchedule()">
+      </div>
+
+      <div class="setting-row" id="schedule-status" style="display:none">
+        <div class="setting-label">
+          <span id="schedule-status-text"></span>
+        </div>
+        <button class="btn btn--sm btn--danger" onclick="stopAutoScan()">Stop</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Scanning Overlay -->
+  <div class="scanning-overlay" id="scanning-overlay">
+    <div class="scanning-box">
+      <div class="scanning-box__spinner">🔍</div>
+      <div class="scanning-box__title">Scanning Followers...</div>
+      <div class="scanning-box__desc">This may take a minute depending on your follower count.</div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast">
+    <div class="toast__title" id="toast-title"></div>
+    <div class="toast__message" id="toast-message"></div>
+  </div>
+
+  <script src="/js/config.js"></script>
+  <script>
+    // ── State ──────────────────────────────────────
+    const API = window.CONFIG?.API_BASE || '/api';
+    const WS_URL = window.CONFIG?.WS_URL || window.location.origin;
+    let socket = null;
+    let followerChart = null;
+    let isScanning = false;
+
+    // ── Auth ───────────────────────────────────────
+    function getToken() {
+      return localStorage.getItem('xactions_token') || sessionStorage.getItem('xactions_token');
+    }
+
+    function authHeaders() {
+      const token = getToken();
+      return token ? { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' } : { 'Content-Type': 'application/json' };
+    }
+
+    // ── API Calls ──────────────────────────────────
+    async function apiGet(path) {
+      const res = await fetch(`${API}${path}`, { headers: authHeaders() });
+      if (!res.ok) throw new Error((await res.json()).error || res.statusText);
+      return res.json();
+    }
+
+    async function apiPost(path, body = {}) {
+      const res = await fetch(`${API}${path}`, {
+        method: 'POST',
+        headers: authHeaders(),
+        body: JSON.stringify(body),
+      });
+      if (!res.ok) throw new Error((await res.json()).error || res.statusText);
+      return res.json();
+    }
+
+    async function apiDelete(path) {
+      const res = await fetch(`${API}${path}`, { method: 'DELETE', headers: authHeaders() });
+      if (!res.ok) throw new Error((await res.json()).error || res.statusText);
+      return res.json();
+    }
+
+    // ── Load Data ──────────────────────────────────
+    async function loadStats() {
+      try {
+        const stats = await apiGet('/unfollowers/stats');
+
+        document.getElementById('stat-total').textContent = stats.currentFollowers.toLocaleString();
+        document.getElementById('stat-gained').textContent = `+${stats.gainedToday}`;
+        document.getElementById('stat-lost').textContent = `-${stats.lostToday}`;
+
+        const net7d = stats.netChange7d;
+        const netEl = document.getElementById('stat-net');
+        netEl.textContent = (net7d >= 0 ? '+' : '') + net7d;
+        netEl.className = `stat-card__value stat-card__value--${net7d > 0 ? 'positive' : net7d < 0 ? 'negative' : 'neutral'}`;
+
+        if (stats.lastScanAt) {
+          document.getElementById('last-scan-time').textContent = `Last scan: ${formatRelative(stats.lastScanAt)}`;
+        }
+      } catch (e) {
+        console.warn('📊 Stats unavailable:', e.message);
+      }
+    }
+
+    async function loadChanges() {
+      try {
+        const [lostData, gainedData] = await Promise.all([
+          apiGet('/unfollowers/changes?type=lost&limit=50'),
+          apiGet('/unfollowers/changes?type=gained&limit=50'),
+        ]);
+
+        renderUserList('lost-list', lostData.changes, 'lost');
+        renderUserList('gained-list', gainedData.changes, 'gained');
+        document.getElementById('lost-count').textContent = lostData.changes.length;
+        document.getElementById('gained-count').textContent = gainedData.changes.length;
+      } catch (e) {
+        console.warn('📋 Changes unavailable:', e.message);
+      }
+    }
+
+    async function loadChart() {
+      try {
+        const { data } = await apiGet('/unfollowers/chart?days=30');
+        renderChart(data);
+      } catch (e) {
+        console.warn('📈 Chart data unavailable:', e.message);
+      }
+    }
+
+    async function loadSchedule() {
+      try {
+        const { schedule } = await apiGet('/unfollowers/schedule');
+        if (schedule && schedule.active) {
+          document.getElementById('scan-interval').value = schedule.interval;
+          document.getElementById('webhook-url').value = schedule.webhookUrl || '';
+          document.getElementById('schedule-status').style.display = 'flex';
+          document.getElementById('schedule-status-text').textContent =
+            `✅ Auto-scan active (${schedule.interval}) — Next: ${schedule.nextRunAt ? formatRelative(schedule.nextRunAt) : 'soon'}`;
+        }
+      } catch (e) {
+        console.warn('📅 Schedule unavailable:', e.message);
+      }
+    }
+
+    // ── Render ─────────────────────────────────────
+    function renderUserList(containerId, users, type) {
+      const container = document.getElementById(containerId);
+
+      if (!users || users.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state__icon">${type === 'lost' ? '✅' : '👋'}</div>
+            <div class="empty-state__text">${type === 'lost' ? 'No unfollowers detected yet' : 'No new followers detected yet'}</div>
+          </div>`;
+        return;
+      }
+
+      container.innerHTML = users.map(u => `
+        <div class="user-item">
+          <img class="user-avatar"
+               src="${u.avatarUrl || `https://unavatar.io/twitter/${u.username}`}"
+               alt="${u.username}"
+               onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 44 44%22><rect fill=%22%23202327%22 width=%2244%22 height=%2244%22 rx=%2222%22/><text x=%2222%22 y=%2228%22 text-anchor=%22middle%22 fill=%22%2371767b%22 font-size=%2218%22>${u.username?.[0]?.toUpperCase() || '?'}</text></svg>'">
+          <div class="user-info">
+            <div class="user-info__name">${escapeHtml(u.name || u.username)}</div>
+            <div class="user-info__username">@${escapeHtml(u.username)}</div>
+            <div class="user-info__meta">
+              ${type === 'lost' && u.followDuration !== null
+                ? `Followed you for ${u.followDuration} day${u.followDuration !== 1 ? 's' : ''} · `
+                : ''}
+              ${formatRelative(u.detectedAt)}
+            </div>
+          </div>
+          <div class="user-actions">
+            ${type === 'lost' ? `
+              <button class="btn btn--sm btn--danger" onclick="visitProfile('${u.username}')" title="Visit Profile">👤</button>
+              <button class="btn btn--sm btn--outline" onclick="blockUser('${u.username}')" title="Block">🚫</button>
+            ` : `
+              <button class="btn btn--sm btn--success" onclick="visitProfile('${u.username}')" title="Visit Profile">👤</button>
+            `}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderChart(data) {
+      const ctx = document.getElementById('follower-chart').getContext('2d');
+
+      if (followerChart) followerChart.destroy();
+
+      if (!data || data.length === 0) {
+        ctx.font = '14px -apple-system, sans-serif';
+        ctx.fillStyle = '#71767b';
+        ctx.textAlign = 'center';
+        ctx.fillText('No data yet — run a scan to start tracking', ctx.canvas.width / 2, ctx.canvas.height / 2);
+        return;
+      }
+
+      const labels = data.map(d => new Date(d.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+      const counts = data.map(d => d.count);
+
+      followerChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Followers',
+            data: counts,
+            borderColor: '#1d9bf0',
+            backgroundColor: 'rgba(29, 155, 240, 0.1)',
+            fill: true,
+            tension: 0.3,
+            pointRadius: 3,
+            pointBackgroundColor: '#1d9bf0',
+            borderWidth: 2,
+          }],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#16181c',
+              borderColor: '#2f3336',
+              borderWidth: 1,
+              titleColor: '#e7e9ea',
+              bodyColor: '#e7e9ea',
+              padding: 10,
+              cornerRadius: 8,
+            },
+          },
+          scales: {
+            x: {
+              ticks: { color: '#71767b', font: { size: 11 } },
+              grid: { color: 'rgba(47,51,54,0.3)' },
+            },
+            y: {
+              ticks: { color: '#71767b', font: { size: 11 } },
+              grid: { color: 'rgba(47,51,54,0.3)' },
+            },
+          },
+        },
+      });
+    }
+
+    // ── Actions ────────────────────────────────────
+    async function startScan() {
+      if (isScanning) return;
+      isScanning = true;
+
+      const btn = document.getElementById('scan-btn');
+      btn.disabled = true;
+      btn.textContent = '⏳ Scanning...';
+      document.getElementById('scanning-overlay').classList.add('active');
+
+      try {
+        const result = await apiPost('/unfollowers/scan');
+
+        if (result.isFirstScan) {
+          showToast('✅ First Scan Complete', `Baseline created with ${result.totalFollowers} followers. Run again later to detect changes.`);
+        } else {
+          showToast(
+            '✅ Scan Complete',
+            `${result.totalFollowers} followers · +${result.gained.length} new · -${result.lost.length} lost`
+          );
+        }
+
+        // Reload all data
+        await Promise.all([loadStats(), loadChanges(), loadChart()]);
+      } catch (e) {
+        showToast('❌ Scan Failed', e.message);
+      } finally {
+        isScanning = false;
+        btn.disabled = false;
+        btn.textContent = '🔍 Scan Now';
+        document.getElementById('scanning-overlay').classList.remove('active');
+      }
+    }
+
+    async function updateSchedule() {
+      const interval = document.getElementById('scan-interval').value;
+      const webhookUrl = document.getElementById('webhook-url').value;
+      const statusEl = document.getElementById('schedule-status');
+      const statusText = document.getElementById('schedule-status-text');
+
+      if (!interval) {
+        // Disable schedule
+        try {
+          await apiDelete('/unfollowers/schedule');
+          statusEl.style.display = 'none';
+        } catch (e) { /* ignore */ }
+        return;
+      }
+
+      try {
+        const { schedule } = await apiPost('/unfollowers/schedule', { interval, webhookUrl: webhookUrl || null });
+        statusEl.style.display = 'flex';
+        statusText.textContent = `✅ Auto-scan active (${interval}) — Next: ${schedule.nextRunAt ? formatRelative(schedule.nextRunAt) : 'soon'}`;
+        showToast('📅 Schedule Updated', `Auto-scan set to ${interval}`);
+      } catch (e) {
+        showToast('❌ Schedule Error', e.message);
+      }
+    }
+
+    async function stopAutoScan() {
+      try {
+        await apiDelete('/unfollowers/schedule');
+        document.getElementById('scan-interval').value = '';
+        document.getElementById('schedule-status').style.display = 'none';
+        showToast('⏹️ Auto-Scan Stopped', 'Automatic scanning has been disabled');
+      } catch (e) {
+        showToast('❌ Error', e.message);
+      }
+    }
+
+    function visitProfile(username) {
+      window.open(`https://x.com/${username}`, '_blank');
+    }
+
+    function blockUser(username) {
+      showToast('🚫 Block', `To block @${username}, visit their profile on X.`);
+      window.open(`https://x.com/${username}`, '_blank');
+    }
+
+    // ── Socket.IO ──────────────────────────────────
+    function connectSocket() {
+      try {
+        const token = getToken();
+        socket = io(WS_URL, {
+          auth: { token },
+          transports: ['websocket', 'polling'],
+        });
+
+        socket.on('connect', () => {
+          document.getElementById('conn-status').className = 'conn-badge conn-badge--on';
+          document.getElementById('conn-status').textContent = 'Connected';
+        });
+
+        socket.on('disconnect', () => {
+          document.getElementById('conn-status').className = 'conn-badge conn-badge--off';
+          document.getElementById('conn-status').textContent = 'Disconnected';
+        });
+
+        // Listen for scan completion (from scheduled scans)
+        socket.on('unfollower:scan-complete', (data) => {
+          showToast('📡 Scan Update', `+${data.gained} / -${data.lost} (${data.totalFollowers} total)`);
+          loadStats();
+          loadChanges();
+          loadChart();
+        });
+
+        // Listen for alerts
+        socket.onAny((event, data) => {
+          if (event.startsWith('unfollower:alerts:')) {
+            if (data.alerts) {
+              data.alerts.forEach(alert => {
+                showToast(alert.title, alert.message);
+              });
+            }
+          }
+        });
+      } catch (e) {
+        console.warn('🔌 Socket connection failed:', e.message);
+      }
+    }
+
+    // ── Utilities ──────────────────────────────────
+    function formatRelative(dateStr) {
+      const now = Date.now();
+      const date = new Date(dateStr);
+      const diff = now - date.getTime();
+
+      if (diff < 60000) return 'just now';
+      if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`;
+      if (diff < 86400000) return `${Math.floor(diff / 3600000)}h ago`;
+      if (diff < 604800000) return `${Math.floor(diff / 86400000)}d ago`;
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function showToast(title, message) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-title').textContent = title;
+      document.getElementById('toast-message').textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 5000);
+    }
+
+    // ── Init ───────────────────────────────────────
+    async function init() {
+      const token = getToken();
+      if (!token) {
+        showToast('🔑 Login Required', 'Please log in to track unfollowers');
+        setTimeout(() => { window.location.href = '/login'; }, 2000);
+        return;
+      }
+
+      connectSocket();
+      await Promise.all([loadStats(), loadChanges(), loadChart(), loadSchedule()]);
+    }
+
+    // Run on DOM ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  </script>
+</body>
+</html>

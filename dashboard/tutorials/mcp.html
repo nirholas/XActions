@@ -57,6 +57,7 @@
     ]
   }
   </script>
+  <link rel="stylesheet" href="/css/common.css">
   <style>
     :root {
       --bg-primary: #000000;
@@ -65,7 +66,7 @@
       --accent: #1d9bf0;
       --accent-hover: #1a8cd8;
       --text-primary: #e7e9ea;
-      --text-secondary: #71767b;
+      --text-secondary: #8b8f94;
       --border: #2f3336;
       --success: #00ba7c;
       --warning: #ffad1f;
@@ -443,6 +444,17 @@ xactions search "AI agents" --limit 50</code></pre>
       }
       document.body.removeChild(textarea);
     }
+
+    // WCAG 2.4.6: Auto-label copy buttons with context from nearest heading
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      if (btn.getAttribute('aria-label')) return;
+      const block = btn.closest('.code-block, .code-section') || btn.parentElement;
+      const heading = block.querySelector('h2, h3, h4, .code-header span') ||
+        block.previousElementSibling?.querySelector('h2, h3, h4') ||
+        btn.closest('section')?.querySelector('h2, h3');
+      const label = heading ? `Copy ${heading.textContent.trim()} code` : 'Copy code snippet';
+      btn.setAttribute('aria-label', label);
+    });
   </script>
 </body>
 </html>

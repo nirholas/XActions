@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Integration - XActions | GPT, Claude & LLM Twitter Automation</title>
-  <meta name="description" content="Integrate AI agents with X/Twitter automation. XActions MCP server enables GPT-4, Claude, Cursor, VS Code Copilot & custom LLMs to automate Twitter. Build intelligent AI Twitter bots with machine learning.">
+  <title>AI Tweet Writer - XActions | Voice Analysis & AI-Powered Content Generation</title>
+  <meta name="description" content="AI-powered tweet writer that scrapes your tweet history, analyzes your voice, and generates new tweets in your style. Integrated with Twitter scraping. No API fees.">
   <meta name="keywords" content="AI Twitter automation, LLM Twitter bot, GPT Twitter integration, Claude Twitter automation, MCP server Twitter, AI agents for X, machine learning Twitter, AI-powered Twitter bot, ChatGPT Twitter, Claude Desktop Twitter, Cursor AI Twitter, VS Code Copilot Twitter, Twitter AI agent, LLM social media automation, AI content moderation Twitter, smart follower management AI, automated engagement AI, AI scheduling Twitter, Model Context Protocol Twitter, programmatic Twitter API, AI Twitter tools, intelligent Twitter automation, GPT-4 Twitter bot, Claude 3 Twitter, Twitter ML automation, neural network Twitter, deep learning Twitter bot, NLP Twitter automation, AI social media manager, autonomous Twitter agent, AI Twitter assistant, LLM API Twitter, OpenAI Twitter integration, Anthropic Claude Twitter, Twitter automation framework, AI-driven social media, smart Twitter bot, cognitive Twitter automation, AI engagement bot, Twitter AI SDK, LLM powered automation">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
@@ -144,6 +144,7 @@
   {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://xactions.app"},{"@type":"ListItem","position":2,"name":"AI Integration","item":"https://xactions.app/ai"}]}
   </script>
 
+  <link rel="stylesheet" href="/css/common.css">
   <style>
     :root {
       --bg-primary: #000000;
@@ -154,7 +155,7 @@
       --accent-hover: #1a8cd8;
       --accent-light: rgba(29, 155, 240, 0.1);
       --text-primary: #e7e9ea;
-      --text-secondary: #71767b;
+      --text-secondary: #8b8f94;
       --text-link: #1d9bf0;
       --border: #2f3336;
       --success: #00ba7c;
@@ -586,6 +587,7 @@
         <a href="/" class="nav-item" aria-label="Home"><span class="nav-icon" aria-hidden="true">🏠</span><span>Home</span></a>
         <a href="/run" class="nav-item" aria-label="One-Click"><span class="nav-icon" aria-hidden="true">🚀</span><span>One-Click</span></a>
         <a href="/dashboard" class="nav-item" aria-label="Dashboard"><span class="nav-icon" aria-hidden="true">📊</span><span>Dashboard</span></a>
+        <a href="/thread" class="nav-item" aria-label="Thread Reader"><span class="nav-icon" aria-hidden="true">🧵</span><span>Thread Reader</span></a>
         <a href="/features" class="nav-item" aria-label="All Scripts"><span class="nav-icon" aria-hidden="true">⚡</span><span>All Scripts</span></a>
         <a href="/tutorials" class="nav-item" aria-label="Tutorials"><span class="nav-icon" aria-hidden="true">📚</span><span>Tutorials</span></a>
         <a href="/docs" class="nav-item" aria-label="Documentation"><span class="nav-icon" aria-hidden="true">📖</span><span>Documentation</span></a>
@@ -602,525 +604,704 @@
     <main class="main-content" id="main-content">
       <!-- Free & Open Source Banner -->
       <div style="background: linear-gradient(90deg, #00ba7c, #1d9bf0); padding: 12px 20px; border-radius: 12px; margin: 16px; text-align: center;">
-        <span style="font-weight: 700;">🎉 XActions is 100% Free & Open Source</span>
-        <span style="margin-left: 12px; opacity: 0.9;">No accounts, no payments, no limits</span>
+        <span style="font-weight: 700;">🧠 AI Tweet Writer — Powered by Voice Analysis</span>
+        <span style="margin-left: 12px; opacity: 0.9;">Scrape → Analyze → Generate</span>
         <a href="https://github.com/nirholas/XActions" style="margin-left: 12px; color: white; text-decoration: underline;">Star on GitHub ⭐</a>
       </div>
 
-      <!-- Hero Section -->
-      <section class="hero-section">
-        <h1>🤖 AI-Powered X/Twitter Automation</h1>
-        <p class="subtitle">Connect GPT, Claude, and any LLM to automate Twitter with the XActions MCP Server. Build intelligent AI agents for social media automation.</p>
-        
-        <div class="hero-badges">
-          <span class="badge accent">MCP Server</span>
-          <span class="badge">GPT-4 Compatible</span>
-          <span class="badge purple">Claude Ready</span>
-          <span class="badge">Open Source</span>
-          <span class="badge">20+ Tools</span>
-        </div>
+      <!-- Tab Navigation -->
+      <div class="tab-nav" style="display: flex; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(12px); z-index: 100;">
+        <button class="tab-btn active" data-tab="voice" style="flex: 1; padding: 16px; background: none; border: none; color: var(--text-primary); font-size: 0.9375rem; font-weight: 700; cursor: pointer; border-bottom: 2px solid var(--accent); transition: all 0.2s;">🎭 Voice Analysis</button>
+        <button class="tab-btn" data-tab="generate" style="flex: 1; padding: 16px; background: none; border: none; color: var(--text-secondary); font-size: 0.9375rem; font-weight: 700; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s;">✍️ Generate</button>
+        <button class="tab-btn" data-tab="calendar" style="flex: 1; padding: 16px; background: none; border: none; color: var(--text-secondary); font-size: 0.9375rem; font-weight: 700; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s;">📅 Calendar</button>
+      </div>
 
-        <div class="highlight-box">
-          <p>🚀 XActions is the first open-source MCP server for X/Twitter automation — let your AI handle your social media!</p>
-        </div>
-      </section>
+      <!-- ==================== TAB 1: Voice Analysis ==================== -->
+      <div class="tab-panel active" id="tab-voice">
+        <section class="section">
+          <h2 class="section-title">🎭 Analyze Writing Voice</h2>
+          <p>Enter a Twitter username to scrape their tweets and analyze their writing style, tone, vocabulary, and content patterns.</p>
 
-      <!-- MCP Server Section -->
-      <section class="section">
-        <h2 class="section-title">🔌 MCP Server Integration</h2>
-        
-        <p>The <strong>Model Context Protocol (MCP)</strong> is the standard for connecting AI assistants to external tools. XActions implements a full MCP server that exposes Twitter automation capabilities to any compatible AI agent.</p>
-
-        <div class="feature-card">
-          <h3>What is MCP?</h3>
-          <p>MCP (Model Context Protocol) is an open protocol developed by Anthropic that enables AI assistants to securely interact with external data sources and tools. It's the bridge between language models and real-world actions.</p>
-          <ul>
-            <li><strong>Standardized:</strong> Works with any MCP-compatible client</li>
-            <li><strong>Secure:</strong> Controlled access to automation tools</li>
-            <li><strong>Powerful:</strong> Full Twitter automation capabilities</li>
-            <li><strong>Open Source:</strong> Inspect and customize the code</li>
-          </ul>
-        </div>
-
-        <div class="feature-card">
-          <h3>XActions MCP Capabilities</h3>
-          <p>The XActions MCP server exposes 20+ tools for comprehensive Twitter automation:</p>
-          <ul>
-            <li><strong>Scraping:</strong> Followers, following, tweets, likes, profiles</li>
-            <li><strong>Actions:</strong> Follow, unfollow, like, unlike, retweet</li>
-            <li><strong>Monitoring:</strong> Track accounts, detect unfollowers</li>
-            <li><strong>Search:</strong> Find users by keywords, hashtags</li>
-            <li><strong>Analytics:</strong> Growth metrics, engagement data</li>
-          </ul>
-        </div>
-
-        <div class="highlight-box purple">
-          <p>💡 With MCP, your AI assistant can research, analyze, and act on Twitter — all autonomously!</p>
-        </div>
-      </section>
-
-      <!-- Compatible AI Tools -->
-      <section class="section">
-        <h2 class="section-title">🛠️ Compatible AI Tools</h2>
-        
-        <p>XActions works with all major AI platforms and tools. Whether you're using a commercial AI assistant or building custom agents, we've got you covered.</p>
-
-        <div class="tool-grid">
-          <div class="tool-card">
-            <div class="icon">💬</div>
-            <h4>ChatGPT / GPT-4</h4>
-            <p>OpenAI's flagship model via API integration</p>
-          </div>
-          <div class="tool-card">
-            <div class="icon">🟣</div>
-            <h4>Claude Desktop</h4>
-            <p>Native MCP support for seamless integration</p>
-          </div>
-          <div class="tool-card">
-            <div class="icon">📝</div>
-            <h4>Cursor AI</h4>
-            <p>AI-powered code editor with MCP tools</p>
-          </div>
-          <div class="tool-card">
-            <div class="icon">🚀</div>
-            <h4>VS Code Copilot</h4>
-            <p>GitHub Copilot in VS Code</p>
-          </div>
-          <div class="tool-card">
-            <div class="icon">🤖</div>
-            <h4>Custom Agents</h4>
-            <p>Build your own with any LLM</p>
-          </div>
-          <div class="tool-card">
-            <div class="icon">⚡</div>
-            <h4>LangChain</h4>
-            <p>Popular LLM framework support</p>
-          </div>
-        </div>
-
-        <div class="feature-card">
-          <h3>Integration Options</h3>
-          <ul>
-            <li><strong>MCP Protocol:</strong> Direct integration via Model Context Protocol</li>
-            <li><strong>REST API:</strong> HTTP endpoints for any programming language</li>
-            <li><strong>Node.js SDK:</strong> Native JavaScript/TypeScript library</li>
-            <li><strong>CLI:</strong> Command-line interface for scripting</li>
-            <li><strong>Webhooks:</strong> Event-driven automation triggers</li>
-          </ul>
-        </div>
-      </section>
-
-      <!-- Use Cases for AI Agents -->
-      <section class="section">
-        <h2 class="section-title">🎯 Use Cases for AI Agents</h2>
-        
-        <p>Discover how AI agents can transform your X/Twitter presence with intelligent automation powered by machine learning and natural language processing.</p>
-
-        <div class="feature-card">
-          <h3>🛡️ Automated Content Moderation</h3>
-          <p>Let AI analyze your followers and engagement for spam, bots, and low-quality accounts. Automatically clean your following list based on intelligent criteria.</p>
-          <ul>
-            <li>Detect bot accounts using ML pattern recognition</li>
-            <li>Identify spam followers and fake engagement</li>
-            <li>Auto-unfollow inactive accounts (no posts in 6+ months)</li>
-            <li>Filter followers by engagement quality</li>
-            <li>Flag suspicious accounts for review</li>
-          </ul>
-        </div>
-
-        <div class="feature-card">
-          <h3>👥 Smart Follower Management</h3>
-          <p>AI-driven strategies for growing and maintaining a high-quality follower base. Let machine learning optimize your following decisions.</p>
-          <ul>
-            <li>Intelligently follow users who engage with similar content</li>
-            <li>Prioritize high-value accounts in your niche</li>
-            <li>Auto-unfollow non-followers with smart delays</li>
-            <li>Track follower/following ratio optimization</li>
-            <li>Segment followers by engagement level</li>
-          </ul>
-        </div>
-
-        <div class="feature-card">
-          <h3>💬 AI-Driven Engagement</h3>
-          <p>Let your AI agent handle engagement tasks intelligently. From liking relevant content to finding conversation opportunities.</p>
-          <ul>
-            <li>Auto-like tweets based on content relevance</li>
-            <li>Find and engage with trending topics in your niche</li>
-            <li>Monitor mentions and keywords for engagement opportunities</li>
-            <li>Smart reply suggestions powered by LLMs</li>
-            <li>Engagement timing optimization</li>
-          </ul>
-        </div>
-
-        <div class="feature-card">
-          <h3>⏰ Scheduled Automation via AI</h3>
-          <p>Create intelligent automation workflows that adapt to your account's needs. Let AI decide when and what actions to take.</p>
-          <ul>
-            <li>Adaptive scheduling based on audience activity</li>
-            <li>Automated cleanup routines (weekly unfollows)</li>
-            <li>Growth campaigns with AI optimization</li>
-            <li>Event-triggered actions (new follower → analyze)</li>
-            <li>Rate-limit aware execution</li>
-          </ul>
-        </div>
-
-        <div class="feature-card">
-          <h3>📊 AI Analytics & Insights</h3>
-          <p>Let AI analyze your Twitter data and provide actionable insights. Natural language reports on your account health and growth.</p>
-          <ul>
-            <li>Natural language growth reports</li>
-            <li>Follower quality scoring</li>
-            <li>Engagement pattern analysis</li>
-            <li>Competitor tracking and insights</li>
-            <li>Anomaly detection (sudden unfollows)</li>
-          </ul>
-        </div>
-      </section>
-
-      <!-- Code Examples -->
-      <section class="section">
-        <h2 class="section-title">💻 Code Examples</h2>
-        
-        <p>Get started quickly with these integration examples. XActions makes it easy to connect AI agents to Twitter automation.</p>
-
-        <h3>Claude Desktop MCP Configuration</h3>
-        <div class="code-block">
-          <div class="code-header">
-            <span class="lang">JSON</span>
-            <span>claude_desktop_config.json</span>
-          </div>
-          <div class="code-content">
-<pre><span class="comment">// Add to your Claude Desktop config</span>
-{
-  <span class="property">"mcpServers"</span>: {
-    <span class="property">"xactions"</span>: {
-      <span class="property">"command"</span>: <span class="string">"npx"</span>,
-      <span class="property">"args"</span>: [<span class="string">"xactions"</span>, <span class="string">"mcp"</span>],
-      <span class="property">"env"</span>: {
-        <span class="property">"TWITTER_AUTH_TOKEN"</span>: <span class="string">"your_token"</span>
-      }
-    }
-  }
-}</pre>
-          </div>
-        </div>
-
-        <h3>Node.js Integration</h3>
-        <div class="code-block">
-          <div class="code-header">
-            <span class="lang">JavaScript</span>
-            <span>ai-agent.js</span>
-          </div>
-          <div class="code-content">
-<pre><span class="keyword">import</span> { XActions } <span class="keyword">from</span> <span class="string">'xactions'</span>;
-<span class="keyword">import</span> OpenAI <span class="keyword">from</span> <span class="string">'openai'</span>;
-
-<span class="comment">// Initialize XActions</span>
-<span class="keyword">const</span> xactions = <span class="keyword">new</span> XActions({
-  authToken: process.env.TWITTER_AUTH_TOKEN
-});
-
-<span class="comment">// Initialize OpenAI</span>
-<span class="keyword">const</span> openai = <span class="keyword">new</span> OpenAI();
-
-<span class="comment">// AI-powered follower analysis</span>
-<span class="keyword">async function</span> analyzeFollowers() {
-  <span class="comment">// Get followers data</span>
-  <span class="keyword">const</span> followers = <span class="keyword">await</span> xactions.scrapeFollowers({
-    username: <span class="string">'your_handle'</span>,
-    limit: <span class="number">100</span>
-  });
-  
-  <span class="comment">// Let GPT analyze the data</span>
-  <span class="keyword">const</span> analysis = <span class="keyword">await</span> openai.chat.completions.create({
-    model: <span class="string">'gpt-4'</span>,
-    messages: [{
-      role: <span class="string">'user'</span>,
-      content: <span class="string">`Analyze these followers and identify 
-        potential bots or low-quality accounts: 
-        ${JSON.stringify(followers)}`</span>
-    }]
-  });
-  
-  <span class="keyword">return</span> analysis.choices[<span class="number">0</span>].message.content;
-}</pre>
-          </div>
-        </div>
-
-        <h3>Python with LangChain</h3>
-        <div class="code-block">
-          <div class="code-header">
-            <span class="lang">Python</span>
-            <span>twitter_agent.py</span>
-          </div>
-          <div class="code-content">
-<pre><span class="keyword">from</span> langchain.agents <span class="keyword">import</span> Tool, AgentExecutor
-<span class="keyword">from</span> langchain_openai <span class="keyword">import</span> ChatOpenAI
-<span class="keyword">import</span> subprocess
-<span class="keyword">import</span> json
-
-<span class="comment"># Define XActions tools for LangChain</span>
-<span class="keyword">def</span> scrape_followers(username: str) -> str:
-    result = subprocess.run(
-        [<span class="string">"npx"</span>, <span class="string">"xactions"</span>, <span class="string">"scrape-followers"</span>, 
-         <span class="string">"--username"</span>, username, <span class="string">"--json"</span>],
-        capture_output=<span class="keyword">True</span>, text=<span class="keyword">True</span>
-    )
-    <span class="keyword">return</span> result.stdout
-
-<span class="comment"># Create LangChain tool</span>
-tools = [
-    Tool(
-        name=<span class="string">"ScrapeFollowers"</span>,
-        func=scrape_followers,
-        description=<span class="string">"Get followers for a Twitter user"</span>
-    )
-]
-
-<span class="comment"># Build AI agent</span>
-llm = ChatOpenAI(model=<span class="string">"gpt-4"</span>)
-agent = AgentExecutor(tools=tools, llm=llm)</pre>
-          </div>
-        </div>
-
-        <h3>CLI Automation Script</h3>
-        <div class="code-block">
-          <div class="code-header">
-            <span class="lang">Bash</span>
-            <span>daily-cleanup.sh</span>
-          </div>
-          <div class="code-content">
-<pre><span class="comment">#!/bin/bash</span>
-<span class="comment"># Daily AI-powered Twitter cleanup</span>
-
-<span class="comment"># Scrape non-followers</span>
-npx xactions unfollow-non-followers \
-  --limit 50 \
-  --delay 30 \
-  --dry-run false
-
-<span class="comment"># Detect new unfollowers</span>
-npx xactions detect-unfollowers \
-  --notify email
-
-<span class="comment"># Log results</span>
-echo "Cleanup completed at $(date)" >> cleanup.log</pre>
-          </div>
-        </div>
-      </section>
-
-      <!-- API for AI -->
-      <section class="section">
-        <h2 class="section-title">🔗 API for AI</h2>
-        
-        <p>XActions provides a comprehensive programmatic API designed for AI agent integration. Build autonomous Twitter bots, integrate with your existing workflows, or create custom automation pipelines.</p>
-
-        <div class="feature-card">
-          <h3>Available API Endpoints</h3>
-          <p>RESTful API endpoints for all automation features:</p>
-        </div>
-
-        <div class="api-endpoint">
-          <span class="api-method get">GET</span>
-          <span class="api-path">/api/scrape/followers/:username</span>
-        </div>
-        <div class="api-endpoint">
-          <span class="api-method get">GET</span>
-          <span class="api-path">/api/scrape/following/:username</span>
-        </div>
-        <div class="api-endpoint">
-          <span class="api-method get">GET</span>
-          <span class="api-path">/api/scrape/tweets/:username</span>
-        </div>
-        <div class="api-endpoint">
-          <span class="api-method post">POST</span>
-          <span class="api-path">/api/actions/follow</span>
-        </div>
-        <div class="api-endpoint">
-          <span class="api-method post">POST</span>
-          <span class="api-path">/api/actions/unfollow</span>
-        </div>
-        <div class="api-endpoint">
-          <span class="api-method post">POST</span>
-          <span class="api-path">/api/actions/like</span>
-        </div>
-        <div class="api-endpoint">
-          <span class="api-method get">GET</span>
-          <span class="api-path">/api/monitor/unfollowers</span>
-        </div>
-        <div class="api-endpoint">
-          <span class="api-method get">GET</span>
-          <span class="api-path">/api/search/users?q=keyword</span>
-        </div>
-
-        <div class="feature-card" style="margin-top: 16px;">
-          <h3>API Features</h3>
-          <ul>
-            <li><strong>JSON Response:</strong> All endpoints return structured JSON</li>
-            <li><strong>Rate Limiting:</strong> Built-in rate limiting to avoid bans</li>
-            <li><strong>Webhooks:</strong> Subscribe to events (new follower, unfollower)</li>
-            <li><strong>Pagination:</strong> Handle large datasets efficiently</li>
-            <li><strong>Error Handling:</strong> Detailed error messages for debugging</li>
-          </ul>
-        </div>
-      </section>
-
-      <!-- Getting Started -->
-      <section class="section">
-        <h2 class="section-title">🚀 Getting Started with AI</h2>
-        
-        <div class="feature-card">
-          <h3>Step 1: Install XActions</h3>
-          <p>Install XActions globally using npm:</p>
-          <div class="code-block" style="margin-top: 8px; margin-bottom: 0;">
-            <div class="code-content">
-<pre>npm install -g xactions</pre>
+          <div class="feature-card" style="margin-top: 16px;">
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <span style="color: var(--text-secondary); font-size: 1.25rem;">@</span>
+              <input type="text" id="voice-username" placeholder="username" style="flex: 1; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; color: var(--text-primary); font-size: 1rem; outline: none;" />
+              <button id="btn-analyze-voice" onclick="analyzeVoice()" style="background: var(--accent); color: white; border: none; border-radius: 9999px; padding: 12px 24px; font-weight: 700; cursor: pointer; white-space: nowrap;">Analyze Voice</button>
+            </div>
+            <p style="margin-top: 8px; font-size: 0.8125rem;">Takes 30-60 seconds to scrape and analyze tweets. Requires auth token.</p>
+            <div style="margin-top: 8px; display: flex; gap: 8px; align-items: center;">
+              <input type="password" id="voice-auth-token" placeholder="auth_token cookie (from x.com DevTools)" style="flex: 1; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; padding: 10px 16px; color: var(--text-primary); font-size: 0.875rem; outline: none;" />
             </div>
           </div>
-        </div>
 
-        <div class="feature-card">
-          <h3>Step 2: Authenticate</h3>
-          <p>Connect your Twitter account:</p>
-          <div class="code-block" style="margin-top: 8px; margin-bottom: 0;">
-            <div class="code-content">
-<pre>xactions auth</pre>
+          <!-- Loading State -->
+          <div id="voice-loading" style="display: none; text-align: center; padding: 40px 16px;">
+            <div style="font-size: 2rem; animation: pulse 1.5s ease-in-out infinite;">🔍</div>
+            <p style="margin-top: 12px; font-weight: 600;">Scraping tweets and analyzing voice...</p>
+            <p style="font-size: 0.8125rem;">This may take 30-60 seconds</p>
+          </div>
+
+          <!-- Voice Profile Result -->
+          <div id="voice-result" style="display: none;">
+            <!-- Profile Card -->
+            <div class="feature-card" style="margin-top: 16px;">
+              <h3 id="voice-profile-title">📊 Voice Profile</h3>
+              
+              <!-- Tone Radar (text-based) -->
+              <div style="margin-top: 16px;">
+                <h4 style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 8px;">TONE DIMENSIONS</h4>
+                <div id="tone-bars"></div>
+              </div>
+
+              <!-- Style Metrics -->
+              <div style="margin-top: 20px;">
+                <h4 style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 8px;">WRITING STYLE</h4>
+                <div id="style-metrics" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;"></div>
+              </div>
+            </div>
+
+            <!-- Content Pillars -->
+            <div class="feature-card" style="margin-top: 12px;">
+              <h3>📌 Content Pillars</h3>
+              <div id="content-pillars" style="margin-top: 12px;"></div>
+            </div>
+
+            <!-- Top Words -->
+            <div class="feature-card" style="margin-top: 12px;">
+              <h3>💬 Top Words</h3>
+              <div id="top-words" style="margin-top: 12px; display: flex; flex-wrap: wrap; gap: 6px;"></div>
+            </div>
+
+            <!-- Best Performing Traits -->
+            <div class="feature-card" style="margin-top: 12px;">
+              <h3>🏆 Best Performing Traits</h3>
+              <ul id="best-traits" style="margin-top: 8px;"></ul>
+            </div>
+
+            <!-- Top Example Tweets -->
+            <div class="feature-card" style="margin-top: 12px;">
+              <h3>⭐ Top Tweets</h3>
+              <div id="top-tweets" style="margin-top: 8px;"></div>
             </div>
           </div>
-        </div>
+        </section>
+      </div>
 
-        <div class="feature-card">
-          <h3>Step 3: Configure MCP</h3>
-          <p>Add XActions to your AI tool's MCP configuration (see examples above).</p>
-        </div>
+      <!-- ==================== TAB 2: Generate ==================== -->
+      <div class="tab-panel" id="tab-generate" style="display: none;">
+        <section class="section">
+          <h2 class="section-title">✍️ Generate Tweets</h2>
+          <p>Generate tweets in a user's analyzed voice. Run Voice Analysis first.</p>
 
-        <div class="feature-card">
-          <h3>Step 4: Start Automating</h3>
-          <p>Your AI agent now has access to all XActions tools. Ask it to scrape followers, unfollow non-followers, or analyze your Twitter data!</p>
-        </div>
+          <div class="feature-card" style="margin-top: 16px;">
+            <!-- Voice Profile Selector -->
+            <div style="margin-bottom: 12px;">
+              <label style="font-size: 0.875rem; color: var(--text-secondary); display: block; margin-bottom: 4px;">Voice Profile</label>
+              <select id="gen-profile" style="width: 100%; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; padding: 10px 16px; color: var(--text-primary); font-size: 0.9375rem; outline: none;">
+                <option value="">— Analyze a voice first —</option>
+              </select>
+            </div>
 
-        <div class="highlight-box">
-          <p>📖 Need more help? Check out our <a href="/docs/examples/mcp-server" style="color: var(--text-primary);">complete MCP Server documentation</a></p>
-        </div>
-      </section>
+            <!-- Topic Input -->
+            <div style="margin-bottom: 12px;">
+              <label style="font-size: 0.875rem; color: var(--text-secondary); display: block; margin-bottom: 4px;">Topic / Prompt</label>
+              <textarea id="gen-topic" placeholder="e.g., Why shipping fast matters more than perfection" rows="3" style="width: 100%; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; padding: 10px 16px; color: var(--text-primary); font-size: 0.9375rem; outline: none; resize: vertical; font-family: inherit;"></textarea>
+            </div>
 
-      <!-- FAQ Section -->
+            <!-- Options Row -->
+            <div style="display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;">
+              <div style="flex: 1; min-width: 120px;">
+                <label style="font-size: 0.8125rem; color: var(--text-secondary); display: block; margin-bottom: 4px;">Type</label>
+                <select id="gen-type" style="width: 100%; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; color: var(--text-primary); font-size: 0.875rem; outline: none;">
+                  <option value="tweet">Single Tweet</option>
+                  <option value="thread">Thread (3-10)</option>
+                  <option value="reply">Reply</option>
+                  <option value="rewrite">Rewrite</option>
+                </select>
+              </div>
+              <div style="flex: 1; min-width: 120px;">
+                <label style="font-size: 0.8125rem; color: var(--text-secondary); display: block; margin-bottom: 4px;">Style</label>
+                <select id="gen-style" style="width: 100%; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; color: var(--text-primary); font-size: 0.875rem; outline: none;">
+                  <option value="">Auto</option>
+                  <option value="hot-take">Hot Take</option>
+                  <option value="educational">Educational</option>
+                  <option value="personal">Personal</option>
+                  <option value="promotional">Promotional</option>
+                </select>
+              </div>
+              <div style="min-width: 80px;">
+                <label style="font-size: 0.8125rem; color: var(--text-secondary); display: block; margin-bottom: 4px;">Count</label>
+                <input type="number" id="gen-count" value="3" min="1" max="5" style="width: 100%; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; color: var(--text-primary); font-size: 0.875rem; outline: none;" />
+              </div>
+            </div>
+
+            <!-- Rewrite Goal (shown when type=rewrite) -->
+            <div id="rewrite-options" style="display: none; margin-bottom: 12px;">
+              <label style="font-size: 0.8125rem; color: var(--text-secondary); display: block; margin-bottom: 4px;">Improvement Goal</label>
+              <select id="gen-rewrite-goal" style="width: 100%; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; color: var(--text-primary); font-size: 0.875rem; outline: none;">
+                <option value="more_engaging">More Engaging</option>
+                <option value="shorter">Shorter & Punchier</option>
+                <option value="add_hook">Add Hook</option>
+                <option value="more_casual">More Casual</option>
+                <option value="more_formal">More Formal</option>
+                <option value="add_cta">Add CTA</option>
+              </select>
+            </div>
+
+            <!-- Reply Tone (shown when type=reply) -->
+            <div id="reply-options" style="display: none; margin-bottom: 12px;">
+              <label style="font-size: 0.8125rem; color: var(--text-secondary); display: block; margin-bottom: 4px;">Reply Tone</label>
+              <select id="gen-reply-tone" style="width: 100%; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; color: var(--text-primary); font-size: 0.875rem; outline: none;">
+                <option value="">Auto</option>
+                <option value="agree">Agree</option>
+                <option value="disagree">Disagree</option>
+                <option value="add-on">Add On</option>
+                <option value="question">Question</option>
+                <option value="funny">Funny</option>
+                <option value="supportive">Supportive</option>
+              </select>
+            </div>
+
+            <!-- API Key (optional) -->
+            <details style="margin-bottom: 12px;">
+              <summary style="font-size: 0.8125rem; color: var(--text-secondary); cursor: pointer;">⚙️ Advanced: API Key & Model</summary>
+              <div style="margin-top: 8px;">
+                <input type="password" id="gen-api-key" placeholder="OpenRouter API key (env: OPENROUTER_API_KEY)" style="width: 100%; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; color: var(--text-primary); font-size: 0.8125rem; outline: none; margin-bottom: 6px;" />
+                <input type="text" id="gen-model" placeholder="Model (default: google/gemini-flash-2.0)" style="width: 100%; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; color: var(--text-primary); font-size: 0.8125rem; outline: none;" />
+              </div>
+            </details>
+
+            <button id="btn-generate" onclick="generateContent()" style="width: 100%; background: var(--accent); color: white; border: none; border-radius: 9999px; padding: 14px; font-weight: 700; font-size: 1rem; cursor: pointer;">✨ Generate</button>
+          </div>
+
+          <!-- Loading -->
+          <div id="gen-loading" style="display: none; text-align: center; padding: 40px 16px;">
+            <div style="font-size: 2rem; animation: pulse 1.5s ease-in-out infinite;">✨</div>
+            <p style="margin-top: 12px; font-weight: 600;">Generating content...</p>
+          </div>
+
+          <!-- Results -->
+          <div id="gen-results" style="display: none;"></div>
+        </section>
+      </div>
+
+      <!-- ==================== TAB 3: Content Calendar ==================== -->
+      <div class="tab-panel" id="tab-calendar" style="display: none;">
+        <section class="section">
+          <h2 class="section-title">📅 Content Calendar</h2>
+          <p>Generate a full week of tweets. Click any slot to regenerate.</p>
+
+          <div class="feature-card" style="margin-top: 16px;">
+            <div style="display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;">
+              <div style="flex: 1; min-width: 120px;">
+                <label style="font-size: 0.8125rem; color: var(--text-secondary); display: block; margin-bottom: 4px;">Voice Profile</label>
+                <select id="cal-profile" style="width: 100%; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; color: var(--text-primary); font-size: 0.875rem; outline: none;">
+                  <option value="">— Analyze a voice first —</option>
+                </select>
+              </div>
+              <div style="flex: 1; min-width: 80px;">
+                <label style="font-size: 0.8125rem; color: var(--text-secondary); display: block; margin-bottom: 4px;">Days</label>
+                <input type="number" id="cal-days" value="7" min="1" max="14" style="width: 100%; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; color: var(--text-primary); font-size: 0.875rem; outline: none;" />
+              </div>
+              <div style="flex: 1; min-width: 80px;">
+                <label style="font-size: 0.8125rem; color: var(--text-secondary); display: block; margin-bottom: 4px;">Posts/Day</label>
+                <input type="number" id="cal-ppd" value="2" min="1" max="5" style="width: 100%; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; color: var(--text-primary); font-size: 0.875rem; outline: none;" />
+              </div>
+            </div>
+
+            <div style="margin-bottom: 12px;">
+              <label style="font-size: 0.8125rem; color: var(--text-secondary); display: block; margin-bottom: 4px;">Topics (comma-separated, optional)</label>
+              <input type="text" id="cal-topics" placeholder="e.g., tech, startups, AI" style="width: 100%; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; padding: 10px 16px; color: var(--text-primary); font-size: 0.9375rem; outline: none;" />
+            </div>
+
+            <button id="btn-calendar" onclick="generateCalendar()" style="width: 100%; background: var(--accent); color: white; border: none; border-radius: 9999px; padding: 14px; font-weight: 700; font-size: 1rem; cursor: pointer;">📅 Generate Calendar</button>
+          </div>
+
+          <!-- Loading -->
+          <div id="cal-loading" style="display: none; text-align: center; padding: 40px 16px;">
+            <div style="font-size: 2rem; animation: pulse 1.5s ease-in-out infinite;">📅</div>
+            <p style="margin-top: 12px; font-weight: 600;">Generating content calendar...</p>
+          </div>
+
+          <!-- Calendar Grid -->
+          <div id="cal-grid" style="display: none; margin-top: 16px;"></div>
+
+          <!-- Export Buttons -->
+          <div id="cal-export" style="display: none; padding: 16px; display: flex; gap: 8px; justify-content: flex-end;">
+            <button onclick="exportCalendar('json')" style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 8px 16px; color: var(--text-primary); font-size: 0.875rem; cursor: pointer;">Export JSON</button>
+            <button onclick="exportCalendar('csv')" style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 8px 16px; color: var(--text-primary); font-size: 0.875rem; cursor: pointer;">Export CSV</button>
+          </div>
+        </section>
+      </div>
+
+      <!-- Info Section (collapsed, for reference) -->
       <section class="section">
-        <h2 class="section-title">❓ AI Integration FAQ</h2>
-
-        <div class="feature-card">
-          <h3>Is XActions free for AI integration?</h3>
-          <p>Yes! XActions is 100% open source and free to use. The MCP server, API, and all automation tools are available at no cost. Premium SaaS features are optional.</p>
-        </div>
-
-        <div class="feature-card">
-          <h3>Do I need the Twitter API?</h3>
-          <p>No! XActions uses browser automation, completely bypassing the expensive Twitter API. This means no API fees, no rate limit hassles, and full feature access.</p>
-        </div>
-
-        <div class="feature-card">
-          <h3>Is this safe for my Twitter account?</h3>
-          <p>XActions includes built-in rate limiting and delay mechanisms to mimic human behavior. However, aggressive automation can trigger Twitter's spam detection. Use responsibly and follow our recommended settings.</p>
-        </div>
-
-        <div class="feature-card">
-          <h3>Can I build a commercial product with XActions?</h3>
-          <p>Yes! XActions is MIT licensed, so you can use it for commercial purposes. Attribution is appreciated but not required.</p>
-        </div>
-
-        <div class="feature-card">
-          <h3>Which LLM works best with XActions?</h3>
-          <p>Any modern LLM works great! GPT-4, Claude 3, and similar models can understand and use the XActions tools effectively. For MCP support, Claude Desktop is recommended.</p>
-        </div>
-
-        <div class="feature-card">
-          <h3>Can I contribute to XActions?</h3>
-          <p>Absolutely! We welcome contributions. Check out our <a href="https://github.com/nirholas/XActions">GitHub repository</a> to get started. Bug fixes, new features, and documentation improvements are all appreciated.</p>
-        </div>
+        <details>
+          <summary style="cursor: pointer; font-weight: 700; font-size: 1.125rem;">ℹ️ How It Works</summary>
+          <div style="margin-top: 16px;">
+            <div class="feature-card">
+              <h3>Step 1: Analyze Voice</h3>
+              <p>Scrapes a user's tweet history and extracts patterns: writing style, tone, vocabulary, content pillars, and engagement correlations.</p>
+            </div>
+            <div class="feature-card" style="margin-top: 8px;">
+              <h3>Step 2: Generate Content</h3>
+              <p>Uses the voice profile as context for an LLM (via OpenRouter) to generate tweets that match the user's exact voice and style.</p>
+            </div>
+            <div class="feature-card" style="margin-top: 8px;">
+              <h3>🔥 Killer Feature</h3>
+              <p>Scrape a competitor's tweets → analyze what works → generate your own tweets that match the winning patterns but in YOUR voice.</p>
+            </div>
+          </div>
+        </details>
       </section>
     </main>
 
     <!-- Right Sidebar -->
     <aside class="sidebar-right" aria-label="Supplementary information">
       <div class="promo-card">
-        <h3 class="promo-header">🤖 Quick Start</h3>
+        <h3 class="promo-header">� AI Writer</h3>
         <div class="promo-item">
-          <h4>MCP Server Docs</h4>
-          <p>Complete guide to AI integration</p>
+          <h4>Voice Analysis</h4>
+          <p>Scrape tweets → analyze writing style</p>
         </div>
-        <a href="/docs/examples/mcp-server" class="promo-link">Read the Guide →</a>
+        <div class="promo-item">
+          <h4>Tweet Generation</h4>
+          <p>Generate tweets in any voice</p>
+        </div>
+        <div class="promo-item">
+          <h4>Content Calendar</h4>
+          <p>Plan a full week of content</p>
+        </div>
+        <a href="https://github.com/nirholas/XActions" target="_blank" class="promo-link">View Source →</a>
       </div>
 
       <div class="promo-card">
-        <h3 class="promo-header">🔧 AI Tools</h3>
+        <h3 class="promo-header">🔥 Killer Feature</h3>
         <div class="promo-item">
-          <h4>20+ Automation Tools</h4>
-          <p>Scrape, follow, unfollow, like & more</p>
+          <h4>Competitor Analysis</h4>
+          <p>Scrape competitor tweets → analyze what works → generate in YOUR voice</p>
         </div>
-        <div class="promo-item">
-          <h4>Multi-LLM Support</h4>
-          <p>GPT-4, Claude, any LLM</p>
-        </div>
-        <div class="promo-item">
-          <h4>No API Fees</h4>
-          <p>Browser automation, no Twitter API</p>
-        </div>
-        <a href="/features" class="promo-link">See All Features →</a>
       </div>
 
       <div class="promo-card">
-        <h3 class="promo-header">⭐ Open Source</h3>
+        <h3 class="promo-header">⚡ API Endpoints</h3>
         <div class="promo-item">
-          <h4>MIT Licensed</h4>
-          <p>Free for personal & commercial use</p>
-        </div>
-        <a href="https://github.com/nirholas/XActions" target="_blank" rel="noopener noreferrer" class="promo-link">Star on GitHub →</a>
-      </div>
-
-      <div class="promo-card">
-        <h3 class="promo-header">📚 Resources</h3>
-        <div class="promo-item">
-          <h4>Documentation</h4>
-          <p>Full API & CLI reference</p>
+          <h4>POST /api/ai/writer/analyze-voice</h4>
+          <p>Analyze writing voice</p>
         </div>
         <div class="promo-item">
-          <h4>Examples</h4>
-          <p>Code samples for every feature</p>
+          <h4>POST /api/ai/writer/generate</h4>
+          <p>Generate tweets</p>
         </div>
-        <a href="/docs" class="promo-link">Browse Docs →</a>
+        <div class="promo-item">
+          <h4>POST /api/ai/writer/rewrite</h4>
+          <p>Improve a tweet</p>
+        </div>
+        <a href="/docs" class="promo-link">Full API Docs →</a>
       </div>
 
       <div class="disclaimer">
-        <p>XActions is an independent project for educational purposes. Not affiliated with X Corp or OpenAI/Anthropic. Use responsibly and comply with Twitter's Terms of Service.</p>
-        <p style="margin-top: 8px;">© 2026 XActions</p>
+        <p>AI Tweet Writer requires an OpenRouter API key for generation. Voice analysis is free (scraping only).</p>
+        <p style="margin-top: 8px;">© 2026 XActions — by <a href="https://x.com/nichxbt">@nichxbt</a></p>
       </div>
     </aside>
   </div>
+
+  <!-- ==================== JavaScript ==================== -->
+  <script>
+    // ====== State ======
+    const API_BASE = window.location.origin;
+    let savedProfiles = {};
+    let currentCalendar = null;
+
+    // ====== Tab Navigation ======
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => {
+          b.style.color = 'var(--text-secondary)';
+          b.style.borderBottom = '2px solid transparent';
+          b.classList.remove('active');
+        });
+        btn.style.color = 'var(--text-primary)';
+        btn.style.borderBottom = '2px solid var(--accent)';
+        btn.classList.add('active');
+
+        document.querySelectorAll('.tab-panel').forEach(p => p.style.display = 'none');
+        document.getElementById('tab-' + btn.dataset.tab).style.display = 'block';
+      });
+    });
+
+    // Show/hide rewrite/reply options based on type
+    document.getElementById('gen-type').addEventListener('change', (e) => {
+      document.getElementById('rewrite-options').style.display = e.target.value === 'rewrite' ? 'block' : 'none';
+      document.getElementById('reply-options').style.display = e.target.value === 'reply' ? 'block' : 'none';
+    });
+
+    // ====== Voice Analysis ======
+    async function analyzeVoice() {
+      const username = document.getElementById('voice-username').value.trim().replace(/^@/, '');
+      const authToken = document.getElementById('voice-auth-token').value.trim();
+
+      if (!username) return alert('Enter a username');
+      if (!authToken) return alert('Enter your auth_token cookie');
+
+      document.getElementById('voice-loading').style.display = 'block';
+      document.getElementById('voice-result').style.display = 'none';
+
+      try {
+        const res = await fetch(`${API_BASE}/api/ai/writer/analyze-voice`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, authToken, tweetLimit: 200 }),
+        });
+        const data = await res.json();
+
+        if (!data.success) throw new Error(data.error || data.message || 'Analysis failed');
+
+        const profile = data.data.profile;
+        savedProfiles[username.toLowerCase()] = profile;
+        renderVoiceProfile(profile);
+        updateProfileSelectors();
+      } catch (err) {
+        alert('Error: ' + err.message);
+      } finally {
+        document.getElementById('voice-loading').style.display = 'none';
+      }
+    }
+
+    function renderVoiceProfile(profile) {
+      document.getElementById('voice-result').style.display = 'block';
+      document.getElementById('voice-profile-title').textContent = `📊 Voice Profile: @${profile.username} (${profile.tweetCount} tweets)`;
+
+      // Tone bars
+      const toneBars = document.getElementById('tone-bars');
+      toneBars.innerHTML = '';
+      const tones = [
+        { label: 'Formality', value: profile.tone.formality, color: '#1d9bf0' },
+        { label: 'Humor', value: profile.tone.humor, color: '#ffad1f' },
+        { label: 'Controversy', value: profile.tone.controversy, color: '#f4212e' },
+        { label: 'Technicality', value: profile.tone.technicality, color: '#794bc4' },
+      ];
+      for (const t of tones) {
+        toneBars.innerHTML += `
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+            <span style="width: 100px; font-size: 0.8125rem; color: var(--text-secondary);">${t.label}</span>
+            <div style="flex: 1; background: var(--bg-tertiary); border-radius: 4px; height: 8px; overflow: hidden;">
+              <div style="width: ${Math.round(t.value * 100)}%; height: 100%; background: ${t.color}; border-radius: 4px; transition: width 0.5s;"></div>
+            </div>
+            <span style="width: 36px; font-size: 0.75rem; color: var(--text-secondary); text-align: right;">${Math.round(t.value * 100)}%</span>
+          </div>`;
+      }
+
+      // Style metrics
+      const styleMetrics = document.getElementById('style-metrics');
+      const s = profile.style;
+      const metrics = [
+        { label: 'Avg Length', value: s.avgLength + ' chars' },
+        { label: 'Emoji/tweet', value: s.emojiRate.toFixed(2) },
+        { label: 'Hashtag/tweet', value: s.hashtagRate.toFixed(2) },
+        { label: 'Question Rate', value: Math.round(s.questionRate * 100) + '%' },
+        { label: 'Thread Rate', value: Math.round(s.threadRate * 100) + '%' },
+        { label: 'Link Rate', value: Math.round(s.urlRate * 100) + '%' },
+      ];
+      styleMetrics.innerHTML = metrics.map(m => `
+        <div style="background: var(--bg-tertiary); border-radius: 8px; padding: 10px 12px;">
+          <div style="font-size: 0.75rem; color: var(--text-secondary);">${m.label}</div>
+          <div style="font-size: 1.125rem; font-weight: 700; margin-top: 2px;">${m.value}</div>
+        </div>`).join('');
+
+      // Content pillars
+      const pillarsEl = document.getElementById('content-pillars');
+      if (profile.contentPillars.length > 0) {
+        pillarsEl.innerHTML = profile.contentPillars.map(p => `
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+            <span style="width: 80px; font-size: 0.875rem; font-weight: 600; text-transform: capitalize;">${p.topic}</span>
+            <div style="flex: 1; background: var(--bg-tertiary); border-radius: 4px; height: 8px; overflow: hidden;">
+              <div style="width: ${Math.round(p.frequency * 100)}%; height: 100%; background: var(--accent); border-radius: 4px;"></div>
+            </div>
+            <span style="font-size: 0.75rem; color: var(--text-secondary);">${Math.round(p.frequency * 100)}%</span>
+          </div>`).join('');
+      } else {
+        pillarsEl.innerHTML = '<p>No strong topic clusters detected</p>';
+      }
+
+      // Top words
+      const wordsEl = document.getElementById('top-words');
+      wordsEl.innerHTML = profile.vocabulary.topWords.slice(0, 20).map(w => {
+        const size = Math.min(1.5, 0.75 + w.count * 0.05);
+        return `<span style="background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 9999px; padding: 4px 10px; font-size: ${size}rem;">${w.word}</span>`;
+      }).join('');
+
+      // Best traits
+      const traitsEl = document.getElementById('best-traits');
+      if (profile.bestPerforming.commonTraits.length > 0) {
+        traitsEl.innerHTML = profile.bestPerforming.commonTraits.map(t => `<li>${t}</li>`).join('');
+      } else {
+        traitsEl.innerHTML = '<li>Not enough data for trait analysis</li>';
+      }
+
+      // Top tweets
+      const tweetsEl = document.getElementById('top-tweets');
+      if (profile.bestPerforming.examples.length > 0) {
+        tweetsEl.innerHTML = profile.bestPerforming.examples.map(t => `
+          <div style="background: var(--bg-tertiary); border-radius: 8px; padding: 12px; margin-bottom: 8px;">
+            <p style="color: var(--text-primary); margin-bottom: 6px;">${escapeHTML(t.text)}</p>
+            <div style="display: flex; gap: 16px; font-size: 0.75rem; color: var(--text-secondary);">
+              <span>❤️ ${t.likes}</span><span>🔁 ${t.retweets}</span><span>💬 ${t.replies}</span>
+            </div>
+          </div>`).join('');
+      } else {
+        tweetsEl.innerHTML = '<p>No examples available</p>';
+      }
+    }
+
+    // ====== Generate Content ======
+    async function generateContent() {
+      const profileKey = document.getElementById('gen-profile').value;
+      const topic = document.getElementById('gen-topic').value.trim();
+      const type = document.getElementById('gen-type').value;
+      const style = document.getElementById('gen-style').value;
+      const count = parseInt(document.getElementById('gen-count').value) || 3;
+      const apiKey = document.getElementById('gen-api-key').value.trim();
+      const model = document.getElementById('gen-model').value.trim();
+
+      if (!profileKey) return alert('Select a voice profile first');
+      if (!topic) return alert('Enter a topic or prompt');
+
+      const voiceProfile = savedProfiles[profileKey];
+      if (!voiceProfile) return alert('Voice profile not found. Run analysis first.');
+
+      document.getElementById('gen-loading').style.display = 'block';
+      document.getElementById('gen-results').style.display = 'none';
+
+      try {
+        let endpoint, body;
+
+        if (type === 'rewrite') {
+          endpoint = '/api/ai/writer/rewrite';
+          body = { username: profileKey, text: topic, goal: document.getElementById('gen-rewrite-goal').value, count, apiKey: apiKey || undefined, model: model || undefined, voiceProfile };
+        } else if (type === 'reply') {
+          endpoint = '/api/ai/writer/reply';
+          body = { username: profileKey, originalTweet: topic, tone: document.getElementById('gen-reply-tone').value || undefined, count, apiKey: apiKey || undefined, model: model || undefined, voiceProfile };
+        } else if (type === 'thread') {
+          endpoint = '/api/ai/writer/generate';
+          body = { username: profileKey, topic, type: 'thread', threadLength: count, apiKey: apiKey || undefined, model: model || undefined, voiceProfile };
+        } else {
+          endpoint = '/api/ai/writer/generate';
+          body = { username: profileKey, topic, style: style || undefined, count, apiKey: apiKey || undefined, model: model || undefined, voiceProfile };
+        }
+
+        const res = await fetch(`${API_BASE}${endpoint}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+        const data = await res.json();
+
+        if (!data.success) throw new Error(data.error || data.message || 'Generation failed');
+
+        renderGenResults(data.data, type);
+      } catch (err) {
+        alert('Error: ' + err.message);
+      } finally {
+        document.getElementById('gen-loading').style.display = 'none';
+      }
+    }
+
+    function renderGenResults(data, type) {
+      const el = document.getElementById('gen-results');
+      el.style.display = 'block';
+
+      let items = [];
+      if (type === 'thread') {
+        items = (data.thread || []).map(t => ({ text: t.text, meta: t.purpose || `Position ${t.position}` }));
+      } else if (type === 'rewrite') {
+        items = (data.rewrites || []).map(r => ({ text: r.text, meta: r.improvement }));
+      } else if (type === 'reply') {
+        items = (data.replies || []).map(r => ({ text: r.text, meta: `${r.tone} — ${r.reasoning}` }));
+      } else {
+        items = (data.tweets || []).map(t => ({ text: t.text, meta: `${t.estimatedEngagement} engagement — ${t.reasoning}` }));
+      }
+
+      el.innerHTML = `<div style="padding: 16px;">
+        <h3 style="margin-bottom: 12px;">✨ Generated ${items.length} ${type === 'thread' ? 'thread tweets' : 'variations'}${data.model ? ` <span style="font-size: 0.75rem; color: var(--text-secondary);">(${data.model})</span>` : ''}</h3>
+        ${items.map((item, i) => `
+          <div class="feature-card" style="margin-bottom: 8px; position: relative;">
+            <p style="color: var(--text-primary); font-size: 1rem; margin-bottom: 8px; white-space: pre-wrap;">${escapeHTML(item.text)}</p>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-size: 0.75rem; color: var(--text-secondary);">${escapeHTML(item.meta || '')}</span>
+              <div style="display: flex; gap: 6px;">
+                <button onclick="copyTweet(this, ${JSON.stringify(item.text).replace(/"/g, '&quot;')})" style="background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; padding: 4px 12px; color: var(--text-primary); font-size: 0.75rem; cursor: pointer;">📋 Copy</button>
+                <button onclick="rateTweet(this, 'up')" style="background: none; border: none; cursor: pointer; font-size: 1rem;" title="Good">👍</button>
+                <button onclick="rateTweet(this, 'down')" style="background: none; border: none; cursor: pointer; font-size: 1rem;" title="Bad">👎</button>
+              </div>
+            </div>
+          </div>
+        `).join('')}
+      </div>`;
+    }
+
+    // ====== Content Calendar ======
+    async function generateCalendar() {
+      const profileKey = document.getElementById('cal-profile').value;
+      const days = parseInt(document.getElementById('cal-days').value) || 7;
+      const postsPerDay = parseInt(document.getElementById('cal-ppd').value) || 2;
+      const topicsStr = document.getElementById('cal-topics').value.trim();
+      const topics = topicsStr ? topicsStr.split(',').map(t => t.trim()).filter(Boolean) : undefined;
+
+      if (!profileKey) return alert('Select a voice profile first');
+
+      const voiceProfile = savedProfiles[profileKey];
+      if (!voiceProfile) return alert('Voice profile not found');
+
+      document.getElementById('cal-loading').style.display = 'block';
+      document.getElementById('cal-grid').style.display = 'none';
+
+      try {
+        const res = await fetch(`${API_BASE}/api/ai/writer/calendar`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: profileKey, topics, postsPerDay, days, voiceProfile }),
+        });
+        const data = await res.json();
+
+        if (!data.success) throw new Error(data.error || data.message || 'Calendar generation failed');
+
+        currentCalendar = data.data.calendar;
+        renderCalendar(currentCalendar);
+      } catch (err) {
+        alert('Error: ' + err.message);
+      } finally {
+        document.getElementById('cal-loading').style.display = 'none';
+      }
+    }
+
+    function renderCalendar(calendar) {
+      const el = document.getElementById('cal-grid');
+      el.style.display = 'block';
+      document.getElementById('cal-export').style.display = 'flex';
+
+      // Group by day
+      const byDay = {};
+      for (const item of calendar) {
+        if (!byDay[item.day]) byDay[item.day] = [];
+        byDay[item.day].push(item);
+      }
+
+      el.innerHTML = Object.entries(byDay).map(([day, items]) => `
+        <div style="border-bottom: 1px solid var(--border); padding: 16px;">
+          <h3 style="margin-bottom: 8px; color: var(--accent);">${day}</h3>
+          ${items.map(item => `
+            <div class="feature-card" style="margin-bottom: 6px;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+                <span class="badge" style="font-size: 0.6875rem;">${item.slot || ''}</span>
+                <span class="badge accent" style="font-size: 0.6875rem;">${item.type || 'single'}</span>
+              </div>
+              <p style="color: var(--text-primary); margin-bottom: 6px;">${escapeHTML(item.text)}</p>
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 0.75rem; color: var(--text-secondary);">${escapeHTML(item.topic || '')}</span>
+                <button onclick="copyTweet(this, ${JSON.stringify(item.text).replace(/"/g, '&quot;')})" style="background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; padding: 4px 12px; color: var(--text-primary); font-size: 0.75rem; cursor: pointer;">📋 Copy</button>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `).join('');
+    }
+
+    function exportCalendar(format) {
+      if (!currentCalendar) return;
+      let content, filename, type;
+
+      if (format === 'csv') {
+        const rows = [['Day', 'Slot', 'Topic', 'Type', 'Text']];
+        for (const item of currentCalendar) {
+          rows.push([item.day, item.slot, item.topic, item.type, `"${(item.text || '').replace(/"/g, '""')}"`]);
+        }
+        content = rows.map(r => r.join(',')).join('\n');
+        filename = 'xactions-calendar.csv';
+        type = 'text/csv';
+      } else {
+        content = JSON.stringify(currentCalendar, null, 2);
+        filename = 'xactions-calendar.json';
+        type = 'application/json';
+      }
+
+      const blob = new Blob([content], { type });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // ====== Helpers ======
+    function updateProfileSelectors() {
+      const options = Object.keys(savedProfiles).map(k => `<option value="${k}">@${k}</option>`).join('');
+      const placeholder = '<option value="">— Select voice profile —</option>';
+      document.getElementById('gen-profile').innerHTML = placeholder + options;
+      document.getElementById('cal-profile').innerHTML = placeholder + options;
+    }
+
+    function copyTweet(btn, text) {
+      navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = '✅ Copied!';
+        setTimeout(() => btn.textContent = '📋 Copy', 2000);
+      });
+    }
+
+    function rateTweet(btn, direction) {
+      btn.style.opacity = '0.5';
+      btn.disabled = true;
+      // Future: send rating to API for feedback loop
+    }
+
+    function escapeHTML(str) {
+      if (!str) return '';
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+  </script>
+
+  <style>
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.1); }
+    }
+  </style>
 
   <footer class="site-footer">
     <div class="footer-content">
       <div class="footer-section">
         <h4>XActions</h4>
         <p>100% Free & Open Source X/Twitter Automation</p>
-        <p>Created by <a href="https://x.com/nichxbt">@nichxbt</a></p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
       </div>
       <div class="footer-section">
-        <h4>Resources</h4>
-        <a href="/features">All Scripts</a>
-        <a href="/tutorials">Tutorials</a>
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/workflows">Workflows</a>
+        <a href="/analytics">Analytics</a>
+        <a href="/monitor">Monitor</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
         <a href="/docs">Documentation</a>
-        <a href="/mcp">AI Integration</a>
+        <a href="/tutorials">Tutorials</a>
       </div>
       <div class="footer-section">
         <h4>Community</h4>
-        <a href="https://github.com/nirholas/XActions">GitHub</a>
-        <a href="https://github.com/nirholas/XActions/issues">Report Issues</a>
-        <a href="https://github.com/nirholas/XActions/blob/main/CONTRIBUTING.md">Contribute</a>
-      </div>
-      <div class="footer-section">
-        <h4>Legal</h4>
-        <a href="/privacy">Privacy</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="https://github.com/nirholas/XActions/issues" rel="noopener">Report Issues</a>
+        <a href="/about">About</a>
         <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
       </div>
     </div>
     <div class="footer-bottom">

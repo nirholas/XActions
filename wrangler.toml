@@ -1,0 +1,16 @@
+# Cloudflare Pages Configuration for XActions Static Frontend
+# Deploy: npx wrangler pages deploy dashboard --project-name xactions
+#
+# This config is for the static dashboard/site only.
+# The API backend runs on Railway (or Docker).
+#
+# by nichxbt
+
+name = "xactions"
+compatibility_date = "2024-12-01"
+
+# Pages-specific config
+pages_build_output_dir = "dashboard"
+
+# Custom headers for security
+# These are also defined in dashboard/_headers
