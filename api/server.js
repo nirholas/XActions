@@ -51,6 +51,8 @@ import settingsRoutes from './routes/settings.js';
 import streamRoutes from './routes/streams.js';
 import automationsRoutes from './routes/automations.js';
 import analyticsRoutes from './routes/analytics.js';
+import workflowRoutes from './routes/workflows.js';
+import portabilityRoutes from './routes/portability.js';
 import { initializeSocketIO } from './realtime/socketHandler.js';
 import { initializeLicensing, brandingMiddleware } from './services/licensing.js';
 
@@ -196,7 +198,9 @@ app.use('/api/bookmarks', bookmarksRoutes);
 app.use('/api/creator', creatorRoutes);
 app.use('/api/spaces', spacesRoutes);
 app.use('/api/settings', settingsRoutes);
+app.use('/api/workflows', workflowRoutes);
 app.use('/api/analytics', analyticsRoutes);
+app.use('/api/portability', portabilityRoutes);
 
 // Plugin routes — mounted under /api/plugins/<plugin-name>/
 function mountPluginRoutes() {

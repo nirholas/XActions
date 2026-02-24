@@ -241,6 +241,26 @@ export async function scrape(platform, action, options = {}) {
 // Default Export — backward compatible
 // ============================================================================
 
+// ============================================================================
+// Plugin Scrapers
+// ============================================================================
+
+/**
+ * Get a plugin-contributed scraper by name.
+ * Plugins register scrapers via the plugin system — this provides a unified lookup.
+ * @param {string} name - Scraper name
+ * @returns {Promise<Function|undefined>} The scraper handler, or undefined
+ */
+export async function getPluginScraper(name) {
+  try {
+    const { getPluginScrapers } = await import('../plugins/index.js');
+    const scraper = getPluginScrapers().find((s) => s.name === name);
+    return scraper?.handler;
+  } catch {
+    return undefined;
+  }
+}
+
 export default {
   // Core (Twitter)
   createBrowser,
@@ -278,4 +298,7 @@ export default {
   bluesky,
   mastodon,
   threads,
+  
+  // Plugin scrapers lookup
+  getPluginScraper,
 };

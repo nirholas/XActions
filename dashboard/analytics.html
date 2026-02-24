@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analytics - XActions | Sentiment Analysis & Reputation Monitoring</title>
+  <meta name="description" content="XActions Analytics — Real-time sentiment analysis and reputation monitoring for X/Twitter. Track mentions, detect trends, and get alerts.">
+  <meta name="author" content="nich (@nichxbt)">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" defer></script>
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --bg-hover: #1d1f23;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --text-link: #1d9bf0;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --positive: #00ba7c;
+      --neutral: #71767b;
+      --negative: #f4212e;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+    }
+
+    /* Layout */
+    .layout {
+      display: grid;
+      grid-template-columns: 275px 1fr;
+      max-width: 1400px;
+      margin: 0 auto;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      border-right: 1px solid var(--border);
+      padding: 20px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .sidebar-logo {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--text-primary);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 32px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 16px;
+      border-radius: 9999px;
+      color: var(--text-primary);
+      text-decoration: none;
+      font-size: 18px;
+      transition: background 0.2s;
+      margin-bottom: 4px;
+    }
+
+    .nav-link:hover { background: var(--bg-tertiary); }
+    .nav-link.active { font-weight: 700; color: var(--accent); }
+
+    /* Main content */
+    .main {
+      padding: 20px 32px;
+      max-width: 1000px;
+    }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .page-title {
+      font-size: 24px;
+      font-weight: 800;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Grid */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+    }
+
+    /* Stat cards */
+    .stat-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px 20px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .stat-positive { color: var(--positive); }
+    .stat-neutral { color: var(--neutral); }
+    .stat-negative { color: var(--negative); }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 9999px;
+      border: none;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .btn-primary:hover { background: var(--accent-hover); }
+
+    .btn-danger {
+      background: var(--error);
+      color: #fff;
+    }
+
+    .btn-danger:hover { opacity: 0.85; }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+    }
+
+    .btn-outline:hover { background: var(--bg-tertiary); }
+
+    .btn-sm {
+      padding: 6px 14px;
+      font-size: 13px;
+    }
+
+    /* Input */
+    .input-group {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .input {
+      flex: 1;
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 9999px;
+      padding: 10px 16px;
+      color: var(--text-primary);
+      font-size: 14px;
+      outline: none;
+    }
+
+    .input:focus { border-color: var(--accent); }
+
+    .select {
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 9999px;
+      padding: 10px 16px;
+      color: var(--text-primary);
+      font-size: 14px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    /* Sentiment textarea */
+    .sentiment-textarea {
+      width: 100%;
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px 16px;
+      color: var(--text-primary);
+      font-size: 15px;
+      font-family: inherit;
+      resize: vertical;
+      min-height: 80px;
+      outline: none;
+    }
+
+    .sentiment-textarea:focus { border-color: var(--accent); }
+
+    /* Sentiment result */
+    .sentiment-result {
+      display: none;
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: 12px;
+      background: var(--bg-tertiary);
+    }
+
+    .sentiment-result.show { display: block; }
+
+    .score-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 16px;
+      border-radius: 9999px;
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .score-positive { background: rgba(0, 186, 124, 0.15); color: var(--positive); }
+    .score-neutral { background: rgba(113, 118, 123, 0.15); color: var(--neutral); }
+    .score-negative { background: rgba(244, 33, 46, 0.15); color: var(--negative); }
+
+    /* Keywords */
+    .keyword-tag {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      background: var(--accent-light);
+      color: var(--accent);
+      font-size: 13px;
+      margin: 2px;
+    }
+
+    /* Mentions feed */
+    .mention-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .mention-item:last-child { border-bottom: none; }
+
+    .mention-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-top: 6px;
+      flex-shrink: 0;
+    }
+
+    .mention-dot.positive { background: var(--positive); }
+    .mention-dot.neutral { background: var(--neutral); }
+    .mention-dot.negative { background: var(--negative); }
+
+    .mention-text {
+      font-size: 14px;
+      line-height: 1.4;
+      flex: 1;
+    }
+
+    .mention-meta {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    .mention-score {
+      font-size: 13px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* Word cloud */
+    .word-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .word-cloud-item {
+      padding: 4px 12px;
+      border-radius: 9999px;
+      background: var(--bg-tertiary);
+      font-weight: 600;
+      cursor: default;
+      transition: transform 0.2s;
+    }
+
+    .word-cloud-item:hover { transform: scale(1.1); }
+
+    /* Monitors table */
+    .monitors-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .monitors-table th {
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 2px solid var(--border);
+      font-size: 13px;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    .monitors-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .status-active { background: rgba(0, 186, 124, 0.15); color: var(--positive); }
+    .status-stopped { background: rgba(244, 33, 46, 0.15); color: var(--negative); }
+
+    /* Alert config */
+    .alert-form { margin-top: 16px; }
+
+    .form-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .form-label {
+      font-size: 14px;
+      color: var(--text-secondary);
+      min-width: 140px;
+    }
+
+    /* Chart container */
+    .chart-container {
+      position: relative;
+      height: 300px;
+      width: 100%;
+    }
+
+    /* Empty states */
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-secondary);
+    }
+
+    .empty-state-icon { font-size: 48px; margin-bottom: 12px; }
+    .empty-state-text { font-size: 15px; }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 16px;
+    }
+
+    .tab {
+      padding: 12px 20px;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .tab:hover { color: var(--text-primary); }
+    .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+      .main { padding: 16px; }
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <nav class="sidebar">
+      <a href="/dashboard" class="sidebar-logo">⚡ XActions</a>
+      <a href="/dashboard" class="nav-link">🏠 Dashboard</a>
+      <a href="/run" class="nav-link">▶️ Run</a>
+      <a href="/analytics" class="nav-link active">📊 Analytics</a>
+      <a href="/docs" class="nav-link">📖 Docs</a>
+      <a href="/mcp" class="nav-link">🤖 MCP</a>
+      <a href="/admin" class="nav-link">⚙️ Admin</a>
+      <a href="/about" class="nav-link">ℹ️ About</a>
+    </nav>
+
+    <!-- Main -->
+    <main class="main">
+      <div class="page-header">
+        <h1 class="page-title">📊 Sentiment Analytics</h1>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <div class="tab active" data-tab="analyze">Analyze</div>
+        <div class="tab" data-tab="monitors">Monitors</div>
+        <div class="tab" data-tab="timeline">Timeline</div>
+        <div class="tab" data-tab="alerts">Alerts</div>
+      </div>
+
+      <!-- Tab: Analyze -->
+      <div class="tab-content active" id="tab-analyze">
+        <div class="card">
+          <div class="card-title">🔍 Quick Sentiment Analysis</div>
+          <textarea class="sentiment-textarea" id="sentimentInput" placeholder="Paste tweet text, any text, or multiple lines to analyze sentiment..."></textarea>
+          <div style="display: flex; gap: 8px; margin-top: 12px;">
+            <select class="select" id="sentimentMode">
+              <option value="rules">🧠 Rule-based (offline)</option>
+              <option value="llm">🤖 LLM (OpenRouter)</option>
+            </select>
+            <button class="btn btn-primary" id="analyzeBtn" onclick="analyzeSentiment()">Analyze Sentiment</button>
+          </div>
+
+          <div class="sentiment-result" id="sentimentResult">
+            <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 12px;">
+              <span class="score-badge" id="resultBadge"></span>
+              <span style="color: var(--text-secondary); font-size: 14px;">Score: <strong id="resultScore"></strong> | Confidence: <strong id="resultConfidence"></strong></span>
+            </div>
+            <div id="resultKeywords"></div>
+          </div>
+        </div>
+
+        <!-- Batch results -->
+        <div class="card" id="batchResultsCard" style="display: none;">
+          <div class="card-title">📋 Batch Results</div>
+          <div class="grid-3" id="batchStats"></div>
+          <div id="batchList" style="margin-top: 16px; max-height: 400px; overflow-y: auto;"></div>
+        </div>
+      </div>
+
+      <!-- Tab: Monitors -->
+      <div class="tab-content" id="tab-monitors">
+        <div class="card">
+          <div class="card-title">➕ Start New Monitor</div>
+          <div class="input-group">
+            <input class="input" id="monitorTarget" placeholder="@username or keyword" />
+            <select class="select" id="monitorType">
+              <option value="mentions">Mentions</option>
+              <option value="keyword">Keyword</option>
+              <option value="replies">Replies</option>
+            </select>
+            <button class="btn btn-primary" onclick="startMonitor()">Start Monitor</button>
+          </div>
+
+          <div class="alert-form">
+            <div class="form-row">
+              <span class="form-label">Poll interval (sec)</span>
+              <input class="input" id="monitorInterval" type="number" value="900" min="60" style="max-width: 120px;" />
+            </div>
+            <div class="form-row">
+              <span class="form-label">Alert threshold</span>
+              <input class="input" id="alertThreshold" type="number" value="-0.3" step="0.1" min="-1" max="1" style="max-width: 120px;" />
+            </div>
+            <div class="form-row">
+              <span class="form-label">Webhook URL</span>
+              <input class="input" id="webhookUrl" placeholder="https://hooks.example.com/..." />
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">📡 Active Monitors</div>
+          <div id="monitorsContainer">
+            <div class="empty-state">
+              <div class="empty-state-icon">📡</div>
+              <div class="empty-state-text">No active monitors. Start one above.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: Timeline -->
+      <div class="tab-content" id="tab-timeline">
+        <div class="card">
+          <div class="card-title">📈 Sentiment Timeline</div>
+          <div class="input-group">
+            <select class="select" id="timelineMonitor" onchange="loadTimeline()">
+              <option value="">Select a monitor...</option>
+            </select>
+            <select class="select" id="timelinePeriod" onchange="loadTimeline()">
+              <option value="24h">Last 24h</option>
+              <option value="7d" selected>Last 7 days</option>
+              <option value="30d">Last 30 days</option>
+            </select>
+          </div>
+          <div class="chart-container">
+            <canvas id="sentimentChart"></canvas>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">💬 Recent Mentions</div>
+            <div id="mentionsFeed">
+              <div class="empty-state">
+                <div class="empty-state-text">Select a monitor to see mentions</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">☁️ Word Cloud</div>
+            <div class="word-cloud" id="wordCloud">
+              <div class="empty-state">
+                <div class="empty-state-text">Select a monitor to see keywords</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats row -->
+        <div class="grid-3" id="timelineStats" style="display: none;">
+          <div class="stat-card">
+            <div class="stat-value stat-positive" id="statPositive">0</div>
+            <div class="stat-label">🟢 Positive</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value stat-neutral" id="statNeutral">0</div>
+            <div class="stat-label">⚪ Neutral</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value stat-negative" id="statNegative">0</div>
+            <div class="stat-label">🔴 Negative</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: Alerts -->
+      <div class="tab-content" id="tab-alerts">
+        <div class="card">
+          <div class="card-title">🚨 Alert History</div>
+          <div id="alertsContainer">
+            <div class="empty-state">
+              <div class="empty-state-icon">🔔</div>
+              <div class="empty-state-text">No alerts yet. Alerts trigger when sentiment drops below threshold or mention volume spikes.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="/js/analytics.js"></script>
+</body>
+</html>

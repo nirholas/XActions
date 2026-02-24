@@ -1,29 +1,25 @@
 ---
 name: articles-longform
-description: Publish and manage long-form articles on X/Twitter (Premium+). Features include rich formatting, embeds, audio articles (2026), analytics, and SEO optimization.
+description: Publishes long-form articles on X/Twitter using the Premium+ article editor. Supports rich formatting, embeds, and drafts. Use when users want to publish or manage articles on X.
 license: MIT
 metadata:
   author: nichxbt
   version: "3.0"
 ---
 
-# Articles & Long-Form Content with XActions
+# Articles & Long-Form Content
 
-Publish and manage long-form articles on X/Twitter (Premium+ required).
+Browser console script for publishing articles on X/Twitter. Requires Premium+ subscription.
 
-## Features
+## Available Scripts
 
-- **Rich Text**: Formatted articles with headers, bold, italics, lists
-- **Embeds**: Images, videos, tweets, links within articles
-- **Audio Articles**: Embed voiceovers and podcasts (2026, testing)
-- **Analytics**: Track reads, engagement, sharing metrics
-- **SEO**: Article titles and descriptions for search discovery
-- **Publishing**: Draft, schedule, publish workflow
-- **Distribution**: Articles appear in followers' feeds
+| Script | File | Purpose |
+|--------|------|---------|
+| Article Publisher | `src/articlePublisher.js` | Publish, draft, and manage long-form articles |
 
-## Browser Console Script
+## Article Publisher
 
-**File:** `scripts/publishArticle.js`
+**File:** `src/articlePublisher.js`
 
 ### How to use
 
@@ -31,7 +27,7 @@ Publish and manage long-form articles on X/Twitter (Premium+ required).
 2. Open DevTools (F12) → Console
 3. Paste the script → Enter
 
-### Key selectors
+### Key Selectors
 
 | Element | Selector |
 |---------|----------|
@@ -42,31 +38,9 @@ Publish and manage long-form articles on X/Twitter (Premium+ required).
 | Draft save | `[data-testid="articleSaveDraft"]` |
 | Cover image | `[data-testid="articleCoverImage"]` |
 
-## MCP Tools
-
-- `x_publish_article` – Publish a long-form article
-- `x_draft_article` – Save article as draft
-- `x_get_articles` – Get published articles
-- `x_article_analytics` – Article performance data
-
-## API Endpoints
-
-- `POST /api/articles/publish` – Publish article
-- `POST /api/articles/draft` – Save draft
-- `GET /api/articles` – List articles
-- `GET /api/articles/:id/analytics` – Article analytics
-- `PUT /api/articles/:id` – Update article
-- `DELETE /api/articles/:id` – Delete article
-
-## Related Files
-
-- `src/articlePublisher.js` – Core article module
-- `scripts/publishArticle.js` – Browser article script
-
 ## Notes
 
 - Requires Premium+ subscription ($16/mo)
-- Articles support rich formatting and media embeds
-- Audio articles are a 2026 testing feature
+- Articles support rich formatting (headers, bold, italics, lists) and media embeds
 - No character limit for articles
-- Articles get their own analytics dashboard
+- Articles appear in followers' feeds and have their own analytics

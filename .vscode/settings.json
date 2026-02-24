@@ -1,4 +1,47 @@
 {
     "telemetry.editStats.enabled": false,
-    "telemetry.feedback.enabled": false
+    "telemetry.feedback.enabled": false,
+
+    // Exclude from file explorer & general indexing
+    "files.exclude": {
+        "**/node_modules": true,
+        "**/.git": true,
+        "**/dist": true,
+        "**/build": true,
+        "**/coverage": true,
+        "**/.next": true,
+        "**/test-output": true,
+        "**/.nyc_output": true,
+        "**/e2e/reports": true
+    },
+
+    // Exclude from search (reduces CPU on workspace search)
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/package-lock.json": true,
+        "**/bun.lockb": true,
+        "**/dist": true,
+        "**/build": true,
+        "**/coverage": true,
+        "**/.next": true,
+        "**/test-output": true,
+        "**/seo-prompts": true,
+        "**/llms-full.txt": true,
+        "**/llms.txt": true,
+        "**/.github/demos": true,
+        "**/scripts/twitter": true
+    },
+
+    // Reduce file watcher load (biggest perf impact)
+    "files.watcherExclude": {
+        "**/node_modules/**": true,
+        "**/.git/objects/**": true,
+        "**/.git/subtree-cache/**": true,
+        "**/dist/**": true,
+        "**/build/**": true,
+        "**/coverage/**": true,
+        "**/.next/**": true,
+        "**/test-output/**": true,
+        "**/.nyc_output/**": true
+    }
 }

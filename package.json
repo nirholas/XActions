@@ -15,6 +15,11 @@
   "exports": {
     ".": "./src/index.js",
     "./scrapers": "./src/scrapers/index.js",
+    "./scrapers/twitter": "./src/scrapers/twitter/index.js",
+    "./scrapers/bluesky": "./src/scrapers/bluesky/index.js",
+    "./scrapers/mastodon": "./src/scrapers/mastodon/index.js",
+    "./scrapers/threads": "./src/scrapers/threads/index.js",
+    "./plugins": "./src/plugins/index.js",
     "./mcp": "./src/mcp/server.js",
     "./cli": "./src/cli/index.js"
   },
@@ -67,6 +72,7 @@
     "stripe": "^14.10.0"
   },
   "optionalDependencies": {
+    "@atproto/api": "^0.13.0",
     "@x402/core": "^0.1.0",
     "@x402/evm": "^0.1.0",
     "@x402/express": "^0.1.0",

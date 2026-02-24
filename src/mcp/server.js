@@ -738,6 +738,91 @@ const TOOLS = [
     },
   },
   // ====== Real-Time Streaming ======
+  // ====== Sentiment Analysis & Reputation Monitoring ======
+  {
+    name: 'x_analyze_sentiment',
+    description: 'Analyze the sentiment of text. Returns a score (-1 to 1), label (positive/neutral/negative), confidence, and key sentiment-bearing words. Uses a built-in rule-based analyzer by default (zero dependencies), or optionally an LLM via OpenRouter for nuanced analysis.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        text: {
+          type: 'string',
+          description: 'Text to analyze (tweet content, any string)',
+        },
+        texts: {
+          type: 'array',
+          items: { type: 'string' },
+          description: 'Array of texts for batch analysis (alternative to single text)',
+        },
+        mode: {
+          type: 'string',
+          description: 'Analysis mode: "rules" (default, offline) or "llm" (requires OPENROUTER_API_KEY)',
+          enum: ['rules', 'llm'],
+        },
+      },
+    },
+  },
+  {
+    name: 'x_monitor_reputation',
+    description: 'Start monitoring sentiment for a username or keyword over time. Scrapes mentions periodically, analyzes sentiment, computes rolling averages, detects anomalies, and can trigger webhook alerts.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        action: {
+          type: 'string',
+          description: 'Action: "start" (create monitor), "stop" (stop by ID), "list" (list all monitors), "status" (get monitor status by ID)',
+          enum: ['start', 'stop', 'list', 'status'],
+        },
+        target: {
+          type: 'string',
+          description: 'Username (with @) or keyword to monitor (required for "start")',
+        },
+        monitorId: {
+          type: 'string',
+          description: 'Monitor ID (required for "stop" and "status")',
+        },
+        type: {
+          type: 'string',
+          description: 'Monitor type: mentions, keyword, replies (default: mentions)',
+          enum: ['mentions', 'keyword', 'replies'],
+        },
+        interval: {
+          type: 'number',
+          description: 'Polling interval in seconds (default: 900 = 15 min, minimum: 60)',
+        },
+        webhookUrl: {
+          type: 'string',
+          description: 'Webhook URL to POST alerts to',
+        },
+      },
+      required: ['action'],
+    },
+  },
+  {
+    name: 'x_reputation_report',
+    description: 'Generate a reputation report for a monitored username. Shows sentiment distribution, top positive/negative mentions, timeline data, keyword frequency, and alerts. Requires an active monitor for the target.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        username: {
+          type: 'string',
+          description: 'Username to generate report for (must have active monitor)',
+        },
+        period: {
+          type: 'string',
+          description: 'Report period: 24h, 7d, 30d, all (default: 7d)',
+          enum: ['24h', '7d', '30d', 'all'],
+        },
+        format: {
+          type: 'string',
+          description: 'Output format: json or markdown (default: markdown)',
+          enum: ['json', 'markdown'],
+        },
+      },
+      required: ['username'],
+    },
+  },
+  // ====== Real-Time Streaming (continued) ======
   {
     name: 'x_stream_start',
     description: 'Start a real-time stream that polls an X/Twitter account and pushes new events. Types: tweet (new tweets), follower (follow/unfollow events), mention (new mentions). Events are emitted via Socket.IO.',
@@ -845,6 +930,89 @@ const TOOLS = [
       properties: {},
     },
   },
+  // ---- Account Portability Tools ----
+  {
+    name: 'x_export_account',
+    description: 'Export a Twitter account: profile, tweets, followers, following, bookmarks. Outputs JSON, CSV, Markdown, and a self-contained HTML archive viewer. Supports resume-on-failure.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        username: {
+          type: 'string',
+          description: 'Twitter username to export (without @)',
+        },
+        formats: {
+          type: 'array',
+          items: { type: 'string', enum: ['json', 'csv', 'md', 'html'] },
+          description: 'Output formats (default: all)',
+        },
+        only: {
+          type: 'array',
+          items: { type: 'string', enum: ['profile', 'tweets', 'followers', 'following', 'bookmarks', 'likes'] },
+          description: 'Export only specific data types (default: all)',
+        },
+        limit: {
+          type: 'number',
+          description: 'Max items per phase (default: 500)',
+        },
+      },
+      required: ['username'],
+    },
+  },
+  {
+    name: 'x_migrate_account',
+    description: 'Migrate exported Twitter data to Bluesky or Mastodon. Supports dry-run mode to preview actions without executing. Requires a prior export.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        username: {
+          type: 'string',
+          description: 'Twitter username whose export to migrate (without @)',
+        },
+        platform: {
+          type: 'string',
+          description: 'Target platform',
+          enum: ['bluesky', 'mastodon'],
+        },
+        dryRun: {
+          type: 'boolean',
+          description: 'Preview only, do not execute (default: true)',
+        },
+        exportDir: {
+          type: 'string',
+          description: 'Path to export directory (auto-detected from exports/ if omitted)',
+        },
+      },
+      required: ['username', 'platform'],
+    },
+  },
+  {
+    name: 'x_diff_exports',
+    description: 'Compare two account exports to find new/lost followers, deleted tweets, and engagement changes. Generates a diff report in JSON and Markdown.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        dirA: {
+          type: 'string',
+          description: 'Path to the older export directory',
+        },
+        dirB: {
+          type: 'string',
+          description: 'Path to the newer export directory',
+        },
+      },
+      required: ['dirA', 'dirB'],
+    },
+  },
+  // ====== Cross-Platform ======
+  {
+    name: 'x_list_platforms',
+    description: 'List all supported social media platforms (Twitter, Bluesky, Mastodon, Threads) and their capabilities.',
+    inputSchema: {
+      type: 'object',
+      properties: {},
+    },
+  },
 ];
 
 // ============================================================================
@@ -898,9 +1066,19 @@ async function executeTool(name, args) {
     return await executeStreamTool(name, args);
   }
 
+  // Handle analytics/sentiment tools directly
+  if (name === 'x_analyze_sentiment' || name === 'x_monitor_reputation' || name === 'x_reputation_report') {
+    return await executeAnalyticsTool(name, args);
+  }
+
   // Handle workflow tools directly
   if (name.startsWith('x_workflow_')) {
     return await executeWorkflowTool(name, args);
+  }
+
+  // Handle portability tools directly
+  if (name === 'x_export_account' || name === 'x_migrate_account' || name === 'x_diff_exports') {
+    return await executePortabilityTool(name, args);
   }
   
   // Check plugin tools first
@@ -912,7 +1090,21 @@ async function executeTool(name, args) {
   if (MODE === 'remote') {
     return await remoteClient.execute(name, args);
   } else {
-    const toolFn = localTools[name];
+    // Check if a non-Twitter platform param is set and dispatch to multi-platform variant
+    const multiPlatformTools = {
+      x_get_profile: 'x_get_profile_multiplatform',
+      x_get_followers: 'x_get_followers_multiplatform',
+      x_get_following: 'x_get_following_multiplatform',
+      x_get_tweets: 'x_get_tweets_multiplatform',
+      x_search_tweets: 'x_search_tweets_multiplatform',
+    };
+
+    let toolName = name;
+    if (args.platform && args.platform !== 'twitter' && multiPlatformTools[name]) {
+      toolName = multiPlatformTools[name];
+    }
+
+    const toolFn = localTools[toolName] || localTools[name];
     if (!toolFn) {
       throw new Error(`Unknown tool: ${name}`);
     }
@@ -948,6 +1140,214 @@ async function executeStreamTool(name, args) {
     }
     default:
       throw new Error(`Unknown stream tool: ${name}`);
+  }
+}
+
+/**
+ * Execute analytics/sentiment tools
+ */
+async function executeAnalyticsTool(name, args) {
+  // Lazy-import to avoid loading analytics deps when not needed
+  const analytics = await import('../analytics/index.js');
+
+  switch (name) {
+    case 'x_analyze_sentiment': {
+      if (args.texts && Array.isArray(args.texts)) {
+        const results = await analytics.analyzeBatch(args.texts, { mode: args.mode || 'rules' });
+        return { results, count: results.length };
+      }
+      if (!args.text) {
+        return { error: 'Either "text" (string) or "texts" (array) is required' };
+      }
+      return await analytics.analyzeSentiment(args.text, { mode: args.mode || 'rules' });
+    }
+
+    case 'x_monitor_reputation': {
+      const action = args.action;
+
+      if (action === 'start') {
+        if (!args.target) return { error: '"target" is required to start a monitor' };
+        const monitor = analytics.createMonitor({
+          target: args.target,
+          type: args.type || 'mentions',
+          intervalMs: args.interval ? Math.max(60, Number(args.interval)) * 1000 : undefined,
+          sentimentMode: 'rules',
+          alertConfig: {
+            webhookUrl: args.webhookUrl || null,
+          },
+        });
+        return monitor;
+      }
+
+      if (action === 'stop') {
+        if (!args.monitorId) return { error: '"monitorId" is required to stop a monitor' };
+        analytics.removeMonitor(args.monitorId);
+        return { success: true, message: `Monitor ${args.monitorId} stopped` };
+      }
+
+      if (action === 'list') {
+        return { monitors: analytics.listMonitors() };
+      }
+
+      if (action === 'status') {
+        if (!args.monitorId) return { error: '"monitorId" is required for status' };
+        const monitor = analytics.getMonitor(args.monitorId);
+        if (!monitor) return { error: `Monitor ${args.monitorId} not found` };
+        const history = analytics.getMonitorHistory(args.monitorId, { limit: 20 });
+        return { ...monitor, recentHistory: history };
+      }
+
+      return { error: `Unknown action "${action}". Use: start, stop, list, status` };
+    }
+
+    case 'x_reputation_report': {
+      const username = (args.username || '').replace(/^@/, '');
+      if (!username) return { error: '"username" is required' };
+
+      const monitors = analytics.listMonitors();
+      const monitor = monitors.find(m =>
+        m.target.replace(/^@/, '').toLowerCase() === username.toLowerCase()
+      );
+
+      if (!monitor) {
+        return {
+          error: `No active monitor for @${username}. Start one first with x_monitor_reputation action:"start" target:"@${username}"`,
+        };
+      }
+
+      const history = analytics.getMonitorHistory(monitor.id, { limit: 10000 });
+      const { report, markdown } = analytics.generateReport(monitor, history, {
+        period: args.period || '7d',
+        format: args.format || 'markdown',
+      });
+
+      if (args.format === 'json') return report;
+      return { report, markdown };
+    }
+
+    default:
+      throw new Error(`Unknown analytics tool: ${name}`);
+  }
+}
+
+/**
+ * Execute workflow-specific tools
+ */
+async function executeWorkflowTool(name, args) {
+  // Lazy-import to avoid loading workflow deps when not needed
+  const workflows = (await import('../workflows/index.js')).default;
+
+  switch (name) {
+    case 'x_workflow_create': {
+      const workflow = await workflows.create({
+        name: args.name,
+        description: args.description || '',
+        trigger: args.trigger || { type: 'manual' },
+        steps: args.steps || [],
+      });
+      return workflow;
+    }
+    case 'x_workflow_run': {
+      const result = await workflows.run(args.workflow, {
+        trigger: 'mcp',
+        initialContext: args.context || {},
+        authToken: SESSION_COOKIE || undefined,
+      });
+      return {
+        runId: result.id,
+        workflowName: result.workflowName,
+        status: result.status,
+        stepsCompleted: result.stepsCompleted,
+        totalSteps: result.totalSteps,
+        error: result.error,
+        steps: result.steps?.map(s => ({
+          name: s.name,
+          status: s.status,
+          error: s.error,
+        })),
+        result: result.result,
+      };
+    }
+    case 'x_workflow_list': {
+      return await workflows.list();
+    }
+    case 'x_workflow_actions': {
+      return {
+        actions: workflows.listActions(),
+        operators: workflows.getAvailableOperators(),
+      };
+    }
+    default:
+      throw new Error(`Unknown workflow tool: ${name}`);
+  }
+}
+
+/**
+ * Execute portability-specific tools (export, migrate, diff)
+ */
+async function executePortabilityTool(name, args) {
+  const portability = await import('../portability/index.js');
+
+  switch (name) {
+    case 'x_export_account': {
+      // Need a browser page for scraping
+      const scrapers = (await import('../scrapers/index.js')).default || await import('../scrapers/index.js');
+      const browser = await scrapers.createBrowser();
+      const page = await scrapers.createPage(browser);
+
+      if (SESSION_COOKIE) {
+        await scrapers.loginWithCookie(page, SESSION_COOKIE);
+      }
+
+      try {
+        const summary = await portability.exportAccount({
+          page,
+          username: args.username,
+          formats: args.formats || ['json', 'csv', 'md'],
+          only: args.only,
+          limit: args.limit || 500,
+          scrapers,
+        });
+        return summary;
+      } finally {
+        await browser.close();
+      }
+    }
+
+    case 'x_migrate_account': {
+      const { promises: fs } = await import('fs');
+      const path = await import('path');
+
+      // Find export dir
+      let exportDir = args.exportDir;
+      if (!exportDir) {
+        const username = args.username.replace(/^@/, '');
+        const exportsRoot = path.join(process.cwd(), 'exports');
+        try {
+          const dirs = await fs.readdir(exportsRoot);
+          const match = dirs.filter(d => d.startsWith(username + '_')).sort().pop();
+          if (match) exportDir = path.join(exportsRoot, match);
+        } catch { /* no exports dir */ }
+      }
+
+      if (!exportDir) {
+        throw new Error(`No export found for @${args.username}. Run x_export_account first.`);
+      }
+
+      return await portability.migrate({
+        platform: args.platform,
+        exportDir,
+        dryRun: args.dryRun !== false,
+      });
+    }
+
+    case 'x_diff_exports': {
+      const { diff } = await portability.diffAndReport(args.dirA, args.dirB);
+      return diff;
+    }
+
+    default:
+      throw new Error(`Unknown portability tool: ${name}`);
   }
 }
 

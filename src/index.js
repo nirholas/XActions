@@ -28,6 +28,23 @@ import scrapers from './scrapers/index.js';
 export { scrapers };
 
 // ============================================================================
+// Plugin System
+// ============================================================================
+
+import plugins from './plugins/index.js';
+export { plugins };
+export {
+  initializePlugins,
+  installPlugin,
+  removePlugin,
+  listPlugins,
+  getPluginTools,
+  getPluginScrapers,
+  getPluginRoutes,
+  getPluginActions,
+} from './plugins/index.js';
+
+// ============================================================================
 // Managers & Tools (Puppeteer-based ES modules)
 // ============================================================================
 
