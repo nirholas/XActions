@@ -167,6 +167,7 @@ XActions delivers features through **5 delivery modes**:
 | # | File | What It Does | Page Required | Key Config |
 |---|------|-------------|---------------|------------|
 | 9 | `src/automation/growthSuite.js` (368 lines) | All-in-one growth: keyword following + auto-liking + smart unfollowing | Various | `STRATEGY` config with targeting (keywords, target accounts), actions toggle, limits, timing, filters |
+| 9b | `src/automation/algorithmTrainer.js` (570+ lines) | 24/7 algorithm training engine — trains X algorithm for your niches via autonomous browsing, searching, engaging | Any x.com | `NICHES.topics[]` (search terms + comments per niche), `PERSONA.INTENSITY` (chill/normal/active), cycle/daily limits, 8 phases (search top/latest, people follow, home feed, influencer visits, own profile, explore, idle dwell), `stopTrainer()` / `trainerStatus()` / `trainerReset()` |
 | 10 | `src/automation/customerService.js` (511 lines) | Customer service bot — monitors mentions/DMs/replies, auto-responds | Notifications/DMs | `BRAND_KEYWORDS[]`, response template categories (greeting, issue, feedback, faq, escalation), `BUSINESS_HOURS` with timezone |
 | 11 | `src/automation/multiAccount.js` (456 lines) | Multi-account manager with rotation | Any x.com | `addAccount()`, `removeAccount()`, `switchAccount()`, `getNextAccount()` rotation; localStorage storage, per-account stats |
 

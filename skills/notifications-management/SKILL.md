@@ -1,31 +1,27 @@
 ---
 name: notifications-management
-description: Manage X/Twitter notifications including alerts, filters, push/email settings, priority notifications tab, muting, and the 2026 Priority tab feature for iOS/web.
+description: Manages X/Twitter notifications including filtering, marking as read, and automating notification handling. Use when users want to manage, filter, or automate X notification processing.
 license: MIT
 metadata:
   author: nichxbt
   version: "3.0"
 ---
 
-# Notifications Management with XActions
+# Notifications Management
 
-Automate and manage X/Twitter notification settings and monitoring.
+Browser console script for managing and filtering X/Twitter notifications.
 
-## Features
+## Available Scripts
 
-- **Alerts**: Likes, mentions, replies, follows, reposts
-- **Filters**: Mute specific users, words, phrases
-- **Push Notifications**: Device push notification controls
-- **Email Notifications**: Email alert preferences
-- **Web/Browser**: Browser popup notifications
-- **X Alerts**: Custom recommendation alerts
-- **Priority Tab**: Highlighted key notifications for iOS/web (2026)
-- **Timeline View**: Review all notifications in chronological order
-- **Notification Scraping**: Export notification data
+| Script | File | Purpose |
+|--------|------|---------|
+| Notification Manager | `src/notificationManager.js` | Filter, manage, and automate notification handling |
 
-## Browser Console Script
+## Notification Manager
 
-**File:** `scripts/manageNotifications.js`
+**File:** `src/notificationManager.js`
+
+Manages X notifications: filter by type, mark as read, and track notification activity.
 
 ### How to use
 
@@ -33,42 +29,15 @@ Automate and manage X/Twitter notification settings and monitoring.
 2. Open DevTools (F12) → Console
 3. Paste the script → Enter
 
-### Key selectors
+### Key Selectors
 
 | Element | Selector |
 |---------|----------|
-| Notification tab | `a[href="/notifications"]` |
-| Mentions tab | `a[href="/notifications/mentions"]` |
-| All tab | `[role="tab"]` |
 | Notification cells | `[data-testid="notification"]` |
-| Settings gear | `a[href="/settings/notifications"]` |
-| Filter options | `[data-testid="settingsSwitch"]` |
-
-## MCP Tools
-
-- `x_get_notifications` – Scrape recent notifications
-- `x_mute_user` – Mute a user
-- `x_unmute_user` – Unmute a user
-- `x_mute_word` – Mute a word/phrase
-- `x_notification_settings` – Get/update notification preferences
-
-## API Endpoints
-
-- `GET /api/notifications` – Get recent notifications
-- `GET /api/notifications/mentions` – Get mentions only
-- `PUT /api/notifications/settings` – Update notification preferences
-- `POST /api/notifications/mute-word` – Add muted word
-- `DELETE /api/notifications/mute-word/:word` – Remove muted word
-
-## Related Files
-
-- `src/notificationManager.js` – Core notification module
-- `scripts/manageNotifications.js` – Browser notification script
-- `scripts/scrapeNotifications.js` – Notification scraping
+| Toggle switch | `[data-testid="settingsSwitch"]` |
 
 ## Notes
 
-- Priority tab is a 2026 feature for iOS and web
-- Muted words/phrases can be temporary or permanent
-- Email notifications have separate per-category settings
-- Push notifications require browser/device permissions
+- Notifications page loads in batches — script scrolls to collect more
+- Filter types: mentions, likes, reposts, follows, replies
+- Rate limit: process with 1s delays between actions

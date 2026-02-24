@@ -5,6 +5,11 @@
  * Moved from src/scrapers/index.js to support multi-platform architecture.
  * All original exports are preserved for backward compatibility.
  * 
+ * Supports multiple frameworks via the adapter option:
+ *   createBrowser({ adapter: 'playwright' })  // Use Playwright
+ *   createBrowser({ adapter: 'puppeteer' })   // Use Puppeteer (default)
+ *   createBrowser()                            // Legacy Puppeteer (no adapter wrapping)
+ * 
  * @author nich (@nichxbt) - https://github.com/nirholas
  * @see https://xactions.app
  * @license MIT
@@ -24,9 +29,26 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const randomDelay = (min = 1000, max = 3000) => sleep(min + Math.random() * (max - min));
 
 /**
- * Create a browser instance with stealth settings
+ * Create a browser instance with stealth settings.
+ * 
+ * Supports adapter mode:
+ *   const browser = await createBrowser({ adapter: 'playwright' });
+ *   const browser = await createBrowser({ adapter: 'puppeteer' });
+ *   const browser = await createBrowser(); // Legacy Puppeteer
+ * 
+ * @param {Object} [options]
+ * @param {string} [options.adapter] - Framework adapter: 'puppeteer', 'playwright', 'cheerio'
+ * @param {boolean} [options.headless] - Run headless (default: true)
+ * @returns {Promise<Object>} Browser instance
  */
 export async function createBrowser(options = {}) {
+  if (options.adapter) {
+    const { getAdapter } = await import('../adapters/index.js');
+    const adapter = await getAdapter(options.adapter);
+    const { adapter: _, ...adapterOptions } = options;
+    return adapter.launch(adapterOptions);
+  }
+
   return puppeteer.launch({
     headless: options.headless !== false ? 'new' : false,
     args: [
@@ -40,9 +62,20 @@ export async function createBrowser(options = {}) {
 }
 
 /**
- * Create a page with realistic settings
+ * Create a page with realistic settings.
+ * Works with both native Puppeteer browsers and adapter browsers.
+ * 
+ * @param {Object} browser - Browser instance (native or adapter)
+ * @param {Object} [options]
+ * @returns {Promise<Object>} Page instance
  */
-export async function createPage(browser) {
+export async function createPage(browser, options = {}) {
+  if (browser._adapter) {
+    const { getAdapter } = await import('../adapters/index.js');
+    const adapter = await getAdapter(browser._adapter);
+    return adapter.newPage(browser, options);
+  }
+
   const page = await browser.newPage();
   await page.setViewport({ width: 1280 + Math.floor(Math.random() * 100), height: 800 });
   await page.setUserAgent(
@@ -52,9 +85,25 @@ export async function createPage(browser) {
 }
 
 /**
- * Login with session cookie
+ * Login with session cookie.
+ * Works with both native Puppeteer pages and adapter pages.
  */
 export async function loginWithCookie(page, authToken) {
+  if (page._adapter) {
+    const { getAdapter } = await import('../adapters/index.js');
+    const adapter = await getAdapter(page._adapter);
+    await adapter.setCookie(page, {
+      name: 'auth_token',
+      value: authToken,
+      domain: '.x.com',
+      path: '/',
+      httpOnly: true,
+      secure: true,
+    });
+    await adapter.goto(page, 'https://x.com/home', { waitUntil: 'networkidle' });
+    return page;
+  }
+
   await page.setCookie({
     name: 'auth_token',
     value: authToken,

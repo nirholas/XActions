@@ -1,10 +1,14 @@
 /**
- * XActions Scrapers — Unified Multi-Platform Interface
+ * XActions Scrapers — Unified Multi-Platform, Multi-Framework Interface
  * 
- * Supports: Twitter/X, Bluesky, Threads, Mastodon
+ * Platforms: Twitter/X, Bluesky, Threads, Mastodon
+ * Frameworks: Puppeteer (default), Playwright, Cheerio/HTTP
  * 
  * All original Twitter exports are preserved for full backward compatibility.
  * New unified `scrape()` function dispatches to the correct platform module.
+ * 
+ * Set scraping framework globally: XACTIONS_SCRAPER_ADAPTER=playwright
+ * Or per-call: createBrowser({ adapter: 'playwright' })
  * 
  * Usage:
  *   // Backward-compatible Twitter (unchanged):
@@ -15,6 +19,11 @@
  *   import { scrape, platforms } from 'xactions/scrapers';
  *   const profile = await scrape('bluesky', 'profile', { username: 'user.bsky.social' });
  *   const profile = await scrape('mastodon', 'profile', { username: 'user', instance: 'https://mastodon.social' });
+ * 
+ *   // Use Playwright instead of Puppeteer:
+ *   import { createBrowser, createPage, scrapeProfile } from 'xactions/scrapers';
+ *   const browser = await createBrowser({ adapter: 'playwright' });
+ *   const page = await createPage(browser);
  * 
  * @author nich (@nichxbt) - https://github.com/nirholas
  * @see https://xactions.app
@@ -29,6 +38,22 @@ import twitter from './twitter/index.js';
 import bluesky from './bluesky/index.js';
 import mastodon from './mastodon/index.js';
 import threads from './threads/index.js';
+
+// ============================================================================
+// Adapter System (Multi-Framework Support)
+// ============================================================================
+
+import {
+  getAdapter,
+  getAvailableAdapter,
+  setDefaultAdapter,
+  getDefaultAdapterName,
+  registerAdapter,
+  listAdapters,
+  getAdapterInfo,
+  checkAvailability,
+  BaseAdapter,
+} from './adapters/index.js';
 
 // ============================================================================
 // Backward-Compatible Twitter Re-exports
@@ -301,4 +326,28 @@ export default {
   
   // Plugin scrapers lookup
   getPluginScraper,
+
+  // Adapter system (multi-framework support)
+  getAdapter,
+  getAvailableAdapter,
+  setDefaultAdapter,
+  getDefaultAdapterName,
+  registerAdapter,
+  listAdapters,
+  getAdapterInfo,
+  checkAvailability,
+  BaseAdapter,
+};
+
+// Named re-exports for adapter utilities
+export {
+  getAdapter,
+  getAvailableAdapter,
+  setDefaultAdapter,
+  getDefaultAdapterName,
+  registerAdapter,
+  listAdapters,
+  getAdapterInfo,
+  checkAvailability,
+  BaseAdapter,
 };

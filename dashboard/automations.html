@@ -225,7 +225,7 @@
     .form-input {
       width: 100%; background: var(--bg-primary); border: 1px solid var(--border);
       border-radius: 8px; padding: 10px 12px; color: var(--text-primary);
-      font-size: 14px; font-family: var(--font); outline: none; transition: border-color 0.15s;
+      font-size: 14px; font-family: var(--font); transition: border-color 0.15s;
     }
     .form-input:focus { border-color: var(--accent); }
     .form-textarea { resize: vertical; min-height: 80px; }
@@ -239,12 +239,33 @@
       .page-header { flex-direction: column; gap: 12px; align-items: flex-start; }
       .nav__links { display: none; }
     }
+    /* Skip Navigation */
+    .skip-nav {
+      position: absolute;
+      top: -100%;
+      left: 16px;
+      background: var(--accent);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 700;
+      z-index: 9999;
+      text-decoration: none;
+    }
+    .skip-nav:focus {
+      top: 16px;
+    }
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
   </style>
 </head>
 <body>
 
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
   <!-- Nav -->
-  <nav class="nav">
+  <nav class="nav" aria-label="Main navigation">
     <a href="/dashboard" class="nav__brand">⚡ XActions</a>
     <div class="nav__links">
       <a href="/dashboard" class="nav__link">Dashboard</a>
@@ -256,12 +277,12 @@
       <a href="/docs" class="nav__link">Docs</a>
     </div>
     <div class="nav__right">
-      <span id="conn-status" class="conn-badge conn-badge--off">Disconnected</span>
+      <span id="conn-status" class="conn-badge conn-badge--off" role="status" aria-live="polite">Disconnected</span>
     </div>
   </nav>
 
   <!-- Main -->
-  <div class="main">
+  <main class="main" id="main-content">
     <div class="page-header">
       <div>
         <h1>⚙️ Automations</h1>
@@ -285,16 +306,16 @@
     <div class="auto-grid" id="automation-grid" aria-live="polite" aria-atomic="false">
       <!-- Cards rendered by JS -->
     </div>
-  </div>
+  </main>
 
   <!-- Modal overlay -->
   <div class="modal-overlay" id="modal-overlay"></div>
 
   <!-- Settings modal -->
-  <div class="settings-modal" id="settings-modal">
+  <div class="settings-modal" id="settings-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
     <div class="modal-header">
       <h2 id="modal-title">Settings</h2>
-      <button class="modal-close" id="modal-close">&times;</button>
+      <button class="modal-close" id="modal-close" aria-label="Close settings">&times;</button>
     </div>
     <div class="modal-body" id="modal-body">
       <!-- Dynamic form fields -->

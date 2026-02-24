@@ -21,6 +21,7 @@ Browser console scripts for X/Twitter. **Always paste `src/automation/core.js` f
 | Follow users who engaged with specific posts | `src/automation/followEngagers.js` |
 | Follow followers/following of target accounts | `src/automation/followTargetUsers.js` |
 | All-in-one: keyword follow + auto-like + smart unfollow | `src/automation/growthSuite.js` |
+| Train algorithm for niche(s) — 24/7 autonomous browsing | `src/automation/algorithmTrainer.js` |
 
 ## Key script details
 
@@ -35,6 +36,8 @@ Browser console scripts for X/Twitter. **Always paste `src/automation/core.js` f
 **followTargetUsers.js** — Takes target account(s), follows their followers or following list. Rich filters: min/max follower count, follower-to-following ratio, bio keywords (include/exclude), account age.
 
 **growthSuite.js** — Combines keyword follow + auto-like + smart unfollow + engagement tracking into a single long-running session.
+
+**algorithmTrainer.js** — Autonomous 24/7 algorithm training engine. Configurable niches with search terms and comment templates. Cycles through 8 phases: search top results, search latest, search people & follow, home feed engagement, influencer profile visits, own profile visits, explore page browsing, and idle dwell periods. Human-like timing with randomized delays, probabilistic engagement (like/comment/bookmark/retweet/follow), intensity presets (chill/normal/active), per-cycle and daily rate limits, persistent state across sessions. Controls: `stopTrainer()`, `trainerStatus()`, `trainerReset()`.
 
 ## Supporting scripts
 

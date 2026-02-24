@@ -1,46 +1,28 @@
 ---
 name: spaces-live
-description: Manage X/Twitter Spaces (live audio/video), live streams, events, and Circles. Includes hosting, joining, recording, Q&As, and private sharing features.
+description: Interacts with X/Twitter Spaces (live audio) including joining, scraping metadata, and managing live audio rooms. Use when users want to find Spaces, scrape Space data, or interact with live audio features.
 license: MIT
 metadata:
   author: nichxbt
   version: "3.0"
 ---
 
-# Spaces, Live & Events with XActions
+# Spaces & Live Audio
 
-Manage live audio/video features on X/Twitter.
+Browser console scripts for interacting with X/Twitter Spaces.
 
-## Features
+## Available Scripts
 
-### Spaces
-- **Host**: Create live audio/video rooms
-- **Join**: Participate in live Spaces
-- **Schedule**: Plan Spaces in advance
-- **Record**: Record Spaces for replay
-- **Q&A**: Interactive question and answer sessions
-- **Speakers**: Manage speakers and listeners
-- **Captions**: Live captions for accessibility
-- **Clips**: Create short clips from Spaces
+| Script | File | Purpose |
+|--------|------|---------|
+| Spaces Manager | `src/spacesManager.js` | Join, manage, and interact with Spaces |
+| Scrape Spaces | `src/scrapeSpaces.js` | Find and collect Space metadata from search |
 
-### Live Streams
-- **Video Broadcasts**: Stream live video
-- **Periscope Integration**: Legacy live streaming
-- **Multi-host**: Co-hosting live streams
+## Spaces Manager
 
-### Events
-- **Create**: Set up event pages
-- **Promote**: Share events with followers
-- **RSVP**: Track attendance and interest
-- **Reminders**: Automated event reminders
+**File:** `src/spacesManager.js`
 
-### Circles
-- **Private Sharing**: Share with up to 150 selected followers
-- **Close Friends**: Curated audience for personal content
-
-## Browser Console Script
-
-**File:** `scripts/scrapeSpaces.js`
+Manages interactions with X Spaces: join, leave, request to speak.
 
 ### How to use
 
@@ -48,11 +30,28 @@ Manage live audio/video features on X/Twitter.
 2. Open DevTools (F12) → Console
 3. Paste the script → Enter
 
-### Key selectors
+## Scrape Spaces
+
+**File:** `src/scrapeSpaces.js`
+
+Finds X Spaces from search results or timelines. Identifies live, scheduled, and ended Spaces.
+
+### How to use
+
+1. Search for Spaces or navigate to a timeline with Spaces
+2. Paste in DevTools console → Enter
+
+### Output
+
+- Live/scheduled/ended counts per Space
+- Host and title for each Space
+- Direct links to join
+- JSON export
+
+### Key Selectors
 
 | Element | Selector |
 |---------|----------|
-| Spaces nav | `a[href*="/spaces"]` |
 | Start Space | `[data-testid="SpaceButton"]` |
 | Join Space | `[data-testid="joinSpace"]` |
 | Speaker list | `[data-testid="spaceSpeakers"]` |
@@ -60,34 +59,8 @@ Manage live audio/video features on X/Twitter.
 | Recording | `[data-testid="spaceRecording"]` |
 | Schedule | `[data-testid="scheduleSpace"]` |
 
-## MCP Tools
-
-- `x_create_space` – Start a new Space
-- `x_get_spaces` – Get live/scheduled Spaces
-- `x_join_space` – Join a Space
-- `x_schedule_space` – Schedule a Space
-- `x_scrape_space` – Scrape Space metadata
-- `x_create_event` – Create an event
-
-## API Endpoints
-
-- `POST /api/spaces/create` – Create a Space
-- `GET /api/spaces/live` – Get live Spaces
-- `GET /api/spaces/scheduled` – Get scheduled Spaces
-- `POST /api/spaces/schedule` – Schedule a Space
-- `GET /api/spaces/:id` – Space details
-- `POST /api/events/create` – Create event
-- `GET /api/events` – List events
-
-## Related Files
-
-- `src/spacesManager.js` – Core Spaces module
-- `scripts/scrapeSpaces.js` – Browser Spaces scraper
-
 ## Notes
 
-- Spaces support up to thousands of listeners
-- Recording depends on host settings
-- Events integrate with Spaces for live sessions
-- Circles limited to 150 followers
-- Scheduled Spaces send reminders to followers
+- Scraping captures metadata only (not audio content)
+- Spaces can be live, scheduled, or ended
+- Recording availability depends on host settings

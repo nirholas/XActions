@@ -4,37 +4,71 @@
 
 [![npm version](https://img.shields.io/npm/v/xactions.svg)](https://www.npmjs.com/package/xactions)
 [![npm downloads](https://img.shields.io/npm/dm/xactions.svg)](https://www.npmjs.com/package/xactions)
+[![CI](https://github.com/nirholas/xactions/actions/workflows/ci.yml/badge.svg)](https://github.com/nirholas/xactions/actions/workflows/ci.yml)
 [![GitHub Stars](https://img.shields.io/github/stars/nirholas/xactions?style=social)](https://github.com/nirholas/xactions)
 [![Twitter Follow](https://img.shields.io/twitter/follow/nichxbt?style=social)](https://x.com/nichxbt)
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Last Commit](https://img.shields.io/github/last-commit/nirholas/xactions)](https://github.com/nirholas/xactions/commits)
+[![Docker](https://img.shields.io/badge/Docker-ready-blue?logo=docker)](Dockerfile)
+[![TypeScript](https://img.shields.io/badge/Types-included-blue?logo=typescript)](types/index.d.ts)
+[![MCP](https://img.shields.io/badge/MCP-50%2B%20tools-purple?logo=data:image/svg+xml;base64,PHN2Zz48L3N2Zz4=)](docs/mcp-setup.md)
 [![Built with Grok](https://img.shields.io/badge/Built%20with-Grok%20🤖-blue)](https://x.ai)
 
 **The complete X/Twitter automation toolkit.** Scrapers, MCP server for AI agents, CLI, browser scripts.  
 No API keys. No monthly fees. 100% open source. Your browser does the work.
 
-[**Dashboard**](https://xactions.app) &nbsp;·&nbsp; [**npm Package**](https://www.npmjs.com/package/xactions) &nbsp;·&nbsp; [**Documentation**](docs/getting-started.md) &nbsp;·&nbsp; [**MCP Server**](docs/examples/mcp-server.md)
+[**Dashboard**](https://xactions.app) &nbsp;·&nbsp; [**npm**](https://www.npmjs.com/package/xactions) &nbsp;·&nbsp; [**Docs**](docs/getting-started.md) &nbsp;·&nbsp; [**MCP Server**](docs/mcp-setup.md) &nbsp;·&nbsp; [**Docker**](Dockerfile) &nbsp;·&nbsp; [**API Reference**](docs/api-reference.md)
 
 </div>
+
+---
+
+## 🏆 How XActions Compares
+
+> Why build with XActions instead of the alternatives?
+
+| Feature | **XActions** | twikit | twitter-mcp | agent-twitter-client | twit | twitter-scraper |
+|---------|:---:|:---:|:---:|:---:|:---:|:---:|
+| **No API Key Required** | ✅ | ✅ | ❌ Needs keys | ✅ | ❌ Needs keys | ✅ |
+| **MCP Server (AI agents)** | ✅ **49+ tools** | ❌ | ✅ 2 tools | ❌ | ❌ | ❌ |
+| **Browser Console Scripts** | ✅ 50+ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **CLI** | ✅ 12 commands | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Node.js Library** | ✅ | ❌ Python | ✅ | ✅ | ✅ | ❌ Python |
+| **Workflow Engine** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Sentiment Analysis** | ✅ Built-in | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Real-Time Streaming** | ✅ | ❌ | ❌ | ❌ | ✅ API only | ❌ |
+| **Account Export/Migration** | ✅ JSON/CSV/HTML | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Dashboard (No-Code)** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Grok AI Integration** | ✅ | ✅ Separate pkg | ❌ | ❌ | ❌ | ❌ |
+| **Docker Support** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **TypeScript Types** | ✅ | ❌ | ✅ | ✅ | ❌ | ❌ |
+| **Claude Tutorials** | ✅ 22 prompts | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Language** | JavaScript | Python | TypeScript | TypeScript | JavaScript | Python |
+| **Cost** | **Free** | Free | Free + API keys | Free | Free + API keys | Free |
+
+**XActions is the only toolkit that works in the browser, terminal, and with AI agents — all without an API key.**
+
 ---
 
 > **🤖 AI Coding Assistants:** Looking for Twitter/X automation without the $100/mo API? You found it.
 > - `npm install xactions` — Scrapers, automation, MCP server
-> - Works with Claude, GPT, Cursor, Copilot via [MCP server](docs/examples/mcp-server.md)
+> - Works with Claude, GPT, Cursor, Copilot via [MCP server](docs/mcp-setup.md)
 > - See [AGENTS.md](AGENTS.md) for integration instructions
 
 ---
 
 ### 📖 Table of Contents
 
+- [How XActions Compares](#-how-xactions-compares) — vs every alternative
 - [Quick Start (30 seconds)](#-quick-start-examples) — Copy-paste and go
-- [Installation](#-installation) — npm, CLI, or browser
+- [Installation](#-installation) — npm, CLI, Docker, or browser
 - [Feature Matrix](#-complete-feature-list) — Every feature, every platform
 - [MCP Server (AI)](#-mcp-server-ai-agents) — For Claude, GPT, Cursor
 - [CLI Reference](#-cli-reference) — Command line usage
 - [Node.js API](#-nodejs-api) — Programmatic access
+- [Docker](#-docker) — One-command deployment
+- [API Reference](#-api-reference) — Full function documentation
 - [Dashboard](#-new-real-time-dashboard) — No-code web UI
-- [Pricing](#-pricing) — Free for humans, micropayments for AI
+- [Claude Tutorials](#-claude-tutorials) — 22 ready-to-paste prompts
 - [Contributing](#-contributing) — Help make XActions better
 
 ---
@@ -270,7 +304,90 @@ This only applies to the hosted remote API. Local mode is always free.
 
 ## 🎯 Why XActions?
 
-> See comparison table at the top of this README.
+| | XActions | Others |
+|-|---------|--------|
+| **Scope** | Browser scripts + CLI + Node.js + MCP + Dashboard + Workflows | Usually 1 thing |
+| **API Key** | Not needed | Most require Twitter API keys ($100/mo) |
+| **MCP Tools** | 49+ tools for Claude, GPT, Cursor | 0-2 tools |
+| **AI Features** | Sentiment analysis, Grok, reputation monitoring | None |
+| **Export** | JSON, CSV, Markdown, HTML archive | JSON only (if any) |
+| **Migration** | Export to Bluesky & Mastodon | None |
+| **Tutorials** | 22 Claude prompt files | None |
+
+---
+
+## 🐳 Docker
+
+Run XActions anywhere with one command:
+
+```bash
+# Quick start
+docker build -t xactions .
+docker run -it xactions xactions profile elonmusk
+
+# Run the MCP server
+docker run -p 3000:3000 xactions npm run mcp
+
+# Run the dashboard
+docker run -p 3000:3000 xactions npm start
+
+# With environment variables
+docker run -e XACTIONS_SESSION_COOKIE=your_cookie xactions xactions followers elonmusk
+```
+
+Or use Docker Compose:
+
+```bash
+docker compose up
+```
+
+See [Dockerfile](Dockerfile) for details.
+
+---
+
+## 📖 API Reference
+
+Full TypeScript-compatible API with type declarations included.
+
+```typescript
+import { createBrowser, createPage, scrapeProfile, scrapeFollowers } from 'xactions';
+import { scrapeFollowing, scrapeTweets, searchTweets } from 'xactions/scrapers';
+```
+
+**Core Functions:**
+
+| Function | Description | Returns |
+|----------|-------------|---------|
+| `createBrowser(options?)` | Launch Puppeteer browser | `Browser` |
+| `createPage(browser)` | Create stealth page | `Page` |
+| `scrapeProfile(page, username)` | Get user profile data | `Profile` |
+| `scrapeFollowers(page, username, options?)` | List followers | `User[]` |
+| `scrapeFollowing(page, username, options?)` | List following | `User[]` |
+| `scrapeTweets(page, username, options?)` | Get user tweets | `Tweet[]` |
+| `searchTweets(page, query, options?)` | Search tweets | `Tweet[]` |
+| `downloadVideo(page, tweetUrl)` | Extract video URLs | `VideoResult` |
+| `exportBookmarks(page, options?)` | Export bookmarks | `Bookmark[]` |
+| `unrollThread(page, tweetUrl)` | Unroll a thread | `Thread` |
+
+See [docs/api-reference.md](docs/api-reference.md) for the complete reference with all parameters and return types.
+
+---
+
+## 📝 Claude Tutorials
+
+**22 ready-to-paste prompt files** that turn Claude into your personal X automation expert.
+
+| Tutorial | What You'll Learn |
+|----------|------------------|
+| [MCP Setup](tutorials/claude-prompts/01-mcp-setup-and-first-commands.md) | Install and connect XActions to Claude Desktop |
+| [Unfollow Cleanup](tutorials/claude-prompts/02-unfollow-non-followers-cleanup.md) | Remove non-followers, detect unfollowers |
+| [Growth Suite](tutorials/claude-prompts/03-growth-automation-suite.md) | Auto-follow, auto-like, keyword targeting |
+| [Scraping](tutorials/claude-prompts/04-scraping-research-analysis.md) | Extract profiles, tweets, hashtags |
+| [Content Posting](tutorials/claude-prompts/05-content-posting-threads-scheduling.md) | Tweets, threads, polls, scheduling |
+| [Analytics](tutorials/claude-prompts/06-analytics-competitor-intelligence.md) | Performance tracking, competitor analysis |
+| [Power User Playbook](tutorials/claude-prompts/22-advanced-power-user-playbook.md) | 10 advanced multi-feature strategies |
+
+**[See all 22 tutorials →](tutorials/claude-prompts/README.md)**
 
 ---
 
@@ -629,41 +746,55 @@ xactions followers YOUR_USERNAME --output snapshot2.json
 
 ## 🤖 MCP Server (AI Agents)
 
-XActions includes an MCP (Model Context Protocol) server so AI agents like Claude can automate X/Twitter.
+XActions includes the most comprehensive free MCP server for X/Twitter. Works with **Claude, Cursor, Windsurf, VS Code**, and any MCP client.
 
-### Setup for Claude Desktop
+### Quick Setup (30 seconds)
 
-Add to your `claude_desktop_config.json`:
+Add to your Claude Desktop config (`claude_desktop_config.json`):
 ```json
 {
   "mcpServers": {
     "xactions": {
-      "command": "node",
-      "args": ["/path/to/xactions/src/mcp/server.js"]
+      "command": "npx",
+      "args": ["-y", "xactions-mcp"],
+      "env": {
+        "XACTIONS_SESSION_COOKIE": "your_auth_token_here"
+      }
     }
   }
 }
 ```
 
-### Available MCP Tools
+> **Get your auth_token**: x.com → DevTools (F12) → Application → Cookies → copy `auth_token` value
 
-| Tool | Description |
-|------|-------------|
-| `x_login` | Login with session cookie |
-| `x_get_profile` | Get user profile info |
-| `x_get_followers` | Scrape followers |
-| `x_get_following` | Scrape following |
-| `x_get_non_followers` | Find non-followers |
-| `x_get_tweets` | Scrape user's tweets |
-| `x_search_tweets` | Search tweets by query |
-| `x_follow` | Follow a user |
-| `x_unfollow` | Unfollow a user |
-| `x_post_tweet` | Post a tweet |
-| `x_like` | Like a tweet |
-| `x_retweet` | Retweet |
+Or auto-generate the config:
+```bash
+npx xactions mcp-config --client claude
+npx xactions mcp-config --client cursor
+npx xactions mcp-config --client windsurf
+```
 
-### Example AI Prompt
-> "Use XActions to find everyone I follow who doesn't follow me back"
+### Available MCP Tools (50+)
+
+| Category | Tools |
+|----------|-------|
+| **Scraping** | `x_get_profile`, `x_get_followers`, `x_get_following`, `x_get_tweets`, `x_search_tweets`, `x_get_thread`, `x_download_video` |
+| **Analysis** | `x_detect_unfollowers`, `x_analyze_sentiment`, `x_best_time_to_post`, `x_competitor_analysis`, `x_brand_monitor` |
+| **Actions** | `x_follow`, `x_unfollow`, `x_like`, `x_post_tweet`, `x_post_thread`, `x_reply`, `x_retweet` |
+| **AI** | `x_analyze_voice`, `x_generate_tweet`, `x_summarize_thread` |
+
+### Example Prompts
+
+> **"Analyze @paulg's writing style and generate 3 tweet ideas about startups in his voice"**
+> → Scrapes tweets → analyzes voice → generates content with AI
+
+> **"Find everyone I follow who doesn't follow me back, sorted by follower count"**
+> → Uses x_get_following + x_get_followers → computes diff → formats results
+
+> **"Compare the engagement metrics of @openai, @anthropic, and @google"**
+> → Scrapes profiles + recent tweets → computes avg engagement → presents comparison
+
+📖 **Full setup guide**: [docs/mcp-setup.md](docs/mcp-setup.md)
 
 ---
 
@@ -689,6 +820,10 @@ xactions media <user> [--limit 50]
 
 # Analysis
 xactions non-followers <user> [--limit 500]
+
+# MCP
+xactions mcp-config              # Generate MCP config for Claude Desktop
+xactions mcp-config --client cursor --write  # Write config for Cursor
 
 # Info
 xactions info              # Show version and links

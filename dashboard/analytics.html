@@ -256,10 +256,9 @@
       padding: 10px 16px;
       color: var(--text-primary);
       font-size: 14px;
-      outline: none;
     }
 
-    .input:focus { border-color: var(--accent); }
+    .input:focus { border-color: var(--accent); outline: 2px solid var(--accent); outline-offset: -1px; }
 
     .select {
       background: var(--bg-primary);
@@ -268,7 +267,6 @@
       padding: 10px 16px;
       color: var(--text-primary);
       font-size: 14px;
-      outline: none;
       cursor: pointer;
     }
 
@@ -284,10 +282,9 @@
       font-family: inherit;
       resize: vertical;
       min-height: 80px;
-      outline: none;
     }
 
-    .sentiment-textarea:focus { border-color: var(--accent); }
+    .sentiment-textarea:focus { border-color: var(--accent); outline: 2px solid var(--accent); outline-offset: -1px; }
 
     /* Sentiment result */
     .sentiment-result {
@@ -481,12 +478,33 @@
       .main { padding: 16px; }
       .grid-2, .grid-3 { grid-template-columns: 1fr; }
     }
+    /* Skip Navigation */
+    .skip-nav {
+      position: absolute;
+      top: -100%;
+      left: 16px;
+      background: var(--accent);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 700;
+      z-index: 9999;
+      text-decoration: none;
+    }
+    .skip-nav:focus {
+      top: 16px;
+    }
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
   </style>
 </head>
 <body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
   <div class="layout">
     <!-- Sidebar -->
-    <nav class="sidebar">
+    <nav class="sidebar" aria-label="Main navigation">
       <a href="/dashboard" class="sidebar-logo">⚡ XActions</a>
       <a href="/dashboard" class="nav-link">🏠 Dashboard</a>
       <a href="/run" class="nav-link">▶️ Run</a>
@@ -498,26 +516,26 @@
     </nav>
 
     <!-- Main -->
-    <main class="main">
+    <main class="main" id="main-content">
       <div class="page-header">
         <h1 class="page-title">📊 Sentiment Analytics</h1>
       </div>
 
       <!-- Tabs -->
-      <div class="tabs">
-        <div class="tab active" data-tab="analyze">Analyze</div>
-        <div class="tab" data-tab="monitors">Monitors</div>
-        <div class="tab" data-tab="timeline">Timeline</div>
-        <div class="tab" data-tab="alerts">Alerts</div>
+      <div class="tabs" role="tablist" aria-label="Analytics sections">
+        <div class="tab active" role="tab" aria-selected="true" aria-controls="tab-analyze" tabindex="0" data-tab="analyze">Analyze</div>
+        <div class="tab" role="tab" aria-selected="false" aria-controls="tab-monitors" tabindex="0" data-tab="monitors">Monitors</div>
+        <div class="tab" role="tab" aria-selected="false" aria-controls="tab-timeline" tabindex="0" data-tab="timeline">Timeline</div>
+        <div class="tab" role="tab" aria-selected="false" aria-controls="tab-alerts" tabindex="0" data-tab="alerts">Alerts</div>
       </div>
 
       <!-- Tab: Analyze -->
-      <div class="tab-content active" id="tab-analyze">
+      <div class="tab-content active" id="tab-analyze" role="tabpanel">
         <div class="card">
           <div class="card-title">🔍 Quick Sentiment Analysis</div>
-          <textarea class="sentiment-textarea" id="sentimentInput" placeholder="Paste tweet text, any text, or multiple lines to analyze sentiment..."></textarea>
+          <textarea class="sentiment-textarea" id="sentimentInput" aria-label="Text to analyze" placeholder="Paste tweet text, any text, or multiple lines to analyze sentiment..."></textarea>
           <div style="display: flex; gap: 8px; margin-top: 12px;">
-            <select class="select" id="sentimentMode">
+            <select class="select" id="sentimentMode" aria-label="Analysis mode">
               <option value="rules">🧠 Rule-based (offline)</option>
               <option value="llm">🤖 LLM (OpenRouter)</option>
             </select>
@@ -542,12 +560,12 @@
       </div>
 
       <!-- Tab: Monitors -->
-      <div class="tab-content" id="tab-monitors">
+      <div class="tab-content" id="tab-monitors" role="tabpanel">
         <div class="card">
           <div class="card-title">➕ Start New Monitor</div>
           <div class="input-group">
-            <input class="input" id="monitorTarget" placeholder="@username or keyword" />
-            <select class="select" id="monitorType">
+            <input class="input" id="monitorTarget" aria-label="Monitor target" placeholder="@username or keyword" />
+            <select class="select" id="monitorType" aria-label="Monitor type">
               <option value="mentions">Mentions</option>
               <option value="keyword">Keyword</option>
               <option value="replies">Replies</option>
@@ -583,14 +601,14 @@
       </div>
 
       <!-- Tab: Timeline -->
-      <div class="tab-content" id="tab-timeline">
+      <div class="tab-content" id="tab-timeline" role="tabpanel">
         <div class="card">
           <div class="card-title">📈 Sentiment Timeline</div>
           <div class="input-group">
-            <select class="select" id="timelineMonitor" onchange="loadTimeline()">
+            <select class="select" id="timelineMonitor" aria-label="Select monitor" onchange="loadTimeline()">
               <option value="">Select a monitor...</option>
             </select>
-            <select class="select" id="timelinePeriod" onchange="loadTimeline()">
+            <select class="select" id="timelinePeriod" aria-label="Time period" onchange="loadTimeline()">
               <option value="24h">Last 24h</option>
               <option value="7d" selected>Last 7 days</option>
               <option value="30d">Last 30 days</option>
@@ -639,7 +657,7 @@
       </div>
 
       <!-- Tab: Alerts -->
-      <div class="tab-content" id="tab-alerts">
+      <div class="tab-content" id="tab-alerts" role="tabpanel">
         <div class="card">
           <div class="card-title">🚨 Alert History</div>
           <div id="alertsContainer">

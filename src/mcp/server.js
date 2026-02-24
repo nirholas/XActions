@@ -1338,6 +1338,11 @@ async function executeTool(name, args) {
   if (name === 'x_export_account' || name === 'x_migrate_account' || name === 'x_diff_exports') {
     return await executePortabilityTool(name, args);
   }
+
+  // Handle graph tools directly
+  if (name.startsWith('x_graph_')) {
+    return await executeGraphTool(name, args);
+  }
   
   // Check plugin tools first
   const pluginTool = getPluginTools().find((t) => t.name === name);
@@ -1621,6 +1626,80 @@ async function executePortabilityTool(name, args) {
 
     default:
       throw new Error(`Unknown portability tool: ${name}`);
+  }
+}
+
+/**
+ * Execute graph-specific tools (build, analyze, recommendations, list)
+ */
+async function executeGraphTool(name, args) {
+  const graphMod = (await import('../graph/index.js')).default;
+
+  switch (name) {
+    case 'x_graph_build': {
+      const username = (args.username || '').replace(/^@/, '');
+      if (!username) throw new Error('"username" is required');
+
+      const result = await graphMod.build(username, {
+        depth: args.depth || 2,
+        maxNodes: args.maxNodes || 500,
+        authToken: SESSION_COOKIE || undefined,
+      });
+
+      return {
+        graphId: result.id,
+        seed: result.seed,
+        nodesCount: result.nodes?.length || 0,
+        edgesCount: result.edges?.length || 0,
+        status: result.metadata?.status || 'complete',
+        message: `Graph built: ${result.nodes?.length || 0} nodes, ${result.edges?.length || 0} edges. Use graphId "${result.id}" for analysis.`,
+      };
+    }
+
+    case 'x_graph_analyze': {
+      if (!args.graphId) throw new Error('"graphId" is required');
+      const data = await graphMod.get(args.graphId);
+      if (!data) throw new Error(`Graph not found: ${args.graphId}`);
+
+      const analysis = graphMod.analyze(data);
+
+      // Summarize for MCP response (avoid huge payloads)
+      return {
+        graphId: args.graphId,
+        seed: analysis.seed,
+        nodesCount: analysis.nodesCount,
+        edgesCount: analysis.edgesCount,
+        clusters: analysis.clusters.map(c => ({ label: c.label, size: c.size, topMembers: c.members.slice(0, 5) })),
+        topInfluencers: analysis.influenceRanking.slice(0, 10).map(u => ({ username: u.username, score: u.influenceScore })),
+        bridgeAccounts: analysis.bridgeAccounts.slice(0, 5).map(b => ({ username: b.username, betweenness: b.betweenness })),
+        mutualConnections: analysis.mutualConnections.length,
+        ghostFollowers: analysis.ghostFollowers.length,
+        orbits: analysis.orbits?.summary || null,
+      };
+    }
+
+    case 'x_graph_recommendations': {
+      if (!args.graphId) throw new Error('"graphId" is required');
+      const data = await graphMod.get(args.graphId);
+      if (!data) throw new Error(`Graph not found: ${args.graphId}`);
+
+      const recs = graphMod.recommend(data, data.seed);
+
+      return {
+        seed: recs.seed,
+        followSuggestions: recs.followSuggestions.slice(0, 10).map(s => ({ username: s.username, reason: s.reason })),
+        engageSuggestions: recs.engageSuggestions.slice(0, 10).map(s => ({ username: s.username, reason: s.reason })),
+        competitorWatch: recs.competitorWatch.slice(0, 5).map(s => ({ username: s.username, reason: s.reason })),
+        safeToUnfollow: recs.safeToUnfollow.slice(0, 10).map(s => ({ username: s.username, reason: s.reason })),
+      };
+    }
+
+    case 'x_graph_list': {
+      return await graphMod.list();
+    }
+
+    default:
+      throw new Error(`Unknown graph tool: ${name}`);
   }
 }
 

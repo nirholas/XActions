@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Twitter Video Downloader — Free, No Login | XActions</title>
+  <meta name="description" content="Download videos from Twitter/X for free. No signup, no app install. Just paste the tweet URL and download in 1080p, 720p, or 480p.">
+  <meta name="keywords" content="twitter video downloader, download x video, save twitter video, download twitter video free, x video downloader, twitter video saver, download video from twitter, save x video, twitter mp4 download">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Twitter Video Downloader — Free, No Login | XActions">
+  <meta property="og:description" content="Download videos from Twitter/X for free. No signup, no app install. Just paste the tweet URL.">
+  <meta property="og:url" content="https://xactions.app/video">
+  <meta property="og:site_name" content="XActions">
+  <meta property="og:image" content="https://xactions.app/og-video.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="en_US">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:creator" content="@nichxbt">
+  <meta name="twitter:title" content="Twitter Video Downloader — Free, No Login | XActions">
+  <meta name="twitter:description" content="Download videos from Twitter/X for free. No signup, no app install. Just paste the tweet URL.">
+  <meta name="twitter:image" content="https://xactions.app/og-video.png">
+
+  <link rel="canonical" href="https://xactions.app/video">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  <link rel="manifest" href="/manifest.json">
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Twitter Video Downloader",
+    "description": "Download videos from Twitter/X for free. No signup, no app install. Just paste the tweet URL.",
+    "url": "https://xactions.app/video",
+    "applicationCategory": "MultimediaApplication",
+    "operatingSystem": "Web Browser",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Person", "name": "nichxbt", "url": "https://x.com/nichxbt" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Video Downloader", "item": "https://xactions.app/video" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to Download Twitter Videos",
+    "description": "Download any video from Twitter/X in 3 simple steps",
+    "step": [
+      { "@type": "HowToStep", "position": 1, "name": "Copy the Tweet URL", "text": "Go to the tweet with a video and copy its URL from the address bar or share menu." },
+      { "@type": "HowToStep", "position": 2, "name": "Paste the URL", "text": "Paste the tweet URL into the input field on this page." },
+      { "@type": "HowToStep", "position": 3, "name": "Download", "text": "Click Download and choose your preferred quality (1080p, 720p, 480p)." }
+    ]
+  }
+  </script>
+  <style>
+    :root { --bg-primary: #000; --bg-secondary: #16181c; --bg-tertiary: #202327; --accent: #1d9bf0; --accent-hover: #1a8cd8; --accent-light: rgba(29,155,240,0.1); --text-primary: #e7e9ea; --text-secondary: #71767b; --border: #2f3336; --success: #00ba7c; --warning: #ffad1f; --error: #f4212e; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.5; }
+    ::-webkit-scrollbar { width: 16px; } ::-webkit-scrollbar-track { background: var(--bg-primary); } ::-webkit-scrollbar-thumb { background: var(--bg-tertiary); border-radius: 8px; border: 4px solid var(--bg-primary); }
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar-left { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; } .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background 0.2s; } .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; } .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background 0.2s; margin-bottom: 4px; } .nav-item:hover { background: var(--bg-tertiary); } .nav-item.active { font-weight: 700; } .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: white; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background 0.2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; } .action-btn:hover { background: var(--accent-hover); }
+    .main-content { flex: 1; max-width: 700px; border-right: 1px solid var(--border); min-height: 100vh; }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,0.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px; z-index: 100; } .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+
+    /* Video Downloader UI */
+    .hero { padding: 48px 24px 32px; text-align: center; }
+    .hero h2 { font-size: 2rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .hero p { color: var(--text-secondary); font-size: 1.0625rem; max-width: 500px; margin: 0 auto; }
+
+    .download-box { padding: 0 24px 32px; }
+    .input-group { display: flex; gap: 12px; margin-bottom: 16px; }
+    .url-input { flex: 1; padding: 16px 20px; background: var(--bg-secondary); border: 2px solid var(--border); border-radius: 9999px; color: var(--text-primary); font-size: 1rem; outline: none; transition: border-color 0.2s; }
+    .url-input:focus { border-color: var(--accent); }
+    .url-input::placeholder { color: var(--text-secondary); }
+    .download-btn { padding: 16px 32px; background: var(--accent); color: white; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+    .download-btn:hover { background: var(--accent-hover); transform: scale(1.02); }
+    .download-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    /* Loading */
+    .loading { display: none; text-align: center; padding: 32px; }
+    .loading.visible { display: block; }
+    .spinner { width: 40px; height: 40px; border: 3px solid var(--border); border-top: 3px solid var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 12px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading p { color: var(--text-secondary); }
+
+    /* Error */
+    .error-msg { display: none; background: rgba(244,33,46,0.1); border: 1px solid var(--error); color: var(--error); padding: 12px 20px; border-radius: 12px; margin: 0 24px 16px; font-size: 0.9375rem; }
+    .error-msg.visible { display: block; }
+
+    /* Result Card */
+    .result { display: none; padding: 0 24px 24px; }
+    .result.visible { display: block; }
+    .result-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+    .result-thumbnail { position: relative; background: var(--bg-tertiary); aspect-ratio: 16/9; overflow: hidden; }
+    .result-thumbnail img { width: 100%; height: 100%; object-fit: cover; }
+    .result-thumbnail .play-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 64px; height: 64px; background: rgba(0,0,0,0.7); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+    .result-info { padding: 16px; }
+    .result-author { font-weight: 700; margin-bottom: 4px; }
+    .result-text { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .quality-options { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+    .quality-btn { padding: 10px 20px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 9999px; color: var(--text-primary); font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+    .quality-btn:hover { border-color: var(--accent); background: var(--accent-light); }
+    .quality-btn.best { background: var(--accent); border-color: var(--accent); color: white; }
+    .quality-btn.best:hover { background: var(--accent-hover); }
+    .result-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .share-btn { padding: 10px 20px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 9999px; color: var(--text-secondary); font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+    .share-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+    /* How-to Section */
+    .how-to { padding: 24px; border-top: 1px solid var(--border); }
+    .how-to h3 { font-size: 1.125rem; font-weight: 700; margin-bottom: 16px; }
+    .steps { display: grid; gap: 16px; }
+    .step { display: flex; gap: 16px; align-items: flex-start; }
+    .step-num { width: 36px; height: 36px; background: var(--accent); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.875rem; flex-shrink: 0; }
+    .step-content h4 { font-weight: 600; margin-bottom: 2px; }
+    .step-content p { color: var(--text-secondary); font-size: 0.875rem; }
+
+    /* Recent Downloads */
+    .recent { padding: 24px; border-top: 1px solid var(--border); }
+    .recent h3 { font-size: 1.125rem; font-weight: 700; margin-bottom: 16px; }
+    .recent-list { display: flex; flex-direction: column; gap: 8px; }
+    .recent-item { display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; cursor: pointer; transition: all 0.2s; text-decoration: none; color: var(--text-primary); }
+    .recent-item:hover { border-color: var(--accent); }
+    .recent-thumb { width: 64px; height: 36px; background: var(--bg-tertiary); border-radius: 6px; overflow: hidden; flex-shrink: 0; }
+    .recent-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .recent-meta { flex: 1; min-width: 0; }
+    .recent-meta .author { font-weight: 600; font-size: 0.875rem; }
+    .recent-meta .time { color: var(--text-secondary); font-size: 0.75rem; }
+    .recent-empty { color: var(--text-secondary); font-size: 0.875rem; text-align: center; padding: 16px; }
+    .clear-history { background: none; border: none; color: var(--text-secondary); font-size: 0.8125rem; cursor: pointer; float: right; margin-top: -32px; } .clear-history:hover { color: var(--error); }
+
+    /* FAQ */
+    .faq { padding: 24px; border-top: 1px solid var(--border); }
+    .faq h3 { font-size: 1.125rem; font-weight: 700; margin-bottom: 16px; }
+    .faq details { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 8px; }
+    .faq summary { padding: 12px 16px; cursor: pointer; font-weight: 600; font-size: 0.9375rem; }
+    .faq details[open] summary { border-bottom: 1px solid var(--border); }
+    .faq details p { padding: 12px 16px; color: var(--text-secondary); font-size: 0.875rem; }
+
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 48px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px; }
+    .footer-brand h3 { font-size: 1.25rem; margin-bottom: 8px; } .footer-brand p { color: var(--text-secondary); font-size: 0.875rem; }
+    .footer-links h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 12px; } .footer-links a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 4px 0; } .footer-links a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 24px auto 0; padding-top: 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .footer-bottom p { color: var(--text-secondary); font-size: 0.8125rem; } .footer-bottom a { color: var(--text-secondary); } .footer-bottom a:hover { color: var(--accent); }
+    @media (max-width: 768px) { .footer-content { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 480px) { .footer-content { grid-template-columns: 1fr; } }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .sidebar-left { width: 68px; } .logo a span:last-child, .nav-item span:last-child { display: none; } .nav-item { justify-content: center; } .action-btn { width: 50px; height: 50px; padding: 0; font-size: 0; } .action-btn::before { content: '→'; font-size: 1.5rem; }
+      .hero h2 { font-size: 1.5rem; }
+      .input-group { flex-direction: column; }
+      .download-btn { width: 100%; }
+    }
+
+    /* Skip Navigation */
+    .skip-nav { position: absolute; top: -100%; left: 16px; background: var(--accent); color: white; padding: 12px 24px; border-radius: 8px; font-weight: 700; z-index: 9999; text-decoration: none; }
+    .skip-nav:focus { top: 16px; }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
+  <div class="layout">
+    <aside class="sidebar-left" aria-label="Main navigation">
+      <div class="logo"><a href="/"><span>⚡</span><span>XActions</span></a></div>
+      <nav>
+        <a href="/" class="nav-item" aria-label="Home"><span class="nav-icon" aria-hidden="true">🏠</span><span>Home</span></a>
+        <a href="/run" class="nav-item" aria-label="One-Click"><span class="nav-icon" aria-hidden="true">🚀</span><span>One-Click</span></a>
+        <a href="/dashboard" class="nav-item" aria-label="Dashboard"><span class="nav-icon" aria-hidden="true">📊</span><span>Dashboard</span></a>
+        <a href="/video" class="nav-item active" aria-label="Video Downloader"><span class="nav-icon" aria-hidden="true">🎬</span><span>Video DL</span></a>
+        <a href="/features" class="nav-item" aria-label="All Scripts"><span class="nav-icon" aria-hidden="true">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item" aria-label="Tutorials"><span class="nav-icon" aria-hidden="true">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item" aria-label="Documentation"><span class="nav-icon" aria-hidden="true">📖</span><span>Documentation</span></a>
+        <a href="/mcp" class="nav-item" aria-label="AI/MCP"><span class="nav-icon" aria-hidden="true">🤖</span><span>AI/MCP</span></a>
+        <a href="/about" class="nav-item" aria-label="About"><span class="nav-icon" aria-hidden="true">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><span class="nav-icon" aria-hidden="true">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="https://github.com/nirholas/XActions" class="action-btn" target="_blank">Star on GitHub ⭐</a>
+    </aside>
+
+    <main class="main-content" id="main-content">
+      <header class="main-header"><h1>🎬 Video Downloader</h1></header>
+
+      <!-- Hero -->
+      <section class="hero">
+        <h2>Download X/Twitter Videos</h2>
+        <p>Free. No login. No app install. Just paste the tweet URL.</p>
+      </section>
+
+      <!-- Download Box — works without JS via form POST -->
+      <section class="download-box">
+        <form id="download-form" method="POST" action="/api/video/extract-form">
+          <div class="input-group">
+            <input type="url" name="url" id="url-input" class="url-input" placeholder="Paste tweet URL here — https://x.com/user/status/123" required autocomplete="off" autofocus>
+            <button type="submit" class="download-btn" id="download-btn">⬇ Download</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Error Message -->
+      <div class="error-msg" id="error-msg" role="alert"></div>
+
+      <!-- Loading -->
+      <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <p>Extracting video... this may take a few seconds</p>
+      </div>
+
+      <!-- Result -->
+      <section class="result" id="result">
+        <div class="result-card">
+          <div class="result-thumbnail" id="result-thumbnail">
+            <img id="thumb-img" src="" alt="Video thumbnail" loading="lazy">
+            <div class="play-icon">▶</div>
+          </div>
+          <div class="result-info">
+            <div class="result-author" id="result-author"></div>
+            <div class="result-text" id="result-text"></div>
+            <div class="quality-options" id="quality-options"></div>
+            <div class="result-actions">
+              <button class="share-btn" id="share-btn" onclick="shareResult()">📤 Share XActions</button>
+              <button class="share-btn" id="copy-url-btn" onclick="copyVideoUrl()">📋 Copy Video URL</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- How To -->
+      <section class="how-to">
+        <h3>How to Download Twitter Videos</h3>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <h4>Copy the Tweet URL</h4>
+              <p>Go to the tweet with a video on X/Twitter. Copy the URL from your browser's address bar or tap the share button and copy the link.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <h4>Paste & Download</h4>
+              <p>Paste the URL in the field above and click "Download". We'll extract all available video qualities.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <h4>Choose Quality</h4>
+              <p>Pick your preferred quality — 1080p, 720p, or 480p. The video will download directly to your device.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Recent Downloads -->
+      <section class="recent" id="recent-section">
+        <h3>Recent Downloads</h3>
+        <button class="clear-history" id="clear-history" onclick="clearHistory()">Clear history</button>
+        <div class="recent-list" id="recent-list">
+          <div class="recent-empty">No downloads yet. Paste a tweet URL above to get started!</div>
+        </div>
+      </section>
+
+      <!-- FAQ -->
+      <section class="faq">
+        <h3>Frequently Asked Questions</h3>
+        <details>
+          <summary>Is this free?</summary>
+          <p>Yes, 100% free. No signup, no limits, no hidden fees. XActions is open source (MIT license).</p>
+        </details>
+        <details>
+          <summary>What video qualities are supported?</summary>
+          <p>We extract all available qualities from Twitter — typically 1080p, 720p, 480p, and 360p. You choose which one to download.</p>
+        </details>
+        <details>
+          <summary>Can I download GIFs?</summary>
+          <p>Twitter GIFs are actually MP4 videos. This tool downloads them as MP4 files which play everywhere.</p>
+        </details>
+        <details>
+          <summary>Does it work with private/protected tweets?</summary>
+          <p>No. Only publicly visible tweets can be downloaded. Private or protected tweets require authentication which this tool does not use.</p>
+        </details>
+        <details>
+          <summary>Is it safe?</summary>
+          <p>Yes. XActions is open source — you can inspect every line of code on <a href="https://github.com/nirholas/XActions" style="color: var(--accent);">GitHub</a>. We don't store your data or videos.</p>
+        </details>
+        <details>
+          <summary>Why does extraction sometimes fail?</summary>
+          <p>Twitter may rate-limit requests, the tweet may have been deleted, or it may only contain images (not video). Try again in a minute if you hit a rate limit.</p>
+        </details>
+      </section>
+    </main>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-brand"><h3>⚡ XActions</h3><p>Free, open-source X/Twitter automation toolkit. Mass unfollow, detect unfollowers, auto-engage, video downloader, and more. No API fees.</p></div>
+      <div class="footer-links"><h4>Product</h4><a href="/features">Features</a><a href="/video">Video Downloader</a><a href="/run">Run Scripts</a><a href="/dashboard">Dashboard</a><a href="/automations">Automations</a><a href="/workflows">Workflows</a><a href="/analytics">Analytics</a></div>
+      <div class="footer-links"><h4>AI & Developers</h4><a href="/ai">AI Integration</a><a href="/ai-api">AI API (x402)</a><a href="/mcp">MCP Server</a><a href="/docs">Documentation</a></div>
+      <div class="footer-links"><h4>Community</h4><a href="https://github.com/nirholas/XActions" target="_blank" rel="noopener noreferrer">GitHub</a><a href="https://x.com/nichxbt" target="_blank" rel="noopener noreferrer">Twitter</a><a href="/about">About</a><a href="/terms">Terms</a><a href="/privacy">Privacy</a></div>
+    </div>
+    <div class="footer-bottom"><p>© 2024-2026 XActions. Not affiliated with X Corp.</p><p>Made with ❤️ by <a href="https://x.com/nichxbt" target="_blank" rel="noopener noreferrer">@nichxbt</a></p></div>
+  </footer>
+
+  <script>
+    // ========================================================================
+    // Progressive Enhancement — JS enhances the basic form POST
+    // ========================================================================
+
+    const form = document.getElementById('download-form');
+    const urlInput = document.getElementById('url-input');
+    const downloadBtn = document.getElementById('download-btn');
+    const loadingEl = document.getElementById('loading');
+    const errorEl = document.getElementById('error-msg');
+    const resultEl = document.getElementById('result');
+
+    let lastResult = null;
+
+    // Show URL-param errors from form fallback redirect
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('error')) {
+      const messages = {
+        invalid: 'Invalid URL. Please provide a valid X/Twitter tweet URL.',
+        novideo: 'No video found in this tweet. Make sure the tweet contains a video.',
+        failed: 'Failed to extract video. Please try again.',
+      };
+      showError(messages[params.get('error')] || 'Something went wrong.');
+    }
+
+    // Hijack form submission with JS for async extraction
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      await extractVideo();
+    });
+
+    async function extractVideo() {
+      const url = urlInput.value.trim();
+      if (!url) return;
+
+      // Basic client-side URL validation
+      if (!/^https?:\/\/(www\.)?(twitter\.com|x\.com)\/\w+\/status\/\d+/.test(url)) {
+        showError('Invalid URL. Please paste a valid tweet URL (e.g., https://x.com/user/status/123)');
+        return;
+      }
+
+      // Reset UI
+      hideError();
+      hideResult();
+      showLoading();
+      downloadBtn.disabled = true;
+      downloadBtn.textContent = '⏳ Extracting...';
+
+      try {
+        const res = await fetch('/api/video/extract', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.error || 'Failed to extract video');
+        }
+
+        lastResult = data;
+        showResult(data);
+        saveToHistory(data, url);
+      } catch (err) {
+        showError(err.message || 'Failed to extract video. Please try again.');
+      } finally {
+        hideLoading();
+        downloadBtn.disabled = false;
+        downloadBtn.textContent = '⬇ Download';
+      }
+    }
+
+    function showLoading() { loadingEl.classList.add('visible'); }
+    function hideLoading() { loadingEl.classList.remove('visible'); }
+    function showError(msg) { errorEl.textContent = msg; errorEl.classList.add('visible'); }
+    function hideError() { errorEl.classList.remove('visible'); }
+    function hideResult() { resultEl.classList.remove('visible'); }
+
+    function showResult(data) {
+      // Thumbnail
+      const thumbImg = document.getElementById('thumb-img');
+      if (data.thumbnail) {
+        thumbImg.src = data.thumbnail;
+        thumbImg.alt = `Video by @${data.username}`;
+      } else {
+        thumbImg.src = '';
+        document.getElementById('result-thumbnail').style.display = 'none';
+      }
+
+      // Author & text
+      document.getElementById('result-author').textContent = `@${data.username}` + (data.author !== data.username ? ` (${data.author})` : '');
+      document.getElementById('result-text').textContent = data.text || '';
+
+      // Quality buttons
+      const optionsEl = document.getElementById('quality-options');
+      optionsEl.innerHTML = '';
+
+      data.videos.forEach((v, i) => {
+        const a = document.createElement('a');
+        const downloadUrl = `/api/video/download?url=${encodeURIComponent(v.url)}&author=${encodeURIComponent(data.username)}&tweetId=${encodeURIComponent(data.tweetId)}`;
+        a.href = downloadUrl;
+        a.className = 'quality-btn' + (i === 0 ? ' best' : '');
+        a.download = `${data.username}_${data.tweetId}.mp4`;
+
+        let label = v.quality !== 'unknown' ? v.quality : `${v.width}x${v.height}`;
+        if (i === 0) label += ' ★ Best';
+        a.textContent = `⬇ ${label}`;
+        a.title = `${v.width}x${v.height} — ${v.contentType}`;
+        optionsEl.appendChild(a);
+      });
+
+      resultEl.classList.add('visible');
+      resultEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function shareResult() {
+      const text = 'Download Twitter/X videos for free with XActions — no login required! 🎬';
+      const url = 'https://xactions.app/video';
+      if (navigator.share) {
+        navigator.share({ title: 'XActions Video Downloader', text, url }).catch(() => {});
+      } else {
+        navigator.clipboard.writeText(`${text}\n${url}`).then(() => {
+          const btn = document.getElementById('share-btn');
+          btn.textContent = '✅ Copied!';
+          setTimeout(() => { btn.textContent = '📤 Share XActions'; }, 2000);
+        });
+      }
+    }
+
+    function copyVideoUrl() {
+      if (!lastResult || !lastResult.videos.length) return;
+      const url = lastResult.videos[0].url;
+      navigator.clipboard.writeText(url).then(() => {
+        const btn = document.getElementById('copy-url-btn');
+        btn.textContent = '✅ Copied!';
+        setTimeout(() => { btn.textContent = '📋 Copy Video URL'; }, 2000);
+      });
+    }
+
+    // ========================================================================
+    // Recent Downloads History (localStorage)
+    // ========================================================================
+
+    const HISTORY_KEY = 'xactions_video_history';
+    const MAX_HISTORY = 10;
+
+    function getHistory() {
+      try {
+        return JSON.parse(localStorage.getItem(HISTORY_KEY)) || [];
+      } catch { return []; }
+    }
+
+    function saveToHistory(data, tweetUrl) {
+      const history = getHistory();
+      // Don't duplicate
+      if (history.some(h => h.tweetId === data.tweetId)) return;
+
+      history.unshift({
+        tweetId: data.tweetId,
+        username: data.username,
+        thumbnail: data.thumbnail,
+        tweetUrl,
+        quality: data.videos[0]?.quality || 'unknown',
+        timestamp: Date.now(),
+      });
+
+      // Limit size
+      if (history.length > MAX_HISTORY) history.length = MAX_HISTORY;
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+      renderHistory();
+    }
+
+    function renderHistory() {
+      const history = getHistory();
+      const listEl = document.getElementById('recent-list');
+      const clearBtn = document.getElementById('clear-history');
+
+      if (history.length === 0) {
+        listEl.innerHTML = '<div class="recent-empty">No downloads yet. Paste a tweet URL above to get started!</div>';
+        clearBtn.style.display = 'none';
+        return;
+      }
+
+      clearBtn.style.display = 'block';
+      listEl.innerHTML = history.map(h => {
+        const timeAgo = formatTimeAgo(h.timestamp);
+        const thumbHtml = h.thumbnail
+          ? `<div class="recent-thumb"><img src="${escapeHtml(h.thumbnail)}" alt="" loading="lazy"></div>`
+          : '<div class="recent-thumb" style="display:flex;align-items:center;justify-content:center;font-size:1.2rem;">🎬</div>';
+        return `
+          <a class="recent-item" href="#" onclick="loadFromHistory('${escapeHtml(h.tweetUrl)}'); return false;">
+            ${thumbHtml}
+            <div class="recent-meta">
+              <div class="author">@${escapeHtml(h.username)} · ${escapeHtml(h.quality)}</div>
+              <div class="time">${timeAgo}</div>
+            </div>
+          </a>`;
+      }).join('');
+    }
+
+    function loadFromHistory(tweetUrl) {
+      urlInput.value = tweetUrl;
+      extractVideo();
+    }
+
+    function clearHistory() {
+      localStorage.removeItem(HISTORY_KEY);
+      renderHistory();
+    }
+
+    function formatTimeAgo(ts) {
+      const diff = Date.now() - ts;
+      const mins = Math.floor(diff / 60000);
+      if (mins < 1) return 'Just now';
+      if (mins < 60) return `${mins}m ago`;
+      const hrs = Math.floor(mins / 60);
+      if (hrs < 24) return `${hrs}h ago`;
+      const days = Math.floor(hrs / 24);
+      return `${days}d ago`;
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    // Render history on page load
+    renderHistory();
+  </script>
+</body>
+</html>

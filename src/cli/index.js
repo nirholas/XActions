@@ -51,6 +51,65 @@ function formatNumber(num) {
   return String(num);
 }
 
+/**
+ * Smart output handler — routes data to the right exporter based on file extension.
+ * Supports: .json, .csv, .xlsx, plus --google-sheets flag.
+ *
+ * @param {Object[]} data - Array of objects to export
+ * @param {Object} options - CLI options (output, googleSheets, sheetName)
+ * @param {string} defaultName - Default filename stem (e.g., 'followers')
+ */
+async function smartOutput(data, options, defaultName = 'data') {
+  // Google Sheets export
+  if (options.googleSheets) {
+    try {
+      const { exportToGoogleSheets } = await import('../plugins/google-sheets/index.js');
+      const result = await exportToGoogleSheets(data, {
+        spreadsheetId: options.googleSheets,
+        sheetName: options.sheetName || defaultName,
+        mode: options.sheetMode || 'append',
+      });
+      console.log(chalk.green(`✓ Exported ${result.rowsWritten} rows to Google Sheets`));
+      console.log(chalk.gray(`  → ${result.url}`));
+      return;
+    } catch (error) {
+      console.error(chalk.red(`Google Sheets export failed: ${error.message}`));
+      console.log(chalk.yellow('Falling back to JSON output...'));
+    }
+  }
+
+  // File output
+  if (options.output) {
+    const ext = path.extname(options.output).toLowerCase();
+
+    if (ext === '.xlsx') {
+      try {
+        const { exportToExcel } = await import('../plugins/excel/index.js');
+        const result = await exportToExcel(data, {
+          filepath: options.output,
+          sheetName: options.sheetName || defaultName,
+        });
+        console.log(chalk.green(`✓ Saved ${result.rowsWritten} rows to ${options.output}`));
+        return;
+      } catch (error) {
+        console.error(chalk.red(`Excel export failed: ${error.message}`));
+        console.log(chalk.yellow('Falling back to JSON...'));
+      }
+    }
+
+    if (ext === '.csv') {
+      await scrapers.exportToCSV(data, options.output);
+    } else {
+      await scrapers.exportToJSON(data, options.output);
+    }
+    console.log(chalk.green(`✓ Saved to ${options.output}`));
+    return;
+  }
+
+  // Default: print JSON to stdout
+  console.log(JSON.stringify(data, null, 2));
+}
+
 // ============================================================================
 // CLI Setup
 // ============================================================================
@@ -154,7 +213,10 @@ program
   .command('followers <username>')
   .description('Scrape followers for a user')
   .option('-l, --limit <number>', 'Maximum followers to scrape', '100')
-  .option('-o, --output <file>', 'Output file (json or csv)')
+  .option('-o, --output <file>', 'Output file (json, csv, or xlsx)')
+  .option('--google-sheets <id>', 'Export directly to a Google Sheet (spreadsheet ID)')
+  .option('--sheet-name <name>', 'Sheet/tab name for xlsx or Google Sheets export')
+  .option('--sheet-mode <mode>', 'Google Sheets write mode: append, replace, new-sheet', 'append')
   .action(async (username, options) => {
     const limit = parseInt(options.limit);
     const spinner = ora(`Scraping followers for @${username}`).start();
@@ -178,17 +240,7 @@ program
 
       spinner.succeed(`Scraped ${followers.length} followers`);
 
-      if (options.output) {
-        const ext = path.extname(options.output).toLowerCase();
-        if (ext === '.csv') {
-          await scrapers.exportToCSV(followers, options.output);
-        } else {
-          await scrapers.exportToJSON(followers, options.output);
-        }
-        console.log(chalk.green(`✓ Saved to ${options.output}`));
-      } else {
-        console.log(JSON.stringify(followers, null, 2));
-      }
+      await smartOutput(followers, options, 'followers');
     } catch (error) {
       spinner.fail('Failed to scrape followers');
       console.error(chalk.red(error.message));
@@ -199,7 +251,10 @@ program
   .command('following <username>')
   .description('Scrape accounts a user is following')
   .option('-l, --limit <number>', 'Maximum to scrape', '100')
-  .option('-o, --output <file>', 'Output file (json or csv)')
+  .option('-o, --output <file>', 'Output file (json, csv, or xlsx)')
+  .option('--google-sheets <id>', 'Export directly to a Google Sheet (spreadsheet ID)')
+  .option('--sheet-name <name>', 'Sheet/tab name for xlsx or Google Sheets export')
+  .option('--sheet-mode <mode>', 'Google Sheets write mode: append, replace, new-sheet', 'append')
   .action(async (username, options) => {
     const limit = parseInt(options.limit);
     const spinner = ora(`Scraping following for @${username}`).start();
@@ -223,17 +278,7 @@ program
 
       spinner.succeed(`Scraped ${following.length} following`);
 
-      if (options.output) {
-        const ext = path.extname(options.output).toLowerCase();
-        if (ext === '.csv') {
-          await scrapers.exportToCSV(following, options.output);
-        } else {
-          await scrapers.exportToJSON(following, options.output);
-        }
-        console.log(chalk.green(`✓ Saved to ${options.output}`));
-      } else {
-        console.log(JSON.stringify(following, null, 2));
-      }
+      await smartOutput(following, options, 'following');
     } catch (error) {
       spinner.fail('Failed to scrape following');
       console.error(chalk.red(error.message));
@@ -299,7 +344,10 @@ program
   .description('Scrape tweets from a user')
   .option('-l, --limit <number>', 'Maximum tweets', '50')
   .option('-r, --replies', 'Include replies')
-  .option('-o, --output <file>', 'Output file')
+  .option('-o, --output <file>', 'Output file (json, csv, or xlsx)')
+  .option('--google-sheets <id>', 'Export directly to a Google Sheet (spreadsheet ID)')
+  .option('--sheet-name <name>', 'Sheet/tab name for xlsx or Google Sheets export')
+  .option('--sheet-mode <mode>', 'Google Sheets write mode: append, replace, new-sheet', 'append')
   .action(async (username, options) => {
     const limit = parseInt(options.limit);
     const spinner = ora(`Scraping tweets from @${username}`).start();
@@ -321,17 +369,7 @@ program
 
       spinner.succeed(`Scraped ${tweets.length} tweets`);
 
-      if (options.output) {
-        const ext = path.extname(options.output).toLowerCase();
-        if (ext === '.csv') {
-          await scrapers.exportToCSV(tweets, options.output);
-        } else {
-          await scrapers.exportToJSON(tweets, options.output);
-        }
-        console.log(chalk.green(`✓ Saved to ${options.output}`));
-      } else {
-        console.log(JSON.stringify(tweets, null, 2));
-      }
+      await smartOutput(tweets, options, 'tweets');
     } catch (error) {
       spinner.fail('Failed to scrape tweets');
       console.error(chalk.red(error.message));
@@ -1223,7 +1261,7 @@ graphCmd
 program
   .command('export <username>')
   .description('Export a Twitter account (profile, tweets, followers, following, bookmarks)')
-  .option('-f, --format <formats>', 'Output formats: json,csv,md,html (comma-separated)', 'json,csv,md,html')
+  .option('-f, --format <formats>', 'Output formats: json,csv,xlsx,md,html (comma-separated)', 'json,csv,md,html')
   .option('--only <phases>', 'Export only specific phases: profile,tweets,followers,following,bookmarks,likes (comma-separated)')
   .option('-l, --limit <number>', 'Maximum items per phase', '500')
   .option('-o, --output <dir>', 'Custom output directory')
@@ -1395,6 +1433,115 @@ program
       spinner.fail('Diff failed');
       console.error(chalk.red(error.message));
     }
+  });
+
+// ============================================================================
+// MCP Config Generator
+// ============================================================================
+
+program
+  .command('mcp-config')
+  .description('Generate MCP server config for Claude Desktop, Cursor, Windsurf, etc.')
+  .option('-w, --write', 'Write config to Claude Desktop config file')
+  .option('-c, --client <client>', 'Target client: claude, cursor, windsurf, vscode (default: claude)')
+  .action(async (options) => {
+    const client = options.client || 'claude';
+
+    // Detect OS
+    const platform = process.platform;
+    const home = os.homedir();
+
+    // Config file paths per client and OS
+    const configPaths = {
+      claude: {
+        darwin: path.join(home, 'Library', 'Application Support', 'Claude', 'claude_desktop_config.json'),
+        win32: path.join(process.env.APPDATA || path.join(home, 'AppData', 'Roaming'), 'Claude', 'claude_desktop_config.json'),
+        linux: path.join(home, '.config', 'Claude', 'claude_desktop_config.json'),
+      },
+      cursor: {
+        darwin: path.join(home, '.cursor', 'mcp.json'),
+        win32: path.join(home, '.cursor', 'mcp.json'),
+        linux: path.join(home, '.cursor', 'mcp.json'),
+      },
+      windsurf: {
+        darwin: path.join(home, '.codeium', 'windsurf', 'mcp_config.json'),
+        win32: path.join(home, '.codeium', 'windsurf', 'mcp_config.json'),
+        linux: path.join(home, '.codeium', 'windsurf', 'mcp_config.json'),
+      },
+      vscode: {
+        darwin: path.join('.vscode', 'mcp.json'),
+        win32: path.join('.vscode', 'mcp.json'),
+        linux: path.join('.vscode', 'mcp.json'),
+      },
+    };
+
+    const configPath = configPaths[client]?.[platform] || configPaths[client]?.linux;
+
+    // Build the MCP config snippet
+    const mcpEntry = {
+      command: 'npx',
+      args: ['-y', 'xactions-mcp'],
+      env: {
+        XACTIONS_SESSION_COOKIE: 'your_auth_token_here',
+      },
+    };
+
+    const fullConfig = client === 'vscode'
+      ? { mcp: { servers: { xactions: mcpEntry } } }
+      : { mcpServers: { xactions: mcpEntry } };
+
+    console.log(chalk.bold.cyan('\n⚡ XActions MCP Configuration\n'));
+    console.log(chalk.gray(`Client: ${client}`));
+    console.log(chalk.gray(`OS:     ${platform}`));
+    if (configPath) {
+      console.log(chalk.gray(`Config: ${configPath}`));
+    }
+    console.log();
+    console.log(chalk.bold('Add this to your config file:\n'));
+    console.log(chalk.white(JSON.stringify(fullConfig, null, 2)));
+    console.log();
+
+    if (options.write && configPath) {
+      try {
+        let existing = {};
+        try {
+          const data = await fs.readFile(configPath, 'utf-8');
+          existing = JSON.parse(data);
+        } catch {
+          // File doesn't exist yet, start fresh
+        }
+
+        // Merge
+        const key = client === 'vscode' ? 'mcp' : 'mcpServers';
+        if (client === 'vscode') {
+          existing.mcp = existing.mcp || {};
+          existing.mcp.servers = existing.mcp.servers || {};
+          existing.mcp.servers.xactions = mcpEntry;
+        } else {
+          existing[key] = existing[key] || {};
+          existing[key].xactions = mcpEntry;
+        }
+
+        await fs.mkdir(path.dirname(configPath), { recursive: true });
+        await fs.writeFile(configPath, JSON.stringify(existing, null, 2));
+
+        console.log(chalk.green(`✅ Config written to ${configPath}`));
+        console.log(chalk.yellow('\n⚠️  Remember to:'));
+        console.log(chalk.yellow('   1. Replace "your_auth_token_here" with your actual auth_token'));
+        console.log(chalk.yellow(`   2. Restart ${client === 'claude' ? 'Claude Desktop' : client} to apply changes`));
+      } catch (error) {
+        console.error(chalk.red(`Failed to write config: ${error.message}`));
+        console.log(chalk.gray('\nCopy the JSON above and paste it manually.'));
+      }
+    } else if (options.write) {
+      console.log(chalk.yellow('Config path not found for this client/OS. Copy the JSON above manually.'));
+    } else {
+      console.log(chalk.gray('Tip: Use --write to write directly to the config file.'));
+      console.log(chalk.gray(`     xactions mcp-config --write --client ${client}`));
+    }
+
+    console.log(chalk.gray('\n📖 Full setup guide: https://github.com/nirholas/XActions/blob/main/docs/mcp-setup.md'));
+    console.log();
   });
 
 // ============================================================================

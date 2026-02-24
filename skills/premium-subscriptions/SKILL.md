@@ -1,80 +1,50 @@
 ---
 name: premium-subscriptions
-description: Manage X Premium tiers (Basic $3/mo, Premium $8/mo, Premium+ $16/mo) and SuperGrok ($60/mo). Features include ad reduction, longer posts/videos, verification, revenue sharing, undo post, custom icons, reply boosts, and the 2026 pay-for-reach emphasis.
+description: Manages X/Twitter Premium subscription features including plan details, feature access, and subscription settings. Use when users want to check Premium status, manage subscriptions, or access Premium-only features.
 license: MIT
 metadata:
   author: nichxbt
   version: "3.0"
 ---
 
-# Premium & Subscriptions with XActions
+# Premium Subscriptions
 
-Guide and automate X Premium subscription features.
+Browser console script for managing X/Twitter Premium subscription features.
 
-## Tier Comparison
+## Available Scripts
 
-| Feature | Free | Basic ($3) | Premium ($8) | Premium+ ($16) |
-|---------|------|------------|--------------|-----------------|
-| Post length | 280 | 280 | 25,000+ | 25,000+ |
-| Video length | 140s | 140s | 60min | 3hr |
-| Ad reduction | None | 50% fewer | 50% fewer | No ads |
-| Verification | No | No | Blue check | Blue check |
-| Edit posts | No | No | Yes (1hr) | Yes (1hr) |
-| Scheduling | No | No | Yes | Yes |
-| Bookmark folders | No | No | Yes | Yes |
-| Bold/italics | No | No | Yes | Yes |
-| Revenue share | No | No | Yes | Yes |
-| Articles | No | No | No | Yes |
-| Radar Search | No | No | No | Yes |
-| Grok limits | Basic | More | Higher | Highest |
-| Reply boost | None | Small | Medium | Largest |
+| Script | File | Purpose |
+|--------|------|---------|
+| Premium Manager | `src/premiumManager.js` | Check status, manage features, subscription info |
 
-## SuperGrok ($60/mo)
-Separate xAI subscription with X integration:
-- Unlimited Grok queries and agents
-- MacOS/iOS dedicated apps
-- Project organization
-- Advanced AI features
+## Premium Manager
 
-## 2026 Changes
-- **Pay-for-reach**: Non-Premium organic reach significantly lowered
-- Premium accounts get higher algorithm priority
-- More features gated behind Premium tiers
+**File:** `src/premiumManager.js`
 
-## Browser Console Script
+Interacts with X Premium subscription pages to check status and manage features.
 
-**File:** `scripts/premiumFeatures.js`
+### How to use
 
-Check Premium status and available features.
+1. Navigate to `x.com/i/premium_sign_up` or `x.com/settings/account`
+2. Open DevTools (F12) → Console
+3. Paste the script → Enter
 
-### Key selectors
+### Key Selectors
 
 | Element | Selector |
 |---------|----------|
-| Premium nav | `a[href="/i/premium_sign_up"]` |
-| Verification badge | `[data-testid="icon-verified"]` |
 | Subscription info | `[data-testid="subscriptionInfo"]` |
+| Verification badge | `[data-testid="icon-verified"]` |
 
-## MCP Tools
+## Premium Tiers
 
-- `x_check_premium` – Check user's Premium tier
-- `x_premium_features` – List available Premium features
-- `x_verify_status` – Check verification status
-
-## API Endpoints
-
-- `GET /api/premium/status` – Check Premium tier
-- `GET /api/premium/features` – List available features
-- `GET /api/premium/verify/:username` – Check verification
-
-## Related Files
-
-- `src/premiumManager.js` – Premium feature management
-- `scripts/premiumFeatures.js` – Browser Premium check script
+| Tier | Key Features |
+|------|-------------|
+| Basic | Edit posts, longer posts, bookmark folders |
+| Premium | Blue checkmark, scheduling, analytics, Grok |
+| Premium+ | Articles, no ads, creator monetization |
 
 ## Notes
 
-- Premium features vary by region
-- Verification requires ID or payment
-- Revenue sharing requires 500+ followers and 5M+ impressions in 3 months
-- Pay-for-reach means Premium is increasingly necessary for growth (2026)
+- Premium features gate many XActions capabilities (scheduling, articles, analytics)
+- Subscription status affects which scripts are usable

@@ -175,12 +175,33 @@
       .chart-grid { grid-template-columns: 1fr; }
       .nav__links { display: none; }
     }
+    /* Skip Navigation */
+    .skip-nav {
+      position: absolute;
+      top: -100%;
+      left: 16px;
+      background: var(--accent);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 700;
+      z-index: 9999;
+      text-decoration: none;
+    }
+    .skip-nav:focus {
+      top: 16px;
+    }
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
   </style>
 </head>
 <body>
 
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
   <!-- Nav -->
-  <nav class="nav">
+  <nav class="nav" aria-label="Main navigation">
     <a href="/dashboard" class="nav__brand">⚡ XActions</a>
     <div class="nav__links">
       <a href="/dashboard" class="nav__link">Dashboard</a>
@@ -192,14 +213,14 @@
       <a href="/docs" class="nav__link">Docs</a>
     </div>
     <div class="nav__right">
-      <span id="conn-status" class="conn-badge conn-badge--off">Disconnected</span>
+      <span id="conn-status" class="conn-badge conn-badge--off" role="status" aria-live="polite">Disconnected</span>
     </div>
   </nav>
 
   <!-- Layout -->
   <div class="layout">
     <!-- Main content -->
-    <div class="content">
+    <main class="content" id="main-content">
 
       <!-- Charts -->
       <div class="section">
@@ -262,15 +283,15 @@
         </div>
       </div>
 
-    </div>
+    </main>
 
     <!-- Sidebar -->
-    <div class="sidebar">
+    <aside class="sidebar" aria-label="Active automations">
       <div class="sidebar__title">🤖 Active Automations</div>
       <div id="active-automations">
         <div class="feed-empty">No automations configured</div>
       </div>
-    </div>
+    </aside>
   </div>
 
   <script src="/js/config.js"></script>

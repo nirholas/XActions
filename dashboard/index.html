@@ -28,10 +28,14 @@
   <link rel="manifest" href="/manifest.json">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
   
-  <!-- Socket.io for real-time browser-to-browser communication -->
-  <link rel="preconnect" href="https://cdn.socket.io" crossorigin>
-  <link rel="dns-prefetch" href="//cdn.socket.io">
-  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js" defer></script>
+  <!-- Socket.io for real-time browser-to-browser communication (loaded only when logged in) -->
+  <script>
+    if (localStorage.getItem('authToken')) {
+      var s = document.createElement('script');
+      s.src = 'https://cdn.socket.io/4.7.2/socket.io.min.js';
+      document.head.appendChild(s);
+    }
+  </script>
   
   <!-- Structured Data -->
   <script type="application/ld+json">
@@ -1049,6 +1053,7 @@
       outline-offset: 2px;
     }
   </style>
+  <script src="/js/config.js" defer></script>
 </head>
 <body>
   <a href="#main-content" class="skip-nav">Skip to main content</a>
