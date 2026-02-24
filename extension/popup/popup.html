@@ -271,6 +271,163 @@
         </label>
       </div>
     </div>
+
+    <!-- Video Downloader -->
+    <div class="automation-card" data-automation="videoDownloader">
+      <div class="card-header">
+        <div class="card-icon">🎬</div>
+        <div class="card-info">
+          <div class="card-title">Video Downloader</div>
+          <div class="card-desc">Adds download button to tweets with video</div>
+        </div>
+        <div class="card-status">
+          <span class="status-badge stopped">Off</span>
+        </div>
+      </div>
+      <div class="card-actions">
+        <span class="action-count">0 downloads</span>
+        <button class="btn-settings" title="Settings">⚙️</button>
+        <button class="btn-toggle" title="Enable">▶️</button>
+      </div>
+      <div class="card-settings hidden">
+        <label>Quality preference
+          <select data-setting="quality">
+            <option value="highest">Highest available</option>
+            <option value="720p">720p</option>
+            <option value="480p">480p</option>
+          </select>
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" data-setting="autoDownload"> Auto-download on click
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" data-setting="showButton" checked> Show download button on tweets
+        </label>
+      </div>
+    </div>
+
+    <!-- Who Unfollowed Me -->
+    <div class="automation-card" data-automation="unfollowerDetector">
+      <div class="card-header">
+        <div class="card-icon">🔔</div>
+        <div class="card-info">
+          <div class="card-title">Who Unfollowed Me</div>
+          <div class="card-desc">Detect and track recent unfollowers</div>
+        </div>
+        <div class="card-status">
+          <span class="status-badge stopped">Off</span>
+        </div>
+      </div>
+      <div class="card-actions">
+        <span class="action-count">0 detected</span>
+        <button class="btn-settings" title="Settings">⚙️</button>
+        <button class="btn-toggle" title="Scan">▶️</button>
+      </div>
+      <div class="card-settings hidden">
+        <label>Check frequency (hours)
+          <input type="number" data-setting="checkFrequency" value="24" min="1" max="168">
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" data-setting="notifications" checked> Show notifications
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" data-setting="keepHistory" checked> Keep unfollower history
+        </label>
+        <div id="unfollowerList" class="mini-list"></div>
+      </div>
+    </div>
+
+    <!-- Best Time to Post -->
+    <div class="automation-card" data-automation="bestTimeToPost">
+      <div class="card-header">
+        <div class="card-icon">📊</div>
+        <div class="card-info">
+          <div class="card-title">Best Time to Post</div>
+          <div class="card-desc">Analyze engagement patterns by time of day</div>
+        </div>
+        <div class="card-status">
+          <span class="status-badge stopped">Idle</span>
+        </div>
+      </div>
+      <div class="card-actions">
+        <span class="action-count">No data yet</span>
+        <button class="btn-settings" title="Settings">⚙️</button>
+        <button class="btn-toggle" title="Analyze">▶️</button>
+      </div>
+      <div class="card-settings hidden">
+        <label>Tweets to analyze
+          <input type="number" data-setting="tweetCount" value="50" min="10" max="200">
+        </label>
+        <label>Timezone
+          <select data-setting="timezone">
+            <option value="local">Local time</option>
+            <option value="UTC">UTC</option>
+          </select>
+        </label>
+        <div id="heatmapContainer" class="heatmap-container"></div>
+      </div>
+    </div>
+
+    <!-- Thread Reader -->
+    <div class="automation-card" data-automation="threadReader">
+      <div class="card-header">
+        <div class="card-icon">🧵</div>
+        <div class="card-info">
+          <div class="card-title">Thread Reader</div>
+          <div class="card-desc">Unroll threads into clean readable view</div>
+        </div>
+        <div class="card-status">
+          <span class="status-badge stopped">Off</span>
+        </div>
+      </div>
+      <div class="card-actions">
+        <span class="action-count">0 unrolled</span>
+        <button class="btn-settings" title="Settings">⚙️</button>
+        <button class="btn-toggle" title="Enable">▶️</button>
+      </div>
+      <div class="card-settings hidden">
+        <label class="checkbox-label">
+          <input type="checkbox" data-setting="showUnrollBtn" checked> Show "Unroll" button on threads
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" data-setting="autoDetect" checked> Auto-detect threads
+        </label>
+        <label>Max tweets to unroll
+          <input type="number" data-setting="maxTweets" value="50" min="5" max="200">
+        </label>
+      </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="automation-card" data-automation="quickStats">
+      <div class="card-header">
+        <div class="card-icon">⚡</div>
+        <div class="card-info">
+          <div class="card-title">Quick Stats</div>
+          <div class="card-desc">Engagement rate overlay on your profile</div>
+        </div>
+        <div class="card-status">
+          <span class="status-badge stopped">Off</span>
+        </div>
+      </div>
+      <div class="card-actions">
+        <span class="action-count">—</span>
+        <button class="btn-settings" title="Settings">⚙️</button>
+        <button class="btn-toggle" title="Enable">▶️</button>
+      </div>
+      <div class="card-settings hidden">
+        <label class="checkbox-label">
+          <input type="checkbox" data-setting="showOverlay" checked> Show stats overlay on profile
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" data-setting="trackDaily" checked> Track daily stats
+        </label>
+        <label>Tweets to sample
+          <input type="number" data-setting="sampleSize" value="20" min="5" max="100">
+        </label>
+        <div id="quickStatsDisplay" class="stats-display"></div>
+      </div>
+    </div>
   </section>
 
   <!-- ============================================ -->
