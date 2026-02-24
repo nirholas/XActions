@@ -363,6 +363,339 @@
       flex-shrink: 0;
     }
 
+    /* Sentiment Gauge */
+    .gauge-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 0;
+    }
+
+    .gauge {
+      position: relative;
+      width: 180px;
+      height: 100px;
+      overflow: hidden;
+    }
+
+    .gauge-bg {
+      width: 180px;
+      height: 90px;
+      border-radius: 90px 90px 0 0;
+      background: conic-gradient(
+        from 180deg at 50% 100%,
+        var(--negative) 0deg,
+        var(--warning) 60deg,
+        var(--neutral) 90deg,
+        #b8d4a8 120deg,
+        var(--positive) 180deg
+      );
+      position: relative;
+    }
+
+    .gauge-bg::after {
+      content: '';
+      position: absolute;
+      width: 130px;
+      height: 65px;
+      background: var(--bg-secondary);
+      border-radius: 65px 65px 0 0;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .gauge-needle {
+      position: absolute;
+      width: 4px;
+      height: 60px;
+      background: var(--text-primary);
+      bottom: 0;
+      left: 50%;
+      transform-origin: bottom center;
+      transform: translateX(-50%) rotate(0deg);
+      transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+      border-radius: 2px;
+      z-index: 2;
+    }
+
+    .gauge-needle::after {
+      content: '';
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: var(--text-primary);
+      border-radius: 50%;
+      bottom: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .gauge-value {
+      text-align: center;
+      font-size: 22px;
+      font-weight: 800;
+      margin-top: 8px;
+    }
+
+    .gauge-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    /* Toast notifications */
+    .toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 10000;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      pointer-events: none;
+    }
+
+    .toast {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 20px;
+      max-width: 380px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+      animation: toastIn 0.3s ease-out;
+      pointer-events: auto;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .toast.toast-exit {
+      animation: toastOut 0.3s ease-in forwards;
+    }
+
+    .toast-success { border-left: 3px solid var(--positive); }
+    .toast-error { border-left: 3px solid var(--negative); }
+    .toast-warning { border-left: 3px solid var(--warning); }
+    .toast-info { border-left: 3px solid var(--accent); }
+
+    .toast-body { flex: 1; }
+    .toast-title { font-weight: 700; font-size: 14px; margin-bottom: 2px; }
+    .toast-message { font-size: 13px; color: var(--text-secondary); }
+
+    .toast-close {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 16px;
+      padding: 0 4px;
+    }
+
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateX(40px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes toastOut {
+      from { opacity: 1; transform: translateX(0); }
+      to { opacity: 0; transform: translateX(40px); }
+    }
+
+    /* Comparison mode */
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .comparison-panel {
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .comparison-panel .panel-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    .comparison-vs {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 18px;
+      color: var(--text-secondary);
+    }
+
+    /* Export dropdown */
+    .export-menu {
+      position: relative;
+      display: inline-block;
+    }
+
+    .export-dropdown {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 100%;
+      margin-top: 4px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 8px;
+      min-width: 160px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+      z-index: 100;
+    }
+
+    .export-dropdown.show { display: block; }
+
+    .export-option {
+      display: block;
+      width: 100%;
+      padding: 8px 12px;
+      border: none;
+      background: none;
+      color: var(--text-primary);
+      font-size: 14px;
+      text-align: left;
+      cursor: pointer;
+      border-radius: 8px;
+    }
+
+    .export-option:hover { background: var(--bg-tertiary); }
+
+    /* Skeleton loading */
+    .skeleton {
+      background: linear-gradient(90deg, var(--bg-tertiary) 25%, var(--bg-hover) 50%, var(--bg-tertiary) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 8px;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .skeleton-line {
+      height: 14px;
+      margin-bottom: 8px;
+      border-radius: 7px;
+    }
+
+    .skeleton-line.short { width: 60%; }
+    .skeleton-line.medium { width: 80%; }
+
+    /* Search/filter bar */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .search-input {
+      flex: 1;
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 9999px;
+      padding: 8px 14px;
+      color: var(--text-primary);
+      font-size: 13px;
+    }
+
+    .search-input::placeholder { color: var(--text-secondary); }
+    .search-input:focus { border-color: var(--accent); outline: none; }
+
+    /* Toggle switch */
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .toggle {
+      position: relative;
+      width: 36px;
+      height: 20px;
+      background: var(--bg-tertiary);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.2s;
+      border: 1px solid var(--border);
+    }
+
+    .toggle.active { background: var(--accent); border-color: var(--accent); }
+
+    .toggle::after {
+      content: '';
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      background: #fff;
+      border-radius: 50%;
+      top: 1px;
+      left: 1px;
+      transition: transform 0.2s;
+    }
+
+    .toggle.active::after { transform: translateX(16px); }
+
+    /* Confidence bar */
+    .confidence-bar {
+      width: 100%;
+      height: 6px;
+      background: var(--bg-tertiary);
+      border-radius: 3px;
+      margin-top: 8px;
+      overflow: hidden;
+    }
+
+    .confidence-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.5s ease;
+    }
+
+    /* Donut chart */
+    .donut-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      padding: 16px 0;
+    }
+
+    .donut-legend {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
     /* Word cloud */
     .word-cloud {
       display: flex;
@@ -497,6 +830,15 @@
     :focus-visible {
       outline: 2px solid var(--accent);
       outline-offset: 2px;
+    }
+
+    /* Link differentiation (WCAG 1.4.1) */
+    main a:not(.nav-item):not(.btn):not(.nav__link):not(.nav__brand),
+    .content a:not(.nav-item):not(.btn):not(.nav__link):not(.nav__brand),
+    footer a {
+      text-decoration: underline;
+      text-decoration-color: var(--accent);
+      text-underline-offset: 2px;
     }
   </style>
 </head>

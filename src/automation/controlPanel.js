@@ -96,6 +96,19 @@
       ],
       run: runScrapeFollowers,
     },
+    'algo-builder': {
+      label: '🧠 Algorithm Builder',
+      description: '24/7 niche algorithm builder — search, engage, follow, comment (LLM)',
+      inputs: [
+        { key: 'keywords', label: 'Niche keywords (comma-sep)', type: 'text', default: 'web3 builder, crypto alpha' },
+        { key: 'persona', label: 'Your persona (for LLM comments)', type: 'text', default: 'a crypto & web3 builder' },
+        { key: 'bioKeywords', label: 'Bio filter keywords (comma-sep, blank = all)', type: 'text', default: 'crypto, web3, defi, builder' },
+        { key: 'targetAccounts', label: 'Target @accounts (comma-sep)', type: 'text', default: '' },
+        { key: 'llmApiKey', label: 'OpenRouter API key (blank = no LLM)', type: 'text', default: '' },
+        { key: 'sessionMinutes', label: 'Session length (min)', type: 'number', default: 30 },
+      ],
+      run: runAlgoBuilder,
+    },
   };
 
   // ========================================================================
@@ -725,6 +738,223 @@
 
     panelLog(`✅ Done! Scraped ${collected.length} followers.`, 'success');
     return { collected: collected.length, data: collected };
+  }
+
+  // ─── Algorithm Builder (panel-integrated) ───
+  async function runAlgoBuilder(config, signal) {
+    const keywords = (config.keywords || '').split(',').map(k => k.trim()).filter(Boolean);
+    const persona = config.persona || 'a knowledgeable person on Twitter';
+    const bioKw = (config.bioKeywords || '').split(',').map(k => k.trim()).filter(Boolean);
+    const targets = (config.targetAccounts || '').split(',').map(k => k.trim().replace(/^@/, '')).filter(Boolean);
+    const llmKey = config.llmApiKey || '';
+    const sessionMin = config.sessionMinutes || 30;
+
+    if (keywords.length === 0) { panelLog('❌ At least one keyword required', 'error'); return; }
+
+    panelLog(`🧠 Algorithm Builder started — ${keywords.length} keywords, LLM ${llmKey ? '✅' : '❌'}`, 'action');
+
+    const FALLBACK = [
+      'Solid take', 'Been thinking about this', 'This is underrated',
+      'Hard agree', 'More people need to see this', 'Facts',
+      'Interesting perspective', 'Saving this', 'Real ones know',
+    ];
+
+    const llmComment = async (text) => {
+      if (!llmKey) return null;
+      if (Math.random() > 0.7) return null;
+      try {
+        const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${llmKey}` },
+          body: JSON.stringify({
+            model: 'google/gemini-flash-1.5',
+            messages: [
+              { role: 'system', content: `You are ${persona} on Twitter. Reply in 1-2 casual sentences. No hashtags. Be specific to the tweet.` },
+              { role: 'user', content: `Reply to: "${text.substring(0, 500)}"` },
+            ],
+            max_tokens: 80, temperature: 0.9,
+          }),
+        });
+        if (!res.ok) return null;
+        const d = await res.json();
+        return d.choices?.[0]?.message?.content?.trim()?.replace(/^["']|["']$/g, '') || null;
+      } catch { return null; }
+    };
+
+    const getComment = async (text) => (await llmComment(text)) || FALLBACK[Math.floor(Math.random() * FALLBACK.length)];
+
+    const engageFeed = async (source) => {
+      const maxScrolls = 8 + Math.floor(Math.random() * 8);
+      const seen = new Set();
+      let actions = 0;
+
+      for (let s = 0; s < maxScrolls; s++) {
+        await checkPauseAbort(signal);
+        if (checkTimeLimit()) return actions;
+
+        const tweets = document.querySelectorAll(SELECTORS.tweet);
+        for (const tw of tweets) {
+          await checkPauseAbort(signal);
+          const tid = getTweetId(tw);
+          if (!tid || seen.has(tid)) continue;
+          seen.add(tid);
+
+          const info = window.XActions.Core.extractTweetInfo(tw);
+          if (!info?.text) continue;
+
+          // Like (35% chance)
+          if (Math.random() < 0.35 && !tw.querySelector('[data-testid="unlike"]')) {
+            const btn = tw.querySelector(SELECTORS.likeButton);
+            if (btn) {
+              await randomDelay(500, 2000);
+              await clickElement(btn);
+              actions++;
+              PANEL.actionCount++;
+              PANEL.results.push({ type: 'like', tweet: tid, source, timestamp: new Date().toISOString() });
+              panelLog(`❤️ Liked (${source})`, 'success');
+              await randomDelay(2000, 5000);
+            }
+          }
+
+          // Comment (8% chance)
+          if (Math.random() < 0.08 && info.text.length > 20) {
+            const comment = await getComment(info.text);
+            const replyBtn = tw.querySelector(SELECTORS.replyButton);
+            if (replyBtn && comment) {
+              await clickElement(replyBtn);
+              await sleep(1200);
+              const input = await waitForElement('[data-testid="tweetTextarea_0"]', 5000);
+              if (input) {
+                input.focus();
+                await sleep(300);
+                for (const ch of comment) { document.execCommand('insertText', false, ch); await sleep(50 + Math.random() * 40); }
+                await sleep(600);
+                const post = await waitForElement('[data-testid="tweetButton"]', 3000);
+                if (post) {
+                  await clickElement(post);
+                  await sleep(1200);
+                  actions++;
+                  PANEL.actionCount++;
+                  PANEL.results.push({ type: 'comment', tweet: tid, comment, source, timestamp: new Date().toISOString() });
+                  panelLog(`💬 "${comment.substring(0, 40)}..."`, 'success');
+                }
+              } else {
+                document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+              }
+              await randomDelay(3000, 6000);
+            }
+          }
+
+          // Follow author (15% chance)
+          if (Math.random() < 0.15) {
+            const fBtn = tw.querySelector(SELECTORS.followButton);
+            if (fBtn) {
+              await randomDelay(500, 2000);
+              await clickElement(fBtn);
+              actions++;
+              PANEL.actionCount++;
+              panelLog(`➕ Followed (${source})`, 'success');
+              await randomDelay(2000, 5000);
+            }
+          }
+        }
+
+        scrollBy(300 + Math.floor(Math.random() * 500));
+        await randomDelay(1500, 4000);
+        if (Math.random() < 0.15) await sleep(5000 + Math.random() * 7000); // reading pause
+      }
+      return actions;
+    };
+
+    // ─── Main cycle loop ───
+    const sessionEnd = Date.now() + sessionMin * 60 * 1000;
+    let kwIdx = 0;
+    let tgtIdx = 0;
+    let totalActions = 0;
+    const cycles = ['search', 'home', 'target', 'explore', 'people', 'profile'];
+    let cycleIdx = 0;
+
+    while (Date.now() < sessionEnd) {
+      await checkPauseAbort(signal);
+      if (checkTimeLimit()) break;
+
+      const cycle = cycles[cycleIdx % cycles.length];
+      cycleIdx++;
+
+      try {
+        if (cycle === 'search') {
+          const kw = keywords[kwIdx % keywords.length]; kwIdx++;
+          panelLog(`🔍 Searching: "${kw}"`, 'action');
+          window.location.href = `https://x.com/search?q=${encodeURIComponent(kw)}&src=typed_query&f=top`;
+          await sleep(3000); await waitForTimeline();
+          totalActions += await engageFeed('search-top');
+
+          await checkPauseAbort(signal);
+          window.location.href = `https://x.com/search?q=${encodeURIComponent(kw)}&src=typed_query&f=live`;
+          await sleep(3000); await waitForTimeline();
+          totalActions += await engageFeed('search-latest');
+
+        } else if (cycle === 'home') {
+          panelLog('🏠 Browsing home feed', 'action');
+          window.location.href = 'https://x.com/home';
+          await sleep(3000); await waitForTimeline();
+          totalActions += await engageFeed('home');
+
+        } else if (cycle === 'target' && targets.length > 0) {
+          const t = targets[tgtIdx % targets.length]; tgtIdx++;
+          panelLog(`🎯 Visiting @${t}`, 'action');
+          window.location.href = `https://x.com/${t}`;
+          await sleep(3000); await waitForTimeline();
+          totalActions += await engageFeed('target');
+
+        } else if (cycle === 'explore') {
+          panelLog('🌍 Browsing Explore', 'action');
+          window.location.href = 'https://x.com/explore';
+          await sleep(3000);
+          for (let i = 0; i < 5; i++) { scrollBy(400 + Math.random() * 300); await randomDelay(1500, 3000); }
+
+        } else if (cycle === 'people') {
+          const kw = keywords[Math.floor(Math.random() * keywords.length)];
+          panelLog(`👥 Searching people: "${kw}"`, 'action');
+          window.location.href = `https://x.com/search?q=${encodeURIComponent(kw)}&f=user`;
+          await sleep(3000); await waitForTimeline();
+          const cells = document.querySelectorAll(SELECTORS.userCell);
+          let pFollows = 0;
+          for (const cell of cells) {
+            if (pFollows >= 5) break;
+            const user = window.XActions.Core.extractUserFromCell(cell);
+            if (!user?.username || user.isFollowing) continue;
+            if (bioKw.length > 0 && user.bio) {
+              const bl = user.bio.toLowerCase();
+              if (!bioKw.some(k => bl.includes(k.toLowerCase()))) continue;
+            }
+            const fb = cell.querySelector(SELECTORS.followButton);
+            if (fb) {
+              await randomDelay(1000, 3000);
+              await clickElement(fb);
+              pFollows++; totalActions++;
+              PANEL.actionCount++;
+              panelLog(`➕ Followed @${user.username}`, 'success');
+            }
+          }
+
+        } else if (cycle === 'profile') {
+          panelLog('👤 Visiting own profile', 'action');
+          const pLink = document.querySelector('a[data-testid="AppTabBar_Profile_Link"]');
+          if (pLink) { await clickElement(pLink); await sleep(3000); }
+          for (let i = 0; i < 3; i++) { scrollBy(400); await randomDelay(1000, 2000); }
+        }
+      } catch (err) {
+        panelLog(`⚠️ ${err.message}`, 'warning');
+      }
+
+      // Inter-cycle pause
+      await randomDelay(3000, 8000);
+      updateProgress(Math.min(cycleIdx, cycles.length * 3), cycles.length * 3);
+    }
+
+    panelLog(`✅ Algorithm Builder done! ${totalActions} actions across ${cycleIdx} cycles`, 'success');
+    return { totalActions, cycles: cycleIdx };
   }
 
   // ========================================================================

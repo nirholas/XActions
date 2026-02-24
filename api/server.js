@@ -55,6 +55,8 @@ import workflowRoutes from './routes/workflows.js';
 import portabilityRoutes from './routes/portability.js';
 import threadRoutes from './routes/thread.js';
 import unfollowersRoutes from './routes/unfollowers.js';
+import videoRoutes from './routes/video.js';
+import { startScheduler } from './services/unfollowerScheduler.js';
 import { initializeSocketIO } from './realtime/socketHandler.js';
 import { initializeLicensing, brandingMiddleware } from './services/licensing.js';
 
@@ -205,6 +207,7 @@ app.use('/api/analytics', analyticsRoutes);
 app.use('/api/portability', portabilityRoutes);
 app.use('/api/unfollowers', unfollowersRoutes);
 app.use('/api/thread', threadRoutes);
+app.use('/api/video', videoRoutes);
 
 // Plugin routes — mounted under /api/plugins/<plugin-name>/
 function mountPluginRoutes() {
@@ -323,6 +326,10 @@ app.get('/thread/:tweetId', (req, res) => {
   res.sendFile(path.join(__dirname, '../dashboard/thread.html'));
 });
 
+app.get('/video', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dashboard/video.html'));
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
@@ -370,6 +377,9 @@ httpServer.listen(PORT, async () => {
   
   // Initialize licensing and telemetry
   await initializeLicensing();
+
+  // Start unfollower auto-scan scheduler
+  startScheduler(io);
 });
 
 export default app;

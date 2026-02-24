@@ -22,6 +22,22 @@
   </header>
 
   <!-- ============================================ -->
+  <!-- DISCONNECTED BANNER -->
+  <!-- ============================================ -->
+  <div id="disconnectedBanner" class="disconnected-banner hidden">
+    <div class="disconnected-content">
+      <span class="disconnected-icon">🔗</span>
+      <div>
+        <div class="disconnected-title">Not connected to X</div>
+        <div class="disconnected-desc">Open <a href="https://x.com" target="_blank">x.com</a> in a tab to start using automations</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- ============================================ -->
   <!-- ACCOUNT INFO -->
   <!-- ============================================ -->
   <section id="accountInfo" class="section">
@@ -81,7 +97,7 @@
       <input type="text" id="automationSearch" placeholder="Search automations..." class="search-input">
     </div>
     <!-- Auto-Liker -->
-    <div class="automation-card" data-automation="autoLiker">
+    <div class="automation-card" data-automation="autoLiker" data-category="growth" data-searchable="auto liker like tweets keywords feed">
       <div class="card-header">
         <div class="card-icon">❤️</div>
         <div class="card-info">
@@ -92,8 +108,10 @@
           <span class="status-badge stopped">Stopped</span>
         </div>
       </div>
+      <div class="card-progress hidden"><div class="progress-bar"></div><span class="progress-text"></span></div>
       <div class="card-actions">
         <span class="action-count">0 actions</span>
+        <span class="session-timer hidden"></span>
         <button class="btn-settings" title="Settings">⚙️</button>
         <button class="btn-toggle" title="Start">▶️</button>
       </div>
@@ -104,17 +122,22 @@
         <label>Max likes per session
           <input type="number" data-setting="maxActions" value="20" min="1" max="200">
         </label>
-        <label>Min delay (ms)
-          <input type="number" data-setting="minDelay" value="2000" min="500" max="30000">
-        </label>
-        <label>Max delay (ms)
-          <input type="number" data-setting="maxDelay" value="5000" min="1000" max="60000">
+        <div class="speed-preset-row">
+          <span class="speed-label">Speed</span>
+          <div class="speed-presets">
+            <button class="speed-btn" data-speed="safe" data-min="3000" data-max="6000">Safe</button>
+            <button class="speed-btn active" data-speed="normal" data-min="2000" data-max="5000">Normal</button>
+            <button class="speed-btn" data-speed="fast" data-min="1000" data-max="2500">Fast</button>
+          </div>
+        </div>
+        <label>Delay between actions <small class="delay-display">2s — 5s</small>
+          <input type="range" data-setting="minDelay" min="500" max="10000" step="500" value="2000" class="delay-slider">
         </label>
       </div>
     </div>
 
     <!-- Smart Unfollow -->
-    <div class="automation-card" data-automation="smartUnfollow">
+    <div class="automation-card" data-automation="smartUnfollow" data-category="growth" data-searchable="smart unfollow non-followers following cleanup">
       <div class="card-header">
         <div class="card-icon">👋</div>
         <div class="card-info">
@@ -125,8 +148,10 @@
           <span class="status-badge stopped">Stopped</span>
         </div>
       </div>
+      <div class="card-progress hidden"><div class="progress-bar"></div><span class="progress-text"></span></div>
       <div class="card-actions">
         <span class="action-count">0 actions</span>
+        <span class="session-timer hidden"></span>
         <button class="btn-settings" title="Settings">⚙️</button>
         <button class="btn-toggle" title="Start">▶️</button>
       </div>
@@ -140,9 +165,14 @@
         <label>Whitelist <small>(comma-separated usernames)</small>
           <input type="text" data-setting="whitelist" placeholder="user1, user2">
         </label>
-        <label>Min delay (ms)
-          <input type="number" data-setting="minDelay" value="2000" min="500" max="30000">
-        </label>
+        <div class="speed-preset-row">
+          <span class="speed-label">Speed</span>
+          <div class="speed-presets">
+            <button class="speed-btn" data-speed="safe" data-min="3000" data-max="6000">Safe</button>
+            <button class="speed-btn active" data-speed="normal" data-min="2000" data-max="5000">Normal</button>
+            <button class="speed-btn" data-speed="fast" data-min="1000" data-max="2500">Fast</button>
+          </div>
+        </div>
         <label class="checkbox-label">
           <input type="checkbox" data-setting="dryRun"> Dry run (preview only)
         </label>
@@ -150,7 +180,7 @@
     </div>
 
     <!-- Keyword Follow -->
-    <div class="automation-card" data-automation="keywordFollow">
+    <div class="automation-card" data-automation="keywordFollow" data-category="growth" data-searchable="keyword follow search users discover">
       <div class="card-header">
         <div class="card-icon">🔍</div>
         <div class="card-info">
@@ -161,8 +191,10 @@
           <span class="status-badge stopped">Stopped</span>
         </div>
       </div>
+      <div class="card-progress hidden"><div class="progress-bar"></div><span class="progress-text"></span></div>
       <div class="card-actions">
         <span class="action-count">0 actions</span>
+        <span class="session-timer hidden"></span>
         <button class="btn-settings" title="Settings">⚙️</button>
         <button class="btn-toggle" title="Start">▶️</button>
       </div>
@@ -179,9 +211,14 @@
         <label>Min followers on user
           <input type="number" data-setting="minFollowers" value="100" min="0" max="1000000">
         </label>
-        <label>Min delay (ms)
-          <input type="number" data-setting="minDelay" value="3000" min="500" max="30000">
-        </label>
+        <div class="speed-preset-row">
+          <span class="speed-label">Speed</span>
+          <div class="speed-presets">
+            <button class="speed-btn active" data-speed="safe" data-min="3000" data-max="6000">Safe</button>
+            <button class="speed-btn" data-speed="normal" data-min="2000" data-max="5000">Normal</button>
+            <button class="speed-btn" data-speed="fast" data-min="1000" data-max="2500">Fast</button>
+          </div>
+        </div>
         <label class="checkbox-label">
           <input type="checkbox" data-setting="mustHaveBio"> Must have bio
         </label>
@@ -189,7 +226,7 @@
     </div>
 
     <!-- Growth Suite -->
-    <div class="automation-card" data-automation="growthSuite">
+    <div class="automation-card" data-automation="growthSuite" data-category="growth" data-searchable="growth suite all-in-one like follow unfollow">
       <div class="card-header">
         <div class="card-icon">🚀</div>
         <div class="card-info">
@@ -200,8 +237,10 @@
           <span class="status-badge stopped">Stopped</span>
         </div>
       </div>
+      <div class="card-progress hidden"><div class="progress-bar"></div><span class="progress-text"></span></div>
       <div class="card-actions">
         <span class="action-count">0 actions</span>
+        <span class="session-timer hidden"></span>
         <button class="btn-settings" title="Settings">⚙️</button>
         <button class="btn-toggle" title="Start">▶️</button>
       </div>
@@ -221,9 +260,14 @@
         <label>Max unfollows
           <input type="number" data-setting="maxUnfollows" value="15" min="0" max="100">
         </label>
-        <label>Min delay (ms)
-          <input type="number" data-setting="minDelay" value="3000" min="500" max="30000">
-        </label>
+        <div class="speed-preset-row">
+          <span class="speed-label">Speed</span>
+          <div class="speed-presets">
+            <button class="speed-btn active" data-speed="safe" data-min="3000" data-max="6000">Safe</button>
+            <button class="speed-btn" data-speed="normal" data-min="2000" data-max="5000">Normal</button>
+            <button class="speed-btn" data-speed="fast" data-min="1000" data-max="2500">Fast</button>
+          </div>
+        </div>
         <label class="checkbox-label">
           <input type="checkbox" data-setting="enableFollow" checked> Enable follow
         </label>
@@ -237,7 +281,7 @@
     </div>
 
     <!-- Auto-Commenter -->
-    <div class="automation-card" data-automation="autoCommenter">
+    <div class="automation-card" data-automation="autoCommenter" data-category="growth" data-searchable="auto commenter reply comments posts">
       <div class="card-header">
         <div class="card-icon">💬</div>
         <div class="card-info">
@@ -248,8 +292,10 @@
           <span class="status-badge stopped">Stopped</span>
         </div>
       </div>
+      <div class="card-progress hidden"><div class="progress-bar"></div><span class="progress-text"></span></div>
       <div class="card-actions">
         <span class="action-count">0 actions</span>
+        <span class="session-timer hidden"></span>
         <button class="btn-settings" title="Settings">⚙️</button>
         <button class="btn-toggle" title="Start">▶️</button>
       </div>
@@ -270,7 +316,7 @@
     </div>
 
     <!-- Follow Engagers -->
-    <div class="automation-card" data-automation="followEngagers">
+    <div class="automation-card" data-automation="followEngagers" data-category="growth" data-searchable="follow engagers likers retweeters tweet">
       <div class="card-header">
         <div class="card-icon">👥</div>
         <div class="card-info">
@@ -281,8 +327,10 @@
           <span class="status-badge stopped">Stopped</span>
         </div>
       </div>
+      <div class="card-progress hidden"><div class="progress-bar"></div><span class="progress-text"></span></div>
       <div class="card-actions">
         <span class="action-count">0 actions</span>
+        <span class="session-timer hidden"></span>
         <button class="btn-settings" title="Settings">⚙️</button>
         <button class="btn-toggle" title="Start">▶️</button>
       </div>
@@ -299,14 +347,19 @@
         <label>Min followers on user
           <input type="number" data-setting="minFollowers" value="50" min="0" max="1000000">
         </label>
-        <label>Min delay (ms)
-          <input type="number" data-setting="minDelay" value="3000" min="500" max="30000">
-        </label>
+        <div class="speed-preset-row">
+          <span class="speed-label">Speed</span>
+          <div class="speed-presets">
+            <button class="speed-btn active" data-speed="safe" data-min="3000" data-max="6000">Safe</button>
+            <button class="speed-btn" data-speed="normal" data-min="2000" data-max="5000">Normal</button>
+            <button class="speed-btn" data-speed="fast" data-min="1000" data-max="2500">Fast</button>
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- Video Downloader -->
-    <div class="automation-card" data-automation="videoDownloader">
+    <div class="automation-card" data-automation="videoDownloader" data-category="tools" data-searchable="video downloader download mp4 save media">
       <div class="card-header">
         <div class="card-icon">🎬</div>
         <div class="card-info">
@@ -340,7 +393,7 @@
     </div>
 
     <!-- Who Unfollowed Me -->
-    <div class="automation-card" data-automation="unfollowerDetector">
+    <div class="automation-card" data-automation="unfollowerDetector" data-category="analytics" data-searchable="unfollowed me detector unfollowers tracking">
       <div class="card-header">
         <div class="card-icon">🔔</div>
         <div class="card-info">
@@ -371,7 +424,7 @@
     </div>
 
     <!-- Best Time to Post -->
-    <div class="automation-card" data-automation="bestTimeToPost">
+    <div class="automation-card" data-automation="bestTimeToPost" data-category="analytics" data-searchable="best time post engagement schedule analyze">
       <div class="card-header">
         <div class="card-icon">📊</div>
         <div class="card-info">
@@ -402,7 +455,7 @@
     </div>
 
     <!-- Thread Reader -->
-    <div class="automation-card" data-automation="threadReader">
+    <div class="automation-card" data-automation="threadReader" data-category="tools" data-searchable="thread reader unroll threads readable view">
       <div class="card-header">
         <div class="card-icon">🧵</div>
         <div class="card-info">
@@ -432,7 +485,7 @@
     </div>
 
     <!-- Quick Stats -->
-    <div class="automation-card" data-automation="quickStats">
+    <div class="automation-card" data-automation="quickStats" data-category="analytics" data-searchable="quick stats engagement rate profile analytics">
       <div class="card-header">
         <div class="card-icon">⚡</div>
         <div class="card-info">
@@ -469,7 +522,23 @@
   <section id="tab-activity" class="tab-content">
     <div class="activity-header">
       <span>Live Activity Log</span>
-      <button id="btnClearLog" class="btn-small">Clear</button>
+      <div class="activity-controls">
+        <select id="logFilter" class="log-filter-select">
+          <option value="all">All</option>
+          <option value="autoLiker">❤️ Liker</option>
+          <option value="smartUnfollow">👋 Unfollow</option>
+          <option value="keywordFollow">🔍 Follow</option>
+          <option value="growthSuite">🚀 Growth</option>
+          <option value="autoCommenter">💬 Commenter</option>
+          <option value="followEngagers">👥 Engagers</option>
+          <option value="videoDownloader">🎬 Video</option>
+          <option value="unfollowerDetector">🔔 Unfollower</option>
+          <option value="bestTimeToPost">📊 Best Time</option>
+          <option value="threadReader">🧵 Thread</option>
+          <option value="quickStats">⚡ Stats</option>
+        </select>
+        <button id="btnClearLog" class="btn-small">Clear</button>
+      </div>
     </div>
     <div id="activityLog" class="activity-log">
       <div class="log-empty">No activity yet. Start an automation to see logs here.</div>

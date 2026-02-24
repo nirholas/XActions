@@ -91,6 +91,15 @@
       outline: 2px solid var(--accent);
       outline-offset: 2px;
     }
+
+    /* Link differentiation (WCAG 1.4.1) */
+    main a:not(.nav-item):not(.btn):not(.nav__link):not(.nav__brand),
+    .content a:not(.nav-item):not(.btn):not(.nav__link):not(.nav__brand),
+    footer a {
+      text-decoration: underline;
+      text-decoration-color: var(--accent);
+      text-underline-offset: 2px;
+    }
   </style>
 </head>
 <body>
