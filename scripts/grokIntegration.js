@@ -1,5 +1,5 @@
 // scripts/grokIntegration.js
-// Browser console script to interact with Grok AI on X/Twitter
+// Browser console script for interacting with Grok AI on X
 // Paste in DevTools console on x.com/i/grok
 // by nichxbt
 
@@ -7,26 +7,114 @@
   const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
   // =============================================
-  // CONFIGURE YOUR GROK QUERY HERE
+  // CONFIGURATION
   // =============================================
-  const QUERY = 'Summarize the top tech trends on X today';
-  const WAIT_FOR_RESPONSE = 15000; // ms to wait for Grok response
+  const CONFIG = {
+    prompt: 'Analyze the latest tech trends on X',
+    waitForResponse: true,
+    maxWaitMs: 30000,
+  };
   // =============================================
 
   const SELECTORS = {
-    chatInput: '[data-testid="grokInput"], textarea[placeholder*="Ask"], [contenteditable][role="textbox"]',
-    sendButton: '[data-testid="grokSendButton"], button[aria-label="Send"], button[data-testid*="send"]',
-    responseArea: '[data-testid="grokResponse"], [data-testid="grokResponseText"]',
+    input: '[data-testid="grokInput"], textarea[placeholder*="Ask"], textarea[placeholder*="ask"], [contenteditable="true"]',
+    send: '[data-testid="grokSendButton"], button[aria-label="Send"], button[data-testid*="send"]',
+    response: '[data-testid="grokResponse"], [data-testid="grokResponseText"]',
     newChat: '[data-testid="grokNewChat"], a[href="/i/grok"]',
   };
 
-  const run = async () => {
-    console.log('🤖 XActions Grok Integration');
-    console.log('============================');
+  const findEl = (selectorString) => {
+    for (const sel of selectorString.split(',').map(s => s.trim())) {
+      const el = document.querySelector(sel);
+      if (el) return el;
+    }
+    return null;
+  };
 
-    if (!window.location.href.includes('grok')) {
-      console.log('⚠️ Navigate to x.com/i/grok first');
-      console.log('   Opening Grok...');
+  const typeInto = async (el, text) => {
+    el.focus();
+    await sleep(200);
+    if (el.contentEditable === 'true') {
+      document.execCommand('selectAll', false, null);
+      document.execCommand('insertText', false, text);
+    } else {
+      const nativeSet = Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value')?.set
+        || Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set;
+      if (nativeSet) {
+        nativeSet.call(el, text);
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+        el.dispatchEvent(new Event('change', { bubbles: true }));
+      } else {
+        el.value = text;
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+    }
+    await sleep(300);
+  };
+
+  const waitForResponse = async (maxMs) => {
+    const startTime = Date.now();
+    let lastLength = 0;
+    let stableCount = 0;
+
+    console.log('⏳ Waiting for Grok response...');
+
+    while (Date.now() - startTime < maxMs) {
+      const responseEls = document.querySelectorAll(SELECTORS.response);
+      if (responseEls.length > 0) {
+        const lastEl = responseEls[responseEls.length - 1];
+        const currentLength = (lastEl.textContent || '').length;
+
+        if (currentLength > 0 && currentLength === lastLength) {
+          stableCount++;
+          if (stableCount >= 3) {
+            console.log('✅ Response received.');
+            return lastEl.textContent.trim();
+          }
+        } else {
+          stableCount = 0;
+          lastLength = currentLength;
+        }
+      }
+
+      await sleep(1000);
+      const elapsed = ((Date.now() - startTime) / 1000).toFixed(0);
+      if (parseInt(elapsed) % 5 === 0 && parseInt(elapsed) > 0) {
+        console.log(`   ⏳ Still waiting... (${elapsed}s)`);
+      }
+    }
+
+    // Timeout — grab whatever is there
+    const responseEls = document.querySelectorAll(SELECTORS.response);
+    if (responseEls.length > 0) {
+      const text = responseEls[responseEls.length - 1].textContent?.trim();
+      if (text) {
+        console.log('⚠️ Timeout reached, but partial response captured.');
+        return text;
+      }
+    }
+
+    // Fallback: try markdown or grok-related elements
+    const fallback = document.querySelectorAll('[data-testid*="grok"], [class*="markdown"]');
+    if (fallback.length > 0) {
+      const text = fallback[fallback.length - 1].textContent?.trim();
+      if (text) return text;
+    }
+
+    return null;
+  };
+
+  const run = async () => {
+    console.log('🤖 Grok Integration — AI Assistant');
+    console.log('━'.repeat(50));
+    console.log(`  Prompt: "${CONFIG.prompt.slice(0, 80)}${CONFIG.prompt.length > 80 ? '...' : ''}"`);
+    console.log(`  Max wait: ${CONFIG.maxWaitMs / 1000}s`);
+    console.log('');
+
+    // Check page
+    if (!window.location.href.includes('/i/grok')) {
+      console.log('⚠️ Navigate to x.com/i/grok first.');
+      console.log('🔗 Redirecting...');
       window.location.href = 'https://x.com/i/grok';
       return;
     }
@@ -34,82 +122,63 @@
     await sleep(2000);
 
     // Find input
-    const input = document.querySelector(SELECTORS.chatInput);
-    if (!input) {
-      console.log('❌ Grok input not found. Make sure you have access to Grok.');
+    const inputEl = findEl(SELECTORS.input);
+    if (!inputEl) {
+      console.error('❌ Grok input field not found.');
+      console.log('   Tried selectors:', SELECTORS.input);
+      console.log('   Make sure the Grok page is fully loaded.');
       return;
     }
 
-    // Type query
-    console.log(`📝 Query: "${QUERY}"`);
-    input.focus();
-    await sleep(200);
+    console.log('✅ Found Grok input field.');
 
-    if (input.contentEditable === 'true') {
-      for (const char of QUERY) {
-        document.execCommand('insertText', false, char);
-        await sleep(10);
-      }
-    } else {
-      // For regular input/textarea
-      const nativeSetter = Object.getOwnPropertyDescriptor(
-        HTMLTextAreaElement.prototype, 'value'
-      )?.set || Object.getOwnPropertyDescriptor(
-        HTMLInputElement.prototype, 'value'
-      )?.set;
-
-      if (nativeSetter) {
-        nativeSetter.call(input, QUERY);
-        input.dispatchEvent(new Event('input', { bubbles: true }));
-      }
-    }
+    // Type prompt
+    console.log('📝 Typing prompt...');
+    await typeInto(inputEl, CONFIG.prompt);
     await sleep(500);
 
-    // Send
-    const sendBtn = document.querySelector(SELECTORS.sendButton);
-    if (sendBtn) {
+    // Find and click send
+    const sendBtn = findEl(SELECTORS.send);
+    if (!sendBtn) {
+      console.error('❌ Send button not found. Trying Enter key...');
+      inputEl.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+      await sleep(500);
+    } else {
+      console.log('🚀 Sending prompt...');
       sendBtn.click();
-      console.log('📤 Query sent, waiting for response...');
     }
+
+    await sleep(1000);
 
     // Wait for response
-    await sleep(WAIT_FOR_RESPONSE);
+    if (CONFIG.waitForResponse) {
+      const response = await waitForResponse(CONFIG.maxWaitMs);
 
-    // Extract response
-    const responseEls = document.querySelectorAll(SELECTORS.responseArea);
-    let response = '';
-    if (responseEls.length > 0) {
-      response = responseEls[responseEls.length - 1]?.textContent?.trim() || '';
-    }
+      if (response) {
+        console.log('\n━━━ 🤖 GROK RESPONSE ━━━');
+        console.log(response);
+        console.log('━'.repeat(50));
 
-    // Fallback: try to get any new content that appeared
-    if (!response) {
-      const allText = document.querySelectorAll('[data-testid*="grok"], [class*="markdown"]');
-      if (allText.length > 0) {
-        response = allText[allText.length - 1]?.textContent?.trim() || '';
+        console.log(`\n📊 Response stats:`);
+        console.log(`  Length: ${response.length} characters`);
+        console.log(`  Words: ~${response.split(/\s+/).length}`);
+        console.log(`  Time: ${new Date().toLocaleString()}`);
+
+        try {
+          await navigator.clipboard.writeText(response);
+          console.log('📋 Response copied to clipboard!');
+        } catch (e) {}
+      } else {
+        console.log('❌ No response received within timeout.');
+        console.log(`   Try increasing CONFIG.maxWaitMs (currently ${CONFIG.maxWaitMs}ms).`);
+        console.log('   Or check if Grok is available in your region/account.');
       }
-    }
-
-    if (response) {
-      console.log('\n🤖 Grok Response:');
-      console.log('─'.repeat(40));
-      console.log(response);
-      console.log('─'.repeat(40));
     } else {
-      console.log('\n⚠️ Could not extract response. It may still be loading.');
-      console.log('   Try increasing WAIT_FOR_RESPONSE or check the page manually.');
+      console.log('⏭️ Not waiting for response (CONFIG.waitForResponse = false).');
+      console.log('   Check the Grok chat for the reply.');
     }
 
-    const result = {
-      query: QUERY,
-      response: response || 'Response not captured',
-      timestamp: new Date().toISOString(),
-    };
-
-    try {
-      await navigator.clipboard.writeText(response || JSON.stringify(result, null, 2));
-      console.log('\n✅ Response copied to clipboard!');
-    } catch (e) {}
+    console.log('\n✅ Grok integration complete.');
   };
 
   run();

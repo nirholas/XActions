@@ -17,158 +17,36 @@
   };
   // =============================================
 
-  // ── Minimal QR Code Generator (no external deps) ──
-  // Encodes text as a QR code using canvas. Supports alphanumeric mode.
-  const generateQR = (text, size, dark, light) => {
-    // Use a simple numeric encoding approach with canvas
-    // For reliability, we generate via a data matrix pattern
-    const modules = encodeToModules(text);
-    const moduleCount = modules.length;
+  // Canvas-based QR renderer — loads QR image, redraws with custom colors
+  const generateQR = async (text, size, dark, light) => {
+    const apiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(text)}&format=png`;
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    await new Promise((resolve, reject) => {
+      img.onload = resolve;
+      img.onerror = reject;
+      img.src = apiUrl;
+    });
     const canvas = document.createElement('canvas');
     canvas.width = size;
     canvas.height = size;
     const ctx = canvas.getContext('2d');
-    const cellSize = size / moduleCount;
-
-    ctx.fillStyle = light;
-    ctx.fillRect(0, 0, size, size);
-
-    ctx.fillStyle = dark;
-    for (let row = 0; row < moduleCount; row++) {
-      for (let col = 0; col < moduleCount; col++) {
-        if (modules[row][col]) {
-          ctx.fillRect(col * cellSize, row * cellSize, cellSize + 0.5, cellSize + 0.5);
-        }
+    ctx.drawImage(img, 0, 0, size, size);
+    // Recolor if custom colors are set
+    if (dark !== '#000' || light !== '#fff') {
+      const imageData = ctx.getImageData(0, 0, size, size);
+      const d = imageData.data;
+      const parseCss = (hex) => { const c = parseInt(hex.replace('#',''), 16); return [(c>>16)&255,(c>>8)&255,c&255]; };
+      const [dr, dg, db] = parseCss(dark);
+      const [lr, lg, lb] = parseCss(light);
+      for (let i = 0; i < d.length; i += 4) {
+        const brightness = (d[i] + d[i+1] + d[i+2]) / 3;
+        if (brightness < 128) { d[i]=dr; d[i+1]=dg; d[i+2]=db; }
+        else { d[i]=lr; d[i+1]=lg; d[i+2]=lb; }
       }
+      ctx.putImageData(imageData, 0, 0);
     }
     return canvas;
-  };
-
-  // Minimal QR encoder — builds a Version 3 (29x29) QR with byte mode
-  const encodeToModules = (text) => {
-    const size = 29; // Version 3
-    const grid = Array.from({ length: size }, () => Array(size).fill(false));
-    const reserved = Array.from({ length: size }, () => Array(size).fill(false));
-
-    // Finder patterns (7x7) at three corners
-    const drawFinder = (r, c) => {
-      for (let dr = -1; dr <= 7; dr++) {
-        for (let dc = -1; dc <= 7; dc++) {
-          const row = r + dr, col = c + dc;
-          if (row < 0 || row >= size || col < 0 || col >= size) continue;
-          const isBorder = dr === -1 || dr === 7 || dc === -1 || dc === 7;
-          const isOuter = dr === 0 || dr === 6 || dc === 0 || dc === 6;
-          const isInner = dr >= 2 && dr <= 4 && dc >= 2 && dc <= 4;
-          grid[row][col] = !isBorder && (isOuter || isInner);
-          reserved[row][col] = true;
-        }
-      }
-    };
-    drawFinder(0, 0);
-    drawFinder(0, size - 7);
-    drawFinder(size - 7, 0);
-
-    // Timing patterns
-    for (let i = 8; i < size - 8; i++) {
-      grid[6][i] = i % 2 === 0;
-      grid[i][6] = i % 2 === 0;
-      reserved[6][i] = true;
-      reserved[i][6] = true;
-    }
-
-    // Alignment pattern for version 3 at (22, 22)
-    const drawAlign = (r, c) => {
-      for (let dr = -2; dr <= 2; dr++) {
-        for (let dc = -2; dc <= 2; dc++) {
-          const isEdge = Math.abs(dr) === 2 || Math.abs(dc) === 2;
-          const isCenter = dr === 0 && dc === 0;
-          grid[r + dr][c + dc] = isEdge || isCenter;
-          reserved[r + dr][c + dc] = true;
-        }
-      }
-    };
-    drawAlign(22, 22);
-
-    // Dark module
-    grid[size - 8][8] = true;
-    reserved[size - 8][8] = true;
-
-    // Reserve format info areas
-    for (let i = 0; i < 8; i++) {
-      reserved[8][i] = true;
-      reserved[8][size - 1 - i] = true;
-      reserved[i][8] = true;
-      reserved[size - 1 - i][8] = true;
-    }
-    reserved[8][8] = true;
-
-    // Encode data as bytes
-    const bytes = new TextEncoder().encode(text);
-    const bits = [];
-    // Mode indicator: byte mode = 0100
-    bits.push(0, 1, 0, 0);
-    // Character count (8 bits for version 1-9 byte mode)
-    for (let i = 7; i >= 0; i--) bits.push((bytes.length >> i) & 1);
-    // Data
-    for (const b of bytes) {
-      for (let i = 7; i >= 0; i--) bits.push((b >> i) & 1);
-    }
-    // Terminator
-    bits.push(0, 0, 0, 0);
-    // Pad to 8-bit boundary
-    while (bits.length % 8 !== 0) bits.push(0);
-    // Pad codewords
-    const padBytes = [0xEC, 0x11];
-    let padIdx = 0;
-    while (bits.length < 70 * 8) { // Version 3-L capacity
-      for (let i = 7; i >= 0; i--) bits.push((padBytes[padIdx] >> i) & 1);
-      padIdx = (padIdx + 1) % 2;
-    }
-
-    // Place data bits in zigzag pattern
-    let bitIdx = 0;
-    for (let right = size - 1; right >= 1; right -= 2) {
-      if (right === 6) right = 5; // Skip timing column
-      for (let vert = 0; vert < size; vert++) {
-        for (let j = 0; j < 2; j++) {
-          const col = right - j;
-          const row = ((Math.floor((size - 1 - right + (right < 6 ? 1 : 0)) / 2)) % 2 === 0)
-            ? size - 1 - vert : vert;
-          if (row >= 0 && row < size && col >= 0 && col < size && !reserved[row][col]) {
-            grid[row][col] = bitIdx < bits.length ? !!bits[bitIdx] : false;
-            bitIdx++;
-          }
-        }
-      }
-    }
-
-    // Apply mask 0 (checkerboard): (row + col) % 2 === 0
-    for (let r = 0; r < size; r++) {
-      for (let c = 0; c < size; c++) {
-        if (!reserved[r][c] && (r + c) % 2 === 0) {
-          grid[r][c] = !grid[r][c];
-        }
-      }
-    }
-
-    // Write format info for mask 0, error correction L
-    const formatBits = [1,1,1,0,1,1,1,1,1,0,0,0,1,0,0];
-    const formatPositions = [];
-    for (let i = 0; i < 6; i++) formatPositions.push([8, i]);
-    formatPositions.push([8, 7], [8, 8], [7, 8]);
-    for (let i = 5; i >= 0; i--) formatPositions.push([i, 8]);
-    for (let i = 0; i < 7; i++) formatPositions.push([size - 1 - i, 8]);
-    formatPositions.push([8, size - 8]);
-    for (let i = 1; i < 8; i++) formatPositions.push([8, size - 8 + i]);
-
-    for (let i = 0; i < formatBits.length && i < formatPositions.length; i++) {
-      const [r, c] = formatPositions[i];
-      if (r >= 0 && r < size && c >= 0 && c < size) {
-        grid[r][c] = !!formatBits[i];
-      }
-    }
-
-    return grid;
   };
 
   const download = (canvas, filename) => {
@@ -196,9 +74,14 @@
     console.log(`\n👤 Profile: @${username}`);
     console.log(`🔗 URL: ${profileUrl}\n`);
 
-    // Generate QR code
     console.log('🔲 Generating QR code...');
-    const canvas = generateQR(profileUrl, CONFIG.size, CONFIG.darkColor, CONFIG.lightColor);
+    let canvas;
+    try {
+      canvas = await generateQR(profileUrl, CONFIG.size, CONFIG.darkColor, CONFIG.lightColor);
+    } catch {
+      console.error('❌ Failed to generate QR code. Check your internet connection.');
+      return;
+    }
 
     // Show overlay
     const overlay = document.createElement('div');
@@ -207,7 +90,7 @@
     const card = document.createElement('div');
     card.style.cssText = 'background:white;border-radius:16px;padding:32px;text-align:center;max-width:400px;';
     card.innerHTML = `<h2 style="margin:0 0 8px;font-size:20px;color:#000;">@${username}</h2><p style="margin:0 0 16px;color:#666;font-size:14px;">Scan to visit profile</p>`;
-    canvas.style.cssText = `width:${CONFIG.size}px;height:${CONFIG.size}px;border:2px solid #eee;border-radius:8px;image-rendering:pixelated;`;
+    canvas.style.cssText = `width:${CONFIG.size}px;height:${CONFIG.size}px;border:2px solid #eee;border-radius:8px;`;
     card.appendChild(canvas);
 
     const dlBtn = document.createElement('button');

@@ -58,45 +58,67 @@ Copy the contents of `scripts/naturalFlow.js`, paste into console, press Enter.
 The script shows an **interactive setup prompt** on first run. Pick a preset or customize:
 
 ```
-╔════════════════════════════════════════════════════╗
-║  🌊 NATURAL FLOW — Session Setup                  ║
-╚════════════════════════════════════════════════════╝
+🌊 NATURAL FLOW — Choose a mode:
 
-Choose a preset:
-  [1] 👀 Lurker     — mostly scroll, like a few, no replies
-  [2] 🤝 Friendly   — like + occasional reply, 1-2 follows
-  [3] 🚀 Growth     — max engagement, replies + follows
-  [4] ⚙️ Custom     — set everything manually
+  1  👀 Lurker    — mostly scroll, like a few, no replies
+  2  🤝 Friendly  — like + occasional reply, 1-2 follows
+  3  🚀 Growth    — max engagement, replies + follows + retweets
+  4  ⚙️  Custom    — set everything manually
+  5  🏃 Dry Run   — preview the full session (safe)
 
-Enter keywords (comma-separated):
-> crypto, bitcoin, web3
+Enter 1-5:
 ```
+
+Then it asks for **keywords** and optionally **reply templates**. No editing config objects — everything happens through prompt dialogs.
 
 ### 5. Watch it run
 
-The console shows a **live progress bar** and real-time activity:
+A **floating HUD** appears in the bottom-right corner of the page showing live stats:
 
 ```
-📱 PHASE 1 — Home Timeline
-   ████████░░░░░░░░ 8/15 liked · 2 replied · 12 skipped
-   ❤️ @crypto_alice: "Bitcoin just broke resistance at..."
-   💬 @defi_bob: "Really interesting take on this"
-   ⏭️ Skipped (no keyword match)
-   ❤️ @web3_carol: "The future of DeFi governance..."
+┌──────────────────────────────┐
+│  🌊 Natural Flow   Phase 1/4│
+│  ████████░░░░░░░░ (53%)     │
+│                              │
+│  ❤️ Liked       8            │
+│  💬 Replied     2            │
+│  🔄 Retweeted   1            │
+│  🔖 Bookmarked  2            │
+│  ➕ Followed    1            │
+│  ⏭️ Skipped     12           │
+│                              │
+│  ❤️ @crypto_alice: Bitcoin...│
+│                              │
+│  [⏸ Pause]    [⏹ Stop]      │
+└──────────────────────────────┘
+```
+
+Plus console output with phase progress:
+
+```
+📱 PHASE 1 — Scrolling home timeline...
+   Keywords: crypto, bitcoin, web3
+   📜 Scroll 1/15 — 3 liked (20%), 5 skipped
+   📜 Scroll 2/15 — 6 liked (40%), 9 skipped
+   ✅ Timeline: 15 liked, 3 replied, 1 RT, 2 saved
 ```
 
 ### 6. Session summary + export
 
 ```
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   🌊 NATURAL FLOW — SESSION COMPLETE
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  ❤️  Liked:      12
-  💬  Replied:    2
-  ➕  Followed:   3
-  📜  Scrolls:    15
-  ⏱️  Duration:   4.2 min
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ❤️  Liked:       12
+  💬  Replied:     2
+  🔄  Retweeted:   1
+  🔖  Bookmarked:  3
+  ➕  Followed:    3
+  📜  Scrolls:     15
+  ⏭️  Skipped:     18
+  ⏱️  Duration:    4.2 min
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Engaged with 8 unique accounts
 📥 Session log exported.
 ```
 
@@ -106,38 +128,66 @@ A JSON log file auto-downloads with every action timestamped.
 
 ## ⚙️ Configuration Reference
 
+All settings are configured through the **interactive setup prompt** — no editing config objects. Here's what each preset gives you:
+
+### Presets
+
+| Preset | Likes | Replies | Follows | Retweets | Bookmarks | Like % |
+|--------|-------|---------|---------|----------|-----------|--------|
+| 👀 Lurker | 8 | 0 | 0 | 0 | 2 | 40% |
+| 🤝 Friendly | 15 | 3 | 2 | 1 | 3 | 60% |
+| 🚀 Growth | 25 | 5 | 4 | 3 | 5 | 75% |
+| ⚙️ Custom | you choose | you choose | you choose | you choose | 3 | 60% |
+
 ### Keywords
 
-```javascript
-keywords: ['crypto', 'bitcoin', 'web3']
-```
-
-Only engage with posts containing at least one keyword. Empty array = engage with everything (not recommended).
+Prompted during setup. Comma-separated list. Empty = engage with everything (not recommended).
 
 ### Timeline
 
 | Option | Default | Description |
 |--------|---------|-------------|
-| `scrolls` | 12 | Number of scroll cycles |
-| `maxLikes` | 15 | Hard cap on likes per session |
-| `likeChance` | 0.6 | Probability of liking a keyword match (0-1) |
+| `scrolls` | 15 | Number of scroll cycles |
+| `maxLikes` | per preset | Hard cap on likes per session |
+| `likeChance` | per preset | Probability of liking a keyword match (0-1) |
+| `minEngagement` | 2 | Skip posts with fewer than N total engagements |
 
 ### Replies
 
 | Option | Default | Description |
 |--------|---------|-------------|
-| `enabled` | true | Toggle replies on/off |
-| `max` | 3 | Hard cap on replies per session |
-| `chance` | 0.15 | Probability of replying to a liked post |
-| `templates` | 6 built-in | Array of reply strings — **customize these!** |
+| `enabled` | per preset | Toggle replies on/off |
+| `max` | per preset | Hard cap on replies per session |
+| `chance` | 0.2 | Probability of replying to a liked post |
+| `templates` | 8 built-in | Array of reply strings — **prompted during setup** |
+
+Replies are **context-aware**: the script picks templates that match the tweet's tone (e.g., "Great breakdown" for threads, "The data speaks for itself" for stats-heavy posts).
+
+### Retweets
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `enabled` | per preset | Toggle retweets on/off |
+| `max` | per preset | Hard cap on retweets per session |
+| `chance` | 0.1 | Probability of retweeting a liked post |
+
+Retweets only trigger on posts with **10+ engagements** — prevents retweeting low-quality content.
+
+### Bookmarks
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `enabled` | per preset | Toggle bookmarks on/off |
+| `max` | per preset | Hard cap on bookmarks per session |
+| `chance` | 0.15 | Probability of bookmarking a liked post |
 
 ### Follows
 
 | Option | Default | Description |
 |--------|---------|-------------|
-| `enabled` | true | Toggle follows on/off |
-| `max` | 4 | Hard cap on follows per session |
-| `chance` | 0.2 | Probability of following a liked post's author |
+| `enabled` | per preset | Toggle follows on/off |
+| `max` | per preset | Hard cap on follows per session |
+| `chance` | 0.25 | Probability of following a liked post's author |
 
 ### Timing
 
@@ -149,12 +199,7 @@ Only engage with posts containing at least one keyword. Empty array = engage wit
 | `scrollPause` | 1.5-3s | Pause after each scroll |
 | `replyTyping` | 3-6s | Simulate typing a reply |
 
-### Safety
-
-| Option | Default | Description |
-|--------|---------|-------------|
-| `dryRun` | **true** | Preview mode — nothing gets clicked |
-| `skipKeywords` | promoted, ad, giveaway, sponsor | Auto-skip these |
+All delays are subject to **cooldown escalation** — they increase by ~3% per action taken. By the end of a session, delays are noticeably longer than at the start, mimicking a real person slowing down.
 
 ---
 
@@ -176,12 +221,18 @@ Each paste picks up exactly where you left off. Stats accumulate across phases.
 
 ## 🛡️ Safety Features
 
+- **Floating HUD** — on-page overlay with ⏸ Pause and ⏹ Stop buttons (no console needed)
 - **Rate limit detection** — auto-pauses 120s if X shows rate limit warnings
 - **Duplicate prevention** — never engages with the same tweet twice (per session)
-- **Skip filters** — auto-skips promoted content, ads, giveaways
+- **Skip filters** — auto-skips promoted content, ads, giveaways, sponsors
+- **Engagement scoring** — skips very low-engagement posts (configurable threshold)
+- **Cooldown escalation** — delays increase ~3% per action so the session naturally slows
+- **Session history** — warns you if you ran less than 2 hours ago (uses localStorage)
 - **Probability-based** — not every match gets liked; randomness is built in
-- **Abort anytime** — `XActions.stop()` in console
-- **Session log export** — JSON file auto-downloads for review
+- **Abort anytime** — `XActions.stop()` in console, or click 🛑 on the HUD
+- **Pause/resume** — `XActions.pause()` in console, or click ⏸ on the HUD
+- **Session log export** — JSON file auto-downloads with every action timestamped
+- **Dry run mode** — preset 5 previews the entire session without clicking anything
 
 ---
 
@@ -198,8 +249,13 @@ Each paste picks up exactly where you left off. Stats accumulate across phases.
 
 ## 💡 Tips
 
-1. **Customize reply templates** — generic replies get flagged. Write 10+ that sound like you.
-2. **Rotate keywords** — don't use the same keywords every session.
-3. **Vary session length** — sometimes do 5 likes, sometimes 20.
-4. **Manual first** — browse manually for 5 min before running the script.
-5. **Review the log** — check the exported JSON to see what was engaged with.
+1. **Start with Dry Run** — always use preset 5 first to see what would happen.
+2. **Customize reply templates** — generic replies get flagged. Write 10+ that sound like you.
+3. **Rotate keywords** — don't use the same keywords every session.
+4. **Vary session length** — sometimes do 5 likes, sometimes 20. Use different presets.
+5. **Manual first** — browse manually for 5 min before running the script.
+6. **Review the log** — check the exported JSON to see what was engaged with.
+7. **Use the HUD** — pause the session if someone messages you, resume after.
+8. **Session history** — the script remembers past sessions in localStorage. If it warns you about running too soon, listen to it.
+9. **Clear state** — `sessionStorage.removeItem('xactions_natural_flow')` to reset a stuck session.
+10. **Clear history** — `localStorage.removeItem('xactions_nf_history')` to reset session history.

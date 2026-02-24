@@ -563,6 +563,18 @@
       el.textContent = `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, '0')}`;
     }
 
+    // ETA
+    const etaEl = document.getElementById('xeb-eta');
+    if (etaEl && STATE.processed > 0 && STATE.total > STATE.processed && STATE.startTime) {
+      const elapsed = Date.now() - STATE.startTime;
+      const perItem = elapsed / STATE.processed;
+      const remaining = (STATE.total - STATE.processed) * perItem;
+      const mins = Math.ceil(remaining / 60000);
+      etaEl.textContent = mins > 0 ? `~${mins}m left` : '<1m left';
+    } else if (etaEl) {
+      etaEl.textContent = STATE.processed >= STATE.total && STATE.total > 0 ? 'Done' : '';
+    }
+
     const ids = { 'xeb-sLiked': STATE.liked, 'xeb-sRetweeted': STATE.retweeted, 'xeb-sBookmarked': STATE.bookmarked, 'xeb-sReplied': STATE.replied };
     for (const [id, val] of Object.entries(ids)) {
       const e = document.getElementById(id);
@@ -729,6 +741,9 @@
         const author = authorMatch ? authorMatch[1] : null;
         if (!author || ['home', 'explore', 'notifications', 'messages', 'i'].includes(author)) continue;
 
+        // Filter: blocklist
+        if (CONFIG.blockUsers.length > 0 && CONFIG.blockUsers.some(u => u.toLowerCase() === author.toLowerCase())) continue;
+
         // Filter: target users
         if (CONFIG.targetUsers.length > 0 && !CONFIG.targetUsers.some(u => u.toLowerCase() === author.toLowerCase())) continue;
 
@@ -822,10 +837,70 @@
     return true;  // Bookmarks don't visually toggle the same way
   };
 
-  const replyToTweet = async (article, template, author) => {
+  // Smart template picker — matches reply to tweet topic
+  const pickReplyTemplate = (tweetText) => {
+    const lower = tweetText.toLowerCase();
+    const templates = CONFIG.replyTemplates;
+    // Try topic-matched templates first
+    const topicMatches = templates.filter(t =>
+      t.topics && t.topics.length > 0 && t.topics.some(kw => lower.includes(kw))
+    );
+    if (topicMatches.length > 0) {
+      return topicMatches[Math.floor(Math.random() * topicMatches.length)].text;
+    }
+    // Fall back to generic (no topics) templates
+    const generic = templates.filter(t => !t.topics || t.topics.length === 0);
+    const pool = generic.length > 0 ? generic : templates;
+    return pool[Math.floor(Math.random() * pool.length)].text || pool[0];
+  };
+
+  // Follow a user (best-effort: via caret menu on tweet)
+  const followUserFromTweet = async (article, author) => {
+    if (CONFIG.dryRun) { addLog(`  👤 [DRY] Would follow @${author}`); return true; }
+    try {
+      // Look for a follow button in the tweet's caret menu
+      const caret = article.querySelector('[data-testid="caret"]');
+      if (caret) {
+        caret.click();
+        await sleep(600);
+        const menuItems = $$('[role="menuitem"]');
+        const followItem = menuItems.find(el => /follow @/i.test(el.textContent));
+        if (followItem && !/unfollow/i.test(followItem.textContent)) {
+          followItem.click();
+          await sleep(500);
+          return true;
+        }
+        // Close menu if no follow option
+        document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+        await sleep(300);
+      }
+      return false;
+    } catch { return false; }
+  };
+
+  // Tweet visual highlight
+  let highlightedArticle = null;
+  const highlightTweet = (article) => {
+    unhighlightTweet();
+    highlightedArticle = article;
+    article.style.outline = '2px solid #1d9bf0';
+    article.style.outlineOffset = '-2px';
+    article.style.borderRadius = '16px';
+    article.style.boxShadow = '0 0 20px rgba(29,155,240,0.25)';
+    article.style.transition = 'outline 0.3s, box-shadow 0.3s';
+  };
+  const unhighlightTweet = () => {
+    if (!highlightedArticle) return;
+    highlightedArticle.style.outline = '';
+    highlightedArticle.style.outlineOffset = '';
+    highlightedArticle.style.boxShadow = '';
+    highlightedArticle = null;
+  };
+
+  const replyToTweet = async (article, tweetText, author) => {
     const replyBtn = $(SEL.replyBtn, article);
     if (!replyBtn) return false;
-    const replyText = template.replace('{author}', `@${author}`);
+    const replyText = pickReplyTemplate(tweetText).replace('{author}', `@${author}`);
     if (CONFIG.dryRun) { addLog(`  💬 [DRY] Would reply: "${replyText}"`); return true; }
     replyBtn.click();
     await sleep(1500);
@@ -891,6 +966,7 @@
     if (el) el.textContent = `@${target.author}: "${preview}"`;
 
     addLog(`[${index + 1}/${total}] @${target.author} (${target.likes}❤️${target.score !== undefined ? ` score:${target.score}` : ''})`);
+    highlightTweet(target.article);
 
     target.article.scrollIntoView({ behavior: 'smooth', block: 'center' });
     await sleep(800);
@@ -930,19 +1006,30 @@
       await sleep(gaussian(300, 700));
     }
 
-    // Reply
+    // Reply (smart template picker)
     if (CONFIG.actions.reply) {
-      const template = CONFIG.replyTemplates[index % CONFIG.replyTemplates.length];
-      const ok = await replyToTweet(target.article, template, target.author);
+      const ok = await replyToTweet(target.article, target.text, target.author);
       if (ok) {
         STATE.replied++;
         result.actions.push('replied');
       } else STATE.failed++;
     }
 
+    // Follow
+    if (CONFIG.actions.follow) {
+      const ok = await followUserFromTweet(target.article, target.author);
+      if (ok) {
+        STATE.followed = (STATE.followed || 0) + 1;
+        result.actions.push('followed');
+      }
+      // Don't count follow failure as "failed" — option often unavailable
+      await sleep(gaussian(300, 600));
+    }
+
     result.timestamp = new Date().toISOString();
     STATE.results.push(result);
     STATE.processed++;
+    unhighlightTweet();
     updatePanel();
     return result;
   };
@@ -1022,9 +1109,15 @@
       await waitForUnpause();
 
       if (isRateLimited()) {
-        addLog('🚨 Rate limited! Waiting 120s...', 'error');
-        await sleep(120000);
+        STATE.rateLimitStreak = (STATE.rateLimitStreak || 0) + 1;
+        const backoff = Math.min(120000 * Math.pow(1.5, STATE.rateLimitStreak - 1), 600000);
+        const sec = Math.round(backoff / 1000);
+        addLog(`🚨 Rate limited! Backoff ${sec}s (streak #${STATE.rateLimitStreak})`, 'error');
+        showToast(`🚨 Rate limited — cooling ${sec}s`, 'error');
+        await sleep(backoff);
         if (isRateLimited()) { addLog('🛑 Still limited. Stopping.', 'error'); break; }
+      } else {
+        STATE.rateLimitStreak = 0;
       }
 
       await processTweet(toProcess[i], i, toProcess.length);
@@ -1071,14 +1164,83 @@
       speed: CONFIG.speedPreset,
     });
 
-    // Auto-export results
+    // Auto-export results (JSON + CSV)
     if (STATE.results.length > 0 && !CONFIG.dryRun) {
-      const blob = new Blob([JSON.stringify(STATE.results, null, 2)], { type: 'application/json' });
-      const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-      a.download = `xactions-engagement-${new Date().toISOString().slice(0, 10)}.json`;
-      document.body.appendChild(a); a.click(); a.remove();
-      addLog('📥 Results exported');
+      const dateStr = new Date().toISOString().slice(0, 10);
+      // JSON
+      const jsonBlob = new Blob([JSON.stringify(STATE.results, null, 2)], { type: 'application/json' });
+      downloadBlob(jsonBlob, `xactions-engagement-${dateStr}.json`);
+      // CSV
+      const headers = ['timestamp', 'author', 'text', 'score', 'actions'];
+      const rows = STATE.results.map(r =>
+        [r.timestamp, r.author, `"${(r.text || '').replace(/"/g, '""')}"`, r.score || '', r.actions.join('+')]
+      );
+      const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+      const csvBlob = new Blob([csv], { type: 'text/csv' });
+      downloadBlob(csvBlob, `xactions-engagement-${dateStr}.csv`);
+      addLog('📥 Results exported (JSON + CSV)');
     }
+
+    // Completion sound
+    playCompletionSound();
+    showToast(`✅ Done! ${STATE.processed} tweets processed`, 'success');
+  };
+
+  const downloadBlob = (blob, filename) => {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    document.body.appendChild(a); a.click(); a.remove();
+  };
+
+  // Completion sound — plays a pleasant C major chord
+  const playCompletionSound = () => {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      [523.25, 659.25, 783.99].forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.08, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
+        osc.connect(gain).connect(ctx.destination);
+        osc.start(ctx.currentTime + i * 0.12);
+        osc.stop(ctx.currentTime + 0.7);
+      });
+    } catch { /* AudioContext unavailable */ }
+  };
+
+  // Toast overlay notifications
+  let toastContainer = null;
+  const initToasts = () => {
+    if (toastContainer) return;
+    toastContainer = document.createElement('div');
+    Object.assign(toastContainer.style, {
+      position: 'fixed', bottom: '80px', left: '50%', transform: 'translateX(-50%)',
+      zIndex: '2147483646', display: 'flex', flexDirection: 'column-reverse',
+      gap: '8px', pointerEvents: 'none',
+    });
+    document.body.appendChild(toastContainer);
+  };
+  const TOAST_COLORS = { success: '#00ba7c', warning: '#ffad1f', error: '#f4212e', info: '#1d9bf0' };
+  const showToast = (msg, type = 'info') => {
+    if (!toastContainer) initToasts();
+    const el = document.createElement('div');
+    Object.assign(el.style, {
+      background: TOAST_COLORS[type] || '#1d9bf0', color: '#fff',
+      padding: '10px 18px', borderRadius: '12px', fontSize: '13px', fontWeight: '600',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      boxShadow: '0 4px 16px rgba(0,0,0,0.4)', opacity: '0', transform: 'translateY(12px)',
+      transition: 'all 0.3s ease', pointerEvents: 'auto', maxWidth: '320px', textAlign: 'center',
+    });
+    el.textContent = msg;
+    toastContainer.appendChild(el);
+    requestAnimationFrame(() => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; });
+    setTimeout(() => {
+      el.style.opacity = '0'; el.style.transform = 'translateY(12px)';
+      setTimeout(() => el.remove(), 300);
+    }, 3500);
   };
 
   // ═══════════════════════════════════════════════════════════
