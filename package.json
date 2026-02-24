@@ -67,9 +67,11 @@
     "compression": "^1.8.1",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
+    "exceljs": "^4.4.0",
     "express": "^4.18.2",
     "express-rate-limit": "^7.1.5",
     "express-validator": "^7.0.1",
+    "googleapis": "^171.4.0",
     "helmet": "^7.1.0",
     "inquirer": "^9.2.0",
     "jsonwebtoken": "^9.0.2",
@@ -95,7 +97,7 @@
     "marked": "^17.0.3",
     "nodemon": "^3.0.2",
     "supertest": "^6.3.4",
-    "vitest": "^1.6.1"
+    "vitest": "^4.0.18"
   },
   "author": {
     "name": "nich",
