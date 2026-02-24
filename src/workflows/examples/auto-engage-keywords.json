@@ -1,0 +1,51 @@
+{
+  "name": "Auto-Engage Keywords",
+  "description": "Search for tweets containing target keywords and engage with relevant users",
+  "trigger": { "type": "schedule", "cron": "0 */2 * * *" },
+  "enabled": true,
+  "steps": [
+    {
+      "action": "searchTweets",
+      "query": "web3 automation OR twitter tools OR social media API",
+      "limit": 20,
+      "output": "searchResults"
+    },
+    {
+      "condition": "searchResults.length > 0"
+    },
+    {
+      "action": "filter",
+      "input": "searchResults",
+      "field": "likes",
+      "operator": ">",
+      "value": 5,
+      "output": "engagingTweets"
+    },
+    {
+      "action": "pick",
+      "input": "engagingTweets",
+      "fields": ["username", "text", "likes", "retweets", "url"],
+      "output": "tweetSummaries"
+    },
+    {
+      "action": "count",
+      "input": "tweetSummaries",
+      "output": "matchCount"
+    },
+    {
+      "action": "summarize",
+      "input": "tweetSummaries",
+      "prompt": "Analyze these tweets about web3/automation tools. Which users seem most influential and which tweets have the best engagement? Provide a brief recommendation on who to engage with and why:",
+      "output": "analysis"
+    },
+    {
+      "action": "template",
+      "text": "## Keyword Engagement Report\n\n**Search:** web3 automation, twitter tools, social media API\n**Found:** {{matchCount}} high-engagement tweets\n\n### Analysis\n{{analysis}}\n\n### Top Tweets\n{{tweetSummaries}}\n\n---\n_Scan completed at {{_timestamp}}_",
+      "output": "report"
+    },
+    {
+      "action": "log",
+      "variable": "report"
+    }
+  ]
+}

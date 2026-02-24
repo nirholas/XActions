@@ -1,0 +1,16 @@
+# XActions - robots.txt
+# https://xactions.app
+
+User-agent: *
+Allow: /
+
+# Disallow admin and internal pages
+Disallow: /admin
+Disallow: /admin.html
+Disallow: /login
+Disallow: /login.html
+Disallow: /dashboard
+Disallow: /api/
+
+# Sitemap
+Sitemap: https://xactions.app/sitemap.xml

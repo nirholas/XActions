@@ -278,11 +278,35 @@
     .footer-bottom p { color: var(--text-secondary); font-size: 0.8125rem; }
     @media (max-width: 768px) { .footer-content { grid-template-columns: 1fr 1fr; } }
     @media (max-width: 480px) { .footer-content { grid-template-columns: 1fr; } }
+
+    /* Skip Navigation */
+    .skip-nav {
+      position: absolute;
+      top: -100%;
+      left: 16px;
+      background: var(--accent);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 700;
+      z-index: 9999;
+      text-decoration: none;
+    }
+    .skip-nav:focus {
+      top: 16px;
+    }
+
+    /* Visible focus styles */
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
   </style>
 </head>
 <body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
   <div class="layout">
-    <aside class="sidebar-left">
+    <aside class="sidebar-left" aria-label="Main navigation">
       <div class="logo">
         <a href="/"><span>⚡</span><span>XActions</span></a>
       </div>
@@ -300,7 +324,7 @@
       <a href="https://github.com/nirholas/XActions" class="action-btn" target="_blank">Star on GitHub ⭐</a>
     </aside>
 
-    <main class="main-content">
+    <main class="main-content" id="main-content">
       <header class="main-header">
         <h1>📚 Tutorials</h1>
       </header>
@@ -317,7 +341,7 @@
 
         <div class="category-header">🧹 Unfollow & Cleanup</div>
 
-        <a href="/docs/examples/unfollow-everyone" class="tutorial-card">
+        <a href="/tutorials/unfollow" class="tutorial-card">
           <h3>💥 Unfollow Everyone <span class="tutorial-badge">Beginner</span></h3>
           <p>Clean slate - remove all accounts you follow in one go.</p>
           <div class="tutorial-meta">
@@ -326,7 +350,7 @@
           </div>
         </a>
 
-        <a href="/docs/examples/unfollow-non-followers" class="tutorial-card">
+        <a href="/tutorials/unfollow" class="tutorial-card">
           <h3>🔄 Unfollow Non-Followers <span class="tutorial-badge">Beginner</span></h3>
           <p>Remove accounts that don't follow you back. Most popular script!</p>
           <div class="tutorial-meta">
@@ -335,7 +359,7 @@
           </div>
         </a>
 
-        <a href="/docs/examples/smart-unfollow" class="tutorial-card">
+        <a href="/tutorials/unfollow" class="tutorial-card">
           <h3>🧠 Smart Unfollow <span class="tutorial-badge intermediate">Intermediate</span></h3>
           <p>Unfollow with advanced filtering - by days inactive, engagement, and more.</p>
           <div class="tutorial-meta">
@@ -344,7 +368,7 @@
           </div>
         </a>
 
-        <a href="/docs/examples/leave-all-communities" class="tutorial-card">
+        <a href="/tutorials/communities" class="tutorial-card">
           <h3>👋 Leave All Communities <span class="tutorial-badge">Beginner</span></h3>
           <p>Automatically leave all X Communities you've joined.</p>
           <div class="tutorial-meta">
@@ -355,7 +379,7 @@
 
         <div class="category-header">🔍 Detection & Monitoring</div>
 
-        <a href="/docs/examples/detect-unfollowers" class="tutorial-card">
+        <a href="/tutorials/monitoring" class="tutorial-card">
           <h3>🕵️ Detect Unfollowers <span class="tutorial-badge">Beginner</span></h3>
           <p>Find out who unfollowed you. Takes a snapshot and compares on each run.</p>
           <div class="tutorial-meta">
@@ -364,7 +388,7 @@
           </div>
         </a>
 
-        <a href="/docs/examples/monitor-account" class="tutorial-card">
+        <a href="/tutorials/monitoring" class="tutorial-card">
           <h3>👀 Monitor Any Account <span class="tutorial-badge intermediate">Intermediate</span></h3>
           <p>Track changes to any public account - new followers, unfollowers, tweets.</p>
           <div class="tutorial-meta">
@@ -373,7 +397,7 @@
           </div>
         </a>
 
-        <a href="/docs/examples/new-follower-alerts" class="tutorial-card">
+        <a href="/tutorials/monitoring" class="tutorial-card">
           <h3>🔔 New Follower Alerts <span class="tutorial-badge intermediate">Intermediate</span></h3>
           <p>Get notified when someone new follows you.</p>
           <div class="tutorial-meta">
@@ -384,7 +408,7 @@
 
         <div class="category-header">📊 Scraping & Data</div>
 
-        <a href="/docs/examples/followers-scraping" class="tutorial-card">
+        <a href="/tutorials/scrapers" class="tutorial-card">
           <h3>👥 Scrape Followers <span class="tutorial-badge">Beginner</span></h3>
           <p>Export any account's follower list to JSON/CSV.</p>
           <div class="tutorial-meta">
@@ -393,7 +417,7 @@
           </div>
         </a>
 
-        <a href="/docs/examples/following-scraping" class="tutorial-card">
+        <a href="/tutorials/scrapers" class="tutorial-card">
           <h3>➡️ Scrape Following <span class="tutorial-badge">Beginner</span></h3>
           <p>Export who any account follows to JSON/CSV.</p>
           <div class="tutorial-meta">
@@ -402,7 +426,7 @@
           </div>
         </a>
 
-        <a href="/docs/examples/profile-scraping" class="tutorial-card">
+        <a href="/tutorials/scrapers" class="tutorial-card">
           <h3>👤 Scrape Profile <span class="tutorial-badge">Beginner</span></h3>
           <p>Get bio, stats, and info from any public profile.</p>
           <div class="tutorial-meta">
@@ -411,7 +435,7 @@
           </div>
         </a>
 
-        <a href="/docs/examples/tweet-scraping" class="tutorial-card">
+        <a href="/tutorials/scrapers" class="tutorial-card">
           <h3>📝 Scrape Tweets <span class="tutorial-badge">Beginner</span></h3>
           <p>Export tweets from any user's timeline.</p>
           <div class="tutorial-meta">
@@ -420,7 +444,7 @@
           </div>
         </a>
 
-        <a href="/docs/examples/video-downloader" class="tutorial-card">
+        <a href="/tutorials/scrapers" class="tutorial-card">
           <h3>🎥 Download Videos <span class="tutorial-badge">Beginner</span></h3>
           <p>Download any video from X/Twitter posts.</p>
           <div class="tutorial-meta">
@@ -431,7 +455,7 @@
 
         <div class="category-header">🤖 Automation & Engagement</div>
 
-        <a href="/docs/examples/auto-liker" class="tutorial-card">
+        <a href="/tutorials/automation" class="tutorial-card">
           <h3>❤️ Auto Liker <span class="tutorial-badge intermediate">Intermediate</span></h3>
           <p>Automatically like posts matching keywords or from specific users.</p>
           <div class="tutorial-meta">
@@ -440,7 +464,7 @@
           </div>
         </a>
 
-        <a href="/docs/examples/follow-engagers" class="tutorial-card">
+        <a href="/tutorials/automation" class="tutorial-card">
           <h3>🎯 Follow Engagers <span class="tutorial-badge intermediate">Intermediate</span></h3>
           <p>Follow people who engage with specific tweets or accounts.</p>
           <div class="tutorial-meta">
@@ -449,7 +473,7 @@
           </div>
         </a>
 
-        <a href="/docs/examples/keyword-follow" class="tutorial-card">
+        <a href="/tutorials/automation" class="tutorial-card">
           <h3>🔤 Keyword Follow <span class="tutorial-badge intermediate">Intermediate</span></h3>
           <p>Follow users who tweet about specific topics.</p>
           <div class="tutorial-meta">
@@ -460,7 +484,7 @@
 
         <div class="category-header">🤖 AI Integration</div>
 
-        <a href="/docs/examples/mcp-server" class="tutorial-card">
+        <a href="/tutorials/mcp" class="tutorial-card">
           <h3>🔌 MCP Server Setup <span class="tutorial-badge advanced">Advanced</span></h3>
           <p>Connect Claude, GPT, and other AI agents to XActions.</p>
           <div class="tutorial-meta">
@@ -471,7 +495,7 @@
       </section>
     </main>
 
-    <aside class="sidebar-right">
+    <aside class="sidebar-right" aria-label="Supplementary information">
       <div class="promo-card">
         <h3 class="promo-header">🚀 Quick Start</h3>
         <div class="promo-item">

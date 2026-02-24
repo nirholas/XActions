@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import compression from 'compression';
 import rateLimit from 'express-rate-limit';
 import morgan from 'morgan';
 import path from 'path';
@@ -49,8 +50,12 @@ import spacesRoutes from './routes/spaces.js';
 import settingsRoutes from './routes/settings.js';
 import streamRoutes from './routes/streams.js';
 import automationsRoutes from './routes/automations.js';
+import analyticsRoutes from './routes/analytics.js';
 import { initializeSocketIO } from './realtime/socketHandler.js';
 import { initializeLicensing, brandingMiddleware } from './services/licensing.js';
+
+// Plugin system
+import { initializePlugins, getPluginRoutes } from '../src/plugins/index.js';
 
 // Optional: x402 micropayment support for remote AI API (disabled by default)
 import { x402Middleware, x402HealthCheck, x402Pricing } from './middleware/x402.js';
@@ -62,6 +67,9 @@ const httpServer = createServer(app);
 
 // Initialize Socket.io for real-time browser-to-browser communication
 const io = initializeSocketIO(httpServer);
+
+// Make io accessible to routes (for analytics alerts, etc.)
+app.set('io', io);
 
 // Make io available to route handlers via app.set
 app.set('io', io);
@@ -75,7 +83,7 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.socket.io"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.socket.io", "https://cdn.jsdelivr.net"],
       styleSrc: ["'self'", "'unsafe-inline'"],
       imgSrc: ["'self'", "data:", "https:"],
       connectSrc: ["'self'", "wss:", "https:"],
@@ -85,6 +93,10 @@ app.use(helmet({
     }
   }
 }));
+
+// Gzip/brotli compression — reduces HTML/JSON response size ~70%
+app.use(compression({ level: 6, threshold: 1024 }));
+
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
     ? ['https://xactions.app', process.env.FRONTEND_URL].filter(Boolean)
@@ -148,8 +160,18 @@ app.get('/api/ai/health', x402HealthCheck);
 app.get('/api/ai/pricing', x402Pricing);
 app.use('/api/ai', aiRoutes);
 
-// Serve dashboard static files
-app.use(express.static(path.join(__dirname, '../dashboard')));
+// Serve dashboard static files with cache headers
+app.use(express.static(path.join(__dirname, '../dashboard'), {
+  maxAge: '1h',        // Cache HTML for 1 hour (content changes frequently)
+  etag: true,          // Enable ETag for conditional requests
+  lastModified: true,
+  setHeaders: (res, filePath) => {
+    // Long cache for immutable assets (if any)
+    if (filePath.endsWith('.png') || filePath.endsWith('.jpg') || filePath.endsWith('.svg') || filePath.endsWith('.ico') || filePath.endsWith('.woff2')) {
+      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+    }
+  }
+}));
 
 // Branding middleware - injects "Powered by XActions" if no license
 app.use(brandingMiddleware());
@@ -174,6 +196,20 @@ app.use('/api/bookmarks', bookmarksRoutes);
 app.use('/api/creator', creatorRoutes);
 app.use('/api/spaces', spacesRoutes);
 app.use('/api/settings', settingsRoutes);
+app.use('/api/analytics', analyticsRoutes);
+
+// Plugin routes — mounted under /api/plugins/<plugin-name>/
+function mountPluginRoutes() {
+  const routes = getPluginRoutes();
+  for (const route of routes) {
+    const pluginName = route._plugin || 'unknown';
+    const mountPath = `/api/plugins/${pluginName}${route.path}`;
+    const method = (route.method || 'get').toLowerCase();
+    if (typeof app[method] === 'function' && typeof route.handler === 'function') {
+      app[method](mountPath, route.handler);
+    }
+  }
+}
 app.use('/api/automations', automationsRoutes);
 app.use('/api/streams', streamRoutes);
 
@@ -250,6 +286,10 @@ app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, '../dashboard/admin.html'));
 });
 
+app.get('/analytics', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dashboard/analytics.html'));
+});
+
 app.get('/automations', (req, res) => {
   res.sendFile(path.join(__dirname, '../dashboard/automations.html'));
 });
@@ -283,6 +323,17 @@ httpServer.listen(PORT, async () => {
   console.log(`🚀 XActions API Server running on port ${PORT}`);
   console.log(`🔌 WebSocket server ready for real-time connections`);
   console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
+  
+  // Initialize plugin system and mount plugin routes
+  try {
+    const pluginCount = await initializePlugins();
+    if (pluginCount > 0) {
+      mountPluginRoutes();
+      console.log(`📦 Plugins loaded: ${pluginCount}`);
+    }
+  } catch (error) {
+    console.warn('⚠️  Plugin system initialization warning:', error.message);
+  }
   
   // Optional: Validate x402 micropayment config (only relevant if self-hosting with payments)
   try {

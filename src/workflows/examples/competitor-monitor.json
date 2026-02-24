@@ -1,0 +1,44 @@
+{
+  "name": "Competitor Monitor",
+  "description": "Monitor a competitor's profile every 30 minutes, summarize new tweets, and log insights",
+  "trigger": { "type": "schedule", "cron": "*/30 * * * *" },
+  "enabled": true,
+  "steps": [
+    {
+      "action": "scrapeProfile",
+      "target": "@competitor",
+      "output": "profile",
+      "onError": "continue"
+    },
+    {
+      "action": "scrapeTweets",
+      "target": "@competitor",
+      "limit": 5,
+      "output": "tweets"
+    },
+    {
+      "condition": {
+        "left": "tweets.length",
+        "operator": ">",
+        "right": 0
+      },
+      "onFail": "skip"
+    },
+    {
+      "action": "summarize",
+      "input": "tweets",
+      "provider": "openrouter",
+      "prompt": "Summarize these recent tweets from a competitor. Identify key themes, announcements, and sentiment:",
+      "output": "summary"
+    },
+    {
+      "action": "template",
+      "text": "## Competitor Report: {{profile.name}} (@{{profile.username}})\n\n**Followers:** {{profile.followers}} | **Following:** {{profile.following}}\n\n### Recent Activity Summary\n{{summary}}\n\n---\n_Generated at {{_timestamp}}_",
+      "output": "report"
+    },
+    {
+      "action": "log",
+      "variable": "report"
+    }
+  ]
+}

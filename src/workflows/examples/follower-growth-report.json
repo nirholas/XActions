@@ -1,0 +1,61 @@
+{
+  "name": "Follower Growth Report",
+  "description": "Generate a weekly follower growth report with stats and analysis",
+  "trigger": { "type": "schedule", "cron": "0 9 * * 1" },
+  "enabled": true,
+  "steps": [
+    {
+      "action": "scrapeProfile",
+      "target": "@myaccount",
+      "output": "profile"
+    },
+    {
+      "action": "scrapeFollowers",
+      "target": "@myaccount",
+      "limit": 50,
+      "output": "recentFollowers"
+    },
+    {
+      "action": "scrapeFollowing",
+      "target": "@myaccount",
+      "limit": 50,
+      "output": "recentFollowing"
+    },
+    {
+      "action": "count",
+      "input": "recentFollowers",
+      "output": "followerSampleSize"
+    },
+    {
+      "action": "count",
+      "input": "recentFollowing",
+      "output": "followingSampleSize"
+    },
+    {
+      "action": "scrapeTweets",
+      "target": "@myaccount",
+      "limit": 10,
+      "output": "recentTweets"
+    },
+    {
+      "action": "summarize",
+      "input": "recentTweets",
+      "prompt": "Analyze these recent tweets for engagement patterns. Which types of content got the most likes and retweets? Provide actionable suggestions for improving engagement:",
+      "output": "contentAnalysis"
+    },
+    {
+      "action": "template",
+      "text": "# 📊 Weekly Follower Growth Report\n\n## Account: {{profile.name}} (@{{profile.username}})\n\n### Stats\n| Metric | Value |\n|--------|-------|\n| Followers | {{profile.followers}} |\n| Following | {{profile.following}} |\n| Tweets | {{profile.tweets}} |\n| Likes | {{profile.likes}} |\n\n### Recent Followers (sample of {{followerSampleSize}})\nLatest followers have been scraped and are available in the `recentFollowers` variable.\n\n### Content Analysis\n{{contentAnalysis}}\n\n### Recommendations\nBased on the analysis above, focus on the content types that drive the most engagement.\n\n---\n_Report generated: {{_timestamp}}_",
+      "output": "report"
+    },
+    {
+      "action": "log",
+      "variable": "report"
+    },
+    {
+      "action": "exportJSON",
+      "input": "report",
+      "filepath": "exports/follower-growth-report.json"
+    }
+  ]
+}

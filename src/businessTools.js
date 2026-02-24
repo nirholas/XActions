@@ -112,9 +112,17 @@ export async function getAudienceInsights(page, username, options = {}) {
 
   while (followers.length < sampleSize && scrollAttempts < Math.ceil(sampleSize / 5)) {
     const newFollowers = await page.evaluate((sel) => {
+      const extractBio = (cell) => {
+        const testId = cell.querySelector('[data-testid="UserDescription"]');
+        if (testId?.textContent?.trim()) return testId.textContent.trim();
+        const autoDir = cell.querySelector('[dir="auto"]:not([data-testid])');
+        const text = autoDir?.textContent?.trim();
+        if (text && text.length >= 10 && !text.startsWith('@')) return text;
+        return '';
+      };
       return Array.from(document.querySelectorAll(sel.userCell)).map(user => {
         const name = user.querySelector('[dir="ltr"]')?.textContent || '';
-        const bio = user.querySelector('[data-testid="UserDescription"]')?.textContent || '';
+        const bio = extractBio(user);
         const isVerified = !!user.querySelector('[data-testid="icon-verified"]');
         return { name, bio: bio.substring(0, 200), isVerified };
       });

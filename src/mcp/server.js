@@ -30,6 +30,12 @@ import {
 } from '@modelcontextprotocol/sdk/types.js';
 
 // ============================================================================
+// Plugin System
+// ============================================================================
+
+import { initializePlugins, getPluginTools } from '../plugins/index.js';
+
+// ============================================================================
 // Configuration
 // ============================================================================
 
@@ -64,13 +70,22 @@ const TOOLS = [
   },
   {
     name: 'x_get_profile',
-    description: 'Get profile information for an X/Twitter user including bio, follower count, etc.',
+    description: 'Get profile information for a user including bio, follower count, etc. Supports Twitter, Bluesky, Threads, and Mastodon.',
     inputSchema: {
       type: 'object',
       properties: {
         username: {
           type: 'string',
-          description: 'Twitter username (without @)',
+          description: 'Username (without @). For Bluesky: user.bsky.social. For Mastodon: user or user@instance.',
+        },
+        platform: {
+          type: 'string',
+          enum: ['twitter', 'bluesky', 'mastodon', 'threads'],
+          description: 'Platform to scrape (default: twitter)',
+        },
+        instance: {
+          type: 'string',
+          description: 'Mastodon instance URL (e.g. https://mastodon.social). Only needed for Mastodon.',
         },
       },
       required: ['username'],
@@ -78,17 +93,26 @@ const TOOLS = [
   },
   {
     name: 'x_get_followers',
-    description: 'Scrape followers for an X/Twitter account. Returns usernames, names, and bios.',
+    description: 'Scrape followers for an account. Supports Twitter, Bluesky, Mastodon, and Threads.',
     inputSchema: {
       type: 'object',
       properties: {
         username: {
           type: 'string',
-          description: 'Twitter username (without @)',
+          description: 'Username (without @)',
         },
         limit: {
           type: 'number',
           description: 'Maximum number of followers to scrape (default: 100)',
+        },
+        platform: {
+          type: 'string',
+          enum: ['twitter', 'bluesky', 'mastodon', 'threads'],
+          description: 'Platform to scrape (default: twitter)',
+        },
+        instance: {
+          type: 'string',
+          description: 'Mastodon instance URL. Only needed for Mastodon.',
         },
       },
       required: ['username'],
@@ -96,17 +120,26 @@ const TOOLS = [
   },
   {
     name: 'x_get_following',
-    description: 'Scrape accounts that a user is following. Includes whether they follow back.',
+    description: 'Scrape accounts that a user is following. Supports Twitter, Bluesky, Mastodon, and Threads.',
     inputSchema: {
       type: 'object',
       properties: {
         username: {
           type: 'string',
-          description: 'Twitter username (without @)',
+          description: 'Username (without @)',
         },
         limit: {
           type: 'number',
           description: 'Maximum number to scrape (default: 100)',
+        },
+        platform: {
+          type: 'string',
+          enum: ['twitter', 'bluesky', 'mastodon', 'threads'],
+          description: 'Platform to scrape (default: twitter)',
+        },
+        instance: {
+          type: 'string',
+          description: 'Mastodon instance URL. Only needed for Mastodon.',
         },
       },
       required: ['username'],
@@ -128,17 +161,26 @@ const TOOLS = [
   },
   {
     name: 'x_get_tweets',
-    description: 'Scrape recent tweets from a user profile.',
+    description: 'Scrape recent tweets/posts from a user profile. Supports Twitter, Bluesky, Mastodon, and Threads.',
     inputSchema: {
       type: 'object',
       properties: {
         username: {
           type: 'string',
-          description: 'Twitter username (without @)',
+          description: 'Username (without @)',
         },
         limit: {
           type: 'number',
-          description: 'Maximum number of tweets (default: 50)',
+          description: 'Maximum number of tweets/posts (default: 50)',
+        },
+        platform: {
+          type: 'string',
+          enum: ['twitter', 'bluesky', 'mastodon', 'threads'],
+          description: 'Platform to scrape (default: twitter)',
+        },
+        instance: {
+          type: 'string',
+          description: 'Mastodon instance URL. Only needed for Mastodon.',
         },
       },
       required: ['username'],
@@ -146,17 +188,26 @@ const TOOLS = [
   },
   {
     name: 'x_search_tweets',
-    description: 'Search for tweets matching a query. Returns latest tweets.',
+    description: 'Search for tweets/posts matching a query. Supports Twitter, Bluesky, Mastodon, and Threads.',
     inputSchema: {
       type: 'object',
       properties: {
         query: {
           type: 'string',
-          description: 'Search query (can include operators like from:, to:, #hashtag)',
+          description: 'Search query',
         },
         limit: {
           type: 'number',
           description: 'Maximum results (default: 50)',
+        },
+        platform: {
+          type: 'string',
+          enum: ['twitter', 'bluesky', 'mastodon', 'threads'],
+          description: 'Platform to search (default: twitter)',
+        },
+        instance: {
+          type: 'string',
+          description: 'Mastodon instance URL. Only needed for Mastodon.',
         },
       },
       required: ['query'],
@@ -732,6 +783,68 @@ const TOOLS = [
       properties: {},
     },
   },
+  // ---- Workflow Tools ----
+  {
+    name: 'x_workflow_create',
+    description: 'Create a new automation workflow. Workflows chain multiple actions (scrape, filter, summarize, etc.) into pipelines with triggers and conditions.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        name: {
+          type: 'string',
+          description: 'Workflow name',
+        },
+        description: {
+          type: 'string',
+          description: 'What this workflow does',
+        },
+        trigger: {
+          type: 'object',
+          description: 'Trigger config: { type: "manual"|"schedule"|"webhook", cron?: "*/30 * * * *" }',
+        },
+        steps: {
+          type: 'array',
+          description: 'Array of steps. Each step is { action: "scrapeProfile", target: "@user", output: "varName" } or { condition: "varName.field > 100" }',
+          items: { type: 'object' },
+        },
+      },
+      required: ['name', 'steps'],
+    },
+  },
+  {
+    name: 'x_workflow_run',
+    description: 'Run a workflow by ID or name. Returns execution results with step-by-step logs.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        workflow: {
+          type: 'string',
+          description: 'Workflow ID or name',
+        },
+        context: {
+          type: 'object',
+          description: 'Optional initial context variables for the workflow',
+        },
+      },
+      required: ['workflow'],
+    },
+  },
+  {
+    name: 'x_workflow_list',
+    description: 'List all saved workflows with their trigger type, step count, and enabled status.',
+    inputSchema: {
+      type: 'object',
+      properties: {},
+    },
+  },
+  {
+    name: 'x_workflow_actions',
+    description: 'List all available actions that can be used in workflow steps (scrapers, transforms, AI, utilities).',
+    inputSchema: {
+      type: 'object',
+      properties: {},
+    },
+  },
 ];
 
 // ============================================================================
@@ -784,7 +897,18 @@ async function executeTool(name, args) {
   if (name === 'x_stream_start' || name === 'x_stream_stop' || name === 'x_stream_list') {
     return await executeStreamTool(name, args);
   }
+
+  // Handle workflow tools directly
+  if (name.startsWith('x_workflow_')) {
+    return await executeWorkflowTool(name, args);
+  }
   
+  // Check plugin tools first
+  const pluginTool = getPluginTools().find((t) => t.name === name);
+  if (pluginTool?.handler) {
+    return await pluginTool.handler(args, { localTools, SESSION_COOKIE });
+  }
+
   if (MODE === 'remote') {
     return await remoteClient.execute(name, args);
   } else {
@@ -843,9 +967,10 @@ const server = new Server(
   }
 );
 
-// List available tools
+// List available tools (core + plugins)
 server.setRequestHandler(ListToolsRequestSchema, async () => {
-  return { tools: TOOLS };
+  const pluginToolDefs = getPluginTools().map(({ _plugin, handler, ...def }) => def);
+  return { tools: [...TOOLS, ...pluginToolDefs] };
 });
 
 // Execute tools
@@ -944,8 +1069,15 @@ async function main() {
   
   await initializeBackend();
   
+  // Load plugins
+  const pluginCount = await initializePlugins();
+  const pluginToolCount = getPluginTools().length;
+  
   console.error('');
-  console.error('📋 Available tools: ' + TOOLS.length);
+  console.error('📋 Available tools: ' + (TOOLS.length + pluginToolCount));
+  if (pluginCount > 0) {
+    console.error('   Plugins loaded: ' + pluginCount + ' (' + pluginToolCount + ' tools)');
+  }
   console.error('');
   
   const transport = new StdioServerTransport();

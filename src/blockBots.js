@@ -25,6 +25,20 @@
 
   const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
+  // Bio extraction with fallback chain (canonical version: src/automation/core.js → extractUserFromCell)
+  const extractBio = (cell) => {
+    // Strategy 1: data-testid (most reliable)
+    const testId = cell.querySelector('[data-testid="UserDescription"]');
+    if (testId?.textContent?.trim()) return testId.textContent.trim();
+    // Strategy 2: dir="auto" excluding testid elements
+    const autoDir = cell.querySelector('[dir="auto"]:not([data-testid])');
+    if (autoDir?.textContent?.trim()?.length >= 10) return autoDir.textContent.trim();
+    // Strategy 3: dir="auto" excluding role (variant DOMs)
+    const noRole = cell.querySelector('[dir="auto"]:not([role])');
+    if (noRole && !noRole.closest('a') && noRole.textContent?.trim()?.length >= 10) return noRole.textContent.trim();
+    return '';
+  };
+
   const detected = [];
   const processedUsers = new Set();
 
@@ -53,8 +67,8 @@
     }
 
     // Check for no bio
-    const bioEl = userEl.querySelector('[dir="auto"]:not([data-testid])');
-    if (!bioEl || bioEl.textContent.trim().length === 0) {
+    const bio = extractBio(userEl);
+    if (!bio) {
       reasons.push('no bio');
     }
 

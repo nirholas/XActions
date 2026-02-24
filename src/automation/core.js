@@ -52,6 +52,10 @@ window.XActions.Core = (() => {
     userAvatar: '[data-testid="UserAvatar-Container"]',
     userName: '[data-testid="User-Name"]',
     userFollowIndicator: '[data-testid="userFollowIndicator"]',
+    userDescription: '[data-testid="UserDescription"]',
+    userLink: 'a[href^="/"]',
+    verifiedBadge: '[data-testid="icon-verified"]',
+    protectedIcon: '[data-testid="icon-lock"]',
     
     // Input elements
     tweetInput: '[data-testid="tweetTextarea_0"]',
@@ -230,6 +234,147 @@ window.XActions.Core = (() => {
   };
 
   // ============================================
+  // USER CELL EXTRACTION
+  // ============================================
+
+  const extractUserFromCell = (cell) => {
+    if (!cell) return null;
+    try {
+      // === USERNAME (handle) ===
+      // Strategy 1: href attribute parsing (most reliable)
+      let username = '';
+      const link = cell.querySelector('a[href^="/"]');
+      if (link) {
+        const href = link.getAttribute('href');
+        const match = href.match(/^\/([^/]+)$/);
+        if (match) username = match[1].toLowerCase();
+        // Fallback: split approach for nested paths
+        if (!username) {
+          const parts = href.replace(/^\//, '').split('/');
+          if (parts[0] && !['i', 'search', 'explore', 'settings', 'messages'].includes(parts[0])) {
+            username = parts[0].toLowerCase();
+          }
+        }
+      }
+
+      // === DISPLAY NAME ===
+      // Strategy 1: data-testid (most stable)
+      let displayName = '';
+      const nameTestId = cell.querySelector('[data-testid="User-Name"]');
+      if (nameTestId) {
+        // The first text node before @ is the display name
+        const spans = nameTestId.querySelectorAll('span');
+        for (const span of spans) {
+          const text = span.textContent.trim();
+          if (text && !text.startsWith('@') && text.length > 0) {
+            displayName = text;
+            break;
+          }
+        }
+      }
+      // Strategy 2: dir="ltr" > span (common fallback)
+      if (!displayName) {
+        const ltrSpan = cell.querySelector('[dir="ltr"] > span');
+        if (ltrSpan) displayName = ltrSpan.textContent.trim();
+      }
+      // Strategy 3: first non-@ span with reasonable length
+      if (!displayName) {
+        const spans = cell.querySelectorAll('span');
+        for (const span of spans) {
+          const text = span.textContent.trim();
+          if (text && !text.startsWith('@') && text.length >= 2 && text.length < 50) {
+            displayName = text;
+            break;
+          }
+        }
+      }
+      if (!displayName) displayName = username;
+
+      // === BIO ===
+      // Strategy 1: data-testid="UserDescription" (most reliable, Twitter's own test ID)
+      let bio = '';
+      const bioTestId = cell.querySelector(SELECTORS.userDescription || '[data-testid="UserDescription"]');
+      if (bioTestId) bio = bioTestId.textContent.trim();
+
+      // Strategy 2: dir="auto" excluding testid elements (catches variant DOMs)
+      if (!bio) {
+        const autoDir = cell.querySelector('[dir="auto"]:not([data-testid])');
+        if (autoDir) {
+          const text = autoDir.textContent.trim();
+          // Validate: must not look like a username or display name
+          if (text && !text.startsWith('@') && text.length >= 10 && text !== displayName) {
+            bio = text;
+          }
+        }
+      }
+
+      // Strategy 3: dir="auto" excluding role attributes (another variant)
+      if (!bio) {
+        const candidates = cell.querySelectorAll('[dir="auto"]:not([role])');
+        for (const el of candidates) {
+          if (el.closest('a')) continue; // Skip elements inside links
+          const text = el.textContent.trim();
+          if (text && !text.startsWith('@') && text.length >= 10 && text !== displayName) {
+            bio = text;
+            break;
+          }
+        }
+      }
+
+      // Strategy 4: span iteration (last resort, used when DOM structure changes significantly)
+      if (!bio) {
+        const spans = cell.querySelectorAll('span');
+        for (const span of spans) {
+          if (span.closest('a')) continue;
+          const text = span.textContent.trim();
+          if (text.startsWith('@') || text.length < 15) continue;
+          if (text === displayName) continue;
+          // Skip follower/following count patterns
+          if (/^\d[\d,.]*[KMB]?\s*(followers?|following)/i.test(text)) continue;
+          bio = text;
+          break;
+        }
+      }
+
+      // === FOLLOWER COUNT ===
+      let followers = 0;
+      const cellText = cell.textContent || '';
+      const followerMatch = cellText.match(/(\d[\d,]*\.?\d*[KMB]?)\s*Follower/i);
+      if (followerMatch) {
+        followers = parseCount(followerMatch[1]);
+      }
+
+      // === FLAGS ===
+      const isFollowing = !!cell.querySelector(SELECTORS.unfollowButton);
+      const followsYou = !!cell.querySelector(SELECTORS.userFollowIndicator);
+      const isVerified = !!cell.querySelector('[data-testid="icon-verified"]') || 
+                         !!cell.querySelector('svg[aria-label*="Verified"]');
+      const isProtected = !!cell.querySelector('[data-testid="icon-lock"]');
+
+      // === EXTRACTION METADATA (for debugging) ===
+      const _meta = {
+        bioStrategy: bio ? (bioTestId ? 'testid' : 'fallback') : 'none',
+        nameStrategy: nameTestId ? 'testid' : (displayName ? 'fallback' : 'none'),
+      };
+
+      return { username, displayName, bio, followers, isFollowing, followsYou, isVerified, isProtected, _meta };
+    } catch (e) {
+      log(`extractUserFromCell error: ${e.message}`, 'error');
+      return null;
+    }
+  };
+
+  const parseCount = (str) => {
+    if (!str) return 0;
+    str = str.replace(/,/g, '');
+    const num = parseFloat(str);
+    if (str.toUpperCase().includes('K')) return num * 1000;
+    if (str.toUpperCase().includes('M')) return num * 1000000;
+    if (str.toUpperCase().includes('B')) return num * 1000000000;
+    return num;
+  };
+
+  // ============================================
   // RATE LIMITING
   // ============================================
   
@@ -317,6 +462,8 @@ window.XActions.Core = (() => {
     typeText,
     extractUsername,
     extractTweetInfo,
+    extractUserFromCell,
+    parseCount,
     rateLimit,
     actionQueue,
   };

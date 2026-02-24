@@ -62,15 +62,39 @@
     .keyword { color: #569cd6; }
     .string { color: #ce9178; }
     .function { color: #dcdcaa; }
+
+    /* Skip Navigation */
+    .skip-nav {
+      position: absolute;
+      top: -100%;
+      left: 16px;
+      background: var(--accent);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 700;
+      z-index: 9999;
+      text-decoration: none;
+    }
+    .skip-nav:focus {
+      top: 16px;
+    }
+
+    /* Visible focus styles */
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
   </style>
 </head>
 <body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
   <nav class="nav">
     <a href="../index.html">⚡ XActions</a>
     <span style="margin-left: 20px; color: var(--text-secondary);">/ Tutorials / Scrapers</span>
   </nav>
 
-  <main class="main">
+  <main class="main" id="main-content">
     <h1>📊 Scraper Tutorials</h1>
     <p class="subtitle">Export data, download videos, and scrape content from X/Twitter</p>
 

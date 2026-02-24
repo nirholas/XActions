@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pricing — Free Twitter Automation, AI API Pay-Per-Use | XActions</title>
-  <meta name="description" content="XActions is 100% free for humans. AI agents pay per API request via x402 micropayments starting at $0.001. No subscriptions, no hidden fees.">
-  <meta name="keywords" content="free twitter automation, twitter api pricing, twitter bot free, twitter api alternative free, x402 payment, ai api pricing, twitter automation cost, open source twitter tools, free mass unfollow, free twitter scraper">
+  <title>Pricing — 100% Free & Open Source Twitter Automation | XActions</title>
+  <meta name="description" content="XActions is 100% free and open source. All features included, no API keys, no subscriptions. Optional self-hosted remote API available.">
+  <meta name="keywords" content="free twitter automation, twitter api free, twitter bot free, twitter api alternative free, open source twitter tools, free mass unfollow, free twitter scraper">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content="XActions Pricing — Free for Humans, Pay-Per-Use for AI">
-  <meta property="og:description" content="100% free X/Twitter automation for humans. AI agents pay per request via x402 micropayments. No subscriptions ever.">
+  <meta property="og:title" content="XActions Pricing — 100% Free & Open Source">
+  <meta property="og:description" content="100% free X/Twitter automation. All features included. No API keys, no subscriptions, no payments.">
   <meta property="og:url" content="https://xactions.app/pricing">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-pricing.png">
@@ -24,8 +24,8 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:creator" content="@nichxbt">
-  <meta name="twitter:title" content="XActions Pricing — Free for Humans, AI Pays Per Request">
-  <meta name="twitter:description" content="Free forever for humans. AI API starting at $0.001/request. No subscriptions.">
+  <meta name="twitter:title" content="XActions Pricing — 100% Free & Open Source">
+  <meta name="twitter:description" content="Free forever. No API keys, no subscriptions, no payments. Open source.">
   <meta name="twitter:image" content="https://xactions.app/og-pricing.png">
 
   <link rel="canonical" href="https://xactions.app/pricing">
@@ -52,9 +52,9 @@
       },
       {
         "@type": "Offer",
-        "name": "AI API (Pay-Per-Use)",
-        "description": "AI agent API access via x402 micropayments",
-        "price": "0.001",
+        "name": "Remote API (Optional)",
+        "description": "Self-hosted remote API with optional x402 micropayments",
+        "price": "0",
         "priceCurrency": "USD",
         "availability": "https://schema.org/InStock"
       }
@@ -171,16 +171,40 @@
     @media (max-width: 600px) {
       .tier-grid { grid-template-columns: 1fr; }
     }
+
+    /* Skip Navigation */
+    .skip-nav {
+      position: absolute;
+      top: -100%;
+      left: 16px;
+      background: var(--accent);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 700;
+      z-index: 9999;
+      text-decoration: none;
+    }
+    .skip-nav:focus {
+      top: 16px;
+    }
+
+    /* Visible focus styles */
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
+  <div class="container" id="main-content">
     <h1>⚡ XActions Pricing</h1>
-    <p>Dual-tier system: Free for humans, pay-per-use for AI agents</p>
+    <p>100% Free & Open Source. No API keys. No subscriptions. No paywalls.</p>
     
     <div class="tier-grid">
       <div class="tier-card free">
-        <h2>🆓 Humans</h2>
+        <h2>🆓 Everything</h2>
         <p>FREE Forever</p>
         <ul>
           <li>✅ Browser scripts</li>
@@ -194,23 +218,23 @@
       </div>
       
       <div class="tier-card paid">
-        <h2>🤖 AI Agents</h2>
-        <p>Pay-per-Request</p>
+        <h2>☁️ Remote API</h2>
+        <p>Optional • Self-Hosted</p>
         <ul>
-          <li>💳 Profile scrape: $0.001</li>
-          <li>💳 Followers/Following: $0.01</li>
-          <li>💳 Unfollow non-followers: $0.05</li>
-          <li>💳 Detect unfollowers: $0.02</li>
-          <li>💳 No subscriptions</li>
-          <li>💳 x402 micropayments</li>
+          <li>☁️ Self-host your own API</li>
+          <li>☁️ Remote access for AI agents</li>
+          <li>☁️ Optional x402 micropayments</li>
+          <li>☁️ No subscriptions</li>
+          <li>☁️ Fully open source</li>
+          <li>☁️ Deploy anywhere</li>
         </ul>
-        <a href="/ai-api" class="btn btn-purple">View AI API Docs</a>
+        <a href="/ai-api" class="btn btn-purple">Learn More</a>
       </div>
     </div>
     
     <p style="font-size: 0.9375rem;">
-      <strong>Why charge AI agents?</strong><br>
-      AI can make thousands of requests per minute. Usage-based pricing ensures fair access.
+      <strong>Why is everything free?</strong><br>
+      XActions is open source. Run it locally or self-host it. If you self-host the remote API, you can optionally enable x402 micropayments for AI agent access.
     </p>
     
     <div class="footer-links">

@@ -19,6 +19,8 @@ Browser console scripts for automating content creation and publishing on X/Twit
 | Schedule Posts | `src/schedulePosts.js` | Queue posts for future publishing |
 | Create Poll | `src/createPoll.js` | Create a poll tweet programmatically |
 | Auto Repost | `src/autoRepost.js` | Auto-retweet by keyword or user filters |
+| Post Composer | `src/postComposer.js` | Core posting module for single tweets |
+| Poll Creator | `src/pollCreator.js` | Alternative poll creation script |
 
 ## Post Thread
 
@@ -129,18 +131,41 @@ const CONFIG = {
 3. Clicks retweet → confirm on matching tweets
 4. Respects configurable delays and limits
 
-### Key selectors
+## Key Selectors
 
 | Element | Selector |
 |---------|----------|
+| Compose button | `a[data-testid="SideNav_NewTweet_Button"]` |
+| Tweet text area | `[data-testid="tweetTextarea_0"]` |
+| Post button | `[data-testid="tweetButton"]` |
+| Media button | `[data-testid="fileInput"]` |
+| Poll button | `[aria-label="Add poll"]` |
+| Schedule button | `[data-testid="scheduleOption"]` |
+| Thread add | `[data-testid="addButton"]` |
 | Retweet button | `[data-testid="retweet"]` |
 | Confirm retweet | `[data-testid="retweetConfirm"]` |
 | Already retweeted | `[data-testid="unretweet"]` |
+| Alt text | `[data-testid="altTextInput"]` |
+
+## MCP Tools
+
+- `x_post_tweet` – Post a new tweet
+- `x_post_thread` – Post a multi-tweet thread
+- `x_create_poll` – Create a poll with options
+- `x_schedule_post` – Schedule a post for later
+- `x_quote_post` – Quote retweet a post
+- `x_repost` – Retweet/repost a post
+- `x_edit_post` – Edit a recent post (Premium)
+- `x_delete_post` – Delete a post
+
+## 2026 Features
+
+Image polls, audio articles, and shuffle choices are in testing. Edit window is 1 hour (Premium). Bold/italics text formatting available for Premium users.
 
 ## Notes
 
 - All posting scripts include dry-run mode by default
 - Thread tweets are validated for character count before posting
-- Poll creation may require Premium
+- Free accounts: 280 char limit. Premium: 25,000+ chars, scheduling, edit
 - Auto Repost includes safety filters (min likes, skip replies, skip sensitive)
 - Add delays between actions to avoid rate limiting

@@ -608,6 +608,503 @@ pluginCmd
   });
 
 // ============================================================================
+// Stream Commands
+// ============================================================================
+
+const streamCmd = program
+  .command('stream')
+  .description('Real-time event streaming for X/Twitter accounts');
+
+streamCmd
+  .command('start <type> <username>')
+  .description('Start a stream (type: tweet, follower, mention)')
+  .option('-i, --interval <seconds>', 'Poll interval in seconds', '60')
+  .action(async (type, username, options) => {
+    const spinner = ora(`Starting ${type} stream for @${username}`).start();
+    try {
+      const { createStream } = await import('../streaming/index.js');
+      const config = await loadConfig();
+      const stream = await createStream({
+        type,
+        username,
+        interval: parseInt(options.interval, 10) * 1000,
+        authToken: config.authToken || undefined,
+      });
+      spinner.succeed(`Stream started: ${stream.id}`);
+      console.log(chalk.gray(`  Type: ${stream.type}`));
+      console.log(chalk.gray(`  Username: @${stream.username}`));
+      console.log(chalk.gray(`  Interval: ${stream.interval / 1000}s`));
+      console.log(chalk.cyan('\n  Events will be emitted via Socket.IO.'));
+      console.log(chalk.cyan(`  Room: stream:${stream.id}`));
+    } catch (error) {
+      spinner.fail('Failed to start stream');
+      console.error(chalk.red(error.message));
+    }
+  });
+
+streamCmd
+  .command('stop <streamId>')
+  .description('Stop an active stream')
+  .action(async (streamId) => {
+    const spinner = ora(`Stopping stream ${streamId}`).start();
+    try {
+      const { stopStream } = await import('../streaming/index.js');
+      await stopStream(streamId);
+      spinner.succeed(`Stream stopped: ${streamId}`);
+    } catch (error) {
+      spinner.fail('Failed to stop stream');
+      console.error(chalk.red(error.message));
+    }
+  });
+
+streamCmd
+  .command('list')
+  .description('List active streams')
+  .action(async () => {
+    try {
+      const { listStreams, getPoolStatus } = await import('../streaming/index.js');
+      const streams = await listStreams();
+      const pool = getPoolStatus();
+
+      if (streams.length === 0) {
+        console.log(chalk.gray('\n  No active streams.'));
+        console.log(chalk.gray('  Start one with: xactions stream start <type> <username>\n'));
+        return;
+      }
+
+      console.log(chalk.bold.cyan('\n📡 Active Streams\n'));
+      for (const s of streams) {
+        const statusColor = s.status === 'running' ? chalk.green : chalk.yellow;
+        console.log(`  ${statusColor('●')} ${chalk.bold(s.id)}`);
+        console.log(`    Type: ${s.type}  User: @${s.username}  Interval: ${s.interval / 1000}s`);
+        console.log(`    Status: ${statusColor(s.status)}  Polls: ${s.pollCount}  Errors: ${s.errorCount}`);
+        if (s.lastPollAt) console.log(chalk.gray(`    Last poll: ${s.lastPollAt}`));
+        console.log('');
+      }
+
+      console.log(chalk.gray(`  Browser pool: ${pool.browsers}/${pool.maxBrowsers} browsers`));
+      console.log('');
+    } catch (error) {
+      console.error(chalk.red('Failed to list streams: ' + error.message));
+    }
+  });
+
+streamCmd
+  .command('history <streamId>')
+  .description('Show recent events for a stream')
+  .option('-l, --limit <number>', 'Max events', '20')
+  .action(async (streamId, options) => {
+    try {
+      const { getStreamHistory } = await import('../streaming/index.js');
+      const events = await getStreamHistory(streamId, parseInt(options.limit, 10));
+
+      if (events.length === 0) {
+        console.log(chalk.gray('\n  No events yet for this stream.\n'));
+        return;
+      }
+
+      console.log(chalk.bold.cyan(`\n📡 Events for ${streamId}\n`));
+      for (const e of events) {
+        const time = chalk.gray(new Date(e.timestamp).toLocaleTimeString());
+        const type = chalk.cyan(e.type);
+        console.log(`  ${time} ${type}`);
+        if (e.data?.text) console.log(`    ${e.data.text.slice(0, 120)}`);
+        if (e.data?.action) console.log(`    ${e.data.action}: ${e.data.follower || e.data.delta || ''}`);
+      }
+      console.log('');
+    } catch (error) {
+      console.error(chalk.red('Failed to get history: ' + error.message));
+    }
+  });
+
+// ============================================================================
+// Workflow Commands
+// ============================================================================
+
+const workflowCmd = program
+  .command('workflow')
+  .description('Manage and run automation workflows');
+
+workflowCmd
+  .command('create')
+  .description('Create a workflow from a JSON file or interactively')
+  .option('-f, --file <path>', 'Path to workflow JSON file')
+  .action(async (options) => {
+    try {
+      const workflows = (await import('../workflows/index.js')).default;
+
+      if (options.file) {
+        const content = await fs.readFile(options.file, 'utf-8');
+        const definition = JSON.parse(content);
+        const workflow = await workflows.create(definition);
+        console.log(chalk.green(`✓ Workflow created: ${workflow.name} (${workflow.id})`));
+        return;
+      }
+
+      // Interactive creation
+      const answers = await inquirer.prompt([
+        { type: 'input', name: 'name', message: 'Workflow name:' },
+        { type: 'input', name: 'description', message: 'Description (optional):' },
+        {
+          type: 'list',
+          name: 'triggerType',
+          message: 'Trigger type:',
+          choices: ['manual', 'schedule', 'webhook'],
+        },
+        {
+          type: 'input',
+          name: 'cron',
+          message: 'Cron expression (e.g., */30 * * * *):',
+          when: (a) => a.triggerType === 'schedule',
+        },
+      ]);
+
+      const trigger = { type: answers.triggerType };
+      if (answers.cron) trigger.cron = answers.cron;
+
+      const workflow = await workflows.create({
+        name: answers.name,
+        description: answers.description,
+        trigger,
+        steps: [],
+      });
+
+      console.log(chalk.green(`✓ Workflow created: ${workflow.name} (${workflow.id})`));
+      console.log(chalk.gray('  Add steps by editing the workflow JSON or using the API.'));
+    } catch (error) {
+      console.error(chalk.red('Failed to create workflow: ' + error.message));
+    }
+  });
+
+workflowCmd
+  .command('run <name>')
+  .description('Run a workflow by name or ID')
+  .option('--auth <token>', 'X/Twitter session cookie for authentication')
+  .action(async (name, options) => {
+    const spinner = ora(`Running workflow "${name}"`).start();
+    try {
+      const workflows = (await import('../workflows/index.js')).default;
+      const config = await loadConfig();
+
+      const result = await workflows.run(name, {
+        trigger: 'cli',
+        authToken: options.auth || config.authToken,
+        onProgress: (event) => {
+          if (event.type === 'step_start') {
+            spinner.text = `Step ${event.step + 1}/${event.total}: ${event.name}`;
+          } else if (event.type === 'step_error') {
+            spinner.warn(`Step error: ${event.error}`);
+          } else if (event.type === 'condition_failed') {
+            spinner.info(`Condition not met at step ${event.step}: ${event.details}`);
+          }
+        },
+      });
+
+      if (result.status === 'completed') {
+        spinner.succeed(`Workflow "${result.workflowName}" completed (${result.stepsCompleted}/${result.totalSteps} steps)`);
+      } else if (result.status === 'failed') {
+        spinner.fail(`Workflow failed: ${result.error}`);
+      } else {
+        spinner.info(`Workflow finished with status: ${result.status}`);
+      }
+
+      if (result.steps) {
+        console.log(chalk.bold('\nStep Results:'));
+        for (const step of result.steps) {
+          const icon = step.status === 'completed' ? chalk.green('✓') : step.status === 'skipped' ? chalk.yellow('○') : chalk.red('✗');
+          console.log(`  ${icon} ${step.name} — ${step.status}`);
+          if (step.error) console.log(chalk.red(`    Error: ${step.error}`));
+        }
+      }
+    } catch (error) {
+      spinner.fail('Failed to run workflow');
+      console.error(chalk.red(error.message));
+    }
+  });
+
+workflowCmd
+  .command('list')
+  .description('List all workflows')
+  .action(async () => {
+    try {
+      const workflows = (await import('../workflows/index.js')).default;
+      const list = await workflows.list();
+
+      if (list.length === 0) {
+        console.log(chalk.gray('\n  No workflows found.'));
+        console.log(chalk.gray('  Create one with: xactions workflow create -f workflow.json\n'));
+        return;
+      }
+
+      console.log(chalk.bold.cyan('\n⚡ Workflows\n'));
+      for (const wf of list) {
+        const status = wf.enabled ? chalk.green('● enabled') : chalk.gray('○ disabled');
+        const trigger = wf.trigger?.type || 'manual';
+        console.log(`  ${status}  ${chalk.bold(wf.name)} ${chalk.gray(`(${wf.id?.slice(0, 8)}...)`)}`);
+        console.log(`         Trigger: ${trigger}  Steps: ${wf.stepsCount}`);
+        if (wf.description) console.log(`         ${chalk.gray(wf.description)}`);
+        console.log('');
+      }
+    } catch (error) {
+      console.error(chalk.red('Failed to list workflows: ' + error.message));
+    }
+  });
+
+workflowCmd
+  .command('delete <id>')
+  .description('Delete a workflow')
+  .action(async (id) => {
+    try {
+      const workflows = (await import('../workflows/index.js')).default;
+      const deleted = await workflows.remove(id);
+      if (deleted) {
+        console.log(chalk.green(`✓ Workflow deleted: ${id}`));
+      } else {
+        console.log(chalk.red(`Workflow not found: ${id}`));
+      }
+    } catch (error) {
+      console.error(chalk.red('Failed to delete workflow: ' + error.message));
+    }
+  });
+
+workflowCmd
+  .command('actions')
+  .description('List available workflow actions')
+  .action(async () => {
+    try {
+      const workflows = (await import('../workflows/index.js')).default;
+      const actions = workflows.listActions();
+
+      console.log(chalk.bold.cyan('\n⚡ Available Workflow Actions\n'));
+
+      const categories = {};
+      for (const action of actions) {
+        const cat = action.category || 'general';
+        if (!categories[cat]) categories[cat] = [];
+        categories[cat].push(action);
+      }
+
+      for (const [cat, acts] of Object.entries(categories)) {
+        console.log(chalk.bold(`  ${cat.toUpperCase()}`));
+        for (const a of acts) {
+          console.log(`    ${chalk.cyan(a.name)} — ${a.description}`);
+        }
+        console.log('');
+      }
+    } catch (error) {
+      console.error(chalk.red('Failed to list actions: ' + error.message));
+    }
+  });
+
+workflowCmd
+  .command('runs <workflowId>')
+  .description('Show execution history for a workflow')
+  .option('-l, --limit <number>', 'Max runs to show', '10')
+  .action(async (workflowId, options) => {
+    try {
+      const workflows = (await import('../workflows/index.js')).default;
+      const runsList = await workflows.runs(workflowId, parseInt(options.limit, 10));
+
+      if (runsList.length === 0) {
+        console.log(chalk.gray('\n  No runs found for this workflow.\n'));
+        return;
+      }
+
+      console.log(chalk.bold.cyan('\n📊 Execution History\n'));
+      for (const r of runsList) {
+        const statusIcon = r.status === 'completed' ? chalk.green('✓') : r.status === 'failed' ? chalk.red('✗') : chalk.yellow('●');
+        const time = r.startedAt ? new Date(r.startedAt).toLocaleString() : 'N/A';
+        console.log(`  ${statusIcon} ${chalk.gray(r.id?.slice(0, 8))}  ${r.status}  ${r.stepsCompleted}/${r.totalSteps} steps  ${chalk.gray(time)}`);
+        if (r.error) console.log(chalk.red(`    Error: ${r.error}`));
+      }
+      console.log('');
+    } catch (error) {
+      console.error(chalk.red('Failed to get runs: ' + error.message));
+    }
+  });
+
+// ============================================================================
+// Portability Commands (export, migrate, diff)
+// ============================================================================
+
+program
+  .command('export <username>')
+  .description('Export a Twitter account (profile, tweets, followers, following, bookmarks)')
+  .option('-f, --format <formats>', 'Output formats: json,csv,md,html (comma-separated)', 'json,csv,md,html')
+  .option('--only <phases>', 'Export only specific phases: profile,tweets,followers,following,bookmarks,likes (comma-separated)')
+  .option('-l, --limit <number>', 'Maximum items per phase', '500')
+  .option('-o, --output <dir>', 'Custom output directory')
+  .action(async (username, options) => {
+    const user = username.replace(/^@/, '');
+    const formats = options.format.split(',').map((s) => s.trim());
+    const only = options.only ? options.only.split(',').map((s) => s.trim()) : undefined;
+    const limit = parseInt(options.limit) || 500;
+
+    const spinner = ora(`Exporting @${user}...`).start();
+
+    try {
+      const browser = await scrapers.createBrowser();
+      const page = await scrapers.createPage(browser);
+
+      const config = await loadConfig();
+      if (config.authToken) {
+        await scrapers.loginWithCookie(page, config.authToken);
+      }
+
+      const { exportAccount } = await import('../portability/exporter.js');
+      const summary = await exportAccount({
+        page,
+        username: user,
+        formats,
+        only,
+        limit,
+        outputDir: options.output,
+        scrapers,
+        onProgress: ({ phase, completed, total, currentItem }) => {
+          spinner.text = `[${phase}] ${currentItem || ''} (${completed}/${total})`;
+        },
+      });
+
+      await browser.close();
+
+      spinner.succeed(`Export complete → ${summary.dir}`);
+
+      // Show summary
+      console.log('');
+      for (const [phase, info] of Object.entries(summary.phases || {})) {
+        const status = info.skipped ? chalk.gray('(cached)') : chalk.green('✓');
+        console.log(`  ${status} ${chalk.bold(phase)}: ${info.count} items`);
+      }
+      if (summary.archiveViewer) {
+        console.log(`\n  ${chalk.cyan('Archive viewer:')} ${summary.archiveViewer}`);
+      }
+      if (summary.errors?.length > 0) {
+        console.log(`\n  ${chalk.yellow('Errors:')}`);
+        for (const e of summary.errors) {
+          console.log(`    ${chalk.red(e.phase)}: ${e.error}`);
+        }
+      }
+      console.log('');
+    } catch (error) {
+      spinner.fail('Export failed');
+      console.error(chalk.red(error.message));
+    }
+  });
+
+program
+  .command('migrate <username>')
+  .description('Migrate Twitter data to Bluesky or Mastodon')
+  .requiredOption('--to <platform>', 'Target platform: bluesky or mastodon')
+  .option('--dry-run', 'Preview migration without executing (default)', true)
+  .option('--execute', 'Actually execute the migration')
+  .option('--export-dir <dir>', 'Path to export directory (auto-detected if omitted)')
+  .option('-l, --limit <number>', 'Max tweets to migrate', '50')
+  .action(async (username, options) => {
+    const user = username.replace(/^@/, '');
+    const dryRun = !options.execute;
+    const platform = options.to.toLowerCase();
+
+    if (!['bluesky', 'mastodon'].includes(platform)) {
+      console.error(chalk.red('Platform must be "bluesky" or "mastodon"'));
+      return;
+    }
+
+    // Find export directory
+    let exportDir = options.exportDir;
+    if (!exportDir) {
+      const { promises: fs } = await import('fs');
+      const exportsRoot = path.join(process.cwd(), 'exports');
+      try {
+        const dirs = await fs.readdir(exportsRoot);
+        const match = dirs
+          .filter((d) => d.startsWith(user + '_'))
+          .sort()
+          .pop();
+        if (match) exportDir = path.join(exportsRoot, match);
+      } catch { /* no exports dir */ }
+    }
+
+    if (!exportDir) {
+      console.error(chalk.red(`No export found for @${user}. Run "xactions export @${user}" first.`));
+      return;
+    }
+
+    const spinner = ora(`${dryRun ? 'Previewing' : 'Executing'} migration to ${platform}...`).start();
+
+    try {
+      const { migrate } = await import('../portability/importer.js');
+      const summary = await migrate({
+        platform,
+        exportDir,
+        dryRun,
+        onProgress: ({ phase, completed, total }) => {
+          spinner.text = `[${phase}] ${completed}/${total}`;
+        },
+      });
+
+      spinner.succeed(`Migration ${dryRun ? 'preview' : ''} complete`);
+
+      console.log(`\n  Platform: ${chalk.cyan(platform)}`);
+      console.log(`  Mode: ${dryRun ? chalk.yellow('DRY RUN') : chalk.green('EXECUTE')}`);
+      console.log(`  Tweets: ${summary.tweets.migrated}/${summary.tweets.total} ready`);
+      console.log(`  Follows: ${summary.follows.matched}/${summary.follows.total} matchable`);
+
+      if (dryRun) {
+        console.log(`\n  ${chalk.yellow('This was a dry run. Add --execute to perform the migration.')}`);
+      }
+
+      if (summary.actions.length > 0) {
+        console.log(`\n  ${chalk.gray('Sample actions:')}`);
+        for (const a of summary.actions.slice(0, 5)) {
+          console.log(`    ${a.type}: ${a.content?.slice(0, 60) || a.twitterUser || ''} [${a.status}]`);
+        }
+        if (summary.actions.length > 5) {
+          console.log(`    ... and ${summary.actions.length - 5} more`);
+        }
+      }
+      console.log('');
+    } catch (error) {
+      spinner.fail('Migration failed');
+      console.error(chalk.red(error.message));
+    }
+  });
+
+program
+  .command('diff <dirA> <dirB>')
+  .description('Compare two account exports and show changes')
+  .option('-o, --output <dir>', 'Output directory for report (default: dirB)')
+  .action(async (dirA, dirB, options) => {
+    const spinner = ora('Comparing exports...').start();
+
+    try {
+      const { diffAndReport } = await import('../portability/differ.js');
+      const { diff, files } = await diffAndReport(dirA, dirB, options.output);
+      const s = diff.summary;
+
+      spinner.succeed('Diff complete');
+
+      console.log('');
+      console.log(`  ${chalk.bold('Followers:')} ${chalk.green('+' + s.followersGained)} ${chalk.red('-' + s.followersLost)} (net: ${s.netFollowerChange >= 0 ? '+' : ''}${s.netFollowerChange})`);
+      console.log(`  ${chalk.bold('Following:')} ${chalk.green('+' + s.followingAdded)} ${chalk.red('-' + s.followingRemoved)}`);
+      console.log(`  ${chalk.bold('Tweets:')} ${chalk.green('+' + s.newTweets + ' new')} ${chalk.red(s.deletedTweets + ' deleted')}`);
+      console.log(`  ${chalk.bold('Engagement changes:')} ${s.engagementChanges} tweets`);
+
+      if (s.profileChanges > 0) {
+        console.log(`  ${chalk.bold('Profile changes:')} ${s.profileChanges}`);
+        for (const c of diff.profile.changes) {
+          console.log(`    ${c.field}: ${chalk.gray(String(c.before))} → ${chalk.white(String(c.after))}`);
+        }
+      }
+
+      console.log(`\n  ${chalk.cyan('Report:')} ${files.join(', ')}`);
+      console.log('');
+    } catch (error) {
+      spinner.fail('Diff failed');
+      console.error(chalk.red(error.message));
+    }
+  });
+
+// ============================================================================
 // Info Commands
 // ============================================================================
 
@@ -637,6 +1134,140 @@ ${chalk.cyan('Links:')}
 
 ${chalk.yellow('Run "xactions --help" for all commands')}
 `);
+  });
+
+// ============================================================================
+// Analytics Commands
+// ============================================================================
+
+program
+  .command('sentiment <text>')
+  .description('Analyze sentiment of text or tweet content')
+  .option('-m, --mode <mode>', 'Analysis mode: rules (default) or llm', 'rules')
+  .option('-o, --output <file>', 'Output file (JSON)')
+  .action(async (text, options) => {
+    const spinner = ora('Analyzing sentiment...').start();
+    try {
+      const { analyzeSentiment } = await import('../analytics/sentiment.js');
+      const result = await analyzeSentiment(text, { mode: options.mode });
+      spinner.succeed('Sentiment analysis complete');
+
+      const icon = result.label === 'positive' ? '🟢' : result.label === 'negative' ? '🔴' : '⚪';
+      console.log(`\n${icon} ${chalk.bold(result.label.toUpperCase())} (score: ${result.score}, confidence: ${result.confidence})`);
+      if (result.keywords.length > 0) {
+        console.log(chalk.gray(`   Keywords: ${result.keywords.join(', ')}`));
+      }
+
+      if (options.output) {
+        const fs = await import('fs/promises');
+        await fs.writeFile(options.output, JSON.stringify(result, null, 2));
+        console.log(chalk.green(`\n✓ Saved to ${options.output}`));
+      }
+    } catch (error) {
+      spinner.fail('Sentiment analysis failed');
+      console.error(chalk.red(error.message));
+    }
+  });
+
+program
+  .command('monitor <target>')
+  .description('Start monitoring sentiment for a username or keyword')
+  .option('-t, --type <type>', 'Monitor type: mentions, keyword, replies', 'mentions')
+  .option('-i, --interval <seconds>', 'Polling interval in seconds', '900')
+  .option('-m, --mode <mode>', 'Analysis mode: rules or llm', 'rules')
+  .option('--threshold <number>', 'Alert threshold for negative sentiment', '-0.3')
+  .option('--webhook <url>', 'Webhook URL for alerts')
+  .action(async (target, options) => {
+    const spinner = ora(`Starting monitor for ${target}...`).start();
+    try {
+      const { createMonitor } = await import('../analytics/reputation.js');
+      const monitor = createMonitor({
+        target,
+        type: options.type,
+        intervalMs: Math.max(60, parseInt(options.interval)) * 1000,
+        sentimentMode: options.mode,
+        alertConfig: {
+          sentimentThreshold: parseFloat(options.threshold),
+          webhookUrl: options.webhook || null,
+        },
+      });
+
+      spinner.succeed(`Monitor started: ${monitor.id}`);
+      console.log(chalk.cyan(`\n📊 Monitoring ${target}`));
+      console.log(chalk.gray(`   Type: ${monitor.type}`));
+      console.log(chalk.gray(`   Interval: ${monitor.intervalMs / 1000}s`));
+      console.log(chalk.gray(`   Mode: ${monitor.sentimentMode}`));
+      console.log(chalk.yellow(`\n⚡ Monitor is running. Press Ctrl+C to stop.`));
+      console.log(chalk.gray(`   ID: ${monitor.id}`));
+
+      // Keep process alive
+      process.on('SIGINT', () => {
+        const { stopMonitor: stop } = require('../analytics/reputation.js');
+        stop(monitor.id);
+        console.log(chalk.yellow('\n🛑 Monitor stopped.'));
+        process.exit(0);
+      });
+
+      // Prevent exit
+      await new Promise(() => {});
+    } catch (error) {
+      spinner.fail('Failed to start monitor');
+      console.error(chalk.red(error.message));
+    }
+  });
+
+program
+  .command('report <username>')
+  .description('Generate a reputation report for a monitored username')
+  .option('-p, --period <period>', 'Report period: 24h, 7d, 30d, all', '7d')
+  .option('-f, --format <format>', 'Output format: json or markdown', 'markdown')
+  .option('-o, --output <file>', 'Output file')
+  .action(async (username, options) => {
+    const spinner = ora(`Generating report for @${username}...`).start();
+    try {
+      const { listMonitors, getMonitor, getMonitorHistory } = await import('../analytics/reputation.js');
+      const { generateReport } = await import('../analytics/reports.js');
+
+      const monitors = listMonitors();
+      const monitor = monitors.find(m =>
+        m.target.replace(/^@/, '').toLowerCase() === username.replace(/^@/, '').toLowerCase()
+      );
+
+      if (!monitor) {
+        spinner.fail(`No active monitor found for @${username}`);
+        console.log(chalk.yellow('Start one first with: xactions monitor @' + username));
+        return;
+      }
+
+      const history = getMonitorHistory(monitor.id, { limit: 10000 });
+      const { report, markdown } = generateReport(monitor, history, {
+        period: options.period,
+        format: options.format,
+      });
+
+      spinner.succeed('Report generated');
+
+      if (options.format === 'markdown' && markdown) {
+        if (options.output) {
+          const fs = await import('fs/promises');
+          await fs.writeFile(options.output, markdown);
+          console.log(chalk.green(`\n✓ Report saved to ${options.output}`));
+        } else {
+          console.log('\n' + markdown);
+        }
+      } else {
+        if (options.output) {
+          const fs = await import('fs/promises');
+          await fs.writeFile(options.output, JSON.stringify(report, null, 2));
+          console.log(chalk.green(`\n✓ Report saved to ${options.output}`));
+        } else {
+          console.log(JSON.stringify(report, null, 2));
+        }
+      }
+    } catch (error) {
+      spinner.fail('Failed to generate report');
+      console.error(chalk.red(error.message));
+    }
   });
 
 // ============================================================================

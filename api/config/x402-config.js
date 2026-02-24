@@ -12,8 +12,8 @@
 // Determine environment
 const isProduction = process.env.NODE_ENV === 'production';
 
-// Payment receiving address (optional — only needed if you want to enable x402 payments)
-export const PAY_TO_ADDRESS = process.env.X402_PAY_TO_ADDRESS || null;
+// Payment receiving address (override with X402_PAY_TO_ADDRESS env var)
+export const PAY_TO_ADDRESS = process.env.X402_PAY_TO_ADDRESS || '0x40252CFDF8B20Ed757D61ff157719F33Ec332402';
 
 // Facilitator URL (testnet for development, mainnet for production)
 export const FACILITATOR_URL = process.env.X402_FACILITATOR_URL || 'https://x402.org/facilitator';

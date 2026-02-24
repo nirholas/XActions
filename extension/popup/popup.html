@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=400">
+  <title>XActions</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <!-- ============================================ -->
+  <!-- HEADER -->
+  <!-- ============================================ -->
+  <header id="header">
+    <div class="header-left">
+      <div class="logo">X<span class="accent">A</span></div>
+      <div class="header-title">XActions</div>
+    </div>
+    <div class="header-right">
+      <div id="connectionStatus" class="status-dot disconnected" title="Not connected to X"></div>
+      <button id="btnEmergencyStop" class="btn-emergency" title="Emergency Stop All">⏹</button>
+    </div>
+  </header>
+
+  <!-- ============================================ -->
+  <!-- ACCOUNT INFO -->
+  <!-- ============================================ -->
+  <section id="accountInfo" class="section">
+    <div class="account-card">
+      <div class="account-avatar" id="accountAvatar">?</div>
+      <div class="account-details">
+        <div class="account-name" id="accountName">Connect to X</div>
+        <div class="account-handle" id="accountHandle">Open x.com to get started</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- TAB NAVIGATION -->
+  <!-- ============================================ -->
+  <nav class="tabs">
+    <button class="tab active" data-tab="automations">Automations</button>
+    <button class="tab" data-tab="activity">Activity</button>
+    <button class="tab" data-tab="settings">Settings</button>
+  </nav>
+
+  <!-- ============================================ -->
+  <!-- AUTOMATIONS TAB -->
+  <!-- ============================================ -->
+  <section id="tab-automations" class="tab-content active">
+    <!-- Auto-Liker -->
+    <div class="automation-card" data-automation="autoLiker">
+      <div class="card-header">
+        <div class="card-icon">❤️</div>
+        <div class="card-info">
+          <div class="card-title">Auto-Liker</div>
+          <div class="card-desc">Like tweets matching keywords in your feed</div>
+        </div>
+        <div class="card-status">
+          <span class="status-badge stopped">Stopped</span>
+        </div>
+      </div>
+      <div class="card-actions">
+        <span class="action-count">0 actions</span>
+        <button class="btn-settings" title="Settings">⚙️</button>
+        <button class="btn-toggle" title="Start">▶️</button>
+      </div>
+      <div class="card-settings hidden">
+        <label>Keywords <small>(comma-separated, empty = all)</small>
+          <input type="text" data-setting="keywords" placeholder="web3, crypto, AI">
+        </label>
+        <label>Max likes per session
+          <input type="number" data-setting="maxActions" value="20" min="1" max="200">
+        </label>
+        <label>Min delay (ms)
+          <input type="number" data-setting="minDelay" value="2000" min="500" max="30000">
+        </label>
+        <label>Max delay (ms)
+          <input type="number" data-setting="maxDelay" value="5000" min="1000" max="60000">
+        </label>
+      </div>
+    </div>
+
+    <!-- Smart Unfollow -->
+    <div class="automation-card" data-automation="smartUnfollow">
+      <div class="card-header">
+        <div class="card-icon">👋</div>
+        <div class="card-info">
+          <div class="card-title">Smart Unfollow</div>
+          <div class="card-desc">Unfollow users who don't follow back</div>
+        </div>
+        <div class="card-status">
+          <span class="status-badge stopped">Stopped</span>
+        </div>
+      </div>
+      <div class="card-actions">
+        <span class="action-count">0 actions</span>
+        <button class="btn-settings" title="Settings">⚙️</button>
+        <button class="btn-toggle" title="Start">▶️</button>
+      </div>
+      <div class="card-settings hidden">
+        <label>Days to wait before unfollow
+          <input type="number" data-setting="daysToWait" value="3" min="1" max="30">
+        </label>
+        <label>Max unfollows per session
+          <input type="number" data-setting="maxActions" value="50" min="1" max="200">
+        </label>
+        <label>Whitelist <small>(comma-separated usernames)</small>
+          <input type="text" data-setting="whitelist" placeholder="user1, user2">
+        </label>
+        <label>Min delay (ms)
+          <input type="number" data-setting="minDelay" value="2000" min="500" max="30000">
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" data-setting="dryRun"> Dry run (preview only)
+        </label>
+      </div>
+    </div>
+
+    <!-- Keyword Follow -->
+    <div class="automation-card" data-automation="keywordFollow">
+      <div class="card-header">
+        <div class="card-icon">🔍</div>
+        <div class="card-info">
+          <div class="card-title">Keyword Follow</div>
+          <div class="card-desc">Search keywords and follow matching users</div>
+        </div>
+        <div class="card-status">
+          <span class="status-badge stopped">Stopped</span>
+        </div>
+      </div>
+      <div class="card-actions">
+        <span class="action-count">0 actions</span>
+        <button class="btn-settings" title="Settings">⚙️</button>
+        <button class="btn-toggle" title="Start">▶️</button>
+      </div>
+      <div class="card-settings hidden">
+        <label>Keywords <small>(comma-separated)</small>
+          <input type="text" data-setting="keywords" placeholder="web3 developer, solidity">
+        </label>
+        <label>Max follows per keyword
+          <input type="number" data-setting="maxPerKeyword" value="10" min="1" max="50">
+        </label>
+        <label>Max follows total
+          <input type="number" data-setting="maxActions" value="30" min="1" max="100">
+        </label>
+        <label>Min followers on user
+          <input type="number" data-setting="minFollowers" value="100" min="0" max="1000000">
+        </label>
+        <label>Min delay (ms)
+          <input type="number" data-setting="minDelay" value="3000" min="500" max="30000">
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" data-setting="mustHaveBio"> Must have bio
+        </label>
+      </div>
+    </div>
+
+    <!-- Growth Suite -->
+    <div class="automation-card" data-automation="growthSuite">
+      <div class="card-header">
+        <div class="card-icon">🚀</div>
+        <div class="card-info">
+          <div class="card-title">Growth Suite</div>
+          <div class="card-desc">All-in-one: like, follow, unfollow non-followers</div>
+        </div>
+        <div class="card-status">
+          <span class="status-badge stopped">Stopped</span>
+        </div>
+      </div>
+      <div class="card-actions">
+        <span class="action-count">0 actions</span>
+        <button class="btn-settings" title="Settings">⚙️</button>
+        <button class="btn-toggle" title="Start">▶️</button>
+      </div>
+      <div class="card-settings hidden">
+        <label>Keywords <small>(comma-separated)</small>
+          <input type="text" data-setting="keywords" placeholder="web3, crypto, AI">
+        </label>
+        <label>Session duration (minutes)
+          <input type="number" data-setting="sessionMinutes" value="30" min="5" max="120">
+        </label>
+        <label>Max likes
+          <input type="number" data-setting="maxLikes" value="30" min="0" max="200">
+        </label>
+        <label>Max follows
+          <input type="number" data-setting="maxFollows" value="20" min="0" max="100">
+        </label>
+        <label>Max unfollows
+          <input type="number" data-setting="maxUnfollows" value="15" min="0" max="100">
+        </label>
+        <label>Min delay (ms)
+          <input type="number" data-setting="minDelay" value="3000" min="500" max="30000">
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" data-setting="enableFollow" checked> Enable follow
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" data-setting="enableLike" checked> Enable like
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" data-setting="enableUnfollow" checked> Enable unfollow
+        </label>
+      </div>
+    </div>
+
+    <!-- Auto-Commenter -->
+    <div class="automation-card" data-automation="autoCommenter">
+      <div class="card-header">
+        <div class="card-icon">💬</div>
+        <div class="card-info">
+          <div class="card-title">Auto-Commenter</div>
+          <div class="card-desc">Auto-reply to new posts with random comments</div>
+        </div>
+        <div class="card-status">
+          <span class="status-badge stopped">Stopped</span>
+        </div>
+      </div>
+      <div class="card-actions">
+        <span class="action-count">0 actions</span>
+        <button class="btn-settings" title="Settings">⚙️</button>
+        <button class="btn-toggle" title="Start">▶️</button>
+      </div>
+      <div class="card-settings hidden">
+        <label>Comments <small>(comma-separated)</small>
+          <input type="text" data-setting="comments" placeholder="🔥, Great point!, Interesting!">
+        </label>
+        <label>Keywords filter <small>(empty = all posts)</small>
+          <input type="text" data-setting="keywords" placeholder="web3, crypto">
+        </label>
+        <label>Check interval (seconds)
+          <input type="number" data-setting="checkInterval" value="60" min="10" max="600">
+        </label>
+        <label>Max comments per session
+          <input type="number" data-setting="maxActions" value="5" min="1" max="50">
+        </label>
+      </div>
+    </div>
+
+    <!-- Follow Engagers -->
+    <div class="automation-card" data-automation="followEngagers">
+      <div class="card-header">
+        <div class="card-icon">👥</div>
+        <div class="card-info">
+          <div class="card-title">Follow Engagers</div>
+          <div class="card-desc">Follow users who liked/retweeted a tweet</div>
+        </div>
+        <div class="card-status">
+          <span class="status-badge stopped">Stopped</span>
+        </div>
+      </div>
+      <div class="card-actions">
+        <span class="action-count">0 actions</span>
+        <button class="btn-settings" title="Settings">⚙️</button>
+        <button class="btn-toggle" title="Start">▶️</button>
+      </div>
+      <div class="card-settings hidden">
+        <label>Mode
+          <select data-setting="mode">
+            <option value="likers">Likers</option>
+            <option value="retweeters">Retweeters</option>
+          </select>
+        </label>
+        <label>Max follows
+          <input type="number" data-setting="maxActions" value="30" min="1" max="100">
+        </label>
+        <label>Min followers on user
+          <input type="number" data-setting="minFollowers" value="50" min="0" max="1000000">
+        </label>
+        <label>Min delay (ms)
+          <input type="number" data-setting="minDelay" value="3000" min="500" max="30000">
+        </label>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- ACTIVITY TAB -->
+  <!-- ============================================ -->
+  <section id="tab-activity" class="tab-content">
+    <div class="activity-header">
+      <span>Live Activity Log</span>
+      <button id="btnClearLog" class="btn-small">Clear</button>
+    </div>
+    <div id="activityLog" class="activity-log">
+      <div class="log-empty">No activity yet. Start an automation to see logs here.</div>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- SETTINGS TAB -->
+  <!-- ============================================ -->
+  <section id="tab-settings" class="tab-content">
+    <div class="settings-section">
+      <h3>Global Settings</h3>
+      <label>Default min delay (ms)
+        <input type="number" id="globalMinDelay" value="2000" min="500" max="30000">
+      </label>
+      <label>Default max delay (ms)
+        <input type="number" id="globalMaxDelay" value="5000" min="1000" max="60000">
+      </label>
+      <label class="checkbox-label">
+        <input type="checkbox" id="globalDebug" checked> Debug logging
+      </label>
+    </div>
+    <div class="settings-section">
+      <h3>Data</h3>
+      <button id="btnExportSettings" class="btn-secondary">Export settings</button>
+      <button id="btnResetAll" class="btn-danger">Reset all data</button>
+    </div>
+    <div class="settings-footer">
+      <a href="https://github.com/nirholas/XActions" target="_blank">XActions on GitHub</a>
+      <span>v1.0.0 — by nichxbt</span>
+    </div>
+  </section>
+
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -20,6 +20,20 @@
 
   const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
+  // Bio extraction with fallback chain (canonical version: src/automation/core.js → extractUserFromCell)
+  const extractBio = (cell) => {
+    // Strategy 1: data-testid (most reliable)
+    const testId = cell.querySelector('[data-testid="UserDescription"]');
+    if (testId?.textContent?.trim()) return testId.textContent.trim();
+    // Strategy 2: dir="auto" excluding testid elements
+    const autoDir = cell.querySelector('[dir="auto"]:not([data-testid])');
+    if (autoDir?.textContent?.trim()?.length >= 10) return autoDir.textContent.trim();
+    // Strategy 3: dir="auto" excluding role (variant DOMs)
+    const noRole = cell.querySelector('[dir="auto"]:not([role])');
+    if (noRole && !noRole.closest('a') && noRole.textContent?.trim()?.length >= 10) return noRole.textContent.trim();
+    return '';
+  };
+
   const run = async () => {
     console.log('🔍 AUDIT FOLLOWERS - XActions by nichxbt');
 
@@ -45,9 +59,8 @@
         if (followers.has(username)) return;
 
         const nameEl = cell.querySelector($userName);
-        const bioEl = cell.querySelector('[dir="auto"]:not([data-testid])');
         const followsYou = !!cell.querySelector($followIndicator);
-        const bio = bioEl?.textContent?.trim() || '';
+        const bio = extractBio(cell);
         const displayName = nameEl?.textContent?.split('@')[0]?.trim() || '';
 
         // Heuristic scoring

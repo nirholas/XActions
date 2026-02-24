@@ -29,11 +29,19 @@
     URL.revokeObjectURL(url);
   };
 
+  const extractBio = (cell) => {
+    const testId = cell.querySelector('[data-testid="UserDescription"]');
+    if (testId?.textContent?.trim()) return testId.textContent.trim();
+    const autoDir = cell.querySelector('[dir="auto"]:not([data-testid])');
+    const text = autoDir?.textContent?.trim();
+    if (text && text.length >= 10 && !text.startsWith('@')) return text;
+    return '';
+  };
+
   const extractUser = (cell) => {
     try {
       const nameEl = cell.querySelector('[dir="ltr"] > span');
       const handleEl = cell.querySelector('a[href^="/"]');
-      const bioEl = cell.querySelector('[data-testid="UserDescription"]');
       const followsYou = !!cell.querySelector('[data-testid="userFollowIndicator"]');
       
       const href = handleEl?.getAttribute('href') || '';
@@ -42,7 +50,7 @@
       return {
         handle,
         displayName: nameEl?.textContent || '',
-        bio: bioEl?.textContent || '',
+        bio: extractBio(cell),
         followsYou,
         profileUrl: `https://x.com/${handle}`,
       };

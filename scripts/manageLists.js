@@ -6,6 +6,15 @@
 (() => {
   const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
+  const extractBio = (cell) => {
+    const testId = cell.querySelector('[data-testid="UserDescription"]');
+    if (testId?.textContent?.trim()) return testId.textContent.trim();
+    const autoDir = cell.querySelector('[dir="auto"]:not([data-testid])');
+    const text = autoDir?.textContent?.trim();
+    if (text && text.length >= 10 && !text.startsWith('@')) return text;
+    return '';
+  };
+
   const CONFIG = {
     action: 'export', // 'export' or 'export_members'
     maxLists: 50,
@@ -59,7 +68,7 @@
       document.querySelectorAll('[data-testid="UserCell"]').forEach(user => {
         const name = user.querySelector('[dir="ltr"]')?.textContent || '';
         const handle = user.querySelector('a[role="link"]')?.href?.split('/').pop() || '';
-        const bio = user.querySelector('[data-testid="UserDescription"]')?.textContent || '';
+        const bio = extractBio(user);
         const isVerified = !!user.querySelector('[data-testid="icon-verified"]');
 
         if (handle && !members.find(m => m.handle === handle)) {

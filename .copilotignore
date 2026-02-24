@@ -1,0 +1,90 @@
+# ===========================================
+# .copilotignore - Reduce AI agent scanning
+# ===========================================
+# Prevents Copilot and AI tools from indexing
+# files that aren't needed for code generation.
+
+# Dependencies
+node_modules/
+
+# Lock files (large, no code value)
+package-lock.json
+bun.lockb
+
+# Build outputs
+dist/
+build/
+.next/
+es/
+lib/
+
+# Git
+.git/
+
+# Docs & examples (AI doesn't need to index these)
+docs/examples/
+seo-prompts/
+prompts/
+tutorials/
+GROWTH_STRATEGY.md
+ROADMAP.md
+AUDIT_REPORT.md
+CHANGELOG.md
+CODE_OF_CONDUCT.md
+CONTRIBUTING.md
+SECURITY.md
+CITATION.cff
+FEATURE_PROMPTS.md
+FEATURE_INVENTORY.md
+EXAMPLE_WRITER_PROMPT.md
+AGENT_PROMPTS.md
+humans.txt
+llms-full.txt
+llms.txt
+
+# Dashboard static HTML (not code AI needs to understand)
+dashboard/*.html
+dashboard/tutorials/
+
+# Archive (legacy scripts)
+archive/
+
+# SEO / marketing scripts
+scripts/twitter/
+
+# Deployment configs
+railway.json
+railway.toml
+nixpacks.toml
+vercel.json
+Procfile
+server.json
+
+# Database
+prisma/migrations/
+*.db
+*.sqlite
+
+# Testing artifacts
+coverage/
+.coverage/
+.nyc_output/
+test-output/
+e2e/reports/
+
+# Media / binary
+*.pdf
+*.patch
+*.ppt*
+*.doc*
+*.xls*
+.github/demos/
+
+# Environment
+.env*
+vertex-ai-key.json
+
+# AI tool caches
+.local/
+.claude/
+.serena/

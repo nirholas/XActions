@@ -17,7 +17,7 @@
     return;
   }
 
-  const { log, sleep, randomDelay, scrollBy, clickElement, waitForElement, storage, SELECTORS } = window.XActions.Core;
+  const { log, sleep, randomDelay, scrollBy, clickElement, waitForElement, storage, SELECTORS, extractUserFromCell } = window.XActions.Core;
 
   // ============================================
   // CONFIGURATION
@@ -148,37 +148,17 @@
   // GET USER INFO FROM CELL
   // ============================================
   const getUserInfoFromCell = (cell) => {
-    const info = {
-      username: null,
-      bio: null,
-      isProtected: false,
-      isVerified: false,
-      followers: 0,
+    const extracted = extractUserFromCell(cell);
+    if (!extracted) {
+      return { username: null, bio: null, isProtected: false, isVerified: false, followers: 0 };
+    }
+    return {
+      username: extracted.username || null,
+      bio: extracted.bio || null,
+      isProtected: extracted.isProtected || false,
+      isVerified: extracted.isVerified || false,
+      followers: extracted.followers || 0,
     };
-    
-    // Get username
-    const link = cell.querySelector('a[href^="/"]');
-    if (link) {
-      info.username = link.getAttribute('href').replace('/', '').toLowerCase();
-    }
-    
-    // Check if protected (lock icon)
-    info.isProtected = !!cell.querySelector('[data-testid="icon-lock"]');
-    
-    // Check if verified
-    info.isVerified = !!cell.querySelector('[data-testid="icon-verified"]');
-    
-    // Get bio (if visible in cell)
-    const spans = cell.querySelectorAll('span');
-    for (const span of spans) {
-      const text = span.textContent;
-      // Skip username and display name
-      if (text.startsWith('@') || text.length < 10) continue;
-      info.bio = text;
-      break;
-    }
-    
-    return info;
   };
 
   // ============================================

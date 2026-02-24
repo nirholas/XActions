@@ -90,11 +90,35 @@
     @media (max-width: 768px) { .sidebar-left { width: 68px; } .logo a span:last-child, .nav-item span:last-child { display: none; } .nav-item { justify-content: center; } .action-btn { width: 50px; height: 50px; padding: 0; font-size: 0; } .action-btn::before { content: '→'; font-size: 1.5rem; } }
     .site-footer { border-top: 1px solid var(--border); padding: 48px 24px; } .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px; } .footer-brand h3 { font-size: 1.25rem; margin-bottom: 8px; } .footer-brand p { color: var(--text-secondary); font-size: 0.875rem; } .footer-links h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 12px; } .footer-links a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 4px 0; } .footer-links a:hover { color: var(--accent); } .footer-bottom { max-width: 1200px; margin: 24px auto 0; padding-top: 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; } .footer-bottom p { color: var(--text-secondary); font-size: 0.8125rem; } .footer-bottom a { color: var(--text-secondary); } .footer-bottom a:hover { color: var(--accent); }
     @media (max-width: 768px) { .footer-content { grid-template-columns: 1fr 1fr; } }
+
+    /* Skip Navigation */
+    .skip-nav {
+      position: absolute;
+      top: -100%;
+      left: 16px;
+      background: var(--accent);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 700;
+      z-index: 9999;
+      text-decoration: none;
+    }
+    .skip-nav:focus {
+      top: 16px;
+    }
+
+    /* Visible focus styles */
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
   </style>
 </head>
 <body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
   <div class="layout">
-    <aside class="sidebar-left">
+    <aside class="sidebar-left" aria-label="Main navigation">
       <div class="logo"><a href="/"><span>⚡</span><span>XActions</span></a></div>
       <nav>
         <a href="/" class="nav-item"><span class="nav-icon">🏠</span><span>Home</span></a>
@@ -109,7 +133,7 @@
       <a href="/dashboard" class="action-btn">Open Dashboard</a>
     </aside>
 
-    <main class="main-content">
+    <main class="main-content" id="main-content">
       <header class="main-header"><h1>⚡ XActions Features</h1></header>
 
       <div style="background: linear-gradient(90deg, #00ba7c, #1d9bf0); padding: 12px 20px; border-radius: 12px; margin: 16px; text-align: center;">
@@ -982,7 +1006,7 @@ npx xactions mcp
       </section>
     </main>
 
-    <aside class="sidebar-right">
+    <aside class="sidebar-right" aria-label="Supplementary information">
       <div class="promo-card">
         <h3 class="promo-header">🚀 Getting Started</h3>
         <div class="promo-item"><h4>New here?</h4><p>Start with the free browser scripts!</p></div>

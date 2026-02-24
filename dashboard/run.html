@@ -415,9 +415,33 @@
         display: none;
       }
     }
+
+    /* Skip Navigation */
+    .skip-nav {
+      position: absolute;
+      top: -100%;
+      left: 16px;
+      background: var(--accent);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 700;
+      z-index: 9999;
+      text-decoration: none;
+    }
+    .skip-nav:focus {
+      top: 16px;
+    }
+
+    /* Visible focus styles */
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
   </style>
 </head>
 <body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
   <!-- Navigation -->
   <nav class="nav">
     <a href="/" class="nav-brand">
@@ -433,7 +457,7 @@
     </div>
   </nav>
 
-  <main class="main">
+  <main class="main" id="main-content">
     <!-- Hero -->
     <div class="hero">
       <h1>🚀 One-Click Scripts</h1>

@@ -12,6 +12,7 @@
 
 import puppeteer from 'puppeteer-extra';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
+import { scrape, getPlatform, platforms } from '../scrapers/index.js';
 
 puppeteer.use(StealthPlugin());
 
@@ -504,8 +505,87 @@ export async function x_download_video({ tweetUrl }) {
   };
 }
 
+// ============================================================================
+// Cross-Platform Scraping Tools
+// ============================================================================
+
+/**
+ * Multi-platform profile scraper
+ * Dispatches to the correct platform via the unified scrape() interface
+ */
+export async function x_get_profile_multiplatform({ username, platform = 'twitter', instance }) {
+  if (platform === 'twitter' || platform === 'x') {
+    return await x_get_profile({ username });
+  }
+
+  return await scrape(platform, 'profile', { username, instance });
+}
+
+/**
+ * Multi-platform followers scraper
+ */
+export async function x_get_followers_multiplatform({ username, platform = 'twitter', limit = 100, instance }) {
+  if (platform === 'twitter' || platform === 'x') {
+    return await x_get_followers({ username, limit });
+  }
+
+  return await scrape(platform, 'followers', { username, limit, instance });
+}
+
+/**
+ * Multi-platform following scraper
+ */
+export async function x_get_following_multiplatform({ username, platform = 'twitter', limit = 100, instance }) {
+  if (platform === 'twitter' || platform === 'x') {
+    return await x_get_following({ username, limit });
+  }
+
+  return await scrape(platform, 'following', { username, limit, instance });
+}
+
+/**
+ * Multi-platform tweets/posts scraper
+ */
+export async function x_get_tweets_multiplatform({ username, platform = 'twitter', limit = 50, instance }) {
+  if (platform === 'twitter' || platform === 'x') {
+    return await x_get_tweets({ username, limit });
+  }
+
+  return await scrape(platform, 'tweets', { username, limit, instance });
+}
+
+/**
+ * Multi-platform search
+ */
+export async function x_search_tweets_multiplatform({ query, platform = 'twitter', limit = 50, instance }) {
+  if (platform === 'twitter' || platform === 'x') {
+    return await x_search_tweets({ query, limit });
+  }
+
+  return await scrape(platform, 'search', { query, limit, instance });
+}
+
+/**
+ * List supported platforms
+ */
+export async function x_list_platforms() {
+  return {
+    platforms: [
+      { name: 'twitter', aliases: ['x'], description: 'X/Twitter — Puppeteer-based scraping', requiresAuth: true },
+      { name: 'bluesky', aliases: ['bsky'], description: 'Bluesky — AT Protocol API (no Puppeteer)', requiresAuth: false },
+      { name: 'mastodon', aliases: ['masto'], description: 'Mastodon — REST API (any instance, no Puppeteer)', requiresAuth: false },
+      { name: 'threads', aliases: [], description: 'Threads — Puppeteer-based scraping', requiresAuth: false },
+    ],
+  };
+}
+
+// ============================================================================
+// Tool Map Export
+// ============================================================================
+
 // Export all tools as a map for dynamic lookup
 export const toolMap = {
+  // Twitter-specific tools
   x_login,
   x_get_profile,
   x_get_followers,
@@ -521,6 +601,14 @@ export const toolMap = {
   x_unfollow_non_followers,
   x_detect_unfollowers,
   x_download_video,
+
+  // Cross-platform tools (dispatch by platform param)
+  x_get_profile_multiplatform,
+  x_get_followers_multiplatform,
+  x_get_following_multiplatform,
+  x_get_tweets_multiplatform,
+  x_search_tweets_multiplatform,
+  x_list_platforms,
 };
 
 export default toolMap;

@@ -14,7 +14,7 @@
     return;
   }
 
-  const { log, sleep, randomDelay, scrollBy, clickElement, waitForElement, storage, rateLimit, SELECTORS } = window.XActions.Core;
+  const { log, sleep, randomDelay, scrollBy, clickElement, waitForElement, storage, rateLimit, SELECTORS, extractUserFromCell, parseCount } = window.XActions.Core;
 
   // ============================================
   // CONFIGURATION
@@ -77,41 +77,7 @@
   // USER EXTRACTION
   // ============================================
   const extractUserInfo = (userCell) => {
-    try {
-      const link = userCell.querySelector('a[href^="/"]');
-      const username = link?.getAttribute('href')?.replace('/', '') || '';
-      
-      const nameEl = userCell.querySelector('[dir="ltr"] > span');
-      const displayName = nameEl?.textContent || username;
-      
-      const bioEl = userCell.querySelector('[data-testid="UserDescription"]');
-      const bio = bioEl?.textContent || '';
-      
-      // Try to get follower count (might not always be visible)
-      const statsText = userCell.textContent || '';
-      const followerMatch = statsText.match(/(\d+(?:,\d+)*(?:\.\d+)?[KMB]?)\s*Followers/i);
-      let followers = 0;
-      if (followerMatch) {
-        followers = parseFollowerCount(followerMatch[1]);
-      }
-      
-      const isFollowing = !!userCell.querySelector(SELECTORS.unfollowButton);
-      const followsYou = !!userCell.querySelector(SELECTORS.userFollowIndicator);
-      
-      return { username, displayName, bio, followers, isFollowing, followsYou };
-    } catch (e) {
-      return null;
-    }
-  };
-
-  const parseFollowerCount = (str) => {
-    if (!str) return 0;
-    str = str.replace(/,/g, '');
-    const num = parseFloat(str);
-    if (str.includes('K')) return num * 1000;
-    if (str.includes('M')) return num * 1000000;
-    if (str.includes('B')) return num * 1000000000;
-    return num;
+    return extractUserFromCell(userCell);
   };
 
   // ============================================
@@ -197,7 +163,7 @@
         const userInfo = extractUserInfo(cell);
         if (!passesFilters(userInfo)) continue;
 
-        log(`Found match: @${userInfo.username} - "${userInfo.bio?.substring(0, 50)}..."`, 'info');
+        log(`Found match: @${userInfo.username} [bio:${userInfo._meta?.bioStrategy}] - "${userInfo.bio?.substring(0, 50)}..."`, 'info');
         
         await followUser(cell, userInfo);
         keywordFollows++;

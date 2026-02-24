@@ -3,25 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI API - XActions | Pay-per-Request X/Twitter Automation</title>
-  <meta name="description" content="XActions AI API - Pay-per-request API for AI agents via x402 protocol. No subscriptions, no minimums. Scrape profiles, automate unfollows, monitor accounts.">
-  <meta name="keywords" content="Twitter API, X API, AI agent, x402, pay per request, micropayments, MCP server, Claude, GPT, Twitter automation API">
+  <title>AI API - XActions | Free & Open Source X/Twitter Automation</title>
+  <meta name="description" content="XActions AI API - Free, open-source API for AI agents. Use locally or self-host with optional x402 micropayments. No subscriptions, no API keys.">
+  <meta name="keywords" content="Twitter API, X API, AI agent, free twitter api, MCP server, Claude, GPT, Twitter automation API, open source">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
   <meta property="og:type" content="article">
-  <meta property="og:title" content="XActions AI API - Pay-per-Request X/Twitter Automation">
-  <meta property="og:description" content="API for AI agents with micropayment support via x402 protocol. No subscriptions, pay only for what you use.">
+  <meta property="og:title" content="XActions AI API - Free & Open Source X/Twitter Automation">
+  <meta property="og:description" content="Free API for AI agents. Use locally or self-host. Optional x402 micropayments for remote mode.">
   <meta property="og:url" content="https://xactions.app/ai-api">
   <meta property="og:site_name" content="XActions">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="XActions AI API - x402 Micropayments">
+  <meta name="twitter:title" content="XActions AI API - Free & Open Source">
   <meta name="twitter:description" content="Pay-per-request API for AI agents. No subscriptions. x402 micropayments.">
   <link rel="canonical" href="https://xactions.app/ai-api">
   <link rel="manifest" href="/manifest.json">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"TechArticle","headline":"XActions AI API Documentation","description":"Pay-per-request API for AI agents via x402 protocol","url":"https://xactions.app/ai-api","author":{"@type":"Person","name":"nich"},"publisher":{"@type":"Organization","name":"XActions"}}
+  {"@context":"https://schema.org","@type":"TechArticle","headline":"XActions AI API Documentation","description":"Free, open-source API for AI agents. Local or self-hosted.","url":"https://xactions.app/ai-api","author":{"@type":"Person","name":"nich"},"publisher":{"@type":"Organization","name":"XActions"}}
   </script>
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://xactions.app"},{"@type":"ListItem","position":2,"name":"AI API","item":"https://xactions.app/ai-api"}]}
@@ -169,27 +169,27 @@
       <header class="main-header"><h1>🤖 XActions AI API</h1></header>
       
       <div class="content">
-        <p class="subtitle">Pay-per-request API for AI agents via x402 protocol</p>
+        <p class="subtitle">Free & open-source API for AI agents — local or self-hosted</p>
         
         <!-- Dual Tier System -->
         <div class="tier-banner">
           <div class="tier-card free">
-            <h3>🆓 Humans: FREE</h3>
-            <p>Browser scripts, CLI, Node.js library, local MCP server</p>
+            <h3>🆓 Local Mode: FREE</h3>
+            <p>Browser scripts, CLI, Node.js library, local MCP server — no limits</p>
           </div>
           <div class="tier-card paid">
-            <h3>🤖 AI Agents: Pay-per-Use</h3>
-            <p>Remote API with x402 micropayments</p>
+            <h3>☁️ Remote Mode: Self-Hosted</h3>
+            <p>Host your own API with optional micropayments</p>
           </div>
         </div>
         
         <div class="info-box">
-          <p><strong>Why the difference?</strong> AI agents can make thousands of requests per minute. The x402 protocol enables fair, usage-based pricing with instant micropayments—no subscriptions, no minimums, no API keys to manage.</p>
+          <p><strong>Everything is free.</strong> Run locally with zero cost. If you self-host the remote API, you can optionally enable x402 micropayments for AI agent access — but it's entirely optional.</p>
         </div>
         
-        <!-- Pricing Section -->
-        <h2 id="pricing">💰 Pricing</h2>
-        <p>Pay only for what you use. Prices in USD, paid via x402 protocol (ETH/USDC).</p>
+        <!-- Pricing Section (Optional x402) -->
+        <h2 id="pricing">💰 Remote API Pricing (Optional)</h2>
+        <p>If you enable x402 micropayments on your self-hosted API, these are the default per-request prices:</p>
         
         <div class="pricing-grid">
           <div class="pricing-card">
@@ -244,8 +244,8 @@
 }</code></pre>
         </div>
         
-        <h3>Direct API Usage</h3>
-        <p>The x402 protocol uses HTTP 402 (Payment Required) responses:</p>
+        <h3>Direct API Usage (with x402 enabled)</h3>
+        <p>If x402 is enabled on the remote server, the protocol uses HTTP 402 (Payment Required) responses:</p>
         <div class="code-wrapper">
           <button class="copy-btn" onclick="copyCode(this)">Copy</button>
           <pre><code>// 1. Make initial request
@@ -280,9 +280,9 @@ const profile = await paidResponse.json();
 // { username: 'elonmusk', name: 'Elon Musk', followers: 150000000, ... }</code></pre>
         </div>
         
-        <!-- x402 Protocol -->
-        <h2 id="x402">🔐 x402 Protocol</h2>
-        <p>x402 is an open protocol for HTTP-native payments. No API keys, no accounts—just sign requests with your Ethereum wallet.</p>
+        <!-- x402 Protocol (Optional) -->
+        <h2 id="x402">🔐 x402 Protocol (Optional)</h2>
+        <p>x402 is an open protocol for HTTP-native payments. If you enable it on your self-hosted API, agents pay per request — no API keys, no accounts needed.</p>
         
         <h3>How It Works</h3>
         <ol>
@@ -402,8 +402,11 @@ const profile = await paidResponse.json();
         <h3>Why charge AI agents but not humans?</h3>
         <p>Humans manually run scripts occasionally. AI agents can make thousands of automated requests. Usage-based pricing ensures fair access and sustainable infrastructure.</p>
         
+        <h3>Do I need to pay anything?</h3>
+        <p>No! Everything is free. The local MCP server has full functionality. x402 micropayments are an optional feature only for self-hosted remote APIs.</p>
+        
         <h3>Do I need an API key?</h3>
-        <p>No! The x402 protocol uses cryptographic signatures instead of API keys. Just sign payments with your Ethereum wallet.</p>
+        <p>No! If x402 is enabled, it uses cryptographic signatures instead of API keys.</p>
         
         <h3>What's the minimum payment?</h3>
         <p>As low as $0.001. No minimums, no prepaying, no subscriptions.</p>
@@ -419,9 +422,9 @@ const profile = await paidResponse.json();
     <aside class="sidebar-right" aria-label="Supplementary information">
       <div class="info-sidebar">
         <h3>📖 On This Page</h3>
-        <a href="#pricing">Pricing</a>
+        <a href="#pricing">Remote API Pricing</a>
         <a href="#quickstart">Quick Start</a>
-        <a href="#x402">x402 Protocol</a>
+        <a href="#x402">x402 Protocol (Optional)</a>
         <a href="#endpoints">API Endpoints</a>
         <a href="#free">Free Alternatives</a>
         <a href="#faq">FAQ</a>

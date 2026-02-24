@@ -29,7 +29,9 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
   
   <!-- Socket.io for real-time browser-to-browser communication -->
-  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <link rel="preconnect" href="https://cdn.socket.io" crossorigin>
+  <link rel="dns-prefetch" href="//cdn.socket.io">
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js" defer></script>
   
   <!-- Structured Data -->
   <script type="application/ld+json">
@@ -1520,25 +1522,13 @@
       return names[op] || op;
     }
 
-    // Modified operation modal to use WebSocket
-    function openOperationModal(operation) {
+    // WebSocket-based operation trigger (used when agent is connected)
+    function runOperationViaSocket(operation, config) {
       if (!agentConnected) {
-        alert('Please connect your browser first!\\n\\nClick "Connect Browser" and follow the instructions.');
+        alert('Please connect your browser first!\n\nClick "Connect Browser" and follow the instructions.');
         return;
       }
-      
-      currentOperation = operation;
-      
-      // Simple confirm and run
-      const config = {};
-      if (operation === 'unfollowNonFollowers' || operation === 'unfollowEveryone') {
-        const max = prompt('How many accounts to unfollow? (default: 100)', '100');
-        config.maxUnfollows = parseInt(max) || 100;
-      }
-      
-      if (confirm(\`Run \${formatOperationName(operation)}?\`)) {
-        socket.emit('start:operation', { operation, config });
-      }
+      socket.emit('start:operation', { operation, config });
     }
 
     // Initialize socket on page load
@@ -1805,10 +1795,7 @@
     loadDashboard();
     setInterval(loadRecentOperations, 10000);
 
-    // Auto-connect socket on page load if logged in
-    if (authToken) {
-      initSocket();
-    }
+    // Socket already initialized above — no duplicate call
   </script>
 
   <footer class="site-footer">
