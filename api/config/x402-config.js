@@ -102,6 +102,77 @@ export const AI_OPERATION_PRICES = {
   'download:video': '$0.005',        // Video download
   'export:bookmarks': '$0.01',       // Bookmark export
   'unroll:thread': '$0.002',         // Thread unroller
+  
+  // Profile operations
+  'profile:get': '$0.001',           // Get profile info
+  'profile:update': '$0.01',         // Update profile fields
+  
+  // Posting operations
+  'posting:tweet': '$0.005',         // Post a tweet
+  'posting:thread': '$0.01',         // Post a thread
+  'posting:poll': '$0.01',           // Create a poll
+  'posting:schedule': '$0.005',      // Schedule a post
+  'posting:delete': '$0.002',        // Delete a tweet
+  
+  // Engagement operations
+  'engagement:like': '$0.002',       // Like a tweet
+  'engagement:unlike': '$0.002',     // Unlike a tweet
+  'engagement:reply': '$0.005',      // Reply to a tweet
+  'engagement:bookmark': '$0.002',   // Bookmark a tweet
+  'engagement:auto-like': '$0.02',   // Auto-like by keywords
+  'engagement:analytics': '$0.01',   // Engagement analytics
+  
+  // Discovery operations
+  'discovery:search': '$0.01',       // Search tweets
+  'discovery:trends': '$0.005',      // Get trending topics
+  'discovery:explore': '$0.005',     // Explore feed
+  
+  // Notification operations
+  'notifications:get': '$0.005',     // Get notifications
+  'notifications:mute': '$0.002',    // Mute a user
+  'notifications:unmute': '$0.002',  // Unmute a user
+  
+  // DM operations
+  'messages:send': '$0.01',          // Send a DM
+  'messages:conversations': '$0.005', // List conversations
+  'messages:export': '$0.02',        // Export DMs
+  
+  // Bookmark operations
+  'bookmarks:get': '$0.01',          // Get bookmarks
+  'bookmarks:folder': '$0.005',      // Create folder
+  'bookmarks:clear': '$0.01',        // Clear all bookmarks
+  
+  // Creator operations
+  'creator:analytics': '$0.01',      // Creator analytics
+  'creator:revenue': '$0.005',       // Revenue info
+  'creator:subscribers': '$0.01',    // Subscriber list
+  
+  // Spaces operations
+  'spaces:live': '$0.005',           // Live Spaces
+  'spaces:scheduled': '$0.005',      // Scheduled Spaces
+  'spaces:scrape': '$0.01',          // Scrape a Space
+  
+  // Settings operations
+  'settings:get': '$0.005',          // Get settings
+  'settings:protected': '$0.005',    // Toggle protected
+  'settings:blocked': '$0.01',       // Get blocked accounts
+  'settings:muted': '$0.01',         // Get muted accounts
+  'settings:download-data': '$0.02', // Request data download
+  
+  // Grok AI operations
+  'grok:query': '$0.02',             // Query Grok
+  'grok:summarize': '$0.02',         // Summarize topic
+  
+  // Business operations
+  'business:brand-monitor': '$0.03', // Brand monitoring
+  'business:competitor': '$0.03',    // Competitor analysis
+  
+  // Premium operations
+  'premium:check': '$0.001',         // Check premium status
+  
+  // Article operations
+  'article:publish': '$0.05',        // Publish article
+  'article:analytics': '$0.01',      // Article analytics
 };
 
 // Route configuration for x402 middleware

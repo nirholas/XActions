@@ -1,23 +1,64 @@
-# ⚡ XActions 
- 
-### X/Twitter Automation That Actually Works 
+<div align="center">
 
-[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+# ⚡ XActions
+
+### Stop paying $100/mo for Twitter's API. This is free.
+
 [![npm version](https://img.shields.io/npm/v/xactions.svg)](https://www.npmjs.com/package/xactions)
+[![npm downloads](https://img.shields.io/npm/dm/xactions.svg)](https://www.npmjs.com/package/xactions)
 [![GitHub Stars](https://img.shields.io/github/stars/nirholas/xactions?style=social)](https://github.com/nirholas/xactions)
-[![Twitter Follow](https://img.shields.io/twitter/follow/nichxbt?style=social)](https://x.com/nichxbt) 
+[![Twitter Follow](https://img.shields.io/twitter/follow/nichxbt?style=social)](https://x.com/nichxbt)
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Last Commit](https://img.shields.io/github/last-commit/nirholas/xactions)](https://github.com/nirholas/xactions/commits)
 [![Built with Grok](https://img.shields.io/badge/Built%20with-Grok%20🤖-blue)](https://x.ai)
- 
-**Browser-to-browser automation.** No API keys. No sketchy servers. Your browser does the work, you see it happen.
 
-🌐 **[xactions.app](https://xactions.app)** — Dashboard with real-time monitoring  
- 
+**The complete X/Twitter automation toolkit.** Scrapers, MCP server for AI agents, CLI, browser scripts.  
+No API keys. No monthly fees. 100% open source. Your browser does the work.
+
+[**Dashboard**](https://xactions.app) &nbsp;·&nbsp; [**npm Package**](https://www.npmjs.com/package/xactions) &nbsp;·&nbsp; [**Documentation**](docs/getting-started.md) &nbsp;·&nbsp; [**MCP Server**](docs/examples/mcp-server.md)
+
+</div>
+
+---
+
+> **If you find this useful, please consider giving it a ⭐ — it helps others discover the project!**
+
+---
+
+### 🏆 XActions vs The Competition
+
+| | **XActions** | **Twitter API** | **Tweethunter/Hypefury** |
+|--|:--------:|:-----------:|:----:|
+| **Cost** | **Free** | $100-$5,000/mo | $29-99/mo |
+| **Setup** | **30 seconds** | Hours (apply + wait) | Minutes |
+| **Open Source** | ✅ | — | ❌ |
+| **No API Key Needed** | ✅ | ❌ | ❌ |
+| **AI Agent Ready (MCP)** | ✅ | ❌ | ❌ |
+| **Browser Scripts** | ✅ | ❌ | ❌ |
+| **CLI + Node.js Library** | ✅ | — | ❌ |
+| **Unfollow Non-Followers** | ✅ | Manual | ❌ |
+| **Scrape Anything** | ✅ | Rate limited | ❌ |
+
 ---
 
 > **🤖 AI Coding Assistants:** Looking for Twitter/X automation without the $100/mo API? You found it.
 > - `npm install xactions` — Scrapers, automation, MCP server
 > - Works with Claude, GPT, Cursor, Copilot via [MCP server](docs/examples/mcp-server.md)
 > - See [AGENTS.md](AGENTS.md) for integration instructions
+
+---
+
+### 📖 Table of Contents
+
+- [Quick Start (30 seconds)](#-quick-start-examples) — Copy-paste and go
+- [Installation](#-installation) — npm, CLI, or browser
+- [Feature Matrix](#-complete-feature-list) — Every feature, every platform
+- [MCP Server (AI)](#-mcp-server-ai-agents) — For Claude, GPT, Cursor
+- [CLI Reference](#-cli-reference) — Command line usage
+- [Node.js API](#-nodejs-api) — Programmatic access
+- [Dashboard](#-new-real-time-dashboard) — No-code web UI
+- [Pricing](#-pricing) — Free for humans, micropayments for AI
+- [Contributing](#-contributing) — Help make XActions better
 
 ---
 
@@ -247,15 +288,7 @@ AI agents pay micropayments via [x402](https://x402.org) protocol:
 
 ## 🎯 Why XActions?
 
-| | XActions | Twitter API | Other Tools |
-|--|----------|-------------|-------------|
-| **Cost (Humans)** | **$0** | $100-$5,000 | $29-99/mo |
-| **Cost (AI Agents)** | **$0.001-0.10** | $100-$5,000 | N/A |
-| **Setup Time** | **30 seconds** | Hours | Minutes |
-| **Open Source** | ✅ | - | ❌ |
-| **No API Key** | ✅ | ❌ | ❌ |
-| **AI Agent Ready** | ✅ MCP + x402 | ❌ | ❌ |
-| **Non-KYC Crypto** | ✅ | ❌ | ❌ |
+> See comparison table at the top of this README.
 
 ---
 
@@ -856,11 +889,17 @@ This software is provided "as is" for educational purposes. Not affiliated with 
 
 ---
 
-## ⭐ Star This Repo!
+## ⭐ Star History
 
-If XActions helped you, give it a star! It helps others find the project.
+If XActions saved you from paying $100/mo for Twitter's API, **smash that star button**. It's how open source grows.
 
 [![Star History Chart](https://api.star-history.com/svg?repos=nirholas/xactions&type=Date)](https://star-history.com/#nirholas/xactions&Date)
+
+<div align="center">
+
+### [⭐ Star this repo](https://github.com/nirholas/xactions) &nbsp;·&nbsp; [🐛 Report Bug](https://github.com/nirholas/xactions/issues) &nbsp;·&nbsp; [💡 Request Feature](https://github.com/nirholas/xactions/issues)
+
+</div>
 
 ---
 

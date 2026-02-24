@@ -8,6 +8,60 @@
 
 You are a world-class technical writer and SEO specialist writing example documentation for **XActions** — the complete free X/Twitter automation toolkit. Your job is to create **one detailed, real-world example page** for every feature listed below.
 
+### 🚨 CRITICAL RULE: DO NOT MODIFY EXISTING FILES
+
+> **NEVER overwrite, delete, rename, or edit any existing file in `docs/examples/`.** 
+> Existing documentation has been hand-written and must be preserved exactly as-is.
+>
+> - If a `docs/examples/[feature].md` file **already exists** → **CREATE A NEW FILE** with the suffix `-tutorial.md` (e.g., `unfollow-everyone-tutorial.md`) and place it in `docs/examples/tutorials/`
+> - If a `docs/examples/[feature].md` file **does NOT exist** → create it normally in `docs/examples/`
+> - **NEVER** run any delete, move, rename, or overwrite operation on existing files
+> - Read existing files for **reference only** — to understand tone, see what's already covered, and link to them. Do not duplicate their content.
+> - The `docs/examples/README.md` index should be **appended to** (add new entries), never replaced
+
+**Existing files to LEAVE UNTOUCHED (as of Feb 2026):**
+```
+docs/examples/README.md
+docs/examples/auto-commenter.md
+docs/examples/auto-liker.md
+docs/examples/auto-repost.md
+docs/examples/bookmark-exporter.md
+docs/examples/create-poll.md
+docs/examples/detect-unfollowers.md
+docs/examples/engagement-analytics.md
+docs/examples/follow-engagers.md
+docs/examples/follow-target-followers.md
+docs/examples/followers-scraping.md
+docs/examples/following-scraping.md
+docs/examples/growth-suite.md
+docs/examples/hashtag-scraping.md
+docs/examples/keyword-follow.md
+docs/examples/leave-all-communities.md
+docs/examples/likes-scraping.md
+docs/examples/link-scraper.md
+docs/examples/list-scraping.md
+docs/examples/mass-block-unblock.md
+docs/examples/mcp-server.md
+docs/examples/media-scraping.md
+docs/examples/monitor-account.md
+docs/examples/multi-account.md
+docs/examples/new-follower-alerts.md
+docs/examples/post-thread.md
+docs/examples/profile-scraping.md
+docs/examples/schedule-posts.md
+docs/examples/search-tweets.md
+docs/examples/send-direct-message.md
+docs/examples/smart-unfollow.md
+docs/examples/thread-scraping.md
+docs/examples/thread-unroller.md
+docs/examples/tweet-scraping.md
+docs/examples/unfollow-everyone.md
+docs/examples/unfollow-non-followers.md
+docs/examples/unlike-all-posts.md
+docs/examples/video-downloader.md
+docs/examples/viral-tweet-scraper.md
+```
+
 Every example must be:
 - **Real-world** — a believable scenario someone would actually do on X.com (not abstract)
 - **Visual** — rich with ASCII diagrams, terminal output previews, before/after comparisons, emoji-styled step cards, and formatted output samples that make the reader go "wow"
@@ -418,6 +472,7 @@ Time spent: 3 days clicking     Time spent: 12 minutes
 
 ## Quality Bar — Every Example Must Pass These Checks
 
+- [ ] **No existing files were modified** — all existing `docs/examples/*.md` files are untouched
 - [ ] **Scenario is specific and relatable** — not "scrape some data" but "export your 10,000 followers to a Google Sheet for your marketing team"
 - [ ] **Code is 100% copy-paste ready** — no placeholders like `YOUR_TOKEN_HERE` unless absolutely required, and if so, show exactly where to find it
 - [ ] **Output preview looks real** — use realistic usernames, numbers, timestamps
@@ -448,10 +503,13 @@ Time spent: 3 days clicking     Time spent: 12 minutes
 
 Save each file as:
 ```
-docs/examples/[feature-slug].md
+docs/examples/[feature-slug].md          # ← ONLY if this file does NOT already exist
+docs/examples/tutorials/[feature-slug]-tutorial.md  # ← if the base file ALREADY exists
 ```
 
 Using kebab-case matching the feature names above (e.g., `unfollow-everyone.md`, `profile-scraping.md`, `auto-liker.md`).
+
+> ⚠️ **Reminder:** Since most `docs/examples/*.md` files already exist, most new files will go into `docs/examples/tutorials/`. Create that directory if it doesn’t exist.
 
 ---
 
@@ -469,8 +527,10 @@ Using kebab-case matching the feature names above (e.g., `unfollow-everyone.md`,
 3. **For each feature:**
    - Read the corresponding source file in `src/` or `scripts/` to get the exact working code
    - Read the corresponding `skills/[category]/SKILL.md` for full feature documentation
-   - Read any existing `docs/examples/[feature].md` to improve upon (not duplicate) existing content
+   - **Check if `docs/examples/[feature].md` already exists** — if YES, read it for reference but **DO NOT MODIFY IT**. Instead, create a new companion file at `docs/examples/tutorials/[feature]-tutorial.md`
+   - If the example file does NOT exist yet, create it at `docs/examples/[feature].md`
    - Produce the complete Markdown file following the template above
+   - Link to the existing doc where relevant ("For the quick-start version, see [feature](../feature.md)")
 
 4. **Cross-link everything** — every page should form part of an interconnected web of content
 

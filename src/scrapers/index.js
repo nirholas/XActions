@@ -663,6 +663,229 @@ export async function exportToCSV(data, filename) {
 }
 
 // ============================================================================
+// Scrape Bookmarks
+// ============================================================================
+
+/**
+ * Scrape bookmarked tweets (requires login)
+ */
+export async function scrapeBookmarks(page, options = {}) {
+  const { limit = 100, scrollDelay = 2000 } = options;
+  
+  await page.goto('https://x.com/i/bookmarks', { waitUntil: 'networkidle2' });
+  await randomDelay(2000, 3000);
+  
+  const bookmarks = [];
+  const seen = new Set();
+  let scrolls = 0;
+  const maxScrolls = Math.ceil(limit / 5);
+  
+  while (bookmarks.length < limit && scrolls < maxScrolls) {
+    const tweets = await page.$$eval('article[data-testid="tweet"]', (articles) =>
+      articles.map((article) => {
+        const text = article.querySelector('[data-testid="tweetText"]')?.innerText || '';
+        const author = article.querySelector('[data-testid="User-Name"] a')?.getAttribute('href')?.replace('/', '') || '';
+        const time = article.querySelector('time')?.getAttribute('datetime') || '';
+        const likes = article.querySelector('[data-testid="like"] span')?.innerText || '0';
+        const retweets = article.querySelector('[data-testid="retweet"] span')?.innerText || '0';
+        const link = article.querySelector('a[href*="/status/"]')?.getAttribute('href') || '';
+        return { author, text, time, likes, retweets, link: link ? `https://x.com${link}` : '' };
+      })
+    );
+    
+    for (const tweet of tweets) {
+      const key = tweet.link || tweet.text.slice(0, 80);
+      if (!seen.has(key) && key) {
+        seen.add(key);
+        bookmarks.push(tweet);
+      }
+    }
+    
+    await page.evaluate(() => window.scrollBy(0, window.innerHeight * 2));
+    await sleep(scrollDelay);
+    scrolls++;
+  }
+  
+  return bookmarks.slice(0, limit);
+}
+
+// ============================================================================
+// Scrape Notifications
+// ============================================================================
+
+/**
+ * Scrape recent notifications (requires login)
+ */
+export async function scrapeNotifications(page, options = {}) {
+  const { limit = 50, tab = 'all', scrollDelay = 2000 } = options;
+  
+  const url = tab === 'mentions'
+    ? 'https://x.com/notifications/mentions'
+    : 'https://x.com/notifications';
+  
+  await page.goto(url, { waitUntil: 'networkidle2' });
+  await randomDelay(2000, 3000);
+  
+  const notifications = [];
+  const seen = new Set();
+  let scrolls = 0;
+  const maxScrolls = Math.ceil(limit / 5);
+  
+  while (notifications.length < limit && scrolls < maxScrolls) {
+    const items = await page.$$eval('article[data-testid="tweet"], [data-testid="notification"]', (els) =>
+      els.map((el) => {
+        const text = el.innerText || '';
+        const time = el.querySelector('time')?.getAttribute('datetime') || '';
+        const links = Array.from(el.querySelectorAll('a[href*="/status/"]')).map(a => a.getAttribute('href'));
+        return { text: text.slice(0, 280), time, links: links.map(l => `https://x.com${l}`) };
+      })
+    );
+    
+    for (const item of items) {
+      const key = item.text.slice(0, 100) + item.time;
+      if (!seen.has(key) && key.trim()) {
+        seen.add(key);
+        notifications.push(item);
+      }
+    }
+    
+    await page.evaluate(() => window.scrollBy(0, window.innerHeight * 2));
+    await sleep(scrollDelay);
+    scrolls++;
+  }
+  
+  return notifications.slice(0, limit);
+}
+
+// ============================================================================
+// Scrape Trending Topics
+// ============================================================================
+
+/**
+ * Scrape trending topics from the Explore page
+ */
+export async function scrapeTrending(page, options = {}) {
+  const { limit = 30 } = options;
+  
+  await page.goto('https://x.com/explore/tabs/trending', { waitUntil: 'networkidle2' });
+  await randomDelay(2000, 3000);
+  
+  // Scroll a few times to load more trends
+  for (let i = 0; i < 3; i++) {
+    await page.evaluate(() => window.scrollBy(0, window.innerHeight));
+    await sleep(1500);
+  }
+  
+  const trends = await page.$$eval('[data-testid="trend"]', (els) =>
+    els.map((el) => {
+      const spans = el.querySelectorAll('span');
+      const texts = Array.from(spans).map(s => s.innerText).filter(Boolean);
+      const category = texts[0] || '';
+      const topic = texts.find(t => t.startsWith('#') || t.length > 3) || texts[1] || '';
+      const posts = texts.find(t => /posts|tweets/i.test(t)) || '';
+      return { category, topic, posts };
+    })
+  );
+  
+  return trends.slice(0, limit);
+}
+
+// ============================================================================
+// Scrape Community Members
+// ============================================================================
+
+/**
+ * Scrape members of an X Community
+ */
+export async function scrapeCommunityMembers(page, communityUrl, options = {}) {
+  const { limit = 100, scrollDelay = 2000 } = options;
+  
+  const membersUrl = communityUrl.endsWith('/members')
+    ? communityUrl
+    : `${communityUrl}/members`;
+  
+  await page.goto(membersUrl, { waitUntil: 'networkidle2' });
+  await randomDelay(2000, 3000);
+  
+  const members = [];
+  const seen = new Set();
+  let scrolls = 0;
+  const maxScrolls = Math.ceil(limit / 10);
+  
+  while (members.length < limit && scrolls < maxScrolls) {
+    const users = await page.$$eval('[data-testid="UserCell"]', (cells) =>
+      cells.map((cell) => {
+        const name = cell.querySelector('[dir="ltr"] span')?.innerText || '';
+        const handle = cell.querySelector('a[href^="/"]')?.getAttribute('href')?.replace('/', '') || '';
+        const bio = cell.querySelector('[data-testid="userDescription"]')?.innerText || '';
+        return { name, handle, bio };
+      })
+    );
+    
+    for (const user of users) {
+      if (!seen.has(user.handle) && user.handle) {
+        seen.add(user.handle);
+        members.push(user);
+      }
+    }
+    
+    await page.evaluate(() => window.scrollBy(0, window.innerHeight * 2));
+    await sleep(scrollDelay);
+    scrolls++;
+  }
+  
+  return members.slice(0, limit);
+}
+
+// ============================================================================
+// Scrape Spaces
+// ============================================================================
+
+/**
+ * Scrape X Spaces from search results
+ */
+export async function scrapeSpaces(page, query, options = {}) {
+  const { limit = 20, scrollDelay = 2000 } = options;
+  
+  await page.goto(`https://x.com/search?q=${encodeURIComponent(query)}&f=top`, {
+    waitUntil: 'networkidle2',
+  });
+  await randomDelay(2000, 3000);
+  
+  const spaces = [];
+  const seen = new Set();
+  let scrolls = 0;
+  const maxScrolls = Math.ceil(limit / 3);
+  
+  while (spaces.length < limit && scrolls < maxScrolls) {
+    const found = await page.$$eval('a[href*="/i/spaces/"]', (links) =>
+      links.map((link) => {
+        const href = link.getAttribute('href') || '';
+        const card = link.closest('div[data-testid]') || link.parentElement;
+        const title = card?.querySelector('span')?.innerText || '';
+        return {
+          title,
+          link: href.startsWith('http') ? href : `https://x.com${href}`,
+        };
+      })
+    );
+    
+    for (const space of found) {
+      if (!seen.has(space.link) && space.link) {
+        seen.add(space.link);
+        spaces.push(space);
+      }
+    }
+    
+    await page.evaluate(() => window.scrollBy(0, window.innerHeight * 2));
+    await sleep(scrollDelay);
+    scrolls++;
+  }
+  
+  return spaces.slice(0, limit);
+}
+
+// ============================================================================
 // Main Export
 // ============================================================================
 
@@ -683,6 +906,11 @@ export default {
   scrapeHashtag,
   scrapeMedia,
   scrapeListMembers,
+  scrapeBookmarks,
+  scrapeNotifications,
+  scrapeTrending,
+  scrapeCommunityMembers,
+  scrapeSpaces,
   
   // Export
   exportToJSON,

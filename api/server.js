@@ -37,6 +37,16 @@ import adminRoutes from './routes/admin.js';
 import webhookRoutes from './routes/webhooks.js';
 // AI API routes - modular structure optimized for AI agent consumption
 import aiRoutes from './routes/ai/index.js';
+// Feature routes - comprehensive X/Twitter feature coverage
+import profileRoutes from './routes/profile.js';
+import postingRoutes from './routes/posting.js';
+import engagementRoutes from './routes/engagement.js';
+import discoveryRoutes from './routes/discovery.js';
+import messagesRoutes from './routes/messages.js';
+import bookmarksRoutes from './routes/bookmarks.js';
+import creatorRoutes from './routes/creator.js';
+import spacesRoutes from './routes/spaces.js';
+import settingsRoutes from './routes/settings.js';
 import { initializeSocketIO } from './realtime/socketHandler.js';
 import { initializeLicensing, brandingMiddleware } from './services/licensing.js';
 
@@ -148,6 +158,16 @@ app.use('/api/twitter', twitterRoutes);
 app.use('/api/session', sessionAuthRoutes);
 app.use('/api/license', licenseRoutes);
 app.use('/api/admin', adminRoutes);
+// Feature routes
+app.use('/api/profile', profileRoutes);
+app.use('/api/posting', postingRoutes);
+app.use('/api/engagement', engagementRoutes);
+app.use('/api/discovery', discoveryRoutes);
+app.use('/api/messages', messagesRoutes);
+app.use('/api/bookmarks', bookmarksRoutes);
+app.use('/api/creator', creatorRoutes);
+app.use('/api/spaces', spacesRoutes);
+app.use('/api/settings', settingsRoutes);
 
 // Dashboard routes
 app.get('/', (req, res) => {
