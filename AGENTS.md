@@ -185,6 +185,26 @@ Brief description.
   - `src/leaveAllCommunities.js`
   - `archive/unfollowback.js`
 
+### Codespace Performance
+
+If Codespace becomes slow, check and kill resource-heavy processes:
+
+```bash
+# See top CPU consumers
+ps aux --sort=-%cpu | head -20
+
+# Kill vitest workers
+pkill -f "vitest"
+
+# Kill type-checker (tsgo)
+pkill -f "tsgo --noEmit"
+
+# Force-kill a specific process by PID
+kill -9 <PID>
+```
+
+Common resource hogs: `tsgo --noEmit` (~500% CPU), vitest workers (15x ~100% CPU each), multiple tsserver instances
+
 ### Terminal Management
 
 - **Always use background terminals** (`isBackground: true`) for every command so a terminal ID is returned
