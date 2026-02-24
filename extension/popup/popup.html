@@ -462,6 +462,8 @@
     <div class="settings-section">
       <h3>Data</h3>
       <button id="btnExportSettings" class="btn-secondary">Export settings</button>
+      <button id="btnImportSettings" class="btn-secondary">Import settings</button>
+      <input type="file" id="importFileInput" accept=".json" style="display:none">
       <button id="btnResetAll" class="btn-danger">Reset all data</button>
     </div>
     <div class="settings-footer">
@@ -469,6 +471,55 @@
       <span>v1.0.0 — by nichxbt</span>
     </div>
   </section>
+
+  <!-- ============================================ -->
+  <!-- RATE LIMIT WARNING -->
+  <!-- ============================================ -->
+  <div id="rateLimitWarning" class="rate-limit-banner hidden">
+    <span class="rate-limit-icon">⚠️</span>
+    <span class="rate-limit-text">Rate limit detected — automations paused</span>
+    <button id="btnDismissRateLimit" class="btn-small">Dismiss</button>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- ONBOARDING MODAL -->
+  <!-- ============================================ -->
+  <div id="onboardingModal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <div class="onboarding-header">
+        <div class="logo-large">X<span class="accent">A</span></div>
+        <h2>Welcome to XActions</h2>
+        <p class="onboarding-subtitle">X/Twitter automation without the hassle. No API fees.</p>
+      </div>
+      <div class="onboarding-features">
+        <div class="onboarding-feature">
+          <span>❤️</span>
+          <div><strong>Auto-Liker</strong><br><small>Like tweets matching your keywords</small></div>
+        </div>
+        <div class="onboarding-feature">
+          <span>👋</span>
+          <div><strong>Smart Unfollow</strong><br><small>Remove non-followers automatically</small></div>
+        </div>
+        <div class="onboarding-feature">
+          <span>🎬</span>
+          <div><strong>Video Downloader</strong><br><small>Download videos from any tweet</small></div>
+        </div>
+        <div class="onboarding-feature">
+          <span>🧵</span>
+          <div><strong>Thread Reader</strong><br><small>Unroll threads into readable view</small></div>
+        </div>
+      </div>
+      <div class="onboarding-actions">
+        <button id="btnOnboardingStart" class="btn-primary">Get Started</button>
+        <label class="checkbox-label onboarding-enable">
+          <input type="checkbox" id="onboardingEnablePopular" checked> Enable popular features
+        </label>
+      </div>
+      <div class="onboarding-footer">
+        <small>Open <strong>x.com</strong> to start using automations. By nichxbt.</small>
+      </div>
+    </div>
+  </div>
 
   <script src="popup.js"></script>
 </body>

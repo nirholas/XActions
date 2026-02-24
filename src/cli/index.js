@@ -693,10 +693,14 @@ streamCmd
   .command('history <streamId>')
   .description('Show recent events for a stream')
   .option('-l, --limit <number>', 'Max events', '20')
+  .option('-t, --type <eventType>', 'Filter by event type (e.g. stream:tweet)')
   .action(async (streamId, options) => {
     try {
       const { getStreamHistory } = await import('../streaming/index.js');
-      const events = await getStreamHistory(streamId, parseInt(options.limit, 10));
+      const events = await getStreamHistory(streamId, {
+        limit: parseInt(options.limit, 10),
+        eventType: options.type,
+      });
 
       if (events.length === 0) {
         console.log(chalk.gray('\n  No events yet for this stream.\n'));
@@ -714,6 +718,80 @@ streamCmd
       console.log('');
     } catch (error) {
       console.error(chalk.red('Failed to get history: ' + error.message));
+    }
+  });
+
+streamCmd
+  .command('pause <streamId>')
+  .description('Pause an active stream (retains state)')
+  .action(async (streamId) => {
+    const spinner = ora(`Pausing stream ${streamId}`).start();
+    try {
+      const { pauseStream } = await import('../streaming/index.js');
+      await pauseStream(streamId);
+      spinner.succeed(`Stream paused: ${streamId}`);
+      console.log(chalk.gray('  Resume with: xactions stream resume ' + streamId));
+    } catch (error) {
+      spinner.fail('Failed to pause stream');
+      console.error(chalk.red(error.message));
+    }
+  });
+
+streamCmd
+  .command('resume <streamId>')
+  .description('Resume a paused stream')
+  .action(async (streamId) => {
+    const spinner = ora(`Resuming stream ${streamId}`).start();
+    try {
+      const { resumeStream } = await import('../streaming/index.js');
+      await resumeStream(streamId);
+      spinner.succeed(`Stream resumed: ${streamId}`);
+    } catch (error) {
+      spinner.fail('Failed to resume stream');
+      console.error(chalk.red(error.message));
+    }
+  });
+
+streamCmd
+  .command('status <streamId>')
+  .description('Get detailed status of a stream')
+  .action(async (streamId) => {
+    try {
+      const { getStreamStatus } = await import('../streaming/index.js');
+      const s = await getStreamStatus(streamId);
+      if (!s) {
+        console.log(chalk.red(`\n  Stream not found: ${streamId}\n`));
+        return;
+      }
+      const statusColor = s.status === 'running' ? chalk.green : s.status === 'paused' ? chalk.yellow : chalk.red;
+      console.log(chalk.bold.cyan(`\n📡 Stream ${s.id}\n`));
+      console.log(`  Type:      ${s.type}`);
+      console.log(`  Username:  @${s.username}`);
+      console.log(`  Status:    ${statusColor(s.status)}`);
+      console.log(`  Interval:  ${s.interval / 1000}s`);
+      console.log(`  Polls:     ${s.pollCount}`);
+      console.log(`  Events:    ${s.eventCount || 0}`);
+      console.log(`  Errors:    ${s.errorCount}`);
+      if (s.lastPollAt) console.log(`  Last poll: ${chalk.gray(s.lastPollAt)}`);
+      if (s.createdAt) console.log(`  Created:   ${chalk.gray(s.createdAt)}`);
+      console.log('');
+    } catch (error) {
+      console.error(chalk.red('Failed to get status: ' + error.message));
+    }
+  });
+
+streamCmd
+  .command('stop-all')
+  .description('Stop all active streams')
+  .action(async () => {
+    const spinner = ora('Stopping all streams').start();
+    try {
+      const { stopAllStreams } = await import('../streaming/index.js');
+      const result = await stopAllStreams();
+      spinner.succeed(`All streams stopped (${result.stopped || 0} streams)`);
+    } catch (error) {
+      spinner.fail('Failed to stop all streams');
+      console.error(chalk.red(error.message));
     }
   });
 
