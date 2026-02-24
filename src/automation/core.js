@@ -293,8 +293,9 @@ window.XActions.Core = (() => {
       // === BIO ===
       // Strategy 1: data-testid="UserDescription" (most reliable, Twitter's own test ID)
       let bio = '';
+      let bioStrategy = 'none';
       const bioTestId = cell.querySelector(SELECTORS.userDescription || '[data-testid="UserDescription"]');
-      if (bioTestId) bio = bioTestId.textContent.trim();
+      if (bioTestId) { bio = bioTestId.textContent.trim(); bioStrategy = 'testid'; }
 
       // Strategy 2: dir="auto" excluding testid elements (catches variant DOMs)
       if (!bio) {
@@ -304,6 +305,7 @@ window.XActions.Core = (() => {
           // Validate: must not look like a username or display name
           if (text && !text.startsWith('@') && text.length >= 10 && text !== displayName) {
             bio = text;
+            bioStrategy = 'dir-auto';
           }
         }
       }
@@ -316,6 +318,7 @@ window.XActions.Core = (() => {
           const text = el.textContent.trim();
           if (text && !text.startsWith('@') && text.length >= 10 && text !== displayName) {
             bio = text;
+            bioStrategy = 'dir-no-role';
             break;
           }
         }
@@ -332,6 +335,7 @@ window.XActions.Core = (() => {
           // Skip follower/following count patterns
           if (/^\d[\d,.]*[KMB]?\s*(followers?|following)/i.test(text)) continue;
           bio = text;
+          bioStrategy = 'span-scan';
           break;
         }
       }
@@ -351,10 +355,15 @@ window.XActions.Core = (() => {
                          !!cell.querySelector('svg[aria-label*="Verified"]');
       const isProtected = !!cell.querySelector('[data-testid="icon-lock"]');
 
+      // === RECORD EXTRACTION DIAGNOSTICS ===
+      const nameStrategy = nameTestId ? 'testid' : (displayName ? (cell.querySelector('[dir="ltr"] > span') ? 'dir-ltr' : 'span-scan') : 'none');
+      if (bio) extractionStats.record('bio', bioStrategy);
+      if (displayName) extractionStats.record('name', nameStrategy);
+
       // === EXTRACTION METADATA (for debugging) ===
       const _meta = {
-        bioStrategy: bio ? (bioTestId ? 'testid' : 'fallback') : 'none',
-        nameStrategy: nameTestId ? 'testid' : (displayName ? 'fallback' : 'none'),
+        bioStrategy,
+        nameStrategy,
       };
 
       return { username, displayName, bio, followers, isFollowing, followsYou, isVerified, isProtected, _meta };
@@ -362,6 +371,44 @@ window.XActions.Core = (() => {
       log(`extractUserFromCell error: ${e.message}`, 'error');
       return null;
     }
+  };
+
+  // ============================================
+  // EXTRACTION DIAGNOSTICS
+  // ============================================
+
+  const extractionStats = {
+    _stats: { bio: {}, name: {} },
+
+    record: (field, strategy) => {
+      if (!extractionStats._stats[field]) extractionStats._stats[field] = {};
+      extractionStats._stats[field][strategy] = (extractionStats._stats[field][strategy] || 0) + 1;
+    },
+
+    report: () => {
+      const stats = extractionStats._stats;
+      log('📊 Extraction Strategy Report:', 'info');
+      for (const [field, strategies] of Object.entries(stats)) {
+        const total = Object.values(strategies).reduce((a, b) => a + b, 0);
+        log(`  ${field}: ${total} extractions`, 'info');
+        for (const [strategy, count] of Object.entries(strategies)) {
+          const pct = ((count / total) * 100).toFixed(1);
+          const bar = '█'.repeat(Math.round(pct / 5));
+          log(`    ${strategy}: ${count} (${pct}%) ${bar}`, strategy === 'testid' ? 'success' : 'warning');
+        }
+      }
+      // Alert if primary strategy usage drops below 50%
+      const bioStats = stats.bio || {};
+      const bioTotal = Object.values(bioStats).reduce((a, b) => a + b, 0);
+      const testidCount = bioStats.testid || 0;
+      if (bioTotal > 10 && (testidCount / bioTotal) < 0.5) {
+        log('⚠️ WARNING: Primary bio selector (data-testid) working less than 50% of the time. Twitter may have changed their DOM!', 'warning');
+      }
+    },
+
+    reset: () => {
+      extractionStats._stats = { bio: {}, name: {} };
+    },
   };
 
   const parseCount = (str) => {
@@ -466,6 +513,7 @@ window.XActions.Core = (() => {
     parseCount,
     rateLimit,
     actionQueue,
+    extractionStats,
   };
 })();
 

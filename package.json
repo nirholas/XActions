@@ -12,6 +12,7 @@
   },
   "type": "module",
   "main": "src/index.js",
+  "types": "types/index.d.ts",
   "exports": {
     ".": "./src/index.js",
     "./scrapers": "./src/scrapers/index.js",

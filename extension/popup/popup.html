@@ -47,6 +47,39 @@
   <!-- AUTOMATIONS TAB -->
   <!-- ============================================ -->
   <section id="tab-automations" class="tab-content active">
+
+    <!-- Dashboard Summary -->
+    <div class="dashboard-summary" id="dashboardSummary">
+      <div class="dash-stat">
+        <div class="dash-value" id="dashRunning">0</div>
+        <div class="dash-label">Running</div>
+      </div>
+      <div class="dash-stat">
+        <div class="dash-value" id="dashTodayActions">0</div>
+        <div class="dash-label">Today</div>
+      </div>
+      <div class="dash-stat">
+        <div class="dash-value" id="dashTotalActions">0</div>
+        <div class="dash-label">Total</div>
+      </div>
+      <div class="dash-stat">
+        <div class="dash-value" id="dashSessionTime">—</div>
+        <div class="dash-label">Uptime</div>
+      </div>
+    </div>
+
+    <!-- Category Filters -->
+    <div class="category-filters">
+      <button class="cat-filter active" data-category="all">All</button>
+      <button class="cat-filter" data-category="growth">Growth</button>
+      <button class="cat-filter" data-category="tools">Tools</button>
+      <button class="cat-filter" data-category="analytics">Analytics</button>
+    </div>
+
+    <!-- Search -->
+    <div class="search-bar">
+      <input type="text" id="automationSearch" placeholder="Search automations..." class="search-input">
+    </div>
     <!-- Auto-Liker -->
     <div class="automation-card" data-automation="autoLiker">
       <div class="card-header">
