@@ -12,11 +12,33 @@ Paste each prompt into a **fresh Claude Opus 4.6 chat**. Work through them in or
 | 06 | `06-add-progressive-disclosure.md` | Adds reference files for complex skills (selectors, API, patterns) | #04 + #05 done |
 | 07 | `07-create-agent-prompts-skills.md` | Converts AGENT_PROMPTS.md monolith into individual skill-based prompts | #01-#06 done |
 | 08 | `08-validation-and-testing.md` | Validates all SKILL.md files, checks frontmatter, tests discovery | Everything done |
+| 09 | `09-competitive-features.md` | **16 prompts (09-A—09-P)** building features to beat Phantombuster, Apify, Circleboom, Hypefury, Taplio, Followerwonk, Typefully, Social Blade | None (all independent) |
+
+### Prompt 09 Sub-prompts
+
+| Sub | Feature | Kills Competitor |
+|-----|---------|-----------------|
+| 09-A | Historical Analytics Database | Followerwonk, Social Blade |
+| 09-B | Audience Overlap & Venn Analysis | Followerwonk |
+| 09-C | Follower CRM & Segmentation | Circleboom, Followerwonk |
+| 09-D | CSV Bulk Operations Import | Phantombuster, Circleboom |
+| 09-E | Proxy Rotation & Stealth | Phantombuster, Apify |
+| 09-F | Cloud Scheduled Execution | Phantombuster, Apify |
+| 09-G | Visual Content Calendar Dashboard | Hypefury, Taplio, Typefully |
+| 09-H | Evergreen Content Recycler | Hypefury |
+| 09-I | RSS & Webhook Content Ingestion | Hypefury, Taplio |
+| 09-J | AI Hashtag & Content Optimizer | Taplio |
+| 09-K | Thread Composer with Preview | Typefully |
+| 09-L | Notification Integrations | Phantombuster, Circleboom |
+| 09-M | Robust Pagination & Retry Engine | Apify |
+| 09-N | Team & Multi-User Support | Phantombuster, Taplio |
+| 09-O | Dashboard Analytics Visualization | All competitors |
+| 09-P | Apify/Phantombuster Export Compat | Apify, Phantombuster |
 
 ## Budget Estimate
 
 Each prompt will consume ~$2-8 of Claude Opus 4.6 credits depending on output length.
-Total estimated: ~$30-60 for the full overhaul, well within your budget.
+Total estimated: ~$30-60 for the skills overhaul (#01-#08), ~$50-120 for competitive features (#09).
 
 ## Key Principles Applied
 

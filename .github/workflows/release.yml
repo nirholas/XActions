@@ -1,0 +1,115 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# XActions — Automated GitHub Releases
+# Creates a GitHub Release with changelog on version tag push
+# by nichxbt
+# ═══════════════════════════════════════════════════════════════════════════════
+#
+# Triggers on tags like v3.0.43, v4.0.0, etc.
+# Automatically generates release notes from commits since last tag.
+#
+# To create a release:
+#   git tag v3.0.43
+#   git push origin v3.0.43
+#
+# ═══════════════════════════════════════════════════════════════════════════════
+
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Get version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          # Get the previous tag
+          PREV_TAG=$(git tag --sort=-version:refname | head -2 | tail -1)
+          
+          if [ -z "$PREV_TAG" ] || [ "$PREV_TAG" = "${GITHUB_REF#refs/tags/}" ]; then
+            PREV_TAG=$(git rev-list --max-parents=0 HEAD)
+          fi
+          
+          echo "## What's Changed" > RELEASE_NOTES.md
+          echo "" >> RELEASE_NOTES.md
+          
+          # Group commits by type
+          echo "### Features" >> RELEASE_NOTES.md
+          git log ${PREV_TAG}..HEAD --pretty=format:"- %s (%h)" --grep="^feat" >> RELEASE_NOTES.md 2>/dev/null || true
+          echo "" >> RELEASE_NOTES.md
+          
+          echo "### Bug Fixes" >> RELEASE_NOTES.md
+          git log ${PREV_TAG}..HEAD --pretty=format:"- %s (%h)" --grep="^fix" >> RELEASE_NOTES.md 2>/dev/null || true
+          echo "" >> RELEASE_NOTES.md
+          
+          echo "### Other Changes" >> RELEASE_NOTES.md
+          git log ${PREV_TAG}..HEAD --pretty=format:"- %s (%h)" --invert-grep --grep="^feat" --grep="^fix" >> RELEASE_NOTES.md 2>/dev/null || true
+          echo "" >> RELEASE_NOTES.md
+          
+          echo "---" >> RELEASE_NOTES.md
+          echo "" >> RELEASE_NOTES.md
+          echo "**Full Changelog**: https://github.com/nirholas/xactions/compare/${PREV_TAG}...v${{ steps.version.outputs.VERSION }}" >> RELEASE_NOTES.md
+          echo "" >> RELEASE_NOTES.md
+          echo "### Install" >> RELEASE_NOTES.md
+          echo '```bash' >> RELEASE_NOTES.md
+          echo "npm install xactions@${{ steps.version.outputs.VERSION }}" >> RELEASE_NOTES.md
+          echo '```' >> RELEASE_NOTES.md
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          body_path: RELEASE_NOTES.md
+          generate_release_notes: true
+          draft: false
+          prerelease: ${{ contains(steps.version.outputs.VERSION, 'beta') || contains(steps.version.outputs.VERSION, 'alpha') }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish-npm:
+    name: Publish to npm
+    runs-on: ubuntu-latest
+    needs: release
+    if: "!contains(github.ref, 'beta') && !contains(github.ref, 'alpha')"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Publish
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

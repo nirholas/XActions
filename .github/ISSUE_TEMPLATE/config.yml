@@ -1,0 +1,18 @@
+# XActions — Issue Template Configuration
+# by nichxbt
+
+blank_issues_enabled: true
+
+contact_links:
+  - name: "📖 Documentation"
+    url: "https://github.com/nirholas/XActions/blob/main/docs/getting-started.md"
+    about: "Read the docs before opening an issue"
+  - name: "💬 Discussions"
+    url: "https://github.com/nirholas/XActions/discussions"
+    about: "Ask questions, share ideas, show what you built"
+  - name: "🐦 Twitter / X"
+    url: "https://x.com/nichxbt"
+    about: "Follow @nichxbt for updates and support"
+  - name: "📝 Claude Tutorials"
+    url: "https://github.com/nirholas/XActions/tree/main/tutorials/claude-prompts"
+    about: "22 ready-to-paste Claude prompts covering every feature"
