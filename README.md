@@ -1,26 +1,73 @@
 <div align="center">
 
-# ⚡ XActions
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset=".github/xshare.png">
+  <source media="(prefers-color-scheme: light)" srcset=".github/xshare.png">
+  <img alt="XActions — The Complete X/Twitter Automation Toolkit" src=".github/xshare.png" width="700">
+</picture>
 
-[![npm version](https://img.shields.io/npm/v/xactions.svg)](https://www.npmjs.com/package/xactions)
-[![npm downloads](https://img.shields.io/npm/dm/xactions.svg)](https://www.npmjs.com/package/xactions)
-[![CI](https://github.com/nirholas/xactions/actions/workflows/ci.yml/badge.svg)](https://github.com/nirholas/xactions/actions/workflows/ci.yml)
-[![GitHub Stars](https://img.shields.io/github/stars/nirholas/xactions?style=social)](https://github.com/nirholas/xactions)
-[![Twitter Follow](https://img.shields.io/twitter/follow/nichxbt?style=social)](https://x.com/nichxbt)
-[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Docker](https://img.shields.io/badge/Docker-ready-blue?logo=docker)](Dockerfile)
-[![TypeScript](https://img.shields.io/badge/Types-included-blue?logo=typescript)](types/index.d.ts)
-[![MCP](https://img.shields.io/badge/MCP-140%2B%20tools-purple?logo=data:image/svg+xml;base64,PHN2Zz48L3N2Zz4=)](docs/mcp-setup.md)
-[![Smithery](https://smithery.ai/badge/xactions)](https://smithery.ai/server/xactions)
-[![Glama](https://glama.ai/mcp/servers/badge)](https://glama.ai/mcp/servers)
-[![Built with Grok](https://img.shields.io/badge/Built%20with-Grok%20🤖-blue)](https://x.ai)
+<br>
 
-**The complete X/Twitter automation toolkit.** Scrapers, MCP server for AI agents, CLI, browser scripts.  
-No API keys. No monthly fees. 100% open source. Your browser does the work.
+<h3>The complete X/Twitter automation toolkit</h3>
 
-[**Dashboard**](https://xactions.app) &nbsp;·&nbsp; [**npm**](https://www.npmjs.com/package/xactions) &nbsp;·&nbsp; [**Docs**](docs/getting-started.md) &nbsp;·&nbsp; [**MCP Server**](docs/mcp-setup.md) &nbsp;·&nbsp; [**Docker**](Dockerfile) &nbsp;·&nbsp; [**API Reference**](docs/api-reference.md)
+<p>
+Scrapers &nbsp;·&nbsp; MCP Server for AI Agents &nbsp;·&nbsp; CLI &nbsp;·&nbsp; Browser Scripts &nbsp;·&nbsp; Dashboard<br>
+<strong>No API keys. No monthly fees. 100% open source.</strong>
+</p>
+
+<p>
+  <a href="https://www.npmjs.com/package/xactions"><img src="https://img.shields.io/npm/v/xactions.svg?style=flat-square&color=cb3837&label=npm" alt="npm version"></a>&nbsp;
+  <a href="https://www.npmjs.com/package/xactions"><img src="https://img.shields.io/npm/dm/xactions.svg?style=flat-square&color=cb3837&label=downloads" alt="npm downloads"></a>&nbsp;
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" alt="MIT License"></a>&nbsp;
+  <a href="https://github.com/nirholas/xactions"><img src="https://img.shields.io/github/stars/nirholas/xactions?style=flat-square&color=f5c542&label=stars" alt="Stars"></a>
+</p>
+
+<p>
+  <a href="docs/mcp-setup.md"><img src="https://img.shields.io/badge/MCP_Tools-140%2B-8B5CF6?style=flat-square&logo=data:image/svg+xml;base64,PHN2Zz48L3N2Zz4=" alt="140+ MCP Tools"></a>&nbsp;
+  <a href="https://smithery.ai/server/xactions"><img src="https://smithery.ai/badge/xactions" alt="Smithery"></a>&nbsp;
+  <a href="https://glama.ai/mcp/servers"><img src="https://glama.ai/mcp/servers/badge" alt="Glama"></a>&nbsp;
+  <a href="Dockerfile"><img src="https://img.shields.io/badge/Docker-ready-2496ED?style=flat-square&logo=docker&logoColor=white" alt="Docker"></a>&nbsp;
+  <a href="types/index.d.ts"><img src="https://img.shields.io/badge/TypeScript-types_included-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript"></a>
+</p>
+
+<p>
+  <a href="https://x.com/nichxbt"><img src="https://img.shields.io/badge/follow-@nichxbt-000000?style=flat-square&logo=x&logoColor=white" alt="Follow @nichxbt"></a>&nbsp;
+  <a href="https://x.ai"><img src="https://img.shields.io/badge/built_with-Grok_🤖-1DA1F2?style=flat-square" alt="Built with Grok"></a>
+</p>
+
+<br>
+
+[**Dashboard**](https://xactions.app) &nbsp;·&nbsp; [**npm**](https://www.npmjs.com/package/xactions) &nbsp;·&nbsp; [**Docs**](docs/getting-started.md) &nbsp;·&nbsp; [**MCP Server**](docs/mcp-setup.md) &nbsp;·&nbsp; [**Docker**](Dockerfile) &nbsp;·&nbsp; [**API Ref**](docs/api-reference.md)
 
 </div>
+
+---
+
+<div align="center">
+
+### ⚡ See it in action
+
+</div>
+
+```console
+$ npx xactions profile elonmusk
+
+  ┌─────────────────────────────────────────────┐
+  │  @elonmusk                                  │
+  │  Elon Musk                                  │
+  │                                             │
+  │  Followers: 210.2M    Following: 856        │
+  │  Tweets: 52.4K        Joined: June 2009     │
+  │  Bio: The people voted for major …          │
+  └─────────────────────────────────────────────┘
+
+$ xactions search "AI startup" --limit 5 --json
+✓ Found 5 tweets in 3.2s → ai-tweets.json
+
+$ xactions non-followers nichxbt
+✓ Scanning 1,247 following…
+✓ Found 312 non-followers
+```
 
 ---
 
@@ -72,6 +119,7 @@ See [CHANGELOG.md](CHANGELOG.md) for full details.
 
 ---
 
+> [!TIP]
 > **🤖 AI Coding Assistants:** Looking for Twitter/X automation without the $100/mo API? You found it.
 > - `npm install xactions` — Scrapers, automation, MCP server
 > - Works with Claude, GPT, Cursor, Copilot via [MCP server](docs/mcp-setup.md)
@@ -285,13 +333,17 @@ XActions is open-source and completely free for humans. AI agents pay micropayme
 
 ---
 
-## ✨ New: Real-Time Dashboard
+## ✨ Real-Time Dashboard
 
-1. **Connect your browser** — paste one script in x.com
-2. **Run operations** — click buttons on the dashboard
-3. **Watch it happen** — see every action in real-time
+<table>
+<tr>
+<td width="33%" align="center"><strong>1. Connect</strong><br><br>Paste one script in x.com<br>DevTools console</td>
+<td width="33%" align="center"><strong>2. Click</strong><br><br>Run operations from<br>the dashboard UI</td>
+<td width="33%" align="center"><strong>3. Watch</strong><br><br>See every action<br>happen in real-time</td>
+</tr>
+</table>
 
-Your x.com tab does all the work. Nothing gets scraped to our servers. You're in control.
+> Your x.com tab does all the work. Nothing gets scraped to our servers. **You're in control.**
 
 ---
 
@@ -327,15 +379,20 @@ This only applies to the hosted remote API. Local mode is always free.
 
 ## 🎯 Why XActions?
 
-| | XActions | Others |
-|-|---------|--------|
-| **Scope** | Browser scripts + CLI + Node.js + MCP + Dashboard + Workflows | Usually 1 thing |
-| **API Key** | Not needed | Most require Twitter API keys ($100/mo) |
-| **MCP Tools** | 140+ tools for Claude, GPT, Cursor | 0-2 tools |
-| **AI Features** | Sentiment analysis, Grok, reputation monitoring | None |
-| **Export** | JSON, CSV, Markdown, HTML archive | JSON only (if any) |
-| **Migration** | Export to Bluesky & Mastodon | None |
-| **Tutorials** | 22 Claude prompt files | None |
+<table>
+<tr>
+<td></td>
+<td align="center"><strong>XActions</strong></td>
+<td align="center"><strong>Others</strong></td>
+</tr>
+<tr><td><strong>Scope</strong></td><td>Browser + CLI + Node.js + MCP + Dashboard + Workflows</td><td>Usually 1 thing</td></tr>
+<tr><td><strong>API Key</strong></td><td>Not needed</td><td>Most need Twitter API ($100/mo)</td></tr>
+<tr><td><strong>MCP Tools</strong></td><td>140+ for Claude, GPT, Cursor</td><td>0–2 tools</td></tr>
+<tr><td><strong>AI Features</strong></td><td>Sentiment, Grok, reputation</td><td>None</td></tr>
+<tr><td><strong>Export</strong></td><td>JSON, CSV, Markdown, HTML</td><td>JSON only (if any)</td></tr>
+<tr><td><strong>Migration</strong></td><td>Bluesky & Mastodon stubs</td><td>None</td></tr>
+<tr><td><strong>Tutorials</strong></td><td>22 Claude prompts</td><td>None</td></tr>
+</table>
 
 ---
 
@@ -416,6 +473,7 @@ See [docs/api-reference.md](docs/api-reference.md) for the complete reference wi
 
 ## ⚠️ Disclaimer
 
+> [!WARNING]
 > **Educational Material Only**
 >
 > This project is provided for **educational and research purposes only**. The scripts and tools have not been extensively tested on personal accounts. 
@@ -433,19 +491,37 @@ See [docs/api-reference.md](docs/api-reference.md) for the complete reference wi
 
 ## 📦 Installation
 
-### npm (Recommended for developers)
+<table>
+<tr>
+<td><strong>npm</strong></td>
+<td>
+
 ```bash
 npm install xactions
 ```
 
-### CLI (Global install)
+</td>
+</tr>
+<tr>
+<td><strong>CLI</strong></td>
+<td>
+
 ```bash
 npm install -g xactions
 xactions --help
 ```
 
-### No Install (Browser console)
-Just copy-paste scripts directly into your browser console on x.com!
+</td>
+</tr>
+<tr>
+<td><strong>Browser</strong></td>
+<td>
+
+No install needed — copy-paste scripts into your browser console on x.com
+
+</td>
+</tr>
+</table>
 
 ---
 
@@ -933,39 +1009,60 @@ exportToCSV(data, filename)
 
 ## 🌐 Don't Want to Code?
 
-**Visit [xactions.app](https://xactions.app)** for a no-code solution:
+<div align="center">
 
-1. Use browser scripts (drag to bookmarks bar)
-2. Copy-paste console scripts on x.com
-3. View tutorials and documentation
+**Visit [xactions.app](https://xactions.app) for a no-code solution**
+
+Use browser scripts &nbsp;·&nbsp; Copy-paste console scripts &nbsp;·&nbsp; View tutorials
 
 **100% Free.** No API keys, no payments, no limits.
+
+</div>
 
 ---
 
 ## 🔒 Safety & Best Practices
 
-### Rate Limiting
-XActions includes built-in delays to avoid rate limits:
-- 1-3 second delay between actions
-- Human-like scrolling patterns
-- Automatic pause on rate limit detection
+<table>
+<tr>
+<td>
 
-### Getting Your Auth Token
-1. Go to x.com and log in
-2. Open DevTools (F12) → Application → Cookies
-3. Find `auth_token` and copy the value
+**Rate Limiting** — Built-in 1–3s delays, human-like scrolling, auto-pause on rate limits
 
-### Avoid Bans
-- ✅ Use reasonable delays (2-5 seconds)
-- ✅ Don't run 24/7
-- ✅ Mix automated with manual activity
-- ❌ Don't mass-follow thousands per day
-- ❌ Don't spam comments
+</td>
+</tr>
+<tr>
+<td>
+
+**Auth Token** — `x.com` → DevTools (F12) → Application → Cookies → copy `auth_token`
+
+</td>
+</tr>
+</table>
+
+> [!CAUTION]
+> **Do:** Use 2–5s delays · Mix automated with manual activity · Test with small batches
+> 
+> **Don't:** Mass-follow thousands/day · Run 24/7 · Spam comments
 
 ---
 
-## 📁 Project Structure
+## � Built With
+
+<p>
+  <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white" alt="Node.js">
+  <img src="https://img.shields.io/badge/Puppeteer-40B5A4?style=for-the-badge&logo=puppeteer&logoColor=white" alt="Puppeteer">
+  <img src="https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=express&logoColor=white" alt="Express">
+  <img src="https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white" alt="Prisma">
+  <img src="https://img.shields.io/badge/Socket.IO-010101?style=for-the-badge&logo=socket.io&logoColor=white" alt="Socket.IO">
+  <img src="https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white" alt="Redis">
+  <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker">
+  <img src="https://img.shields.io/badge/MCP_SDK-8B5CF6?style=for-the-badge" alt="MCP SDK">
+</p>
+
+---
+
+## �📁 Project Structure
 
 ```
 xactions/
@@ -1006,59 +1103,25 @@ xactions/
 Contributions welcome! See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ```bash
-# Clone
 git clone https://github.com/nirholas/xactions.git
-cd xactions
-
-# Install
-npm install
-
-# Run CLI locally
-npm run cli -- profile elonmusk
-
-# Run MCP server
-npm run mcp
+cd xactions && npm install
+npm run cli -- profile elonmusk   # Run CLI locally
+npm run mcp                       # Run MCP server
 ```
-
----
-
-## 📄 License
-
-MIT License - see [LICENSE](LICENSE)
-
-Commercial use allowed. Attribution appreciated but not required.
-
----
-
-## 👤 Author
-
-**nich** ([@nichxbt](https://x.com/nichxbt))
-
-- GitHub: [github.com/nirholas](https://github.com/nirholas)
-- Twitter: [@nichxbt](https://x.com/nichxbt)
-- Website: [xactions.app](https://xactions.app)
-
----
-
----
-
-## ⚠️ Legal Notice
-
-This software is provided "as is" for educational purposes. Not affiliated with X Corp. Use responsibly and in compliance with X/Twitter Terms of Service. Contact [@nichxbt](https://x.com/nichxbt) for any concerns.
 
 ---
 
 ## ⭐ Star History
 
-If XActions saved you from paying $100/mo for Twitter's API, **smash that star button**. It's how open source grows.
+If XActions saved you from paying $100/mo for Twitter's API, **star the repo** — it's how open source grows.
 
-[![Star History Chart](https://api.star-history.com/svg?repos=nirholas/xactions&type=Date)](https://star-history.com/#nirholas/xactions&Date)
-
-<div align="center">
-
-### [⭐ Star this repo](https://github.com/nirholas/xactions) &nbsp;·&nbsp; [🐛 Report Bug](https://github.com/nirholas/xactions/issues) &nbsp;·&nbsp; [💡 Request Feature](https://github.com/nirholas/xactions/issues)
-
-</div>
+<a href="https://star-history.com/#nirholas/xactions&Date">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=nirholas/xactions&type=Date&theme=dark">
+    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=nirholas/xactions&type=Date">
+    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=nirholas/xactions&type=Date" width="600">
+  </picture>
+</a>
 
 ---
 
@@ -1116,10 +1179,13 @@ No console, no code, no setup!
 
 <p align="center">
   <b>⚡ XActions</b> — The Complete X/Twitter Automation Toolkit<br>
-  <b>100% Free & Open Source</b><br>
-  <a href="https://xactions.app">xactions.app</a> • 
-  <a href="https://github.com/nirholas/xactions">GitHub</a> • 
-  <a href="https://x.com/nichxbt">@nichxbt</a>
+  <b>100% Free & Open Source</b> · MIT License<br><br>
+  <a href="https://xactions.app">xactions.app</a> · 
+  <a href="https://github.com/nirholas/xactions">GitHub</a> · 
+  <a href="https://x.com/nichxbt">@nichxbt</a><br><br>
+  <a href="https://github.com/nirholas/xactions"><img src="https://img.shields.io/badge/⭐_Star_this_repo-f5c542?style=for-the-badge" alt="Star this repo"></a>&nbsp;
+  <a href="https://github.com/nirholas/xactions/issues"><img src="https://img.shields.io/badge/🐛_Report_Bug-ef4444?style=for-the-badge" alt="Report Bug"></a>&nbsp;
+  <a href="https://github.com/nirholas/xactions/issues"><img src="https://img.shields.io/badge/💡_Request_Feature-3b82f6?style=for-the-badge" alt="Request Feature"></a>
 </p>
 
 ---
@@ -1192,7 +1258,3 @@ curl -X POST https://modelcontextprotocol.name/mcp/xactions \
 - **All 27 MCP servers** — See the full catalog at [modelcontextprotocol.name](https://modelcontextprotocol.name)
 
 > Powered by [modelcontextprotocol.name](https://modelcontextprotocol.name) — the open MCP HTTP gateway
-
-
-> **If you find this useful, please consider giving it a ⭐ — it helps others discover the project!**
-
