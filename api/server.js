@@ -267,7 +267,19 @@ app.get('/graph', (req, res) => {
   res.sendFile(path.join(__dirname, '../dashboard/graph.html'));
 });
 // Documentation sub-pages — serves 167 auto-generated SEO pages
-// Nested paths: /docs/guides/:slug, /docs/skills/:slug, /docs/tutorials/:slug, etc.
+// 3-level paths: /docs/guides/developer/:slug
+app.get('/docs/:section/:subsection/:slug', (req, res) => {
+  const section = req.params.section.replace(/[^a-zA-Z0-9-]/g, '');
+  const subsection = req.params.subsection.replace(/[^a-zA-Z0-9-]/g, '');
+  const slug = req.params.slug.replace(/[^a-zA-Z0-9-_]/g, '');
+  const filePath = path.join(__dirname, `../dashboard/docs/${section}/${subsection}/${slug}.html`);
+  res.sendFile(filePath, (err) => {
+    if (err) {
+      res.status(404).sendFile(path.join(__dirname, '../dashboard/404.html'));
+    }
+  });
+});
+// 2-level paths: /docs/guides/:slug, /docs/skills/:slug, /docs/tutorials/:slug, etc.
 app.get('/docs/:section/:slug', (req, res) => {
   const section = req.params.section.replace(/[^a-zA-Z0-9-]/g, '');
   const slug = req.params.slug.replace(/[^a-zA-Z0-9-_]/g, '');

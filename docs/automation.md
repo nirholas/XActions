@@ -23,6 +23,7 @@ All automation scripts use a **modular architecture**:
 src/automation/
 ├── core.js               ← Required! Load this first
 ├── actions.js            ← XActions library (100+ actions)
+├── algorithmBuilder.js   ← LLM-powered algorithm cultivation (browser)
 ├── autoLiker.js          ← Timeline auto-liking
 ├── keywordFollow.js      ← Search & auto-follow
 ├── smartUnfollow.js      ← Time-based unfollowing
@@ -1408,6 +1409,56 @@ csStats()         // View statistics
 csTemplates()     // Show all templates
 csRespond('issue') // Get a response template
 ```
+
+---
+
+### 14. Algorithm Builder (`algorithmBuilder.js`)
+
+**Purpose:** LLM-powered algorithm cultivation engine. Trains X's algorithm by systematically searching your niche, liking relevant content, following key accounts, and posting AI-generated comments and original posts — all in your persona's voice.
+
+**This is the browser console version.** For the 24/7 headless Puppeteer version, use the CLI: `xactions persona run <id>`.
+
+**How to use:**
+1. Go to `x.com/home`
+2. Paste `core.js` then `algorithmBuilder.js`
+3. Edit the `NICHE_CONFIG` and `LLM_CONFIG` at the top
+4. The script runs indefinitely with activity cycles and rest periods
+
+**Configuration:**
+```js
+const NICHE_CONFIG = {
+  topics: ['crypto', 'defi', 'web3', 'bitcoin'],
+  searchTerms: ['crypto alpha', 'defi yield', 'new token launch'],
+  targetAccounts: ['0xCygaar', 'DefiIgnas'],
+  avoidTopics: ['scam', 'rug'],
+  commentStyle: 'brief, hype-driven, crypto lingo',
+  tone: 'degen casual — short, punchy, uses crypto slang',
+};
+
+const LLM_CONFIG = {
+  enabled: true,
+  apiKey: 'your_openrouter_api_key',
+  model: 'google/gemini-flash-2.0',
+};
+```
+
+**What it does each cycle:**
+1. **Search phase** — Searches niche terms, scrolls results, likes on-topic tweets
+2. **Engage phase** — Follows relevant users, comments using LLM-generated replies
+3. **Create phase** — Posts original content in your persona's voice
+4. **Browse phase** — Scrolls timeline, visits profiles, checks notifications
+5. **Rest phase** — Sleeps 30–120 seconds between cycles to appear human
+
+**Fallback behavior:** If OpenRouter is unavailable, the script falls back to curated comment templates stored in `FALLBACK_COMMENTS`.
+
+**Commands:**
+```js
+stopAlgorithm()                     // Stop the builder
+window.XActions.Algorithm.stats()   // View engagement stats
+window.XActions.Algorithm.state()   // View current state
+```
+
+> **Tip:** For 24/7 unattended operation, use the Node.js version via `xactions persona create` + `xactions persona run <id>` instead.
 
 ---
 

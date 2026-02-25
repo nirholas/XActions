@@ -47,27 +47,13 @@ Scrapers &nbsp;·&nbsp; MCP Server for AI Agents &nbsp;·&nbsp; CLI &nbsp;·&nbs
 
 ### ⚡ See it in action
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="public/demo.svg">
+  <source media="(prefers-color-scheme: light)" srcset="public/demo.svg">
+  <img alt="XActions CLI demo — profile lookup, tweet search, non-follower detection" src="public/demo.svg" width="720">
+</picture>
+
 </div>
-
-```console
-$ npx xactions profile elonmusk
-
-  ┌─────────────────────────────────────────────┐
-  │  @elonmusk                                  │
-  │  Elon Musk                                  │
-  │                                             │
-  │  Followers: 210.2M    Following: 856        │
-  │  Tweets: 52.4K        Joined: June 2009     │
-  │  Bio: The people voted for major …          │
-  └─────────────────────────────────────────────┘
-
-$ xactions search "AI startup" --limit 5 --json
-✓ Found 5 tweets in 3.2s → ai-tweets.json
-
-$ xactions non-followers nichxbt
-✓ Scanning 1,247 following…
-✓ Found 312 non-followers
-```
 
 ---
 
