@@ -173,6 +173,115 @@
         <h1>Changelog</h1>
 <p>All notable changes to this project will be documented in this file.</p>
 <p>The format is based on <a href="https://keepachangelog.com/en/1.1.0/">Keep a Changelog</a>.</p>
+<h2>[3.1.0] - 2026-02-25</h2>
+<h3>Added</h3>
+<h4>Plugin System</h4>
+<ul>
+<li>Community plugin architecture — create <code>xactions-plugin-*</code> npm packages</li>
+<li>Plugin loader, manager, and template in <code>src/plugins/</code></li>
+<li>CLI commands: <code>xactions plugin install/list/remove</code></li>
+<li>MCP server auto-discovers and registers plugin tools</li>
+</ul>
+<h4>Real-Time Streaming</h4>
+<ul>
+<li>Live event streams for tweets, followers, and mentions via Socket.IO</li>
+<li>Puppeteer-based polling with Redis deduplication and rate limit backoff</li>
+<li>Browser pool management (max 3 concurrent instances)</li>
+<li>MCP tools: <code>x_stream_start</code>, <code>x_stream_stop</code>, <code>x_stream_list</code></li>
+</ul>
+<h4>Workflow Engine</h4>
+<ul>
+<li>Declarative JSON automation pipelines with triggers, actions, and conditions</li>
+<li>Cron scheduling, webhook triggers, event-based triggers</li>
+<li>3 example workflows: competitor monitor, auto-engage keywords, follower growth report</li>
+<li>CLI: <code>xactions workflow create/run/list</code></li>
+<li>MCP tools: <code>x_workflow_create</code>, <code>x_workflow_run</code>, <code>x_workflow_list</code></li>
+</ul>
+<h4>Cross-Platform Scrapers</h4>
+<ul>
+<li>Unified scraper interface: <code>scrape(platform, type, options)</code></li>
+<li>Bluesky support via AT Protocol (@atproto/api) — no Puppeteer needed</li>
+<li>Mastodon support via public REST API — any instance URL</li>
+<li>Threads support via Puppeteer</li>
+<li>Backward compatible — existing Twitter imports unchanged</li>
+</ul>
+<h4>Sentiment Analysis &amp; Reputation Monitoring</h4>
+<ul>
+<li>Built-in rule-based sentiment analyzer (works offline, zero dependencies)</li>
+<li>Optional LLM mode via OpenRouter for nuanced analysis</li>
+<li>Reputation monitoring with trend detection and anomaly alerts</li>
+<li>Alert delivery via webhook, Socket.IO, or console</li>
+<li>Daily/weekly reputation reports</li>
+</ul>
+<h4>Account Portability</h4>
+<ul>
+<li>Full account export: profile, tweets, followers, following, bookmarks, likes</li>
+<li>Output formats: JSON, CSV, Markdown, self-contained HTML archive viewer</li>
+<li>Export diff tool — compare two snapshots to see changes</li>
+<li>Migration stubs for Bluesky and Mastodon</li>
+</ul>
+<h4>Social Graph Analysis</h4>
+<ul>
+<li>Graph builder crawls N degrees from seed account</li>
+<li>Algorithms: mutual connections, bridge accounts, cluster detection, influence scoring</li>
+<li>Exports to D3.js JSON and Gephi GEXF formats</li>
+<li>Self-contained HTML visualization with force-directed layout</li>
+</ul>
+<h4>Browser Extension</h4>
+<ul>
+<li>Manifest V3 Chrome/Firefox extension</li>
+<li>Popup UI to run automations without console access</li>
+<li>Content script injection, settings persistence, activity badge</li>
+</ul>
+<h4>Dashboard Enhancements</h4>
+<ul>
+<li><code>automations.html</code> — automation control panel with start/stop toggles</li>
+<li><code>monitor.html</code> — real-time activity feed with Chart.js visualizations</li>
+<li><code>workflows.html</code> — visual workflow builder</li>
+<li><code>analytics.html</code> — sentiment timeline, mention analysis, alert configuration</li>
+<li>Full docs site generated at <code>dashboard/docs/</code></li>
+</ul>
+<h4>New API Routes</h4>
+<ul>
+<li><code>/api/streams</code> — real-time stream management</li>
+<li><code>/api/workflows</code> — workflow CRUD and execution</li>
+<li><code>/api/analytics</code> — sentiment analysis and monitoring</li>
+<li><code>/api/portability</code> — account export and migration</li>
+<li><code>/api/graph</code> — social graph building and analysis</li>
+<li><code>/api/automations</code> — automation start/stop control</li>
+<li>15+ additional routes for bookmarks, discovery, engagement, posting, etc.</li>
+</ul>
+<h4>New Browser Scripts</h4>
+<ul>
+<li><code>engagementBooster.js</code> — systematic engagement with target accounts</li>
+<li><code>sentimentAnalyzer.js</code> — in-browser sentiment scoring</li>
+<li><code>shadowbanChecker.js</code> — detect account restrictions</li>
+<li><code>viralTweetDetector.js</code> — find viral content early</li>
+<li><code>followerGrowthTracker.js</code> — track growth over time</li>
+<li><code>tweetScheduleOptimizer.js</code> — find best posting times</li>
+<li><code>welcomeNewFollowers.js</code> — auto-welcome with templates</li>
+<li><code>quoteTweetAutomation.js</code> — strategic quote tweeting</li>
+<li><code>threadComposer.js</code> — multi-tweet thread builder</li>
+<li><code>contentCalendar.js</code> — plan and schedule content</li>
+<li><code>audienceDemographics.js</code> — analyze follower demographics</li>
+<li><code>accountHealthMonitor.js</code> — monitor account health signals</li>
+<li><code>pinTweetManager.js</code> — manage pinned tweets</li>
+<li><code>bulkDeleteTweets.js</code> — mass delete old tweets</li>
+<li><code>autoReply.js</code> — automated reply with templates</li>
+</ul>
+<h4>Other</h4>
+<ul>
+<li>TypeScript type declarations (<code>types/index.d.ts</code>)</li>
+<li>Docker support (Dockerfile + docker-compose)</li>
+<li>New npm exports: <code>xactions/streaming</code>, <code>xactions/analytics</code>, <code>xactions/plugins</code></li>
+<li><code>xactions-mcp</code> and <code>xactions-agent</code> bin commands</li>
+</ul>
+<h3>Changed</h3>
+<ul>
+<li>MCP server expanded from ~200 to 140+ registered tools</li>
+<li>Package exports updated for multi-platform scraper paths</li>
+<li>Dependencies updated: vitest 4.x, puppeteer 24.x, added node-cron, better-sqlite3, exceljs</li>
+</ul>
 <h2>[1.0.0] - 2026-02-11</h2>
 <h3>Added</h3>
 <ul>
@@ -195,7 +304,7 @@
         <a href="/docs/project/roadmap">📄 XActions Roadmap</a>
         <a href="/docs/project/security">📄 Security Policy</a>
         <a href="/docs/project/code_of_conduct">📄 Contributor Covenant Code of Conduct</a>
-        <a href="/docs/project/readme">📄 ⚡ XActions</a>
+        <a href="/docs/project/readme">📄 Quick start</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

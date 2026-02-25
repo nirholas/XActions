@@ -172,7 +172,7 @@
         <span class="cat-badge">Agent Skills</span>
         <h1>Settings &amp; Privacy</h1>
 <p>Browser console scripts for managing X/Twitter account settings and privacy controls.</p>
-<h2>Available Scripts</h2>
+<h2>Script Selection</h2>
 <table>
 <thead>
 <tr>
@@ -191,24 +191,34 @@
 <td><code>src/manageMutedWords.js</code></td>
 <td>Bulk add, remove, and manage muted words/phrases</td>
 </tr>
+<tr>
+<td>Mass Unblock</td>
+<td><code>src/massUnblock.js</code></td>
+<td>Clear blocked accounts</td>
+</tr>
+<tr>
+<td>Mass Unmute</td>
+<td><code>src/massUnmute.js</code></td>
+<td>Clear muted accounts</td>
+</tr>
 </tbody></table>
 <h2>Settings Manager</h2>
 <p><strong>File:</strong> <code>src/settingsManager.js</code></p>
 <p>Manages account settings: privacy controls, content filtering, notification preferences, and account configuration.</p>
-<h3>How to use</h3>
+<h3>How to Use</h3>
 <ol>
 <li>Navigate to <code>x.com/settings</code></li>
-<li>Open DevTools (F12) → Console</li>
-<li>Paste the script → Enter</li>
+<li>Open DevTools (F12) -&gt; Console</li>
+<li>Paste the script -&gt; Enter</li>
 </ol>
 <h2>Muted Words Manager</h2>
 <p><strong>File:</strong> <code>src/manageMutedWords.js</code></p>
 <p>Bulk add or remove muted words and phrases to filter unwanted content from timeline, notifications, and search.</p>
-<h3>How to use</h3>
+<h3>How to Use</h3>
 <ol>
 <li>Navigate to <code>x.com/settings/muted_keywords</code></li>
-<li>Open DevTools (F12) → Console</li>
-<li>Paste the script → Enter</li>
+<li>Open DevTools (F12) -&gt; Console</li>
+<li>Paste the script -&gt; Enter</li>
 </ol>
 <h3>Configuration</h3>
 <pre><code class="language-javascript">const CONFIG = {
@@ -217,7 +227,7 @@
   muteFrom: &#39;everyone&#39;,   // &#39;everyone&#39; or &#39;people_you_dont_follow&#39;
 };
 </code></pre>
-<h3>Key Selectors</h3>
+<h2>DOM Selectors</h2>
 <table>
 <thead>
 <tr>
@@ -241,8 +251,12 @@
 <td>Muted keywords</td>
 <td><code>a[href=&quot;/settings/muted_keywords&quot;]</code></td>
 </tr>
+<tr>
+<td>Confirmation dialog</td>
+<td><code>[data-testid=&quot;confirmationSheetConfirm&quot;]</code></td>
+</tr>
 </tbody></table>
-<h2>Common Settings</h2>
+<h2>Settings Pages</h2>
 <table>
 <thead>
 <tr>
@@ -276,13 +290,56 @@
 <td><code>/settings/content_preferences</code></td>
 <td>Sensitive content filters</td>
 </tr>
+<tr>
+<td>Notifications</td>
+<td><code>/settings/notifications</code></td>
+<td>Notification filtering</td>
+</tr>
+<tr>
+<td>Privacy and safety</td>
+<td><code>/settings/privacy_and_safety</code></td>
+<td>DM controls, discoverability</td>
+</tr>
+<tr>
+<td>Account info</td>
+<td><code>/settings/your_twitter_data/account</code></td>
+<td>Email, phone, username</td>
+</tr>
+<tr>
+<td>Download data</td>
+<td><code>/settings/download_your_data</code></td>
+<td>Request full data archive</td>
+</tr>
 </tbody></table>
+<h2>Strategy Guide</h2>
+<h3>Locking down a new account</h3>
+<ol>
+<li>Navigate to <code>/settings/audience_and_tagging</code> -&gt; enable Protected Tweets</li>
+<li>Navigate to <code>/settings/privacy_and_safety</code> -&gt; adjust DM settings</li>
+<li>Run <code>src/manageMutedWords.js</code> to add spam filters</li>
+<li>Navigate to <code>/settings/notifications</code> -&gt; filter notifications from non-followers</li>
+</ol>
+<h3>Cleaning up after spam attack</h3>
+<ol>
+<li>Run <code>src/massUnblock.js</code> to clear old blocks (make room for new ones)</li>
+<li>Run <code>src/blockBots.js</code> on your followers page</li>
+<li>Run <code>src/manageMutedWords.js</code> with spam keywords</li>
+<li>Check <code>/settings/muted/all</code> and <code>/settings/blocked/all</code> for status</li>
+</ol>
+<h3>Content creator setup</h3>
+<ol>
+<li>Keep Protected Tweets OFF (public account needed for growth)</li>
+<li>Mute common spam keywords: giveaway, airdrop, DM me, follow back</li>
+<li>Filter notifications to verified accounts or followers only</li>
+<li>Enable sensitive content warnings if posting edgy content</li>
+</ol>
 <h2>Notes</h2>
 <ul>
 <li>Protected tweets: only approved followers can see posts</li>
 <li>Muted words filter content from timeline, notifications, and search</li>
 <li>Settings changes take effect immediately</li>
 <li>Some settings require password confirmation</li>
+<li>Download data request takes 24-48 hours to process</li>
 <li>Muted words support phrases, hashtags, and individual words</li>
 </ul>
 
@@ -300,7 +357,7 @@
         <h3>📖 In This Section</h3>
                 <a href="/docs/skills/algorithm-cultivation">🎯 Algorithm Cultivation &amp; Thought Leadership</a>
         <a href="/docs/skills/analytics-insights">🎯 Analytics &amp; Insights</a>
-        <a href="/docs/skills/articles-longform">🎯 Articles &amp; Long-Form Content</a>
+        <a href="/docs/skills/articles-longform">🎯 Articles &amp; Longform</a>
         <a href="/docs/skills/blocking-muting-management">🎯 Blocking &amp; Muting Management</a>
         <a href="/docs/skills/bookmarks-management">🎯 Bookmarks Management</a>
         <a href="/docs/skills/business-ads">🎯 Business &amp; Ads Tools</a>

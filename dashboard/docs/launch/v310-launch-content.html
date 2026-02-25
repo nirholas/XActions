@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XActions v3.1.0 — Launch Content | XActions</title>
+  <meta name="description" content="Ready-to-post content for X, Reddit, Hacker News, and Product Hunt.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, open source, v310, launch, content, v3.1.0, launch &amp; releases">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="XActions v3.1.0 — Launch Content — XActions">
+  <meta property="og:description" content="Ready-to-post content for X, Reddit, Hacker News, and Product Hunt.">
+  <meta property="og:url" content="https://xactions.app/docs/launch/v310-launch-content">
+  <meta property="og:site_name" content="XActions">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="XActions v3.1.0 — Launch Content — XActions">
+  <meta name="twitter:description" content="Ready-to-post content for X, Reddit, Hacker News, and Product Hunt.">
+
+  <link rel="canonical" href="https://xactions.app/docs/launch/v310-launch-content">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "XActions v3.1.0 — Launch Content | XActions",
+    "description": "Ready-to-post content for X, Reddit, Hacker News, and Product Hunt.",
+    "url": "https://xactions.app/docs/launch/v310-launch-content",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-25",
+    "dateModified": "2026-02-25",
+    "mainEntityOfPage": "https://xactions.app/docs/launch/v310-launch-content",
+    "articleSection": "Launch & Releases",
+    "keywords": "xactions, twitter automation, x automation, free, open source, v310, launch, content, v3.1.0, launch & releases"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Launch & Releases", "item": "https://xactions.app/docs/launch" },
+      { "@type": "ListItem", "position": 4, "name": "XActions v3.1.0 — Launch Content", "item": "https://xactions.app/docs/launch/v310-launch-content" }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .article pre { font-size: 0.75rem; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <main class="main-content">
+      <header class="main-header">
+        <h1>🚀 XActions v3.1.0 — Launch Content</h1>
+        <div class="breadcrumb">
+          <a href="https://xactions.app">Home</a> › <a href="https://xactions.app/docs">Docs</a> › <a href="https://xactions.app/docs/launch">Launch &amp; Releases</a> › XActions v3.1.0 — Launch Content
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Launch &amp; Releases</span>
+        <h1>XActions v3.1.0 — Launch Content</h1>
+<p>Ready-to-post content for X, Reddit, Hacker News, and Product Hunt.</p>
+<p><strong>Tweet 1 (Hook)</strong></p>
+<p>just shipped the biggest update to XActions ever</p>
+<p>58,000+ lines of new code. 115 new files.</p>
+<p>XActions is now the most complete open-source X/Twitter toolkit on GitHub.</p>
+<p>plugins. workflows. cross-platform. real-time streaming. social graphs. sentiment analysis. browser extension.</p>
+<p>all free. thread 🧵</p>
+<hr>
+<p><strong>Tweet 2 (Plugin System)</strong></p>
+<p>1/ Plugin System</p>
+<p>anyone can now extend XActions with npm packages</p>
+<p>create xactions-plugin-yourname → add scrapers, MCP tools, automations, API routes</p>
+<p>community plugins auto-register in the MCP server so AI agents discover them instantly</p>
+<hr>
+<p><strong>Tweet 3 (Cross-Platform)</strong></p>
+<p>2/ Cross-Platform Scrapers</p>
+<p>XActions now scrapes Bluesky, Mastodon, and Threads — not just Twitter</p>
+<p>Bluesky uses AT Protocol (no browser needed)<br>Mastodon uses public REST API (any instance)<br>Threads uses Puppeteer like Twitter</p>
+<p>one unified interface:<br>scrape(&#39;bluesky&#39;, &#39;profile&#39;, { username: &#39;user.bsky.social&#39; })</p>
+<hr>
+<p><strong>Tweet 4 (Workflows)</strong></p>
+<p>3/ Workflow Engine</p>
+<p>define automation pipelines as JSON:</p>
+<p>trigger: every 30 min<br>→ scrape @competitor&#39;s latest tweet<br>→ if posted &lt; 30 min ago<br>→ summarize with AI<br>→ post your take</p>
+<p>set it and forget it. runs on cron via Bull queue.</p>
+<hr>
+<p><strong>Tweet 5 (Streaming)</strong></p>
+<p>4/ Real-Time Streaming</p>
+<p>subscribe to any account&#39;s tweets, follower changes, or mentions</p>
+<p>polls via Puppeteer → deduplicates in Redis → pushes events over Socket.IO</p>
+<p>your dashboard updates live. no API key. no webhook setup.</p>
+<hr>
+<p><strong>Tweet 6 (Sentiment + Graph)</strong></p>
+<p>5/ Sentiment Analysis + Social Graph</p>
+<p>built-in sentiment analyzer works completely offline — no API keys</p>
+<p>monitor your reputation over time. get alerts when sentiment drops.</p>
+<p>plus: map your entire social graph. find clusters, bridge accounts, influence scores. export to D3.js or Gephi.</p>
+<hr>
+<p><strong>Tweet 7 (Portability)</strong></p>
+<p>6/ Account Portability</p>
+<p>export your ENTIRE Twitter life:</p>
+<ul>
+<li>all tweets</li>
+<li>followers &amp; following lists</li>
+<li>bookmarks &amp; likes</li>
+<li>DMs</li>
+</ul>
+<p>formats: JSON, CSV, Markdown, self-contained HTML archive</p>
+<p>migration stubs ready for Bluesky &amp; Mastodon</p>
+<hr>
+<p><strong>Tweet 8 (Extension)</strong></p>
+<p>7/ Browser Extension</p>
+<p>no more pasting scripts in the console</p>
+<p>Chrome/Firefox extension with a popup UI:</p>
+<ul>
+<li>toggle automations on/off</li>
+<li>configure settings</li>
+<li>live activity log</li>
+<li>works on x.com, standalone, no server needed</li>
+</ul>
+<hr>
+<p><strong>Tweet 9 (Numbers)</strong></p>
+<p>by the numbers:</p>
+<p>140+ MCP tools (most of any Twitter MCP server)<br>4 platforms (Twitter, Bluesky, Mastodon, Threads)<br>50+ browser scripts<br>29 API route modules<br>26 agent skills<br>22 Claude tutorials<br>6 new systems (plugins, streaming, workflows, analytics, portability, graph)</p>
+<hr>
+<p><strong>Tweet 10 (CTA)</strong></p>
+<p>all of this is 100% free and open source.</p>
+<p>no API keys. no subscriptions. no paywalls.</p>
+<p>⭐ github.com/nirholas/XActions<br>📦 npm install xactions</p>
+<p>if this saved you from paying $100/mo for Twitter&#39;s API, star the repo</p>
+<p>built by @nichxbt</p>
+<hr>
+<h2>Hacker News Post</h2>
+<p><strong>Title:</strong> Show HN: XActions – Open-source X/Twitter automation with MCP, cross-platform scrapers, and workflow engine</p>
+<p><strong>Text:</strong></p>
+<p>Hey HN,</p>
+<p>I&#39;ve been building XActions — an open-source toolkit for X/Twitter automation. Just shipped v3.1.0 with some features I haven&#39;t seen in any other project:</p>
+<ul>
+<li><strong>Plugin system</strong> — community npm packages that extend scrapers, MCP tools, and automations</li>
+<li><strong>Cross-platform scrapers</strong> — Twitter + Bluesky (AT Protocol) + Mastodon (REST API) + Threads behind one interface</li>
+<li><strong>Workflow engine</strong> — declarative JSON pipelines with cron triggers, conditions, and chained actions</li>
+<li><strong>Real-time streaming</strong> — subscribe to tweet/follower/mention events via Socket.IO polling</li>
+<li><strong>Social graph analysis</strong> — map relationships, detect clusters, find bridge accounts with D3.js visualization</li>
+<li><strong>140+ MCP tools</strong> — largest free MCP server for Twitter, works with Claude/GPT/Cursor</li>
+<li><strong>Sentiment analysis</strong> — built-in rule-based analyzer (works offline) + optional LLM mode</li>
+<li><strong>Account portability</strong> — export your entire Twitter life to JSON/CSV/HTML, migration stubs for Bluesky</li>
+</ul>
+<p>Everything runs via browser scripts (paste in console), CLI, Node.js library, or MCP server for AI agents. No Twitter API key needed — it uses Puppeteer with stealth mode.</p>
+<p>GitHub: <a href="https://github.com/nirholas/XActions">https://github.com/nirholas/XActions</a><br>npm: <a href="https://www.npmjs.com/package/xactions">https://www.npmjs.com/package/xactions</a></p>
+<p>100% MIT licensed. Would love feedback on the architecture, especially the plugin system and workflow engine.</p>
+<hr>
+<h2>Reddit Posts</h2>
+<h3>r/javascript</h3>
+<p><strong>Title:</strong> XActions v3.1.0 — Open-source X/Twitter toolkit with plugin system, workflow engine, and cross-platform scrapers (Bluesky, Mastodon, Threads)</p>
+<p><strong>Body:</strong></p>
+<p>Built an open-source Node.js toolkit for X/Twitter automation. Just shipped the biggest update with 58K+ lines of new code:</p>
+<p><strong>What&#39;s new:</strong></p>
+<ul>
+<li>Plugin system — npm packages (<code>xactions-plugin-*</code>) that add scrapers, MCP tools, API routes</li>
+<li>Cross-platform — Bluesky (AT Protocol), Mastodon (REST API), Threads via unified <code>scrape()</code> interface</li>
+<li>Workflow engine — JSON pipelines with cron triggers and conditions</li>
+<li>Real-time streaming — Socket.IO + Puppeteer polling + Redis deduplication</li>
+<li>Social graph — D3.js visualization, cluster detection, influence scoring</li>
+<li>140+ MCP tools for AI agents (Claude, GPT, Cursor)</li>
+</ul>
+<p><strong>Stack:</strong> Node.js 18+, ESM, Puppeteer + stealth, Express, Prisma/PostgreSQL, Bull, Socket.IO, Redis</p>
+<p>No Twitter API key needed. MIT licensed.</p>
+<p>GitHub: <a href="https://github.com/nirholas/XActions">https://github.com/nirholas/XActions</a></p>
+<hr>
+<h3>r/ChatGPT or r/ClaudeAI</h3>
+<p><strong>Title:</strong> Built a free MCP server with 140+ tools for Twitter/X automation — works with Claude Desktop, Cursor, GPT</p>
+<p><strong>Body:</strong></p>
+<p>XActions just shipped v3.1.0 with 140+ MCP tools for X/Twitter — biggest free MCP server for social media.</p>
+<p>What you can do with Claude/Cursor:</p>
+<ul>
+<li>&quot;Analyze @paulg&#39;s writing style and write tweets in his voice&quot;</li>
+<li>&quot;Find everyone I follow who doesn&#39;t follow me back&quot;</li>
+<li>&quot;Monitor @competitor and alert me when they post about AI&quot;</li>
+<li>&quot;Export my Twitter bookmarks to CSV&quot;</li>
+<li>&quot;Build a social graph of accounts in the AI niche&quot;</li>
+</ul>
+<p>New in v3.1.0:</p>
+<ul>
+<li>Workflow engine — define automation pipelines as JSON, run on cron</li>
+<li>Cross-platform — also scrapes Bluesky, Mastodon, and Threads</li>
+<li>Real-time streaming — subscribe to live events</li>
+<li>Sentiment analysis — monitor reputation with alerts</li>
+<li>Plugin system — community can add new MCP tools via npm</li>
+</ul>
+<p>Setup: add 3 lines to your Claude Desktop config, no API key needed.</p>
+<p>100% free, open source: <a href="https://github.com/nirholas/XActions">https://github.com/nirholas/XActions</a></p>
+<hr>
+<h2>Product Hunt Tagline</h2>
+<p><strong>Tagline:</strong> The complete open-source X/Twitter automation toolkit — scrapers, MCP server for AI agents, workflows, and cross-platform support. No API key needed.</p>
+<p><strong>Description:</strong></p>
+<p>XActions is the most complete open-source toolkit for X/Twitter automation.</p>
+<p>🔧 <strong>4 ways to use it:</strong> Browser console scripts, CLI, Node.js library, MCP server for AI agents</p>
+<p>🤖 <strong>140+ MCP tools</strong> — largest free Twitter MCP server, works with Claude, GPT, Cursor</p>
+<p>🌐 <strong>Cross-platform</strong> — Twitter + Bluesky + Mastodon + Threads behind one unified interface</p>
+<p>⚡ <strong>Workflow engine</strong> — declarative JSON pipelines with cron triggers and conditions</p>
+<p>📊 <strong>Built-in analytics</strong> — sentiment analysis, social graph mapping, reputation monitoring</p>
+<p>🔌 <strong>Plugin system</strong> — extend with community npm packages</p>
+<p>💰 <strong>100% free</strong> — no API keys, no subscriptions, no paywalls. MIT licensed.</p>
+<p>v3.1.0 ships with 58,000+ lines of new code across plugins, streaming, workflows, cross-platform scrapers, sentiment analysis, social graph visualization, account portability, and a browser extension.</p>
+
+
+        <div class="cta-box">
+          <h3>⚡ Explore XActions</h3>
+          <p>100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/docs">Browse All Documentation</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 In This Section</h3>
+        <a href="/docs">Browse all docs</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/docs">All Documentation</a>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

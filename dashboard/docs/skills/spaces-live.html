@@ -172,7 +172,7 @@
         <span class="cat-badge">Agent Skills</span>
         <h1>Spaces &amp; Live Audio</h1>
 <p>Browser console scripts for interacting with X/Twitter Spaces.</p>
-<h2>Available Scripts</h2>
+<h2>Script Selection</h2>
 <table>
 <thead>
 <tr>
@@ -195,20 +195,20 @@
 <h2>Spaces Manager</h2>
 <p><strong>File:</strong> <code>src/spacesManager.js</code></p>
 <p>Manages interactions with X Spaces: join, leave, request to speak, and get live Space data.</p>
-<h3>How to use</h3>
+<h3>How to Use</h3>
 <ol>
 <li>Navigate to a Space or <code>x.com/i/spaces</code></li>
-<li>Open DevTools (F12) → Console</li>
-<li>Paste the script → Enter</li>
+<li>Open DevTools (F12) -&gt; Console</li>
+<li>Paste the script -&gt; Enter</li>
 </ol>
 <h2>Scrape Spaces</h2>
 <p><strong>File:</strong> <code>src/scrapeSpaces.js</code></p>
 <p>Finds X Spaces from search results or timelines. Identifies live, scheduled, and ended Spaces with metadata.</p>
-<h3>How to use</h3>
+<h3>How to Use</h3>
 <ol>
 <li>Search for Spaces: <code>x.com/search?q=your-topic&amp;f=live</code> or any timeline</li>
-<li>Open DevTools (F12) → Console</li>
-<li>Paste the script → Enter</li>
+<li>Open DevTools (F12) -&gt; Console</li>
+<li>Paste the script -&gt; Enter</li>
 </ol>
 <h3>Configuration</h3>
 <pre><code class="language-javascript">const CONFIG = {
@@ -225,7 +225,7 @@
 <li>Direct links to join</li>
 <li>JSON export of all collected metadata</li>
 </ul>
-<h3>Key Selectors</h3>
+<h2>DOM Selectors</h2>
 <table>
 <thead>
 <tr>
@@ -266,13 +266,37 @@
 <td><code>[data-testid=&quot;spaceTopic&quot;]</code></td>
 </tr>
 </tbody></table>
+<h2>Strategy Guide</h2>
+<h3>Using Spaces for growth</h3>
+<ol>
+<li>Use <code>src/scrapeSpaces.js</code> to find active Spaces in your niche</li>
+<li>Join as a listener -- consistent presence builds recognition</li>
+<li>Request to speak when topic aligns with your expertise</li>
+<li>Follow hosts and frequent speakers afterward</li>
+<li>Post about key takeaways after each Space (content repurposing)</li>
+</ol>
+<h3>Discovering niche Spaces</h3>
+<ol>
+<li>Search <code>x.com/search?q=your-topic&amp;f=live</code> for live Spaces</li>
+<li>Follow accounts that regularly host Spaces in your niche</li>
+<li>Set up <code>src/keywordMonitor.js</code> with Space-related keywords</li>
+<li>Check <code>/i/spaces</code> for recommended Spaces in your interests</li>
+</ol>
+<h3>Hosting workflow</h3>
+<ol>
+<li>Schedule a Space from the compose button</li>
+<li>Promote it with a tweet thread 24h before</li>
+<li>Use <code>src/scrapeSpaces.js</code> to record participant metadata</li>
+<li>After the Space, engage with attendees using <code>src/engagementBooster.js</code></li>
+</ol>
 <h2>Notes</h2>
 <ul>
 <li>Scraping captures metadata only (not audio content)</li>
-<li>Spaces can be live, scheduled, or ended — all three states are detected</li>
+<li>Spaces can be live, scheduled, or ended -- all three states are detected</li>
 <li>Recording availability depends on host settings</li>
-<li>Space links follow the pattern <code>x.com/i/spaces/{spaceId}</code></li>
-<li>Use delays between scrolls to avoid rate limits</li>
+<li>Space links: <code>x.com/i/spaces/{spaceId}</code></li>
+<li>Live Spaces filter: append <code>&amp;f=live</code> to search URL</li>
+<li>Hosting requires 600+ followers (X restriction)</li>
 </ul>
 
 
@@ -289,7 +313,7 @@
         <h3>📖 In This Section</h3>
                 <a href="/docs/skills/algorithm-cultivation">🎯 Algorithm Cultivation &amp; Thought Leadership</a>
         <a href="/docs/skills/analytics-insights">🎯 Analytics &amp; Insights</a>
-        <a href="/docs/skills/articles-longform">🎯 Articles &amp; Long-Form Content</a>
+        <a href="/docs/skills/articles-longform">🎯 Articles &amp; Longform</a>
         <a href="/docs/skills/blocking-muting-management">🎯 Blocking &amp; Muting Management</a>
         <a href="/docs/skills/bookmarks-management">🎯 Bookmarks Management</a>
         <a href="/docs/skills/business-ads">🎯 Business &amp; Ads Tools</a>

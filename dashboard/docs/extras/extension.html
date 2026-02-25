@@ -4,21 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>XActions Browser Extension | XActions</title>
-  <meta name="description" content="Run XActions automation scripts on X/Twitter without browser console access. Dark-themed popup with toggle cards, per-automation settings, live activity log, an">
+  <meta name="description" content="Run XActions automations on X/Twitter directly from your browser toolbar. No console access needed. Dark-themed popup with 11 automation cards, live dashboard, ">
   <meta name="keywords" content="xactions, twitter automation, x automation, free, open source, extension, browser, extensions &amp; plugins">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="XActions Browser Extension — XActions">
-  <meta property="og:description" content="Run XActions automation scripts on X/Twitter without browser console access. Dark-themed popup with toggle cards, per-automation settings, live activity log, an">
+  <meta property="og:description" content="Run XActions automations on X/Twitter directly from your browser toolbar. No console access needed. Dark-themed popup with 11 automation cards, live dashboard, ">
   <meta property="og:url" content="https://xactions.app/docs/extras/extension">
   <meta property="og:site_name" content="XActions">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="XActions Browser Extension — XActions">
-  <meta name="twitter:description" content="Run XActions automation scripts on X/Twitter without browser console access. Dark-themed popup with toggle cards, per-automation settings, live activity log, an">
+  <meta name="twitter:description" content="Run XActions automations on X/Twitter directly from your browser toolbar. No console access needed. Dark-themed popup with 11 automation cards, live dashboard, ">
 
   <link rel="canonical" href="https://xactions.app/docs/extras/extension">
   <link rel="manifest" href="/manifest.json">
@@ -29,7 +29,7 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "XActions Browser Extension | XActions",
-    "description": "Run XActions automation scripts on X/Twitter without browser console access. Dark-themed popup with toggle cards, per-automation settings, live activity log, an",
+    "description": "Run XActions automations on X/Twitter directly from your browser toolbar. No console access needed. Dark-themed popup with 11 automation cards, live dashboard, ",
     "url": "https://xactions.app/docs/extras/extension",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -172,203 +172,177 @@
         <span class="cat-badge">Extensions &amp; Plugins</span>
         <h1>XActions Browser Extension</h1>
 <blockquote>
-<p>Run XActions automation scripts on X/Twitter without browser console access. Dark-themed popup with toggle cards, per-automation settings, live activity log, and global controls.</p>
+<p>Run XActions automations on X/Twitter directly from your browser toolbar. No console access needed. Dark-themed popup with 11 automation cards, live dashboard, category filtering, search, progress tracking, and keyboard shortcuts.</p>
 </blockquote>
-<p><img src="https://img.shields.io/badge/Manifest-V3-blue" alt="Manifest V3"><br><img src="https://img.shields.io/badge/Chrome-%E2%9C%93-green" alt="Chrome"><br><img src="https://img.shields.io/badge/Firefox-%E2%9C%93-green" alt="Firefox"></p>
+<p><img src="https://img.shields.io/badge/Manifest-V3-blue" alt="Manifest V3"><br><img src="https://img.shields.io/badge/Chrome-%E2%9C%93-green" alt="Chrome"><br><img src="https://img.shields.io/badge/Firefox-%E2%9C%93-green" alt="Firefox"><br><img src="https://img.shields.io/badge/Automations-11-orange" alt="11 Automations"></p>
+<h2>Quick Start</h2>
+<ol>
+<li>Open <code>chrome://extensions/</code> → Enable <strong>Developer mode</strong> → <strong>Load unpacked</strong> → select the <code>extension/</code> folder</li>
+<li>Navigate to <strong>x.com</strong></li>
+<li>Click the <strong>XA</strong> icon in your toolbar</li>
+<li>Pick an automation, configure settings, click ▶️</li>
+</ol>
+<p>Full installation guide: <a href="../docs/extension.md">docs/extension.md</a></p>
 <h2>Features</h2>
-<h3>Automations (6)</h3>
-<ul>
-<li><strong>Auto-Liker</strong> — Like tweets matching keywords in your feed</li>
-<li><strong>Smart Unfollow</strong> — Unfollow users who don&#39;t follow back</li>
-<li><strong>Keyword Follow</strong> — Search keywords and follow matching users</li>
-<li><strong>Growth Suite</strong> — All-in-one: like, follow, unfollow non-followers</li>
-<li><strong>Auto-Commenter</strong> — Auto-reply to new posts with configurable comments</li>
-<li><strong>Follow Engagers</strong> — Follow users who liked/retweeted a specific tweet</li>
-</ul>
-<h3>Tools (5)</h3>
-<ul>
-<li><strong>Video Downloader</strong> — Adds a download button (⬇) to every tweet with video</li>
-<li><strong>Who Unfollowed Me</strong> — Scans your followers, compares to last snapshot, shows unfollowers</li>
-<li><strong>Best Time to Post</strong> — Analyzes engagement by hour/day, finds optimal posting times</li>
-<li><strong>Thread Reader</strong> — Adds &quot;Unroll&quot; button (🧵) to threads, shows clean readable overlay</li>
-<li><strong>Quick Stats</strong> — Calculates engagement rate and shows floating overlay on profile page</li>
-</ul>
-<h3>Global Features</h3>
-<ul>
-<li><strong>Right-click context menu</strong> — &quot;Download video&quot;, &quot;Unroll thread&quot;, &quot;Analyze account&quot;</li>
-<li><strong>First-run onboarding</strong> — Welcome modal with one-click popular feature enablement</li>
-<li><strong>Rate limit detection</strong> — Auto-pauses automations on HTTP 429, shows warning banner</li>
-<li><strong>Emergency stop</strong> — Red button stops all running automations instantly</li>
-<li><strong>Import/Export settings</strong> — Backup and restore all settings as JSON</li>
-<li><strong>Activity log</strong> — Real-time log of all actions across all automations</li>
-<li><strong>Badge counter</strong> — Extension badge shows total action count</li>
-</ul>
-<p>Each automation has:</p>
-<ul>
-<li>Configurable settings (delays, limits, keywords, filters)</li>
-<li>Start/Stop toggle</li>
-<li>Live action counter</li>
-<li>Activity logging</li>
-</ul>
-<h2>Installation</h2>
-<h3>Chrome (Load Unpacked)</h3>
-<ol>
-<li>Open Chrome and navigate to <code>chrome://extensions/</code></li>
-<li>Enable <strong>Developer mode</strong> (toggle in the top-right corner)</li>
-<li>Click <strong>Load unpacked</strong></li>
-<li>Select the <code>extension/</code> directory from this repository</li>
-<li>The XActions icon (&quot;XA&quot;) appears in your toolbar</li>
-<li>Pin it for easy access</li>
-</ol>
-<h3>Firefox (Temporary Add-on)</h3>
-<ol>
-<li>Open Firefox and navigate to <code>about:debugging#/runtime/this-firefox</code></li>
-<li>Click <strong>Load Temporary Add-on...</strong></li>
-<li>Select the <code>extension/manifest.json</code> file</li>
-<li>The XActions icon appears in your toolbar</li>
-</ol>
-<blockquote>
-<p><strong>Note:</strong> Firefox temporary add-ons are removed when Firefox closes. For permanent installation, the extension would need to be signed via <a href="https://addons.mozilla.org">addons.mozilla.org</a>.</p>
-</blockquote>
-<h2>Usage</h2>
-<ol>
-<li>Navigate to <strong>x.com</strong> (or twitter.com)</li>
-<li>Click the <strong>XA</strong> icon in your browser toolbar</li>
-<li>The popup shows your connection status (green dot = connected)</li>
-<li>Configure an automation&#39;s settings via the ⚙️ button</li>
-<li>Click ▶️ to start, ⏹ to stop</li>
-<li>Watch the <strong>Activity</strong> tab for real-time logs</li>
-<li>Use the red <strong>⏹</strong> button in the header for emergency stop all</li>
-</ol>
-<h3>Automation Tips</h3>
+<h3>Growth Automations (6)</h3>
 <table>
 <thead>
 <tr>
-<th>Feature</th>
-<th>Navigate to</th>
-<th>Notes</th>
+<th>Automation</th>
+<th>What it does</th>
+<th>Settings</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>Auto-Liker</td>
-<td>Home feed or any profile</td>
-<td>Scrolls and likes matching tweets</td>
+<td>❤️ <strong>Auto-Liker</strong></td>
+<td>Like tweets matching keywords in your feed</td>
+<td>Keywords, max likes, speed preset</td>
 </tr>
 <tr>
-<td>Smart Unfollow</td>
-<td><code>x.com/YOUR_USERNAME/following</code></td>
-<td>Must be on your following page</td>
+<td>👋 <strong>Smart Unfollow</strong></td>
+<td>Unfollow non-followers from your /following page</td>
+<td>Days to wait, whitelist, dry run</td>
 </tr>
 <tr>
-<td>Keyword Follow</td>
-<td>Any page (it searches)</td>
-<td>Navigates to search automatically</td>
+<td>🔍 <strong>Keyword Follow</strong></td>
+<td>Search keywords and follow matching users</td>
+<td>Keywords, max per keyword, min followers</td>
 </tr>
 <tr>
-<td>Growth Suite</td>
-<td>Home feed</td>
-<td>Runs like + follow + unfollow phases</td>
+<td>🚀 <strong>Growth Suite</strong></td>
+<td>All-in-one: like + follow + unfollow in one session</td>
+<td>Session duration, per-action limits</td>
 </tr>
 <tr>
-<td>Auto-Commenter</td>
-<td>A user&#39;s profile</td>
-<td>Monitors for new posts</td>
+<td>💬 <strong>Auto-Commenter</strong></td>
+<td>Reply to posts with random comments from your list</td>
+<td>Comment pool, check interval, keyword filter</td>
 </tr>
 <tr>
-<td>Follow Engagers</td>
-<td>A specific tweet</td>
-<td>Opens the likers panel</td>
-</tr>
-<tr>
-<td>Video Downloader</td>
-<td>Any feed or tweet</td>
-<td>Adds ⬇ button to tweets with video</td>
-</tr>
-<tr>
-<td>Who Unfollowed Me</td>
-<td><code>x.com/YOUR_USERNAME/followers</code></td>
-<td>Must be on your followers page</td>
-</tr>
-<tr>
-<td>Best Time to Post</td>
-<td>Your profile (tweets tab)</td>
-<td>Scrolls and analyzes engagement data</td>
-</tr>
-<tr>
-<td>Thread Reader</td>
-<td>Any feed</td>
-<td>Adds 🧵 button to detected threads</td>
-</tr>
-<tr>
-<td>Quick Stats</td>
-<td>Your profile</td>
-<td>Samples tweets for engagement rate</td>
+<td>👥 <strong>Follow Engagers</strong></td>
+<td>Follow users who liked/retweeted a specific tweet</td>
+<td>Mode (likers/retweeters), min followers</td>
 </tr>
 </tbody></table>
+<h3>Tools (2)</h3>
+<table>
+<thead>
+<tr>
+<th>Automation</th>
+<th>What it does</th>
+<th>Settings</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>🎬 <strong>Video Downloader</strong></td>
+<td>Adds ⬇ button to tweets with video</td>
+<td>Quality, auto-download, show button</td>
+</tr>
+<tr>
+<td>🧵 <strong>Thread Reader</strong></td>
+<td>Adds 🧵 Unroll button to threads, shows clean overlay</td>
+<td>Show button, auto-detect, max tweets</td>
+</tr>
+</tbody></table>
+<h3>Analytics (3)</h3>
+<table>
+<thead>
+<tr>
+<th>Automation</th>
+<th>What it does</th>
+<th>Settings</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>🔔 <strong>Who Unfollowed Me</strong></td>
+<td>Scans followers, compares snapshots, detects unfollowers</td>
+<td>Check frequency, notifications, history</td>
+</tr>
+<tr>
+<td>📊 <strong>Best Time to Post</strong></td>
+<td>Analyzes engagement patterns by hour/day</td>
+<td>Sample size, timezone</td>
+</tr>
+<tr>
+<td>⚡ <strong>Quick Stats</strong></td>
+<td>Calculates engagement rate, shows floating overlay</td>
+<td>Show overlay, track daily, sample size</td>
+</tr>
+</tbody></table>
+<h3>UX Features</h3>
+<ul>
+<li><strong>Dashboard</strong> — 4-stat summary: running count, today&#39;s actions, total actions, uptime</li>
+<li><strong>Category filters</strong> — All / Growth / Tools / Analytics pill buttons</li>
+<li><strong>Search</strong> — Instant filter across all automations (press <code>/</code> to focus)</li>
+<li><strong>Progress bars</strong> — Visual progress on running cards (e.g., 12/50)</li>
+<li><strong>Session timers</strong> — Live elapsed time per running automation</li>
+<li><strong>Speed presets</strong> — Safe / Normal / Fast instead of raw millisecond inputs</li>
+<li><strong>Delay sliders</strong> — Range sliders with human-readable labels (2.0s — 5.0s)</li>
+<li><strong>Toast notifications</strong> — Styled feedback for start/stop/import/export/errors</li>
+<li><strong>Disconnected banner</strong> — Prominent alert when not on x.com with link</li>
+<li><strong>Activity log filtering</strong> — Dropdown to filter by automation type</li>
+<li><strong>Relative timestamps</strong> — &quot;2m ago&quot; in logs (hover for full time)</li>
+<li><strong>Pause/Resume</strong> — ⏸ button pauses all without stopping</li>
+<li><strong>Emergency stop</strong> — ⏹ instantly stops everything (no confirm dialog)</li>
+<li><strong>Keyboard shortcuts</strong> — <code>Ctrl+Shift+S</code> stop, <code>Ctrl+Shift+P</code> pause, <code>/</code> search, <code>Esc</code> clear</li>
+<li><strong>Right-click menus</strong> — &quot;Download video&quot;, &quot;Unroll thread&quot;, &quot;Analyze account&quot;</li>
+<li><strong>First-run onboarding</strong> — Welcome modal with one-click feature setup</li>
+<li><strong>Rate limit detection</strong> — Auto-pauses on HTTP 429</li>
+<li><strong>Import/Export</strong> — Backup and restore all settings as JSON</li>
+<li><strong>Badge</strong> — Green badge shows running automation count</li>
+</ul>
 <h2>Architecture</h2>
 <pre><code>extension/
-├── manifest.json              # Manifest V3 configuration
+├── manifest.json                  Manifest V3 configuration
 ├── background/
-│   └── service-worker.js      # State management, badge, alarms
+│   └── service-worker.js          State management, badge, context menus, rate limits
 ├── content/
-│   ├── bridge.js              # Content script — message bridge
-│   └── injected.js            # Page-context script — automation engine
+│   ├── bridge.js                  Content script — message relay
+│   └── injected.js                Page-context script — 11 automation runners
 ├── popup/
-│   ├── popup.html             # Popup UI
-│   ├── popup.css              # Dark theme styles
-│   └── popup.js               # Popup controller
-├── icons/
-│   ├── icon16.png             # Toolbar icon
-│   ├── icon48.png             # Extension page icon
-│   └── icon128.png            # Store icon
-└── README.md                  # This file
+│   ├── popup.html                 Popup UI (632 lines)
+│   ├── popup.css                  Dark theme styles (1086 lines)
+│   └── popup.js                   Popup controller (782 lines)
+└── icons/
+    ├── icon16.png, icon48.png, icon128.png
 </code></pre>
-<h3>Communication Flow</h3>
-<pre><code>┌─────────┐     chrome.runtime      ┌───────────────┐     chrome.runtime      ┌─────────┐
-│  Popup   │ ◄──────────────────────► │  Background   │ ◄──────────────────────► │ Content │
-│ popup.js │    sendMessage           │ service-worker│    sendMessage           │ bridge  │
-└─────────┘                          └───────────────┘                          └────┬────┘
-                                                                                     │
-                                                                              window.postMessage
-                                                                                     │
-                                                                              ┌──────▼──────┐
-                                                                              │   Injected   │
-                                                                              │  injected.js │
-                                                                              │ (page context)│
-                                                                              └──────────────┘
+<h3>Message Flow</h3>
+<pre><code>Popup  ──chrome.runtime──►  Background  ──chrome.tabs──►  Bridge  ──postMessage──►  Injected
+popup.js                    service-worker.js              bridge.js                 injected.js
+       ◄──chrome.runtime──              ◄──chrome.runtime──        ◄──postMessage──
 </code></pre>
-<ul>
-<li><strong>Popup</strong> ↔ <strong>Background</strong>: <code>chrome.runtime.sendMessage</code> for start/stop commands and state queries</li>
-<li><strong>Background</strong> ↔ <strong>Content (Bridge)</strong>: <code>chrome.tabs.sendMessage</code> to relay commands to specific tabs</li>
-<li><strong>Content (Bridge)</strong> ↔ <strong>Injected (Page)</strong>: <code>window.postMessage</code> since they share the same page but different JS contexts</li>
-<li><strong>Settings</strong>: persisted in <code>chrome.storage.local</code></li>
-</ul>
-<h2>Settings Storage</h2>
-<p>All settings are stored per-automation in <code>chrome.storage.local</code>:</p>
-<pre><code>settings_autoLiker: { keywords: [...], maxActions: 20, minDelay: 2000, ... }
-settings_smartUnfollow: { daysToWait: 3, maxActions: 50, ... }
-settings_videoDownloader: { quality: &#39;highest&#39;, showButton: true, ... }
-settings_unfollowerDetector: { checkFrequency: 24, notifications: true, ... }
-settings_bestTimeToPost: { tweetCount: 50, timezone: &#39;local&#39; }
-settings_threadReader: { showUnrollBtn: true, autoDetect: true, maxTweets: 50 }
-settings_quickStats: { showOverlay: true, trackDaily: true, sampleSize: 20 }
-globalSettings: { minDelay: 2000, maxDelay: 5000, debug: true }
-activityLog: [ { time, type, automation, message }, ... ]
-automations: { autoLiker: { running, actionCount, startedAt }, ... }
-firstRun: true/false
-rateLimited: true/false
-</code></pre>
+<h2>Detailed Docs</h2>
+<table>
+<thead>
+<tr>
+<th>Document</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="../docs/extension.md">Extension User Guide</a></td>
+<td>Installation, usage, each automation explained, tips, FAQ</td>
+</tr>
+<tr>
+<td><a href="../docs/extension-api.md">Extension Internal API</a></td>
+<td>Message protocol, storage schema, event flow</td>
+</tr>
+<tr>
+<td><a href="../docs/extension-dev.md">Extension Developer Guide</a></td>
+<td>Adding automations, modifying UI, DOM selectors, testing</td>
+</tr>
+</tbody></table>
 <h2>Permissions</h2>
 <table>
 <thead>
 <tr>
 <th>Permission</th>
-<th>Reason</th>
+<th>Why</th>
 </tr>
 </thead>
 <tbody><tr>
 <td><code>activeTab</code></td>
-<td>Access the current X tab to inject scripts</td>
+<td>Access the current X tab</td>
 </tr>
 <tr>
 <td><code>storage</code></td>
@@ -380,29 +354,21 @@ rateLimited: true/false
 </tr>
 <tr>
 <td><code>scripting</code></td>
-<td>Programmatic script injection</td>
+<td>Inject automation code</td>
 </tr>
 <tr>
 <td><code>contextMenus</code></td>
-<td>Right-click menu: Download video, Unroll thread, Analyze account</td>
+<td>Right-click: Download video, Unroll thread, Analyze account</td>
 </tr>
 <tr>
 <td><code>notifications</code></td>
-<td>Alert when rate limits are detected</td>
+<td>Rate limit alerts</td>
 </tr>
 <tr>
-<td><code>host_permissions: x.com, twitter.com</code></td>
-<td>Only runs on X/Twitter pages</td>
+<td><code>host_permissions</code></td>
+<td>Only x.com and twitter.com</td>
 </tr>
 </tbody></table>
-<h2>Development</h2>
-<p>To modify automations, edit <code>content/injected.js</code>. Each automation is registered via <code>registerAutomation(id, asyncRunnerFn)</code>.</p>
-<p>To add a new automation:</p>
-<ol>
-<li>Add a <code>registerAutomation(&#39;myNew&#39;, async (settings) =&gt; { ... })</code> block in <code>injected.js</code></li>
-<li>Add a card in <code>popup.html</code> with <code>data-automation=&quot;myNew&quot;</code></li>
-<li>The settings/toggle/log infrastructure handles the rest automatically</li>
-</ol>
 <h2>Credits</h2>
 <p>Built by <a href="https://x.com/nichxbt">nichxbt</a> as part of <a href="https://github.com/nirholas/XActions">XActions</a>.</p>
 

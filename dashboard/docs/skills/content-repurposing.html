@@ -4,21 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Content Repurposing | XActions</title>
-  <meta name="description" content="MCP-powered workflow for identifying top-performing content and generating repurposed variations for a content calendar.">
+  <meta name="description" content="Browser scripts and MCP workflows for identifying top content and generating repurposed variations.">
   <meta name="keywords" content="xactions, twitter automation, x automation, free, open source, content, repurposing, agent skills">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Content Repurposing — XActions">
-  <meta property="og:description" content="MCP-powered workflow for identifying top-performing content and generating repurposed variations for a content calendar.">
+  <meta property="og:description" content="Browser scripts and MCP workflows for identifying top content and generating repurposed variations.">
   <meta property="og:url" content="https://xactions.app/docs/skills/content-repurposing">
   <meta property="og:site_name" content="XActions">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Content Repurposing — XActions">
-  <meta name="twitter:description" content="MCP-powered workflow for identifying top-performing content and generating repurposed variations for a content calendar.">
+  <meta name="twitter:description" content="Browser scripts and MCP workflows for identifying top content and generating repurposed variations.">
 
   <link rel="canonical" href="https://xactions.app/docs/skills/content-repurposing">
   <link rel="manifest" href="/manifest.json">
@@ -29,7 +29,7 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Content Repurposing | XActions",
-    "description": "MCP-powered workflow for identifying top-performing content and generating repurposed variations for a content calendar.",
+    "description": "Browser scripts and MCP workflows for identifying top content and generating repurposed variations.",
     "url": "https://xactions.app/docs/skills/content-repurposing",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -171,76 +171,130 @@
       <article class="article">
         <span class="cat-badge">Agent Skills</span>
         <h1>Content Repurposing</h1>
-<p>MCP-powered workflow for identifying top-performing content and generating repurposed variations for a content calendar.</p>
-<h2>MCP Tools Used</h2>
+<p>Browser scripts and MCP workflows for identifying top content and generating repurposed variations.</p>
+<h2>Script Selection</h2>
 <table>
 <thead>
 <tr>
-<th>Tool</th>
-<th>Purpose</th>
+<th>Goal</th>
+<th>File</th>
+<th>Navigate to</th>
 </tr>
 </thead>
 <tbody><tr>
-<td><code>x_get_tweets</code></td>
-<td>Pull recent posts with engagement data</td>
+<td>Repurpose tweets (5 formats)</td>
+<td><code>src/contentRepurposer.js</code></td>
+<td><code>x.com/USERNAME</code></td>
 </tr>
 <tr>
-<td><code>x_get_profile</code></td>
-<td>Context on account size for engagement rates</td>
+<td>Compose threads from ideas</td>
+<td><code>src/threadComposer.js</code></td>
+<td><code>x.com/USERNAME</code></td>
 </tr>
 <tr>
-<td><code>x_search_tweets</code></td>
-<td>Research trending angles in your niche</td>
+<td>Content calendar analysis</td>
+<td><code>src/contentCalendar.js</code></td>
+<td><code>x.com/USERNAME</code></td>
+</tr>
+<tr>
+<td>Find top-performing content</td>
+<td><code>src/tweetPerformance.js</code></td>
+<td><code>x.com/USERNAME</code></td>
+</tr>
+<tr>
+<td>Optimize posting schedule</td>
+<td><code>src/tweetScheduleOptimizer.js</code></td>
+<td><code>x.com/USERNAME</code></td>
 </tr>
 </tbody></table>
-<h2>Workflow</h2>
+<h2>Content Repurposer</h2>
+<p><strong>File:</strong> <code>src/contentRepurposer.js</code></p>
+<p>The main repurposing engine. Scans your timeline, then converts any tweet into 5 content formats.</p>
+<h3>Controls</h3>
+<ul>
+<li><code>XActions.scan()</code> -- Scrape tweets from current page</li>
+<li><code>XActions.list()</code> -- Show all scraped tweets with indices</li>
+<li><code>XActions.toThread(i)</code> -- Convert tweet to thread outline</li>
+<li><code>XActions.toSummary(i)</code> -- Condense to punchy summary variations</li>
+<li><code>XActions.toStorm(i)</code> -- Break into numbered tweet storm</li>
+<li><code>XActions.toBlog(i)</code> -- Generate blog/article outline with SEO keywords</li>
+<li><code>XActions.toQuoteTemplates(i)</code> -- Create 3 quote-retweet variations</li>
+<li><code>XActions.all(i)</code> -- Run ALL 5 repurposing strategies</li>
+<li><code>XActions.export()</code> -- Download all repurposed content as JSON</li>
+</ul>
+<h3>Repurposing Formats</h3>
+<table>
+<thead>
+<tr>
+<th>Format</th>
+<th>Best For</th>
+<th>Output</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Thread</td>
+<td>Deep dives, tutorials</td>
+<td>Hook + body parts + CTA</td>
+</tr>
+<tr>
+<td>Summary</td>
+<td>Time-sensitive repost</td>
+<td>3 punchy variations</td>
+</tr>
+<tr>
+<td>Storm</td>
+<td>Long content splitting</td>
+<td>Numbered 1/N tweets</td>
+</tr>
+<tr>
+<td>Blog</td>
+<td>SEO content, articles</td>
+<td>Title + sections + keywords</td>
+</tr>
+<tr>
+<td>Quote Templates</td>
+<td>Engagement farming</td>
+<td>Agreement/personal/contrarian takes</td>
+</tr>
+</tbody></table>
+<h2>MCP Workflow</h2>
 <ol>
-<li><strong>Pull performance data</strong> — Call <code>x_get_tweets</code> with <code>limit: 100</code> for the target account. Call <code>x_get_profile</code> to get follower count for rate calculation.</li>
-<li><strong>Rank by engagement</strong> — Calculate engagement rate per tweet: <code>(likes + retweets + replies) / followers * 100</code>. Sort descending. Select top 10.</li>
-<li><strong>Analyze winning patterns</strong> — For each top tweet, identify:<ul>
-<li>Format: standalone, thread opener, question, list, hot take, story</li>
-<li>Hook type: curiosity gap, bold claim, number-led, personal story</li>
-<li>Topic/theme</li>
-<li>Length (short &lt;100 chars, medium 100-200, long 200+)</li>
-</ul>
-</li>
-<li><strong>Research trending angles</strong> — Call <code>x_search_tweets</code> with 2-3 queries related to top-performing topics. Note fresh angles and current discussions.</li>
-<li><strong>Generate variations</strong> — For each top 5 tweet, create 3 repurposed versions:<ul>
-<li><strong>Angle shift</strong>: Same core idea, different perspective or audience</li>
-<li><strong>Format change</strong>: Convert standalone → thread, or thread → standalone</li>
-<li><strong>Update/expand</strong>: Add new data, examples, or context</li>
-</ul>
-</li>
-<li><strong>Build content calendar</strong> — Organize variations into a 2-week posting schedule, spacing similar topics at least 3 days apart.</li>
+<li>Call <code>x_get_tweets</code> with <code>limit: 100</code> for the target account</li>
+<li>Call <code>x_get_profile</code> to get follower count for rate calculation</li>
+<li>Rank by engagement rate: <code>(likes + RTs + replies) / followers * 100</code></li>
+<li>For top 5, generate variations using the content repurposer patterns</li>
 </ol>
-<h2>Output Template</h2>
-<pre><code>## Content Repurposing Report: @{username}
-
-### Top Performers
-| Rank | Tweet | Eng Rate | Format | Hook Type |
-|------|-------|----------|--------|-----------|
-| 1    | {text excerpt} | {rate}% | {format} | {hook} |
-
-### Winning Patterns
-- Best format: {format} ({avg_rate}% avg)
-- Best hook type: {hook} ({avg_rate}% avg)
-- Best topic: {topic}
-- Optimal length: {range}
-
-### Repurposed Content
-
-**Original:** &quot;{tweet text}&quot; — {eng_rate}%
-
-1. **Angle shift:** {new tweet text}
-2. **Format change:** {new tweet text}
-3. **Update/expand:** {new tweet text}
-
-### 2-Week Calendar
-| Day | Content | Type | Based On |
-|-----|---------|------|----------|
-| Mon | {text}  | Angle shift | Top tweet #1 |
-| Wed | {text}  | Thread | Top tweet #3 |
+<h2>Repurposing Pipeline</h2>
+<pre><code>High-engagement tweet
+  -&gt; toThread()    = 5-10 tweet thread
+  -&gt; toSummary()   = 3 punchy rewrites
+  -&gt; toStorm()     = numbered tweet storm
+  -&gt; toBlog()      = article outline + SEO keywords
+  -&gt; toQuoteTemplates() = 3 QT engagement variations
 </code></pre>
+<h2>Strategy Guide</h2>
+<h3>Weekly content repurposing routine</h3>
+<ol>
+<li>Run <code>src/tweetPerformance.js</code> to identify top 5 tweets this week</li>
+<li>Run <code>src/contentRepurposer.js</code> -&gt; <code>XActions.scan()</code></li>
+<li>For each top tweet: <code>XActions.all(i)</code> to generate all formats</li>
+<li>Export with <code>XActions.export()</code> for scheduling</li>
+<li>Space repurposed content 3+ days from original</li>
+</ol>
+<h3>Maximizing a viral tweet</h3>
+<ol>
+<li>When a tweet goes viral, immediately run <code>XActions.toThread(i)</code> for a follow-up thread</li>
+<li>Use <code>XActions.toQuoteTemplates(i)</code> for engagement in replies</li>
+<li>Later, use <code>XActions.toBlog(i)</code> for a long-form article</li>
+<li>Use <code>src/autoPlugReplies.js</code> to plug your offer on the viral tweet</li>
+</ol>
+<h2>Notes</h2>
+<ul>
+<li>Content repurposer generates outlines and templates, not final polished content</li>
+<li>Blog outlines include SEO keyword suggestions</li>
+<li>All output exportable as JSON for external tools</li>
+<li>Works best on tweets with 50+ words (more content to repurpose)</li>
+</ul>
 
 
         <div class="cta-box">
@@ -256,7 +310,7 @@
         <h3>📖 In This Section</h3>
                 <a href="/docs/skills/algorithm-cultivation">🎯 Algorithm Cultivation &amp; Thought Leadership</a>
         <a href="/docs/skills/analytics-insights">🎯 Analytics &amp; Insights</a>
-        <a href="/docs/skills/articles-longform">🎯 Articles &amp; Long-Form Content</a>
+        <a href="/docs/skills/articles-longform">🎯 Articles &amp; Longform</a>
         <a href="/docs/skills/blocking-muting-management">🎯 Blocking &amp; Muting Management</a>
         <a href="/docs/skills/bookmarks-management">🎯 Bookmarks Management</a>
         <a href="/docs/skills/business-ads">🎯 Business &amp; Ads Tools</a>

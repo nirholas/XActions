@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unfollow Non-Followers on X (Twitter) — Clean Up Your Ratio in Minutes — Free X/Twitter Tools Tool | XActions</title>
+  <meta name="description" content="**Find every account that doesn't follow you back on X (Twitter) and unfollow them automatically — free, no API, no app install.** Keep your mutuals. Remove ...">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, unfollow, non, followers, tutorial, non-followers, (twitter), clean, ratio, minutes, tools, unfollow non followers tutorial twitter">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Unfollow Non-Followers on X (Twitter) — Clean Up Your Ratio in Minutes — XActions">
+  <meta property="og:description" content="**Find every account that doesn't follow you back on X (Twitter) and unfollow them automatically — free, no API, no app install.** Keep your mutuals. Remove ...">
+  <meta property="og:url" content="https://xactions.app/docs/step-by-step/unfollow-non-followers-tutorial">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Unfollow Non-Followers on X (Twitter) — Clean Up Your Ratio in Minutes — Free X/Twitter Tool">
+  <meta name="twitter:description" content="**Find every account that doesn't follow you back on X (Twitter) and unfollow them automatically — free, no API, no app install.** Keep your mutuals. Remove ...">
+
+  <link rel="canonical" href="https://xactions.app/docs/step-by-step/unfollow-non-followers-tutorial">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Unfollow Non-Followers on X (Twitter) — Clean Up Your Ratio in Minutes — Free X/Twitter Tools Tool | XActions",
+    "description": "**Find every account that doesn't follow you back on X (Twitter) and unfollow them automatically — free, no API, no app install.** Keep your mutuals. Remove ...",
+    "url": "https://xactions.app/docs/step-by-step/unfollow-non-followers-tutorial",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/unfollow-non-followers-tutorial",
+    "articleSection": "Tools",
+    "keywords": "xactions, twitter automation, x automation, free, unfollow, non, followers, tutorial, non-followers, (twitter), clean, ratio, minutes, tools, unfollow non followers tutorial twitter"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Unfollow Non-Followers on X (Twitter) — Clean Up Your Ratio in Minutes", "item": "https://xactions.app/docs/unfollow-non-followers-tutorial" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use Unfollow Non-Followers on X (Twitter) — Clean Up Your Ratio in Minutes",
+    "description": "**Find every account that doesn't follow you back on X (Twitter) and unfollow them automatically — free, no API, no app install.** Keep your mutuals. Remove ...",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions Unfollow Non-Followers on X (Twitter) — Clean Up Your Ratio in Minutes script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>⚡ Unfollow Non-Followers on X (Twitter) — Clean Up Your Ratio in Minutes</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › Unfollow Non-Followers on X (Twitter) — Clean Up Your Ratio in Minutes
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Tools</span>
+        <h1>🚫 Unfollow Non-Followers on X (Twitter) — Clean Up Your Ratio in Minutes</h1>
+<blockquote>
+<p><strong>Find every account that doesn&#39;t follow you back on X (Twitter) and unfollow them automatically — free, no API, no app install.</strong> Keep your mutuals. Remove the dead weight.</p>
+</blockquote>
+<p><strong>Works on:</strong> 🌐 Browser Console · 💻 CLI · 🤖 MCP (AI Agents)<br><strong>Difficulty:</strong> 🟢 Beginner<br><strong>Time:</strong> ⏱️ 5–20 minutes<br><strong>Requirements:</strong> A web browser logged into x.com</p>
+<blockquote>
+<p>📖 For the quick-reference version, see <a href="../unfollow-non-followers.md">unfollow-non-followers.md</a></p>
+</blockquote>
+<hr>
+<h2>🎯 Real-World Scenario</h2>
+<p>You&#39;ve been on X for three years. You followed back anyone who followed you, hit &quot;Follow&quot; on people in your niche hoping they&#39;d follow back, and binged through &quot;suggested accounts.&quot; Now you follow <strong>2,100 people</strong> but only <strong>890 follow you back</strong>. Your follower-to-following ratio is 0.42 — and every growth guide says it should be above 1.0. You don&#39;t want to unfollow <em>everyone</em> (you like your mutuals) — you just want to remove the <strong>1,210 accounts</strong> that never followed you back.</p>
+<p>Doing this manually means clicking each profile, checking &quot;Follows you,&quot; clicking unfollow, confirming — that&#39;s <strong>4 clicks × 1,210 people = 4,840 clicks</strong>. XActions does it with one paste.</p>
+<p><strong>Before XActions:</strong></p>
+<pre><code>┌─────────────────────────────────────────────────────┐
+│  @yourhandle                                        │
+├─────────────────────────────────────────────────────┤
+│  Following: 2,100         Followers: 890            │
+│  Ratio: 0.42x 😬                                    │
+│                                                     │
+│  👤 @big_influencer     Follows you? ❌ (NOPE)      │
+│  👤 @real_friend_01     Follows you? ✅ (mutual)    │
+│  👤 @brand_account      Follows you? ❌ (NOPE)      │
+│  👤 @dead_profile_77    Follows you? ❌ (NOPE)      │
+│  👤 @mutual_buddy       Follows you? ✅ (mutual)    │
+│  👤 @crypto_shill_88    Follows you? ❌ (NOPE)      │
+│  ... 2,094 more to check manually 😩                │
+│                                                     │
+│  Time to clean up by hand: ~6 hours                 │
+└─────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>After XActions:</strong></p>
+<pre><code>┌─────────────────────────────────────────────────────┐
+│  @yourhandle                                        │
+├─────────────────────────────────────────────────────┤
+│  Following: 890           Followers: 890            │
+│  Ratio: 1.0x 💪                                     │
+│                                                     │
+│  👤 @real_friend_01     ✅ mutual                   │
+│  👤 @mutual_buddy       ✅ mutual                   │
+│  👤 @work_colleague     ✅ mutual                   │
+│  ... only people who follow you back                │
+│                                                     │
+│  Non-followers removed: 1,210                       │
+│  Time: ~15 minutes (with safety pauses)             │
+│  Backup file: ✅ saved automatically                │
+└─────────────────────────────────────────────────────┘
+</code></pre>
+<hr>
+<h2>📋 What This Does (Step by Step)</h2>
+<ol>
+<li>📜 <strong>Scrolls your following list</strong> — loads all accounts from <code>x.com/you/following</code></li>
+<li>🔎 <strong>Checks the &quot;Follows you&quot; badge</strong> — uses <code>[data-testid=&quot;userFollowIndicator&quot;]</code> on each user cell</li>
+<li>📊 <strong>Separates mutuals from non-followers</strong> — builds two lists</li>
+<li>💾 <strong>Downloads the non-followers list</strong> — JSON backup before making any changes</li>
+<li>⚠️ <strong>Shows confirmation dialog</strong> — previews who will be unfollowed</li>
+<li>🚫 <strong>Unfollows only non-followers</strong> — clicks unfollow + confirm for each, skipping mutuals</li>
+<li>⏸️ <strong>Pauses for safety</strong> — 3s delay per action + 15s break every 10 unfollows</li>
+</ol>
+<pre><code>┌───────────────────────────────────────────────────────────┐
+│                                                           │
+│  [Navigate to /following]                                 │
+│          │                                                │
+│          ▼                                                │
+│  [Scroll &amp; load all user cells]                           │
+│          │                                                │
+│          ▼                                                │
+│  [For each user: check &quot;Follows you&quot; badge]               │
+│          │                                                │
+│    ┌─────┴─────┐                                          │
+│    │           │                                          │
+│  Badge ✅    No badge ❌                                   │
+│    │           │                                          │
+│    ▼           ▼                                          │
+│  [SKIP]    [Add to non-followers list]                    │
+│               │                                           │
+│               ▼                                           │
+│  [Download non-followers JSON]                            │
+│               │                                           │
+│               ▼                                           │
+│  [Confirm?] ──→ Cancel → [Abort, keep backup]            │
+│       │                                                   │
+│      OK                                                   │
+│       │                                                   │
+│       ▼                                                   │
+│  [Click unfollow → confirm → wait 3-5s → next]           │
+│               │                                           │
+│               ▼                                           │
+│  [Print summary: unfollowed / failed / remaining]         │
+│                                                           │
+└───────────────────────────────────────────────────────────┘
+</code></pre>
+<hr>
+<h2>🌐 Method 1: Browser Console (Copy-Paste)</h2>
+<p><strong>Best for:</strong> Cleaning up accounts with up to ~1,000 following. Zero setup.</p>
+<h3>Prerequisites</h3>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> Logged into X/Twitter in your web browser</li>
+<li><input checked="" disabled="" type="checkbox"> On desktop/laptop</li>
+<li><input checked="" disabled="" type="checkbox"> Know your username</li>
+</ul>
+<h3>Step 1: Navigate to your Following page</h3>
+<blockquote>
+<p>Go to <strong><code>x.com/YOUR_USERNAME/following</code></strong></p>
+</blockquote>
+<pre><code>┌────────────────────────────────────────────────────┐
+│ 🔍 x.com/nichxbt/following                         │
+├────────────────────────────────────────────────────┤
+│                                                    │
+│  👤 Elon Musk @elonmusk          [Following ✓]    │
+│                                                    │
+│  👤 Sam Altman @sama             [Following ✓]    │
+│     Follows you                                    │
+│                                                    │
+│  👤 Dead Account @gone_2023      [Following ✓]    │
+│                                                    │
+│  👤 Real Friend @bestie_dev      [Following ✓]    │
+│     Follows you                                    │
+│                                                    │
+│  ... 2,096 more                                    │
+│                                                    │
+└────────────────────────────────────────────────────┘
+</code></pre>
+<p>Notice the small &quot;Follows you&quot; label — that&#39;s the <code>[data-testid=&quot;userFollowIndicator&quot;]</code> badge the script looks for.</p>
+<h3>Step 2: Open Developer Console</h3>
+<table>
+<thead>
+<tr>
+<th>OS</th>
+<th>Shortcut</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Windows / Linux</strong></td>
+<td><code>F12</code> then <strong>Console</strong> tab, or <code>Ctrl + Shift + J</code></td>
+</tr>
+<tr>
+<td><strong>Mac</strong></td>
+<td><code>Cmd + Option + J</code></td>
+</tr>
+</tbody></table>
+<h3>Step 3: Paste and Run</h3>
+<pre><code class="language-javascript">// ============================================
+// XActions - Unfollow Non-Followers on X/Twitter
+// by nichxbt — https://xactions.app
+// Go to: x.com/YOUR_USERNAME/following
+// Open console (F12 → Console), paste, Enter
+// ============================================
+
+(async () =&gt; {
+  // ── Configuration ──────────────────────────────────────
+  const MAX_UNFOLLOWS = 100;          // Max unfollows per run
+  const SCROLL_DELAY = 2000;          // Delay between scrolls (ms)
+  const UNFOLLOW_DELAY = 3000;        // Delay between unfollows (ms)
+  const BATCH_PAUSE = 15000;          // 15s pause every 10 unfollows
+  const MAX_SCROLL_RETRIES = 15;      // Stop scrolling after this many retries
+
+  console.log(&#39;&#39;);
+  console.log(&#39;🔍 XActions - UNFOLLOW NON-FOLLOWERS&#39;);
+  console.log(&#39;════════════════════════════════════════&#39;);
+  console.log(`⚙️  Max unfollows per run: ${MAX_UNFOLLOWS}`);
+  console.log(&#39;&#39;);
+
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+
+  // Verify page
+  const pathMatch = window.location.pathname.match(/^\/([^/]+)\/following/);
+  if (!pathMatch) {
+    console.error(&#39;❌ Navigate to your FOLLOWING page first!&#39;);
+    console.log(&#39;👉 Go to: x.com/YOUR_USERNAME/following&#39;);
+    return;
+  }
+
+  const currentUsername = pathMatch[1];
+  console.log(`📍 Account: @${currentUsername}`);
+  console.log(&#39;&#39;);
+
+  // ── Step 1: Scan following list ────────────────────────
+  console.log(&#39;📜 Step 1: Scanning your following list...&#39;);
+
+  const users = new Map();
+  let scrollRetries = 0;
+
+  while (scrollRetries &lt; MAX_SCROLL_RETRIES) {
+    const cells = document.querySelectorAll(&#39;[data-testid=&quot;UserCell&quot;]&#39;);
+    const prevSize = users.size;
+
+    cells.forEach(cell =&gt; {
+      try {
+        const link = cell.querySelector(&#39;a[href^=&quot;/&quot;]&#39;);
+        const href = link?.getAttribute(&#39;href&#39;) || &#39;&#39;;
+        const username = href.split(&#39;/&#39;)[1];
+        if (!username || username.includes(&#39;?&#39;) || username.includes(&#39;/&#39;)) return;
+
+        const nameEl = cell.querySelector(&#39;[dir=&quot;ltr&quot;] &gt; span&#39;);
+        const name = nameEl?.textContent?.trim() || username;
+
+        // KEY CHECK: does this person follow you back?
+        const followsYou = cell.querySelector(&#39;[data-testid=&quot;userFollowIndicator&quot;]&#39;) !== null;
+
+        const unfollowBtn = cell.querySelector(&#39;[data-testid$=&quot;-unfollow&quot;]&#39;);
+
+        if (!users.has(username)) {
+          users.set(username, { username, name, followsYou, cell, unfollowBtn });
+        }
+      } catch (e) { /* skip */ }
+    });
+
+    const nonCount = Array.from(users.values()).filter(u =&gt; !u.followsYou).length;
+    console.log(`   📊 Scanned: ${users.size} users (${nonCount} don&#39;t follow back)`);
+
+    if (users.size === prevSize) scrollRetries++;
+    else scrollRetries = 0;
+
+    window.scrollTo(0, document.body.scrollHeight);
+    await sleep(SCROLL_DELAY);
+  }
+
+  // ── Step 2: Separate mutuals from non-followers ────────
+  console.log(&#39;&#39;);
+  console.log(&#39;🔎 Step 2: Identifying non-followers...&#39;);
+
+  const allUsers = Array.from(users.values());
+  const nonFollowers = allUsers.filter(u =&gt; !u.followsYou);
+  const mutuals = allUsers.filter(u =&gt; u.followsYou);
+
+  console.log(`   👥 Total following:      ${allUsers.length}`);
+  console.log(`   ✅ Mutuals (safe):       ${mutuals.length}`);
+  console.log(`   ❌ Non-followers:        ${nonFollowers.length}`);
+
+  if (nonFollowers.length === 0) {
+    console.log(&#39;&#39;);
+    console.log(&#39;🎉 Everyone you follow also follows you back! Nothing to clean up.&#39;);
+    return;
+  }
+
+  // ── Step 3: Export non-followers list ──────────────────
+  console.log(&#39;&#39;);
+  console.log(&#39;💾 Step 3: Downloading non-followers list...&#39;);
+
+  const exportData = nonFollowers.map(u =&gt; ({
+    username: u.username,
+    name: u.name,
+    followsYou: false
+  }));
+
+  const json = JSON.stringify(exportData, null, 2);
+  const blob = new Blob([json], { type: &#39;application/json&#39; });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement(&#39;a&#39;);
+  a.href = url;
+  a.download = `non-followers-${currentUsername}-${new Date().toISOString().split(&#39;T&#39;)[0]}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+
+  console.log(`   📥 Downloaded: non-followers-${currentUsername}.json`);
+  try { await navigator.clipboard.writeText(json); console.log(&#39;   📋 Copied to clipboard!&#39;); } catch {}
+
+  // Preview
+  console.log(&#39;&#39;);
+  console.log(&#39;📋 Non-followers preview:&#39;);
+  nonFollowers.slice(0, 15).forEach((u, i) =&gt; {
+    console.log(`   ${(i + 1).toString().padStart(2)}. @${u.username} (${u.name})`);
+  });
+  if (nonFollowers.length &gt; 15) console.log(`   ... and ${nonFollowers.length - 15} more`);
+
+  // ── Step 4: Confirmation ───────────────────────────────
+  const toUnfollow = nonFollowers.slice(0, MAX_UNFOLLOWS);
+
+  const confirmed = window.confirm(
+    `🚫 Unfollow ${toUnfollow.length} non-followers?\n\n` +
+    `${mutuals.length} mutuals will NOT be touched.\n` +
+    `Non-followers list has been downloaded.\n\n` +
+    `Click OK to proceed.`
+  );
+
+  if (!confirmed) {
+    console.log(&#39;👋 Cancelled — no one was unfollowed. Backup file is saved.&#39;);
+    return;
+  }
+
+  // ── Step 5: Unfollow loop ──────────────────────────────
+  console.log(&#39;&#39;);
+  console.log(`🚫 Step 4: Unfollowing ${toUnfollow.length} non-followers...`);
+  console.log(&#39;   (Mutuals are safe — only removing non-followers)&#39;);
+  console.log(&#39;&#39;);
+
+  const unfollowed = [];
+  const failed = [];
+
+  for (let i = 0; i &lt; toUnfollow.length; i++) {
+    const user = toUnfollow[i];
+
+    try {
+      user.cell.scrollIntoView({ behavior: &#39;smooth&#39;, block: &#39;center&#39; });
+      await sleep(500);
+
+      const btn = user.cell.querySelector(&#39;[data-testid$=&quot;-unfollow&quot;]&#39;);
+      if (!btn) { failed.push(user.username); continue; }
+
+      btn.click();
+      await sleep(500);
+
+      const confirmBtn = document.querySelector(&#39;[data-testid=&quot;confirmationSheetConfirm&quot;]&#39;);
+      if (confirmBtn) {
+        confirmBtn.click();
+        unfollowed.push(user.username);
+        const pct = ((i + 1) / toUnfollow.length * 100).toFixed(1);
+        console.log(`   ✅ Unfollowed @${user.username}  [${unfollowed.length}/${toUnfollow.length}]  ${pct}%`);
+      } else {
+        failed.push(user.username);
+        console.log(`   ⚠️  @${user.username} — confirm dialog not found`);
+      }
+
+      await sleep(UNFOLLOW_DELAY + Math.random() * 2000);
+
+      if (unfollowed.length % 10 === 0 &amp;&amp; unfollowed.length &gt; 0 &amp;&amp; i &lt; toUnfollow.length - 1) {
+        console.log(`   ⏸️  Safety pause (${BATCH_PAUSE / 1000}s)...`);
+        await sleep(BATCH_PAUSE);
+        console.log(&#39;   ▶️  Resuming...&#39;);
+      }
+
+      const toast = document.querySelector(&#39;[data-testid=&quot;toast&quot;]&#39;);
+      if (toast?.textContent?.includes(&#39;limit&#39;)) {
+        console.log(&#39;⛔ RATE LIMIT — stopping. Wait 15–30 min, then re-run.&#39;);
+        break;
+      }
+    } catch (err) {
+      failed.push(user.username);
+    }
+  }
+
+  // ── Summary ────────────────────────────────────────────
+  console.log(&#39;&#39;);
+  console.log(&#39;════════════════════════════════════════&#39;);
+  console.log(&#39;🚫 UNFOLLOW NON-FOLLOWERS — COMPLETE&#39;);
+  console.log(&#39;════════════════════════════════════════&#39;);
+  console.log(`📊 Non-followers found:   ${nonFollowers.length}`);
+  console.log(`✅ Unfollowed:            ${unfollowed.length}`);
+  console.log(`❌ Failed:                ${failed.length}`);
+  console.log(`👥 Mutuals kept:          ${mutuals.length}`);
+  console.log(&#39;&#39;);
+
+  if (nonFollowers.length &gt; MAX_UNFOLLOWS) {
+    console.log(`💡 ${nonFollowers.length - unfollowed.length} non-followers remain — refresh and re-run.`);
+  } else if (unfollowed.length === nonFollowers.length) {
+    console.log(&#39;🎉 All non-followers removed! Only mutuals remain.&#39;);
+  }
+})();
+</code></pre>
+<h3>✅ Expected Console Output</h3>
+<pre><code>🔍 XActions - UNFOLLOW NON-FOLLOWERS
+════════════════════════════════════════
+⚙️  Max unfollows per run: 100
+
+📍 Account: @nichxbt
+
+📜 Step 1: Scanning your following list...
+   📊 Scanned: 245 users (89 don&#39;t follow back)
+   📊 Scanned: 578 users (231 don&#39;t follow back)
+   📊 Scanned: 1,024 users (519 don&#39;t follow back)
+   📊 Scanned: 2,100 users (1,210 don&#39;t follow back)
+   📊 Scanned: 2,100 users (1,210 don&#39;t follow back)
+
+🔎 Step 2: Identifying non-followers...
+   👥 Total following:      2,100
+   ✅ Mutuals (safe):       890
+   ❌ Non-followers:        1,210
+
+💾 Step 3: Downloading non-followers list...
+   📥 Downloaded: non-followers-nichxbt.json
+   📋 Copied to clipboard!
+
+📋 Non-followers preview:
+    1. @influencer_xyz (Big Influencer)
+    2. @brand_official (Some Brand)
+    3. @dead_account_2022 (Inactive User)
+    4. @crypto_shill_88 (TO THE MOON)
+    5. @giveaway_page (FREE STUFF)
+   ... and 1,195 more
+
+   [Browser confirm dialog: &quot;Unfollow 100 non-followers?&quot;]
+
+🚫 Step 4: Unfollowing 100 non-followers...
+   (Mutuals are safe — only removing non-followers)
+
+   ✅ Unfollowed @influencer_xyz     [1/100]    1.0%
+   ✅ Unfollowed @brand_official     [2/100]    2.0%
+   ✅ Unfollowed @dead_account_2022  [3/100]    3.0%
+   ✅ Unfollowed @crypto_shill_88    [4/100]    4.0%
+   ✅ Unfollowed @giveaway_page      [5/100]    5.0%
+   ...
+   ✅ Unfollowed @random_bot_55      [10/100]   10.0%
+   ⏸️  Safety pause (15s)...
+   ▶️  Resuming...
+   ✅ Unfollowed @old_follow_001     [11/100]   11.0%
+   ...
+
+════════════════════════════════════════
+🚫 UNFOLLOW NON-FOLLOWERS — COMPLETE
+════════════════════════════════════════
+📊 Non-followers found:   1,210
+✅ Unfollowed:            98
+❌ Failed:                2
+👥 Mutuals kept:          890
+
+💡 1,112 non-followers remain — refresh and re-run.
+</code></pre>
+<hr>
+<h2>💻 Method 2: CLI (Command Line)</h2>
+<p><strong>Best for:</strong> Power users, scheduled cleanups, larger accounts.</p>
+<pre><code class="language-bash"># Install XActions globally
+npm install -g xactions
+
+# Unfollow non-followers (interactive)
+npx xactions unfollow --non-followers
+
+# With explicit options
+npx xactions unfollow --non-followers \
+  --username nichxbt \
+  --max 100 \
+  --delay 4000 \
+  --batch-size 10 \
+  --batch-pause 20000 \
+  --output ./cleanup-results.json
+</code></pre>
+<h3>✅ CLI Output Preview</h3>
+<pre><code>⚡ XActions v2.4.0
+
+🔍 UNFOLLOW NON-FOLLOWERS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+👤 Account: @nichxbt
+
+📜 Scanning following list...
+   ████████████████████████████ 2,100 users
+
+📜 Scanning followers list...
+   ████████████████████████████ 890 users
+
+🔎 Analysis:
+   Following:      2,100
+   Followers:      890
+   Mutuals:        890
+   Non-followers:  1,210
+
+💾 Exported → non-followers-nichxbt-2026-02-24.json
+💾 Exported → non-followers-nichxbt-2026-02-24.csv
+
+❓ Unfollow 100 non-followers? (yes/no): yes
+
+🚫 Unfollowing...
+   ████████░░░░░░░░░░░░░░░░░░░░ 28% | 28/100 | ETA: 6m
+
+✅ Complete!
+   Unfollowed: 98 | Failed: 2 | Mutuals kept: 890
+   Remaining non-followers: 1,112
+   Results → ./cleanup-results.json
+</code></pre>
+<h3>CLI Configuration Table</h3>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>--non-followers</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Only unfollow non-followers (required)</td>
+</tr>
+<tr>
+<td><code>--username</code></td>
+<td>string</td>
+<td>auto-detect</td>
+<td>Your X username</td>
+</tr>
+<tr>
+<td><code>--max</code></td>
+<td>number</td>
+<td><code>50</code></td>
+<td>Max unfollows per session</td>
+</tr>
+<tr>
+<td><code>--delay</code></td>
+<td>number</td>
+<td><code>4000</code></td>
+<td>Delay between unfollows in ms</td>
+</tr>
+<tr>
+<td><code>--batch-size</code></td>
+<td>number</td>
+<td><code>10</code></td>
+<td>Unfollows before pausing</td>
+</tr>
+<tr>
+<td><code>--batch-pause</code></td>
+<td>number</td>
+<td><code>20000</code></td>
+<td>Pause duration between batches (ms)</td>
+</tr>
+<tr>
+<td><code>--output</code></td>
+<td>string</td>
+<td>auto</td>
+<td>Path for results log</td>
+</tr>
+<tr>
+<td><code>--export-only</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Just export list, don&#39;t unfollow</td>
+</tr>
+<tr>
+<td><code>--headless</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Run browser in background</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>🤖 Method 3: MCP Server (AI Agents)</h2>
+<blockquote>
+<p>Use with Claude Desktop, GPT, Cursor, or any MCP-compatible AI agent.</p>
+</blockquote>
+<h3>Setup</h3>
+<p>Add XActions to your MCP config:</p>
+<pre><code class="language-json">{
+  &quot;mcpServers&quot;: {
+    &quot;xactions&quot;: {
+      &quot;command&quot;: &quot;npx&quot;,
+      &quot;args&quot;: [&quot;-y&quot;, &quot;xactions&quot;, &quot;mcp&quot;]
+    }
+  }
+}
+</code></pre>
+<h3>MCP Tool Call</h3>
+<pre><code class="language-json">{
+  &quot;tool&quot;: &quot;x_unfollow_non_followers&quot;,
+  &quot;arguments&quot;: {
+    &quot;confirm&quot;: true,
+    &quot;max_unfollows&quot;: 100,
+    &quot;export_list&quot;: true,
+    &quot;delay_ms&quot;: 4000
+  }
+}
+</code></pre>
+<h3>Claude Desktop example prompt:</h3>
+<blockquote>
+<p>&quot;Find everyone I follow on X who doesn&#39;t follow me back, export the list to a file, then unfollow the first 50.&quot;</p>
+</blockquote>
+<h3>Expected MCP response:</h3>
+<pre><code class="language-json">{
+  &quot;status&quot;: &quot;complete&quot;,
+  &quot;account&quot;: &quot;nichxbt&quot;,
+  &quot;total_following&quot;: 2100,
+  &quot;total_followers&quot;: 890,
+  &quot;mutuals&quot;: 890,
+  &quot;non_followers_found&quot;: 1210,
+  &quot;unfollowed&quot;: 50,
+  &quot;failed&quot;: 1,
+  &quot;export_file&quot;: &quot;non-followers-nichxbt-2026-02-24.json&quot;
+}
+</code></pre>
+<hr>
+<h2>📊 Method Comparison</h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>🌐 Browser Console</th>
+<th>💻 CLI</th>
+<th>🤖 MCP</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Setup</td>
+<td>None</td>
+<td><code>npm install</code></td>
+<td>Config JSON</td>
+</tr>
+<tr>
+<td>Speed</td>
+<td>Fast</td>
+<td>Fastest</td>
+<td>Via AI agent</td>
+</tr>
+<tr>
+<td>Best for</td>
+<td>Quick cleanup</td>
+<td>Power users</td>
+<td>AI workflows</td>
+</tr>
+<tr>
+<td>Detects non-followers</td>
+<td>✅ via badge</td>
+<td>✅ cross-references lists</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Export before unfollow</td>
+<td>✅ JSON</td>
+<td>✅ JSON + CSV</td>
+<td>✅ JSON</td>
+</tr>
+<tr>
+<td>Whitelist / protect</td>
+<td>❌ (manual)</td>
+<td>Coming soon</td>
+<td>Coming soon</td>
+</tr>
+<tr>
+<td>Progress</td>
+<td>Console logs</td>
+<td>Progress bar</td>
+<td>Status object</td>
+</tr>
+<tr>
+<td>Rate limit safety</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>📊 How Detection Works</h2>
+<p>The script identifies non-followers using the <strong>&quot;Follows you&quot; badge</strong> on x.com:</p>
+<pre><code>┌────────────────────────────────────────────────────┐
+│  User cell in your following list                  │
+├────────────────────────────────────────────────────┤
+│                                                    │
+│  👤 @real_friend                   [Following ✓]  │
+│     &quot;Follows you&quot;  ← THIS BADGE                   │
+│     ───────────                                    │
+│     data-testid=&quot;userFollowIndicator&quot;              │
+│     ✅ MUTUAL — will be KEPT                       │
+│                                                    │
+│  👤 @non_follower                  [Following ✓]  │
+│     (no badge)                                     │
+│     ❌ NON-FOLLOWER — will be UNFOLLOWED           │
+│                                                    │
+└────────────────────────────────────────────────────┘
+</code></pre>
+<p>The browser script filters with this one-liner:</p>
+<pre><code class="language-javascript">followButtons.filter(b =&gt;
+  b.parentElement?.parentElement
+   ?.querySelector(&#39;[data-testid=&quot;userFollowIndicator&quot;]&#39;) === null
+)
+</code></pre>
+<p>Only buttons <strong>without</strong> the &quot;Follows you&quot; indicator get clicked. Mutuals are never touched.</p>
+<hr>
+<h2>📊 Sample Output / Results</h2>
+<h3>Non-Followers Export (auto-downloaded):</h3>
+<pre><code class="language-json">[
+  {
+    &quot;username&quot;: &quot;influencer_xyz&quot;,
+    &quot;name&quot;: &quot;Big Influencer&quot;,
+    &quot;followsYou&quot;: false
+  },
+  {
+    &quot;username&quot;: &quot;brand_official&quot;,
+    &quot;name&quot;: &quot;Some Brand™&quot;,
+    &quot;followsYou&quot;: false
+  },
+  {
+    &quot;username&quot;: &quot;dead_account_2022&quot;,
+    &quot;name&quot;: &quot;Gone User&quot;,
+    &quot;followsYou&quot;: false
+  }
+]
+</code></pre>
+<h3>Results Summary (CLI — JSON):</h3>
+<pre><code class="language-json">{
+  &quot;date&quot;: &quot;2026-02-24T14:30:00.000Z&quot;,
+  &quot;account&quot;: &quot;nichxbt&quot;,
+  &quot;following&quot;: 2100,
+  &quot;followers&quot;: 890,
+  &quot;nonFollowersFound&quot;: 1210,
+  &quot;unfollowed&quot;: [&quot;influencer_xyz&quot;, &quot;brand_official&quot;, &quot;dead_account_2022&quot;],
+  &quot;failed&quot;: [{ &quot;username&quot;: &quot;suspended_user&quot;, &quot;error&quot;: &quot;Page load timeout&quot; }],
+  &quot;remaining&quot;: 1112
+}
+</code></pre>
+<h3>Non-Followers CSV (CLI):</h3>
+<pre><code class="language-csv">username,name,bio
+&quot;influencer_xyz&quot;,&quot;Big Influencer&quot;,&quot;10M followers | DM for collabs&quot;
+&quot;brand_official&quot;,&quot;Some Brand™&quot;,&quot;The official account of Some Brand&quot;
+&quot;dead_account_2022&quot;,&quot;Gone User&quot;,&quot;&quot;
+</code></pre>
+<hr>
+<h2>💡 Pro Tips</h2>
+<ol>
+<li><p><strong>Run <code>--export-only</code> first</strong> — Before unfollowing anyone, export the non-followers list and review it. You might discover accounts you want to keep following even though they don&#39;t follow back (news outlets, public figures, etc.).</p>
+</li>
+<li><p><strong>Do 50–100 per session, not all at once</strong> — X is more lenient with gradual cleanup. Running 3 sessions of 50 unfollows with 30-minute gaps between is safer than blasting through 150 in one go.</p>
+</li>
+<li><p><strong>Pair this with &quot;Detect Unfollowers&quot; for ongoing hygiene</strong> — Run <a href="../detect-unfollowers.md">detect-unfollowers</a> weekly to catch new non-followers as they appear, rather than letting them pile up again.</p>
+</li>
+<li><p><strong>Check your ratio after cleanup</strong> — If you started at 2,100/890 (0.42x) and removed 1,210 non-followers, you&#39;ll be at 890/890 (1.0x). That&#39;s a massive algorithm signal — X shows your tweets to more people when your ratio is healthy.</p>
+</li>
+<li><p><strong>The &quot;Follows you&quot; badge may lag</strong> — If someone followed you in the last few minutes, the badge might not render yet. The script reads what&#39;s currently visible on the DOM. Wait a few seconds after page load for accuracy.</p>
+</li>
+</ol>
+<hr>
+<h2>⚠️ Important Notes</h2>
+<ul>
+<li><strong>Mutuals are never touched</strong> — The script only unfollows accounts where the &quot;Follows you&quot; badge is <strong>absent</strong>. Your mutual follows are safe.</li>
+<li><strong>Rate limits</strong> — X limits how many unfollows you can do per window. The built-in 3s delay + 15s batch pauses keep you safe. If you see &quot;You&#39;re doing that too fast,&quot; stop and wait 15–30 minutes.</li>
+<li><strong>Platform policy</strong> — Cleaning up non-followers is one of the most common uses of automation on X. The human-like delays in this script mitigate risk.</li>
+<li><strong>Re-run for completion</strong> — If you follow 2,000+ accounts, you&#39;ll need 2–4 sessions. The script is safe to re-run immediately after refreshing the page — it recalculates non-followers from scratch each time.</li>
+<li><strong>Protected accounts</strong> — If someone has a protected account and doesn&#39;t follow you, they&#39;ll appear as a non-follower and be unfollowed normally.</li>
+<li><strong>Recently unfollowed you</strong> — Someone who <em>just</em> unfollowed you will show as a non-follower. This is accurate — they don&#39;t currently follow you.</li>
+</ul>
+<hr>
+<h2>🔗 Related Features</h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Use Case</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Unfollow Everyone</td>
+<td>Go fully nuclear — unfollow ALL accounts</td>
+<td><a href="../unfollow-everyone.md">→ Guide</a></td>
+</tr>
+<tr>
+<td>Smart Unfollow</td>
+<td>Unfollow inactive accounts with a whitelist</td>
+<td><a href="../smart-unfollow.md">→ Guide</a></td>
+</tr>
+<tr>
+<td>Detect Unfollowers</td>
+<td>Find out who unfollowed you recently</td>
+<td><a href="../detect-unfollowers.md">→ Guide</a></td>
+</tr>
+<tr>
+<td>Following Scraping</td>
+<td>Export your full following list to CSV</td>
+<td><a href="../following-scraping.md">→ Guide</a></td>
+</tr>
+<tr>
+<td>Followers Scraping</td>
+<td>Export your followers to a spreadsheet</td>
+<td><a href="../followers-scraping.md">→ Guide</a></td>
+</tr>
+<tr>
+<td>Growth Suite</td>
+<td>Auto-follow + auto-like + auto-comment in one</td>
+<td><a href="../growth-suite.md">→ Guide</a></td>
+</tr>
+</tbody></table>
+<hr>
+<h2>❓ FAQ</h2>
+<h3>Q: How do I see who doesn&#39;t follow me back on Twitter / X?</h3>
+<p><strong>A:</strong> Go to <code>x.com/YOUR_USERNAME/following</code>, open your browser console (F12 → Console), and paste the XActions non-followers script. It scans every account you follow, checks for the &quot;Follows you&quot; badge, and downloads a JSON list of every non-follower. No API key, no app, no sign-up required.</p>
+<h3>Q: Will unfollowing non-followers help my Twitter / X algorithm?</h3>
+<p><strong>A:</strong> Yes — X&#39;s algorithm favors accounts with a healthy follower-to-following ratio. If you follow 2,000 people but only 500 follow you back, your ratio is 0.25x. Removing 1,500 non-followers brings it to 1.0x, which signals authority and typically increases your impressions and reach.</p>
+<h3>Q: Can I protect certain accounts from being unfollowed?</h3>
+<p><strong>A:</strong> The current browser script unfollows all non-followers automatically. To protect specific accounts, lower the <code>MAX_UNFOLLOWS</code> count and review the preview list before confirming — or use the <code>--export-only</code> CLI flag to review the list first, then manually remove accounts you want to keep from the unfollow batch.</p>
+<h3>Q: How often should I clean up non-followers?</h3>
+<p><strong>A:</strong> Once a month is a good cadence. Pair this script with <a href="../detect-unfollowers.md">Detect Unfollowers</a> to get alerts when someone unfollows you, so you can address it in real time rather than letting non-followers accumulate.</p>
+<h3>Q: Is this the same as &quot;unfollow everyone&quot;?</h3>
+<p><strong>A:</strong> No — &quot;Unfollow Everyone&quot; removes <strong>all</strong> accounts you follow, including mutuals. &quot;Unfollow Non-Followers&quot; only removes people who <strong>don&#39;t follow you back</strong>, keeping your mutual connections intact.</p>
+<hr>
+<footer>
+Built with ⚡ by <a href="https://x.com/nichxbt">@nichxbt</a> · <a href="https://xactions.app">xactions.app</a> · <a href="https://github.com/nichxbt/xactions">GitHub</a>
+</footer>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try Unfollow Non-Followers on X (Twitter) — Clean Up Your Ratio in Minutes?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/step-by-step/auto-commenter-tutorial">📝 Auto Commenter Tutorial</a>
+        <a href="/docs/step-by-step/auto-liker-tutorial">📝 Auto Liker Tutorial</a>
+        <a href="/docs/step-by-step/bookmark-exporter-tutorial">📝 Bookmark Exporter Tutorial</a>
+        <a href="/docs/step-by-step/detect-unfollowers-tutorial">📝 Detect Unfollowers Tutorial</a>
+        <a href="/docs/step-by-step/follow-target-followers-tutorial">📝 Follow Target Followers Tutorial</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a> / <a href="/docs#step-by-step">Tutorials</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

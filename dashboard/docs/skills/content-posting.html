@@ -3,21 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Content Posting with XActions | XActions</title>
+  <title>Content Posting | XActions</title>
   <meta name="description" content="Browser console scripts for automating content creation and publishing on X/Twitter.">
   <meta name="keywords" content="xactions, twitter automation, x automation, free, open source, content, posting, agent skills">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Content Posting with XActions — XActions">
+  <meta property="og:title" content="Content Posting — XActions">
   <meta property="og:description" content="Browser console scripts for automating content creation and publishing on X/Twitter.">
   <meta property="og:url" content="https://xactions.app/docs/skills/content-posting">
   <meta property="og:site_name" content="XActions">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Content Posting with XActions — XActions">
+  <meta name="twitter:title" content="Content Posting — XActions">
   <meta name="twitter:description" content="Browser console scripts for automating content creation and publishing on X/Twitter.">
 
   <link rel="canonical" href="https://xactions.app/docs/skills/content-posting">
@@ -28,7 +28,7 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Content Posting with XActions | XActions",
+    "headline": "Content Posting | XActions",
     "description": "Browser console scripts for automating content creation and publishing on X/Twitter.",
     "url": "https://xactions.app/docs/skills/content-posting",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
@@ -48,7 +48,7 @@
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://xactions.app/docs" },
       { "@type": "ListItem", "position": 3, "name": "Agent Skills", "item": "https://xactions.app/docs/skills" },
-      { "@type": "ListItem", "position": 4, "name": "Content Posting with XActions", "item": "https://xactions.app/docs/skills/content-posting" }
+      { "@type": "ListItem", "position": 4, "name": "Content Posting", "item": "https://xactions.app/docs/skills/content-posting" }
     ]
   }
   </script>
@@ -162,59 +162,89 @@
 
     <main class="main-content">
       <header class="main-header">
-        <h1>🎯 Content Posting with XActions</h1>
+        <h1>🎯 Content Posting</h1>
         <div class="breadcrumb">
-          <a href="https://xactions.app">Home</a> › <a href="https://xactions.app/docs">Docs</a> › <a href="https://xactions.app/docs/skills">Agent Skills</a> › Content Posting with XActions
+          <a href="https://xactions.app">Home</a> › <a href="https://xactions.app/docs">Docs</a> › <a href="https://xactions.app/docs/skills">Agent Skills</a> › Content Posting
         </div>
       </header>
 
       <article class="article">
         <span class="cat-badge">Agent Skills</span>
-        <h1>Content Posting with XActions</h1>
+        <h1>Content Posting</h1>
 <p>Browser console scripts for automating content creation and publishing on X/Twitter.</p>
-<h2>Available Scripts</h2>
+<h2>Script Selection</h2>
 <table>
 <thead>
 <tr>
-<th>Script</th>
+<th>Goal</th>
 <th>File</th>
-<th>Purpose</th>
+<th>Navigate to</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>Post Thread</td>
+<td>Post a thread</td>
 <td><code>src/postThread.js</code></td>
-<td>Compose and publish a multi-tweet thread</td>
+<td><code>x.com</code></td>
 </tr>
 <tr>
-<td>Schedule Posts</td>
+<td>Schedule posts</td>
 <td><code>src/schedulePosts.js</code></td>
-<td>Queue posts for future publishing (Premium)</td>
+<td><code>x.com</code></td>
 </tr>
 <tr>
-<td>Create Poll</td>
+<td>Create a poll</td>
 <td><code>src/createPoll.js</code></td>
-<td>Create a poll tweet with 2-4 options</td>
+<td><code>x.com</code></td>
 </tr>
 <tr>
-<td>Auto Repost</td>
+<td>Auto-repost by keyword</td>
 <td><code>src/autoRepost.js</code></td>
-<td>Auto-retweet by keyword or user filters</td>
+<td>Timeline or search</td>
 </tr>
 <tr>
-<td>Post Composer</td>
-<td><code>src/postComposer.js</code></td>
-<td>Core posting module for single tweets</td>
+<td>Compose + preview threads</td>
+<td><code>src/threadComposer.js</code></td>
+<td><code>x.com/USERNAME</code></td>
 </tr>
 <tr>
-<td>Poll Creator</td>
-<td><code>src/pollCreator.js</code></td>
-<td>Alternative poll creation script</td>
+<td>Quote-tweet with templates</td>
+<td><code>src/quoteTweetAutomation.js</code></td>
+<td>Timeline</td>
+</tr>
+<tr>
+<td>Repurpose tweets</td>
+<td><code>src/contentRepurposer.js</code></td>
+<td><code>x.com/USERNAME</code></td>
+</tr>
+<tr>
+<td>Auto-plug viral tweets</td>
+<td><code>src/autoPlugReplies.js</code></td>
+<td><code>x.com/USERNAME</code></td>
+</tr>
+<tr>
+<td>Content calendar analysis</td>
+<td><code>src/contentCalendar.js</code></td>
+<td><code>x.com/USERNAME</code></td>
+</tr>
+<tr>
+<td>Optimize posting times</td>
+<td><code>src/tweetScheduleOptimizer.js</code></td>
+<td><code>x.com/USERNAME</code></td>
 </tr>
 </tbody></table>
-<h2>Script details</h2>
-<p><strong>Full CONFIG examples and per-script usage</strong>: See <a href="references/script-configs.md">references/script-configs.md</a></p>
-<h2>Key Selectors</h2>
+<h2>Script Details</h2>
+<h3>threadComposer.js</h3>
+<p>Interactive thread creation with draft persistence. Compose parts, preview, reorder, and publish.</p>
+<p><strong>Controls:</strong> <code>XActions.create(topic, points)</code>, <code>XActions.preview()</code>, <code>XActions.post()</code>, <code>XActions.export()</code></p>
+<h3>contentRepurposer.js</h3>
+<p>Converts existing tweets into new formats: threads, tweet storms, blog outlines, summary variations, and quote-tweet templates. Scan your timeline, pick top tweets, generate 5 content variations per tweet.</p>
+<p><strong>Controls:</strong> <code>XActions.scan()</code>, <code>XActions.list()</code>, <code>XActions.toThread(i)</code>, <code>XActions.toSummary(i)</code>, <code>XActions.toStorm(i)</code>, <code>XActions.toBlog(i)</code>, <code>XActions.toQuoteTemplates(i)</code>, <code>XActions.all(i)</code></p>
+<h3>autoPlugReplies.js</h3>
+<p>Auto-replies to your own viral tweets with a promotional plug. Configurable viral threshold, dry-run mode, session limits.</p>
+<p><strong>Controls:</strong> <code>XActions.setPlug(text)</code>, <code>XActions.scan()</code>, <code>XActions.autoScan(ms)</code>, <code>XActions.stop()</code></p>
+<h3>quoteTweetAutomation.js</h3>
+<p>Auto quote-tweets matching tweets with customizable templates and engagement filters.</p>
+<h2>DOM Selectors</h2>
 <table>
 <thead>
 <tr>
@@ -235,7 +265,7 @@
 <td><code>[data-testid=&quot;tweetButton&quot;]</code></td>
 </tr>
 <tr>
-<td>Media button</td>
+<td>Media input</td>
 <td><code>[data-testid=&quot;fileInput&quot;]</code></td>
 </tr>
 <tr>
@@ -243,7 +273,7 @@
 <td><code>[aria-label=&quot;Add poll&quot;]</code></td>
 </tr>
 <tr>
-<td>Schedule button</td>
+<td>Schedule</td>
 <td><code>[data-testid=&quot;scheduleOption&quot;]</code></td>
 </tr>
 <tr>
@@ -251,41 +281,33 @@
 <td><code>[data-testid=&quot;addButton&quot;]</code></td>
 </tr>
 <tr>
-<td>Retweet button</td>
-<td><code>[data-testid=&quot;retweet&quot;]</code></td>
-</tr>
-<tr>
-<td>Confirm retweet</td>
-<td><code>[data-testid=&quot;retweetConfirm&quot;]</code></td>
-</tr>
-<tr>
-<td>Already retweeted</td>
-<td><code>[data-testid=&quot;unretweet&quot;]</code></td>
-</tr>
-<tr>
-<td>Alt text</td>
-<td><code>[data-testid=&quot;altTextInput&quot;]</code></td>
+<td>Reply button</td>
+<td><code>[data-testid=&quot;reply&quot;]</code></td>
 </tr>
 </tbody></table>
-<h2>MCP Tools</h2>
-<ul>
-<li><code>x_post_tweet</code> – Post a new tweet</li>
-<li><code>x_post_thread</code> – Post a multi-tweet thread</li>
-<li><code>x_create_poll</code> – Create a poll with options</li>
-<li><code>x_schedule_post</code> – Schedule a post for later</li>
-<li><code>x_quote_post</code> – Quote retweet a post</li>
-<li><code>x_repost</code> – Retweet/repost a post</li>
-<li><code>x_edit_post</code> – Edit a recent post (Premium)</li>
-<li><code>x_delete_post</code> – Delete a post</li>
-</ul>
+<h2>Content Strategy</h2>
+<h3>Maximizing content output</h3>
+<ol>
+<li><code>src/tweetPerformance.js</code> -- identify your best-performing content</li>
+<li><code>src/contentRepurposer.js</code> -- generate 5 variations per top tweet</li>
+<li><code>src/tweetScheduleOptimizer.js</code> -- schedule content at optimal times</li>
+<li><code>src/autoPlugReplies.js</code> -- automatically promote on viral tweets</li>
+<li><code>src/contentCalendar.js</code> -- identify posting gaps to fill</li>
+</ol>
+<h3>Thread workflow</h3>
+<ol>
+<li>Use <code>src/contentRepurposer.js</code> -&gt; <code>XActions.toThread(i)</code> for thread outlines</li>
+<li>Edit and refine with <code>src/threadComposer.js</code></li>
+<li>Preview with <code>XActions.preview()</code></li>
+<li>Post with <code>XActions.post()</code></li>
+</ol>
 <h2>Notes</h2>
 <ul>
 <li>All posting scripts include dry-run mode by default</li>
-<li>Thread tweets are validated for character count before posting</li>
-<li>Free accounts: 280 char limit. Premium: 25,000+ chars, scheduling, edit</li>
-<li>Auto Repost includes safety filters (min likes, skip replies, skip sensitive)</li>
-<li>Add delays between actions to avoid rate limiting</li>
-<li>2026 features: image polls, audio articles, shuffle choices in testing</li>
+<li>Thread tweets validated for character count before posting</li>
+<li>Free: 280 chars. Premium: 25,000+ chars, scheduling, edit</li>
+<li>Auto-repost includes safety filters (min likes, skip replies)</li>
+<li>Add 1-3s delays between actions to avoid rate limiting</li>
 </ul>
 
 
@@ -302,7 +324,7 @@
         <h3>📖 In This Section</h3>
                 <a href="/docs/skills/algorithm-cultivation">🎯 Algorithm Cultivation &amp; Thought Leadership</a>
         <a href="/docs/skills/analytics-insights">🎯 Analytics &amp; Insights</a>
-        <a href="/docs/skills/articles-longform">🎯 Articles &amp; Long-Form Content</a>
+        <a href="/docs/skills/articles-longform">🎯 Articles &amp; Longform</a>
         <a href="/docs/skills/blocking-muting-management">🎯 Blocking &amp; Muting Management</a>
         <a href="/docs/skills/bookmarks-management">🎯 Bookmarks Management</a>
         <a href="/docs/skills/business-ads">🎯 Business &amp; Ads Tools</a>

@@ -4,21 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Creator Monetization | XActions</title>
-  <meta name="description" content="Browser automation for X/Twitter creator monetization — analytics, revenue tracking, and subscriber management.">
+  <meta name="description" content="Browser console scripts for managing and analyzing X/Twitter creator monetization features.">
   <meta name="keywords" content="xactions, twitter automation, x automation, free, open source, creator, monetization, agent skills">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Creator Monetization — XActions">
-  <meta property="og:description" content="Browser automation for X/Twitter creator monetization — analytics, revenue tracking, and subscriber management.">
+  <meta property="og:description" content="Browser console scripts for managing and analyzing X/Twitter creator monetization features.">
   <meta property="og:url" content="https://xactions.app/docs/skills/creator-monetization">
   <meta property="og:site_name" content="XActions">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Creator Monetization — XActions">
-  <meta name="twitter:description" content="Browser automation for X/Twitter creator monetization — analytics, revenue tracking, and subscriber management.">
+  <meta name="twitter:description" content="Browser console scripts for managing and analyzing X/Twitter creator monetization features.">
 
   <link rel="canonical" href="https://xactions.app/docs/skills/creator-monetization">
   <link rel="manifest" href="/manifest.json">
@@ -29,7 +29,7 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Creator Monetization | XActions",
-    "description": "Browser automation for X/Twitter creator monetization — analytics, revenue tracking, and subscriber management.",
+    "description": "Browser console scripts for managing and analyzing X/Twitter creator monetization features.",
     "url": "https://xactions.app/docs/skills/creator-monetization",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -171,7 +171,7 @@
       <article class="article">
         <span class="cat-badge">Agent Skills</span>
         <h1>Creator Monetization</h1>
-<p>Browser automation for X/Twitter creator monetization — analytics, revenue tracking, and subscriber management.</p>
+<p>Browser console scripts for managing and analyzing X/Twitter creator monetization features.</p>
 <h2>Script Selection</h2>
 <table>
 <thead>
@@ -182,71 +182,62 @@
 </tr>
 </thead>
 <tbody><tr>
-<td>Account analytics overview</td>
+<td>Creator dashboard analytics</td>
 <td><code>src/creatorStudio.js</code></td>
-<td><code>x.com/i/account_analytics</code></td>
+<td><code>x.com/i/monetization</code></td>
 </tr>
 <tr>
-<td>Post-level analytics</td>
-<td><code>src/creatorStudio.js</code></td>
-<td>Tweet URL</td>
+<td>Subscription management</td>
+<td><code>src/subscriptionManager.js</code></td>
+<td><code>x.com/i/monetization</code></td>
 </tr>
 <tr>
-<td>Revenue &amp; earnings</td>
-<td><code>src/creatorStudio.js</code></td>
-<td><code>x.com/settings/monetization</code></td>
+<td>Content performance for monetization</td>
+<td><code>src/tweetPerformance.js</code></td>
+<td><code>x.com/USERNAME</code></td>
 </tr>
 <tr>
-<td>Subscriber list</td>
-<td><code>src/creatorStudio.js</code></td>
-<td><code>x.com/settings/monetization/subscribers</code></td>
-</tr>
-<tr>
-<td>Combined dashboard</td>
-<td><code>src/creatorStudio.js</code></td>
-<td><code>x.com/i/account_analytics</code></td>
+<td>Audience demographics</td>
+<td><code>src/audienceDemographics.js</code></td>
+<td><code>x.com/USERNAME/followers</code></td>
 </tr>
 </tbody></table>
 <h2>Creator Studio</h2>
 <p><strong>File:</strong> <code>src/creatorStudio.js</code></p>
-<p>Puppeteer-based module for accessing X&#39;s creator analytics and monetization pages.</p>
-<h3>Functions</h3>
+<p>Scrapes and analyzes creator monetization data from X&#39;s dashboard.</p>
+<h3>Features</h3>
+<ul>
+<li>Ad revenue tracking (daily/weekly/monthly)</li>
+<li>Impression and engagement rate for monetized content</li>
+<li>Subscriber count and revenue</li>
+<li>Tipping analytics</li>
+<li>Monetization eligibility check</li>
+</ul>
+<h3>Eligibility Requirements</h3>
 <table>
 <thead>
 <tr>
-<th>Function</th>
-<th>Purpose</th>
+<th>Feature</th>
+<th>Requirements</th>
 </tr>
 </thead>
 <tbody><tr>
-<td><code>getAccountAnalytics(page, { period })</code></td>
-<td>Scrape account-level analytics metrics</td>
+<td>Ad Revenue Sharing</td>
+<td>Premium + 500 followers + 5M organic impressions (90 days)</td>
 </tr>
 <tr>
-<td><code>getPostAnalytics(page, postUrl)</code></td>
-<td>Get likes, reposts, replies, bookmarks, views for a post</td>
+<td>Subscriptions</td>
+<td>Premium + 500 followers</td>
 </tr>
 <tr>
-<td><code>getRevenue(page)</code></td>
-<td>Access monetization settings and revenue data</td>
+<td>Tipping</td>
+<td>Any account</td>
 </tr>
 <tr>
-<td><code>getSubscribers(page, { limit })</code></td>
-<td>List subscribers with names and subscription dates</td>
-</tr>
-<tr>
-<td><code>getCreatorDashboard(page)</code></td>
-<td>Combined analytics + revenue snapshot</td>
+<td>Media Studio</td>
+<td>Premium</td>
 </tr>
 </tbody></table>
-<h3>Account Analytics</h3>
-<p>Navigates to <code>x.com/i/account_analytics</code> and extracts available metrics from stat cards. Supports period configuration (default: 28 days).</p>
-<h3>Post Analytics</h3>
-<p>Visits a specific tweet URL and extracts engagement breakdown: likes, reposts, replies, bookmarks, and view/impression count.</p>
-<h3>Revenue</h3>
-<p>Navigates to <code>x.com/settings/monetization</code> and extracts available text from the monetization page. Revenue data requires Premium subscription and eligibility.</p>
-<h3>Subscribers</h3>
-<p>Lists subscribers from the monetization subscribers page with display name, username, and subscription start date.</p>
 <h2>DOM Selectors</h2>
 <table>
 <thead>
@@ -256,76 +247,79 @@
 </tr>
 </thead>
 <tbody><tr>
-<td>Analytics nav</td>
-<td><code>a[href=&quot;/i/account_analytics&quot;]</code></td>
-</tr>
-<tr>
 <td>Monetization nav</td>
-<td><code>a[href=&quot;/settings/monetization&quot;]</code></td>
+<td><code>a[href=&quot;/i/monetization&quot;]</code></td>
 </tr>
 <tr>
-<td>Impressions</td>
-<td><code>[data-testid=&quot;impressions&quot;]</code></td>
+<td>Revenue display</td>
+<td><code>[data-testid=&quot;revenueAmount&quot;]</code></td>
 </tr>
 <tr>
-<td>Analytics button</td>
-<td><code>[data-testid=&quot;analyticsButton&quot;]</code></td>
+<td>Analytics tabs</td>
+<td><code>[role=&quot;tab&quot;]</code></td>
 </tr>
 <tr>
-<td>Like count</td>
-<td><code>[data-testid=&quot;like&quot;] span</code></td>
+<td>Subscription info</td>
+<td><code>[data-testid=&quot;subscriptionInfo&quot;]</code></td>
 </tr>
 <tr>
-<td>Repost count</td>
-<td><code>[data-testid=&quot;retweet&quot;] span</code></td>
-</tr>
-<tr>
-<td>Reply count</td>
-<td><code>[data-testid=&quot;reply&quot;] span</code></td>
-</tr>
-<tr>
-<td>User cell</td>
-<td><code>[data-testid=&quot;UserCell&quot;]</code></td>
+<td>Earnings chart</td>
+<td><code>[data-testid=&quot;earningsChart&quot;]</code></td>
 </tr>
 </tbody></table>
-<h2>Eligibility Requirements</h2>
-<ul>
-<li><strong>Ad Revenue Sharing:</strong> X Premium + 500 followers + 5M impressions in last 3 months</li>
-<li><strong>Subscriptions:</strong> Verified + 500 followers + active 30+ days</li>
-<li><strong>Tips:</strong> Any account can enable</li>
-<li><strong>Minimum payout:</strong> $10</li>
-</ul>
-<h2>Rate Limiting</h2>
-<ul>
-<li>2–3s delay between page navigations</li>
-<li>Post analytics requires visiting each tweet individually (~4s per post)</li>
-<li>Dashboard function chains analytics + revenue pages sequentially</li>
-</ul>
-<h2>Troubleshooting</h2>
+<h2>Monetization Strategy</h2>
+<h3>Maximizing ad revenue</h3>
+<ol>
+<li><code>src/tweetPerformance.js</code> -- identify high-impression content types</li>
+<li><code>src/tweetScheduleOptimizer.js</code> -- post at peak times for maximum reach</li>
+<li><code>src/contentRepurposer.js</code> -- multiply high-performing content</li>
+<li>Focus on original tweets, not replies (replies don&#39;t earn ad revenue)</li>
+<li>Threads generate more impressions than single tweets</li>
+</ol>
+<h3>Growing subscriptions</h3>
+<ol>
+<li><code>src/audienceDemographics.js</code> -- understand who your audience is</li>
+<li>Post subscriber-only previews with <code>src/postThread.js</code></li>
+<li>Use <code>src/autoPlugReplies.js</code> to promote subscription on viral tweets</li>
+<li>Track subscriber growth with <code>src/followerGrowthTracker.js</code></li>
+</ol>
+<h3>Content that earns</h3>
 <table>
 <thead>
 <tr>
-<th>Problem</th>
-<th>Solution</th>
+<th>Content Type</th>
+<th>Revenue Potential</th>
+<th>Why</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>Monetization tab not visible</td>
-<td>Requires X Premium and eligibility criteria</td>
+<td>Threads (5+ tweets)</td>
+<td>High</td>
+<td>Multiple impressions per reader</td>
 </tr>
 <tr>
-<td>Revenue shows $0</td>
-<td>Revenue updates are delayed 24–48 hours</td>
+<td>Hot takes/opinions</td>
+<td>High</td>
+<td>Engagement-driven reach</td>
 </tr>
 <tr>
-<td>Subscriber count mismatch</td>
-<td>Dashboard may show pending vs. confirmed subscribers</td>
+<td>Tutorials/how-tos</td>
+<td>Medium</td>
+<td>Bookmarks + shares</td>
 </tr>
 <tr>
-<td>Analytics empty</td>
-<td>Ensure account has public tweets with impressions</td>
+<td>Reply threads</td>
+<td>None</td>
+<td>Replies excluded from ad sharing</td>
 </tr>
 </tbody></table>
+<h2>Notes</h2>
+<ul>
+<li>Ad revenue is paid monthly with a minimum threshold</li>
+<li>Revenue data may lag 24-48 hours behind real-time</li>
+<li>Only organic impressions count (not promoted/ad views)</li>
+<li>Creator dashboard is only accessible to eligible accounts</li>
+</ul>
 
 
         <div class="cta-box">
@@ -341,7 +335,7 @@
         <h3>📖 In This Section</h3>
                 <a href="/docs/skills/algorithm-cultivation">🎯 Algorithm Cultivation &amp; Thought Leadership</a>
         <a href="/docs/skills/analytics-insights">🎯 Analytics &amp; Insights</a>
-        <a href="/docs/skills/articles-longform">🎯 Articles &amp; Long-Form Content</a>
+        <a href="/docs/skills/articles-longform">🎯 Articles &amp; Longform</a>
         <a href="/docs/skills/blocking-muting-management">🎯 Blocking &amp; Muting Management</a>
         <a href="/docs/skills/bookmarks-management">🎯 Bookmarks Management</a>
         <a href="/docs/skills/business-ads">🎯 Business &amp; Ads Tools</a>

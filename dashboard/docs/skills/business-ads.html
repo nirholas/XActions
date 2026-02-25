@@ -4,21 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Business &amp; Ads Tools | XActions</title>
-  <meta name="description" content="Browser automation for X/Twitter business intelligence — brand monitoring, audience insights, and competitor analysis.">
+  <meta name="description" content="Browser console scripts and automation for X/Twitter business intelligence and promotion.">
   <meta name="keywords" content="xactions, twitter automation, x automation, free, open source, business, ads, tools, agent skills">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Business &amp; Ads Tools — XActions">
-  <meta property="og:description" content="Browser automation for X/Twitter business intelligence — brand monitoring, audience insights, and competitor analysis.">
+  <meta property="og:description" content="Browser console scripts and automation for X/Twitter business intelligence and promotion.">
   <meta property="og:url" content="https://xactions.app/docs/skills/business-ads">
   <meta property="og:site_name" content="XActions">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Business &amp; Ads Tools — XActions">
-  <meta name="twitter:description" content="Browser automation for X/Twitter business intelligence — brand monitoring, audience insights, and competitor analysis.">
+  <meta name="twitter:description" content="Browser console scripts and automation for X/Twitter business intelligence and promotion.">
 
   <link rel="canonical" href="https://xactions.app/docs/skills/business-ads">
   <link rel="manifest" href="/manifest.json">
@@ -29,7 +29,7 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Business & Ads Tools | XActions",
-    "description": "Browser automation for X/Twitter business intelligence — brand monitoring, audience insights, and competitor analysis.",
+    "description": "Browser console scripts and automation for X/Twitter business intelligence and promotion.",
     "url": "https://xactions.app/docs/skills/business-ads",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -171,7 +171,7 @@
       <article class="article">
         <span class="cat-badge">Agent Skills</span>
         <h1>Business &amp; Ads Tools</h1>
-<p>Browser automation for X/Twitter business intelligence — brand monitoring, audience insights, and competitor analysis.</p>
+<p>Browser console scripts and automation for X/Twitter business intelligence and promotion.</p>
 <h2>Script Selection</h2>
 <table>
 <thead>
@@ -182,7 +182,7 @@
 </tr>
 </thead>
 <tbody><tr>
-<td>Monitor brand mentions</td>
+<td>Brand monitoring &amp; sentiment</td>
 <td><code>src/businessTools.js</code></td>
 <td>Search results page</td>
 </tr>
@@ -192,14 +192,34 @@
 <td><code>x.com/USERNAME/followers</code></td>
 </tr>
 <tr>
-<td>Competitor analysis</td>
+<td>Competitor comparison</td>
 <td><code>src/businessTools.js</code></td>
 <td>Any profile page</td>
+</tr>
+<tr>
+<td>A/B test tweet performance</td>
+<td><code>src/tweetABTester.js</code></td>
+<td><code>x.com/USERNAME</code></td>
+</tr>
+<tr>
+<td>Auto-plug viral tweets</td>
+<td><code>src/autoPlugReplies.js</code></td>
+<td><code>x.com/USERNAME</code></td>
+</tr>
+<tr>
+<td>Audience demographics</td>
+<td><code>src/audienceDemographics.js</code></td>
+<td><code>x.com/USERNAME/followers</code></td>
+</tr>
+<tr>
+<td>Content performance</td>
+<td><code>src/tweetPerformance.js</code></td>
+<td><code>x.com/USERNAME</code></td>
 </tr>
 </tbody></table>
 <h2>Business Tools</h2>
 <p><strong>File:</strong> <code>src/businessTools.js</code></p>
-<p>Puppeteer-based module with three core functions for business intelligence.</p>
+<p>Puppeteer-based module for business intelligence.</p>
 <h3>Functions</h3>
 <table>
 <thead>
@@ -209,69 +229,46 @@
 </tr>
 </thead>
 <tbody><tr>
-<td><code>monitorBrandMentions(page, brandName, { limit, since })</code></td>
-<td>Search for brand mentions with sentiment tagging</td>
+<td><code>monitorBrandMentions(page, brand, {limit, since})</code></td>
+<td>Search mentions with sentiment</td>
 </tr>
 <tr>
-<td><code>getAudienceInsights(page, username, { sampleSize })</code></td>
-<td>Analyze follower bios for interests and demographics</td>
+<td><code>getAudienceInsights(page, username, {sampleSize})</code></td>
+<td>Follower bio analysis</td>
 </tr>
 <tr>
 <td><code>analyzeCompetitors(page, [&#39;user1&#39;, &#39;user2&#39;])</code></td>
-<td>Compare follower counts, bios, and verification status</td>
+<td>Side-by-side comparison</td>
 </tr>
 </tbody></table>
-<h3>Brand Mention Monitoring</h3>
-<p>Searches X for a brand name or handle and collects mentions with basic sentiment analysis (positive/negative/neutral based on keyword matching).</p>
-<p><strong>Returns:</strong> mention text, author, timestamp, link, likes, reposts, and sentiment breakdown.</p>
-<h3>Audience Insights</h3>
-<p>Scrapes a sample of followers and analyzes their bios to extract common interests (e.g., developer, founder, crypto, AI). Reports verified follower percentage.</p>
-<h3>Competitor Analysis</h3>
-<p>Visits each competitor&#39;s profile page and collects follower/following counts, verification status, and bio. Returns side-by-side comparison.</p>
-<h2>DOM Selectors</h2>
-<table>
-<thead>
-<tr>
-<th>Element</th>
-<th>Selector</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Tweet</td>
-<td><code>article[data-testid=&quot;tweet&quot;]</code></td>
-</tr>
-<tr>
-<td>Tweet text</td>
-<td><code>[data-testid=&quot;tweetText&quot;]</code></td>
-</tr>
-<tr>
-<td>User cell</td>
-<td><code>[data-testid=&quot;UserCell&quot;]</code></td>
-</tr>
-<tr>
-<td>Search input</td>
-<td><code>[data-testid=&quot;SearchBox_Search_Input&quot;]</code></td>
-</tr>
-<tr>
-<td>User description</td>
-<td><code>[data-testid=&quot;UserDescription&quot;]</code></td>
-</tr>
-<tr>
-<td>Verified icon</td>
-<td><code>[data-testid=&quot;icon-verified&quot;]</code></td>
-</tr>
-</tbody></table>
-<h2>Rate Limiting</h2>
-<ul>
-<li>1.5s delay between scroll cycles</li>
-<li>1–2s delay between competitor profile visits</li>
-<li>Each competitor takes ~5s to analyze</li>
-</ul>
+<h2>Tweet A/B Testing</h2>
+<p><strong>File:</strong> <code>src/tweetABTester.js</code></p>
+<p>Test tweet variations with statistical comparison.</p>
+<p><strong>Controls:</strong> <code>XActions.createTest(name, textA, textB)</code>, <code>XActions.setUrl(name, variant, url)</code>, <code>XActions.measure(name)</code>, <code>XActions.results(name)</code></p>
+<h2>Auto-Plug Replies</h2>
+<p><strong>File:</strong> <code>src/autoPlugReplies.js</code></p>
+<p>Automatically reply to your viral tweets with promotional content.</p>
+<p><strong>Controls:</strong> <code>XActions.setPlug(text)</code>, <code>XActions.setThreshold(n)</code>, <code>XActions.scan()</code>, <code>XActions.autoScan(ms)</code></p>
+<h2>Strategy Guide</h2>
+<h3>Low-budget promotion (no ads spend)</h3>
+<ol>
+<li>A/B test content styles with <code>src/tweetABTester.js</code></li>
+<li>Set up <code>src/autoPlugReplies.js</code> to promote on viral tweets</li>
+<li>Find trends with <code>src/trendingTopicMonitor.js</code> for timely content</li>
+<li>Analyze audience with <code>src/audienceDemographics.js</code> for targeting</li>
+<li>Track results with <code>src/tweetPerformance.js</code></li>
+</ol>
+<h3>Brand monitoring</h3>
+<ol>
+<li>Use <code>src/businessTools.js</code> -&gt; <code>monitorBrandMentions()</code> for sentiment</li>
+<li>Set up <code>src/keywordMonitor.js</code> for real-time brand mention alerts</li>
+<li>Export data for reporting</li>
+</ol>
 <h2>Notes</h2>
 <ul>
-<li>Sentiment analysis is keyword-based (not ML) — useful for quick polarity, not nuanced analysis</li>
-<li>Audience insights sample a configurable number of followers (default: 50)</li>
-<li>No X Ads API integration — this is browser-side intelligence gathering</li>
+<li>Sentiment analysis is keyword-based (not ML) -- quick polarity assessment</li>
+<li>A/B testing requires manually posting both tweet variants</li>
+<li>No X Ads API integration -- this is browser-side intelligence</li>
 </ul>
 
 
@@ -288,7 +285,7 @@
         <h3>📖 In This Section</h3>
                 <a href="/docs/skills/algorithm-cultivation">🎯 Algorithm Cultivation &amp; Thought Leadership</a>
         <a href="/docs/skills/analytics-insights">🎯 Analytics &amp; Insights</a>
-        <a href="/docs/skills/articles-longform">🎯 Articles &amp; Long-Form Content</a>
+        <a href="/docs/skills/articles-longform">🎯 Articles &amp; Longform</a>
         <a href="/docs/skills/blocking-muting-management">🎯 Blocking &amp; Muting Management</a>
         <a href="/docs/skills/bookmarks-management">🎯 Bookmarks Management</a>
         <a href="/docs/skills/community-health-monitoring">🎯 Community Health Monitoring</a>

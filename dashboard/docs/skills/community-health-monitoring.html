@@ -205,19 +205,53 @@
 <td>Track recent unfollower patterns</td>
 </tr>
 </tbody></table>
+<h2>Browser Scripts</h2>
+<p>Complement MCP analysis with browser-side tools:</p>
+<table>
+<thead>
+<tr>
+<th>Goal</th>
+<th>Script</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Audit follower quality</td>
+<td><code>src/auditFollowers.js</code></td>
+</tr>
+<tr>
+<td>Detect unfollowers</td>
+<td><code>src/detectUnfollowers.js</code></td>
+</tr>
+<tr>
+<td>Audience demographics</td>
+<td><code>src/audienceDemographics.js</code></td>
+</tr>
+<tr>
+<td>Follow ratio analysis</td>
+<td><code>src/followRatioManager.js</code></td>
+</tr>
+<tr>
+<td>Account health dashboard</td>
+<td><code>src/accountHealthMonitor.js</code></td>
+</tr>
+<tr>
+<td>Shadowban check</td>
+<td><code>src/shadowbanChecker.js</code></td>
+</tr>
+</tbody></table>
 <h2>Workflow</h2>
 <ol>
-<li><strong>Profile baseline</strong> — Call <code>x_get_profile</code> to get follower count, following count, and calculate follower-to-following ratio.</li>
-<li><strong>Audit follower quality</strong> — Call <code>x_get_followers</code> with <code>limit: 200</code>. Classify each follower:<ul>
+<li><strong>Profile baseline</strong> -- Call <code>x_get_profile</code> to get follower count, following count, and calculate follower-to-following ratio.</li>
+<li><strong>Audit follower quality</strong> -- Call <code>x_get_followers</code> with <code>limit: 200</code>. Classify each follower:<ul>
 <li><strong>Active</strong>: Has bio, 50+ followers, posted in last 30 days</li>
 <li><strong>Low quality</strong>: No bio, &lt;10 followers, or no recent activity</li>
 <li><strong>Suspect bot</strong>: Default avatar, username with many numbers, 0 tweets, follows 1000+</li>
 </ul>
 </li>
-<li><strong>Check engagement authenticity</strong> — Call <code>x_get_tweets</code> with <code>limit: 30</code>. For each tweet, compare engagement volume to follower count. Flag anomalies: likes/follower ratio &gt; 10% (potential engagement pods) or &lt; 0.1% (ghost followers).</li>
-<li><strong>Analyze unfollower patterns</strong> — Call <code>x_detect_unfollowers</code>. Note churn rate and whether unfollowers correlate with specific content types or posting gaps.</li>
-<li><strong>Assess reciprocity</strong> — Call <code>x_get_non_followers</code>. Calculate reciprocity rate: <code>mutual_follows / total_following * 100</code>. Identify high-value accounts not following back.</li>
-<li><strong>Calculate health score</strong> — Weighted composite (0-100):<ul>
+<li><strong>Check engagement authenticity</strong> -- Call <code>x_get_tweets</code> with <code>limit: 30</code>. For each tweet, compare engagement volume to follower count. Flag anomalies: likes/follower ratio &gt; 10% (potential engagement pods) or &lt; 0.1% (ghost followers).</li>
+<li><strong>Analyze unfollower patterns</strong> -- Call <code>x_detect_unfollowers</code>. Note churn rate and whether unfollowers correlate with specific content types or posting gaps.</li>
+<li><strong>Assess reciprocity</strong> -- Call <code>x_get_non_followers</code>. Calculate reciprocity rate: <code>mutual_follows / total_following * 100</code>. Identify high-value accounts not following back.</li>
+<li><strong>Calculate health score</strong> -- Weighted composite (0-100):<ul>
 <li>Follower quality: 30% (% active followers)</li>
 <li>Engagement authenticity: 25% (normal engagement patterns)</li>
 <li>Churn rate: 20% (low unfollower rate)</li>
@@ -225,7 +259,7 @@
 <li>Growth trend: 10% (net positive follower change)</li>
 </ul>
 </li>
-<li><strong>Generate report</strong> — Compile into the template below with actionable recommendations.</li>
+<li><strong>Generate report</strong> -- Compile into the template below with actionable recommendations.</li>
 </ol>
 <h2>Output Template</h2>
 <pre><code>## Community Health Report: @{username}
@@ -255,6 +289,62 @@ Date: {date} | Health Score: {score}/100
 2. {actionable recommendation}
 3. {actionable recommendation}
 </code></pre>
+<h2>Strategy Guide</h2>
+<h3>Monthly health audit routine</h3>
+<ol>
+<li>Run full MCP workflow above for baseline report</li>
+<li>Compare against previous month&#39;s scores</li>
+<li>Action items: block flagged bots, unfollow non-reciprocals above threshold</li>
+<li>Use <code>src/accountHealthMonitor.js</code> for quick between-audit checks</li>
+</ol>
+<h3>Score interpretation</h3>
+<table>
+<thead>
+<tr>
+<th>Score</th>
+<th>Grade</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>80-100</td>
+<td>Excellent</td>
+<td>Maintain current strategy</td>
+</tr>
+<tr>
+<td>60-79</td>
+<td>Good</td>
+<td>Minor adjustments needed</td>
+</tr>
+<tr>
+<td>40-59</td>
+<td>Fair</td>
+<td>Review engagement strategy, clean follower list</td>
+</tr>
+<tr>
+<td>20-39</td>
+<td>Poor</td>
+<td>Major cleanup needed, block bots, reassess content</td>
+</tr>
+<tr>
+<td>0-19</td>
+<td>Critical</td>
+<td>Possible shadowban, mass bot followers, or inactive account</td>
+</tr>
+</tbody></table>
+<h3>Improving a low health score</h3>
+<ol>
+<li>Block suspect bot followers with <code>src/blockBots.js</code></li>
+<li>Unfollow non-reciprocals with <code>src/unfollowback.js</code></li>
+<li>Increase posting consistency to reduce churn</li>
+<li>Engage authentically to improve engagement rate</li>
+</ol>
+<h2>Notes</h2>
+<ul>
+<li>Health score is a heuristic -- use as directional guidance, not exact measurement</li>
+<li>Bot detection uses profile signals, not ML -- some false positives expected</li>
+<li>Run quarterly for trend tracking, monthly for active management</li>
+</ul>
 
 
         <div class="cta-box">
@@ -270,7 +360,7 @@ Date: {date} | Health Score: {score}/100
         <h3>📖 In This Section</h3>
                 <a href="/docs/skills/algorithm-cultivation">🎯 Algorithm Cultivation &amp; Thought Leadership</a>
         <a href="/docs/skills/analytics-insights">🎯 Analytics &amp; Insights</a>
-        <a href="/docs/skills/articles-longform">🎯 Articles &amp; Long-Form Content</a>
+        <a href="/docs/skills/articles-longform">🎯 Articles &amp; Longform</a>
         <a href="/docs/skills/blocking-muting-management">🎯 Blocking &amp; Muting Management</a>
         <a href="/docs/skills/bookmarks-management">🎯 Bookmarks Management</a>
         <a href="/docs/skills/business-ads">🎯 Business &amp; Ads Tools</a>

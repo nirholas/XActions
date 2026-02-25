@@ -4,21 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Blocking &amp; Muting Management | XActions</title>
-  <meta name="description" content="Browser console scripts for blocking, unblocking, muting, and managing unwanted accounts.">
+  <meta name="description" content="Browser console scripts for blocking, unblocking, muting, and managing unwanted accounts on X/Twitter.">
   <meta name="keywords" content="xactions, twitter automation, x automation, free, open source, blocking, muting, management, agent skills">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Blocking &amp; Muting Management — XActions">
-  <meta property="og:description" content="Browser console scripts for blocking, unblocking, muting, and managing unwanted accounts.">
+  <meta property="og:description" content="Browser console scripts for blocking, unblocking, muting, and managing unwanted accounts on X/Twitter.">
   <meta property="og:url" content="https://xactions.app/docs/skills/blocking-muting-management">
   <meta property="og:site_name" content="XActions">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Blocking &amp; Muting Management — XActions">
-  <meta name="twitter:description" content="Browser console scripts for blocking, unblocking, muting, and managing unwanted accounts.">
+  <meta name="twitter:description" content="Browser console scripts for blocking, unblocking, muting, and managing unwanted accounts on X/Twitter.">
 
   <link rel="canonical" href="https://xactions.app/docs/skills/blocking-muting-management">
   <link rel="manifest" href="/manifest.json">
@@ -29,7 +29,7 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Blocking & Muting Management | XActions",
-    "description": "Browser console scripts for blocking, unblocking, muting, and managing unwanted accounts.",
+    "description": "Browser console scripts for blocking, unblocking, muting, and managing unwanted accounts on X/Twitter.",
     "url": "https://xactions.app/docs/skills/blocking-muting-management",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -171,116 +171,83 @@
       <article class="article">
         <span class="cat-badge">Agent Skills</span>
         <h1>Blocking &amp; Muting Management</h1>
-<p>Browser console scripts for blocking, unblocking, muting, and managing unwanted accounts.</p>
-<h2>Available Scripts</h2>
+<p>Browser console scripts for blocking, unblocking, muting, and managing unwanted accounts on X/Twitter.</p>
+<h2>Script Selection</h2>
 <table>
 <thead>
 <tr>
-<th>Script</th>
+<th>Goal</th>
 <th>File</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Mass Block</td>
-<td><code>src/massBlock.js</code></td>
-<td>Block multiple accounts from a list or visible on page</td>
-</tr>
-<tr>
-<td>Mass Unblock</td>
-<td><code>src/massUnblock.js</code></td>
-<td>Unblock multiple accounts with keep-blocked filter</td>
-</tr>
-<tr>
-<td>Mass Unmute</td>
-<td><code>src/massUnmute.js</code></td>
-<td>Unmute multiple accounts with keep-muted filter</td>
-</tr>
-<tr>
-<td>Block Bots</td>
-<td><code>src/blockBots.js</code></td>
-<td>Detect and block bot/spam accounts by heuristics</td>
-</tr>
-<tr>
-<td>Mute by Keywords</td>
-<td><code>src/muteByKeywords.js</code></td>
-<td>Mute accounts tweeting specific keywords</td>
-</tr>
-<tr>
-<td>Report Spam</td>
-<td><code>src/reportSpam.js</code></td>
-<td>Report accounts for spam/abuse</td>
-</tr>
-<tr>
-<td>Remove Followers</td>
-<td><code>src/removeFollowers.js</code></td>
-<td>Remove followers without blocking (soft-block)</td>
-</tr>
-</tbody></table>
-<h2>Quick Start</h2>
-<table>
-<thead>
-<tr>
-<th>Script</th>
 <th>Navigate to</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>Block Bots</td>
-<td><code>x.com/YOUR_USERNAME/followers</code></td>
+<td>Block multiple accounts</td>
+<td><code>src/massBlock.js</code></td>
+<td>Any page on x.com</td>
 </tr>
 <tr>
-<td>Mass Block</td>
-<td>Any x.com page (list mode) or spam reply thread (visible mode)</td>
-</tr>
-<tr>
-<td>Mass Unblock</td>
+<td>Unblock all blocked accounts</td>
+<td><code>src/massUnblock.js</code></td>
 <td><code>x.com/settings/blocked/all</code></td>
 </tr>
 <tr>
-<td>Mass Unmute</td>
+<td>Unmute all muted accounts</td>
+<td><code>src/massUnmute.js</code></td>
 <td><code>x.com/settings/muted/all</code></td>
 </tr>
 <tr>
-<td>Mute by Keywords</td>
+<td>Detect and block bots</td>
+<td><code>src/blockBots.js</code></td>
+<td><code>x.com/USERNAME/followers</code></td>
+</tr>
+<tr>
+<td>Mute users by keywords</td>
+<td><code>src/muteByKeywords.js</code></td>
 <td>Timeline or search results</td>
 </tr>
 <tr>
-<td>Remove Followers</td>
-<td><code>x.com/YOUR_USERNAME/followers</code></td>
+<td>Manage muted words</td>
+<td><code>src/manageMutedWords.js</code></td>
+<td>Any page</td>
 </tr>
 <tr>
-<td>Report Spam</td>
-<td>Any x.com page</td>
+<td>Report spam</td>
+<td><code>src/reportSpam.js</code></td>
+<td>Target account profile</td>
+</tr>
+<tr>
+<td>Remove followers (soft-block)</td>
+<td><code>src/removeFollowers.js</code></td>
+<td><code>x.com/USERNAME/followers</code></td>
 </tr>
 </tbody></table>
-<ol>
-<li>Navigate to the required page</li>
-<li>Open DevTools (F12) → Console</li>
-<li>Set <code>dryRun: false</code> when ready → Paste and run</li>
-</ol>
-<h2>Block Bots — <code>src/blockBots.js</code></h2>
-<p>Scans followers and blocks accounts matching bot heuristics: no avatar, random-string usernames, high follow ratio, no bio, zero tweets.</p>
-<h2>Mass Block / Unblock — <code>src/massBlock.js</code>, <code>src/massUnblock.js</code></h2>
-<p>Block or unblock accounts from a configurable username list. Mass Block also supports <code>&#39;visible&#39;</code> mode that blocks all users on the current page (useful for spam reply threads).</p>
-<h2>Mass Unmute — <code>src/massUnmute.js</code></h2>
-<p>Unmute all or selected accounts. Supports keep-muted filter to preserve specific mutes.</p>
-<h2>Mute by Keywords — <code>src/muteByKeywords.js</code></h2>
-<p>Scans timeline for tweets matching keywords and mutes the authors. Useful for filtering recurring spam topics.</p>
-<h2>Report Spam — <code>src/reportSpam.js</code></h2>
-<p>Report multiple accounts for spam or abuse. Configurable reason (<code>spam</code>, <code>abuse</code>, <code>fake</code>) with optional block-after-report.</p>
-<h2>Remove Followers — <code>src/removeFollowers.js</code></h2>
-<p>Removes followers using soft-block (block → immediate unblock). Three modes: <code>list</code> (specific users), <code>all</code> (all visible), <code>smart</code> (heuristic-based filtering).</p>
-<h2>Shared Features</h2>
-<p>Production-grade scripts (<code>massBlock</code>, <code>massUnblock</code>, <code>massUnmute</code>, <code>removeFollowers</code>) include:</p>
+<h2>Script Details</h2>
+<h3>massBlock.js</h3>
+<p>Blocks a list of usernames by navigating to each profile and clicking Block. Configurable delay between blocks. Tracks progress and exports block list.</p>
+<p><strong>Controls:</strong> <code>window.XActions.pause()</code>, <code>.resume()</code>, <code>.abort()</code></p>
+<h3>massUnblock.js</h3>
+<p>Navigates to blocked accounts page and clicks Unblock on each. Scrolls for more. Progress tracking with auto JSON export.</p>
+<h3>massUnmute.js</h3>
+<p>Same pattern as massUnblock but for muted accounts. Navigate to <code>x.com/settings/muted/all</code> first.</p>
+<h3>blockBots.js</h3>
+<p>Scans your followers using heuristics to detect bot accounts:</p>
 <ul>
-<li><strong>Pause/resume/abort</strong> — <code>window.XActions.pause()</code> / <code>.resume()</code> / <code>.abort()</code> / <code>.status()</code></li>
-<li><strong>Dry-run mode</strong> — preview actions before executing</li>
-<li><strong>Rate-limit detection</strong> — auto-cooldown on 429 responses</li>
-<li><strong>Progress tracking</strong> — real-time console output with counts</li>
-<li><strong>JSON export</strong> — download results on completion</li>
+<li>Default avatar / no profile picture</li>
+<li>Very low follower count with high following count</li>
+<li>Account age &lt; 30 days with high activity</li>
+<li>Bio contains spam keywords</li>
+<li>No tweets or only retweets</li>
 </ul>
-<h2>Key Selectors</h2>
+<p>Flags accounts as suspicious before blocking. Review mode available.</p>
+<h3>muteByKeywords.js</h3>
+<p>Scans timeline or search results for tweets containing specific keywords. Mutes the authors. Configurable keyword list.</p>
+<h3>manageMutedWords.js</h3>
+<p>Bulk-adds words/phrases to X&#39;s muted words list. Navigates to settings and adds each word programmatically.</p>
+<h3>removeFollowers.js</h3>
+<p>Removes followers using the block-then-immediately-unblock method. They stop following you without being permanently blocked. Processes one-by-one with safety delays.</p>
+<p><strong>Controls:</strong> <code>window.XActions.pause()</code>, <code>.resume()</code>, <code>.abort()</code></p>
+<h2>DOM Selectors</h2>
 <table>
 <thead>
 <tr>
@@ -293,7 +260,11 @@
 <td><code>[data-testid=&quot;block&quot;]</code></td>
 </tr>
 <tr>
-<td>Confirmation dialog</td>
+<td>Unblock button</td>
+<td><code>[data-testid=&quot;unblock&quot;]</code> or <code>[data-testid$=&quot;-unblock&quot;]</code></td>
+</tr>
+<tr>
+<td>Confirmation</td>
 <td><code>[data-testid=&quot;confirmationSheetConfirm&quot;]</code></td>
 </tr>
 <tr>
@@ -306,24 +277,35 @@
 </tr>
 <tr>
 <td>Mute option</td>
-<td><code>[data-testid=&quot;muteLink&quot;]</code></td>
-</tr>
-<tr>
-<td>Report option</td>
-<td><code>[data-testid=&quot;report&quot;]</code></td>
-</tr>
-<tr>
-<td>Tweet caret menu</td>
-<td><code>[data-testid=&quot;caret&quot;]</code></td>
+<td><code>[data-testid=&quot;mute&quot;]</code></td>
 </tr>
 </tbody></table>
+<h2>Rate Limiting &amp; Safety</h2>
+<ul>
+<li>1-2s delays between block/unblock/mute actions</li>
+<li>Bot detection uses heuristics — review flagged accounts before blocking</li>
+<li>X may restrict after ~100 blocks in quick succession</li>
+<li>Soft-block (block+unblock) is the safest way to remove followers</li>
+</ul>
+<h2>Strategy Guide</h2>
+<h3>Cleaning up after a bot attack</h3>
+<ol>
+<li>Run <code>src/blockBots.js</code> on your followers page</li>
+<li>Review flagged accounts in the console output</li>
+<li>Let the script block confirmed bots</li>
+<li>Run <code>src/auditFollowers.js</code> to verify remaining follower quality</li>
+</ol>
+<h3>Mass cleanup of muted/blocked accounts</h3>
+<ol>
+<li>Run <code>src/massUnblock.js</code> on <code>x.com/settings/blocked/all</code> to clear block list</li>
+<li>Run <code>src/massUnmute.js</code> on <code>x.com/settings/muted/all</code> to clear mute list</li>
+<li>Set up fresh keyword mutes with <code>src/manageMutedWords.js</code></li>
+</ol>
 <h2>Notes</h2>
 <ul>
-<li>Mass operations use 1-3s random delays between actions to avoid rate limits</li>
-<li>Bot detection uses heuristics — review flagged accounts before blocking</li>
-<li>Remove followers: block then immediately unblock (they stop following you)</li>
-<li>Report spam sends the report to X — use responsibly, only for genuine spam</li>
-<li>All scripts default to <code>dryRun: true</code> for safety</li>
+<li>Block/unblock operations are final — X doesn&#39;t have a bulk undo</li>
+<li>Soft-block (removeFollowers) is invisible to the removed user</li>
+<li>Bot detection heuristics may flag legitimate new accounts — always review</li>
 </ul>
 
 
@@ -340,7 +322,7 @@
         <h3>📖 In This Section</h3>
                 <a href="/docs/skills/algorithm-cultivation">🎯 Algorithm Cultivation &amp; Thought Leadership</a>
         <a href="/docs/skills/analytics-insights">🎯 Analytics &amp; Insights</a>
-        <a href="/docs/skills/articles-longform">🎯 Articles &amp; Long-Form Content</a>
+        <a href="/docs/skills/articles-longform">🎯 Articles &amp; Longform</a>
         <a href="/docs/skills/bookmarks-management">🎯 Bookmarks Management</a>
         <a href="/docs/skills/business-ads">🎯 Business &amp; Ads Tools</a>
         <a href="/docs/skills/community-health-monitoring">🎯 Community Health Monitoring</a>

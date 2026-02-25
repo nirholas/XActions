@@ -177,6 +177,7 @@
 <pre><code>src/automation/
 ├── core.js               ← Required! Load this first
 ├── actions.js            ← XActions library (100+ actions)
+├── algorithmBuilder.js   ← LLM-powered algorithm cultivation (browser)
 ├── autoLiker.js          ← Timeline auto-liking
 ├── keywordFollow.js      ← Search &amp; auto-follow
 ├── smartUnfollow.js      ← Time-based unfollowing
@@ -1458,6 +1459,50 @@ csStats()         // View statistics
 csTemplates()     // Show all templates
 csRespond(&#39;issue&#39;) // Get a response template
 </code></pre>
+<hr>
+<h3>14. Algorithm Builder (<code>algorithmBuilder.js</code>)</h3>
+<p><strong>Purpose:</strong> LLM-powered algorithm cultivation engine. Trains X&#39;s algorithm by systematically searching your niche, liking relevant content, following key accounts, and posting AI-generated comments and original posts — all in your persona&#39;s voice.</p>
+<p><strong>This is the browser console version.</strong> For the 24/7 headless Puppeteer version, use the CLI: <code>xactions persona run &lt;id&gt;</code>.</p>
+<p><strong>How to use:</strong></p>
+<ol>
+<li>Go to <code>x.com/home</code></li>
+<li>Paste <code>core.js</code> then <code>algorithmBuilder.js</code></li>
+<li>Edit the <code>NICHE_CONFIG</code> and <code>LLM_CONFIG</code> at the top</li>
+<li>The script runs indefinitely with activity cycles and rest periods</li>
+</ol>
+<p><strong>Configuration:</strong></p>
+<pre><code class="language-js">const NICHE_CONFIG = {
+  topics: [&#39;crypto&#39;, &#39;defi&#39;, &#39;web3&#39;, &#39;bitcoin&#39;],
+  searchTerms: [&#39;crypto alpha&#39;, &#39;defi yield&#39;, &#39;new token launch&#39;],
+  targetAccounts: [&#39;0xCygaar&#39;, &#39;DefiIgnas&#39;],
+  avoidTopics: [&#39;scam&#39;, &#39;rug&#39;],
+  commentStyle: &#39;brief, hype-driven, crypto lingo&#39;,
+  tone: &#39;degen casual — short, punchy, uses crypto slang&#39;,
+};
+
+const LLM_CONFIG = {
+  enabled: true,
+  apiKey: &#39;your_openrouter_api_key&#39;,
+  model: &#39;google/gemini-flash-2.0&#39;,
+};
+</code></pre>
+<p><strong>What it does each cycle:</strong></p>
+<ol>
+<li><strong>Search phase</strong> — Searches niche terms, scrolls results, likes on-topic tweets</li>
+<li><strong>Engage phase</strong> — Follows relevant users, comments using LLM-generated replies</li>
+<li><strong>Create phase</strong> — Posts original content in your persona&#39;s voice</li>
+<li><strong>Browse phase</strong> — Scrolls timeline, visits profiles, checks notifications</li>
+<li><strong>Rest phase</strong> — Sleeps 30–120 seconds between cycles to appear human</li>
+</ol>
+<p><strong>Fallback behavior:</strong> If OpenRouter is unavailable, the script falls back to curated comment templates stored in <code>FALLBACK_COMMENTS</code>.</p>
+<p><strong>Commands:</strong></p>
+<pre><code class="language-js">stopAlgorithm()                     // Stop the builder
+window.XActions.Algorithm.stats()   // View engagement stats
+window.XActions.Algorithm.state()   // View current state
+</code></pre>
+<blockquote>
+<p><strong>Tip:</strong> For 24/7 unattended operation, use the Node.js version via <code>xactions persona create</code> + <code>xactions persona run &lt;id&gt;</code> instead.</p>
+</blockquote>
 <hr>
 <h3>Multi-Account with user:pass Import</h3>
 <p>The Multi-Account Manager now supports importing from simple text format:</p>

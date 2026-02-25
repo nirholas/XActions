@@ -172,7 +172,7 @@
         <span class="cat-badge">Agent Skills</span>
         <h1>Profile Management</h1>
 <p>Browser console scripts for updating X/Twitter profile information.</p>
-<h2>Available Scripts</h2>
+<h2>Script Selection</h2>
 <table>
 <thead>
 <tr>
@@ -200,11 +200,11 @@
 <h2>Update Profile</h2>
 <p><strong>File:</strong> <code>src/updateProfile.js</code></p>
 <p>Programmatically updates profile fields: display name, bio, location, website, birth date.</p>
-<h3>How to use</h3>
+<h3>How to Use</h3>
 <ol>
 <li>Navigate to <code>x.com/settings/profile</code></li>
-<li>Open DevTools (F12) → Console</li>
-<li>Paste the script → Enter</li>
+<li>Open DevTools (F12) -&gt; Console</li>
+<li>Paste the script -&gt; Enter</li>
 </ol>
 <h3>Configuration</h3>
 <pre><code class="language-javascript">const CONFIG = {
@@ -219,8 +219,8 @@
 <p>Core module for reading and updating profile data. Used by other scripts that need profile context.</p>
 <h2>QR Code Sharing</h2>
 <p><strong>File:</strong> <code>src/qrCodeSharing.js</code></p>
-<p>Generates a shareable QR code for your X profile. Useful for cross-platform promotion.</p>
-<h3>Key Selectors</h3>
+<p>Generates a shareable QR code for your X profile. Useful for in-person networking and cross-platform promotion.</p>
+<h2>DOM Selectors</h2>
 <table>
 <thead>
 <tr>
@@ -252,6 +252,14 @@
 <td>User description</td>
 <td><code>[data-testid=&quot;UserDescription&quot;]</code></td>
 </tr>
+<tr>
+<td>User location</td>
+<td><code>[data-testid=&quot;UserLocation&quot;]</code></td>
+</tr>
+<tr>
+<td>User URL</td>
+<td><code>[data-testid=&quot;UserUrl&quot;]</code></td>
+</tr>
 </tbody></table>
 <h2>Field Limits</h2>
 <table>
@@ -279,19 +287,44 @@
 </tr>
 <tr>
 <td>Avatar</td>
-<td>Square image, 400×400px recommended</td>
+<td>Square image, 400x400px recommended</td>
 </tr>
 <tr>
 <td>Header</td>
-<td>1500×500px recommended</td>
+<td>1500x500px recommended</td>
 </tr>
 </tbody></table>
+<h2>Strategy Guide</h2>
+<h3>Optimizing profile for conversions</h3>
+<ol>
+<li><strong>Display name</strong>: Full name + value proposition keyword (e.g., &quot;Jane Smith | AI Engineer&quot;)</li>
+<li><strong>Bio</strong>: Lead with what you do, who you serve, proof (numbers), and CTA</li>
+<li><strong>Location</strong>: Include if relevant to your niche (e.g., &quot;San Francisco, CA&quot; for tech)</li>
+<li><strong>Website</strong>: Link to your most important conversion page (not just homepage)</li>
+<li><strong>Avatar</strong>: Professional headshot, face visible, good lighting, contrasting background</li>
+<li><strong>Header</strong>: Banner showing your work, product, or personal brand tagline</li>
+</ol>
+<h3>Bio formula (160 chars max)</h3>
+<pre><code>{What you do} for {who you serve}
+{Proof/credentials}
+{CTA or link description}
+</code></pre>
+<p>Example: &quot;Building AI tools for indie hackers | 10K+ users | Free at example.com&quot;</p>
+<h3>Profile A/B testing</h3>
+<ol>
+<li>Use <code>src/updateProfile.js</code> to set version A</li>
+<li>Run for 1 week, track follower growth with <code>src/followerGrowthTracker.js</code></li>
+<li>Switch to version B with <code>src/updateProfile.js</code></li>
+<li>Compare growth rates after another week</li>
+<li>Keep the winning version</li>
+</ol>
 <h2>Notes</h2>
 <ul>
 <li>Profile updates take effect immediately after saving</li>
 <li>Avatar and header uploads require file input interaction</li>
 <li>Bio supports line breaks and emoji</li>
 <li>All scripts include dry-run mode by default</li>
+<li>Changes can be reverted by running the script again with old values</li>
 </ul>
 
 
@@ -308,7 +341,7 @@
         <h3>📖 In This Section</h3>
                 <a href="/docs/skills/algorithm-cultivation">🎯 Algorithm Cultivation &amp; Thought Leadership</a>
         <a href="/docs/skills/analytics-insights">🎯 Analytics &amp; Insights</a>
-        <a href="/docs/skills/articles-longform">🎯 Articles &amp; Long-Form Content</a>
+        <a href="/docs/skills/articles-longform">🎯 Articles &amp; Longform</a>
         <a href="/docs/skills/blocking-muting-management">🎯 Blocking &amp; Muting Management</a>
         <a href="/docs/skills/bookmarks-management">🎯 Bookmarks Management</a>
         <a href="/docs/skills/business-ads">🎯 Business &amp; Ads Tools</a>

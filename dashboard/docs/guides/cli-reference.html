@@ -934,6 +934,361 @@ Links:
 Run &quot;xactions --help&quot; for all commands
 </code></pre>
 <hr>
+<h3>xactions persona create</h3>
+<p>Interactively create a new persona for the algorithm builder. Guides you through choosing a niche preset, engagement strategy, and activity pattern.</p>
+<p><strong>Syntax:</strong></p>
+<pre><code class="language-bash">xactions persona create [options]
+</code></pre>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>--name &lt;name&gt;</code></td>
+<td>Persona name (skips prompt)</td>
+</tr>
+<tr>
+<td><code>--preset &lt;preset&gt;</code></td>
+<td>Niche preset (skips prompt)</td>
+</tr>
+<tr>
+<td><code>--strategy &lt;strategy&gt;</code></td>
+<td>Engagement strategy (skips prompt)</td>
+</tr>
+<tr>
+<td><code>--activity &lt;pattern&gt;</code></td>
+<td>Activity pattern (skips prompt)</td>
+</tr>
+</tbody></table>
+<p><strong>Available Presets:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Preset</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>crypto-degen</code></td>
+<td>Crypto/DeFi/Web3 with degen slang</td>
+</tr>
+<tr>
+<td><code>tech-builder</code></td>
+<td>Indie hacker / building in public</td>
+</tr>
+<tr>
+<td><code>ai-researcher</code></td>
+<td>AI/ML papers and research</td>
+</tr>
+<tr>
+<td><code>growth-marketer</code></td>
+<td>Content strategy and audience growth</td>
+</tr>
+<tr>
+<td><code>finance-investor</code></td>
+<td>Markets, investing, economics</td>
+</tr>
+<tr>
+<td><code>creative-writer</code></td>
+<td>Writing craft and storytelling</td>
+</tr>
+<tr>
+<td><code>custom</code></td>
+<td>Define your own topics and tone</td>
+</tr>
+</tbody></table>
+<p><strong>Available Strategies:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Strategy</th>
+<th>Follows/day</th>
+<th>Likes/day</th>
+<th>Comments/day</th>
+<th>Posts/day</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>aggressive</code></td>
+<td>80</td>
+<td>150</td>
+<td>40</td>
+<td>5</td>
+</tr>
+<tr>
+<td><code>moderate</code></td>
+<td>40</td>
+<td>80</td>
+<td>20</td>
+<td>3</td>
+</tr>
+<tr>
+<td><code>conservative</code></td>
+<td>15</td>
+<td>40</td>
+<td>8</td>
+<td>1</td>
+</tr>
+<tr>
+<td><code>thoughtleader</code></td>
+<td>20</td>
+<td>60</td>
+<td>30</td>
+<td>4</td>
+</tr>
+</tbody></table>
+<p><strong>Available Activity Patterns:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>night-owl</code></td>
+<td>Active late night, peak midnight–2am</td>
+</tr>
+<tr>
+<td><code>early-bird</code></td>
+<td>Active from 5am, peak morning</td>
+</tr>
+<tr>
+<td><code>nine-to-five</code></td>
+<td>Checks before/after work, active evenings</td>
+</tr>
+<tr>
+<td><code>always-on</code></td>
+<td>Active throughout the day</td>
+</tr>
+<tr>
+<td><code>weekend-warrior</code></td>
+<td>Light weekdays, heavy weekends</td>
+</tr>
+</tbody></table>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-bash"># Interactive creation
+$ xactions persona create
+
+# One-liner
+$ xactions persona create --name &quot;CryptoBot&quot; --preset crypto-degen --strategy aggressive --activity night-owl
+
+# Custom niche (interactive prompts for topics, search terms, etc.)
+$ xactions persona create --preset custom
+</code></pre>
+<hr>
+<h3>xactions persona list</h3>
+<p>List all saved personas with their stats and last activity.</p>
+<p><strong>Syntax:</strong></p>
+<pre><code class="language-bash">xactions persona list
+</code></pre>
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">$ xactions persona list
+
+🤖 Saved Personas
+
+  ● CryptoBot (persona_1234567890)
+    Preset: crypto-degen | Strategy: aggressive
+    Sessions: 42 | Follows: 320 | Likes: 1200 | Comments: 180
+    Last active: 1/15/2025, 3:42:00 AM
+
+  ○ AIResearcher (persona_0987654321)
+    Preset: ai-researcher | Strategy: thoughtleader
+    Sessions: 0 | Follows: 0 | Likes: 0 | Comments: 0
+</code></pre>
+<hr>
+<h3>xactions persona run</h3>
+<p>Start the 24/7 algorithm builder for a persona. Launches a Puppeteer browser, logs in, and runs automated sessions with sleep cycles.</p>
+<p><strong>Syntax:</strong></p>
+<pre><code class="language-bash">xactions persona run &lt;personaId&gt; [options]
+</code></pre>
+<p><strong>Arguments:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Description</th>
+<th>Required</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>personaId</code></td>
+<td>The persona ID (shown in <code>persona list</code>)</td>
+<td>Yes</td>
+</tr>
+</tbody></table>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>--headless</code></td>
+<td>Run browser in headless mode</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>--no-headless</code></td>
+<td>Show the browser window</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>--dry-run</code></td>
+<td>Preview actions without executing</td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td><code>--sessions &lt;n&gt;</code></td>
+<td>Stop after N sessions (0 = infinite)</td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>--token &lt;token&gt;</code></td>
+<td>X auth token (overrides saved config)</td>
+<td>-</td>
+</tr>
+</tbody></table>
+<p><strong>Environment Variables:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>XACTIONS_SESSION_COOKIE</code></td>
+<td>Yes*</td>
+<td>X auth token (alt: <code>--token</code> or <code>xactions login</code>)</td>
+</tr>
+<tr>
+<td><code>OPENROUTER_API_KEY</code></td>
+<td>Yes</td>
+<td>OpenRouter key for LLM-generated comments/posts</td>
+</tr>
+</tbody></table>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-bash"># Start with saved auth
+$ xactions persona run persona_1234567890
+
+# With visible browser for debugging
+$ xactions persona run persona_1234567890 --no-headless
+
+# Dry run — preview without executing
+$ xactions persona run persona_1234567890 --dry-run
+
+# Run 5 sessions then stop
+$ xactions persona run persona_1234567890 --sessions 5
+
+# Explicit auth token
+$ xactions persona run persona_1234567890 --token &quot;abc123hex...&quot;
+</code></pre>
+<hr>
+<h3>xactions persona status</h3>
+<p>Display detailed status, config, and lifetime stats for a persona.</p>
+<p><strong>Syntax:</strong></p>
+<pre><code class="language-bash">xactions persona status &lt;personaId&gt;
+</code></pre>
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">$ xactions persona status persona_1234567890
+
+🤖 CryptoBot — Status Report
+
+Identity
+  ID: persona_1234567890
+  Preset: crypto-degen
+  Created: 1/10/2025, 9:00:00 AM
+
+Niche
+  Topics: crypto, defi, web3, bitcoin, ethereum, solana, memecoins
+  Search terms: 7
+  Target accounts: 0xCygaar, blaboratory, DefiIgnas
+
+Strategy
+  Growth: aggressive
+  Activity: night-owl
+  Daily limits: 80 follows, 150 likes, 40 comments
+
+Lifetime Stats
+  Sessions: 42
+  Follows: 320
+  Likes: 1200
+  Comments: 180
+  Posts: 24
+  Searches: 89
+  Last active: 1/15/2025, 3:42:00 AM
+
+Follow Graph
+  Users followed: 280
+  Current followers: 145
+  Target: 10,000
+</code></pre>
+<hr>
+<h3>xactions persona edit</h3>
+<p>Modify an existing persona&#39;s config without recreating it.</p>
+<p><strong>Syntax:</strong></p>
+<pre><code class="language-bash">xactions persona edit &lt;personaId&gt; [options]
+</code></pre>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>--topics &lt;topics&gt;</code></td>
+<td>Set topics (comma-separated)</td>
+</tr>
+<tr>
+<td><code>--search-terms &lt;terms&gt;</code></td>
+<td>Set search terms (comma-separated)</td>
+</tr>
+<tr>
+<td><code>--target-accounts &lt;accounts&gt;</code></td>
+<td>Set target accounts (comma-separated, no @)</td>
+</tr>
+<tr>
+<td><code>--strategy &lt;strategy&gt;</code></td>
+<td>Set engagement strategy</td>
+</tr>
+<tr>
+<td><code>--activity &lt;pattern&gt;</code></td>
+<td>Set activity pattern</td>
+</tr>
+</tbody></table>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-bash"># Change topics
+$ xactions persona edit persona_123 --topics &quot;ai,llm,agents,agi&quot;
+
+# Switch to conservative strategy
+$ xactions persona edit persona_123 --strategy conservative
+
+# Update target accounts
+$ xactions persona edit persona_123 --target-accounts &quot;elonmusk,sama,karpathy&quot;
+</code></pre>
+<hr>
+<h3>xactions persona delete</h3>
+<p>Permanently delete a saved persona and all its data.</p>
+<p><strong>Syntax:</strong></p>
+<pre><code class="language-bash">xactions persona delete &lt;personaId&gt;
+</code></pre>
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">$ xactions persona delete persona_1234567890
+? Delete persona persona_1234567890? This cannot be undone. (y/N) y
+✅ Persona persona_1234567890 deleted
+</code></pre>
+<hr>
 <h2>Output Formats</h2>
 <p>XActions supports two output formats: <strong>JSON</strong> and <strong>CSV</strong>.</p>
 <h3>JSON Output</h3>
@@ -1038,6 +1393,9 @@ XACTIONS_HEADLESS=false xactions profile nichxbt
 <h3>Config File Location</h3>
 <pre><code>~/.xactions/
 ├── config.json      # Authentication and settings
+├── personas/        # Saved persona configurations
+│   ├── persona_123.json
+│   └── persona_456.json
 └── cache/           # Temporary cache (optional)
 </code></pre>
 <h3>Config File Structure</h3>
@@ -1168,6 +1526,36 @@ XACTIONS_HEADLESS=false xactions profile nichxbt
 <td><code>info</code></td>
 <td>Show info</td>
 <td><code>xactions info</code></td>
+</tr>
+<tr>
+<td><code>persona create</code></td>
+<td>Create a new persona</td>
+<td><code>xactions persona create</code></td>
+</tr>
+<tr>
+<td><code>persona list</code></td>
+<td>List all personas</td>
+<td><code>xactions persona list</code></td>
+</tr>
+<tr>
+<td><code>persona run</code></td>
+<td>Start 24/7 algorithm builder</td>
+<td><code>xactions persona run &lt;id&gt;</code></td>
+</tr>
+<tr>
+<td><code>persona status</code></td>
+<td>Show persona stats</td>
+<td><code>xactions persona status &lt;id&gt;</code></td>
+</tr>
+<tr>
+<td><code>persona edit</code></td>
+<td>Modify persona config</td>
+<td><code>xactions persona edit &lt;id&gt; --strategy aggressive</code></td>
+</tr>
+<tr>
+<td><code>persona delete</code></td>
+<td>Delete a persona</td>
+<td><code>xactions persona delete &lt;id&gt;</code></td>
 </tr>
 </tbody></table>
 <hr>

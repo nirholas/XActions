@@ -203,42 +203,72 @@
 </tbody></table>
 <h2>Workflow</h2>
 <ol>
-<li><strong>Define search queries</strong> — Build 3-5 keyword queries combining pain points, competitor names, or buying signals (e.g., &quot;looking for {tool}&quot;, &quot;anyone recommend {category}&quot;, &quot;switching from {competitor}&quot;).</li>
-<li><strong>Search conversations</strong> — Call <code>x_search_tweets</code> for each query with <code>limit: 30</code>. Collect unique usernames from results.</li>
-<li><strong>Qualify profiles</strong> — For each unique username, call <code>x_get_profile</code>. Filter by: has bio, follower count &gt; 100, account age &gt; 6 months, posts in English (or target language).</li>
-<li><strong>Score intent</strong> — Assign 1-5 score based on:<ul>
+<li><strong>Define search queries</strong> -- Build 3-5 keyword queries combining pain points, competitor names, or buying signals (e.g., &quot;looking for {tool}&quot;, &quot;anyone recommend {category}&quot;, &quot;switching from {competitor}&quot;).</li>
+<li><strong>Search conversations</strong> -- Call <code>x_search_tweets</code> for each query with <code>limit: 30</code>. Collect unique usernames.</li>
+<li><strong>Qualify profiles</strong> -- Call <code>x_get_profile</code> for each. Filter by: has bio, followers &gt; 100, account age &gt; 6 months.</li>
+<li><strong>Score intent</strong> -- Assign 1-5 score:<ul>
 <li>5: Explicit buying intent (&quot;need a tool for...&quot;, &quot;budget approved&quot;)</li>
 <li>4: Comparing solutions (&quot;X vs Y&quot;, &quot;switching from&quot;)</li>
-<li>3: Pain point discussion (&quot;struggling with...&quot;, &quot;frustrated by&quot;)</li>
+<li>3: Pain point discussion (&quot;struggling with...&quot;)</li>
 <li>2: Topic interest (engages with industry content)</li>
 <li>1: Tangential mention</li>
 </ul>
 </li>
-<li><strong>Gather context</strong> — For top-scored leads (4-5), call <code>x_get_tweets</code> with <code>limit: 20</code> to identify recent interests, tech stack mentions, and engagement patterns.</li>
-<li><strong>Check network</strong> — Call <code>x_get_following</code> for high-value leads to see if they follow competitors or relevant accounts.</li>
-<li><strong>Export lead list</strong> — Format as CSV-ready output using the template below.</li>
+<li><strong>Gather context</strong> -- For top leads (4-5), call <code>x_get_tweets</code> with <code>limit: 20</code>.</li>
+<li><strong>Check network</strong> -- Call <code>x_get_following</code> for high-value leads to see competitor follows.</li>
+<li><strong>Export lead list</strong> -- Format as structured output.</li>
 </ol>
+<h2>Browser Script Integration</h2>
+<p>Enhance MCP workflows with browser scripts:</p>
+<table>
+<thead>
+<tr>
+<th>Goal</th>
+<th>Script</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Monitor keywords in real-time</td>
+<td><code>src/keywordMonitor.js</code></td>
+</tr>
+<tr>
+<td>Analyze potential lead&#39;s audience</td>
+<td><code>src/audienceDemographics.js</code></td>
+</tr>
+<tr>
+<td>Check overlap with your audience</td>
+<td><code>src/audienceOverlap.js</code></td>
+</tr>
+<tr>
+<td>Engage with leads&#39; content</td>
+<td><code>src/engagementBooster.js</code></td>
+</tr>
+<tr>
+<td>Auto-follow qualified leads</td>
+<td><code>src/automation/keywordFollow.js</code></td>
+</tr>
+</tbody></table>
 <h2>Output Template</h2>
 <pre><code>## Lead List: {search_topic}
 Generated: {date} | Total qualified: {count}
 
-| Username | Score | Followers | Bio Summary | Signal | Tweet URL | Notes |
-|----------|-------|-----------|-------------|--------|-----------|-------|
-| @{user}  | {1-5} | {count}   | {summary}   | {type} | {url}     | {note}|
+| Username | Score | Followers | Signal | Tweet URL |
+|----------|-------|-----------|--------|-----------|
+| @{user}  | {1-5} | {count}   | {type} | {url}     |
 
 ### High-Priority Leads (Score 4-5)
 
-**@{username}** — Score: {n}/5
+**@{username}** -- Score: {n}/5
 - Signal: &quot;{tweet excerpt}&quot;
 - Bio: {bio}
-- Followers: {count} | Industry: {industry}
 - Suggested approach: {personalized outreach note}
 </code></pre>
 <h2>Tips</h2>
 <ul>
 <li>Run searches at different times to catch varied audiences</li>
-<li>Refresh weekly — buying signals are time-sensitive</li>
-<li>Cross-reference with <code>x_get_followers</code> to find warm intros through mutual connections</li>
+<li>Refresh weekly -- buying signals are time-sensitive</li>
+<li>Cross-reference with <code>x_get_followers</code> to find warm intros</li>
+<li>Use <code>src/keywordMonitor.js</code> for ongoing keyword monitoring</li>
 </ul>
 
 
@@ -255,7 +285,7 @@ Generated: {date} | Total qualified: {count}
         <h3>📖 In This Section</h3>
                 <a href="/docs/skills/algorithm-cultivation">🎯 Algorithm Cultivation &amp; Thought Leadership</a>
         <a href="/docs/skills/analytics-insights">🎯 Analytics &amp; Insights</a>
-        <a href="/docs/skills/articles-longform">🎯 Articles &amp; Long-Form Content</a>
+        <a href="/docs/skills/articles-longform">🎯 Articles &amp; Longform</a>
         <a href="/docs/skills/blocking-muting-management">🎯 Blocking &amp; Muting Management</a>
         <a href="/docs/skills/bookmarks-management">🎯 Bookmarks Management</a>
         <a href="/docs/skills/business-ads">🎯 Business &amp; Ads Tools</a>

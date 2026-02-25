@@ -4,21 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>XActions MCP Server | XActions</title>
-  <meta name="description" content="Entry point: `src/mcp/server.js` — communicates via stdio transport.">
+  <meta name="description" content="The definitive free Twitter/X MCP server. 68+ tools for AI agents.">
   <meta name="keywords" content="xactions, twitter automation, x automation, free, open source, mcp, server, agent skills">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="XActions MCP Server — XActions">
-  <meta property="og:description" content="Entry point: `src/mcp/server.js` — communicates via stdio transport.">
+  <meta property="og:description" content="The definitive free Twitter/X MCP server. 68+ tools for AI agents.">
   <meta property="og:url" content="https://xactions.app/docs/skills/xactions-mcp-server">
   <meta property="og:site_name" content="XActions">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="XActions MCP Server — XActions">
-  <meta name="twitter:description" content="Entry point: `src/mcp/server.js` — communicates via stdio transport.">
+  <meta name="twitter:description" content="The definitive free Twitter/X MCP server. 68+ tools for AI agents.">
 
   <link rel="canonical" href="https://xactions.app/docs/skills/xactions-mcp-server">
   <link rel="manifest" href="/manifest.json">
@@ -29,7 +29,7 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "XActions MCP Server | XActions",
-    "description": "Entry point: `src/mcp/server.js` — communicates via stdio transport.",
+    "description": "The definitive free Twitter/X MCP server. 68+ tools for AI agents.",
     "url": "https://xactions.app/docs/skills/xactions-mcp-server",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -171,152 +171,92 @@
       <article class="article">
         <span class="cat-badge">Agent Skills</span>
         <h1>XActions MCP Server</h1>
-<p>Entry point: <code>src/mcp/server.js</code> — communicates via stdio transport.</p>
-<h2>Configuration</h2>
+<p>The definitive free Twitter/X MCP server. 68+ tools for AI agents.</p>
+<h2>Quick Start</h2>
 <pre><code class="language-json">{
   &quot;mcpServers&quot;: {
     &quot;xactions&quot;: {
-      &quot;command&quot;: &quot;node&quot;,
-      &quot;args&quot;: [&quot;node_modules/xactions/src/mcp/server.js&quot;],
+      &quot;command&quot;: &quot;npx&quot;,
+      &quot;args&quot;: [&quot;xactions-mcp&quot;],
       &quot;env&quot;: {
-        &quot;XACTIONS_MODE&quot;: &quot;local&quot;,
         &quot;XACTIONS_SESSION_COOKIE&quot;: &quot;your_auth_token_here&quot;
       }
     }
   }
 }
 </code></pre>
+<h2>Setup</h2>
+<h3>1. Get auth_token</h3>
+<p>DevTools (F12) -&gt; Application -&gt; Cookies -&gt; x.com -&gt; copy <code>auth_token</code> value</p>
+<h3>2. Configure your client</h3>
+<p><strong>Claude Desktop:</strong></p>
+<pre><code class="language-bash">xactions mcp-config --client claude --write
+</code></pre>
+<p><strong>Cursor:</strong></p>
+<pre><code class="language-bash">xactions mcp-config --client cursor --write
+</code></pre>
+<p><strong>Windsurf / VS Code:</strong></p>
+<pre><code class="language-bash">xactions mcp-config --client windsurf --write
+xactions mcp-config --client vscode --write
+</code></pre>
+<h3>3. Restart your client</h3>
+<h2>Available Tools (68+)</h2>
+<h3>Scraping</h3>
+<p><code>x_get_profile</code>, <code>x_get_followers</code>, <code>x_get_following</code>, <code>x_get_non_followers</code>, <code>x_get_tweets</code>, <code>x_search_tweets</code>, <code>x_get_thread</code>, <code>x_download_video</code></p>
+<h3>Actions</h3>
+<p><code>x_follow</code>, <code>x_unfollow</code>, <code>x_unfollow_non_followers</code>, <code>x_post_tweet</code>, <code>x_like</code>, <code>x_retweet</code>, <code>x_delete_tweet</code>, <code>x_reply</code>, <code>x_bookmark</code>, <code>x_get_bookmarks</code>, <code>x_clear_bookmarks</code>, <code>x_auto_like</code></p>
+<h3>Analysis</h3>
+<p><code>x_detect_unfollowers</code>, <code>x_best_time_to_post</code>, <code>x_analyze_sentiment</code>, <code>x_monitor_reputation</code>, <code>x_reputation_report</code>, <code>x_competitor_analysis</code>, <code>x_brand_monitor</code></p>
+<h3>Profile &amp; Settings</h3>
+<p><code>x_update_profile</code>, <code>x_get_settings</code>, <code>x_toggle_protected</code>, <code>x_get_blocked</code>, <code>x_check_premium</code></p>
+<h3>Content</h3>
+<p><code>x_post_thread</code>, <code>x_create_poll</code>, <code>x_schedule_post</code>, <code>x_publish_article</code></p>
+<h3>Discovery</h3>
+<p><code>x_get_trends</code>, <code>x_get_explore</code></p>
+<h3>Messaging</h3>
+<p><code>x_send_dm</code>, <code>x_get_conversations</code>, <code>x_export_dms</code></p>
+<h3>AI (requires OPENROUTER_API_KEY)</h3>
+<p><code>x_analyze_voice</code>, <code>x_generate_tweet</code>, <code>x_rewrite_tweet</code>, <code>x_summarize_thread</code></p>
+<h3>Advanced</h3>
+<ul>
+<li><strong>Streaming:</strong> <code>x_stream_start/stop/list/pause/resume/status/history</code></li>
+<li><strong>Workflows:</strong> <code>x_workflow_create/run/list/actions</code></li>
+<li><strong>Social Graph:</strong> <code>x_graph_build/analyze/recommendations/list</code></li>
+<li><strong>Portability:</strong> <code>x_export_account/migrate_account/diff_exports</code></li>
+</ul>
+<h2>Example Prompts</h2>
+<pre><code>&quot;Scrape @nichxbt&#39;s profile and last 50 tweets. What topics do they post about most?&quot;
+
+&quot;Find my non-followers and unfollow them&quot;
+
+&quot;Search for tweets about &#39;AI agents&#39; and analyze the sentiment&quot;
+
+&quot;Post a thread about the top 3 AI trends in 2026&quot;
+
+&quot;Monitor brand mentions of &#39;XActions&#39; for the last week&quot;
+</code></pre>
+<h2>Environment Variables</h2>
 <table>
 <thead>
 <tr>
 <th>Variable</th>
 <th>Required</th>
-<th>Default</th>
-<th>Description</th>
+<th>Purpose</th>
 </tr>
 </thead>
 <tbody><tr>
-<td><code>XACTIONS_MODE</code></td>
-<td>No</td>
-<td><code>local</code></td>
-<td><code>local</code> (free, Puppeteer) or <code>remote</code> (cloud API)</td>
-</tr>
-<tr>
 <td><code>XACTIONS_SESSION_COOKIE</code></td>
-<td>Yes (local)</td>
-<td>—</td>
-<td><code>auth_token</code> cookie from x.com</td>
+<td>Yes</td>
+<td>X auth_token for authentication</td>
 </tr>
 <tr>
-<td><code>XACTIONS_API_URL</code></td>
+<td><code>OPENROUTER_API_KEY</code></td>
 <td>No</td>
-<td><code>https://api.xactions.app</code></td>
-<td>Remote mode API URL</td>
-</tr>
-<tr>
-<td><code>X402_PRIVATE_KEY</code></td>
-<td>No</td>
-<td>—</td>
-<td>Optional wallet key for remote mode micropayments</td>
-</tr>
-<tr>
-<td><code>X402_NETWORK</code></td>
-<td>No</td>
-<td><code>base-sepolia</code></td>
-<td>Optional: <code>base-sepolia</code> or <code>base</code></td>
+<td>Enables AI tools (voice analysis, tweet generation)</td>
 </tr>
 </tbody></table>
-<h2>Modes</h2>
-<p><strong>Local</strong> (default, free): Puppeteer stealth browser automation. No API keys, no payments. Implemented in <code>src/mcp/local-tools.js</code>.</p>
-<p><strong>Remote</strong> (optional): Self-hosted XActions cloud API. Optionally supports x402 micropayments. Implemented in <code>src/mcp/x402-client.js</code>.</p>
-<h2>Tool catalog</h2>
-<h3>Read operations</h3>
-<table>
-<thead>
-<tr>
-<th>Tool</th>
-<th>Params</th>
-<th>Returns</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>x_login</code></td>
-<td><code>cookie</code></td>
-<td>Session confirmation</td>
-</tr>
-<tr>
-<td><code>x_get_profile</code></td>
-<td><code>username</code></td>
-<td>Bio, follower/following counts, verified status</td>
-</tr>
-<tr>
-<td><code>x_get_followers</code></td>
-<td><code>username</code>, <code>limit?</code> (default: 100)</td>
-<td>Array of <code>{ username, displayName, bio }</code></td>
-</tr>
-<tr>
-<td><code>x_get_following</code></td>
-<td><code>username</code>, <code>limit?</code></td>
-<td>Array with <code>followsYou</code> indicator</td>
-</tr>
-<tr>
-<td><code>x_get_non_followers</code></td>
-<td><code>username</code></td>
-<td>Accounts not following back</td>
-</tr>
-<tr>
-<td><code>x_get_tweets</code></td>
-<td><code>username</code>, <code>limit?</code></td>
-<td>Array of <code>{ text, likes, retweets, replies, timestamp, url }</code></td>
-</tr>
-<tr>
-<td><code>x_search_tweets</code></td>
-<td><code>query</code>, <code>limit?</code></td>
-<td>Same shape as tweets</td>
-</tr>
-<tr>
-<td><code>x_detect_unfollowers</code></td>
-<td><code>username</code></td>
-<td>Snapshot comparison results</td>
-</tr>
-</tbody></table>
-<h3>Write operations</h3>
-<table>
-<thead>
-<tr>
-<th>Tool</th>
-<th>Params</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>x_follow</code></td>
-<td><code>username</code></td>
-</tr>
-<tr>
-<td><code>x_unfollow</code></td>
-<td><code>username</code></td>
-</tr>
-<tr>
-<td><code>x_unfollow_non_followers</code></td>
-<td><code>username</code>, <code>limit?</code></td>
-</tr>
-<tr>
-<td><code>x_post_tweet</code></td>
-<td><code>text</code></td>
-</tr>
-<tr>
-<td><code>x_like</code></td>
-<td><code>tweet_url</code> or <code>tweet_id</code></td>
-</tr>
-<tr>
-<td><code>x_retweet</code></td>
-<td><code>tweet_url</code> or <code>tweet_id</code></td>
-</tr>
-<tr>
-<td><code>x_download_video</code></td>
-<td><code>tweet_url</code> → returns MP4 URLs</td>
-</tr>
-</tbody></table>
+<h2>Full Documentation</h2>
+<p>See <code>docs/mcp-setup.md</code> for complete setup guide with troubleshooting.</p>
 
 
         <div class="cta-box">
@@ -332,7 +272,7 @@
         <h3>📖 In This Section</h3>
                 <a href="/docs/skills/algorithm-cultivation">🎯 Algorithm Cultivation &amp; Thought Leadership</a>
         <a href="/docs/skills/analytics-insights">🎯 Analytics &amp; Insights</a>
-        <a href="/docs/skills/articles-longform">🎯 Articles &amp; Long-Form Content</a>
+        <a href="/docs/skills/articles-longform">🎯 Articles &amp; Longform</a>
         <a href="/docs/skills/blocking-muting-management">🎯 Blocking &amp; Muting Management</a>
         <a href="/docs/skills/bookmarks-management">🎯 Bookmarks Management</a>
         <a href="/docs/skills/business-ads">🎯 Business &amp; Ads Tools</a>

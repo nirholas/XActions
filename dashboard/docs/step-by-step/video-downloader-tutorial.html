@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Download Videos from X (Twitter) — Free, No App, No Watermark — Free X/Twitter Tools Tool | XActions</title>
+  <meta name="description" content="**Download any video from X/Twitter straight to your device with one script — free, no sign-up, no third-party app, no watermark.** Picks the highest quality...">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, video, downloader, tutorial, download, videos, (twitter), free,, app,, watermark, tools, video downloader tutorial twitter">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Download Videos from X (Twitter) — Free, No App, No Watermark — XActions">
+  <meta property="og:description" content="**Download any video from X/Twitter straight to your device with one script — free, no sign-up, no third-party app, no watermark.** Picks the highest quality...">
+  <meta property="og:url" content="https://xactions.app/docs/step-by-step/video-downloader-tutorial">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Download Videos from X (Twitter) — Free, No App, No Watermark — Free X/Twitter Tool">
+  <meta name="twitter:description" content="**Download any video from X/Twitter straight to your device with one script — free, no sign-up, no third-party app, no watermark.** Picks the highest quality...">
+
+  <link rel="canonical" href="https://xactions.app/docs/step-by-step/video-downloader-tutorial">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Download Videos from X (Twitter) — Free, No App, No Watermark — Free X/Twitter Tools Tool | XActions",
+    "description": "**Download any video from X/Twitter straight to your device with one script — free, no sign-up, no third-party app, no watermark.** Picks the highest quality...",
+    "url": "https://xactions.app/docs/step-by-step/video-downloader-tutorial",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/video-downloader-tutorial",
+    "articleSection": "Tools",
+    "keywords": "xactions, twitter automation, x automation, free, video, downloader, tutorial, download, videos, (twitter), free,, app,, watermark, tools, video downloader tutorial twitter"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Download Videos from X (Twitter) — Free, No App, No Watermark", "item": "https://xactions.app/docs/video-downloader-tutorial" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use Download Videos from X (Twitter) — Free, No App, No Watermark",
+    "description": "**Download any video from X/Twitter straight to your device with one script — free, no sign-up, no third-party app, no watermark.** Picks the highest quality...",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions Download Videos from X (Twitter) — Free, No App, No Watermark script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>⚡ Download Videos from X (Twitter) — Free, No App, No Watermark</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › Download Videos from X (Twitter) — Free, No App, No Watermark
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Tools</span>
+        <h1>🎬 Download Videos from X (Twitter) — Free, No App, No Watermark</h1>
+<blockquote>
+<p><strong>Download any video from X/Twitter straight to your device with one script — free, no sign-up, no third-party app, no watermark.</strong> Picks the highest quality automatically.</p>
+</blockquote>
+<p><strong>Works on:</strong> 🌐 Browser Console · 💻 CLI · 🤖 MCP (AI Agents)<br><strong>Difficulty:</strong> 🟢 Beginner<br><strong>Time:</strong> ⏱️ Under 1 minute<br><strong>Requirements:</strong> A web browser (Chrome, Firefox, Edge, Safari)</p>
+<blockquote>
+<p>📖 For the quick-reference version, see <a href="../video-downloader.md">video-downloader.md</a></p>
+</blockquote>
+<hr>
+<h2>🎯 Real-World Scenario</h2>
+<p>You&#39;re scrolling X and hit a viral 2-minute clip — a perfect demo of a coding technique, a hilarious skit, a breaking news moment. You want to save it locally so you can share it on Slack, embed it in a presentation, or just watch it offline. But X doesn&#39;t have a &quot;Download&quot; button. Third-party sites want you to paste URLs, watch ads, and download mystery files with watermarks.</p>
+<p>XActions finds every quality variant of the video embedded in the tweet&#39;s page data, picks the highest resolution, and downloads it as a clean MP4 — directly from Twitter&#39;s own CDN. No middleman, no watermark, no ads.</p>
+<p><strong>Before XActions:</strong></p>
+<pre><code>┌─────────────────────────────────────────────────────┐
+│  You: &quot;How do I download this video?&quot;               │
+├─────────────────────────────────────────────────────┤
+│  Option 1: Third-party sites                        │
+│    → Paste URL → Wait → Ads → Captcha → Low quality│
+│    → Watermark: &quot;Downloaded with SketchySite.io&quot;    │
+│                                                     │
+│  Option 2: Screen recording                         │
+│    → Lose quality → Capture UI → Bad audio sync     │
+│                                                     │
+│  Option 3: Twitter API ($100/month)                 │
+│    → Apply for developer access → Wait 3 days       │
+│    → Parse JSON responses → Still no direct link    │
+└─────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>After XActions:</strong></p>
+<pre><code>┌─────────────────────────────────────────────────────┐
+│  You: F12 → Paste → Enter                           │
+├─────────────────────────────────────────────────────┤
+│  📹 FOUND 3 VIDEO(S)                                │
+│                                                     │
+│  1. [1280x720] MP4  ← highest                      │
+│  2. [640x360]  MP4                                  │
+│  3. [480x270]  MP4                                  │
+│                                                     │
+│  ✅ Download started! → nichxbt_1893847265.mp4      │
+│  📋 URL copied to clipboard                         │
+│  ⏱️  Total time: 3 seconds                          │
+│  💰 Cost: $0                                        │
+└─────────────────────────────────────────────────────┘
+</code></pre>
+<hr>
+<h2>📋 What This Does (Step by Step)</h2>
+<ol>
+<li>🔍 <strong>Reads the tweet page&#39;s DOM and source data</strong> — scans <code>&lt;video&gt;</code> elements, page HTML, and framework data</li>
+<li>🎣 <strong>Extracts all <code>video.twimg.com</code> URLs</strong> — finds every quality variant Twitter has for this video</li>
+<li>📡 <strong>Sets up a network interceptor</strong> — catches any video URLs loaded via <code>fetch</code> or <code>XMLHttpRequest</code> (for second-run reliability)</li>
+<li>📊 <strong>Sorts by resolution</strong> — parses <code>1280x720</code>, <code>640x360</code>, etc. from the URL paths</li>
+<li>🏆 <strong>Picks the best quality</strong> — auto-selects the highest resolution MP4</li>
+<li>⬇️ <strong>Downloads the file</strong> — fetches the blob and triggers a browser download (or opens in new tab if CORS-blocked)</li>
+<li>📋 <strong>Copies URL to clipboard</strong> — so you can paste it elsewhere</li>
+</ol>
+<pre><code>┌───────────────────────────────────────────────────────────────┐
+│                                                               │
+│  [Open tweet with video]                                      │
+│          │                                                    │
+│          ▼                                                    │
+│  [Click PLAY on the video]                                    │
+│          │                                                    │
+│          ▼                                                    │
+│  [Paste script in console]                                    │
+│          │                                                    │
+│          ▼                                                    │
+│  [Scan page for video.twimg.com URLs]                         │
+│          │                                                    │
+│    ┌─────┼─────────┬──────────────┐                           │
+│    ▼     ▼         ▼              ▼                           │
+│  &lt;video&gt; Page     Network       Framework                     │
+│  elements source  intercepts    data                          │
+│    │     │         │              │                           │
+│    └─────┴─────────┴──────────────┘                           │
+│          │                                                    │
+│          ▼                                                    │
+│  [Deduplicate &amp; sort by resolution]                           │
+│          │                                                    │
+│          ▼                                                    │
+│  [Display all qualities + auto-download best]                 │
+│          │                                                    │
+│          ▼                                                    │
+│  [Copy URL to clipboard + save as filename.mp4]               │
+│                                                               │
+└───────────────────────────────────────────────────────────────┘
+</code></pre>
+<hr>
+<h2>🌐 Method 1: Browser Console (Copy-Paste)</h2>
+<p><strong>Best for:</strong> Everyone — no installs, no sign-ups, works in 3 seconds.</p>
+<h3>Prerequisites</h3>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> Any modern web browser (Chrome, Firefox, Edge, Safari)</li>
+<li><input checked="" disabled="" type="checkbox"> The tweet must contain a native X/Twitter video (not a YouTube embed)</li>
+</ul>
+<h3>Step 1: Open the tweet with the video</h3>
+<blockquote>
+<p>Go to the tweet containing the video you want to download. The URL should look like<br><strong><code>x.com/username/status/1234567890</code></strong></p>
+</blockquote>
+<pre><code>┌──────────────────────────────────────────────────────────┐
+│ 🔍 x.com/nichxbt/status/1893847265192837465              │
+├──────────────────────────────────────────────────────────┤
+│                                                          │
+│  👤 nich @nichxbt · 2h                                   │
+│  Just shipped the new XActions dashboard 🚀              │
+│                                                          │
+│  ┌──────────────────────────────────────────────┐        │
+│  │                                              │        │
+│  │          ▶ [VIDEO — 1:42]                    │        │
+│  │           Click play first!                  │        │
+│  │                                              │        │
+│  └──────────────────────────────────────────────┘        │
+│                                                          │
+│  ♡ 247   🔁 89   💬 34                                   │
+│                                                          │
+└──────────────────────────────────────────────────────────┘
+</code></pre>
+<h3>Step 2: Click PLAY on the video</h3>
+<blockquote>
+<p><strong>Important:</strong> The video must start playing at least once — this loads the video URL into the page data so the script can find it.</p>
+</blockquote>
+<h3>Step 3: Open Developer Console</h3>
+<table>
+<thead>
+<tr>
+<th>OS</th>
+<th>Shortcut</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Windows / Linux</strong></td>
+<td><code>F12</code> then <strong>Console</strong> tab, or <code>Ctrl + Shift + J</code></td>
+</tr>
+<tr>
+<td><strong>Mac</strong></td>
+<td><code>Cmd + Option + J</code></td>
+</tr>
+</tbody></table>
+<h3>Step 4: Paste and Run</h3>
+<pre><code class="language-javascript">// ============================================
+// XActions - X/Twitter Video Downloader
+// by nichxbt — https://xactions.app
+// Go to a tweet with a video, click play, then paste this
+// ============================================
+
+(() =&gt; {
+  const CONFIG = {
+    QUALITY: &#39;highest&#39;,      // &#39;highest&#39;, &#39;lowest&#39;, &#39;all&#39;
+    AUTO_DOWNLOAD: true,     // Auto-download best quality
+    SHOW_ALL_QUALITIES: true // Show all available qualities
+  };
+
+  const getTweetId = () =&gt; {
+    const match = window.location.href.match(/status\/(\d+)/);
+    return match ? match[1] : null;
+  };
+
+  const getAuthor = () =&gt; {
+    const match = window.location.href.match(/x\.com\/(\w+)/);
+    return match ? match[1] : &#39;unknown&#39;;
+  };
+
+  // Method 1: Direct &lt;video&gt; elements
+  const findVideoInReactState = () =&gt; {
+    const videos = [];
+    document.querySelectorAll(&#39;video&#39;).forEach(video =&gt; {
+      if (video.src &amp;&amp; !video.src.startsWith(&#39;blob:&#39;)) {
+        videos.push({ url: video.src, quality: &#39;direct&#39;, type: &#39;mp4&#39; });
+      }
+      video.querySelectorAll(&#39;source&#39;).forEach(source =&gt; {
+        if (source.src &amp;&amp; !source.src.startsWith(&#39;blob:&#39;)) {
+          videos.push({ url: source.src, quality: &#39;source&#39;, type: &#39;mp4&#39; });
+        }
+      });
+    });
+    return videos;
+  };
+
+  // Method 2: Scan page HTML for video.twimg.com URLs
+  const findVideoInPageData = () =&gt; {
+    const videos = [];
+    const pageContent = document.documentElement.innerHTML;
+    const patterns = [
+      /https:\/\/video\.twimg\.com\/[^&quot;&#39;\s]+\.mp4[^&quot;&#39;\s]*/g,
+      /https:\/\/video\.twimg\.com\/[^&quot;&#39;\s]+\.m3u8[^&quot;&#39;\s]*/g,
+      /https:\/\/pbs\.twimg\.com\/[^&quot;&#39;\s]+\.mp4[^&quot;&#39;\s]*/g,
+      /https:\/\/[^&quot;&#39;\s]*\/amplify_video[^&quot;&#39;\s]*\.mp4[^&quot;&#39;\s]*/g,
+      /https:\/\/[^&quot;&#39;\s]*\/ext_tw_video[^&quot;&#39;\s]*\.mp4[^&quot;&#39;\s]*/g,
+    ];
+    patterns.forEach(pattern =&gt; {
+      const matches = pageContent.match(pattern) || [];
+      matches.forEach(url =&gt; {
+        let cleanUrl = url.replace(/\\u002F/g, &#39;/&#39;).replace(/\\/g, &#39;&#39;);
+        cleanUrl = cleanUrl.split(&#39;&quot;&#39;)[0].split(&quot;&#39;&quot;)[0].split(&#39; &#39;)[0];
+        if (cleanUrl.includes(&#39;.mp4&#39;)) {
+          const qualityMatch = cleanUrl.match(/\/(\d+x\d+)\//);
+          const quality = qualityMatch ? qualityMatch[1] : &#39;unknown&#39;;
+          videos.push({ url: cleanUrl, quality, type: &#39;mp4&#39; });
+        }
+      });
+    });
+    // Deduplicate
+    const unique = [];
+    const seen = new Set();
+    videos.forEach(v =&gt; {
+      const key = v.url.split(&#39;?&#39;)[0];
+      if (!seen.has(key)) { seen.add(key); unique.push(v); }
+    });
+    return unique;
+  };
+
+  // Method 3: Network intercepts
+  const findVideoInNetwork = () =&gt; window.__XACTIONS_VIDEO_URLS || [];
+
+  // Method 4: Framework data
+  const findVideoInNextData = () =&gt; {
+    const videos = [];
+    if (window.__NEXT_DATA__) {
+      const dataStr = JSON.stringify(window.__NEXT_DATA__);
+      const mp4Matches = dataStr.match(/https:[^&quot;]*\.mp4[^&quot;]*/g) || [];
+      mp4Matches.forEach(url =&gt; {
+        videos.push({ url: url.replace(/\\/g, &#39;&#39;), quality: &#39;next_data&#39;, type: &#39;mp4&#39; });
+      });
+    }
+    return videos;
+  };
+
+  // Set up network interceptor for future runs
+  const setupInterceptor = () =&gt; {
+    if (window.__XACTIONS_INTERCEPTOR_ACTIVE) return;
+    window.__XACTIONS_VIDEO_URLS = window.__XACTIONS_VIDEO_URLS || [];
+    const origFetch = window.fetch;
+    window.fetch = async (...args) =&gt; {
+      const url = args[0]?.toString?.() || args[0]?.url || args[0];
+      if (url &amp;&amp; (url.includes(&#39;.mp4&#39;) || url.includes(&#39;.m3u8&#39;) || url.includes(&#39;video.twimg&#39;))) {
+        window.__XACTIONS_VIDEO_URLS.push({ url, quality: &#39;intercepted&#39;, type: url.includes(&#39;.m3u8&#39;) ? &#39;m3u8&#39; : &#39;mp4&#39;, time: Date.now() });
+      }
+      return origFetch(...args);
+    };
+    const origXHR = window.XMLHttpRequest.prototype.open;
+    window.XMLHttpRequest.prototype.open = function(method, url, ...rest) {
+      if (url &amp;&amp; (url.includes(&#39;.mp4&#39;) || url.includes(&#39;.m3u8&#39;) || url.includes(&#39;video.twimg&#39;))) {
+        window.__XACTIONS_VIDEO_URLS.push({ url, quality: &#39;xhr&#39;, type: url.includes(&#39;.m3u8&#39;) ? &#39;m3u8&#39; : &#39;mp4&#39;, time: Date.now() });
+      }
+      return origXHR.call(this, method, url, ...rest);
+    };
+    window.__XACTIONS_INTERCEPTOR_ACTIVE = true;
+  };
+
+  const sortByQuality = (videos) =&gt;
+    videos.sort((a, b) =&gt; {
+      const getRes = (v) =&gt; { const m = v.quality?.match(/(\d+)x(\d+)/); return m ? parseInt(m[1]) * parseInt(m[2]) : 0; };
+      return getRes(b) - getRes(a);
+    });
+
+  const downloadVideo = async (url, filename) =&gt; {
+    try {
+      const response = await fetch(url, { mode: &#39;cors&#39; });
+      if (response.ok) {
+        const blob = await response.blob();
+        const blobUrl = URL.createObjectURL(blob);
+        const a = document.createElement(&#39;a&#39;);
+        a.href = blobUrl;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() =&gt; URL.revokeObjectURL(blobUrl), 1000);
+        console.log(&#39;✅ Download started!&#39;);
+        return true;
+      }
+    } catch (e) {
+      console.log(&#39;⚠️ CORS blocked — opening in new tab...&#39;);
+    }
+    window.open(url, &#39;_blank&#39;);
+    console.log(&#39;📺 Opened in new tab — right-click → Save Video As&#39;);
+    return true;
+  };
+
+  // Main
+  const run = async () =&gt; {
+    console.clear();
+    console.log(&#39;🎬 XActions — X/Twitter Video Downloader&#39;);
+    console.log(&#39;════════════════════════════════════════════════&#39;);
+
+    const tweetId = getTweetId();
+    const author = getAuthor();
+
+    if (!tweetId) {
+      console.error(&#39;❌ Navigate to a tweet page first!&#39;);
+      console.log(&#39;   Example: x.com/user/status/123456789&#39;);
+      return;
+    }
+
+    console.log(`📍 Tweet: @${author}/status/${tweetId}`);
+    console.log(&#39;&#39;);
+
+    setupInterceptor();
+
+    console.log(&#39;🔍 Searching for video URLs...&#39;);
+    let allVideos = [];
+
+    const reactVids = findVideoInReactState();
+    if (reactVids.length) { console.log(`   ✓ ${reactVids.length} in video elements`); allVideos.push(...reactVids); }
+
+    const pageVids = findVideoInPageData();
+    if (pageVids.length) { console.log(`   ✓ ${pageVids.length} in page data`); allVideos.push(...pageVids); }
+
+    const netVids = findVideoInNetwork();
+    if (netVids.length) { console.log(`   ✓ ${netVids.length} from network`); allVideos.push(...netVids); }
+
+    const nextVids = findVideoInNextData();
+    if (nextVids.length) { console.log(`   ✓ ${nextVids.length} in framework data`); allVideos.push(...nextVids); }
+
+    // Deduplicate
+    const seen = new Set();
+    allVideos = allVideos.filter(v =&gt; { const k = v.url.split(&#39;?&#39;)[0]; if (seen.has(k)) return false; seen.add(k); return true; });
+    allVideos = sortByQuality(allVideos);
+
+    if (allVideos.length === 0) {
+      console.log(&#39;&#39;);
+      console.log(&#39;❌ No video URLs found.&#39;);
+      console.log(&#39;&#39;);
+      console.log(&#39;💡 Fix:&#39;);
+      console.log(&#39;   1. Make sure the tweet has a native video (not YouTube)&#39;);
+      console.log(&#39;   2. Click PLAY on the video&#39;);
+      console.log(&#39;   3. Run this script again — the interceptor is now active&#39;);
+      return;
+    }
+
+    console.log(&#39;&#39;);
+    console.log(&#39;════════════════════════════════════════════════&#39;);
+    console.log(`📹 FOUND ${allVideos.length} VIDEO(S)`);
+    console.log(&#39;════════════════════════════════════════════════&#39;);
+
+    if (CONFIG.SHOW_ALL_QUALITIES) {
+      console.log(&#39;&#39;);
+      allVideos.forEach((v, i) =&gt; {
+        console.log(`${i + 1}. [${v.quality}] ${v.type.toUpperCase()}  ${v.url.slice(0, 60)}...`);
+      });
+    }
+
+    const best = allVideos[0];
+    console.log(&#39;&#39;);
+    console.log(&#39;🏆 BEST QUALITY:&#39;);
+    console.log(`   Resolution: ${best.quality}`);
+    console.log(`   Type: ${best.type.toUpperCase()}`);
+
+    try { await navigator.clipboard.writeText(best.url); console.log(&#39;   📋 URL copied to clipboard!&#39;); } catch {}
+
+    window.xVideo = { best: best.url, all: allVideos, author, tweetId, tweetUrl: window.location.href };
+
+    console.log(&#39;&#39;);
+    console.log(&#39;🔗 Direct URL:&#39;);
+    console.log(best.url);
+
+    if (CONFIG.AUTO_DOWNLOAD) {
+      console.log(&#39;&#39;);
+      await downloadVideo(best.url, `${author}_${tweetId}.mp4`);
+    }
+
+    console.log(&#39;&#39;);
+    console.log(&#39;════════════════════════════════════════════════&#39;);
+    console.log(&#39;💾 All data: window.xVideo&#39;);
+    console.log(&#39;   window.xVideo.best  → Best quality URL&#39;);
+    console.log(&#39;   window.xVideo.all   → All qualities array&#39;);
+    console.log(&#39;════════════════════════════════════════════════&#39;);
+  };
+
+  run();
+})();
+</code></pre>
+<h3>✅ Expected Console Output</h3>
+<pre><code>🎬 XActions — X/Twitter Video Downloader
+════════════════════════════════════════════════
+📍 Tweet: @nichxbt/status/1893847265192837465
+
+🔍 Searching for video URLs...
+   ✓ 1 in video elements
+   ✓ 3 in page data
+
+════════════════════════════════════════════════
+📹 FOUND 3 VIDEO(S)
+════════════════════════════════════════════════
+
+1. [1280x720] MP4  https://video.twimg.com/ext_tw_video/189384...
+2. [640x360]  MP4  https://video.twimg.com/ext_tw_video/189384...
+3. [480x270]  MP4  https://video.twimg.com/ext_tw_video/189384...
+
+🏆 BEST QUALITY:
+   Resolution: 1280x720
+   Type: MP4
+   📋 URL copied to clipboard!
+
+🔗 Direct URL:
+https://video.twimg.com/ext_tw_video/1893847265/pu/vid/1280x720/abcDEF123.mp4?tag=14
+
+✅ Download started!
+
+════════════════════════════════════════════════
+💾 All data: window.xVideo
+   window.xVideo.best  → Best quality URL
+   window.xVideo.all   → All qualities array
+════════════════════════════════════════════════
+</code></pre>
+<p>The file <code>nichxbt_1893847265192837465.mp4</code> drops into your downloads folder.</p>
+<hr>
+<h2>💻 Method 2: CLI (Command Line)</h2>
+<pre><code class="language-bash"># Install XActions globally
+npm install -g xactions
+
+# Download a video by tweet URL
+npx xactions download-video https://x.com/nichxbt/status/1893847265192837465
+
+# Specify output path and quality
+npx xactions download-video https://x.com/nichxbt/status/1893847265192837465 \
+  --quality highest \
+  --output ./videos/my-video.mp4
+</code></pre>
+<h3>Example with all options:</h3>
+<pre><code class="language-bash">npx xactions download-video &quot;https://x.com/nichxbt/status/1893847265192837465&quot; \
+  --quality highest \
+  --output ./downloads/ \
+  --filename &quot;demo-video.mp4&quot; \
+  --show-all-qualities \
+  --copy-url
+</code></pre>
+<h3>✅ CLI Output Preview</h3>
+<pre><code>⚡ XActions v2.4.0
+
+🎬 VIDEO DOWNLOADER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📍 Tweet: @nichxbt/status/1893847265192837465
+
+🔍 Finding video URLs...
+
+📹 Available qualities:
+   1. 1280x720  MP4   2.4 MB
+   2. 640x360   MP4   1.1 MB
+   3. 480x270   MP4   0.6 MB
+
+⬇️  Downloading best quality (1280x720)...
+   ████████████████████████████ 100% | 2.4 MB
+
+✅ Saved → ./downloads/demo-video.mp4
+📋 URL copied to clipboard
+</code></pre>
+<h3>CLI Configuration Table</h3>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>--quality</code></td>
+<td>string</td>
+<td><code>highest</code></td>
+<td><code>highest</code>, <code>lowest</code>, or <code>all</code></td>
+</tr>
+<tr>
+<td><code>--output</code></td>
+<td>string</td>
+<td><code>./</code></td>
+<td>Output directory or file path</td>
+</tr>
+<tr>
+<td><code>--filename</code></td>
+<td>string</td>
+<td>auto</td>
+<td>Custom filename (<code>author_tweetId.mp4</code> by default)</td>
+</tr>
+<tr>
+<td><code>--show-all-qualities</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Display all available resolutions</td>
+</tr>
+<tr>
+<td><code>--copy-url</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Copy direct video URL to clipboard</td>
+</tr>
+<tr>
+<td><code>--json</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Output video info as JSON</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>🤖 Method 3: MCP Server (AI Agents)</h2>
+<blockquote>
+<p>Use with Claude Desktop, GPT, Cursor, or any MCP-compatible AI agent.</p>
+</blockquote>
+<h3>Setup</h3>
+<pre><code class="language-json">{
+  &quot;mcpServers&quot;: {
+    &quot;xactions&quot;: {
+      &quot;command&quot;: &quot;npx&quot;,
+      &quot;args&quot;: [&quot;-y&quot;, &quot;xactions&quot;, &quot;mcp&quot;]
+    }
+  }
+}
+</code></pre>
+<h3>MCP Tool Call</h3>
+<pre><code class="language-json">{
+  &quot;tool&quot;: &quot;x_download_video&quot;,
+  &quot;arguments&quot;: {
+    &quot;tweet_url&quot;: &quot;https://x.com/nichxbt/status/1893847265192837465&quot;,
+    &quot;quality&quot;: &quot;highest&quot;
+  }
+}
+</code></pre>
+<h3>Claude Desktop example prompt:</h3>
+<blockquote>
+<p>&quot;Download the video from this tweet: x.com/nichxbt/status/1893847265192837465 and save it in the highest quality.&quot;</p>
+</blockquote>
+<h3>Expected MCP response:</h3>
+<pre><code class="language-json">{
+  &quot;status&quot;: &quot;complete&quot;,
+  &quot;tweet&quot;: &quot;@nichxbt/status/1893847265192837465&quot;,
+  &quot;qualities_found&quot;: 3,
+  &quot;best_quality&quot;: &quot;1280x720&quot;,
+  &quot;file_size&quot;: &quot;2.4 MB&quot;,
+  &quot;download_url&quot;: &quot;https://video.twimg.com/ext_tw_video/...&quot;,
+  &quot;saved_to&quot;: &quot;nichxbt_1893847265192837465.mp4&quot;
+}
+</code></pre>
+<hr>
+<h2>📊 Method Comparison</h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>🌐 Browser Console</th>
+<th>💻 CLI</th>
+<th>🤖 MCP</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Setup</td>
+<td>None</td>
+<td><code>npm install</code></td>
+<td>Config JSON</td>
+</tr>
+<tr>
+<td>Speed</td>
+<td>Instant</td>
+<td>Instant</td>
+<td>Via AI agent</td>
+</tr>
+<tr>
+<td>Best for</td>
+<td>Grab one video fast</td>
+<td>Batch downloads</td>
+<td>AI workflows</td>
+</tr>
+<tr>
+<td>Show all qualities</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Auto-download</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Clipboard copy</td>
+<td>✅</td>
+<td>✅</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Custom filename</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Batch mode</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Works on GIFs</td>
+<td>✅ (they&#39;re videos)</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>⚙️ Configuration Reference</h2>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>QUALITY</code></td>
+<td>string</td>
+<td><code>&#39;highest&#39;</code></td>
+<td>Which quality to auto-download: <code>&#39;highest&#39;</code>, <code>&#39;lowest&#39;</code>, <code>&#39;all&#39;</code></td>
+</tr>
+<tr>
+<td><code>AUTO_DOWNLOAD</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Automatically trigger download of the best quality</td>
+</tr>
+<tr>
+<td><code>SHOW_ALL_QUALITIES</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>List all available resolutions in console</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>📊 Sample Output / Results</h2>
+<h3><code>window.xVideo</code> object (available after running the script):</h3>
+<pre><code class="language-javascript">// Access in console after running the script
+window.xVideo
+// =&gt;
+{
+  best: &quot;https://video.twimg.com/ext_tw_video/189384.../pu/vid/1280x720/abcDEF.mp4?tag=14&quot;,
+  all: [
+    { url: &quot;https://video.twimg.com/.../1280x720/...&quot;, quality: &quot;1280x720&quot;, type: &quot;mp4&quot; },
+    { url: &quot;https://video.twimg.com/.../640x360/...&quot;,  quality: &quot;640x360&quot;,  type: &quot;mp4&quot; },
+    { url: &quot;https://video.twimg.com/.../480x270/...&quot;,  quality: &quot;480x270&quot;,  type: &quot;mp4&quot; }
+  ],
+  author: &quot;nichxbt&quot;,
+  tweetId: &quot;1893847265192837465&quot;,
+  tweetUrl: &quot;https://x.com/nichxbt/status/1893847265192837465&quot;
+}
+</code></pre>
+<h3>Downloaded file:</h3>
+<pre><code>nichxbt_1893847265192837465.mp4
+├── Format: MP4 (H.264 + AAC)
+├── Resolution: 1280×720
+├── Duration: 1:42
+└── Size: 2.4 MB
+</code></pre>
+<hr>
+<h2>💡 Pro Tips</h2>
+<ol>
+<li><p><strong>Click PLAY first, then paste</strong> — X lazy-loads video URLs. If the video hasn&#39;t played yet, the URL might not be in the page data. Just tap play (even for one second), then paste the script. On second run, the network interceptor catches URLs automatically.</p>
+</li>
+<li><p><strong>GIFs are actually videos</strong> — X stores animated GIFs as MP4 files internally. This script downloads them as MP4, which is smaller and higher quality than the original GIF format.</p>
+</li>
+<li><p><strong>Use <code>window.xVideo.all</code> to grab a specific quality</strong> — After running the script, open the console and type <code>window.xVideo.all</code> to see every available variant. You can manually open any URL in a new tab and right-click → Save.</p>
+</li>
+<li><p><strong>Bookmark the script</strong> — Create a browser bookmark with <code>javascript:</code> followed by the minified script for one-click video downloading on any tweet page (search &quot;bookmarklet&quot; for how-to on your browser).</p>
+</li>
+<li><p><strong>For CORS-blocked videos, use the new tab workaround</strong> — Some videos open in a new tab instead of auto-downloading. Just right-click the video → &quot;Save Video As…&quot; from the new tab. The URL is also copied to your clipboard.</p>
+</li>
+</ol>
+<hr>
+<h2>⚠️ Important Notes</h2>
+<ul>
+<li><strong>Native X videos only</strong> — Works on videos uploaded directly to X/Twitter. Does <em>not</em> work on embedded YouTube, Vimeo, or other external players.</li>
+<li><strong>No watermark</strong> — Downloads the original file directly from Twitter&#39;s CDN (<code>video.twimg.com</code>). No third-party branding.</li>
+<li><strong>Respect copyright</strong> — You&#39;re downloading content created by others. Don&#39;t re-upload or monetize without permission.</li>
+<li><strong>CORS may block direct download</strong> — Some browsers block cross-origin downloads. In that case, the script opens the video in a new tab where you can right-click → Save As.</li>
+<li><strong>Large videos</strong> — Very long videos (10+ minutes) may take a moment to fetch. The download happens entirely in-browser.</li>
+</ul>
+<hr>
+<h2>🔧 Troubleshooting</h2>
+<table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&quot;No video URLs found&quot;</td>
+<td>Click PLAY on the video, then run the script again. The interceptor is now active.</td>
+</tr>
+<tr>
+<td>Opens in new tab instead of downloading</td>
+<td>CORS restriction — right-click the video → &quot;Save Video As…&quot;</td>
+</tr>
+<tr>
+<td>Only finds low-quality versions</td>
+<td>The video may have been uploaded in low quality. Check <code>window.xVideo.all</code> for all options.</td>
+</tr>
+<tr>
+<td>Script doesn&#39;t work on a GIF</td>
+<td>It should — X GIFs are MP4s. Make sure you&#39;re on the tweet page, not the media viewer overlay.</td>
+</tr>
+<tr>
+<td>&quot;Not a tweet page&quot; error</td>
+<td>Navigate to <code>x.com/user/status/123456</code>. The script needs <code>/status/</code> in the URL.</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>🔗 Related Features</h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Use Case</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Media Scraping</td>
+<td>Download ALL images/videos from a profile&#39;s media tab</td>
+<td><a href="../media-scraping.md">→ Guide</a></td>
+</tr>
+<tr>
+<td>Tweet Scraping</td>
+<td>Archive tweets and their media together</td>
+<td><a href="../tweet-scraping.md">→ Guide</a></td>
+</tr>
+<tr>
+<td>Bookmark Exporter</td>
+<td>Export bookmarked tweets (including video links)</td>
+<td><a href="../bookmark-exporter.md">→ Guide</a></td>
+</tr>
+<tr>
+<td>Thread Scraping</td>
+<td>Save a full thread including embedded videos</td>
+<td><a href="../thread-scraping.md">→ Guide</a></td>
+</tr>
+</tbody></table>
+<hr>
+<h2>❓ FAQ</h2>
+<h3>Q: How do I download a video from Twitter / X for free?</h3>
+<p><strong>A:</strong> Go to the tweet with the video, click play on it, open your browser console (F12 → Console), paste the XActions video downloader script, and press Enter. The video downloads as an MP4 in the highest quality available — no app, no API key, no watermark, completely free.</p>
+<h3>Q: Can I download Twitter GIFs?</h3>
+<p><strong>A:</strong> Yes — X/Twitter stores all &quot;GIFs&quot; as MP4 video files internally. The XActions downloader works on them identically and downloads the MP4 version, which is actually higher quality and smaller in file size than the original GIF.</p>
+<h3>Q: What video quality can I get?</h3>
+<p><strong>A:</strong> X typically stores videos in 3 qualities: 480p (480×270), 360p (640×360), and 720p (1280×720). The script finds all variants and auto-downloads the highest. Some videos uploaded in 1080p will have a 1920×1080 variant available.</p>
+<h3>Q: Does this work on protected/private accounts?</h3>
+<p><strong>A:</strong> Only if you can see the video in your browser (i.e., you follow the private account). The script reads what&#39;s already loaded on the page — it doesn&#39;t bypass any access restrictions.</p>
+<h3>Q: Why does the video open in a new tab instead of downloading?</h3>
+<p><strong>A:</strong> This is a browser CORS (Cross-Origin Resource Sharing) restriction — some browsers block downloading files from <code>video.twimg.com</code> directly. When this happens, the video opens in a new tab. Right-click it → &quot;Save Video As…&quot; to save it to your device.</p>
+<hr>
+<footer>
+Built with ⚡ by <a href="https://x.com/nichxbt">@nichxbt</a> · <a href="https://xactions.app">xactions.app</a> · <a href="https://github.com/nichxbt/xactions">GitHub</a>
+</footer>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try Download Videos from X (Twitter) — Free, No App, No Watermark?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/step-by-step/auto-commenter-tutorial">📝 Auto Commenter Tutorial</a>
+        <a href="/docs/step-by-step/auto-liker-tutorial">📝 Auto Liker Tutorial</a>
+        <a href="/docs/step-by-step/bookmark-exporter-tutorial">📝 Bookmark Exporter Tutorial</a>
+        <a href="/docs/step-by-step/detect-unfollowers-tutorial">📝 Detect Unfollowers Tutorial</a>
+        <a href="/docs/step-by-step/follow-target-followers-tutorial">📝 Follow Target Followers Tutorial</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a> / <a href="/docs#step-by-step">Tutorials</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

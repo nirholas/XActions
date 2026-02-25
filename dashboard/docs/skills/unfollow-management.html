@@ -217,100 +217,8 @@
 <td><code>x.com/USERNAME/followers</code></td>
 </tr>
 </tbody></table>
-<h2>How Each Script Works</h2>
-<h3>unfollowEveryone.js</h3>
-<p>Bulk unfollows every account you follow. Processes in batches with scroll-and-click cycles.</p>
-<p><strong>Algorithm:</strong> Find all <code>[data-testid$=&quot;-unfollow&quot;]</code> buttons → click each → confirm in dialog → scroll down for more → repeat. Includes retry logic (3 attempts when no buttons found), progress tracking with ETA, sessionStorage persistence across page refreshes, auto JSON export of unfollowed accounts.</p>
-<p><strong>Controls:</strong></p>
-<ul>
-<li><code>window.XActions.pause()</code> — Pause execution</li>
-<li><code>window.XActions.resume()</code> — Resume</li>
-<li><code>window.XActions.abort()</code> — Stop and export results</li>
-</ul>
-<h3>unfollowback.js</h3>
-<p>Unfollows accounts that don&#39;t follow you back (non-mutual). Identifies non-followers by checking for the <strong>absence</strong> of the &quot;Follows you&quot; badge.</p>
-<p><strong>Algorithm:</strong> For each user cell, check if <code>[data-testid=&quot;userFollowIndicator&quot;]</code> exists. If NOT present → unfollow. Processes one-by-one with configurable delay.</p>
-<p><strong>Output:</strong> Console log of each unfollowed account, running count, final JSON export.</p>
-<h3>unfollowWDFBLog.js</h3>
-<p>Same non-follower detection as <code>unfollowback.js</code> but collects usernames and auto-downloads a <code>.txt</code> log file when complete. Useful for record-keeping before mass unfollowing.</p>
-<p><strong>Output:</strong> Downloaded <code>unfollowed-nonfollowers-TIMESTAMP.txt</code> file + console summary.</p>
-<h3>smartUnfollow.js (Automation)</h3>
-<p><strong>Requires:</strong> Paste <code>src/automation/core.js</code> first.</p>
-<p>Uses follow timestamps from <code>keywordFollow.js</code> to only unfollow users who haven&#39;t followed you back within a configurable grace period. Supports a whitelist to protect VIP accounts.</p>
-<p><strong>Config:</strong></p>
-<ul>
-<li><code>gracePeriodDays: 7</code> — Days to wait before unfollowing</li>
-<li><code>whitelist: [&#39;account1&#39;, &#39;account2&#39;]</code> — Protected accounts</li>
-</ul>
-<h3>followRatioManager.js</h3>
-<p>Monitors and manages your follower/following ratio with actionable improvement plans.</p>
-<p><strong>Features:</strong></p>
-<ul>
-<li>Letter-grade rating (S through F)</li>
-<li>Visual ratio bar</li>
-<li>Three improvement paths: unfollow accounts, gain followers, or combination</li>
-<li>Weekly growth projections</li>
-<li>localStorage history with trend tracking</li>
-<li>Cross-references other XActions scripts in recommendations</li>
-</ul>
-<p><strong>Controls:</strong></p>
-<ul>
-<li><code>XActions.setTarget(ratio)</code> — Set goal ratio (e.g., 2.0)</li>
-<li><code>XActions.track()</code> — Record current snapshot</li>
-<li><code>XActions.history()</code> — View trend over time</li>
-<li><code>XActions.plan()</code> — Generate actionable plan</li>
-</ul>
-<h3>detectUnfollowers.js</h3>
-<p>Takes snapshots of your follower list and compares to detect who unfollowed you.</p>
-<p><strong>Navigate to:</strong> <code>x.com/USERNAME/followers</code></p>
-<h3>removeFollowers.js</h3>
-<p>Removes followers from YOUR list using the block-then-unblock method.</p>
-<p><strong>Navigate to:</strong> <code>x.com/USERNAME/followers</code></p>
-<h2>DOM Selectors</h2>
-<table>
-<thead>
-<tr>
-<th>Element</th>
-<th>Selector</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Unfollow button</td>
-<td><code>[data-testid$=&quot;-unfollow&quot;]</code></td>
-<td>Appears on Following page</td>
-</tr>
-<tr>
-<td>Confirmation dialog</td>
-<td><code>[data-testid=&quot;confirmationSheetConfirm&quot;]</code></td>
-<td>Red &quot;Unfollow&quot; button</td>
-</tr>
-<tr>
-<td>Follows you indicator</td>
-<td><code>[data-testid=&quot;userFollowIndicator&quot;]</code></td>
-<td>&quot;Follows you&quot; badge</td>
-</tr>
-<tr>
-<td>User cell</td>
-<td><code>[data-testid=&quot;UserCell&quot;]</code></td>
-<td>Container for each user</td>
-</tr>
-<tr>
-<td>Username link</td>
-<td><code>a[href^=&quot;/&quot;][role=&quot;link&quot;]</code></td>
-<td>First link in cell</td>
-</tr>
-<tr>
-<td>Follower count</td>
-<td><code>a[href$=&quot;/followers&quot;] span</code></td>
-<td>On profile page</td>
-</tr>
-<tr>
-<td>Following count</td>
-<td><code>a[href$=&quot;/following&quot;] span</code></td>
-<td>On profile page</td>
-</tr>
-</tbody></table>
+<h2>Script Details</h2>
+<p>For detailed algorithms, controls, configurations, and DOM selectors for each script, see <a href="references/script-details.md">references/script-details.md</a>.</p>
 <h2>Rate Limiting &amp; Safety</h2>
 <ul>
 <li><strong>Default delay:</strong> 1–2 seconds between unfollows (gaussian randomized)</li>
@@ -398,7 +306,7 @@
         <h3>📖 In This Section</h3>
                 <a href="/docs/skills/algorithm-cultivation">🎯 Algorithm Cultivation &amp; Thought Leadership</a>
         <a href="/docs/skills/analytics-insights">🎯 Analytics &amp; Insights</a>
-        <a href="/docs/skills/articles-longform">🎯 Articles &amp; Long-Form Content</a>
+        <a href="/docs/skills/articles-longform">🎯 Articles &amp; Longform</a>
         <a href="/docs/skills/blocking-muting-management">🎯 Blocking &amp; Muting Management</a>
         <a href="/docs/skills/bookmarks-management">🎯 Bookmarks Management</a>
         <a href="/docs/skills/business-ads">🎯 Business &amp; Ads Tools</a>

@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Growth Automation Suite on X (Twitter) — Follow + Like + Unfollow — Free X/Twitter Tools Tool | XActions</title>
+  <meta name="description" content="**All-in-one growth automation: keyword-based following, timeline engagement, and smart unfollowing — combined into a single session-based script.** Free, no...">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, growth, suite, tutorial, automation, (twitter), follow, like, unfollow, tools, growth suite tutorial twitter, twitter growth suite tutorial">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Growth Automation Suite on X (Twitter) — Follow + Like + Unfollow — XActions">
+  <meta property="og:description" content="**All-in-one growth automation: keyword-based following, timeline engagement, and smart unfollowing — combined into a single session-based script.** Free, no...">
+  <meta property="og:url" content="https://xactions.app/docs/step-by-step/growth-suite-tutorial">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Growth Automation Suite on X (Twitter) — Follow + Like + Unfollow — Free X/Twitter Tool">
+  <meta name="twitter:description" content="**All-in-one growth automation: keyword-based following, timeline engagement, and smart unfollowing — combined into a single session-based script.** Free, no...">
+
+  <link rel="canonical" href="https://xactions.app/docs/step-by-step/growth-suite-tutorial">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Growth Automation Suite on X (Twitter) — Follow + Like + Unfollow — Free X/Twitter Tools Tool | XActions",
+    "description": "**All-in-one growth automation: keyword-based following, timeline engagement, and smart unfollowing — combined into a single session-based script.** Free, no...",
+    "url": "https://xactions.app/docs/step-by-step/growth-suite-tutorial",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/growth-suite-tutorial",
+    "articleSection": "Tools",
+    "keywords": "xactions, twitter automation, x automation, free, growth, suite, tutorial, automation, (twitter), follow, like, unfollow, tools, growth suite tutorial twitter, twitter growth suite tutorial"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Growth Automation Suite on X (Twitter) — Follow + Like + Unfollow", "item": "https://xactions.app/docs/growth-suite-tutorial" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use Growth Automation Suite on X (Twitter) — Follow + Like + Unfollow",
+    "description": "**All-in-one growth automation: keyword-based following, timeline engagement, and smart unfollowing — combined into a single session-based script.** Free, no...",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions Growth Automation Suite on X (Twitter) — Follow + Like + Unfollow script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>⚡ Growth Automation Suite on X (Twitter) — Follow + Like + Unfollow</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › Growth Automation Suite on X (Twitter) — Follow + Like + Unfollow
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Tools</span>
+        <h1>🚀 Growth Automation Suite on X (Twitter) — Follow + Like + Unfollow</h1>
+<blockquote>
+<p><strong>All-in-one growth automation: keyword-based following, timeline engagement, and smart unfollowing — combined into a single session-based script.</strong> Free, no API key, no app install.</p>
+</blockquote>
+<p><strong>Works on:</strong> 🌐 Browser Console (requires <code>core.js</code>)<br><strong>Difficulty:</strong> 🔴 Advanced<br><strong>Time:</strong> ⏱️ Up to 30 minutes per session (configurable)<br><strong>Requirements:</strong> A web browser logged into x.com</p>
+<blockquote>
+<p>📖 For the quick-reference version, see <a href="../growth-suite.md">growth-suite.md</a></p>
+</blockquote>
+<hr>
+<h2>🎯 Real-World Scenario</h2>
+<p>You want to grow your X account from 500 followers to 5,000. You&#39;ve read all the growth hacking guides — they all say the same thing: <em>follow relevant people in your niche, engage with their content, then unfollow the ones who don&#39;t follow back after a few days.</em> But executing this strategy manually means running three separate scripts (keyword follow, auto-liker, smart unfollow) every day and keeping track of who you followed and when.</p>
+<p>XActions&#39; Growth Suite combines all three strategies into one automated session. You define your niche keywords (like &quot;web3 developer,&quot; &quot;DeFi builder&quot;), target accounts, and limits. The script runs a 3-phase campaign: Phase 1 (keyword follow) searches for and follows relevant users, Phase 2 (timeline like) engages with your feed, Phase 3 (smart unfollow) cleans up non-followers past your grace period. One script, one paste, one session — then come back tomorrow and do it again.</p>
+<p><strong>Before XActions:</strong></p>
+<pre><code>┌──────────────────────────────────────────────────────────────┐
+│  Twitter Growth Loop (Manual / Multiple Scripts)             │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  Morning:                                                    │
+│    1. Run keyword follow script (5 min to set up)            │
+│    2. Wait for it to finish                                  │
+│    3. Run auto-liker script (3 min to set up)                │
+│    4. Wait for it to finish                                  │
+│    5. Run unfollow script (3 min to set up)                  │
+│    6. Wait for it to finish                                  │
+│    7. Hope you didn&#39;t exceed any rate limits                 │
+│                                                              │
+│  Scripts: 3 separate scripts to manage                       │
+│  Setup time: ~15 min total                                   │
+│  Coordination: Manual (you&#39;re the scheduler)                 │
+│  State tracking: Fragmented across scripts                   │
+└──────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>After XActions Growth Suite:</strong></p>
+<pre><code>┌──────────────────────────────────────────────────────────────┐
+│  Twitter Growth Loop (Growth Suite)                          │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  Morning:                                                    │
+│    1. Paste core.js + growth suite. Press Enter.             │
+│    2. Phase 1: Keyword follow (auto)                         │
+│    3. Phase 2: Timeline engagement (auto)                    │
+│    4. Phase 3: Smart unfollow (auto)                         │
+│    5. Done. Come back tomorrow.                              │
+│                                                              │
+│  Scripts: 1 (Growth Suite handles everything)                │
+│  Setup time: ~2 min                                          │
+│  Coordination: Automatic (phases run sequentially)           │
+│  State tracking: Unified (all tracked in one place)          │
+└──────────────────────────────────────────────────────────────┘
+</code></pre>
+<hr>
+<h2>📋 What This Does (Step by Step)</h2>
+<p>The Growth Suite runs 3 automated phases in sequence, with session duration and rate limits enforced across all actions:</p>
+<h3>Phase 1 — Keyword Follow</h3>
+<ol>
+<li>🔍 <strong>Searches each keyword</strong> — navigates to <code>x.com/search?q=KEYWORD&amp;f=user</code></li>
+<li>📜 <strong>Scans user cells</strong> — extracts profiles from People results</li>
+<li>➕ <strong>Follows matching users</strong> — with 3s+ delays</li>
+<li>💾 <strong>Tracks followed users</strong> — persistent storage with follow timestamp</li>
+</ol>
+<h3>Phase 2 — Timeline Engagement</h3>
+<ol start="5">
+<li>🏠 <strong>Returns to home timeline</strong> — navigates to <code>x.com/home</code></li>
+<li>❤️ <strong>Likes tweets</strong> — scrolls feed and likes tweets you haven&#39;t already liked</li>
+<li>📜 <strong>Scrolls for more</strong> — loads additional content</li>
+</ol>
+<h3>Phase 3 — Smart Unfollow</h3>
+<ol start="8">
+<li>📋 <strong>Finds expired follows</strong> — checks tracked users past the grace period</li>
+<li>🔙 <strong>Unfollows non-followers</strong> — navigates to your following page and unfollows</li>
+<li>📊 <strong>Reports results</strong> — prints combined session summary</li>
+</ol>
+<pre><code>┌──────────────────────────────────────────────────────────────┐
+│                                                              │
+│  [Start Growth Suite Session]                                │
+│          │                                                   │
+│          ▼                                                   │
+│  ┌────────────────────────────────────────────────────┐      │
+│  │  PHASE 1 — Keyword Follow                          │      │
+│  │                                                    │      │
+│  │  For each keyword:                                 │      │
+│  │    Navigate to search → People tab                 │      │
+│  │    Scan cells → Filter → Follow                    │      │
+│  │    Track: { username, timestamp, source }           │      │
+│  │    Respect: LIMITS.FOLLOWS per session             │      │
+│  └──────────────────────┬─────────────────────────────┘      │
+│                         │                                    │
+│                         ▼                                    │
+│  [Session expired?] ──Yes──→ [Print summary]                 │
+│          │ No                                                │
+│          ▼                                                   │
+│  ┌────────────────────────────────────────────────────┐      │
+│  │  PHASE 2 — Timeline Engagement                     │      │
+│  │                                                    │      │
+│  │  Navigate to home                                  │      │
+│  │  For each tweet:                                   │      │
+│  │    Already liked? → Skip                           │      │
+│  │    Click Like → Track tweet ID                     │      │
+│  │    Respect: LIMITS.LIKES per session               │      │
+│  └──────────────────────┬─────────────────────────────┘      │
+│                         │                                    │
+│                         ▼                                    │
+│  [Session expired?] ──Yes──→ [Print summary]                 │
+│          │ No                                                │
+│          ▼                                                   │
+│  ┌────────────────────────────────────────────────────┐      │
+│  │  PHASE 3 — Smart Unfollow                          │      │
+│  │                                                    │      │
+│  │  Find users followed &gt; UNFOLLOW_AFTER_DAYS ago     │      │
+│  │  Navigate to your following page                   │      │
+│  │  For each expired user found on page:              │      │
+│  │    Click Unfollow → Confirm                        │      │
+│  │    Remove from tracked list                        │      │
+│  │    Respect: LIMITS.UNFOLLOWS per session           │      │
+│  └──────────────────────┬─────────────────────────────┘      │
+│                         │                                    │
+│                         ▼                                    │
+│  [Print combined session summary]                            │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘
+</code></pre>
+<hr>
+<h2>🌐 Method 1: Browser Console (Copy-Paste)</h2>
+<p><strong>Best for:</strong> Daily growth campaigns. Requires pasting <code>core.js</code> first.</p>
+<h3>Prerequisites</h3>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> Logged into your X/Twitter account in a web browser</li>
+<li><input checked="" disabled="" type="checkbox"> On a desktop/laptop (not mobile)</li>
+<li><input checked="" disabled="" type="checkbox"> On <code>x.com</code> (any page — the script navigates automatically)</li>
+</ul>
+<h3>Step 1: Paste <code>core.js</code> first</h3>
+<blockquote>
+<p>Open DevTools Console (<code>F12</code> → Console). Paste the contents of <a href="https://github.com/nichxbt/xactions/blob/main/src/automation/core.js"><code>src/automation/core.js</code></a> and press Enter. You&#39;ll see <code>✅ XActions Core loaded</code>.</p>
+</blockquote>
+<h3>Step 2: Configure your strategy and paste</h3>
+<p>Edit <code>KEYWORDS</code>, <code>TARGET_ACCOUNTS</code>, and <code>LIMITS</code> below, then paste:</p>
+<pre><code class="language-javascript">// ============================================
+// XActions - Growth Automation Suite
+// by nichxbt — https://xactions.app
+// REQUIRES: Paste core.js first!
+// All-in-one: keyword follow + auto-like + smart unfollow
+// ============================================
+
+(() =&gt; {
+  if (!window.XActions?.Core) {
+    console.error(&#39;❌ Core module not loaded! Paste core.js first.&#39;);
+    return;
+  }
+
+  const { log, sleep, randomDelay, scrollBy, clickElement,
+          waitForElement, storage, rateLimit, SELECTORS } = window.XActions.Core;
+
+  // ============================================
+  // GROWTH STRATEGY — edit this!
+  // ============================================
+  const STRATEGY = {
+    // ── TARGETING ──
+    KEYWORDS: [
+      &#39;web3 developer&#39;,
+      &#39;solidity engineer&#39;,
+      &#39;defi builder&#39;,
+    ],
+
+    TARGET_ACCOUNTS: [
+      // &#39;vitalikbuterin&#39;,
+      // &#39;naval&#39;,
+    ],
+
+    // ── ACTIONS ──
+    ACTIONS: {
+      FOLLOW: true,
+      LIKE: true,
+      UNFOLLOW: true,
+    },
+
+    // ── LIMITS (per session) ──
+    LIMITS: {
+      FOLLOWS: 20,
+      LIKES: 30,
+      UNFOLLOWS: 15,
+    },
+
+    // ── TIMING ──
+    TIMING: {
+      UNFOLLOW_AFTER_DAYS: 3,
+      DELAY_BETWEEN_ACTIONS: 3000,
+      SESSION_DURATION_MINUTES: 30,
+    },
+
+    // ── FILTERS ──
+    FILTERS: {
+      MIN_FOLLOWERS: 50,
+      MAX_FOLLOWERS: 50000,
+      MUST_HAVE_BIO: true,
+      SKIP_PRIVATE: true,
+      LANGUAGE: null,
+    },
+  };
+
+  // ============================================
+  // STATE
+  // ============================================
+  const state = {
+    follows: 0, likes: 0, unfollows: 0,
+    startTime: Date.now(),
+    isRunning: true,
+  };
+
+  const tracked = {
+    followed: new Map(Object.entries(storage.get(&#39;growth_followed&#39;) || {})),
+    liked: new Set(storage.get(&#39;growth_liked&#39;) || []),
+  };
+
+  const saveTracked = () =&gt; {
+    storage.set(&#39;growth_followed&#39;, Object.fromEntries(tracked.followed));
+    storage.set(&#39;growth_liked&#39;, Array.from(tracked.liked));
+  };
+
+  const isSessionExpired = () =&gt; {
+    const elapsed = (Date.now() - state.startTime) / 1000 / 60;
+    return elapsed &gt;= STRATEGY.TIMING.SESSION_DURATION_MINUTES;
+  };
+
+  const checkLimits = () =&gt; ({
+    canFollow: state.follows &lt; STRATEGY.LIMITS.FOLLOWS,
+    canLike: state.likes &lt; STRATEGY.LIMITS.LIKES,
+    canUnfollow: state.unfollows &lt; STRATEGY.LIMITS.UNFOLLOWS,
+  });
+
+  // ── Follow ──
+  const doFollow = async (userCell) =&gt; {
+    if (!STRATEGY.ACTIONS.FOLLOW || !checkLimits().canFollow) return false;
+    const followBtn = userCell.querySelector(SELECTORS.followButton);
+    if (!followBtn) return false;
+    const link = userCell.querySelector(&#39;a[href^=&quot;/&quot;]&#39;);
+    const username = link?.getAttribute(&#39;href&#39;)?.replace(&#39;/&#39;, &#39;&#39;).toLowerCase();
+    if (!username || tracked.followed.has(username)) return false;
+    await clickElement(followBtn);
+    state.follows++;
+    tracked.followed.set(username, { at: Date.now(), source: &#39;growth&#39; });
+    saveTracked();
+    log(`✅ Followed @${username} (${state.follows}/${STRATEGY.LIMITS.FOLLOWS})`, &#39;success&#39;);
+    return true;
+  };
+
+  // ── Like ──
+  const doLike = async (tweet) =&gt; {
+    if (!STRATEGY.ACTIONS.LIKE || !checkLimits().canLike) return false;
+    const likeBtn = tweet.querySelector(SELECTORS.likeButton);
+    if (!likeBtn) return false;
+    const tweetLink = tweet.querySelector(&#39;a[href*=&quot;/status/&quot;]&#39;);
+    const tweetId = tweetLink?.href?.match(/status\/(\d+)/)?.[1];
+    if (!tweetId || tracked.liked.has(tweetId)) return false;
+    await clickElement(likeBtn);
+    state.likes++;
+    tracked.liked.add(tweetId);
+    saveTracked();
+    log(`❤️ Liked tweet (${state.likes}/${STRATEGY.LIMITS.LIKES})`, &#39;success&#39;);
+    return true;
+  };
+
+  // ── Smart Unfollow ──
+  const findExpiredFollows = () =&gt; {
+    const expired = [];
+    const threshold = STRATEGY.TIMING.UNFOLLOW_AFTER_DAYS * 24 * 60 * 60 * 1000;
+    for (const [username, data] of tracked.followed) {
+      if (Date.now() - data.at &gt; threshold &amp;&amp; !data.followedBack) expired.push(username);
+    }
+    return expired;
+  };
+
+  const doUnfollow = async (userCell, username) =&gt; {
+    if (!STRATEGY.ACTIONS.UNFOLLOW || !checkLimits().canUnfollow) return false;
+    const unfollowBtn = userCell.querySelector(SELECTORS.unfollowButton);
+    if (!unfollowBtn) return false;
+    await clickElement(unfollowBtn);
+    await sleep(500);
+    const confirmBtn = await waitForElement(SELECTORS.confirmButton, 2000);
+    if (confirmBtn) await clickElement(confirmBtn);
+    state.unfollows++;
+    tracked.followed.delete(username);
+    saveTracked();
+    log(`🔙 Unfollowed @${username} (${state.unfollows}/${STRATEGY.LIMITS.UNFOLLOWS})`, &#39;action&#39;);
+    return true;
+  };
+
+  // ── Phase 1: Keyword Follow ──
+  const phaseFollow = async () =&gt; {
+    if (!STRATEGY.ACTIONS.FOLLOW) return;
+    log(&#39;📍 Phase 1: Keyword Follow&#39;, &#39;info&#39;);
+
+    for (const keyword of STRATEGY.KEYWORDS) {
+      if (!state.isRunning || !checkLimits().canFollow || isSessionExpired()) break;
+      log(`Searching: &quot;${keyword}&quot;`, &#39;action&#39;);
+      window.location.href = `https://x.com/search?q=${encodeURIComponent(keyword)}&amp;src=typed_query&amp;f=user`;
+      await sleep(3000);
+      await waitForElement(SELECTORS.userCell, 10000);
+
+      let scrolls = 0;
+      while (scrolls &lt; 10 &amp;&amp; checkLimits().canFollow &amp;&amp; state.isRunning) {
+        const cells = document.querySelectorAll(SELECTORS.userCell);
+        for (const cell of cells) {
+          if (!checkLimits().canFollow) break;
+          if (cell.querySelector(SELECTORS.unfollowButton)) continue;
+          await doFollow(cell);
+          await randomDelay(STRATEGY.TIMING.DELAY_BETWEEN_ACTIONS, STRATEGY.TIMING.DELAY_BETWEEN_ACTIONS * 1.5);
+        }
+        scrollBy(600);
+        scrolls++;
+        await sleep(2000);
+      }
+    }
+  };
+
+  // ── Phase 2: Timeline Engagement ──
+  const phaseLike = async () =&gt; {
+    if (!STRATEGY.ACTIONS.LIKE) return;
+    log(&#39;📍 Phase 2: Timeline Engagement&#39;, &#39;info&#39;);
+    window.location.href = &#39;https://x.com/home&#39;;
+    await sleep(3000);
+
+    let scrolls = 0;
+    while (scrolls &lt; 20 &amp;&amp; checkLimits().canLike &amp;&amp; state.isRunning &amp;&amp; !isSessionExpired()) {
+      const tweets = document.querySelectorAll(SELECTORS.tweet);
+      for (const tweet of tweets) {
+        if (!checkLimits().canLike) break;
+        if (tweet.querySelector(SELECTORS.unlikeButton)) continue;
+        await doLike(tweet);
+        await randomDelay(STRATEGY.TIMING.DELAY_BETWEEN_ACTIONS, STRATEGY.TIMING.DELAY_BETWEEN_ACTIONS * 1.5);
+      }
+      scrollBy(600);
+      scrolls++;
+      await sleep(2000);
+    }
+  };
+
+  // ── Phase 3: Smart Unfollow ──
+  const phaseUnfollow = async () =&gt; {
+    if (!STRATEGY.ACTIONS.UNFOLLOW) return;
+    log(&#39;📍 Phase 3: Smart Unfollow&#39;, &#39;info&#39;);
+
+    const expired = findExpiredFollows();
+    if (expired.length === 0) { log(&#39;No expired follows to clean up&#39;, &#39;info&#39;); return; }
+    log(`Found ${expired.length} users past ${STRATEGY.TIMING.UNFOLLOW_AFTER_DAYS}-day threshold`, &#39;info&#39;);
+
+    const username = document.querySelector(&#39;[data-testid=&quot;SideNav_AccountSwitcher_Button&quot;]&#39;)
+      ?.textContent?.match(/@(\w+)/)?.[1];
+    if (!username) return;
+
+    window.location.href = `https://x.com/${username}/following`;
+    await sleep(3000);
+    const expiredSet = new Set(expired);
+    let scrolls = 0;
+
+    while (scrolls &lt; 50 &amp;&amp; checkLimits().canUnfollow &amp;&amp; state.isRunning &amp;&amp; !isSessionExpired()) {
+      const cells = document.querySelectorAll(SELECTORS.userCell);
+      for (const cell of cells) {
+        if (!checkLimits().canUnfollow) break;
+        const link = cell.querySelector(&#39;a[href^=&quot;/&quot;]&#39;);
+        const cellUser = link?.getAttribute(&#39;href&#39;)?.replace(&#39;/&#39;, &#39;&#39;).toLowerCase();
+        if (cellUser &amp;&amp; expiredSet.has(cellUser)) {
+          await doUnfollow(cell, cellUser);
+          await randomDelay(STRATEGY.TIMING.DELAY_BETWEEN_ACTIONS, STRATEGY.TIMING.DELAY_BETWEEN_ACTIONS * 1.5);
+        }
+      }
+      scrollBy(600);
+      scrolls++;
+      await sleep(2000);
+    }
+  };
+
+  // ── Main ──
+  const run = async () =&gt; {
+    console.log(`
+╔═══════════════════════════════════════════════════════════╗
+║  🚀 XActions Growth Automation Suite                      ║
+╠═══════════════════════════════════════════════════════════╣
+║  Keywords: ${STRATEGY.KEYWORDS.slice(0, 3).join(&#39;, &#39;).substring(0, 30).padEnd(30)}  ║
+║  Session:  ${STRATEGY.TIMING.SESSION_DURATION_MINUTES} minutes                                 ║
+║                                                           ║
+║  Limits:                                                  ║
+║    Follows:   ${String(STRATEGY.LIMITS.FOLLOWS).padEnd(5)} | Likes:    ${String(STRATEGY.LIMITS.LIKES).padEnd(5)}       ║
+║    Unfollows: ${String(STRATEGY.LIMITS.UNFOLLOWS).padEnd(5)} | After:    ${STRATEGY.TIMING.UNFOLLOW_AFTER_DAYS} days       ║
+║                                                           ║
+║  Run stopGrowth() to stop early.                          ║
+╚═══════════════════════════════════════════════════════════╝
+    `);
+
+    log(`Tracking ${tracked.followed.size} followed users`, &#39;info&#39;);
+
+    await phaseFollow();
+    if (state.isRunning &amp;&amp; !isSessionExpired()) await phaseLike();
+    if (state.isRunning &amp;&amp; !isSessionExpired()) await phaseUnfollow();
+
+    console.log(`
+╔═══════════════════════════════════════════════════════════╗
+║  ✅ SESSION COMPLETE                                      ║
+╠═══════════════════════════════════════════════════════════╣
+║  Follows:   ${String(state.follows).padEnd(5)}                                      ║
+║  Likes:     ${String(state.likes).padEnd(5)}                                      ║
+║  Unfollows: ${String(state.unfollows).padEnd(5)}                                      ║
+║  Total tracked: ${String(tracked.followed.size).padEnd(5)} users                        ║
+╚═══════════════════════════════════════════════════════════╝
+    `);
+  };
+
+  run();
+
+  window.stopGrowth = () =&gt; {
+    state.isRunning = false;
+    log(&#39;Stopping growth automation...&#39;, &#39;warning&#39;);
+  };
+})();
+</code></pre>
+<h3>Step 3: Watch the 3-phase campaign</h3>
+<pre><code>╔═══════════════════════════════════════════════════════════╗
+║  🚀 XActions Growth Automation Suite                      ║
+║  Keywords: web3 developer, solidity eng...                ║
+║  Session:  30 minutes                                     ║
+║  Limits:   Follows: 20   | Likes: 30                     ║
+║            Unfollows: 15 | After: 3 days                  ║
+╚═══════════════════════════════════════════════════════════╝
+
+   Tracking 47 followed users
+
+📍 Phase 1: Keyword Follow
+   Searching: &quot;web3 developer&quot;
+   ✅ Followed @soliditydev (1/20)
+   ✅ Followed @web3alice (2/20)
+   ✅ Followed @defiresearcher (3/20)
+   ...
+   Searching: &quot;solidity engineer&quot;
+   ...
+
+📍 Phase 2: Timeline Engagement
+   ❤️ Liked tweet (1/30)
+   ❤️ Liked tweet (2/30)
+   ...
+
+📍 Phase 3: Smart Unfollow
+   Found 8 users past 3-day threshold
+   🔙 Unfollowed @inactiveuser (1/15)
+   🔙 Unfollowed @nofollowback (2/15)
+   ...
+
+╔═══════════════════════════════════════════════════════════╗
+║  ✅ SESSION COMPLETE                                      ║
+║  Follows:   20    | Likes: 30    | Unfollows: 8          ║
+║  Total tracked: 59 users                                  ║
+╚═══════════════════════════════════════════════════════════╝
+</code></pre>
+<hr>
+<h2>⚙️ Configuration Reference</h2>
+<h3>Strategy Settings</h3>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>KEYWORDS</code></td>
+<td><code>[&#39;web3 developer&#39;, ...]</code></td>
+<td>Search terms for Phase 1 following</td>
+</tr>
+<tr>
+<td><code>TARGET_ACCOUNTS</code></td>
+<td><code>[]</code></td>
+<td>Accounts to engage with (reserved for future use)</td>
+</tr>
+<tr>
+<td><code>ACTIONS.FOLLOW</code></td>
+<td><code>true</code></td>
+<td>Enable/disable Phase 1</td>
+</tr>
+<tr>
+<td><code>ACTIONS.LIKE</code></td>
+<td><code>true</code></td>
+<td>Enable/disable Phase 2</td>
+</tr>
+<tr>
+<td><code>ACTIONS.UNFOLLOW</code></td>
+<td><code>true</code></td>
+<td>Enable/disable Phase 3</td>
+</tr>
+</tbody></table>
+<h3>Limits (Per Session)</h3>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>LIMITS.FOLLOWS</code></td>
+<td><code>20</code></td>
+<td>Max follow actions</td>
+</tr>
+<tr>
+<td><code>LIMITS.LIKES</code></td>
+<td><code>30</code></td>
+<td>Max like actions</td>
+</tr>
+<tr>
+<td><code>LIMITS.UNFOLLOWS</code></td>
+<td><code>15</code></td>
+<td>Max unfollow actions</td>
+</tr>
+</tbody></table>
+<h3>Timing</h3>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>UNFOLLOW_AFTER_DAYS</code></td>
+<td><code>3</code></td>
+<td>Grace period before unfollowing</td>
+</tr>
+<tr>
+<td><code>DELAY_BETWEEN_ACTIONS</code></td>
+<td><code>3000</code></td>
+<td>Milliseconds between each action</td>
+</tr>
+<tr>
+<td><code>SESSION_DURATION_MINUTES</code></td>
+<td><code>30</code></td>
+<td>Hard session timeout</td>
+</tr>
+</tbody></table>
+<h3>Filters</h3>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>MIN_FOLLOWERS</code></td>
+<td><code>50</code></td>
+<td>Skip users with fewer followers</td>
+</tr>
+<tr>
+<td><code>MAX_FOLLOWERS</code></td>
+<td><code>50000</code></td>
+<td>Skip mega-accounts</td>
+</tr>
+<tr>
+<td><code>MUST_HAVE_BIO</code></td>
+<td><code>true</code></td>
+<td>Skip users without a bio</td>
+</tr>
+<tr>
+<td><code>SKIP_PRIVATE</code></td>
+<td><code>true</code></td>
+<td>Skip private/protected accounts</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>💡 Pro Tips</h2>
+<ol>
+<li><strong>Run the Growth Suite daily.</strong> The follow → like → unfollow loop compounds over time. After 2 weeks, you should see measurable follower growth if your content is good.</li>
+<li><strong>Start conservative.</strong> Set FOLLOWS: 10, LIKES: 15, UNFOLLOWS: 5 for the first week. Increase gradually as you observe X&#39;s response.</li>
+<li><strong>Set UNFOLLOW_AFTER_DAYS to 3–5.</strong> Too short (1 day) and you unfollow before they see your follow. Too long (14 days) and your following count inflates.</li>
+<li><strong>Disable phases you don&#39;t need.</strong> Set <code>ACTIONS.UNFOLLOW: false</code> if you&#39;re just focused on growth. Set <code>ACTIONS.FOLLOW: false</code> if you only want engagement.</li>
+<li><strong>Check <code>storage.get(&#39;growth_followed&#39;)</code> regularly.</strong> This shows all tracked users with timestamps and follow-back status.</li>
+<li><strong>Pair with Natural Flow.</strong> Run Growth Suite in the morning for strategic growth, then Natural Flow in the evening for organic engagement. Different scripts, complementary strategies.</li>
+</ol>
+<hr>
+<h2>⚠️ Important Warnings</h2>
+<blockquote>
+<p><strong>Core.js required:</strong> Paste <code>core.js</code> before this script. If you see <code>❌ Core module not loaded!</code>, you forgot this step.</p>
+</blockquote>
+<blockquote>
+<p><strong>Rate limits are cumulative.</strong> All three phases share X&#39;s rate limits. Following 20 + liking 30 + unfollowing 15 = 65 actions in one session. Stay under 100 total actions per session.</p>
+</blockquote>
+<blockquote>
+<p><strong>Page navigation.</strong> The script navigates between search results, home timeline, and your following page. Don&#39;t interact with the page while it&#39;s running.</p>
+</blockquote>
+<blockquote>
+<p><strong>State persistence.</strong> Followed users are tracked in <code>sessionStorage</code> (cleared on tab close). The unfollow grace period timer starts when you follow, so closing the tab resets your tracking. For persistent tracking across sessions, use <code>localStorage</code> by modifying the <code>storage</code> calls.</p>
+</blockquote>
+<hr>
+<h2>🔗 Related Features</h2>
+<ul>
+<li><a href="natural-flow-tutorial.md">Natural Flow Tutorial</a> — Human-like session with likes, replies, retweets, bookmarks</li>
+<li><a href="keyword-follow-tutorial.md">Keyword Follow Tutorial</a> — Standalone keyword follow (Phase 1 only)</li>
+<li><a href="auto-liker-tutorial.md">Auto-Liker Tutorial</a> — Standalone auto-liker (Phase 2 only)</li>
+<li><a href="smart-unfollow-tutorial.md">Smart Unfollow Tutorial</a> — Standalone unfollow with detailed logging (beyond Phase 3)</li>
+<li><a href="follow-target-followers-tutorial.md">Follow Target Followers Tutorial</a> — Follow from competitor lists instead of keyword search</li>
+</ul>
+<hr>
+<h2>❓ FAQ</h2>
+<h3>How is the Growth Suite different from running individual scripts?</h3>
+<p>The Growth Suite runs all three strategies (follow, like, unfollow) in a single session with unified state tracking, shared rate limits, and a session timeout. Individual scripts don&#39;t coordinate with each other — you&#39;d have to manage timing and limits manually.</p>
+<h3>How does the smart unfollow know who to unfollow?</h3>
+<p>It checks the <code>growth_followed</code> storage for users who were followed more than <code>UNFOLLOW_AFTER_DAYS</code> days ago and haven&#39;t been marked as following back. It then navigates to your following page and unfollows matching accounts.</p>
+<h3>Can I run this multiple times per day?</h3>
+<p>Yes, but conservative limits are recommended. Running 2x per day with 20 follows + 30 likes per session is safer than 1x with 50 follows + 60 likes.</p>
+<h3>What happens when the session expires?</h3>
+<p>The script checks <code>SESSION_DURATION_MINUTES</code> between phases. If the timer expires during Phase 1, Phases 2 and 3 are skipped. The session summary still prints with whatever was accomplished.</p>
+<h3>Is this detectable by X?</h3>
+<p>The Growth Suite uses 3s+ delays between actions, stays within conservative limits, and mimics page navigation patterns. However, no automation is 100% safe. Start with lower limits and increase gradually.</p>
+<h3>Can I skip specific phases?</h3>
+<p>Yes. Set <code>ACTIONS.FOLLOW: false</code>, <code>ACTIONS.LIKE: false</code>, or <code>ACTIONS.UNFOLLOW: false</code> to disable individual phases.</p>
+<hr>
+<p align="center">
+  <b>Built with ❤️ by <a href="https://x.com/nichxbt">@nichxbt</a></b><br>
+  <a href="https://xactions.app">xactions.app</a> · <a href="https://github.com/nichxbt/xactions">GitHub</a>
+</p>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try Growth Automation Suite on X (Twitter) — Follow + Like + Unfollow?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/step-by-step/auto-commenter-tutorial">📝 Auto Commenter Tutorial</a>
+        <a href="/docs/step-by-step/auto-liker-tutorial">📝 Auto Liker Tutorial</a>
+        <a href="/docs/step-by-step/bookmark-exporter-tutorial">📝 Bookmark Exporter Tutorial</a>
+        <a href="/docs/step-by-step/detect-unfollowers-tutorial">📝 Detect Unfollowers Tutorial</a>
+        <a href="/docs/step-by-step/follow-target-followers-tutorial">📝 Follow Target Followers Tutorial</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a> / <a href="/docs#step-by-step">Tutorials</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

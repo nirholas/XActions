@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scrape X (Twitter) Followers to CSV/JSON — Free, No API — Free X/Twitter Tools Tool | XActions</title>
+  <meta name="description" content="**Export any public account's full followers list on X (Twitter) to a CSV or JSON file — free, no API key, no paid tools.** Get usernames, display names, bio...">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, followers, scraping, tutorial, scrape, (twitter), csv/json, free,, tools, followers scraping tutorial twitter, twitter followers scraping tutorial">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Scrape X (Twitter) Followers to CSV/JSON — Free, No API — XActions">
+  <meta property="og:description" content="**Export any public account's full followers list on X (Twitter) to a CSV or JSON file — free, no API key, no paid tools.** Get usernames, display names, bio...">
+  <meta property="og:url" content="https://xactions.app/docs/step-by-step/followers-scraping-tutorial">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Scrape X (Twitter) Followers to CSV/JSON — Free, No API — Free X/Twitter Tool">
+  <meta name="twitter:description" content="**Export any public account's full followers list on X (Twitter) to a CSV or JSON file — free, no API key, no paid tools.** Get usernames, display names, bio...">
+
+  <link rel="canonical" href="https://xactions.app/docs/step-by-step/followers-scraping-tutorial">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Scrape X (Twitter) Followers to CSV/JSON — Free, No API — Free X/Twitter Tools Tool | XActions",
+    "description": "**Export any public account's full followers list on X (Twitter) to a CSV or JSON file — free, no API key, no paid tools.** Get usernames, display names, bio...",
+    "url": "https://xactions.app/docs/step-by-step/followers-scraping-tutorial",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/followers-scraping-tutorial",
+    "articleSection": "Tools",
+    "keywords": "xactions, twitter automation, x automation, free, followers, scraping, tutorial, scrape, (twitter), csv/json, free,, tools, followers scraping tutorial twitter, twitter followers scraping tutorial"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Scrape X (Twitter) Followers to CSV/JSON — Free, No API", "item": "https://xactions.app/docs/followers-scraping-tutorial" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use Scrape X (Twitter) Followers to CSV/JSON — Free, No API",
+    "description": "**Export any public account's full followers list on X (Twitter) to a CSV or JSON file — free, no API key, no paid tools.** Get usernames, display names, bio...",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions Scrape X (Twitter) Followers to CSV/JSON — Free, No API script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>⚡ Scrape X (Twitter) Followers to CSV/JSON — Free, No API</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › Scrape X (Twitter) Followers to CSV/JSON — Free, No API
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Tools</span>
+        <h1>👥 Scrape X (Twitter) Followers to CSV/JSON — Free, No API</h1>
+<blockquote>
+<p><strong>Export any public account&#39;s full followers list on X (Twitter) to a CSV or JSON file — free, no API key, no paid tools.</strong> Get usernames, display names, bios, verified status, and more.</p>
+</blockquote>
+<p><strong>Works on:</strong> 🌐 Browser Console · 💻 CLI · 🤖 MCP (AI Agents)<br><strong>Difficulty:</strong> 🟢 Beginner<br><strong>Time:</strong> ⏱️ 2–20 minutes (depends on follower count)<br><strong>Requirements:</strong> A web browser logged into x.com</p>
+<blockquote>
+<p>📖 For the quick-reference version, see <a href="../followers-scraping.md">followers-scraping.md</a></p>
+</blockquote>
+<hr>
+<h2>🎯 Real-World Scenario</h2>
+<p>You run a SaaS startup and your competitor <code>@rival_app</code> has <strong>12,000 followers</strong>. Your marketing team wants a spreadsheet of those followers — usernames, bios, and verified status — so they can identify influencers to reach out to, find common audience segments, and build targeted ad lookalike audiences. Twitter&#39;s API costs $100/month and has strict rate limits. Third-party scraping services charge per 1,000 followers.</p>
+<p>XActions scrapes the followers page directly from the browser DOM, collecting everything visible in each <code>UserCell</code> — then exports it all as a clean CSV you can open in Google Sheets, Excel, or import into your CRM. Zero cost, zero API credentials.</p>
+<p><strong>Before XActions:</strong></p>
+<pre><code>┌─────────────────────────────────────────────────────┐
+│  Your options for exporting followers               │
+├─────────────────────────────────────────────────────┤
+│                                                     │
+│  Option 1: Twitter API ($100/mo Basic)              │
+│    → Apply for developer access                     │
+│    → Wait 1-3 days for approval                     │
+│    → Rate limit: 15 requests / 15 min               │
+│    → Parse JSON responses yourself                  │
+│                                                     │
+│  Option 2: Paid scraping tools ($20-50/mo)          │
+│    → Phantombuster, Apify, etc.                     │
+│    → Limited credits per month                      │
+│    → Share your auth tokens with third party        │
+│                                                     │
+│  Option 3: Manual copy-paste (😩)                    │
+│    → Scroll, screenshot, type...                    │
+│    → 12,000 followers = 3 weeks of your life        │
+│                                                     │
+└─────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>After XActions:</strong></p>
+<pre><code>┌─────────────────────────────────────────────────────┐
+│  ✅ Paste script → Wait → Download CSV              │
+├─────────────────────────────────────────────────────┤
+│                                                     │
+│  📁 rival_app_followers_2026-02-24.csv              │
+│  ┌────────────────────────────────────────────┐     │
+│  │ Handle    │ Name      │ Bio       │ Verified│    │
+│  │ @alice    │ Alice C.  │ AI dev    │ true   │     │
+│  │ @bob_k    │ Bob K     │ Web3     │ false  │     │
+│  │ @carol_m  │ Carol M.  │ PM @Meta │ true   │     │
+│  │ ... 4,997 more rows                        │    │
+│  └────────────────────────────────────────────┘     │
+│                                                     │
+│  📊 Total: 5,000 followers exported                 │
+│  ✓ Verified accounts: 347                           │
+│  ✓ With bios: 3,812                                 │
+│  ⏱️ Time: 8 minutes                                 │
+│  💰 Cost: $0                                        │
+│                                                     │
+└─────────────────────────────────────────────────────┘
+</code></pre>
+<hr>
+<h2>📋 What This Does (Step by Step)</h2>
+<ol>
+<li>📜 <strong>Navigates to the followers page</strong> — reads <code>x.com/username/followers</code></li>
+<li>🔄 <strong>Scrolls to load all user cells</strong> — X lazy-loads followers in batches; the script scrolls repeatedly</li>
+<li>🔍 <strong>Extracts data from each <code>UserCell</code></strong> — username, display name, bio, verified status, avatar URL, &quot;Follows you&quot; badge</li>
+<li>🗂️ <strong>Deduplicates</strong> — uses a <code>Map</code> keyed by username to avoid counting the same person twice</li>
+<li>📊 <strong>Shows progress</strong> — logs the running total as it scrolls</li>
+<li>💾 <strong>Downloads JSON + CSV</strong> — auto-triggers a browser download for both formats</li>
+<li>📋 <strong>Copies to clipboard</strong> — paste directly into Google Sheets if you prefer</li>
+</ol>
+<pre><code>┌──────────────────────────────────────────────────────────┐
+│                                                          │
+│  [Navigate to x.com/target/followers]                    │
+│          │                                               │
+│          ▼                                               │
+│  [Read all visible UserCell elements]                    │
+│          │                                               │
+│          ▼                                               │
+│  [Extract: username, name, bio, verified, avatar]        │
+│          │                                               │
+│          ▼                                               │
+│  [Add to Map (dedup by username)]                        │
+│          │                                               │
+│          ▼                                               │
+│  [Scroll down to load more]                              │
+│          │                                               │
+│     ┌────┴────┐                                          │
+│   New users?  No new users                               │
+│     │          │                                         │
+│     ▼          ▼                                         │
+│  [Continue]  [Retry up to 5 times]                       │
+│                │                                         │
+│                ▼                                         │
+│          [Done scrolling]                                │
+│                │                                         │
+│                ▼                                         │
+│  [Download JSON + CSV + copy to clipboard]               │
+│                                                          │
+└──────────────────────────────────────────────────────────┘
+</code></pre>
+<hr>
+<h2>🌐 Method 1: Browser Console (Copy-Paste)</h2>
+<p><strong>Best for:</strong> Quick exports of up to ~5,000 followers. No setup needed.</p>
+<h3>Prerequisites</h3>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> Logged into X/Twitter in your browser</li>
+<li><input checked="" disabled="" type="checkbox"> On desktop/laptop</li>
+<li><input checked="" disabled="" type="checkbox"> Know the username of the account you want to scrape</li>
+</ul>
+<h3>Step 1: Navigate to the Followers page</h3>
+<blockquote>
+<p>Go to <strong><code>x.com/TARGET_USERNAME/followers</code></strong> — this works on any public account, not just yours.</p>
+</blockquote>
+<pre><code>┌────────────────────────────────────────────────────┐
+│ 🔍 x.com/rival_app/followers                       │
+├────────────────────────────────────────────────────┤
+│                                                    │
+│  👤 Alice Chen @alice_dev        ✓ Verified        │
+│     AI researcher | Building cool things           │
+│                                                    │
+│  👤 Bob K @bob_web3                                │
+│     Web3 developer | Ethereum                      │
+│                                                    │
+│  👤 Carol M @carol_pm            ✓ Verified        │
+│     Product Manager @Meta                          │
+│                                                    │
+│  ... 11,997 more                                   │
+│                                                    │
+└────────────────────────────────────────────────────┘
+</code></pre>
+<h3>Step 2: Open Developer Console</h3>
+<table>
+<thead>
+<tr>
+<th>OS</th>
+<th>Shortcut</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Windows / Linux</strong></td>
+<td><code>F12</code> then <strong>Console</strong> tab, or <code>Ctrl + Shift + J</code></td>
+</tr>
+<tr>
+<td><strong>Mac</strong></td>
+<td><code>Cmd + Option + J</code></td>
+</tr>
+</tbody></table>
+<h3>Step 3: Paste and Run</h3>
+<pre><code class="language-javascript">// ============================================
+// XActions - Followers Scraper for X/Twitter
+// by nichxbt — https://xactions.app
+// Go to: x.com/TARGET_USERNAME/followers
+// Open console (F12 → Console), paste, Enter
+// ============================================
+
+(async () =&gt; {
+  const CONFIG = {
+    MAX_FOLLOWERS: 5000,     // Max followers to scrape
+    SCROLL_DELAY: 1500,      // Delay between scrolls (ms)
+    FORMAT: &#39;both&#39;,          // &#39;json&#39;, &#39;csv&#39;, or &#39;both&#39;
+  };
+
+  console.log(&#39;&#39;);
+  console.log(&#39;👥 XActions - FOLLOWERS SCRAPER&#39;);
+  console.log(&#39;════════════════════════════════════════&#39;);
+
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+
+  // Verify page
+  if (!window.location.pathname.includes(&#39;/followers&#39;)) {
+    console.error(&#39;❌ Navigate to a followers page first!&#39;);
+    console.log(&#39;👉 Go to: x.com/USERNAME/followers&#39;);
+    return;
+  }
+
+  const username = window.location.pathname.split(&#39;/&#39;)[1];
+  console.log(`📍 Target: @${username}/followers`);
+  console.log(`⚙️  Max: ${CONFIG.MAX_FOLLOWERS} | Format: ${CONFIG.FORMAT}`);
+  console.log(&#39;&#39;);
+
+  const download = (content, filename, type) =&gt; {
+    const blob = new Blob([content], { type });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement(&#39;a&#39;);
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const extractUser = (cell) =&gt; {
+    try {
+      const link = cell.querySelector(&#39;a[href^=&quot;/&quot;]&#39;);
+      const href = link?.getAttribute(&#39;href&#39;) || &#39;&#39;;
+      const handle = href.replace(&#39;/&#39;, &#39;&#39;).split(&#39;/&#39;)[0];
+      if (!handle || handle.includes(&#39;?&#39;)) return null;
+
+      const nameEl = cell.querySelector(&#39;[dir=&quot;ltr&quot;] &gt; span&#39;);
+      const bioEl = cell.querySelector(&#39;[data-testid=&quot;UserDescription&quot;]&#39;);
+      const followsYou = !!cell.querySelector(&#39;[data-testid=&quot;userFollowIndicator&quot;]&#39;);
+      const verified = !!cell.querySelector(&#39;svg[aria-label*=&quot;Verified&quot;]&#39;);
+      const avatarEl = cell.querySelector(&#39;img[src*=&quot;profile_images&quot;]&#39;);
+
+      return {
+        handle,
+        displayName: nameEl?.textContent?.trim() || &#39;&#39;,
+        bio: bioEl?.textContent?.trim() || &#39;&#39;,
+        followsYou,
+        verified,
+        avatar: avatarEl?.src || &#39;&#39;,
+        profileUrl: `https://x.com/${handle}`,
+      };
+    } catch (e) { return null; }
+  };
+
+  // ── Scraping loop ──────────────────────────────────────
+  console.log(&#39;📜 Scanning followers list...&#39;);
+
+  const followers = new Map();
+  let noNewCount = 0;
+  let scrolls = 0;
+
+  while (followers.size &lt; CONFIG.MAX_FOLLOWERS &amp;&amp; noNewCount &lt; 5) {
+    const cells = document.querySelectorAll(&#39;[data-testid=&quot;UserCell&quot;]&#39;);
+    const before = followers.size;
+
+    cells.forEach(cell =&gt; {
+      const user = extractUser(cell);
+      if (user &amp;&amp; user.handle &amp;&amp; !followers.has(user.handle)) {
+        followers.set(user.handle, user);
+      }
+    });
+
+    const added = followers.size - before;
+    if (added &gt; 0) {
+      console.log(`   👥 Collected: ${followers.size} followers`);
+      noNewCount = 0;
+    } else {
+      noNewCount++;
+    }
+
+    window.scrollBy(0, 800);
+    await sleep(CONFIG.SCROLL_DELAY);
+    scrolls++;
+    if (scrolls &gt; 300) break;
+  }
+
+  const result = Array.from(followers.values());
+  const ts = Date.now();
+
+  // ── Summary ────────────────────────────────────────────
+  console.log(&#39;&#39;);
+  console.log(&#39;════════════════════════════════════════&#39;);
+  console.log(`👥 SCRAPED ${result.length} FOLLOWERS`);
+  console.log(&#39;════════════════════════════════════════&#39;);
+  console.log(`   ✓ Verified:       ${result.filter(u =&gt; u.verified).length}`);
+  console.log(`   ✓ With bio:       ${result.filter(u =&gt; u.bio).length}`);
+  console.log(`   ✓ Follows you:    ${result.filter(u =&gt; u.followsYou).length}`);
+  console.log(&#39;&#39;);
+
+  // Preview
+  console.log(&#39;📋 Preview (first 5):&#39;);
+  result.slice(0, 5).forEach((f, i) =&gt; {
+    console.log(`   ${i + 1}. @${f.handle} ${f.verified ? &#39;✓&#39; : &#39;&#39;} — ${f.displayName}`);
+  });
+  if (result.length &gt; 5) console.log(`   ... and ${result.length - 5} more`);
+
+  // ── Download JSON ──────────────────────────────────────
+  if (CONFIG.FORMAT === &#39;json&#39; || CONFIG.FORMAT === &#39;both&#39;) {
+    const json = JSON.stringify(result, null, 2);
+    download(json, `${username}_followers_${ts}.json`, &#39;application/json&#39;);
+    console.log(&#39;&#39;);
+    console.log(`💾 Downloaded: ${username}_followers_${ts}.json`);
+  }
+
+  // ── Download CSV ───────────────────────────────────────
+  if (CONFIG.FORMAT === &#39;csv&#39; || CONFIG.FORMAT === &#39;both&#39;) {
+    const csv = [
+      &#39;Handle,DisplayName,Bio,Verified,FollowsYou,ProfileURL&#39;,
+      ...result.map(f =&gt;
+        `&quot;@${f.handle}&quot;,&quot;${f.displayName.replace(/&quot;/g, &#39;&quot;&quot;&#39;)}&quot;,&quot;${f.bio.replace(/&quot;/g, &#39;&quot;&quot;&#39;).replace(/\n/g, &#39; &#39;)}&quot;,${f.verified},${f.followsYou},&quot;${f.profileUrl}&quot;`
+      )
+    ].join(&#39;\n&#39;);
+    download(csv, `${username}_followers_${ts}.csv`, &#39;text/csv&#39;);
+    console.log(`💾 Downloaded: ${username}_followers_${ts}.csv`);
+  }
+
+  // ── Clipboard ──────────────────────────────────────────
+  try {
+    await navigator.clipboard.writeText(JSON.stringify(result, null, 2));
+    console.log(&#39;📋 JSON copied to clipboard!&#39;);
+  } catch {}
+
+  // Store globally
+  window.scrapedFollowers = result;
+  console.log(&#39;&#39;);
+  console.log(&#39;════════════════════════════════════════&#39;);
+  console.log(&#39;💾 Access data: window.scrapedFollowers&#39;);
+  console.log(&#39;════════════════════════════════════════&#39;);
+})();
+</code></pre>
+<h3>✅ Expected Console Output</h3>
+<pre><code>👥 XActions - FOLLOWERS SCRAPER
+════════════════════════════════════════
+📍 Target: @rival_app/followers
+⚙️  Max: 5000 | Format: both
+
+📜 Scanning followers list...
+   👥 Collected: 48 followers
+   👥 Collected: 124 followers
+   👥 Collected: 287 followers
+   👥 Collected: 512 followers
+   👥 Collected: 1,024 followers
+   👥 Collected: 2,198 followers
+   👥 Collected: 3,456 followers
+   👥 Collected: 4,891 followers
+   👥 Collected: 5,000 followers
+
+════════════════════════════════════════
+👥 SCRAPED 5,000 FOLLOWERS
+════════════════════════════════════════
+   ✓ Verified:       347
+   ✓ With bio:       3,812
+   ✓ Follows you:    89
+
+📋 Preview (first 5):
+   1. @alice_dev ✓ — Alice Chen
+   2. @bob_web3 — Bob K
+   3. @carol_pm ✓ — Carol Martinez
+   4. @dave_startup — Dave Wilson
+   5. @eve_design — Eve Thompson
+   ... and 4,995 more
+
+💾 Downloaded: rival_app_followers_1740412800000.json
+💾 Downloaded: rival_app_followers_1740412800000.csv
+📋 JSON copied to clipboard!
+
+════════════════════════════════════════
+💾 Access data: window.scrapedFollowers
+════════════════════════════════════════
+</code></pre>
+<p>Two files land in your downloads folder, ready for Google Sheets or Excel.</p>
+<hr>
+<h2>💻 Method 2: CLI (Command Line)</h2>
+<p><strong>Best for:</strong> Scraping large accounts (5,000+), batch jobs, automation pipelines.</p>
+<pre><code class="language-bash"># Install XActions globally
+npm install -g xactions
+
+# Scrape followers (basic)
+npx xactions scrape followers rival_app
+
+# Scrape with options
+npx xactions scrape followers rival_app \
+  --limit 10000 \
+  --format csv \
+  --output ./data/rival-followers.csv
+</code></pre>
+<h3>Example with all options:</h3>
+<pre><code class="language-bash">npx xactions scrape followers rival_app \
+  --limit 10000 \
+  --format both \
+  --output ./exports/ \
+  --scroll-delay 2000 \
+  --headless \
+  --auth-token &quot;YOUR_AUTH_TOKEN&quot;
+</code></pre>
+<h3>✅ CLI Output Preview</h3>
+<pre><code>⚡ XActions v2.4.0
+
+👥 FOLLOWERS SCRAPER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📍 Target: @rival_app
+📊 Limit: 10,000
+
+📜 Scraping...
+   ████████████████████████████ 100% | 10,000/10,000
+
+📊 Summary:
+   Total: 10,000
+   Verified: 892
+   With bio: 7,634
+
+💾 Saved → ./exports/rival_app-followers-2026-02-24.json
+💾 Saved → ./exports/rival_app-followers-2026-02-24.csv
+
+📋 Sample:
+   @alice_dev ✓ — Alice Chen
+   @bob_web3 — Bob K
+   @carol_pm ✓ — Carol Martinez
+</code></pre>
+<h3>CLI Configuration Table</h3>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>--limit</code></td>
+<td>number</td>
+<td><code>1000</code></td>
+<td>Max followers to scrape</td>
+</tr>
+<tr>
+<td><code>--format</code></td>
+<td>string</td>
+<td><code>both</code></td>
+<td>Output: <code>json</code>, <code>csv</code>, or <code>both</code></td>
+</tr>
+<tr>
+<td><code>--output</code></td>
+<td>string</td>
+<td><code>./</code></td>
+<td>Output directory or file path</td>
+</tr>
+<tr>
+<td><code>--scroll-delay</code></td>
+<td>number</td>
+<td><code>1500</code></td>
+<td>Delay between scrolls (ms)</td>
+</tr>
+<tr>
+<td><code>--headless</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Run browser in background</td>
+</tr>
+<tr>
+<td><code>--auth-token</code></td>
+<td>string</td>
+<td>—</td>
+<td>X auth cookie (for private accounts you follow)</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>🤖 Method 3: MCP Server (AI Agents)</h2>
+<blockquote>
+<p>Use with Claude Desktop, GPT, Cursor, or any MCP-compatible AI agent.</p>
+</blockquote>
+<h3>Setup</h3>
+<pre><code class="language-json">{
+  &quot;mcpServers&quot;: {
+    &quot;xactions&quot;: {
+      &quot;command&quot;: &quot;npx&quot;,
+      &quot;args&quot;: [&quot;-y&quot;, &quot;xactions&quot;, &quot;mcp&quot;]
+    }
+  }
+}
+</code></pre>
+<h3>MCP Tool Call</h3>
+<pre><code class="language-json">{
+  &quot;tool&quot;: &quot;x_scrape_followers&quot;,
+  &quot;arguments&quot;: {
+    &quot;username&quot;: &quot;rival_app&quot;,
+    &quot;limit&quot;: 5000,
+    &quot;format&quot;: &quot;json&quot;
+  }
+}
+</code></pre>
+<h3>Claude Desktop example prompt:</h3>
+<blockquote>
+<p>&quot;Scrape the first 5,000 followers of @rival_app on X and export them to a CSV with usernames, bios, and verified status.&quot;</p>
+</blockquote>
+<h3>Expected MCP response:</h3>
+<pre><code class="language-json">{
+  &quot;status&quot;: &quot;complete&quot;,
+  &quot;target&quot;: &quot;rival_app&quot;,
+  &quot;followers_scraped&quot;: 5000,
+  &quot;verified_count&quot;: 347,
+  &quot;with_bio_count&quot;: 3812,
+  &quot;export_file&quot;: &quot;rival_app-followers-2026-02-24.json&quot;,
+  &quot;sample&quot;: [
+    { &quot;username&quot;: &quot;alice_dev&quot;, &quot;name&quot;: &quot;Alice Chen&quot;, &quot;verified&quot;: true },
+    { &quot;username&quot;: &quot;bob_web3&quot;, &quot;name&quot;: &quot;Bob K&quot;, &quot;verified&quot;: false }
+  ]
+}
+</code></pre>
+<hr>
+<h2>📊 Method Comparison</h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>🌐 Browser Console</th>
+<th>💻 CLI</th>
+<th>🤖 MCP</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Setup</td>
+<td>None</td>
+<td><code>npm install</code></td>
+<td>Config JSON</td>
+</tr>
+<tr>
+<td>Best for</td>
+<td>Quick grabs (&lt;5K)</td>
+<td>Large scrapes</td>
+<td>AI workflows</td>
+</tr>
+<tr>
+<td>Export: JSON</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Export: CSV</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Clipboard copy</td>
+<td>✅</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Batch scraping</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Progress bar</td>
+<td>Console logs</td>
+<td>ASCII progress bar</td>
+<td>Status object</td>
+</tr>
+<tr>
+<td>Auth token support</td>
+<td>N/A (uses session)</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Max practical limit</td>
+<td>~5,000</td>
+<td>~50,000</td>
+<td>~50,000</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>⚙️ Configuration Reference</h2>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>MAX_FOLLOWERS</code></td>
+<td>number</td>
+<td><code>5000</code></td>
+<td>Maximum followers to collect before stopping</td>
+</tr>
+<tr>
+<td><code>SCROLL_DELAY</code></td>
+<td>number</td>
+<td><code>1500</code></td>
+<td>Milliseconds between scroll actions</td>
+</tr>
+<tr>
+<td><code>FORMAT</code></td>
+<td>string</td>
+<td><code>&#39;both&#39;</code></td>
+<td>Export format: <code>&#39;json&#39;</code>, <code>&#39;csv&#39;</code>, or <code>&#39;both&#39;</code></td>
+</tr>
+</tbody></table>
+<hr>
+<h2>📊 Sample Output / Results</h2>
+<h3>JSON Export:</h3>
+<pre><code class="language-json">[
+  {
+    &quot;handle&quot;: &quot;alice_dev&quot;,
+    &quot;displayName&quot;: &quot;Alice Chen&quot;,
+    &quot;bio&quot;: &quot;AI researcher | Building cool things | @Stanford&quot;,
+    &quot;verified&quot;: true,
+    &quot;followsYou&quot;: false,
+    &quot;avatar&quot;: &quot;https://pbs.twimg.com/profile_images/.../photo.jpg&quot;,
+    &quot;profileUrl&quot;: &quot;https://x.com/alice_dev&quot;
+  },
+  {
+    &quot;handle&quot;: &quot;bob_web3&quot;,
+    &quot;displayName&quot;: &quot;Bob K&quot;,
+    &quot;bio&quot;: &quot;Web3 developer. Ethereum maxi. Building the future.&quot;,
+    &quot;verified&quot;: false,
+    &quot;followsYou&quot;: true,
+    &quot;avatar&quot;: &quot;https://pbs.twimg.com/profile_images/.../photo.jpg&quot;,
+    &quot;profileUrl&quot;: &quot;https://x.com/bob_web3&quot;
+  }
+]
+</code></pre>
+<h3>CSV Export (opens directly in Excel/Google Sheets):</h3>
+<pre><code class="language-csv">Handle,DisplayName,Bio,Verified,FollowsYou,ProfileURL
+&quot;@alice_dev&quot;,&quot;Alice Chen&quot;,&quot;AI researcher | Building cool things | @Stanford&quot;,true,false,&quot;https://x.com/alice_dev&quot;
+&quot;@bob_web3&quot;,&quot;Bob K&quot;,&quot;Web3 developer. Ethereum maxi. Building the future.&quot;,false,true,&quot;https://x.com/bob_web3&quot;
+&quot;@carol_pm&quot;,&quot;Carol Martinez&quot;,&quot;Product Manager @Meta | Ex-Google | Building for 1B users&quot;,true,false,&quot;https://x.com/carol_pm&quot;
+</code></pre>
+<h3>What you can do with this data:</h3>
+<pre><code>┌───────────────────────────────────────────────────────┐
+│  Import CSV into...                                   │
+├───────────────────────────────────────────────────────┤
+│                                                       │
+│  📊 Google Sheets → Filter, sort, analyze             │
+│  📧 CRM (HubSpot, etc.) → Import as leads            │
+│  📣 Ad platforms → Build lookalike audiences           │
+│  🤖 Python/Pandas → Data analysis                     │
+│  📋 Notion database → Track outreach                  │
+│  📈 Spreadsheet → Pivot table by verified/bio         │
+│                                                       │
+└───────────────────────────────────────────────────────┘
+</code></pre>
+<hr>
+<h2>💡 Pro Tips</h2>
+<ol>
+<li><p><strong>Scrape your own followers too</strong> — Compare your followers list with a competitor&#39;s to find overlap. Shared followers = your warmest prospects for engagement.</p>
+</li>
+<li><p><strong>Filter the CSV in Google Sheets for high-value accounts</strong> — Sort by <code>Verified = true</code> to find influencers, or filter bios containing keywords like &quot;founder,&quot; &quot;CEO,&quot; &quot;investor&quot; for targeted outreach.</p>
+</li>
+<li><p><strong>Increase <code>MAX_FOLLOWERS</code> for bigger accounts</strong> — The default 5,000 limit keeps things fast. For massive accounts, bump it to 10,000–50,000 and use the CLI version for better performance and progress tracking.</p>
+</li>
+<li><p><strong>Run weekly for growth tracking</strong> — Export followers periodically, then use the &quot;Compare Followers Over Time&quot; pattern to track audience growth and churn trends.</p>
+</li>
+<li><p><strong>Combine with <code>followsYou</code> data</strong> — The script captures whether each follower also follows you. Filter <code>followsYou: true</code> to find your mutual connections within someone else&#39;s audience.</p>
+</li>
+</ol>
+<hr>
+<h2>⚠️ Important Notes</h2>
+<ul>
+<li><strong>Public accounts only (browser method)</strong> — The browser script reads what&#39;s visible on your screen. For private accounts, you need to follow them first. The CLI method supports auth tokens for authenticated scraping.</li>
+<li><strong>X limits scroll loading</strong> — Twitter&#39;s infinite scroll eventually stops loading new users. For accounts with 100K+ followers, the practical limit is around 10,000–50,000 per session.</li>
+<li><strong>Respect privacy and terms</strong> — Scraping public data is common practice, but don&#39;t use the data for spam, harassment, or unauthorized commercial purposes.</li>
+<li><strong>Rate of scraping</strong> — The script only scrolls the page (no API calls), so there&#39;s minimal rate-limit risk. However, don&#39;t scrape the same account repeatedly in a short window.</li>
+<li><strong>Data freshness</strong> — The export reflects the followers list at the moment you scrape. Follower counts change constantly.</li>
+</ul>
+<h3>Performance estimates:</h3>
+<table>
+<thead>
+<tr>
+<th>Follower count</th>
+<th>Browser time</th>
+<th>CLI time</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>500</td>
+<td>~2 min</td>
+<td>~1.5 min</td>
+</tr>
+<tr>
+<td>1,000</td>
+<td>~4 min</td>
+<td>~3 min</td>
+</tr>
+<tr>
+<td>5,000</td>
+<td>~15 min</td>
+<td>~10 min</td>
+</tr>
+<tr>
+<td>10,000</td>
+<td>~30 min</td>
+<td>~20 min</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>🔗 Related Features</h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Use Case</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Following Scraping</td>
+<td>Export who someone follows (not followers)</td>
+<td><a href="../following-scraping.md">→ Guide</a></td>
+</tr>
+<tr>
+<td>Profile Scraping</td>
+<td>Get detailed info on a single profile</td>
+<td><a href="../profile-scraping.md">→ Guide</a></td>
+</tr>
+<tr>
+<td>Detect Unfollowers</td>
+<td>Compare follower snapshots to find who left</td>
+<td><a href="../detect-unfollowers.md">→ Guide</a></td>
+</tr>
+<tr>
+<td>Follow Target Followers</td>
+<td>Auto-follow a competitor&#39;s followers</td>
+<td><a href="../follow-target-followers.md">→ Guide</a></td>
+</tr>
+<tr>
+<td>Engagement Analytics</td>
+<td>Analyze your tweet performance</td>
+<td><a href="../engagement-analytics.md">→ Guide</a></td>
+</tr>
+<tr>
+<td>Audit Followers</td>
+<td>Detect bot/fake accounts in your followers</td>
+<td>Coming soon</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>❓ FAQ</h2>
+<h3>Q: How do I scrape Twitter followers without the API?</h3>
+<p><strong>A:</strong> Go to <code>x.com/USERNAME/followers</code> in your browser, open the console (F12 → Console), and paste the XActions followers scraper script. It scrolls through the followers list, extracts data from each user card, and downloads a CSV + JSON file — all without any API credentials, app registration, or paid tools.</p>
+<h3>Q: Can I export someone else&#39;s followers, not just my own?</h3>
+<p><strong>A:</strong> Yes — navigate to any <strong>public</strong> account&#39;s followers page (<code>x.com/THEIR_USERNAME/followers</code>) and run the script. It works on any public profile. For private/protected accounts, you need to be an approved follower.</p>
+<h3>Q: What data fields are included in the export?</h3>
+<p><strong>A:</strong> Each follower entry includes: <strong>username</strong> (handle), <strong>display name</strong>, <strong>bio/description</strong>, <strong>verified status</strong> (blue check), <strong>&quot;Follows you&quot; status</strong>, <strong>avatar URL</strong>, and <strong>profile URL</strong>. The CSV opens directly in Excel or Google Sheets with proper column headers.</p>
+<h3>Q: How many followers can I scrape at once?</h3>
+<p><strong>A:</strong> The browser script works well up to about <strong>5,000 followers</strong>. For larger accounts, use the CLI version which handles up to <strong>50,000</strong> with better memory management and progress tracking. X&#39;s infinite scroll eventually caps, so extremely large accounts (1M+) can only be partially scraped.</p>
+<h3>Q: Is scraping Twitter followers legal?</h3>
+<p><strong>A:</strong> Scraping publicly available data is generally legal in most jurisdictions (see the US Ninth Circuit ruling in <em>hiQ v. LinkedIn</em>). However, respect X&#39;s Terms of Service — avoid excessive scraping, don&#39;t use data for spam, and be mindful of privacy regulations like GDPR if handling EU user data.</p>
+<hr>
+<footer>
+Built with ⚡ by <a href="https://x.com/nichxbt">@nichxbt</a> · <a href="https://xactions.app">xactions.app</a> · <a href="https://github.com/nichxbt/xactions">GitHub</a>
+</footer>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try Scrape X (Twitter) Followers to CSV/JSON — Free, No API?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/step-by-step/auto-commenter-tutorial">📝 Auto Commenter Tutorial</a>
+        <a href="/docs/step-by-step/auto-liker-tutorial">📝 Auto Liker Tutorial</a>
+        <a href="/docs/step-by-step/bookmark-exporter-tutorial">📝 Bookmark Exporter Tutorial</a>
+        <a href="/docs/step-by-step/detect-unfollowers-tutorial">📝 Detect Unfollowers Tutorial</a>
+        <a href="/docs/step-by-step/follow-target-followers-tutorial">📝 Follow Target Followers Tutorial</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a> / <a href="/docs#step-by-step">Tutorials</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

@@ -3,22 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Articles &amp; Long-Form Content | XActions</title>
-  <meta name="description" content="Browser automation for publishing and managing long-form articles on X/Twitter. Requires Premium+ subscription.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, free, open source, articles, longform, long-form, content, agent skills">
+  <title>Articles &amp; Longform | XActions</title>
+  <meta name="description" content="Browser console scripts for creating and managing X/Twitter Articles (Premium+ feature).">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, open source, articles, longform, agent skills">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Articles &amp; Long-Form Content — XActions">
-  <meta property="og:description" content="Browser automation for publishing and managing long-form articles on X/Twitter. Requires Premium+ subscription.">
+  <meta property="og:title" content="Articles &amp; Longform — XActions">
+  <meta property="og:description" content="Browser console scripts for creating and managing X/Twitter Articles (Premium+ feature).">
   <meta property="og:url" content="https://xactions.app/docs/skills/articles-longform">
   <meta property="og:site_name" content="XActions">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Articles &amp; Long-Form Content — XActions">
-  <meta name="twitter:description" content="Browser automation for publishing and managing long-form articles on X/Twitter. Requires Premium+ subscription.">
+  <meta name="twitter:title" content="Articles &amp; Longform — XActions">
+  <meta name="twitter:description" content="Browser console scripts for creating and managing X/Twitter Articles (Premium+ feature).">
 
   <link rel="canonical" href="https://xactions.app/docs/skills/articles-longform">
   <link rel="manifest" href="/manifest.json">
@@ -28,8 +28,8 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Articles & Long-Form Content | XActions",
-    "description": "Browser automation for publishing and managing long-form articles on X/Twitter. Requires Premium+ subscription.",
+    "headline": "Articles & Longform | XActions",
+    "description": "Browser console scripts for creating and managing X/Twitter Articles (Premium+ feature).",
     "url": "https://xactions.app/docs/skills/articles-longform",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -37,7 +37,7 @@
     "dateModified": "2026-02-25",
     "mainEntityOfPage": "https://xactions.app/docs/skills/articles-longform",
     "articleSection": "Agent Skills",
-    "keywords": "xactions, twitter automation, x automation, free, open source, articles, longform, long-form, content, agent skills"
+    "keywords": "xactions, twitter automation, x automation, free, open source, articles, longform, agent skills"
   }
   </script>
   <script type="application/ld+json">
@@ -48,7 +48,7 @@
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://xactions.app/docs" },
       { "@type": "ListItem", "position": 3, "name": "Agent Skills", "item": "https://xactions.app/docs/skills" },
-      { "@type": "ListItem", "position": 4, "name": "Articles & Long-Form Content", "item": "https://xactions.app/docs/skills/articles-longform" }
+      { "@type": "ListItem", "position": 4, "name": "Articles & Longform", "item": "https://xactions.app/docs/skills/articles-longform" }
     ]
   }
   </script>
@@ -162,16 +162,16 @@
 
     <main class="main-content">
       <header class="main-header">
-        <h1>🎯 Articles &amp; Long-Form Content</h1>
+        <h1>🎯 Articles &amp; Longform</h1>
         <div class="breadcrumb">
-          <a href="https://xactions.app">Home</a> › <a href="https://xactions.app/docs">Docs</a> › <a href="https://xactions.app/docs/skills">Agent Skills</a> › Articles &amp; Long-Form Content
+          <a href="https://xactions.app">Home</a> › <a href="https://xactions.app/docs">Docs</a> › <a href="https://xactions.app/docs/skills">Agent Skills</a> › Articles &amp; Longform
         </div>
       </header>
 
       <article class="article">
         <span class="cat-badge">Agent Skills</span>
-        <h1>Articles &amp; Long-Form Content</h1>
-<p>Browser automation for publishing and managing long-form articles on X/Twitter. Requires Premium+ subscription.</p>
+        <h1>Articles &amp; Longform</h1>
+<p>Browser console scripts for creating and managing X/Twitter Articles (Premium+ feature).</p>
 <h2>Script Selection</h2>
 <table>
 <thead>
@@ -182,68 +182,54 @@
 </tr>
 </thead>
 <tbody><tr>
-<td>Publish or draft an article</td>
+<td>Publish an article</td>
 <td><code>src/articlePublisher.js</code></td>
 <td><code>x.com/compose/article</code></td>
 </tr>
 <tr>
-<td>List published articles</td>
-<td><code>src/articlePublisher.js</code></td>
-<td><code>x.com/USERNAME/articles</code></td>
+<td>Convert thread to article</td>
+<td><code>src/contentRepurposer.js</code></td>
+<td><code>x.com/USERNAME</code></td>
 </tr>
 <tr>
-<td>Get article analytics</td>
-<td><code>src/articlePublisher.js</code></td>
-<td>Article URL</td>
+<td>Track article performance</td>
+<td><code>src/tweetPerformance.js</code></td>
+<td><code>x.com/USERNAME</code></td>
+</tr>
+<tr>
+<td>Generate blog outline</td>
+<td><code>src/contentRepurposer.js</code></td>
+<td><code>x.com/USERNAME</code></td>
 </tr>
 </tbody></table>
 <h2>Article Publisher</h2>
 <p><strong>File:</strong> <code>src/articlePublisher.js</code></p>
-<p>Puppeteer-based module for creating, drafting, listing, and analyzing long-form articles.</p>
-<h3>Functions</h3>
-<table>
-<thead>
-<tr>
-<th>Function</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>publishArticle(page, { title, body, coverImage? })</code></td>
-<td>Publish with optional cover image</td>
-</tr>
-<tr>
-<td><code>saveDraft(page, { title, body })</code></td>
-<td>Save article as draft</td>
-</tr>
-<tr>
-<td><code>getArticles(page, username)</code></td>
-<td>List all published articles for a user</td>
-</tr>
-<tr>
-<td><code>getArticleAnalytics(page, articleUrl)</code></td>
-<td>Get likes, reposts, views for an article</td>
-</tr>
-</tbody></table>
-<h3>How It Works</h3>
+<p>Assists with article composition on X&#39;s article editor.</p>
+<h3>Features</h3>
+<ul>
+<li>Title and subtitle insertion</li>
+<li>Body text formatting (headings, bold, italic, lists)</li>
+<li>Image and media embedding</li>
+<li>Draft saving</li>
+<li>Publish with cover image</li>
+</ul>
+<h3>How to Use</h3>
 <ol>
-<li>Navigates to <code>x.com/compose/article</code></li>
-<li>Types title into the title field, body into the rich text editor</li>
-<li>Optionally uploads a cover image via file chooser</li>
-<li>Clicks Publish or Save Draft</li>
-<li>Returns success status with metadata (title, body length, timestamp)</li>
+<li>Navigate to <code>x.com/compose/article</code></li>
+<li>Open DevTools (F12) -&gt; Console</li>
+<li>Paste the script -&gt; Enter</li>
+<li>Use controls to compose</li>
 </ol>
-<h3>Usage (Node.js / Puppeteer)</h3>
-<pre><code class="language-javascript">import { publishArticle, saveDraft } from &#39;./src/articlePublisher.js&#39;;
-
-await publishArticle(page, {
-  title: &#39;My Article&#39;,
-  body: &#39;Full article content...&#39;,
-  coverImage: &#39;/path/to/cover.jpg&#39;, // optional
-});
-
-await saveDraft(page, { title: &#39;Draft&#39;, body: &#39;Content...&#39; });
-</code></pre>
+<h3>Controls</h3>
+<ul>
+<li><code>XActions.setTitle(text)</code> -- Set article title</li>
+<li><code>XActions.setSubtitle(text)</code> -- Set subtitle</li>
+<li><code>XActions.addParagraph(text)</code> -- Add body paragraph</li>
+<li><code>XActions.addHeading(text, level)</code> -- Add heading (h2, h3)</li>
+<li><code>XActions.addImage(url, alt)</code> -- Insert image</li>
+<li><code>XActions.preview()</code> -- Preview formatted article</li>
+<li><code>XActions.publish()</code> -- Publish (with confirmation prompt)</li>
+</ul>
 <h2>DOM Selectors</h2>
 <table>
 <thead>
@@ -253,7 +239,11 @@ await saveDraft(page, { title: &#39;Draft&#39;, body: &#39;Content...&#39; });
 </tr>
 </thead>
 <tbody><tr>
-<td>Title input</td>
+<td>Article editor</td>
+<td><code>[data-testid=&quot;articleEditor&quot;]</code></td>
+</tr>
+<tr>
+<td>Title field</td>
 <td><code>[data-testid=&quot;articleTitle&quot;]</code></td>
 </tr>
 <tr>
@@ -261,53 +251,49 @@ await saveDraft(page, { title: &#39;Draft&#39;, body: &#39;Content...&#39; });
 <td><code>[data-testid=&quot;articleBody&quot;]</code></td>
 </tr>
 <tr>
+<td>Cover image</td>
+<td><code>[data-testid=&quot;articleCoverImage&quot;]</code></td>
+</tr>
+<tr>
 <td>Publish button</td>
-<td><code>[data-testid=&quot;articlePublish&quot;]</code></td>
+<td><code>[data-testid=&quot;articlePublishButton&quot;]</code></td>
 </tr>
 <tr>
 <td>Save draft</td>
 <td><code>[data-testid=&quot;articleSaveDraft&quot;]</code></td>
 </tr>
-<tr>
-<td>Cover image</td>
-<td><code>[data-testid=&quot;articleCoverImage&quot;]</code></td>
-</tr>
-<tr>
-<td>Article card</td>
-<td><code>[data-testid=&quot;articleCard&quot;]</code></td>
-</tr>
 </tbody></table>
-<h2>Prerequisites &amp; Limits</h2>
+<h2>Content Strategy</h2>
+<h3>Thread-to-Article pipeline</h3>
+<ol>
+<li>Run <code>src/tweetPerformance.js</code> to find your best-performing threads</li>
+<li>Run <code>src/contentRepurposer.js</code> -&gt; <code>XActions.toBlog(i)</code> to generate article outline</li>
+<li>Navigate to <code>x.com/compose/article</code></li>
+<li>Use <code>src/articlePublisher.js</code> to format and publish</li>
+<li>Share the article link as a tweet for promotion</li>
+</ol>
+<h3>SEO and reach optimization</h3>
 <ul>
-<li><strong>Premium+ subscription</strong> ($16/mo) required for article publishing</li>
-<li>Cover images: JPEG/PNG, under 5MB</li>
-<li>3s delay after navigation, 5s wait after publish to confirm</li>
+<li>Use <code>src/contentRepurposer.js</code> -&gt; <code>XActions.toBlog(i)</code> for keyword suggestions</li>
+<li>Articles get indexed by Google (unlike regular tweets)</li>
+<li>Include 1-2 images per 500 words for better engagement</li>
+<li>Link back to your profile and other articles</li>
 </ul>
-<h2>Troubleshooting</h2>
-<table>
-<thead>
-<tr>
-<th>Problem</th>
-<th>Solution</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>&quot;Premium+ required&quot; error</td>
-<td>Article compose requires Premium+ subscription</td>
-</tr>
-<tr>
-<td>Cover image upload fails</td>
-<td>Check file format (JPEG/PNG) and size (&lt; 5MB)</td>
-</tr>
-<tr>
-<td>Article not appearing in feeds</td>
-<td>May take a few minutes to surface</td>
-</tr>
-<tr>
-<td>Empty title/body error</td>
-<td>Both fields are required to publish</td>
-</tr>
-</tbody></table>
+<h2>Requirements</h2>
+<ul>
+<li>X Premium+ subscription ($16/mo) required</li>
+<li>Articles support rich text, images, and embedded tweets</li>
+<li>No word count limit</li>
+<li>Articles are publicly accessible (even to non-X users)</li>
+<li>Articles have their own URL structure: <code>x.com/USERNAME/articles/ID</code></li>
+</ul>
+<h2>Notes</h2>
+<ul>
+<li>Articles persist permanently (unlike tweets which get buried)</li>
+<li>Google indexes X Articles -- good for SEO</li>
+<li>Cover image recommended for social sharing preview</li>
+<li>Draft auto-saves periodically</li>
+</ul>
 
 
         <div class="cta-box">

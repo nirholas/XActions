@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Unfollow Non-Followers on X (Twitter) — With Full Logging — Free X/Twitter Tools Tool | XActions</title>
+  <meta name="description" content="**Unfollow accounts that don't follow you back on X/Twitter — with comprehensive logging, CSV + JSON export, whitelist protection, and dry-run preview.** Fre...">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, smart, unfollow, tutorial, non-followers, (twitter), full, logging, tools, smart unfollow tutorial twitter, twitter smart unfollow tutorial">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Smart Unfollow Non-Followers on X (Twitter) — With Full Logging — XActions">
+  <meta property="og:description" content="**Unfollow accounts that don't follow you back on X/Twitter — with comprehensive logging, CSV + JSON export, whitelist protection, and dry-run preview.** Fre...">
+  <meta property="og:url" content="https://xactions.app/docs/step-by-step/smart-unfollow-tutorial">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Smart Unfollow Non-Followers on X (Twitter) — With Full Logging — Free X/Twitter Tool">
+  <meta name="twitter:description" content="**Unfollow accounts that don't follow you back on X/Twitter — with comprehensive logging, CSV + JSON export, whitelist protection, and dry-run preview.** Fre...">
+
+  <link rel="canonical" href="https://xactions.app/docs/step-by-step/smart-unfollow-tutorial">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Smart Unfollow Non-Followers on X (Twitter) — With Full Logging — Free X/Twitter Tools Tool | XActions",
+    "description": "**Unfollow accounts that don't follow you back on X/Twitter — with comprehensive logging, CSV + JSON export, whitelist protection, and dry-run preview.** Fre...",
+    "url": "https://xactions.app/docs/step-by-step/smart-unfollow-tutorial",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/smart-unfollow-tutorial",
+    "articleSection": "Tools",
+    "keywords": "xactions, twitter automation, x automation, free, smart, unfollow, tutorial, non-followers, (twitter), full, logging, tools, smart unfollow tutorial twitter, twitter smart unfollow tutorial"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Smart Unfollow Non-Followers on X (Twitter) — With Full Logging", "item": "https://xactions.app/docs/smart-unfollow-tutorial" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use Smart Unfollow Non-Followers on X (Twitter) — With Full Logging",
+    "description": "**Unfollow accounts that don't follow you back on X/Twitter — with comprehensive logging, CSV + JSON export, whitelist protection, and dry-run preview.** Fre...",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions Smart Unfollow Non-Followers on X (Twitter) — With Full Logging script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>⚡ Smart Unfollow Non-Followers on X (Twitter) — With Full Logging</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › Smart Unfollow Non-Followers on X (Twitter) — With Full Logging
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Tools</span>
+        <h1>📝 Smart Unfollow Non-Followers on X (Twitter) — With Full Logging</h1>
+<blockquote>
+<p><strong>Unfollow accounts that don&#39;t follow you back on X/Twitter — with comprehensive logging, CSV + JSON export, whitelist protection, and dry-run preview.</strong> Free, no API key, no app install.</p>
+</blockquote>
+<p><strong>Works on:</strong> 🌐 Browser Console<br><strong>Difficulty:</strong> 🟢 Beginner<br><strong>Time:</strong> ⏱️ 5–60 minutes (depends on following count)<br><strong>Requirements:</strong> A web browser logged into x.com</p>
+<blockquote>
+<p>📖 For the quick-reference version, see <a href="../smart-unfollow.md">smart-unfollow.md</a></p>
+</blockquote>
+<hr>
+<h2>🎯 Real-World Scenario</h2>
+<p>You followed 2,000+ accounts over the past year while growing your X presence — competitors, niche influencers, potential collaborators. Now your following/follower ratio is terrible (following 2,100, followers 800), which makes your profile look spammy. You need to clean up — but you want to know <strong>exactly who</strong> you unfollowed and <strong>why</strong>, because some of those accounts might actually be valuable contacts you don&#39;t want to lose.</p>
+<p>XActions&#39; Smart Unfollow scans your entire following list, identifies accounts that don&#39;t follow you back, and unfollows them — while logging every single action with username, display name, bio, follower count, and timestamp. At the end, it automatically downloads both JSON and CSV files so you have a complete audit trail. You can whitelist accounts you want to keep, and preview everything in dry-run mode first.</p>
+<p><strong>Before XActions:</strong></p>
+<pre><code>┌──────────────────────────────────────────────────────────────┐
+│  Cleaning Your Following List (Manual)                       │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  Step 1: Go to your following list                           │
+│  Step 2: For each person, check if they follow you back      │
+│  Step 3: If not, click ••• → Unfollow                        │
+│  Step 4: Confirm the unfollow dialog                         │
+│  Step 5: Write down who you unfollowed (maybe?)              │
+│  Step 6: Repeat 1,300 more times...                          │
+│                                                              │
+│  Time estimate: 6+ hours                                     │
+│  Will you actually finish? No.                               │
+│  Will you track who you unfollowed? Definitely not.          │
+└──────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>After XActions Smart Unfollow:</strong></p>
+<pre><code>┌──────────────────────────────────────────────────────────────┐
+│  Cleaning Your Following List (XActions)                     │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  Step 1: Go to x.com/YOUR_USERNAME/following                 │
+│  Step 2: Paste script with dryRun: true                      │
+│  Step 3: Review the preview — see exactly who&#39;d be removed   │
+│  Step 4: Re-run with dryRun: false to execute                │
+│  Step 5: JSON + CSV files auto-download with full details    │
+│                                                              │
+│  Time: ~15 min for 1,000 accounts                            │
+│  Full audit trail: ✅ (username, bio, followers, timestamp)  │
+│  Whitelist protected: ✅                                     │
+└──────────────────────────────────────────────────────────────┘
+</code></pre>
+<hr>
+<h2>📋 What This Does (Step by Step)</h2>
+<ol>
+<li>📜 <strong>Scans your following list</strong> — reads each user cell on the page</li>
+<li>🔍 <strong>Checks for &quot;Follows you&quot; badge</strong> — identifies who follows you back</li>
+<li>🛡️ <strong>Checks whitelist</strong> — skips accounts you&#39;ve protected</li>
+<li>📊 <strong>Extracts rich data</strong> — captures username, display name, bio, follower count for the log</li>
+<li>🔙 <strong>Unfollows non-followers</strong> — clicks the Unfollow button with confirmation</li>
+<li>⏱️ <strong>Waits between actions</strong> — randomized 1.5–4s Gaussian delays (human-like)</li>
+<li>📜 <strong>Scrolls for more</strong> — loads additional users by scrolling</li>
+<li>🚨 <strong>Handles rate limits</strong> — auto-pauses for 60s if X blocks you</li>
+<li>💾 <strong>Persists progress</strong> — saves to <code>localStorage</code> so you can resume</li>
+<li>📥 <strong>Exports results</strong> — auto-downloads JSON and CSV when done</li>
+</ol>
+<pre><code>┌──────────────────────────────────────────────────────────────┐
+│                                                              │
+│  [Navigate to x.com/YOU/following]                           │
+│          │                                                   │
+│          ▼                                                   │
+│  [For each UserCell on page]                                 │
+│          │                                                   │
+│          ▼                                                   │
+│  [Already processed?] ──Yes──→ [Skip]                        │
+│          │ No                                                │
+│          ▼                                                   │
+│  [Has &quot;Follows you&quot; badge?] ──Yes──→ [Skip (mutual)]        │
+│          │ No                                                │
+│          ▼                                                   │
+│  [In whitelist?] ──Yes──→ [Skip (protected)]                 │
+│          │ No                                                │
+│          ▼                                                   │
+│  [Extract: username, name, bio, followers]                   │
+│          │                                                   │
+│          ├── DRY RUN: Log &quot;Would unfollow @user&quot; ──→ next    │
+│          │                                                   │
+│          ├── LIVE: Click Unfollow → Confirm dialog           │
+│          │         Wait 1.5-4s (Gaussian random)             │
+│          │         Log action with full details              │
+│          │                                                   │
+│          ▼                                                   │
+│  [Rate limited?] ──Yes──→ [Pause 60s] ──→ [Resume]          │
+│          │ No                                                │
+│          ▼                                                   │
+│  [Scroll for more users]                                     │
+│          │                                                   │
+│          ▼                                                   │
+│  [All done] → [Print summary] → [Export JSON + CSV]          │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘
+</code></pre>
+<hr>
+<h2>🌐 Method 1: Browser Console (Copy-Paste)</h2>
+<p><strong>Best for:</strong> Everyone — no installs, runs right in your browser.</p>
+<h3>Prerequisites</h3>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> Logged into your X/Twitter account in a web browser</li>
+<li><input checked="" disabled="" type="checkbox"> On a desktop/laptop (not mobile)</li>
+</ul>
+<h3>Step 1: Navigate to your following list</h3>
+<blockquote>
+<p>Go to <strong><code>x.com/YOUR_USERNAME/following</code></strong> — replace <code>YOUR_USERNAME</code> with your actual handle.</p>
+</blockquote>
+<pre><code>┌──────────────────────────────────────────────────────────────┐
+│ 🔍 x.com/nichxbt/following                                   │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  👤 @elonmusk          Following ✓       Follows you ✗      │
+│  👤 @naval             Following ✓       Follows you ✗      │
+│  👤 @vitalikbuterin    Following ✓       Follows you ✗      │
+│  👤 @yourfriend        Following ✓       Follows you ✓      │
+│  👤 @deadaccount       Following ✓       Follows you ✗      │
+│  👤 @cryptodev         Following ✓       Follows you ✓      │
+│                                                              │
+│  ... 2,094 more accounts below                               │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘
+</code></pre>
+<h3>Step 2: Open Developer Console</h3>
+<table>
+<thead>
+<tr>
+<th>OS</th>
+<th>Shortcut</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Windows / Linux</strong></td>
+<td><code>F12</code> then click <strong>Console</strong> tab, or <code>Ctrl + Shift + J</code></td>
+</tr>
+<tr>
+<td><strong>Mac</strong></td>
+<td><code>Cmd + Option + J</code></td>
+</tr>
+</tbody></table>
+<h3>Step 3: Paste and Run</h3>
+<p>Copy the entire script below. <strong>Important:</strong> Start with <code>dryRun: true</code> to preview before executing.</p>
+<pre><code class="language-javascript">// ============================================
+// XActions - Smart Unfollow with Full Log
+// by nichxbt — https://xactions.app
+// Go to: x.com/YOUR_USERNAME/following
+// Open console (F12 → Console), paste, Enter
+// ============================================
+
+(() =&gt; {
+  &#39;use strict&#39;;
+
+  const CONFIG = {
+    maxUnfollows: Infinity,      // Set a number to limit, or Infinity for all
+    whitelist: [                 // Accounts to never unfollow (without @)
+      // &#39;elonmusk&#39;,
+      // &#39;naval&#39;,
+    ],
+    dryRun: true,                // ⚠️ Start with true! Set to false to execute
+    minDelay: 1500,              // Min delay between unfollows (ms)
+    maxDelay: 4000,              // Max delay between unfollows (ms)
+    scrollDelay: 2000,
+    maxConsecutiveErrors: 8,
+    maxEmptyScrolls: 6,
+    rateLimitCooldown: 60000,    // 60s cooldown if rate limited
+    logLevel: &#39;verbose&#39;,         // &#39;verbose&#39; | &#39;normal&#39; | &#39;quiet&#39;
+    exportFormat: &#39;both&#39;,        // &#39;json&#39; | &#39;csv&#39; | &#39;both&#39;
+  };
+
+  const SEL = {
+    unfollowBtn: [&#39;[data-testid$=&quot;-unfollow&quot;]&#39;, &#39;button[aria-label*=&quot;Following @&quot;]&#39;],
+    confirmBtn:  [&#39;[data-testid=&quot;confirmationSheetConfirm&quot;]&#39;],
+    userCell:    [&#39;[data-testid=&quot;UserCell&quot;]&#39;, &#39;[data-testid=&quot;cellInnerDiv&quot;]&#39;],
+    followsYou:  [&#39;[data-testid=&quot;userFollowIndicator&quot;]&#39;],
+    toast:       [&#39;[data-testid=&quot;toast&quot;]&#39;, &#39;[role=&quot;alert&quot;]&#39;],
+  };
+
+  const $ = (sel, ctx = document) =&gt; {
+    for (const s of (Array.isArray(sel) ? sel : [sel])) { const e = ctx.querySelector(s); if (e) return e; }
+    return null;
+  };
+  const $$ = (sel, ctx = document) =&gt; {
+    for (const s of (Array.isArray(sel) ? sel : [sel])) { const e = ctx.querySelectorAll(s); if (e.length) return [...e]; }
+    return [];
+  };
+
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+  const gaussian = (min, max) =&gt; Math.floor(min + ((Math.random() + Math.random()) / 2) * (max - min));
+  const isRateLimited = () =&gt; { const t = $(SEL.toast); return t &amp;&amp; /rate limit|try again|too many|slow down/i.test(t.textContent); };
+
+  // ── State ──
+  let paused = false, aborted = false;
+  let unfollowed = 0, scanned = 0, errors = 0, consecutiveErrors = 0;
+  const startTime = Date.now();
+  const log = [];
+  const processedUsers = new Set();
+  const whitelistSet = new Set(CONFIG.whitelist.map(u =&gt; u.toLowerCase().replace(/^@/, &#39;&#39;)));
+
+  // Restore from localStorage
+  const STORAGE_KEY = &#39;xactions_unfollowWDFBLog&#39;;
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || &#39;{}&#39;);
+    if (saved.processed) saved.processed.forEach(u =&gt; processedUsers.add(u));
+    if (saved.log) saved.log.forEach(entry =&gt; log.push(entry));
+  } catch {}
+
+  const persist = () =&gt; {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ processed: [...processedUsers], log, lastRun: new Date().toISOString() })); } catch {}
+  };
+
+  // ── Controls ──
+  const showStatus = () =&gt; {
+    const elapsed = ((Date.now() - startTime) / 1000).toFixed(0);
+    const rate = unfollowed &gt; 0 ? (unfollowed / (elapsed / 60)).toFixed(1) : &#39;0&#39;;
+    console.log(`📊 Unfollowed: ${unfollowed} | Scanned: ${scanned} | Errors: ${errors} | ${rate}/min | ${elapsed}s`);
+  };
+
+  const exportNow = () =&gt; {
+    if (log.length === 0) { console.log(&#39;Nothing to export.&#39;); return; }
+    const ts = new Date().toISOString().slice(0, 10);
+    const tag = CONFIG.dryRun ? &#39;preview&#39; : &#39;results&#39;;
+
+    if (CONFIG.exportFormat === &#39;json&#39; || CONFIG.exportFormat === &#39;both&#39;) {
+      const data = { summary: { scanned, unfollowed, errors, dryRun: CONFIG.dryRun, exportedAt: new Date().toISOString() }, accounts: log };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: &#39;application/json&#39; });
+      const a = document.createElement(&#39;a&#39;); a.href = URL.createObjectURL(blob); a.download = `xactions-unfollowlog-${tag}-${ts}.json`;
+      document.body.appendChild(a); a.click(); a.remove();
+    }
+
+    if (CONFIG.exportFormat === &#39;csv&#39; || CONFIG.exportFormat === &#39;both&#39;) {
+      const header = &#39;username,displayName,bio,followers,following,unfollowedAt\n&#39;;
+      const rows = log.map(r =&gt;
+        `&quot;${r.username}&quot;,&quot;${(r.displayName || &#39;&#39;).replace(/&quot;/g, &#39;&quot;&quot;&#39;)}&quot;,&quot;${(r.bio || &#39;&#39;).replace(/&quot;/g, &#39;&quot;&quot;&#39;).replace(/\n/g, &#39; &#39;)}&quot;,${r.followers || 0},${r.following || 0},&quot;${r.timestamp}&quot;`
+      ).join(&#39;\n&#39;);
+      const blob = new Blob([header + rows], { type: &#39;text/csv&#39; });
+      const a = document.createElement(&#39;a&#39;); a.href = URL.createObjectURL(blob); a.download = `xactions-unfollowlog-${tag}-${ts}.csv`;
+      document.body.appendChild(a); a.click(); a.remove();
+    }
+
+    console.log(&#39;📥 Exported.&#39;);
+  };
+
+  window.XActions = {
+    pause()  { paused = true;  console.log(&#39;⏸️ Paused.&#39;); },
+    resume() { paused = false; console.log(&#39;▶️ Resumed.&#39;); },
+    abort()  { aborted = true; console.log(&#39;🛑 Aborting...&#39;); },
+    status:  showStatus,
+    export:  exportNow,
+  };
+
+  const shouldContinue = async () =&gt; { while (paused &amp;&amp; !aborted) await sleep(500); return !aborted; };
+
+  // ── Extract Rich User Data ──
+  const extractUserData = (cell) =&gt; {
+    const data = { username: null, displayName: null, bio: null, followers: 0, following: 0 };
+    const link = cell.querySelector(&#39;a[href^=&quot;/&quot;][role=&quot;link&quot;]&#39;) || cell.querySelector(&#39;a[href^=&quot;/&quot;]&#39;);
+    if (link) {
+      const match = (link.getAttribute(&#39;href&#39;) || &#39;&#39;).match(/^\/([A-Za-z0-9_]+)/);
+      if (match &amp;&amp; ![&#39;home&#39;,&#39;explore&#39;,&#39;notifications&#39;,&#39;messages&#39;,&#39;i&#39;].includes(match[1])) data.username = match[1];
+    }
+    if (!data.username) {
+      const spans = cell.querySelectorAll(&#39;span&#39;);
+      for (const s of spans) { const m = s.textContent.match(/^@([A-Za-z0-9_]+)$/); if (m) { data.username = m[1]; break; } }
+    }
+    const nameSpans = cell.querySelectorAll(&#39;a[href^=&quot;/&quot;] span&#39;);
+    if (nameSpans.length &gt; 0) data.displayName = nameSpans[0].textContent.trim();
+    const bioEl = cell.querySelector(&#39;[dir=&quot;auto&quot;]:not(a [dir=&quot;auto&quot;])&#39;);
+    if (bioEl &amp;&amp; bioEl.textContent.length &gt; 5) data.bio = bioEl.textContent.trim().slice(0, 300);
+    return data;
+  };
+
+  // ── Main ──
+  const run = async () =&gt; {
+    const W = 60;
+    console.log(&#39;╔&#39; + &#39;═&#39;.repeat(W) + &#39;╗&#39;);
+    console.log(&#39;║  📝 UNFOLLOW NON-FOLLOWERS WITH LOG&#39; + &#39; &#39;.repeat(W - 37) + &#39;║&#39;);
+    console.log(&#39;║  by nichxbt — v2.0&#39; + &#39; &#39;.repeat(W - 21) + &#39;║&#39;);
+    console.log(&#39;╚&#39; + &#39;═&#39;.repeat(W) + &#39;╝&#39;);
+
+    if (!window.location.href.includes(&#39;/following&#39;)) {
+      console.error(&#39;❌ Navigate to x.com/YOUR_USERNAME/following first!&#39;);
+      return;
+    }
+
+    console.log(`\n⚙️ Dry run: ${CONFIG.dryRun ? &#39;YES&#39; : &#39;NO&#39;}  |  Whitelist: ${whitelistSet.size}  |  Export: ${CONFIG.exportFormat}`);
+    if (CONFIG.dryRun) console.log(&#39;   ⚠️ Preview only. Set dryRun=false to execute.\n&#39;);
+
+    let emptyScrolls = 0;
+
+    while (unfollowed &lt; CONFIG.maxUnfollows &amp;&amp; emptyScrolls &lt; CONFIG.maxEmptyScrolls) {
+      if (!(await shouldContinue())) break;
+      if (isRateLimited()) { console.warn(`🚨 Rate limit! Cooling down ${CONFIG.rateLimitCooldown / 1000}s...`); await sleep(CONFIG.rateLimitCooldown); continue; }
+
+      const cells = $$(SEL.userCell);
+      let foundNew = false;
+
+      for (const cell of cells) {
+        if (!(await shouldContinue())) break;
+        if (unfollowed &gt;= CONFIG.maxUnfollows) break;
+
+        const userData = extractUserData(cell);
+        if (!userData.username) continue;
+        const uLower = userData.username.toLowerCase();
+        if (processedUsers.has(uLower)) continue;
+
+        processedUsers.add(uLower);
+        foundNew = true;
+        scanned++;
+
+        if ($(SEL.followsYou, cell)) continue;
+        if (whitelistSet.has(uLower)) { if (CONFIG.logLevel === &#39;verbose&#39;) console.log(`   🛡️ Whitelisted: @${userData.username}`); continue; }
+
+        const entry = { ...userData, timestamp: new Date().toISOString(), dryRun: CONFIG.dryRun };
+
+        if (CONFIG.dryRun) {
+          if (CONFIG.logLevel !== &#39;quiet&#39;) console.log(`   🔍 Would unfollow: @${userData.username}${userData.displayName ? ` (${userData.displayName})` : &#39;&#39;}${userData.bio ? ` — &quot;${userData.bio.slice(0, 60)}...&quot;` : &#39;&#39;}`);
+          log.push(entry);
+          unfollowed++;
+          continue;
+        }
+
+        const btn = $(SEL.unfollowBtn, cell);
+        if (!btn) { errors++; consecutiveErrors++; continue; }
+
+        try {
+          btn.click();
+          await sleep(gaussian(400, 800));
+          const confirm = $(SEL.confirmBtn);
+          if (confirm) { confirm.click(); await sleep(gaussian(300, 600)); }
+          unfollowed++;
+          consecutiveErrors = 0;
+          log.push(entry);
+          if (CONFIG.logLevel === &#39;verbose&#39; || unfollowed % 5 === 0) console.log(`   🔙 #${unfollowed} @${userData.username}${userData.displayName ? ` (${userData.displayName})` : &#39;&#39;}`);
+          persist();
+          await sleep(gaussian(CONFIG.minDelay, CONFIG.maxDelay));
+        } catch (e) {
+          errors++;
+          consecutiveErrors++;
+          if (consecutiveErrors &gt;= CONFIG.maxConsecutiveErrors) { console.error(`❌ ${CONFIG.maxConsecutiveErrors} consecutive errors — aborting.`); break; }
+        }
+      }
+
+      if (consecutiveErrors &gt;= CONFIG.maxConsecutiveErrors) break;
+      if (!foundNew) emptyScrolls++; else emptyScrolls = 0;
+
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(gaussian(CONFIG.scrollDelay, CONFIG.scrollDelay + 1000));
+    }
+
+    const elapsed = ((Date.now() - startTime) / 1000).toFixed(0);
+    console.log(&#39;\n╔&#39; + &#39;═&#39;.repeat(52) + &#39;╗&#39;);
+    console.log(&#39;║  📊 FINAL RESULTS&#39; + &#39; &#39;.repeat(34) + &#39;║&#39;);
+    console.log(&#39;╠&#39; + &#39;═&#39;.repeat(52) + &#39;╣&#39;);
+    console.log(`║  Scanned:       ${String(scanned).padEnd(33)}║`);
+    console.log(`║  Unfollowed:    ${String(unfollowed).padEnd(33)}║`);
+    console.log(`║  Errors:        ${String(errors).padEnd(33)}║`);
+    console.log(`║  Duration:      ${(elapsed + &#39;s&#39;).padEnd(33)}║`);
+    console.log(`║  Mode:          ${(CONFIG.dryRun ? &#39;DRY RUN&#39; : &#39;LIVE&#39;).padEnd(33)}║`);
+    console.log(&#39;╚&#39; + &#39;═&#39;.repeat(52) + &#39;╝&#39;);
+
+    persist();
+    if (log.length &gt; 0) exportNow();
+  };
+
+  run();
+})();
+</code></pre>
+<h3>Step 4: Review the dry-run output</h3>
+<pre><code>╔════════════════════════════════════════════════════════════════╗
+║  📝 UNFOLLOW NON-FOLLOWERS WITH LOG                           ║
+║  by nichxbt — v2.0                                            ║
+╚════════════════════════════════════════════════════════════════╝
+
+⚙️ Dry run: YES  |  Whitelist: 0  |  Export: both
+   ⚠️ Preview only. Set dryRun=false to execute.
+
+   🔍 Would unfollow: @deadaccount123 (Dead Account) — &quot;inactive since 2020...&quot;
+   🔍 Would unfollow: @cryptospammer (Crypto Guy) — &quot;follow for follow...&quot;
+   🛡️ Whitelisted: @naval
+   🔍 Would unfollow: @randomuser (Random) — &quot;just vibes...&quot;
+   ...
+
+╔════════════════════════════════════════════════════════════════╗
+║  📊 FINAL RESULTS                                             ║
+╠════════════════════════════════════════════════════════════════╣
+║  Scanned:       847                                           ║
+║  Unfollowed:    612                                           ║
+║  Errors:        0                                             ║
+║  Duration:      45s                                           ║
+║  Mode:          DRY RUN                                       ║
+╚════════════════════════════════════════════════════════════════╝
+
+📥 Exported.
+</code></pre>
+<h3>Step 5: Execute for real</h3>
+<p>Once you&#39;re satisfied with the preview, change <code>dryRun: false</code> and run again. The script will actually unfollow and download full logs.</p>
+<hr>
+<h2>⚙️ Configuration Reference</h2>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>maxUnfollows</code></td>
+<td><code>Infinity</code></td>
+<td>Maximum accounts to unfollow (set a number to limit)</td>
+</tr>
+<tr>
+<td><code>whitelist</code></td>
+<td><code>[]</code></td>
+<td>Usernames to never unfollow (without @)</td>
+</tr>
+<tr>
+<td><code>dryRun</code></td>
+<td><code>true</code></td>
+<td>Preview mode — no actions taken until set to <code>false</code></td>
+</tr>
+<tr>
+<td><code>minDelay</code></td>
+<td><code>1500</code></td>
+<td>Minimum delay between unfollows (ms)</td>
+</tr>
+<tr>
+<td><code>maxDelay</code></td>
+<td><code>4000</code></td>
+<td>Maximum delay between unfollows (ms)</td>
+</tr>
+<tr>
+<td><code>scrollDelay</code></td>
+<td><code>2000</code></td>
+<td>Delay between scroll-to-bottom actions (ms)</td>
+</tr>
+<tr>
+<td><code>maxConsecutiveErrors</code></td>
+<td><code>8</code></td>
+<td>Abort after this many errors in a row</td>
+</tr>
+<tr>
+<td><code>maxEmptyScrolls</code></td>
+<td><code>6</code></td>
+<td>Stop if no new users found after this many scrolls</td>
+</tr>
+<tr>
+<td><code>rateLimitCooldown</code></td>
+<td><code>60000</code></td>
+<td>Pause duration when rate limited (ms)</td>
+</tr>
+<tr>
+<td><code>logLevel</code></td>
+<td><code>&#39;verbose&#39;</code></td>
+<td><code>&#39;verbose&#39;</code>, <code>&#39;normal&#39;</code>, or <code>&#39;quiet&#39;</code></td>
+</tr>
+<tr>
+<td><code>exportFormat</code></td>
+<td><code>&#39;both&#39;</code></td>
+<td><code>&#39;json&#39;</code>, <code>&#39;csv&#39;</code>, or <code>&#39;both&#39;</code></td>
+</tr>
+</tbody></table>
+<h3>Runtime Controls</h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>XActions.pause()</code></td>
+<td>Pause the script</td>
+</tr>
+<tr>
+<td><code>XActions.resume()</code></td>
+<td>Resume after pause</td>
+</tr>
+<tr>
+<td><code>XActions.abort()</code></td>
+<td>Stop immediately</td>
+</tr>
+<tr>
+<td><code>XActions.status()</code></td>
+<td>Show progress stats</td>
+</tr>
+<tr>
+<td><code>XActions.export()</code></td>
+<td>Force export now</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>📥 Export Format</h2>
+<h3>JSON Output</h3>
+<pre><code class="language-json">{
+  &quot;summary&quot;: {
+    &quot;scanned&quot;: 847,
+    &quot;unfollowed&quot;: 612,
+    &quot;errors&quot;: 0,
+    &quot;dryRun&quot;: false,
+    &quot;exportedAt&quot;: &quot;2026-02-24T14:30:00.000Z&quot;
+  },
+  &quot;accounts&quot;: [
+    {
+      &quot;username&quot;: &quot;deadaccount123&quot;,
+      &quot;displayName&quot;: &quot;Dead Account&quot;,
+      &quot;bio&quot;: &quot;Haven&#39;t posted since 2020&quot;,
+      &quot;followers&quot;: 12,
+      &quot;following&quot;: 890,
+      &quot;timestamp&quot;: &quot;2026-02-24T14:15:00.000Z&quot;,
+      &quot;dryRun&quot;: false
+    }
+  ]
+}
+</code></pre>
+<h3>CSV Output</h3>
+<pre><code>username,displayName,bio,followers,following,unfollowedAt
+&quot;deadaccount123&quot;,&quot;Dead Account&quot;,&quot;Haven&#39;t posted since 2020&quot;,12,890,&quot;2026-02-24T14:15:00.000Z&quot;
+&quot;cryptospammer&quot;,&quot;Crypto Guy&quot;,&quot;follow for follow DM me&quot;,3,9400,&quot;2026-02-24T14:15:04.000Z&quot;
+</code></pre>
+<hr>
+<h2>💡 Pro Tips</h2>
+<ol>
+<li><strong>Always start with dry run.</strong> <code>dryRun: true</code> shows exactly who would be unfollowed. Review the CSV export, then run for real.</li>
+<li><strong>Whitelist important accounts.</strong> Add brand partners, friends, or key influencers to the <code>whitelist</code> array even if they don&#39;t follow back.</li>
+<li><strong>Use the CSV in a spreadsheet.</strong> Import the CSV into Google Sheets or Excel to sort by follower count — you might spot accounts you actually want to keep.</li>
+<li><strong>Run in batches.</strong> Set <code>maxUnfollows: 200</code> and run multiple sessions over several days instead of unfollowing 1,000+ at once.</li>
+<li><strong>Check the exported JSON for patterns.</strong> Look at the bios of unfollowed accounts — if you see valuable contacts, add them to the whitelist and re-follow manually.</li>
+<li><strong>Pair with the Follow Target Followers script.</strong> Unfollow non-followers → follow new niche accounts → repeat weekly. This is the classic growth loop.</li>
+</ol>
+<hr>
+<h2>⚠️ Important Warnings</h2>
+<blockquote>
+<p><strong>Rate limits:</strong> X limits unfollow actions. The script uses Gaussian-distributed delays (1.5–4s) and auto-pauses on rate limit detection, but unfollowing 500+ accounts in one session may trigger a temporary block.</p>
+</blockquote>
+<blockquote>
+<p><strong>Recovery:</strong> Progress is saved to <code>localStorage</code>. If the page crashes, your previously processed users won&#39;t be re-processed. To clear saved state: <code>localStorage.removeItem(&#39;xactions_unfollowWDFBLog&#39;)</code></p>
+</blockquote>
+<blockquote>
+<p><strong>&quot;Follows you&quot; detection:</strong> The script looks for the <code>[data-testid=&quot;userFollowIndicator&quot;]</code> badge. If X changes this selector, mutuals could be accidentally unfollowed. Always preview with dry run first.</p>
+</blockquote>
+<hr>
+<h2>🔗 Related Features</h2>
+<ul>
+<li><a href="unfollow-everyone-tutorial.md">Unfollow Everyone Tutorial</a> — Nuclear option: unfollow ALL accounts</li>
+<li><a href="unfollow-non-followers-tutorial.md">Unfollow Non-Followers Tutorial</a> — Simpler version without detailed logging</li>
+<li><a href="follow-target-followers-tutorial.md">Follow Target Followers Tutorial</a> — Build your audience back up after cleaning</li>
+<li><a href="detect-unfollowers-tutorial.md">Detect Unfollowers Tutorial</a> — Find out who unfollowed you</li>
+</ul>
+<hr>
+<h2>❓ FAQ</h2>
+<h3>What&#39;s the difference between this and &quot;Unfollow Non-Followers&quot;?</h3>
+<p>This script (<code>unfollowWDFBLog.js</code>) is the <strong>production-grade version</strong> with comprehensive logging (username, display name, bio, followers, timestamp), CSV + JSON export, whitelist protection, pause/resume controls, resumable state, and rate limit handling. The simpler version just unfollows without detailed logs.</p>
+<h3>Will this unfollow accounts I&#39;m mutuals with?</h3>
+<p>No. The script checks for the &quot;Follows you&quot; indicator on each user cell. If someone follows you back, they&#39;re skipped automatically.</p>
+<h3>Can I undo an unfollow?</h3>
+<p>Not through the script, but you can use the exported CSV/JSON to see exactly who was unfollowed and manually re-follow them. This is why the detailed logging exists.</p>
+<h3>How long does it take to process 2,000 accounts?</h3>
+<p>With default delays (1.5–4s per unfollow), processing 2,000 accounts takes roughly 30–90 minutes depending on how many are non-followers. Scanning is fast — the delay is between actual unfollow clicks.</p>
+<h3>What happens if X rate-limits me?</h3>
+<p>The script detects rate limit toasts and automatically pauses for 60 seconds. It will resume automatically after the cooldown.</p>
+<h3>Can I resume if my browser crashes?</h3>
+<p>Yes. The script saves progress to <code>localStorage</code>. When you re-paste and run the script, it skips previously processed users automatically.</p>
+<hr>
+<p align="center">
+  <b>Built with ❤️ by <a href="https://x.com/nichxbt">@nichxbt</a></b><br>
+  <a href="https://xactions.app">xactions.app</a> · <a href="https://github.com/nichxbt/xactions">GitHub</a>
+</p>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try Smart Unfollow Non-Followers on X (Twitter) — With Full Logging?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/step-by-step/auto-commenter-tutorial">📝 Auto Commenter Tutorial</a>
+        <a href="/docs/step-by-step/auto-liker-tutorial">📝 Auto Liker Tutorial</a>
+        <a href="/docs/step-by-step/bookmark-exporter-tutorial">📝 Bookmark Exporter Tutorial</a>
+        <a href="/docs/step-by-step/detect-unfollowers-tutorial">📝 Detect Unfollowers Tutorial</a>
+        <a href="/docs/step-by-step/follow-target-followers-tutorial">📝 Follow Target Followers Tutorial</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a> / <a href="/docs#step-by-step">Tutorials</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

@@ -4,21 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Twitter Scraping | XActions</title>
-  <meta name="description" content="All scrapers require an `auth_token` cookie from x.com (DevTools → Application → Cookies → copy `auth_token` value).">
+  <meta name="description" content="All scrapers require an `auth_token` cookie from x.com (DevTools -&gt; Application -&gt; Cookies -&gt; copy `auth_token` value).">
   <meta name="keywords" content="xactions, twitter automation, x automation, free, open source, twitter, scraping, agent skills">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Twitter Scraping — XActions">
-  <meta property="og:description" content="All scrapers require an `auth_token` cookie from x.com (DevTools → Application → Cookies → copy `auth_token` value).">
+  <meta property="og:description" content="All scrapers require an `auth_token` cookie from x.com (DevTools -&gt; Application -&gt; Cookies -&gt; copy `auth_token` value).">
   <meta property="og:url" content="https://xactions.app/docs/skills/twitter-scraping">
   <meta property="og:site_name" content="XActions">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Twitter Scraping — XActions">
-  <meta name="twitter:description" content="All scrapers require an `auth_token` cookie from x.com (DevTools → Application → Cookies → copy `auth_token` value).">
+  <meta name="twitter:description" content="All scrapers require an `auth_token` cookie from x.com (DevTools -&gt; Application -&gt; Cookies -&gt; copy `auth_token` value).">
 
   <link rel="canonical" href="https://xactions.app/docs/skills/twitter-scraping">
   <link rel="manifest" href="/manifest.json">
@@ -29,7 +29,7 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Twitter Scraping | XActions",
-    "description": "All scrapers require an `auth_token` cookie from x.com (DevTools → Application → Cookies → copy `auth_token` value).",
+    "description": "All scrapers require an `auth_token` cookie from x.com (DevTools -> Application -> Cookies -> copy `auth_token` value).",
     "url": "https://xactions.app/docs/skills/twitter-scraping",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -171,10 +171,10 @@
       <article class="article">
         <span class="cat-badge">Agent Skills</span>
         <h1>Twitter Scraping</h1>
-<h2>Auth setup</h2>
-<p>All scrapers require an <code>auth_token</code> cookie from x.com (DevTools → Application → Cookies → copy <code>auth_token</code> value).</p>
+<h2>Auth Setup</h2>
+<p>All scrapers require an <code>auth_token</code> cookie from x.com (DevTools -&gt; Application -&gt; Cookies -&gt; copy <code>auth_token</code> value).</p>
 <h2>Node.js Scraper API</h2>
-<p><code>npm install xactions</code> — all functions from <code>src/scrapers/index.js</code>.</p>
+<p><code>npm install xactions</code> -- all functions from <code>src/scrapers/index.js</code>.</p>
 <pre><code class="language-javascript">import { createBrowser, createPage, loginWithCookie, scrapeProfile } from &#39;xactions&#39;;
 
 const browser = await createBrowser();
@@ -228,44 +228,162 @@ await browser.close();
 <td>File export</td>
 </tr>
 </tbody></table>
-<h2>Browser console scripts</h2>
-<p>Standalone IIFEs — paste into DevTools console on x.com. No dependencies.</p>
+<h2>Browser Console Scripts</h2>
+<p>Standalone IIFEs -- paste into DevTools console on x.com. No dependencies.</p>
 <table>
 <thead>
 <tr>
 <th>Script</th>
+<th>File</th>
 <th>Navigate to</th>
-<th>Purpose</th>
 </tr>
 </thead>
 <tbody><tr>
+<td>Download video</td>
 <td><code>src/scrapers/videoDownloader.js</code></td>
 <td>Tweet with video</td>
-<td>Extract MP4 URLs, auto-download best quality</td>
 </tr>
 <tr>
+<td>Export bookmarks</td>
 <td><code>src/scrapers/bookmarkExporter.js</code></td>
 <td><code>x.com/i/bookmarks</code></td>
-<td>Export bookmarks to JSON/CSV</td>
 </tr>
 <tr>
+<td>Unroll thread</td>
 <td><code>src/scrapers/threadUnroller.js</code></td>
 <td>Any thread</td>
-<td>Save thread as text/markdown/JSON</td>
 </tr>
 <tr>
+<td>Find viral tweets</td>
 <td><code>src/scrapers/viralTweets.js</code></td>
 <td>User profile</td>
-<td>Find top tweets by engagement</td>
+</tr>
+<tr>
+<td>Scrape followers</td>
+<td><code>scripts/scrapeFollowers.js</code></td>
+<td><code>x.com/USER/followers</code></td>
+</tr>
+<tr>
+<td>Scrape following</td>
+<td><code>scripts/scrapeFollowing.js</code></td>
+<td><code>x.com/USER/following</code></td>
+</tr>
+<tr>
+<td>Scrape profile</td>
+<td><code>scripts/scrapeProfile.js</code></td>
+<td>User profile</td>
+</tr>
+<tr>
+<td>Scrape search</td>
+<td><code>scripts/scrapeSearch.js</code></td>
+<td>Search results</td>
+</tr>
+<tr>
+<td>Scrape hashtag</td>
+<td><code>scripts/scrapeHashtag.js</code></td>
+<td><code>x.com/hashtag/TAG</code></td>
+</tr>
+<tr>
+<td>Scrape likes</td>
+<td><code>scripts/scrapeLikes.js</code></td>
+<td><code>x.com/USER/likes</code></td>
+</tr>
+<tr>
+<td>Scrape likers</td>
+<td><code>scripts/scrapeLikers.js</code></td>
+<td>Any tweet</td>
+</tr>
+<tr>
+<td>Scrape replies</td>
+<td><code>scripts/scrapeReplies.js</code></td>
+<td>Any tweet</td>
+</tr>
+<tr>
+<td>Scrape media</td>
+<td><code>scripts/scrapeMedia.js</code></td>
+<td>User media tab</td>
+</tr>
+<tr>
+<td>Scrape DMs</td>
+<td><code>scripts/scrapeDMs.js</code></td>
+<td><code>x.com/messages</code></td>
+</tr>
+<tr>
+<td>Scrape notifications</td>
+<td><code>scripts/scrapeNotifications.js</code></td>
+<td><code>x.com/notifications</code></td>
+</tr>
+<tr>
+<td>Scrape list</td>
+<td><code>scripts/scrapeList.js</code></td>
+<td>Any X List</td>
+</tr>
+<tr>
+<td>Scrape bookmarks</td>
+<td><code>scripts/scrapeBookmarks.js</code></td>
+<td><code>x.com/i/bookmarks</code></td>
+</tr>
+<tr>
+<td>Export to CSV</td>
+<td><code>scripts/exportToCSV.js</code></td>
+<td>After any scrape</td>
+</tr>
+<tr>
+<td>Link scraper</td>
+<td><code>scripts/linkScraper.js</code></td>
+<td>Any timeline</td>
+</tr>
+<tr>
+<td>Quote retweets</td>
+<td><code>scripts/scrapeQuoteRetweets.js</code></td>
+<td>Any tweet</td>
 </tr>
 </tbody></table>
-<h2>Scraper details</h2>
-<p><strong>Full return shapes, configs, and per-scraper usage</strong>: See <a href="references/scraper-details.md">references/scraper-details.md</a></p>
+<h2>MCP Scraping Tools</h2>
+<p>All scrapers available via the MCP server for AI agents:</p>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>x_get_profile</code></td>
+<td>Scrape user profile</td>
+</tr>
+<tr>
+<td><code>x_get_followers</code></td>
+<td>Get follower list</td>
+</tr>
+<tr>
+<td><code>x_get_following</code></td>
+<td>Get following list</td>
+</tr>
+<tr>
+<td><code>x_get_tweets</code></td>
+<td>Get user tweets</td>
+</tr>
+<tr>
+<td><code>x_search_tweets</code></td>
+<td>Search tweets</td>
+</tr>
+<tr>
+<td><code>x_get_thread</code></td>
+<td>Unroll thread</td>
+</tr>
+<tr>
+<td><code>x_download_video</code></td>
+<td>Extract video URL</td>
+</tr>
+</tbody></table>
 <h2>Notes</h2>
 <ul>
 <li>Always call <code>browser.close()</code> when done with Node.js scrapers</li>
-<li>Browser scripts stop on page navigation — stay on the page while running</li>
+<li>Browser scripts stop on page navigation -- stay on the page while running</li>
 <li>All scripts support JSON and CSV export</li>
+<li>Increase <code>limit</code> parameter for deeper scraping (default varies by function)</li>
+<li>Rate limiting is built in -- avoid reducing delays below defaults</li>
 </ul>
 
 
@@ -282,7 +400,7 @@ await browser.close();
         <h3>📖 In This Section</h3>
                 <a href="/docs/skills/algorithm-cultivation">🎯 Algorithm Cultivation &amp; Thought Leadership</a>
         <a href="/docs/skills/analytics-insights">🎯 Analytics &amp; Insights</a>
-        <a href="/docs/skills/articles-longform">🎯 Articles &amp; Long-Form Content</a>
+        <a href="/docs/skills/articles-longform">🎯 Articles &amp; Longform</a>
         <a href="/docs/skills/blocking-muting-management">🎯 Blocking &amp; Muting Management</a>
         <a href="/docs/skills/bookmarks-management">🎯 Bookmarks Management</a>
         <a href="/docs/skills/business-ads">🎯 Business &amp; Ads Tools</a>

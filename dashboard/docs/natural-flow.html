@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Natural Flow — Human-Like Browsing Session — Free X/Twitter Growth Tool | XActions</title>
-  <meta name="description" content="Simulates a real person using X/Twitter: scroll timeline, like keyword posts, reply occasionally, follow interesting accounts, check your own profile, read n...">
+  <meta name="description" content="Simulates a real person using X/Twitter: scroll timeline, like keyword posts, reply occasionally, retweet, bookmark, follow interesting accounts, check your ...">
   <meta name="keywords" content="xactions, twitter automation, x automation, free, natural, flow, human-like, browsing, session, growth, natural flow twitter, twitter natural flow">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
@@ -12,7 +12,7 @@
   <!-- Open Graph -->
   <meta property="og:type" content="article">
   <meta property="og:title" content="Natural Flow — Human-Like Browsing Session — XActions">
-  <meta property="og:description" content="Simulates a real person using X/Twitter: scroll timeline, like keyword posts, reply occasionally, follow interesting accounts, check your own profile, read n...">
+  <meta property="og:description" content="Simulates a real person using X/Twitter: scroll timeline, like keyword posts, reply occasionally, retweet, bookmark, follow interesting accounts, check your ...">
   <meta property="og:url" content="https://xactions.app/docs/natural-flow">
   <meta property="og:site_name" content="XActions">
 
@@ -20,7 +20,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Natural Flow — Human-Like Browsing Session — Free X/Twitter Tool">
-  <meta name="twitter:description" content="Simulates a real person using X/Twitter: scroll timeline, like keyword posts, reply occasionally, follow interesting accounts, check your own profile, read n...">
+  <meta name="twitter:description" content="Simulates a real person using X/Twitter: scroll timeline, like keyword posts, reply occasionally, retweet, bookmark, follow interesting accounts, check your ...">
 
   <link rel="canonical" href="https://xactions.app/docs/natural-flow">
   <link rel="manifest" href="/manifest.json">
@@ -32,7 +32,7 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Natural Flow — Human-Like Browsing Session — Free X/Twitter Growth Tool | XActions",
-    "description": "Simulates a real person using X/Twitter: scroll timeline, like keyword posts, reply occasionally, follow interesting accounts, check your own profile, read n...",
+    "description": "Simulates a real person using X/Twitter: scroll timeline, like keyword posts, reply occasionally, retweet, bookmark, follow interesting accounts, check your ...",
     "url": "https://xactions.app/docs/natural-flow",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -61,7 +61,7 @@
     "@context": "https://schema.org",
     "@type": "HowTo",
     "name": "How to use Natural Flow — Human-Like Browsing Session",
-    "description": "Simulates a real person using X/Twitter: scroll timeline, like keyword posts, reply occasionally, follow interesting accounts, check your own profile, read n...",
+    "description": "Simulates a real person using X/Twitter: scroll timeline, like keyword posts, reply occasionally, retweet, bookmark, follow interesting accounts, check your ...",
     "step": [
       { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
       { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
@@ -201,7 +201,7 @@
       <article class="article">
         <span class="cat-badge">Growth</span>
         <h1>🌊 Natural Flow — Human-Like Browsing Session</h1>
-<p>Simulates a real person using X/Twitter: scroll timeline, like keyword posts, reply occasionally, follow interesting accounts, check your own profile, read notifications, and return home.</p>
+<p>Simulates a real person using X/Twitter: scroll timeline, like keyword posts, reply occasionally, retweet, bookmark, follow interesting accounts, check your own profile, read notifications, and return home.</p>
 <hr>
 <h2>📋 What It Does</h2>
 <p>Unlike single-purpose scripts (auto-liker, keyword-follow), Natural Flow chains multiple behaviors into one session that looks like genuine browsing:</p>
@@ -215,8 +215,8 @@
 </thead>
 <tbody><tr>
 <td>1. Home timeline</td>
-<td>Scroll, like keyword-matched posts, reply to a few, queue follows</td>
-<td>✅ Like, Reply, Follow</td>
+<td>Scroll, like keyword-matched posts, reply, retweet, bookmark, queue follows</td>
+<td>✅ Like, Reply, RT, Bookmark, Follow</td>
 </tr>
 <tr>
 <td>2. Own profile</td>
@@ -239,6 +239,7 @@
 <li>Bots like the same things at constant rates — humans browse, pause, switch pages</li>
 <li>Mixing read-only phases with engagement phases mimics real usage patterns</li>
 <li>Randomized timing, probabilities, and scroll distances add variance every run</li>
+<li>Cooldown escalation makes delays gradually increase as the session progresses — just like a real person slowing down</li>
 </ul>
 <hr>
 <h2>⚠️ IMPORTANT WARNINGS</h2>
@@ -266,47 +267,114 @@
 <p>Copy the contents of <code>scripts/naturalFlow.js</code>, paste into console, press Enter.</p>
 <h3>4. First run: Interactive setup</h3>
 <p>The script shows an <strong>interactive setup prompt</strong> on first run. Pick a preset or customize:</p>
-<pre><code>╔════════════════════════════════════════════════════╗
-║  🌊 NATURAL FLOW — Session Setup                  ║
-╚════════════════════════════════════════════════════╝
+<pre><code>🌊 NATURAL FLOW — Choose a mode:
 
-Choose a preset:
-  [1] 👀 Lurker     — mostly scroll, like a few, no replies
-  [2] 🤝 Friendly   — like + occasional reply, 1-2 follows
-  [3] 🚀 Growth     — max engagement, replies + follows
-  [4] ⚙️ Custom     — set everything manually
+  1  👀 Lurker    — mostly scroll, like a few, no replies
+  2  🤝 Friendly  — like + occasional reply, 1-2 follows
+  3  🚀 Growth    — max engagement, replies + follows + retweets
+  4  ⚙️  Custom    — set everything manually
+  5  🏃 Dry Run   — preview the full session (safe)
 
-Enter keywords (comma-separated):
-&gt; crypto, bitcoin, web3
+Enter 1-5:
 </code></pre>
+<p>Then it asks for <strong>keywords</strong> and optionally <strong>reply templates</strong>. No editing config objects — everything happens through prompt dialogs.</p>
 <h3>5. Watch it run</h3>
-<p>The console shows a <strong>live progress bar</strong> and real-time activity:</p>
-<pre><code>📱 PHASE 1 — Home Timeline
-   ████████░░░░░░░░ 8/15 liked · 2 replied · 12 skipped
-   ❤️ @crypto_alice: &quot;Bitcoin just broke resistance at...&quot;
-   💬 @defi_bob: &quot;Really interesting take on this&quot;
-   ⏭️ Skipped (no keyword match)
-   ❤️ @web3_carol: &quot;The future of DeFi governance...&quot;
+<p>A <strong>floating HUD</strong> appears in the bottom-right corner of the page showing live stats:</p>
+<pre><code>┌──────────────────────────────┐
+│  🌊 Natural Flow   Phase 1/4│
+│  ████████░░░░░░░░ (53%)     │
+│                              │
+│  ❤️ Liked       8            │
+│  💬 Replied     2            │
+│  🔄 Retweeted   1            │
+│  🔖 Bookmarked  2            │
+│  ➕ Followed    1            │
+│  ⏭️ Skipped     12           │
+│                              │
+│  ❤️ @crypto_alice: Bitcoin...│
+│                              │
+│  [⏸ Pause]    [⏹ Stop]      │
+└──────────────────────────────┘
+</code></pre>
+<p>Plus console output with phase progress:</p>
+<pre><code>📱 PHASE 1 — Scrolling home timeline...
+   Keywords: crypto, bitcoin, web3
+   📜 Scroll 1/15 — 3 liked (20%), 5 skipped
+   📜 Scroll 2/15 — 6 liked (40%), 9 skipped
+   ✅ Timeline: 15 liked, 3 replied, 1 RT, 2 saved
 </code></pre>
 <h3>6. Session summary + export</h3>
-<pre><code>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+<pre><code>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   🌊 NATURAL FLOW — SESSION COMPLETE
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  ❤️  Liked:      12
-  💬  Replied:    2
-  ➕  Followed:   3
-  📜  Scrolls:    15
-  ⏱️  Duration:   4.2 min
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ❤️  Liked:       12
+  💬  Replied:     2
+  🔄  Retweeted:   1
+  🔖  Bookmarked:  3
+  ➕  Followed:    3
+  📜  Scrolls:     15
+  ⏭️  Skipped:     18
+  ⏱️  Duration:    4.2 min
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Engaged with 8 unique accounts
 📥 Session log exported.
 </code></pre>
 <p>A JSON log file auto-downloads with every action timestamped.</p>
 <hr>
 <h2>⚙️ Configuration Reference</h2>
+<p>All settings are configured through the <strong>interactive setup prompt</strong> — no editing config objects. Here&#39;s what each preset gives you:</p>
+<h3>Presets</h3>
+<table>
+<thead>
+<tr>
+<th>Preset</th>
+<th>Likes</th>
+<th>Replies</th>
+<th>Follows</th>
+<th>Retweets</th>
+<th>Bookmarks</th>
+<th>Like %</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>👀 Lurker</td>
+<td>8</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>2</td>
+<td>40%</td>
+</tr>
+<tr>
+<td>🤝 Friendly</td>
+<td>15</td>
+<td>3</td>
+<td>2</td>
+<td>1</td>
+<td>3</td>
+<td>60%</td>
+</tr>
+<tr>
+<td>🚀 Growth</td>
+<td>25</td>
+<td>5</td>
+<td>4</td>
+<td>3</td>
+<td>5</td>
+<td>75%</td>
+</tr>
+<tr>
+<td>⚙️ Custom</td>
+<td>you choose</td>
+<td>you choose</td>
+<td>you choose</td>
+<td>you choose</td>
+<td>3</td>
+<td>60%</td>
+</tr>
+</tbody></table>
 <h3>Keywords</h3>
-<pre><code class="language-javascript">keywords: [&#39;crypto&#39;, &#39;bitcoin&#39;, &#39;web3&#39;]
-</code></pre>
-<p>Only engage with posts containing at least one keyword. Empty array = engage with everything (not recommended).</p>
+<p>Prompted during setup. Comma-separated list. Empty = engage with everything (not recommended).</p>
 <h3>Timeline</h3>
 <table>
 <thead>
@@ -318,18 +386,23 @@ Enter keywords (comma-separated):
 </thead>
 <tbody><tr>
 <td><code>scrolls</code></td>
-<td>12</td>
+<td>15</td>
 <td>Number of scroll cycles</td>
 </tr>
 <tr>
 <td><code>maxLikes</code></td>
-<td>15</td>
+<td>per preset</td>
 <td>Hard cap on likes per session</td>
 </tr>
 <tr>
 <td><code>likeChance</code></td>
-<td>0.6</td>
+<td>per preset</td>
 <td>Probability of liking a keyword match (0-1)</td>
+</tr>
+<tr>
+<td><code>minEngagement</code></td>
+<td>2</td>
+<td>Skip posts with fewer than N total engagements</td>
 </tr>
 </tbody></table>
 <h3>Replies</h3>
@@ -343,23 +416,75 @@ Enter keywords (comma-separated):
 </thead>
 <tbody><tr>
 <td><code>enabled</code></td>
-<td>true</td>
+<td>per preset</td>
 <td>Toggle replies on/off</td>
 </tr>
 <tr>
 <td><code>max</code></td>
-<td>3</td>
+<td>per preset</td>
 <td>Hard cap on replies per session</td>
 </tr>
 <tr>
 <td><code>chance</code></td>
-<td>0.15</td>
+<td>0.2</td>
 <td>Probability of replying to a liked post</td>
 </tr>
 <tr>
 <td><code>templates</code></td>
-<td>6 built-in</td>
-<td>Array of reply strings — <strong>customize these!</strong></td>
+<td>8 built-in</td>
+<td>Array of reply strings — <strong>prompted during setup</strong></td>
+</tr>
+</tbody></table>
+<p>Replies are <strong>context-aware</strong>: the script picks templates that match the tweet&#39;s tone (e.g., &quot;Great breakdown&quot; for threads, &quot;The data speaks for itself&quot; for stats-heavy posts).</p>
+<h3>Retweets</h3>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>enabled</code></td>
+<td>per preset</td>
+<td>Toggle retweets on/off</td>
+</tr>
+<tr>
+<td><code>max</code></td>
+<td>per preset</td>
+<td>Hard cap on retweets per session</td>
+</tr>
+<tr>
+<td><code>chance</code></td>
+<td>0.1</td>
+<td>Probability of retweeting a liked post</td>
+</tr>
+</tbody></table>
+<p>Retweets only trigger on posts with <strong>10+ engagements</strong> — prevents retweeting low-quality content.</p>
+<h3>Bookmarks</h3>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>enabled</code></td>
+<td>per preset</td>
+<td>Toggle bookmarks on/off</td>
+</tr>
+<tr>
+<td><code>max</code></td>
+<td>per preset</td>
+<td>Hard cap on bookmarks per session</td>
+</tr>
+<tr>
+<td><code>chance</code></td>
+<td>0.15</td>
+<td>Probability of bookmarking a liked post</td>
 </tr>
 </tbody></table>
 <h3>Follows</h3>
@@ -373,17 +498,17 @@ Enter keywords (comma-separated):
 </thead>
 <tbody><tr>
 <td><code>enabled</code></td>
-<td>true</td>
+<td>per preset</td>
 <td>Toggle follows on/off</td>
 </tr>
 <tr>
 <td><code>max</code></td>
-<td>4</td>
+<td>per preset</td>
 <td>Hard cap on follows per session</td>
 </tr>
 <tr>
 <td><code>chance</code></td>
-<td>0.2</td>
+<td>0.25</td>
 <td>Probability of following a liked post&#39;s author</td>
 </tr>
 </tbody></table>
@@ -422,26 +547,7 @@ Enter keywords (comma-separated):
 <td>Simulate typing a reply</td>
 </tr>
 </tbody></table>
-<h3>Safety</h3>
-<table>
-<thead>
-<tr>
-<th>Option</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>dryRun</code></td>
-<td><strong>true</strong></td>
-<td>Preview mode — nothing gets clicked</td>
-</tr>
-<tr>
-<td><code>skipKeywords</code></td>
-<td>promoted, ad, giveaway, sponsor</td>
-<td>Auto-skip these</td>
-</tr>
-</tbody></table>
+<p>All delays are subject to <strong>cooldown escalation</strong> — they increase by ~3% per action taken. By the end of a session, delays are noticeably longer than at the start, mimicking a real person slowing down.</p>
 <hr>
 <h2>🔄 Multi-Page Resume (Live Mode)</h2>
 <p>In live mode (<code>dryRun: false</code>), navigating to your profile/notifications kills the script context. The script uses <code>sessionStorage</code> to track progress:</p>
@@ -457,12 +563,18 @@ Enter keywords (comma-separated):
 <hr>
 <h2>🛡️ Safety Features</h2>
 <ul>
+<li><strong>Floating HUD</strong> — on-page overlay with ⏸ Pause and ⏹ Stop buttons (no console needed)</li>
 <li><strong>Rate limit detection</strong> — auto-pauses 120s if X shows rate limit warnings</li>
 <li><strong>Duplicate prevention</strong> — never engages with the same tweet twice (per session)</li>
-<li><strong>Skip filters</strong> — auto-skips promoted content, ads, giveaways</li>
+<li><strong>Skip filters</strong> — auto-skips promoted content, ads, giveaways, sponsors</li>
+<li><strong>Engagement scoring</strong> — skips very low-engagement posts (configurable threshold)</li>
+<li><strong>Cooldown escalation</strong> — delays increase ~3% per action so the session naturally slows</li>
+<li><strong>Session history</strong> — warns you if you ran less than 2 hours ago (uses localStorage)</li>
 <li><strong>Probability-based</strong> — not every match gets liked; randomness is built in</li>
-<li><strong>Abort anytime</strong> — <code>XActions.stop()</code> in console</li>
-<li><strong>Session log export</strong> — JSON file auto-downloads for review</li>
+<li><strong>Abort anytime</strong> — <code>XActions.stop()</code> in console, or click 🛑 on the HUD</li>
+<li><strong>Pause/resume</strong> — <code>XActions.pause()</code> in console, or click ⏸ on the HUD</li>
+<li><strong>Session log export</strong> — JSON file auto-downloads with every action timestamped</li>
+<li><strong>Dry run mode</strong> — preset 5 previews the entire session without clicking anything</li>
 </ul>
 <hr>
 <h2>📁 Related Scripts</h2>
@@ -493,11 +605,16 @@ Enter keywords (comma-separated):
 <hr>
 <h2>💡 Tips</h2>
 <ol>
+<li><strong>Start with Dry Run</strong> — always use preset 5 first to see what would happen.</li>
 <li><strong>Customize reply templates</strong> — generic replies get flagged. Write 10+ that sound like you.</li>
 <li><strong>Rotate keywords</strong> — don&#39;t use the same keywords every session.</li>
-<li><strong>Vary session length</strong> — sometimes do 5 likes, sometimes 20.</li>
+<li><strong>Vary session length</strong> — sometimes do 5 likes, sometimes 20. Use different presets.</li>
 <li><strong>Manual first</strong> — browse manually for 5 min before running the script.</li>
 <li><strong>Review the log</strong> — check the exported JSON to see what was engaged with.</li>
+<li><strong>Use the HUD</strong> — pause the session if someone messages you, resume after.</li>
+<li><strong>Session history</strong> — the script remembers past sessions in localStorage. If it warns you about running too soon, listen to it.</li>
+<li><strong>Clear state</strong> — <code>sessionStorage.removeItem(&#39;xactions_natural_flow&#39;)</code> to reset a stuck session.</li>
+<li><strong>Clear history</strong> — <code>localStorage.removeItem(&#39;xactions_nf_history&#39;)</code> to reset session history.</li>
 </ol>
 
 
@@ -551,7 +668,7 @@ Enter keywords (comma-separated):
       <div class="footer-section">
         <h4>AI & Developers</h4>
         <a href="/ai">AI Integration</a>
-        <a href="/ai-api">AI API</a>
+        <a href="/ai-api">AI API (x402)</a>
         <a href="/mcp">MCP Server</a>
         <a href="/docs">Documentation</a>
         <a href="/tutorials">Tutorials</a>

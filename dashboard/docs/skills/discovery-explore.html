@@ -4,21 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Discovery &amp; Explore | XActions</title>
-  <meta name="description" content="Browser automation for X/Twitter search, trending topics, and content discovery.">
+  <meta name="description" content="Browser console scripts and MCP tools for exploring trends, searching content, and discovering accounts on X/Twitter.">
   <meta name="keywords" content="xactions, twitter automation, x automation, free, open source, discovery, explore, agent skills">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Discovery &amp; Explore — XActions">
-  <meta property="og:description" content="Browser automation for X/Twitter search, trending topics, and content discovery.">
+  <meta property="og:description" content="Browser console scripts and MCP tools for exploring trends, searching content, and discovering accounts on X/Twitter.">
   <meta property="og:url" content="https://xactions.app/docs/skills/discovery-explore">
   <meta property="og:site_name" content="XActions">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Discovery &amp; Explore — XActions">
-  <meta name="twitter:description" content="Browser automation for X/Twitter search, trending topics, and content discovery.">
+  <meta name="twitter:description" content="Browser console scripts and MCP tools for exploring trends, searching content, and discovering accounts on X/Twitter.">
 
   <link rel="canonical" href="https://xactions.app/docs/skills/discovery-explore">
   <link rel="manifest" href="/manifest.json">
@@ -29,7 +29,7 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Discovery & Explore | XActions",
-    "description": "Browser automation for X/Twitter search, trending topics, and content discovery.",
+    "description": "Browser console scripts and MCP tools for exploring trends, searching content, and discovering accounts on X/Twitter.",
     "url": "https://xactions.app/docs/skills/discovery-explore",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -171,7 +171,7 @@
       <article class="article">
         <span class="cat-badge">Agent Skills</span>
         <h1>Discovery &amp; Explore</h1>
-<p>Browser automation for X/Twitter search, trending topics, and content discovery.</p>
+<p>Browser console scripts and MCP tools for exploring trends, searching content, and discovering accounts on X/Twitter.</p>
 <h2>Script Selection</h2>
 <table>
 <thead>
@@ -182,189 +182,116 @@
 </tr>
 </thead>
 <tbody><tr>
-<td>Search tweets</td>
-<td><code>src/discoveryExplore.js</code></td>
-<td><code>x.com/search?q=QUERY</code></td>
-</tr>
-<tr>
-<td>Get trending topics</td>
-<td><code>src/discoveryExplore.js</code></td>
+<td>Monitor trending topics</td>
+<td><code>src/trendingTopicMonitor.js</code></td>
 <td><code>x.com/explore/tabs/trending</code></td>
 </tr>
 <tr>
-<td>Browse explore feed</td>
-<td><code>src/discoveryExplore.js</code></td>
+<td>Search tweets</td>
+<td><code>scripts/scrapeSearch.js</code></td>
+<td>Search results page</td>
+</tr>
+<tr>
+<td>Scrape hashtag</td>
+<td><code>scripts/scrapeHashtag.js</code></td>
+<td><code>x.com/hashtag/TAG</code></td>
+</tr>
+<tr>
+<td>Find viral tweets</td>
+<td><code>src/viralTweetDetector.js</code></td>
+<td>Any profile</td>
+</tr>
+<tr>
+<td>Keyword monitoring</td>
+<td><code>src/keywordMonitor.js</code></td>
+<td>Any page</td>
+</tr>
+<tr>
+<td>Scrape explore page</td>
+<td><code>src/exploreScraper.js</code></td>
 <td><code>x.com/explore</code></td>
 </tr>
-<tr>
-<td>Follow a topic</td>
-<td><code>src/discoveryExplore.js</code></td>
-<td>Topic search page</td>
-</tr>
-<tr>
-<td>Advanced filtered search</td>
-<td><code>src/discoveryExplore.js</code></td>
-<td><code>x.com/search</code></td>
-</tr>
 </tbody></table>
-<h2>Discovery Explore</h2>
-<p><strong>File:</strong> <code>src/discoveryExplore.js</code></p>
-<p>Puppeteer-based module for search, trends, explore feed, and topic management.</p>
-<h3>Functions</h3>
+<h2>MCP Tools</h2>
 <table>
 <thead>
 <tr>
-<th>Function</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>searchTweets(page, query, { limit, tab, since, until })</code></td>
-<td>Search with optional date range and tab (latest/people/media)</td>
-</tr>
-<tr>
-<td><code>getTrends(page, { location })</code></td>
-<td>Scrape all visible trending topics with rank, name, category, tweet count</td>
-</tr>
-<tr>
-<td><code>getExploreFeed(page, { limit, tab })</code></td>
-<td>Get tweets from explore tabs (foryou/trending/news/sports/entertainment)</td>
-</tr>
-<tr>
-<td><code>followTopic(page, topicName)</code></td>
-<td>Follow a topic via search</td>
-</tr>
-<tr>
-<td><code>advancedSearch(page, filters)</code></td>
-<td>Multi-filter search with all X operators</td>
-</tr>
-</tbody></table>
-<h3>Search Tweets</h3>
-<p>Navigates to X search with the given query and scrolls to collect results. Supports <code>tab</code> parameter: <code>&#39;latest&#39;</code> (default), <code>&#39;people&#39;</code>, <code>&#39;media&#39;</code>. Returns tweet text, author, time, link, likes, and reposts.</p>
-<h3>Get Trends</h3>
-<p>Visits <code>x.com/explore/tabs/trending</code> and extracts all trend items with rank, name, category label, and tweet count.</p>
-<h3>Advanced Search</h3>
-<p>Builds a query from structured filters:</p>
-<pre><code class="language-javascript">await advancedSearch(page, {
-  allWords: &#39;javascript&#39;,
-  from: &#39;nichxbt&#39;,
-  since: &#39;2025-01-01&#39;,
-  minLikes: 100,
-  hasMedia: true,
-  lang: &#39;en&#39;,
-  limit: 50,
-});
-</code></pre>
-<p><strong>Available filters:</strong> <code>allWords</code>, <code>exactPhrase</code>, <code>anyWords</code>, <code>noneOfWords</code>, <code>hashtags</code>, <code>from</code>, <code>to</code>, <code>mentioning</code>, <code>since</code>, <code>until</code>, <code>minLikes</code>, <code>minRetweets</code>, <code>hasMedia</code>, <code>hasLinks</code>, <code>lang</code>.</p>
-<h2>X Search Operators</h2>
-<table>
-<thead>
-<tr>
-<th>Operator</th>
-<th>Example</th>
+<th>Tool</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody><tr>
-<td><code>from:</code></td>
-<td><code>from:elonmusk</code></td>
-<td>Tweets from specific user</td>
+<td><code>x_get_trends</code></td>
+<td>Current trending topics</td>
 </tr>
 <tr>
-<td><code>to:</code></td>
-<td><code>to:elonmusk</code></td>
-<td>Replies to specific user</td>
+<td><code>x_get_explore</code></td>
+<td>Explore page content</td>
 </tr>
 <tr>
-<td><code>since:</code> / <code>until:</code></td>
-<td><code>since:2024-01-01</code></td>
-<td>Date range</td>
-</tr>
-<tr>
-<td><code>min_faves:</code></td>
-<td><code>min_faves:100</code></td>
-<td>Minimum likes</td>
-</tr>
-<tr>
-<td><code>min_retweets:</code></td>
-<td><code>min_retweets:50</code></td>
-<td>Minimum retweets</td>
-</tr>
-<tr>
-<td><code>filter:media</code></td>
-<td><code>-filter:retweets</code></td>
-<td>Include/exclude filters</td>
-</tr>
-<tr>
-<td><code>lang:</code></td>
-<td><code>lang:en</code></td>
-<td>Language filter</td>
+<td><code>x_search_tweets</code></td>
+<td>Full-text tweet search</td>
 </tr>
 </tbody></table>
-<h2>DOM Selectors</h2>
-<table>
-<thead>
-<tr>
-<th>Element</th>
-<th>Selector</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Search input</td>
-<td><code>[data-testid=&quot;SearchBox_Search_Input&quot;]</code></td>
-</tr>
-<tr>
-<td>Trend item</td>
-<td><code>[data-testid=&quot;trend&quot;]</code></td>
-</tr>
-<tr>
-<td>Topic follow</td>
-<td><code>[data-testid=&quot;TopicFollow&quot;]</code></td>
-</tr>
-<tr>
-<td>Tab buttons</td>
-<td><code>[role=&quot;tab&quot;]</code></td>
-</tr>
-<tr>
-<td>Tweet</td>
-<td><code>article[data-testid=&quot;tweet&quot;]</code></td>
-</tr>
-<tr>
-<td>Tweet text</td>
-<td><code>[data-testid=&quot;tweetText&quot;]</code></td>
-</tr>
-</tbody></table>
-<h2>Rate Limiting</h2>
+<h2>Trending Topic Monitor</h2>
+<p><strong>File:</strong> <code>src/trendingTopicMonitor.js</code></p>
+<p>Real-time trending topic scraper with niche classification.</p>
+<h3>Controls</h3>
 <ul>
-<li>1.5s delay between scroll cycles</li>
-<li>3s initial wait after page navigation</li>
-<li>Scrolls cap at <code>limit * 2</code> attempts to avoid infinite loops</li>
+<li><code>XActions.scan()</code> -- Scrape current trends</li>
+<li><code>XActions.track()</code> -- Log trend snapshot with timestamp</li>
+<li><code>XActions.history()</code> -- Show all tracked snapshots</li>
+<li><code>XActions.forNiche(keyword)</code> -- Filter trends by niche keyword</li>
+<li><code>XActions.export()</code> -- Download trend data as JSON</li>
 </ul>
-<h2>Troubleshooting</h2>
-<table>
-<thead>
-<tr>
-<th>Problem</th>
-<th>Solution</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>No trends visible</td>
-<td>Trends are location-specific — check account region settings</td>
-</tr>
-<tr>
-<td>Search returns no results</td>
-<td>Try broader keywords or remove date/engagement filters</td>
-</tr>
-<tr>
-<td>Topic follow button not found</td>
-<td>Topic may not exist as a followable entity</td>
-</tr>
-<tr>
-<td>Explore feed empty</td>
-<td>Ensure you&#39;re logged in with an active account</td>
-</tr>
-</tbody></table>
+<h3>Features</h3>
+<ul>
+<li>Categorizes trends by niche (tech, politics, entertainment, sports, crypto, etc.)</li>
+<li>Tracks trend velocity (rising/falling)</li>
+<li>Identifies trending hashtags vs organic trends</li>
+<li>Alerts on niche-relevant trends</li>
+</ul>
+<h2>Keyword Monitor</h2>
+<p><strong>File:</strong> <code>src/keywordMonitor.js</code></p>
+<p>Monitors X for mentions of specific keywords with sentiment classification.</p>
+<h3>Controls</h3>
+<ul>
+<li><code>XActions.setKeywords([&#39;keyword1&#39;, &#39;keyword2&#39;])</code> -- Configure keywords</li>
+<li><code>XActions.scan()</code> -- Run one search cycle</li>
+<li><code>XActions.autoScan(intervalMs)</code> -- Continuous monitoring</li>
+<li><code>XActions.stop()</code> -- Stop auto-scanning</li>
+<li><code>XActions.report()</code> -- Show summary with sentiment breakdown</li>
+<li><code>XActions.export()</code> -- Download results as JSON</li>
+</ul>
+<h2>Strategy Guide</h2>
+<h3>Trend-jacking workflow</h3>
+<ol>
+<li>Run <code>src/trendingTopicMonitor.js</code> -&gt; <code>XActions.forNiche(&#39;your_niche&#39;)</code></li>
+<li>Identify relevant trends with momentum</li>
+<li>Craft timely content using <code>src/threadComposer.js</code> or <code>src/contentRepurposer.js</code></li>
+<li>Post within the first 2 hours of trend emergence for maximum visibility</li>
+<li>Track performance with <code>src/tweetPerformance.js</code></li>
+</ol>
+<h3>Content ideation from search</h3>
+<ol>
+<li>Use <code>scripts/scrapeSearch.js</code> or <code>x_search_tweets</code> for niche keywords</li>
+<li>Analyze top results for content gaps</li>
+<li>Use <code>src/viralTweetDetector.js</code> on popular accounts in your niche</li>
+<li>Repurpose successful formats with <code>src/contentRepurposer.js</code></li>
+</ol>
+<h3>Building a discovery routine</h3>
+<ol>
+<li>Daily: <code>src/trendingTopicMonitor.js</code> -&gt; <code>XActions.track()</code> for trend log</li>
+<li>Weekly: Review <code>XActions.history()</code> for recurring themes</li>
+<li>Set <code>src/keywordMonitor.js</code> for brand/topic monitoring</li>
+</ol>
+<h2>Notes</h2>
+<ul>
+<li>Explore page content varies by region and account history</li>
+<li>Trends refresh every ~15 minutes on X</li>
+<li>Keyword monitor uses X search (subject to standard rate limits)</li>
+<li>Trending data is publicly accessible (no auth needed for viewing)</li>
+</ul>
 
 
         <div class="cta-box">
@@ -380,7 +307,7 @@
         <h3>📖 In This Section</h3>
                 <a href="/docs/skills/algorithm-cultivation">🎯 Algorithm Cultivation &amp; Thought Leadership</a>
         <a href="/docs/skills/analytics-insights">🎯 Analytics &amp; Insights</a>
-        <a href="/docs/skills/articles-longform">🎯 Articles &amp; Long-Form Content</a>
+        <a href="/docs/skills/articles-longform">🎯 Articles &amp; Longform</a>
         <a href="/docs/skills/blocking-muting-management">🎯 Blocking &amp; Muting Management</a>
         <a href="/docs/skills/bookmarks-management">🎯 Bookmarks Management</a>
         <a href="/docs/skills/business-ads">🎯 Business &amp; Ads Tools</a>

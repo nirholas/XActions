@@ -173,9 +173,9 @@
         <h1>Algorithm Cultivation &amp; Thought Leadership</h1>
 <p>Train your X/Twitter algorithm for a specific niche. Three approaches:</p>
 <ol>
-<li><strong>Browser script</strong> — paste into DevTools console for manual sessions</li>
-<li><strong>CLI + Persona Engine</strong> — create personas and run from the command line</li>
-<li><strong>24/7 Algorithm Builder</strong> — headless Puppeteer + LLM running continuously</li>
+<li><strong>Browser script</strong> -- paste into DevTools console for manual sessions</li>
+<li><strong>CLI + Persona Engine</strong> -- create personas and run from the command line</li>
+<li><strong>24/7 Algorithm Builder</strong> -- headless Puppeteer + LLM running continuously</li>
 </ol>
 <h2>Quick Reference</h2>
 <table>
@@ -220,12 +220,12 @@
 </tbody></table>
 <h2>Core Concepts</h2>
 <ul>
-<li><strong>Persona</strong> — identity config: niche, activity pattern, engagement strategy, topics</li>
-<li><strong>Session</strong> — one period of activity (search, browse, engage, post)</li>
-<li><strong>Strategy</strong> — engagement limits (aggressive/moderate/conservative/thoughtleader)</li>
-<li><strong>Activity pattern</strong> — human-like schedule (night-owl/early-bird/nine-to-five/always-on/weekend-warrior)</li>
+<li><strong>Persona</strong> -- identity config: niche, activity pattern, engagement strategy, topics</li>
+<li><strong>Session</strong> -- one period of activity (search, browse, engage, post)</li>
+<li><strong>Strategy</strong> -- engagement limits (aggressive/moderate/conservative/thoughtleader)</li>
+<li><strong>Activity pattern</strong> -- human-like schedule (night-owl/early-bird/nine-to-five/always-on/weekend-warrior)</li>
 </ul>
-<h2>Algorithm Builder — <code>src/algorithmBuilder.js</code></h2>
+<h2>Algorithm Builder -- <code>src/algorithmBuilder.js</code></h2>
 <p>24/7 headless automation: Puppeteer + stealth + OpenRouter LLM.</p>
 <pre><code class="language-js">import { startAlgorithmBuilder } from &#39;./algorithmBuilder.js&#39;;
 
@@ -238,6 +238,74 @@ await startAlgorithmBuilder({
 });
 </code></pre>
 <p>Requires <code>OPENROUTER_API_KEY</code> env var for LLM-generated comments and posts.</p>
+<h2>Algorithm Trainer -- <code>src/automation/algorithmTrainer.js</code></h2>
+<p>Browser console script for manual training sessions. Requires <code>src/automation/core.js</code> pasted first.</p>
+<h3>Training Phases (cycles through all 8)</h3>
+<ol>
+<li>Search top tweets for niche keywords</li>
+<li>Search latest tweets for niche keywords</li>
+<li>Follow people from search results</li>
+<li>Engage with home feed (like/reply)</li>
+<li>Visit influencer profiles</li>
+<li>Browse random profiles in niche</li>
+<li>Explore page browsing</li>
+<li>Idle dwell time (human-like pauses)</li>
+</ol>
+<h3>Controls</h3>
+<ul>
+<li><code>stopTrainer()</code> -- Stop training</li>
+<li><code>trainerStatus()</code> -- Current phase, actions taken, rate limits</li>
+<li><code>trainerReset()</code> -- Reset counters</li>
+</ul>
+<h3>Intensity Presets</h3>
+<table>
+<thead>
+<tr>
+<th>Preset</th>
+<th>Actions/hour</th>
+<th>Daily cap</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>chill</td>
+<td>10-15</td>
+<td>100</td>
+</tr>
+<tr>
+<td>normal</td>
+<td>20-30</td>
+<td>300</td>
+</tr>
+<tr>
+<td>active</td>
+<td>40-60</td>
+<td>500</td>
+</tr>
+</tbody></table>
+<h2>Strategy Guide</h2>
+<h3>Fresh account (week 1-2)</h3>
+<ol>
+<li>Create a persona with <code>xactions persona create</code> or configure algorithmTrainer manually</li>
+<li>Use conservative/chill intensity -- X flags aggressive new accounts</li>
+<li>Focus on phases 1-2 (search) and 7 (explore) to signal interests</li>
+<li>Follow 5-10 niche accounts per day manually</li>
+<li>Like 20-30 niche tweets per day</li>
+</ol>
+<h3>Established account pivoting niches</h3>
+<ol>
+<li>Aggressively engage with new niche content for 1-2 weeks</li>
+<li>Use <code>src/automation/algorithmTrainer.js</code> on <code>active</code> intensity</li>
+<li>Unfollow accounts from the old niche gradually with <code>src/automation/smartUnfollow.js</code></li>
+<li>The algorithm typically adjusts within 3-7 days of consistent signals</li>
+</ol>
+<h3>Running 24/7 with LLM</h3>
+<ol>
+<li>Set <code>OPENROUTER_API_KEY</code> for AI-generated replies</li>
+<li><code>xactions persona create</code> -- configure niche, strategy, schedule</li>
+<li><code>xactions persona run &lt;id&gt;</code> -- starts headless Puppeteer session</li>
+<li>Monitor: <code>xactions persona status &lt;id&gt;</code></li>
+<li>Cost estimate: ~$0.50-2.00/day depending on model and activity level</li>
+</ol>
 <h2>Environment Variables</h2>
 <table>
 <thead>
@@ -258,11 +326,11 @@ await startAlgorithmBuilder({
 <h2>Detailed References</h2>
 <p>Load these on demand for deeper context:</p>
 <ul>
-<li><strong>Persona Engine details</strong> — <code>skills/algorithm-cultivation/references/persona-engine.md</code> (presets, strategies, CLI commands, exports)</li>
-<li><strong>Browser scripts</strong> — <code>skills/algorithm-cultivation/references/browser-scripts.md</code> (3 scripts, configs, controls, training phases)</li>
-<li><strong>Algorithm internals</strong> — <code>skills/algorithm-cultivation/references/algorithm-internals.md</code> (signal weights, phase model, architecture diagram, cost estimate)</li>
-<li><strong>Research: algorithm internals</strong> — <code>docs/research/algorithm-cultivation.md</code></li>
-<li><strong>Research: LLM architecture</strong> — <code>docs/research/llm-powered-thought-leader.md</code></li>
+<li><strong>Persona Engine details</strong> -- <code>skills/algorithm-cultivation/references/persona-engine.md</code></li>
+<li><strong>Browser scripts</strong> -- <code>skills/algorithm-cultivation/references/browser-scripts.md</code></li>
+<li><strong>Algorithm internals</strong> -- <code>skills/algorithm-cultivation/references/algorithm-internals.md</code></li>
+<li><strong>Research: algorithm internals</strong> -- <code>docs/research/algorithm-cultivation.md</code></li>
+<li><strong>Research: LLM architecture</strong> -- <code>docs/research/llm-powered-thought-leader.md</code></li>
 </ul>
 <h2>Notes</h2>
 <ul>
@@ -286,7 +354,7 @@ await startAlgorithmBuilder({
       <div class="sidebar-card">
         <h3>📖 In This Section</h3>
                 <a href="/docs/skills/analytics-insights">🎯 Analytics &amp; Insights</a>
-        <a href="/docs/skills/articles-longform">🎯 Articles &amp; Long-Form Content</a>
+        <a href="/docs/skills/articles-longform">🎯 Articles &amp; Longform</a>
         <a href="/docs/skills/blocking-muting-management">🎯 Blocking &amp; Muting Management</a>
         <a href="/docs/skills/bookmarks-management">🎯 Bookmarks Management</a>
         <a href="/docs/skills/business-ads">🎯 Business &amp; Ads Tools</a>

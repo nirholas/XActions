@@ -172,11 +172,16 @@
         <span class="cat-badge">Agent Skills</span>
         <h1>XActions CLI</h1>
 <p>Entry point: <code>src/cli/index.js</code>. Config stored at <code>~/.xactions/config.json</code>.</p>
-<h2>Auth</h2>
+<h2>Installation</h2>
+<pre><code class="language-bash">npm install -g xactions
+</code></pre>
+<h2>Authentication</h2>
 <pre><code class="language-bash">xactions login    # Interactive prompt for auth_token cookie
 xactions logout   # Removes saved cookie
+xactions info     # Show current auth status and config
 </code></pre>
-<h2>Commands</h2>
+<p>Get your auth_token: DevTools (F12) -&gt; Application -&gt; Cookies -&gt; x.com -&gt; copy <code>auth_token</code> value.</p>
+<h2>Scraping Commands</h2>
 <pre><code class="language-bash">xactions profile &lt;username&gt;
 xactions followers &lt;username&gt; [-l &lt;limit&gt;] [-o json|csv]
 xactions following &lt;username&gt; [-l &lt;limit&gt;] [-o json|csv]
@@ -186,9 +191,16 @@ xactions search &quot;&lt;query&gt;&quot; [-l &lt;limit&gt;] [-o json|csv]
 xactions hashtag &lt;tag&gt; [-l &lt;limit&gt;] [-o json|csv]
 xactions thread &lt;url&gt;
 xactions media &lt;username&gt; [-l &lt;limit&gt;]
-xactions info
 </code></pre>
-<h2>Output flags</h2>
+<h2>MCP Server Commands</h2>
+<pre><code class="language-bash">xactions mcp-config                     # Generate config for Claude Desktop
+xactions mcp-config --client cursor     # Generate for Cursor
+xactions mcp-config --client windsurf   # Generate for Windsurf
+xactions mcp-config --client vscode     # Generate for VS Code
+xactions mcp-config --write             # Write config directly to file
+</code></pre>
+<p>The <code>mcp-config</code> command auto-detects your OS and generates the correct config file path.</p>
+<h2>Output Flags</h2>
 <table>
 <thead>
 <tr>
@@ -198,22 +210,71 @@ xactions info
 </thead>
 <tbody><tr>
 <td><code>-l, --limit &lt;n&gt;</code></td>
-<td>Max items to scrape</td>
+<td>Maximum items to scrape</td>
 </tr>
 <tr>
 <td><code>-o, --output &lt;format&gt;</code></td>
 <td><code>json</code> or <code>csv</code> — saves to <code>{username}_{command}.{ext}</code></td>
 </tr>
 </tbody></table>
-<p>Default output is pretty-printed to terminal.</p>
-<h2>Programmatic use</h2>
+<p>Default output is pretty-printed to terminal with colored formatting.</p>
+<h2>Programmatic API</h2>
 <p>The CLI wraps the same scraper API available as a library:</p>
 <pre><code class="language-javascript">import { createBrowser, createPage, loginWithCookie,
   scrapeProfile, scrapeFollowers, scrapeFollowing, scrapeTweets,
   searchTweets, scrapeHashtag, scrapeThread, scrapeMedia,
   exportToJSON, exportToCSV } from &#39;xactions&#39;;
 </code></pre>
-<p>See the <code>twitter-scraping</code> skill for return shapes and API details.</p>
+<h2>Examples</h2>
+<pre><code class="language-bash"># Scrape a profile
+xactions profile elonmusk
+
+# Export followers as CSV
+xactions followers nichxbt -l 200 -o csv
+
+# Search tweets and save as JSON
+xactions search &quot;AI agents&quot; -l 50 -o json
+
+# Unroll a thread
+xactions thread https://x.com/nichxbt/status/1234567890
+
+# Generate Claude Desktop MCP config
+xactions mcp-config --write
+</code></pre>
+<h2>Troubleshooting</h2>
+<table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&quot;Not authenticated&quot;</td>
+<td>Run <code>xactions login</code> first</td>
+</tr>
+<tr>
+<td>Browser won&#39;t launch</td>
+<td>Install Chromium: <code>npx puppeteer browsers install chrome</code></td>
+</tr>
+<tr>
+<td>Scraping returns empty</td>
+<td>Account may be private or auth_token expired</td>
+</tr>
+<tr>
+<td>Command not found</td>
+<td>Reinstall: <code>npm install -g xactions</code></td>
+</tr>
+<tr>
+<td>MCP config path wrong</td>
+<td>Use <code>--client</code> flag to specify your IDE</td>
+</tr>
+</tbody></table>
+<h2>Related Skills</h2>
+<ul>
+<li><strong>twitter-scraping</strong> — Detailed scraper API documentation</li>
+<li><strong>xactions-mcp-server</strong> — MCP server setup and tools</li>
+</ul>
 
 
         <div class="cta-box">
@@ -229,7 +290,7 @@ xactions info
         <h3>📖 In This Section</h3>
                 <a href="/docs/skills/algorithm-cultivation">🎯 Algorithm Cultivation &amp; Thought Leadership</a>
         <a href="/docs/skills/analytics-insights">🎯 Analytics &amp; Insights</a>
-        <a href="/docs/skills/articles-longform">🎯 Articles &amp; Long-Form Content</a>
+        <a href="/docs/skills/articles-longform">🎯 Articles &amp; Longform</a>
         <a href="/docs/skills/blocking-muting-management">🎯 Blocking &amp; Muting Management</a>
         <a href="/docs/skills/bookmarks-management">🎯 Bookmarks Management</a>
         <a href="/docs/skills/business-ads">🎯 Business &amp; Ads Tools</a>

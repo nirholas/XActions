@@ -4,21 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Competitor Intelligence | XActions</title>
-  <meta name="description" content="MCP-powered workflow for analyzing competitor X/Twitter accounts. Produces a structured report covering profile, content, audience, and network.">
+  <meta name="description" content="MCP-powered workflow plus browser scripts for analyzing competitor X/Twitter accounts.">
   <meta name="keywords" content="xactions, twitter automation, x automation, free, open source, competitor, intelligence, agent skills">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Competitor Intelligence — XActions">
-  <meta property="og:description" content="MCP-powered workflow for analyzing competitor X/Twitter accounts. Produces a structured report covering profile, content, audience, and network.">
+  <meta property="og:description" content="MCP-powered workflow plus browser scripts for analyzing competitor X/Twitter accounts.">
   <meta property="og:url" content="https://xactions.app/docs/skills/competitor-intelligence">
   <meta property="og:site_name" content="XActions">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Competitor Intelligence — XActions">
-  <meta name="twitter:description" content="MCP-powered workflow for analyzing competitor X/Twitter accounts. Produces a structured report covering profile, content, audience, and network.">
+  <meta name="twitter:description" content="MCP-powered workflow plus browser scripts for analyzing competitor X/Twitter accounts.">
 
   <link rel="canonical" href="https://xactions.app/docs/skills/competitor-intelligence">
   <link rel="manifest" href="/manifest.json">
@@ -29,7 +29,7 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Competitor Intelligence | XActions",
-    "description": "MCP-powered workflow for analyzing competitor X/Twitter accounts. Produces a structured report covering profile, content, audience, and network.",
+    "description": "MCP-powered workflow plus browser scripts for analyzing competitor X/Twitter accounts.",
     "url": "https://xactions.app/docs/skills/competitor-intelligence",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -171,8 +171,8 @@
       <article class="article">
         <span class="cat-badge">Agent Skills</span>
         <h1>Competitor Intelligence</h1>
-<p>MCP-powered workflow for analyzing competitor X/Twitter accounts. Produces a structured report covering profile, content, audience, and network.</p>
-<h2>MCP Tools Used</h2>
+<p>MCP-powered workflow plus browser scripts for analyzing competitor X/Twitter accounts.</p>
+<h2>MCP Tools</h2>
 <table>
 <thead>
 <tr>
@@ -200,46 +200,81 @@
 <td><code>x_search_tweets</code></td>
 <td>Find mentions and replies</td>
 </tr>
+<tr>
+<td><code>x_competitor_analysis</code></td>
+<td>Automated comparison</td>
+</tr>
 </tbody></table>
-<h2>Workflow</h2>
+<h2>Browser Scripts</h2>
+<table>
+<thead>
+<tr>
+<th>Goal</th>
+<th>Script</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Side-by-side competitor comparison</td>
+<td><code>src/competitorAnalysis.js</code></td>
+</tr>
+<tr>
+<td>Compare audience overlap</td>
+<td><code>src/audienceOverlap.js</code></td>
+</tr>
+<tr>
+<td>Analyze their audience demographics</td>
+<td><code>src/audienceDemographics.js</code></td>
+</tr>
+<tr>
+<td>Find their viral tweets</td>
+<td><code>src/viralTweetDetector.js</code></td>
+</tr>
+<tr>
+<td>Benchmark your engagement</td>
+<td><code>src/tweetPerformance.js</code></td>
+</tr>
+<tr>
+<td>Track their trending topics</td>
+<td><code>src/trendingTopicMonitor.js</code></td>
+</tr>
+</tbody></table>
+<h2>Analysis Workflow</h2>
 <ol>
-<li><strong>Collect profile</strong> — Call <code>x_get_profile</code> for the target username. Record bio, follower count, following count, verified status, join date.</li>
-<li><strong>Pull recent tweets</strong> — Call <code>x_get_tweets</code> with <code>limit: 50</code>. Note posting frequency, media usage, and content themes.</li>
-<li><strong>Calculate engagement metrics</strong> — For each tweet compute engagement rate: <code>(likes + retweets + replies) / follower_count</code>. Identify top 5 posts by total engagement.</li>
-<li><strong>Analyze content patterns</strong> — Categorize tweets by type (original, reply, retweet, thread). Track posting times and days. Identify recurring topics and hashtags.</li>
-<li><strong>Audit audience</strong> — Call <code>x_get_followers</code> with <code>limit: 100</code>. Scan bios for common keywords, industries, and follower size distribution.</li>
-<li><strong>Map network</strong> — Call <code>x_get_following</code> with <code>limit: 100</code>. Identify mutual connections, industry peers, and influencer relationships.</li>
-<li><strong>Compile report</strong> — Assemble findings into the output template below.</li>
+<li><strong>Collect profile</strong> -- <code>x_get_profile</code> for target username</li>
+<li><strong>Pull tweets</strong> -- <code>x_get_tweets</code> with <code>limit: 50</code>, note frequency and themes</li>
+<li><strong>Calculate engagement</strong> -- Per-tweet rate: <code>(likes + RTs + replies) / followers</code></li>
+<li><strong>Categorize content</strong> -- Original vs reply vs retweet vs thread</li>
+<li><strong>Audit audience</strong> -- <code>x_get_followers</code> with <code>limit: 100</code>, scan bios</li>
+<li><strong>Map network</strong> -- <code>x_get_following</code> for mutual connections and influencer relationships</li>
+<li><strong>Find overlap</strong> -- <code>src/audienceOverlap.js</code> to compare your followers with theirs</li>
 </ol>
 <h2>Output Template</h2>
 <pre><code>## Competitor Report: @{username}
 
-### Profile Summary
-- Followers: {count} | Following: {count} | Ratio: {ratio}
+### Profile
+- Followers: {n} | Following: {n} | Ratio: {r}
 - Verified: {yes/no} | Joined: {date}
-- Bio: {bio}
 
 ### Content Strategy
-- Posts/week: {count} | Primary type: {original/reply/thread}
-- Top topics: {topic1}, {topic2}, {topic3}
+- Posts/week: {n} | Top topics: {t1}, {t2}, {t3}
 - Peak posting: {day} at {hour}
-- Media usage: {percentage}% of posts include images/video
-
-### Engagement Metrics
 - Avg engagement rate: {rate}%
-- Avg likes: {n} | Avg retweets: {n} | Avg replies: {n}
-- Top post: {url} ({likes} likes, {retweets} RTs)
 
-### Audience Profile
+### Audience
 - Common industries: {list}
-- Common bio keywords: {list}
-- Follower size distribution: {micro/mid/large breakdown}
+- Follower size distribution: {breakdown}
 
 ### Network
 - Notable follows: {list}
-- Mutual connections: {list}
-- Key communities: {list}
+- Audience overlap with you: {percentage}%
 </code></pre>
+<h2>Tips</h2>
+<ul>
+<li>Run competitor analysis quarterly for trends</li>
+<li>Use <code>src/audienceOverlap.js</code> to find collaboration opportunities</li>
+<li>Track competitors&#39; viral content for content inspiration</li>
+<li>Mirror successful content formats, not exact content</li>
+</ul>
 
 
         <div class="cta-box">
@@ -255,7 +290,7 @@
         <h3>📖 In This Section</h3>
                 <a href="/docs/skills/algorithm-cultivation">🎯 Algorithm Cultivation &amp; Thought Leadership</a>
         <a href="/docs/skills/analytics-insights">🎯 Analytics &amp; Insights</a>
-        <a href="/docs/skills/articles-longform">🎯 Articles &amp; Long-Form Content</a>
+        <a href="/docs/skills/articles-longform">🎯 Articles &amp; Longform</a>
         <a href="/docs/skills/blocking-muting-management">🎯 Blocking &amp; Muting Management</a>
         <a href="/docs/skills/bookmarks-management">🎯 Bookmarks Management</a>
         <a href="/docs/skills/business-ads">🎯 Business &amp; Ads Tools</a>

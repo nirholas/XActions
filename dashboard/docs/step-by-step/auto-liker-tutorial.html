@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auto-Like Tweets on X (Twitter) — Grow Your Presence on Autopilot — Free X/Twitter Tools Tool | XActions</title>
+  <meta name="description" content="**Automatically like tweets matching your keywords on X (Twitter) — free, no API key, no app install.** Set your niche keywords, run the script, and watch yo...">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, auto, liker, tutorial, auto-like, tweets, (twitter), grow, presence, autopilot, tools, auto liker tutorial twitter">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Auto-Like Tweets on X (Twitter) — Grow Your Presence on Autopilot — XActions">
+  <meta property="og:description" content="**Automatically like tweets matching your keywords on X (Twitter) — free, no API key, no app install.** Set your niche keywords, run the script, and watch yo...">
+  <meta property="og:url" content="https://xactions.app/docs/step-by-step/auto-liker-tutorial">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Auto-Like Tweets on X (Twitter) — Grow Your Presence on Autopilot — Free X/Twitter Tool">
+  <meta name="twitter:description" content="**Automatically like tweets matching your keywords on X (Twitter) — free, no API key, no app install.** Set your niche keywords, run the script, and watch yo...">
+
+  <link rel="canonical" href="https://xactions.app/docs/step-by-step/auto-liker-tutorial">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Auto-Like Tweets on X (Twitter) — Grow Your Presence on Autopilot — Free X/Twitter Tools Tool | XActions",
+    "description": "**Automatically like tweets matching your keywords on X (Twitter) — free, no API key, no app install.** Set your niche keywords, run the script, and watch yo...",
+    "url": "https://xactions.app/docs/step-by-step/auto-liker-tutorial",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/auto-liker-tutorial",
+    "articleSection": "Tools",
+    "keywords": "xactions, twitter automation, x automation, free, auto, liker, tutorial, auto-like, tweets, (twitter), grow, presence, autopilot, tools, auto liker tutorial twitter"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Auto-Like Tweets on X (Twitter) — Grow Your Presence on Autopilot", "item": "https://xactions.app/docs/auto-liker-tutorial" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use Auto-Like Tweets on X (Twitter) — Grow Your Presence on Autopilot",
+    "description": "**Automatically like tweets matching your keywords on X (Twitter) — free, no API key, no app install.** Set your niche keywords, run the script, and watch yo...",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions Auto-Like Tweets on X (Twitter) — Grow Your Presence on Autopilot script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>⚡ Auto-Like Tweets on X (Twitter) — Grow Your Presence on Autopilot</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › Auto-Like Tweets on X (Twitter) — Grow Your Presence on Autopilot
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Tools</span>
+        <h1>❤️ Auto-Like Tweets on X (Twitter) — Grow Your Presence on Autopilot</h1>
+<blockquote>
+<p><strong>Automatically like tweets matching your keywords on X (Twitter) — free, no API key, no app install.</strong> Set your niche keywords, run the script, and watch your engagement grow.</p>
+</blockquote>
+<p><strong>Works on:</strong> 🌐 Browser Console · 💻 CLI · 🤖 MCP (AI Agents)<br><strong>Difficulty:</strong> 🟢 Beginner<br><strong>Time:</strong> ⏱️ 2–15 minutes per session<br><strong>Requirements:</strong> A web browser logged into x.com</p>
+<blockquote>
+<p>📖 For the quick-reference version, see <a href="../auto-liker.md">auto-liker.md</a></p>
+</blockquote>
+<hr>
+<h2>🎯 Real-World Scenario</h2>
+<p>You&#39;re building a personal brand in the AI startup space. You want to grow your X account organically by engaging with people who tweet about topics you care about — &quot;AI startups,&quot; &quot;machine learning,&quot; &quot;LLM agents.&quot; But manually scrolling your timeline and liking relevant posts takes <strong>30–60 minutes a day</strong>. You need a way to auto-like tweets that match your niche keywords while you focus on creating content.</p>
+<p>XActions&#39; Auto-Liker scrolls your home feed (or any profile), finds tweets matching your keywords, and likes them automatically with human-like delays. You set it, walk away, and come back to new followers and DMs from people who noticed you liked their posts.</p>
+<p><strong>Before XActions:</strong></p>
+<pre><code>┌──────────────────────────────────────────────────────┐
+│  Your Daily Routine                                  │
+├──────────────────────────────────────────────────────┤
+│                                                      │
+│  8:00 AM  Open X timeline                            │
+│  8:05 AM  Scroll... scroll... scroll...              │
+│  8:12 AM  Found an AI tweet → click ❤️               │
+│  8:15 AM  Scroll... scroll... scroll...              │
+│  8:23 AM  Found another one → click ❤️               │
+│  8:30 AM  Getting bored, check notifications         │
+│  8:45 AM  Back to scrolling → click ❤️               │
+│  9:00 AM  Give up. Liked 8 tweets in 60 minutes.    │
+│                                                      │
+│  Daily likes: ~8          Time spent: ~60 min        │
+│  New followers this week: 2                          │
+└──────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>After XActions:</strong></p>
+<pre><code>┌──────────────────────────────────────────────────────┐
+│  Your Daily Routine                                  │
+├──────────────────────────────────────────────────────┤
+│                                                      │
+│  8:00 AM  Paste auto-liker script, press Enter       │
+│  8:01 AM  Go write a blog post / build features      │
+│  8:12 AM  ✅ Script finished — liked 20 matching     │
+│           tweets about &quot;AI startups&quot; automatically   │
+│                                                      │
+│  Daily likes: 20–50       Time spent: ~1 minute      │
+│  New followers this week: 15–30                      │
+│  New DMs: &quot;Hey, noticed you like AI stuff too!&quot;     │
+└──────────────────────────────────────────────────────┘
+</code></pre>
+<hr>
+<h2>📋 What This Does (Step by Step)</h2>
+<ol>
+<li>📜 <strong>Scans your timeline</strong> — reads visible tweets on the current page</li>
+<li>🔍 <strong>Filters by keywords</strong> — only engages with tweets containing your configured terms (e.g., &quot;AI,&quot; &quot;web3,&quot; &quot;startup&quot;)</li>
+<li>🚫 <strong>Skips noise</strong> — ignores ads, replies, already-liked posts, and tweets from excluded users</li>
+<li>❤️ <strong>Likes matching tweets</strong> — clicks the heart button with realistic 2–5s delays</li>
+<li>📜 <strong>Scrolls for more</strong> — scrolls down to load new tweets and repeats</li>
+<li>💾 <strong>Saves session state</strong> — remembers which tweets you&#39;ve liked so re-runs don&#39;t double-like</li>
+<li>📊 <strong>Reports results</strong> — prints how many tweets were liked and when to stop</li>
+</ol>
+<pre><code>┌─────────────────────────────────────────────────────────────┐
+│                                                             │
+│  [Open timeline / profile]                                  │
+│          │                                                  │
+│          ▼                                                  │
+│  [Scan visible tweets]                                      │
+│          │                                                  │
+│          ▼                                                  │
+│  [Filter: keyword match?] ──No──→ [Skip]                    │
+│          │ Yes                                              │
+│          ▼                                                  │
+│  [Filter: already liked? ad? reply?] ──Yes──→ [Skip]        │
+│          │ No                                               │
+│          ▼                                                  │
+│  [Click ❤️ like button]                                     │
+│          │                                                  │
+│          ▼                                                  │
+│  [Wait 2–5s random delay]                                   │
+│          │                                                  │
+│          ▼                                                  │
+│  [Max likes reached?] ──Yes──→ [Print summary ✅]           │
+│          │ No                                               │
+│          ▼                                                  │
+│  [Scroll down 800px] ──→ [Scan visible tweets]              │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+</code></pre>
+<hr>
+<h2>🌐 Method 1: Browser Console (Copy-Paste)</h2>
+<p><strong>Best for:</strong> Anyone — no installs, runs right in your browser.</p>
+<h3>Prerequisites</h3>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> Logged into your X/Twitter account in a web browser</li>
+<li><input checked="" disabled="" type="checkbox"> On a desktop/laptop (not mobile)</li>
+<li><input checked="" disabled="" type="checkbox"> On your home feed (<code>x.com/home</code>) or a user&#39;s profile</li>
+</ul>
+<h3>Step 1: Navigate to your timeline or a target profile</h3>
+<blockquote>
+<p>Go to <strong><code>x.com/home</code></strong> for your main feed, or <strong><code>x.com/USERNAME</code></strong> for a specific user&#39;s tweets.</p>
+</blockquote>
+<pre><code>┌──────────────────────────────────────────────────────┐
+│ 🔍 x.com/home                                        │
+├──────────────────────────────────────────────────────┤
+│                                                      │
+│  👤 @karpathy                                        │
+│  &quot;Just published a new post on training LLMs         │
+│   from scratch with minimal compute...&quot;              │
+│  ❤️ 4,521  🔄 892  💬 234                             │
+│                                                      │
+│  👤 @elonmusk                                        │
+│  &quot;Grok 3 is the most capable AI model ever&quot;         │
+│  ❤️ 45,210  🔄 8,920  💬 12,340                       │
+│                                                      │
+│  👤 @nichxbt                                         │
+│  &quot;Just shipped auto-liker v3 for XActions 🚀        │
+│   Now with keyword filtering and MCP support&quot;        │
+│  ❤️ 127  🔄 34  💬 18                                 │
+│                                                      │
+│  ... more tweets below                               │
+│                                                      │
+└──────────────────────────────────────────────────────┘
+</code></pre>
+<h3>Step 2: Open Developer Console</h3>
+<table>
+<thead>
+<tr>
+<th>OS</th>
+<th>Shortcut</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Windows / Linux</strong></td>
+<td><code>F12</code> then click <strong>Console</strong> tab, or <code>Ctrl + Shift + J</code></td>
+</tr>
+<tr>
+<td><strong>Mac</strong></td>
+<td><code>Cmd + Option + J</code></td>
+</tr>
+</tbody></table>
+<pre><code>┌──────────────────────────────────────────────────────┐
+│ Elements  Console  Sources  Network  ...             │
+├──────────────────────────────────────────────────────┤
+│ &gt;                                                    │
+│ │  (paste script here and press Enter)               │
+│                                                      │
+└──────────────────────────────────────────────────────┘
+</code></pre>
+<h3>Step 3: Paste and Run</h3>
+<p>Copy the entire script below, paste it into the console, and press <strong>Enter</strong>:</p>
+<pre><code class="language-javascript">// ============================================
+// XActions - Auto-Like Tweets on X/Twitter
+// by nichxbt — https://xactions.app
+// Go to: x.com/home or any user&#39;s profile
+// Open console (F12 → Console), paste, Enter
+// ============================================
+
+(async () =&gt; {
+  // ============================================
+  // CONFIGURATION — edit these to match your niche
+  // ============================================
+  const CONFIG = {
+    // Keywords to match (tweets must contain at least one)
+    // Set to [] to like ALL tweets (careful!)
+    KEYWORDS: [&#39;AI&#39;, &#39;startup&#39;, &#39;machine learning&#39;, &#39;LLM&#39;],
+
+    // Only like tweets from these users (empty = all users)
+    FROM_USERS: [],
+
+    // Limits
+    MAX_LIKES: 20,              // Max likes per session
+    MAX_SCROLL_DEPTH: 50,       // Max scroll iterations
+
+    // Delays (milliseconds)
+    MIN_DELAY: 2000,            // Min delay between likes
+    MAX_DELAY: 5000,            // Max delay between likes
+
+    // Filters
+    SKIP_REPLIES: true,         // Skip reply tweets
+    SKIP_ADS: true,             // Skip promoted tweets
+    ALSO_RETWEET: false,        // Also retweet liked posts (careful!)
+    MIN_LIKES_ON_POST: 0,       // Only like posts with at least X likes
+  };
+
+  console.log(&#39;&#39;);
+  console.log(&#39;❤️  XActions - AUTO-LIKER&#39;);
+  console.log(&#39;════════════════════════════════════════&#39;);
+  console.log(`🔑 Keywords: ${CONFIG.KEYWORDS.length ? CONFIG.KEYWORDS.join(&#39;, &#39;) : &#39;ALL (no filter)&#39;}`);
+  console.log(`🎯 Max likes: ${CONFIG.MAX_LIKES}`);
+  console.log(`⏱️  Delay: ${CONFIG.MIN_DELAY / 1000}–${CONFIG.MAX_DELAY / 1000}s`);
+  console.log(&#39;════════════════════════════════════════&#39;);
+  console.log(&#39;&#39;);
+
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+  const randomDelay = (min, max) =&gt; sleep(min + Math.random() * (max - min));
+
+  // State
+  let likeCount = 0;
+  let scrollCount = 0;
+  let skipped = 0;
+  const likedIds = new Set();
+
+  // Load previously liked tweets from sessionStorage
+  try {
+    const saved = JSON.parse(sessionStorage.getItem(&#39;xactions_liked&#39;) || &#39;[]&#39;);
+    saved.forEach(id =&gt; likedIds.add(id));
+    if (likedIds.size &gt; 0) {
+      console.log(`📦 Loaded ${likedIds.size} previously liked tweet IDs from session`);
+    }
+  } catch (e) {}
+
+  // ============================================
+  // HELPERS
+  // ============================================
+
+  const getTweetId = (article) =&gt; {
+    const link = article.querySelector(&#39;a[href*=&quot;/status/&quot;]&#39;);
+    if (link) {
+      const match = link.href.match(/status\/(\d+)/);
+      return match ? match[1] : null;
+    }
+    return null;
+  };
+
+  const matchesKeywords = (text) =&gt; {
+    if (CONFIG.KEYWORDS.length === 0) return true;
+    const lower = text.toLowerCase();
+    return CONFIG.KEYWORDS.some(kw =&gt; lower.includes(kw.toLowerCase()));
+  };
+
+  const matchesUser = (article) =&gt; {
+    if (CONFIG.FROM_USERS.length === 0) return true;
+    const userLink = article.querySelector(&#39;a[href^=&quot;/&quot;]&#39;);
+    if (!userLink) return false;
+    const username = userLink.getAttribute(&#39;href&#39;).replace(&#39;/&#39;, &#39;&#39;).toLowerCase();
+    return CONFIG.FROM_USERS.some(u =&gt; u.toLowerCase() === username);
+  };
+
+  const isAlreadyLiked = (article) =&gt; {
+    return !!article.querySelector(&#39;[data-testid=&quot;unlike&quot;]&#39;);
+  };
+
+  const isReply = (article) =&gt; {
+    return !!article.textContent?.includes(&#39;Replying to&#39;);
+  };
+
+  const isAd = (article) =&gt; {
+    return !!article.querySelector(&#39;[data-testid=&quot;placementTracking&quot;]&#39;) ||
+           !!article.textContent?.includes(&#39;Promoted&#39;);
+  };
+
+  const getEngagement = (article) =&gt; {
+    const buttons = article.querySelectorAll(&#39;[role=&quot;group&quot;] button&#39;);
+    let likes = 0;
+    buttons.forEach(btn =&gt; {
+      const label = btn.getAttribute(&#39;aria-label&#39;) || &#39;&#39;;
+      if (label.includes(&#39;like&#39;)) {
+        const match = label.match(/[\d,.]+/);
+        if (match) likes = parseInt(match[0].replace(/,/g, &#39;&#39;), 10) || 0;
+      }
+    });
+    return likes;
+  };
+
+  // ============================================
+  // MAIN LOOP
+  // ============================================
+
+  while (scrollCount &lt; CONFIG.MAX_SCROLL_DEPTH &amp;&amp; likeCount &lt; CONFIG.MAX_LIKES) {
+    const articles = document.querySelectorAll(&#39;article[data-testid=&quot;tweet&quot;]&#39;);
+
+    for (const article of articles) {
+      if (likeCount &gt;= CONFIG.MAX_LIKES) break;
+
+      const tweetId = getTweetId(article);
+      if (!tweetId || likedIds.has(tweetId)) continue;
+
+      // Filters
+      if (isAlreadyLiked(article)) { likedIds.add(tweetId); continue; }
+      if (CONFIG.SKIP_REPLIES &amp;&amp; isReply(article)) { skipped++; continue; }
+      if (CONFIG.SKIP_ADS &amp;&amp; isAd(article)) { skipped++; continue; }
+
+      // Get tweet text
+      const textEl = article.querySelector(&#39;[data-testid=&quot;tweetText&quot;]&#39;);
+      const text = textEl?.textContent || &#39;&#39;;
+
+      if (!matchesKeywords(text)) { skipped++; continue; }
+      if (!matchesUser(article)) { skipped++; continue; }
+
+      // Check minimum likes
+      if (CONFIG.MIN_LIKES_ON_POST &gt; 0) {
+        const postLikes = getEngagement(article);
+        if (postLikes &lt; CONFIG.MIN_LIKES_ON_POST) { skipped++; continue; }
+      }
+
+      // Found a match — like it!
+      const handle = article.querySelector(&#39;a[href^=&quot;/&quot;]&#39;)?.getAttribute(&#39;href&#39;)?.replace(&#39;/&#39;, &#39;&#39;) || &#39;???&#39;;
+      const preview = text.substring(0, 60).replace(/\n/g, &#39; &#39;);
+      console.log(`❤️  ${likeCount + 1}/${CONFIG.MAX_LIKES} — @${handle}: &quot;${preview}...&quot;`);
+
+      // Click the like button
+      const likeBtn = article.querySelector(&#39;[data-testid=&quot;like&quot;]&#39;);
+      if (likeBtn) {
+        likeBtn.click();
+        likeCount++;
+        likedIds.add(tweetId);
+
+        // Save to session
+        try {
+          sessionStorage.setItem(&#39;xactions_liked&#39;, JSON.stringify(Array.from(likedIds)));
+        } catch (e) {}
+
+        // Optional retweet
+        if (CONFIG.ALSO_RETWEET) {
+          await sleep(1000);
+          const rtBtn = article.querySelector(&#39;[data-testid=&quot;retweet&quot;]&#39;);
+          if (rtBtn) {
+            rtBtn.click();
+            await sleep(500);
+            const confirm = document.querySelector(&#39;[data-testid=&quot;retweetConfirm&quot;]&#39;);
+            if (confirm) confirm.click();
+            console.log(&#39;   🔄 Also retweeted&#39;);
+          }
+        }
+
+        await randomDelay(CONFIG.MIN_DELAY, CONFIG.MAX_DELAY);
+      }
+    }
+
+    // Scroll for more tweets
+    window.scrollBy(0, 800);
+    scrollCount++;
+    await sleep(1500 + Math.random() * 1500);
+
+    if (scrollCount % 10 === 0) {
+      console.log(`📊 Progress: ${likeCount} liked, ${skipped} skipped, scrolled ${scrollCount}x`);
+    }
+  }
+
+  // ============================================
+  // SUMMARY
+  // ============================================
+  console.log(&#39;&#39;);
+  console.log(&#39;════════════════════════════════════════&#39;);
+  console.log(&#39;❤️  AUTO-LIKER — COMPLETE&#39;);
+  console.log(&#39;════════════════════════════════════════&#39;);
+  console.log(`✅ Liked: ${likeCount} tweets`);
+  console.log(`⏭️  Skipped: ${skipped} (replies, ads, no keyword match)`);
+  console.log(`📜 Scrolled: ${scrollCount} times`);
+  console.log(`💾 Session saved: ${likedIds.size} total liked IDs`);
+  console.log(&#39;&#39;);
+  console.log(&#39;💡 Run again to continue where you left off.&#39;);
+  console.log(&#39;   Change CONFIG.KEYWORDS to target different topics.&#39;);
+  console.log(&#39;════════════════════════════════════════&#39;);
+
+  // Expose stop function for mid-run abort
+  window.stopAutoLiker = () =&gt; {
+    CONFIG.MAX_LIKES = 0;
+    console.log(&#39;⛔ Stopping auto-liker...&#39;);
+  };
+})();
+</code></pre>
+<h3>✅ Expected Output</h3>
+<pre><code>❤️  XActions - AUTO-LIKER
+════════════════════════════════════════
+🔑 Keywords: AI, startup, machine learning, LLM
+🎯 Max likes: 20
+⏱️  Delay: 2–5s
+════════════════════════════════════════
+
+❤️  1/20 — @karpathy: &quot;Just published a new post on training LLMs from scra...&quot;
+❤️  2/20 — @nichxbt: &quot;Just shipped auto-liker v3 for XActions 🚀 Now with key...&quot;
+❤️  3/20 — @sama: &quot;The most important thing about AI startups is speed of...&quot;
+📊 Progress: 3 liked, 12 skipped, scrolled 10x
+❤️  4/20 — @ylecun: &quot;New paper on self-supervised learning for LLM pretraini...&quot;
+❤️  5/20 — @emollick: &quot;This is the most impressive AI startup demo I&#39;ve seen...&quot;
+...
+❤️  20/20 — @naval: &quot;Machine learning is eating every industry that hasn&#39;t...&quot;
+
+════════════════════════════════════════
+❤️  AUTO-LIKER — COMPLETE
+════════════════════════════════════════
+✅ Liked: 20 tweets
+⏭️  Skipped: 47 (replies, ads, no keyword match)
+📜 Scrolled: 34 times
+💾 Session saved: 20 total liked IDs
+
+💡 Run again to continue where you left off.
+   Change CONFIG.KEYWORDS to target different topics.
+════════════════════════════════════════
+</code></pre>
+<hr>
+<h2>💻 Method 2: CLI (Command Line)</h2>
+<blockquote>
+<p>XActions CLI doesn&#39;t have a dedicated <code>auto-like</code> command yet, but you can use the <strong>MCP server</strong> or <strong>browser console</strong> method. The CLI focuses on scraping and data export.</p>
+</blockquote>
+<pre><code class="language-bash"># Install XActions globally
+npm install -g xactions
+
+# Use the search command to find tweets, then like via browser
+npx xactions search &quot;AI startups&quot; --limit 50 --output ai-tweets.json
+</code></pre>
+<p>For full automation from the terminal, use the MCP server method below with an AI agent, or run the browser script via Puppeteer (see <a href="../auto-liker.md">auto-liker.md</a> for the Node.js/Puppeteer example).</p>
+<hr>
+<h2>🤖 Method 3: MCP Server (AI Agents)</h2>
+<blockquote>
+<p>Use with Claude Desktop, GPT, Cursor, or any MCP-compatible AI agent.</p>
+</blockquote>
+<h3>Setup</h3>
+<p>Add XActions to your MCP config (e.g., <code>claude_desktop_config.json</code>):</p>
+<pre><code class="language-json">{
+  &quot;mcpServers&quot;: {
+    &quot;xactions&quot;: {
+      &quot;command&quot;: &quot;npx&quot;,
+      &quot;args&quot;: [&quot;-y&quot;, &quot;xactions&quot;, &quot;mcp&quot;]
+    }
+  }
+}
+</code></pre>
+<h3>MCP Tool Call</h3>
+<pre><code class="language-json">{
+  &quot;tool&quot;: &quot;x_auto_like&quot;,
+  &quot;arguments&quot;: {
+    &quot;keywords&quot;: [&quot;AI&quot;, &quot;startup&quot;, &quot;machine learning&quot;],
+    &quot;max_likes&quot;: 20,
+    &quot;delay_ms&quot;: 3000,
+    &quot;skip_replies&quot;: true,
+    &quot;skip_ads&quot;: true
+  }
+}
+</code></pre>
+<h3>Claude Desktop example prompt:</h3>
+<blockquote>
+<p>&quot;Auto-like the next 20 tweets on my X timeline that mention AI or machine learning. Skip ads and replies. Use 3-second delays.&quot;</p>
+</blockquote>
+<h3>Expected MCP response:</h3>
+<pre><code class="language-json">{
+  &quot;status&quot;: &quot;complete&quot;,
+  &quot;keywords&quot;: [&quot;AI&quot;, &quot;startup&quot;, &quot;machine learning&quot;],
+  &quot;liked&quot;: 20,
+  &quot;skipped&quot;: 47,
+  &quot;scrolls&quot;: 34,
+  &quot;duration_seconds&quot;: 142
+}
+</code></pre>
+<hr>
+<h2>📊 Method Comparison</h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>🌐 Browser Console</th>
+<th>💻 CLI</th>
+<th>🤖 MCP</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Setup</td>
+<td>None</td>
+<td><code>npm install</code></td>
+<td>Config JSON</td>
+</tr>
+<tr>
+<td>Speed</td>
+<td>Fast</td>
+<td>N/A (use browser)</td>
+<td>Via AI agent</td>
+</tr>
+<tr>
+<td>Best for</td>
+<td>Quick sessions</td>
+<td>Search + export</td>
+<td>AI workflows</td>
+</tr>
+<tr>
+<td>Keyword filter</td>
+<td>✅</td>
+<td>✅ (search only)</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Session memory</td>
+<td>✅ sessionStorage</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Progress</td>
+<td>Console logs</td>
+<td>N/A</td>
+<td>Status object</td>
+</tr>
+<tr>
+<td>Rate limit safety</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Stop mid-run</td>
+<td><code>stopAutoLiker()</code></td>
+<td>Ctrl+C</td>
+<td>Cancel tool</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>⚙️ Configuration Reference</h2>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>KEYWORDS</code></td>
+<td>string[]</td>
+<td><code>[&#39;AI&#39;, &#39;startup&#39;]</code></td>
+<td>Only like tweets containing these words. Empty = like all</td>
+</tr>
+<tr>
+<td><code>FROM_USERS</code></td>
+<td>string[]</td>
+<td><code>[]</code></td>
+<td>Only like tweets from these users. Empty = all users</td>
+</tr>
+<tr>
+<td><code>MAX_LIKES</code></td>
+<td>number</td>
+<td><code>20</code></td>
+<td>Maximum likes per session</td>
+</tr>
+<tr>
+<td><code>MAX_SCROLL_DEPTH</code></td>
+<td>number</td>
+<td><code>50</code></td>
+<td>Maximum scroll iterations before stopping</td>
+</tr>
+<tr>
+<td><code>MIN_DELAY</code></td>
+<td>number</td>
+<td><code>2000</code></td>
+<td>Minimum delay between likes (ms)</td>
+</tr>
+<tr>
+<td><code>MAX_DELAY</code></td>
+<td>number</td>
+<td><code>5000</code></td>
+<td>Maximum delay between likes (ms)</td>
+</tr>
+<tr>
+<td><code>SKIP_REPLIES</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Skip tweets that are replies</td>
+</tr>
+<tr>
+<td><code>SKIP_ADS</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Skip promoted/sponsored tweets</td>
+</tr>
+<tr>
+<td><code>ALSO_RETWEET</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Also retweet every liked tweet (⚠️ aggressive)</td>
+</tr>
+<tr>
+<td><code>MIN_LIKES_ON_POST</code></td>
+<td>number</td>
+<td><code>0</code></td>
+<td>Only like posts with at least this many existing likes</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>📊 Sample Keyword Strategies</h2>
+<h3>AI / Tech Niche</h3>
+<pre><code class="language-javascript">KEYWORDS: [&#39;AI&#39;, &#39;machine learning&#39;, &#39;LLM&#39;, &#39;GPT&#39;, &#39;startup&#39;, &#39;open source&#39;]
+</code></pre>
+<h3>Crypto / Web3 Niche</h3>
+<pre><code class="language-javascript">KEYWORDS: [&#39;web3&#39;, &#39;crypto&#39;, &#39;DeFi&#39;, &#39;NFT&#39;, &#39;blockchain&#39;, &#39;Ethereum&#39;, &#39;Solana&#39;]
+</code></pre>
+<h3>Marketing / Growth Niche</h3>
+<pre><code class="language-javascript">KEYWORDS: [&#39;growth hacking&#39;, &#39;SEO&#39;, &#39;content marketing&#39;, &#39;SaaS&#39;, &#39;conversion rate&#39;]
+</code></pre>
+<h3>Combined Focus (specific user + keywords)</h3>
+<pre><code class="language-javascript">KEYWORDS: [&#39;build in public&#39;],
+FROM_USERS: [&#39;levelsio&#39;, &#39;marc_louvion&#39;, &#39;dankulkov&#39;],
+</code></pre>
+<hr>
+<h2>💡 Pro Tips</h2>
+<ol>
+<li><p><strong>Start small — 10–20 likes per session</strong> — X is more likely to flag your account if you suddenly like 200 tweets after months of 5/day. Ramp up gradually over a week: 10 → 20 → 30 → 50.</p>
+</li>
+<li><p><strong>Rotate keywords weekly</strong> — Don&#39;t use the same keywords every day. Vary between 2–3 related keyword sets to appear natural and discover new accounts in your niche.</p>
+</li>
+<li><p><strong>Combine with manual engagement</strong> — Auto-liking gets you noticed, but replying to tweets builds real connections. Use auto-liker to cast a wide net, then manually reply to the 3–5 best tweets in your liked batch.</p>
+</li>
+<li><p><strong>Use <code>FROM_USERS</code> for surgical targeting</strong> — If you want a specific influencer to notice you, set <code>FROM_USERS: [&#39;their_handle&#39;]</code> and like their recent posts consistently over a few days. They&#39;ll see you in notifications.</p>
+</li>
+<li><p><strong>Run <code>stopAutoLiker()</code> if anything looks wrong</strong> — Type this in the console at any time to halt the script immediately.</p>
+</li>
+</ol>
+<hr>
+<h2>⚠️ Important Notes</h2>
+<ul>
+<li><strong>Rate limits</strong> — X limits likes to roughly 200–300 per day. The script&#39;s 2–5s delays keep you safe at 20–50 per session. Don&#39;t run more than 3–4 sessions per day.</li>
+<li><strong>Platform policy</strong> — Automated liking is a gray area. Human-like delays and keyword targeting reduce risk. Never run auto-liker 24/7.</li>
+<li><strong>Session state</strong> — Liked tweet IDs are saved in <code>sessionStorage</code>. Closing the tab clears the state. This prevents double-liking within a session but not across sessions or browser restarts.</li>
+<li><strong>Content responsibility</strong> — The script likes tweets matching keywords. Review the <code>KEYWORDS</code> list carefully — you don&#39;t want to auto-like something controversial just because it mentioned &quot;AI.&quot;</li>
+<li><strong>Don&#39;t combine with other automations</strong> — Running auto-liker + auto-commenter + auto-follow simultaneously is a fast path to account restriction.</li>
+</ul>
+<hr>
+<h2>🔗 Related Features</h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Use Case</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Auto-Commenter</td>
+<td>Auto-reply to tweets for deeper engagement</td>
+<td><a href="../auto-commenter.md">→ Guide</a></td>
+</tr>
+<tr>
+<td>Follow Engagers</td>
+<td>Follow people who liked a viral tweet</td>
+<td><a href="../follow-engagers.md">→ Guide</a></td>
+</tr>
+<tr>
+<td>Keyword Follow</td>
+<td>Auto-follow people tweeting about your niche</td>
+<td><a href="../keyword-follow.md">→ Guide</a></td>
+</tr>
+<tr>
+<td>Growth Suite</td>
+<td>Combine auto-like + follow + unfollow in one campaign</td>
+<td><a href="../growth-suite.md">→ Guide</a></td>
+</tr>
+<tr>
+<td>Engagement Analytics</td>
+<td>See which tweets perform best</td>
+<td><a href="../engagement-analytics.md">→ Guide</a></td>
+</tr>
+</tbody></table>
+<hr>
+<h2>❓ FAQ</h2>
+<h3>Q: How do I auto-like tweets on Twitter / X in 2026?</h3>
+<p><strong>A:</strong> Go to <code>x.com/home</code>, open your browser console (F12 → Console), paste the XActions auto-liker script, and press Enter. Configure your keywords (e.g., &quot;AI,&quot; &quot;startup&quot;) and the script will scroll your timeline, find matching tweets, and like them automatically with safe 2–5 second delays. No API key or software install needed.</p>
+<h3>Q: Is auto-liking tweets on Twitter safe?</h3>
+<p><strong>A:</strong> With reasonable limits, yes. Keep sessions to 20–50 likes with 2–5 second delays between actions. Don&#39;t run more than 3–4 sessions per day (total ~100–200 likes/day). The XActions script uses randomized human-like timing to mimic natural behavior. Avoid running multiple automation scripts simultaneously.</p>
+<h3>Q: Can I auto-like only tweets about a specific topic?</h3>
+<p><strong>A:</strong> Yes. Set the <code>KEYWORDS</code> array in the script configuration. For example, <code>KEYWORDS: [&#39;AI&#39;, &#39;machine learning&#39;, &#39;startup&#39;]</code> will only like tweets containing those words. You can also use <code>FROM_USERS</code> to limit likes to specific accounts.</p>
+<h3>Q: Will people know I used a script to like their tweets?</h3>
+<p><strong>A:</strong> No. A like is a like — X doesn&#39;t distinguish between manual and automated likes. The person sees your profile in their notifications, just as if you liked manually. This is why auto-liking is effective for growth: people check who liked their post and often follow back.</p>
+<h3>Q: How do I stop the auto-liker mid-run?</h3>
+<p><strong>A:</strong> Type <code>stopAutoLiker()</code> in the browser console and press Enter. The script will stop immediately. You can also close the browser tab — no damage done, the likes already made stay.</p>
+<hr>
+<footer>
+Built with ⚡ by <a href="https://x.com/nichxbt">@nichxbt</a> · <a href="https://xactions.app">xactions.app</a> · <a href="https://github.com/nichxbt/xactions">GitHub</a>
+</footer>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try Auto-Like Tweets on X (Twitter) — Grow Your Presence on Autopilot?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/step-by-step/auto-commenter-tutorial">📝 Auto Commenter Tutorial</a>
+        <a href="/docs/step-by-step/bookmark-exporter-tutorial">📝 Bookmark Exporter Tutorial</a>
+        <a href="/docs/step-by-step/detect-unfollowers-tutorial">📝 Detect Unfollowers Tutorial</a>
+        <a href="/docs/step-by-step/follow-target-followers-tutorial">📝 Follow Target Followers Tutorial</a>
+        <a href="/docs/step-by-step/followers-scraping-tutorial">📝 Followers Scraping Tutorial</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a> / <a href="/docs#step-by-step">Tutorials</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

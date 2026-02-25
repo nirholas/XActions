@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Follow a Competitor's Followers on X (Twitter) — Steal Their Audience — Free X/Twitter Tools Tool | XActions</title>
+  <meta name="description" content="**Automatically follow the followers (or following) of any target account on X/Twitter — with smart filters for follower count, bio keywords, and ratio.** Fr...">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, follow, target, followers, tutorial, competitor's, (twitter), steal, their, audience, tools, follow target followers tutorial twitter">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Follow a Competitor's Followers on X (Twitter) — Steal Their Audience — XActions">
+  <meta property="og:description" content="**Automatically follow the followers (or following) of any target account on X/Twitter — with smart filters for follower count, bio keywords, and ratio.** Fr...">
+  <meta property="og:url" content="https://xactions.app/docs/step-by-step/follow-target-followers-tutorial">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Follow a Competitor's Followers on X (Twitter) — Steal Their Audience — Free X/Twitter Tool">
+  <meta name="twitter:description" content="**Automatically follow the followers (or following) of any target account on X/Twitter — with smart filters for follower count, bio keywords, and ratio.** Fr...">
+
+  <link rel="canonical" href="https://xactions.app/docs/step-by-step/follow-target-followers-tutorial">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Follow a Competitor's Followers on X (Twitter) — Steal Their Audience — Free X/Twitter Tools Tool | XActions",
+    "description": "**Automatically follow the followers (or following) of any target account on X/Twitter — with smart filters for follower count, bio keywords, and ratio.** Fr...",
+    "url": "https://xactions.app/docs/step-by-step/follow-target-followers-tutorial",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/follow-target-followers-tutorial",
+    "articleSection": "Tools",
+    "keywords": "xactions, twitter automation, x automation, free, follow, target, followers, tutorial, competitor's, (twitter), steal, their, audience, tools, follow target followers tutorial twitter"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Follow a Competitor's Followers on X (Twitter) — Steal Their Audience", "item": "https://xactions.app/docs/follow-target-followers-tutorial" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use Follow a Competitor's Followers on X (Twitter) — Steal Their Audience",
+    "description": "**Automatically follow the followers (or following) of any target account on X/Twitter — with smart filters for follower count, bio keywords, and ratio.** Fr...",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions Follow a Competitor's Followers on X (Twitter) — Steal Their Audience script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>⚡ Follow a Competitor's Followers on X (Twitter) — Steal Their Audience</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › Follow a Competitor's Followers on X (Twitter) — Steal Their Audience
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Tools</span>
+        <h1>👥 Follow a Competitor&#39;s Followers on X (Twitter) — Steal Their Audience</h1>
+<blockquote>
+<p><strong>Automatically follow the followers (or following) of any target account on X/Twitter — with smart filters for follower count, bio keywords, and ratio.</strong> Free, no API key, no app install.</p>
+</blockquote>
+<p><strong>Works on:</strong> 🌐 Browser Console (requires <code>core.js</code>)<br><strong>Difficulty:</strong> 🟡 Intermediate<br><strong>Time:</strong> ⏱️ 5–30 minutes per target account<br><strong>Requirements:</strong> A web browser logged into x.com</p>
+<blockquote>
+<p>📖 For the quick-reference version, see <a href="../follow-target-followers.md">follow-target-followers.md</a></p>
+</blockquote>
+<hr>
+<h2>🎯 Real-World Scenario</h2>
+<p>You&#39;re launching a DeFi protocol and you need to build a Twitter audience fast. You know that the followers of @vitalikbuterin, @naval, and @aaboronkov are exactly the type of people who would be interested in your project — they&#39;re crypto-native, technically savvy, and actively engaged. But manually visiting each competitor&#39;s followers page and clicking &quot;Follow&quot; hundreds of times would take <strong>hours</strong> and you&#39;d have no way to filter out bots, inactive accounts, or mega-influencers who never follow back.</p>
+<p>XActions&#39; Follow Target Followers script navigates to any account&#39;s follower or following list, applies smart filters (minimum followers, bio keywords, ratio checks), and follows matching users automatically with 3s+ delays. You configure your target accounts, set your filters, and let the script build your audience while you focus on shipping features.</p>
+<p><strong>Before XActions:</strong></p>
+<pre><code>┌──────────────────────────────────────────────────────────────┐
+│  Growing Your Twitter Audience (Manual)                      │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  9:00 AM  Go to @naval&#39;s profile                             │
+│  9:01 AM  Click &quot;Followers&quot;                                  │
+│  9:02 AM  Scroll... see 1,000+ accounts                      │
+│  9:03 AM  Click Follow on someone. Check their bio first.    │
+│  9:05 AM  This one has 3 followers. Skip.                    │
+│  9:06 AM  This one is private. Skip.                         │
+│  9:08 AM  This one looks good. Follow.                       │
+│  9:10 AM  Scroll more... repeat...                           │
+│  10:00 AM Give up. Followed 12 people in an hour.            │
+│                                                              │
+│  Follows/hour: ~12         Quality: random                   │
+│  Follow-back rate: ~15%    (no filtering = low quality)      │
+└──────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>After XActions:</strong></p>
+<pre><code>┌──────────────────────────────────────────────────────────────┐
+│  Growing Your Twitter Audience (XActions)                    │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  9:00 AM  Configure script: targets = naval, vitalik         │
+│  9:01 AM  Set filters: 100-50K followers, must have bio      │
+│  9:02 AM  Paste core.js + script. Press Enter.               │
+│  9:02 AM  Script navigates to @naval/followers               │
+│           ✅ Followed @cryptodev (2.1K followers, has bio)   │
+│           ⏭️ Skipped @bot123 (2 followers, no bio)            │
+│           ✅ Followed @web3builder (890 followers, DeFi bio) │
+│  9:15 AM  Moves to @vitalik/followers...                     │
+│  9:30 AM  ✅ Done! Followed 50 filtered users.               │
+│                                                              │
+│  Follows/hour: ~50         Quality: pre-filtered             │
+│  Follow-back rate: ~35%    (smart filters = higher quality)  │
+└──────────────────────────────────────────────────────────────┘
+</code></pre>
+<hr>
+<h2>📋 What This Does (Step by Step)</h2>
+<ol>
+<li>📍 <strong>Navigates to target account&#39;s follower/following list</strong> — goes to <code>x.com/USERNAME/followers</code> or <code>x.com/USERNAME/following</code></li>
+<li>🔍 <strong>Scans each user cell</strong> — extracts username, bio, follower count, verified status, protected status</li>
+<li>🧹 <strong>Applies smart filters</strong> — checks min/max followers, bio presence, bio keywords, ratio, protected/verified status</li>
+<li>⏭️ <strong>Skips non-matching users</strong> — too few followers, no bio, private accounts, already following</li>
+<li>➕ <strong>Follows matching users</strong> — clicks the Follow button with 3s+ delays between actions</li>
+<li>💾 <strong>Tracks followed users</strong> — saves to <code>sessionStorage</code> so re-runs don&#39;t double-follow</li>
+<li>🔄 <strong>Scrolls for more</strong> — loads more users by scrolling down the list</li>
+<li>📊 <strong>Reports results</strong> — prints how many followed, skipped, and why</li>
+</ol>
+<pre><code>┌──────────────────────────────────────────────────────────────┐
+│                                                              │
+│  [For each TARGET_ACCOUNT]                                   │
+│          │                                                   │
+│          ▼                                                   │
+│  [Navigate to x.com/TARGET/followers]                        │
+│          │                                                   │
+│          ▼                                                   │
+│  [Wait for user cells to load]                               │
+│          │                                                   │
+│          ▼                                                   │
+│  ┌── [For each UserCell] ──────────────────────────────┐     │
+│  │                                                     │     │
+│  │  [Extract: username, bio, followers, verified]      │     │
+│  │          │                                          │     │
+│  │          ▼                                          │     │
+│  │  [Already processed?] ──Yes──→ [Skip]               │     │
+│  │          │ No                                       │     │
+│  │          ▼                                          │     │
+│  │  [Already following?] ──Yes──→ [Skip]               │     │
+│  │          │ No                                       │     │
+│  │          ▼                                          │     │
+│  │  [Meets filters?] ──No──→ [Skip + log reason]      │     │
+│  │          │ Yes                                      │     │
+│  │          ▼                                          │     │
+│  │  [Click Follow button]                              │     │
+│  │          │                                          │     │
+│  │          ▼                                          │     │
+│  │  [Wait 3-4.5s delay]                                │     │
+│  │          │                                          │     │
+│  │          ▼                                          │     │
+│  │  [Max follows reached?] ──Yes──→ [Next target]      │     │
+│  │          │ No                                       │     │
+│  │          ▼                                          │     │
+│  │  [Scroll for more users]                            │     │
+│  │                                                     │     │
+│  └─────────────────────────────────────────────────────┘     │
+│          │                                                   │
+│          ▼                                                   │
+│  [Print session summary]                                     │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘
+</code></pre>
+<hr>
+<h2>🌐 Method 1: Browser Console (Copy-Paste)</h2>
+<p><strong>Best for:</strong> Everyone — requires pasting <code>core.js</code> first, then this script.</p>
+<h3>Prerequisites</h3>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> Logged into your X/Twitter account in a web browser</li>
+<li><input checked="" disabled="" type="checkbox"> On a desktop/laptop (not mobile)</li>
+<li><input checked="" disabled="" type="checkbox"> On <code>x.com</code> (any page — the script navigates automatically)</li>
+</ul>
+<h3>Step 1: Paste <code>core.js</code> first</h3>
+<blockquote>
+<p>Navigate to <code>x.com/home</code>. Open DevTools Console (<code>F12</code> → Console). Paste the contents of <a href="https://github.com/nichxbt/xactions/blob/main/src/automation/core.js"><code>src/automation/core.js</code></a> and press Enter. You&#39;ll see <code>✅ XActions Core loaded</code>.</p>
+</blockquote>
+<h3>Step 2: Configure and paste the script</h3>
+<p>Edit the <code>CONFIG</code> section to add your target accounts and filters, then paste:</p>
+<pre><code class="language-javascript">// ============================================
+// XActions - Follow Target&#39;s Followers
+// by nichxbt — https://xactions.app
+// REQUIRES: Paste core.js first!
+// ============================================
+
+(() =&gt; {
+  if (!window.XActions?.Core) {
+    console.error(&#39;❌ Core module not loaded! Paste core.js first.&#39;);
+    return;
+  }
+
+  const { log, sleep, randomDelay, scrollBy, clickElement,
+          waitForElement, storage, SELECTORS, extractUserFromCell } = window.XActions.Core;
+
+  // ============================================
+  // CONFIGURATION — edit these!
+  // ============================================
+  const CONFIG = {
+    // Target accounts — follow their followers or following
+    TARGET_ACCOUNTS: [
+      &#39;naval&#39;,        // Replace with your competitors
+      &#39;vitalikbuterin&#39;,
+    ],
+
+    // &#39;followers&#39; or &#39;following&#39;
+    LIST_TYPE: &#39;followers&#39;,
+
+    // Follow limits
+    MAX_FOLLOWS_PER_ACCOUNT: 20,
+    TOTAL_MAX_FOLLOWS: 50,
+
+    // ── FILTERS ──
+    FILTERS: {
+      MIN_FOLLOWERS: 100,        // Skip tiny accounts
+      MAX_FOLLOWERS: 50000,      // Skip mega accounts
+      MIN_FOLLOWING: 10,
+      MAX_FOLLOWING: 5000,
+      MIN_RATIO: 0.1,            // followers/following &gt; 10%
+      MUST_HAVE_BIO: true,
+      BIO_KEYWORDS: [],          // e.g. [&#39;crypto&#39;, &#39;defi&#39;, &#39;web3&#39;]
+      SKIP_PROTECTED: true,
+      SKIP_VERIFIED: false,
+    },
+
+    // ── TIMING ──
+    DELAY_BETWEEN_FOLLOWS: 3000,
+    DELAY_BETWEEN_SCROLLS: 2000,
+    MAX_SCROLLS_PER_ACCOUNT: 30,
+
+    // ── INTERACTION ──
+    INTERACT_AFTER_FOLLOW: false, // Also like their recent posts
+    LIKES_PER_USER: 2,
+  };
+
+  // ============================================
+  // STATE
+  // ============================================
+  const state = {
+    totalFollowed: 0,
+    skipped: { protected: 0, verified: 0, filtered: 0, alreadyFollowing: 0 },
+    isRunning: true,
+  };
+
+  const tracked = {
+    followed: new Map(Object.entries(storage.get(&#39;targetfollow_followed&#39;) || {})),
+    processed: new Set(storage.get(&#39;targetfollow_processed&#39;) || []),
+  };
+
+  const saveTracked = () =&gt; {
+    storage.set(&#39;targetfollow_followed&#39;, Object.fromEntries(tracked.followed));
+    storage.set(&#39;targetfollow_processed&#39;, Array.from(tracked.processed));
+  };
+
+  const parseCount = (text) =&gt; {
+    if (!text) return 0;
+    text = text.toLowerCase().replace(/,/g, &#39;&#39;);
+    if (text.includes(&#39;k&#39;)) return parseFloat(text) * 1000;
+    if (text.includes(&#39;m&#39;)) return parseFloat(text) * 1000000;
+    return parseInt(text) || 0;
+  };
+
+  const meetsFilters = (userInfo) =&gt; {
+    const { FILTERS } = CONFIG;
+    if (FILTERS.SKIP_PROTECTED &amp;&amp; userInfo.isProtected)  { state.skipped.protected++; return false; }
+    if (FILTERS.SKIP_VERIFIED &amp;&amp; userInfo.isVerified)    { state.skipped.verified++; return false; }
+    if (FILTERS.MIN_FOLLOWERS &amp;&amp; userInfo.followers &lt; FILTERS.MIN_FOLLOWERS) { state.skipped.filtered++; return false; }
+    if (FILTERS.MAX_FOLLOWERS &amp;&amp; userInfo.followers &gt; FILTERS.MAX_FOLLOWERS) { state.skipped.filtered++; return false; }
+    if (FILTERS.MUST_HAVE_BIO &amp;&amp; !userInfo.bio)          { state.skipped.filtered++; return false; }
+    if (FILTERS.BIO_KEYWORDS.length &gt; 0) {
+      const bioLower = (userInfo.bio || &#39;&#39;).toLowerCase();
+      if (!FILTERS.BIO_KEYWORDS.some(kw =&gt; bioLower.includes(kw.toLowerCase()))) { state.skipped.filtered++; return false; }
+    }
+    return true;
+  };
+
+  const getUserInfoFromCell = (cell) =&gt; {
+    const extracted = extractUserFromCell(cell);
+    if (!extracted) return { username: null, bio: null, isProtected: false, isVerified: false, followers: 0 };
+    return { username: extracted.username, bio: extracted.bio, isProtected: extracted.isProtected || false, isVerified: extracted.isVerified || false, followers: extracted.followers || 0 };
+  };
+
+  // ============================================
+  // PROCESS TARGET ACCOUNT
+  // ============================================
+  const processTargetAccount = async (targetUsername) =&gt; {
+    log(`\n📍 Processing @${targetUsername}&#39;s ${CONFIG.LIST_TYPE}...`, &#39;info&#39;);
+    const url = `https://x.com/${targetUsername}/${CONFIG.LIST_TYPE}`;
+    window.location.href = url;
+    await sleep(3000);
+    await waitForElement(SELECTORS.userCell, 10000);
+
+    let followedThisAccount = 0;
+    let scrolls = 0;
+    const processedThisSession = new Set();
+
+    while (
+      scrolls &lt; CONFIG.MAX_SCROLLS_PER_ACCOUNT &amp;&amp;
+      followedThisAccount &lt; CONFIG.MAX_FOLLOWS_PER_ACCOUNT &amp;&amp;
+      state.totalFollowed &lt; CONFIG.TOTAL_MAX_FOLLOWS &amp;&amp;
+      state.isRunning
+    ) {
+      const cells = document.querySelectorAll(SELECTORS.userCell);
+
+      for (const cell of cells) {
+        if (!state.isRunning) break;
+        if (state.totalFollowed &gt;= CONFIG.TOTAL_MAX_FOLLOWS) break;
+        if (followedThisAccount &gt;= CONFIG.MAX_FOLLOWS_PER_ACCOUNT) break;
+
+        const userInfo = getUserInfoFromCell(cell);
+        if (!userInfo.username) continue;
+        if (processedThisSession.has(userInfo.username)) continue;
+        processedThisSession.add(userInfo.username);
+        if (tracked.followed.has(userInfo.username) || tracked.processed.has(userInfo.username)) continue;
+
+        // Skip if already following
+        const unfollowBtn = cell.querySelector(SELECTORS.unfollowButton);
+        if (unfollowBtn) { state.skipped.alreadyFollowing++; tracked.processed.add(userInfo.username); continue; }
+
+        // Check filters
+        if (!meetsFilters(userInfo)) { tracked.processed.add(userInfo.username); continue; }
+
+        // Follow
+        const followBtn = cell.querySelector(SELECTORS.followButton);
+        if (!followBtn) continue;
+
+        await clickElement(followBtn);
+        state.totalFollowed++;
+        followedThisAccount++;
+
+        tracked.followed.set(userInfo.username, { at: Date.now(), source: `${targetUsername}/${CONFIG.LIST_TYPE}` });
+        tracked.processed.add(userInfo.username);
+        saveTracked();
+
+        log(`✅ Followed @${userInfo.username} [${state.totalFollowed}/${CONFIG.TOTAL_MAX_FOLLOWS}]`, &#39;success&#39;);
+        await randomDelay(CONFIG.DELAY_BETWEEN_FOLLOWS, CONFIG.DELAY_BETWEEN_FOLLOWS * 1.5);
+      }
+
+      scrollBy(600);
+      scrolls++;
+      await sleep(CONFIG.DELAY_BETWEEN_SCROLLS);
+    }
+
+    log(`Finished @${targetUsername}: followed ${followedThisAccount} users`, &#39;info&#39;);
+  };
+
+  // ============================================
+  // RUN
+  // ============================================
+  const run = async () =&gt; {
+    console.log(`
+╔═══════════════════════════════════════════════════════════╗
+║  👥 XActions - Follow Target&#39;s Followers                  ║
+╠═══════════════════════════════════════════════════════════╣
+║  Targets: ${String(CONFIG.TARGET_ACCOUNTS.length).padEnd(5)} accounts                            ║
+║  List type: ${CONFIG.LIST_TYPE.padEnd(12)}                             ║
+║  Max per account: ${String(CONFIG.MAX_FOLLOWS_PER_ACCOUNT).padEnd(5)}                              ║
+║  Total max: ${String(CONFIG.TOTAL_MAX_FOLLOWS).padEnd(5)}                                    ║
+║                                                           ║
+║  Run stopTargetFollow() to stop early.                    ║
+╚═══════════════════════════════════════════════════════════╝
+    `);
+
+    if (CONFIG.TARGET_ACCOUNTS.length === 0) {
+      log(&#39;⚠️ No target accounts! Add usernames to CONFIG.TARGET_ACCOUNTS&#39;, &#39;warning&#39;);
+      return;
+    }
+
+    for (const target of CONFIG.TARGET_ACCOUNTS) {
+      if (!state.isRunning || state.totalFollowed &gt;= CONFIG.TOTAL_MAX_FOLLOWS) break;
+      await processTargetAccount(target);
+    }
+
+    console.log(`
+╔═══════════════════════════════════════════════════════════╗
+║  ✅ SESSION COMPLETE                                      ║
+╠═══════════════════════════════════════════════════════════╣
+║  Total Followed: ${String(state.totalFollowed).padEnd(5)}                                ║
+║  Skipped:                                                 ║
+║    Already following: ${String(state.skipped.alreadyFollowing).padEnd(5)}                          ║
+║    Protected: ${String(state.skipped.protected).padEnd(5)}                                  ║
+║    Verified: ${String(state.skipped.verified).padEnd(5)}                                   ║
+║    Filtered: ${String(state.skipped.filtered).padEnd(5)}                                   ║
+║  Total tracked: ${String(tracked.followed.size).padEnd(5)} users                          ║
+╚═══════════════════════════════════════════════════════════╝
+    `);
+  };
+
+  run();
+
+  window.stopTargetFollow = () =&gt; {
+    state.isRunning = false;
+    log(&#39;Stopping target follow...&#39;, &#39;warning&#39;);
+  };
+})();
+</code></pre>
+<h3>Step 3: Watch it work</h3>
+<p>The script automatically navigates between target accounts&#39; follower lists. You&#39;ll see console output like:</p>
+<pre><code>╔═══════════════════════════════════════════════════════════╗
+║  👥 XActions - Follow Target&#39;s Followers                  ║
+║  Targets: 2     accounts                                  ║
+║  List type: followers                                     ║
+║  Max per account: 20                                      ║
+╚═══════════════════════════════════════════════════════════╝
+
+📍 Processing @naval&#39;s followers...
+  ✅ Followed @cryptodev [1/50]
+  ✅ Followed @web3builder [2/50]
+  ⏭️ Skipped: no bio
+  ⏭️ Skipped: 3 followers (min: 100)
+  ✅ Followed @defiresearcher [3/50]
+  ...
+Finished @naval: followed 20 users
+
+📍 Processing @vitalikbuterin&#39;s followers...
+  ...
+</code></pre>
+<hr>
+<h2>⚙️ Configuration Reference</h2>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>TARGET_ACCOUNTS</code></td>
+<td><code>[]</code></td>
+<td>Array of usernames (without @) to scrape followers from</td>
+</tr>
+<tr>
+<td><code>LIST_TYPE</code></td>
+<td><code>&#39;followers&#39;</code></td>
+<td><code>&#39;followers&#39;</code> or <code>&#39;following&#39;</code> — which list to scrape</td>
+</tr>
+<tr>
+<td><code>MAX_FOLLOWS_PER_ACCOUNT</code></td>
+<td><code>20</code></td>
+<td>Max follows per target account</td>
+</tr>
+<tr>
+<td><code>TOTAL_MAX_FOLLOWS</code></td>
+<td><code>50</code></td>
+<td>Hard cap across all targets</td>
+</tr>
+<tr>
+<td><code>MIN_FOLLOWERS</code></td>
+<td><code>100</code></td>
+<td>Skip users with fewer than this many followers</td>
+</tr>
+<tr>
+<td><code>MAX_FOLLOWERS</code></td>
+<td><code>50000</code></td>
+<td>Skip mega-accounts (rarely follow back)</td>
+</tr>
+<tr>
+<td><code>MIN_RATIO</code></td>
+<td><code>0.1</code></td>
+<td>Minimum followers/following ratio</td>
+</tr>
+<tr>
+<td><code>MUST_HAVE_BIO</code></td>
+<td><code>true</code></td>
+<td>Skip users without a bio</td>
+</tr>
+<tr>
+<td><code>BIO_KEYWORDS</code></td>
+<td><code>[]</code></td>
+<td>Must contain one of these words (empty = any)</td>
+</tr>
+<tr>
+<td><code>SKIP_PROTECTED</code></td>
+<td><code>true</code></td>
+<td>Skip private/locked accounts</td>
+</tr>
+<tr>
+<td><code>SKIP_VERIFIED</code></td>
+<td><code>false</code></td>
+<td>Skip verified accounts</td>
+</tr>
+<tr>
+<td><code>DELAY_BETWEEN_FOLLOWS</code></td>
+<td><code>3000</code></td>
+<td>Milliseconds between follow clicks</td>
+</tr>
+<tr>
+<td><code>INTERACT_AFTER_FOLLOW</code></td>
+<td><code>false</code></td>
+<td>Also like their recent posts after following</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>💡 Pro Tips</h2>
+<ol>
+<li><strong>Target &#39;following&#39; lists for higher follow-back rates.</strong> Accounts in a user&#39;s &quot;following&quot; list are already active followers of others — they&#39;re more likely to follow you back than passive followers.</li>
+<li><strong>Use BIO_KEYWORDS for laser-targeting.</strong> Set <code>BIO_KEYWORDS: [&#39;defi&#39;, &#39;web3&#39;, &#39;solidity&#39;]</code> to only follow users whose bio mentions your niche. This dramatically improves follow-back rates.</li>
+<li><strong>Keep MAX_FOLLOWS_PER_ACCOUNT under 25.</strong> X rate-limits follow actions. Going over 25 per session per list can trigger temporary blocks.</li>
+<li><strong>Enable INTERACT_AFTER_FOLLOW sparingly.</strong> Liking 2 posts after following increases your chances of being noticed, but it slows down the script significantly (navigates to each profile).</li>
+<li><strong>Run the Smart Unfollow script 3–4 days later.</strong> Follow → wait → unfollow non-followers is the classic growth loop. Use <code>unfollowWDFBLog.js</code> to clean up.</li>
+<li><strong>Pick 3–5 competitors, not 30.</strong> Quality over quantity. Choose accounts whose followers most closely match your ideal audience.</li>
+</ol>
+<hr>
+<h2>⚠️ Important Warnings</h2>
+<blockquote>
+<p><strong>Rate limits:</strong> X limits follow actions. The script uses 3s+ delays, but following 50+ users in one session may trigger a temporary follow block (usually 24 hours).</p>
+</blockquote>
+<blockquote>
+<p><strong>Core.js required:</strong> This script depends on <code>core.js</code> being loaded first. If you see <code>❌ Core module not loaded!</code>, paste <code>core.js</code> before this script.</p>
+</blockquote>
+<blockquote>
+<p><strong>Page navigation:</strong> The script navigates away from your current page. Save any unsaved work before running.</p>
+</blockquote>
+<hr>
+<h2>🔗 Related Features</h2>
+<ul>
+<li><a href="keyword-follow-tutorial.md">Keyword Follow Tutorial</a> — Follow users from search results instead of competitor lists</li>
+<li><a href="smart-unfollow-tutorial.md">Smart Unfollow Tutorial</a> — Unfollow non-followers after a grace period</li>
+<li><a href="growth-suite-tutorial.md">Growth Suite Tutorial</a> — Combines follow + like + unfollow in one session</li>
+<li><a href="profile-scraping-tutorial.md">Profile Scraping Tutorial</a> — Extract any profile&#39;s data before following</li>
+</ul>
+<hr>
+<h2>❓ FAQ</h2>
+<h3>How many people can I follow per day on X?</h3>
+<p>X&#39;s official limit is approximately 400 follows per day, but aggressive following can trigger temporary blocks much sooner. We recommend staying under 50 per session and running 1–2 sessions per day max.</p>
+<h3>Should I target &#39;followers&#39; or &#39;following&#39; lists?</h3>
+<p><strong>Following lists</strong> generally have higher follow-back rates because those users are already active followers of others. <strong>Follower lists</strong> give you access to a wider audience but may include more passive/inactive accounts.</p>
+<h3>What&#39;s the MIN_RATIO filter?</h3>
+<p>It checks followers/following ratio. A ratio of <code>0.1</code> means the user must have at least 10% as many followers as their following count. This helps skip follow-for-follow spam accounts who follow 10,000 people but have 50 followers.</p>
+<h3>Can I follow from multiple target accounts in one session?</h3>
+<p>Yes! Add multiple usernames to <code>TARGET_ACCOUNTS</code>. The script processes them sequentially and respects <code>TOTAL_MAX_FOLLOWS</code> across all targets.</p>
+<h3>Does this work on private accounts?</h3>
+<p>No. You can&#39;t see the followers of private/protected accounts. The script will skip protected target accounts automatically.</p>
+<hr>
+<p align="center">
+  <b>Built with ❤️ by <a href="https://x.com/nichxbt">@nichxbt</a></b><br>
+  <a href="https://xactions.app">xactions.app</a> · <a href="https://github.com/nichxbt/xactions">GitHub</a>
+</p>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try Follow a Competitor's Followers on X (Twitter) — Steal Their Audience?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/step-by-step/auto-commenter-tutorial">📝 Auto Commenter Tutorial</a>
+        <a href="/docs/step-by-step/auto-liker-tutorial">📝 Auto Liker Tutorial</a>
+        <a href="/docs/step-by-step/bookmark-exporter-tutorial">📝 Bookmark Exporter Tutorial</a>
+        <a href="/docs/step-by-step/detect-unfollowers-tutorial">📝 Detect Unfollowers Tutorial</a>
+        <a href="/docs/step-by-step/followers-scraping-tutorial">📝 Followers Scraping Tutorial</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a> / <a href="/docs#step-by-step">Tutorials</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Who Unfollowed Me on X (Twitter) — Free Unfollower Tracker — Free X/Twitter Tools Tool | XActions</title>
+  <meta name="description" content="**Find out exactly who unfollowed you on X (Twitter) — free, no app download, no API key.** Takes a snapshot of your followers, then compares on the next run...">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, detect, unfollowers, tutorial, unfollowed, (twitter), unfollower, tracker, tools, detect unfollowers tutorial twitter, twitter detect unfollowers tutorial">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Who Unfollowed Me on X (Twitter) — Free Unfollower Tracker — XActions">
+  <meta property="og:description" content="**Find out exactly who unfollowed you on X (Twitter) — free, no app download, no API key.** Takes a snapshot of your followers, then compares on the next run...">
+  <meta property="og:url" content="https://xactions.app/docs/step-by-step/detect-unfollowers-tutorial">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Who Unfollowed Me on X (Twitter) — Free Unfollower Tracker — Free X/Twitter Tool">
+  <meta name="twitter:description" content="**Find out exactly who unfollowed you on X (Twitter) — free, no app download, no API key.** Takes a snapshot of your followers, then compares on the next run...">
+
+  <link rel="canonical" href="https://xactions.app/docs/step-by-step/detect-unfollowers-tutorial">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Who Unfollowed Me on X (Twitter) — Free Unfollower Tracker — Free X/Twitter Tools Tool | XActions",
+    "description": "**Find out exactly who unfollowed you on X (Twitter) — free, no app download, no API key.** Takes a snapshot of your followers, then compares on the next run...",
+    "url": "https://xactions.app/docs/step-by-step/detect-unfollowers-tutorial",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/detect-unfollowers-tutorial",
+    "articleSection": "Tools",
+    "keywords": "xactions, twitter automation, x automation, free, detect, unfollowers, tutorial, unfollowed, (twitter), unfollower, tracker, tools, detect unfollowers tutorial twitter, twitter detect unfollowers tutorial"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Who Unfollowed Me on X (Twitter) — Free Unfollower Tracker", "item": "https://xactions.app/docs/detect-unfollowers-tutorial" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use Who Unfollowed Me on X (Twitter) — Free Unfollower Tracker",
+    "description": "**Find out exactly who unfollowed you on X (Twitter) — free, no app download, no API key.** Takes a snapshot of your followers, then compares on the next run...",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions Who Unfollowed Me on X (Twitter) — Free Unfollower Tracker script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>⚡ Who Unfollowed Me on X (Twitter) — Free Unfollower Tracker</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › Who Unfollowed Me on X (Twitter) — Free Unfollower Tracker
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Tools</span>
+        <h1>🔍 Who Unfollowed Me on X (Twitter) — Free Unfollower Tracker</h1>
+<blockquote>
+<p><strong>Find out exactly who unfollowed you on X (Twitter) — free, no app download, no API key.</strong> Takes a snapshot of your followers, then compares on the next run to reveal who left and who&#39;s new.</p>
+</blockquote>
+<p><strong>Works on:</strong> 🌐 Browser Console · 💻 CLI · 🤖 MCP (AI Agents)<br><strong>Difficulty:</strong> 🟢 Beginner<br><strong>Time:</strong> ⏱️ 2–5 minutes per scan<br><strong>Requirements:</strong> A web browser logged into x.com</p>
+<blockquote>
+<p>📖 For the quick-reference version, see <a href="../detect-unfollowers.md">detect-unfollowers.md</a></p>
+</blockquote>
+<hr>
+<h2>🎯 Real-World Scenario</h2>
+<p>You posted a hot take last Friday. It got 200 likes — but your follower count dropped from <strong>1,247 to 1,239</strong>. Eight people unfollowed you. Who were they? Was it that brand you were pitching? Your ex-colleague? Random bots? X doesn&#39;t tell you. Third-party &quot;unfollower tracker&quot; apps want your login credentials (sketchy) or charge $5/month for something that should take 30 seconds.</p>
+<p>XActions solves this with a two-run workflow: <strong>Run 1</strong> saves a snapshot of your followers to <code>localStorage</code>. <strong>Run 2</strong> (hours or days later) compares the new list against the old one and tells you exactly who left and who joined. No app install, no login sharing, no fees.</p>
+<p><strong>Before XActions:</strong></p>
+<pre><code>┌─────────────────────────────────────────────────────┐
+│  Your follower count: 1,247 → 1,239                │
+│  &quot;Who unfollowed me?&quot; 🤔                            │
+├─────────────────────────────────────────────────────┤
+│                                                     │
+│  Option 1: Paid tracker apps ($5/mo)                │
+│    → Give them your login → Privacy risk            │
+│                                                     │
+│  Option 2: Manually check each follower             │
+│    → 1,239 profiles to click through 😩             │
+│                                                     │
+│  Option 3: Just wonder forever                      │
+│    → Accept the mystery 🤷                           │
+│                                                     │
+└─────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>After XActions:</strong></p>
+<pre><code>┌─────────────────────────────────────────────────────┐
+│  🚨 8 PEOPLE UNFOLLOWED YOU:                        │
+├─────────────────────────────────────────────────────┤
+│  1. @crypto_bro_88     (followed you for 2 days)   │
+│  2. @brand_pitch_fail  (the one you were pitching)  │
+│  3. @bot_account_1     (automated follow/unfollow)  │
+│  4. @spammer_xyz       (good riddance)              │
+│  5. @random_user_42    (who even was this)          │
+│  6. @old_colleague     (ouch)                       │
+│  7. @bot_account_2     (another bot)                │
+│  8. @giveaway_hunter   (followed for the giveaway)  │
+│                                                     │
+│  🎉 3 NEW FOLLOWERS:                                │
+│  1. @genuine_fan       2. @dev_friend              │
+│  3. @new_reader                                     │
+│                                                     │
+│  📉 Net change: -5 followers                        │
+│  📥 Unfollowers list downloaded!                    │
+│  ⏱️  Time: 45 seconds                               │
+│  💰 Cost: $0                                        │
+└─────────────────────────────────────────────────────┘
+</code></pre>
+<hr>
+<h2>📋 What This Does (Step by Step)</h2>
+<ol>
+<li>📜 <strong>Scrolls your followers list</strong> — loads all followers from <code>x.com/you/followers</code></li>
+<li>📸 <strong>Takes a snapshot</strong> — saves every username + display name to <code>localStorage</code></li>
+<li>🔄 <strong>On second run: compares</strong> — diffs the new list against the saved snapshot</li>
+<li>🚨 <strong>Shows unfollowers</strong> — lists every person who was in the previous snapshot but isn&#39;t now</li>
+<li>🎉 <strong>Shows new followers</strong> — lists every person who&#39;s new since the last snapshot</li>
+<li>📥 <strong>Downloads unfollowers</strong> — auto-downloads a <code>.txt</code> file of unfollower usernames</li>
+<li>💾 <strong>Updates snapshot</strong> — saves the current state for the next comparison</li>
+</ol>
+<pre><code>┌──────────────────────────────────────────────────────────┐
+│                                                          │
+│  ── RUN 1 (first time) ──────────────────────────        │
+│                                                          │
+│  [Navigate to /followers]                                │
+│          │                                               │
+│          ▼                                               │
+│  [Scroll &amp; collect all follower usernames]               │
+│          │                                               │
+│          ▼                                               │
+│  [Save snapshot to localStorage]                         │
+│          │                                               │
+│          ▼                                               │
+│  [Done! &quot;Run again later to detect changes.&quot;]            │
+│                                                          │
+│                                                          │
+│  ── RUN 2+ (subsequent times) ───────────────────        │
+│                                                          │
+│  [Navigate to /followers]                                │
+│          │                                               │
+│          ▼                                               │
+│  [Scroll &amp; collect all follower usernames]               │
+│          │                                               │
+│          ▼                                               │
+│  [Load previous snapshot from localStorage]              │
+│          │                                               │
+│    ┌─────┴─────┐                                         │
+│    ▼           ▼                                         │
+│  [In old,    [In new,                                    │
+│   not new]    not old]                                   │
+│    │           │                                         │
+│    ▼           ▼                                         │
+│  🚨 UNFOLLOWED  🎉 NEW FOLLOWER                          │
+│          │                                               │
+│          ▼                                               │
+│  [Download unfollowers.txt + update snapshot]            │
+│                                                          │
+└──────────────────────────────────────────────────────────┘
+</code></pre>
+<hr>
+<h2>🌐 Method 1: Browser Console (Copy-Paste)</h2>
+<p><strong>Best for:</strong> Everyone. Run it once to take a snapshot, then again whenever you want to check.</p>
+<h3>Prerequisites</h3>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> Logged into X/Twitter in your browser</li>
+<li><input checked="" disabled="" type="checkbox"> On desktop/laptop</li>
+</ul>
+<h3>Step 1: Navigate to your Followers page</h3>
+<blockquote>
+<p>Go to <strong><code>x.com/YOUR_USERNAME/followers</code></strong> (not &quot;following&quot; — <strong>followers</strong>)</p>
+</blockquote>
+<pre><code>┌────────────────────────────────────────────────────┐
+│ 🔍 x.com/nichxbt/followers                         │
+├────────────────────────────────────────────────────┤
+│                                                    │
+│  👤 Real Friend @bestie_dev                        │
+│     Full-stack dev | Building cool stuff           │
+│                                                    │
+│  👤 New Fan @genuine_reader                        │
+│     I read your blog                               │
+│                                                    │
+│  👤 Bot Account @spammy_bot_42                     │
+│     🚀💰 Follow for follow! 🎉                    │
+│                                                    │
+│  ... 1,236 more                                    │
+│                                                    │
+└────────────────────────────────────────────────────┘
+</code></pre>
+<h3>Step 2: Open Developer Console</h3>
+<table>
+<thead>
+<tr>
+<th>OS</th>
+<th>Shortcut</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Windows / Linux</strong></td>
+<td><code>F12</code> then <strong>Console</strong> tab, or <code>Ctrl + Shift + J</code></td>
+</tr>
+<tr>
+<td><strong>Mac</strong></td>
+<td><code>Cmd + Option + J</code></td>
+</tr>
+</tbody></table>
+<h3>Step 3: Paste and Run</h3>
+<p><strong>Run 1 (first time):</strong> Takes a snapshot and saves it. <strong>Run 2+ (later):</strong> Compares and shows who unfollowed.</p>
+<pre><code class="language-javascript">// ============================================
+// XActions - Detect Unfollowers on X/Twitter
+// by nichxbt — https://xactions.app
+// Go to: x.com/YOUR_USERNAME/followers
+// Open console (F12 → Console), paste, Enter
+// Run once to snapshot, again later to compare
+// ============================================
+
+(async () =&gt; {
+  const STORAGE_KEY = &#39;xactions_followers_snapshot&#39;;
+  const SCROLL_DELAY = 1500;
+  const MAX_SCROLL_RETRIES = 10;
+
+  console.log(&#39;&#39;);
+  console.log(&#39;🔍 XActions - DETECT UNFOLLOWERS&#39;);
+  console.log(&#39;════════════════════════════════════════&#39;);
+
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+
+  // Verify page
+  const pathMatch = window.location.pathname.match(/^\/([^/]+)\/followers/);
+  if (!pathMatch) {
+    console.error(&#39;❌ Navigate to your FOLLOWERS page first!&#39;);
+    console.log(&#39;👉 Go to: x.com/YOUR_USERNAME/followers&#39;);
+    return;
+  }
+
+  const username = pathMatch[1];
+  console.log(`📍 Monitoring: @${username}`);
+  console.log(&#39;&#39;);
+
+  // ── Step 1: Scan current followers ─────────────────────
+  console.log(&#39;📜 Step 1: Scanning your followers list...&#39;);
+
+  const followers = new Map();
+  let scrollRetries = 0;
+
+  while (scrollRetries &lt; MAX_SCROLL_RETRIES) {
+    const cells = document.querySelectorAll(&#39;[data-testid=&quot;UserCell&quot;]&#39;);
+    const prevSize = followers.size;
+
+    cells.forEach(cell =&gt; {
+      try {
+        const link = cell.querySelector(&#39;a[href^=&quot;/&quot;]&#39;);
+        const href = link?.getAttribute(&#39;href&#39;) || &#39;&#39;;
+        const handle = href.split(&#39;/&#39;)[1]?.toLowerCase();
+        if (!handle || handle.includes(&#39;?&#39;) || handle.includes(&#39;/&#39;)) return;
+
+        const nameEl = cell.querySelector(&#39;[dir=&quot;ltr&quot;] &gt; span&#39;);
+        const displayName = nameEl?.textContent?.trim() || handle;
+        const bioEl = cell.querySelector(&#39;[data-testid=&quot;UserDescription&quot;]&#39;);
+        const bio = bioEl?.textContent?.trim() || &#39;&#39;;
+
+        if (!followers.has(handle)) {
+          followers.set(handle, { username: handle, displayName, bio });
+        }
+      } catch (e) { /* skip */ }
+    });
+
+    console.log(`   📊 Found ${followers.size} followers so far...`);
+
+    if (followers.size === prevSize) scrollRetries++;
+    else scrollRetries = 0;
+
+    window.scrollTo(0, document.body.scrollHeight);
+    await sleep(SCROLL_DELAY);
+  }
+
+  const currentFollowers = Array.from(followers.values());
+  console.log(&#39;&#39;);
+  console.log(`✅ Scan complete! Found ${currentFollowers.length} followers`);
+
+  // ── Step 2: Load previous snapshot ─────────────────────
+  console.log(&#39;&#39;);
+  console.log(&#39;📂 Step 2: Checking for previous snapshot...&#39;);
+
+  let previousData = null;
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) previousData = JSON.parse(stored);
+  } catch (e) { /* no previous data */ }
+
+  // ── Step 3: Compare if previous data exists ────────────
+  if (previousData &amp;&amp; previousData.username === username) {
+    const prevDate = new Date(previousData.timestamp).toLocaleString();
+    console.log(`   📸 Found snapshot from ${prevDate}`);
+    console.log(`   📊 Previous: ${previousData.count} | Current: ${currentFollowers.length}`);
+    console.log(&#39;&#39;);
+    console.log(&#39;🔎 Step 3: Comparing snapshots...&#39;);
+
+    const prevSet = new Set(previousData.followers.map(f =&gt; f.username.toLowerCase()));
+    const currSet = new Set(currentFollowers.map(f =&gt; f.username.toLowerCase()));
+
+    const unfollowers = previousData.followers.filter(f =&gt; !currSet.has(f.username.toLowerCase()));
+    const newFollowers = currentFollowers.filter(f =&gt; !prevSet.has(f.username.toLowerCase()));
+
+    // Show unfollowers
+    console.log(&#39;&#39;);
+    if (unfollowers.length &gt; 0) {
+      console.log(`🚨 ${unfollowers.length} PEOPLE UNFOLLOWED YOU:`);
+      console.log(&#39;─&#39;.repeat(45));
+      unfollowers.forEach((u, i) =&gt; {
+        console.log(`   ${i + 1}. @${u.username} (${u.displayName})`);
+        console.log(`      └─ https://x.com/${u.username}`);
+      });
+
+      // Auto-download unfollowers list
+      const list = unfollowers.map(u =&gt; `@${u.username}`).join(&#39;\n&#39;);
+      const blob = new Blob([list], { type: &#39;text/plain&#39; });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement(&#39;a&#39;);
+      a.href = url;
+      a.download = `unfollowers-${username}-${new Date().toISOString().split(&#39;T&#39;)[0]}.txt`;
+      a.click();
+      URL.revokeObjectURL(url);
+      console.log(&#39;&#39;);
+      console.log(&#39;📥 Unfollowers list downloaded!&#39;);
+    } else {
+      console.log(&#39;✨ No one unfollowed you since last check!&#39;);
+    }
+
+    // Show new followers
+    console.log(&#39;&#39;);
+    if (newFollowers.length &gt; 0) {
+      console.log(`🎉 ${newFollowers.length} NEW FOLLOWERS:`);
+      console.log(&#39;─&#39;.repeat(45));
+      newFollowers.slice(0, 25).forEach((u, i) =&gt; {
+        console.log(`   ${i + 1}. @${u.username} (${u.displayName})`);
+      });
+      if (newFollowers.length &gt; 25) console.log(`   ... and ${newFollowers.length - 25} more!`);
+    } else {
+      console.log(&#39;📭 No new followers since last check.&#39;);
+    }
+
+    // Summary
+    console.log(&#39;&#39;);
+    console.log(&#39;📈 SUMMARY:&#39;);
+    console.log(&#39;─&#39;.repeat(45));
+    const net = newFollowers.length - unfollowers.length;
+    const icon = net &gt; 0 ? &#39;📈&#39; : net &lt; 0 ? &#39;📉&#39; : &#39;➡️&#39;;
+    console.log(`   ${icon} Net change: ${net &gt;= 0 ? &#39;+&#39; : &#39;&#39;}${net} followers`);
+    console.log(`   ➕ Gained: ${newFollowers.length}`);
+    console.log(`   ➖ Lost: ${unfollowers.length}`);
+
+  } else {
+    console.log(&#39;   📸 No previous snapshot — this is your first scan!&#39;);
+    console.log(&#39;   💡 Run this script again later to detect changes.&#39;);
+  }
+
+  // ── Step 4: Save current snapshot ──────────────────────
+  console.log(&#39;&#39;);
+  console.log(&#39;💾 Step 4: Saving current snapshot...&#39;);
+
+  const snapshot = {
+    username,
+    followers: currentFollowers,
+    count: currentFollowers.length,
+    timestamp: new Date().toISOString()
+  };
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
+  console.log(`   ✅ Saved ${currentFollowers.length} followers`);
+  console.log(`   📅 ${new Date().toLocaleString()}`);
+
+  console.log(&#39;&#39;);
+  console.log(&#39;════════════════════════════════════════&#39;);
+  console.log(&#39;🔄 Run again anytime to detect changes!&#39;);
+  console.log(&#39;════════════════════════════════════════&#39;);
+})();
+</code></pre>
+<h3>✅ Expected Output — First Run (Snapshot)</h3>
+<pre><code>🔍 XActions - DETECT UNFOLLOWERS
+════════════════════════════════════════
+📍 Monitoring: @nichxbt
+
+📜 Step 1: Scanning your followers list...
+   📊 Found 234 followers so far...
+   📊 Found 567 followers so far...
+   📊 Found 1,239 followers so far...
+   📊 Found 1,239 followers so far...
+
+✅ Scan complete! Found 1,239 followers
+
+📂 Step 2: Checking for previous snapshot...
+   📸 No previous snapshot — this is your first scan!
+   💡 Run this script again later to detect changes.
+
+💾 Step 4: Saving current snapshot...
+   ✅ Saved 1,239 followers
+   📅 2/24/2026, 2:30:00 PM
+
+════════════════════════════════════════
+🔄 Run again anytime to detect changes!
+════════════════════════════════════════
+</code></pre>
+<h3>✅ Expected Output — Second Run (Comparison)</h3>
+<pre><code>🔍 XActions - DETECT UNFOLLOWERS
+════════════════════════════════════════
+📍 Monitoring: @nichxbt
+
+📜 Step 1: Scanning your followers list...
+   📊 Found 289 followers so far...
+   📊 Found 612 followers so far...
+   📊 Found 1,234 followers so far...
+
+✅ Scan complete! Found 1,234 followers
+
+📂 Step 2: Checking for previous snapshot...
+   📸 Found snapshot from 2/24/2026, 2:30:00 PM
+   📊 Previous: 1,239 | Current: 1,234
+
+🔎 Step 3: Comparing snapshots...
+
+🚨 8 PEOPLE UNFOLLOWED YOU:
+─────────────────────────────────────────────
+   1. @crypto_bro_88 (TO THE MOON 🚀)
+      └─ https://x.com/crypto_bro_88
+   2. @brand_pitch_fail (Some Brand™)
+      └─ https://x.com/brand_pitch_fail
+   3. @bot_account_1 (Follow Back!)
+      └─ https://x.com/bot_account_1
+   4. @spammer_xyz (Win Free iPhone!!)
+      └─ https://x.com/spammer_xyz
+   5. @random_user_42 (Random User)
+      └─ https://x.com/random_user_42
+   6. @ex_colleague (Jane Smith)
+      └─ https://x.com/ex_colleague
+   7. @bot_account_2 (Bot Farm 🤖)
+      └─ https://x.com/bot_account_2
+   8. @giveaway_hunter (Giveaway Pro)
+      └─ https://x.com/giveaway_hunter
+
+📥 Unfollowers list downloaded!
+
+🎉 3 NEW FOLLOWERS:
+─────────────────────────────────────────────
+   1. @genuine_fan (Real Dev)
+   2. @dev_friend (Alex K.)
+   3. @new_reader (Blog Reader)
+
+📈 SUMMARY:
+─────────────────────────────────────────────
+   📉 Net change: -5 followers
+   ➕ Gained: 3
+   ➖ Lost: 8
+
+💾 Step 4: Saving current snapshot...
+   ✅ Saved 1,234 followers
+   📅 2/25/2026, 10:15:00 AM
+
+════════════════════════════════════════
+🔄 Run again anytime to detect changes!
+════════════════════════════════════════
+</code></pre>
+<hr>
+<h2>💻 Method 2: CLI (Command Line)</h2>
+<p><strong>Best for:</strong> Scheduled daily checks, historical tracking, large accounts.</p>
+<pre><code class="language-bash"># Install XActions globally
+npm install -g xactions
+
+# Take a follower snapshot
+npx xactions followers snapshot --username nichxbt
+
+# Check for unfollowers (compares with last snapshot)
+npx xactions followers check --username nichxbt
+
+# Compare two specific snapshots
+npx xactions followers compare \
+  --old ./snapshots/2026-02-20.json \
+  --new ./snapshots/2026-02-24.json
+</code></pre>
+<h3>✅ CLI Output Preview</h3>
+<pre><code>⚡ XActions v2.4.0
+
+🔍 DETECT UNFOLLOWERS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+👤 Account: @nichxbt
+
+📜 Scanning followers...
+   ████████████████████████████ 1,234 followers
+
+📸 Previous snapshot: 2/24/2026 (1,239 followers)
+
+🚨 Unfollowed you (8):
+   @crypto_bro_88, @brand_pitch_fail, @bot_account_1,
+   @spammer_xyz, @random_user_42, @ex_colleague,
+   @bot_account_2, @giveaway_hunter
+
+🎉 New followers (3):
+   @genuine_fan, @dev_friend, @new_reader
+
+📉 Net: -5 | Gained: 3 | Lost: 8
+💾 Snapshot saved → ./snapshots/2026-02-25.json
+📥 Unfollowers → ./unfollowers-2026-02-25.txt
+</code></pre>
+<h3>Schedule daily checks (cron):</h3>
+<pre><code class="language-bash"># Run every day at 9 AM
+0 9 * * * cd /path/to/project &amp;&amp; npx xactions followers check --username nichxbt &gt;&gt; /var/log/unfollower-check.log 2&gt;&amp;1
+</code></pre>
+<h3>CLI Configuration Table</h3>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>--username</code></td>
+<td>string</td>
+<td>required</td>
+<td>Your X username</td>
+</tr>
+<tr>
+<td><code>--snapshot-dir</code></td>
+<td>string</td>
+<td><code>./snapshots</code></td>
+<td>Directory for snapshot files</td>
+</tr>
+<tr>
+<td><code>--output</code></td>
+<td>string</td>
+<td>auto</td>
+<td>Output file for unfollower list</td>
+</tr>
+<tr>
+<td><code>--format</code></td>
+<td>string</td>
+<td><code>txt</code></td>
+<td>Output format: <code>txt</code>, <code>json</code>, <code>csv</code></td>
+</tr>
+<tr>
+<td><code>--headless</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Run browser in background</td>
+</tr>
+<tr>
+<td><code>--notify</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Send desktop notification on changes</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>🤖 Method 3: MCP Server (AI Agents)</h2>
+<blockquote>
+<p>Use with Claude Desktop, GPT, Cursor, or any MCP-compatible AI agent.</p>
+</blockquote>
+<h3>Setup</h3>
+<pre><code class="language-json">{
+  &quot;mcpServers&quot;: {
+    &quot;xactions&quot;: {
+      &quot;command&quot;: &quot;npx&quot;,
+      &quot;args&quot;: [&quot;-y&quot;, &quot;xactions&quot;, &quot;mcp&quot;]
+    }
+  }
+}
+</code></pre>
+<h3>MCP Tool Call</h3>
+<pre><code class="language-json">{
+  &quot;tool&quot;: &quot;x_detect_unfollowers&quot;,
+  &quot;arguments&quot;: {
+    &quot;username&quot;: &quot;nichxbt&quot;,
+    &quot;compare_with_last&quot;: true
+  }
+}
+</code></pre>
+<h3>Claude Desktop example prompt:</h3>
+<blockquote>
+<p>&quot;Check who unfollowed me on X since my last scan and list them with links to their profiles.&quot;</p>
+</blockquote>
+<h3>Expected MCP response:</h3>
+<pre><code class="language-json">{
+  &quot;status&quot;: &quot;complete&quot;,
+  &quot;account&quot;: &quot;nichxbt&quot;,
+  &quot;previous_scan&quot;: &quot;2026-02-24T14:30:00Z&quot;,
+  &quot;previous_count&quot;: 1239,
+  &quot;current_count&quot;: 1234,
+  &quot;unfollowers&quot;: [
+    { &quot;username&quot;: &quot;crypto_bro_88&quot;, &quot;display_name&quot;: &quot;TO THE MOON 🚀&quot; },
+    { &quot;username&quot;: &quot;brand_pitch_fail&quot;, &quot;display_name&quot;: &quot;Some Brand™&quot; }
+  ],
+  &quot;new_followers&quot;: [
+    { &quot;username&quot;: &quot;genuine_fan&quot;, &quot;display_name&quot;: &quot;Real Dev&quot; }
+  ],
+  &quot;net_change&quot;: -5
+}
+</code></pre>
+<hr>
+<h2>📊 Method Comparison</h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>🌐 Browser Console</th>
+<th>💻 CLI</th>
+<th>🤖 MCP</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Setup</td>
+<td>None</td>
+<td><code>npm install</code></td>
+<td>Config JSON</td>
+</tr>
+<tr>
+<td>Storage</td>
+<td>localStorage</td>
+<td>JSON files</td>
+<td>JSON files</td>
+</tr>
+<tr>
+<td>Historical tracking</td>
+<td>Last snapshot only</td>
+<td>All snapshots</td>
+<td>All snapshots</td>
+</tr>
+<tr>
+<td>Auto-download list</td>
+<td>✅ txt file</td>
+<td>✅ txt/json/csv</td>
+<td>✅ json</td>
+</tr>
+<tr>
+<td>Scheduled runs</td>
+<td>❌ (manual)</td>
+<td>✅ (cron)</td>
+<td>✅ (via agent)</td>
+</tr>
+<tr>
+<td>Desktop notifications</td>
+<td>❌</td>
+<td>✅</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Cross-device sync</td>
+<td>❌ (browser-local)</td>
+<td>✅ (files)</td>
+<td>✅ (files)</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>📊 How It Works Under the Hood</h2>
+<p>The script uses a <strong>snapshot-diff</strong> pattern:</p>
+<pre><code>┌──────────────────────────────────────────────────────────┐
+│                                                          │
+│  SNAPSHOT A (Feb 24)           SNAPSHOT B (Feb 25)       │
+│  ─────────────────             ─────────────────         │
+│  @alice ────────────────────── @alice            ✅ Same │
+│  @bob ──────────────────────── @bob              ✅ Same │
+│  @crypto_bro ──────────── ❌   (missing)        🚨 GONE │
+│  @carol ────────────────────── @carol            ✅ Same │
+│  @spammer ─────────────── ❌   (missing)        🚨 GONE │
+│                                @new_fan          🎉 NEW  │
+│  @dave ─────────────────────── @dave             ✅ Same │
+│                                                          │
+│  localStorage key: &quot;xactions_followers_snapshot&quot;         │
+│  Format: { username, followers[], count, timestamp }     │
+│                                                          │
+└──────────────────────────────────────────────────────────┘
+</code></pre>
+<p>Data is stored in <code>localStorage</code> under the key <code>xactions_followers_snapshot</code>. To reset and start fresh:</p>
+<pre><code class="language-javascript">localStorage.removeItem(&#39;xactions_followers_snapshot&#39;);
+</code></pre>
+<hr>
+<h2>📊 Sample Output / Results</h2>
+<h3>Unfollowers download (auto-saved <code>.txt</code> file):</h3>
+<pre><code>@crypto_bro_88
+@brand_pitch_fail
+@bot_account_1
+@spammer_xyz
+@random_user_42
+@ex_colleague
+@bot_account_2
+@giveaway_hunter
+</code></pre>
+<h3>Snapshot data (in localStorage):</h3>
+<pre><code class="language-json">{
+  &quot;username&quot;: &quot;nichxbt&quot;,
+  &quot;followers&quot;: [
+    { &quot;username&quot;: &quot;alice&quot;, &quot;displayName&quot;: &quot;Alice Chen&quot;, &quot;bio&quot;: &quot;Building AI tools&quot; },
+    { &quot;username&quot;: &quot;bob&quot;, &quot;displayName&quot;: &quot;Bob K&quot;, &quot;bio&quot;: &quot;Web3 dev&quot; },
+    { &quot;username&quot;: &quot;carol&quot;, &quot;displayName&quot;: &quot;Carol M&quot;, &quot;bio&quot;: &quot;&quot; }
+  ],
+  &quot;count&quot;: 1234,
+  &quot;timestamp&quot;: &quot;2026-02-25T10:15:00.000Z&quot;
+}
+</code></pre>
+<hr>
+<h2>💡 Pro Tips</h2>
+<ol>
+<li><p><strong>Run it weekly for the clearest signal</strong> — Daily scans catch noise (bots that follow/unfollow within hours). Weekly scans give you a meaningful picture of real unfollower trends.</p>
+</li>
+<li><p><strong>Check after controversial tweets</strong> — If you posted something spicy, run the script 24–48 hours later to see exactly who bounced. Great for understanding your audience&#39;s boundaries.</p>
+</li>
+<li><p><strong>Combine with &quot;Unfollow Non-Followers&quot; for cleanup</strong> — Once you know who unfollowed you, use <a href="../unfollow-non-followers.md">Unfollow Non-Followers</a> to remove everyone who doesn&#39;t follow back. Keep your ratio clean.</p>
+</li>
+<li><p><strong>The localStorage snapshot survives browser restarts</strong> — Your snapshot persists until you clear browser data or manually remove the key. You can safely close the tab and come back days later.</p>
+</li>
+<li><p><strong>Monitor other accounts too</strong> — The <code>monitorAccount.js</code> script works on ANY public account, not just yours. Track competitors or accounts you&#39;re interested in by navigating to their <code>/followers</code> page and running the monitor script.</p>
+</li>
+</ol>
+<hr>
+<h2>⚠️ Important Notes</h2>
+<ul>
+<li><strong>Two runs minimum</strong> — The first run only takes a snapshot. You need to run it a second time (later) to see unfollowers. No previous data = no comparison.</li>
+<li><strong>localStorage is per-browser</strong> — Your snapshot is stored locally in the browser you used. Running from a different browser or device starts fresh.</li>
+<li><strong>Scroll-loading limits</strong> — For accounts with 10,000+ followers, the browser may not load all of them. X throttles infinite scroll. The script retries up to 10 times with no new data.</li>
+<li><strong>Suspended/deleted accounts</strong> — If someone&#39;s account gets suspended between scans, they&#39;ll appear as an unfollower. They didn&#39;t choose to unfollow — their account simply no longer exists.</li>
+<li><strong>Rate limits</strong> — The script only scrolls and reads DOM data (no API calls), so there&#39;s no rate limiting. It&#39;s purely passive scraping.</li>
+<li><strong>Clearing localStorage resets history</strong> — If you clear browser data or run <code>localStorage.removeItem(&#39;xactions_followers_snapshot&#39;)</code>, your baseline is gone and you start fresh.</li>
+</ul>
+<hr>
+<h2>🔗 Related Features</h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Use Case</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>New Follower Alerts</td>
+<td>Get notified of new followers in real-time</td>
+<td><a href="../new-follower-alerts.md">→ Guide</a></td>
+</tr>
+<tr>
+<td>Monitor Account</td>
+<td>Track any public account&#39;s follower changes</td>
+<td><a href="../monitor-account.md">→ Guide</a></td>
+</tr>
+<tr>
+<td>Unfollow Non-Followers</td>
+<td>Remove accounts that don&#39;t follow you back</td>
+<td><a href="../unfollow-non-followers.md">→ Guide</a></td>
+</tr>
+<tr>
+<td>Followers Scraping</td>
+<td>Export your full followers list to CSV/JSON</td>
+<td><a href="../followers-scraping.md">→ Guide</a></td>
+</tr>
+<tr>
+<td>Engagement Analytics</td>
+<td>Analyze your tweet performance over time</td>
+<td><a href="../engagement-analytics.md">→ Guide</a></td>
+</tr>
+</tbody></table>
+<hr>
+<h2>❓ FAQ</h2>
+<h3>Q: How do I see who unfollowed me on Twitter / X?</h3>
+<p><strong>A:</strong> Go to <code>x.com/YOUR_USERNAME/followers</code>, open browser console (F12 → Console), and paste the XActions detect-unfollowers script. On the first run, it saves a snapshot of your followers. Run it again days later from the same browser — it compares the new list against the saved one and shows exactly who unfollowed you and who&#39;s new. No app, no API, completely free.</p>
+<h3>Q: Does X / Twitter notify you when someone unfollows?</h3>
+<p><strong>A:</strong> No — X does not send any notification when someone unfollows you. The only way to know is to compare your follower list over time, which is exactly what this script does. It takes before/after snapshots and shows the diff.</p>
+<h3>Q: Can I track who unfollowed me without any app?</h3>
+<p><strong>A:</strong> Yes — the XActions browser script runs entirely in your browser console. It doesn&#39;t require downloading any app, giving login credentials to third parties, or installing extensions. Just paste and run.</p>
+<h3>Q: How far back can I track unfollowers?</h3>
+<p><strong>A:</strong> The script compares your current followers against the most recent saved snapshot. It cannot retroactively tell you who unfollowed before the first snapshot. For historical tracking, use the CLI version which saves dated JSON files that you can compare over time.</p>
+<h3>Q: Will the person I check know I&#39;m tracking unfollowers?</h3>
+<p><strong>A:</strong> No. The script only reads your publicly visible followers page. There&#39;s no notification, API call, or interaction that would alert anyone.</p>
+<hr>
+<footer>
+Built with ⚡ by <a href="https://x.com/nichxbt">@nichxbt</a> · <a href="https://xactions.app">xactions.app</a> · <a href="https://github.com/nichxbt/xactions">GitHub</a>
+</footer>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try Who Unfollowed Me on X (Twitter) — Free Unfollower Tracker?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/step-by-step/auto-commenter-tutorial">📝 Auto Commenter Tutorial</a>
+        <a href="/docs/step-by-step/auto-liker-tutorial">📝 Auto Liker Tutorial</a>
+        <a href="/docs/step-by-step/bookmark-exporter-tutorial">📝 Bookmark Exporter Tutorial</a>
+        <a href="/docs/step-by-step/follow-target-followers-tutorial">📝 Follow Target Followers Tutorial</a>
+        <a href="/docs/step-by-step/followers-scraping-tutorial">📝 Followers Scraping Tutorial</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a> / <a href="/docs#step-by-step">Tutorials</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

@@ -4,21 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Getting Started with XActions | XActions</title>
-  <meta name="description" content="Welcome! XActions helps you automate your X (Twitter) account. No coding needed.">
+  <meta name="description" content="XActions is the complete X/Twitter automation toolkit. Browser scripts, CLI, Node.js library, MCP server for AI agents, and a web dashboard — all without Twitte">
   <meta name="keywords" content="xactions, twitter automation, x automation, free, open source, getting, started, guides &amp; reference">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Getting Started with XActions — XActions">
-  <meta property="og:description" content="Welcome! XActions helps you automate your X (Twitter) account. No coding needed.">
+  <meta property="og:description" content="XActions is the complete X/Twitter automation toolkit. Browser scripts, CLI, Node.js library, MCP server for AI agents, and a web dashboard — all without Twitte">
   <meta property="og:url" content="https://xactions.app/docs/guides/getting-started">
   <meta property="og:site_name" content="XActions">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Getting Started with XActions — XActions">
-  <meta name="twitter:description" content="Welcome! XActions helps you automate your X (Twitter) account. No coding needed.">
+  <meta name="twitter:description" content="XActions is the complete X/Twitter automation toolkit. Browser scripts, CLI, Node.js library, MCP server for AI agents, and a web dashboard — all without Twitte">
 
   <link rel="canonical" href="https://xactions.app/docs/guides/getting-started">
   <link rel="manifest" href="/manifest.json">
@@ -29,7 +29,7 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Getting Started with XActions | XActions",
-    "description": "Welcome! XActions helps you automate your X (Twitter) account. No coding needed.",
+    "description": "XActions is the complete X/Twitter automation toolkit. Browser scripts, CLI, Node.js library, MCP server for AI agents, and a web dashboard — all without Twitte",
     "url": "https://xactions.app/docs/guides/getting-started",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -171,189 +171,219 @@
       <article class="article">
         <span class="cat-badge">Guides &amp; Reference</span>
         <h1>Getting Started with XActions</h1>
-<p>Welcome! XActions helps you automate your X (Twitter) account. No coding needed.</p>
-<h2>Two Ways to Use XActions</h2>
-<h3>Option 1: Dashboard (Recommended) 🌐</h3>
-<p>Use our web dashboard for the easiest experience:</p>
-<ol>
-<li><strong>Sign up</strong> at <a href="https://xactions.app">xactions.app</a></li>
-<li><strong>Get credits</strong> — Follow @nichxbt for 3 free credits, or buy a package</li>
-<li><strong>Connect your browser</strong> — Paste a simple script in your x.com tab</li>
-<li><strong>Run operations</strong> — Click buttons to automate, watch progress in real-time</li>
-</ol>
-<p><strong>Pricing:</strong></p>
-<ul>
-<li>Start with 2 free credits (1 demo operation)</li>
-<li>Follow @nichxbt = +1 bonus credit</li>
-<li>Starter pack = $2.99 for 17 credits</li>
-</ul>
-<h3>Option 2: Browser Scripts (Free) 📜</h3>
-<p>Run scripts directly in your browser console — 100% free, no account needed.</p>
+<p>XActions is the complete X/Twitter automation toolkit. Browser scripts, CLI, Node.js library, MCP server for AI agents, and a web dashboard — all without Twitter API fees.</p>
+<h2>Choose Your Interface</h2>
+<table>
+<thead>
+<tr>
+<th>Interface</th>
+<th>Best For</th>
+<th>Setup Time</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Browser Scripts</strong></td>
+<td>Quick one-off tasks, free usage</td>
+<td>30 seconds</td>
+</tr>
+<tr>
+<td><strong>CLI</strong></td>
+<td>Power users, scripting, automation</td>
+<td>2 minutes</td>
+</tr>
+<tr>
+<td><strong>Node.js Library</strong></td>
+<td>Custom integrations, bots</td>
+<td>5 minutes</td>
+</tr>
+<tr>
+<td><strong>MCP Server</strong></td>
+<td>AI agents (Claude, GPT, Cursor)</td>
+<td>3 minutes</td>
+</tr>
+<tr>
+<td><strong>Dashboard</strong></td>
+<td>Visual monitoring, team use</td>
+<td>1 minute</td>
+</tr>
+<tr>
+<td><strong>Browser Extension</strong></td>
+<td>One-click automation from x.com</td>
+<td>1 minute</td>
+</tr>
+</tbody></table>
+<p>---|--------|<br>| Unfollow non-followers | <code>src/unfollowback.js</code> |<br>| Unfollow everyone | <code>src/unfollowEveryone.js</code> |<br>| Detect who unfollowed you | <code>src/detectUnfollowers.js</code> |<br>| Auto-like by keyword | <code>src/automation/autoLiker.js</code> |<br>| Scrape followers | <code>scripts/scrapeFollowers.js</code> |</p>
+<blockquote>
+<p><strong>Note:</strong> Scripts in <code>src/automation/</code> require pasting <code>src/automation/core.js</code> first.</p>
+</blockquote>
 <hr>
-<h2>Dashboard Quick Start</h2>
-<h3>Step 1: Create an Account</h3>
-<ol>
-<li>Go to <a href="https://xactions.app">xactions.app</a></li>
-<li>Click <strong>Sign Up</strong></li>
-<li>Enter your email, username, and password</li>
-</ol>
-<h3>Step 2: Get Credits</h3>
-<p><strong>Free option:</strong></p>
-<ol>
-<li>New accounts get 2 free credits (1 demo operation)</li>
-<li>Follow @nichxbt on X for +1 bonus credit</li>
-<li>Refer friends for more credits (after they pay)</li>
-</ol>
-<p><strong>Paid option:</strong></p>
-<ol>
-<li>Go to <a href="https://xactions.app/pricing">Pricing</a></li>
-<li>Choose a credit package</li>
-<li>Pay with card or crypto (BTC, ETH, SOL, USDC)</li>
-</ol>
-<h3>Step 3: Connect Your Browser</h3>
-<p>XActions uses a &quot;browser-to-browser&quot; approach. The automation runs in YOUR x.com tab, so it&#39;s just like doing actions manually — only automated!</p>
-<ol>
-<li>Open <a href="https://x.com">x.com</a> in a new tab and log in</li>
-<li>On the XActions dashboard, click <strong>&quot;Connect Browser&quot;</strong></li>
-<li>Copy the script that appears</li>
-<li>In your x.com tab, press <code>F12</code> to open Developer Tools</li>
-<li>Go to the <strong>Console</strong> tab</li>
-<li>Paste the script and press Enter</li>
-<li>You&#39;ll see &quot;✅ Connected to XActions&quot;</li>
-</ol>
-<h3>Step 4: Run an Operation</h3>
-<ol>
-<li>Back on the dashboard, click an operation (e.g., &quot;Unfollow Non-Followers&quot;)</li>
-<li>Set your options (how many to unfollow, delays, etc.)</li>
-<li>Click <strong>Run</strong></li>
-<li>Watch the real-time progress as it runs in your x.com tab!</li>
-</ol>
-<p>You&#39;ll see:</p>
-<ul>
-<li>Live progress bar</li>
-<li>Each action logged in real-time</li>
-<li>Results summary when complete</li>
-</ul>
+<h2>Quick Start: CLI</h2>
+<pre><code class="language-bash">npm install -g xactions
+xactions login          # Saves your auth_token cookie
+xactions profile elonmusk --json
+xactions followers elonmusk --count 500 --output followers.csv
+xactions non-followers myhandle
+</code></pre>
+<p>See the full <a href="cli-reference.md">CLI Reference</a> for all 111 commands.</p>
 <hr>
-<h2>Browser Scripts (Free)</h2>
-<p>If you just want free scripts without an account:</p>
-<h3>Step 1: Go to Your Following List</h3>
+<h2>Quick Start: Node.js Library</h2>
+<pre><code class="language-bash">npm install xactions
+</code></pre>
+<pre><code class="language-js">import { scrapeProfile, scrapeFollowers, searchTweets } from &#39;xactions&#39;;
+
+const profile = await scrapeProfile(&#39;elonmusk&#39;, { cookie: process.env.X_COOKIE });
+const followers = await scrapeFollowers(&#39;elonmusk&#39;, { count: 100, cookie: process.env.X_COOKIE });
+const tweets = await searchTweets(&#39;javascript&#39;, { count: 50, cookie: process.env.X_COOKIE });
+</code></pre>
+<p>Multi-platform scraping:</p>
+<pre><code class="language-js">import { scrape } from &#39;xactions/scrapers&#39;;
+
+const profile = await scrape(&#39;bluesky&#39;, &#39;profile&#39;, &#39;user.bsky.social&#39;);
+const tweets = await scrape(&#39;mastodon&#39;, &#39;tweets&#39;, &#39;user@mastodon.social&#39;);
+</code></pre>
+<p>See the full <a href="api-reference.md">API Reference</a> and <a href="xactions-reference.md">XActions Reference</a>.</p>
+<hr>
+<h2>Quick Start: MCP Server (AI Agents)</h2>
+<p>Add XActions to Claude Desktop, Cursor, or any MCP-compatible client:</p>
+<pre><code class="language-json">{
+  &quot;mcpServers&quot;: {
+    &quot;xactions&quot;: {
+      &quot;command&quot;: &quot;npx&quot;,
+      &quot;args&quot;: [&quot;-y&quot;, &quot;xactions&quot;, &quot;mcp&quot;],
+      &quot;env&quot;: {
+        &quot;XACTIONS_SESSION_COOKIE&quot;: &quot;your_auth_token_here&quot;
+      }
+    }
+  }
+}
+</code></pre>
+<p>Generate this config automatically:</p>
+<pre><code class="language-bash">xactions mcp-config
+</code></pre>
+<p>51+ MCP tools available — scraping, posting, engagement, analytics, streaming, and more. See <a href="mcp-setup.md">MCP Setup</a>.</p>
+<hr>
+<h2>Quick Start: Dashboard</h2>
+<ol>
+<li>Deploy the API server (see <a href="deployment.md">Deployment</a>)</li>
+<li>Open the dashboard at your deployment URL</li>
+<li>Connect your browser by pasting the bridge script into your x.com tab</li>
+<li>Run operations from the visual interface</li>
+</ol>
+<hr>
+<h2>Quick Start: Browser Extension</h2>
+<ol>
+<li>Open <code>chrome://extensions</code> (or <code>edge://extensions</code>)</li>
+<li>Enable <strong>Developer mode</strong></li>
+<li>Click <strong>Load unpacked</strong> → select the <code>extension/</code> folder</li>
+<li>Navigate to x.com — the extension icon activates automatically</li>
+</ol>
+<p>See <a href="extension.md">Extension Guide</a>.</p>
+<hr>
+<h2>Authentication</h2>
+<p>All interfaces need an X/Twitter session cookie (<code>auth_token</code>):</p>
 <ol>
 <li>Open <a href="https://x.com">x.com</a> and log in</li>
-<li>Go to <code>x.com/YOUR_USERNAME/following</code></li>
+<li>Open DevTools → Application → Cookies → <code>https://x.com</code></li>
+<li>Find the <code>auth_token</code> cookie and copy its value</li>
 </ol>
-<h3>Step 2: Open the Console</h3>
-<p><strong>Windows/Linux:</strong> Press <code>Ctrl</code> + <code>Shift</code> + <code>J</code><br><strong>Mac:</strong> Press <code>Cmd</code> + <code>Option</code> + <code>J</code></p>
-<h3>Step 3: Pick a Script</h3>
 <table>
 <thead>
 <tr>
-<th>I want to...</th>
-<th>Script</th>
+<th>Interface</th>
+<th>How to Set</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>Unfollow non-followers</td>
-<td><code>src/unfollowback.js</code></td>
+<td>CLI</td>
+<td><code>xactions login</code> (interactive prompt)</td>
 </tr>
 <tr>
-<td>Unfollow everyone</td>
-<td><code>src/unfollowEveryone.js</code></td>
+<td>Node.js</td>
+<td>Pass <code>{ cookie: &#39;your_token&#39; }</code> to functions</td>
 </tr>
 <tr>
-<td>Unfollow + save list</td>
-<td><code>src/unfollowWDFBLog.js</code></td>
+<td>MCP</td>
+<td>Set <code>XACTIONS_SESSION_COOKIE</code> env var</td>
+</tr>
+<tr>
+<td>Dashboard</td>
+<td>Pasted via bridge script</td>
+</tr>
+<tr>
+<td>Extension</td>
+<td>Reads automatically from x.com tab</td>
 </tr>
 </tbody></table>
-<h3>Step 4: Copy &amp; Paste</h3>
-<ol>
-<li>Go to <a href="https://github.com/nirholas/XActions">github.com/nirholas/XActions</a></li>
-<li>Open the <code>src</code> folder</li>
-<li>Click on the script you want</li>
-<li>Click <strong>&quot;Copy raw file&quot;</strong></li>
-<li>Paste into the console and press Enter</li>
-</ol>
 <hr>
-<h2>Credit System</h2>
+<h2>Rate Limits &amp; Safety</h2>
+<p>X/Twitter enforces aggressive rate limits. All XActions tools include built-in delays, but follow these guidelines:</p>
+<ul>
+<li><strong>Start small</strong> — test with 10-20 actions before scaling up</li>
+<li><strong>1-3 second minimum delays</strong> between actions (built into all scripts)</li>
+<li><strong>Batch large operations</strong> — do 200, wait 15-30 minutes, repeat</li>
+<li><strong>Don&#39;t run multiple scripts simultaneously</strong> on the same account</li>
+<li><strong>Keep your browser tab open</strong> while operations run (browser scripts only)</li>
+</ul>
+<hr>
+<h2>What&#39;s Next?</h2>
 <table>
 <thead>
 <tr>
-<th>Package</th>
-<th>Credits</th>
-<th>Price</th>
+<th>Guide</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>Free Demo</td>
-<td>2</td>
-<td>Free</td>
+<td><a href="cli-reference.md">CLI Reference</a></td>
+<td>All 111 CLI commands</td>
 </tr>
 <tr>
-<td>Follow Bonus</td>
-<td>+1</td>
-<td>Free</td>
+<td><a href="api-reference.md">API Reference</a></td>
+<td>Node.js library functions</td>
 </tr>
 <tr>
-<td>Starter</td>
-<td>17</td>
-<td>$2.99</td>
+<td><a href="mcp-setup.md">MCP Setup</a></td>
+<td>AI agent integration</td>
 </tr>
 <tr>
-<td>Basic</td>
-<td>47</td>
-<td>$6.99</td>
+<td><a href="browser-scripts.md">Browser Scripts</a></td>
+<td>Complete script catalog</td>
 </tr>
 <tr>
-<td>Pro</td>
-<td>113</td>
-<td>$14.99</td>
+<td><a href="automation.md">Automation</a></td>
+<td>Advanced browser automation framework</td>
 </tr>
 <tr>
-<td>Power</td>
-<td>251</td>
-<td>$29.99</td>
+<td><a href="analytics.md">Analytics</a></td>
+<td>Sentiment, reputation, history tracking</td>
+</tr>
+<tr>
+<td><a href="workflows.md">Workflows</a></td>
+<td>Automated multi-step workflows</td>
+</tr>
+<tr>
+<td><a href="streaming.md">Streaming</a></td>
+<td>Real-time tweet/follower/mention streams</td>
+</tr>
+<tr>
+<td><a href="social-graph.md">Social Graph</a></td>
+<td>Network analysis and visualization</td>
+</tr>
+<tr>
+<td><a href="plugins.md">Plugins</a></td>
+<td>Extend XActions with plugins</td>
+</tr>
+<tr>
+<td><a href="deployment.md">Deployment</a></td>
+<td>Deploy to Railway, Fly.io, Docker</td>
+</tr>
+<tr>
+<td><a href="troubleshooting.md">Troubleshooting</a></td>
+<td>Common issues and fixes</td>
 </tr>
 </tbody></table>
-<p><strong>Credit costs vary by operation:</strong></p>
-<ul>
-<li>Basic ops (unfollow): 2 credits</li>
-<li>Detection ops (unfollowers, alerts): 3 credits</li>
-<li>Power features (auto-liker, keyword follow): 5 credits</li>
-</ul>
-<p>We accept: <strong>Crypto</strong> (BTC, ETH, SOL, USDC) or <strong>Card</strong> (Stripe)</p>
 <hr>
-<h2>Tips &amp; Tricks</h2>
-<h3>Go Slow to Avoid Rate Limits</h3>
-<p>X may limit your account if you do too many actions too fast. The scripts have built-in delays, but if you&#39;re unfollowing thousands of people:</p>
-<ul>
-<li>Run in batches</li>
-<li>Wait 15-30 minutes between runs</li>
-</ul>
-<h3>Keep Your Browser Open</h3>
-<p>Don&#39;t close the x.com tab while operations are running.</p>
-<h3>Dashboard Real-Time Monitoring</h3>
-<p>With the dashboard, you can watch operations happen in real-time. The admin can also monitor all sessions!</p>
-<hr>
-<h2>Safety &amp; Privacy</h2>
-<p>✅ <strong>Safe:</strong> Scripts run in YOUR browser — just like doing actions manually<br>✅ <strong>Private:</strong> No passwords or session cookies stored on our servers<br>✅ <strong>Open Source:</strong> All code is visible on <a href="https://github.com/nirholas/XActions">GitHub</a><br>✅ <strong>Non-KYC:</strong> Pay with crypto, no identity verification needed</p>
-<hr>
-<h2>🔭 Want to Monitor Followers?</h2>
-<p>Check out the <a href="monitoring.md">Monitoring Guide</a> to learn how to:</p>
-<ul>
-<li>Find out who unfollowed you</li>
-<li>Track your new followers</li>
-<li>Monitor any public account&#39;s activity</li>
-<li>Set up continuous monitoring with alerts</li>
-</ul>
-<hr>
-<h2>Need Help?</h2>
-<ul>
-<li>📚 <a href="https://xactions.app/docs">Full Documentation</a></li>
-<li>💬 <a href="https://github.com/nirholas/XActions/issues">GitHub Issues</a></li>
-<li>🐦 <a href="https://x.com/nichxbt">@nichxbt on X</a></li>
-</ul>
-<hr>
-<p><em>Made with ❤️ by <a href="https://x.com/nichxbt">@nichxbt</a></em></p>
+<p><em>By <a href="https://x.com/nichxbt">@nichxbt</a> — <a href="https://github.com/nirholas/XActions">GitHub</a></em></p>
 
 
         <div class="cta-box">

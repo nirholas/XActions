@@ -4,21 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Growth Automation | XActions</title>
-  <meta name="description" content="Browser console scripts for X/Twitter. Always paste `src/automation/core.js` first — it provides shared config, selectors, utilities, and rate limiting.">
+  <meta name="description" content="Browser console scripts for X/Twitter. Always paste `src/automation/core.js` first -- it provides shared config, selectors, utilities, and rate limiting.">
   <meta name="keywords" content="xactions, twitter automation, x automation, free, open source, growth, automation, agent skills">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Growth Automation — XActions">
-  <meta property="og:description" content="Browser console scripts for X/Twitter. Always paste `src/automation/core.js` first — it provides shared config, selectors, utilities, and rate limiting.">
+  <meta property="og:description" content="Browser console scripts for X/Twitter. Always paste `src/automation/core.js` first -- it provides shared config, selectors, utilities, and rate limiting.">
   <meta property="og:url" content="https://xactions.app/docs/skills/growth-automation">
   <meta property="og:site_name" content="XActions">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Growth Automation — XActions">
-  <meta name="twitter:description" content="Browser console scripts for X/Twitter. Always paste `src/automation/core.js` first — it provides shared config, selectors, utilities, and rate limiting.">
+  <meta name="twitter:description" content="Browser console scripts for X/Twitter. Always paste `src/automation/core.js` first -- it provides shared config, selectors, utilities, and rate limiting.">
 
   <link rel="canonical" href="https://xactions.app/docs/skills/growth-automation">
   <link rel="manifest" href="/manifest.json">
@@ -29,7 +29,7 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Growth Automation | XActions",
-    "description": "Browser console scripts for X/Twitter. Always paste `src/automation/core.js` first — it provides shared config, selectors, utilities, and rate limiting.",
+    "description": "Browser console scripts for X/Twitter. Always paste `src/automation/core.js` first -- it provides shared config, selectors, utilities, and rate limiting.",
     "url": "https://xactions.app/docs/skills/growth-automation",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -171,8 +171,8 @@
       <article class="article">
         <span class="cat-badge">Agent Skills</span>
         <h1>Growth Automation</h1>
-<p>Browser console scripts for X/Twitter. <strong>Always paste <code>src/automation/core.js</code> first</strong> — it provides shared config, selectors, utilities, and rate limiting.</p>
-<h2>Script selection</h2>
+<p>Browser console scripts for X/Twitter. <strong>Always paste <code>src/automation/core.js</code> first</strong> -- it provides shared config, selectors, utilities, and rate limiting.</p>
+<h2>Script Selection</h2>
 <table>
 <thead>
 <tr>
@@ -181,53 +181,103 @@
 </tr>
 </thead>
 <tbody><tr>
-<td>Auto-like timeline tweets matching filters</td>
+<td>Auto-like timeline tweets</td>
 <td><code>src/automation/autoLiker.js</code></td>
 </tr>
 <tr>
-<td>Auto-comment on a target user&#39;s new posts</td>
+<td>Auto-comment on target&#39;s posts</td>
 <td><code>src/automation/autoCommenter.js</code></td>
 </tr>
 <tr>
-<td>Search keywords → follow matching users</td>
+<td>Follow users by keyword search</td>
 <td><code>src/automation/keywordFollow.js</code></td>
 </tr>
 <tr>
-<td>Follow users who engaged with specific posts</td>
+<td>Follow users who engaged with posts</td>
 <td><code>src/automation/followEngagers.js</code></td>
 </tr>
 <tr>
-<td>Follow followers/following of target accounts</td>
+<td>Follow target account&#39;s audience</td>
 <td><code>src/automation/followTargetUsers.js</code></td>
 </tr>
 <tr>
-<td>All-in-one: keyword follow + auto-like + smart unfollow</td>
+<td>All-in-one growth suite</td>
 <td><code>src/automation/growthSuite.js</code></td>
 </tr>
 <tr>
-<td>Train algorithm for niche(s) — 24/7 autonomous browsing</td>
+<td>Train algorithm for your niche</td>
 <td><code>src/automation/algorithmTrainer.js</code></td>
 </tr>
+<tr>
+<td>Boost engagement systematically</td>
+<td><code>src/engagementBooster.js</code></td>
+</tr>
+<tr>
+<td>Welcome new followers</td>
+<td><code>src/welcomeNewFollowers.js</code></td>
+</tr>
+<tr>
+<td>Auto-plug viral tweets</td>
+<td><code>src/autoPlugReplies.js</code></td>
+</tr>
 </tbody></table>
-<h2>Key script details</h2>
-<p><strong>autoLiker.js</strong> — Scrolls timeline, checks tweets against configurable filters (keywords, users, skip replies/ads, min likes threshold, max per session), clicks <code>[data-testid=&quot;like&quot;]</code>.</p>
-<p><strong>autoCommenter.js</strong> — Monitors a target user&#39;s profile for new posts, replies with randomly rotated comment templates. Configurable check interval and max comments per session.</p>
-<p><strong>keywordFollow.js</strong> — Searches X by keywords, follows users from results. Records follow timestamps (used by <code>smartUnfollow.js</code> for grace-period logic). Configurable daily limits, de-duplicates.</p>
-<p><strong>followEngagers.js</strong> — Takes post URL(s), scans likers/retweeters/quote-tweeters, follows them. Configure engagement types and follow limit per post.</p>
-<p><strong>followTargetUsers.js</strong> — Takes target account(s), follows their followers or following list. Rich filters: min/max follower count, follower-to-following ratio, bio keywords (include/exclude), account age.</p>
-<p><strong>growthSuite.js</strong> — Combines keyword follow + auto-like + smart unfollow + engagement tracking into a single long-running session.</p>
-<p><strong>algorithmTrainer.js</strong> — Autonomous 24/7 algorithm training engine. Configurable niches with search terms and comment templates. Cycles through 8 phases: search top results, search latest, search people &amp; follow, home feed engagement, influencer profile visits, own profile visits, explore page browsing, and idle dwell periods. Human-like timing with randomized delays, probabilistic engagement (like/comment/bookmark/retweet/follow), intensity presets (chill/normal/active), per-cycle and daily rate limits, persistent state across sessions. Controls: <code>stopTrainer()</code>, <code>trainerStatus()</code>, <code>trainerReset()</code>.</p>
-<h2>Supporting scripts</h2>
-<p>See <a href="references/supporting-scripts.md">references/supporting-scripts.md</a> for details on:</p>
-<ul>
-<li><strong>quotaSupervisor.js</strong> — Rate limiting with hourly/daily quotas (recommended to load first)</li>
-<li><strong>sessionLogger.js</strong> — Action logging, reports, JSON/CSV export</li>
-<li><strong>multiAccount.js</strong> — Multi-account rotation and status tracking</li>
-<li><strong>customerService.js</strong> — Auto-respond to mentions/DMs with templates</li>
-<li><strong>protectActiveUsers.js</strong> — Protects engaged followers from smart unfollow</li>
-</ul>
-<h2>DOM selectors (automation suite)</h2>
-<p>Defined in <code>src/automation/core.js</code>. Key selectors:</p>
+<h2>Key Scripts</h2>
+<h3>autoLiker.js</h3>
+<p>Scrolls timeline, checks tweets against configurable filters (keywords, users, skip replies/ads, min likes threshold, max per session), clicks Like. Gaussian-randomized delays.</p>
+<h3>autoCommenter.js</h3>
+<p>Monitors a target user&#39;s profile for new posts. Replies with randomly rotated comment templates. Configurable check interval and max comments per session.</p>
+<h3>keywordFollow.js</h3>
+<p>Searches X by keywords, follows users from results. Records follow timestamps (used by <code>smartUnfollow.js</code> for grace-period logic). Configurable daily limits, de-duplicates.</p>
+<h3>followEngagers.js</h3>
+<p>Takes post URL(s), scans likers/retweeters/quote-tweeters, follows them. Configure engagement types and follow limit per post.</p>
+<h3>followTargetUsers.js</h3>
+<p>Takes target account(s), follows their followers or following. Rich filters: min/max follower count, ratio, bio keywords (include/exclude), account age.</p>
+<h3>growthSuite.js</h3>
+<p>Combines keyword follow + auto-like + smart unfollow + engagement tracking into a single long-running session with unified rate limiting.</p>
+<h3>algorithmTrainer.js</h3>
+<p>Autonomous 24/7 algorithm training engine. Configurable niches with search terms and comment templates. Cycles through 8 phases: search top/latest, follow people, home feed engagement, influencer visits, profile visits, explore browsing, idle dwell. Human-like timing, probabilistic engagement, intensity presets (chill/normal/active), per-cycle and daily rate limits.</p>
+<p><strong>Controls:</strong> <code>stopTrainer()</code>, <code>trainerStatus()</code>, <code>trainerReset()</code></p>
+<h3>engagementBooster.js</h3>
+<p>Systematically likes and replies to tweets from target accounts. Tracks engagement history to avoid duplicates. Builds reciprocal relationships.</p>
+<h2>Supporting Scripts</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>src/automation/quotaSupervisor.js</code></td>
+<td>Rate limiting with hourly/daily quotas</td>
+</tr>
+<tr>
+<td><code>src/automation/sessionLogger.js</code></td>
+<td>Action logging, reports, JSON/CSV export</td>
+</tr>
+<tr>
+<td><code>src/automation/multiAccount.js</code></td>
+<td>Multi-account rotation and tracking</td>
+</tr>
+<tr>
+<td><code>src/automation/customerService.js</code></td>
+<td>Auto-respond to mentions/DMs</td>
+</tr>
+<tr>
+<td><code>src/automation/protectActiveUsers.js</code></td>
+<td>Protect engaged followers from unfollow</td>
+</tr>
+<tr>
+<td><code>src/automation/smartUnfollow.js</code></td>
+<td>Time-based unfollow with whitelist</td>
+</tr>
+<tr>
+<td><code>src/automation/rssMonitor.js</code></td>
+<td>Monitor RSS feeds for content triggers</td>
+</tr>
+</tbody></table>
+<h2>DOM Selectors</h2>
+<p>Defined in <code>src/automation/core.js</code>:</p>
 <table>
 <thead>
 <tr>
@@ -252,10 +302,41 @@
 <td><code>[data-testid=&quot;UserCell&quot;]</code></td>
 </tr>
 <tr>
-<td>Follow indicator</td>
-<td><code>[data-testid=&quot;userFollowIndicator&quot;]</code></td>
+<td>Follow button</td>
+<td><code>[data-testid$=&quot;-follow&quot;]</code></td>
 </tr>
 </tbody></table>
+<h2>Rate Limits &amp; Safety</h2>
+<ul>
+<li>Auto-liker: 1-3s between likes, max 100/hour</li>
+<li>Keyword follow: 2-5s between follows, max 50/day recommended</li>
+<li>Auto-commenter: 30-60s between comments, max 20/day</li>
+<li>Algorithm trainer: built-in intensity presets with daily caps</li>
+<li>All scripts include rate-limit detection and automatic backoff</li>
+</ul>
+<h2>Strategy Guide</h2>
+<h3>New account growth (0-1000 followers)</h3>
+<ol>
+<li>Set up <code>src/automation/algorithmTrainer.js</code> with your niche keywords</li>
+<li>Run <code>src/automation/keywordFollow.js</code> targeting niche keywords daily</li>
+<li>Use <code>src/automation/autoLiker.js</code> to engage with niche content</li>
+<li>Enable <code>src/welcomeNewFollowers.js</code> to greet new followers</li>
+<li>After 7 days, run <code>src/automation/smartUnfollow.js</code> to remove non-reciprocals</li>
+</ol>
+<h3>Accelerating an established account</h3>
+<ol>
+<li>Use <code>src/automation/followEngagers.js</code> on competitor&#39;s viral tweets</li>
+<li>Run <code>src/engagementBooster.js</code> targeting accounts in your space</li>
+<li>Set up <code>src/autoPlugReplies.js</code> on your viral tweets</li>
+<li>Use <code>src/automation/followTargetUsers.js</code> on competitor audiences with ratio filter</li>
+</ol>
+<h2>Notes</h2>
+<ul>
+<li>Always paste <code>src/automation/core.js</code> first for automation scripts</li>
+<li>Browser scripts in <code>src/</code> (non-automation) are standalone -- no core.js needed</li>
+<li>All growth scripts include pause/resume/abort controls</li>
+<li>Growth automation works best combined with quality content</li>
+</ul>
 
 
         <div class="cta-box">
@@ -271,7 +352,7 @@
         <h3>📖 In This Section</h3>
                 <a href="/docs/skills/algorithm-cultivation">🎯 Algorithm Cultivation &amp; Thought Leadership</a>
         <a href="/docs/skills/analytics-insights">🎯 Analytics &amp; Insights</a>
-        <a href="/docs/skills/articles-longform">🎯 Articles &amp; Long-Form Content</a>
+        <a href="/docs/skills/articles-longform">🎯 Articles &amp; Longform</a>
         <a href="/docs/skills/blocking-muting-management">🎯 Blocking &amp; Muting Management</a>
         <a href="/docs/skills/bookmarks-management">🎯 Bookmarks Management</a>
         <a href="/docs/skills/business-ads">🎯 Business &amp; Ads Tools</a>

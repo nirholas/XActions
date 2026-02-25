@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auto-Follow by Keyword on X (Twitter) — Targeted Audience Growth — Free X/Twitter Tools Tool | XActions</title>
+  <meta name="description" content="**Automatically search for keywords on X/Twitter and follow users who match your niche — with follower filters, bio matching, and rate limiting.** Free, no A...">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, keyword, follow, tutorial, auto-follow, (twitter), targeted, audience, growth, tools, keyword follow tutorial twitter, twitter keyword follow tutorial">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Auto-Follow by Keyword on X (Twitter) — Targeted Audience Growth — XActions">
+  <meta property="og:description" content="**Automatically search for keywords on X/Twitter and follow users who match your niche — with follower filters, bio matching, and rate limiting.** Free, no A...">
+  <meta property="og:url" content="https://xactions.app/docs/step-by-step/keyword-follow-tutorial">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Auto-Follow by Keyword on X (Twitter) — Targeted Audience Growth — Free X/Twitter Tool">
+  <meta name="twitter:description" content="**Automatically search for keywords on X/Twitter and follow users who match your niche — with follower filters, bio matching, and rate limiting.** Free, no A...">
+
+  <link rel="canonical" href="https://xactions.app/docs/step-by-step/keyword-follow-tutorial">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Auto-Follow by Keyword on X (Twitter) — Targeted Audience Growth — Free X/Twitter Tools Tool | XActions",
+    "description": "**Automatically search for keywords on X/Twitter and follow users who match your niche — with follower filters, bio matching, and rate limiting.** Free, no A...",
+    "url": "https://xactions.app/docs/step-by-step/keyword-follow-tutorial",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/keyword-follow-tutorial",
+    "articleSection": "Tools",
+    "keywords": "xactions, twitter automation, x automation, free, keyword, follow, tutorial, auto-follow, (twitter), targeted, audience, growth, tools, keyword follow tutorial twitter, twitter keyword follow tutorial"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Auto-Follow by Keyword on X (Twitter) — Targeted Audience Growth", "item": "https://xactions.app/docs/keyword-follow-tutorial" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use Auto-Follow by Keyword on X (Twitter) — Targeted Audience Growth",
+    "description": "**Automatically search for keywords on X/Twitter and follow users who match your niche — with follower filters, bio matching, and rate limiting.** Free, no A...",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions Auto-Follow by Keyword on X (Twitter) — Targeted Audience Growth script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>⚡ Auto-Follow by Keyword on X (Twitter) — Targeted Audience Growth</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › Auto-Follow by Keyword on X (Twitter) — Targeted Audience Growth
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Tools</span>
+        <h1>🔍 Auto-Follow by Keyword on X (Twitter) — Targeted Audience Growth</h1>
+<blockquote>
+<p><strong>Automatically search for keywords on X/Twitter and follow users who match your niche — with follower filters, bio matching, and rate limiting.</strong> Free, no API key, no app install.</p>
+</blockquote>
+<p><strong>Works on:</strong> 🌐 Browser Console (requires <code>core.js</code>)<br><strong>Difficulty:</strong> 🟡 Intermediate<br><strong>Time:</strong> ⏱️ 5–15 minutes per keyword set<br><strong>Requirements:</strong> A web browser logged into x.com</p>
+<blockquote>
+<p>📖 For the quick-reference version, see <a href="../keyword-follow.md">keyword-follow.md</a></p>
+</blockquote>
+<hr>
+<h2>🎯 Real-World Scenario</h2>
+<p>You&#39;re building a SaaS tool for Solidity developers and you want to connect with people who actually tweet about your niche. You could manually search &quot;web3 developer&quot; on X, scroll through results, and click Follow on each relevant profile — but that takes forever and you&#39;ll inevitably follow spam accounts with no bio and 3 followers.</p>
+<p>XActions&#39; Keyword Follow searches X for your niche keywords (like &quot;web3 developer,&quot; &quot;solidity engineer,&quot; &quot;DeFi builder&quot;), navigates to the People tab, and follows users who match your filters. It skips users without bios, accounts you already follow, and profiles outside your follower range. You configure 3–5 keywords, set your limits, and let it run.</p>
+<p><strong>Before XActions:</strong></p>
+<pre><code>┌──────────────────────────────────────────────────────────────┐
+│  Finding Your Niche on Twitter (Manual)                      │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  9:00 AM  Search &quot;web3 developer&quot; on X                       │
+│  9:01 AM  Click the People tab                               │
+│  9:02 AM  See hundreds of profiles. Start clicking Follow.   │
+│  9:05 AM  Wait — that one has 3 followers. Undo.             │
+│  9:06 AM  That one has no bio. Skip.                         │
+│  9:08 AM  Decent profile. Follow. Next...                    │
+│  9:25 AM  Done with first keyword. Now search &quot;solidity&quot;...  │
+│  9:45 AM  Getting tired. Followed 15 people total.           │
+│                                                              │
+│  Time: 45 minutes       Follows: 15                          │
+│  Quality: hit or miss (no filtering)                         │
+└──────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>After XActions Keyword Follow:</strong></p>
+<pre><code>┌──────────────────────────────────────────────────────────────┐
+│  Finding Your Niche on Twitter (XActions)                    │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  9:00 AM  Set keywords: web3 developer, solidity, defi       │
+│  9:01 AM  Paste core.js + script. Press Enter.               │
+│  9:01 AM  Script searches &quot;web3 developer&quot; → People tab      │
+│           ✅ Followed @soliditydev (2.1K followers, web3 bio)│
+│           ⏭️ Skipped: no bio                                  │
+│           ✅ Followed @defibuilder (800 followers, DeFi bio) │
+│  9:05 AM  Script moves to &quot;solidity engineer&quot;...             │
+│  9:10 AM  Script moves to &quot;defi builder&quot;...                  │
+│  9:12 AM  ✅ Done! Followed 30 filtered users.               │
+│                                                              │
+│  Time: 12 minutes       Follows: 30                          │
+│  Quality: pre-filtered by bio + followers                    │
+└──────────────────────────────────────────────────────────────┘
+</code></pre>
+<hr>
+<h2>📋 What This Does (Step by Step)</h2>
+<ol>
+<li>🔍 <strong>Searches each keyword</strong> — navigates to <code>x.com/search?q=KEYWORD&amp;f=user</code> (People tab)</li>
+<li>📜 <strong>Scans user cells</strong> — extracts username, bio, follower count, follow status</li>
+<li>🧹 <strong>Applies filters</strong> — checks bio presence, bio keywords, follower range, already following</li>
+<li>➕ <strong>Follows matching users</strong> — clicks Follow with 3s+ delays</li>
+<li>💾 <strong>Tracks followed users</strong> — persistent storage prevents double-follows across sessions</li>
+<li>📜 <strong>Scrolls for more</strong> — loads additional results by scrolling</li>
+<li>➡️ <strong>Moves to next keyword</strong> — 10s cooldown between searches</li>
+<li>📊 <strong>Reports results</strong> — prints how many followed per keyword and total</li>
+</ol>
+<pre><code>┌──────────────────────────────────────────────────────────────┐
+│                                                              │
+│  [For each KEYWORD in list]                                  │
+│          │                                                   │
+│          ▼                                                   │
+│  [Navigate to x.com/search?q=KEYWORD&amp;f=user]                │
+│          │                                                   │
+│          ▼                                                   │
+│  [Wait for user cells to load]                               │
+│          │                                                   │
+│          ▼                                                   │
+│  ┌── [For each UserCell] ──────────────────────────────┐     │
+│  │                                                     │     │
+│  │  [Already following?] ──Yes──→ [Skip]               │     │
+│  │          │ No                                       │     │
+│  │          ▼                                          │     │
+│  │  [Already in tracked list?] ──Yes──→ [Skip]         │     │
+│  │          │ No                                       │     │
+│  │          ▼                                          │     │
+│  │  [Has bio?] ──No──→ [Skip]                          │     │
+│  │          │ Yes                                      │     │
+│  │          ▼                                          │     │
+│  │  [Followers in range?] ──No──→ [Skip]               │     │
+│  │          │ Yes                                      │     │
+│  │          ▼                                          │     │
+│  │  [Click Follow] → [Wait 3-4.5s]                     │     │
+│  │  [Save to tracked list]                             │     │
+│  │                                                     │     │
+│  └─────────────────────────────────────────────────────┘     │
+│          │                                                   │
+│          ▼                                                   │
+│  [Max follows for keyword?] ──No──→ [Scroll + repeat]        │
+│          │ Yes                                               │
+│          ▼                                                   │
+│  [Wait 10s cooldown] → [Next keyword]                        │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘
+</code></pre>
+<hr>
+<h2>🌐 Method 1: Browser Console (Copy-Paste)</h2>
+<p><strong>Best for:</strong> Everyone — requires pasting <code>core.js</code> first, then this script.</p>
+<h3>Prerequisites</h3>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> Logged into your X/Twitter account in a web browser</li>
+<li><input checked="" disabled="" type="checkbox"> On a desktop/laptop (not mobile)</li>
+<li><input checked="" disabled="" type="checkbox"> On <code>x.com</code> (any page — the script navigates automatically)</li>
+</ul>
+<h3>Step 1: Paste <code>core.js</code> first</h3>
+<blockquote>
+<p>Navigate to <code>x.com/home</code>. Open DevTools Console (<code>F12</code> → Console). Paste the contents of <a href="https://github.com/nichxbt/xactions/blob/main/src/automation/core.js"><code>src/automation/core.js</code></a> and press Enter. You&#39;ll see <code>✅ XActions Core loaded</code>.</p>
+</blockquote>
+<h3>Step 2: Configure keywords and paste</h3>
+<p>Edit <code>KEYWORDS</code> and filters below, then paste:</p>
+<pre><code class="language-javascript">// ============================================
+// XActions - Keyword Search &amp; Follow
+// by nichxbt — https://xactions.app
+// REQUIRES: Paste core.js first!
+// ============================================
+
+(() =&gt; {
+  if (!window.XActions?.Core) {
+    console.error(&#39;❌ Core module not loaded! Paste core.js first.&#39;);
+    return;
+  }
+
+  const { log, sleep, randomDelay, scrollBy, clickElement,
+          waitForElement, storage, rateLimit, SELECTORS,
+          extractUserFromCell, parseCount } = window.XActions.Core;
+
+  // ============================================
+  // CONFIGURATION — edit these!
+  // ============================================
+  const OPTIONS = {
+    // Search terms (will search each one)
+    KEYWORDS: [
+      &#39;web3 developer&#39;,
+      &#39;solidity engineer&#39;,
+      &#39;crypto founder&#39;,
+    ],
+
+    // Follow limits
+    MAX_FOLLOWS_PER_KEYWORD: 10,
+    MAX_FOLLOWS_TOTAL: 30,
+
+    // Filters
+    MIN_FOLLOWERS: 100,
+    MAX_FOLLOWERS: 100000,
+    MUST_HAVE_BIO: true,
+    BIO_KEYWORDS: [],            // e.g. [&#39;web3&#39;, &#39;defi&#39;] — empty = any bio
+    SKIP_IF_FOLLOWING: true,
+
+    // Timing
+    DELAY_BETWEEN_FOLLOWS: 3000,
+    DELAY_BETWEEN_SEARCHES: 10000,
+  };
+
+  // ── State ──
+  let followCount = 0;
+  const followedUsers = new Map(Object.entries(storage.get(&#39;followed_users&#39;) || {}));
+
+  const saveFollowedUser = (username) =&gt; {
+    followedUsers.set(username.toLowerCase(), {
+      followedAt: Date.now(),
+      followedBack: false,
+      checkedAt: null,
+    });
+    storage.set(&#39;followed_users&#39;, Object.fromEntries(followedUsers));
+  };
+
+  // ── Navigation ──
+  const searchFor = async (keyword) =&gt; {
+    log(`Searching for: &quot;${keyword}&quot;`, &#39;action&#39;);
+    const searchUrl = `https://x.com/search?q=${encodeURIComponent(keyword)}&amp;src=typed_query&amp;f=user`;
+    window.location.href = searchUrl;
+    await sleep(3000);
+    await waitForElement(SELECTORS.userCell, 10000);
+    await sleep(1000);
+  };
+
+  // ── Filters ──
+  const passesFilters = (userInfo) =&gt; {
+    if (!userInfo || !userInfo.username) return false;
+    if (OPTIONS.SKIP_IF_FOLLOWING &amp;&amp; userInfo.isFollowing) return false;
+    if (followedUsers.has(userInfo.username.toLowerCase())) return false;
+    if (OPTIONS.MUST_HAVE_BIO &amp;&amp; !userInfo.bio) return false;
+    if (OPTIONS.BIO_KEYWORDS.length &gt; 0) {
+      const bioLower = userInfo.bio.toLowerCase();
+      if (!OPTIONS.BIO_KEYWORDS.some(kw =&gt; bioLower.includes(kw.toLowerCase()))) return false;
+    }
+    if (userInfo.followers &gt; 0) {
+      if (userInfo.followers &lt; OPTIONS.MIN_FOLLOWERS) return false;
+      if (userInfo.followers &gt; OPTIONS.MAX_FOLLOWERS) return false;
+    }
+    return true;
+  };
+
+  // ── Follow ──
+  const followUser = async (userCell, userInfo) =&gt; {
+    const followBtn = userCell.querySelector(SELECTORS.followButton);
+    if (!followBtn) return false;
+    const clicked = await clickElement(followBtn);
+    if (clicked) {
+      followCount++;
+      saveFollowedUser(userInfo.username);
+      rateLimit.increment(&#39;follow&#39;, &#39;day&#39;);
+      log(`✅ Followed @${userInfo.username} (${userInfo.displayName}) — #${followCount}`, &#39;success&#39;);
+      return true;
+    }
+    return false;
+  };
+
+  // ── Process ──
+  const processSearchResults = async (keyword) =&gt; {
+    let keywordFollows = 0;
+    let scrolls = 0;
+
+    while (keywordFollows &lt; OPTIONS.MAX_FOLLOWS_PER_KEYWORD &amp;&amp;
+           followCount &lt; OPTIONS.MAX_FOLLOWS_TOTAL &amp;&amp;
+           scrolls &lt; 20) {
+
+      if (!rateLimit.check(&#39;follow&#39;, 100, &#39;day&#39;)) {
+        log(&#39;Daily follow limit reached&#39;, &#39;warning&#39;);
+        return;
+      }
+
+      const userCells = document.querySelectorAll(SELECTORS.userCell);
+
+      for (const cell of userCells) {
+        if (keywordFollows &gt;= OPTIONS.MAX_FOLLOWS_PER_KEYWORD) break;
+        if (followCount &gt;= OPTIONS.MAX_FOLLOWS_TOTAL) break;
+
+        const userInfo = extractUserFromCell(cell);
+        if (!passesFilters(userInfo)) continue;
+
+        await followUser(cell, userInfo);
+        keywordFollows++;
+        await randomDelay(OPTIONS.DELAY_BETWEEN_FOLLOWS, OPTIONS.DELAY_BETWEEN_FOLLOWS * 1.5);
+      }
+
+      scrollBy(600);
+      scrolls++;
+      await sleep(2000);
+    }
+
+    log(`Followed ${keywordFollows} users from &quot;${keyword}&quot;`, &#39;info&#39;);
+  };
+
+  // ── Run ──
+  const run = async () =&gt; {
+    log(&#39;🚀 Starting Keyword Follow...&#39;, &#39;info&#39;);
+    log(`Keywords: ${OPTIONS.KEYWORDS.join(&#39;, &#39;)}`, &#39;info&#39;);
+    log(`Max follows: ${OPTIONS.MAX_FOLLOWS_TOTAL}`, &#39;info&#39;);
+    log(`Tracking ${followedUsers.size} previously followed users`, &#39;info&#39;);
+
+    for (const keyword of OPTIONS.KEYWORDS) {
+      if (followCount &gt;= OPTIONS.MAX_FOLLOWS_TOTAL) break;
+      await searchFor(keyword);
+      await processSearchResults(keyword);
+
+      if (OPTIONS.KEYWORDS.indexOf(keyword) &lt; OPTIONS.KEYWORDS.length - 1) {
+        log(&#39;Waiting before next search...&#39;, &#39;info&#39;);
+        await sleep(OPTIONS.DELAY_BETWEEN_SEARCHES);
+      }
+    }
+
+    log(`\n✅ Done! Followed ${followCount} new users.`, &#39;success&#39;);
+    log(`Total tracked: ${followedUsers.size} users`, &#39;info&#39;);
+    log(`Run smartUnfollow.js later to remove non-followers!`, &#39;info&#39;);
+  };
+
+  if (window.location.pathname.includes(&#39;/search&#39;)) {
+    processSearchResults(OPTIONS.KEYWORDS[0]);
+  } else {
+    run();
+  }
+
+  window.stopKeywordFollow = () =&gt; {
+    OPTIONS.MAX_FOLLOWS_TOTAL = 0;
+    log(&#39;Stopping...&#39;, &#39;warning&#39;);
+  };
+})();
+</code></pre>
+<h3>Step 3: Watch it work</h3>
+<pre><code>🚀 Starting Keyword Follow...
+   Keywords: web3 developer, solidity engineer, crypto founder
+   Max follows: 30
+   Tracking 0 previously followed users
+
+   Searching for: &quot;web3 developer&quot;
+   ✅ Followed @soliditydev (Solidity Dev) — #1
+   ✅ Followed @web3alice (Alice | Web3) — #2
+   ⏭️ Skipped: no bio
+   ⏭️ Skipped: 12 followers (min: 100)
+   ✅ Followed @defiresearcher (DeFi Labs) — #3
+   Followed 10 users from &quot;web3 developer&quot;
+
+   Waiting before next search...
+   Searching for: &quot;solidity engineer&quot;
+   ...
+
+   ✅ Done! Followed 30 new users.
+   Total tracked: 30 users
+   Run smartUnfollow.js later to remove non-followers!
+</code></pre>
+<hr>
+<h2>⚙️ Configuration Reference</h2>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>KEYWORDS</code></td>
+<td><code>[&#39;web3 developer&#39;, ...]</code></td>
+<td>Array of search terms — each is searched separately</td>
+</tr>
+<tr>
+<td><code>MAX_FOLLOWS_PER_KEYWORD</code></td>
+<td><code>10</code></td>
+<td>Max follows per individual keyword search</td>
+</tr>
+<tr>
+<td><code>MAX_FOLLOWS_TOTAL</code></td>
+<td><code>30</code></td>
+<td>Hard cap across all keywords</td>
+</tr>
+<tr>
+<td><code>MIN_FOLLOWERS</code></td>
+<td><code>100</code></td>
+<td>Skip users with fewer followers</td>
+</tr>
+<tr>
+<td><code>MAX_FOLLOWERS</code></td>
+<td><code>100000</code></td>
+<td>Skip mega-accounts (rarely follow back)</td>
+</tr>
+<tr>
+<td><code>MUST_HAVE_BIO</code></td>
+<td><code>true</code></td>
+<td>Skip users without a bio</td>
+</tr>
+<tr>
+<td><code>BIO_KEYWORDS</code></td>
+<td><code>[]</code></td>
+<td>Bio must contain one of these (empty = any)</td>
+</tr>
+<tr>
+<td><code>SKIP_IF_FOLLOWING</code></td>
+<td><code>true</code></td>
+<td>Skip users you already follow</td>
+</tr>
+<tr>
+<td><code>DELAY_BETWEEN_FOLLOWS</code></td>
+<td><code>3000</code></td>
+<td>Milliseconds between follow clicks</td>
+</tr>
+<tr>
+<td><code>DELAY_BETWEEN_SEARCHES</code></td>
+<td><code>10000</code></td>
+<td>Milliseconds between keyword searches</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>💡 Pro Tips</h2>
+<ol>
+<li><strong>Use specific, long-tail keywords.</strong> &quot;web3 developer&quot; is better than &quot;web3&quot; — you&#39;ll get more relevant profiles in People results.</li>
+<li><strong>Add BIO_KEYWORDS for double-filtering.</strong> Search &quot;AI startup&quot; + filter bios for <code>[&#39;founder&#39;, &#39;builder&#39;, &#39;engineer&#39;]</code> to get only the people you actually want to connect with.</li>
+<li><strong>Keep MAX_FOLLOWS_PER_KEYWORD at 10.</strong> After the first 10 results, quality drops rapidly in X&#39;s search results.</li>
+<li><strong>Run the Smart Unfollow script 3 days later.</strong> This creates the growth loop: follow → wait → unfollow non-followers → follow new people.</li>
+<li><strong>Track your followed users.</strong> The script saves every followed user to <code>sessionStorage</code>. Use <code>storage.get(&#39;followed_users&#39;)</code> in the console to see your history.</li>
+<li><strong>Don&#39;t overlap keywords too much.</strong> &quot;web3 developer&quot; and &quot;web3 dev&quot; will return many of the same people — the script handles duplicates, but you waste search slots.</li>
+</ol>
+<hr>
+<h2>⚠️ Important Warnings</h2>
+<blockquote>
+<p><strong>Core.js required:</strong> This script depends on <code>core.js</code> being loaded first. Paste it before running this script.</p>
+</blockquote>
+<blockquote>
+<p><strong>Rate limits:</strong> X limits follow actions aggressively. Keep <code>MAX_FOLLOWS_TOTAL</code> under 50 per session. The built-in daily rate limiter will stop at 100 follows/day.</p>
+</blockquote>
+<blockquote>
+<p><strong>Search quality degrades.</strong> X&#39;s People search results get less relevant after the first few pages. Don&#39;t scroll too deep (maxScrolls is capped at 20).</p>
+</blockquote>
+<hr>
+<h2>🔗 Related Features</h2>
+<ul>
+<li><a href="follow-target-followers-tutorial.md">Follow Target Followers Tutorial</a> — Follow from competitor follower lists instead of search</li>
+<li><a href="smart-unfollow-tutorial.md">Smart Unfollow Tutorial</a> — Clean up non-followers after your growth campaign</li>
+<li><a href="growth-suite-tutorial.md">Growth Suite Tutorial</a> — All-in-one: keyword follow + auto-like + smart unfollow</li>
+<li><a href="auto-liker-tutorial.md">Auto-Liker Tutorial</a> — Engage with niche content without following</li>
+</ul>
+<hr>
+<h2>❓ FAQ</h2>
+<h3>How is this different from Follow Target Followers?</h3>
+<p>Keyword Follow searches X by topic and follows users from People results. Follow Target Followers goes directly to a specific account&#39;s follower/following list. Use Keyword Follow for broad niche targeting; use Target Followers to &quot;steal&quot; a specific competitor&#39;s audience.</p>
+<h3>Can I use phrases as keywords?</h3>
+<p>Yes! &quot;web3 developer&quot; (with quotes in the array) searches for that exact phrase. You can also use X&#39;s search operators: <code>&quot;web3 developer&quot; -promoted</code>.</p>
+<h3>What happens if I run this multiple times?</h3>
+<p>The script tracks previously followed users in <code>sessionStorage</code>. Users you&#39;ve already followed in previous sessions will be skipped automatically. Note: <code>sessionStorage</code> is cleared when you close the tab.</p>
+<h3>Will X rate-limit me?</h3>
+<p>Yes, if you follow too many people too quickly. The script uses 3s+ delays and a daily rate limiter (100/day cap). Stay under 50 follows per session for safety.</p>
+<h3>Can I also like their posts?</h3>
+<p>Not with this script alone, but the <a href="growth-suite-tutorial.md">Growth Suite</a> combines keyword follow + auto-like in one session. Or run the <a href="auto-liker-tutorial.md">Auto-Liker</a> separately.</p>
+<hr>
+<p align="center">
+  <b>Built with ❤️ by <a href="https://x.com/nichxbt">@nichxbt</a></b><br>
+  <a href="https://xactions.app">xactions.app</a> · <a href="https://github.com/nichxbt/xactions">GitHub</a>
+</p>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try Auto-Follow by Keyword on X (Twitter) — Targeted Audience Growth?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/step-by-step/auto-commenter-tutorial">📝 Auto Commenter Tutorial</a>
+        <a href="/docs/step-by-step/auto-liker-tutorial">📝 Auto Liker Tutorial</a>
+        <a href="/docs/step-by-step/bookmark-exporter-tutorial">📝 Bookmark Exporter Tutorial</a>
+        <a href="/docs/step-by-step/detect-unfollowers-tutorial">📝 Detect Unfollowers Tutorial</a>
+        <a href="/docs/step-by-step/follow-target-followers-tutorial">📝 Follow Target Followers Tutorial</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a> / <a href="/docs#step-by-step">Tutorials</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

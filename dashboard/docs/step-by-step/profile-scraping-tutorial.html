@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scrape X (Twitter) Profile Data — Export Bio, Followers &amp; Stats to JSON for Free — Free X/Twitter Tools Tool | XActions</title>
+  <meta name="description" content="**Extract any public profile's complete data from X (Twitter) — bio, follower count, following count, tweets, verified status, join date, profile image, and ...">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, profile, scraping, tutorial, scrape, (twitter), data, export, bio,, followers, stats, json">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Scrape X (Twitter) Profile Data — Export Bio, Followers &amp; Stats to JSON for Free — XActions">
+  <meta property="og:description" content="**Extract any public profile's complete data from X (Twitter) — bio, follower count, following count, tweets, verified status, join date, profile image, and ...">
+  <meta property="og:url" content="https://xactions.app/docs/step-by-step/profile-scraping-tutorial">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Scrape X (Twitter) Profile Data — Export Bio, Followers &amp; Stats to JSON for Free — Free X/Twitter Tool">
+  <meta name="twitter:description" content="**Extract any public profile's complete data from X (Twitter) — bio, follower count, following count, tweets, verified status, join date, profile image, and ...">
+
+  <link rel="canonical" href="https://xactions.app/docs/step-by-step/profile-scraping-tutorial">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Scrape X (Twitter) Profile Data — Export Bio, Followers & Stats to JSON for Free — Free X/Twitter Tools Tool | XActions",
+    "description": "**Extract any public profile's complete data from X (Twitter) — bio, follower count, following count, tweets, verified status, join date, profile image, and ...",
+    "url": "https://xactions.app/docs/step-by-step/profile-scraping-tutorial",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/profile-scraping-tutorial",
+    "articleSection": "Tools",
+    "keywords": "xactions, twitter automation, x automation, free, profile, scraping, tutorial, scrape, (twitter), data, export, bio,, followers, stats, json"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Scrape X (Twitter) Profile Data — Export Bio, Followers & Stats to JSON for Free", "item": "https://xactions.app/docs/profile-scraping-tutorial" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use Scrape X (Twitter) Profile Data — Export Bio, Followers &amp; Stats to JSON for Free",
+    "description": "**Extract any public profile's complete data from X (Twitter) — bio, follower count, following count, tweets, verified status, join date, profile image, and ...",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions Scrape X (Twitter) Profile Data — Export Bio, Followers &amp; Stats to JSON for Free script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>⚡ Scrape X (Twitter) Profile Data — Export Bio, Followers &amp; Stats to JSON for Free</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › Scrape X (Twitter) Profile Data — Export Bio, Followers &amp; Stats to JSON for Free
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Tools</span>
+        <h1>👤 Scrape X (Twitter) Profile Data — Export Bio, Followers &amp; Stats to JSON for Free</h1>
+<blockquote>
+<p><strong>Extract any public profile&#39;s complete data from X (Twitter) — bio, follower count, following count, tweets, verified status, join date, profile image, and more — to a JSON file. Free, no API key, no paid plan.</strong></p>
+</blockquote>
+<p><strong>Works on:</strong> 🌐 Browser Console · 💻 CLI · 🤖 MCP (AI Agents)<br><strong>Difficulty:</strong> 🟢 Beginner<br><strong>Time:</strong> ⏱️ Under 1 minute<br><strong>Requirements:</strong> A web browser logged into x.com</p>
+<blockquote>
+<p>📖 For the quick-reference version, see <a href="../profile-scraping.md">profile-scraping.md</a></p>
+</blockquote>
+<hr>
+<h2>🎯 Real-World Scenario</h2>
+<p>You&#39;re preparing a pitch deck for investors and need competitive intelligence on 5 rival accounts. For each one, you need: follower count, bio, website, join date, tweet volume, and verified status. Normally you&#39;d browse each profile and manually copy-paste into a spreadsheet — tedious and error-prone. Or you&#39;d sign up for Twitter&#39;s API ($100/month Basic tier) just to pull profile data.</p>
+<p>XActions&#39; profile scraper reads everything visible on a profile page and exports it to a structured JSON file in under 10 seconds. Run it on 5 profiles and your competitive analysis spreadsheet is done in under a minute.</p>
+<p><strong>Before XActions:</strong></p>
+<pre><code>┌──────────────────────────────────────────────────────┐
+│  Competitive Research (Manual)                       │
+├──────────────────────────────────────────────────────┤
+│                                                      │
+│  For each competitor (5 accounts):                   │
+│  1. Go to their profile                              │
+│  2. Copy their display name         (Ctrl+C → Tab)  │
+│  3. Copy their bio                  (Ctrl+C → Tab)  │
+│  4. Copy follower count             (Ctrl+C → Tab)  │
+│  5. Copy following count            (Ctrl+C → Tab)  │
+│  6. Copy website link               (Ctrl+C → Tab)  │
+│  7. Copy join date                  (Ctrl+C → Tab)  │
+│  8. Check if verified               (Ctrl+C → Tab)  │
+│  9. Copy profile image URL          (right-click...) │
+│                                                      │
+│  Time per profile: ~5 minutes                        │
+│  Total for 5 profiles: ~25 minutes                   │
+│  Accuracy: ¯\_(ツ)_/¯                                │
+└──────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>After XActions:</strong></p>
+<pre><code>┌──────────────────────────────────────────────────────┐
+│  Competitive Research (XActions)                     │
+├──────────────────────────────────────────────────────┤
+│                                                      │
+│  For each competitor (5 accounts):                   │
+│  1. Go to their profile                              │
+│  2. Paste script → Enter                             │
+│  3. JSON auto-downloads with everything              │
+│                                                      │
+│  Time per profile: ~10 seconds                       │
+│  Total for 5 profiles: ~1 minute                     │
+│  Accuracy: 100% (reads directly from the DOM)        │
+└──────────────────────────────────────────────────────┘
+</code></pre>
+<hr>
+<h2>📋 What This Does (Step by Step)</h2>
+<ol>
+<li>📍 <strong>Detects the username</strong> — reads it from the URL path</li>
+<li>🔍 <strong>Extracts profile fields</strong> — display name, bio, location, website, join date using <code>data-testid</code> selectors</li>
+<li>📊 <strong>Parses follower/following counts</strong> — handles K/M abbreviations (e.g., &quot;5.8M&quot; → 5800000)</li>
+<li>✅ <strong>Checks verified status</strong> — detects the blue/gold checkmark badge</li>
+<li>🖼️ <strong>Gets profile/banner images</strong> — extracts full-resolution image URLs</li>
+<li>📈 <strong>Gets tweet count</strong> — reads from the profile header</li>
+<li>💾 <strong>Downloads JSON</strong> — auto-downloads a structured JSON file with all data</li>
+<li>🖥️ <strong>Stores on <code>window</code></strong> — access <code>window.scrapedProfile</code> for further use</li>
+</ol>
+<pre><code>┌─────────────────────────────────────────────────────────────┐
+│                                                             │
+│  [Navigate to x.com/USERNAME]                               │
+│          │                                                  │
+│          ▼                                                  │
+│  [Read username from URL path]                              │
+│          │                                                  │
+│          ▼                                                  │
+│  [Extract from DOM:]                                        │
+│     ├── Display name    (UserName testid)                   │
+│     ├── Bio             (UserDescription testid)            │
+│     ├── Location        (UserLocation testid)               │
+│     ├── Website         (UserUrl testid)                    │
+│     ├── Join date       (UserJoinDate testid)               │
+│     ├── Followers       (/followers link text)              │
+│     ├── Following       (/following link text)              │
+│     ├── Verified badge  (SVG aria-label)                    │
+│     ├── Profile image   (/photo link img)                   │
+│     └── Banner image    (/header_photo link img)            │
+│          │                                                  │
+│          ▼                                                  │
+│  [Print summary to console]                                 │
+│          │                                                  │
+│          ▼                                                  │
+│  [Download profile_USERNAME_timestamp.json]                  │
+│          │                                                  │
+│          ▼                                                  │
+│  [Store on window.scrapedProfile ✅]                        │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+</code></pre>
+<hr>
+<h2>🌐 Method 1: Browser Console (Copy-Paste)</h2>
+<p><strong>Best for:</strong> Anyone — no installs, instant results.</p>
+<h3>Prerequisites</h3>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> Logged into X/Twitter in a web browser</li>
+<li><input checked="" disabled="" type="checkbox"> On a desktop/laptop (not mobile)</li>
+</ul>
+<h3>Step 1: Navigate to the target profile</h3>
+<blockquote>
+<p>Go to <strong><code>x.com/USERNAME</code></strong> — any public profile.</p>
+</blockquote>
+<pre><code>┌──────────────────────────────────────────────────────┐
+│ 🔍 x.com/nichxbt                                     │
+├──────────────────────────────────────────────────────┤
+│                                                      │
+│  🖼️  [Banner Image]                                  │
+│                                                      │
+│  👤 nich @nichxbt                            ✅      │
+│  Building XActions — free X/Twitter automation       │
+│  toolkit. Open source. No API fees.                  │
+│                                                      │
+│  📍 Internet  🔗 xactions.app  📅 Joined Jan 2023  │
+│                                                      │
+│  👥 12,847 Followers    👥 892 Following              │
+│                                                      │
+│  Tweets  Replies  Highlights  Media  Likes           │
+│                                                      │
+└──────────────────────────────────────────────────────┘
+</code></pre>
+<h3>Step 2: Open Developer Console</h3>
+<table>
+<thead>
+<tr>
+<th>OS</th>
+<th>Shortcut</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Windows / Linux</strong></td>
+<td><code>F12</code> then click <strong>Console</strong> tab, or <code>Ctrl + Shift + J</code></td>
+</tr>
+<tr>
+<td><strong>Mac</strong></td>
+<td><code>Cmd + Option + J</code></td>
+</tr>
+</tbody></table>
+<h3>Step 3: Paste and Run</h3>
+<p>Copy the entire script below, paste it into the console, and press <strong>Enter</strong>:</p>
+<pre><code class="language-javascript">// ============================================
+// XActions - Scrape X/Twitter Profile Data
+// by nichxbt — https://xactions.app
+// Go to: x.com/ANY_USERNAME
+// Open console (F12 → Console), paste, Enter
+// ============================================
+
+(() =&gt; {
+  const username = window.location.pathname.split(&#39;/&#39;)[1];
+
+  // Validate we&#39;re on a profile page
+  if (!username || username.startsWith(&#39;i/&#39;) ||
+      [&#39;home&#39;, &#39;explore&#39;, &#39;notifications&#39;, &#39;messages&#39;, &#39;search&#39;].includes(username)) {
+    console.error(&#39;❌ Please go to a user profile first!&#39;);
+    console.log(&#39;   👉 Example: x.com/nichxbt&#39;);
+    return;
+  }
+
+  console.log(&#39;&#39;);
+  console.log(&#39;👤 XActions - PROFILE SCRAPER&#39;);
+  console.log(&#39;════════════════════════════════════════&#39;);
+  console.log(`🎯 Scraping @${username}...`);
+  console.log(&#39;&#39;);
+
+  // Parse engagement numbers (handles K, M abbreviations)
+  const parseNumber = (str) =&gt; {
+    if (!str) return 0;
+    const clean = str.replace(/,/g, &#39;&#39;).trim();
+    const num = parseFloat(clean);
+    if (str.includes(&#39;K&#39;)) return num * 1000;
+    if (str.includes(&#39;M&#39;)) return num * 1000000;
+    return num;
+  };
+
+  // Build profile object
+  const profile = {
+    handle: username,
+    displayName: &#39;&#39;,
+    bio: &#39;&#39;,
+    location: &#39;&#39;,
+    website: &#39;&#39;,
+    joinDate: &#39;&#39;,
+    followersCount: 0,
+    followingCount: 0,
+    tweetsCount: 0,
+    verified: false,
+    profileImageUrl: &#39;&#39;,
+    bannerImageUrl: &#39;&#39;,
+    scrapedAt: new Date().toISOString(),
+  };
+
+  // Display name
+  const nameEl = document.querySelector(&#39;[data-testid=&quot;UserName&quot;] span&#39;);
+  profile.displayName = nameEl?.textContent || username;
+
+  // Bio
+  const bioEl = document.querySelector(&#39;[data-testid=&quot;UserDescription&quot;]&#39;);
+  profile.bio = bioEl?.textContent || &#39;&#39;;
+
+  // Location
+  const locEl = document.querySelector(&#39;[data-testid=&quot;UserLocation&quot;]&#39;);
+  profile.location = locEl?.textContent || &#39;&#39;;
+
+  // Website
+  const webEl = document.querySelector(&#39;[data-testid=&quot;UserUrl&quot;] a&#39;);
+  profile.website = webEl?.href || webEl?.textContent || &#39;&#39;;
+
+  // Join date
+  const joinEl = document.querySelector(&#39;[data-testid=&quot;UserJoinDate&quot;]&#39;);
+  profile.joinDate = joinEl?.textContent || &#39;&#39;;
+
+  // Followers / Following counts
+  const followLinks = document.querySelectorAll(&#39;a[href*=&quot;/followers&quot;], a[href*=&quot;/following&quot;]&#39;);
+  followLinks.forEach(link =&gt; {
+    const text = link.textContent || &#39;&#39;;
+    if (link.href.includes(&#39;/followers&#39;) &amp;&amp; !link.href.includes(&#39;/followers_you_follow&#39;)) {
+      profile.followersCount = parseNumber(text);
+    } else if (link.href.includes(&#39;/following&#39;)) {
+      profile.followingCount = parseNumber(text);
+    }
+  });
+
+  // Verified badge
+  profile.verified = !!document.querySelector(&#39;[data-testid=&quot;UserName&quot;] svg[aria-label*=&quot;Verified&quot;]&#39;);
+
+  // Profile image (get full resolution)
+  const profileImg = document.querySelector(&#39;a[href*=&quot;/photo&quot;] img&#39;);
+  if (profileImg) {
+    profile.profileImageUrl = profileImg.src.replace(&#39;_normal&#39;, &#39;_400x400&#39;);
+  }
+
+  // Banner image
+  const bannerImg = document.querySelector(&#39;a[href*=&quot;/header_photo&quot;] img&#39;);
+  profile.bannerImageUrl = bannerImg?.src || &#39;&#39;;
+
+  // Tweet count
+  const tweetCountEl = document.querySelector(&#39;[data-testid=&quot;primaryColumn&quot;] h2&#39;)?.parentElement?.querySelector(&#39;span&#39;);
+  if (tweetCountEl) {
+    const match = tweetCountEl.textContent?.match(/[\d,.]+[KM]?/);
+    if (match) profile.tweetsCount = parseNumber(match[0]);
+  }
+
+  // Print results
+  console.log(&#39;════════════════════════════════════════&#39;);
+  console.log(`👤 PROFILE: @${profile.handle}`);
+  console.log(&#39;════════════════════════════════════════&#39;);
+  console.log(`📛 Name:       ${profile.displayName}`);
+  console.log(`📝 Bio:        ${profile.bio.slice(0, 80)}${profile.bio.length &gt; 80 ? &#39;...&#39; : &#39;&#39;}`);
+  console.log(`📍 Location:   ${profile.location || &#39;N/A&#39;}`);
+  console.log(`🔗 Website:    ${profile.website || &#39;N/A&#39;}`);
+  console.log(`📅 Joined:     ${profile.joinDate}`);
+  console.log(`👥 Followers:  ${profile.followersCount.toLocaleString()}`);
+  console.log(`👥 Following:  ${profile.followingCount.toLocaleString()}`);
+  console.log(`📊 Tweets:     ${profile.tweetsCount.toLocaleString()}`);
+  console.log(`${profile.verified ? &#39;✅ Verified&#39; : &#39;❌ Not verified&#39;}`);
+  console.log(&#39;════════════════════════════════════════&#39;);
+
+  // Download JSON
+  const json = JSON.stringify(profile, null, 2);
+  const blob = new Blob([json], { type: &#39;application/json&#39; });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement(&#39;a&#39;);
+  a.href = url;
+  a.download = `profile_${username}_${Date.now()}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  console.log(&#39;💾 Downloaded profile JSON&#39;);
+
+  // Copy to clipboard
+  try {
+    navigator.clipboard.writeText(json);
+    console.log(&#39;📋 Copied to clipboard!&#39;);
+  } catch (e) {}
+
+  // Store globally
+  window.scrapedProfile = profile;
+  console.log(&#39;&#39;);
+  console.log(&#39;✅ Done! Access data: window.scrapedProfile&#39;);
+})();
+</code></pre>
+<h3>✅ Expected Output</h3>
+<pre><code>👤 XActions - PROFILE SCRAPER
+════════════════════════════════════════
+🎯 Scraping @nichxbt...
+
+════════════════════════════════════════
+👤 PROFILE: @nichxbt
+════════════════════════════════════════
+📛 Name:       nich
+📝 Bio:        Building XActions — free X/Twitter automation toolkit. Open source. No AP...
+📍 Location:   Internet
+🔗 Website:    https://xactions.app
+📅 Joined:     Joined January 2023
+👥 Followers:  12,847
+👥 Following:  892
+📊 Tweets:     3,421
+✅ Verified
+════════════════════════════════════════
+💾 Downloaded profile JSON
+📋 Copied to clipboard!
+
+✅ Done! Access data: window.scrapedProfile
+</code></pre>
+<hr>
+<h2>💻 Method 2: CLI (Command Line)</h2>
+<pre><code class="language-bash"># Install XActions globally
+npm install -g xactions
+
+# Scrape a profile
+npx xactions profile nichxbt
+
+# With JSON output
+npx xactions profile nichxbt --json
+
+# Scrape multiple profiles (run sequentially)
+for user in nichxbt karpathy levelsio; do
+  npx xactions profile $user --output &quot;profile_${user}.json&quot;
+done
+</code></pre>
+<h3>✅ CLI Output Preview</h3>
+<pre><code>⚡ XActions v3.x.x
+
+⚡ @nichxbt
+
+  Name:      nich
+  Bio:       Building XActions — free X/Twitter automation toolkit
+  Location:  Internet
+  Website:   https://xactions.app
+  Joined:    January 2023
+  Followers: 12,847
+  Following: 892
+  Tweets:    3,421
+  Verified:  ✅
+</code></pre>
+<h3>CLI Flags</h3>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>--json</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Output as raw JSON</td>
+</tr>
+<tr>
+<td><code>--output</code></td>
+<td>string</td>
+<td>stdout</td>
+<td>Save to file</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>🤖 Method 3: MCP Server (AI Agents)</h2>
+<blockquote>
+<p>Use with Claude Desktop, GPT, Cursor, or any MCP-compatible AI agent.</p>
+</blockquote>
+<h3>Setup</h3>
+<pre><code class="language-json">{
+  &quot;mcpServers&quot;: {
+    &quot;xactions&quot;: {
+      &quot;command&quot;: &quot;npx&quot;,
+      &quot;args&quot;: [&quot;-y&quot;, &quot;xactions&quot;, &quot;mcp&quot;]
+    }
+  }
+}
+</code></pre>
+<h3>MCP Tool Call</h3>
+<pre><code class="language-json">{
+  &quot;tool&quot;: &quot;x_get_profile&quot;,
+  &quot;arguments&quot;: {
+    &quot;username&quot;: &quot;nichxbt&quot;
+  }
+}
+</code></pre>
+<h3>Claude Desktop example prompt:</h3>
+<blockquote>
+<p>&quot;Get the profile data for @nichxbt on X — I need their follower count, bio, website, and whether they&#39;re verified.&quot;</p>
+</blockquote>
+<h3>Expected MCP response:</h3>
+<pre><code class="language-json">{
+  &quot;handle&quot;: &quot;nichxbt&quot;,
+  &quot;displayName&quot;: &quot;nich&quot;,
+  &quot;bio&quot;: &quot;Building XActions — free X/Twitter automation toolkit. Open source. No API fees.&quot;,
+  &quot;location&quot;: &quot;Internet&quot;,
+  &quot;website&quot;: &quot;https://xactions.app&quot;,
+  &quot;joinDate&quot;: &quot;Joined January 2023&quot;,
+  &quot;followersCount&quot;: 12847,
+  &quot;followingCount&quot;: 892,
+  &quot;tweetsCount&quot;: 3421,
+  &quot;verified&quot;: true
+}
+</code></pre>
+<hr>
+<h2>📊 Method Comparison</h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>🌐 Browser Console</th>
+<th>💻 CLI</th>
+<th>🤖 MCP</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Setup</td>
+<td>None</td>
+<td><code>npm install</code></td>
+<td>Config JSON</td>
+</tr>
+<tr>
+<td>Speed</td>
+<td>Instant</td>
+<td>~5s</td>
+<td>Via AI agent</td>
+</tr>
+<tr>
+<td>Best for</td>
+<td>Quick lookup</td>
+<td>Scripts/pipelines</td>
+<td>AI workflows</td>
+</tr>
+<tr>
+<td>Export</td>
+<td>JSON + clipboard</td>
+<td>JSON, terminal</td>
+<td>JSON</td>
+</tr>
+<tr>
+<td>Profile image</td>
+<td>✅ full-res URL</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Banner image</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Batch scraping</td>
+<td>Manual per-profile</td>
+<td>Shell loop</td>
+<td>Multi-call</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>⚙️ Fields Extracted</h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Example</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>handle</code></td>
+<td>string</td>
+<td><code>&quot;nichxbt&quot;</code></td>
+<td>Username without @</td>
+</tr>
+<tr>
+<td><code>displayName</code></td>
+<td>string</td>
+<td><code>&quot;nich&quot;</code></td>
+<td>Display name</td>
+</tr>
+<tr>
+<td><code>bio</code></td>
+<td>string</td>
+<td><code>&quot;Building XActions...&quot;</code></td>
+<td>Profile bio text</td>
+</tr>
+<tr>
+<td><code>location</code></td>
+<td>string</td>
+<td><code>&quot;Internet&quot;</code></td>
+<td>Location field</td>
+</tr>
+<tr>
+<td><code>website</code></td>
+<td>string</td>
+<td><code>&quot;https://xactions.app&quot;</code></td>
+<td>Website URL</td>
+</tr>
+<tr>
+<td><code>joinDate</code></td>
+<td>string</td>
+<td><code>&quot;Joined January 2023&quot;</code></td>
+<td>Join date text</td>
+</tr>
+<tr>
+<td><code>followersCount</code></td>
+<td>number</td>
+<td><code>12847</code></td>
+<td>Number of followers</td>
+</tr>
+<tr>
+<td><code>followingCount</code></td>
+<td>number</td>
+<td><code>892</code></td>
+<td>Number following</td>
+</tr>
+<tr>
+<td><code>tweetsCount</code></td>
+<td>number</td>
+<td><code>3421</code></td>
+<td>Total tweets</td>
+</tr>
+<tr>
+<td><code>verified</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Has verification badge</td>
+</tr>
+<tr>
+<td><code>profileImageUrl</code></td>
+<td>string</td>
+<td><code>&quot;https://pbs.twimg.com/...&quot;</code></td>
+<td>Profile photo (400x400)</td>
+</tr>
+<tr>
+<td><code>bannerImageUrl</code></td>
+<td>string</td>
+<td><code>&quot;https://pbs.twimg.com/...&quot;</code></td>
+<td>Header/banner image</td>
+</tr>
+<tr>
+<td><code>scrapedAt</code></td>
+<td>string</td>
+<td><code>&quot;2026-02-24T14:30:00Z&quot;</code></td>
+<td>ISO timestamp of scrape</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>📊 Sample Output / Results</h2>
+<h3>Example JSON Export</h3>
+<pre><code class="language-json">{
+  &quot;handle&quot;: &quot;nichxbt&quot;,
+  &quot;displayName&quot;: &quot;nich&quot;,
+  &quot;bio&quot;: &quot;Building XActions — free X/Twitter automation toolkit. Open source. No API fees.&quot;,
+  &quot;location&quot;: &quot;Internet&quot;,
+  &quot;website&quot;: &quot;https://xactions.app&quot;,
+  &quot;joinDate&quot;: &quot;Joined January 2023&quot;,
+  &quot;followersCount&quot;: 12847,
+  &quot;followingCount&quot;: 892,
+  &quot;tweetsCount&quot;: 3421,
+  &quot;verified&quot;: true,
+  &quot;profileImageUrl&quot;: &quot;https://pbs.twimg.com/profile_images/1234567890/avatar_400x400.jpg&quot;,
+  &quot;bannerImageUrl&quot;: &quot;https://pbs.twimg.com/profile_banners/1234567890/1708789200/1500x500&quot;,
+  &quot;scrapedAt&quot;: &quot;2026-02-24T14:30:00.000Z&quot;
+}
+</code></pre>
+<h3>Batch Comparison (5 profiles → spreadsheet)</h3>
+<pre><code>┌──────────────┬──────────┬───────────┬──────────┬─────────┐
+│ Handle       │ Followers│ Following │ Tweets   │Verified │
+├──────────────┼──────────┼───────────┼──────────┼─────────┤
+│ @nichxbt     │  12,847  │    892    │   3,421  │ ✅      │
+│ @competitor1 │  45,210  │  1,203    │  12,847  │ ✅      │
+│ @competitor2 │   8,932  │    456    │   2,103  │ ❌      │
+│ @competitor3 │ 128,400  │    312    │  18,923  │ ✅      │
+│ @competitor4 │   3,210  │  2,847    │     892  │ ❌      │
+└──────────────┴──────────┴───────────┴──────────┴─────────┘
+</code></pre>
+<hr>
+<h2>💡 Pro Tips</h2>
+<ol>
+<li><p><strong>Run on a fully loaded profile page</strong> — Wait for the profile to fully load (you should see the bio, follower count, and tweets) before pasting the script. If the page is still loading spinner, the script may miss fields.</p>
+</li>
+<li><p><strong>Get full-res profile images</strong> — The script automatically replaces <code>_normal</code> with <code>_400x400</code> in the profile image URL. For the original resolution, change to <code>_original</code>:</p>
+<pre><code class="language-javascript">profile.profileImageUrl = profileImg.src.replace(&#39;_normal&#39;, &#39;_original&#39;);
+</code></pre>
+</li>
+<li><p><strong>Batch scrape with the CLI</strong> — Use a shell loop to scrape multiple profiles:</p>
+<pre><code class="language-bash">for user in karpathy sama naval levelsio; do
+  npx xactions profile $user --output &quot;profiles/${user}.json&quot;
+  sleep 2
+done
+</code></pre>
+</li>
+<li><p><strong>Calculate follower-to-following ratio</strong> — After scraping, check the ratio in the console:</p>
+<pre><code class="language-javascript">const p = window.scrapedProfile;
+console.log(`Ratio: ${(p.followersCount / p.followingCount).toFixed(1)}x`);
+</code></pre>
+</li>
+</ol>
+<hr>
+<h2>⚠️ Important Notes</h2>
+<ul>
+<li><strong>Public profiles only</strong> — The script reads what&#39;s visible on the page. Protected/private accounts will show limited data (no bio, no follower counts if not following).</li>
+<li><strong>Rate limits</strong> — Profile scraping is read-only (no API calls, no clicks). X doesn&#39;t rate-limit page viewing, but don&#39;t scrape hundreds of profiles in rapid succession. Add 2–3 second delays between profiles.</li>
+<li><strong>DOM changes</strong> — X uses <code>data-testid</code> attributes that are relatively stable but may change with UI updates. Check <a href="https://xactions.app">xactions.app</a> for the latest selectors.</li>
+<li><strong>Accuracy</strong> — Follower/following counts with K/M abbreviations are approximations (e.g., &quot;5.8M&quot; becomes 5,800,000). For exact counts, you&#39;d need the API.</li>
+</ul>
+<hr>
+<h2>🔗 Related Features</h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Use Case</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Followers Scraping</td>
+<td>Export a user&#39;s full follower list</td>
+<td><a href="../followers-scraping.md">→ Guide</a></td>
+</tr>
+<tr>
+<td>Following Scraping</td>
+<td>Export who a user follows</td>
+<td><a href="../following-scraping.md">→ Guide</a></td>
+</tr>
+<tr>
+<td>Tweet Scraping</td>
+<td>Scrape a user&#39;s tweets</td>
+<td><a href="../tweet-scraping.md">→ Guide</a></td>
+</tr>
+<tr>
+<td>Competitor Analysis</td>
+<td>Compare metrics across multiple accounts</td>
+<td><a href="../competitor-analysis.md">→ Guide</a></td>
+</tr>
+<tr>
+<td>Audit Followers</td>
+<td>Detect bots and fake accounts in a follower list</td>
+<td><a href="../audit-followers.md">→ Guide</a></td>
+</tr>
+</tbody></table>
+<hr>
+<h2>❓ FAQ</h2>
+<h3>Q: How do I scrape a Twitter / X profile without the API in 2026?</h3>
+<p><strong>A:</strong> Go to <code>x.com/USERNAME</code>, open your browser console (F12 → Console), paste the XActions profile scraper script, and press Enter. The script reads the profile page&#39;s DOM and extracts all visible data — display name, bio, follower/following counts, website, join date, verified status, and profile image — then auto-downloads a JSON file. No API key, no rate limit fees.</p>
+<h3>Q: What data can I get from a Twitter profile?</h3>
+<p><strong>A:</strong> The XActions profile scraper exports: username, display name, bio, location, website URL, join date, follower count, following count, tweet count, verified badge status, profile image URL (full resolution), and banner image URL. All extracted directly from the page DOM.</p>
+<h3>Q: Can I scrape multiple profiles at once?</h3>
+<p><strong>A:</strong> The browser script scrapes one profile per run. For batch scraping, use the XActions CLI with a shell loop (<code>for user in user1 user2; do npx xactions profile $user; done</code>) or the MCP server with sequential tool calls.</p>
+<h3>Q: Is scraping X profiles legal?</h3>
+<p><strong>A:</strong> Scraping publicly visible profile data is generally acceptable for personal use and research. The data is public by design — anyone visiting the profile sees this information. Respect privacy, don&#39;t scrape protected accounts, and don&#39;t use data for harassment or unauthorized commercial purposes.</p>
+<hr>
+<footer>
+Built with ⚡ by <a href="https://x.com/nichxbt">@nichxbt</a> · <a href="https://xactions.app">xactions.app</a> · <a href="https://github.com/nichxbt/xactions">GitHub</a>
+</footer>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try Scrape X (Twitter) Profile Data — Export Bio, Followers &amp; Stats to JSON for Free?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/step-by-step/auto-commenter-tutorial">📝 Auto Commenter Tutorial</a>
+        <a href="/docs/step-by-step/auto-liker-tutorial">📝 Auto Liker Tutorial</a>
+        <a href="/docs/step-by-step/bookmark-exporter-tutorial">📝 Bookmark Exporter Tutorial</a>
+        <a href="/docs/step-by-step/detect-unfollowers-tutorial">📝 Detect Unfollowers Tutorial</a>
+        <a href="/docs/step-by-step/follow-target-followers-tutorial">📝 Follow Target Followers Tutorial</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a> / <a href="/docs#step-by-step">Tutorials</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

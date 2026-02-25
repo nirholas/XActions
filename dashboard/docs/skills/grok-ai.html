@@ -4,21 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Grok AI Integration | XActions</title>
-  <meta name="description" content="Browser automation for interacting with X's Grok AI chatbot — prompts, image generation, summarization, and post analysis.">
+  <meta name="description" content="Browser console scripts for automating interactions with X's built-in Grok AI assistant.">
   <meta name="keywords" content="xactions, twitter automation, x automation, free, open source, grok, integration, agent skills">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Grok AI Integration — XActions">
-  <meta property="og:description" content="Browser automation for interacting with X's Grok AI chatbot — prompts, image generation, summarization, and post analysis.">
+  <meta property="og:description" content="Browser console scripts for automating interactions with X's built-in Grok AI assistant.">
   <meta property="og:url" content="https://xactions.app/docs/skills/grok-ai">
   <meta property="og:site_name" content="XActions">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Grok AI Integration — XActions">
-  <meta name="twitter:description" content="Browser automation for interacting with X's Grok AI chatbot — prompts, image generation, summarization, and post analysis.">
+  <meta name="twitter:description" content="Browser console scripts for automating interactions with X's built-in Grok AI assistant.">
 
   <link rel="canonical" href="https://xactions.app/docs/skills/grok-ai">
   <link rel="manifest" href="/manifest.json">
@@ -29,7 +29,7 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Grok AI Integration | XActions",
-    "description": "Browser automation for interacting with X's Grok AI chatbot — prompts, image generation, summarization, and post analysis.",
+    "description": "Browser console scripts for automating interactions with X's built-in Grok AI assistant.",
     "url": "https://xactions.app/docs/skills/grok-ai",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -171,7 +171,7 @@
       <article class="article">
         <span class="cat-badge">Agent Skills</span>
         <h1>Grok AI Integration</h1>
-<p>Browser automation for interacting with X&#39;s Grok AI chatbot — prompts, image generation, summarization, and post analysis.</p>
+<p>Browser console scripts for automating interactions with X&#39;s built-in Grok AI assistant.</p>
 <h2>Script Selection</h2>
 <table>
 <thead>
@@ -182,67 +182,46 @@
 </tr>
 </thead>
 <tbody><tr>
-<td>Send prompts to Grok</td>
+<td>Chat with Grok</td>
 <td><code>src/grokIntegration.js</code></td>
 <td><code>x.com/i/grok</code></td>
 </tr>
 <tr>
-<td>Generate images with Grok</td>
+<td>Generate images</td>
 <td><code>src/grokIntegration.js</code></td>
 <td><code>x.com/i/grok</code></td>
 </tr>
 <tr>
-<td>Summarize a topic or thread</td>
+<td>Analyze tweet with Grok</td>
 <td><code>src/grokIntegration.js</code></td>
-<td><code>x.com/i/grok</code></td>
-</tr>
-<tr>
-<td>Analyze a post&#39;s engagement potential</td>
-<td><code>src/grokIntegration.js</code></td>
-<td><code>x.com/i/grok</code></td>
+<td>Any tweet</td>
 </tr>
 </tbody></table>
 <h2>Grok Integration</h2>
 <p><strong>File:</strong> <code>src/grokIntegration.js</code></p>
-<p>Puppeteer-based module for programmatic Grok AI interactions.</p>
-<h3>Functions</h3>
-<table>
-<thead>
-<tr>
-<th>Function</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>queryGrok(page, query, { newChat?, waitTime? })</code></td>
-<td>Send a text prompt and extract the response</td>
-</tr>
-<tr>
-<td><code>generateImage(page, prompt)</code></td>
-<td>Generate an AI image (Premium+ may be required)</td>
-</tr>
-<tr>
-<td><code>summarize(page, topicOrUrl)</code></td>
-<td>Summarize a topic or thread URL</td>
-</tr>
-<tr>
-<td><code>analyzePost(page, postText)</code></td>
-<td>Rate a post 1–10 and get improvement suggestions</td>
-</tr>
-</tbody></table>
-<h3>queryGrok</h3>
-<p>Navigates to <code>x.com/i/grok</code>, optionally starts a new chat, types the query, sends it, waits for the response to complete, and extracts the response text.</p>
-<p><strong>Options:</strong></p>
+<p>Automates Grok AI prompts and response scraping.</p>
+<h3>How to Use</h3>
+<ol>
+<li>Navigate to <code>x.com/i/grok</code></li>
+<li>Open DevTools (F12) -&gt; Console</li>
+<li>Paste the script -&gt; Enter</li>
+</ol>
+<h3>Controls</h3>
 <ul>
-<li><code>newChat: true</code> — start a fresh conversation (default: true)</li>
-<li><code>waitTime: 15000</code> — milliseconds to wait for response (default: 15s)</li>
+<li><code>XActions.ask(prompt)</code> -- Send a prompt to Grok</li>
+<li><code>XActions.scrapeResponse()</code> -- Capture Grok&#39;s latest response</li>
+<li><code>XActions.generateImage(prompt)</code> -- Request image generation</li>
+<li><code>XActions.batchAsk(prompts[])</code> -- Send multiple prompts sequentially</li>
+<li><code>XActions.export()</code> -- Download conversation history as JSON</li>
 </ul>
-<h3>generateImage</h3>
-<p>Sends an image generation prompt to Grok and waits up to 20s for the image to render. Extracts the image URL if available.</p>
-<h3>summarize</h3>
-<p>Accepts a topic string or URL. If URL, asks Grok to summarize the thread/post. If text, asks for a summary of the latest discussion on that topic. Uses Grok&#39;s real-time X data access.</p>
-<h3>analyzePost</h3>
-<p>Sends a post&#39;s text to Grok and asks for a 1–10 engagement rating with improvement suggestions.</p>
+<h3>Features</h3>
+<ul>
+<li>Automated prompt submission with response capture</li>
+<li>Batch prompting for content generation workflows</li>
+<li>Image generation prompt automation</li>
+<li>Conversation history export</li>
+<li>Rate-limited to avoid triggering restrictions</li>
+</ul>
 <h2>DOM Selectors</h2>
 <table>
 <thead>
@@ -252,70 +231,92 @@
 </tr>
 </thead>
 <tbody><tr>
-<td>Chat input</td>
-<td><code>[data-testid=&quot;grokInput&quot;]</code></td>
+<td>Grok input</td>
+<td><code>[data-testid=&quot;grokInput&quot;]</code> or <code>textarea[placeholder]</code></td>
 </tr>
 <tr>
 <td>Send button</td>
-<td><code>[data-testid=&quot;grokSendButton&quot;]</code></td>
+<td><code>[data-testid=&quot;grokSend&quot;]</code></td>
 </tr>
 <tr>
-<td>Response area</td>
+<td>Response container</td>
 <td><code>[data-testid=&quot;grokResponse&quot;]</code></td>
 </tr>
 <tr>
-<td>Response text</td>
-<td><code>[data-testid=&quot;grokResponseText&quot;]</code></td>
+<td>Image output</td>
+<td><code>[data-testid=&quot;grokImage&quot;]</code></td>
 </tr>
 <tr>
-<td>New chat</td>
-<td><code>[data-testid=&quot;grokNewChat&quot;]</code></td>
-</tr>
-<tr>
-<td>Image gen toggle</td>
-<td><code>[data-testid=&quot;grokImageGen&quot;]</code></td>
+<td>Grok nav</td>
+<td><code>a[href=&quot;/i/grok&quot;]</code></td>
 </tr>
 </tbody></table>
-<h2>Prerequisites</h2>
+<h2>Content Strategy with Grok</h2>
+<h3>Using Grok for content ideation</h3>
+<ol>
+<li><code>XActions.ask(&quot;What are the top 5 trending topics in {niche} right now?&quot;)</code></li>
+<li><code>XActions.ask(&quot;Write 3 tweet variations about {topic}&quot;)</code></li>
+<li><code>XActions.ask(&quot;Analyze this tweet for engagement: {tweet_text}&quot;)</code></li>
+<li>Capture responses with <code>XActions.scrapeResponse()</code></li>
+<li>Feed into <code>src/threadComposer.js</code> for thread creation</li>
+</ol>
+<h3>Batch content generation</h3>
+<pre><code class="language-javascript">await XActions.batchAsk([
+  &quot;Write a hot take about AI agents&quot;,
+  &quot;Write a thread hook about productivity&quot;,
+  &quot;Write a poll question about remote work&quot;,
+  &quot;Suggest 5 tweet ideas about {niche}&quot;,
+]);
+XActions.export(); // Download all responses
+</code></pre>
+<h3>Image generation workflow</h3>
+<ol>
+<li><code>XActions.generateImage(&quot;Professional headshot, tech founder, minimalist&quot;)</code></li>
+<li>Wait for generation (10-30 seconds)</li>
+<li>Right-click generated image to save</li>
+<li>Use as profile picture, header, or tweet media</li>
+</ol>
+<h2>Requirements</h2>
 <ul>
-<li><strong>Grok access:</strong> Requires X Premium subscription</li>
-<li><strong>Image generation:</strong> May require Premium+; daily limits (~10–25 images/day)</li>
+<li>X Premium or Premium+ subscription</li>
+<li>Grok access varies by region and account tier</li>
+<li>Image generation requires Premium+ in most regions</li>
+<li>Rate limits: ~20 prompts/hour for chat, ~5 images/hour</li>
 </ul>
-<h2>Rate Limiting</h2>
-<ul>
-<li>5s built-in wait between queued prompts</li>
-<li>15s default wait for text responses, 20s for image generation</li>
-<li>Grok may limit requests per hour during high traffic</li>
-</ul>
-<h2>Troubleshooting</h2>
+<h2>MCP Alternative</h2>
+<p>For programmatic AI content without Grok, the XActions MCP server includes AI tools powered by OpenRouter:</p>
 <table>
 <thead>
 <tr>
-<th>Problem</th>
-<th>Solution</th>
+<th>MCP Tool</th>
+<th>Purpose</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>Grok not responding</td>
-<td>Check X Premium subscription status</td>
+<td><code>x_analyze_voice</code></td>
+<td>Analyze account&#39;s writing style</td>
 </tr>
 <tr>
-<td>Response not captured</td>
-<td>Increase <code>waitTime</code> — Grok may still be streaming</td>
+<td><code>x_generate_tweet</code></td>
+<td>Generate tweet in user&#39;s voice</td>
 </tr>
 <tr>
-<td>Image generation fails</td>
-<td>Daily limit may be hit — try again tomorrow</td>
+<td><code>x_rewrite_tweet</code></td>
+<td>Rewrite tweet for better engagement</td>
 </tr>
 <tr>
-<td>&quot;Grok is at capacity&quot;</td>
-<td>High traffic — retry in a few minutes</td>
-</tr>
-<tr>
-<td>Input field not found</td>
-<td>Grok UI may have updated — inspect for new selectors</td>
+<td><code>x_summarize_thread</code></td>
+<td>Summarize a thread</td>
 </tr>
 </tbody></table>
+<p>These require an <code>OPENROUTER_API_KEY</code> env var but work without Premium.</p>
+<h2>Notes</h2>
+<ul>
+<li>Grok responses are AI-generated and should be reviewed before posting</li>
+<li>Grok has real-time X data access -- can reference current trends</li>
+<li>Image generation creates original images (not screenshots/existing images)</li>
+<li>Conversation context is maintained within a chat session</li>
+</ul>
 
 
         <div class="cta-box">
@@ -331,7 +332,7 @@
         <h3>📖 In This Section</h3>
                 <a href="/docs/skills/algorithm-cultivation">🎯 Algorithm Cultivation &amp; Thought Leadership</a>
         <a href="/docs/skills/analytics-insights">🎯 Analytics &amp; Insights</a>
-        <a href="/docs/skills/articles-longform">🎯 Articles &amp; Long-Form Content</a>
+        <a href="/docs/skills/articles-longform">🎯 Articles &amp; Longform</a>
         <a href="/docs/skills/blocking-muting-management">🎯 Blocking &amp; Muting Management</a>
         <a href="/docs/skills/bookmarks-management">🎯 Bookmarks Management</a>
         <a href="/docs/skills/business-ads">🎯 Business &amp; Ads Tools</a>

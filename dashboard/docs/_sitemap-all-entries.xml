@@ -59,12 +59,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://xactions.app/docs/guides/openrouter</loc>
-    <lastmod>2026-02-25</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://xactions.app/docs/guides/xactions-reference</loc>
     <lastmod>2026-02-25</lastmod>
     <changefreq>monthly</changefreq>
@@ -359,6 +353,12 @@
     <priority>0.5</priority>
   </url>
   <url>
+    <loc>https://xactions.app/docs/skills/unfollow-management-script-details</loc>
+    <lastmod>2026-02-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
     <loc>https://xactions.app/docs/tutorials/01-mcp-setup-and-first-commands</loc>
     <lastmod>2026-02-25</lastmod>
     <changefreq>monthly</changefreq>
@@ -570,6 +570,12 @@
   </url>
   <url>
     <loc>https://xactions.app/docs/extras/scripts</loc>
+    <lastmod>2026-02-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://xactions.app/docs/launch/v310-launch-content</loc>
     <lastmod>2026-02-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>

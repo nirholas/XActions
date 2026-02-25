@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>#⃣ Scrape Tweets by Hashtag on X (Twitter) — Export to JSON &amp; CSV — Free X/Twitter Tools Tool | XActions</title>
+  <meta name="description" content="**Collect all tweets containing a specific hashtag on X/Twitter — with engagement metrics, author info, and full text — exported to JSON and CSV.** Free, no ...">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, hashtag, scraping, tutorial, scrape, tweets, (twitter), export, json, tools, hashtag scraping tutorial twitter, twitter hashtag scraping tutorial">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="#⃣ Scrape Tweets by Hashtag on X (Twitter) — Export to JSON &amp; CSV — XActions">
+  <meta property="og:description" content="**Collect all tweets containing a specific hashtag on X/Twitter — with engagement metrics, author info, and full text — exported to JSON and CSV.** Free, no ...">
+  <meta property="og:url" content="https://xactions.app/docs/step-by-step/hashtag-scraping-tutorial">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="#⃣ Scrape Tweets by Hashtag on X (Twitter) — Export to JSON &amp; CSV — Free X/Twitter Tool">
+  <meta name="twitter:description" content="**Collect all tweets containing a specific hashtag on X/Twitter — with engagement metrics, author info, and full text — exported to JSON and CSV.** Free, no ...">
+
+  <link rel="canonical" href="https://xactions.app/docs/step-by-step/hashtag-scraping-tutorial">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "#⃣ Scrape Tweets by Hashtag on X (Twitter) — Export to JSON & CSV — Free X/Twitter Tools Tool | XActions",
+    "description": "**Collect all tweets containing a specific hashtag on X/Twitter — with engagement metrics, author info, and full text — exported to JSON and CSV.** Free, no ...",
+    "url": "https://xactions.app/docs/step-by-step/hashtag-scraping-tutorial",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/hashtag-scraping-tutorial",
+    "articleSection": "Tools",
+    "keywords": "xactions, twitter automation, x automation, free, hashtag, scraping, tutorial, scrape, tweets, (twitter), export, json, tools, hashtag scraping tutorial twitter, twitter hashtag scraping tutorial"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "#⃣ Scrape Tweets by Hashtag on X (Twitter) — Export to JSON & CSV", "item": "https://xactions.app/docs/hashtag-scraping-tutorial" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use #⃣ Scrape Tweets by Hashtag on X (Twitter) — Export to JSON &amp; CSV",
+    "description": "**Collect all tweets containing a specific hashtag on X/Twitter — with engagement metrics, author info, and full text — exported to JSON and CSV.** Free, no ...",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions #⃣ Scrape Tweets by Hashtag on X (Twitter) — Export to JSON &amp; CSV script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>⚡ #⃣ Scrape Tweets by Hashtag on X (Twitter) — Export to JSON &amp; CSV</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › #⃣ Scrape Tweets by Hashtag on X (Twitter) — Export to JSON &amp; CSV
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Tools</span>
+        <h1>#️⃣ Scrape Tweets by Hashtag on X (Twitter) — Export to JSON &amp; CSV</h1>
+<blockquote>
+<p><strong>Collect all tweets containing a specific hashtag on X/Twitter — with engagement metrics, author info, and full text — exported to JSON and CSV.</strong> Free, no API key, no app install.</p>
+</blockquote>
+<p><strong>Works on:</strong> 🌐 Browser Console · 💻 CLI<br><strong>Difficulty:</strong> 🟢 Beginner<br><strong>Time:</strong> ⏱️ 2–10 minutes (depends on tweet volume)<br><strong>Requirements:</strong> A web browser logged into x.com</p>
+<blockquote>
+<p>📖 For the quick-reference version, see <a href="../hashtag-scraping.md">hashtag-scraping.md</a></p>
+</blockquote>
+<hr>
+<h2>🎯 Real-World Scenario</h2>
+<p>You&#39;re a crypto marketing manager running a campaign with the hashtag #DeFiSummer. You need to know: How many tweets are using the hashtag? What&#39;s the average engagement? Who are the top tweeters? What time of day gets the most traction? The official X analytics dashboard gives you almost nothing — and third-party tools want $200/month for hashtag tracking.</p>
+<p>XActions&#39; Hashtag Scraper navigates to any hashtag page, scrolls through results, and collects every tweet with full data: author, text, likes, retweets, replies, views, timestamp, and extracted hashtags. At the end, it exports everything to JSON and CSV so you can analyze it in any spreadsheet or data tool.</p>
+<p><strong>Before XActions:</strong></p>
+<pre><code>┌──────────────────────────────────────────────────────────────┐
+│  Tracking a Hashtag Campaign (Manual)                        │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  Search #DeFiSummer on X                                     │
+│  Scroll through results                                      │
+│  Copy-paste interesting tweets into Google Docs               │
+│  Manually count likes/retweets for each                      │
+│  Try to figure out who posted the most engaging content       │
+│                                                              │
+│  Data collected: Incomplete, unstructured                    │
+│  Time spent: 2 hours                                         │
+│  Insights: &quot;I think people liked it?&quot;                        │
+└──────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>After XActions:</strong></p>
+<pre><code>┌──────────────────────────────────────────────────────────────┐
+│  Tracking a Hashtag Campaign (XActions)                      │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  Navigate to x.com/hashtag/DeFiSummer                        │
+│  Paste script → press Enter                                  │
+│  Script scrolls and collects tweets automatically            │
+│  JSON + CSV files download with full data                    │
+│                                                              │
+│  Data collected: 347 tweets with full metrics                │
+│  Time spent: 3 minutes                                       │
+│  Insights: Top 5 tweets, avg engagement, top authors         │
+└──────────────────────────────────────────────────────────────┘
+</code></pre>
+<hr>
+<h2>📋 What This Does (Step by Step)</h2>
+<ol>
+<li>🔍 <strong>Detects the hashtag</strong> — reads it from the URL (<code>/hashtag/TAG</code> or <code>?q=%23TAG</code>)</li>
+<li>📜 <strong>Scans visible tweets</strong> — extracts all tweet data from the page</li>
+<li>📊 <strong>Collects engagement metrics</strong> — likes, retweets, replies, views for each tweet</li>
+<li>🏷️ <strong>Extracts hashtags</strong> — finds all <code>#hashtags</code> within each tweet&#39;s text</li>
+<li>📜 <strong>Scrolls for more</strong> — loads additional tweets by scrolling down</li>
+<li>🔄 <strong>Deduplicates</strong> — uses tweet IDs to avoid counting duplicates</li>
+<li>📈 <strong>Sorts by engagement</strong> — top-liked tweets shown first in the summary</li>
+<li>📥 <strong>Exports JSON + CSV</strong> — auto-downloads both formats</li>
+</ol>
+<pre><code>┌──────────────────────────────────────────────────────────────┐
+│                                                              │
+│  [Navigate to x.com/hashtag/TAG]                             │
+│          │                                                   │
+│          ▼                                                   │
+│  [For each visible article]                                  │
+│          │                                                   │
+│          ▼                                                   │
+│  [Extract: author, text, likes, RTs, replies, views, time]   │
+│          │                                                   │
+│          ▼                                                   │
+│  [Already seen this tweet ID?] ──Yes──→ [Skip]               │
+│          │ No                                                │
+│          ▼                                                   │
+│  [Add to collection]                                         │
+│          │                                                   │
+│          ▼                                                   │
+│  [Scroll down 800px] → [Wait 1.5s]                           │
+│          │                                                   │
+│          ▼                                                   │
+│  [No new tweets found 5x in a row?] ──Yes──→ [Stop]         │
+│          │ No                                                │
+│          ▼                                                   │
+│  [Repeat scan...]                                            │
+│          │                                                   │
+│          ▼                                                   │
+│  [Sort by likes] → [Print top 5] → [Export JSON + CSV]       │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘
+</code></pre>
+<hr>
+<h2>🌐 Method 1: Browser Console (Copy-Paste)</h2>
+<p><strong>Best for:</strong> Quick one-off hashtag scrapes. No installs needed.</p>
+<h3>Prerequisites</h3>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> Logged into your X/Twitter account in a web browser</li>
+<li><input checked="" disabled="" type="checkbox"> On a desktop/laptop (not mobile)</li>
+</ul>
+<h3>Step 1: Navigate to the hashtag page</h3>
+<blockquote>
+<p>Go to <strong><code>x.com/hashtag/YOUR_HASHTAG</code></strong> (e.g., <code>x.com/hashtag/DeFiSummer</code>) or search <code>#YOUR_HASHTAG</code> and stay on the results page.</p>
+</blockquote>
+<pre><code>┌──────────────────────────────────────────────────────────────┐
+│ 🔍 x.com/hashtag/DeFiSummer                                  │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  👤 @defiprotocol                                            │
+│  &quot;The #DeFiSummer is just getting started 🔥                │
+│   TVL across major protocols up 340% this quarter&quot;           │
+│  ❤️ 2,341  🔄 567  💬 89  👁️ 124K                            │
+│                                                              │
+│  👤 @cryptoanalyst                                           │
+│  &quot;#DeFiSummer yields are back. Here&#39;s my                    │
+│   thread on the top 5 opportunities...&quot;                     │
+│  ❤️ 891  🔄 234  💬 67  👁️ 56K                               │
+│                                                              │
+│  ... hundreds more below                                     │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘
+</code></pre>
+<h3>Step 2: Open Developer Console</h3>
+<table>
+<thead>
+<tr>
+<th>OS</th>
+<th>Shortcut</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Windows / Linux</strong></td>
+<td><code>F12</code> then click <strong>Console</strong> tab, or <code>Ctrl + Shift + J</code></td>
+</tr>
+<tr>
+<td><strong>Mac</strong></td>
+<td><code>Cmd + Option + J</code></td>
+</tr>
+</tbody></table>
+<h3>Step 3: Paste and Run</h3>
+<pre><code class="language-javascript">// ============================================
+// XActions - Hashtag Scraper
+// by nichxbt — https://xactions.app
+// Go to: x.com/hashtag/TAG or search #TAG
+// Open console (F12 → Console), paste, Enter
+// ============================================
+
+(() =&gt; {
+  const CONFIG = {
+    MAX_TWEETS: 500,       // Max tweets to collect
+    SCROLL_DELAY: 1500,    // Delay between scrolls (ms)
+    FORMAT: &#39;both&#39;,        // &#39;json&#39;, &#39;csv&#39;, &#39;both&#39;
+  };
+
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+
+  const download = (content, filename, type) =&gt; {
+    const blob = new Blob([content], { type });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement(&#39;a&#39;);
+    a.href = url; a.download = filename; a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const parseNumber = (str) =&gt; {
+    if (!str) return 0;
+    const num = parseFloat(str.replace(/,/g, &#39;&#39;));
+    if (str.includes(&#39;K&#39;)) return num * 1000;
+    if (str.includes(&#39;M&#39;)) return num * 1000000;
+    return num;
+  };
+
+  const extractTweet = (article) =&gt; {
+    try {
+      const tweetText = article.querySelector(&#39;[data-testid=&quot;tweetText&quot;]&#39;)?.textContent || &#39;&#39;;
+      const userName = article.querySelector(&#39;[data-testid=&quot;User-Name&quot;]&#39;)?.textContent || &#39;&#39;;
+      const handle = userName.match(/@(\w+)/)?.[1] || &#39;&#39;;
+      const displayName = userName.split(&#39;@&#39;)[0]?.trim() || &#39;&#39;;
+
+      const timeLink = article.querySelector(&#39;time&#39;)?.closest(&#39;a&#39;);
+      const tweetUrl = timeLink?.href || &#39;&#39;;
+      const tweetId = tweetUrl.split(&#39;/status/&#39;)[1]?.split(&#39;?&#39;)[0] || &#39;&#39;;
+      const time = article.querySelector(&#39;time&#39;)?.getAttribute(&#39;datetime&#39;) || &#39;&#39;;
+
+      const buttons = article.querySelectorAll(&#39;[role=&quot;group&quot;] button&#39;);
+      let replies = 0, retweets = 0, likes = 0, views = 0;
+      buttons.forEach(btn =&gt; {
+        const label = btn.getAttribute(&#39;aria-label&#39;) || &#39;&#39;;
+        const num = parseNumber(label.match(/[\d,.]+[KM]?/)?.[0] || &#39;0&#39;);
+        if (label.includes(&#39;repl&#39;)) replies = num;
+        else if (label.includes(&#39;repost&#39;) || label.includes(&#39;Retweet&#39;)) retweets = num;
+        else if (label.includes(&#39;like&#39;)) likes = num;
+        else if (label.includes(&#39;view&#39;)) views = num;
+      });
+
+      const hashtags = tweetText.match(/#\w+/g) || [];
+
+      return { tweetId, handle, displayName, text: tweetText, url: tweetUrl, time, likes, retweets, replies, views, hashtags };
+    } catch (e) { return null; }
+  };
+
+  const getHashtag = () =&gt; {
+    const urlMatch = window.location.href.match(/hashtag\/(\w+)/);
+    if (urlMatch) return urlMatch[1];
+    const searchMatch = window.location.href.match(/q=%23(\w+)/);
+    if (searchMatch) return searchMatch[1];
+    return &#39;unknown&#39;;
+  };
+
+  const run = async () =&gt; {
+    const hashtag = getHashtag();
+    console.log(`#️⃣ Scraping tweets for #${hashtag}...`);
+
+    const tweets = new Map();
+    let scrolls = 0;
+    let noNewCount = 0;
+
+    while (tweets.size &lt; CONFIG.MAX_TWEETS &amp;&amp; noNewCount &lt; 5) {
+      const articles = document.querySelectorAll(&#39;article[data-testid=&quot;tweet&quot;]&#39;);
+      const beforeCount = tweets.size;
+
+      articles.forEach(article =&gt; {
+        const tweet = extractTweet(article);
+        if (tweet &amp;&amp; tweet.tweetId &amp;&amp; !tweets.has(tweet.tweetId)) {
+          tweets.set(tweet.tweetId, tweet);
+        }
+      });
+
+      const added = tweets.size - beforeCount;
+      if (added &gt; 0) { console.log(`#️⃣ Collected ${tweets.size} tweets...`); noNewCount = 0; }
+      else { noNewCount++; }
+
+      window.scrollBy(0, 800);
+      await sleep(CONFIG.SCROLL_DELAY);
+      scrolls++;
+      if (scrolls &gt; 100) break;
+    }
+
+    const tweetList = Array.from(tweets.values());
+    tweetList.sort((a, b) =&gt; b.likes - a.likes);
+
+    console.log(&#39;\n&#39; + &#39;=&#39;.repeat(60));
+    console.log(`#️⃣ SCRAPED ${tweetList.length} TWEETS FOR #${hashtag}`);
+    console.log(&#39;=&#39;.repeat(60) + &#39;\n&#39;);
+
+    tweetList.slice(0, 5).forEach((t, i) =&gt; {
+      console.log(`${i + 1}. @${t.handle} (${t.likes} ❤️): &quot;${t.text.slice(0, 60)}...&quot;`);
+    });
+
+    if (CONFIG.FORMAT === &#39;json&#39; || CONFIG.FORMAT === &#39;both&#39;) {
+      download(JSON.stringify({ hashtag, tweets: tweetList }, null, 2),
+        `hashtag_${hashtag}_${Date.now()}.json`, &#39;application/json&#39;);
+      console.log(&#39;💾 Downloaded hashtag tweets.json&#39;);
+    }
+
+    if (CONFIG.FORMAT === &#39;csv&#39; || CONFIG.FORMAT === &#39;both&#39;) {
+      const csv = [
+        &#39;Handle,Text,Likes,Retweets,Replies,Views,URL,Time&#39;,
+        ...tweetList.map(t =&gt;
+          `&quot;@${t.handle}&quot;,&quot;${t.text.replace(/&quot;/g, &#39;&quot;&quot;&#39;).replace(/\n/g, &#39; &#39;)}&quot;,${t.likes},${t.retweets},${t.replies},${t.views},&quot;${t.url}&quot;,&quot;${t.time}&quot;`
+        )
+      ].join(&#39;\n&#39;);
+      download(csv, `hashtag_${hashtag}_${Date.now()}.csv`, &#39;text/csv&#39;);
+      console.log(&#39;💾 Downloaded hashtag tweets.csv&#39;);
+    }
+
+    window.scrapedHashtag = { hashtag, tweets: tweetList };
+    console.log(&#39;\n✅ Done! Access data: window.scrapedHashtag&#39;);
+  };
+
+  run();
+})();
+</code></pre>
+<h3>Step 4: Review the output</h3>
+<pre><code>#️⃣ Scraping tweets for #DeFiSummer...
+#️⃣ Collected 47 tweets...
+#️⃣ Collected 112 tweets...
+#️⃣ Collected 189 tweets...
+#️⃣ Collected 247 tweets...
+#️⃣ Collected 310 tweets...
+#️⃣ Collected 347 tweets...
+
+============================================================
+#️⃣ SCRAPED 347 TWEETS FOR #DeFiSummer
+============================================================
+
+1. @defiprotocol (2341 ❤️): &quot;The #DeFiSummer is just getting started 🔥 TVL across ma...&quot;
+2. @cryptoanalyst (891 ❤️): &quot;#DeFiSummer yields are back. Here&#39;s my thread on the to...&quot;
+3. @web3founder (567 ❤️): &quot;Just deployed our #DeFiSummer liquidity pool. 47% APY o...&quot;
+4. @blockchaindev (423 ❤️): &quot;My #DeFiSummer portfolio strategy — a thread 🧵...&quot;
+5. @nichxbt (312 ❤️): &quot;Built a hashtag scraper for tracking #DeFiSummer with X...&quot;
+
+💾 Downloaded hashtag tweets.json
+💾 Downloaded hashtag tweets.csv
+
+✅ Done! Access data: window.scrapedHashtag
+</code></pre>
+<hr>
+<h2>💻 Method 2: CLI</h2>
+<pre><code class="language-bash"># Install XActions
+npm install -g xactions
+
+# Scrape tweets by hashtag
+npx xactions hashtag DeFiSummer --max 500
+
+# Export to CSV
+npx xactions hashtag DeFiSummer --format csv --output defi-summer.csv
+
+# Scrape with login (for protected search results)
+npx xactions login
+npx xactions hashtag YOUR_HASHTAG --max 1000
+</code></pre>
+<hr>
+<h2>⚙️ Configuration Reference</h2>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>MAX_TWEETS</code></td>
+<td><code>500</code></td>
+<td>Maximum tweets to collect before stopping</td>
+</tr>
+<tr>
+<td><code>SCROLL_DELAY</code></td>
+<td><code>1500</code></td>
+<td>Milliseconds between scroll-downs</td>
+</tr>
+<tr>
+<td><code>FORMAT</code></td>
+<td><code>&#39;both&#39;</code></td>
+<td>Export format: <code>&#39;json&#39;</code>, <code>&#39;csv&#39;</code>, or <code>&#39;both&#39;</code></td>
+</tr>
+</tbody></table>
+<h3>Data Fields Collected</h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>tweetId</code></td>
+<td>Unique tweet identifier</td>
+<td><code>&quot;1834567890123456789&quot;</code></td>
+</tr>
+<tr>
+<td><code>handle</code></td>
+<td>Author&#39;s username</td>
+<td><code>&quot;defiprotocol&quot;</code></td>
+</tr>
+<tr>
+<td><code>displayName</code></td>
+<td>Author&#39;s display name</td>
+<td><code>&quot;DeFi Protocol&quot;</code></td>
+</tr>
+<tr>
+<td><code>text</code></td>
+<td>Full tweet text</td>
+<td><code>&quot;The #DeFiSummer is...&quot;</code></td>
+</tr>
+<tr>
+<td><code>url</code></td>
+<td>Direct link to tweet</td>
+<td><code>&quot;https://x.com/defi.../status/...&quot;</code></td>
+</tr>
+<tr>
+<td><code>time</code></td>
+<td>ISO timestamp</td>
+<td><code>&quot;2026-02-24T14:30:00.000Z&quot;</code></td>
+</tr>
+<tr>
+<td><code>likes</code></td>
+<td>Like count</td>
+<td><code>2341</code></td>
+</tr>
+<tr>
+<td><code>retweets</code></td>
+<td>Retweet/repost count</td>
+<td><code>567</code></td>
+</tr>
+<tr>
+<td><code>replies</code></td>
+<td>Reply count</td>
+<td><code>89</code></td>
+</tr>
+<tr>
+<td><code>views</code></td>
+<td>View/impression count</td>
+<td><code>124000</code></td>
+</tr>
+<tr>
+<td><code>hashtags</code></td>
+<td>All hashtags in tweet</td>
+<td><code>[&quot;#DeFiSummer&quot;, &quot;#crypto&quot;]</code></td>
+</tr>
+</tbody></table>
+<hr>
+<h2>💡 Pro Tips</h2>
+<ol>
+<li><strong>Sort the CSV by likes.</strong> Import into Google Sheets → sort by Likes column → instantly see top-performing content for the hashtag.</li>
+<li><strong>Track hashtags over time.</strong> Run the scraper daily and compare datasets to see how engagement trends change.</li>
+<li><strong>Use window.scrapedHashtag for live analysis.</strong> After scraping, run analysis code directly in the console:<pre><code class="language-javascript">// Average likes per tweet
+const avg = window.scrapedHashtag.tweets.reduce((sum, t) =&gt; sum + t.likes, 0) / window.scrapedHashtag.tweets.length;
+console.log(`Average likes: ${avg.toFixed(0)}`);
+
+// Top 3 authors by number of tweets
+const authors = {};
+window.scrapedHashtag.tweets.forEach(t =&gt; { authors[t.handle] = (authors[t.handle] || 0) + 1; });
+Object.entries(authors).sort((a, b) =&gt; b[1] - a[1]).slice(0, 3).forEach(([h, c]) =&gt; console.log(`@${h}: ${c} tweets`));
+</code></pre>
+</li>
+<li><strong>Scrape competitor hashtags.</strong> See what&#39;s working for competitors and use the insights for your own content strategy.</li>
+<li><strong>Combine with Auto-Liker.</strong> After identifying top authors for a hashtag, use the Auto-Liker to engage with their content.</li>
+</ol>
+<hr>
+<h2>⚠️ Important Warnings</h2>
+<blockquote>
+<p><strong>Scroll limit:</strong> The script stops after 100 scrolls or when no new tweets appear 5 times in a row. X limits how far back you can scroll in search results.</p>
+</blockquote>
+<blockquote>
+<p><strong>Data accuracy:</strong> Engagement numbers (likes, retweets) are scraped from the DOM at the time of collection. They may differ from X&#39;s API/analytics numbers.</p>
+</blockquote>
+<blockquote>
+<p><strong>Rate limits:</strong> Scrolling too fast may trigger rate limiting. The default 1.5s delay is safe, but avoid reducing it below 1s.</p>
+</blockquote>
+<hr>
+<h2>🔗 Related Features</h2>
+<ul>
+<li><a href="tweet-scraping-tutorial.md">Tweet Scraping Tutorial</a> — Search and export tweets by keyword (not just hashtags)</li>
+<li><a href="auto-liker-tutorial.md">Auto-Liker Tutorial</a> — Auto-engage with tweets after identifying trending hashtags</li>
+<li><a href="profile-scraping-tutorial.md">Profile Scraping Tutorial</a> — Get detailed data on top hashtag authors</li>
+</ul>
+<hr>
+<h2>❓ FAQ</h2>
+<h3>What&#39;s the difference between hashtag scraping and tweet scraping?</h3>
+<p>Hashtag scraping targets a specific <code>#hashtag</code> page or search. Tweet scraping searches by keywords (without the #). Use hashtag scraping for tracking campaigns; use tweet scraping for broader topic research.</p>
+<h3>How many tweets can I scrape?</h3>
+<p>The default is 500, but you can increase <code>MAX_TWEETS</code>. X limits search depth, so you may not get more than ~1,000 tweets even with a higher limit.</p>
+<h3>Can I scrape multiple hashtags?</h3>
+<p>Run the script once per hashtag. Each run produces separate JSON/CSV files. To merge datasets, combine the JSON files or import CSVs into the same spreadsheet.</p>
+<h3>Does this work without logging in?</h3>
+<p>You need to be logged into x.com for the search to return full results. Logged-out searches are severely limited.</p>
+<h3>Can I access the data programmatically?</h3>
+<p>Yes! After the script runs, use <code>window.scrapedHashtag</code> to access the full dataset in the console. The object contains <code>{ hashtag, tweets: [...] }</code>.</p>
+<hr>
+<p align="center">
+  <b>Built with ❤️ by <a href="https://x.com/nichxbt">@nichxbt</a></b><br>
+  <a href="https://xactions.app">xactions.app</a> · <a href="https://github.com/nichxbt/xactions">GitHub</a>
+</p>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try #⃣ Scrape Tweets by Hashtag on X (Twitter) — Export to JSON &amp; CSV?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/step-by-step/auto-commenter-tutorial">📝 Auto Commenter Tutorial</a>
+        <a href="/docs/step-by-step/auto-liker-tutorial">📝 Auto Liker Tutorial</a>
+        <a href="/docs/step-by-step/bookmark-exporter-tutorial">📝 Bookmark Exporter Tutorial</a>
+        <a href="/docs/step-by-step/detect-unfollowers-tutorial">📝 Detect Unfollowers Tutorial</a>
+        <a href="/docs/step-by-step/follow-target-followers-tutorial">📝 Follow Target Followers Tutorial</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a> / <a href="/docs#step-by-step">Tutorials</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

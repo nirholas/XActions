@@ -4,21 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Follower Monitoring | XActions</title>
-  <meta name="description" content="Browser console scripts. Paste into DevTools on the appropriate followers/following page.">
+  <meta name="description" content="Browser console scripts for tracking follower changes on X/Twitter. All scripts use localStorage for persistent snapshot comparison.">
   <meta name="keywords" content="xactions, twitter automation, x automation, free, open source, follower, monitoring, agent skills">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Follower Monitoring — XActions">
-  <meta property="og:description" content="Browser console scripts. Paste into DevTools on the appropriate followers/following page.">
+  <meta property="og:description" content="Browser console scripts for tracking follower changes on X/Twitter. All scripts use localStorage for persistent snapshot comparison.">
   <meta property="og:url" content="https://xactions.app/docs/skills/follower-monitoring">
   <meta property="og:site_name" content="XActions">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Follower Monitoring — XActions">
-  <meta name="twitter:description" content="Browser console scripts. Paste into DevTools on the appropriate followers/following page.">
+  <meta name="twitter:description" content="Browser console scripts for tracking follower changes on X/Twitter. All scripts use localStorage for persistent snapshot comparison.">
 
   <link rel="canonical" href="https://xactions.app/docs/skills/follower-monitoring">
   <link rel="manifest" href="/manifest.json">
@@ -29,7 +29,7 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Follower Monitoring | XActions",
-    "description": "Browser console scripts. Paste into DevTools on the appropriate followers/following page.",
+    "description": "Browser console scripts for tracking follower changes on X/Twitter. All scripts use localStorage for persistent snapshot comparison.",
     "url": "https://xactions.app/docs/skills/follower-monitoring",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -171,78 +171,135 @@
       <article class="article">
         <span class="cat-badge">Agent Skills</span>
         <h1>Follower Monitoring</h1>
-<p>Browser console scripts. Paste into DevTools on the appropriate followers/following page.</p>
-<h2>Script selection</h2>
+<p>Browser console scripts for tracking follower changes on X/Twitter. All scripts use localStorage for persistent snapshot comparison.</p>
+<h2>Script Selection</h2>
 <table>
 <thead>
 <tr>
 <th>Goal</th>
-<th>Navigate to</th>
 <th>File</th>
+<th>Navigate to</th>
 </tr>
 </thead>
 <tbody><tr>
 <td>Detect who unfollowed you</td>
-<td><code>x.com/USERNAME/followers</code></td>
 <td><code>src/detectUnfollowers.js</code></td>
+<td><code>x.com/USERNAME/followers</code></td>
 </tr>
 <tr>
-<td>Track any public account&#39;s changes</td>
-<td><code>x.com/TARGET/followers</code> or <code>/following</code></td>
+<td>Monitor any public account</td>
 <td><code>src/monitorAccount.js</code></td>
+<td><code>x.com/TARGET/followers</code></td>
 </tr>
 <tr>
-<td>Auto-refresh monitoring with alerts</td>
-<td><code>x.com/USERNAME/followers</code></td>
+<td>Continuous monitoring + alerts</td>
 <td><code>src/continuousMonitor.js</code></td>
+<td><code>x.com/USERNAME/followers</code></td>
 </tr>
 <tr>
-<td>New follower tracking + welcome messages</td>
-<td><code>x.com/USERNAME/followers</code></td>
+<td>New follower tracking + welcome</td>
 <td><code>src/newFollowersAlert.js</code></td>
+<td><code>x.com/USERNAME/followers</code></td>
+</tr>
+<tr>
+<td>Follower growth over time</td>
+<td><code>src/followerGrowthTracker.js</code></td>
+<td><code>x.com/USERNAME/followers</code></td>
+</tr>
+<tr>
+<td>Follower demographics</td>
+<td><code>src/audienceDemographics.js</code></td>
+<td><code>x.com/USERNAME/followers</code></td>
+</tr>
+<tr>
+<td>Audit follower quality</td>
+<td><code>src/auditFollowers.js</code></td>
+<td><code>x.com/USERNAME/followers</code></td>
+</tr>
+<tr>
+<td>Follow ratio management</td>
+<td><code>src/followRatioManager.js</code></td>
+<td><code>x.com/USERNAME</code></td>
 </tr>
 </tbody></table>
-<h2>How they work</h2>
-<p>All scripts use the same snapshot-compare pattern:</p>
+<h2>How They Work</h2>
+<p>All scripts use the same <strong>snapshot-compare pattern</strong>:</p>
 <ol>
-<li><strong>First run</strong>: Scrapes all visible users by scrolling, saves snapshot to <code>localStorage</code>, reports total count</li>
-<li><strong>Subsequent runs</strong>: Scrapes current list, compares against saved snapshot, reports additions and removals, updates snapshot</li>
+<li>First run: Scrapes visible users by scrolling, saves snapshot to localStorage</li>
+<li>Subsequent runs: Scrapes current list, compares against saved snapshot, reports additions/removals</li>
 </ol>
-<h3>Storage keys</h3>
+<h3>detectUnfollowers.js</h3>
+<p>Compares follower snapshots. Auto-downloads unfollowers as <code>.txt</code> file. Simple two-run workflow: paste once to baseline, paste again later to detect changes.</p>
+<h3>monitorAccount.js</h3>
+<p>Works on ANY public account (not just yours). Tracks both followers and following list changes. Downloads removed accounts list.</p>
+<h3>continuousMonitor.js</h3>
+<p>Long-running script with auto-refresh on interval (default: 5 minutes). Sends browser Notification API alerts and plays Web Audio API sounds on changes. Tab must stay open.</p>
+<h3>newFollowersAlert.js</h3>
+<p>Tracks new followers with display names. Generates welcome message templates. Also reports unfollowers as secondary output.</p>
+<h3>followerGrowthTracker.js</h3>
+<p>Records follower count snapshots over time with timestamps. Calculates daily/weekly/monthly growth rates. Projects future milestones. Visual growth chart in console.</p>
+<p><strong>Controls:</strong> <code>XActions.track()</code>, <code>XActions.history()</code>, <code>XActions.project(target)</code></p>
+<h3>audienceDemographics.js</h3>
+<p>Scrapes follower profiles and classifies by niche, account size, bot likelihood, and verified status. Visual distribution charts.</p>
+<h3>followRatioManager.js</h3>
+<p>Navigate to profile page. Monitors follower/following ratio with letter grades. Generates improvement plans.</p>
+<p><strong>Controls:</strong> <code>XActions.track()</code>, <code>XActions.plan()</code>, <code>XActions.history()</code></p>
+<h2>Storage Keys</h2>
 <table>
 <thead>
 <tr>
 <th>Script</th>
-<th>localStorage key</th>
-<th>Value format</th>
+<th>localStorage Key</th>
 </tr>
 </thead>
 <tbody><tr>
 <td>detectUnfollowers</td>
 <td><code>xactions_my_followers</code></td>
-<td><code>[{ username, displayName }]</code></td>
 </tr>
 <tr>
 <td>monitorAccount</td>
 <td><code>xactions_monitor_{username}_{type}</code></td>
-<td><code>[{ username, displayName }]</code></td>
 </tr>
 <tr>
 <td>newFollowersAlert</td>
 <td><code>xactions_new_followers</code></td>
-<td><code>Map</code> with display names</td>
+</tr>
+<tr>
+<td>followerGrowthTracker</td>
+<td><code>xactions_follower_growth</code></td>
+</tr>
+<tr>
+<td>followRatioManager</td>
+<td><code>xactions_ratio_history</code></td>
 </tr>
 </tbody></table>
-<h3>Script-specific behavior</h3>
-<p><strong>detectUnfollowers.js</strong> — Auto-downloads unfollower list as <code>.txt</code> on detection.</p>
-<p><strong>monitorAccount.js</strong> — Works on ANY public account (not just yours). Downloads lists of removed accounts.</p>
-<p><strong>continuousMonitor.js</strong> — Long-running. Auto-checks on interval (default: <code>CHECK_INTERVAL_MINUTES = 5</code> at top of script). Sends browser Notification API alerts and plays Web Audio API sounds on changes. Tab must stay open.</p>
-<p><strong>newFollowersAlert.js</strong> — Tracks new followers with display names and generates welcome message templates. Also reports unfollowers as secondary output.</p>
-<h2>Resetting data</h2>
+<h2>Strategy Guide</h2>
+<h3>Daily monitoring setup</h3>
+<ol>
+<li>Open <code>x.com/USERNAME/followers</code> in a pinned tab</li>
+<li>Paste <code>src/continuousMonitor.js</code> — it auto-refreshes every 5 minutes</li>
+<li>Enable browser notifications when prompted</li>
+<li>Check back periodically for alerts</li>
+</ol>
+<h3>Weekly follower health check</h3>
+<ol>
+<li><code>src/followerGrowthTracker.js</code> -&gt; <code>XActions.track()</code> to log this week</li>
+<li><code>src/followRatioManager.js</code> -&gt; <code>XActions.track()</code> for ratio snapshot</li>
+<li><code>src/auditFollowers.js</code> to check for new bot followers</li>
+<li><code>src/audienceDemographics.js</code> to verify audience quality</li>
+</ol>
+<h3>Resetting data</h3>
 <pre><code class="language-javascript">localStorage.removeItem(&#39;xactions_my_followers&#39;)
-// or for monitored accounts:
-localStorage.removeItem(&#39;xactions_monitor_username_followers&#39;)
+localStorage.removeItem(&#39;xactions_follower_growth&#39;)
+localStorage.removeItem(&#39;xactions_ratio_history&#39;)
 </code></pre>
+<h2>Notes</h2>
+<ul>
+<li>All scripts auto-export results as downloadable JSON</li>
+<li><code>continuousMonitor.js</code> requires the tab to stay open (Chrome throttles background timers)</li>
+<li>Monitoring accuracy improves with more scroll rounds (increase in CONFIG)</li>
+<li>localStorage persists across browser sessions but NOT across browser profiles</li>
+</ul>
 
 
         <div class="cta-box">
@@ -258,7 +315,7 @@ localStorage.removeItem(&#39;xactions_monitor_username_followers&#39;)
         <h3>📖 In This Section</h3>
                 <a href="/docs/skills/algorithm-cultivation">🎯 Algorithm Cultivation &amp; Thought Leadership</a>
         <a href="/docs/skills/analytics-insights">🎯 Analytics &amp; Insights</a>
-        <a href="/docs/skills/articles-longform">🎯 Articles &amp; Long-Form Content</a>
+        <a href="/docs/skills/articles-longform">🎯 Articles &amp; Longform</a>
         <a href="/docs/skills/blocking-muting-management">🎯 Blocking &amp; Muting Management</a>
         <a href="/docs/skills/bookmarks-management">🎯 Bookmarks Management</a>
         <a href="/docs/skills/business-ads">🎯 Business &amp; Ads Tools</a>

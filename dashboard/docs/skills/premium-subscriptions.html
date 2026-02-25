@@ -3,21 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Premium Subscriptions | XActions</title>
+  <title>Premium &amp; Subscriptions | XActions</title>
   <meta name="description" content="Browser console script for checking and managing X/Twitter Premium subscription information.">
   <meta name="keywords" content="xactions, twitter automation, x automation, free, open source, premium, subscriptions, agent skills">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Premium Subscriptions — XActions">
+  <meta property="og:title" content="Premium &amp; Subscriptions — XActions">
   <meta property="og:description" content="Browser console script for checking and managing X/Twitter Premium subscription information.">
   <meta property="og:url" content="https://xactions.app/docs/skills/premium-subscriptions">
   <meta property="og:site_name" content="XActions">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Premium Subscriptions — XActions">
+  <meta name="twitter:title" content="Premium &amp; Subscriptions — XActions">
   <meta name="twitter:description" content="Browser console script for checking and managing X/Twitter Premium subscription information.">
 
   <link rel="canonical" href="https://xactions.app/docs/skills/premium-subscriptions">
@@ -28,7 +28,7 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Premium Subscriptions | XActions",
+    "headline": "Premium & Subscriptions | XActions",
     "description": "Browser console script for checking and managing X/Twitter Premium subscription information.",
     "url": "https://xactions.app/docs/skills/premium-subscriptions",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
@@ -48,7 +48,7 @@
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://xactions.app/docs" },
       { "@type": "ListItem", "position": 3, "name": "Agent Skills", "item": "https://xactions.app/docs/skills" },
-      { "@type": "ListItem", "position": 4, "name": "Premium Subscriptions", "item": "https://xactions.app/docs/skills/premium-subscriptions" }
+      { "@type": "ListItem", "position": 4, "name": "Premium & Subscriptions", "item": "https://xactions.app/docs/skills/premium-subscriptions" }
     ]
   }
   </script>
@@ -162,41 +162,141 @@
 
     <main class="main-content">
       <header class="main-header">
-        <h1>🎯 Premium Subscriptions</h1>
+        <h1>🎯 Premium &amp; Subscriptions</h1>
         <div class="breadcrumb">
-          <a href="https://xactions.app">Home</a> › <a href="https://xactions.app/docs">Docs</a> › <a href="https://xactions.app/docs/skills">Agent Skills</a> › Premium Subscriptions
+          <a href="https://xactions.app">Home</a> › <a href="https://xactions.app/docs">Docs</a> › <a href="https://xactions.app/docs/skills">Agent Skills</a> › Premium &amp; Subscriptions
         </div>
       </header>
 
       <article class="article">
         <span class="cat-badge">Agent Skills</span>
-        <h1>Premium Subscriptions</h1>
+        <h1>Premium &amp; Subscriptions</h1>
 <p>Browser console script for checking and managing X/Twitter Premium subscription information.</p>
-<h2>Available Scripts</h2>
+<h2>Script Selection</h2>
 <table>
 <thead>
 <tr>
-<th>Script</th>
+<th>Goal</th>
 <th>File</th>
-<th>Purpose</th>
+<th>Navigate to</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>Premium Manager</td>
+<td>Check Premium status</td>
 <td><code>src/premiumManager.js</code></td>
-<td>Check status, manage features, subscription info</td>
+<td><code>x.com/settings/account</code></td>
+</tr>
+<tr>
+<td>Manage articles (Premium+)</td>
+<td><code>src/articlePublisher.js</code></td>
+<td><code>x.com/compose/article</code></td>
+</tr>
+<tr>
+<td>Schedule posts (Premium)</td>
+<td><code>src/schedulePosts.js</code></td>
+<td><code>x.com</code></td>
+</tr>
+<tr>
+<td>Creator monetization</td>
+<td><code>src/creatorStudio.js</code></td>
+<td><code>x.com/i/monetization</code></td>
 </tr>
 </tbody></table>
 <h2>Premium Manager</h2>
 <p><strong>File:</strong> <code>src/premiumManager.js</code></p>
-<p>Interacts with X Premium subscription pages to check current tier, feature access, and subscription status.</p>
-<h3>How to use</h3>
+<p>Checks current Premium tier, feature access, and subscription status.</p>
+<h3>How to Use</h3>
 <ol>
-<li>Navigate to <code>x.com/i/premium_sign_up</code> or <code>x.com/settings/account</code></li>
-<li>Open DevTools (F12) → Console</li>
-<li>Paste the script → Enter</li>
+<li>Navigate to <code>x.com/settings/account</code> or <code>x.com/i/premium_sign_up</code></li>
+<li>Open DevTools (F12) -&gt; Console</li>
+<li>Paste the script -&gt; Enter</li>
 </ol>
-<h3>Key Selectors</h3>
+<h2>Premium Tiers</h2>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Price</th>
+<th>Key Features</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Basic</td>
+<td>$3/mo</td>
+<td>Edit posts, longer posts (25K chars), bookmark folders</td>
+</tr>
+<tr>
+<td>Premium</td>
+<td>$8/mo</td>
+<td>Blue checkmark, scheduling, analytics, Grok, reduced ads</td>
+</tr>
+<tr>
+<td>Premium+</td>
+<td>$16/mo</td>
+<td>Articles, no ads, creator monetization, highest reply boost</td>
+</tr>
+</tbody></table>
+<h2>XActions Feature Gating</h2>
+<p>Several scripts depend on Premium:</p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Required Tier</th>
+<th>Script</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Scheduling</td>
+<td>Premium+</td>
+<td><code>src/schedulePosts.js</code></td>
+</tr>
+<tr>
+<td>Articles</td>
+<td>Premium+</td>
+<td><code>src/articlePublisher.js</code></td>
+</tr>
+<tr>
+<td>Advanced analytics</td>
+<td>Premium</td>
+<td><code>src/creatorStudio.js</code></td>
+</tr>
+<tr>
+<td>Edit posts</td>
+<td>Basic+</td>
+<td>N/A (manual edit)</td>
+</tr>
+<tr>
+<td>Longer posts (25K)</td>
+<td>Basic+</td>
+<td><code>src/postComposer.js</code></td>
+</tr>
+<tr>
+<td>Grok AI</td>
+<td>Premium+</td>
+<td><code>src/grokIntegration.js</code></td>
+</tr>
+<tr>
+<td>Ad revenue sharing</td>
+<td>Premium (500+ followers + 5M impressions)</td>
+<td><code>src/creatorStudio.js</code></td>
+</tr>
+<tr>
+<td>Subscriptions</td>
+<td>Premium (500+ followers)</td>
+<td><code>src/creatorStudio.js</code></td>
+</tr>
+</tbody></table>
+<p>Scripts that work on ALL tiers (including free):</p>
+<ul>
+<li>All scraping scripts</li>
+<li>All unfollow/follow scripts</li>
+<li>All analytics scripts (browser-based)</li>
+<li>Engagement automation</li>
+<li>Blocking/muting management</li>
+<li>All monitoring scripts</li>
+</ul>
+<h2>DOM Selectors</h2>
 <table>
 <thead>
 <tr>
@@ -217,42 +317,12 @@
 <td><code>a[href=&quot;/i/premium_sign_up&quot;]</code></td>
 </tr>
 </tbody></table>
-<h2>Premium Tiers</h2>
-<table>
-<thead>
-<tr>
-<th>Tier</th>
-<th>Key Features</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Basic</td>
-<td>Edit posts, longer posts, bookmark folders</td>
-</tr>
-<tr>
-<td>Premium</td>
-<td>Blue checkmark, scheduling, analytics, Grok</td>
-</tr>
-<tr>
-<td>Premium+</td>
-<td>Articles, no ads, creator monetization</td>
-</tr>
-</tbody></table>
-<h2>Feature Gating</h2>
-<p>Several XActions scripts depend on Premium features:</p>
-<ul>
-<li><strong>Scheduling</strong> — <code>src/schedulePosts.js</code> requires Premium or Premium+</li>
-<li><strong>Articles</strong> — <code>src/articlePublisher.js</code> requires Premium+</li>
-<li><strong>Analytics</strong> — advanced analytics require Premium</li>
-<li><strong>Edit posts</strong> — requires Basic or higher</li>
-<li><strong>Longer posts</strong> — 25,000+ characters requires Basic or higher</li>
-</ul>
 <h2>Notes</h2>
 <ul>
-<li>Premium features gate many XActions capabilities</li>
-<li>Subscription status affects which scripts are fully usable</li>
-<li>The script reads subscription info — it does not modify subscriptions</li>
-<li>Badge verification status can be checked on any profile page</li>
+<li>Premium features gate some XActions capabilities but most scripts work on free tier</li>
+<li>The script reads subscription info -- it does not modify subscriptions</li>
+<li>Badge verification can be checked on any profile page</li>
+<li>Premium status affects reply ranking in threads</li>
 </ul>
 
 
@@ -269,7 +339,7 @@
         <h3>📖 In This Section</h3>
                 <a href="/docs/skills/algorithm-cultivation">🎯 Algorithm Cultivation &amp; Thought Leadership</a>
         <a href="/docs/skills/analytics-insights">🎯 Analytics &amp; Insights</a>
-        <a href="/docs/skills/articles-longform">🎯 Articles &amp; Long-Form Content</a>
+        <a href="/docs/skills/articles-longform">🎯 Articles &amp; Longform</a>
         <a href="/docs/skills/blocking-muting-management">🎯 Blocking &amp; Muting Management</a>
         <a href="/docs/skills/bookmarks-management">🎯 Bookmarks Management</a>
         <a href="/docs/skills/business-ads">🎯 Business &amp; Ads Tools</a>

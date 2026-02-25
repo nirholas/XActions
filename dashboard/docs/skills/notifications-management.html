@@ -172,29 +172,39 @@
         <span class="cat-badge">Agent Skills</span>
         <h1>Notifications Management</h1>
 <p>Browser console script for managing and filtering X/Twitter notifications.</p>
-<h2>Available Scripts</h2>
+<h2>Script Selection</h2>
 <table>
 <thead>
 <tr>
-<th>Script</th>
+<th>Goal</th>
 <th>File</th>
-<th>Purpose</th>
+<th>Navigate to</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>Notification Manager</td>
+<td>Filter and manage notifications</td>
 <td><code>src/notificationManager.js</code></td>
-<td>Filter, manage, and automate notification handling</td>
+<td><code>x.com/notifications</code></td>
+</tr>
+<tr>
+<td>Scrape notification data</td>
+<td><code>scripts/scrapeNotifications.js</code></td>
+<td><code>x.com/notifications</code></td>
+</tr>
+<tr>
+<td>Welcome new followers</td>
+<td><code>src/welcomeNewFollowers.js</code></td>
+<td><code>x.com/USERNAME/followers</code></td>
 </tr>
 </tbody></table>
 <h2>Notification Manager</h2>
 <p><strong>File:</strong> <code>src/notificationManager.js</code></p>
 <p>Manages X notifications: filter by type (mentions, likes, reposts, follows, replies), mark as read, and track notification activity.</p>
-<h3>How to use</h3>
+<h3>How to Use</h3>
 <ol>
 <li>Navigate to <code>x.com/notifications</code></li>
-<li>Open DevTools (F12) → Console</li>
-<li>Paste the script → Enter</li>
+<li>Open DevTools (F12) -&gt; Console</li>
+<li>Paste the script -&gt; Enter</li>
 </ol>
 <h3>Configuration</h3>
 <pre><code class="language-javascript">const CONFIG = {
@@ -205,7 +215,18 @@
   actionDelay: 1000,
 };
 </code></pre>
-<h3>Key Selectors</h3>
+<h3>Features</h3>
+<ul>
+<li>Filter notifications by type</li>
+<li>Count notifications by category</li>
+<li>Scrape notification content with author and timestamp</li>
+<li>Export notification data as JSON</li>
+<li>Identify most-engaged users from notifications</li>
+</ul>
+<h2>Notification Scraper</h2>
+<p><strong>File:</strong> <code>scripts/scrapeNotifications.js</code></p>
+<p>Standalone scraper that exports all visible notifications as structured JSON with author, type, content, and timestamp.</p>
+<h2>DOM Selectors</h2>
 <table>
 <thead>
 <tr>
@@ -229,14 +250,31 @@
 <td>Mentions tab</td>
 <td><code>a[href=&quot;/notifications/mentions&quot;]</code></td>
 </tr>
+<tr>
+<td>Notification text</td>
+<td><code>[data-testid=&quot;notification&quot;] [dir=&quot;auto&quot;]</code></td>
+</tr>
 </tbody></table>
+<h2>Strategy Guide</h2>
+<h3>Identifying engagement opportunities</h3>
+<ol>
+<li>Run <code>src/notificationManager.js</code> to filter for mentions</li>
+<li>Identify high-value mentions (verified users, large accounts)</li>
+<li>Prioritize replies to mentions from users with 1000+ followers</li>
+<li>Use <code>src/engagementLeaderboard.js</code> to cross-reference top engagers</li>
+</ol>
+<h3>Automated new follower pipeline</h3>
+<ol>
+<li>Run <code>src/welcomeNewFollowers.js</code> to detect new followers</li>
+<li>Review generated welcome message templates</li>
+<li>Customize messages per follower based on their bio/niche</li>
+</ol>
 <h2>Notes</h2>
 <ul>
 <li>Notifications page loads in batches — script scrolls to collect more</li>
-<li>Filter types: mentions, likes, reposts, follows, replies</li>
 <li>Rate limit: process with 1-2s delays between actions</li>
-<li>Notifications are read-only after processing — cannot &quot;un-read&quot;</li>
-<li>Navigate to the Notifications tab before running the script</li>
+<li>Navigate to the Notifications tab before running</li>
+<li>Mentions tab shows only @mentions for easier filtering</li>
 </ul>
 
 
@@ -253,7 +291,7 @@
         <h3>📖 In This Section</h3>
                 <a href="/docs/skills/algorithm-cultivation">🎯 Algorithm Cultivation &amp; Thought Leadership</a>
         <a href="/docs/skills/analytics-insights">🎯 Analytics &amp; Insights</a>
-        <a href="/docs/skills/articles-longform">🎯 Articles &amp; Long-Form Content</a>
+        <a href="/docs/skills/articles-longform">🎯 Articles &amp; Longform</a>
         <a href="/docs/skills/blocking-muting-management">🎯 Blocking &amp; Muting Management</a>
         <a href="/docs/skills/bookmarks-management">🎯 Bookmarks Management</a>
         <a href="/docs/skills/business-ads">🎯 Business &amp; Ads Tools</a>

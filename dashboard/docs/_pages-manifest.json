@@ -2,7 +2,7 @@
   {
     "slug": "getting-started",
     "title": "Getting Started with XActions",
-    "description": "Welcome! XActions helps you automate your X (Twitter) account. No coding needed.",
+    "description": "XActions is the complete X/Twitter automation toolkit. Browser scripts, CLI, Node.js library, MCP server for AI agents, and a web dashboard — all without Twitter API fees.",
     "section": "Guides & Reference",
     "icon": "📖",
     "urlPath": "/docs/guides/getting-started",
@@ -12,7 +12,7 @@
   {
     "slug": "usage",
     "title": "Usage",
-    "description": "These scripts are intended to be pasted into your browser's Developer Console while viewing your `following` page on X (formerly Twitter).",
+    "description": "Usage — XActions documentation",
     "section": "Guides & Reference",
     "icon": "📖",
     "urlPath": "/docs/guides/usage",
@@ -96,16 +96,6 @@
     "section": "Guides & Reference",
     "icon": "📖",
     "urlPath": "/docs/guides/mcp-setup",
-    "outSubdir": "guides",
-    "priority": 0.7
-  },
-  {
-    "slug": "openrouter",
-    "title": "Using xActions with OpenRouter",
-    "description": "xActions is an MCP server that provides AI agents with the ability to interact with social platforms like Twitter/X. Use it with any OpenRouter-powered AI client.",
-    "section": "Guides & Reference",
-    "icon": "📖",
-    "urlPath": "/docs/guides/openrouter",
     "outSubdir": "guides",
     "priority": 0.7
   },
@@ -231,8 +221,8 @@
   },
   {
     "slug": "articles-longform",
-    "title": "Articles & Long-Form Content",
-    "description": "Browser automation for publishing and managing long-form articles on X/Twitter. Requires Premium+ subscription.",
+    "title": "Articles & Longform",
+    "description": "Browser console scripts for creating and managing X/Twitter Articles (Premium+ feature).",
     "section": "Agent Skills",
     "icon": "🎯",
     "urlPath": "/docs/skills/articles-longform",
@@ -242,7 +232,7 @@
   {
     "slug": "blocking-muting-management",
     "title": "Blocking & Muting Management",
-    "description": "Browser console scripts for blocking, unblocking, muting, and managing unwanted accounts.",
+    "description": "Browser console scripts for blocking, unblocking, muting, and managing unwanted accounts on X/Twitter.",
     "section": "Agent Skills",
     "icon": "🎯",
     "urlPath": "/docs/skills/blocking-muting-management",
@@ -262,7 +252,7 @@
   {
     "slug": "business-ads",
     "title": "Business & Ads Tools",
-    "description": "Browser automation for X/Twitter business intelligence — brand monitoring, audience insights, and competitor analysis.",
+    "description": "Browser console scripts and automation for X/Twitter business intelligence and promotion.",
     "section": "Agent Skills",
     "icon": "🎯",
     "urlPath": "/docs/skills/business-ads",
@@ -292,7 +282,7 @@
   {
     "slug": "competitor-intelligence",
     "title": "Competitor Intelligence",
-    "description": "MCP-powered workflow for analyzing competitor X/Twitter accounts. Produces a structured report covering profile, content, audience, and network.",
+    "description": "MCP-powered workflow plus browser scripts for analyzing competitor X/Twitter accounts.",
     "section": "Agent Skills",
     "icon": "🎯",
     "urlPath": "/docs/skills/competitor-intelligence",
@@ -311,7 +301,7 @@
   },
   {
     "slug": "content-posting",
-    "title": "Content Posting with XActions",
+    "title": "Content Posting",
     "description": "Browser console scripts for automating content creation and publishing on X/Twitter.",
     "section": "Agent Skills",
     "icon": "🎯",
@@ -322,7 +312,7 @@
   {
     "slug": "content-repurposing",
     "title": "Content Repurposing",
-    "description": "MCP-powered workflow for identifying top-performing content and generating repurposed variations for a content calendar.",
+    "description": "Browser scripts and MCP workflows for identifying top content and generating repurposed variations.",
     "section": "Agent Skills",
     "icon": "🎯",
     "urlPath": "/docs/skills/content-repurposing",
@@ -332,7 +322,7 @@
   {
     "slug": "creator-monetization",
     "title": "Creator Monetization",
-    "description": "Browser automation for X/Twitter creator monetization — analytics, revenue tracking, and subscriber management.",
+    "description": "Browser console scripts for managing and analyzing X/Twitter creator monetization features.",
     "section": "Agent Skills",
     "icon": "🎯",
     "urlPath": "/docs/skills/creator-monetization",
@@ -352,7 +342,7 @@
   {
     "slug": "discovery-explore",
     "title": "Discovery & Explore",
-    "description": "Browser automation for X/Twitter search, trending topics, and content discovery.",
+    "description": "Browser console scripts and MCP tools for exploring trends, searching content, and discovering accounts on X/Twitter.",
     "section": "Agent Skills",
     "icon": "🎯",
     "urlPath": "/docs/skills/discovery-explore",
@@ -372,7 +362,7 @@
   {
     "slug": "follower-monitoring",
     "title": "Follower Monitoring",
-    "description": "Browser console scripts. Paste into DevTools on the appropriate followers/following page.",
+    "description": "Browser console scripts for tracking follower changes on X/Twitter. All scripts use localStorage for persistent snapshot comparison.",
     "section": "Agent Skills",
     "icon": "🎯",
     "urlPath": "/docs/skills/follower-monitoring",
@@ -382,7 +372,7 @@
   {
     "slug": "grok-ai",
     "title": "Grok AI Integration",
-    "description": "Browser automation for interacting with X's Grok AI chatbot — prompts, image generation, summarization, and post analysis.",
+    "description": "Browser console scripts for automating interactions with X's built-in Grok AI assistant.",
     "section": "Agent Skills",
     "icon": "🎯",
     "urlPath": "/docs/skills/grok-ai",
@@ -392,7 +382,7 @@
   {
     "slug": "growth-automation",
     "title": "Growth Automation",
-    "description": "Browser console scripts for X/Twitter. Always paste `src/automation/core.js` first — it provides shared config, selectors, utilities, and rate limiting.",
+    "description": "Browser console scripts for X/Twitter. Always paste `src/automation/core.js` first -- it provides shared config, selectors, utilities, and rate limiting.",
     "section": "Agent Skills",
     "icon": "🎯",
     "urlPath": "/docs/skills/growth-automation",
@@ -431,7 +421,7 @@
   },
   {
     "slug": "premium-subscriptions",
-    "title": "Premium Subscriptions",
+    "title": "Premium & Subscriptions",
     "description": "Browser console script for checking and managing X/Twitter Premium subscription information.",
     "section": "Agent Skills",
     "icon": "🎯",
@@ -472,7 +462,7 @@
   {
     "slug": "twitter-scraping",
     "title": "Twitter Scraping",
-    "description": "All scrapers require an `auth_token` cookie from x.com (DevTools → Application → Cookies → copy `auth_token` value).",
+    "description": "All scrapers require an `auth_token` cookie from x.com (DevTools -> Application -> Cookies -> copy `auth_token` value).",
     "section": "Agent Skills",
     "icon": "🎯",
     "urlPath": "/docs/skills/twitter-scraping",
@@ -512,7 +502,7 @@
   {
     "slug": "xactions-mcp-server",
     "title": "XActions MCP Server",
-    "description": "Entry point: `src/mcp/server.js` — communicates via stdio transport.",
+    "description": "The definitive free Twitter/X MCP server. 68+ tools for AI agents.",
     "section": "Agent Skills",
     "icon": "🎯",
     "urlPath": "/docs/skills/xactions-mcp-server",
@@ -596,6 +586,16 @@
     "section": "Skill References",
     "icon": "📚",
     "urlPath": "/docs/skills/twitter-scraping-scraper-details",
+    "outSubdir": "skills",
+    "priority": 0.5
+  },
+  {
+    "slug": "unfollow-management-script-details",
+    "title": "Unfollow Management — Script Details",
+    "description": "Detailed algorithms, controls, and configurations for each unfollow script.",
+    "section": "Skill References",
+    "icon": "📚",
+    "urlPath": "/docs/skills/unfollow-management-script-details",
     "outSubdir": "skills",
     "priority": 0.5
   },
@@ -881,8 +881,8 @@
   },
   {
     "slug": "readme",
-    "title": "⚡ XActions",
-    "description": "![npm version](https://www.npmjs.com/package/xactions)",
+    "title": "Quick start",
+    "description": "<source media=\"(prefers-color-scheme: dark)\" srcset=\".github/xshare.png\">",
     "section": "Project Info",
     "icon": "📄",
     "urlPath": "/docs/project/readme",
@@ -892,7 +892,7 @@
   {
     "slug": "extension",
     "title": "XActions Browser Extension",
-    "description": "Run XActions automation scripts on X/Twitter without browser console access. Dark-themed popup with toggle cards, per-automation settings, live activity log, and global controls.",
+    "description": "Run XActions automations on X/Twitter directly from your browser toolbar. No console access needed. Dark-themed popup with 11 automation cards, live dashboard, category filtering, search, progress tracking, and keyboard shortcuts.",
     "section": "Extensions & Plugins",
     "icon": "🔌",
     "urlPath": "/docs/extras/extension",
@@ -957,6 +957,16 @@
     "icon": "🔌",
     "urlPath": "/docs/extras/scripts",
     "outSubdir": "extras",
+    "priority": 0.5
+  },
+  {
+    "slug": "v310-launch-content",
+    "title": "XActions v3.1.0 — Launch Content",
+    "description": "Ready-to-post content for X, Reddit, Hacker News, and Product Hunt.",
+    "section": "Launch & Releases",
+    "icon": "🚀",
+    "urlPath": "/docs/launch/v310-launch-content",
+    "outSubdir": "launch",
     "priority": 0.5
   }
 ]
