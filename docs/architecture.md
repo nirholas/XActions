@@ -191,6 +191,9 @@ Scripts in `src/` are designed to run standalone in a browser DevTools console �
 | `STRIPE_SECRET_KEY` | No | Stripe payments |
 | `OPENROUTER_API_KEY` | No | AI features (OpenRouter) |
 | `X_SESSION_COOKIE` | No | Default auth_token for CLI |
+| `XACTIONS_PROXIES` | No | Comma-separated proxy list |
+| `XACTIONS_PROXY_FILE` | No | Path to proxy list file |
+| `PUPPETEER_EXECUTABLE_PATH` | No | Custom Chrome binary path |
 
 ## Port Assignments
 
@@ -199,6 +202,86 @@ Scripts in `src/` are designed to run standalone in a browser DevTools console �
 | 3001 | API server + Dashboard |
 | 5432 | PostgreSQL |
 | 6379 | Redis |
+
+## Data Flow Diagrams
+
+### Scraping Pipeline
+
+```
+User Request → CLI/MCP/API
+  → Scraper Module (twitter/bluesky/mastodon/threads)
+    → Adapter (puppeteer/playwright/cheerio)
+      → StealthBrowser (anti-detection, fingerprints)
+        → ProxyManager (rotation, health tracking)
+          → PaginationEngine (scroll, dedup, checkpoint)
+            → Dataset Storage (~/.xactions/datasets/)
+              → Export (JSON/CSV/XLSX/Google Sheets)
+```
+
+### Agent Event Loop
+
+```
+ThoughtLeaderAgent.start()
+  → Scheduler.getNextActivity()       (circadian rhythm)
+  → BrowserDriver.navigate()          (stealth browser)
+    → AntiDetection.humanClick()       (Bezier curves, typing, scrolling)
+  → LLMBrain.scoreRelevance()         (fast model: DeepSeek)
+  → LLMBrain.generateReply()          (mid model: Claude Haiku)
+  → Persona.validateContent()          (bot pattern detection)
+  → BrowserDriver.replyToTweet()       (execute action)
+  → AgentDatabase.logAction()          (SQLite tracking)
+  → ContentCalendar.markPublished()    (content lifecycle)
+  → sleep(circadian_delay)
+  → Loop ↑
+```
+
+### Real-Time Streaming
+
+```
+stream start tweet nichxbt -i 30
+  → StreamManager.createStream()
+    → BrowserPool.acquire()            (shared Puppeteer instances)
+    → TweetStream.poll()               (periodic scrape)
+      → Socket.IO emit('tweet:new')    (real-time event)
+      → Event stored in history
+    → Wait interval
+    → Poll again ↑
+```
+
+### Workflow Execution
+
+```
+workflow run morning-engage
+  → WorkflowEngine.execute()
+    → Trigger check (manual/schedule/webhook)
+    → For each step:
+      → Condition evaluate (if/unless)
+      → Action execute (scrape/post/engage/notify)
+      → Log result
+    → Complete / Error recovery
+```
+
+## Documentation Index
+
+| Document | Covers |
+|----------|--------|
+| [getting-started.md](getting-started.md) | Installation, quick start |
+| [cli-reference.md](cli-reference.md) | 78+ CLI commands |
+| [rest-api.md](rest-api.md) | 175+ REST API endpoints |
+| [mcp-setup.md](mcp-setup.md) | MCP server for AI agents |
+| [agents.md](agents.md) | Autonomous thought leader agent |
+| [scraping-infrastructure.md](scraping-infrastructure.md) | Proxy, stealth browser, pagination |
+| [graph.md](graph.md) | Social graph analysis & visualization |
+| [streaming.md](streaming.md) | Real-time event streams |
+| [workflows.md](workflows.md) | Workflow engine |
+| [plugins.md](plugins.md) | Plugin system |
+| [analytics.md](analytics.md) | Analytics & sentiment |
+| [video.md](video.md) | Video generation |
+| [portability.md](portability.md) | Export, migrate, diff |
+| [automation.md](automation.md) | Browser automation framework |
+| [deployment.md](deployment.md) | Deploy to cloud |
+| [dom-selectors.md](dom-selectors.md) | X/Twitter DOM selectors |
+| [engagement-booster.md](engagement-booster.md) | Engagement control panel |
 
 ---
 
