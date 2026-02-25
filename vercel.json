@@ -140,6 +140,10 @@
       "dest": "/dashboard/video.html"
     },
     {
+      "src": "/faq",
+      "dest": "/dashboard/faq.html"
+    },
+    {
       "src": "/404",
       "dest": "/dashboard/404.html"
     },

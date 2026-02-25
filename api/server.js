@@ -292,6 +292,10 @@ app.get('/about', (req, res) => {
   res.sendFile(path.join(__dirname, '../dashboard/about.html'));
 });
 
+app.get('/faq', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dashboard/faq.html'));
+});
+
 app.get('/mcp', (req, res) => {
   res.sendFile(path.join(__dirname, '../dashboard/mcp.html'));
 });

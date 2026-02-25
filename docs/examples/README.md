@@ -120,6 +120,13 @@ Step-by-step tutorials with real-world scenarios, ASCII diagrams, multiple metho
 | [Bookmark Exporter Tutorial](tutorials/bookmark-exporter-tutorial.md) | Export all your X bookmarks before they're gone |
 | [Auto-Commenter Tutorial](tutorials/auto-commenter-tutorial.md) | Auto-reply to new tweets for engagement growth |
 | [Profile Scraping Tutorial](tutorials/profile-scraping-tutorial.md) | Extract any profile's data to JSON instantly |
+| [Natural Flow Tutorial](tutorials/natural-flow-tutorial.md) | Human-like engagement sessions with presets and HUD |
+| [Follow Target Followers Tutorial](tutorials/follow-target-followers-tutorial.md) | Steal competitor audiences with smart filters |
+| [Smart Unfollow Tutorial](tutorials/smart-unfollow-tutorial.md) | Unfollow non-followers with full logging and export |
+| [Keyword Follow Tutorial](tutorials/keyword-follow-tutorial.md) | Auto-follow users by keyword search with filters |
+| [Hashtag Scraping Tutorial](tutorials/hashtag-scraping-tutorial.md) | Scrape tweets from any hashtag to JSON/CSV |
+| [Following Scraping Tutorial](tutorials/following-scraping-tutorial.md) | Export your following list with mutual status detection |
+| [Growth Suite Tutorial](tutorials/growth-suite-tutorial.md) | All-in-one growth: keyword follow + auto-like + smart unfollow |
 
 ---
 

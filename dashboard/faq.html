@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAQ — XActions | Free X/Twitter Automation Toolkit</title>
+  <meta name="description" content="Frequently asked questions about XActions: free X/Twitter automation, browser scripts, MCP server for AI agents. No API fees, 100% open source.">
+  <meta name="keywords" content="xactions faq, twitter automation questions, mass unfollow twitter, xactions safe, twitter mcp server, xactions free, twitter bot help, how to use xactions">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="FAQ — XActions | Free X/Twitter Automation">
+  <meta property="og:description" content="Everything you need to know about XActions: is it free, is it safe, how to use it, MCP integration, and more.">
+  <meta property="og:url" content="https://xactions.app/faq">
+  <meta property="og:site_name" content="XActions">
+  <meta property="og:image" content="https://xactions.app/og-faq.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="en_US">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:creator" content="@nichxbt">
+  <meta name="twitter:title" content="FAQ — XActions | Free X/Twitter Automation">
+  <meta name="twitter:description" content="Everything you need to know about XActions: free, safe, open source Twitter automation.">
+  <meta name="twitter:image" content="https://xactions.app/og-faq.png">
+
+  <link rel="canonical" href="https://xactions.app/faq">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  <link rel="manifest" href="/manifest.json">
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is XActions?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "XActions is a free, open-source X/Twitter automation toolkit with 43+ tools for unfollowing, scraping, auto-engaging, and more. No API fees, no accounts required."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is XActions really free?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, 100% free and open source under the MIT license. No hidden fees, no premium tiers, no credit system."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do I need a Twitter/X API key?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. XActions uses browser automation — scripts run directly in your browser's DevTools console on x.com. No API key or developer account needed."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is my account safe?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "XActions runs in YOUR browser — your credentials never leave your machine. Scripts add human-like delays (1-3 seconds) between actions to avoid rate limits."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I use XActions?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Three ways: (1) Copy-paste scripts into browser DevTools on x.com, (2) Use the CLI with npx xactions, (3) Use the MCP server with AI agents like Claude."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the MCP server?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Model Context Protocol server that lets AI assistants (Claude, Cursor, Windsurf) control Twitter actions through natural language commands."
+        }
+      }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "FAQ", "item": "https://xactions.app/faq" }
+    ]
+  }
+  </script>
+  <link rel="stylesheet" href="/css/common.css">
+  <style>
+    :root { --bg-primary: #000; --bg-secondary: #16181c; --bg-tertiary: #202327; --accent: #1d9bf0; --accent-hover: #1a8cd8; --accent-light: rgba(29,155,240,0.1); --text-primary: #e7e9ea; --text-secondary: #8b8f94; --border: #2f3336; --success: #00ba7c; --warning: #ffad1f; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.5; }
+    ::-webkit-scrollbar { width: 16px; } ::-webkit-scrollbar-track { background: var(--bg-primary); } ::-webkit-scrollbar-thumb { background: var(--bg-tertiary); border-radius: 8px; border: 4px solid var(--bg-primary); }
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar-left { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; } .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background 0.2s; } .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; } .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background 0.2s; margin-bottom: 4px; } .nav-item:hover { background: var(--bg-tertiary); } .nav-item.active { font-weight: 700; } .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: white; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background 0.2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; } .action-btn:hover { background: var(--accent-hover); }
+    .main-content { flex: 1; max-width: 600px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,0.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px; z-index: 100; } .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .section { padding: 24px 16px; border-bottom: 1px solid var(--border); }
+    .section-title { font-size: 1.25rem; font-weight: 800; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    h3 { font-size: 1rem; font-weight: 700; margin: 0 0 8px; }
+    p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 12px; }
+    p a, .faq-answer a { color: var(--accent); text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 2px; }
+
+    /* FAQ Accordion */
+    .faq-item { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 8px; transition: border-color 0.2s; }
+    .faq-item:hover { border-color: var(--accent); }
+    .faq-item summary { padding: 16px; cursor: pointer; font-size: 0.9375rem; font-weight: 600; color: var(--text-primary); list-style: none; display: flex; align-items: center; gap: 12px; }
+    .faq-item summary::-webkit-details-marker { display: none; }
+    .faq-item summary::before { content: '▶'; font-size: 0.625rem; color: var(--text-secondary); transition: transform 0.2s; flex-shrink: 0; }
+    .faq-item[open] summary::before { transform: rotate(90deg); }
+    .faq-answer { padding: 0 16px 16px; color: var(--text-secondary); font-size: 0.9375rem; line-height: 1.6; }
+
+    .sidebar-right { width: 350px; padding: 12px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .promo-card { background: var(--bg-secondary); border-radius: 16px; margin-bottom: 16px; overflow: hidden; } .promo-header { padding: 16px; font-size: 1.25rem; font-weight: 800; } .promo-item { padding: 16px; border-top: 1px solid var(--border); } .promo-item h4 { font-size: 0.9375rem; margin-bottom: 4px; } .promo-item p { color: var(--text-secondary); font-size: 0.8125rem; margin: 0; }
+
+    .site-footer { border-top: 1px solid var(--border); padding: 48px 24px; } .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px; } .footer-brand h3 { font-size: 1.25rem; margin-bottom: 8px; } .footer-brand p { color: var(--text-secondary); font-size: 0.875rem; } .footer-links h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 12px; } .footer-links a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 4px 0; } .footer-links a:hover { color: var(--accent); } .footer-bottom { max-width: 1200px; margin: 24px auto 0; padding-top: 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; } .footer-bottom p { color: var(--text-secondary); font-size: 0.8125rem; } .footer-bottom a { color: var(--text-secondary); } .footer-bottom a:hover { color: var(--accent); }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } .main-content { max-width: 100%; } }
+    @media (max-width: 768px) { .sidebar-left { width: 68px; } .logo a span:last-child, .nav-item span:last-child { display: none; } .nav-item { justify-content: center; } .action-btn { width: 50px; height: 50px; padding: 0; font-size: 0; } .action-btn::before { content: '→'; font-size: 1.5rem; } .footer-content { grid-template-columns: 1fr 1fr; } }
+    .skip-nav { position: absolute; top: -100%; left: 16px; background: var(--accent); color: white; padding: 12px 24px; border-radius: 8px; font-weight: 700; z-index: 9999; text-decoration: none; } .skip-nav:focus { top: 16px; }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    main a:not(.nav-item):not(.btn):not(.nav__link):not(.nav__brand), .content a:not(.nav-item):not(.btn):not(.nav__link):not(.nav__brand), footer a { text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 2px; }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
+  <div class="layout">
+    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <script src="/js/sidebar.js"></script>
+
+    <main class="main-content" id="main-content">
+      <header class="main-header"><h1>❓ Frequently Asked Questions</h1></header>
+
+      <div class="section">
+        <p>Everything you need to know about XActions — the free, open-source X/Twitter automation toolkit.</p>
+      </div>
+
+      <!-- GENERAL -->
+      <section class="section">
+        <h2 class="section-title">💡 General</h2>
+
+        <details class="faq-item">
+          <summary>What is XActions?</summary>
+          <div class="faq-answer">XActions is a free, open-source X/Twitter automation toolkit with 43+ tools for unfollowing, scraping, auto-engaging, and more. It works through browser scripts, a CLI, and an MCP server for AI agents. No API fees, no accounts required.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>Is XActions really free?</summary>
+          <div class="faq-answer">Yes, 100% free and open source under the <strong>MIT license</strong>. No hidden fees, no premium tiers, no credit system. Every feature is available to everyone.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>Do I need a Twitter/X API key?</summary>
+          <div class="faq-answer">No. XActions uses browser automation — scripts run directly in your browser's DevTools console on x.com. You don't need an API key, developer account, or any special permissions.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>Is XActions affiliated with X/Twitter?</summary>
+          <div class="faq-answer">No. XActions is an independent open-source project. It is not endorsed by or affiliated with X Corp in any way.</div>
+        </details>
+      </section>
+
+      <!-- SAFETY & SECURITY -->
+      <section class="section">
+        <h2 class="section-title">🔒 Safety &amp; Security</h2>
+
+        <details class="faq-item">
+          <summary>Is my account safe?</summary>
+          <div class="faq-answer">XActions runs in <strong>your</strong> browser — your credentials never leave your machine. Scripts add human-like delays (1-3 seconds) between actions to avoid rate limits. However, any automation carries some risk; start with conservative settings.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>Will I get banned or suspended?</summary>
+          <div class="faq-answer">XActions mimics human behavior with built-in delays. Thousands of users have used it without issues. That said, any automation carries some risk. Avoid running multiple scripts simultaneously, and start with small batches.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>Do you store my data?</summary>
+          <div class="faq-answer">No. Browser scripts run entirely in your browser — nothing is sent to our servers. The CLI tool and MCP server both run locally on your machine. Your data stays with you.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>Is the code safe to run?</summary>
+          <div class="faq-answer">Yes — it's fully open source. You can <a href="https://github.com/nirholas/XActions" target="_blank" rel="noopener noreferrer">read every line of code on GitHub</a> before running it. The project is MIT-licensed and community-audited.</div>
+        </details>
+      </section>
+
+      <!-- USAGE -->
+      <section class="section">
+        <h2 class="section-title">🚀 Usage</h2>
+
+        <details class="faq-item">
+          <summary>How do I use XActions?</summary>
+          <div class="faq-answer">Three ways:
+            <br><br><strong>1. Browser Scripts</strong> — Copy-paste scripts into DevTools (F12) on x.com
+            <br><strong>2. CLI</strong> — Run <code style="background:var(--bg-tertiary);padding:2px 6px;border-radius:4px;">npx xactions</code> from your terminal
+            <br><strong>3. MCP Server</strong> — Use with AI agents like Claude, Cursor, or Windsurf
+            <br><br>See the <a href="/tutorials">Tutorials</a> for step-by-step guides.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>What can I automate?</summary>
+          <div class="faq-answer">Unfollowing, following, liking, posting, scraping profiles/tweets/followers, detecting unfollowers, downloading videos, training your algorithm, auto-replying, and much more. See <a href="/features">all 43+ features</a> for the complete list.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>How do I unfollow people who don't follow me back?</summary>
+          <div class="faq-answer">Go to x.com, open DevTools (F12), paste the unfollowback script, and run it. It will automatically check each account you follow and unfollow those who don't follow you back. See the <a href="/tutorials/unfollow">unfollow tutorial</a> for step-by-step instructions.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>Can I schedule automations?</summary>
+          <div class="faq-answer">Yes. The MCP server and CLI can be combined with cron jobs or AI agents for scheduling. Browser scripts run on-demand when you paste them in DevTools.</div>
+        </details>
+      </section>
+
+      <!-- MCP & AI -->
+      <section class="section">
+        <h2 class="section-title">🤖 MCP &amp; AI Integration</h2>
+
+        <details class="faq-item">
+          <summary>What is the MCP server?</summary>
+          <div class="faq-answer">The <strong>Model Context Protocol (MCP)</strong> server lets AI assistants (Claude, Cursor, Windsurf) control Twitter actions through natural language. For example: "Unfollow everyone who hasn't tweeted in 6 months." It exposes 140+ tools that AI agents can call directly. See the <a href="/mcp">MCP page</a> for details.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>How do I set up MCP with Claude Desktop?</summary>
+          <div class="faq-answer">Run <code style="background:var(--bg-tertiary);padding:2px 6px;border-radius:4px;">npx xactions-mcp</code> and add the config to Claude Desktop's settings. The setup takes about 30 seconds. See the <a href="/tutorials/mcp">MCP setup tutorial</a> for the full guide.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>Which AI tools work with XActions?</summary>
+          <div class="faq-answer">Any MCP-compatible client works, including Claude Desktop, Cursor, Windsurf, and VS Code with Copilot. XActions also has a standalone AI integration via OpenRouter for tweet generation and voice analysis.</div>
+        </details>
+      </section>
+
+      <!-- TECHNICAL -->
+      <section class="section">
+        <h2 class="section-title">⚙️ Technical</h2>
+
+        <details class="faq-item">
+          <summary>Which browsers are supported?</summary>
+          <div class="faq-answer">Chrome, Edge, Brave, and any Chromium-based browser. Firefox works for most scripts. Safari has limited support for some DevTools features.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>Does it work on mobile?</summary>
+          <div class="faq-answer">Browser scripts require desktop DevTools, so they don't work on mobile. The CLI and MCP server work on any machine with Node.js installed.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>What version of Node.js do I need?</summary>
+          <div class="faq-answer">Node.js 18 or higher is recommended for the CLI and MCP server. Browser scripts don't require Node.js at all.</div>
+        </details>
+
+        <details class="faq-item">
+          <summary>How do I report a bug?</summary>
+          <div class="faq-answer">Open an issue on GitHub: <a href="https://github.com/nirholas/XActions/issues" target="_blank" rel="noopener noreferrer">github.com/nirholas/XActions/issues</a>. Include steps to reproduce, your browser version, and any error messages.</div>
+        </details>
+      </section>
+
+      <!-- CTA -->
+      <section class="section" style="text-align: center; padding: 32px 16px;">
+        <h2 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 8px;">Still have questions?</h2>
+        <p>Ask the community or check the docs.</p>
+        <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 16px;">
+          <a href="https://github.com/nirholas/XActions/discussions" target="_blank" rel="noopener noreferrer" class="action-btn" style="width: auto; padding: 12px 24px; font-size: 0.9375rem;">💬 Ask on GitHub</a>
+          <a href="/docs" class="action-btn" style="width: auto; padding: 12px 24px; font-size: 0.9375rem; background: var(--bg-tertiary); border: 1px solid var(--border);">📚 Read the Docs</a>
+        </div>
+      </section>
+    </main>
+
+    <aside class="sidebar-right" aria-label="Quick links">
+      <div class="promo-card">
+        <div class="promo-header">Quick Links</div>
+        <div class="promo-item"><h4><a href="/features" style="color: var(--text-primary); text-decoration: none;">⚡ All Features</a></h4><p>Browse 43+ free tools</p></div>
+        <div class="promo-item"><h4><a href="/tutorials" style="color: var(--text-primary); text-decoration: none;">📖 Tutorials</a></h4><p>Step-by-step guides</p></div>
+        <div class="promo-item"><h4><a href="/mcp" style="color: var(--text-primary); text-decoration: none;">🤖 MCP Server</a></h4><p>AI agent integration</p></div>
+        <div class="promo-item"><h4><a href="/docs" style="color: var(--text-primary); text-decoration: none;">📚 Documentation</a></h4><p>Full reference docs</p></div>
+        <div class="promo-item"><h4><a href="https://github.com/nirholas/XActions" target="_blank" rel="noopener noreferrer" style="color: var(--text-primary); text-decoration: none;">⭐ Star on GitHub</a></h4><p>Support the project</p></div>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-brand"><h3>⚡ XActions</h3><p>Free, open-source X/Twitter automation toolkit. Mass unfollow, detect unfollowers, auto-engage, and grow your audience without expensive API fees.</p></div>
+      <div class="footer-links"><h4>Product</h4><a href="/features">Features</a><a href="/video">Video Downloader</a><a href="/pricing">Pricing</a><a href="/run">Run Scripts</a><a href="/dashboard">Dashboard</a><a href="/automations">Automations</a><a href="/workflows">Workflows</a><a href="/analytics">Analytics</a><a href="/monitor">Monitor</a></div>
+      <div class="footer-links"><h4>AI & Developers</h4><a href="/ai">AI Integration</a><a href="/ai-api">AI API</a><a href="/mcp">MCP Server</a><a href="/docs">Documentation</a></div>
+      <div class="footer-links"><h4>Tutorials</h4><a href="/tutorials">All Tutorials</a><a href="/tutorials/unfollow">Mass Unfollow</a><a href="/tutorials/scrapers">Scrapers</a><a href="/tutorials/automation">Automation</a><a href="/tutorials/mcp">MCP Setup</a></div>
+      <div class="footer-links"><h4>Company</h4><a href="/about">About</a><a href="https://github.com/nirholas/XActions" target="_blank" rel="noopener noreferrer">GitHub</a><a href="https://x.com/nichxbt" target="_blank" rel="noopener noreferrer">Twitter</a><a href="/terms">Terms</a><a href="/privacy">Privacy</a></div>
+    </div>
+    <div class="footer-bottom"><p>© 2026 XActions. Not affiliated with X Corp.</p><p>Made with ❤️ by <a href="https://x.com/nichxbt" target="_blank" rel="noopener noreferrer">@nichxbt</a></p></div>
+  </footer>
+</body>
+</html>
