@@ -59,11 +59,18 @@
     "agent": "node src/agents/thoughtLeaderAgent.js",
     "agent:login": "node src/agents/thoughtLeaderAgent.js --login",
     "agent:test": "node src/agents/thoughtLeaderAgent.js --test",
-    "agent:setup": "node src/agents/setup.js"
+    "agent:setup": "node src/agents/setup.js",
+    "video:preview": "cd site/video && npx remotion preview src/index.js",
+    "video:render": "node site/video/render.mjs",
+    "video:render:tweet": "node site/video/render.mjs TweetVideo",
+    "video:render:thread": "node site/video/render.mjs ThreadVideo",
+    "video:render:analytics": "node site/video/render.mjs AnalyticsDashboard",
+    "video:render:promo": "node site/video/render.mjs PromoVideo"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",
     "@prisma/client": "^5.7.1",
+    "@remotion/bundler": "^4.0.428",
     "@remotion/cli": "^4.0.428",
     "@remotion/player": "^4.0.428",
     "@remotion/renderer": "^4.0.428",
