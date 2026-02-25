@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tutorial: DM Management, Export &amp; Automation with Claude | XActions</title>
+  <meta name="description" content="You are my X/Twitter DM management specialist. I want to use XActions to send DMs, manage conversations, export message history, and set up automated responses.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, open source, management, automation, tutorial:, management,, export, claude, claude tutorials">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Tutorial: DM Management, Export &amp; Automation with Claude — XActions">
+  <meta property="og:description" content="You are my X/Twitter DM management specialist. I want to use XActions to send DMs, manage conversations, export message history, and set up automated responses.">
+  <meta property="og:url" content="https://xactions.app/docs/tutorials/09-dm-management-automation">
+  <meta property="og:site_name" content="XActions">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Tutorial: DM Management, Export &amp; Automation with Claude — XActions">
+  <meta name="twitter:description" content="You are my X/Twitter DM management specialist. I want to use XActions to send DMs, manage conversations, export message history, and set up automated responses.">
+
+  <link rel="canonical" href="https://xactions.app/docs/tutorials/09-dm-management-automation">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Tutorial: DM Management, Export & Automation with Claude | XActions",
+    "description": "You are my X/Twitter DM management specialist. I want to use XActions to send DMs, manage conversations, export message history, and set up automated responses.",
+    "url": "https://xactions.app/docs/tutorials/09-dm-management-automation",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-25",
+    "dateModified": "2026-02-25",
+    "mainEntityOfPage": "https://xactions.app/docs/tutorials/09-dm-management-automation",
+    "articleSection": "Claude Tutorials",
+    "keywords": "xactions, twitter automation, x automation, free, open source, management, automation, tutorial:, management,, export, claude, claude tutorials"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Claude Tutorials", "item": "https://xactions.app/docs/tutorials" },
+      { "@type": "ListItem", "position": 4, "name": "Tutorial: DM Management, Export & Automation with Claude", "item": "https://xactions.app/docs/tutorials/09-dm-management-automation" }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .article pre { font-size: 0.75rem; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <main class="main-content">
+      <header class="main-header">
+        <h1>🤖 Tutorial: DM Management, Export &amp; Automation with Claude</h1>
+        <div class="breadcrumb">
+          <a href="https://xactions.app">Home</a> › <a href="https://xactions.app/docs">Docs</a> › <a href="https://xactions.app/docs/tutorials">Claude Tutorials</a> › Tutorial: DM Management, Export &amp; Automation with Claude
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Claude Tutorials</span>
+        <h1>Tutorial: DM Management, Export &amp; Automation with Claude</h1>
+<p>You are my X/Twitter DM management specialist. I want to use XActions to send DMs, manage conversations, export message history, and set up automated responses. Help me take control of my inbox.</p>
+<h2>Context</h2>
+<p>I&#39;m using XActions (<a href="https://github.com/nirholas/XActions">https://github.com/nirholas/XActions</a>), an open-source X/Twitter toolkit with DM capabilities via MCP tools (<code>x_send_dm</code>, <code>x_get_conversations</code>, <code>x_export_dms</code>) and browser console scripts (<code>src/sendDirectMessage.js</code>, <code>src/automation/customerService.js</code>).</p>
+<h2>What I Need You To Do</h2>
+<h3>Part 1: DM Overview</h3>
+<p>First, help me understand my DM landscape:</p>
+<ol>
+<li><p><strong>Get my conversations</strong> using <code>x_get_conversations</code>:</p>
+<pre><code>&quot;Show me my recent DM conversations&quot;
+</code></pre>
+<ul>
+<li>List all active conversations</li>
+<li>Show unread count</li>
+<li>Identify important vs spam DMs</li>
+</ul>
+</li>
+<li><p><strong>Export DM history</strong> using <code>x_export_dms</code>:</p>
+<pre><code>&quot;Export my last 100 DM messages to JSON&quot;
+</code></pre>
+<ul>
+<li>Full message history with timestamps</li>
+<li>Useful for backup or analysis</li>
+<li>Identify patterns in who DMs you</li>
+</ul>
+</li>
+</ol>
+<h3>Part 2: Sending DMs</h3>
+<p>Send direct messages through Claude:</p>
+<ol>
+<li><p><strong>Single DM</strong> using <code>x_send_dm</code>:</p>
+<pre><code>&quot;Send a DM to @username saying: Hey! Loved your thread about AI. Would love to connect!&quot;
+</code></pre>
+<p>Parameters:</p>
+<ul>
+<li><code>username</code>: Recipient (without @)</li>
+<li><code>message</code>: Message text</li>
+</ul>
+</li>
+<li><p><strong>DM templates for common scenarios:</strong></p>
+<p><strong>Networking:</strong></p>
+<blockquote>
+<p>&quot;Hey [name]! Really enjoyed your recent thread about [topic]. Your point about [specific insight] really resonated. Would love to continue the conversation — I&#39;m working on [your project] which is in a similar space.&quot;</p>
+</blockquote>
+<p><strong>Collaboration:</strong></p>
+<blockquote>
+<p>&quot;Hi [name]! I&#39;ve been following your work on [their project] and think there could be some great synergy with what I&#39;m building at [your project]. Would you be open to a quick chat about potential collaboration?&quot;</p>
+</blockquote>
+<p><strong>Thank you:</strong></p>
+<blockquote>
+<p>&quot;Hey [name], just wanted to say thanks for [specific action — retweeting, sharing, mentioning]. Really appreciate the support! 🙏&quot;</p>
+</blockquote>
+<p><strong>Cold outreach:</strong></p>
+<blockquote>
+<p>&quot;Hi [name]! I&#39;m [your name], working on [brief description]. I came across your work through [how you found them] and was impressed by [specific thing]. I&#39;d love to get your thoughts on [specific question]. No pressure — just admire your perspective.&quot;</p>
+</blockquote>
+</li>
+<li><p><strong>DM etiquette tips:</strong></p>
+<ul>
+<li>Always personalize — never send identical messages</li>
+<li>Reference something specific about them</li>
+<li>Keep it short (2-3 sentences max for first DM)</li>
+<li>Don&#39;t pitch immediately</li>
+<li>Don&#39;t ask for follows or retweets</li>
+</ul>
+</li>
+</ol>
+<h3>Part 3: Browser Console DM Script</h3>
+<p>Walk me through <code>src/sendDirectMessage.js</code>:</p>
+<ol>
+<li><p><strong>How it works:</strong></p>
+<ul>
+<li>Navigates to X DM interface</li>
+<li>Opens a new conversation or existing one</li>
+<li>Types and sends the message</li>
+<li>Uses X&#39;s DM selectors:<ul>
+<li><code>[data-testid=&quot;dmComposerTextInput&quot;]</code> for the text input</li>
+<li><code>[data-testid=&quot;dmComposerSendButton&quot;]</code> for send</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>Batch DM sending:</strong></p>
+<ul>
+<li>Send personalized DMs to a list of users</li>
+<li>Important: Personalize each one (X flags identical mass DMs)</li>
+<li>Rate limit: 1-2 DMs per minute max</li>
+<li>Daily limit: Stay under 50 new DMs to avoid restrictions</li>
+</ul>
+</li>
+</ol>
+<h3>Part 4: Customer Service Bot</h3>
+<p>For business accounts, set up <code>src/automation/customerService.js</code>:</p>
+<ol>
+<li><p><strong>Paste core.js</strong>, then configure customerService.js:</p>
+<pre><code class="language-javascript">const CONFIG = {
+  ACTIVE_ACCOUNT: &#39;your_business_account&#39;,
+  
+  MONITOR: {
+    mentions: true,      // Watch @mentions
+    dms: true,           // Watch DMs
+    replies: true,       // Watch replies to your posts
+    keywords: true,      // Watch brand keywords
+  },
+  
+  BRAND_KEYWORDS: [&#39;your_brand&#39;, &#39;your_product&#39;],
+  
+  RESPONSE: {
+    autoReply: true,
+    autoReplyDM: false,  // Careful with auto DM replies
+    requireApproval: true,  // Review before sending (recommended!)
+    markAsRead: true,
+  },
+  
+  BUSINESS_HOURS: {
+    enabled: true,
+    start: 9,   // 9 AM
+    end: 17,    // 5 PM
+    days: [1,2,3,4,5],  // Mon-Fri
+    outsideHoursMessage: &quot;Thanks for reaching out! We&#39;re outside business hours (Mon-Fri 9-5 ET). We&#39;ll respond next business day! 🙏&quot;,
+  },
+  
+  CHECK_INTERVAL_SECONDS: 60,
+  MAX_RESPONSES_PER_HOUR: 20,
+  MAX_RESPONSES_PER_DAY: 100,
+};
+</code></pre>
+</li>
+<li><p><strong>Response templates</strong> — the bot auto-categorizes messages:</p>
+<pre><code class="language-javascript">const TEMPLATES = {
+  greeting: [&quot;Hi {customer}! Thanks for reaching out. How can I help? 😊&quot;],
+  issue: [&quot;Hi {customer}, sorry about the trouble. Please DM us details so we can fix this.&quot;],
+  thanks: [&quot;Thank you {customer}! We really appreciate the kind words! ❤️&quot;],
+  question: [&quot;Great question {customer}! Here&#39;s what I can tell you: [CUSTOMIZE]&quot;],
+  pricing: [&quot;Hi {customer}! For pricing, check our website or DM us for a quote! 💰&quot;],
+  support: [&quot;Hi {customer}! For support, DM us or email support@company.com 📧&quot;],
+};
+</code></pre>
+</li>
+<li><p><strong>Keyword auto-detection</strong> — Categorizes incoming messages:</p>
+<ul>
+<li><strong>Issue keywords:</strong> problem, broken, doesn&#39;t work, refund, cancel</li>
+<li><strong>Thanks keywords:</strong> thank, awesome, amazing, love, great</li>
+<li><strong>Pricing keywords:</strong> price, cost, how much, discount</li>
+<li><strong>Question keywords:</strong> ?, how do, what is, where, when</li>
+</ul>
+</li>
+<li><p><strong>How it runs:</strong></p>
+<ul>
+<li>Checks notifications every 60 seconds</li>
+<li>Detects new mentions/replies</li>
+<li>Auto-categorizes the message</li>
+<li>Picks appropriate template response</li>
+<li>If <code>requireApproval</code> is true, shows you the response before sending</li>
+<li>Respects business hours</li>
+<li>Rate limits itself</li>
+</ul>
+</li>
+</ol>
+<h3>Part 5: DM Export &amp; Backup</h3>
+<p>Export your entire DM history:</p>
+<ol>
+<li><p><strong>Via MCP:</strong></p>
+<pre><code>&quot;Export all my DMs to JSON&quot;
+</code></pre>
+</li>
+<li><p><strong>Via browser script</strong> (<code>scripts/scrapeDMs.js</code>):</p>
+<ul>
+<li>Open X DM inbox</li>
+<li>Script scrolls through all conversations</li>
+<li>Extracts messages with timestamps, sender, and content</li>
+<li>Exports as JSON</li>
+</ul>
+</li>
+<li><p><strong>Via CLI:</strong></p>
+<pre><code class="language-bash">xactions dms --limit 500 --format json &gt; my-dms-backup.json
+</code></pre>
+</li>
+<li><p><strong>Use cases for DM exports:</strong></p>
+<ul>
+<li>Backup important conversations</li>
+<li>Analyze common questions (for FAQ creation)</li>
+<li>Track business lead conversations</li>
+<li>Legal/compliance records</li>
+</ul>
+</li>
+</ol>
+<h3>Part 6: DM Manager (Puppeteer)</h3>
+<p>For programmatic Node.js usage, the <code>dmManager</code> module:</p>
+<pre><code class="language-javascript">import { dmManager } from &#39;xactions&#39;;
+
+// Access DM management functions:
+// - Send messages
+// - Read conversations
+// - Export conversations
+// - Manage message requests
+</code></pre>
+<p>Walk me through the available functions and how to integrate them into custom scripts.</p>
+<h3>Part 7: DM Outreach Campaign</h3>
+<p>Help me set up a tasteful DM outreach campaign:</p>
+<ol>
+<li><p><strong>Define the campaign:</strong></p>
+<ul>
+<li>Who am I reaching out to? (List of target usernames)</li>
+<li>What&#39;s the goal? (Networking, sales, collaboration, community building)</li>
+<li>What&#39;s the message? (Must be personalized per person)</li>
+</ul>
+</li>
+<li><p><strong>Research each target</strong> using <code>x_get_profile</code>:</p>
+<ul>
+<li>What do they tweet about?</li>
+<li>What&#39;s in their bio?</li>
+<li>Any recent achievement I can reference?</li>
+</ul>
+</li>
+<li><p><strong>Craft personalized messages</strong> — Give me a template but help me customize each one:</p>
+<pre><code>For @user1 (AI researcher): &quot;Hey [name]! Your paper on [topic] was fascinating...&quot;
+For @user2 (Startup founder): &quot;Hi [name]! I saw your launch of [product]...&quot;
+For @user3 (Community builder): &quot;Hey [name]! Love what you&#39;re doing with [community]...&quot;
+</code></pre>
+</li>
+<li><p><strong>Send with appropriate pacing:</strong></p>
+<ul>
+<li>2-3 DMs per hour max</li>
+<li>Never more than 15-20 new DMs per day</li>
+<li>Wait for responses before sending to similar accounts</li>
+<li>Track who responded and who didn&#39;t</li>
+</ul>
+</li>
+<li><p><strong>Follow-up strategy:</strong></p>
+<ul>
+<li>If no response after 3-5 days, one gentle follow-up</li>
+<li>If still no response, move on</li>
+<li>Never send more than 2 messages without a reply</li>
+</ul>
+</li>
+</ol>
+<h3>Part 8: DM Analytics</h3>
+<p>Track your DM performance:</p>
+<ol>
+<li><strong>Response rate:</strong> What % of your outreach DMs get responses?</li>
+<li><strong>Response time:</strong> How quickly do people reply?</li>
+<li><strong>Conversion:</strong> How many DM conversations turned into real connections?</li>
+<li><strong>Patterns:</strong> Which DM opener style works best?</li>
+</ol>
+<h2>My DM Goals</h2>
+<p>(Replace before pasting)</p>
+<ul>
+<li>Purpose: Networking / Customer service / Outreach / Backup</li>
+<li>Target users to DM: @user1, @user2 (or a description)</li>
+<li>Am I a business account? Yes/No</li>
+<li>Brand keywords to monitor: brand1, brand2</li>
+</ul>
+<p>Start with Part 1 — show me my DM landscape and help me organize my inbox.</p>
+
+
+        <div class="cta-box">
+          <h3>⚡ Explore XActions</h3>
+          <p>100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/docs">Browse All Documentation</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 In This Section</h3>
+                <a href="/docs/tutorials/01-mcp-setup-and-first-commands">🤖 Tutorial: Setting Up XActions MCP Server with Claude</a>
+        <a href="/docs/tutorials/02-unfollow-non-followers-cleanup">🤖 Tutorial: Unfollow Non-Followers &amp; Follower Cleanup with Claude</a>
+        <a href="/docs/tutorials/03-growth-automation-suite">🤖 Tutorial: Growth Automation Suite — Grow Your X Account on Autopilot</a>
+        <a href="/docs/tutorials/04-scraping-research-analysis">🤖 Tutorial: Tweet Scraping, Profile Analysis &amp; Research with Claude</a>
+        <a href="/docs/tutorials/05-content-posting-threads-scheduling">🤖 Tutorial: Content Posting, Threads, Polls &amp; Scheduling with Claude</a>
+        <a href="/docs/tutorials/06-analytics-competitor-intelligence">🤖 Tutorial: Engagement Analytics, Best Time to Post &amp; Competitor Intelligence</a>
+        <a href="/docs/tutorials/07-auto-liker-auto-commenter">🤖 Tutorial: Auto-Liker &amp; Auto-Commenter — Engagement Automation with Claude</a>
+        <a href="/docs/tutorials/08-blocking-muting-spam-protection">🤖 Tutorial: Mass Block, Unblock, Mute &amp; Spam Protection with Claude</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/docs">All Documentation</a>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

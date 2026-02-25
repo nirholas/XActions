@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tutorial: Video Downloading, Thread Unrolling &amp; Media Export with Claude | XActions</title>
+  <meta name="description" content="You are my X/Twitter media specialist. I want to use XActions to download videos, unroll threads into readable content, export media, and build a content archiv">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, open source, video, download, thread, media, tutorial:, downloading,, unrolling, export, claude, claude tutorials">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Tutorial: Video Downloading, Thread Unrolling &amp; Media Export with Claude — XActions">
+  <meta property="og:description" content="You are my X/Twitter media specialist. I want to use XActions to download videos, unroll threads into readable content, export media, and build a content archiv">
+  <meta property="og:url" content="https://xactions.app/docs/tutorials/17-video-download-thread-media">
+  <meta property="og:site_name" content="XActions">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Tutorial: Video Downloading, Thread Unrolling &amp; Media Export with Claude — XActions">
+  <meta name="twitter:description" content="You are my X/Twitter media specialist. I want to use XActions to download videos, unroll threads into readable content, export media, and build a content archiv">
+
+  <link rel="canonical" href="https://xactions.app/docs/tutorials/17-video-download-thread-media">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Tutorial: Video Downloading, Thread Unrolling & Media Export with Claude | XActions",
+    "description": "You are my X/Twitter media specialist. I want to use XActions to download videos, unroll threads into readable content, export media, and build a content archiv",
+    "url": "https://xactions.app/docs/tutorials/17-video-download-thread-media",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-25",
+    "dateModified": "2026-02-25",
+    "mainEntityOfPage": "https://xactions.app/docs/tutorials/17-video-download-thread-media",
+    "articleSection": "Claude Tutorials",
+    "keywords": "xactions, twitter automation, x automation, free, open source, video, download, thread, media, tutorial:, downloading,, unrolling, export, claude, claude tutorials"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Claude Tutorials", "item": "https://xactions.app/docs/tutorials" },
+      { "@type": "ListItem", "position": 4, "name": "Tutorial: Video Downloading, Thread Unrolling & Media Export with Claude", "item": "https://xactions.app/docs/tutorials/17-video-download-thread-media" }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .article pre { font-size: 0.75rem; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <main class="main-content">
+      <header class="main-header">
+        <h1>🤖 Tutorial: Video Downloading, Thread Unrolling &amp; Media Export with Claude</h1>
+        <div class="breadcrumb">
+          <a href="https://xactions.app">Home</a> › <a href="https://xactions.app/docs">Docs</a> › <a href="https://xactions.app/docs/tutorials">Claude Tutorials</a> › Tutorial: Video Downloading, Thread Unrolling &amp; Media Export with Claude
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Claude Tutorials</span>
+        <h1>Tutorial: Video Downloading, Thread Unrolling &amp; Media Export with Claude</h1>
+<p>You are my X/Twitter media specialist. I want to use XActions to download videos, unroll threads into readable content, export media, and build a content archive. Help me save the best content from X.</p>
+<h2>Context</h2>
+<p>I&#39;m using XActions (<a href="https://github.com/nirholas/XActions">https://github.com/nirholas/XActions</a>), an open-source X/Twitter toolkit with video downloading (<code>x_download_video</code>, <code>src/scrapers/videoDownloader.js</code>), thread unrolling (<code>scripts/threadUnroller.js</code>, <code>src/scrapers/threadUnroller.js</code>), media scraping, and content export.</p>
+<h2>What I Need You To Do</h2>
+<h3>Part 1: Download Videos from Tweets</h3>
+<ol>
+<li><p><strong>Via MCP</strong> using <code>x_download_video</code>:</p>
+<pre><code>&quot;Download the video from this tweet: https://x.com/user/status/123456&quot;
+</code></pre>
+<p>Parameters:</p>
+<ul>
+<li><code>tweetUrl</code>: URL of the tweet containing video</li>
+</ul>
+<p>Returns:</p>
+<ul>
+<li>Direct video download URLs (multiple quality options when available)</li>
+<li>Video resolution and format info</li>
+<li>Thumbnail URL</li>
+</ul>
+</li>
+<li><p><strong>How the video downloader works:</strong></p>
+<ul>
+<li>Navigates to the tweet page via Puppeteer</li>
+<li>Extracts video URLs from the page&#39;s React state / network requests</li>
+<li>X stores videos on their CDN (video.twimg.com)</li>
+<li>Returns direct URLs you can open in a browser or download with wget/curl</li>
+</ul>
+</li>
+<li><p><strong>Download the actual file:</strong></p>
+<pre><code class="language-bash"># Using the URL returned
+curl -o video.mp4 &quot;VIDEO_URL_HERE&quot;
+
+# Or with wget
+wget -O video.mp4 &quot;VIDEO_URL_HERE&quot;
+</code></pre>
+</li>
+<li><p><strong>Via browser script</strong> (<code>scripts/videoDownloader.js</code>):</p>
+<ul>
+<li>Navigate to the tweet with the video</li>
+<li>Paste the script in DevTools</li>
+<li>It extracts video URLs from the page</li>
+<li>Shows download links in the console</li>
+</ul>
+</li>
+<li><p><strong>Via CLI:</strong></p>
+<pre><code class="language-bash"># If implemented in CLI
+xactions download-video &quot;https://x.com/user/status/123456&quot;
+</code></pre>
+</li>
+</ol>
+<h3>Part 2: Thread Unrolling</h3>
+<p>Save threads as clean, readable content:</p>
+<ol>
+<li><p><strong>Via MCP</strong> — Use <code>x_get_tweets</code> to pull the thread:</p>
+<pre><code>&quot;Unroll this thread: https://x.com/user/status/123456&quot;
+&quot;Get all tweets in this thread and format as readable text&quot;
+</code></pre>
+</li>
+<li><p><strong>Via browser script</strong> (<code>scripts/threadUnroller.js</code> or <code>src/scrapers/threadUnroller.js</code>):</p>
+<ul>
+<li>Navigate to the first tweet of the thread</li>
+<li>Paste the script</li>
+<li>It automatically:<ul>
+<li>Detects the thread structure</li>
+<li>Follows the reply chain</li>
+<li>Extracts all tweet text in order</li>
+<li>Includes media references</li>
+<li>Formats for readability</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>Output formats:</strong></p>
+<ul>
+<li><strong>Plain text:</strong> Clean readable text</li>
+<li><strong>Markdown:</strong> Headers, links, formatting preserved</li>
+<li><strong>JSON:</strong> Structured data with metadata</li>
+</ul>
+</li>
+<li><p><strong>Via CLI:</strong></p>
+<pre><code class="language-bash"># Unroll to terminal
+xactions thread &quot;https://x.com/user/status/123456&quot;
+
+# Save as markdown
+xactions thread &quot;https://x.com/user/status/123456&quot; --format markdown --output thread.md
+
+# Save as JSON with metadata
+xactions thread &quot;https://x.com/user/status/123456&quot; --format json --output thread.json
+</code></pre>
+</li>
+<li><p><strong>What&#39;s captured per tweet in a thread:</strong></p>
+<ul>
+<li>Tweet text (full content)</li>
+<li>Author and username</li>
+<li>Timestamp</li>
+<li>Engagement stats (likes, retweets, replies)</li>
+<li>Media URLs (images, videos)</li>
+<li>Tweet position in thread (1 of N)</li>
+</ul>
+</li>
+</ol>
+<h3>Part 3: Media Scraping</h3>
+<p>Export all media from any profile:</p>
+<ol>
+<li><p><strong>Via CLI:</strong></p>
+<pre><code class="language-bash">xactions media USERNAME --limit 100 --format json --output media.json
+</code></pre>
+</li>
+<li><p><strong>Via browser script</strong> (<code>scripts/scrapeMedia.js</code>):</p>
+<ul>
+<li>Navigate to the user&#39;s Media tab (x.com/USERNAME/media)</li>
+<li>Paste the script</li>
+<li>Scrolls through all media</li>
+<li>Extracts image and video URLs</li>
+<li>Exports as JSON</li>
+</ul>
+</li>
+<li><p><strong>What you get:</strong></p>
+<ul>
+<li>Image URLs (multiple resolutions available on X&#39;s CDN)</li>
+<li>Video URLs with quality options</li>
+<li>Original tweet text and URL</li>
+<li>Timestamp</li>
+</ul>
+</li>
+<li><p><strong>Bulk download media:</strong></p>
+<pre><code class="language-bash"># Export URLs then download
+xactions media photographer1 --format json | jq -r &#39;.[].urls[]&#39; &gt; urls.txt
+
+# Download all with wget
+wget -i urls.txt -P downloads/
+
+# Or with parallel downloading
+cat urls.txt | xargs -P 4 -I {} wget {} -P downloads/
+</code></pre>
+</li>
+</ol>
+<h3>Part 4: Bookmark Export &amp; Content Library</h3>
+<p>Build a personal content library from X:</p>
+<ol>
+<li><p><strong>Export bookmarks:</strong></p>
+<pre><code>&quot;Export all my bookmarks to JSON&quot;
+</code></pre>
+<p>or</p>
+<pre><code class="language-bash">xactions bookmarks --limit 500 --format json --output my-bookmarks.json
+</code></pre>
+</li>
+<li><p><strong>Export likes:</strong></p>
+<pre><code class="language-bash"># Via browser script scripts/scrapeLikes.js
+# Navigate to your Likes page, paste the script
+</code></pre>
+</li>
+<li><p><strong>Organize exported content:</strong></p>
+<ul>
+<li>Threads → Markdown files in a knowledge base</li>
+<li>Videos → Downloaded locally</li>
+<li>Images → Saved for reference/inspiration</li>
+<li>Tweets → Categorized by topic</li>
+</ul>
+</li>
+</ol>
+<h3>Part 5: Viral Tweet Discovery &amp; Download</h3>
+<p>Find and archive the best content:</p>
+<ol>
+<li><p><strong>Find viral content:</strong></p>
+<pre><code>&quot;Search for viral tweets about &#39;AI&#39; with minimum 1000 likes&quot;
+</code></pre>
+</li>
+<li><p><strong>Via <code>scripts/viralTweetsScraper.js</code></strong> or <code>src/scrapers/viralTweets.js</code>:</p>
+<ul>
+<li>Search by keyword or from specific accounts</li>
+<li>Filter by minimum engagement</li>
+<li>Export top-performing tweets</li>
+</ul>
+</li>
+<li><p><strong>Build a swipe file:</strong></p>
+<ul>
+<li>Archive viral tweets in your niche</li>
+<li>Analyze what makes them work</li>
+<li>Use as inspiration (never copy!)</li>
+<li>Track patterns: hooks, formats, topics</li>
+</ul>
+</li>
+</ol>
+<h3>Part 6: Link Scraping</h3>
+<p>Extract all links shared by any user:</p>
+<ol>
+<li><p><strong>Via browser script</strong> (<code>src/automation/linkScraper.js</code> or <code>scripts/linkScraper.js</code>):</p>
+<ul>
+<li>Navigate to a user&#39;s profile</li>
+<li>Paste core.js, then linkScraper.js</li>
+<li>Extracts all URLs from their tweets</li>
+<li>Groups by domain (which websites they share most)</li>
+<li>Exports the link list</li>
+</ul>
+</li>
+<li><p><strong>Use cases:</strong></p>
+<ul>
+<li>Find what blogs/tools someone recommends</li>
+<li>Map someone&#39;s go-to resources</li>
+<li>Discover hidden gems in your niche</li>
+<li>Competitive intelligence (what links do competitors share?)</li>
+</ul>
+</li>
+</ol>
+<h3>Part 7: Reply &amp; Quote Tweet Scraping</h3>
+<ol>
+<li><p><strong>Scrape replies</strong> (<code>scripts/scrapeReplies.js</code>):</p>
+<ul>
+<li>Navigate to any tweet</li>
+<li>Paste the script</li>
+<li>Extracts all replies with author info and engagement</li>
+<li>Great for sentiment analysis on specific tweets</li>
+</ul>
+</li>
+<li><p><strong>Scrape quote tweets</strong> (<code>scripts/scrapeQuoteRetweets.js</code>):</p>
+<ul>
+<li>Navigate to a tweet</li>
+<li>Paste the script</li>
+<li>Extracts all quote tweets (people&#39;s reactions and commentary)</li>
+<li>Useful for seeing how your content spreads</li>
+</ul>
+</li>
+</ol>
+<h3>Part 8: Notification Export</h3>
+<p>Save your notification history:</p>
+<ol>
+<li><p><strong>Via MCP:</strong></p>
+<pre><code>&quot;Export my last 200 notifications&quot;
+</code></pre>
+</li>
+<li><p><strong>Via browser script</strong> (<code>scripts/scrapeNotifications.js</code>):</p>
+<ul>
+<li>Navigate to Notifications tab</li>
+<li>Paste the script</li>
+<li>Extracts and categorizes all notifications:<ul>
+<li>Likes</li>
+<li>Retweets</li>
+<li>Follows</li>
+<li>Mentions</li>
+<li>Replies</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3>Part 9: Spaces Content</h3>
+<p>Save content from X Spaces:</p>
+<ol>
+<li><p><strong>Get Space metadata:</strong></p>
+<pre><code>&quot;Get details about this Space: [URL]&quot;
+</code></pre>
+</li>
+<li><p><strong>Via <code>scripts/scrapeSpaces.js</code>:</strong></p>
+<ul>
+<li>Find and document active/scheduled Spaces</li>
+<li>Get speaker lists</li>
+<li>Track topics and categories</li>
+</ul>
+</li>
+<li><p><strong>Note:</strong> Recording actual Space audio requires different tools — XActions captures metadata and participant info.</p>
+</li>
+</ol>
+<h3>Part 10: Export Workflows</h3>
+<p>Complete export workflows for different purposes:</p>
+<h4>Archive Your Entire Account</h4>
+<pre><code class="language-bash"># Profile
+xactions profile myusername --format json --output archive/profile.json
+
+# All tweets
+xactions tweets myusername --limit 5000 --format json --output archive/tweets.json
+
+# Followers snapshot
+xactions followers myusername --limit 10000 --format json --output archive/followers.json
+
+# Following snapshot
+xactions following myusername --limit 5000 --format json --output archive/following.json
+
+# Bookmarks (via MCP or browser script)
+# DMs (via browser script)
+</code></pre>
+<h4>Research a Topic</h4>
+<pre><code class="language-bash"># Search tweets
+xactions search &quot;topic&quot; --limit 200 --format json --output research/tweets.json
+
+# Top voices (extract from tweets)
+cat research/tweets.json | jq &#39;group_by(.author) | map({author: .[0].author, count: length}) | sort_by(-.count) | .[:20]&#39;
+
+# Save key threads
+xactions thread &quot;URL1&quot; --format markdown --output research/thread1.md
+xactions thread &quot;URL2&quot; --format markdown --output research/thread2.md
+</code></pre>
+<h4>Content Inspiration Database</h4>
+<pre><code class="language-bash"># Viral tweets in niche
+xactions search &quot;topic min_faves:500&quot; --limit 100 --format json --output inspo/viral.json
+
+# Bookmark exports
+# Thread unrolls of best content
+# Media from top creators
+</code></pre>
+<h2>My Media Goals</h2>
+<p>(Replace before pasting)</p>
+<ul>
+<li>What I want to download/export: Videos / Threads / Media / Everything</li>
+<li>Specific tweets to unroll: URL1, URL2</li>
+<li>Accounts to archive media from: @account1, @account2</li>
+<li>Purpose: Personal archive / Research / Content creation</li>
+</ul>
+<p>Start with Part 1 — show me how to download a video from a specific tweet.</p>
+
+
+        <div class="cta-box">
+          <h3>⚡ Explore XActions</h3>
+          <p>100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/docs">Browse All Documentation</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 In This Section</h3>
+                <a href="/docs/tutorials/01-mcp-setup-and-first-commands">🤖 Tutorial: Setting Up XActions MCP Server with Claude</a>
+        <a href="/docs/tutorials/02-unfollow-non-followers-cleanup">🤖 Tutorial: Unfollow Non-Followers &amp; Follower Cleanup with Claude</a>
+        <a href="/docs/tutorials/03-growth-automation-suite">🤖 Tutorial: Growth Automation Suite — Grow Your X Account on Autopilot</a>
+        <a href="/docs/tutorials/04-scraping-research-analysis">🤖 Tutorial: Tweet Scraping, Profile Analysis &amp; Research with Claude</a>
+        <a href="/docs/tutorials/05-content-posting-threads-scheduling">🤖 Tutorial: Content Posting, Threads, Polls &amp; Scheduling with Claude</a>
+        <a href="/docs/tutorials/06-analytics-competitor-intelligence">🤖 Tutorial: Engagement Analytics, Best Time to Post &amp; Competitor Intelligence</a>
+        <a href="/docs/tutorials/07-auto-liker-auto-commenter">🤖 Tutorial: Auto-Liker &amp; Auto-Commenter — Engagement Automation with Claude</a>
+        <a href="/docs/tutorials/08-blocking-muting-spam-protection">🤖 Tutorial: Mass Block, Unblock, Mute &amp; Spam Protection with Claude</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/docs">All Documentation</a>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tutorial: Bookmark Management, Export &amp; Organization with Claude | XActions</title>
+  <meta name="description" content="You are my X/Twitter bookmark specialist. I want to use XActions to manage my bookmarks — export them, organize them, clear old ones, and build a personal knowl">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, open source, bookmark, management, export, tutorial:, management,, organization, claude, claude tutorials">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Tutorial: Bookmark Management, Export &amp; Organization with Claude — XActions">
+  <meta property="og:description" content="You are my X/Twitter bookmark specialist. I want to use XActions to manage my bookmarks — export them, organize them, clear old ones, and build a personal knowl">
+  <meta property="og:url" content="https://xactions.app/docs/tutorials/12-bookmark-management-export">
+  <meta property="og:site_name" content="XActions">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Tutorial: Bookmark Management, Export &amp; Organization with Claude — XActions">
+  <meta name="twitter:description" content="You are my X/Twitter bookmark specialist. I want to use XActions to manage my bookmarks — export them, organize them, clear old ones, and build a personal knowl">
+
+  <link rel="canonical" href="https://xactions.app/docs/tutorials/12-bookmark-management-export">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Tutorial: Bookmark Management, Export & Organization with Claude | XActions",
+    "description": "You are my X/Twitter bookmark specialist. I want to use XActions to manage my bookmarks — export them, organize them, clear old ones, and build a personal knowl",
+    "url": "https://xactions.app/docs/tutorials/12-bookmark-management-export",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-25",
+    "dateModified": "2026-02-25",
+    "mainEntityOfPage": "https://xactions.app/docs/tutorials/12-bookmark-management-export",
+    "articleSection": "Claude Tutorials",
+    "keywords": "xactions, twitter automation, x automation, free, open source, bookmark, management, export, tutorial:, management,, organization, claude, claude tutorials"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Claude Tutorials", "item": "https://xactions.app/docs/tutorials" },
+      { "@type": "ListItem", "position": 4, "name": "Tutorial: Bookmark Management, Export & Organization with Claude", "item": "https://xactions.app/docs/tutorials/12-bookmark-management-export" }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .article pre { font-size: 0.75rem; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <main class="main-content">
+      <header class="main-header">
+        <h1>🤖 Tutorial: Bookmark Management, Export &amp; Organization with Claude</h1>
+        <div class="breadcrumb">
+          <a href="https://xactions.app">Home</a> › <a href="https://xactions.app/docs">Docs</a> › <a href="https://xactions.app/docs/tutorials">Claude Tutorials</a> › Tutorial: Bookmark Management, Export &amp; Organization with Claude
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Claude Tutorials</span>
+        <h1>Tutorial: Bookmark Management, Export &amp; Organization with Claude</h1>
+<p>You are my X/Twitter bookmark specialist. I want to use XActions to manage my bookmarks — export them, organize them, clear old ones, and build a personal knowledge base from saved tweets. Help me turn my bookmarks into a system.</p>
+<h2>Context</h2>
+<p>I&#39;m using XActions (<a href="https://github.com/nirholas/XActions">https://github.com/nirholas/XActions</a>), an open-source X/Twitter toolkit with bookmark management via MCP tools (<code>x_bookmark</code>, <code>x_get_bookmarks</code>, <code>x_clear_bookmarks</code>) and browser scripts (<code>src/bookmarkOrganizer.js</code>, <code>src/bookmarkManager.js</code>, <code>src/clearAllBookmarks.js</code>).</p>
+<h2>What I Need You To Do</h2>
+<h3>Part 1: Export All Bookmarks</h3>
+<p>First, let me see everything I&#39;ve saved:</p>
+<ol>
+<li><p><strong>Export bookmarks</strong> using <code>x_get_bookmarks</code>:</p>
+<pre><code>&quot;Export my bookmarks to JSON&quot;
+&quot;Show me my last 100 bookmarked tweets&quot;
+</code></pre>
+<p>Parameters:</p>
+<ul>
+<li><code>limit</code>: Maximum bookmarks to export (default 100)</li>
+<li><code>format</code>: json or csv</li>
+</ul>
+</li>
+<li><p><strong>What you&#39;ll get:</strong></p>
+<ul>
+<li>Tweet text</li>
+<li>Author username and display name</li>
+<li>Timestamp</li>
+<li>Engagement stats (likes, retweets, replies)</li>
+<li>Tweet URL</li>
+</ul>
+</li>
+<li><p><strong>Analyze my bookmarks:</strong></p>
+<ul>
+<li>How many total bookmarks do I have?</li>
+<li>What topics appear most? (Create a tag cloud)</li>
+<li>Which authors do I bookmark most?</li>
+<li>Are there old bookmarks I&#39;ve forgotten about?</li>
+<li>Group bookmarks by theme/topic</li>
+</ul>
+</li>
+</ol>
+<h3>Part 2: Bookmark New Tweets</h3>
+<p>Save tweets efficiently:</p>
+<ol>
+<li><p><strong>Via MCP</strong> using <code>x_bookmark</code>:</p>
+<pre><code>&quot;Bookmark this tweet: [URL]&quot;
+</code></pre>
+</li>
+<li><p><strong>Bulk bookmark</strong> — after searching:</p>
+<pre><code>&quot;Search for the top tweets about &#39;startup fundraising&#39; and bookmark the best 10&quot;
+</code></pre>
+</li>
+<li><p><strong>Smart bookmarking workflow:</strong></p>
+<ul>
+<li>Search for valuable content in your niche</li>
+<li>Bookmark for later reading/reference</li>
+<li>Review weekly and organize</li>
+</ul>
+</li>
+</ol>
+<h3>Part 3: Bookmark Organizer</h3>
+<p>Walk me through <code>src/bookmarkOrganizer.js</code>:</p>
+<ol>
+<li><p><strong>Navigate to bookmarks</strong> (x.com/i/bookmarks)</p>
+</li>
+<li><p><strong>What the organizer does:</strong></p>
+<ul>
+<li>Scrolls through all bookmarks</li>
+<li>Extracts tweet content and metadata</li>
+<li>Categorizes by topic using keyword detection</li>
+<li>Groups similar bookmarks together</li>
+<li>Identifies duplicates or very similar content</li>
+</ul>
+</li>
+<li><p><strong>Custom categories</strong> you can set up:</p>
+<ul>
+<li>📚 Learning Resources</li>
+<li>💡 Content Ideas</li>
+<li>🔧 Tools &amp; Products</li>
+<li>📈 Growth Tips</li>
+<li>💰 Business Advice</li>
+<li>🧵 Threads to Read</li>
+<li>🎨 Inspiration</li>
+</ul>
+</li>
+</ol>
+<h3>Part 4: Bookmark Manager (Puppeteer)</h3>
+<p>Using <code>src/bookmarkManager.js</code> programmatically:</p>
+<ol>
+<li><p><strong>Available functions:</strong></p>
+<ul>
+<li>Get all bookmarks</li>
+<li>Add bookmarks</li>
+<li>Remove specific bookmarks</li>
+<li>Export in multiple formats</li>
+<li>Organize into categories</li>
+</ul>
+</li>
+<li><p><strong>Browser script</strong> (<code>scripts/manageBookmarks.js</code>):</p>
+<ul>
+<li>Paste into DevTools on the bookmarks page</li>
+<li>Interactive management of your bookmarks</li>
+</ul>
+</li>
+</ol>
+<h3>Part 5: Bookmark Exporter</h3>
+<p>Using <code>scripts/bookmarkExporter.js</code> or <code>src/scrapers/bookmarkExporter.js</code>:</p>
+<ol>
+<li><p><strong>Full export to file:</strong></p>
+<ul>
+<li>JSON format with all metadata</li>
+<li>CSV format for spreadsheets</li>
+<li>Markdown format for note-taking apps</li>
+</ul>
+</li>
+<li><p><strong>Export workflow:</strong></p>
+<ul>
+<li>Navigate to bookmarks page</li>
+<li>Run the exporter script</li>
+<li>Script scrolls through ALL bookmarks (can take time for large collections)</li>
+<li>Downloads the export file</li>
+</ul>
+</li>
+<li><p><strong>What&#39;s in the export:</strong></p>
+<pre><code class="language-json">{
+  &quot;tweets&quot;: [
+    {
+      &quot;text&quot;: &quot;Tweet content here...&quot;,
+      &quot;author&quot;: &quot;@username&quot;,
+      &quot;date&quot;: &quot;2026-02-15&quot;,
+      &quot;likes&quot;: 1250,
+      &quot;retweets&quot;: 340,
+      &quot;url&quot;: &quot;https://x.com/user/status/123...&quot;
+    }
+  ],
+  &quot;total&quot;: 500,
+  &quot;exportDate&quot;: &quot;2026-02-24&quot;
+}
+</code></pre>
+</li>
+</ol>
+<h3>Part 6: Clear All Bookmarks</h3>
+<p>When your bookmarks are overwhelming, use <code>src/clearAllBookmarks.js</code>:</p>
+<ol>
+<li><p><strong>Via MCP:</strong></p>
+<pre><code>&quot;Clear all my bookmarks&quot;
+</code></pre>
+<p>⚠️ Warning: This cannot be undone! Export first.</p>
+</li>
+<li><p><strong>Via browser script:</strong></p>
+<ul>
+<li>Navigate to bookmarks page</li>
+<li>Paste clearAllBookmarks.js</li>
+<li>Script clicks the unbookmark button on each tweet</li>
+<li>Scrolls and repeats</li>
+<li>Removes bookmarks in sequence with delays</li>
+</ul>
+</li>
+<li><p><strong>Selective clearing:</strong></p>
+<ul>
+<li>Instead of clearing ALL, modify to clear only:<ul>
+<li>Bookmarks older than X days</li>
+<li>Bookmarks from specific users</li>
+<li>Bookmarks matching certain keywords</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3>Part 7: Build a Knowledge Base from Bookmarks</h3>
+<p>Help me turn bookmarks into organized knowledge:</p>
+<ol>
+<li><p><strong>Export → Categorize → Organize:</strong></p>
+<ul>
+<li>Export all bookmarks</li>
+<li>Have Claude categorize them by topic</li>
+<li>Create a structured document/spreadsheet</li>
+</ul>
+</li>
+<li><p><strong>Weekly bookmark review workflow:</strong></p>
+<ul>
+<li>Monday: Export new bookmarks from the past week</li>
+<li>Review each one — is it still valuable?</li>
+<li>Tag/categorize useful ones</li>
+<li>Clear ones that are no longer relevant</li>
+<li>Archive important ones to notes app</li>
+</ul>
+</li>
+<li><p><strong>Content creation from bookmarks:</strong></p>
+<ul>
+<li>Use bookmarked material as inspiration</li>
+<li>Create threads summarizing the best content you found</li>
+<li>Quote tweet and add your perspective</li>
+<li>Build content pillars from recurring bookmark themes</li>
+</ul>
+</li>
+</ol>
+<h3>Part 8: Bookmark Analytics</h3>
+<p>Analyze your bookmarking patterns:</p>
+<ol>
+<li><strong>What you save most:</strong> Topics, authors, content types</li>
+<li><strong>Reading habits:</strong> How often do you go back to bookmarks?</li>
+<li><strong>Value assessment:</strong> Which bookmarks led to actionable insights?</li>
+<li><strong>Author discovery:</strong> Who creates content worth saving?</li>
+<li><strong>Optimization:</strong> Should you follow certain authors more closely?</li>
+</ol>
+<h2>My Bookmark Goals</h2>
+<p>(Replace before pasting)</p>
+<ul>
+<li>Approximate number of bookmarks: ROUGH_NUMBER</li>
+<li>Am I overwhelmed by bookmarks? Yes/No</li>
+<li>Main reason I bookmark: Learning / Content ideas / Reference / Random</li>
+<li>Do I want to clear everything and start fresh? Yes/No</li>
+<li>Export format preference: JSON / CSV / Markdown</li>
+</ul>
+<p>Start with Part 1 — export my bookmarks and help me understand what I&#39;ve been saving.</p>
+
+
+        <div class="cta-box">
+          <h3>⚡ Explore XActions</h3>
+          <p>100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/docs">Browse All Documentation</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 In This Section</h3>
+                <a href="/docs/tutorials/01-mcp-setup-and-first-commands">🤖 Tutorial: Setting Up XActions MCP Server with Claude</a>
+        <a href="/docs/tutorials/02-unfollow-non-followers-cleanup">🤖 Tutorial: Unfollow Non-Followers &amp; Follower Cleanup with Claude</a>
+        <a href="/docs/tutorials/03-growth-automation-suite">🤖 Tutorial: Growth Automation Suite — Grow Your X Account on Autopilot</a>
+        <a href="/docs/tutorials/04-scraping-research-analysis">🤖 Tutorial: Tweet Scraping, Profile Analysis &amp; Research with Claude</a>
+        <a href="/docs/tutorials/05-content-posting-threads-scheduling">🤖 Tutorial: Content Posting, Threads, Polls &amp; Scheduling with Claude</a>
+        <a href="/docs/tutorials/06-analytics-competitor-intelligence">🤖 Tutorial: Engagement Analytics, Best Time to Post &amp; Competitor Intelligence</a>
+        <a href="/docs/tutorials/07-auto-liker-auto-commenter">🤖 Tutorial: Auto-Liker &amp; Auto-Commenter — Engagement Automation with Claude</a>
+        <a href="/docs/tutorials/08-blocking-muting-spam-protection">🤖 Tutorial: Mass Block, Unblock, Mute &amp; Spam Protection with Claude</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/docs">All Documentation</a>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

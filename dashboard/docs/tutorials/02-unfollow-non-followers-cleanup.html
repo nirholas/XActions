@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tutorial: Unfollow Non-Followers &amp; Follower Cleanup with Claude | XActions</title>
+  <meta name="description" content="You are my X/Twitter account manager. I want to clean up my following list using XActions. Help me identify who doesn't follow me back and strategically unfollo">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, open source, unfollow, non, followers, cleanup, tutorial:, non-followers, follower, claude, claude tutorials">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Tutorial: Unfollow Non-Followers &amp; Follower Cleanup with Claude — XActions">
+  <meta property="og:description" content="You are my X/Twitter account manager. I want to clean up my following list using XActions. Help me identify who doesn't follow me back and strategically unfollo">
+  <meta property="og:url" content="https://xactions.app/docs/tutorials/02-unfollow-non-followers-cleanup">
+  <meta property="og:site_name" content="XActions">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Tutorial: Unfollow Non-Followers &amp; Follower Cleanup with Claude — XActions">
+  <meta name="twitter:description" content="You are my X/Twitter account manager. I want to clean up my following list using XActions. Help me identify who doesn't follow me back and strategically unfollo">
+
+  <link rel="canonical" href="https://xactions.app/docs/tutorials/02-unfollow-non-followers-cleanup">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Tutorial: Unfollow Non-Followers & Follower Cleanup with Claude | XActions",
+    "description": "You are my X/Twitter account manager. I want to clean up my following list using XActions. Help me identify who doesn't follow me back and strategically unfollo",
+    "url": "https://xactions.app/docs/tutorials/02-unfollow-non-followers-cleanup",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-25",
+    "dateModified": "2026-02-25",
+    "mainEntityOfPage": "https://xactions.app/docs/tutorials/02-unfollow-non-followers-cleanup",
+    "articleSection": "Claude Tutorials",
+    "keywords": "xactions, twitter automation, x automation, free, open source, unfollow, non, followers, cleanup, tutorial:, non-followers, follower, claude, claude tutorials"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Claude Tutorials", "item": "https://xactions.app/docs/tutorials" },
+      { "@type": "ListItem", "position": 4, "name": "Tutorial: Unfollow Non-Followers & Follower Cleanup with Claude", "item": "https://xactions.app/docs/tutorials/02-unfollow-non-followers-cleanup" }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .article pre { font-size: 0.75rem; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <main class="main-content">
+      <header class="main-header">
+        <h1>🤖 Tutorial: Unfollow Non-Followers &amp; Follower Cleanup with Claude</h1>
+        <div class="breadcrumb">
+          <a href="https://xactions.app">Home</a> › <a href="https://xactions.app/docs">Docs</a> › <a href="https://xactions.app/docs/tutorials">Claude Tutorials</a> › Tutorial: Unfollow Non-Followers &amp; Follower Cleanup with Claude
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Claude Tutorials</span>
+        <h1>Tutorial: Unfollow Non-Followers &amp; Follower Cleanup with Claude</h1>
+<p>You are my X/Twitter account manager. I want to clean up my following list using XActions. Help me identify who doesn&#39;t follow me back and strategically unfollow them. Be methodical and give me full control over the process.</p>
+<h2>Context</h2>
+<p>I&#39;m using XActions (<a href="https://github.com/nirholas/XActions">https://github.com/nirholas/XActions</a>), an open-source X/Twitter automation toolkit. It has both an MCP server (for Claude Desktop) and browser console scripts for follower management.</p>
+<h2>What I Need You To Do</h2>
+<h3>Phase 1: Audit My Following List</h3>
+<p>First, help me understand the state of my account:</p>
+<ol>
+<li><p><strong>Get my profile stats</strong> using <code>x_get_profile</code> for my username</p>
+<ul>
+<li>Show me: followers count, following count, follower-to-following ratio</li>
+<li>Tell me if my ratio is healthy (generally, following &gt;&gt; followers looks spammy)</li>
+</ul>
+</li>
+<li><p><strong>Find non-followers</strong> using <code>x_get_non_followers</code> for my username</p>
+<ul>
+<li>This will show everyone I follow who doesn&#39;t follow me back</li>
+<li>Present the results as a clean list: username, display name, bio</li>
+<li>Tell me the total count and what percentage of my following list doesn&#39;t follow back</li>
+</ul>
+</li>
+<li><p><strong>Categorize the non-followers</strong> into groups:</p>
+<ul>
+<li><strong>Celebrities/Influencers</strong> (100K+ followers) — might want to keep following these</li>
+<li><strong>News/Media accounts</strong> — I probably follow these for content, not follow-backs</li>
+<li><strong>Inactive accounts</strong> — haven&#39;t posted in months  </li>
+<li><strong>Likely bots</strong> — no bio, suspicious patterns</li>
+<li><strong>Regular users who just don&#39;t follow back</strong> — prime unfollow candidates</li>
+</ul>
+</li>
+</ol>
+<h3>Phase 2: Smart Unfollow Strategy</h3>
+<p>Help me create an unfollow plan:</p>
+<ol>
+<li><p><strong>Build a whitelist</strong> — Ask me which accounts I want to NEVER unfollow regardless (favorite creators, friends, family, news sources)</p>
+</li>
+<li><p><strong>Suggest an unfollow order</strong> — Start with:</p>
+<ul>
+<li>Obvious bots and spam accounts first</li>
+<li>Inactive accounts next</li>
+<li>Then regular non-followers</li>
+<li>Celebrities/influencers last (or keep them)</li>
+</ul>
+</li>
+<li><p><strong>Execute unfollows in batches</strong> using <code>x_unfollow</code> or the bulk <code>x_unfollow_non_followers</code> tool:</p>
+<ul>
+<li>Use <code>dryRun: true</code> first to preview what would happen</li>
+<li>Then do it for real in batches of 20-30</li>
+<li>Wait between batches to avoid rate limits</li>
+<li>Give me a running count: &quot;Unfollowed 23/150 non-followers&quot;</li>
+</ul>
+</li>
+</ol>
+<h3>Phase 3: Browser Console Script Alternative</h3>
+<p>If I prefer the browser console method, walk me through the XActions unfollowback script:</p>
+<ol>
+<li><p>Have me navigate to <code>https://x.com/MY_USERNAME/following</code></p>
+</li>
+<li><p>Tell me to open DevTools (F12 or Cmd+Option+I)</p>
+</li>
+<li><p>Give me the script to paste. The standard XActions unfollow script uses these selectors:</p>
+<ul>
+<li><code>[data-testid$=&quot;-unfollow&quot;]</code> for unfollow buttons</li>
+<li><code>[data-testid=&quot;confirmationSheetConfirm&quot;]</code> for the confirmation dialog</li>
+<li><code>[data-testid=&quot;userFollowIndicator&quot;]</code> to detect who follows you back</li>
+</ul>
+</li>
+<li><p>Explain what the script does step by step:</p>
+<ul>
+<li>Scrolls through the following list</li>
+<li>Identifies users without the &quot;Follows you&quot; indicator</li>
+<li>Clicks unfollow, then confirms</li>
+<li>Waits 1-2 seconds between each to avoid rate limits</li>
+<li>Logs each unfollow to the console</li>
+</ul>
+</li>
+</ol>
+<h3>Phase 4: Detect Unfollowers Over Time</h3>
+<p>Set me up with ongoing unfollower detection:</p>
+<ol>
+<li><p><strong>Using MCP:</strong> Run <code>x_detect_unfollowers</code> periodically to snapshot my followers list</p>
+<ul>
+<li>Compare snapshots to find who unfollowed me</li>
+<li>Show me: &quot;Since last check, 3 people unfollowed you: @user1, @user2, @user3&quot;</li>
+</ul>
+</li>
+<li><p><strong>Using browser script</strong> (<code>src/detectUnfollowers.js</code>):</p>
+<ul>
+<li>Explain how it stores follower snapshots in localStorage</li>
+<li>How to compare snapshots to detect changes</li>
+<li>Setting up the <code>newFollowersAlert.js</code> for real-time monitoring</li>
+</ul>
+</li>
+<li><p><strong>Using the continuous monitor</strong> (<code>src/continuousMonitor.js</code>):</p>
+<ul>
+<li>Explain how it runs continuously checking for new followers/unfollowers</li>
+<li>How to configure check intervals</li>
+<li>How to set up alerts</li>
+</ul>
+</li>
+</ol>
+<h3>Phase 5: Smart Unfollow with Tracking</h3>
+<p>For ongoing follow management, walk me through the automation framework:</p>
+<ol>
+<li><p><strong>Paste <code>core.js</code></strong> (the foundation module) into browser console first</p>
+</li>
+<li><p><strong>Then paste <code>smartUnfollow.js</code></strong> which provides:</p>
+<ul>
+<li>Time-based unfollowing (unfollow after X days if no follow-back)</li>
+<li>Whitelist support</li>
+<li>Dry run mode to preview</li>
+<li>Integration with follow tracking data from <code>keywordFollow.js</code></li>
+</ul>
+<p>Key config options to explain:</p>
+<pre><code class="language-javascript">DAYS_TO_WAIT: 3,        // Days before unfollowing
+MAX_UNFOLLOWS: 50,      // Per session limit
+WHITELIST: [],           // Protected accounts
+DRY_RUN: false,          // Preview mode
+ONLY_TRACKED: true,      // Only unfollow previously tracked follows
+</code></pre>
+</li>
+<li><p><strong>Explain the complete workflow:</strong></p>
+<ul>
+<li>Follow people with <code>keywordFollow.js</code> (tracks who you followed and when)</li>
+<li>Wait 3 days (configurable)</li>
+<li>Run <code>smartUnfollow.js</code> to clean up non-followers automatically</li>
+<li>Repeat for continuous, sustainable growth</li>
+</ul>
+</li>
+</ol>
+<h3>Phase 6: Follower Audit Deep Dive</h3>
+<p>Help me audit the quality of my followers using <code>x_get_followers</code>:</p>
+<ol>
+<li>Scrape my followers list</li>
+<li>Analyze patterns:<ul>
+<li>What percentage have bios?</li>
+<li>What&#39;s the average follower count?</li>
+<li>Any obvious bot accounts? (no avatar, no bio, following thousands)</li>
+<li>What niches/interests do they represent?</li>
+</ul>
+</li>
+<li>Suggest who I should engage with more to retain good followers</li>
+<li>Suggest using <code>removeFollowers.js</code> to remove bot/spam followers</li>
+</ol>
+<h3>Phase 7: Results Summary</h3>
+<p>After the cleanup, show me:</p>
+<ul>
+<li><strong>Before vs After</strong> comparison of my following count</li>
+<li><strong>New follower-to-following ratio</strong></li>
+<li><strong>Quality score</strong> of remaining following list</li>
+<li><strong>Recommendations</strong> for maintaining a healthy ratio going forward</li>
+</ul>
+<h2>Important Notes</h2>
+<ul>
+<li>Rate limits: Stay under 50 unfollows per hour to be safe</li>
+<li>Delays: Always wait 2-3 seconds between actions</li>
+<li>Reversibility: Following someone back is easy, so err on the side of unfollowing</li>
+<li>The <code>auth_token</code> cookie is needed for authenticated operations</li>
+</ul>
+<h2>My Account Details</h2>
+<p>(Replace these before pasting)</p>
+<ul>
+<li>My username: YOUR_USERNAME</li>
+<li>Accounts to never unfollow: [list your must-keeps]</li>
+<li>My goal ratio: I want to follow fewer people than follow me</li>
+</ul>
+<p>Walk me through this entire process step by step. Start with Phase 1 and check in with me before moving to each next phase.</p>
+
+
+        <div class="cta-box">
+          <h3>⚡ Explore XActions</h3>
+          <p>100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/docs">Browse All Documentation</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 In This Section</h3>
+                <a href="/docs/tutorials/01-mcp-setup-and-first-commands">🤖 Tutorial: Setting Up XActions MCP Server with Claude</a>
+        <a href="/docs/tutorials/03-growth-automation-suite">🤖 Tutorial: Growth Automation Suite — Grow Your X Account on Autopilot</a>
+        <a href="/docs/tutorials/04-scraping-research-analysis">🤖 Tutorial: Tweet Scraping, Profile Analysis &amp; Research with Claude</a>
+        <a href="/docs/tutorials/05-content-posting-threads-scheduling">🤖 Tutorial: Content Posting, Threads, Polls &amp; Scheduling with Claude</a>
+        <a href="/docs/tutorials/06-analytics-competitor-intelligence">🤖 Tutorial: Engagement Analytics, Best Time to Post &amp; Competitor Intelligence</a>
+        <a href="/docs/tutorials/07-auto-liker-auto-commenter">🤖 Tutorial: Auto-Liker &amp; Auto-Commenter — Engagement Automation with Claude</a>
+        <a href="/docs/tutorials/08-blocking-muting-spam-protection">🤖 Tutorial: Mass Block, Unblock, Mute &amp; Spam Protection with Claude</a>
+        <a href="/docs/tutorials/09-dm-management-automation">🤖 Tutorial: DM Management, Export &amp; Automation with Claude</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/docs">All Documentation</a>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

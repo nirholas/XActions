@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>24/7 LLM-Powered Thought Leadership Agent — Architecture &amp; Implementation Guide | XActions</title>
+  <meta name="description" content="How to run automated algorithm cultivation and content creation continuously with AI intelligence.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, open source, llm, powered, thought, leader, 24/7, llm-powered, leadership, agent, architecture, implementation">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="24/7 LLM-Powered Thought Leadership Agent — Architecture &amp; Implementation Guide — XActions">
+  <meta property="og:description" content="How to run automated algorithm cultivation and content creation continuously with AI intelligence.">
+  <meta property="og:url" content="https://xactions.app/docs/research/llm-powered-thought-leader">
+  <meta property="og:site_name" content="XActions">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="24/7 LLM-Powered Thought Leadership Agent — Architecture &amp; Implementation Guide — XActions">
+  <meta name="twitter:description" content="How to run automated algorithm cultivation and content creation continuously with AI intelligence.">
+
+  <link rel="canonical" href="https://xactions.app/docs/research/llm-powered-thought-leader">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "24/7 LLM-Powered Thought Leadership Agent — Architecture & Implementation Guide | XActions",
+    "description": "How to run automated algorithm cultivation and content creation continuously with AI intelligence.",
+    "url": "https://xactions.app/docs/research/llm-powered-thought-leader",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-25",
+    "dateModified": "2026-02-25",
+    "mainEntityOfPage": "https://xactions.app/docs/research/llm-powered-thought-leader",
+    "articleSection": "Research & Architecture",
+    "keywords": "xactions, twitter automation, x automation, free, open source, llm, powered, thought, leader, 24/7, llm-powered, leadership, agent, architecture, implementation"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Research & Architecture", "item": "https://xactions.app/docs/research" },
+      { "@type": "ListItem", "position": 4, "name": "24/7 LLM-Powered Thought Leadership Agent — Architecture & Implementation Guide", "item": "https://xactions.app/docs/research/llm-powered-thought-leader" }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .article pre { font-size: 0.75rem; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <main class="main-content">
+      <header class="main-header">
+        <h1>🔬 24/7 LLM-Powered Thought Leadership Agent — Architecture &amp; Implementation Guide</h1>
+        <div class="breadcrumb">
+          <a href="https://xactions.app">Home</a> › <a href="https://xactions.app/docs">Docs</a> › <a href="https://xactions.app/docs/research">Research &amp; Architecture</a> › 24/7 LLM-Powered Thought Leadership Agent — Architecture &amp; Implementation Guide
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Research &amp; Architecture</span>
+        <h1>24/7 LLM-Powered Thought Leadership Agent — Architecture &amp; Implementation Guide</h1>
+<blockquote>
+<p>How to run automated algorithm cultivation and content creation continuously with AI intelligence.</p>
+</blockquote>
+<h2>Architecture Diagram</h2>
+<pre><code>┌──────────────────────────────────────────────────────────────────────────────┐
+│                         THOUGHT LEADER AGENT                                  │
+│                                                                                │
+│  ┌─────────────────────────────────────────────────────────────────────────┐  │
+│  │                          ORCHESTRATOR                                    │  │
+│  │  ┌──────────┐  ┌──────────┐  ┌──────────────┐  ┌──────────────────┐   │  │
+│  │  │ Scheduler│  │ Session  │  │ Rate Limiter │  │ Health Monitor   │   │  │
+│  │  │ (cron +  │  │ Manager  │  │ (per-action  │  │ (crash recovery, │   │  │
+│  │  │ variance)│  │ (cookies)│  │  daily caps) │  │  alert on block) │   │  │
+│  │  └────┬─────┘  └────┬─────┘  └──────┬───────┘  └────────┬─────────┘   │  │
+│  │       └──────────────┴───────────────┴───────────────────┘             │  │
+│  └──────────────────────────────┬──────────────────────────────────────────┘  │
+│                                  │                                              │
+│  ┌───────────────────────────────┼──────────────────────────────────────────┐  │
+│  │              BROWSER LAYER    │                                            │  │
+│  │  ┌────────────────────────────▼─────────────────────────────────────┐    │  │
+│  │  │              Puppeteer + Stealth Plugin                           │    │  │
+│  │  │  ┌────────────────────────────────────────────────────────────┐  │    │  │
+│  │  │  │  Page Actions:                                              │  │    │  │
+│  │  │  │  navigate() | search() | scroll() | click() | type()       │  │    │  │
+│  │  │  │  screenshot() | extractText() | waitForSelector()          │  │    │  │
+│  │  │  └────────────────────────────────────────────────────────────┘  │    │  │
+│  │  │  ┌────────────────────────────────────────────────────────────┐  │    │  │
+│  │  │  │  Anti-Detection:                                            │  │    │  │
+│  │  │  │  stealth plugin | mouse simulation | scroll variance       │  │    │  │
+│  │  │  │  viewport rotation | UA rotation | timezone matching       │  │    │  │
+│  │  │  └────────────────────────────────────────────────────────────┘  │    │  │
+│  │  └──────────────────────────────────────────────────────────────────┘    │  │
+│  └──────────────────────────────────────────────────────────────────────────┘  │
+│                                                                                │
+│  ┌──────────────────────────────────────────────────────────────────────────┐  │
+│  │                        LLM BRAIN                                          │  │
+│  │                                                                            │  │
+│  │  ┌────────────────┐ ┌─────────────────┐ ┌──────────────────────────────┐ │  │
+│  │  │ Content Scorer │ │ Reply Generator │ │ Content Creator              │ │  │
+│  │  │ (fast model)   │ │ (mid model)     │ │ (smart model)               │ │  │
+│  │  │                │ │                 │ │                              │ │  │
+│  │  │ Input: tweet   │ │ Input: tweet +  │ │ Input: topic + persona      │ │  │
+│  │  │ Output: 0-100  │ │  thread context │ │ Output: tweet/thread/quote  │ │  │
+│  │  │ + reason       │ │ Output: reply   │ │ + schedule time             │ │  │
+│  │  └────────────────┘ └─────────────────┘ └──────────────────────────────┘ │  │
+│  │  ┌────────────────┐ ┌─────────────────┐ ┌──────────────────────────────┐ │  │
+│  │  │ Trend Analyzer │ │ Strategy Engine │ │ Persona Enforcer             │ │  │
+│  │  │ (what&#39;s hot?)  │ │ (adapt tactics) │ │ (consistency check)          │ │  │
+│  │  └────────────────┘ └─────────────────┘ └──────────────────────────────┘ │  │
+│  └──────────────────────────────────────────────────────────────────────────┘  │
+│                                                                                │
+│  ┌──────────────────────────────────────────────────────────────────────────┐  │
+│  │                     DATA LAYER                                            │  │
+│  │  ┌───────────┐ ┌──────────────┐ ┌──────────┐ ┌───────────────────────┐  │  │
+│  │  │ SQLite DB │ │ Action Log   │ │ Metrics  │ │ Session Store         │  │  │
+│  │  │ (state,   │ │ (every click │ │ (growth  │ │ (cookies, tokens,     │  │  │
+│  │  │  follows, │ │  timestamped)│ │  charts) │ │  fingerprint config)  │  │  │
+│  │  │  likes)   │ │              │ │          │ │                       │  │  │
+│  │  └───────────┘ └──────────────┘ └──────────┘ └───────────────────────┘  │  │
+│  └──────────────────────────────────────────────────────────────────────────┘  │
+└──────────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<hr>
+<h2>Technology Stack</h2>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Technology</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Runtime</strong></td>
+<td>Node.js 20+</td>
+<td>Async orchestration</td>
+</tr>
+<tr>
+<td><strong>Browser</strong></td>
+<td>Puppeteer Extra + Stealth</td>
+<td>Headless Chrome, anti-detection</td>
+</tr>
+<tr>
+<td><strong>LLM Provider</strong></td>
+<td>OpenRouter / OpenAI / Ollama</td>
+<td>Model routing, cost control</td>
+</tr>
+<tr>
+<td><strong>Database</strong></td>
+<td>SQLite (better-sqlite3)</td>
+<td>Action log, state, metrics</td>
+</tr>
+<tr>
+<td><strong>Scheduler</strong></td>
+<td>node-cron + custom variance</td>
+<td>Circadian rhythm simulation</td>
+</tr>
+<tr>
+<td><strong>Process Mgmt</strong></td>
+<td>PM2 / Docker</td>
+<td>24/7 uptime, auto-restart</td>
+</tr>
+<tr>
+<td><strong>Monitoring</strong></td>
+<td>XActions Dashboard / Webhooks</td>
+<td>Alerts, metrics visualization</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Component Details</h2>
+<h3>1. Orchestrator (<code>thoughtLeaderAgent.js</code>)</h3>
+<p>The main event loop that coordinates all other components:</p>
+<pre><code class="language-javascript">// Pseudocode — see src/agents/thoughtLeaderAgent.js for full implementation
+import { BrowserDriver } from &#39;./browserDriver.js&#39;;
+import { LLMBrain } from &#39;./llmBrain.js&#39;;
+import { Scheduler } from &#39;./scheduler.js&#39;;
+import { Database } from &#39;./database.js&#39;;
+
+class ThoughtLeaderAgent {
+  constructor(config) {
+    this.config = config;
+    this.browser = new BrowserDriver(config.browser);
+    this.llm = new LLMBrain(config.llm);
+    this.scheduler = new Scheduler(config.schedule);
+    this.db = new Database(config.dbPath);
+    this.running = false;
+  }
+
+  async start() {
+    this.running = true;
+    await this.browser.launch();
+    await this.browser.restoreSession();
+
+    while (this.running) {
+      const activity = this.scheduler.getNextActivity();
+      
+      if (activity.type === &#39;sleep&#39;) {
+        await this.sleep(activity.duration);
+        continue;
+      }
+
+      try {
+        await this.executeActivity(activity);
+      } catch (err) {
+        this.handleError(err);
+      }
+
+      await this.humanPause();
+    }
+  }
+
+  async executeActivity(activity) {
+    switch (activity.type) {
+      case &#39;search-engage&#39;:
+        return this.searchAndEngage(activity.query, activity.tab);
+      case &#39;home-feed&#39;:
+        return this.browseHomeFeed();
+      case &#39;influencer-visit&#39;:
+        return this.visitInfluencer(activity.username);
+      case &#39;create-content&#39;:
+        return this.createContent(activity.contentType);
+      case &#39;engage-replies&#39;:
+        return this.engageWithReplies();
+      case &#39;explore&#39;:
+        return this.browseExplore();
+      case &#39;own-profile&#39;:
+        return this.visitOwnProfile();
+    }
+  }
+
+  async searchAndEngage(query, tab) {
+    await this.browser.navigate(searchUrl(query, tab));
+    const tweets = await this.browser.extractTweets();
+    
+    for (const tweet of tweets) {
+      // LLM scores relevance
+      const score = await this.llm.scoreRelevance(tweet.text, this.config.niche);
+      
+      if (score &gt; 60 &amp;&amp; this.rateLimiter.canLike()) {
+        await this.browser.likeTweet(tweet);
+        this.db.logAction(&#39;like&#39;, tweet.id);
+      }
+      
+      if (score &gt; 80 &amp;&amp; this.rateLimiter.canComment()) {
+        // LLM generates contextual reply
+        const reply = await this.llm.generateReply(tweet, this.config.persona);
+        await this.browser.replyToTweet(tweet, reply);
+        this.db.logAction(&#39;comment&#39;, tweet.id, { reply });
+      }
+
+      await this.humanScroll();
+    }
+  }
+
+  async createContent(type) {
+    // LLM analyzes trends and generates content
+    const trending = await this.browser.getTrendingTopics();
+    const content = await this.llm.generateContent({
+      type, // &#39;tweet&#39; | &#39;thread&#39; | &#39;quote&#39;
+      persona: this.config.persona,
+      niche: this.config.niche,
+      trends: trending,
+      recentPosts: this.db.getRecentPosts(20),
+    });
+    
+    await this.browser.postContent(content);
+    this.db.logAction(&#39;post&#39;, null, { content });
+  }
+}
+</code></pre>
+<h3>2. Browser Driver (<code>browserDriver.js</code>)</h3>
+<p>Wraps Puppeteer with X.com-specific actions:</p>
+<pre><code class="language-javascript">import puppeteer from &#39;puppeteer-extra&#39;;
+import StealthPlugin from &#39;puppeteer-extra-plugin-stealth&#39;;
+
+puppeteer.use(StealthPlugin());
+
+class BrowserDriver {
+  async launch() {
+    this.browser = await puppeteer.launch({
+      headless: &#39;new&#39;,
+      args: [
+        &#39;--no-sandbox&#39;,
+        &#39;--disable-setuid-sandbox&#39;,
+        &#39;--disable-blink-features=AutomationControlled&#39;,
+        `--window-size=${randomInt(1280,1920)},${randomInt(720,1080)}`,
+      ],
+    });
+    this.page = await this.browser.newPage();
+    await this.page.setViewport({ width: randomInt(1280,1920), height: randomInt(720,1080) });
+  }
+
+  async restoreSession() {
+    const cookies = JSON.parse(fs.readFileSync(&#39;session.json&#39;, &#39;utf8&#39;));
+    await this.page.setCookie(...cookies);
+    await this.page.goto(&#39;https://x.com/home&#39;, { waitUntil: &#39;networkidle2&#39; });
+  }
+
+  async saveSession() {
+    const cookies = await this.page.cookies();
+    fs.writeFileSync(&#39;session.json&#39;, JSON.stringify(cookies));
+  }
+
+  async navigate(url) {
+    await this.page.goto(url, { waitUntil: &#39;networkidle2&#39;, timeout: 30000 });
+    await this.page.waitForSelector(&#39;[data-testid=&quot;primaryColumn&quot;]&#39;, { timeout: 15000 });
+    await sleep(randomInt(1000, 2000));
+  }
+
+  async extractTweets() {
+    return this.page.evaluate(() =&gt; {
+      const tweets = document.querySelectorAll(&#39;article[data-testid=&quot;tweet&quot;]&#39;);
+      return Array.from(tweets).map(tweet =&gt; ({
+        id: tweet.querySelector(&#39;a[href*=&quot;/status/&quot;]&#39;)?.href?.match(/status\/(\d+)/)?.[1],
+        text: tweet.querySelector(&#39;[data-testid=&quot;tweetText&quot;]&#39;)?.textContent || &#39;&#39;,
+        author: tweet.querySelector(&#39;a[href^=&quot;/&quot;]&#39;)?.getAttribute(&#39;href&#39;)?.replace(&#39;/&#39;, &#39;&#39;),
+        isAd: !!tweet.querySelector(&#39;[data-testid=&quot;placementTracking&quot;]&#39;),
+      })).filter(t =&gt; t.id &amp;&amp; !t.isAd);
+    });
+  }
+
+  async likeTweet(tweet) {
+    await this.page.evaluate((tweetId) =&gt; {
+      const tweets = document.querySelectorAll(&#39;article[data-testid=&quot;tweet&quot;]&#39;);
+      for (const t of tweets) {
+        const link = t.querySelector(`a[href*=&quot;/status/${tweetId}&quot;]`);
+        if (link) {
+          const btn = t.querySelector(&#39;[data-testid=&quot;like&quot;]&#39;);
+          if (btn) btn.click();
+          break;
+        }
+      }
+    }, tweet.id);
+    await sleep(randomInt(500, 1500));
+  }
+
+  async replyToTweet(tweet, text) {
+    // Click reply, wait for compose box, type text, click post
+    await this.page.evaluate((tweetId) =&gt; {
+      const tweets = document.querySelectorAll(&#39;article[data-testid=&quot;tweet&quot;]&#39;);
+      for (const t of tweets) {
+        const link = t.querySelector(`a[href*=&quot;/status/${tweetId}&quot;]`);
+        if (link) {
+          t.querySelector(&#39;[data-testid=&quot;reply&quot;]&#39;)?.click();
+          break;
+        }
+      }
+    }, tweet.id);
+    
+    await sleep(1500);
+    await this.page.waitForSelector(&#39;[data-testid=&quot;tweetTextarea_0&quot;]&#39;, { timeout: 5000 });
+    await this.humanType(&#39;[data-testid=&quot;tweetTextarea_0&quot;]&#39;, text);
+    await sleep(800);
+    await this.page.click(&#39;[data-testid=&quot;tweetButton&quot;]&#39;);
+    await sleep(1500);
+  }
+
+  async humanType(selector, text) {
+    await this.page.focus(selector);
+    for (const char of text) {
+      await this.page.keyboard.type(char, { delay: randomInt(30, 100) });
+    }
+  }
+
+  async humanScroll(pixels = randomInt(400, 800)) {
+    await this.page.evaluate((px) =&gt; {
+      window.scrollBy({ top: px, behavior: &#39;smooth&#39; });
+    }, pixels);
+    await sleep(randomInt(1000, 3000));
+  }
+
+  async postContent(content) {
+    if (content.type === &#39;tweet&#39;) {
+      await this.navigate(&#39;https://x.com/compose/tweet&#39;);
+      await this.humanType(&#39;[data-testid=&quot;tweetTextarea_0&quot;]&#39;, content.text);
+      await sleep(1000);
+      await this.page.click(&#39;[data-testid=&quot;tweetButton&quot;]&#39;);
+    }
+    // Thread posting, quote posting, etc.
+  }
+
+  async getTrendingTopics() {
+    await this.navigate(&#39;https://x.com/explore/tabs/trending&#39;);
+    return this.page.evaluate(() =&gt; {
+      return Array.from(document.querySelectorAll(&#39;[data-testid=&quot;trend&quot;]&#39;)).map(el =&gt; ({
+        text: el.textContent,
+      }));
+    });
+  }
+}
+</code></pre>
+<h3>3. LLM Brain (<code>llmBrain.js</code>)</h3>
+<p>Tiered model routing for cost efficiency:</p>
+<pre><code class="language-javascript">class LLMBrain {
+  constructor(config) {
+    this.apiKey = config.apiKey;
+    this.baseUrl = config.baseUrl || &#39;https://openrouter.ai/api/v1&#39;;
+    this.models = {
+      fast: config.fastModel || &#39;deepseek/deepseek-chat&#39;,          // Scoring, classification
+      mid:  config.midModel || &#39;anthropic/claude-3.5-haiku&#39;,        // Reply generation
+      smart: config.smartModel || &#39;anthropic/claude-sonnet-4&#39;,   // Content creation + strategy
+    };
+    this.persona = config.persona;
+  }
+
+  async call(model, messages, options = {}) {
+    const response = await fetch(`${this.baseUrl}/chat/completions`, {
+      method: &#39;POST&#39;,
+      headers: {
+        &#39;Content-Type&#39;: &#39;application/json&#39;,
+        &#39;Authorization&#39;: `Bearer ${this.apiKey}`,
+      },
+      body: JSON.stringify({
+        model,
+        messages,
+        temperature: options.temperature || 0.7,
+        max_tokens: options.maxTokens || 500,
+      }),
+    });
+    const data = await response.json();
+    return data.choices[0].message.content;
+  }
+
+  async scoreRelevance(tweetText, niche) {
+    const result = await this.call(this.models.fast, [
+      { role: &#39;system&#39;, content: `Score this tweet 0-100 for relevance to: ${niche.keywords.join(&#39;, &#39;)}.
+        Respond with only a JSON object: { &quot;score&quot;: N, &quot;reason&quot;: &quot;one sentence&quot; }` },
+      { role: &#39;user&#39;, content: tweetText },
+    ], { temperature: 0.1, maxTokens: 100 });
+    
+    try {
+      return JSON.parse(result).score;
+    } catch {
+      return 50; // Default mid-score on parse failure
+    }
+  }
+
+  async generateReply(tweet, persona) {
+    const result = await this.call(this.models.mid, [
+      { role: &#39;system&#39;, content: `You are ${persona.name}, a ${persona.niche} thought leader.
+        Tone: ${persona.tone}
+        
+        Generate a short reply (1-2 sentences) to this tweet. Be natural, add value.
+        Don&#39;t use hashtags. Vary style (question, agreement, insight, mild pushback).
+        Never start with &quot;Great point&quot; or &quot;Interesting&quot; — be more creative.` },
+      { role: &#39;user&#39;, content: `Tweet by @${tweet.author}: &quot;${tweet.text}&quot;` },
+    ], { temperature: 0.8, maxTokens: 150 });
+    
+    return result.trim();
+  }
+
+  async generateContent({ type, persona, niche, trends, recentPosts }) {
+    const recent = recentPosts.map(p =&gt; p.text).join(&#39;\n---\n&#39;);
+    const trendText = trends.map(t =&gt; t.text).join(&#39;, &#39;);
+
+    const prompt = type === &#39;thread&#39;
+      ? `Write a 4-6 tweet thread about a ${niche.name} topic. Current trending: ${trendText}. 
+         Format: Each tweet separated by ---. First tweet should hook. Last should have a takeaway.`
+      : `Write a single tweet about ${niche.name}. Under 280 characters. 
+         Make it insightful, potentially controversial, or actionable.`;
+
+    const result = await this.call(this.models.smart, [
+      { role: &#39;system&#39;, content: `You are ${persona.name}, writing as yourself on X/Twitter.
+        Tone: ${persona.tone}
+        Expertise: ${persona.expertise.join(&#39;, &#39;)}
+        Recent posts (avoid repetition): ${recent}
+        
+        ${prompt}` },
+      { role: &#39;user&#39;, content: `Generate a ${type} now.` },
+    ], { temperature: 0.9, maxTokens: type === &#39;thread&#39; ? 1000 : 300 });
+
+    return { type, text: result.trim() };
+  }
+
+  async analyzeStrategy(metrics) {
+    const result = await this.call(this.models.smart, [
+      { role: &#39;system&#39;, content: `Analyze these X/Twitter growth metrics and recommend specific adjustments.
+        Be concrete: more/less of what, specific timing changes, content type shifts.` },
+      { role: &#39;user&#39;, content: JSON.stringify(metrics, null, 2) },
+    ], { temperature: 0.5, maxTokens: 500 });
+
+    return result;
+  }
+}
+</code></pre>
+<h3>4. Scheduler (<code>scheduler.js</code>)</h3>
+<p>Circadian rhythm with realistic variance:</p>
+<pre><code class="language-javascript">class Scheduler {
+  constructor(config) {
+    this.timezone = config.timezone || &#39;America/New_York&#39;;
+    this.schedule = config.schedule || this.defaultSchedule();
+  }
+
+  defaultSchedule() {
+    return {
+      // hour: { active: bool, intensity: 0-1, activities: [...] }
+      0: { active: false }, 1: { active: false }, 2: { active: false },
+      3: { active: false }, 4: { active: false }, 5: { active: false },
+      6:  { active: true, intensity: 0.3, activities: [&#39;home-feed&#39;] },
+      7:  { active: true, intensity: 0.6, activities: [&#39;search-engage&#39;, &#39;home-feed&#39;] },
+      8:  { active: true, intensity: 0.8, activities: [&#39;search-engage&#39;, &#39;engage-replies&#39;] },
+      9:  { active: true, intensity: 1.0, activities: [&#39;create-content&#39;, &#39;search-engage&#39;] },
+      10: { active: true, intensity: 0.9, activities: [&#39;search-engage&#39;, &#39;influencer-visit&#39;] },
+      11: { active: true, intensity: 0.6, activities: [&#39;home-feed&#39;] },
+      12: { active: true, intensity: 0.7, activities: [&#39;explore&#39;, &#39;home-feed&#39;] },
+      13: { active: true, intensity: 0.5, activities: [&#39;home-feed&#39;] },
+      14: { active: false },  // Afternoon break
+      15: { active: true, intensity: 0.6, activities: [&#39;search-engage&#39;] },
+      16: { active: true, intensity: 0.8, activities: [&#39;search-engage&#39;, &#39;search-people&#39;] },
+      17: { active: true, intensity: 1.0, activities: [&#39;create-content&#39;, &#39;engage-replies&#39;] },
+      18: { active: true, intensity: 0.9, activities: [&#39;search-engage&#39;, &#39;influencer-visit&#39;] },
+      19: { active: true, intensity: 0.8, activities: [&#39;home-feed&#39;, &#39;engage-replies&#39;] },
+      20: { active: true, intensity: 0.7, activities: [&#39;home-feed&#39;] },
+      21: { active: true, intensity: 0.5, activities: [&#39;home-feed&#39;, &#39;own-profile&#39;] },
+      22: { active: true, intensity: 0.3, activities: [&#39;home-feed&#39;] },
+      23: { active: false },
+    };
+  }
+
+  getNextActivity() {
+    const now = new Date();
+    const hour = now.getHours();
+    const slot = this.schedule[hour];
+
+    if (!slot?.active) {
+      // Sleep until next active hour
+      const nextActive = this.findNextActiveHour(hour);
+      const sleepMs = this.msUntilHour(nextActive);
+      return { type: &#39;sleep&#39;, duration: sleepMs };
+    }
+
+    // Add ±15 min variance
+    const variance = (Math.random() - 0.5) * 30 * 60 * 1000;
+
+    // Pick random activity from this hour&#39;s options
+    const activity = slot.activities[Math.floor(Math.random() * slot.activities.length)];
+    
+    return {
+      type: activity,
+      intensity: slot.intensity,
+      scheduledFor: Date.now() + variance,
+    };
+  }
+
+  findNextActiveHour(currentHour) {
+    for (let i = 1; i &lt;= 24; i++) {
+      const h = (currentHour + i) % 24;
+      if (this.schedule[h]?.active) return h;
+    }
+    return 7; // fallback
+  }
+
+  msUntilHour(targetHour) {
+    const now = new Date();
+    const target = new Date(now);
+    target.setHours(targetHour, Math.floor(Math.random() * 30), 0, 0);
+    if (target &lt;= now) target.setDate(target.getDate() + 1);
+    return target - now;
+  }
+}
+</code></pre>
+<hr>
+<h2>Deployment Options</h2>
+<h3>Option A: Docker (Recommended)</h3>
+<pre><code class="language-dockerfile">FROM node:20-slim
+
+# Install Chrome dependencies
+RUN apt-get update &amp;&amp; apt-get install -y \
+    chromium \
+    fonts-liberation \
+    libasound2 libatk-bridge2.0-0 libgtk-3-0 \
+    --no-install-recommends &amp;&amp; \
+    rm -rf /var/lib/apt/lists/*
+
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
+
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --production
+COPY . .
+
+CMD [&quot;node&quot;, &quot;src/agents/thoughtLeaderAgent.js&quot;]
+</code></pre>
+<pre><code class="language-yaml"># docker-compose.agent.yml
+version: &#39;3.8&#39;
+services:
+  thought-leader:
+    build: .
+    restart: unless-stopped
+    volumes:
+      - ./data/session.json:/app/data/session.json
+      - ./data/agent.db:/app/data/agent.db
+    environment:
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - AGENT_TIMEZONE=America/New_York
+      - AGENT_NICHE=ai-engineering
+      - AGENT_MODE=normal
+    mem_limit: 2g
+    cpus: &#39;1.0&#39;
+</code></pre>
+<h3>Option B: PM2 (Direct VPS)</h3>
+<pre><code class="language-javascript">// ecosystem.config.js
+module.exports = {
+  apps: [{
+    name: &#39;thought-leader&#39;,
+    script: &#39;src/agents/thoughtLeaderAgent.js&#39;,
+    cron_restart: &#39;0 4 * * *&#39;,  // Restart daily at 4 AM (session refresh)
+    max_memory_restart: &#39;1G&#39;,
+    env: {
+      OPENROUTER_API_KEY: &#39;sk-...&#39;,
+      AGENT_TIMEZONE: &#39;America/New_York&#39;,
+    },
+  }],
+};
+</code></pre>
+<h3>Option C: Railway/Fly.io</h3>
+<p>Both are supported natively by the project. Deploy with:</p>
+<pre><code class="language-bash"># Railway
+railway up
+
+# Fly.io
+fly deploy
+</code></pre>
+<hr>
+<h2>Cost Estimates</h2>
+<h3>LLM Costs (Monthly)</h3>
+<table>
+<thead>
+<tr>
+<th>Activity</th>
+<th>Model Tier</th>
+<th>Calls/Day</th>
+<th>Tokens/Call</th>
+<th>Monthly Cost</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Relevance scoring</td>
+<td>Fast (DeepSeek)</td>
+<td>200</td>
+<td>~200</td>
+<td>~$0.80</td>
+</tr>
+<tr>
+<td>Reply generation</td>
+<td>Mid (Haiku)</td>
+<td>20</td>
+<td>~300</td>
+<td>~$1.50</td>
+</tr>
+<tr>
+<td>Content creation</td>
+<td>Smart (Sonnet)</td>
+<td>5</td>
+<td>~800</td>
+<td>~$3.00</td>
+</tr>
+<tr>
+<td>Strategy analysis</td>
+<td>Smart (Sonnet)</td>
+<td>1</td>
+<td>~1000</td>
+<td>~$0.50</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td><strong>~$5-10/mo</strong></td>
+</tr>
+</tbody></table>
+<p>If using local models (Ollama with Llama 3.1):</p>
+<ul>
+<li><strong>$0/month</strong> for LLM costs</li>
+<li>Requires machine with 16GB+ RAM (for 7B model) or GPU (for 70B)</li>
+</ul>
+<h3>Infrastructure Costs</h3>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Monthly Cost</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Hetzner CAX11 (ARM VPS)</td>
+<td>$4.15</td>
+</tr>
+<tr>
+<td>DigitalOcean Basic</td>
+<td>$6.00</td>
+</tr>
+<tr>
+<td>Railway (Hobby)</td>
+<td>$5.00</td>
+</tr>
+<tr>
+<td>Fly.io (shared-cpu-1x)</td>
+<td>$3.19</td>
+</tr>
+<tr>
+<td>Home server</td>
+<td>$0 (electricity only)</td>
+</tr>
+</tbody></table>
+<p><strong>Total all-in cost: $8-15/month</strong> for a fully autonomous 24/7 thought leadership agent.</p>
+<hr>
+<h2>Session Management</h2>
+<p>The most critical piece for 24/7 operation is maintaining authenticated sessions:</p>
+<pre><code class="language-javascript">class SessionManager {
+  constructor(cookiePath = &#39;data/session.json&#39;) {
+    this.cookiePath = cookiePath;
+  }
+
+  async save(page) {
+    const cookies = await page.cookies(&#39;https://x.com&#39;);
+    fs.writeFileSync(this.cookiePath, JSON.stringify(cookies, null, 2));
+    log(&#39;Session saved&#39;);
+  }
+
+  async restore(page) {
+    if (!fs.existsSync(this.cookiePath)) {
+      throw new Error(&#39;No session file — manual login required first&#39;);
+    }
+    const cookies = JSON.parse(fs.readFileSync(this.cookiePath, &#39;utf8&#39;));
+    await page.setCookie(...cookies);
+    log(&#39;Session restored&#39;);
+  }
+
+  async isValid(page) {
+    await page.goto(&#39;https://x.com/home&#39;, { waitUntil: &#39;networkidle2&#39; });
+    const isLoggedIn = await page.evaluate(() =&gt; {
+      return !!document.querySelector(&#39;a[data-testid=&quot;AppTabBar_Profile_Link&quot;]&#39;);
+    });
+    return isLoggedIn;
+  }
+
+  async refresh(page) {
+    // Sessions typically last 30-90 days
+    // Periodic cookie refresh prevents expiration
+    await this.save(page);
+  }
+}
+</code></pre>
+<p><strong>Initial setup requires one manual login:</strong></p>
+<ol>
+<li>Launch browser in headed mode (non-headless)</li>
+<li>Navigate to x.com and log in manually</li>
+<li>Script captures and saves cookies</li>
+<li>All subsequent runs use saved cookies</li>
+</ol>
+<hr>
+<h2>Monitoring &amp; Alerts</h2>
+<h3>Webhook Notifications</h3>
+<pre><code class="language-javascript">const notify = async (event, data) =&gt; {
+  if (!process.env.WEBHOOK_URL) return;
+  await fetch(process.env.WEBHOOK_URL, {
+    method: &#39;POST&#39;,
+    headers: { &#39;Content-Type&#39;: &#39;application/json&#39; },
+    body: JSON.stringify({
+      event,
+      timestamp: new Date().toISOString(),
+      ...data,
+    }),
+  });
+};
+
+// Example alerts:
+// notify(&#39;session_expired&#39;, { action: &#39;manual re-login required&#39; })
+// notify(&#39;rate_limited&#39;, { action: &#39;likes&#39;, remaining: 0 })
+// notify(&#39;daily_summary&#39;, { likes: 142, follows: 23, comments: 8 })
+// notify(&#39;content_posted&#39;, { type: &#39;thread&#39;, topic: &#39;AI agents&#39; })
+</code></pre>
+<p>Supports: Discord webhooks, Slack, Telegram bots, email via SMTP, or custom endpoints.</p>
+<hr>
+<h2>Security Considerations</h2>
+<ol>
+<li><strong>Credentials</strong>: Never store passwords. Use cookie-based session persistence only.</li>
+<li><strong>API keys</strong>: Use environment variables, never commit to code.</li>
+<li><strong>Session files</strong>: Encrypt at rest (<code>session.json</code> contains auth cookies).</li>
+<li><strong>Network</strong>: Run behind VPN if IP reputation matters.</li>
+<li><strong>Logs</strong>: Redact sensitive data from action logs.</li>
+<li><strong>Access</strong>: Restrict SSH/admin access to the deployment server.</li>
+</ol>
+<hr>
+<h2>Getting Started</h2>
+<pre><code class="language-bash"># 1. Install dependencies
+npm install puppeteer-extra puppeteer-extra-plugin-stealth better-sqlite3
+
+# 2. Create config
+cp config/agent-config.example.json config/agent-config.json
+# Edit with your niche, persona, API keys
+
+# 3. Initial login (headed browser)
+node src/agents/setup.js --login
+# → Opens browser, you log in manually, cookies saved
+
+# 4. Test run (5-minute quick session)
+node src/agents/thoughtLeaderAgent.js --test
+
+# 5. Start 24/7 operation
+pm2 start ecosystem.config.js
+# or
+docker compose -f docker-compose.agent.yml up -d
+</code></pre>
+<hr>
+<p><em>See the full research paper at <code>docs/research/algorithm-cultivation.md</code> and the build prompts at <code>prompts/09-algorithm-cultivation-system.md</code>.</em></p>
+
+
+        <div class="cta-box">
+          <h3>⚡ Explore XActions</h3>
+          <p>100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/docs">Browse All Documentation</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 In This Section</h3>
+                <a href="/docs/research/algorithm-cultivation">🔬 Algorithmic Feed Cultivation: A Technical Research Paper on Automated Thought Leadership via Platform Signal Training</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/docs">All Documentation</a>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

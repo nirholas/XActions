@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tutorial: Community Management, Lists &amp; Spaces with Claude | XActions</title>
+  <meta name="description" content="You are my X/Twitter community management expert. I want to use XActions to manage my X communities, organize my following with lists, and discover Twitter Spac">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, open source, communities, lists, spaces, tutorial:, community, management,, claude, claude tutorials">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Tutorial: Community Management, Lists &amp; Spaces with Claude — XActions">
+  <meta property="og:description" content="You are my X/Twitter community management expert. I want to use XActions to manage my X communities, organize my following with lists, and discover Twitter Spac">
+  <meta property="og:url" content="https://xactions.app/docs/tutorials/10-communities-lists-spaces">
+  <meta property="og:site_name" content="XActions">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Tutorial: Community Management, Lists &amp; Spaces with Claude — XActions">
+  <meta name="twitter:description" content="You are my X/Twitter community management expert. I want to use XActions to manage my X communities, organize my following with lists, and discover Twitter Spac">
+
+  <link rel="canonical" href="https://xactions.app/docs/tutorials/10-communities-lists-spaces">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Tutorial: Community Management, Lists & Spaces with Claude | XActions",
+    "description": "You are my X/Twitter community management expert. I want to use XActions to manage my X communities, organize my following with lists, and discover Twitter Spac",
+    "url": "https://xactions.app/docs/tutorials/10-communities-lists-spaces",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-25",
+    "dateModified": "2026-02-25",
+    "mainEntityOfPage": "https://xactions.app/docs/tutorials/10-communities-lists-spaces",
+    "articleSection": "Claude Tutorials",
+    "keywords": "xactions, twitter automation, x automation, free, open source, communities, lists, spaces, tutorial:, community, management,, claude, claude tutorials"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Claude Tutorials", "item": "https://xactions.app/docs/tutorials" },
+      { "@type": "ListItem", "position": 4, "name": "Tutorial: Community Management, Lists & Spaces with Claude", "item": "https://xactions.app/docs/tutorials/10-communities-lists-spaces" }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .article pre { font-size: 0.75rem; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <main class="main-content">
+      <header class="main-header">
+        <h1>🤖 Tutorial: Community Management, Lists &amp; Spaces with Claude</h1>
+        <div class="breadcrumb">
+          <a href="https://xactions.app">Home</a> › <a href="https://xactions.app/docs">Docs</a> › <a href="https://xactions.app/docs/tutorials">Claude Tutorials</a> › Tutorial: Community Management, Lists &amp; Spaces with Claude
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Claude Tutorials</span>
+        <h1>Tutorial: Community Management, Lists &amp; Spaces with Claude</h1>
+<p>You are my X/Twitter community management expert. I want to use XActions to manage my X communities, organize my following with lists, and discover Twitter Spaces. Help me build and curate my network.</p>
+<h2>Context</h2>
+<p>I&#39;m using XActions (<a href="https://github.com/nirholas/XActions">https://github.com/nirholas/XActions</a>), an open-source X/Twitter toolkit with community, list, and Spaces management features — via MCP tools and browser console scripts.</p>
+<h2>What I Need You To Do</h2>
+<h3>Part 1: Leave All Communities</h3>
+<p>If I&#39;ve joined too many communities and want to clean up:</p>
+<ol>
+<li><p><strong>The problem:</strong> X communities clutter notifications and feed</p>
+</li>
+<li><p><strong>Using <code>src/leaveAllCommunities.js</code></strong> browser script:</p>
+<ul>
+<li>Navigate to your Communities page (<code>x.com/communities</code>)</li>
+<li>Paste the script in DevTools console</li>
+<li>How it works:<ul>
+<li>Finds all community links on the page</li>
+<li>For each community, navigates to it</li>
+<li>Finds the &quot;Joined&quot; button (<code>button[aria-label^=&quot;Joined&quot;]</code>)</li>
+<li>Clicks to leave</li>
+<li>Confirms the action</li>
+<li>Uses sessionStorage to track which communities were processed</li>
+<li>Avoids infinite loops with the tracking system</li>
+</ul>
+</li>
+<li>The script handles page navigation automatically</li>
+</ul>
+</li>
+<li><p><strong>Selective community leaving:</strong></p>
+<ul>
+<li>Instead of leaving ALL, modify the script to keep some</li>
+<li>Review your communities list first</li>
+<li>Identify which ones provide value and which are noise</li>
+</ul>
+</li>
+</ol>
+<h3>Part 2: Join New Communities</h3>
+<p>Using <code>src/joinCommunities.js</code>:</p>
+<ol>
+<li><p><strong>Find relevant communities:</strong></p>
+<ul>
+<li>Search for communities in your niche</li>
+<li>Check member count and activity level</li>
+<li>Look for communities run by people you respect</li>
+</ul>
+</li>
+<li><p><strong>How the join script works:</strong></p>
+<ul>
+<li>Navigate to community search or explore</li>
+<li>Script finds community cards and join buttons</li>
+<li>Clicks join with appropriate delays</li>
+<li>Tracks which communities you joined</li>
+</ul>
+</li>
+<li><p><strong>Community strategy:</strong></p>
+<ul>
+<li>Join 5-10 active, relevant communities</li>
+<li>Engage regularly (not just post and leave)</li>
+<li>Build relationships within the community</li>
+<li>Share value, not just self-promotion</li>
+</ul>
+</li>
+</ol>
+<h3>Part 3: List Management with MCP</h3>
+<p>X Lists are the most underrated feature for organizing your feed. Help me master them:</p>
+<ol>
+<li><p><strong>View my lists</strong> using <code>x_get_lists</code>:</p>
+<pre><code>&quot;Show me all my X lists&quot;
+</code></pre>
+</li>
+<li><p><strong>Get list members</strong> using <code>x_get_list_members</code>:</p>
+<pre><code>&quot;Show me the members of this list: [list URL]&quot;
+</code></pre>
+</li>
+<li><p><strong>List management with <code>src/listManager.js</code></strong> browser script:</p>
+<ul>
+<li>Create new lists</li>
+<li>Add/remove members</li>
+<li>Organize by category</li>
+</ul>
+</li>
+<li><p><strong>Recommended list structure:</strong></p>
+<p><strong>Must-Have Lists:</strong></p>
+<ul>
+<li><strong>🏆 VIPs</strong> — Your most important connections (10-20 people)</li>
+<li><strong>📰 News Sources</strong> — Media accounts and journalists</li>
+<li><strong>🧠 Thought Leaders</strong> — Influencers in your niche</li>
+<li><strong>🤝 Mutuals</strong> — People who engage with you regularly</li>
+<li><strong>👀 Competitors</strong> — Accounts to monitor</li>
+<li><strong>🌱 Prospects</strong> — Potential connections/clients</li>
+</ul>
+<p><strong>Niche Lists:</strong></p>
+<ul>
+<li><strong>💻 Tech</strong> — Developer/tech accounts</li>
+<li><strong>📈 Business</strong> — Entrepreneurs and founders</li>
+<li><strong>🎨 Creative</strong> — Designers, artists, writers</li>
+<li><strong>📚 Learning</strong> — Educational content creators</li>
+</ul>
+</li>
+<li><p><strong>How to use lists effectively:</strong></p>
+<ul>
+<li>Check VIP list daily (never miss their posts)</li>
+<li>Check competitor list weekly</li>
+<li>Use lists as your &quot;filtered feed&quot; separate from the algorithm</li>
+<li>Private lists for sensitive categorization (competitors, prospects)</li>
+</ul>
+</li>
+</ol>
+<h3>Part 4: List Manager Script</h3>
+<p>Walk me through <code>src/listManager.js</code> in detail:</p>
+<ol>
+<li><p><strong>Navigate to Lists</strong> (x.com/lists)</p>
+</li>
+<li><p><strong>Available actions:</strong></p>
+<ul>
+<li>Create a new list</li>
+<li>Add members to existing lists</li>
+<li>Remove members</li>
+<li>Delete lists</li>
+<li>Export list members</li>
+</ul>
+</li>
+<li><p><strong>Bulk operations:</strong></p>
+<ul>
+<li>Add multiple users to a list at once</li>
+<li>Move users between lists</li>
+<li>Merge lists</li>
+</ul>
+</li>
+</ol>
+<h3>Part 5: Spaces Discovery &amp; Management</h3>
+<p>Use Spaces tools to find live conversations:</p>
+<ol>
+<li><p><strong>Find live Spaces</strong> using <code>x_get_spaces</code>:</p>
+<pre><code>&quot;Show me live X Spaces about AI&quot;
+&quot;What Spaces are happening right now?&quot;
+&quot;Find scheduled Spaces about crypto for this week&quot;
+</code></pre>
+<p>Parameters:</p>
+<ul>
+<li><code>filter</code>: live, scheduled, or all</li>
+<li><code>topic</code>: Topic filter</li>
+<li><code>limit</code>: Maximum Spaces to return</li>
+</ul>
+</li>
+<li><p><strong>Scrape Space details</strong> using <code>x_scrape_space</code>:</p>
+<pre><code>&quot;Get details about this Space: [Space URL]&quot;
+</code></pre>
+<p>Returns:</p>
+<ul>
+<li>Title and description</li>
+<li>Host information</li>
+<li>Speaker list</li>
+<li>Listener count</li>
+<li>Duration</li>
+<li>Topics/tags</li>
+</ul>
+</li>
+<li><p><strong>Using <code>src/scrapeSpaces.js</code></strong> browser script:</p>
+<ul>
+<li>Scrape all visible Spaces from the Spaces tab</li>
+<li>Extract metadata for analysis</li>
+<li>Find Spaces in your niche</li>
+</ul>
+</li>
+<li><p><strong>Spaces strategy for growth:</strong></p>
+<ul>
+<li>Join Spaces in your niche as a listener</li>
+<li>Request to speak when you have valuable input</li>
+<li>Host your own Spaces (builds authority)</li>
+<li>Network with other speakers</li>
+<li>Promote upcoming Spaces to your followers</li>
+</ul>
+</li>
+</ol>
+<h3>Part 6: Spaces Manager (Puppeteer)</h3>
+<p>For programmatic usage, the <code>spacesManager</code> module:</p>
+<pre><code class="language-javascript">import { spacesManager } from &#39;xactions&#39;;
+
+// Available functions:
+// - Find live and scheduled Spaces
+// - Get Space details and speaker info
+// - Join Spaces programmatically
+</code></pre>
+<p>Walk me through integrating Spaces discovery into a weekly routine.</p>
+<h3>Part 7: Community + List + Spaces Strategy</h3>
+<p>Help me build a complete community management workflow:</p>
+<p><strong>Daily (10 min):</strong></p>
+<ol>
+<li>Check VIP list — engage with their latest posts</li>
+<li>Check notifications for community mentions</li>
+<li>Join one relevant Space as a listener</li>
+</ol>
+<p><strong>Weekly (20 min):</strong></p>
+<ol>
+<li>Review competitor list — what are they posting?</li>
+<li>Update lists — add new interesting accounts, remove inactive ones</li>
+<li>Host or co-host one Space in your niche</li>
+<li>Post in 2-3 communities you&#39;re active in</li>
+</ol>
+<p><strong>Monthly (30 min):</strong></p>
+<ol>
+<li>Community audit — leave dead communities, join active new ones</li>
+<li>List cleanup — reorganize lists based on changing interests</li>
+<li>Review Spaces activity — which topics/hosts draw the most listeners?</li>
+<li>Network with 5 new people from communities/Spaces</li>
+</ol>
+<h3>Part 8: Using Notifications Effectively</h3>
+<p>Use <code>x_get_notifications</code> to stay on top of community engagement:</p>
+<ol>
+<li><p><strong>Check notifications:</strong></p>
+<pre><code>&quot;Get my notifications from the last 24 hours, filtered by mentions&quot;
+</code></pre>
+<p>Parameters:</p>
+<ul>
+<li><code>limit</code>: Maximum notifications</li>
+<li><code>filter</code>: all, mentions, likes, follows</li>
+</ul>
+</li>
+<li><p><strong>Notification analysis:</strong></p>
+<ul>
+<li>Who&#39;s engaging with you most?</li>
+<li>Which community posts get engagement?</li>
+<li>Are there conversations worth jumping into?</li>
+</ul>
+</li>
+<li><p><strong>Using <code>src/notificationManager.js</code></strong> (Puppeteer module) or <code>scripts/manageNotifications.js</code>:</p>
+<ul>
+<li>Scrape and categorize notifications</li>
+<li>Mark as read</li>
+<li>Take action on specific notifications</li>
+</ul>
+</li>
+</ol>
+<h2>My Community Goals</h2>
+<p>(Replace before pasting)</p>
+<ul>
+<li>How many communities am I in? ROUGH_NUMBER</li>
+<li>Communities I want to stay in: community1, community2</li>
+<li>My niche for new communities: YOUR_NICHE</li>
+<li>Current number of lists: NUMBER</li>
+<li>Spaces topics I&#39;m interested in: topic1, topic2</li>
+</ul>
+<p>Start with Part 1 — help me clean up my communities and set up an organized system.</p>
+
+
+        <div class="cta-box">
+          <h3>⚡ Explore XActions</h3>
+          <p>100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/docs">Browse All Documentation</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 In This Section</h3>
+                <a href="/docs/tutorials/01-mcp-setup-and-first-commands">🤖 Tutorial: Setting Up XActions MCP Server with Claude</a>
+        <a href="/docs/tutorials/02-unfollow-non-followers-cleanup">🤖 Tutorial: Unfollow Non-Followers &amp; Follower Cleanup with Claude</a>
+        <a href="/docs/tutorials/03-growth-automation-suite">🤖 Tutorial: Growth Automation Suite — Grow Your X Account on Autopilot</a>
+        <a href="/docs/tutorials/04-scraping-research-analysis">🤖 Tutorial: Tweet Scraping, Profile Analysis &amp; Research with Claude</a>
+        <a href="/docs/tutorials/05-content-posting-threads-scheduling">🤖 Tutorial: Content Posting, Threads, Polls &amp; Scheduling with Claude</a>
+        <a href="/docs/tutorials/06-analytics-competitor-intelligence">🤖 Tutorial: Engagement Analytics, Best Time to Post &amp; Competitor Intelligence</a>
+        <a href="/docs/tutorials/07-auto-liker-auto-commenter">🤖 Tutorial: Auto-Liker &amp; Auto-Commenter — Engagement Automation with Claude</a>
+        <a href="/docs/tutorials/08-blocking-muting-spam-protection">🤖 Tutorial: Mass Block, Unblock, Mute &amp; Spam Protection with Claude</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/docs">All Documentation</a>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

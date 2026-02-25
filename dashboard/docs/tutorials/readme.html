@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XActions Claude Tutorial Prompts | XActions</title>
+  <meta name="description" content="22 ready-to-paste prompt files that turn Claude into your personal X/Twitter automation expert. Each file is a complete, self-contained tutorial covering one fe">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, open source, readme, claude, tutorial, prompts, claude tutorials">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="XActions Claude Tutorial Prompts — XActions">
+  <meta property="og:description" content="22 ready-to-paste prompt files that turn Claude into your personal X/Twitter automation expert. Each file is a complete, self-contained tutorial covering one fe">
+  <meta property="og:url" content="https://xactions.app/docs/tutorials/readme">
+  <meta property="og:site_name" content="XActions">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="XActions Claude Tutorial Prompts — XActions">
+  <meta name="twitter:description" content="22 ready-to-paste prompt files that turn Claude into your personal X/Twitter automation expert. Each file is a complete, self-contained tutorial covering one fe">
+
+  <link rel="canonical" href="https://xactions.app/docs/tutorials/readme">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "XActions Claude Tutorial Prompts | XActions",
+    "description": "22 ready-to-paste prompt files that turn Claude into your personal X/Twitter automation expert. Each file is a complete, self-contained tutorial covering one fe",
+    "url": "https://xactions.app/docs/tutorials/readme",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-25",
+    "dateModified": "2026-02-25",
+    "mainEntityOfPage": "https://xactions.app/docs/tutorials/readme",
+    "articleSection": "Claude Tutorials",
+    "keywords": "xactions, twitter automation, x automation, free, open source, readme, claude, tutorial, prompts, claude tutorials"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Claude Tutorials", "item": "https://xactions.app/docs/tutorials" },
+      { "@type": "ListItem", "position": 4, "name": "XActions Claude Tutorial Prompts", "item": "https://xactions.app/docs/tutorials/readme" }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .article pre { font-size: 0.75rem; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <main class="main-content">
+      <header class="main-header">
+        <h1>🤖 XActions Claude Tutorial Prompts</h1>
+        <div class="breadcrumb">
+          <a href="https://xactions.app">Home</a> › <a href="https://xactions.app/docs">Docs</a> › <a href="https://xactions.app/docs/tutorials">Claude Tutorials</a> › XActions Claude Tutorial Prompts
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Claude Tutorials</span>
+        <h1>XActions Claude Tutorial Prompts</h1>
+<blockquote>
+<p><strong>22 ready-to-paste prompt files</strong> that turn Claude into your personal X/Twitter automation expert. Each file is a complete, self-contained tutorial covering one feature area of <a href="https://github.com/nirholas/XActions">XActions</a>.</p>
+</blockquote>
+<h2>How to Use</h2>
+<ol>
+<li><strong>Pick a tutorial</strong> from the list below</li>
+<li><strong>Open the <code>.md</code> file</strong> and copy the entire content</li>
+<li><strong>Paste into a new Claude chat</strong> (or any AI assistant)</li>
+<li><strong>Fill in your details</strong> at the bottom (marked with placeholders)</li>
+<li><strong>Follow Claude&#39;s step-by-step guidance</strong></li>
+</ol>
+<p>Each prompt is designed to:</p>
+<ul>
+<li>Give Claude full context about XActions features</li>
+<li>Walk you through setup, configuration, and usage</li>
+<li>Include real code examples and configurations</li>
+<li>Let you customize everything to your needs</li>
+</ul>
+<p>|----------|-------------|<br>| 01 | <a href="01-mcp-setup-first-commands.md">MCP Setup &amp; First Commands</a> | Install XActions MCP server, connect to Claude Desktop, run your first commands |<br>| 15 | <a href="15-cli-mastery-guide.md">CLI Mastery Guide</a> | Master the <code>xactions</code> command-line tool — all 12 commands with examples |<br>| 16 | <a href="16-browser-automation-framework.md">Browser Automation Framework</a> | Learn the core.js + actions.js browser automation system |</p>
+<h3>Follower Management</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Tutorial</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>02</td>
+<td><a href="02-unfollow-non-followers-cleanup.md">Unfollow Non-Followers &amp; Cleanup</a></td>
+<td>Find and remove people who don&#39;t follow you back</td>
+</tr>
+<tr>
+<td>03</td>
+<td><a href="03-growth-automation-suite.md">Growth Automation Suite</a></td>
+<td>Keyword follow, auto-like, smart unfollow — the complete growth engine</td>
+</tr>
+<tr>
+<td>07</td>
+<td><a href="07-auto-liker-auto-commenter.md">Auto-Liker &amp; Auto-Commenter</a></td>
+<td>Automated engagement with keyword targeting and templates</td>
+</tr>
+</tbody></table>
+<h3>Content &amp; Posting</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Tutorial</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>05</td>
+<td><a href="05-content-posting-threads-scheduling.md">Content Posting, Threads &amp; Scheduling</a></td>
+<td>Post tweets, create threads, schedule content, manage polls</td>
+</tr>
+<tr>
+<td>13</td>
+<td><a href="13-content-cleanup-unlike-clear.md">Content Cleanup (Unlike, Clear)</a></td>
+<td>Mass unlike, remove reposts, delete old tweets</td>
+</tr>
+</tbody></table>
+<h3>Analytics &amp; Intelligence</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Tutorial</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>04</td>
+<td><a href="04-scraping-research-analysis.md">Scraping, Research &amp; Analysis</a></td>
+<td>Scrape profiles, followers, tweets, hashtags — extract data from X</td>
+</tr>
+<tr>
+<td>06</td>
+<td><a href="06-analytics-competitor-intelligence.md">Analytics &amp; Competitor Intelligence</a></td>
+<td>Track your performance and analyze competitors</td>
+</tr>
+<tr>
+<td>14</td>
+<td><a href="14-brand-monitoring-business-tools.md">Brand Monitoring &amp; Business Tools</a></td>
+<td>Real-time brand monitoring, streaming, and business intelligence</td>
+</tr>
+<tr>
+<td>18</td>
+<td><a href="18-grok-ai-sentiment-analysis.md">Grok AI &amp; Sentiment Analysis</a></td>
+<td>Query Grok AI, analyze sentiment, monitor reputation</td>
+</tr>
+</tbody></table>
+<h3>Media &amp; Export</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Tutorial</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>12</td>
+<td><a href="12-bookmark-management-export.md">Bookmark Management &amp; Export</a></td>
+<td>Save, organize, export, and manage bookmarks</td>
+</tr>
+<tr>
+<td>17</td>
+<td><a href="17-video-download-thread-media.md">Video Download, Threads &amp; Media</a></td>
+<td>Download videos, unroll threads, scrape media, export content</td>
+</tr>
+</tbody></table>
+<h3>Communication</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Tutorial</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>08</td>
+<td><a href="08-blocking-muting-spam-protection.md">Blocking, Muting &amp; Spam Protection</a></td>
+<td>Block, mute, and protect your account from spam</td>
+</tr>
+<tr>
+<td>09</td>
+<td><a href="09-dm-management-automation.md">DM Management &amp; Automation</a></td>
+<td>Send, read, export, and automate direct messages</td>
+</tr>
+<tr>
+<td>10</td>
+<td><a href="10-communities-lists-spaces.md">Communities, Lists &amp; Spaces</a></td>
+<td>Manage lists, participate in Spaces, Community features</td>
+</tr>
+<tr>
+<td>19</td>
+<td><a href="19-customer-service-bot.md">Customer Service Bot</a></td>
+<td>Automate customer support with templated responses and business hours</td>
+</tr>
+</tbody></table>
+<h3>Account &amp; Settings</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Tutorial</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>11</td>
+<td><a href="11-profile-backup-settings.md">Profile, Backup &amp; Settings</a></td>
+<td>Update profile, manage settings, privacy, premium features</td>
+</tr>
+<tr>
+<td>20</td>
+<td><a href="20-session-logging-safety.md">Session Logging &amp; Safety</a></td>
+<td>Track automation activity, manage rate limits, stay safe</td>
+</tr>
+<tr>
+<td>21</td>
+<td><a href="21-workflows-account-portability.md">Workflows &amp; Account Portability</a></td>
+<td>Build automated workflows, export account, migrate to Bluesky/Mastodon</td>
+</tr>
+</tbody></table>
+<h3>Advanced</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Tutorial</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>22</td>
+<td><a href="22-advanced-power-user-playbook.md">Advanced Power User Playbook</a></td>
+<td>10 multi-feature strategies — growth engine, brand command center, content machine, and more</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Quick Start Recommendations</h2>
+<p><strong>&quot;I just want to clean up my account&quot;</strong><br>→ Start with <a href="02-unfollow-non-followers-cleanup.md">Tutorial 02</a> (Unfollow Non-Followers)</p>
+<p><strong>&quot;I want to grow my following&quot;</strong><br>→ Start with <a href="03-growth-automation-suite.md">Tutorial 03</a> (Growth Suite), then <a href="22-advanced-power-user-playbook.md">Tutorial 22</a> (Power User Playbook)</p>
+<p><strong>&quot;I want to use XActions with Claude Desktop (MCP)&quot;</strong><br>→ Start with <a href="01-mcp-setup-first-commands.md">Tutorial 01</a> (MCP Setup)</p>
+<p><strong>&quot;I want to analyze my competitors&quot;</strong><br>→ Start with <a href="06-analytics-competitor-intelligence.md">Tutorial 06</a> (Analytics &amp; Intelligence)</p>
+<p><strong>&quot;I want to automate everything&quot;</strong><br>→ Start with <a href="21-workflows-account-portability.md">Tutorial 21</a> (Workflows), then <a href="22-advanced-power-user-playbook.md">Tutorial 22</a> (Power User Playbook)</p>
+<p><strong>&quot;I want to monitor my brand&quot;</strong><br>→ Start with <a href="18-grok-ai-sentiment-analysis.md">Tutorial 18</a> (Sentiment Analysis) + <a href="14-brand-monitoring-business-tools.md">Tutorial 14</a> (Brand Monitoring)</p>
+<p><strong>&quot;I want to download/save content from X&quot;</strong><br>→ Start with <a href="17-video-download-thread-media.md">Tutorial 17</a> (Video/Media) + <a href="12-bookmark-management-export.md">Tutorial 12</a> (Bookmarks)</p>
+<hr>
+<h2>Coverage Map</h2>
+<p>These 22 tutorials cover <strong>every XActions feature</strong>:</p>
+<ul>
+<li>✅ <strong>49+ MCP tools</strong> — Covered across tutorials 01-22</li>
+<li>✅ <strong>15 browser automation scripts</strong> — Tutorials 03, 07, 16, 19, 20</li>
+<li>✅ <strong>12 CLI commands</strong> — Tutorial 15</li>
+<li>✅ <strong>5 scraper modules</strong> — Tutorials 04, 17</li>
+<li>✅ <strong>40+ standalone scripts</strong> — Tutorials 04, 12, 13, 17</li>
+<li>✅ <strong>Workflow engine</strong> — Tutorial 21</li>
+<li>✅ <strong>Real-time streaming</strong> — Tutorials 14, 21</li>
+<li>✅ <strong>Sentiment analysis</strong> — Tutorial 18</li>
+<li>✅ <strong>Account portability</strong> — Tutorial 21</li>
+<li>✅ <strong>Customer service</strong> — Tutorial 19</li>
+<li>✅ <strong>Session logging</strong> — Tutorial 20</li>
+</ul>
+<hr>
+<h2>About XActions</h2>
+<p><a href="https://github.com/nirholas/XActions">XActions</a> is the complete X/Twitter automation toolkit — scrapers, MCP server for AI agents, CLI, browser scripts. No API fees. Open source. By <a href="https://x.com/nichxbt">nichxbt</a>.</p>
+<p><strong>Star us on GitHub:</strong> <a href="https://github.com/nirholas/XActions">https://github.com/nirholas/XActions</a> ⭐</p>
+
+
+        <div class="cta-box">
+          <h3>⚡ Explore XActions</h3>
+          <p>100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/docs">Browse All Documentation</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 In This Section</h3>
+                <a href="/docs/tutorials/01-mcp-setup-and-first-commands">🤖 Tutorial: Setting Up XActions MCP Server with Claude</a>
+        <a href="/docs/tutorials/02-unfollow-non-followers-cleanup">🤖 Tutorial: Unfollow Non-Followers &amp; Follower Cleanup with Claude</a>
+        <a href="/docs/tutorials/03-growth-automation-suite">🤖 Tutorial: Growth Automation Suite — Grow Your X Account on Autopilot</a>
+        <a href="/docs/tutorials/04-scraping-research-analysis">🤖 Tutorial: Tweet Scraping, Profile Analysis &amp; Research with Claude</a>
+        <a href="/docs/tutorials/05-content-posting-threads-scheduling">🤖 Tutorial: Content Posting, Threads, Polls &amp; Scheduling with Claude</a>
+        <a href="/docs/tutorials/06-analytics-competitor-intelligence">🤖 Tutorial: Engagement Analytics, Best Time to Post &amp; Competitor Intelligence</a>
+        <a href="/docs/tutorials/07-auto-liker-auto-commenter">🤖 Tutorial: Auto-Liker &amp; Auto-Commenter — Engagement Automation with Claude</a>
+        <a href="/docs/tutorials/08-blocking-muting-spam-protection">🤖 Tutorial: Mass Block, Unblock, Mute &amp; Spam Protection with Claude</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/docs">All Documentation</a>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

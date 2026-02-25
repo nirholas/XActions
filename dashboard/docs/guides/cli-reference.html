@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XActions CLI Reference | XActions</title>
+  <meta name="description" content="The Complete X/Twitter Automation Toolkit">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, open source, cli, reference, guides &amp; reference">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="XActions CLI Reference — XActions">
+  <meta property="og:description" content="The Complete X/Twitter Automation Toolkit">
+  <meta property="og:url" content="https://xactions.app/docs/guides/cli-reference">
+  <meta property="og:site_name" content="XActions">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="XActions CLI Reference — XActions">
+  <meta name="twitter:description" content="The Complete X/Twitter Automation Toolkit">
+
+  <link rel="canonical" href="https://xactions.app/docs/guides/cli-reference">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "XActions CLI Reference | XActions",
+    "description": "The Complete X/Twitter Automation Toolkit",
+    "url": "https://xactions.app/docs/guides/cli-reference",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-25",
+    "dateModified": "2026-02-25",
+    "mainEntityOfPage": "https://xactions.app/docs/guides/cli-reference",
+    "articleSection": "Guides & Reference",
+    "keywords": "xactions, twitter automation, x automation, free, open source, cli, reference, guides & reference"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Guides & Reference", "item": "https://xactions.app/docs/guides" },
+      { "@type": "ListItem", "position": 4, "name": "XActions CLI Reference", "item": "https://xactions.app/docs/guides/cli-reference" }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .article pre { font-size: 0.75rem; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <main class="main-content">
+      <header class="main-header">
+        <h1>📖 XActions CLI Reference</h1>
+        <div class="breadcrumb">
+          <a href="https://xactions.app">Home</a> › <a href="https://xactions.app/docs">Docs</a> › <a href="https://xactions.app/docs/guides">Guides &amp; Reference</a> › XActions CLI Reference
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Guides &amp; Reference</span>
+        <h1>XActions CLI Reference</h1>
+<blockquote>
+<p><strong>The Complete X/Twitter Automation Toolkit</strong><br>Version 3.0.0 | Author: nich (<a href="https://x.com/nichxbt">@nichxbt</a>)</p>
+</blockquote>
+<p>The XActions CLI provides powerful command-line tools for X/Twitter automation, scraping, and data extraction. No Twitter API required — saves you $100-$5,000+/month in API costs.</p>
+<h2>Installation</h2>
+<p>Install XActions globally using npm:</p>
+<pre><code class="language-bash">npm install -g xactions
+</code></pre>
+<p>Verify the installation:</p>
+<pre><code class="language-bash">xactions --version
+# Output: 3.0.0
+
+xactions --help
+</code></pre>
+<h3>Requirements</h3>
+<ul>
+<li><strong>Node.js</strong>: v18.0.0 or higher</li>
+<li><strong>npm</strong>: v8.0.0 or higher</li>
+<li>A valid X/Twitter account for authentication</li>
+</ul>
+<hr>
+<h2>Quick Start</h2>
+<pre><code class="language-bash"># 1. Install XActions
+npm install -g xactions
+
+# 2. Authenticate with your X account
+xactions login
+
+# 3. Scrape a profile
+xactions profile elonmusk
+
+# 4. Get followers and save to file
+xactions followers elonmusk --limit 500 --output followers.json
+</code></pre>
+<hr>
+<h2>Authentication</h2>
+<p>XActions uses your X/Twitter session cookie for authentication. This approach bypasses API rate limits and doesn&#39;t require expensive API access.</p>
+<h3>xactions login</h3>
+<p>Set up authentication with your X/Twitter session cookie.</p>
+<p><strong>Syntax:</strong></p>
+<pre><code class="language-bash">xactions login
+</code></pre>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-bash">$ xactions login
+
+⚡ XActions Login Setup
+
+To get your auth_token cookie:
+1. Go to x.com and log in
+2. Open DevTools (F12) → Application → Cookies
+3. Find &quot;auth_token&quot; and copy its value
+
+? Enter your auth_token cookie: ********
+
+✓ Authentication saved!
+</code></pre>
+<p><strong>How to get your auth_token:</strong></p>
+<ol>
+<li>Open <a href="https://x.com">x.com</a> in your browser and log in</li>
+<li>Press <code>F12</code> to open Developer Tools</li>
+<li>Go to <strong>Application</strong> tab (Chrome) or <strong>Storage</strong> tab (Firefox)</li>
+<li>Expand <strong>Cookies</strong> → click on <code>https://x.com</code></li>
+<li>Find the cookie named <code>auth_token</code></li>
+<li>Copy the <strong>Value</strong> (a long hexadecimal string)</li>
+<li>Paste it when prompted by <code>xactions login</code></li>
+</ol>
+<blockquote>
+<p>⚠️ <strong>Security Note</strong>: Your auth_token is stored locally in <code>~/.xactions/config.json</code>. Never share this token with anyone.</p>
+</blockquote>
+<hr>
+<h3>xactions logout</h3>
+<p>Remove saved authentication credentials.</p>
+<p><strong>Syntax:</strong></p>
+<pre><code class="language-bash">xactions logout
+</code></pre>
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">$ xactions logout
+✓ Logged out successfully
+</code></pre>
+<hr>
+<h2>Commands</h2>
+<h3>xactions profile</h3>
+<p>Fetch detailed profile information for any X/Twitter user.</p>
+<p><strong>Syntax:</strong></p>
+<pre><code class="language-bash">xactions profile &lt;username&gt; [options]
+</code></pre>
+<p><strong>Arguments:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Description</th>
+<th>Required</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>username</code></td>
+<td>X/Twitter username (without the @)</td>
+<td>Yes</td>
+</tr>
+</tbody></table>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Alias</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>--json</code></td>
+<td><code>-j</code></td>
+<td>Output as raw JSON</td>
+<td>false</td>
+</tr>
+</tbody></table>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-bash"># Get profile with formatted output
+xactions profile elonmusk
+
+# Output:
+# ⚡ @elonmusk
+#
+#   Name:      Elon Musk
+#   Bio:       Mars &amp; Cars, Chips &amp; Dips
+#   Location:  𝕏
+#   Website:   x.com
+#   Joined:    June 2009
+#   Following: 800  Followers: 195.2M
+#   ✓ Verified
+
+# Get profile as JSON
+xactions profile elonmusk --json
+
+# Output:
+# {
+#   &quot;username&quot;: &quot;elonmusk&quot;,
+#   &quot;name&quot;: &quot;Elon Musk&quot;,
+#   &quot;bio&quot;: &quot;Mars &amp; Cars, Chips &amp; Dips&quot;,
+#   &quot;location&quot;: &quot;𝕏&quot;,
+#   &quot;website&quot;: &quot;x.com&quot;,
+#   &quot;joined&quot;: &quot;June 2009&quot;,
+#   &quot;following&quot;: 800,
+#   &quot;followers&quot;: 195200000,
+#   &quot;verified&quot;: true
+# }
+</code></pre>
+<hr>
+<h3>xactions followers</h3>
+<p>Scrape the followers list for any user.</p>
+<p><strong>Syntax:</strong></p>
+<pre><code class="language-bash">xactions followers &lt;username&gt; [options]
+</code></pre>
+<p><strong>Arguments:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Description</th>
+<th>Required</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>username</code></td>
+<td>X/Twitter username (without the @)</td>
+<td>Yes</td>
+</tr>
+</tbody></table>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Alias</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>--limit &lt;n&gt;</code></td>
+<td><code>-l</code></td>
+<td>Maximum followers to scrape</td>
+<td>100</td>
+</tr>
+<tr>
+<td><code>--output &lt;file&gt;</code></td>
+<td><code>-o</code></td>
+<td>Output file (.json or .csv)</td>
+<td>stdout</td>
+</tr>
+</tbody></table>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-bash"># Scrape 100 followers (default)
+xactions followers nichxbt
+
+# Scrape 500 followers and save to JSON
+xactions followers nichxbt --limit 500 --output followers.json
+
+# Scrape 1000 followers and save to CSV
+xactions followers nichxbt -l 1000 -o followers.csv
+
+# Pipe output to jq for processing
+xactions followers nichxbt --limit 50 | jq &#39;.[].username&#39;
+</code></pre>
+<p><strong>Output Schema (JSON):</strong></p>
+<pre><code class="language-json">[
+  {
+    &quot;username&quot;: &quot;user1&quot;,
+    &quot;name&quot;: &quot;User One&quot;,
+    &quot;bio&quot;: &quot;Developer &amp; Creator&quot;,
+    &quot;followers&quot;: 1500,
+    &quot;following&quot;: 200,
+    &quot;verified&quot;: false,
+    &quot;followsBack&quot;: true
+  }
+]
+</code></pre>
+<hr>
+<h3>xactions following</h3>
+<p>Scrape the accounts a user is following.</p>
+<p><strong>Syntax:</strong></p>
+<pre><code class="language-bash">xactions following &lt;username&gt; [options]
+</code></pre>
+<p><strong>Arguments:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Description</th>
+<th>Required</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>username</code></td>
+<td>X/Twitter username (without the @)</td>
+<td>Yes</td>
+</tr>
+</tbody></table>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Alias</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>--limit &lt;n&gt;</code></td>
+<td><code>-l</code></td>
+<td>Maximum accounts to scrape</td>
+<td>100</td>
+</tr>
+<tr>
+<td><code>--output &lt;file&gt;</code></td>
+<td><code>-o</code></td>
+<td>Output file (.json or .csv)</td>
+<td>stdout</td>
+</tr>
+</tbody></table>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-bash"># Scrape following list
+xactions following nichxbt
+
+# Scrape 200 accounts and save to JSON
+xactions following nichxbt --limit 200 --output following.json
+
+# Get following as CSV for spreadsheet analysis
+xactions following nichxbt -l 500 -o following.csv
+</code></pre>
+<hr>
+<h3>xactions non-followers</h3>
+<p>Analyze follow relationships to find accounts that don&#39;t follow you back.</p>
+<p><strong>Syntax:</strong></p>
+<pre><code class="language-bash">xactions non-followers &lt;username&gt; [options]
+</code></pre>
+<p><strong>Arguments:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Description</th>
+<th>Required</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>username</code></td>
+<td>Your X/Twitter username</td>
+<td>Yes</td>
+</tr>
+</tbody></table>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Alias</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>--limit &lt;n&gt;</code></td>
+<td><code>-l</code></td>
+<td>Maximum accounts to analyze</td>
+<td>500</td>
+</tr>
+<tr>
+<td><code>--output &lt;file&gt;</code></td>
+<td><code>-o</code></td>
+<td>Output file for full list</td>
+<td>stdout</td>
+</tr>
+</tbody></table>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-bash"># Analyze your follow relationships
+xactions non-followers nichxbt
+
+# Output:
+# 📊 Follow Analysis
+#
+#   Total Following: 450
+#   Mutuals:         320
+#   Non-Followers:   130
+#
+# Non-followers:
+#   @user1 - John Doe
+#   @user2 - Jane Smith
+#   @user3 - Bob Wilson
+#   ... and 127 more
+
+# Save full list of non-followers to file
+xactions non-followers nichxbt --limit 1000 --output non-followers.json
+
+# Analyze and export for batch unfollowing
+xactions non-followers myaccount -l 2000 -o cleanup-list.json
+</code></pre>
+<hr>
+<h3>xactions tweets</h3>
+<p>Scrape tweets from a user&#39;s timeline.</p>
+<p><strong>Syntax:</strong></p>
+<pre><code class="language-bash">xactions tweets &lt;username&gt; [options]
+</code></pre>
+<p><strong>Arguments:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Description</th>
+<th>Required</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>username</code></td>
+<td>X/Twitter username (without the @)</td>
+<td>Yes</td>
+</tr>
+</tbody></table>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Alias</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>--limit &lt;n&gt;</code></td>
+<td><code>-l</code></td>
+<td>Maximum tweets to scrape</td>
+<td>50</td>
+</tr>
+<tr>
+<td><code>--replies</code></td>
+<td><code>-r</code></td>
+<td>Include replies in results</td>
+<td>false</td>
+</tr>
+<tr>
+<td><code>--output &lt;file&gt;</code></td>
+<td><code>-o</code></td>
+<td>Output file (.json or .csv)</td>
+<td>stdout</td>
+</tr>
+</tbody></table>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-bash"># Scrape recent tweets
+xactions tweets elonmusk
+
+# Scrape 200 tweets including replies
+xactions tweets elonmusk --limit 200 --replies
+
+# Save tweets to JSON file
+xactions tweets elonmusk -l 100 -o elon-tweets.json
+
+# Export to CSV for spreadsheet analysis
+xactions tweets nichxbt --limit 500 --output tweets.csv
+</code></pre>
+<p><strong>Output Schema (JSON):</strong></p>
+<pre><code class="language-json">[
+  {
+    &quot;id&quot;: &quot;1234567890123456789&quot;,
+    &quot;text&quot;: &quot;Just shipped a new feature! 🚀&quot;,
+    &quot;timestamp&quot;: &quot;2025-12-15T10:30:00.000Z&quot;,
+    &quot;likes&quot;: 1500,
+    &quot;retweets&quot;: 200,
+    &quot;replies&quot;: 50,
+    &quot;views&quot;: 50000,
+    &quot;isReply&quot;: false,
+    &quot;isRetweet&quot;: false
+  }
+]
+</code></pre>
+<hr>
+<h3>xactions search</h3>
+<p>Search for tweets matching a query.</p>
+<p><strong>Syntax:</strong></p>
+<pre><code class="language-bash">xactions search &lt;query&gt; [options]
+</code></pre>
+<p><strong>Arguments:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Description</th>
+<th>Required</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>query</code></td>
+<td>Search query string</td>
+<td>Yes</td>
+</tr>
+</tbody></table>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Alias</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>--limit &lt;n&gt;</code></td>
+<td><code>-l</code></td>
+<td>Maximum results to return</td>
+<td>50</td>
+</tr>
+<tr>
+<td><code>--filter &lt;type&gt;</code></td>
+<td><code>-f</code></td>
+<td>Filter type: <code>latest</code>, <code>top</code>, <code>people</code>, <code>photos</code>, <code>videos</code></td>
+<td><code>latest</code></td>
+</tr>
+<tr>
+<td><code>--output &lt;file&gt;</code></td>
+<td><code>-o</code></td>
+<td>Output file</td>
+<td>stdout</td>
+</tr>
+</tbody></table>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-bash"># Search for tweets about Bitcoin
+xactions search &quot;bitcoin&quot;
+
+# Search with filter for top tweets
+xactions search &quot;AI agents&quot; --filter top --limit 100
+
+# Search for photos only
+xactions search &quot;sunset photography&quot; -f photos -l 50 -o photos.json
+
+# Search for people/accounts
+xactions search &quot;web3 developer&quot; --filter people
+
+# Complex query with quotes
+xactions search &#39;&quot;machine learning&quot; from:openai&#39; --limit 200
+
+# Save search results
+xactions search &quot;typescript tips&quot; -o ts-tips.json
+</code></pre>
+<p><strong>Search Operators:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Operator</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>from:username</code></td>
+<td>Tweets from a specific user</td>
+<td><code>from:nichxbt</code></td>
+</tr>
+<tr>
+<td><code>to:username</code></td>
+<td>Replies to a specific user</td>
+<td><code>to:elonmusk</code></td>
+</tr>
+<tr>
+<td><code>&quot;exact phrase&quot;</code></td>
+<td>Match exact phrase</td>
+<td><code>&quot;artificial intelligence&quot;</code></td>
+</tr>
+<tr>
+<td><code>filter:links</code></td>
+<td>Only tweets with links</td>
+<td><code>web3 filter:links</code></td>
+</tr>
+<tr>
+<td><code>filter:images</code></td>
+<td>Only tweets with images</td>
+<td><code>sunset filter:images</code></td>
+</tr>
+<tr>
+<td><code>min_faves:n</code></td>
+<td>Minimum likes</td>
+<td><code>javascript min_faves:100</code></td>
+</tr>
+<tr>
+<td><code>min_retweets:n</code></td>
+<td>Minimum retweets</td>
+<td><code>breaking min_retweets:50</code></td>
+</tr>
+<tr>
+<td><code>since:YYYY-MM-DD</code></td>
+<td>Tweets since date</td>
+<td><code>bitcoin since:2025-01-01</code></td>
+</tr>
+<tr>
+<td><code>until:YYYY-MM-DD</code></td>
+<td>Tweets until date</td>
+<td><code>crypto until:2025-06-01</code></td>
+</tr>
+<tr>
+<td><code>-word</code></td>
+<td>Exclude word</td>
+<td><code>crypto -scam</code></td>
+</tr>
+<tr>
+<td><code>OR</code></td>
+<td>Match either term</td>
+<td><code>bitcoin OR ethereum</code></td>
+</tr>
+</tbody></table>
+<hr>
+<h3>xactions hashtag</h3>
+<p>Scrape tweets containing a specific hashtag.</p>
+<p><strong>Syntax:</strong></p>
+<pre><code class="language-bash">xactions hashtag &lt;tag&gt; [options]
+</code></pre>
+<p><strong>Arguments:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Description</th>
+<th>Required</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>tag</code></td>
+<td>Hashtag to search (with or without #)</td>
+<td>Yes</td>
+</tr>
+</tbody></table>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Alias</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>--limit &lt;n&gt;</code></td>
+<td><code>-l</code></td>
+<td>Maximum tweets to scrape</td>
+<td>50</td>
+</tr>
+<tr>
+<td><code>--output &lt;file&gt;</code></td>
+<td><code>-o</code></td>
+<td>Output file</td>
+<td>stdout</td>
+</tr>
+</tbody></table>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-bash"># Scrape tweets with #buildinpublic
+xactions hashtag buildinpublic
+
+# With the # symbol (both work)
+xactions hashtag &quot;#100DaysOfCode&quot;
+
+# Scrape 200 tweets and save
+xactions hashtag AI --limit 200 --output ai-tweets.json
+
+# Track trending hashtag
+xactions hashtag trending -l 500 -o trending.json
+</code></pre>
+<hr>
+<h3>xactions thread</h3>
+<p>Scrape an entire tweet thread/conversation.</p>
+<p><strong>Syntax:</strong></p>
+<pre><code class="language-bash">xactions thread &lt;url&gt; [options]
+</code></pre>
+<p><strong>Arguments:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Description</th>
+<th>Required</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>url</code></td>
+<td>URL of any tweet in the thread</td>
+<td>Yes</td>
+</tr>
+</tbody></table>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Alias</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>--output &lt;file&gt;</code></td>
+<td><code>-o</code></td>
+<td>Output file</td>
+<td>stdout</td>
+</tr>
+</tbody></table>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-bash"># Scrape a thread (formatted output)
+xactions thread https://x.com/nichxbt/status/1234567890123456789
+
+# Output:
+# 🧵 Thread:
+#
+# 1. First tweet in the thread explaining the concept...
+#    Dec 15, 2025
+#
+# 2. Continuing with more details about implementation...
+#    Dec 15, 2025
+#
+# 3. Final thoughts and call to action...
+#    Dec 15, 2025
+
+# Save thread to file
+xactions thread https://x.com/user/status/123456789 -o thread.json
+</code></pre>
+<hr>
+<h3>xactions media</h3>
+<p>Scrape media (images, videos, GIFs) from a user&#39;s timeline.</p>
+<p><strong>Syntax:</strong></p>
+<pre><code class="language-bash">xactions media &lt;username&gt; [options]
+</code></pre>
+<p><strong>Arguments:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Description</th>
+<th>Required</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>username</code></td>
+<td>X/Twitter username (without the @)</td>
+<td>Yes</td>
+</tr>
+</tbody></table>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Alias</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>--limit &lt;n&gt;</code></td>
+<td><code>-l</code></td>
+<td>Maximum media items to scrape</td>
+<td>50</td>
+</tr>
+<tr>
+<td><code>--output &lt;file&gt;</code></td>
+<td><code>-o</code></td>
+<td>Output file</td>
+<td>stdout</td>
+</tr>
+</tbody></table>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-bash"># Scrape media from a user
+xactions media nichxbt
+
+# Scrape 100 media items
+xactions media photographer --limit 100 --output media.json
+
+# Short form
+xactions media artist -l 200 -o artist-media.json
+</code></pre>
+<p><strong>Output Schema (JSON):</strong></p>
+<pre><code class="language-json">[
+  {
+    &quot;type&quot;: &quot;image&quot;,
+    &quot;url&quot;: &quot;https://pbs.twimg.com/media/...&quot;,
+    &quot;tweetId&quot;: &quot;1234567890123456789&quot;,
+    &quot;tweetUrl&quot;: &quot;https://x.com/user/status/1234567890123456789&quot;,
+    &quot;timestamp&quot;: &quot;2025-12-15T10:30:00.000Z&quot;,
+    &quot;alt&quot;: &quot;Image description&quot;
+  }
+]
+</code></pre>
+<hr>
+<h3>xactions info</h3>
+<p>Display XActions information, version, and links.</p>
+<p><strong>Syntax:</strong></p>
+<pre><code class="language-bash">xactions info
+</code></pre>
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">$ xactions info
+
+⚡ XActions v3.0.0
+
+The Complete X/Twitter Automation Toolkit
+
+Features:
+  • Scrape profiles, followers, following, tweets
+  • Search tweets and hashtags
+  • Extract threads, media, and more
+  • Export to JSON or CSV
+  • No Twitter API required (saves $100-$5000+/mo)
+
+Author:
+  nich (@nichxbt) - https://github.com/nirholas
+
+Links:
+  Website:  https://xactions.app
+  GitHub:   https://github.com/nirholas/xactions
+  Docs:     https://xactions.app/docs
+
+Run &quot;xactions --help&quot; for all commands
+</code></pre>
+<hr>
+<h2>Output Formats</h2>
+<p>XActions supports two output formats: <strong>JSON</strong> and <strong>CSV</strong>.</p>
+<h3>JSON Output</h3>
+<p>JSON is the default format when using <code>--output</code> with a <code>.json</code> extension.</p>
+<pre><code class="language-bash"># Save as JSON
+xactions followers nichxbt -o followers.json
+</code></pre>
+<p><strong>Features:</strong></p>
+<ul>
+<li>Preserves all data types (numbers, booleans, nested objects)</li>
+<li>Easy to process with <code>jq</code>, Node.js, Python, etc.</li>
+<li>Suitable for programmatic use</li>
+</ul>
+<h3>CSV Output</h3>
+<p>Use <code>.csv</code> extension to export as comma-separated values.</p>
+<pre><code class="language-bash"># Save as CSV
+xactions followers nichxbt -o followers.csv
+</code></pre>
+<p><strong>Features:</strong></p>
+<ul>
+<li>Opens directly in Excel, Google Sheets, Numbers</li>
+<li>Great for data analysis and reporting</li>
+<li>Flattens nested data structures</li>
+</ul>
+<h3>Stdout Output</h3>
+<p>Without <code>--output</code>, data is printed to stdout as JSON.</p>
+<pre><code class="language-bash"># Print to terminal
+xactions followers nichxbt
+
+# Pipe to jq for processing
+xactions followers nichxbt | jq &#39;.[].username&#39;
+
+# Pipe to file
+xactions followers nichxbt &gt; followers.json
+
+# Pipe to another command
+xactions followers nichxbt | wc -l
+</code></pre>
+<hr>
+<h2>Environment Variables</h2>
+<p>XActions supports the following environment variables:</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>XACTIONS_AUTH_TOKEN</code></td>
+<td>X/Twitter auth_token cookie (alternative to login)</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>XACTIONS_CONFIG_DIR</code></td>
+<td>Custom config directory path</td>
+<td><code>~/.xactions</code></td>
+</tr>
+<tr>
+<td><code>XACTIONS_HEADLESS</code></td>
+<td>Run browser in headless mode</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>XACTIONS_TIMEOUT</code></td>
+<td>Request timeout in milliseconds</td>
+<td><code>30000</code></td>
+</tr>
+<tr>
+<td><code>XACTIONS_PROXY</code></td>
+<td>HTTP/SOCKS proxy URL</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>DEBUG</code></td>
+<td>Enable debug logging (<code>xactions:*</code>)</td>
+<td>—</td>
+</tr>
+</tbody></table>
+<h3>Examples</h3>
+<pre><code class="language-bash"># Use auth token from environment
+export XACTIONS_AUTH_TOKEN=&quot;your_auth_token_here&quot;
+xactions followers nichxbt
+
+# Use a proxy
+export XACTIONS_PROXY=&quot;http://proxy.example.com:8080&quot;
+xactions profile elonmusk
+
+# Enable debug mode
+DEBUG=xactions:* xactions followers nichxbt
+
+# Custom config directory
+XACTIONS_CONFIG_DIR=/custom/path xactions login
+
+# Inline environment variables
+XACTIONS_HEADLESS=false xactions profile nichxbt
+</code></pre>
+<hr>
+<h2>Configuration</h2>
+<p>XActions stores configuration in <code>~/.xactions/config.json</code>.</p>
+<h3>Config File Location</h3>
+<pre><code>~/.xactions/
+├── config.json      # Authentication and settings
+└── cache/           # Temporary cache (optional)
+</code></pre>
+<h3>Config File Structure</h3>
+<pre><code class="language-json">{
+  &quot;authToken&quot;: &quot;your_auth_token_here&quot;,
+  &quot;headless&quot;: true,
+  &quot;timeout&quot;: 30000,
+  &quot;proxy&quot;: null
+}
+</code></pre>
+<h3>Manual Configuration</h3>
+<p>You can manually edit the config file:</p>
+<pre><code class="language-bash"># View current config
+cat ~/.xactions/config.json
+
+# Edit config
+nano ~/.xactions/config.json
+</code></pre>
+<hr>
+<h2>Troubleshooting</h2>
+<h3>Common Issues</h3>
+<p><strong>1. &quot;Authentication required&quot; error</strong></p>
+<pre><code class="language-bash"># Solution: Run login command
+xactions login
+</code></pre>
+<p><strong>2. &quot;Timeout&quot; errors</strong></p>
+<pre><code class="language-bash"># Increase timeout
+XACTIONS_TIMEOUT=60000 xactions followers nichxbt
+</code></pre>
+<p><strong>3. &quot;Browser not found&quot; error</strong></p>
+<p>XActions requires Chromium/Chrome. Install it:</p>
+<pre><code class="language-bash"># macOS
+brew install --cask chromium
+
+# Ubuntu/Debian
+sudo apt install chromium-browser
+
+# Or use Puppeteer&#39;s bundled Chromium
+npm install puppeteer
+</code></pre>
+<p><strong>4. Rate limiting</strong></p>
+<p>If you&#39;re being rate limited:</p>
+<ul>
+<li>Reduce the <code>--limit</code> value</li>
+<li>Add delays between commands</li>
+<li>Consider using a proxy</li>
+</ul>
+<p><strong>5. &quot;Page not loading&quot; issues</strong></p>
+<pre><code class="language-bash"># Run with visible browser for debugging
+XACTIONS_HEADLESS=false xactions profile nichxbt
+</code></pre>
+<h3>Debug Mode</h3>
+<p>Enable verbose logging for troubleshooting:</p>
+<pre><code class="language-bash">DEBUG=xactions:* xactions followers nichxbt
+</code></pre>
+<h3>Getting Help</h3>
+<ul>
+<li><strong>Documentation</strong>: <a href="https://xactions.app/docs">https://xactions.app/docs</a></li>
+<li><strong>GitHub Issues</strong>: <a href="https://github.com/nirholas/xactions/issues">https://github.com/nirholas/xactions/issues</a></li>
+<li><strong>Twitter/X</strong>: <a href="https://x.com/nichxbt">@nichxbt</a></li>
+</ul>
+<hr>
+<h2>Command Reference Summary</h2>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>login</code></td>
+<td>Set up authentication</td>
+<td><code>xactions login</code></td>
+</tr>
+<tr>
+<td><code>logout</code></td>
+<td>Remove authentication</td>
+<td><code>xactions logout</code></td>
+</tr>
+<tr>
+<td><code>profile</code></td>
+<td>Get user profile</td>
+<td><code>xactions profile elonmusk --json</code></td>
+</tr>
+<tr>
+<td><code>followers</code></td>
+<td>Scrape followers</td>
+<td><code>xactions followers user -l 500 -o f.json</code></td>
+</tr>
+<tr>
+<td><code>following</code></td>
+<td>Scrape following</td>
+<td><code>xactions following user -l 500</code></td>
+</tr>
+<tr>
+<td><code>non-followers</code></td>
+<td>Find non-followers</td>
+<td><code>xactions non-followers myuser</code></td>
+</tr>
+<tr>
+<td><code>tweets</code></td>
+<td>Scrape tweets</td>
+<td><code>xactions tweets user -l 100 --replies</code></td>
+</tr>
+<tr>
+<td><code>search</code></td>
+<td>Search tweets</td>
+<td><code>xactions search &quot;query&quot; -f top</code></td>
+</tr>
+<tr>
+<td><code>hashtag</code></td>
+<td>Scrape hashtag</td>
+<td><code>xactions hashtag AI -l 200</code></td>
+</tr>
+<tr>
+<td><code>thread</code></td>
+<td>Scrape thread</td>
+<td><code>xactions thread &lt;url&gt;</code></td>
+</tr>
+<tr>
+<td><code>media</code></td>
+<td>Scrape media</td>
+<td><code>xactions media user -l 50</code></td>
+</tr>
+<tr>
+<td><code>info</code></td>
+<td>Show info</td>
+<td><code>xactions info</code></td>
+</tr>
+</tbody></table>
+<hr>
+<h2>License</h2>
+<p>MIT License - see <a href="../LICENSE">LICENSE</a> for details.</p>
+<hr>
+<p align="center">
+  <strong>⚡ XActions</strong><br>
+  Built by <a href="https://x.com/nichxbt">nich (@nichxbt)</a><br>
+  <a href="https://xactions.app">https://xactions.app</a>
+</p>
+
+
+        <div class="cta-box">
+          <h3>⚡ Explore XActions</h3>
+          <p>100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/docs">Browse All Documentation</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 In This Section</h3>
+                <a href="/docs/guides/getting-started">📖 Getting Started with XActions</a>
+        <a href="/docs/guides/usage">📖 Usage</a>
+        <a href="/docs/guides/automation">📖 XActions Automation Framework Guide</a>
+        <a href="/docs/guides/monitoring">📖 Monitoring Guide</a>
+        <a href="/docs/guides/ai-api">📖 XActions AI API Documentation</a>
+        <a href="/docs/guides/api-reference">📖 XActions — API Reference</a>
+        <a href="/docs/guides/deployment">📖 Deployment Guide</a>
+        <a href="/docs/guides/dom-selectors">📖 X/Twitter DOM Selector Reference</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/docs">All Documentation</a>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

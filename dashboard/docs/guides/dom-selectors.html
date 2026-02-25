@@ -1,0 +1,2386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>X/Twitter DOM Selector Reference | XActions</title>
+  <meta name="description" content="Last verified: February 2026. Twitter frequently changes their DOM — always verify selectors before use.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, open source, dom, selectors, x/twitter, selector, reference, guides &amp; reference">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="X/Twitter DOM Selector Reference — XActions">
+  <meta property="og:description" content="Last verified: February 2026. Twitter frequently changes their DOM — always verify selectors before use.">
+  <meta property="og:url" content="https://xactions.app/docs/guides/dom-selectors">
+  <meta property="og:site_name" content="XActions">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="X/Twitter DOM Selector Reference — XActions">
+  <meta name="twitter:description" content="Last verified: February 2026. Twitter frequently changes their DOM — always verify selectors before use.">
+
+  <link rel="canonical" href="https://xactions.app/docs/guides/dom-selectors">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "X/Twitter DOM Selector Reference | XActions",
+    "description": "Last verified: February 2026. Twitter frequently changes their DOM — always verify selectors before use.",
+    "url": "https://xactions.app/docs/guides/dom-selectors",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-25",
+    "dateModified": "2026-02-25",
+    "mainEntityOfPage": "https://xactions.app/docs/guides/dom-selectors",
+    "articleSection": "Guides & Reference",
+    "keywords": "xactions, twitter automation, x automation, free, open source, dom, selectors, x/twitter, selector, reference, guides & reference"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Guides & Reference", "item": "https://xactions.app/docs/guides" },
+      { "@type": "ListItem", "position": 4, "name": "X/Twitter DOM Selector Reference", "item": "https://xactions.app/docs/guides/dom-selectors" }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .article pre { font-size: 0.75rem; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <main class="main-content">
+      <header class="main-header">
+        <h1>📖 X/Twitter DOM Selector Reference</h1>
+        <div class="breadcrumb">
+          <a href="https://xactions.app">Home</a> › <a href="https://xactions.app/docs">Docs</a> › <a href="https://xactions.app/docs/guides">Guides &amp; Reference</a> › X/Twitter DOM Selector Reference
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Guides &amp; Reference</span>
+        <h1>X/Twitter DOM Selector Reference</h1>
+<blockquote>
+<p><strong>Last verified: February 2026.</strong> Twitter frequently changes their DOM — always verify selectors before use.</p>
+<p>This is the <strong>canonical reference</strong> for all known X/Twitter DOM selectors used across the XActions project. Check here before writing new selectors.</p>
+</blockquote>
+<h2>UserCell Elements</h2>
+<p>Search results, followers lists, following lists, and any user-list UI.</p>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Primary Selector</th>
+<th>Fallback Selector(s)</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>User cell container</td>
+<td><code>[data-testid=&quot;UserCell&quot;]</code></td>
+<td><code>[data-testid=&quot;user&quot;]</code>, <code>div[role=&quot;listitem&quot;]</code></td>
+<td>Main container for user list items</td>
+</tr>
+<tr>
+<td>Display name</td>
+<td><code>[data-testid=&quot;User-Name&quot;]</code></td>
+<td><code>[data-testid=&quot;UserCell&quot;] a[href^=&quot;/&quot;]</code></td>
+<td>Note the <strong>hyphen</strong>: <code>User-Name</code></td>
+</tr>
+<tr>
+<td>Display name link</td>
+<td><code>[data-testid=&quot;User-Name&quot;] a</code></td>
+<td>—</td>
+<td>Direct link to profile</td>
+</tr>
+<tr>
+<td>Handle link</td>
+<td><code>[data-testid=&quot;User-Name&quot;] a[tabindex=&quot;-1&quot;]</code></td>
+<td>—</td>
+<td>The @username portion</td>
+</tr>
+<tr>
+<td>Bio/Description</td>
+<td><code>[data-testid=&quot;UserDescription&quot;]</code></td>
+<td><code>[dir=&quot;auto&quot;]:not([data-testid])</code>, <code>[dir=&quot;auto&quot;]:not([role])</code></td>
+<td>⚠️ Case-sensitive: capital <strong>U</strong></td>
+</tr>
+<tr>
+<td>Follow indicator</td>
+<td><code>[data-testid=&quot;userFollowIndicator&quot;]</code></td>
+<td>—</td>
+<td>&quot;Follows you&quot; badge</td>
+</tr>
+<tr>
+<td>Follow button</td>
+<td><code>[data-testid$=&quot;-follow&quot;]</code></td>
+<td><code>button[aria-label*=&quot;Follow @&quot;]</code></td>
+<td>Uses <strong>suffix match</strong> (<code>$=</code>)</td>
+</tr>
+<tr>
+<td>Unfollow button</td>
+<td><code>[data-testid$=&quot;-unfollow&quot;]</code></td>
+<td><code>button[aria-label*=&quot;Following @&quot;]</code></td>
+<td>Uses <strong>suffix match</strong> (<code>$=</code>)</td>
+</tr>
+<tr>
+<td>Verified badge</td>
+<td><code>[data-testid=&quot;icon-verified&quot;]</code></td>
+<td><code>svg[aria-label*=&quot;Verified&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Protected icon</td>
+<td><code>[data-testid=&quot;icon-lock&quot;]</code></td>
+<td><code>svg[aria-label*=&quot;Protected&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Avatar container</td>
+<td><code>[data-testid=&quot;UserAvatar-Container&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Avatar image</td>
+<td><code>[data-testid=&quot;UserAvatar-Container&quot;] img</code></td>
+<td><code>[data-testid*=&quot;UserAvatar&quot;] img</code></td>
+<td></td>
+</tr>
+<tr>
+<td>User actions menu</td>
+<td><code>[data-testid=&quot;userActions&quot;]</code></td>
+<td><code>button[aria-label=&quot;More&quot;]</code></td>
+<td>The &quot;…&quot; menu on user cells</td>
+</tr>
+<tr>
+<td>Scrollable cell</td>
+<td><code>[data-testid=&quot;cellInnerDiv&quot;]</code></td>
+<td>—</td>
+<td>Generic inner div for scrollable lists</td>
+</tr>
+<tr>
+<td>Internal profile link</td>
+<td><code>a[href^=&quot;/&quot;][role=&quot;link&quot;]</code></td>
+<td><code>a[href^=&quot;/&quot;]</code></td>
+<td>Username extraction from cells</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Profile Page Elements</h2>
+<p>Selectors for profile pages (<code>x.com/username</code>).</p>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Primary Selector</th>
+<th>Fallback Selector(s)</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Profile username</td>
+<td><code>[data-testid=&quot;UserName&quot;]</code></td>
+<td>—</td>
+<td>⚠️ No hyphen (unlike <code>User-Name</code> in tweets)</td>
+</tr>
+<tr>
+<td>Profile header items</td>
+<td><code>[data-testid=&quot;UserProfileHeader_Items&quot;]</code></td>
+<td>—</td>
+<td>Container for location, URL, join date</td>
+</tr>
+<tr>
+<td>Profile schema</td>
+<td><code>[data-testid=&quot;UserProfileSchema&quot;]</code></td>
+<td>—</td>
+<td>Structured profile data</td>
+</tr>
+<tr>
+<td>Bio/Description</td>
+<td><code>[data-testid=&quot;UserDescription&quot;]</code></td>
+<td>—</td>
+<td>Same selector as UserCell</td>
+</tr>
+<tr>
+<td>Location</td>
+<td><code>[data-testid=&quot;UserLocation&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Website URL</td>
+<td><code>[data-testid=&quot;UserUrl&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Website link</td>
+<td><code>[data-testid=&quot;UserUrl&quot;] a</code></td>
+<td>—</td>
+<td>The clickable link element</td>
+</tr>
+<tr>
+<td>Join date</td>
+<td><code>[data-testid=&quot;UserJoinDate&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Birthday</td>
+<td><code>[data-testid=&quot;UserBirthday&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Avatar (profile page)</td>
+<td><code>[data-testid=&quot;UserAvatar&quot;] img</code></td>
+<td><code>a[href$=&quot;/photo&quot;] img</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Avatar (unknown variant)</td>
+<td><code>[data-testid=&quot;UserAvatar-Container-unknown&quot;] img</code></td>
+<td>—</td>
+<td>Appears in some contexts</td>
+</tr>
+<tr>
+<td>Header photo</td>
+<td><code>a[href$=&quot;/header_photo&quot;] img</code></td>
+<td>—</td>
+<td>Banner image</td>
+</tr>
+<tr>
+<td>Profile image (generic)</td>
+<td><code>img[src*=&quot;profile_images&quot;]</code></td>
+<td>—</td>
+<td>Matches by URL pattern</td>
+</tr>
+<tr>
+<td>Default avatar</td>
+<td><code>img[src*=&quot;default_profile&quot;]</code></td>
+<td>—</td>
+<td>Users with no profile pic</td>
+</tr>
+<tr>
+<td>Followers link</td>
+<td><code>a[href$=&quot;/followers&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Followers count</td>
+<td><code>a[href$=&quot;/followers&quot;] span</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Following link</td>
+<td><code>a[href$=&quot;/following&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Following count</td>
+<td><code>a[href$=&quot;/following&quot;] span</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Verified followers</td>
+<td><code>a[href$=&quot;/verified_followers&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Premium badge</td>
+<td><code>[data-testid=&quot;premiumBadge&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Premium banner</td>
+<td><code>[data-testid=&quot;premiumBanner&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Premium link</td>
+<td><code>a[href*=&quot;premium&quot;]</code></td>
+<td>—</td>
+<td>Premium upgrade link</td>
+</tr>
+<tr>
+<td>Profile tab bar link</td>
+<td><code>[data-testid=&quot;AppTabBar_Profile_Link&quot;]</code></td>
+<td>—</td>
+<td>Used for shadow-ban checking</td>
+</tr>
+<tr>
+<td>Profile meta tag</td>
+<td><code>meta[property=&quot;al:android:url&quot;]</code></td>
+<td>—</td>
+<td>Profile detection via meta tag</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Tweet Elements</h2>
+<p>Tweet/post containers, content, and metadata.</p>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Primary Selector</th>
+<th>Fallback Selector(s)</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Tweet container</td>
+<td><code>article[data-testid=&quot;tweet&quot;]</code></td>
+<td><code>article[role=&quot;article&quot;]</code>, <code>[data-testid=&quot;cellInnerDiv&quot;] article</code></td>
+<td>Primary tweet wrapper</td>
+</tr>
+<tr>
+<td>Tweet text</td>
+<td><code>[data-testid=&quot;tweetText&quot;]</code></td>
+<td><code>[lang][dir] span</code>, <code>article span[dir=&quot;auto&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Social context</td>
+<td><code>[data-testid=&quot;socialContext&quot;]</code></td>
+<td>—</td>
+<td>&quot;Retweeted&quot;, &quot;Pinned&quot;, &quot;Replying to&quot;</td>
+</tr>
+<tr>
+<td>Tweet photo</td>
+<td><code>[data-testid=&quot;tweetPhoto&quot;]</code></td>
+<td>—</td>
+<td>Photo container</td>
+</tr>
+<tr>
+<td>Tweet image</td>
+<td><code>[data-testid=&quot;tweetPhoto&quot;] img</code></td>
+<td>—</td>
+<td>Actual image element</td>
+</tr>
+<tr>
+<td>Video player</td>
+<td><code>[data-testid=&quot;videoPlayer&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Quote tweet</td>
+<td><code>[data-testid=&quot;quoteTweet&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Nested quote tweet</td>
+<td><code>[data-testid=&quot;tweet&quot;] [data-testid=&quot;tweet&quot;]</code></td>
+<td>—</td>
+<td>Quote inside a tweet</td>
+</tr>
+<tr>
+<td>Card/link preview</td>
+<td><code>[data-testid=&quot;card.wrapper&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Thread indicator</td>
+<td><code>[data-testid=&quot;tweet-thread-indicator&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Promoted/Ad tweet</td>
+<td><code>[data-testid=&quot;placementTracking&quot;]</code></td>
+<td>—</td>
+<td>Filter these to skip ads</td>
+</tr>
+<tr>
+<td>Tweet permalink</td>
+<td><code>a[href*=&quot;/status/&quot;]</code></td>
+<td>—</td>
+<td>Link to individual tweet</td>
+</tr>
+<tr>
+<td>Tweet timestamp</td>
+<td><code>a[href*=&quot;/status/&quot;] time</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Timestamp element</td>
+<td><code>time</code></td>
+<td>—</td>
+<td>Generic time element</td>
+</tr>
+<tr>
+<td>Tweet author avatar</td>
+<td><code>[data-testid=&quot;Tweet-User-Avatar&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Author name in tweet</td>
+<td><code>[data-testid=&quot;User-Name&quot;] a[href^=&quot;/&quot;]</code></td>
+<td>—</td>
+<td>Profile link from tweet</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Engagement Buttons</h2>
+<p>Like, reply, retweet, bookmark, share, and analytics buttons on tweets.</p>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Primary Selector</th>
+<th>Fallback Selector(s)</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Like button</td>
+<td><code>[data-testid=&quot;like&quot;]</code></td>
+<td><code>button[aria-label*=&quot;Like&quot;]</code>, <code>[role=&quot;button&quot;][data-testid*=&quot;like&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Unlike button</td>
+<td><code>[data-testid=&quot;unlike&quot;]</code></td>
+<td><code>button[aria-label*=&quot;Liked&quot;]</code></td>
+<td>Already-liked state</td>
+</tr>
+<tr>
+<td>Reply button</td>
+<td><code>[data-testid=&quot;reply&quot;]</code></td>
+<td><code>button[aria-label*=&quot;Reply&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Retweet/Repost button</td>
+<td><code>[data-testid=&quot;retweet&quot;]</code></td>
+<td><code>button[aria-label*=&quot;Repost&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Undo retweet</td>
+<td><code>[data-testid=&quot;unretweet&quot;]</code></td>
+<td><code>button[aria-label*=&quot;Undo repost&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Confirm retweet</td>
+<td><code>[data-testid=&quot;retweetConfirm&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Confirm undo retweet</td>
+<td><code>[data-testid=&quot;unretweetConfirm&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Bookmark button</td>
+<td><code>[data-testid=&quot;bookmark&quot;]</code></td>
+<td><code>button[aria-label*=&quot;Bookmark&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Remove bookmark</td>
+<td><code>[data-testid=&quot;removeBookmark&quot;]</code></td>
+<td><code>button[aria-label*=&quot;Remove Bookmark&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Share button</td>
+<td><code>[data-testid=&quot;share&quot;]</code></td>
+<td><code>button[aria-label*=&quot;Share&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>More menu (caret)</td>
+<td><code>[data-testid=&quot;caret&quot;]</code></td>
+<td><code>button[aria-label=&quot;More&quot;]</code>, <code>[data-testid=&quot;tweet&quot;] button:last-of-type</code></td>
+<td>Three-dot menu</td>
+</tr>
+<tr>
+<td>Hide reply</td>
+<td><code>[data-testid=&quot;hideReply&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Reply restriction</td>
+<td><code>[data-testid=&quot;replyRestriction&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Analytics button</td>
+<td><code>[data-testid=&quot;analyticsButton&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Impressions count</td>
+<td><code>[data-testid=&quot;impressions&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Follow / Unfollow</h2>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Primary Selector</th>
+<th>Fallback Selector(s)</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Follow button</td>
+<td><code>[data-testid$=&quot;-follow&quot;]</code></td>
+<td><code>button[aria-label*=&quot;Follow @&quot;]</code></td>
+<td>Suffix match — username prefix varies</td>
+</tr>
+<tr>
+<td>Unfollow button</td>
+<td><code>[data-testid$=&quot;-unfollow&quot;]</code></td>
+<td><code>button[aria-label*=&quot;Following @&quot;]</code></td>
+<td>Suffix match</td>
+</tr>
+<tr>
+<td>Unblock button</td>
+<td><code>[data-testid$=&quot;-unblock&quot;]</code></td>
+<td><code>button[aria-label*=&quot;Unblock&quot;]</code>, <code>button[aria-label*=&quot;Blocked&quot;]</code></td>
+<td>Suffix match</td>
+</tr>
+<tr>
+<td>Unmute button</td>
+<td><code>[data-testid$=&quot;-unmute&quot;]</code></td>
+<td><code>button[aria-label*=&quot;Unmute&quot;]</code>, <code>button[aria-label*=&quot;Muted&quot;]</code></td>
+<td>Suffix match</td>
+</tr>
+<tr>
+<td>Placement button</td>
+<td><code>[data-testid=&quot;placementTracking&quot;] [role=&quot;button&quot;]</code></td>
+<td>—</td>
+<td>Follow/Unblock variant in placements</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Compose / Post Creation</h2>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Primary Selector</th>
+<th>Fallback Selector(s)</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Compose tweet button</td>
+<td><code>a[data-testid=&quot;SideNav_NewTweet_Button&quot;]</code></td>
+<td><code>[data-testid=&quot;SideNav_NewTweet_Button&quot;]</code></td>
+<td>Sidebar compose button</td>
+</tr>
+<tr>
+<td>Tweet textarea (first)</td>
+<td><code>[data-testid=&quot;tweetTextarea_0&quot;]</code></td>
+<td><code>[role=&quot;textbox&quot;][data-testid]</code>, <code>div[contenteditable=&quot;true&quot;][role=&quot;textbox&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Tweet textarea (any)</td>
+<td><code>[data-testid^=&quot;tweetTextarea_&quot;]</code></td>
+<td>—</td>
+<td>Prefix match for threads</td>
+</tr>
+<tr>
+<td>Tweet textarea (nth)</td>
+<td><code>[data-testid=&quot;tweetTextarea_${i}&quot;]</code></td>
+<td>—</td>
+<td>Dynamic by index</td>
+</tr>
+<tr>
+<td>Post/Tweet button</td>
+<td><code>[data-testid=&quot;tweetButton&quot;]</code></td>
+<td><code>button[data-testid*=&quot;tweet&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Inline tweet button</td>
+<td><code>[data-testid=&quot;tweetButtonInline&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Add thread &quot;+&quot;</td>
+<td><code>[data-testid=&quot;addButton&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Media file input</td>
+<td><code>[data-testid=&quot;fileInput&quot;]</code></td>
+<td><code>input[data-testid=&quot;fileInput&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Image file input</td>
+<td><code>input[data-testid=&quot;fileInput&quot;][accept*=&quot;image&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Alt text input</td>
+<td><code>[data-testid=&quot;altTextInput&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Edit tweet</td>
+<td><code>[data-testid=&quot;editTweet&quot;]</code></td>
+<td>—</td>
+<td>Premium feature</td>
+</tr>
+<tr>
+<td>Delete tweet</td>
+<td><code>[data-testid=&quot;deleteTweet&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Quote tweet option</td>
+<td><code>[data-testid=&quot;quoteTweet&quot;]</code></td>
+<td>—</td>
+<td>In retweet menu</td>
+</tr>
+<tr>
+<td>Contenteditable textbox</td>
+<td><code>div[contenteditable=&quot;true&quot;][role=&quot;textbox&quot;]</code></td>
+<td>—</td>
+<td>Generic fallback</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Compose Toolbar</h2>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Primary Selector</th>
+<th>Fallback Selector(s)</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Add poll</td>
+<td><code>[aria-label=&quot;Add poll&quot;]</code></td>
+<td><code>[data-testid=&quot;pollButton&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Add GIF</td>
+<td><code>[aria-label=&quot;Add a GIF&quot;]</code></td>
+<td><code>[data-testid=&quot;gifyButton&quot;]</code></td>
+<td>Note typo: <code>gifyButton</code></td>
+</tr>
+<tr>
+<td>Add emoji</td>
+<td><code>[aria-label=&quot;Add emoji&quot;]</code></td>
+<td><code>[data-testid=&quot;emojiButton&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Location button</td>
+<td><code>[data-testid=&quot;geoButton&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Scheduling</h2>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Primary Selector</th>
+<th>Fallback Selector(s)</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Schedule option</td>
+<td><code>[data-testid=&quot;scheduleOption&quot;]</code></td>
+<td><code>[data-testid=&quot;scheduledButton&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Date field</td>
+<td><code>[data-testid=&quot;scheduledDateField&quot;]</code></td>
+<td><code>[data-testid=&quot;scheduleDateInput&quot;]</code></td>
+<td>Two known variants</td>
+</tr>
+<tr>
+<td>Time field</td>
+<td><code>[data-testid=&quot;scheduledTimeField&quot;]</code></td>
+<td><code>[data-testid=&quot;scheduleTimeInput&quot;]</code></td>
+<td>Two known variants</td>
+</tr>
+<tr>
+<td>Schedule confirm</td>
+<td><code>[data-testid=&quot;scheduleConfirm&quot;]</code></td>
+<td><code>[data-testid=&quot;scheduledConfirmationPrimaryAction&quot;]</code></td>
+<td></td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Poll Elements</h2>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Primary Selector</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Poll option inputs</td>
+<td><code>[data-testid=&quot;pollOption_0&quot;]</code> through <code>[data-testid=&quot;pollOption_3&quot;]</code></td>
+<td>0-indexed, max 4</td>
+</tr>
+<tr>
+<td>Poll text inputs (variant)</td>
+<td><code>[data-testid=&quot;pollOptionTextInput_0&quot;]</code> through <code>[data-testid=&quot;pollOptionTextInput_3&quot;]</code></td>
+<td>Alternate testid</td>
+</tr>
+<tr>
+<td>Add poll option</td>
+<td><code>[data-testid=&quot;addPollOption&quot;]</code></td>
+<td><code>[data-testid=&quot;addPollOptionButton&quot;]</code> variant</td>
+</tr>
+<tr>
+<td>Poll duration</td>
+<td><code>[data-testid=&quot;pollDuration&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Duration days</td>
+<td><code>[data-testid=&quot;pollDurationDays&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Duration hours</td>
+<td><code>[data-testid=&quot;pollDurationHours&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Duration minutes</td>
+<td><code>[data-testid=&quot;pollDurationMinutes&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Remove poll</td>
+<td><code>[data-testid=&quot;removePoll&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Poll results</td>
+<td><code>[data-testid=&quot;pollResults&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Poll percentage</td>
+<td><code>[data-testid=&quot;pollPercentage&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Poll total votes</td>
+<td><code>[data-testid=&quot;pollTotalVotes&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Poll time remaining</td>
+<td><code>[data-testid=&quot;pollTimeRemaining&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Radio option</td>
+<td><code>[role=&quot;radio&quot;]</code></td>
+<td>Used in polls and settings</td>
+</tr>
+<tr>
+<td>Poll group</td>
+<td><code>[role=&quot;group&quot;]</code></td>
+<td>Container for poll options</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Profile Editing</h2>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Primary Selector</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Edit profile button</td>
+<td><code>[data-testid=&quot;editProfileButton&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Save profile</td>
+<td><code>[data-testid=&quot;Profile_Save_Button&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Edit avatar</td>
+<td><code>[data-testid=&quot;editProfileAvatar&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Edit header</td>
+<td><code>[data-testid=&quot;editProfileHeader&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Add avatar button</td>
+<td><code>[data-testid=&quot;addAvatarButton&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Add banner button</td>
+<td><code>[data-testid=&quot;addBannerButton&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Cancel button</td>
+<td><code>[data-testid=&quot;cancelButton&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Sort by latest</td>
+<td><code>[data-testid=&quot;sortByLatest&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Sort by liked</td>
+<td><code>[data-testid=&quot;sortByLiked&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Name input field</td>
+<td><code>input[name=&quot;displayName&quot;]</code></td>
+<td>Used in edit profile modal</td>
+</tr>
+<tr>
+<td>Bio textarea</td>
+<td><code>textarea[name=&quot;description&quot;]</code></td>
+<td>Used in edit profile modal</td>
+</tr>
+<tr>
+<td>Location input</td>
+<td><code>input[name=&quot;location&quot;]</code></td>
+<td>Used in edit profile modal</td>
+</tr>
+<tr>
+<td>Website URL input</td>
+<td><code>input[name=&quot;url&quot;]</code></td>
+<td>Used in edit profile modal</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Navigation / Layout</h2>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Primary Selector</th>
+<th>Fallback Selector(s)</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Back button</td>
+<td><code>[data-testid=&quot;app-bar-back&quot;]</code></td>
+<td><code>button[aria-label=&quot;Back&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Primary column</td>
+<td><code>[data-testid=&quot;primaryColumn&quot;]</code></td>
+<td>—</td>
+<td>Main content area</td>
+</tr>
+<tr>
+<td>Sidebar column</td>
+<td><code>[data-testid=&quot;sidebarColumn&quot;]</code></td>
+<td>—</td>
+<td>Right sidebar</td>
+</tr>
+<tr>
+<td>Timeline section</td>
+<td><code>section[role=&quot;region&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Tab list</td>
+<td><code>[role=&quot;tablist&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Individual tab</td>
+<td><code>[role=&quot;tab&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Active tab</td>
+<td><code>[role=&quot;tab&quot;][aria-selected=&quot;true&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Main content</td>
+<td><code>[role=&quot;main&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Account switcher</td>
+<td><code>[data-testid=&quot;SideNav_AccountSwitcher_Button&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Sidebar avatar</td>
+<td><code>div[data-testid=&quot;SideNav_AccountSwitcher_Button&quot;] img</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Cell inner div</td>
+<td><code>[data-testid=&quot;cellInnerDiv&quot;]</code></td>
+<td>—</td>
+<td>Generic scrollable cell</td>
+</tr>
+<tr>
+<td>Profile tab link</td>
+<td><code>[data-testid=&quot;AppTabBar_Profile_Link&quot;]</code></td>
+<td>—</td>
+<td>Profile link in app tab bar</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Search / Explore</h2>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Primary Selector</th>
+<th>Fallback Selector(s)</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Search input</td>
+<td><code>[data-testid=&quot;SearchBox_Search_Input&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Typeahead result</td>
+<td><code>[data-testid=&quot;TypeaheadListItem&quot;]</code></td>
+<td>—</td>
+<td>Autocomplete suggestions</td>
+</tr>
+<tr>
+<td>Typeahead user</td>
+<td><code>[data-testid=&quot;TypeaheadUser&quot;]</code></td>
+<td>—</td>
+<td>User in autocomplete</td>
+</tr>
+<tr>
+<td>Trend item</td>
+<td><code>[data-testid=&quot;trend&quot;]</code></td>
+<td><code>[data-testid=&quot;trendItem&quot;]</code></td>
+<td>Two known variants</td>
+</tr>
+<tr>
+<td>Follow topic</td>
+<td><code>[data-testid=&quot;TopicFollow&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Direct Messages</h2>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Primary Selector</th>
+<th>Fallback Selector(s)</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>New DM button</td>
+<td><code>[data-testid=&quot;NewDM_Button&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Search people</td>
+<td><code>[data-testid=&quot;searchPeople&quot;]</code></td>
+<td>—</td>
+<td>DM people search</td>
+</tr>
+<tr>
+<td>DM message input</td>
+<td><code>[data-testid=&quot;dmComposerTextInput&quot;]</code></td>
+<td><code>[role=&quot;textbox&quot;][data-testid*=&quot;dm&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>DM send button</td>
+<td><code>[data-testid=&quot;dmComposerSendButton&quot;]</code></td>
+<td><code>button[data-testid*=&quot;send&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Conversation item</td>
+<td><code>[data-testid=&quot;conversation&quot;]</code></td>
+<td>—</td>
+<td>In DM list</td>
+</tr>
+<tr>
+<td>Message bubble</td>
+<td><code>[data-testid=&quot;messageEntry&quot;]</code></td>
+<td>—</td>
+<td>Individual message</td>
+</tr>
+<tr>
+<td>Last message preview</td>
+<td><code>[data-testid=&quot;lastMessage&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Unread indicator</td>
+<td><code>[data-testid=&quot;unread&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Message reaction</td>
+<td><code>[data-testid=&quot;messageReaction&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Message requests tab</td>
+<td><code>[data-testid=&quot;messageRequests&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Accept request</td>
+<td><code>[data-testid=&quot;acceptRequest&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Delete request</td>
+<td><code>[data-testid=&quot;deleteRequest&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Next button</td>
+<td><code>[data-testid=&quot;nextButton&quot;]</code></td>
+<td>—</td>
+<td>&quot;Next&quot; in DM compose flow</td>
+</tr>
+<tr>
+<td>DM scroller</td>
+<td><code>[data-testid=&quot;DmScrollerContainer&quot;]</code></td>
+<td>—</td>
+<td>Scrollable message container</td>
+</tr>
+<tr>
+<td>DM conversation</td>
+<td><code>[data-testid=&quot;DMConversation&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>DM drawer/inbox</td>
+<td><code>[data-testid=&quot;DMDrawer&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>DM conversation info</td>
+<td><code>[data-testid=&quot;DMConversationInfoButton&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>DM image button</td>
+<td><code>[data-testid=&quot;DMImageButton&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>DM GIF button</td>
+<td><code>[data-testid=&quot;DMGifButton&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>GIF result</td>
+<td><code>[data-testid=&quot;gif&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Reaction emoji</td>
+<td><code>[data-testid=&quot;reactionEmoji&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>DM conversation (variant)</td>
+<td><code>[data-testid=&quot;DM_Conversation&quot;]</code></td>
+<td>—</td>
+<td>Underscore-separated variant</td>
+</tr>
+<tr>
+<td>DM conversation avatar</td>
+<td><code>[data-testid=&quot;DM_Conversation_Avatar&quot;]</code></td>
+<td>—</td>
+<td>Avatar in DM conversation list</td>
+</tr>
+<tr>
+<td>Sent message indicator</td>
+<td><code>[data-testid=&quot;messageSent&quot;]</code></td>
+<td>—</td>
+<td>Indicates message was sent</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Block / Mute / Report</h2>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Primary Selector</th>
+<th>Fallback Selector(s)</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Block option</td>
+<td><code>[data-testid=&quot;block&quot;]</code></td>
+<td><code>[role=&quot;menuitem&quot;] span:has-text(&quot;Block&quot;)</code></td>
+<td>In dropdown menu</td>
+</tr>
+<tr>
+<td>Mute link</td>
+<td><code>[data-testid=&quot;muteLink&quot;]</code></td>
+<td><code>[role=&quot;menuitem&quot;] span:has-text(&quot;Mute&quot;)</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Mute option</td>
+<td><code>[data-testid=&quot;mute&quot;]</code></td>
+<td>—</td>
+<td>Variant testid</td>
+</tr>
+<tr>
+<td>Unmute option</td>
+<td><code>[data-testid=&quot;unmute&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Report option</td>
+<td><code>[data-testid=&quot;report&quot;]</code></td>
+<td><code>[role=&quot;menuitem&quot;] span:has-text(&quot;Report&quot;)</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Add muted word</td>
+<td><code>[data-testid=&quot;addMutedWord&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Muted word input</td>
+<td><code>[data-testid=&quot;mutedWordInput&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Save muted word</td>
+<td><code>[data-testid=&quot;saveMutedWord&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Report flow next</td>
+<td><code>[data-testid=&quot;ChoiceSelectionNextButton&quot;]</code></td>
+<td>—</td>
+<td>Report wizard</td>
+</tr>
+<tr>
+<td>Report reason options</td>
+<td><code>[role=&quot;radio&quot;]</code>, <code>[role=&quot;option&quot;]</code>, <code>button</code></td>
+<td>—</td>
+<td>Options in report/mute flows</td>
+</tr>
+<tr>
+<td>Block inside menu</td>
+<td><code>[role=&quot;menuitem&quot;] [data-testid=&quot;block&quot;]</code></td>
+<td>—</td>
+<td>Block option nested in menu</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Notifications</h2>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Primary Selector</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Notification item</td>
+<td><code>[data-testid=&quot;notification&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Notification text</td>
+<td><code>[data-testid=&quot;notification&quot;] span</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Settings toggle</td>
+<td><code>[data-testid=&quot;settingsSwitch&quot;]</code></td>
+<td></td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Bookmarks</h2>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Primary Selector</th>
+<th>Fallback Selector(s)</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Clear bookmarks</td>
+<td><code>[data-testid=&quot;clearBookmarks&quot;]</code></td>
+<td><code>[data-testid=&quot;clearAllBookmarks&quot;]</code></td>
+<td>Two known variants</td>
+</tr>
+<tr>
+<td>Bookmark folder</td>
+<td><code>[data-testid=&quot;bookmarkFolder&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Create folder</td>
+<td><code>[data-testid=&quot;createBookmarkFolder&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Confirm folder</td>
+<td><code>[data-testid=&quot;createFolderConfirm&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>More options</td>
+<td><code>[aria-label=&quot;More&quot;]</code></td>
+<td>—</td>
+<td>Shared with other contexts</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Lists</h2>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Primary Selector</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Create list</td>
+<td><code>[data-testid=&quot;createList&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>List name input</td>
+<td><code>[data-testid=&quot;listNameInput&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>List description input</td>
+<td><code>[data-testid=&quot;listDescriptionInput&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Private toggle</td>
+<td><code>[data-testid=&quot;listPrivateToggle&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Save list</td>
+<td><code>[data-testid=&quot;listSaveButton&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Add members</td>
+<td><code>[data-testid=&quot;addMembers&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>List container</td>
+<td><code>[data-testid=&quot;list&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>List item</td>
+<td><code>[data-testid=&quot;listItem&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>List description</td>
+<td><code>[data-testid=&quot;listDescription&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Member count</td>
+<td><code>[data-testid=&quot;memberCount&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Done/save assignment</td>
+<td><code>[data-testid=&quot;addToListsButton&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Checkbox (list select)</td>
+<td><code>[role=&quot;checkbox&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>List links</td>
+<td><code>a[href*=&quot;/lists/&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>List heading</td>
+<td><code>h2[role=&quot;heading&quot;]</code></td>
+<td></td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Communities</h2>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Primary Selector</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Joined/leave button</td>
+<td><code>button[aria-label^=&quot;Joined&quot;]</code></td>
+<td>Prefix match</td>
+</tr>
+<tr>
+<td>Join button</td>
+<td><code>button[aria-label^=&quot;Join&quot;]</code></td>
+<td>Prefix match</td>
+</tr>
+<tr>
+<td>Pending request</td>
+<td><code>button[aria-label^=&quot;Pending&quot;]</code></td>
+<td>Prefix match</td>
+</tr>
+<tr>
+<td>Communities nav</td>
+<td><code>a[aria-label=&quot;Communities&quot;]</code></td>
+<td>Sidebar navigation link</td>
+</tr>
+<tr>
+<td>Community links</td>
+<td><code>a[href^=&quot;/i/communities/&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Join community button</td>
+<td><code>button[data-testid=&quot;join&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Community card</td>
+<td><code>div[data-testid=&quot;communityCard&quot;]</code></td>
+<td><code>[data-testid=&quot;CommunityCard&quot;]</code> variant</td>
+</tr>
+<tr>
+<td>Community header</td>
+<td><code>[data-testid=&quot;communityHeader&quot;]</code></td>
+<td></td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Spaces / Live Audio</h2>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Primary Selector</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Start Space button</td>
+<td><code>[data-testid=&quot;SpaceButton&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Join Space</td>
+<td><code>[data-testid=&quot;joinSpace&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Speaker list</td>
+<td><code>[data-testid=&quot;spaceSpeakers&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Listener count</td>
+<td><code>[data-testid=&quot;spaceListeners&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Recording indicator</td>
+<td><code>[data-testid=&quot;spaceRecording&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Schedule Space</td>
+<td><code>[data-testid=&quot;scheduleSpace&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Space topic</td>
+<td><code>[data-testid=&quot;spaceTopic&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Space title</td>
+<td><code>[data-testid=&quot;spaceTitle&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Space host</td>
+<td><code>[data-testid=&quot;spaceHost&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Space card</td>
+<td><code>[data-testid=&quot;SpaceCard&quot;]</code></td>
+<td><code>[data-testid=&quot;space&quot;]</code> variant</td>
+</tr>
+<tr>
+<td>Scheduled Space</td>
+<td><code>[data-testid=&quot;scheduledSpace&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Individual speaker</td>
+<td><code>[data-testid=&quot;spaceSpeaker&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Live indicator</td>
+<td><code>[data-testid=&quot;spaceLive&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Space bar</td>
+<td><code>[data-testid=&quot;SpaceBar&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Space links</td>
+<td><code>a[href*=&quot;/i/spaces/&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Space card media</td>
+<td><code>[data-testid=&quot;card.layoutLarge.media&quot;]</code></td>
+<td></td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Grok AI</h2>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Primary Selector</th>
+<th>Fallback Selector(s)</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Grok chat input</td>
+<td><code>[data-testid=&quot;grokInput&quot;]</code></td>
+<td><code>textarea[placeholder*=&quot;Ask&quot;]</code>, <code>[contenteditable][role=&quot;textbox&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Grok send button</td>
+<td><code>[data-testid=&quot;grokSendButton&quot;]</code></td>
+<td><code>button[aria-label=&quot;Send&quot;]</code>, <code>button[data-testid*=&quot;send&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Grok response area</td>
+<td><code>[data-testid=&quot;grokResponse&quot;]</code></td>
+<td><code>[data-testid=&quot;grokResponseText&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Grok response text</td>
+<td><code>[data-testid=&quot;grokResponseText&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>New chat button</td>
+<td><code>[data-testid=&quot;grokNewChat&quot;]</code></td>
+<td><code>a[href=&quot;/i/grok&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Grok image gen</td>
+<td><code>[data-testid=&quot;grokImageGen&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Chat history</td>
+<td><code>[data-testid=&quot;grokChatHistory&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Any Grok element</td>
+<td><code>[data-testid*=&quot;grok&quot;]</code></td>
+<td>—</td>
+<td>Wildcard match</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Articles / Longform</h2>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Primary Selector</th>
+<th>Fallback Selector(s)</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Article title input</td>
+<td><code>[data-testid=&quot;articleTitle&quot;]</code></td>
+<td><code>h1[contenteditable]</code>, <code>[contenteditable][aria-label*=&quot;title&quot; i]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Article body editor</td>
+<td><code>[data-testid=&quot;articleBody&quot;]</code></td>
+<td><code>[data-testid=&quot;richTextEditor&quot;]</code>, <code>[contenteditable][role=&quot;textbox&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Publish button</td>
+<td><code>[data-testid=&quot;articlePublish&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Save draft</td>
+<td><code>[data-testid=&quot;articleSaveDraft&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Cover image</td>
+<td><code>[data-testid=&quot;articleCoverImage&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Article list</td>
+<td><code>[data-testid=&quot;articleList&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Article card</td>
+<td><code>[data-testid=&quot;articleCard&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Article preview</td>
+<td><code>[data-testid=&quot;articlePreview&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Creator Studio / Monetization</h2>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Primary Selector</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Engagements stat</td>
+<td><code>[data-testid=&quot;engagements&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Followers chart</td>
+<td><code>[data-testid=&quot;followersChart&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Revenue tab</td>
+<td><code>[data-testid=&quot;revenueTab&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Subscription settings</td>
+<td><code>[data-testid=&quot;subscriptionSettings&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Tips settings</td>
+<td><code>[data-testid=&quot;tipsSettings&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Export analytics</td>
+<td><code>[data-testid=&quot;exportAnalytics&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Analytics card</td>
+<td><code>[data-testid=&quot;analyticsCard&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Stat elements</td>
+<td><code>[data-testid*=&quot;stat&quot;]</code></td>
+<td>Wildcard match</td>
+</tr>
+<tr>
+<td>Metric elements</td>
+<td><code>[data-testid*=&quot;metric&quot;]</code></td>
+<td>Wildcard match</td>
+</tr>
+<tr>
+<td>Subscription info</td>
+<td><code>[data-testid=&quot;subscriptionInfo&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Analytics tab</td>
+<td><code>[data-testid=&quot;analyticsTab&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Boost button</td>
+<td><code>[data-testid=&quot;boostButton&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Ads dashboard</td>
+<td><code>[data-testid=&quot;adsDashboard&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Campaign list</td>
+<td><code>[data-testid=&quot;campaignList&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Create campaign</td>
+<td><code>[data-testid=&quot;createCampaign&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>List item (stats)</td>
+<td><code>[role=&quot;listitem&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Analytics nav link</td>
+<td><code>a[href=&quot;/i/account_analytics&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Monetization settings</td>
+<td><code>a[href=&quot;/settings/monetization&quot;]</code></td>
+<td></td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Settings / Privacy</h2>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Primary Selector</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Toggle switch</td>
+<td><code>[role=&quot;switch&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Protected tweets</td>
+<td><code>[data-testid=&quot;protectedTweets&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Settings save</td>
+<td><code>[data-testid=&quot;settingsSave&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Request data</td>
+<td><code>[data-testid=&quot;requestData&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Settings links</td>
+<td><code>a[href^=&quot;/settings/&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Option element</td>
+<td><code>[role=&quot;option&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Account settings</td>
+<td><code>a[href=&quot;/settings/account&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Privacy &amp; safety</td>
+<td><code>a[href=&quot;/settings/privacy_and_safety&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Notifications settings</td>
+<td><code>a[href=&quot;/settings/notifications&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Download data</td>
+<td><code>a[href=&quot;/settings/download_data&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Deactivate account</td>
+<td><code>a[href=&quot;/settings/deactivate&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>2FA settings</td>
+<td><code>a[href=&quot;/settings/account/login_verification&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Blocked accounts</td>
+<td><code>a[href=&quot;/settings/blocked&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Muted accounts</td>
+<td><code>a[href=&quot;/settings/muted&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Muted keywords</td>
+<td><code>a[href=&quot;/settings/muted_keywords&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Content preferences</td>
+<td><code>a[href=&quot;/settings/content_preferences&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Display settings</td>
+<td><code>a[href=&quot;/settings/display&quot;]</code></td>
+<td></td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Dialogs / Confirmations</h2>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Primary Selector</th>
+<th>Fallback Selector(s)</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Confirm button</td>
+<td><code>[data-testid=&quot;confirmationSheetConfirm&quot;]</code></td>
+<td><code>[role=&quot;alertdialog&quot;] button:nth-child(1)</code></td>
+<td>Unfollow, block, delete confirmations</td>
+</tr>
+<tr>
+<td>Cancel button</td>
+<td><code>[data-testid=&quot;confirmationSheetCancel&quot;]</code></td>
+<td><code>[role=&quot;alertdialog&quot;] button:last-child</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Modal container</td>
+<td><code>[data-testid=&quot;modal&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Sheet dialog</td>
+<td><code>[data-testid=&quot;sheetDialog&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Toast notification</td>
+<td><code>[data-testid=&quot;toast&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Alert element</td>
+<td><code>[role=&quot;alert&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Dropdown menu</td>
+<td><code>[data-testid=&quot;Dropdown&quot;]</code></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>Menu item</td>
+<td><code>[role=&quot;menuitem&quot;]</code></td>
+<td>—</td>
+<td>Items inside dropdown menus</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Generic / Utility</h2>
+<p>Selectors used across many contexts as fallbacks or for text extraction.</p>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Primary Selector</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>LTR text span</td>
+<td><code>[dir=&quot;ltr&quot;] &gt; span</code></td>
+<td>Display names, counts</td>
+</tr>
+<tr>
+<td>LTR span (variant)</td>
+<td><code>[dir=&quot;ltr&quot;] span</code></td>
+<td>Less specific</td>
+</tr>
+<tr>
+<td>LTR element</td>
+<td><code>[dir=&quot;ltr&quot;]</code></td>
+<td>Generic LTR container</td>
+</tr>
+<tr>
+<td>Auto-dir (no testid)</td>
+<td><code>[dir=&quot;auto&quot;]:not([data-testid])</code></td>
+<td>Bio/description fallback</td>
+</tr>
+<tr>
+<td>Auto-dir (no role)</td>
+<td><code>[dir=&quot;auto&quot;]:not([role])</code></td>
+<td>Bio/description fallback</td>
+</tr>
+<tr>
+<td>Auto-dir generic</td>
+<td><code>[dir=&quot;auto&quot;]</code></td>
+<td>Any auto-direction text</td>
+</tr>
+<tr>
+<td>Internal link</td>
+<td><code>a[href^=&quot;/&quot;]</code></td>
+<td>Any link within X</td>
+</tr>
+<tr>
+<td>Internal link w/ role</td>
+<td><code>a[href^=&quot;/&quot;][role=&quot;link&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Status permalink</td>
+<td><code>a[href*=&quot;/status/&quot;]</code></td>
+<td>Tweet links</td>
+</tr>
+<tr>
+<td>Analytics link</td>
+<td><code>a[href*=&quot;/analytics&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Likes tab</td>
+<td><code>a[href$=&quot;/likes&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>External links</td>
+<td><code>a[href*=&quot;t.co&quot;]</code></td>
+<td>Shortened URLs</td>
+</tr>
+<tr>
+<td>Premium link</td>
+<td><code>a[href*=&quot;premium&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Follow-related links</td>
+<td><code>a[href*=&quot;/follow&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Media images</td>
+<td><code>img[src*=&quot;media&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Video elements</td>
+<td><code>video</code></td>
+<td></td>
+</tr>
+<tr>
+<td>SVG with testid</td>
+<td><code>svg[data-testid]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Heading element</td>
+<td><code>[role=&quot;heading&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Generic send button</td>
+<td><code>button[aria-label=&quot;Send&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Any button</td>
+<td><code>button</code>, <code>[role=&quot;button&quot;]</code></td>
+<td>Generic button matching</td>
+</tr>
+<tr>
+<td>Link with role</td>
+<td><code>a[role=&quot;link&quot;]</code></td>
+<td>Accessible link element</td>
+</tr>
+<tr>
+<td>Threads post container</td>
+<td><code>[data-pressable-container=&quot;true&quot;]</code></td>
+<td>Meta Threads scraper only</td>
+</tr>
+<tr>
+<td>Threads post fallback</td>
+<td><code>div[role=&quot;article&quot;]</code></td>
+<td>Meta Threads scraper only</td>
+</tr>
+<tr>
+<td>Markdown response</td>
+<td><code>[class*=&quot;markdown&quot;]</code></td>
+<td>Grok markdown-formatted text</td>
+</tr>
+<tr>
+<td>Compose article link</td>
+<td><code>a[href=&quot;/compose/article&quot;]</code></td>
+<td>Navigate to article composer</td>
+</tr>
+<tr>
+<td>Grok nav link</td>
+<td><code>a[href=&quot;/i/grok&quot;]</code></td>
+<td>Navigate to Grok AI</td>
+</tr>
+<tr>
+<td>Spaces nav link</td>
+<td><code>a[href*=&quot;/spaces&quot;]</code></td>
+<td>Navigate to Spaces</td>
+</tr>
+<tr>
+<td>Bookmarks nav link</td>
+<td><code>a[href=&quot;/i/bookmarks&quot;]</code></td>
+<td>Navigate to bookmarks</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Common Pitfalls</h2>
+<h3>Case Sensitivity</h3>
+<p><code>data-testid</code> values are <strong>CASE-SENSITIVE</strong>:</p>
+<ul>
+<li>✅ <code>UserDescription</code> (capital U, capital D)</li>
+<li>❌ <code>userdescription</code></li>
+<li>✅ <code>User-Name</code> (capital U, capital N, with hyphen)</li>
+<li>❌ <code>user-name</code></li>
+<li>⚠️ <code>UserName</code> on profile pages vs <code>User-Name</code> in tweets — they are <strong>different selectors</strong></li>
+</ul>
+<h3>Suffix Matchers for Follow/Unfollow</h3>
+<p>Follow/unfollow buttons include a username prefix in their <code>data-testid</code>:</p>
+<pre><code>data-testid=&quot;nichxbt-follow&quot;
+data-testid=&quot;nichxbt-unfollow&quot;
+</code></pre>
+<p>Always use the <strong>suffix match</strong> (<code>$=</code>):</p>
+<pre><code class="language-javascript">// ✅ Correct
+document.querySelector(&#39;[data-testid$=&quot;-follow&quot;]&#39;);
+
+// ❌ Wrong — won&#39;t match
+document.querySelector(&#39;[data-testid=&quot;follow&quot;]&#39;);
+</code></pre>
+<h3>Bio vs Display Name in UserCells</h3>
+<p>Multiple <code>[dir=&quot;auto&quot;]</code> elements exist inside a <code>UserCell</code>. To find the bio:</p>
+<pre><code class="language-javascript">// ✅ Best approach — use data-testid
+cell.querySelector(&#39;[data-testid=&quot;UserDescription&quot;]&#39;);
+
+// ⚠️ Fallback — filter out elements inside links
+const bioEl = [...cell.querySelectorAll(&#39;[dir=&quot;auto&quot;]&#39;)]
+  .filter(el =&gt; !el.closest(&#39;a&#39;) &amp;&amp; !el.closest(&#39;[data-testid=&quot;User-Name&quot;]&#39;))
+  .pop();
+</code></pre>
+<h3>Navigation Breaks Scripts</h3>
+<p>Browser console scripts <strong>stop when the page navigates</strong>. Use <code>sessionStorage</code> to persist state:</p>
+<pre><code class="language-javascript">const getProcessed = () =&gt; {
+  try { return JSON.parse(sessionStorage.getItem(&#39;xactions_key&#39;) || &#39;[]&#39;); }
+  catch { return []; }
+};
+</code></pre>
+<h3>Confirmation Dialogs Are Required</h3>
+<p>Many destructive actions pop up a confirmation dialog. Always wait for and click it:</p>
+<pre><code class="language-javascript">await sleep(500);
+const confirm = document.querySelector(&#39;[data-testid=&quot;confirmationSheetConfirm&quot;]&#39;);
+if (confirm) confirm.click();
+</code></pre>
+<h3>Promoted Content Filtering</h3>
+<p>Filter out ads before processing tweets:</p>
+<pre><code class="language-javascript">const isAd = tweet.closest(&#39;[data-testid=&quot;placementTracking&quot;]&#39;);
+if (isAd) continue;
+</code></pre>
+<h3>Rate Limiting</h3>
+<p>Add delays <strong>between actions</strong> (1–3 seconds minimum). X will temporarily restrict your account if you bulk-act too fast.</p>
+<h3>DOM Changes</h3>
+<p>X/Twitter frequently updates their DOM. If a selector stops working:</p>
+<ol>
+<li>Check the browser DevTools for the current <code>data-testid</code></li>
+<li>Look for <code>aria-label</code> alternatives</li>
+<li>Fall back to structural selectors (<code>role</code>, tag hierarchy)</li>
+<li>Update this document</li>
+</ol>
+<hr>
+<h2>Selector Architecture</h2>
+<p>The XActions codebase uses a <strong>fallback chain pattern</strong> for resilient selector matching.</p>
+<h3>Canonical Source Files</h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+<th>Selector Count</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>src/utils/core.js</code></td>
+<td>Primary fallback-chain registry</td>
+<td>~29 keys</td>
+</tr>
+<tr>
+<td><code>src/automation/actions.js</code></td>
+<td>Action-oriented selectors</td>
+<td>~40+ keys</td>
+</tr>
+<tr>
+<td><code>src/automation/core.js</code></td>
+<td>Core automation selectors</td>
+<td>~20+ keys</td>
+</tr>
+<tr>
+<td><code>extension/content/injected.js</code></td>
+<td>Browser extension selectors</td>
+<td>~15 keys</td>
+</tr>
+</tbody></table>
+<h3>Fallback Chain Pattern</h3>
+<pre><code class="language-javascript">// From src/utils/core.js — the canonical pattern
+const SELECTORS = {
+  tweet: [
+    &#39;article[data-testid=&quot;tweet&quot;]&#39;,       // Primary: data-testid
+    &#39;article[role=&quot;article&quot;]&#39;,             // Fallback 1: role
+    &#39;[data-testid=&quot;cellInnerDiv&quot;] article&#39; // Fallback 2: structural
+  ],
+  tweetText: [
+    &#39;[data-testid=&quot;tweetText&quot;]&#39;,   // Primary
+    &#39;[lang][dir] span&#39;,            // Fallback 1
+    &#39;article span[dir=&quot;auto&quot;]&#39;     // Fallback 2
+  ]
+};
+</code></pre>
+<p>When writing new selectors:</p>
+<ol>
+<li><strong>Primary</strong>: Use <code>data-testid</code> when available</li>
+<li><strong>Fallback 1</strong>: Use <code>aria-label</code> or <code>role</code> attributes</li>
+<li><strong>Fallback 2</strong>: Use structural/positional selectors as last resort</li>
+<li><strong>Always</strong> add new selectors to this document</li>
+</ol>
+<hr>
+<blockquote>
+<p><strong>Contributing:</strong> When you discover a new selector or a changed one, update this file and the <code>SELECTORS</code> object in <code>src/utils/core.js</code>. Keep this document as the single source of truth.</p>
+</blockquote>
+
+
+        <div class="cta-box">
+          <h3>⚡ Explore XActions</h3>
+          <p>100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/docs">Browse All Documentation</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 In This Section</h3>
+                <a href="/docs/guides/getting-started">📖 Getting Started with XActions</a>
+        <a href="/docs/guides/usage">📖 Usage</a>
+        <a href="/docs/guides/automation">📖 XActions Automation Framework Guide</a>
+        <a href="/docs/guides/monitoring">📖 Monitoring Guide</a>
+        <a href="/docs/guides/cli-reference">📖 XActions CLI Reference</a>
+        <a href="/docs/guides/ai-api">📖 XActions AI API Documentation</a>
+        <a href="/docs/guides/api-reference">📖 XActions — API Reference</a>
+        <a href="/docs/guides/deployment">📖 Deployment Guide</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/docs">All Documentation</a>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

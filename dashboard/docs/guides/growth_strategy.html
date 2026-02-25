@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XActions Growth Strategy: 76 → 100,000 Stars | XActions</title>
+  <meta name="description" content="For context, repos with 100k+ stars: freeCodeCamp, vue, react, tensorflow, bootstrap.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, open source, growth_strategy, growth, strategy:, 100,000, stars, guides &amp; reference">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="XActions Growth Strategy: 76 → 100,000 Stars — XActions">
+  <meta property="og:description" content="For context, repos with 100k+ stars: freeCodeCamp, vue, react, tensorflow, bootstrap.">
+  <meta property="og:url" content="https://xactions.app/docs/guides/growth_strategy">
+  <meta property="og:site_name" content="XActions">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="XActions Growth Strategy: 76 → 100,000 Stars — XActions">
+  <meta name="twitter:description" content="For context, repos with 100k+ stars: freeCodeCamp, vue, react, tensorflow, bootstrap.">
+
+  <link rel="canonical" href="https://xactions.app/docs/guides/growth_strategy">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "XActions Growth Strategy: 76 → 100,000 Stars | XActions",
+    "description": "For context, repos with 100k+ stars: freeCodeCamp, vue, react, tensorflow, bootstrap.",
+    "url": "https://xactions.app/docs/guides/growth_strategy",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-25",
+    "dateModified": "2026-02-25",
+    "mainEntityOfPage": "https://xactions.app/docs/guides/growth_strategy",
+    "articleSection": "Guides & Reference",
+    "keywords": "xactions, twitter automation, x automation, free, open source, growth_strategy, growth, strategy:, 100,000, stars, guides & reference"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Guides & Reference", "item": "https://xactions.app/docs/guides" },
+      { "@type": "ListItem", "position": 4, "name": "XActions Growth Strategy: 76 → 100,000 Stars", "item": "https://xactions.app/docs/guides/growth_strategy" }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .article pre { font-size: 0.75rem; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <main class="main-content">
+      <header class="main-header">
+        <h1>📖 XActions Growth Strategy: 76 → 100,000 Stars</h1>
+        <div class="breadcrumb">
+          <a href="https://xactions.app">Home</a> › <a href="https://xactions.app/docs">Docs</a> › <a href="https://xactions.app/docs/guides">Guides &amp; Reference</a> › XActions Growth Strategy: 76 → 100,000 Stars
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Guides &amp; Reference</span>
+        <h1>🚀 XActions Growth Strategy: 76 → 100,000 Stars</h1>
+<p><strong>Current:</strong> 76 stars, 14 forks<br><strong>Target:</strong> 100,000 stars<br><strong>Timeline:</strong> 12-18 months to 10k, 24-36 months to 100k  </p>
+<blockquote>
+<p>For context, repos with 100k+ stars: freeCodeCamp, vue, react, tensorflow, bootstrap.<br>Repos with 10k-50k stars: nvm, zx, puppeteer-extra, n8n, appwrite.<br>The path: <strong>76 → 500 → 2k → 10k → 50k → 100k</strong></p>
+</blockquote>
+<h2>Phase 2: Momentum (500 → 2,000 Stars)</h2>
+<h3>2.1 MCP/AI Angle (This Is Your Moat)</h3>
+<p>The MCP ecosystem is exploding. Position XActions as THE Twitter MCP server:</p>
+<ul>
+<li>Get listed on <strong>awesome-mcp-servers</strong> repos (multiple exist with 10k+ stars)</li>
+<li>Get listed on <strong>mcp.so</strong> and similar MCP directories</li>
+<li>Write a guide: &quot;How to Give Claude Access to Twitter (Free)&quot;</li>
+<li>Partner with AI tool builders (Cursor, Continue, etc.)</li>
+<li>Submit to Anthropic&#39;s MCP server directory</li>
+</ul>
+<h3>2.2 Awesome Lists &amp; Directories</h3>
+<p>Get listed on these high-traffic repos:</p>
+<ul>
+<li><code>awesome-twitter</code> / <code>awesome-twitter-tools</code></li>
+<li><code>awesome-web-scraping</code></li>
+<li><code>awesome-mcp-servers</code> (multiple repos, some with 30k+ stars)</li>
+<li><code>awesome-automation</code></li>
+<li><code>awesome-social-media</code></li>
+<li><code>awesome-puppeteer</code></li>
+<li><code>awesome-nodejs</code></li>
+<li><code>awesome-cli-apps</code></li>
+</ul>
+<p>Each inclusion = steady passive stars forever.</p>
+<h3>2.3 GitHub Trending</h3>
+<p>To hit GitHub Trending (JavaScript, daily):</p>
+<ul>
+<li>You need ~30-50 stars in a single day</li>
+<li>Coordinate a launch: Post on Twitter + Reddit + HN on the same day</li>
+<li>Once trending, it compounds (trending → more stars → stays trending)</li>
+<li>The daily trending page is viewed by millions</li>
+</ul>
+<h3>2.4 Partnerships &amp; Cross-Promotion</h3>
+<ul>
+<li><strong>n8n</strong> — XActions as an n8n node for Twitter automation</li>
+<li><strong>Puppeteer</strong> — Reference XActions in Puppeteer ecosystem</li>
+<li><strong>AI Agent builders</strong> — Integrate with LangChain, AutoGPT, CrewAI</li>
+<li><strong>Privacy-focused tools</strong> — &quot;No API keys = no data shared with Twitter&quot;</li>
+</ul>
+<hr>
+<h2>Phase 3: Authority (2,000 → 10,000 Stars)</h2>
+<h3>3.1 Become the Standard</h3>
+<ul>
+<li>Publish a <code>SECURITY.md</code> with responsible automation guidelines</li>
+<li>Create a <strong>Twitter Automation Standard</strong> document</li>
+<li>Release monthly &quot;State of Twitter Automation&quot; reports</li>
+<li>Build a community Discord/Telegram</li>
+</ul>
+<h3>3.2 Feature Expansion</h3>
+<p>High-demand features that drive stars:</p>
+<ul>
+<li><strong>Twitter Spaces recorder</strong> (huge demand, few tools)</li>
+<li><strong>Thread unroller</strong> with beautiful output</li>
+<li><strong>Twitter archive analyzer</strong> (download your data → insights)</li>
+<li><strong>Competitor analysis tool</strong> </li>
+<li><strong>Engagement rate calculator</strong></li>
+<li><strong>Best time to post analyzer</strong></li>
+<li><strong>Twitter List manager</strong></li>
+</ul>
+<h3>3.3 Ecosystem Building</h3>
+<ul>
+<li>Create <code>create-xactions-app</code> scaffolding tool</li>
+<li>Build VS Code extension for XActions</li>
+<li>Create GitHub Action for Twitter automation</li>
+<li>Build Raycast extension</li>
+<li>Build Alfred workflow</li>
+</ul>
+<h3>3.4 Conference &amp; Speaking</h3>
+<ul>
+<li>Speak at NodeConf, JSConf, etc. about browser automation</li>
+<li>Lightning talks at local meetups</li>
+<li>Live-code demos are incredibly viral</li>
+</ul>
+<hr>
+<h2>Phase 4: Scale (10,000 → 100,000 Stars)</h2>
+<h3>4.1 Platform Expansion</h3>
+<ul>
+<li>Support <strong>Bluesky</strong>, <strong>Mastodon</strong>, <strong>Threads</strong> automation</li>
+<li>Rename/rebrand to &quot;Social Actions&quot; or keep XActions as umbrella</li>
+<li>Each platform = new audience = new stars</li>
+</ul>
+<h3>4.2 Enterprise &amp; Education</h3>
+<ul>
+<li>Add enterprise features (team management, audit logs)</li>
+<li>Create course on Udemy/YouTube: &quot;Twitter Automation Masterclass&quot;</li>
+<li>Partner with coding bootcamps</li>
+<li>Become the go-to educational repo for browser automation</li>
+</ul>
+<h3>4.3 Media &amp; PR</h3>
+<p>At 10k+ stars, media picks up naturally:</p>
+<ul>
+<li>TechCrunch, The Verge, Wired coverage</li>
+<li>Podcast guest appearances</li>
+<li>YouTube tech influencer reviews (Fireship, Traversy, etc.)</li>
+</ul>
+<h3>4.4 Internationalization</h3>
+<ul>
+<li>Translate README to Chinese, Japanese, Korean, Spanish, Portuguese</li>
+<li>Chinese developer community (Infoq China, CSDN, SegmentFault) is massive</li>
+<li>Each translation = new audience discovery</li>
+</ul>
+<hr>
+<h2>Key Metrics to Track</h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Tool</th>
+<th>Frequency</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>GitHub stars/day</td>
+<td>star-history.com</td>
+<td>Daily</td>
+</tr>
+<tr>
+<td>npm downloads/week</td>
+<td>npmjs.com</td>
+<td>Weekly</td>
+</tr>
+<tr>
+<td>README views</td>
+<td>GitHub Traffic (Insights)</td>
+<td>Weekly</td>
+</tr>
+<tr>
+<td>Clones/Unique visitors</td>
+<td>GitHub Traffic</td>
+<td>Weekly</td>
+</tr>
+<tr>
+<td>Twitter mentions</td>
+<td>Twitter search</td>
+<td>Daily</td>
+</tr>
+<tr>
+<td>Referral sources</td>
+<td>GitHub Traffic</td>
+<td>Weekly</td>
+</tr>
+<tr>
+<td>Hacker News position</td>
+<td>hn.algolia.com</td>
+<td>Per launch</td>
+</tr>
+<tr>
+<td>Google ranking</td>
+<td>&quot;twitter automation tool&quot;</td>
+<td>Monthly</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Quick Wins (Do This Week)</h2>
+<ul>
+<li><input disabled="" type="checkbox"> Post a viral tweet about XActions with demo video</li>
+<li><input disabled="" type="checkbox"> Submit to Hacker News (Show HN)</li>
+<li><input disabled="" type="checkbox"> Post on r/programming and r/javascript</li>
+<li><input disabled="" type="checkbox"> Submit PR to awesome-mcp-servers repos</li>
+<li><input disabled="" type="checkbox"> Create social preview image (1280x640)</li>
+<li><input disabled="" type="checkbox"> Fix LICENSE file so GitHub shows &quot;MIT&quot; properly</li>
+<li><input disabled="" type="checkbox"> Record a 60-second demo video</li>
+<li><input disabled="" type="checkbox"> Add <code>scraper</code> and <code>social-media</code> to GitHub topics (via Settings)</li>
+<li><input disabled="" type="checkbox"> Write Dev.to article</li>
+<li><input disabled="" type="checkbox"> DM 10 developers who might star it</li>
+</ul>
+<hr>
+<h2>The Compound Effect</h2>
+<pre><code>Week 1:  Post on HN + Reddit + Twitter         → 76 → 300 stars
+Week 2:  Hit GitHub Trending (daily)            → 300 → 800 stars  
+Week 3:  Awesome lists + MCP directories        → 800 → 1,200 stars
+Month 2: Dev.to + YouTube + Product Hunt        → 1,200 → 2,500 stars
+Month 3: Conference talks + partnerships        → 2,500 → 5,000 stars
+Month 6: Ecosystem growth + translations        → 5,000 → 15,000 stars
+Year 1:  Platform expansion + enterprise        → 15,000 → 40,000 stars
+Year 2:  Media + education + community          → 40,000 → 100,000 stars
+</code></pre>
+<p><strong>The single most important thing:</strong> Ship a Show HN post this week. One Hacker News front page appearance can 10x your stars overnight.</p>
+<hr>
+<p><em>Strategy by @nichxbt for XActions — github.com/nirholas/xactions</em></p>
+
+
+        <div class="cta-box">
+          <h3>⚡ Explore XActions</h3>
+          <p>100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/docs">Browse All Documentation</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 In This Section</h3>
+                <a href="/docs/guides/getting-started">📖 Getting Started with XActions</a>
+        <a href="/docs/guides/usage">📖 Usage</a>
+        <a href="/docs/guides/automation">📖 XActions Automation Framework Guide</a>
+        <a href="/docs/guides/monitoring">📖 Monitoring Guide</a>
+        <a href="/docs/guides/cli-reference">📖 XActions CLI Reference</a>
+        <a href="/docs/guides/ai-api">📖 XActions AI API Documentation</a>
+        <a href="/docs/guides/api-reference">📖 XActions — API Reference</a>
+        <a href="/docs/guides/deployment">📖 Deployment Guide</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/docs">All Documentation</a>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Getting Started with XActions | XActions</title>
+  <meta name="description" content="Welcome! XActions helps you automate your X (Twitter) account. No coding needed.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, open source, getting, started, guides &amp; reference">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Getting Started with XActions — XActions">
+  <meta property="og:description" content="Welcome! XActions helps you automate your X (Twitter) account. No coding needed.">
+  <meta property="og:url" content="https://xactions.app/docs/guides/getting-started">
+  <meta property="og:site_name" content="XActions">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Getting Started with XActions — XActions">
+  <meta name="twitter:description" content="Welcome! XActions helps you automate your X (Twitter) account. No coding needed.">
+
+  <link rel="canonical" href="https://xactions.app/docs/guides/getting-started">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Getting Started with XActions | XActions",
+    "description": "Welcome! XActions helps you automate your X (Twitter) account. No coding needed.",
+    "url": "https://xactions.app/docs/guides/getting-started",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-25",
+    "dateModified": "2026-02-25",
+    "mainEntityOfPage": "https://xactions.app/docs/guides/getting-started",
+    "articleSection": "Guides & Reference",
+    "keywords": "xactions, twitter automation, x automation, free, open source, getting, started, guides & reference"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Guides & Reference", "item": "https://xactions.app/docs/guides" },
+      { "@type": "ListItem", "position": 4, "name": "Getting Started with XActions", "item": "https://xactions.app/docs/guides/getting-started" }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .article pre { font-size: 0.75rem; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <main class="main-content">
+      <header class="main-header">
+        <h1>📖 Getting Started with XActions</h1>
+        <div class="breadcrumb">
+          <a href="https://xactions.app">Home</a> › <a href="https://xactions.app/docs">Docs</a> › <a href="https://xactions.app/docs/guides">Guides &amp; Reference</a> › Getting Started with XActions
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Guides &amp; Reference</span>
+        <h1>Getting Started with XActions</h1>
+<p>Welcome! XActions helps you automate your X (Twitter) account. No coding needed.</p>
+<h2>Two Ways to Use XActions</h2>
+<h3>Option 1: Dashboard (Recommended) 🌐</h3>
+<p>Use our web dashboard for the easiest experience:</p>
+<ol>
+<li><strong>Sign up</strong> at <a href="https://xactions.app">xactions.app</a></li>
+<li><strong>Get credits</strong> — Follow @nichxbt for 3 free credits, or buy a package</li>
+<li><strong>Connect your browser</strong> — Paste a simple script in your x.com tab</li>
+<li><strong>Run operations</strong> — Click buttons to automate, watch progress in real-time</li>
+</ol>
+<p><strong>Pricing:</strong></p>
+<ul>
+<li>Start with 2 free credits (1 demo operation)</li>
+<li>Follow @nichxbt = +1 bonus credit</li>
+<li>Starter pack = $2.99 for 17 credits</li>
+</ul>
+<h3>Option 2: Browser Scripts (Free) 📜</h3>
+<p>Run scripts directly in your browser console — 100% free, no account needed.</p>
+<hr>
+<h2>Dashboard Quick Start</h2>
+<h3>Step 1: Create an Account</h3>
+<ol>
+<li>Go to <a href="https://xactions.app">xactions.app</a></li>
+<li>Click <strong>Sign Up</strong></li>
+<li>Enter your email, username, and password</li>
+</ol>
+<h3>Step 2: Get Credits</h3>
+<p><strong>Free option:</strong></p>
+<ol>
+<li>New accounts get 2 free credits (1 demo operation)</li>
+<li>Follow @nichxbt on X for +1 bonus credit</li>
+<li>Refer friends for more credits (after they pay)</li>
+</ol>
+<p><strong>Paid option:</strong></p>
+<ol>
+<li>Go to <a href="https://xactions.app/pricing">Pricing</a></li>
+<li>Choose a credit package</li>
+<li>Pay with card or crypto (BTC, ETH, SOL, USDC)</li>
+</ol>
+<h3>Step 3: Connect Your Browser</h3>
+<p>XActions uses a &quot;browser-to-browser&quot; approach. The automation runs in YOUR x.com tab, so it&#39;s just like doing actions manually — only automated!</p>
+<ol>
+<li>Open <a href="https://x.com">x.com</a> in a new tab and log in</li>
+<li>On the XActions dashboard, click <strong>&quot;Connect Browser&quot;</strong></li>
+<li>Copy the script that appears</li>
+<li>In your x.com tab, press <code>F12</code> to open Developer Tools</li>
+<li>Go to the <strong>Console</strong> tab</li>
+<li>Paste the script and press Enter</li>
+<li>You&#39;ll see &quot;✅ Connected to XActions&quot;</li>
+</ol>
+<h3>Step 4: Run an Operation</h3>
+<ol>
+<li>Back on the dashboard, click an operation (e.g., &quot;Unfollow Non-Followers&quot;)</li>
+<li>Set your options (how many to unfollow, delays, etc.)</li>
+<li>Click <strong>Run</strong></li>
+<li>Watch the real-time progress as it runs in your x.com tab!</li>
+</ol>
+<p>You&#39;ll see:</p>
+<ul>
+<li>Live progress bar</li>
+<li>Each action logged in real-time</li>
+<li>Results summary when complete</li>
+</ul>
+<hr>
+<h2>Browser Scripts (Free)</h2>
+<p>If you just want free scripts without an account:</p>
+<h3>Step 1: Go to Your Following List</h3>
+<ol>
+<li>Open <a href="https://x.com">x.com</a> and log in</li>
+<li>Go to <code>x.com/YOUR_USERNAME/following</code></li>
+</ol>
+<h3>Step 2: Open the Console</h3>
+<p><strong>Windows/Linux:</strong> Press <code>Ctrl</code> + <code>Shift</code> + <code>J</code><br><strong>Mac:</strong> Press <code>Cmd</code> + <code>Option</code> + <code>J</code></p>
+<h3>Step 3: Pick a Script</h3>
+<table>
+<thead>
+<tr>
+<th>I want to...</th>
+<th>Script</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Unfollow non-followers</td>
+<td><code>src/unfollowback.js</code></td>
+</tr>
+<tr>
+<td>Unfollow everyone</td>
+<td><code>src/unfollowEveryone.js</code></td>
+</tr>
+<tr>
+<td>Unfollow + save list</td>
+<td><code>src/unfollowWDFBLog.js</code></td>
+</tr>
+</tbody></table>
+<h3>Step 4: Copy &amp; Paste</h3>
+<ol>
+<li>Go to <a href="https://github.com/nirholas/XActions">github.com/nirholas/XActions</a></li>
+<li>Open the <code>src</code> folder</li>
+<li>Click on the script you want</li>
+<li>Click <strong>&quot;Copy raw file&quot;</strong></li>
+<li>Paste into the console and press Enter</li>
+</ol>
+<hr>
+<h2>Credit System</h2>
+<table>
+<thead>
+<tr>
+<th>Package</th>
+<th>Credits</th>
+<th>Price</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Free Demo</td>
+<td>2</td>
+<td>Free</td>
+</tr>
+<tr>
+<td>Follow Bonus</td>
+<td>+1</td>
+<td>Free</td>
+</tr>
+<tr>
+<td>Starter</td>
+<td>17</td>
+<td>$2.99</td>
+</tr>
+<tr>
+<td>Basic</td>
+<td>47</td>
+<td>$6.99</td>
+</tr>
+<tr>
+<td>Pro</td>
+<td>113</td>
+<td>$14.99</td>
+</tr>
+<tr>
+<td>Power</td>
+<td>251</td>
+<td>$29.99</td>
+</tr>
+</tbody></table>
+<p><strong>Credit costs vary by operation:</strong></p>
+<ul>
+<li>Basic ops (unfollow): 2 credits</li>
+<li>Detection ops (unfollowers, alerts): 3 credits</li>
+<li>Power features (auto-liker, keyword follow): 5 credits</li>
+</ul>
+<p>We accept: <strong>Crypto</strong> (BTC, ETH, SOL, USDC) or <strong>Card</strong> (Stripe)</p>
+<hr>
+<h2>Tips &amp; Tricks</h2>
+<h3>Go Slow to Avoid Rate Limits</h3>
+<p>X may limit your account if you do too many actions too fast. The scripts have built-in delays, but if you&#39;re unfollowing thousands of people:</p>
+<ul>
+<li>Run in batches</li>
+<li>Wait 15-30 minutes between runs</li>
+</ul>
+<h3>Keep Your Browser Open</h3>
+<p>Don&#39;t close the x.com tab while operations are running.</p>
+<h3>Dashboard Real-Time Monitoring</h3>
+<p>With the dashboard, you can watch operations happen in real-time. The admin can also monitor all sessions!</p>
+<hr>
+<h2>Safety &amp; Privacy</h2>
+<p>✅ <strong>Safe:</strong> Scripts run in YOUR browser — just like doing actions manually<br>✅ <strong>Private:</strong> No passwords or session cookies stored on our servers<br>✅ <strong>Open Source:</strong> All code is visible on <a href="https://github.com/nirholas/XActions">GitHub</a><br>✅ <strong>Non-KYC:</strong> Pay with crypto, no identity verification needed</p>
+<hr>
+<h2>🔭 Want to Monitor Followers?</h2>
+<p>Check out the <a href="monitoring.md">Monitoring Guide</a> to learn how to:</p>
+<ul>
+<li>Find out who unfollowed you</li>
+<li>Track your new followers</li>
+<li>Monitor any public account&#39;s activity</li>
+<li>Set up continuous monitoring with alerts</li>
+</ul>
+<hr>
+<h2>Need Help?</h2>
+<ul>
+<li>📚 <a href="https://xactions.app/docs">Full Documentation</a></li>
+<li>💬 <a href="https://github.com/nirholas/XActions/issues">GitHub Issues</a></li>
+<li>🐦 <a href="https://x.com/nichxbt">@nichxbt on X</a></li>
+</ul>
+<hr>
+<p><em>Made with ❤️ by <a href="https://x.com/nichxbt">@nichxbt</a></em></p>
+
+
+        <div class="cta-box">
+          <h3>⚡ Explore XActions</h3>
+          <p>100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/docs">Browse All Documentation</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 In This Section</h3>
+                <a href="/docs/guides/usage">📖 Usage</a>
+        <a href="/docs/guides/automation">📖 XActions Automation Framework Guide</a>
+        <a href="/docs/guides/monitoring">📖 Monitoring Guide</a>
+        <a href="/docs/guides/cli-reference">📖 XActions CLI Reference</a>
+        <a href="/docs/guides/ai-api">📖 XActions AI API Documentation</a>
+        <a href="/docs/guides/api-reference">📖 XActions — API Reference</a>
+        <a href="/docs/guides/deployment">📖 Deployment Guide</a>
+        <a href="/docs/guides/dom-selectors">📖 X/Twitter DOM Selector Reference</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/docs">All Documentation</a>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

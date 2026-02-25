@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tutorial: Customer Service Bot with Claude | XActions</title>
+  <meta name="description" content="You are my X/Twitter customer service automation expert. I want to use XActions' customer service bot to automate responses to mentions, handle inquiries, and p">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, open source, customer, service, bot, tutorial:, claude, claude tutorials">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Tutorial: Customer Service Bot with Claude — XActions">
+  <meta property="og:description" content="You are my X/Twitter customer service automation expert. I want to use XActions' customer service bot to automate responses to mentions, handle inquiries, and p">
+  <meta property="og:url" content="https://xactions.app/docs/tutorials/19-customer-service-bot">
+  <meta property="og:site_name" content="XActions">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Tutorial: Customer Service Bot with Claude — XActions">
+  <meta name="twitter:description" content="You are my X/Twitter customer service automation expert. I want to use XActions' customer service bot to automate responses to mentions, handle inquiries, and p">
+
+  <link rel="canonical" href="https://xactions.app/docs/tutorials/19-customer-service-bot">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Tutorial: Customer Service Bot with Claude | XActions",
+    "description": "You are my X/Twitter customer service automation expert. I want to use XActions' customer service bot to automate responses to mentions, handle inquiries, and p",
+    "url": "https://xactions.app/docs/tutorials/19-customer-service-bot",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-25",
+    "dateModified": "2026-02-25",
+    "mainEntityOfPage": "https://xactions.app/docs/tutorials/19-customer-service-bot",
+    "articleSection": "Claude Tutorials",
+    "keywords": "xactions, twitter automation, x automation, free, open source, customer, service, bot, tutorial:, claude, claude tutorials"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Claude Tutorials", "item": "https://xactions.app/docs/tutorials" },
+      { "@type": "ListItem", "position": 4, "name": "Tutorial: Customer Service Bot with Claude", "item": "https://xactions.app/docs/tutorials/19-customer-service-bot" }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .article pre { font-size: 0.75rem; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <main class="main-content">
+      <header class="main-header">
+        <h1>🤖 Tutorial: Customer Service Bot with Claude</h1>
+        <div class="breadcrumb">
+          <a href="https://xactions.app">Home</a> › <a href="https://xactions.app/docs">Docs</a> › <a href="https://xactions.app/docs/tutorials">Claude Tutorials</a> › Tutorial: Customer Service Bot with Claude
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Claude Tutorials</span>
+        <h1>Tutorial: Customer Service Bot with Claude</h1>
+<p>You are my X/Twitter customer service automation expert. I want to use XActions&#39; customer service bot to automate responses to mentions, handle inquiries, and provide excellent support. Help me configure and run the full CS automation system.</p>
+<h2>Context</h2>
+<p>I&#39;m using XActions (<a href="https://github.com/nirholas/XActions">https://github.com/nirholas/XActions</a>), an open-source X/Twitter toolkit. The <code>src/automation/customerService.js</code> is a browser-based bot that:</p>
+<ul>
+<li>Monitors mentions, DMs, and replies in real-time</li>
+<li>Auto-categorizes incoming messages (issue, thanks, pricing, question, etc.)</li>
+<li>Responds with category-appropriate templates</li>
+<li>Enforces business hours</li>
+<li>Tracks all interactions with analytics</li>
+<li>Has configurable rate limits and approval modes</li>
+</ul>
+<h2>What I Need You To Do</h2>
+<h3>Phase 1: Understand the Customer Service Bot</h3>
+<p>The bot runs in the browser console on x.com. Here&#39;s how it works:</p>
+<ol>
+<li><p><strong>Setup flow:</strong></p>
+<ul>
+<li>Navigate to x.com (logged into your business account)</li>
+<li>Open DevTools → Console</li>
+<li>Paste <code>core.js</code> (the XActions foundation)</li>
+<li>Paste <code>customerService.js</code></li>
+<li>The bot starts monitoring immediately</li>
+</ul>
+</li>
+<li><p><strong>Bot architecture:</strong></p>
+<pre><code>Notification Check Loop
+↓
+Fetch @mentions from x.com/notifications/mentions
+↓
+For each mention:
+  → Extract customer username + message text
+  → Auto-categorize (keyword matching)
+  → Generate templated response
+  → Check rate limits + business hours
+  → Send reply (or prepare for approval)
+↓
+Wait CHECK_INTERVAL_SECONDS
+↓
+Repeat
+</code></pre>
+</li>
+</ol>
+<h3>Phase 2: Configure the Bot</h3>
+<p>Here&#39;s every configuration option. Help me customize each section.</p>
+<p><strong>Account Configuration:</strong></p>
+<pre><code class="language-javascript">const ACCOUNTS = `
+my_business_account
+`.trim().split(&#39;\n&#39;).map(line =&gt; {
+  const [username, password] = line.trim().split(&#39;:&#39;);
+  return { username: username?.toLowerCase(), password };
+}).filter(a =&gt; a.username);
+</code></pre>
+<ul>
+<li>Format: One account per line</li>
+<li>Just the username if already logged in</li>
+<li><code>username:password</code> format if switching accounts</li>
+</ul>
+<p><strong>Monitoring Configuration:</strong></p>
+<pre><code class="language-javascript">MONITOR: {
+  mentions: true,      // Watch @mentions
+  dms: true,           // Watch DMs
+  replies: true,       // Watch replies to your tweets
+  keywords: true,      // Watch brand keywords
+},
+
+BRAND_KEYWORDS: [
+  // &#39;your_brand_name&#39;,
+  // &#39;your_product_name&#39;,
+],
+</code></pre>
+<p><strong>Response Settings:</strong></p>
+<pre><code class="language-javascript">RESPONSE: {
+  autoReply: true,          // Auto-reply to mentions
+  autoReplyDM: false,       // Auto-reply to DMs (careful!)
+  requireApproval: true,    // Show response and wait for confirmation
+  markAsRead: true,         // Mark notifications as read
+},
+</code></pre>
+<p><strong>Business Hours:</strong></p>
+<pre><code class="language-javascript">BUSINESS_HOURS: {
+  enabled: true,
+  timezone: &#39;America/New_York&#39;,
+  start: 9,                 // 9 AM
+  end: 17,                  // 5 PM
+  days: [1, 2, 3, 4, 5],    // Mon-Fri (0=Sunday)
+  outsideHoursMessage: &quot;Thanks for reaching out! We&#39;re outside business hours (Mon-Fri 9AM-5PM ET). We&#39;ll respond next business day! 🙏&quot;,
+},
+</code></pre>
+<p>Outside hours: bot sends the <code>outsideHoursMessage</code> instead of a category-specific response.</p>
+<p><strong>Rate Limits:</strong></p>
+<pre><code class="language-javascript">CHECK_INTERVAL_SECONDS: 60,      // How often to check notifications
+RESPONSE_DELAY_SECONDS: 5,       // Wait before replying (looks natural)
+MAX_RESPONSES_PER_HOUR: 20,
+MAX_RESPONSES_PER_DAY: 100,
+</code></pre>
+<h3>Phase 3: Response Templates</h3>
+<p>The bot uses categorized templates with placeholders:</p>
+<pre><code class="language-javascript">const TEMPLATES = {
+  greeting: [
+    &quot;Hi {customer}! Thanks for reaching out. How can I help? 😊&quot;,
+    &quot;Hey {customer}! We&#39;re here to help. What can we assist with?&quot;,
+  ],
+  issue: [
+    &quot;Hi {customer}, sorry about the issues. Please DM us details so we can help!&quot;,
+    &quot;Hey {customer}, we want to fix this! DM us your order details.&quot;,
+  ],
+  thanks: [
+    &quot;Thank you {customer}! We appreciate your kind words! 🙏❤️&quot;,
+    &quot;Wow, thanks {customer}! Comments like yours make our day! 🌟&quot;,
+  ],
+  question: [
+    &quot;Great question {customer}! Let me help. [CUSTOMIZE]&quot;,
+  ],
+  pricing: [
+    &quot;Hi {customer}! For pricing, check our site or DM for a quote! 💰&quot;,
+  ],
+  support: [
+    &quot;Hi {customer}! For fastest support, DM us or email support@company.com 📧&quot;,
+  ],
+  availability: [
+    &quot;Hi {customer}! We&#39;ll check availability and DM you!&quot;,
+  ],
+  escalate: [
+    &quot;Hi {customer}! Let&#39;s continue in DMs for better assistance. Send us a message! 🙌&quot;,
+  ],
+};
+</code></pre>
+<p><strong>Placeholder variables:</strong></p>
+<ul>
+<li><code>{customer}</code> → replaced with <code>@username</code></li>
+<li><code>{original}</code> → replaced with their message text</li>
+</ul>
+<p><strong>Customize for my business:</strong></p>
+<ol>
+<li>Replace generic templates with brand-voice responses</li>
+<li>Add product-specific categories</li>
+<li>Include links to FAQ, support pages, etc.</li>
+<li>Add seasonal/promotional templates</li>
+</ol>
+<h3>Phase 4: Auto-Categorization</h3>
+<p>The bot detects message categories using keyword matching:</p>
+<pre><code class="language-javascript">const KEYWORD_CATEGORIES = {
+  issue: [&#39;problem&#39;, &#39;issue&#39;, &#39;broken&#39;, &#39;doesn\&#39;t work&#39;, &#39;not working&#39;,
+          &#39;error&#39;, &#39;bug&#39;, &#39;complaint&#39;, &#39;disappointed&#39;, &#39;frustrated&#39;,
+          &#39;terrible&#39;, &#39;awful&#39;, &#39;worst&#39;, &#39;refund&#39;, &#39;cancel&#39;],
+  thanks: [&#39;thank&#39;, &#39;thanks&#39;, &#39;awesome&#39;, &#39;amazing&#39;, &#39;love&#39;, &#39;great&#39;,
+           &#39;excellent&#39;, &#39;perfect&#39;, &#39;best&#39;, &#39;fantastic&#39;, &#39;wonderful&#39;],
+  pricing: [&#39;price&#39;, &#39;cost&#39;, &#39;how much&#39;, &#39;pricing&#39;, &#39;discount&#39;,
+            &#39;coupon&#39;, &#39;deal&#39;, &#39;sale&#39;, &#39;expensive&#39;, &#39;cheap&#39;],
+  availability: [&#39;available&#39;, &#39;in stock&#39;, &#39;restock&#39;, &#39;when&#39;,
+                  &#39;back in stock&#39;, &#39;sold out&#39;, &#39;inventory&#39;],
+  question: [&#39;?&#39;, &#39;how do&#39;, &#39;how can&#39;, &#39;what is&#39;, &#39;where&#39;, &#39;when&#39;,
+             &#39;why&#39;, &#39;can you&#39;, &#39;could you&#39;, &#39;does it&#39;, &#39;is it&#39;],
+};
+</code></pre>
+<p><strong>Customization ideas:</strong></p>
+<ul>
+<li>Add industry-specific keywords</li>
+<li>Add product names to relevant categories</li>
+<li>Create new categories (e.g., &quot;shipping&quot;, &quot;returns&quot;, &quot;demo&quot;)</li>
+<li>Adjust keyword priority order (first match wins)</li>
+</ul>
+<h3>Phase 5: Runtime Controls</h3>
+<p>Once the bot is running, use these console commands:</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>stopCS()</code></td>
+<td>Stop the bot</td>
+</tr>
+<tr>
+<td><code>csStats()</code></td>
+<td>Print interaction statistics</td>
+</tr>
+<tr>
+<td><code>csTemplates()</code></td>
+<td>List all available templates</td>
+</tr>
+<tr>
+<td><code>csRespond(&#39;category&#39;)</code></td>
+<td>Get a random response from a category (copied to clipboard)</td>
+</tr>
+<tr>
+<td><code>csRespond(&#39;thanks&#39;, &#39;Custom message&#39;)</code></td>
+<td>Use a custom message</td>
+</tr>
+</tbody></table>
+<p><strong>Stats output:</strong></p>
+<pre><code>╔═══════════════════════════════════════════════════╗
+║  📊 Customer Service Stats                        ║
+╠═══════════════════════════════════════════════════╣
+║  Total Interactions: 47                           ║
+║  Today: 12   │  This Hour: 3                      ║
+╠───────────────────────────────────────────────────╣
+║  By Category:                                     ║
+║    issue          : 15                            ║
+║    thanks         : 12                            ║
+║    question       : 10                            ║
+║    pricing        : 5                             ║
+║    greeting       : 5                             ║
+╚═══════════════════════════════════════════════════╝
+</code></pre>
+<h3>Phase 6: Approval Mode</h3>
+<p>When <code>requireApproval: true</code>:</p>
+<ol>
+<li>Bot detects a new mention</li>
+<li>Categorizes the message</li>
+<li>Generates a response</li>
+<li>Types the response into the reply box</li>
+<li>Logs: &quot;📝 Response ready. Press Enter to send, Escape to cancel&quot;</li>
+<li><strong>You</strong> review and send or cancel</li>
+</ol>
+<p>This is the recommended mode because:</p>
+<ul>
+<li>Prevents embarrassing auto-replies</li>
+<li>Lets you customize before sending</li>
+<li>Catches categorization errors</li>
+<li>Human-in-the-loop quality control</li>
+</ul>
+<h3>Phase 7: Full Setup Walkthrough</h3>
+<p>Here&#39;s the complete setup for MY business:</p>
+<ol>
+<li><p><strong>Prepare <code>core.js</code></strong> — Copy <code>src/automation/core.js</code></p>
+</li>
+<li><p><strong>Customize <code>customerService.js</code>:</strong></p>
+<ul>
+<li>Set <code>ACTIVE_ACCOUNT</code> to your X handle</li>
+<li>Configure <code>BRAND_KEYWORDS</code> for your brand</li>
+<li>Set your <code>BUSINESS_HOURS</code></li>
+<li>Start with <code>requireApproval: true</code></li>
+<li>Customize <code>TEMPLATES</code> with your brand voice</li>
+<li>Add product-specific categories to <code>KEYWORD_CATEGORIES</code></li>
+</ul>
+</li>
+<li><p><strong>Go to x.com</strong> → DevTools → Console</p>
+</li>
+<li><p><strong>Paste <code>core.js</code></strong> → Wait for &quot;✅ Core loaded!&quot;</p>
+</li>
+<li><p><strong>Paste customized <code>customerService.js</code></strong></p>
+</li>
+<li><p><strong>Watch the bot start:</strong></p>
+<pre><code>╔═══════════════════════════════════════════════╗
+║  🎧 XActions Customer Service Bot              ║
+║  Active Account: @your_business                ║
+║  Monitoring: Mentions ✅ │ DMs ✅ │ Replies ✅ ║
+║  Auto-Reply: ✅ │ Approval: ✅                 ║
+║  Business Hours: ✅ (9:00-17:00)               ║
+╚═══════════════════════════════════════════════╝
+</code></pre>
+</li>
+</ol>
+<h3>Phase 8: Advanced Customization Ideas</h3>
+<ol>
+<li><p><strong>Multi-language support:</strong></p>
+<ul>
+<li>Detect language from incoming message</li>
+<li>Maintain templates in multiple languages</li>
+<li>Route to language-specific categories</li>
+</ul>
+</li>
+<li><p><strong>Priority detection:</strong></p>
+<ul>
+<li>Flag urgent issues (words: &quot;emergency&quot;, &quot;down&quot;, &quot;broken&quot;)</li>
+<li>Escalate VIP customers (verified accounts, high followers)</li>
+<li>Fast-track returning customers</li>
+</ul>
+</li>
+<li><p><strong>CRM-like features using sessionStorage:</strong></p>
+<pre><code class="language-javascript">// Track customer interaction history
+const customerHistory = storage.get(&#39;cs_customer_history&#39;) || {};
+// Check if returning customer
+if (customerHistory[customer]) {
+  // Personalize greeting
+}
+</code></pre>
+</li>
+<li><p><strong>Integration with MCP:</strong><br>Use MCP tools alongside the bot:</p>
+<pre><code>&quot;Check sentiment of our last 20 mentions&quot;
+&quot;Get analytics on our response rate&quot;
+&quot;Search for unresolved complaints&quot;
+</code></pre>
+</li>
+</ol>
+<h2>My Business Details</h2>
+<p>(Replace before pasting)</p>
+<ul>
+<li>Business X handle: @mybusiness</li>
+<li>Brand keywords: brand1, product1, product2</li>
+<li>Business hours: 9AM-5PM EST, Mon-Fri</li>
+<li>Support email: <a href="mailto:support@mybusiness.com">support@mybusiness.com</a></li>
+<li>Products/services offered: [describe]</li>
+<li>Common customer issues: [list]</li>
+<li>Brand voice: Professional / Casual / Friendly / Formal</li>
+</ul>
+<p>Generate the fully customized customerService.js with my business details filled in.</p>
+
+
+        <div class="cta-box">
+          <h3>⚡ Explore XActions</h3>
+          <p>100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/docs">Browse All Documentation</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 In This Section</h3>
+                <a href="/docs/tutorials/01-mcp-setup-and-first-commands">🤖 Tutorial: Setting Up XActions MCP Server with Claude</a>
+        <a href="/docs/tutorials/02-unfollow-non-followers-cleanup">🤖 Tutorial: Unfollow Non-Followers &amp; Follower Cleanup with Claude</a>
+        <a href="/docs/tutorials/03-growth-automation-suite">🤖 Tutorial: Growth Automation Suite — Grow Your X Account on Autopilot</a>
+        <a href="/docs/tutorials/04-scraping-research-analysis">🤖 Tutorial: Tweet Scraping, Profile Analysis &amp; Research with Claude</a>
+        <a href="/docs/tutorials/05-content-posting-threads-scheduling">🤖 Tutorial: Content Posting, Threads, Polls &amp; Scheduling with Claude</a>
+        <a href="/docs/tutorials/06-analytics-competitor-intelligence">🤖 Tutorial: Engagement Analytics, Best Time to Post &amp; Competitor Intelligence</a>
+        <a href="/docs/tutorials/07-auto-liker-auto-commenter">🤖 Tutorial: Auto-Liker &amp; Auto-Commenter — Engagement Automation with Claude</a>
+        <a href="/docs/tutorials/08-blocking-muting-spam-protection">🤖 Tutorial: Mass Block, Unblock, Mute &amp; Spam Protection with Claude</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/docs">All Documentation</a>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

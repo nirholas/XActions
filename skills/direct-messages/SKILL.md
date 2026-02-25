@@ -1,13 +1,13 @@
 ---
 name: direct-messages
-description: Send, manage, and automate direct messages on X/Twitter. View DM history, send personalized bulk DMs with templates, export conversations, and filter message requests. Use when users need to manage DMs or automate direct messaging.
+description: Sends, manages, and automates direct messages on X/Twitter. Supports personalized bulk DMs with templates, conversation management, message request filtering, and DM export. The agent uses this skill when a user needs to send DMs, manage conversations, or automate direct messaging workflows.
 license: MIT
 metadata:
   author: nichxbt
   version: "3.0"
 ---
 
-# Direct Messages with XActions
+# Direct Messages
 
 Browser console scripts for sending, managing, and exporting X/Twitter DMs.
 
@@ -16,8 +16,7 @@ Browser console scripts for sending, managing, and exporting X/Twitter DMs.
 | Script | File | Purpose |
 |--------|------|---------|
 | Send Direct Messages | `src/sendDirectMessage.js` | Send personalized DMs to a list of users |
-| DM Manager | `src/dmManager.js` | Core DM management (read, filter, organize) |
-| DM Exporter | `scripts/scrapeDMs.js` | Export DM conversation history |
+| DM Manager | `src/dmManager.js` | Core DM management (read, filter, organize, export) |
 
 ## Send Direct Messages
 
@@ -43,17 +42,17 @@ const CONFIG = {
 ### How to use
 
 1. Navigate to `x.com/messages`
-2. Edit CONFIG with users and message
-3. Set `dryRun = false`
+2. Edit CONFIG with target users and message template
+3. Set `dryRun: false` when ready
 4. Open DevTools (F12) → Console
 5. Paste the script → Enter
 
 ### Safety features
 
-- Tracks sent messages in localStorage to avoid duplicates
+- Tracks sent messages in `localStorage` to avoid duplicates
 - Configurable delay between messages (30s default)
 - Session limit prevents over-messaging
-- Dry-run mode for previewing
+- Dry-run mode previews actions without sending
 
 **Warning:** Mass DMing can get your account restricted. Only message users who have open DMs or follow you.
 
@@ -61,13 +60,13 @@ const CONFIG = {
 
 **File:** `src/dmManager.js`
 
-Core module for reading, filtering, and organizing DM conversations.
+Core module for reading, filtering, organizing, and exporting DM conversations. Supports message requests, conversation search, and DM privacy settings.
 
-## DM Exporter
+### How to use
 
-**File:** `scripts/scrapeDMs.js`
-
-Export DM history as JSON. Navigate to `x.com/messages`, open a conversation, paste the script.
+1. Navigate to `x.com/messages`
+2. Open DevTools (F12) → Console
+3. Paste the script → Enter
 
 ## Key Selectors
 
@@ -79,18 +78,14 @@ Export DM history as JSON. Navigate to `x.com/messages`, open a conversation, pa
 | Send button | `[data-testid="dmComposerSendButton"]` |
 | Conversation list | `[data-testid="conversation"]` |
 | Message bubble | `[data-testid="messageEntry"]` |
+| Message requests | `[data-testid="messageRequests"]` |
 | Back button | `[data-testid="app-bar-back"]` |
-
-## MCP Tools
-
-- `x_send_dm` – Send a direct message
-- `x_get_dms` – Get DM conversations
-- `x_export_dms` – Export DM history
 
 ## Notes
 
 - DM scripts require being on the Messages page (`x.com/messages`)
-- Export is for your own conversations only
 - Group chats support up to 50 participants
 - Message requests from non-followers must be approved before replying
 - Add delays (30s+) between bulk DMs to avoid rate limits
+- `{username}` placeholder in templates is replaced with the recipient's handle
+- Sent history is persisted in `localStorage` across sessions

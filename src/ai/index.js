@@ -17,3 +17,6 @@ export {
   generateReply,
   analyzeCompetitorAndGenerate,
 } from './tweetGenerator.js';
+
+// Content Optimizer (09-J)
+export { suggestHashtags, optimizeTweet, predictPerformance, generateVariations, analyzeVoice as analyzeContentVoice } from './contentOptimizer.js';

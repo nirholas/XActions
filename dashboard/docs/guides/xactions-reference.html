@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>� XActions Complete Function Reference | XActions</title>
+  <meta name="description" content="Every function with real, working examples.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, open source, reference, complete, function, guides &amp; reference">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="� XActions Complete Function Reference — XActions">
+  <meta property="og:description" content="Every function with real, working examples.">
+  <meta property="og:url" content="https://xactions.app/docs/guides/xactions-reference">
+  <meta property="og:site_name" content="XActions">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="� XActions Complete Function Reference — XActions">
+  <meta name="twitter:description" content="Every function with real, working examples.">
+
+  <link rel="canonical" href="https://xactions.app/docs/guides/xactions-reference">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "\udcd6 XActions Complete Function Reference | XActions",
+    "description": "Every function with real, working examples.",
+    "url": "https://xactions.app/docs/guides/xactions-reference",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-25",
+    "dateModified": "2026-02-25",
+    "mainEntityOfPage": "https://xactions.app/docs/guides/xactions-reference",
+    "articleSection": "Guides & Reference",
+    "keywords": "xactions, twitter automation, x automation, free, open source, reference, complete, function, guides & reference"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Guides & Reference", "item": "https://xactions.app/docs/guides" },
+      { "@type": "ListItem", "position": 4, "name": "\udcd6 XActions Complete Function Reference", "item": "https://xactions.app/docs/guides/xactions-reference" }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .article pre { font-size: 0.75rem; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <main class="main-content">
+      <header class="main-header">
+        <h1>📖 � XActions Complete Function Reference</h1>
+        <div class="breadcrumb">
+          <a href="https://xactions.app">Home</a> › <a href="https://xactions.app/docs">Docs</a> › <a href="https://xactions.app/docs/guides">Guides &amp; Reference</a> › � XActions Complete Function Reference
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Guides &amp; Reference</span>
+        <h1>📖 XActions Complete Function Reference</h1>
+<p>Every function with real, working examples.</p>
+<h2>XActions.engage - Engagement Actions</h2>
+<h3><code>like(tweetElement)</code> - Like a tweet</h3>
+<pre><code class="language-js">// Like first tweet
+const tweets = XActions.tweet.getAll()
+await XActions.engage.like(tweets[0])
+
+// Like first 10 tweets
+for (const tweet of XActions.tweet.getAll().slice(0, 10)) {
+  await XActions.engage.like(tweet)
+  await new Promise(r =&gt; setTimeout(r, 500))
+}
+
+// Like tweets with keyword
+async function likeByKeyword(keyword, max = 5) {
+  let count = 0
+  for (const tweet of XActions.tweet.getAll()) {
+    if (count &gt;= max) break
+    const text = tweet.querySelector(&#39;[data-testid=&quot;tweetText&quot;]&#39;)?.textContent || &quot;&quot;
+    if (text.toLowerCase().includes(keyword)) {
+      await XActions.engage.like(tweet)
+      count++
+    }
+  }
+  console.log(`Liked ${count} tweets with &quot;${keyword}&quot;`)
+}
+await likeByKeyword(&quot;web3&quot;, 5)
+</code></pre>
+<h3><code>unlike(tweetElement)</code> - Unlike a tweet</h3>
+<pre><code class="language-js">const tweets = XActions.tweet.getAll()
+await XActions.engage.unlike(tweets[0])
+</code></pre>
+<h3><code>retweet(tweetElement)</code> - Retweet</h3>
+<pre><code class="language-js">// Retweet first tweet
+const tweets = XActions.tweet.getAll()
+await XActions.engage.retweet(tweets[0])
+
+// Like + Retweet combo
+async function boost(tweet) {
+  await XActions.engage.like(tweet)
+  await XActions.engage.retweet(tweet)
+}
+await boost(XActions.tweet.getAll()[0])
+</code></pre>
+<h3><code>unretweet(tweetElement)</code> - Undo retweet</h3>
+<pre><code class="language-js">const tweets = XActions.tweet.getAll()
+await XActions.engage.unretweet(tweets[0])
+</code></pre>
+<h3><code>bookmark(tweetElement)</code> - Bookmark tweet</h3>
+<pre><code class="language-js">// Bookmark first tweet
+await XActions.engage.bookmark(XActions.tweet.getAll()[0])
+
+// Bookmark tweets with links
+for (const tweet of XActions.tweet.getAll()) {
+  if (tweet.querySelector(&#39;a[href*=&quot;t.co&quot;]&#39;)) {
+    await XActions.engage.bookmark(tweet)
+  }
+}
+</code></pre>
+<h3><code>unbookmark(tweetElement)</code> - Remove bookmark</h3>
+<pre><code class="language-js">await XActions.engage.unbookmark(XActions.tweet.getAll()[0])
+</code></pre>
+<h3><code>addToList(tweetElement, listName)</code> - Add author to list</h3>
+<pre><code class="language-js">await XActions.engage.addToList(XActions.tweet.getAll()[0], &quot;Interesting People&quot;)
+</code></pre>
+<h3><code>report(tweetElement)</code> - Report tweet</h3>
+<pre><code class="language-js">await XActions.engage.report(XActions.tweet.getAll()[0])
+// Dialog opens - select reason manually
+</code></pre>
+<h3><code>copyLink(tweetElement)</code> - Copy tweet link</h3>
+<pre><code class="language-js">await XActions.engage.copyLink(XActions.tweet.getAll()[0])
+console.log(&quot;Link copied to clipboard!&quot;)
+</code></pre>
+<h3><code>shareViaDM(tweetElement, username)</code> - Share via DM</h3>
+<pre><code class="language-js">await XActions.engage.shareViaDM(XActions.tweet.getAll()[0], &quot;friendname&quot;)
+</code></pre>
+<h3><code>embed(tweetElement)</code> - Get embed code</h3>
+<pre><code class="language-js">await XActions.engage.embed(XActions.tweet.getAll()[0])
+// Copy embed code from dialog
+</code></pre>
+<h3><code>viewAnalytics(tweetElement)</code> - View analytics</h3>
+<pre><code class="language-js">await XActions.engage.viewAnalytics(XActions.tweet.getAll()[0])
+</code></pre>
+<h3><code>requestNote(tweetElement)</code> - Request community note</h3>
+<pre><code class="language-js">await XActions.engage.requestNote(XActions.tweet.getAll()[0])
+</code></pre>
+<h3><code>highlight(tweetElement)</code> - Highlight (Premium)</h3>
+<pre><code class="language-js">await XActions.engage.highlight(XActions.tweet.getAll()[0])
+</code></pre>
+<hr>
+<h2>XActions.user - User Interactions</h2>
+<h3><code>follow(target)</code> - Follow user</h3>
+<pre><code class="language-js">// By username
+await XActions.user.follow(&quot;elonmusk&quot;)
+
+// Follow list of users
+const users = [&quot;openai&quot;, &quot;anthropic&quot;, &quot;google&quot;]
+for (const u of users) {
+  await XActions.user.follow(u)
+  await new Promise(r =&gt; setTimeout(r, 2000))
+}
+</code></pre>
+<h3><code>unfollow(target)</code> - Unfollow user</h3>
+<pre><code class="language-js">await XActions.user.unfollow(&quot;someuser&quot;)
+</code></pre>
+<h3><code>block(username)</code> - Block user</h3>
+<pre><code class="language-js">await XActions.user.block(&quot;spammer&quot;)
+
+// Block multiple
+for (const spam of [&quot;spam1&quot;, &quot;spam2&quot;]) {
+  await XActions.user.block(spam)
+}
+</code></pre>
+<h3><code>unblock(username)</code> - Unblock user</h3>
+<pre><code class="language-js">await XActions.user.unblock(&quot;formerlyblocked&quot;)
+</code></pre>
+<h3><code>mute(username)</code> - Mute user</h3>
+<pre><code class="language-js">await XActions.user.mute(&quot;annoying&quot;)
+</code></pre>
+<h3><code>unmute(username)</code> - Unmute user</h3>
+<pre><code class="language-js">await XActions.user.unmute(&quot;previouslymuted&quot;)
+</code></pre>
+<h3><code>report(username)</code> - Report user</h3>
+<pre><code class="language-js">await XActions.user.report(&quot;badactor&quot;)
+</code></pre>
+<h3><code>addToList(username, listName)</code> - Add to list</h3>
+<pre><code class="language-js">await XActions.user.addToList(&quot;techwriter&quot;, &quot;Tech News&quot;)
+
+// Build curated list
+const leaders = [&quot;paulg&quot;, &quot;naval&quot;, &quot;sama&quot;]
+for (const l of leaders) {
+  await XActions.user.addToList(l, &quot;Founders&quot;)
+}
+</code></pre>
+<h3><code>notifyOn(username)</code> - Turn on notifications</h3>
+<pre><code class="language-js">await XActions.user.notifyOn(&quot;mustwatchaccount&quot;)
+</code></pre>
+<h3><code>notifyOff(username)</code> - Turn off notifications</h3>
+<pre><code class="language-js">await XActions.user.notifyOff(&quot;toofrequent&quot;)
+</code></pre>
+<h3><code>viewTopics(username)</code> - View topics</h3>
+<pre><code class="language-js">await XActions.user.viewTopics(&quot;influencer&quot;)
+</code></pre>
+<h3><code>viewLists(username)</code> - View lists</h3>
+<pre><code class="language-js">await XActions.user.viewLists(&quot;curator&quot;)
+</code></pre>
+<h3><code>viewFollowers(username)</code> - View followers</h3>
+<pre><code class="language-js">await XActions.user.viewFollowers(&quot;competitor&quot;)
+</code></pre>
+<h3><code>viewFollowing(username)</code> - View following</h3>
+<pre><code class="language-js">await XActions.user.viewFollowing(&quot;tastemaker&quot;)
+</code></pre>
+<h3><code>viewLikes(username)</code> - View likes</h3>
+<pre><code class="language-js">await XActions.user.viewLikes(&quot;researcher&quot;)
+</code></pre>
+<h3><code>viewMedia(username)</code> - View media</h3>
+<pre><code class="language-js">await XActions.user.viewMedia(&quot;photographer&quot;)
+</code></pre>
+<h3><code>viewReplies(username)</code> - View replies</h3>
+<pre><code class="language-js">await XActions.user.viewReplies(&quot;activeuser&quot;)
+</code></pre>
+<h3><code>viewHighlights(username)</code> - View highlights</h3>
+<pre><code class="language-js">await XActions.user.viewHighlights(&quot;creator&quot;)
+</code></pre>
+<h3><code>viewArticles(username)</code> - View articles</h3>
+<pre><code class="language-js">await XActions.user.viewArticles(&quot;writer&quot;)
+</code></pre>
+<h3><code>shareProfile(username)</code> - Copy profile link</h3>
+<pre><code class="language-js">await XActions.user.shareProfile(&quot;coolaccount&quot;)
+</code></pre>
+<h3><code>followsYou(username)</code> - Check if follows you</h3>
+<pre><code class="language-js">const follows = await XActions.user.followsYou(&quot;someuser&quot;)
+console.log(follows ? &quot;They follow you!&quot; : &quot;They don&#39;t follow you&quot;)
+
+// Find mutuals
+async function findMutuals(users) {
+  const mutuals = []
+  for (const u of users) {
+    if (await XActions.user.followsYou(u)) mutuals.push(u)
+  }
+  return mutuals
+}
+</code></pre>
+<h3><code>getInfo(username)</code> - Get user info</h3>
+<pre><code class="language-js">const info = await XActions.user.getInfo(&quot;openai&quot;)
+console.log(`${info.displayName} - ${info.bio}`)
+console.log(`Followers: ${info.followers}`)
+</code></pre>
+<h3><code>restrict(username)</code> - Restrict user</h3>
+<pre><code class="language-js">await XActions.user.restrict(&quot;limitedinteraction&quot;)
+</code></pre>
+<hr>
+<h2>XActions.dm - Direct Messages</h2>
+<h3><code>send(username, message)</code> - Send DM</h3>
+<pre><code class="language-js">await XActions.dm.send(&quot;friend&quot;, &quot;Hey! How are you?&quot;)
+
+// Send to multiple
+const team = [&quot;member1&quot;, &quot;member2&quot;]
+for (const m of team) {
+  await XActions.dm.send(m, &quot;Team meeting at 3pm!&quot;)
+}
+</code></pre>
+<h3><code>open(username)</code> - Open conversation</h3>
+<pre><code class="language-js">await XActions.dm.open(&quot;friend&quot;)
+</code></pre>
+<h3><code>getConversations()</code> - Get all conversations</h3>
+<pre><code class="language-js">const convos = await XActions.dm.getConversations()
+console.log(`You have ${convos.length} conversations`)
+</code></pre>
+<h3><code>deleteConversation(element)</code> - Delete conversation</h3>
+<pre><code class="language-js">const convos = await XActions.dm.getConversations()
+await XActions.dm.deleteConversation(convos[0].element)
+</code></pre>
+<h3><code>leaveGroup()</code> - Leave group DM</h3>
+<pre><code class="language-js">await XActions.dm.leaveGroup()
+</code></pre>
+<h3><code>createGroup(usernames)</code> - Create group DM</h3>
+<pre><code class="language-js">await XActions.dm.createGroup([&quot;user1&quot;, &quot;user2&quot;, &quot;user3&quot;])
+</code></pre>
+<h3><code>sendImage()</code> - Send image</h3>
+<pre><code class="language-js">await XActions.dm.sendImage()
+// File picker opens - select manually
+</code></pre>
+<h3><code>sendGif(searchTerm)</code> - Send GIF</h3>
+<pre><code class="language-js">await XActions.dm.sendGif(&quot;celebration&quot;)
+</code></pre>
+<h3><code>react(messageElement, emoji)</code> - React to message</h3>
+<pre><code class="language-js">// React with heart
+await XActions.dm.react(messageElement, &quot;❤️&quot;)
+</code></pre>
+<hr>
+<h2>XActions.search - Search &amp; Discovery</h2>
+<h3><code>query(query, filter)</code> - Search</h3>
+<pre><code class="language-js">await XActions.search.query(&quot;javascript tips&quot;)
+await XActions.search.query(&quot;AI news&quot;, &quot;live&quot;) // Latest
+</code></pre>
+<h3><code>top(query)</code> - Top results</h3>
+<pre><code class="language-js">await XActions.search.top(&quot;startup advice&quot;)
+</code></pre>
+<h3><code>latest(query)</code> - Latest results</h3>
+<pre><code class="language-js">await XActions.search.latest(&quot;breaking news&quot;)
+</code></pre>
+<h3><code>people(query)</code> - Search people</h3>
+<pre><code class="language-js">await XActions.search.people(&quot;web developer&quot;)
+</code></pre>
+<h3><code>photos(query)</code> - Search photos</h3>
+<pre><code class="language-js">await XActions.search.photos(&quot;sunset photography&quot;)
+</code></pre>
+<h3><code>videos(query)</code> - Search videos</h3>
+<pre><code class="language-js">await XActions.search.videos(&quot;coding tutorial&quot;)
+</code></pre>
+<h3><code>from(username)</code> - Tweets from user</h3>
+<pre><code class="language-js">await XActions.search.from(&quot;elonmusk&quot;)
+</code></pre>
+<h3><code>to(username)</code> - Tweets to user</h3>
+<pre><code class="language-js">await XActions.search.to(&quot;openai&quot;)
+</code></pre>
+<h3><code>mentions(username)</code> - Mentions of user</h3>
+<pre><code class="language-js">await XActions.search.mentions(&quot;yourhandle&quot;)
+</code></pre>
+<h3><code>hashtag(tag)</code> - Search hashtag</h3>
+<pre><code class="language-js">await XActions.search.hashtag(&quot;buildinpublic&quot;)
+</code></pre>
+<h3><code>advanced(options)</code> - Advanced search</h3>
+<pre><code class="language-js">// Viral tweets from a user
+await XActions.search.advanced({
+  from: &quot;elonmusk&quot;,
+  minFaves: 10000,
+  since: &quot;2024-01-01&quot;
+})
+
+// Tech discussions with media
+await XActions.search.advanced({
+  words: &quot;AI startup&quot;,
+  hasMedia: true,
+  minRetweets: 100,
+  lang: &quot;en&quot;
+})
+
+// Find your mentions (excluding RTs)
+await XActions.search.advanced({
+  mentioning: &quot;yourusername&quot;,
+  excludeRetweets: true
+})
+
+// Job postings
+await XActions.search.advanced({
+  words: &quot;hiring&quot;,
+  hashtags: [&quot;remotejobs&quot;],
+  since: &quot;2024-12-01&quot;
+})
+</code></pre>
+<h3><code>getResults()</code> - Get search results</h3>
+<pre><code class="language-js">await XActions.search.query(&quot;javascript&quot;)
+const results = XActions.search.getResults()
+console.log(`Found ${results.length} tweets`)
+</code></pre>
+<hr>
+<h2>XActions.nav - Navigation</h2>
+<h3><code>home()</code> - Go to home</h3>
+<pre><code class="language-js">await XActions.nav.home()
+</code></pre>
+<h3><code>explore()</code> - Go to explore</h3>
+<pre><code class="language-js">await XActions.nav.explore()
+</code></pre>
+<h3><code>notifications()</code> - Go to notifications</h3>
+<pre><code class="language-js">await XActions.nav.notifications()
+</code></pre>
+<h3><code>messages()</code> - Go to messages</h3>
+<pre><code class="language-js">await XActions.nav.messages()
+</code></pre>
+<h3><code>bookmarks()</code> - Go to bookmarks</h3>
+<pre><code class="language-js">await XActions.nav.bookmarks()
+</code></pre>
+<h3><code>lists()</code> - Go to lists</h3>
+<pre><code class="language-js">await XActions.nav.lists()
+</code></pre>
+<h3><code>communities()</code> - Go to communities</h3>
+<pre><code class="language-js">await XActions.nav.communities()
+</code></pre>
+<h3><code>premium()</code> - Go to premium</h3>
+<pre><code class="language-js">await XActions.nav.premium()
+</code></pre>
+<h3><code>profile(username)</code> - Go to profile</h3>
+<pre><code class="language-js">await XActions.nav.profile(&quot;elonmusk&quot;)
+await XActions.nav.profile() // Your own profile
+</code></pre>
+<h3><code>settings()</code> - Go to settings</h3>
+<pre><code class="language-js">await XActions.nav.settings()
+</code></pre>
+<h3><code>notifyAll()</code> - All notifications</h3>
+<pre><code class="language-js">await XActions.nav.notifyAll()
+</code></pre>
+<h3><code>notifyVerified()</code> - Verified notifications</h3>
+<pre><code class="language-js">await XActions.nav.notifyVerified()
+</code></pre>
+<h3><code>notifyMentions()</code> - Mentions only</h3>
+<pre><code class="language-js">await XActions.nav.notifyMentions()
+</code></pre>
+<h3><code>forYou()</code> - For You timeline</h3>
+<pre><code class="language-js">await XActions.nav.forYou()
+</code></pre>
+<h3><code>following()</code> - Following timeline</h3>
+<pre><code class="language-js">await XActions.nav.following()
+</code></pre>
+<h3><code>trending()</code> - Trending</h3>
+<pre><code class="language-js">await XActions.nav.trending()
+</code></pre>
+<h3><code>news()</code> - News tab</h3>
+<pre><code class="language-js">await XActions.nav.news()
+</code></pre>
+<h3><code>sports()</code> - Sports tab</h3>
+<pre><code class="language-js">await XActions.nav.sports()
+</code></pre>
+<h3><code>entertainment()</code> - Entertainment tab</h3>
+<pre><code class="language-js">await XActions.nav.entertainment()
+</code></pre>
+<h3><code>spaces()</code> - Spaces page</h3>
+<pre><code class="language-js">await XActions.nav.spaces()
+</code></pre>
+<h3><code>scrollToTop()</code> - Scroll to top</h3>
+<pre><code class="language-js">XActions.nav.scrollToTop()
+</code></pre>
+<h3><code>scrollToBottom()</code> - Scroll to bottom</h3>
+<pre><code class="language-js">XActions.nav.scrollToBottom()
+</code></pre>
+<h3><code>scrollBy(pixels)</code> - Scroll by amount</h3>
+<pre><code class="language-js">XActions.nav.scrollBy(500)  // Scroll down 500px
+XActions.nav.scrollBy(-200) // Scroll up 200px
+</code></pre>
+<h3><code>back()</code> - Browser back</h3>
+<pre><code class="language-js">XActions.nav.back()
+</code></pre>
+<h3><code>forward()</code> - Browser forward</h3>
+<pre><code class="language-js">XActions.nav.forward()
+</code></pre>
+<h3><code>refresh()</code> - Refresh page</h3>
+<pre><code class="language-js">XActions.nav.refresh()
+</code></pre>
+<hr>
+<h2>XActions.lists - List Management</h2>
+<h3><code>create(name, description, isPrivate)</code> - Create list</h3>
+<pre><code class="language-js">// Public list
+await XActions.lists.create(&quot;Tech News&quot;, &quot;Best tech journalists&quot;, false)
+
+// Private list
+await XActions.lists.create(&quot;Competitors&quot;, &quot;Track competitor accounts&quot;, true)
+</code></pre>
+<h3><code>delete(listId)</code> - Delete list</h3>
+<pre><code class="language-js">await XActions.lists.delete(&quot;1234567890&quot;)
+</code></pre>
+<h3><code>edit(listId, newName, newDescription)</code> - Edit list</h3>
+<pre><code class="language-js">await XActions.lists.edit(&quot;1234567890&quot;, &quot;Updated Name&quot;, &quot;New description&quot;)
+</code></pre>
+<h3><code>follow(listId)</code> - Follow list</h3>
+<pre><code class="language-js">await XActions.lists.follow(&quot;1234567890&quot;)
+</code></pre>
+<h3><code>unfollow(listId)</code> - Unfollow list</h3>
+<pre><code class="language-js">await XActions.lists.unfollow(&quot;1234567890&quot;)
+</code></pre>
+<h3><code>pin(listId)</code> - Pin/unpin list</h3>
+<pre><code class="language-js">await XActions.lists.pin(&quot;1234567890&quot;)
+</code></pre>
+<h3><code>getAll()</code> - Get all lists</h3>
+<pre><code class="language-js">const lists = await XActions.lists.getAll()
+console.log(`You have ${lists.length} lists`)
+</code></pre>
+<h3><code>viewMembers(listId)</code> - View list members</h3>
+<pre><code class="language-js">await XActions.lists.viewMembers(&quot;1234567890&quot;)
+</code></pre>
+<h3><code>viewFollowers(listId)</code> - View list followers</h3>
+<pre><code class="language-js">await XActions.lists.viewFollowers(&quot;1234567890&quot;)
+</code></pre>
+<hr>
+<h2>XActions.settings - Account Settings</h2>
+<h3><code>account()</code> - Account settings</h3>
+<pre><code class="language-js">await XActions.settings.account()
+</code></pre>
+<h3><code>security()</code> - Security settings</h3>
+<pre><code class="language-js">await XActions.settings.security()
+</code></pre>
+<h3><code>privacy()</code> - Privacy settings</h3>
+<pre><code class="language-js">await XActions.settings.privacy()
+</code></pre>
+<h3><code>notifications()</code> - Notification settings</h3>
+<pre><code class="language-js">await XActions.settings.notifications()
+</code></pre>
+<h3><code>accessibility()</code> - Accessibility settings</h3>
+<pre><code class="language-js">await XActions.settings.accessibility()
+</code></pre>
+<h3><code>monetization()</code> - Monetization settings</h3>
+<pre><code class="language-js">await XActions.settings.monetization()
+</code></pre>
+<h3><code>creatorSubs()</code> - Creator subscriptions</h3>
+<pre><code class="language-js">await XActions.settings.creatorSubs()
+</code></pre>
+<h3><code>premium()</code> - Premium settings</h3>
+<pre><code class="language-js">await XActions.settings.premium()
+</code></pre>
+<h3><code>mutedAccounts()</code> - View muted accounts</h3>
+<pre><code class="language-js">await XActions.settings.mutedAccounts()
+</code></pre>
+<h3><code>mutedWords()</code> - View muted words</h3>
+<pre><code class="language-js">await XActions.settings.mutedWords()
+</code></pre>
+<h3><code>blockedAccounts()</code> - View blocked accounts</h3>
+<pre><code class="language-js">await XActions.settings.blockedAccounts()
+</code></pre>
+<h3><code>addMutedWord(word)</code> - Add muted word</h3>
+<pre><code class="language-js">await XActions.settings.addMutedWord(&quot;spoilers&quot;)
+await XActions.settings.addMutedWord(&quot;politics&quot;)
+</code></pre>
+<h3><code>downloadData()</code> - Download your data</h3>
+<pre><code class="language-js">await XActions.settings.downloadData()
+</code></pre>
+<h3><code>deactivate()</code> - Deactivate page</h3>
+<pre><code class="language-js">await XActions.settings.deactivate()
+// Proceed with caution!
+</code></pre>
+<hr>
+<h2>XActions.profile - Profile Editing</h2>
+<h3><code>edit()</code> - Open profile editor</h3>
+<pre><code class="language-js">await XActions.profile.edit()
+</code></pre>
+<h3><code>updateName(newName)</code> - Update display name</h3>
+<pre><code class="language-js">await XActions.profile.updateName(&quot;John Doe 🚀&quot;)
+</code></pre>
+<h3><code>updateBio(newBio)</code> - Update bio</h3>
+<pre><code class="language-js">await XActions.profile.updateBio(&quot;Building cool stuff | Founder @startup | DMs open&quot;)
+</code></pre>
+<h3><code>updateLocation(location)</code> - Update location</h3>
+<pre><code class="language-js">await XActions.profile.updateLocation(&quot;San Francisco, CA&quot;)
+</code></pre>
+<h3><code>updateWebsite(url)</code> - Update website</h3>
+<pre><code class="language-js">await XActions.profile.updateWebsite(&quot;https://mywebsite.com&quot;)
+</code></pre>
+<h3><code>updateAvatar()</code> - Change avatar</h3>
+<pre><code class="language-js">await XActions.profile.updateAvatar()
+// File picker opens
+</code></pre>
+<h3><code>updateHeader()</code> - Change header</h3>
+<pre><code class="language-js">await XActions.profile.updateHeader()
+// File picker opens
+</code></pre>
+<h3><code>switchToProfessional()</code> - Professional account</h3>
+<pre><code class="language-js">await XActions.profile.switchToProfessional()
+</code></pre>
+<hr>
+<h2>XActions.utils - Utilities</h2>
+<h3><code>getCurrentUser()</code> - Get current username</h3>
+<pre><code class="language-js">const me = XActions.utils.getCurrentUser()
+console.log(`Logged in as @${me}`)
+</code></pre>
+<h3><code>isLoggedIn()</code> - Check if logged in</h3>
+<pre><code class="language-js">if (XActions.utils.isLoggedIn()) {
+  console.log(&quot;Ready to automate!&quot;)
+} else {
+  console.log(&quot;Please log in first&quot;)
+}
+</code></pre>
+<h3><code>getTokens()</code> - Get auth tokens</h3>
+<pre><code class="language-js">const tokens = XActions.utils.getTokens()
+console.log(&quot;CSRF token:&quot;, tokens.ct0)
+// Useful for API calls
+</code></pre>
+<h3><code>getTweetIdFromUrl(url)</code> - Extract tweet ID</h3>
+<pre><code class="language-js">const id = XActions.utils.getTweetIdFromUrl(&quot;https://x.com/user/status/123456789&quot;)
+console.log(id) // &quot;123456789&quot;
+</code></pre>
+<h3><code>getUsernameFromUrl(url)</code> - Extract username</h3>
+<pre><code class="language-js">const user = XActions.utils.getUsernameFromUrl(&quot;https://x.com/elonmusk&quot;)
+console.log(user) // &quot;elonmusk&quot;
+</code></pre>
+<h3><code>waitForPageLoad()</code> - Wait for page</h3>
+<pre><code class="language-js">await XActions.utils.waitForPageLoad()
+console.log(&quot;Page ready!&quot;)
+</code></pre>
+<h3><code>loadMore(times)</code> - Scroll to load more</h3>
+<pre><code class="language-js">await XActions.utils.loadMore(5) // Scroll 5 times
+</code></pre>
+<h3><code>clearXData()</code> - Clear localStorage</h3>
+<pre><code class="language-js">XActions.utils.clearXData()
+</code></pre>
+<h3><code>exportBookmarks(maxItems)</code> - Export bookmarks</h3>
+<pre><code class="language-js">// Export 100 bookmarks
+const bookmarks = await XActions.utils.exportBookmarks(100)
+console.log(bookmarks)
+
+// Download as JSON
+const bookmarks = await XActions.utils.exportBookmarks(500)
+const blob = new Blob([JSON.stringify(bookmarks, null, 2)], {type: &#39;application/json&#39;})
+const url = URL.createObjectURL(blob)
+const a = document.createElement(&#39;a&#39;)
+a.href = url
+a.download = &#39;bookmarks.json&#39;
+a.click()
+</code></pre>
+<h3><code>exportLikes(username, maxItems)</code> - Export likes</h3>
+<pre><code class="language-js">const likes = await XActions.utils.exportLikes(&quot;myusername&quot;, 200)
+console.log(`Exported ${likes.length} liked tweets`)
+</code></pre>
+<h3><code>copyToClipboard(text)</code> - Copy to clipboard</h3>
+<pre><code class="language-js">await XActions.utils.copyToClipboard(&quot;Hello world!&quot;)
+</code></pre>
+<h3><code>screenshotTweet(tweetUrl)</code> - Screenshot tweet</h3>
+<pre><code class="language-js">await XActions.utils.screenshotTweet(&quot;https://x.com/user/status/123&quot;)
+// Opens screenshot service in new tab
+</code></pre>
+<h3><code>showKeyboardShortcuts()</code> - Show shortcuts</h3>
+<pre><code class="language-js">XActions.utils.showKeyboardShortcuts()
+</code></pre>
+<h3><code>devMode()</code> - Enable dev mode</h3>
+<pre><code class="language-js">XActions.utils.devMode()
+// All elements outlined with data-testid labels
+</code></pre>
+<h3><code>getAllSelectors()</code> - Get all selectors</h3>
+<pre><code class="language-js">const selectors = XActions.utils.getAllSelectors()
+console.log(selectors) // Array of all data-testid values on page
+</code></pre>
+<hr>
+<h2>XActions.spaces - Twitter Spaces</h2>
+<h3><code>browse()</code> - Browse spaces</h3>
+<pre><code class="language-js">await XActions.spaces.browse()
+</code></pre>
+<h3><code>join(spaceId)</code> - Join space</h3>
+<pre><code class="language-js">await XActions.spaces.join(&quot;1234567890&quot;)
+</code></pre>
+<h3><code>leave()</code> - Leave space</h3>
+<pre><code class="language-js">await XActions.spaces.leave()
+</code></pre>
+<h3><code>requestToSpeak()</code> - Request to speak</h3>
+<pre><code class="language-js">await XActions.spaces.requestToSpeak()
+</code></pre>
+<h3><code>setReminder(spaceId)</code> - Set reminder</h3>
+<pre><code class="language-js">await XActions.spaces.setReminder(&quot;1234567890&quot;)
+</code></pre>
+<h3><code>share()</code> - Share space</h3>
+<pre><code class="language-js">await XActions.spaces.share()
+</code></pre>
+<hr>
+<h2>XActions.communities - Communities</h2>
+<h3><code>browse()</code> - Browse communities</h3>
+<pre><code class="language-js">await XActions.communities.browse()
+</code></pre>
+<h3><code>view(communityId)</code> - View community</h3>
+<pre><code class="language-js">await XActions.communities.view(&quot;1234567890&quot;)
+</code></pre>
+<h3><code>join(communityId)</code> - Join community</h3>
+<pre><code class="language-js">await XActions.communities.join(&quot;1234567890&quot;)
+</code></pre>
+<h3><code>leave(communityId)</code> - Leave community</h3>
+<pre><code class="language-js">await XActions.communities.leave(&quot;1234567890&quot;)
+</code></pre>
+<h3><code>post(communityId, text)</code> - Post in community</h3>
+<pre><code class="language-js">await XActions.communities.post(&quot;1234567890&quot;, &quot;Hello community! 👋&quot;)
+</code></pre>
+<hr>
+<h2>🔥 Power User Recipes</h2>
+<h3>Like &amp; Follow from Search Results</h3>
+<pre><code class="language-js">await XActions.search.query(&quot;web3 developer&quot;)
+await new Promise(r =&gt; setTimeout(r, 2000))
+const tweets = XActions.tweet.getAll().slice(0, 10)
+for (const tweet of tweets) {
+  await XActions.engage.like(tweet)
+  await XActions.user.follow(tweet)
+  await new Promise(r =&gt; setTimeout(r, 3000))
+}
+</code></pre>
+<h3>Export All Your Bookmarks to JSON</h3>
+<pre><code class="language-js">const bookmarks = await XActions.utils.exportBookmarks(1000)
+const blob = new Blob([JSON.stringify(bookmarks, null, 2)], {type: &#39;application/json&#39;})
+const a = document.createElement(&#39;a&#39;)
+a.href = URL.createObjectURL(blob)
+a.download = `bookmarks-${Date.now()}.json`
+a.click()
+console.log(`Exported ${bookmarks.length} bookmarks!`)
+</code></pre>
+<h3>Find Non-Mutuals</h3>
+<pre><code class="language-js">const following = [&quot;user1&quot;, &quot;user2&quot;, &quot;user3&quot;, &quot;user4&quot;, &quot;user5&quot;]
+const nonMutuals = []
+for (const user of following) {
+  if (!(await XActions.user.followsYou(user))) {
+    nonMutuals.push(user)
+  }
+  await new Promise(r =&gt; setTimeout(r, 2000))
+}
+console.log(&quot;Non-mutuals:&quot;, nonMutuals)
+</code></pre>
+<h3>Auto-Engage with Hashtag</h3>
+<pre><code class="language-js">await XActions.search.hashtag(&quot;buildinpublic&quot;)
+await new Promise(r =&gt; setTimeout(r, 2000))
+for (const tweet of XActions.tweet.getAll().slice(0, 5)) {
+  await XActions.engage.like(tweet)
+  await XActions.engage.bookmark(tweet)
+  await new Promise(r =&gt; setTimeout(r, 2000))
+}
+</code></pre>
+<h3>Daily Posting Schedule</h3>
+<pre><code class="language-js">const posts = [
+  &quot;Good morning! ☀️ What are you building today?&quot;,
+  &quot;Tip of the day: Always test your code before deploying 🧪&quot;,
+  &quot;Evening thought: Consistency beats intensity 💪&quot;
+]
+for (const post of posts) {
+  await XActions.tweet.post(post)
+  // In real usage, you&#39;d schedule these with setTimeout or cron
+}
+</code></pre>
+<hr>
+<p align="center">
+  <a href="./automation.md">← Back to Automation Guide</a> |
+  <a href="https://github.com/nirholas/XActions">⭐ Star on GitHub</a>
+</p>
+
+
+        <div class="cta-box">
+          <h3>⚡ Explore XActions</h3>
+          <p>100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/docs">Browse All Documentation</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 In This Section</h3>
+                <a href="/docs/guides/getting-started">📖 Getting Started with XActions</a>
+        <a href="/docs/guides/usage">📖 Usage</a>
+        <a href="/docs/guides/automation">📖 XActions Automation Framework Guide</a>
+        <a href="/docs/guides/monitoring">📖 Monitoring Guide</a>
+        <a href="/docs/guides/cli-reference">📖 XActions CLI Reference</a>
+        <a href="/docs/guides/ai-api">📖 XActions AI API Documentation</a>
+        <a href="/docs/guides/api-reference">📖 XActions — API Reference</a>
+        <a href="/docs/guides/deployment">📖 Deployment Guide</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/docs">All Documentation</a>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

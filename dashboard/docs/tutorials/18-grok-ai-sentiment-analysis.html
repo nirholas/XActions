@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tutorial: Grok AI Integration &amp; Sentiment Analysis with Claude | XActions</title>
+  <meta name="description" content="You are my AI-powered X/Twitter intelligence analyst. I want to use XActions' Grok AI integration and sentiment analysis tools to analyze content, monitor brand">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, open source, grok, sentiment, analysis, tutorial:, integration, claude, claude tutorials">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Tutorial: Grok AI Integration &amp; Sentiment Analysis with Claude — XActions">
+  <meta property="og:description" content="You are my AI-powered X/Twitter intelligence analyst. I want to use XActions' Grok AI integration and sentiment analysis tools to analyze content, monitor brand">
+  <meta property="og:url" content="https://xactions.app/docs/tutorials/18-grok-ai-sentiment-analysis">
+  <meta property="og:site_name" content="XActions">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Tutorial: Grok AI Integration &amp; Sentiment Analysis with Claude — XActions">
+  <meta name="twitter:description" content="You are my AI-powered X/Twitter intelligence analyst. I want to use XActions' Grok AI integration and sentiment analysis tools to analyze content, monitor brand">
+
+  <link rel="canonical" href="https://xactions.app/docs/tutorials/18-grok-ai-sentiment-analysis">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Tutorial: Grok AI Integration & Sentiment Analysis with Claude | XActions",
+    "description": "You are my AI-powered X/Twitter intelligence analyst. I want to use XActions' Grok AI integration and sentiment analysis tools to analyze content, monitor brand",
+    "url": "https://xactions.app/docs/tutorials/18-grok-ai-sentiment-analysis",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-25",
+    "dateModified": "2026-02-25",
+    "mainEntityOfPage": "https://xactions.app/docs/tutorials/18-grok-ai-sentiment-analysis",
+    "articleSection": "Claude Tutorials",
+    "keywords": "xactions, twitter automation, x automation, free, open source, grok, sentiment, analysis, tutorial:, integration, claude, claude tutorials"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Claude Tutorials", "item": "https://xactions.app/docs/tutorials" },
+      { "@type": "ListItem", "position": 4, "name": "Tutorial: Grok AI Integration & Sentiment Analysis with Claude", "item": "https://xactions.app/docs/tutorials/18-grok-ai-sentiment-analysis" }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .article pre { font-size: 0.75rem; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <main class="main-content">
+      <header class="main-header">
+        <h1>🤖 Tutorial: Grok AI Integration &amp; Sentiment Analysis with Claude</h1>
+        <div class="breadcrumb">
+          <a href="https://xactions.app">Home</a> › <a href="https://xactions.app/docs">Docs</a> › <a href="https://xactions.app/docs/tutorials">Claude Tutorials</a> › Tutorial: Grok AI Integration &amp; Sentiment Analysis with Claude
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Claude Tutorials</span>
+        <h1>Tutorial: Grok AI Integration &amp; Sentiment Analysis with Claude</h1>
+<p>You are my AI-powered X/Twitter intelligence analyst. I want to use XActions&#39; Grok AI integration and sentiment analysis tools to analyze content, monitor brand reputation, and get AI-powered insights from X. Help me set up and use these advanced AI features.</p>
+<h2>Context</h2>
+<p>I&#39;m using XActions (<a href="https://github.com/nirholas/XActions">https://github.com/nirholas/XActions</a>), an open-source X/Twitter toolkit. It includes MCP tools for:</p>
+<ul>
+<li>Querying Grok AI (X&#39;s built-in AI) via <code>x_grok_query</code> and <code>x_grok_summarize</code></li>
+<li>Sentiment analysis via <code>x_analyze_sentiment</code> (built-in rules engine or LLM via OpenRouter)</li>
+<li>Reputation monitoring via <code>x_monitor_reputation</code> and <code>x_reputation_report</code></li>
+</ul>
+<h2>What I Need You To Do</h2>
+<h3>Phase 1: Grok AI Queries</h3>
+<p>Use Grok (X&#39;s AI) directly through XActions:</p>
+<ol>
+<li><p><strong>Ask Grok a question:</strong></p>
+<pre><code>&quot;Ask Grok: What are the trending topics in AI today?&quot;
+</code></pre>
+<p>Tool: <code>x_grok_query</code></p>
+<ul>
+<li><code>query</code>: The question or prompt for Grok</li>
+</ul>
+<p>Grok can answer questions about:</p>
+<ul>
+<li>Current events and trending topics on X</li>
+<li>Summarize discussions happening on X</li>
+<li>Provide context on viral tweets</li>
+<li>Answer general knowledge questions</li>
+</ul>
+</li>
+<li><p><strong>Summarize content with Grok:</strong></p>
+<pre><code>&quot;Use Grok to summarize the discourse around &#39;AI regulation&#39; on X&quot;
+</code></pre>
+<p>Tool: <code>x_grok_summarize</code></p>
+<ul>
+<li>Gets AI-powered summaries of conversations and topics</li>
+</ul>
+</li>
+<li><p><strong>Example Grok queries to try:</strong></p>
+<ul>
+<li>&quot;What are people saying about [product] on X right now?&quot;</li>
+<li>&quot;Summarize the debate about [topic] on X&quot;</li>
+<li>&quot;What are the most viral topics in [industry] today?&quot;</li>
+<li>&quot;Who are the most influential voices discussing [keyword]?&quot;</li>
+</ul>
+</li>
+</ol>
+<h3>Phase 2: Sentiment Analysis</h3>
+<p>Analyze the sentiment of any text using XActions&#39; built-in analyzer:</p>
+<ol>
+<li><p><strong>Analyze a single text:</strong></p>
+<pre><code>&quot;Analyze the sentiment of this tweet: &#39;This product is absolutely amazing, best purchase I&#39;ve ever made!&#39;&quot;
+</code></pre>
+<p>Tool: <code>x_analyze_sentiment</code></p>
+<ul>
+<li><code>text</code>: The text to analyze</li>
+<li>Returns: score (-1 to 1), label (positive/neutral/negative), confidence, key words</li>
+</ul>
+</li>
+<li><p><strong>Batch analysis:</strong></p>
+<pre><code>&quot;Analyze sentiment for these tweets: [&#39;Great product!&#39;, &#39;Terrible experience&#39;, &#39;It was okay I guess&#39;]&quot;
+</code></pre>
+<ul>
+<li><code>texts</code>: Array of strings for batch analysis</li>
+<li>Returns individual scores plus aggregate</li>
+</ul>
+</li>
+<li><p><strong>Analysis modes:</strong></p>
+<ul>
+<li><strong>&quot;rules&quot; mode</strong> (default): Offline, zero dependencies, instant. Uses built-in word lists and linguistic rules</li>
+<li><strong>&quot;llm&quot; mode</strong>: Uses OpenRouter API for nuanced, context-aware analysis. Requires <code>OPENROUTER_API_KEY</code> env var</li>
+</ul>
+<pre><code>&quot;Analyze sentiment in LLM mode: &#39;I can&#39;t believe how bad the response time was&#39;&quot;
+</code></pre>
+</li>
+<li><p><strong>Interpret results:</strong></p>
+<ul>
+<li><strong>Score</strong>: -1.0 (very negative) → 0.0 (neutral) → +1.0 (very positive)</li>
+<li><strong>Label</strong>: &quot;positive&quot;, &quot;neutral&quot;, &quot;negative&quot;</li>
+<li><strong>Confidence</strong>: 0.0 to 1.0 (how certain the analysis is)</li>
+<li><strong>Keywords</strong>: Which words drove the sentiment score</li>
+</ul>
+</li>
+<li><p><strong>Practical workflows:</strong></p>
+<p><strong>Analyze mentions sentiment:</strong></p>
+<pre><code>Step 1: &quot;Search for tweets mentioning @mycompany in the last 24 hours&quot;
+Step 2: &quot;Now analyze the sentiment of each of these tweets&quot;
+Step 3: &quot;Summarize: what percentage are positive vs negative?&quot;
+</code></pre>
+<p><strong>Analyze competitor perception:</strong></p>
+<pre><code>Step 1: &quot;Search tweets about CompetitorProduct&quot;
+Step 2: &quot;Analyze sentiment batch for all these tweets&quot;
+Step 3: &quot;Compare: how does sentiment about CompetitorProduct compare to our product?&quot;
+</code></pre>
+</li>
+</ol>
+<h3>Phase 3: Reputation Monitoring</h3>
+<p>Set up continuous reputation monitoring:</p>
+<ol>
+<li><p><strong>Start a reputation monitor:</strong></p>
+<pre><code>&quot;Start monitoring reputation for @mycompany&quot;
+</code></pre>
+<p>Tool: <code>x_monitor_reputation</code></p>
+<ul>
+<li><code>action</code>: &quot;start&quot;</li>
+<li><code>target</code>: &quot;@mycompany&quot; (username with @) or &quot;product name&quot; (keyword)</li>
+<li><code>type</code>: &quot;mentions&quot; (default), &quot;keyword&quot;, or &quot;replies&quot;</li>
+<li><code>interval</code>: Polling interval in seconds (default: 900 = 15 min, minimum: 60)</li>
+<li><code>webhookUrl</code>: Optional URL for real-time alerts</li>
+</ul>
+<p>What it does:</p>
+<ul>
+<li>Periodically scrapes mentions/keyword results</li>
+<li>Runs sentiment analysis on each new mention</li>
+<li>Computes rolling averages</li>
+<li>Detects sentiment anomalies (sudden drops or spikes)</li>
+<li>Sends webhook alerts for anomalies</li>
+</ul>
+</li>
+<li><p><strong>Configure webhook alerts:</strong></p>
+<pre><code>&quot;Start monitoring @mycompany with webhook alerts to https://hooks.slack.com/xxx&quot;
+</code></pre>
+<p>This sends alerts when:</p>
+<ul>
+<li>Sudden negative sentiment spike detected</li>
+<li>Unusual mention volume detected</li>
+<li>Sentiment drops below threshold</li>
+</ul>
+</li>
+<li><p><strong>Monitor types:</strong></p>
+<ul>
+<li><strong>mentions</strong>: Track @mentions of a username</li>
+<li><strong>keyword</strong>: Track a brand name or product keyword</li>
+<li><strong>replies</strong>: Track replies to a specific user&#39;s tweets</li>
+</ul>
+</li>
+<li><p><strong>List active monitors:</strong></p>
+<pre><code>&quot;List all my reputation monitors&quot;
+</code></pre>
+<ul>
+<li><code>action</code>: &quot;list&quot;</li>
+<li>Shows: target, type, interval, status, poll count</li>
+</ul>
+</li>
+<li><p><strong>Check monitor status:</strong></p>
+<pre><code>&quot;Show status for monitor ID xyz&quot;
+</code></pre>
+<ul>
+<li><code>action</code>: &quot;status&quot;</li>
+<li><code>monitorId</code>: The returned ID</li>
+<li>Shows: latest data, sentiment trend, alert history</li>
+</ul>
+</li>
+<li><p><strong>Stop a monitor:</strong></p>
+<pre><code>&quot;Stop reputation monitor xyz&quot;
+</code></pre>
+<ul>
+<li><code>action</code>: &quot;stop&quot;</li>
+<li><code>monitorId</code>: The ID to stop</li>
+</ul>
+</li>
+</ol>
+<h3>Phase 4: Reputation Reports</h3>
+<p>Generate comprehensive reputation reports:</p>
+<ol>
+<li><p><strong>Generate a report:</strong></p>
+<pre><code>&quot;Generate a 7-day reputation report for @mycompany&quot;
+</code></pre>
+<p>Tool: <code>x_reputation_report</code></p>
+<ul>
+<li><code>username</code>: Target username</li>
+<li><code>period</code>: &quot;24h&quot;, &quot;7d&quot;, &quot;30d&quot;, or &quot;all&quot;</li>
+<li><code>format</code>: &quot;json&quot; or &quot;markdown&quot; (default: markdown)</li>
+</ul>
+</li>
+<li><p><strong>What the report includes:</strong></p>
+<ul>
+<li><strong>Sentiment Distribution</strong>: % positive, neutral, negative</li>
+<li><strong>Top Positive Mentions</strong>: Best things people are saying</li>
+<li><strong>Top Negative Mentions</strong>: Complaints and criticism</li>
+<li><strong>Timeline Data</strong>: How sentiment changed over time</li>
+<li><strong>Keyword Frequency</strong>: Most common words in mentions</li>
+<li><strong>Alerts</strong>: Any anomalies or concerning trends</li>
+<li><strong>Volume Analysis</strong>: Mention frequency over time</li>
+</ul>
+</li>
+<li><p><strong>Report periods:</strong></p>
+<ul>
+<li><strong>24h</strong>: Real-time crisis check — are we being dragged right now?</li>
+<li><strong>7d</strong>: Weekly health check — how was the week?</li>
+<li><strong>30d</strong>: Monthly trend — where are we heading?</li>
+<li><strong>all</strong>: Complete historical view</li>
+</ul>
+</li>
+<li><p><strong>Example: Crisis detection workflow:</strong></p>
+<pre><code>Step 1: &quot;Start monitoring @mycompany every 5 minutes&quot; (interval: 300)
+Step 2: &quot;Generate a 24h reputation report&quot;
+Step 3: &quot;Show me all negative mentions from the report&quot;
+Step 4: &quot;Draft responses to the top 3 complaints&quot;
+</code></pre>
+</li>
+</ol>
+<h3>Phase 5: Combined Intelligence Workflows</h3>
+<h4>Brand Health Dashboard</h4>
+<pre><code>1. &quot;Start reputation monitor for @mycompany&quot;
+2. &quot;Search recent tweets about our brand and analyze sentiment&quot;
+3. &quot;Generate a 7-day reputation report&quot;
+4. &quot;Compare our sentiment to @competitor&#39;s sentiment&quot;
+5. &quot;Summarize: What should we focus on this week?&quot;
+</code></pre>
+<h4>Content Strategy from AI Insights</h4>
+<pre><code>1. &quot;Ask Grok what topics are trending in [my niche]&quot;
+2. &quot;Search tweets about top 3 trending topics&quot;
+3. &quot;Analyze which topics have the most positive sentiment&quot;
+4. &quot;Recommend: What should I tweet about today?&quot;
+</code></pre>
+<h4>Customer Sentiment Tracking</h4>
+<pre><code>1. &quot;Monitor keywords: &#39;product name&#39;, &#39;brand name&#39;&quot;
+2. &quot;Generate daily sentiment reports&quot;
+3. &quot;Flag any tweet with sentiment score below -0.5&quot;
+4. &quot;Draft empathetic responses for negative mentions&quot;
+</code></pre>
+<h4>Competitor Intelligence with Sentiment</h4>
+<pre><code>1. &quot;Monitor mentions of @competitor1, @competitor2, @competitor3&quot;
+2. &quot;Run sentiment analysis on each competitor&#39;s mentions&quot;
+3. &quot;Compare: sentiment distribution across competitors&quot;
+4. &quot;Identify: what complaints do their users have that we solve?&quot;
+</code></pre>
+<h3>Phase 6: OpenRouter LLM Integration</h3>
+<p>For more nuanced sentiment analysis, connect an LLM:</p>
+<ol>
+<li><p><strong>Setup:</strong></p>
+<ul>
+<li>Get an API key from <a href="https://openrouter.ai">OpenRouter</a></li>
+<li>Set <code>OPENROUTER_API_KEY</code> in your environment</li>
+</ul>
+</li>
+<li><p><strong>LLM vs Rules comparison:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Rules Mode</th>
+<th>LLM Mode</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Speed</td>
+<td>Instant</td>
+<td>1-3 seconds</td>
+</tr>
+<tr>
+<td>Cost</td>
+<td>Free</td>
+<td>Per-token</td>
+</tr>
+<tr>
+<td>Nuance</td>
+<td>Good</td>
+<td>Excellent</td>
+</tr>
+<tr>
+<td>Sarcasm</td>
+<td>Poor</td>
+<td>Good</td>
+</tr>
+<tr>
+<td>Context</td>
+<td>None</td>
+<td>Full</td>
+</tr>
+<tr>
+<td>Offline</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+</tbody></table>
+</li>
+<li><p><strong>When to use LLM mode:</strong></p>
+<ul>
+<li>Analyzing sarcastic or ironic tweets</li>
+<li>Need nuanced emotional categorization</li>
+<li>Detecting subtle negativity or passive-aggression</li>
+<li>Multi-language sentiment analysis</li>
+</ul>
+</li>
+<li><p><strong>Example:</strong></p>
+<pre><code>&quot;Analyze in LLM mode: &#39;Oh great, another update that breaks everything. Thanks SO much!&#39;&quot;
+</code></pre>
+<ul>
+<li>Rules mode might score this as positive (words: &quot;great&quot;, &quot;thanks&quot;)</li>
+<li>LLM mode correctly identifies sarcasm → negative</li>
+</ul>
+</li>
+</ol>
+<h2>My AI Analysis Goals</h2>
+<p>(Replace before pasting)</p>
+<ul>
+<li>Brand/account to monitor: @myhandle</li>
+<li>Competitors to track: @comp1, @comp2</li>
+<li>Keywords to monitor: keyword1, keyword2</li>
+<li>Alert webhook URL: (optional)</li>
+<li>OpenRouter API key available: Yes/No</li>
+</ul>
+<p>Start with Phase 1 — let&#39;s try a Grok query first, then set up sentiment analysis on my mentions.</p>
+
+
+        <div class="cta-box">
+          <h3>⚡ Explore XActions</h3>
+          <p>100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/docs">Browse All Documentation</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 In This Section</h3>
+                <a href="/docs/tutorials/01-mcp-setup-and-first-commands">🤖 Tutorial: Setting Up XActions MCP Server with Claude</a>
+        <a href="/docs/tutorials/02-unfollow-non-followers-cleanup">🤖 Tutorial: Unfollow Non-Followers &amp; Follower Cleanup with Claude</a>
+        <a href="/docs/tutorials/03-growth-automation-suite">🤖 Tutorial: Growth Automation Suite — Grow Your X Account on Autopilot</a>
+        <a href="/docs/tutorials/04-scraping-research-analysis">🤖 Tutorial: Tweet Scraping, Profile Analysis &amp; Research with Claude</a>
+        <a href="/docs/tutorials/05-content-posting-threads-scheduling">🤖 Tutorial: Content Posting, Threads, Polls &amp; Scheduling with Claude</a>
+        <a href="/docs/tutorials/06-analytics-competitor-intelligence">🤖 Tutorial: Engagement Analytics, Best Time to Post &amp; Competitor Intelligence</a>
+        <a href="/docs/tutorials/07-auto-liker-auto-commenter">🤖 Tutorial: Auto-Liker &amp; Auto-Commenter — Engagement Automation with Claude</a>
+        <a href="/docs/tutorials/08-blocking-muting-spam-protection">🤖 Tutorial: Mass Block, Unblock, Mute &amp; Spam Protection with Claude</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/docs">All Documentation</a>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

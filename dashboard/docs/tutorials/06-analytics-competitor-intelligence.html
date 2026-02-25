@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tutorial: Engagement Analytics, Best Time to Post &amp; Competitor Intelligence | XActions</title>
+  <meta name="description" content="You are my X/Twitter analytics expert. I want to use XActions to measure my performance, find the best times to post, analyze competitors, and make data-driven ">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, open source, analytics, competitor, intelligence, tutorial:, engagement, analytics,, best, time, post, claude tutorials">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Tutorial: Engagement Analytics, Best Time to Post &amp; Competitor Intelligence — XActions">
+  <meta property="og:description" content="You are my X/Twitter analytics expert. I want to use XActions to measure my performance, find the best times to post, analyze competitors, and make data-driven ">
+  <meta property="og:url" content="https://xactions.app/docs/tutorials/06-analytics-competitor-intelligence">
+  <meta property="og:site_name" content="XActions">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Tutorial: Engagement Analytics, Best Time to Post &amp; Competitor Intelligence — XActions">
+  <meta name="twitter:description" content="You are my X/Twitter analytics expert. I want to use XActions to measure my performance, find the best times to post, analyze competitors, and make data-driven ">
+
+  <link rel="canonical" href="https://xactions.app/docs/tutorials/06-analytics-competitor-intelligence">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Tutorial: Engagement Analytics, Best Time to Post & Competitor Intelligence | XActions",
+    "description": "You are my X/Twitter analytics expert. I want to use XActions to measure my performance, find the best times to post, analyze competitors, and make data-driven ",
+    "url": "https://xactions.app/docs/tutorials/06-analytics-competitor-intelligence",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-25",
+    "dateModified": "2026-02-25",
+    "mainEntityOfPage": "https://xactions.app/docs/tutorials/06-analytics-competitor-intelligence",
+    "articleSection": "Claude Tutorials",
+    "keywords": "xactions, twitter automation, x automation, free, open source, analytics, competitor, intelligence, tutorial:, engagement, analytics,, best, time, post, claude tutorials"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Claude Tutorials", "item": "https://xactions.app/docs/tutorials" },
+      { "@type": "ListItem", "position": 4, "name": "Tutorial: Engagement Analytics, Best Time to Post & Competitor Intelligence", "item": "https://xactions.app/docs/tutorials/06-analytics-competitor-intelligence" }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .article pre { font-size: 0.75rem; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <main class="main-content">
+      <header class="main-header">
+        <h1>🤖 Tutorial: Engagement Analytics, Best Time to Post &amp; Competitor Intelligence</h1>
+        <div class="breadcrumb">
+          <a href="https://xactions.app">Home</a> › <a href="https://xactions.app/docs">Docs</a> › <a href="https://xactions.app/docs/tutorials">Claude Tutorials</a> › Tutorial: Engagement Analytics, Best Time to Post &amp; Competitor Intelligence
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Claude Tutorials</span>
+        <h1>Tutorial: Engagement Analytics, Best Time to Post &amp; Competitor Intelligence</h1>
+<p>You are my X/Twitter analytics expert. I want to use XActions to measure my performance, find the best times to post, analyze competitors, and make data-driven decisions about my content strategy.</p>
+<h2>Context</h2>
+<p>I&#39;m using XActions (<a href="https://github.com/nirholas/XActions">https://github.com/nirholas/XActions</a>), an open-source X/Twitter toolkit with analytics capabilities. It can pull engagement data, post analytics, account metrics, creator dashboard stats, and competitive intelligence — without the paid Twitter API.</p>
+<h2>What I Need You To Do</h2>
+<h3>Part 1: Account Performance Dashboard</h3>
+<p>Build me a complete analytics overview:</p>
+<ol>
+<li><p><strong>Profile snapshot</strong> using <code>x_get_profile</code>:</p>
+<ul>
+<li>Current followers, following, tweet count</li>
+<li>Recent growth trend</li>
+<li>Follower-to-following ratio assessment</li>
+</ul>
+</li>
+<li><p><strong>Engagement analytics</strong> using <code>x_get_analytics</code>:</p>
+<pre><code>&quot;Get my account analytics for the last 28 days&quot;
+</code></pre>
+<ul>
+<li>Impressions trend</li>
+<li>Profile visits</li>
+<li>Mentions</li>
+<li>New followers gained</li>
+<li>Engagement rate (interactions / impressions)</li>
+</ul>
+</li>
+<li><p><strong>Post performance</strong> using <code>x_get_tweets</code> on my own profile:</p>
+<ul>
+<li>Pull my last 50 tweets</li>
+<li>Rank by engagement (likes + retweets + replies)</li>
+<li>Find my top 5 best-performing tweets</li>
+<li>Find my worst-performing tweets</li>
+<li>Calculate average engagement per tweet</li>
+<li>Calculate engagement rate (avg engagements / followers * 100)</li>
+</ul>
+</li>
+<li><p><strong>Content type analysis:</strong></p>
+<ul>
+<li>Which performs better: text-only, images, threads, polls, links?</li>
+<li>Average likes for each format</li>
+<li>Which topics get the most engagement?</li>
+</ul>
+</li>
+</ol>
+<p>Present this as a clean dashboard overview.</p>
+<h3>Part 2: Best Time to Post</h3>
+<p>Help me find optimal posting times:</p>
+<ol>
+<li><p><strong>Analyze my posting history:</strong></p>
+<ul>
+<li>Pull my recent tweets with timestamps</li>
+<li>Map engagement by hour of day and day of week</li>
+<li>Create a heatmap: &quot;Monday 9 AM: avg 45 likes, Tuesday 12 PM: avg 82 likes&quot;</li>
+</ul>
+</li>
+<li><p><strong>Using <code>bestTimeToPost.js</code> browser script:</strong></p>
+<ul>
+<li>Navigate to my profile</li>
+<li>The script analyzes tweet timestamps vs engagement rates</li>
+<li>Identifies the top 5 time slots for my audience</li>
+<li>Accounts for timezone differences</li>
+</ul>
+</li>
+<li><p><strong>Recommendations:</strong></p>
+<ul>
+<li>Top 3 posting times for maximum reach</li>
+<li>Top 3 posting times for maximum engagement</li>
+<li>Times to avoid (low activity periods)</li>
+<li>How my optimal times compare to general best practices</li>
+</ul>
+</li>
+<li><p><strong>A/B testing plan:</strong></p>
+<ul>
+<li>Schedule the same type of content at different times</li>
+<li>Track for 2 weeks</li>
+<li>Compare results and refine timing</li>
+</ul>
+</li>
+</ol>
+<h3>Part 3: Post-Level Deep Dive</h3>
+<p>Analyze individual post performance using <code>x_get_post_analytics</code>:</p>
+<ol>
+<li><p><strong>For a specific tweet:</strong></p>
+<pre><code>&quot;Analyze this tweet: [URL]&quot;
+</code></pre>
+<ul>
+<li>Impressions (total views)</li>
+<li>Engagements (clicks, likes, replies, retweets)</li>
+<li>Engagement rate</li>
+<li>Profile clicks generated</li>
+<li>Link clicks (if applicable)</li>
+</ul>
+</li>
+<li><p><strong>Compare top vs bottom tweets:</strong></p>
+<ul>
+<li>What made my best tweet work? (topic, format, time, hook)</li>
+<li>What made my worst tweets flop?</li>
+<li>Patterns I should repeat vs avoid</li>
+</ul>
+</li>
+<li><p><strong>Thread analytics:</strong></p>
+<ul>
+<li>First tweet impressions vs last tweet impressions (drop-off rate)</li>
+<li>Which tweet in the thread got the most engagement?</li>
+<li>Optimal thread length based on my data</li>
+</ul>
+</li>
+</ol>
+<h3>Part 4: Competitor Analysis</h3>
+<p>Deep competitive intelligence using <code>x_competitor_analysis</code>:</p>
+<ol>
+<li><p><strong>Compare accounts:</strong></p>
+<pre><code>&quot;Compare these accounts: @competitor1, @competitor2, @competitor3, and my account @myusername&quot;
+</code></pre>
+</li>
+<li><p><strong>Metrics to compare:</strong></p>
+<ul>
+<li>Follower count and growth rate</li>
+<li>Posting frequency</li>
+<li>Average engagement per post</li>
+<li>Content mix (tweets, threads, images, polls)</li>
+<li>Top-performing content themes</li>
+<li>Follower-to-following ratio</li>
+</ul>
+</li>
+<li><p><strong>Content strategy analysis per competitor:</strong><br>Using <code>x_get_tweets</code> for each competitor:</p>
+<ul>
+<li>What topics do they post about most?</li>
+<li>What format gets them the most engagement?</li>
+<li>How often do they post?</li>
+<li>Do they use threads? How long?</li>
+<li>Do they engage in replies?</li>
+</ul>
+</li>
+<li><p><strong>Steal their audience:</strong></p>
+<ul>
+<li>Use <code>x_get_followers</code> on competitors to find potential followers</li>
+<li>Cross-reference with your follower list for overlap</li>
+<li>Identify high-value accounts following competitors but not you</li>
+<li>Create content that addresses gaps competitors don&#39;t cover</li>
+</ul>
+</li>
+</ol>
+<h3>Part 5: Hashtag Analytics</h3>
+<p>Research hashtag performance:</p>
+<ol>
+<li><p><strong>Analyze specific hashtags:</strong></p>
+<pre><code>&quot;Search for tweets with #buildinpublic from the last week and analyze engagement&quot;
+</code></pre>
+</li>
+<li><p><strong>Compare hashtag performance:</strong></p>
+<ul>
+<li>Average engagement on tweets with vs without hashtags</li>
+<li>Which hashtags bring more impressions?</li>
+<li>Optimal number of hashtags (usually 1-3 on X)</li>
+</ul>
+</li>
+<li><p><strong>Trending hashtags</strong> using <code>x_get_trends</code>:</p>
+<pre><code>&quot;What&#39;s trending right now in technology?&quot;
+</code></pre>
+<ul>
+<li>Identify trending topics to newsjack</li>
+<li>Find hashtags you can add value to</li>
+</ul>
+</li>
+</ol>
+<h3>Part 6: Brand Monitoring</h3>
+<p>Track what people say about you/your brand using <code>x_brand_monitor</code>:</p>
+<ol>
+<li><p><strong>Monitor mentions:</strong></p>
+<pre><code>&quot;Monitor mentions of &#39;XActions&#39; and analyze sentiment&quot;
+</code></pre>
+</li>
+<li><p><strong>Sentiment analysis:</strong></p>
+<ul>
+<li>Positive, negative, neutral breakdown</li>
+<li>Common praise points</li>
+<li>Common complaints</li>
+<li>Influencer mentions (high-impact positive or negative)</li>
+</ul>
+</li>
+<li><p><strong>Notification analysis</strong> using <code>x_get_notifications</code>:</p>
+<pre><code>&quot;Get my last 100 notifications and categorize them&quot;
+</code></pre>
+<ul>
+<li>What type of engagement am I getting most? (likes, follows, replies, retweets)</li>
+<li>Who engages with me most frequently?</li>
+<li>Which tweets are still generating engagement days later?</li>
+</ul>
+</li>
+</ol>
+<h3>Part 7: Creator Analytics (Premium)</h3>
+<p>For Premium users, use <code>x_creator_analytics</code>:</p>
+<ol>
+<li><strong>Creator dashboard:</strong><pre><code>&quot;Get my creator analytics for the last 28 days&quot;
+</code></pre>
+<ul>
+<li>Revenue (if monetized)</li>
+<li>Subscriber count</li>
+<li>Top-performing premium content</li>
+<li>Growth metrics</li>
+</ul>
+</li>
+</ol>
+<h3>Part 8: Browser Console Analytics Scripts</h3>
+<p>For advanced analysis, walk me through the DevTools scripts:</p>
+<h4>Engagement Analytics (<code>src/engagementAnalytics.js</code>)</h4>
+<ul>
+<li>Paste in console on your profile</li>
+<li>Calculates engagement rate per tweet</li>
+<li>Identifies your most engaging content patterns</li>
+<li>Generates a report with recommendations</li>
+</ul>
+<h4>Best Time to Post (<code>src/bestTimeToPost.js</code>)</h4>
+<ul>
+<li>Analyzes your tweets&#39; timestamps vs engagement</li>
+<li>Builds a time-slot performance map</li>
+<li>Recommends optimal posting schedule</li>
+</ul>
+<h4>Competitor Analysis (<code>src/competitorAnalysis.js</code>)</h4>
+<ul>
+<li>Compare up to 5 accounts side by side</li>
+<li>Engagement benchmarking</li>
+<li>Content strategy comparison</li>
+</ul>
+<h4>Hashtag Analytics (<code>src/hashtagAnalytics.js</code>)</h4>
+<ul>
+<li>Track hashtag performance over time</li>
+<li>Find trending hashtags in your niche</li>
+<li>Recommend hashtags based on your content</li>
+</ul>
+<h3>Part 9: Building a Metrics Dashboard</h3>
+<p>Help me set up ongoing tracking:</p>
+<ol>
+<li><p><strong>Weekly metrics to track:</strong></p>
+<ul>
+<li>Followers gained/lost</li>
+<li>Total impressions</li>
+<li>Engagement rate</li>
+<li>Top tweet of the week</li>
+<li>New meaningful connections</li>
+</ul>
+</li>
+<li><p><strong>Monthly reporting:</strong></p>
+<ul>
+<li>Growth trend chart</li>
+<li>Content performance by type</li>
+<li>Competitor comparison update</li>
+<li>Goals progress (followers, engagement rate, etc.)</li>
+</ul>
+</li>
+<li><p><strong>Export &amp; visualize:</strong></p>
+<ul>
+<li>Use CLI: <code>xactions tweets myusername --limit 100 --format csv</code></li>
+<li>Import to Google Sheets</li>
+<li>Create charts showing growth over time</li>
+<li>Track key metrics week over week</li>
+</ul>
+</li>
+</ol>
+<h3>Part 10: Data-Driven Content Strategy</h3>
+<p>Based on all analytics, help me create an optimized strategy:</p>
+<ol>
+<li><strong>Content pillars</strong> — Based on what performs best, define 3-5 content themes</li>
+<li><strong>Format optimization</strong> — Double down on the format that works (threads? polls? images?)</li>
+<li><strong>Timing optimization</strong> — Post at proven best times</li>
+<li><strong>Audience optimization</strong> — Focus on the audience segment that engages most</li>
+<li><strong>Engagement strategy</strong> — When and how to reply, quote tweet, engage with others</li>
+</ol>
+<h2>My Analytics Goals</h2>
+<p>(Replace before pasting)</p>
+<ul>
+<li>My username: YOUR_USERNAME</li>
+<li>Competitors to track: @comp1, @comp2, @comp3</li>
+<li>My brand/product: BRAND_NAME</li>
+<li>Current engagement rate: RATE (or &quot;I don&#39;t know, help me calculate&quot;)</li>
+<li>Analytics period: last 28 days / last 90 days</li>
+</ul>
+<p>Start with Part 1 — build me a complete analytics dashboard for my account.</p>
+
+
+        <div class="cta-box">
+          <h3>⚡ Explore XActions</h3>
+          <p>100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/docs">Browse All Documentation</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 In This Section</h3>
+                <a href="/docs/tutorials/01-mcp-setup-and-first-commands">🤖 Tutorial: Setting Up XActions MCP Server with Claude</a>
+        <a href="/docs/tutorials/02-unfollow-non-followers-cleanup">🤖 Tutorial: Unfollow Non-Followers &amp; Follower Cleanup with Claude</a>
+        <a href="/docs/tutorials/03-growth-automation-suite">🤖 Tutorial: Growth Automation Suite — Grow Your X Account on Autopilot</a>
+        <a href="/docs/tutorials/04-scraping-research-analysis">🤖 Tutorial: Tweet Scraping, Profile Analysis &amp; Research with Claude</a>
+        <a href="/docs/tutorials/05-content-posting-threads-scheduling">🤖 Tutorial: Content Posting, Threads, Polls &amp; Scheduling with Claude</a>
+        <a href="/docs/tutorials/07-auto-liker-auto-commenter">🤖 Tutorial: Auto-Liker &amp; Auto-Commenter — Engagement Automation with Claude</a>
+        <a href="/docs/tutorials/08-blocking-muting-spam-protection">🤖 Tutorial: Mass Block, Unblock, Mute &amp; Spam Protection with Claude</a>
+        <a href="/docs/tutorials/09-dm-management-automation">🤖 Tutorial: DM Management, Export &amp; Automation with Claude</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/docs">All Documentation</a>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

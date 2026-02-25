@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Agent Dashboard — Thought Leader Autopilot | XActions</title>
+  <meta name="description" content="Monitor and control your 24/7 AI-powered thought leadership agent. Real-time metrics, activity feed, LLM costs, and growth tracking.">
+  <meta name="author" content="nich (@nichxbt)">
+
+  <link rel="canonical" href="https://xactions.app/agent">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" defer></script>
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --bg-hover: #1d1f23;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #8b8f94;
+      --text-link: #1d9bf0;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 275px 1fr;
+      max-width: 1400px;
+      margin: 0 auto;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      border-right: 1px solid var(--border);
+      padding: 20px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .sidebar-logo {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--text-primary);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 32px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 16px;
+      border-radius: 9999px;
+      color: var(--text-primary);
+      text-decoration: none;
+      font-size: 18px;
+      transition: background 0.2s;
+      margin-bottom: 4px;
+    }
+
+    .nav-link:hover { background: var(--bg-tertiary); }
+    .nav-link.active { font-weight: 700; color: var(--accent); }
+
+    /* Main */
+    .main {
+      padding: 20px 32px;
+      max-width: 1100px;
+    }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .page-title { font-size: 24px; font-weight: 800; }
+
+    /* Status badge */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border-radius: 9999px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .status-badge.running { background: rgba(0, 186, 124, 0.15); color: var(--success); }
+    .status-badge.stopped { background: rgba(244, 33, 46, 0.15); color: var(--error); }
+    .status-badge .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    .status-badge.running .dot { background: var(--success); }
+    .status-badge.stopped .dot { background: var(--error); }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    /* Controls */
+    .controls {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border-radius: 9999px;
+      border: none;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-start { background: var(--success); color: #fff; }
+    .btn-start:hover { background: #00a06a; }
+    .btn-stop { background: var(--error); color: #fff; }
+    .btn-stop:hover { background: #d41b27; }
+    .btn-secondary {
+      background: transparent;
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover { background: var(--bg-tertiary); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 800;
+    }
+
+    .stat-change {
+      font-size: 13px;
+      margin-top: 4px;
+    }
+    .stat-change.positive { color: var(--success); }
+    .stat-change.negative { color: var(--error); }
+
+    /* Cards */
+    .card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Two-column layout */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    /* Activity Feed */
+    .activity-feed {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .activity-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .activity-item:last-child { border-bottom: none; }
+
+    .activity-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .activity-icon.like { background: rgba(249, 24, 128, 0.15); }
+    .activity-icon.follow { background: rgba(29, 155, 240, 0.15); }
+    .activity-icon.comment { background: rgba(0, 186, 124, 0.15); }
+    .activity-icon.post { background: rgba(255, 173, 31, 0.15); }
+    .activity-icon.explore { background: rgba(139, 143, 148, 0.15); }
+
+    .activity-text {
+      font-size: 14px;
+      color: var(--text-primary);
+    }
+
+    .activity-time {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    /* Heatmap */
+    .heatmap {
+      display: grid;
+      grid-template-columns: repeat(24, 1fr);
+      gap: 3px;
+    }
+
+    .heatmap-cell {
+      aspect-ratio: 1;
+      border-radius: 4px;
+      background: var(--bg-tertiary);
+      position: relative;
+      transition: background 0.2s;
+    }
+
+    .heatmap-cell[data-intensity="1"] { background: rgba(29, 155, 240, 0.2); }
+    .heatmap-cell[data-intensity="2"] { background: rgba(29, 155, 240, 0.4); }
+    .heatmap-cell[data-intensity="3"] { background: rgba(29, 155, 240, 0.6); }
+    .heatmap-cell[data-intensity="4"] { background: rgba(29, 155, 240, 0.8); }
+    .heatmap-cell[data-intensity="5"] { background: rgba(29, 155, 240, 1.0); }
+
+    .heatmap-labels {
+      display: grid;
+      grid-template-columns: repeat(24, 1fr);
+      gap: 3px;
+      margin-top: 4px;
+    }
+
+    .heatmap-label {
+      font-size: 10px;
+      color: var(--text-secondary);
+      text-align: center;
+    }
+
+    /* LLM Cost */
+    .cost-bar {
+      height: 8px;
+      background: var(--bg-tertiary);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+
+    .cost-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+
+    .cost-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+
+    .cost-row:last-child { border-bottom: none; }
+    .cost-model { color: var(--text-secondary); }
+    .cost-amount { font-weight: 600; font-family: monospace; }
+
+    /* Schedule */
+    .schedule-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .schedule-item:last-child { border-bottom: none; }
+
+    .schedule-time {
+      font-size: 13px;
+      font-family: monospace;
+      color: var(--text-secondary);
+      width: 50px;
+    }
+
+    .schedule-type {
+      padding: 4px 10px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 600;
+      background: var(--accent-light);
+      color: var(--accent);
+    }
+
+    .schedule-detail {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    /* Chart container */
+    .chart-container {
+      position: relative;
+      height: 250px;
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-secondary);
+    }
+
+    .empty-state-icon { font-size: 48px; margin-bottom: 12px; }
+    .empty-state-text { font-size: 16px; }
+    .empty-state-sub { font-size: 13px; margin-top: 8px; }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      z-index: 1000;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.3s;
+    }
+
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast.success { background: var(--success); color: #fff; }
+    .toast.error { background: var(--error); color: #fff; }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .two-col { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <nav class="sidebar">
+      <a href="/dashboard" class="sidebar-logo">⚡ XActions</a>
+      <a href="/dashboard" class="nav-link">🏠 Dashboard</a>
+      <a href="/analytics" class="nav-link">📊 Analytics</a>
+      <a href="/automations" class="nav-link">🤖 Automations</a>
+      <a href="/agent" class="nav-link active">🧠 AI Agent</a>
+      <a href="/monitor" class="nav-link">👁️ Monitor</a>
+      <a href="/workflows" class="nav-link">⚙️ Workflows</a>
+      <a href="/unfollowers" class="nav-link">👥 Unfollowers</a>
+      <a href="/docs" class="nav-link">📖 Docs</a>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main">
+      <!-- Header -->
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">🧠 AI Agent</h1>
+          <span id="statusBadge" class="status-badge stopped">
+            <span class="dot"></span> Stopped
+          </span>
+        </div>
+        <div class="controls">
+          <span id="uptimeLabel" style="font-size:13px; color:var(--text-secondary)"></span>
+          <button id="btnStart" class="btn btn-start" onclick="startAgent()">▶ Start</button>
+          <button id="btnStop" class="btn btn-stop" onclick="stopAgent()" disabled>■ Stop</button>
+          <button class="btn btn-secondary" onclick="refreshAll()">↻ Refresh</button>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Actions Today</div>
+          <div class="stat-value" id="statActions">—</div>
+          <div class="stat-change" id="statActionsChange"></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Likes Given</div>
+          <div class="stat-value" id="statLikes">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Comments</div>
+          <div class="stat-value" id="statComments">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">LLM Cost Today</div>
+          <div class="stat-value" id="statCost">—</div>
+        </div>
+      </div>
+
+      <!-- Growth Chart + Heatmap -->
+      <div class="two-col">
+        <div class="card">
+          <div class="card-title">📈 Follower Growth</div>
+          <div class="chart-container">
+            <canvas id="growthChart"></canvas>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">🔥 Activity Heatmap (24h)</div>
+          <div class="heatmap" id="heatmap"></div>
+          <div class="heatmap-labels" id="heatmapLabels"></div>
+          <div style="display:flex;justify-content:space-between;margin-top:8px">
+            <span style="font-size:11px;color:var(--text-secondary)">Less</span>
+            <div style="display:flex;gap:3px">
+              <div style="width:12px;height:12px;border-radius:3px;background:var(--bg-tertiary)"></div>
+              <div style="width:12px;height:12px;border-radius:3px;background:rgba(29,155,240,0.2)"></div>
+              <div style="width:12px;height:12px;border-radius:3px;background:rgba(29,155,240,0.4)"></div>
+              <div style="width:12px;height:12px;border-radius:3px;background:rgba(29,155,240,0.7)"></div>
+              <div style="width:12px;height:12px;border-radius:3px;background:rgba(29,155,240,1.0)"></div>
+            </div>
+            <span style="font-size:11px;color:var(--text-secondary)">More</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Activity Feed + LLM Cost -->
+      <div class="two-col">
+        <div class="card">
+          <div class="card-title">📋 Recent Activity</div>
+          <div class="activity-feed" id="activityFeed">
+            <div class="empty-state">
+              <div class="empty-state-icon">🤖</div>
+              <div class="empty-state-text">No activity yet</div>
+              <div class="empty-state-sub">Start the agent to begin</div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">💰 LLM Costs (7 days)</div>
+          <div id="llmCosts">
+            <div class="empty-state">
+              <div class="empty-state-icon">📊</div>
+              <div class="empty-state-text">No usage data</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Today's Schedule -->
+      <div class="card">
+        <div class="card-title">📅 Today's Schedule</div>
+        <div id="schedule">
+          <div class="empty-state">
+            <div class="empty-state-icon">📅</div>
+            <div class="empty-state-text">No schedule available</div>
+            <div class="empty-state-sub">Start the agent to generate today's plan</div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast"></div>
+
+  <script>
+    // ── API ──────────────────────────────────────────────────────
+    const API_BASE = '/api/agent';
+    const token = localStorage.getItem('token') || '';
+    const headers = { 'Content-Type': 'application/json' };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    async function api(path, opts = {}) {
+      const res = await fetch(`${API_BASE}${path}`, { headers, ...opts });
+      return res.json();
+    }
+
+    // ── State ────────────────────────────────────────────────────
+    let growthChart = null;
+    let refreshInterval = null;
+
+    // ── Init ─────────────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', () => {
+      initHeatmap();
+      refreshAll();
+      refreshInterval = setInterval(refreshAll, 30000); // Refresh every 30s
+    });
+
+    // ── Refresh All ──────────────────────────────────────────────
+    async function refreshAll() {
+      try {
+        await Promise.all([
+          refreshStatus(),
+          refreshActions(),
+          refreshLLMCosts(),
+          refreshSchedule(),
+          refreshMetrics(),
+        ]);
+      } catch (e) { console.error('Refresh error:', e); }
+    }
+
+    // ── Status ───────────────────────────────────────────────────
+    async function refreshStatus() {
+      const data = await api('/status');
+      const badge = document.getElementById('statusBadge');
+      const btnStart = document.getElementById('btnStart');
+      const btnStop = document.getElementById('btnStop');
+      const uptime = document.getElementById('uptimeLabel');
+
+      if (data.running) {
+        badge.className = 'status-badge running';
+        badge.innerHTML = '<span class="dot"></span> Running';
+        btnStart.disabled = true;
+        btnStop.disabled = false;
+        uptime.textContent = `Uptime: ${data.uptimeHuman}`;
+      } else {
+        badge.className = 'status-badge stopped';
+        badge.innerHTML = '<span class="dot"></span> Stopped';
+        btnStart.disabled = false;
+        btnStop.disabled = true;
+        uptime.textContent = '';
+      }
+
+      if (data.today) {
+        document.getElementById('statActions').textContent = data.today.total || 0;
+        document.getElementById('statLikes').textContent = data.today.likes || 0;
+        document.getElementById('statComments').textContent = data.today.comments || 0;
+      }
+    }
+
+    // ── Actions Feed ─────────────────────────────────────────────
+    async function refreshActions() {
+      const data = await api('/actions?limit=30');
+      const feed = document.getElementById('activityFeed');
+
+      if (!data.actions || data.actions.length === 0) {
+        feed.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🤖</div><div class="empty-state-text">No activity yet</div></div>`;
+        return;
+      }
+
+      const icons = {
+        like: ['❤️', 'like'],
+        follow: ['➕', 'follow'],
+        comment: ['💬', 'comment'],
+        post: ['✏️', 'post'],
+        explore: ['🔍', 'explore'],
+        search: ['🔍', 'explore'],
+        retweet: ['🔄', 'like'],
+      };
+
+      feed.innerHTML = data.actions.map(a => {
+        const [icon, cls] = icons[a.type] || ['⚡', 'explore'];
+        const time = new Date(a.created_at).toLocaleTimeString();
+        const target = a.target_id ? ` → ${a.target_id}` : '';
+        return `<div class="activity-item">
+          <div class="activity-icon ${cls}">${icon}</div>
+          <div>
+            <div class="activity-text">${a.type}${target}</div>
+            <div class="activity-time">${time}</div>
+          </div>
+        </div>`;
+      }).join('');
+
+      // Update heatmap from actions
+      updateHeatmapFromActions(data.actions);
+    }
+
+    // ── LLM Costs ────────────────────────────────────────────────
+    async function refreshLLMCosts() {
+      const data = await api('/llm-usage?days=7');
+      const container = document.getElementById('llmCosts');
+
+      document.getElementById('statCost').textContent = data.cost || '$0';
+
+      if (!data.usage || data.usage.length === 0) {
+        container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📊</div><div class="empty-state-text">No usage data</div></div>`;
+        return;
+      }
+
+      const maxTokens = Math.max(...data.usage.map(u => u.input_tokens + u.output_tokens));
+
+      container.innerHTML = data.usage.map(u => {
+        const total = u.input_tokens + u.output_tokens;
+        const pct = maxTokens > 0 ? (total / maxTokens * 100) : 0;
+        return `<div class="cost-row">
+          <span class="cost-model">${u.model}</span>
+          <span class="cost-amount">${(total/1000).toFixed(1)}k tokens (${u.calls} calls)</span>
+        </div>
+        <div class="cost-bar"><div class="cost-fill" style="width:${pct}%"></div></div>`;
+      }).join('');
+
+      container.innerHTML += `<div style="text-align:right;margin-top:12px;font-size:16px;font-weight:700;">Total: ${data.cost}</div>`;
+    }
+
+    // ── Schedule ─────────────────────────────────────────────────
+    async function refreshSchedule() {
+      const data = await api('/schedule');
+      const container = document.getElementById('schedule');
+
+      if (!data.schedule || data.schedule.length === 0) {
+        container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📅</div><div class="empty-state-text">No schedule available</div></div>`;
+        return;
+      }
+
+      container.innerHTML = data.schedule.slice(0, 15).map(s => {
+        const time = new Date(s.scheduledFor).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const detail = s.query ? `"${s.query}"` : (s.username ? `@${s.username}` : '');
+        return `<div class="schedule-item">
+          <span class="schedule-time">${time}</span>
+          <span class="schedule-type">${s.type}</span>
+          <span class="schedule-detail">${detail} (${s.durationMinutes}min)</span>
+        </div>`;
+      }).join('');
+    }
+
+    // ── Growth Chart ─────────────────────────────────────────────
+    async function refreshMetrics() {
+      const data = await api('/metrics?days=30');
+      if (!data.followers || data.followers.length === 0) return;
+
+      const labels = data.followers.map(f => f.date);
+      const values = data.followers.map(f => f.followers);
+
+      const ctx = document.getElementById('growthChart').getContext('2d');
+
+      if (growthChart) growthChart.destroy();
+
+      growthChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Followers',
+            data: values,
+            borderColor: '#1d9bf0',
+            backgroundColor: 'rgba(29, 155, 240, 0.1)',
+            fill: true,
+            tension: 0.3,
+            pointRadius: 2,
+          }],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { grid: { color: 'rgba(47,51,54,0.5)' }, ticks: { color: '#8b8f94', maxTicksLimit: 7 } },
+            y: { grid: { color: 'rgba(47,51,54,0.5)' }, ticks: { color: '#8b8f94' } },
+          },
+        },
+      });
+    }
+
+    // ── Heatmap ──────────────────────────────────────────────────
+    function initHeatmap() {
+      const heatmap = document.getElementById('heatmap');
+      const labels = document.getElementById('heatmapLabels');
+      heatmap.innerHTML = '';
+      labels.innerHTML = '';
+      for (let h = 0; h < 24; h++) {
+        heatmap.innerHTML += `<div class="heatmap-cell" data-hour="${h}" data-intensity="0" title="${h}:00 — 0 actions"></div>`;
+        labels.innerHTML += `<div class="heatmap-label">${h}</div>`;
+      }
+    }
+
+    function updateHeatmapFromActions(actions) {
+      const counts = new Array(24).fill(0);
+      for (const a of actions) {
+        const h = new Date(a.created_at).getHours();
+        counts[h]++;
+      }
+      const max = Math.max(...counts, 1);
+      for (let h = 0; h < 24; h++) {
+        const cell = document.querySelector(`.heatmap-cell[data-hour="${h}"]`);
+        if (!cell) continue;
+        const intensity = Math.ceil((counts[h] / max) * 5);
+        cell.setAttribute('data-intensity', intensity);
+        cell.title = `${h}:00 — ${counts[h]} actions`;
+      }
+    }
+
+    // ── Controls ─────────────────────────────────────────────────
+    async function startAgent() {
+      try {
+        const data = await api('/start', { method: 'POST', body: '{}' });
+        if (data.success) {
+          showToast('Agent started! 🚀', 'success');
+          refreshAll();
+        } else {
+          showToast(data.error || 'Failed to start', 'error');
+        }
+      } catch (e) {
+        showToast('Error starting agent', 'error');
+      }
+    }
+
+    async function stopAgent() {
+      try {
+        const data = await api('/stop', { method: 'POST', body: '{}' });
+        if (data.success) {
+          showToast('Agent stopped', 'success');
+          refreshAll();
+        } else {
+          showToast(data.error || 'Failed to stop', 'error');
+        }
+      } catch (e) {
+        showToast('Error stopping agent', 'error');
+      }
+    }
+
+    // ── Toast ────────────────────────────────────────────────────
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.className = `toast ${type} show`;
+      setTimeout(() => { toast.classList.remove('show'); }, 3000);
+    }
+  </script>
+</body>
+</html>

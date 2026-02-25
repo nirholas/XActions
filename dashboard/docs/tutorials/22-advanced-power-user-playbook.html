@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tutorial: Advanced Multi-Feature Combos &amp; Power User Playbook | XActions</title>
+  <meta name="description" content="You are my X/Twitter power user coach. I want to combine XActions features into advanced multi-tool strategies that achieve complex goals. This isn't about usin">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, open source, advanced, power, user, playbook, tutorial:, multi-feature, combos, claude tutorials">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Tutorial: Advanced Multi-Feature Combos &amp; Power User Playbook — XActions">
+  <meta property="og:description" content="You are my X/Twitter power user coach. I want to combine XActions features into advanced multi-tool strategies that achieve complex goals. This isn't about usin">
+  <meta property="og:url" content="https://xactions.app/docs/tutorials/22-advanced-power-user-playbook">
+  <meta property="og:site_name" content="XActions">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Tutorial: Advanced Multi-Feature Combos &amp; Power User Playbook — XActions">
+  <meta name="twitter:description" content="You are my X/Twitter power user coach. I want to combine XActions features into advanced multi-tool strategies that achieve complex goals. This isn't about usin">
+
+  <link rel="canonical" href="https://xactions.app/docs/tutorials/22-advanced-power-user-playbook">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Tutorial: Advanced Multi-Feature Combos & Power User Playbook | XActions",
+    "description": "You are my X/Twitter power user coach. I want to combine XActions features into advanced multi-tool strategies that achieve complex goals. This isn't about usin",
+    "url": "https://xactions.app/docs/tutorials/22-advanced-power-user-playbook",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-25",
+    "dateModified": "2026-02-25",
+    "mainEntityOfPage": "https://xactions.app/docs/tutorials/22-advanced-power-user-playbook",
+    "articleSection": "Claude Tutorials",
+    "keywords": "xactions, twitter automation, x automation, free, open source, advanced, power, user, playbook, tutorial:, multi-feature, combos, claude tutorials"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Claude Tutorials", "item": "https://xactions.app/docs/tutorials" },
+      { "@type": "ListItem", "position": 4, "name": "Tutorial: Advanced Multi-Feature Combos & Power User Playbook", "item": "https://xactions.app/docs/tutorials/22-advanced-power-user-playbook" }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .article pre { font-size: 0.75rem; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <main class="main-content">
+      <header class="main-header">
+        <h1>🤖 Tutorial: Advanced Multi-Feature Combos &amp; Power User Playbook</h1>
+        <div class="breadcrumb">
+          <a href="https://xactions.app">Home</a> › <a href="https://xactions.app/docs">Docs</a> › <a href="https://xactions.app/docs/tutorials">Claude Tutorials</a> › Tutorial: Advanced Multi-Feature Combos &amp; Power User Playbook
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Claude Tutorials</span>
+        <h1>Tutorial: Advanced Multi-Feature Combos &amp; Power User Playbook</h1>
+<p>You are my X/Twitter power user coach. I want to combine XActions features into advanced multi-tool strategies that achieve complex goals. This isn&#39;t about using one feature — it&#39;s about orchestrating everything together. Help me build the ultimate X automation system.</p>
+<h2>Context</h2>
+<p>I&#39;m using XActions (<a href="https://github.com/nirholas/XActions">https://github.com/nirholas/XActions</a>), the complete X/Twitter automation toolkit with 49+ MCP tools, 15 browser automation scripts, a full CLI, and workflow engine. I&#39;ve already learned the individual features. Now I want to combine them into powerful multi-feature strategies.</p>
+<h2>What I Need You To Do</h2>
+<h3>Strategy 1: The Complete Growth Engine</h3>
+<p><strong>Goal:</strong> Grow from 0 to 10K followers systematically.</p>
+<p><strong>Phase A: Foundation (Week 1)</strong></p>
+<pre><code>1. Set up profile perfectly:
+   → x_get_profile (audit current profile)
+   → x_update_profile (optimize bio, avatar, header)
+   
+2. Research your niche:
+   → x_get_trends (what&#39;s trending)
+   → x_search_tweets &quot;niche topic&quot; (find active communities)
+   → x_analyze_sentiment (understand niche mood)
+   
+3. Identify targets:
+   → x_get_followers @competitor1 (see who follows competitors)
+   → x_get_followers @competitor2
+   → Export and analyze overlap
+</code></pre>
+<p><strong>Phase B: Content + Engagement (Weeks 2-4)</strong></p>
+<pre><code>Daily routine via Claude:
+  Morning:
+    → x_get_trends (spot opportunities)
+    → x_post_tweet (share insight while it&#39;s fresh)
+    → x_auto_like keywords=[&quot;niche term&quot;] limit=20
+    
+  Midday:
+    → x_search_tweets &quot;niche question&quot; (find people asking questions)
+    → x_reply to 5-10 people with helpful answers
+    → x_follow 10-15 new relevant people
+    
+  Evening:
+    → x_get_analytics (check what performed)
+    → x_get_post_analytics (which posts worked)
+    → Plan tomorrow&#39;s content based on data
+</code></pre>
+<p><strong>Phase C: Scale (Weeks 5-12)</strong></p>
+<pre><code>  Weekly workflow:
+    → x_workflow_run &quot;Growth Pipeline&quot; (automated daily tasks)
+    → x_stream_start type=&quot;mention&quot; (catch every mention)
+    → x_reputation_report period=&quot;7d&quot; (weekly sentiment check)
+    → x_competitor_analysis handles=[&quot;@comp1&quot;,&quot;@comp2&quot;]
+    → Adjust strategy based on data
+    
+  Bi-weekly cleanup:
+    → x_get_non_followers (find who doesn&#39;t follow back)
+    → x_unfollow_non_followers (maintain healthy ratio)
+    → x_detect_unfollowers (track who left)
+</code></pre>
+<p><strong>Phase D: Optimize &amp; Compound (Month 3+)</strong></p>
+<pre><code>  Content optimization:
+    → Analyze top 20 performing tweets
+    → Identify winning formats, topics, hooks, times
+    → Create content templates
+    → x_post_thread (long-form on winning topics)
+    → x_schedule_post (queue content at optimal times)
+    
+  Community building:
+    → x_get_list_members (monitor niche lists)
+    → Engage consistently with same people
+    → Build relationships via x_send_dm (genuine outreach)
+</code></pre>
+<h3>Strategy 2: Brand Reputation Command Center</h3>
+<p><strong>Goal:</strong> 24/7 brand monitoring with instant response capability.</p>
+<pre><code>Setup (one-time):
+  1. x_monitor_reputation target=&quot;@mybrand&quot; interval=300 webhookUrl=&quot;slack_url&quot;
+  2. x_monitor_reputation target=&quot;brand name&quot; type=&quot;keyword&quot; interval=600
+  3. x_stream_start type=&quot;mention&quot; username=&quot;mybrand&quot; interval=30
+  4. x_workflow_create name=&quot;Brand Alert Pipeline&quot;
+
+Daily operations:
+  Morning check:
+    → x_reputation_report period=&quot;24h&quot;
+    → x_get_notifications limit=50
+    → x_analyze_sentiment texts=[...overnight_mentions]
+    → Prioritize responses for negative mentions
+    
+  Response workflow:
+    → For each negative mention:
+      → x_reply (empathetic response)
+      → Track in CRM
+    → For positive mentions:
+      → x_like + x_retweet (amplify positive voices)
+      → x_reply (thank them)
+    
+  End of day:
+    → x_reputation_report period=&quot;24h&quot; format=&quot;markdown&quot;
+    → Compare to yesterday: improving or declining?
+    → Adjust strategy
+</code></pre>
+<h3>Strategy 3: Content Creator Machine</h3>
+<p><strong>Goal:</strong> Consistent high-quality content with viral potential.</p>
+<pre><code>Weekly content planning (Monday):
+  1. Research:
+    → x_get_trends
+    → x_search_tweets &quot;niche&quot; min_faves:500 (find viral patterns)
+    → x_grok_query &quot;trending in [niche] this week&quot;
+    → x_competitor_analysis handles=[&quot;@top_creators&quot;]
+  
+  2. Create calendar:
+    → Monday: Educational thread (x_post_thread)
+    → Tuesday: Hot take (x_post_tweet)
+    → Wednesday: Resource share (x_post_tweet with link)
+    → Thursday: Story/experience thread (x_post_thread)
+    → Friday: Community question (x_create_poll)
+    → Weekend: Engagement (reply + like marathon)
+  
+  3. Schedule:
+    → x_schedule_post for each planned tweet
+    → Optimal times from analytics data
+
+Daily engagement:
+  → x_auto_like keywords matching your content topics
+  → Reply to 10 comments on your posts
+  → Engage with 5 accounts in your niche
+  → x_get_post_analytics (real-time performance check)
+
+Content repurposing:
+  → Top performing tweet → expand into thread
+  → Great thread → extract as individual tweets over next week
+  → Viral tweet → analyze why, replicate format
+</code></pre>
+<h3>Strategy 4: Research &amp; Intelligence Agency</h3>
+<p><strong>Goal:</strong> Deep industry intelligence using X as a data source.</p>
+<pre><code>Setup intel pipelines:
+  1. x_workflow_create &quot;Industry Monitor&quot;
+     → Search key industry terms daily
+     → Analyze sentiment trends
+     → Track key opinion leaders
+     → Generate weekly reports
+     
+  2. x_workflow_create &quot;Competitor Watch&quot;
+     → Monitor 5 competitor accounts
+     → Track their content strategy
+     → Analyze their engagement patterns
+     → Alert on significant moves
+  
+  3. x_workflow_create &quot;Talent Scout&quot;
+     → Search for key skill keywords
+     → Follow/monitor top voices
+     → Build lists of potential hires
+
+Ad-hoc research:
+  &quot;Search for all tweets about &#39;product launch&#39; from @competitor&quot;
+  &quot;Analyze sentiment around &#39;industry event&#39;&quot;
+  &quot;Who are the top 10 voices discussing &#39;topic&#39;?&quot;
+  &quot;What links are being shared most about &#39;topic&#39;?&quot;
+  &quot;Unroll this thread and summarize key points&quot;
+</code></pre>
+<h3>Strategy 5: Customer Acquisition Funnel</h3>
+<p><strong>Goal:</strong> Find potential customers and build relationships.</p>
+<pre><code>Identify prospects:
+  → x_search_tweets &quot;looking for [your product type]&quot;
+  → x_search_tweets &quot;recommend [product category]&quot;
+  → x_search_tweets &quot;alternative to [competitor]&quot;
+  → x_search_tweets &quot;[pain point your product solves]&quot;
+
+Qualify leads:
+  → For each prospect: x_get_profile (check follower count, bio, activity)
+  → Filter: active accounts, relevant industry, decision-maker signals
+  → Score based on: engagement level, follower count, bio keywords
+
+Engage:
+  → x_follow qualified prospects
+  → x_like their recent tweets (genuine interest)
+  → x_reply with helpful, non-salesy comments
+  → Wait 3-7 days for relationship building
+
+Convert:
+  → x_send_dm with personalized, value-first message
+  → Share relevant content/resources
+  → Offer free trial/consultation
+  → Track conversion with session logger
+</code></pre>
+<h3>Strategy 6: Account Security &amp; Cleanup</h3>
+<p><strong>Goal:</strong> Clean up and secure your X account.</p>
+<pre><code>Full account audit:
+  1. x_get_profile (review your public presence)
+  2. x_get_following (who are you following?)
+  3. x_get_non_followers (who doesn&#39;t follow back?)
+  4. x_get_blocked (review block list)
+  5. x_get_settings (check privacy settings)
+  6. x_check_premium (review premium status)
+
+Cleanup sequence:
+  1. x_unfollow_non_followers (clean follow ratio)
+  2. Remove spammy followers (block + unblock)
+  3. x_clear_bookmarks (declutter)
+  4. Content cleanup: unlike old tweets, delete irrelevant posts
+  5. x_toggle_protected (if needed for privacy)
+
+Backup:
+  → x_export_account (full backup)
+  → Store locally
+  → Set up weekly backup workflow
+</code></pre>
+<h3>Strategy 7: Multi-Account Management</h3>
+<p><strong>Goal:</strong> Manage multiple X accounts efficiently.</p>
+<pre><code>For business + personal accounts:
+
+Account switching in MCP:
+  → Each browser session = one account
+  → x_login for each account
+
+Per-account workflows:
+  Business account:
+    → Brand monitoring
+    → Customer service bot
+    → Scheduled content
+    → Analytics tracking
+    
+  Personal account:
+    → Growth automation
+    → Engagement autopilot
+    → Network building
+    → Content creation
+
+Cross-account strategy:
+  → Personal account engages with business content
+  → Business account retweets personal insights
+  → Both engage with same niche community
+  → Track separately with session logger
+</code></pre>
+<h3>Strategy 8: Event &amp; Launch Campaigns</h3>
+<p><strong>Goal:</strong> Maximize impact during product launches or events.</p>
+<pre><code>Pre-launch (1 week before):
+  → Build anticipation: x_post_tweet teasers daily
+  → x_create_poll &quot;What feature are you most excited about?&quot;
+  → x_search_tweets for related discussions → engage
+  → x_auto_like keywords related to launch topic
+  → x_schedule_post all launch day content in advance
+
+Launch day:
+  → x_post_tweet announcement
+  → x_post_thread detailed launch breakdown
+  → x_stream_start type=&quot;mention&quot; (catch every mention in real-time)
+  → Monitor with x_reputation_report period=&quot;24h&quot; every few hours
+  → x_reply to every single mention/question
+  → x_retweet positive reactions
+  → Real-time sentiment monitoring
+
+Post-launch (1 week after):
+  → x_get_analytics (measure impact)
+  → x_reputation_report period=&quot;7d&quot;
+  → x_analyze_sentiment on all launch mentions
+  → Identify top champions → x_send_dm thank you
+  → Document what worked for next launch
+</code></pre>
+<h3>Strategy 9: Community Building Playbook</h3>
+<p><strong>Goal:</strong> Build a thriving community around your brand/niche.</p>
+<pre><code>Foundation:
+  → x_get_list_members of relevant niche lists
+  → x_search_tweets for community keywords
+  → Identify 50-100 core community members
+
+Daily engagement routine:
+  → Like 2-3 tweets from each core member weekly
+  → Reply meaningfully to 5-10 people daily
+  → Share community members&#39; best content (x_retweet)
+  → Post discussion starters (questions, polls)
+
+Weekly rituals:
+  → Monday: Industry news + hot take thread
+  → Wednesday: Community spotlight (highlight a member)
+  → Friday: Open Q&amp;A or resource roundup
+  → Weekend: Engagement marathon (reply to everything)
+
+Measurement:
+  → Track engagement per community member
+  → Monitor reply rate and conversation depth
+  → x_get_analytics weekly for community health
+  → Adjust approach based on what drives replies
+</code></pre>
+<h3>Strategy 10: The Daily Autopilot</h3>
+<p><strong>Goal:</strong> A single workflow that handles your daily X routine.</p>
+<pre><code>&quot;Create a comprehensive daily workflow:
+
+  6:00 AM - Research
+    → x_get_trends
+    → x_search_tweets in niche (last 12h)
+    → Identify 3 tweet ideas
+    
+  8:00 AM - Post
+    → x_post_tweet (morning insight)
+    → x_auto_like keywords 20 tweets
+    
+  12:00 PM - Engage  
+    → x_get_notifications (respond to everything)
+    → x_search_tweets &quot;looking for [topic]&quot; (find prospects)
+    → x_reply to 10 relevant conversations
+    → x_follow 10 new relevant accounts
+    
+  5:00 PM - Content
+    → x_post_tweet (or x_post_thread on big days)
+    → x_like 20 more niche tweets
+    
+  9:00 PM - Analyze
+    → x_get_analytics
+    → x_get_post_analytics
+    → x_reputation_report period=&quot;24h&quot;
+    → Log everything with session logger
+    
+  Weekly:
+    → x_unfollow_non_followers (maintain ratio)
+    → x_competitor_analysis
+    → x_export_account (backup)
+    → Review and optimize&quot;
+</code></pre>
+<h2>My Power User Goals</h2>
+<p>(Replace before pasting)</p>
+<ul>
+<li>Primary strategy I want: Growth / Brand / Content / Research / Sales</li>
+<li>My niche/industry: [describe]</li>
+<li>Current followers: [number]</li>
+<li>Target followers: [number]</li>
+<li>Accounts I manage: 1 / Multiple</li>
+<li>Time I can dedicate daily: [minutes]</li>
+<li>Biggest challenge: [describe]</li>
+<li>Tools I&#39;m already using: MCP / CLI / Browser scripts / All</li>
+</ul>
+<p>Let&#39;s start building my personalized automation strategy. Pick the most relevant strategies for my goals and create the implementation plan.</p>
+
+
+        <div class="cta-box">
+          <h3>⚡ Explore XActions</h3>
+          <p>100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/docs">Browse All Documentation</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 In This Section</h3>
+                <a href="/docs/tutorials/01-mcp-setup-and-first-commands">🤖 Tutorial: Setting Up XActions MCP Server with Claude</a>
+        <a href="/docs/tutorials/02-unfollow-non-followers-cleanup">🤖 Tutorial: Unfollow Non-Followers &amp; Follower Cleanup with Claude</a>
+        <a href="/docs/tutorials/03-growth-automation-suite">🤖 Tutorial: Growth Automation Suite — Grow Your X Account on Autopilot</a>
+        <a href="/docs/tutorials/04-scraping-research-analysis">🤖 Tutorial: Tweet Scraping, Profile Analysis &amp; Research with Claude</a>
+        <a href="/docs/tutorials/05-content-posting-threads-scheduling">🤖 Tutorial: Content Posting, Threads, Polls &amp; Scheduling with Claude</a>
+        <a href="/docs/tutorials/06-analytics-competitor-intelligence">🤖 Tutorial: Engagement Analytics, Best Time to Post &amp; Competitor Intelligence</a>
+        <a href="/docs/tutorials/07-auto-liker-auto-commenter">🤖 Tutorial: Auto-Liker &amp; Auto-Commenter — Engagement Automation with Claude</a>
+        <a href="/docs/tutorials/08-blocking-muting-spam-protection">🤖 Tutorial: Mass Block, Unblock, Mute &amp; Spam Protection with Claude</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/docs">All Documentation</a>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

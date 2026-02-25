@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sentiment Analysis &amp; Reputation Monitoring | XActions</title>
+  <meta name="description" content="Real-time sentiment analysis, reputation monitoring, alerting, and reporting for X/Twitter — no API fees.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, open source, analytics, sentiment, analysis, reputation, monitoring, guides &amp; reference">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Sentiment Analysis &amp; Reputation Monitoring — XActions">
+  <meta property="og:description" content="Real-time sentiment analysis, reputation monitoring, alerting, and reporting for X/Twitter — no API fees.">
+  <meta property="og:url" content="https://xactions.app/docs/guides/analytics">
+  <meta property="og:site_name" content="XActions">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Sentiment Analysis &amp; Reputation Monitoring — XActions">
+  <meta name="twitter:description" content="Real-time sentiment analysis, reputation monitoring, alerting, and reporting for X/Twitter — no API fees.">
+
+  <link rel="canonical" href="https://xactions.app/docs/guides/analytics">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Sentiment Analysis & Reputation Monitoring | XActions",
+    "description": "Real-time sentiment analysis, reputation monitoring, alerting, and reporting for X/Twitter — no API fees.",
+    "url": "https://xactions.app/docs/guides/analytics",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-25",
+    "dateModified": "2026-02-25",
+    "mainEntityOfPage": "https://xactions.app/docs/guides/analytics",
+    "articleSection": "Guides & Reference",
+    "keywords": "xactions, twitter automation, x automation, free, open source, analytics, sentiment, analysis, reputation, monitoring, guides & reference"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Guides & Reference", "item": "https://xactions.app/docs/guides" },
+      { "@type": "ListItem", "position": 4, "name": "Sentiment Analysis & Reputation Monitoring", "item": "https://xactions.app/docs/guides/analytics" }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .article pre { font-size: 0.75rem; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <main class="main-content">
+      <header class="main-header">
+        <h1>📖 Sentiment Analysis &amp; Reputation Monitoring</h1>
+        <div class="breadcrumb">
+          <a href="https://xactions.app">Home</a> › <a href="https://xactions.app/docs">Docs</a> › <a href="https://xactions.app/docs/guides">Guides &amp; Reference</a> › Sentiment Analysis &amp; Reputation Monitoring
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Guides &amp; Reference</span>
+        <h1>Sentiment Analysis &amp; Reputation Monitoring</h1>
+<blockquote>
+<p>Real-time sentiment analysis, reputation monitoring, alerting, and reporting for X/Twitter — no API fees.</p>
+</blockquote>
+<h2>Overview</h2>
+<p>XActions Analytics provides a complete sentiment intelligence layer:</p>
+<ul>
+<li><strong>Sentiment Analysis</strong> — Rule-based (offline, instant) or LLM-powered (OpenRouter) analysis of any text</li>
+<li><strong>Reputation Monitoring</strong> — Continuous polling of mentions/keywords with rolling sentiment tracking</li>
+<li><strong>Alert System</strong> — Threshold, volume spike, and anomaly detection with webhook + Socket.IO delivery</li>
+<li><strong>Reports</strong> — Comprehensive Markdown/JSON reports with timelines, keyword frequency, and distribution</li>
+</ul>
+<p>Available via: <strong>API</strong>, <strong>CLI</strong>, <strong>MCP tools</strong> (for AI agents), and <strong>Dashboard</strong>.</p>
+<h2>Architecture</h2>
+<pre><code>src/analytics/
+├── sentiment.js   → Sentiment analysis engine (rule-based + LLM)
+├── reputation.js  → Monitor management, polling, stats
+├── alerts.js      → Alert detection and delivery
+├── reports.js     → Report generation, Markdown export
+└── index.js       → Unified re-exports
+
+api/routes/analytics.js  → REST API endpoints
+dashboard/analytics.html → Dashboard UI
+dashboard/js/analytics.js → Client-side JS
+</code></pre>
+<h3>Data Flow</h3>
+<pre><code>Text → analyzeSentiment() → { score, label, confidence, keywords }
+                                     ↓
+Monitor (polling) → analyzeBatch() → history[] → checkAlerts()
+                                     ↓                ↓
+                              _updateStats()    _deliverAlert()
+                                     ↓           (console, webhook, Socket.IO)
+                          generateReport() → Markdown/JSON
+</code></pre>
+<hr>
+<h2>API Reference</h2>
+<p>Base URL: <code>/api/analytics</code></p>
+<h3>POST /sentiment</h3>
+<p>Analyze sentiment of text or batch of texts.</p>
+<p><strong>Single text:</strong></p>
+<pre><code class="language-json">// Request
+{ &quot;text&quot;: &quot;I love this! 🔥&quot;, &quot;mode&quot;: &quot;rules&quot; }
+
+// Response
+{
+  &quot;score&quot;: 0.65,
+  &quot;label&quot;: &quot;positive&quot;,
+  &quot;confidence&quot;: 0.45,
+  &quot;keywords&quot;: [&quot;love&quot;, &quot;🔥&quot;]
+}
+</code></pre>
+<p><strong>Batch mode (up to 100 texts):</strong></p>
+<pre><code class="language-json">// Request
+{ &quot;texts&quot;: [&quot;great!&quot;, &quot;terrible&quot;, &quot;it&#39;s ok&quot;], &quot;mode&quot;: &quot;rules&quot; }
+
+// Response
+{
+  &quot;results&quot;: [
+    { &quot;text&quot;: &quot;great!&quot;, &quot;score&quot;: 0.6, &quot;label&quot;: &quot;positive&quot;, &quot;confidence&quot;: 0.5, &quot;keywords&quot;: [&quot;great&quot;] },
+    { &quot;text&quot;: &quot;terrible&quot;, &quot;score&quot;: -0.6, &quot;label&quot;: &quot;negative&quot;, &quot;confidence&quot;: 0.5, &quot;keywords&quot;: [&quot;terrible&quot;] },
+    { &quot;text&quot;: &quot;it&#39;s ok&quot;, &quot;score&quot;: 0, &quot;label&quot;: &quot;neutral&quot;, &quot;confidence&quot;: 0, &quot;keywords&quot;: [] }
+  ],
+  &quot;count&quot;: 3
+}
+</code></pre>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>text</code></td>
+<td>string</td>
+<td>—</td>
+<td>Single text to analyze</td>
+</tr>
+<tr>
+<td><code>texts</code></td>
+<td>string[]</td>
+<td>—</td>
+<td>Array of texts for batch analysis (max 100)</td>
+</tr>
+<tr>
+<td><code>mode</code></td>
+<td>string</td>
+<td><code>&quot;rules&quot;</code></td>
+<td><code>&quot;rules&quot;</code> (offline) or <code>&quot;llm&quot;</code> (OpenRouter)</td>
+</tr>
+</tbody></table>
+<p><strong>Score range:</strong> -1.0 (very negative) to 1.0 (very positive)<br><strong>Labels:</strong> <code>positive</code> (&gt;0.05), <code>neutral</code> (-0.05 to 0.05), <code>negative</code> (&lt;-0.05)</p>
+<hr>
+<h3>POST /monitor</h3>
+<p>Start a reputation monitor for a username or keyword.</p>
+<pre><code class="language-json">// Request
+{
+  &quot;target&quot;: &quot;@username&quot;,
+  &quot;type&quot;: &quot;mentions&quot;,
+  &quot;interval&quot;: 900,
+  &quot;sentimentMode&quot;: &quot;rules&quot;,
+  &quot;alertConfig&quot;: {
+    &quot;sentimentThreshold&quot;: -0.3,
+    &quot;webhookUrl&quot;: &quot;https://hooks.example.com/alerts&quot;
+  }
+}
+
+// Response (201 Created)
+{
+  &quot;id&quot;: &quot;monitor_username_1234567890&quot;,
+  &quot;target&quot;: &quot;@username&quot;,
+  &quot;type&quot;: &quot;mentions&quot;,
+  &quot;status&quot;: &quot;active&quot;,
+  &quot;intervalMs&quot;: 900000,
+  &quot;sentimentMode&quot;: &quot;rules&quot;,
+  &quot;alertConfig&quot;: { &quot;sentimentThreshold&quot;: -0.3, &quot;webhookUrl&quot;: &quot;...&quot; },
+  &quot;createdAt&quot;: &quot;2025-01-15T10:00:00.000Z&quot;,
+  &quot;lastPolledAt&quot;: null,
+  &quot;stats&quot;: { &quot;totalPolls&quot;: 0, &quot;totalTweets&quot;: 0, &quot;rollingAverage&quot;: 0, &quot;trend&quot;: &quot;stable&quot;, &quot;volatility&quot;: 0 },
+  &quot;historyCount&quot;: 0
+}
+</code></pre>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>target</code></td>
+<td>string</td>
+<td><strong>required</strong></td>
+<td><code>@username</code> or keyword to monitor</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td>string</td>
+<td><code>&quot;mentions&quot;</code></td>
+<td><code>&quot;mentions&quot;</code>, <code>&quot;keyword&quot;</code>, or <code>&quot;replies&quot;</code></td>
+</tr>
+<tr>
+<td><code>interval</code></td>
+<td>number</td>
+<td><code>900</code></td>
+<td>Polling interval in seconds (min: 60)</td>
+</tr>
+<tr>
+<td><code>sentimentMode</code></td>
+<td>string</td>
+<td><code>&quot;rules&quot;</code></td>
+<td>Sentiment analysis mode</td>
+</tr>
+<tr>
+<td><code>alertConfig.sentimentThreshold</code></td>
+<td>number</td>
+<td><code>-0.3</code></td>
+<td>Alert when avg sentiment drops below</td>
+</tr>
+<tr>
+<td><code>alertConfig.webhookUrl</code></td>
+<td>string</td>
+<td>—</td>
+<td>Webhook URL for alert delivery</td>
+</tr>
+</tbody></table>
+<hr>
+<h3>GET /monitor</h3>
+<p>List all active monitors.</p>
+<pre><code class="language-json">// Response
+{
+  &quot;monitors&quot;: [
+    { &quot;id&quot;: &quot;monitor_username_123&quot;, &quot;target&quot;: &quot;@username&quot;, &quot;type&quot;: &quot;mentions&quot;, &quot;status&quot;: &quot;active&quot;, &quot;historyCount&quot;: 47, &quot;stats&quot;: { ... } }
+  ],
+  &quot;count&quot;: 1
+}
+</code></pre>
+<hr>
+<h3>GET /monitor/:id</h3>
+<p>Get monitor details and history.</p>
+<p><strong>Query params:</strong> <code>?limit=100&amp;since=2025-01-01T00:00:00Z</code></p>
+<pre><code class="language-json">// Response
+{
+  &quot;id&quot;: &quot;monitor_username_123&quot;,
+  &quot;target&quot;: &quot;@username&quot;,
+  &quot;status&quot;: &quot;active&quot;,
+  &quot;stats&quot;: { &quot;rollingAverage&quot;: 0.35, &quot;trend&quot;: &quot;improving&quot;, &quot;volatility&quot;: 0.12 },
+  &quot;history&quot;: [
+    { &quot;timestamp&quot;: &quot;...&quot;, &quot;score&quot;: 0.4, &quot;label&quot;: &quot;positive&quot;, &quot;text&quot;: &quot;...&quot;, &quot;author&quot;: &quot;user1&quot;, &quot;keywords&quot;: [&quot;great&quot;] }
+  ]
+}
+</code></pre>
+<hr>
+<h3>DELETE /monitor/:id</h3>
+<p>Stop and remove a monitor. Returns <code>{ success: true }</code>.</p>
+<hr>
+<h3>GET /reports/:username</h3>
+<p>Generate a reputation report.</p>
+<p><strong>Query params:</strong> <code>?period=7d&amp;format=json</code> or <code>?format=markdown</code></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Options</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>period</code></td>
+<td><code>24h</code>, <code>7d</code>, <code>30d</code>, <code>all</code></td>
+<td><code>7d</code></td>
+</tr>
+<tr>
+<td><code>format</code></td>
+<td><code>json</code>, <code>markdown</code></td>
+<td><code>json</code></td>
+</tr>
+</tbody></table>
+<p><strong>JSON response:</strong></p>
+<pre><code class="language-json">{
+  &quot;target&quot;: &quot;username&quot;,
+  &quot;generatedAt&quot;: &quot;2025-01-15T10:00:00.000Z&quot;,
+  &quot;periodLabel&quot;: &quot;Last 7 Days&quot;,
+  &quot;summary&quot;: {
+    &quot;totalMentions&quot;: 142,
+    &quot;averageSentiment&quot;: 0.234,
+    &quot;medianSentiment&quot;: 0.3,
+    &quot;trend&quot;: &quot;improving&quot;,
+    &quot;volatility&quot;: 0.15,
+    &quot;distribution&quot;: { &quot;positive&quot;: 82, &quot;neutral&quot;: 35, &quot;negative&quot;: 25 },
+    &quot;distributionPercent&quot;: { &quot;positive&quot;: 58, &quot;neutral&quot;: 25, &quot;negative&quot;: 18 }
+  },
+  &quot;topPositive&quot;: [ { &quot;text&quot;: &quot;...&quot;, &quot;score&quot;: 0.9, &quot;author&quot;: &quot;...&quot; } ],
+  &quot;topNegative&quot;: [ { &quot;text&quot;: &quot;...&quot;, &quot;score&quot;: -0.8, &quot;author&quot;: &quot;...&quot; } ],
+  &quot;timeline&quot;: [ { &quot;time&quot;: &quot;2025-01-14&quot;, &quot;averageSentiment&quot;: 0.3, &quot;mentions&quot;: 20 } ],
+  &quot;topKeywords&quot;: [ { &quot;word&quot;: &quot;amazing&quot;, &quot;count&quot;: 12 } ],
+  &quot;alerts&quot;: 2,
+  &quot;alertDetails&quot;: [ { &quot;type&quot;: &quot;volume_spike&quot;, &quot;severity&quot;: &quot;warning&quot;, &quot;message&quot;: &quot;...&quot; } ]
+}
+</code></pre>
+<p><strong>Markdown response:</strong> Returns a formatted Markdown report with tables, emoji bars, and linked tweets.</p>
+<hr>
+<h3>GET /alerts</h3>
+<p>Get recent alerts.</p>
+<p><strong>Query params:</strong> <code>?monitorId=xxx&amp;severity=warning&amp;limit=50</code></p>
+<pre><code class="language-json">{
+  &quot;alerts&quot;: [
+    {
+      &quot;id&quot;: &quot;alert_1_1234567890&quot;,
+      &quot;type&quot;: &quot;sentiment_threshold&quot;,
+      &quot;severity&quot;: &quot;critical&quot;,
+      &quot;message&quot;: &quot;Sentiment for \&quot;@username\&quot; dropped to -0.650 (threshold: -0.3)&quot;,
+      &quot;monitorId&quot;: &quot;monitor_username_123&quot;,
+      &quot;target&quot;: &quot;@username&quot;,
+      &quot;data&quot;: { &quot;averageScore&quot;: -0.65, &quot;threshold&quot;: -0.3, &quot;negativeCount&quot;: 8, &quot;totalCount&quot;: 10 },
+      &quot;timestamp&quot;: &quot;2025-01-15T10:30:00.000Z&quot;
+    }
+  ],
+  &quot;count&quot;: 1
+}
+</code></pre>
+<hr>
+<h2>Alert Types</h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Trigger</th>
+<th>Severity</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>sentiment_threshold</code></td>
+<td>Avg score drops below threshold (default: -0.3)</td>
+<td>warning (-0.3) / critical (-0.6)</td>
+</tr>
+<tr>
+<td><code>volume_spike</code></td>
+<td>Mention count exceeds 3x normal</td>
+<td>warning (3x) / critical (6x)</td>
+</tr>
+<tr>
+<td><code>anomaly</code></td>
+<td>Score shifts &gt;2 standard deviations from baseline</td>
+<td>warning (2σ) / critical (3σ)</td>
+</tr>
+</tbody></table>
+<p><strong>Alert delivery channels:</strong></p>
+<ol>
+<li><strong>Console</strong> — Always logged with emoji indicators</li>
+<li><strong>Webhook</strong> — POST to configured URL with <code>{ event: &quot;xactions.alert&quot;, alert: {...} }</code></li>
+<li><strong>Socket.IO</strong> — Emitted as <code>analytics:alert</code> event to monitor room</li>
+</ol>
+<hr>
+<h2>MCP Tools (AI Agents)</h2>
+<p>Three tools for Claude, GPT, or any MCP-compatible agent:</p>
+<h3>x_analyze_sentiment</h3>
+<pre><code class="language-json">{
+  &quot;text&quot;: &quot;This project is incredible!&quot;,
+  &quot;mode&quot;: &quot;rules&quot;
+}
+// Or batch:
+{ &quot;texts&quot;: [&quot;text1&quot;, &quot;text2&quot;], &quot;mode&quot;: &quot;rules&quot; }
+</code></pre>
+<h3>x_monitor_reputation</h3>
+<pre><code class="language-json">// Start
+{ &quot;action&quot;: &quot;start&quot;, &quot;target&quot;: &quot;@username&quot;, &quot;type&quot;: &quot;mentions&quot;, &quot;interval&quot;: 300 }
+
+// Check status
+{ &quot;action&quot;: &quot;status&quot;, &quot;monitorId&quot;: &quot;monitor_username_123&quot; }
+
+// Stop
+{ &quot;action&quot;: &quot;stop&quot;, &quot;monitorId&quot;: &quot;monitor_username_123&quot; }
+
+// List all
+{ &quot;action&quot;: &quot;list&quot; }
+</code></pre>
+<h3>x_reputation_report</h3>
+<pre><code class="language-json">{ &quot;username&quot;: &quot;elonmusk&quot;, &quot;period&quot;: &quot;7d&quot;, &quot;format&quot;: &quot;markdown&quot; }
+</code></pre>
+<hr>
+<h2>Sentiment Engine Details</h2>
+<h3>Rule-Based Mode (<code>rules</code>)</h3>
+<p>Fast, offline analysis using an AFINN-style lexicon:</p>
+<ul>
+<li><strong>~150 scored words</strong> with scores from -5 (worst) to +5 (best)</li>
+<li><strong>Negation handling</strong> — &quot;not&quot;, &quot;never&quot;, &quot;don&#39;t&quot; etc. flip and weaken scores by 25%</li>
+<li><strong>Intensifiers</strong> — &quot;very&quot; (1.5x), &quot;extremely&quot; (2x), &quot;slightly&quot; (0.5x)</li>
+<li><strong>Emoji scoring</strong> — 20+ emojis mapped to sentiment (😀=3, 😡=-3, 🔥=2)</li>
+<li><strong>Normalization</strong> — Scores normalized to -1.0 to 1.0 range</li>
+</ul>
+<p><strong>Best for:</strong> High-volume analysis, offline use, cost-sensitive workloads.</p>
+<h3>LLM Mode (<code>llm</code>)</h3>
+<p>Uses OpenRouter to call an LLM for nuanced analysis:</p>
+<ul>
+<li><strong>Default model:</strong> <code>meta-llama/llama-3.1-8b-instruct:free</code></li>
+<li>Handles sarcasm, irony, crypto/finance slang, internet culture</li>
+<li>Structured JSON output with graceful fallback to rule-based on parse failure</li>
+<li>Requires <code>OPENROUTER_API_KEY</code> environment variable</li>
+</ul>
+<p><strong>Best for:</strong> Complex/nuanced text, sarcasm detection, specialized domains.</p>
+<hr>
+<h2>Configuration</h2>
+<h3>Environment Variables</h3>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>OPENROUTER_API_KEY</code></td>
+<td>For LLM mode</td>
+<td>OpenRouter API key</td>
+</tr>
+<tr>
+<td><code>PORT</code></td>
+<td>No (default: 3000)</td>
+<td>Server port</td>
+</tr>
+</tbody></table>
+<h3>Monitor Defaults</h3>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Default</th>
+<th>Min</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Poll interval</td>
+<td>900s (15min)</td>
+<td>60s</td>
+<td>How often to check for new mentions</td>
+</tr>
+<tr>
+<td>History cap</td>
+<td>10,000 entries</td>
+<td>—</td>
+<td>Max data points per monitor</td>
+</tr>
+<tr>
+<td>Alert threshold</td>
+<td>-0.3</td>
+<td>-1.0</td>
+<td>Sentiment score that triggers alert</td>
+</tr>
+<tr>
+<td>Volume multiplier</td>
+<td>3x</td>
+<td>—</td>
+<td>Mention spike detection multiplier</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Dashboard</h2>
+<p>Access at <code>/analytics</code> — a dark-themed dashboard with four tabs:</p>
+<ol>
+<li><strong>Analyze</strong> — Quick text analysis with batch support, sentiment badges, and keyword tags</li>
+<li><strong>Monitors</strong> — Start/stop monitors, view status table with rolling averages and trends</li>
+<li><strong>Timeline</strong> — Chart.js line+bar chart showing sentiment over time with mentions overlay, word cloud, mention feed</li>
+<li><strong>Alerts</strong> — Color-coded alert history with severity badges and timestamps</li>
+</ol>
+<p><strong>Features:</strong></p>
+<ul>
+<li>Real-time alert notifications via Socket.IO</li>
+<li>Ctrl+Enter keyboard shortcut for analysis</li>
+<li>Responsive layout (sidebar collapses on mobile)</li>
+<li>Accessible (ARIA roles, skip navigation, focus indicators)</li>
+</ul>
+<hr>
+<h2>Examples</h2>
+<h3>Analyze a tweet&#39;s sentiment</h3>
+<pre><code class="language-bash">curl -X POST http://localhost:3000/api/analytics/sentiment \
+  -H &quot;Content-Type: application/json&quot; \
+  -d &#39;{&quot;text&quot;: &quot;Just shipped v2.0! The team crushed it 🚀🔥&quot;}&#39;
+</code></pre>
+<h3>Monitor your brand mentions</h3>
+<pre><code class="language-bash">curl -X POST http://localhost:3000/api/analytics/monitor \
+  -H &quot;Content-Type: application/json&quot; \
+  -d &#39;{&quot;target&quot;: &quot;@yourproject&quot;, &quot;type&quot;: &quot;mentions&quot;, &quot;interval&quot;: 300}&#39;
+</code></pre>
+<h3>Get a weekly report in Markdown</h3>
+<pre><code class="language-bash">curl &quot;http://localhost:3000/api/analytics/reports/yourproject?period=7d&amp;format=markdown&quot; &gt; report.md
+</code></pre>
+<h3>Batch analyze multiple texts</h3>
+<pre><code class="language-bash">curl -X POST http://localhost:3000/api/analytics/sentiment \
+  -H &quot;Content-Type: application/json&quot; \
+  -d &#39;{&quot;texts&quot;: [&quot;Love this!&quot;, &quot;Worst update ever&quot;, &quot;It works I guess&quot;]}&#39;
+</code></pre>
+<hr>
+<p><em>Built by <a href="https://x.com/nichxbt">@nichxbt</a> — <a href="https://github.com/nirholas/XActions">XActions</a></em></p>
+
+
+        <div class="cta-box">
+          <h3>⚡ Explore XActions</h3>
+          <p>100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/docs">Browse All Documentation</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 In This Section</h3>
+                <a href="/docs/guides/getting-started">📖 Getting Started with XActions</a>
+        <a href="/docs/guides/usage">📖 Usage</a>
+        <a href="/docs/guides/automation">📖 XActions Automation Framework Guide</a>
+        <a href="/docs/guides/monitoring">📖 Monitoring Guide</a>
+        <a href="/docs/guides/cli-reference">📖 XActions CLI Reference</a>
+        <a href="/docs/guides/ai-api">📖 XActions AI API Documentation</a>
+        <a href="/docs/guides/api-reference">📖 XActions — API Reference</a>
+        <a href="/docs/guides/deployment">📖 Deployment Guide</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/docs">All Documentation</a>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

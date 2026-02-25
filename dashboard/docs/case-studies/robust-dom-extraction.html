@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Robust DOM Extraction: A Case Study in Browser Automation Resilience | XActions</title>
+  <meta name="description" content="Browser automation scripts are fragile by nature. X/Twitter uses React with server-side rendering and frequent A/B testing — `data-testid` attributes can appear">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, open source, robust, dom, extraction, extraction:, case, study, browser, automation, resilience, case studies">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Robust DOM Extraction: A Case Study in Browser Automation Resilience — XActions">
+  <meta property="og:description" content="Browser automation scripts are fragile by nature. X/Twitter uses React with server-side rendering and frequent A/B testing — `data-testid` attributes can appear">
+  <meta property="og:url" content="https://xactions.app/docs/case-studies/robust-dom-extraction">
+  <meta property="og:site_name" content="XActions">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Robust DOM Extraction: A Case Study in Browser Automation Resilience — XActions">
+  <meta name="twitter:description" content="Browser automation scripts are fragile by nature. X/Twitter uses React with server-side rendering and frequent A/B testing — `data-testid` attributes can appear">
+
+  <link rel="canonical" href="https://xactions.app/docs/case-studies/robust-dom-extraction">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Robust DOM Extraction: A Case Study in Browser Automation Resilience | XActions",
+    "description": "Browser automation scripts are fragile by nature. X/Twitter uses React with server-side rendering and frequent A/B testing — `data-testid` attributes can appear",
+    "url": "https://xactions.app/docs/case-studies/robust-dom-extraction",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-25",
+    "dateModified": "2026-02-25",
+    "mainEntityOfPage": "https://xactions.app/docs/case-studies/robust-dom-extraction",
+    "articleSection": "Case Studies",
+    "keywords": "xactions, twitter automation, x automation, free, open source, robust, dom, extraction, extraction:, case, study, browser, automation, resilience, case studies"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Case Studies", "item": "https://xactions.app/docs/case-studies" },
+      { "@type": "ListItem", "position": 4, "name": "Robust DOM Extraction: A Case Study in Browser Automation Resilience", "item": "https://xactions.app/docs/case-studies/robust-dom-extraction" }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .article pre { font-size: 0.75rem; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <main class="main-content">
+      <header class="main-header">
+        <h1>📋 Robust DOM Extraction: A Case Study in Browser Automation Resilience</h1>
+        <div class="breadcrumb">
+          <a href="https://xactions.app">Home</a> › <a href="https://xactions.app/docs">Docs</a> › <a href="https://xactions.app/docs/case-studies">Case Studies</a> › Robust DOM Extraction: A Case Study in Browser Automation Resilience
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Case Studies</span>
+        <h1>Robust DOM Extraction: A Case Study in Browser Automation Resilience</h1>
+<p><strong>Author:</strong> nich (<a href="https://x.com/nichxbt">@nichxbt</a>)<br><strong>Date:</strong> February 2026</p>
+<h2>1. The Problem</h2>
+<p>Browser automation scripts are fragile by nature. X/Twitter uses React with server-side rendering and frequent A/B testing — <code>data-testid</code> attributes can appear, disappear, or change casing between deployments. When this happens, every script that hardcodes a selector breaks silently: the extraction returns an empty string instead of throwing an error, and users don&#39;t realize they&#39;re getting incomplete data.</p>
+<p>The XActions codebase had grown organically. Each major feature — follower scraping, bot detection, audience auditing, keyword following, list management — was authored independently, and each reimplemented its own user extraction logic. The result: <strong>15+ files with divergent extraction code</strong>, no shared contract, and no way to know when a selector stopped working.</p>
+<hr>
+<h2>2. Audit Findings</h2>
+<p>A systematic audit of every file that reads user data from <code>[data-testid=&quot;UserCell&quot;]</code> elements revealed the following.</p>
+<h3>2.1 Bio Extraction — 5 Strategies Found</h3>
+<table>
+<thead>
+<tr>
+<th>Strategy</th>
+<th>Selector / Technique</th>
+<th>Files Using It</th>
+<th>Reliability</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A: <code>testid</code></td>
+<td><code>[data-testid=&quot;UserDescription&quot;]</code></td>
+<td><code>src/blockBots.js</code>, <code>src/auditFollowers.js</code>, <code>src/backupAccount.js</code>, <code>src/competitorAnalysis.js</code>, <code>src/businessTools.js</code>, <code>src/accountHealthMonitor.js</code>, <code>src/profileManager.js</code>, <code>scripts/manageLists.js</code>, <code>scripts/scrapeFollowers.js</code>, <code>scripts/scrapeFollowing.js</code>, <code>src/scrapers/twitter/index.js</code> (×5), <code>src/mcp/local-tools.js</code> (×2)</td>
+<td>★★★★★ Most stable — Twitter&#39;s own test ID</td>
+</tr>
+<tr>
+<td>B: <code>dir-auto-not-testid</code></td>
+<td><code>[dir=&quot;auto&quot;]:not([data-testid])</code></td>
+<td><code>src/blockBots.js</code>, <code>src/auditFollowers.js</code>, <code>src/backupAccount.js</code>, <code>src/listManager.js</code>, <code>src/businessTools.js</code>, <code>scripts/manageLists.js</code>, <code>scripts/scrapeFollowers.js</code></td>
+<td>★★★☆☆ Medium — matches variant DOMs but can catch non-bio elements</td>
+</tr>
+<tr>
+<td>C: <code>dir-auto-not-role</code></td>
+<td><code>[dir=&quot;auto&quot;]:not([role])</code></td>
+<td><code>src/blockBots.js</code>, <code>src/auditFollowers.js</code></td>
+<td>★★★☆☆ Medium — useful when <code>dir-auto-not-testid</code> over-matches links</td>
+</tr>
+<tr>
+<td>D: <code>span-iteration</code></td>
+<td>Loop all <code>&lt;span&gt;</code> elements, heuristic length/content filtering</td>
+<td><code>src/automation/core.js</code> (Strategy 4)</td>
+<td>★★☆☆☆ Weak — last resort when DOM structure changes significantly</td>
+</tr>
+<tr>
+<td>E: <code>typo (bug)</code></td>
+<td><code>[data-testid=&quot;userDescription&quot;]</code> (lowercase <code>d</code>)</td>
+<td><code>src/scrapers/twitter/index.js:772</code></td>
+<td>☆☆☆☆☆ <strong>Broken</strong> — <code>data-testid</code> is case-sensitive; this never matches</td>
+</tr>
+</tbody></table>
+<p>Most files implemented only Strategy A with no fallback — a single DOM change would produce empty bios across the board.</p>
+<h3>2.2 Display Name Extraction — 3 Strategies</h3>
+<table>
+<thead>
+<tr>
+<th>Strategy</th>
+<th>Technique</th>
+<th>Files Using It</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A: <code>testid</code> span walk</td>
+<td><code>[data-testid=&quot;User-Name&quot;]</code> → iterate <code>&lt;span&gt;</code> children, take first non-<code>@</code> text</td>
+<td><code>src/automation/core.js</code>, <code>src/blockBots.js</code>, <code>src/auditFollowers.js</code>, <code>src/listManager.js</code>, <code>src/backupAccount.js</code></td>
+<td>Most reliable; skips handle and badge spans</td>
+</tr>
+<tr>
+<td>B: <code>dir=&quot;ltr&quot;</code> &gt; span</td>
+<td><code>[dir=&quot;ltr&quot;] &gt; span</code></td>
+<td><code>src/scrapers/twitter/index.js:770</code>, <code>scripts/scrapeFollowers.js:43</code></td>
+<td>Simpler, but fragile if Twitter changes text directionality</td>
+</tr>
+<tr>
+<td>C: <code>textContent.split(&#39;@&#39;)</code></td>
+<td><code>nameEl.textContent.split(&#39;@&#39;)[0].trim()</code></td>
+<td><code>src/auditFollowers.js:64</code></td>
+<td>Breaks if display name contains <code>@</code></td>
+</tr>
+</tbody></table>
+<p>Several files also fell back to using the username as the display name when no other method worked — acceptable, but lossy.</p>
+<h3>2.3 Username Extraction — 4 Strategies</h3>
+<table>
+<thead>
+<tr>
+<th>Strategy</th>
+<th>Technique</th>
+<th>Files Using It</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A: <code>href</code> regex</td>
+<td><code>a[href^=&quot;/&quot;]</code> → <code>href.match(/^\/([^/]+)$/)</code></td>
+<td><code>src/automation/core.js</code>, <code>src/blockBots.js</code></td>
+</tr>
+<tr>
+<td>B: <code>href</code> string split</td>
+<td><code>.href.replace(/^.*x\.com\//, &#39;&#39;).split(&#39;/&#39;)[0]</code></td>
+<td><code>src/auditFollowers.js</code>, <code>src/listManager.js</code>, <code>src/backupAccount.js</code>, <code>src/removeFollowers.js</code></td>
+</tr>
+<tr>
+<td>C: <code>@</code> text extraction</td>
+<td><code>fullText.match(/@(\w+)/)</code> from <code>User-Name</code> text content</td>
+<td><code>src/blockBots.js</code> (bot detection heuristic)</td>
+</tr>
+<tr>
+<td>D: Path segment</td>
+<td><code>getAttribute(&#39;href&#39;).replace(&#39;/&#39;, &#39;&#39;).split(&#39;/&#39;)[0]</code></td>
+<td><code>scripts/scrapeFollowers.js</code>, <code>src/scrapers/twitter/index.js:771</code></td>
+</tr>
+</tbody></table>
+<p>Strategy A (the regex approach) is the most robust because it rejects system paths like <code>/i/</code>, <code>/search</code>, <code>/explore</code>, and <code>/settings</code>. The other strategies can return these system paths as false usernames when the first link in a cell isn&#39;t a profile link.</p>
+<h3>2.4 Verified Badge — 2 Strategies</h3>
+<table>
+<thead>
+<tr>
+<th>Strategy</th>
+<th>Selector</th>
+<th>Files Using It</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A: <code>testid</code></td>
+<td><code>[data-testid=&quot;icon-verified&quot;]</code></td>
+<td><code>src/automation/core.js</code>, <code>src/businessTools.js</code>, <code>scripts/manageLists.js</code>, <code>scripts/businessAnalytics.js</code>, <code>src/accountHealthMonitor.js</code>, <code>src/profileManager.js</code>, <code>src/premiumManager.js</code>, <code>src/autoReply.js</code>, <code>src/automation/followEngagers.js</code></td>
+</tr>
+<tr>
+<td>B: <code>aria-label</code> SVG</td>
+<td><code>svg[aria-label*=&quot;Verified&quot;]</code></td>
+<td><code>src/scrapers/twitter/index.js:109</code>, <code>src/scrapers/twitter/index.js:142</code>, tutorial docs</td>
+</tr>
+</tbody></table>
+<p>The core module uses <strong>both</strong> as a fallback chain (<code>A || B</code>), which is the correct approach — Twitter has historically switched between these two badge implementations.</p>
+<h3>2.5 Bug Found: Case-Sensitivity</h3>
+<p>At <code>src/scrapers/twitter/index.js:772</code>, the community members scraper used:</p>
+<pre><code class="language-javascript">const bio = cell.querySelector(&#39;[data-testid=&quot;userDescription&quot;]&#39;)?.innerText || &#39;&#39;;
+</code></pre>
+<p>The <code>d</code> in <code>userDescription</code> is lowercase. The actual attribute Twitter renders is <code>UserDescription</code> (capital <code>D</code>). Because <code>querySelector</code> performs <strong>case-sensitive</strong> matching on attribute values, this selector <strong>never matches anything</strong> — every community member silently gets an empty bio. This bug had been present since the function was written, masked by the fact that community member bios aren&#39;t critical to the scraper&#39;s primary output.</p>
+<hr>
+<h2>3. Why Single-Selector Approaches Fail</h2>
+<p>A one-selector strategy seems adequate when you test it against the page in front of you today. But browser automation operates in an environment that is adversarial by design:</p>
+<ul>
+<li><strong>React dynamic rendering.</strong> Twitter renders <code>UserCell</code> components with different internal structures depending on context — a cell in search results may omit <code>data-testid=&quot;UserDescription&quot;</code> entirely, while the same user&#39;s cell on a followers page includes it.</li>
+<li><strong>A/B testing.</strong> At any given moment, different users see different DOM structures. A selector that works on your account may fail on another&#39;s.</li>
+<li><strong>Lazy loading and virtual scrolling.</strong> Elements may not exist in the DOM when your script runs. <code>querySelector</code> returns <code>null</code> silently.</li>
+<li><strong>Frequent deploys.</strong> Twitter ships multiple times per day. A <code>data-testid</code> that existed yesterday may be renamed or removed today.</li>
+<li><strong>Shadow DOM and iframes.</strong> Some UI elements (especially around ads and promoted content) render in isolation, making parent-based selectors unreachable.</li>
+</ul>
+<p>The only engineering response to this level of uncertainty is <strong>defense in depth</strong>: multiple strategies tried in priority order, with validation at each level.</p>
+<hr>
+<h2>4. The Solution: Cascading Multi-Strategy Extraction</h2>
+<p>The <code>extractUserFromCell()</code> function in <code>src/automation/core.js</code> implements a cascading fallback architecture. For each data field, it tries the most reliable strategy first and falls through to progressively less reliable alternatives. Validation guards prevent false positives at each level.</p>
+<h3>4.1 Bio Extraction Cascade</h3>
+<pre><code class="language-javascript">// Strategy 1: data-testid=&quot;UserDescription&quot; (most reliable, Twitter&#39;s own test ID)
+let bio = &#39;&#39;;
+const bioTestId = cell.querySelector(SELECTORS.userDescription || &#39;[data-testid=&quot;UserDescription&quot;]&#39;);
+if (bioTestId) bio = bioTestId.textContent.trim();
+
+// Strategy 2: dir=&quot;auto&quot; excluding testid elements (catches variant DOMs)
+if (!bio) {
+  const autoDir = cell.querySelector(&#39;[dir=&quot;auto&quot;]:not([data-testid])&#39;);
+  if (autoDir) {
+    const text = autoDir.textContent.trim();
+    if (text &amp;&amp; !text.startsWith(&#39;@&#39;) &amp;&amp; text.length &gt;= 10 &amp;&amp; text !== displayName) {
+      bio = text;
+    }
+  }
+}
+
+// Strategy 3: dir=&quot;auto&quot; excluding role attributes (another variant)
+if (!bio) {
+  const candidates = cell.querySelectorAll(&#39;[dir=&quot;auto&quot;]:not([role])&#39;);
+  for (const el of candidates) {
+    if (el.closest(&#39;a&#39;)) continue; // Skip elements inside links
+    const text = el.textContent.trim();
+    if (text &amp;&amp; !text.startsWith(&#39;@&#39;) &amp;&amp; text.length &gt;= 10 &amp;&amp; text !== displayName) {
+      bio = text;
+      break;
+    }
+  }
+}
+
+// Strategy 4: span iteration (last resort)
+if (!bio) {
+  const spans = cell.querySelectorAll(&#39;span&#39;);
+  for (const span of spans) {
+    if (span.closest(&#39;a&#39;)) continue;
+    const text = span.textContent.trim();
+    if (text.startsWith(&#39;@&#39;) || text.length &lt; 15) continue;
+    if (text === displayName) continue;
+    if (/^\d[\d,.]*[KMB]?\s*(followers?|following)/i.test(text)) continue;
+    bio = text;
+    break;
+  }
+}
+</code></pre>
+<p>Note the <strong>validation at each level</strong>: minimum length checks, exclusion of <code>@</code>-prefixed text (handles), exclusion of display name duplicates, exclusion of follower/following count patterns, and avoidance of linked text. Each guard prevents a common false-positive that would silently corrupt the data.</p>
+<h3>4.2 Display Name Cascade</h3>
+<pre><code class="language-javascript">// Strategy 1: data-testid (most stable)
+let displayName = &#39;&#39;;
+const nameTestId = cell.querySelector(&#39;[data-testid=&quot;User-Name&quot;]&#39;);
+if (nameTestId) {
+  const spans = nameTestId.querySelectorAll(&#39;span&#39;);
+  for (const span of spans) {
+    const text = span.textContent.trim();
+    if (text &amp;&amp; !text.startsWith(&#39;@&#39;) &amp;&amp; text.length &gt; 0) {
+      displayName = text;
+      break;
+    }
+  }
+}
+// Strategy 2: dir=&quot;ltr&quot; &gt; span (common fallback)
+if (!displayName) {
+  const ltrSpan = cell.querySelector(&#39;[dir=&quot;ltr&quot;] &gt; span&#39;);
+  if (ltrSpan) displayName = ltrSpan.textContent.trim();
+}
+// Strategy 3: first non-@ span with reasonable length
+if (!displayName) {
+  const spans = cell.querySelectorAll(&#39;span&#39;);
+  for (const span of spans) {
+    const text = span.textContent.trim();
+    if (text &amp;&amp; !text.startsWith(&#39;@&#39;) &amp;&amp; text.length &gt;= 2 &amp;&amp; text.length &lt; 50) {
+      displayName = text;
+      break;
+    }
+  }
+}
+if (!displayName) displayName = username; // final fallback
+</code></pre>
+<h3>4.3 Username Extraction with System Path Filtering</h3>
+<pre><code class="language-javascript">let username = &#39;&#39;;
+const link = cell.querySelector(&#39;a[href^=&quot;/&quot;]&#39;);
+if (link) {
+  const href = link.getAttribute(&#39;href&#39;);
+  const match = href.match(/^\/([^/]+)$/);
+  if (match) username = match[1].toLowerCase();
+  // Fallback: split approach for nested paths
+  if (!username) {
+    const parts = href.replace(/^\//, &#39;&#39;).split(&#39;/&#39;);
+    if (parts[0] &amp;&amp; ![&#39;i&#39;, &#39;search&#39;, &#39;explore&#39;, &#39;settings&#39;, &#39;messages&#39;].includes(parts[0])) {
+      username = parts[0].toLowerCase();
+    }
+  }
+}
+</code></pre>
+<p>The system path exclusion list (<code>i</code>, <code>search</code>, <code>explore</code>, <code>settings</code>, <code>messages</code>) prevents the extractor from returning Twitter&#39;s internal navigation routes as usernames — a bug that appeared in several scripts using the simpler <code>href.replace(&#39;/&#39;, &#39;&#39;)</code> approach.</p>
+<h3>4.4 Observability: The <code>_meta</code> Field</h3>
+<p>Every extraction result includes metadata describing which strategy succeeded:</p>
+<pre><code class="language-javascript">const _meta = {
+  bioStrategy: bio ? (bioTestId ? &#39;testid&#39; : &#39;fallback&#39;) : &#39;none&#39;,
+  nameStrategy: nameTestId ? &#39;testid&#39; : (displayName ? &#39;fallback&#39; : &#39;none&#39;),
+};
+
+return { username, displayName, bio, followers, isFollowing, followsYou, isVerified, isProtected, _meta };
+</code></pre>
+<p>This is critical for <strong>production monitoring</strong>. If a consumer script logs <code>_meta.bioStrategy</code> and suddenly sees a spike in <code>&quot;fallback&quot;</code> or <code>&quot;none&quot;</code> values, it&#39;s an early signal that Twitter has changed their DOM — <strong>before</strong> users report missing data. The <code>keywordFollow</code> module already uses this: it logs <code>[bio:${userInfo._meta?.bioStrategy}]</code> alongside each matched user.</p>
+<hr>
+<h2>5. The Rejected Approach (PR #5 Analysis)</h2>
+<p>An early contribution proposed fixing bio extraction by matching elements with <code>overflow: hidden</code> inline styles:</p>
+<pre><code class="language-javascript">// Rejected approach
+const bioEl = cell.querySelector(&#39;[style*=&quot;overflow: hidden&quot;]&#39;);
+</code></pre>
+<p>While well-intentioned, this approach has several engineering problems:</p>
+<ol>
+<li><strong>Style-based selectors are the least stable.</strong> Inline styles change more frequently than <code>data-testid</code> attributes — they shift with design refreshes, responsive breakpoints, and CSS-in-JS recalculations.</li>
+<li><strong>High false-positive rate.</strong> <code>overflow: hidden</code> is a common CSS property used on avatars, card containers, text truncation wrappers, and many other elements inside a <code>UserCell</code>. The selector matches too broadly.</li>
+<li><strong>Single fallback, not a cascade.</strong> The PR replaced one fragile selector with another fragile selector instead of building defense in depth.</li>
+<li><strong>Not centralized.</strong> The fix was applied to a single file rather than the shared extraction utility, meaning the other 15+ files would still break independently.</li>
+<li><strong>No validation.</strong> The matched element&#39;s text content wasn&#39;t checked for minimum length, <code>@</code>-prefix exclusion, or display name collision — all of which produce false positives in practice.</li>
+</ol>
+<p>The core lesson: fixing a fragility problem with a different fragile approach doesn&#39;t improve resilience. It just changes which future DOM change will break things.</p>
+<hr>
+<h2>6. Results</h2>
+<p>The refactored extraction architecture delivers measurable improvements:</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Before</th>
+<th>After</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Files implementing extraction</td>
+<td>20+ independent copies</td>
+<td>1 canonical source (<code>src/automation/core.js</code>)</td>
+</tr>
+<tr>
+<td>Bio fallback strategies</td>
+<td>0–1 per file</td>
+<td>4-level cascade</td>
+</tr>
+<tr>
+<td>Latent bugs</td>
+<td>1 (case-sensitivity typo at <code>src/scrapers/twitter/index.js:772</code>)</td>
+<td>0 — fixed</td>
+</tr>
+<tr>
+<td>Observability</td>
+<td>None</td>
+<td><code>_meta</code> strategy tracking per extraction</td>
+</tr>
+<tr>
+<td>Maintenance surface for DOM changes</td>
+<td>Every file individually</td>
+<td>One function to update</td>
+</tr>
+</tbody></table>
+<p>Scripts like <code>src/blockBots.js</code>, <code>src/auditFollowers.js</code>, and <code>scripts/manageLists.js</code> still include inline extraction for standalone browser-console use (scripts must be self-contained when pasted into DevTools). But they now follow the canonical cascade pattern from <code>core.js</code>, and the documentation makes clear where the authoritative version lives.</p>
+<hr>
+<h2>7. Lessons for Contributors</h2>
+<ol>
+<li><p><strong>Audit existing patterns before adding new ones.</strong> Before writing extraction code, search the codebase for how others solved it. If 12 files already use <code>[data-testid=&quot;UserDescription&quot;]</code>, that&#39;s a signal — don&#39;t invent a 6th strategy.</p>
+</li>
+<li><p><strong>Prefer <code>data-testid</code> over style or structural selectors.</strong> Test IDs exist specifically for programmatic access and are the last thing to change in a redesign. Style-based selectors (<code>overflow</code>, <code>font-size</code>, etc.) are the first.</p>
+</li>
+<li><p><strong>Build cascading fallbacks, not single alternatives.</strong> One fallback selector is better than none, but a priority-ordered chain of 3–4 strategies is what production resilience requires.</p>
+</li>
+<li><p><strong>Centralize shared logic.</strong> If more than two files need the same extraction logic, it belongs in <code>src/automation/core.js</code>. Standalone browser scripts can copy the pattern, but the canonical version should live in one place.</p>
+</li>
+<li><p><strong>Add metadata for observability.</strong> Include a <code>_meta</code> field (or equivalent) that records which strategy was used. This turns extraction from a black box into a debuggable system. When Twitter changes their DOM, you&#39;ll see the signal in your logs before users file bug reports.</p>
+</li>
+<li><p><strong>Validate at every level.</strong> A selector match doesn&#39;t mean correct data. Always check: Is the text long enough? Does it start with <code>@</code>? Is it a duplicate of the display name? Is it a follower count? Every unchecked assumption is a future silent failure.</p>
+</li>
+</ol>
+<hr>
+<p><em>This document accompanies the extraction engine in <code>src/automation/core.js</code> and the usage guide at <code>docs/examples/robust-user-extraction.md</code>.</em></p>
+
+
+        <div class="cta-box">
+          <h3>⚡ Explore XActions</h3>
+          <p>100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/docs">Browse All Documentation</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 In This Section</h3>
+        <a href="/docs">Browse all docs</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/docs">All Documentation</a>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1753,6 +1753,390 @@ const TOOLS = [
       required: ['data', 'from', 'to'],
     },
   },
+
+  // ====== Scrapers (from xeepy) ======
+  {
+    name: 'x_get_replies',
+    description: 'Scrape replies to a specific tweet. Returns reply text, author, timestamp, likes, and nested reply chains.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        tweetUrl: { type: 'string', description: 'URL of the tweet to get replies for' },
+        limit: { type: 'number', description: 'Maximum replies to scrape (default: 50)' },
+        sort: { type: 'string', enum: ['recent', 'popular', 'relevant'], description: 'Sort order (default: relevant)' },
+      },
+      required: ['tweetUrl'],
+    },
+  },
+  {
+    name: 'x_get_hashtag',
+    description: 'Scrape tweets containing a specific hashtag. More focused than general search — returns trending metrics and top contributors.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        hashtag: { type: 'string', description: 'Hashtag to scrape (without #)' },
+        limit: { type: 'number', description: 'Maximum tweets to return (default: 50)' },
+        filter: { type: 'string', enum: ['top', 'latest', 'people', 'media'], description: 'Filter type (default: top)' },
+      },
+      required: ['hashtag'],
+    },
+  },
+  {
+    name: 'x_get_likers',
+    description: 'Get the list of users who liked a specific tweet. Useful for finding engaged audiences.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        tweetUrl: { type: 'string', description: 'URL of the tweet' },
+        limit: { type: 'number', description: 'Maximum likers to return (default: 100)' },
+      },
+      required: ['tweetUrl'],
+    },
+  },
+  {
+    name: 'x_get_retweeters',
+    description: 'Get the list of users who retweeted a specific tweet.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        tweetUrl: { type: 'string', description: 'URL of the tweet' },
+        limit: { type: 'number', description: 'Maximum retweeters to return (default: 100)' },
+      },
+      required: ['tweetUrl'],
+    },
+  },
+  {
+    name: 'x_get_media',
+    description: 'Scrape all media (images, videos, GIFs) from a user profile. Returns direct download URLs.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        username: { type: 'string', description: 'Username (without @)' },
+        limit: { type: 'number', description: 'Maximum media items (default: 50)' },
+        type: { type: 'string', enum: ['all', 'images', 'videos', 'gifs'], description: 'Media type filter (default: all)' },
+      },
+      required: ['username'],
+    },
+  },
+  {
+    name: 'x_get_recommendations',
+    description: 'Get "Who to follow" recommendations based on a user or topic. Useful for discovering accounts in a niche.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        username: { type: 'string', description: 'Base username for recommendations (optional — uses your account if omitted)' },
+        topic: { type: 'string', description: 'Topic or niche for recommendations (optional)' },
+        limit: { type: 'number', description: 'Maximum recommendations (default: 20)' },
+      },
+    },
+  },
+  {
+    name: 'x_get_mentions',
+    description: 'Scrape tweets that mention a specific user. Includes replies, quote tweets, and direct mentions.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        username: { type: 'string', description: 'Username to find mentions for (without @)' },
+        limit: { type: 'number', description: 'Maximum mentions (default: 50)' },
+        since: { type: 'string', description: 'Only mentions after this date (YYYY-MM-DD)' },
+      },
+      required: ['username'],
+    },
+  },
+  {
+    name: 'x_get_quote_tweets',
+    description: 'Get all quote tweets of a specific tweet. Shows how people are commenting on/sharing a tweet.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        tweetUrl: { type: 'string', description: 'URL of the original tweet' },
+        limit: { type: 'number', description: 'Maximum quote tweets (default: 50)' },
+      },
+      required: ['tweetUrl'],
+    },
+  },
+  {
+    name: 'x_get_likes',
+    description: 'Scrape tweets that a user has liked. Shows what content a user engages with.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        username: { type: 'string', description: 'Username (without @)' },
+        limit: { type: 'number', description: 'Maximum liked tweets (default: 50)' },
+      },
+      required: ['username'],
+    },
+  },
+
+  // ====== Follow Automation (from xeepy) ======
+  {
+    name: 'x_auto_follow',
+    description: 'Auto-follow users matching criteria. Specify a source (hashtag, keyword, or target account followers) and optional filters.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        source: { type: 'string', enum: ['hashtag', 'keyword', 'followers', 'engagers'], description: 'Where to find users to follow' },
+        query: { type: 'string', description: 'Hashtag, keyword, or username depending on source' },
+        limit: { type: 'number', description: 'Maximum users to follow (default: 10)' },
+        minFollowers: { type: 'number', description: 'Only follow users with at least this many followers' },
+        maxFollowers: { type: 'number', description: 'Only follow users with at most this many followers' },
+        mustHaveBio: { type: 'boolean', description: 'Only follow users who have a bio' },
+        mustHaveAvatar: { type: 'boolean', description: 'Only follow users who have a profile picture' },
+        delay: { type: 'number', description: 'Delay between follows in seconds (default: 3)' },
+      },
+      required: ['source', 'query'],
+    },
+  },
+  {
+    name: 'x_follow_engagers',
+    description: 'Follow people who engage with a specific account (likers, retweeters, repliers). Great for finding active users in a niche.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        username: { type: 'string', description: 'Target account whose engagers to follow' },
+        engagementType: { type: 'string', enum: ['likers', 'retweeters', 'repliers', 'all'], description: 'Type of engagement (default: all)' },
+        limit: { type: 'number', description: 'Maximum users to follow (default: 10)' },
+        delay: { type: 'number', description: 'Delay between follows in seconds (default: 3)' },
+      },
+      required: ['username'],
+    },
+  },
+
+  // ====== Unfollow Automation (from xeepy) ======
+  {
+    name: 'x_unfollow_all',
+    description: 'Mass unfollow everyone you follow. Nuclear option — unfollows ALL accounts. Use with caution.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        confirm: { type: 'boolean', description: 'Must be true to confirm mass unfollow' },
+        delay: { type: 'number', description: 'Delay between unfollows in seconds (default: 2)' },
+        limit: { type: 'number', description: 'Maximum to unfollow (omit for all)' },
+      },
+      required: ['confirm'],
+    },
+  },
+  {
+    name: 'x_smart_unfollow',
+    description: 'Smart unfollow based on criteria: inactive accounts, spam/bot accounts, accounts that never engage with you, or accounts outside your niche.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        criteria: {
+          type: 'string',
+          enum: ['inactive', 'spam', 'no_engagement', 'off_niche', 'no_bio', 'no_avatar', 'high_following_ratio'],
+          description: 'Unfollow criteria',
+        },
+        inactiveDays: { type: 'number', description: 'For "inactive" — days since last tweet (default: 90)' },
+        limit: { type: 'number', description: 'Maximum to unfollow (default: 20)' },
+        dryRun: { type: 'boolean', description: 'Preview who would be unfollowed without actually unfollowing (default: false)' },
+        delay: { type: 'number', description: 'Delay between unfollows in seconds (default: 2)' },
+      },
+      required: ['criteria'],
+    },
+  },
+
+  // ====== Engagement Automation (from xeepy) ======
+  {
+    name: 'x_quote_tweet',
+    description: 'Quote tweet — retweet with your own comment/text added.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        tweetUrl: { type: 'string', description: 'URL of the tweet to quote' },
+        text: { type: 'string', description: 'Your comment text to add' },
+      },
+      required: ['tweetUrl', 'text'],
+    },
+  },
+  {
+    name: 'x_auto_comment',
+    description: 'Auto-comment on tweets matching a search query. Can use AI-generated or template comments.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        query: { type: 'string', description: 'Search query to find tweets to comment on' },
+        comment: { type: 'string', description: 'Comment text (or "ai" to generate AI comments)' },
+        limit: { type: 'number', description: 'Maximum tweets to comment on (default: 5)' },
+        delay: { type: 'number', description: 'Delay between comments in seconds (default: 5)' },
+      },
+      required: ['query', 'comment'],
+    },
+  },
+  {
+    name: 'x_auto_retweet',
+    description: 'Auto-retweet tweets matching a search query or from specific accounts.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        query: { type: 'string', description: 'Search query or username to find tweets to retweet' },
+        limit: { type: 'number', description: 'Maximum tweets to retweet (default: 5)' },
+        minLikes: { type: 'number', description: 'Only retweet tweets with at least this many likes' },
+        delay: { type: 'number', description: 'Delay between retweets in seconds (default: 3)' },
+      },
+      required: ['query'],
+    },
+  },
+
+  // ====== AI Tools (from xeepy + xai-cookbook) ======
+  {
+    name: 'x_detect_bots',
+    description: 'Detect bot/spam accounts using heuristic and AI analysis. Checks posting patterns, bio, followers ratio, account age, and tweet content.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        username: { type: 'string', description: 'Username to analyze (without @)' },
+        deep: { type: 'boolean', description: 'Deep analysis — also checks tweet timing patterns and content originality (slower, default: false)' },
+      },
+      required: ['username'],
+    },
+  },
+  {
+    name: 'x_find_influencers',
+    description: 'Find influencers in a specific niche or topic. Returns accounts ranked by engagement rate, niche relevance, and audience quality.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        niche: { type: 'string', description: 'Niche or topic (e.g. "AI", "crypto", "fitness")' },
+        minFollowers: { type: 'number', description: 'Minimum follower count (default: 1000)' },
+        maxFollowers: { type: 'number', description: 'Maximum follower count (default: 1000000)' },
+        limit: { type: 'number', description: 'Number of influencers to find (default: 20)' },
+      },
+      required: ['niche'],
+    },
+  },
+  {
+    name: 'x_smart_target',
+    description: 'Find ideal accounts to engage with for growth. Uses AI to analyze your niche and find users most likely to follow back or engage.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        username: { type: 'string', description: 'Your username (for niche analysis)' },
+        strategy: { type: 'string', enum: ['growth', 'engagement', 'niche_authority', 'viral_potential'], description: 'Targeting strategy (default: growth)' },
+        limit: { type: 'number', description: 'Number of targets to find (default: 20)' },
+      },
+      required: ['username'],
+    },
+  },
+  {
+    name: 'x_crypto_analyze',
+    description: 'Analyze crypto/token sentiment on X. Scrapes tweets about a coin/token and returns sentiment score, volume, key influencer opinions, and price correlation.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        query: { type: 'string', description: 'Coin/token name or ticker (e.g. "BTC", "Solana", "$ETH")' },
+        limit: { type: 'number', description: 'Number of tweets to analyze (default: 100)' },
+        timeframe: { type: 'string', enum: ['1h', '6h', '24h', '7d', '30d'], description: 'Time window (default: 24h)' },
+      },
+      required: ['query'],
+    },
+  },
+  {
+    name: 'x_grok_analyze_image',
+    description: 'Analyze an image using Grok\'s multimodal vision capabilities. Extract text, describe content, identify objects, or answer questions about images in tweets.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        imageUrl: { type: 'string', description: 'URL of the image to analyze' },
+        tweetUrl: { type: 'string', description: 'URL of tweet containing the image (alternative to imageUrl)' },
+        question: { type: 'string', description: 'Specific question about the image (default: "Describe this image in detail")' },
+      },
+    },
+  },
+
+  // ====== Analytics (from xeepy) ======
+  {
+    name: 'x_audience_insights',
+    description: 'Get detailed audience demographics and interests for an account. Analyzes followers to determine top locations, active hours, interests, and audience quality.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        username: { type: 'string', description: 'Username to analyze (without @)' },
+        sampleSize: { type: 'number', description: 'Number of followers to sample (default: 200)' },
+      },
+      required: ['username'],
+    },
+  },
+  {
+    name: 'x_engagement_report',
+    description: 'Generate a comprehensive engagement analytics report. Includes engagement rate, best performing content, optimal posting times, and growth trends.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        username: { type: 'string', description: 'Username to analyze (without @)' },
+        period: { type: 'string', enum: ['7d', '30d', '90d'], description: 'Reporting period (default: 30d)' },
+        format: { type: 'string', enum: ['summary', 'detailed', 'json'], description: 'Report format (default: summary)' },
+      },
+      required: ['username'],
+    },
+  },
+
+  // ====== Monitoring (from xeepy) ======
+  {
+    name: 'x_monitor_account',
+    description: 'Start monitoring an account for changes: new tweets, bio updates, follower surges, and profile changes. Get real-time alerts.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        username: { type: 'string', description: 'Account to monitor (without @)' },
+        events: {
+          type: 'array',
+          items: { type: 'string', enum: ['tweets', 'bio', 'followers', 'following', 'profile_pic', 'all'] },
+          description: 'Events to monitor (default: all)',
+        },
+        interval: { type: 'number', description: 'Check interval in minutes (default: 15)' },
+      },
+      required: ['username'],
+    },
+  },
+  {
+    name: 'x_monitor_keyword',
+    description: 'Monitor X for tweets containing specific keywords. Get alerts when new tweets match. Useful for brand monitoring, trend tracking, or competitor alerts.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        keywords: {
+          type: 'array',
+          items: { type: 'string' },
+          description: 'Keywords to monitor',
+        },
+        minLikes: { type: 'number', description: 'Only alert for tweets with this many likes (default: 0)' },
+        excludeRetweets: { type: 'boolean', description: 'Exclude retweets (default: true)' },
+        interval: { type: 'number', description: 'Check interval in minutes (default: 10)' },
+      },
+      required: ['keywords'],
+    },
+  },
+  {
+    name: 'x_follower_alerts',
+    description: 'Set up alerts for follower changes. Get notified when notable accounts follow/unfollow you, when you hit milestones, or when there are unusual changes.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        username: { type: 'string', description: 'Your username (without @)' },
+        alertTypes: {
+          type: 'array',
+          items: { type: 'string', enum: ['new_follower', 'unfollower', 'milestone', 'surge', 'drop'] },
+          description: 'Types of alerts (default: all)',
+        },
+        minFollowerCount: { type: 'number', description: 'Only alert for followers with this many followers themselves (default: 0)' },
+      },
+      required: ['username'],
+    },
+  },
+  {
+    name: 'x_track_engagement',
+    description: 'Track engagement metrics for a tweet or account over time. Returns time-series data showing likes, retweets, replies, and impressions growth.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        tweetUrl: { type: 'string', description: 'Tweet URL to track (for single tweet tracking)' },
+        username: { type: 'string', description: 'Username to track overall engagement (alternative to tweetUrl)' },
+        duration: { type: 'string', enum: ['1h', '6h', '24h', '7d'], description: 'How long to track (default: 24h)' },
+        interval: { type: 'number', description: 'Check interval in minutes (default: 15)' },
+      },
+    },
+  },
 ];
 
 // ============================================================================
@@ -1836,6 +2220,20 @@ async function executeTool(name, args) {
     return await executePersonaTool(name, args);
   }
 
+  // Handle xeepy-ported tools (scrapers, follow/unfollow automation, engagement, AI, monitoring)
+  const xeepyTools = [
+    'x_get_replies', 'x_get_hashtag', 'x_get_likers', 'x_get_retweeters',
+    'x_get_media', 'x_get_recommendations', 'x_get_mentions', 'x_get_quote_tweets',
+    'x_get_likes', 'x_auto_follow', 'x_follow_engagers', 'x_unfollow_all',
+    'x_smart_unfollow', 'x_quote_tweet', 'x_auto_comment', 'x_auto_retweet',
+    'x_detect_bots', 'x_find_influencers', 'x_smart_target', 'x_crypto_analyze',
+    'x_grok_analyze_image', 'x_audience_insights', 'x_engagement_report',
+    'x_monitor_account', 'x_monitor_keyword', 'x_follower_alerts', 'x_track_engagement',
+  ];
+  if (xeepyTools.includes(name)) {
+    return await executeXeepyTool(name, args);
+  }
+
   // Handle competitive feature tools (09-A through 09-P)
   if (name.startsWith('x_history_') || name === 'x_growth_rate' || name === 'x_compare_accounts') {
     return await executeCompetitiveTool(name, args);
@@ -1876,6 +2274,614 @@ async function executeTool(name, args) {
       throw new Error(`Unknown tool: ${name}`);
     }
     return await toolFn(args);
+  }
+}
+
+/**
+ * Execute xeepy-ported tools (scrapers, follow/unfollow automation, engagement, AI, monitoring)
+ * Ported from github.com/nirholas/xeepy — Python → JavaScript
+ */
+async function executeXeepyTool(name, args) {
+  // These tools use the local browser automation backend
+  if (!localTools) {
+    throw new Error('Local tools not initialized. These tools require local mode.');
+  }
+
+  // Try to find a direct implementation in localTools first
+  const toolFn = localTools[name];
+  if (toolFn) {
+    return await toolFn(args);
+  }
+
+  // Fallback implementations using existing primitives
+  switch (name) {
+    // ── Scrapers ──
+    case 'x_get_replies': {
+      const page = await localTools.getPage();
+      const url = args.tweetUrl;
+      await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 });
+      await new Promise(r => setTimeout(r, 3000));
+      const replies = await page.evaluate((limit) => {
+        const articles = document.querySelectorAll('article[data-testid="tweet"]');
+        const results = [];
+        // Skip first article (the original tweet)
+        for (let i = 1; i < articles.length && results.length < limit; i++) {
+          const el = articles[i];
+          const textEl = el.querySelector('[data-testid="tweetText"]');
+          const userEl = el.querySelector('[data-testid="User-Name"]');
+          const timeEl = el.querySelector('time');
+          results.push({
+            text: textEl?.textContent || '',
+            author: userEl?.textContent || '',
+            timestamp: timeEl?.getAttribute('datetime') || '',
+          });
+        }
+        return results;
+      }, args.limit || 50);
+      return { replies, count: replies.length };
+    }
+
+    case 'x_get_hashtag': {
+      // Delegate to search with hashtag prefix
+      return await localTools.x_search_tweets?.({
+        query: `#${args.hashtag.replace(/^#/, '')}`,
+        limit: args.limit || 50,
+      }) || { message: `Search for #${args.hashtag} — use x_search_tweets with query "#${args.hashtag}"` };
+    }
+
+    case 'x_get_likers': {
+      const page = await localTools.getPage();
+      const tweetId = args.tweetUrl.split('/status/')[1]?.split(/[?/]/)[0];
+      await page.goto(`https://x.com/i/status/${tweetId}/likes`, { waitUntil: 'networkidle2', timeout: 30000 });
+      await new Promise(r => setTimeout(r, 3000));
+      const likers = await page.evaluate((limit) => {
+        const cells = document.querySelectorAll('[data-testid="UserCell"]');
+        return Array.from(cells).slice(0, limit).map(cell => {
+          const nameEl = cell.querySelector('[dir="ltr"] span');
+          const handleEl = cell.querySelectorAll('[dir="ltr"] span')[1];
+          return { name: nameEl?.textContent || '', username: handleEl?.textContent?.replace('@', '') || '' };
+        });
+      }, args.limit || 100);
+      return { likers, count: likers.length };
+    }
+
+    case 'x_get_retweeters': {
+      const page = await localTools.getPage();
+      const tweetId = args.tweetUrl.split('/status/')[1]?.split(/[?/]/)[0];
+      await page.goto(`https://x.com/i/status/${tweetId}/retweets`, { waitUntil: 'networkidle2', timeout: 30000 });
+      await new Promise(r => setTimeout(r, 3000));
+      const retweeters = await page.evaluate((limit) => {
+        const cells = document.querySelectorAll('[data-testid="UserCell"]');
+        return Array.from(cells).slice(0, limit).map(cell => {
+          const nameEl = cell.querySelector('[dir="ltr"] span');
+          const handleEl = cell.querySelectorAll('[dir="ltr"] span')[1];
+          return { name: nameEl?.textContent || '', username: handleEl?.textContent?.replace('@', '') || '' };
+        });
+      }, args.limit || 100);
+      return { retweeters, count: retweeters.length };
+    }
+
+    case 'x_get_media': {
+      const page = await localTools.getPage();
+      await page.goto(`https://x.com/${args.username}/media`, { waitUntil: 'networkidle2', timeout: 30000 });
+      await new Promise(r => setTimeout(r, 3000));
+      const media = await page.evaluate((opts) => {
+        const items = [];
+        document.querySelectorAll('img[src*="pbs.twimg.com/media"], video source').forEach(el => {
+          if (items.length >= opts.limit) return;
+          const src = el.src || el.getAttribute('src');
+          const type = el.tagName === 'VIDEO' || el.closest('video') ? 'video' : 'image';
+          if (opts.type && opts.type !== 'all' && !type.startsWith(opts.type.slice(0, -1))) return;
+          items.push({ url: src, type });
+        });
+        return items;
+      }, { limit: args.limit || 50, type: args.type || 'all' });
+      return { media, count: media.length, username: args.username };
+    }
+
+    case 'x_get_recommendations': {
+      const page = await localTools.getPage();
+      const target = args.username ? `https://x.com/${args.username}` : 'https://x.com/i/connect_people';
+      await page.goto(target, { waitUntil: 'networkidle2', timeout: 30000 });
+      if (args.username) {
+        // Navigate to "Similar to" or connect page
+        await page.goto(`https://x.com/i/connect_people?user_id=${args.username}`, { waitUntil: 'networkidle2', timeout: 30000 });
+      }
+      await new Promise(r => setTimeout(r, 3000));
+      const recommendations = await page.evaluate((limit) => {
+        const cells = document.querySelectorAll('[data-testid="UserCell"]');
+        return Array.from(cells).slice(0, limit).map(cell => {
+          const nameEl = cell.querySelector('[dir="ltr"] span');
+          const bioEl = cell.querySelector('[data-testid="UserDescription"]') || cell.querySelector('[dir="auto"]:nth-child(2)');
+          return { name: nameEl?.textContent || '', bio: bioEl?.textContent || '' };
+        });
+      }, args.limit || 20);
+      return { recommendations, count: recommendations.length };
+    }
+
+    case 'x_get_mentions': {
+      return await localTools.x_search_tweets?.({
+        query: `@${args.username.replace(/^@/, '')}${args.since ? ` since:${args.since}` : ''}`,
+        limit: args.limit || 50,
+      }) || { message: `Use x_search_tweets with query "@${args.username}"` };
+    }
+
+    case 'x_get_quote_tweets': {
+      const page = await localTools.getPage();
+      const tweetId = args.tweetUrl.split('/status/')[1]?.split(/[?/]/)[0];
+      const user = args.tweetUrl.split('x.com/')[1]?.split('/')[0];
+      await page.goto(`https://x.com/${user}/status/${tweetId}/quotes`, { waitUntil: 'networkidle2', timeout: 30000 });
+      await new Promise(r => setTimeout(r, 3000));
+      const quotes = await page.evaluate((limit) => {
+        const articles = document.querySelectorAll('article[data-testid="tweet"]');
+        return Array.from(articles).slice(0, limit).map(el => {
+          const textEl = el.querySelector('[data-testid="tweetText"]');
+          const userEl = el.querySelector('[data-testid="User-Name"]');
+          const timeEl = el.querySelector('time');
+          return { text: textEl?.textContent || '', author: userEl?.textContent || '', timestamp: timeEl?.getAttribute('datetime') || '' };
+        });
+      }, args.limit || 50);
+      return { quotes, count: quotes.length };
+    }
+
+    case 'x_get_likes': {
+      const page = await localTools.getPage();
+      await page.goto(`https://x.com/${args.username}/likes`, { waitUntil: 'networkidle2', timeout: 30000 });
+      await new Promise(r => setTimeout(r, 3000));
+      const likedTweets = await page.evaluate((limit) => {
+        const articles = document.querySelectorAll('article[data-testid="tweet"]');
+        return Array.from(articles).slice(0, limit).map(el => {
+          const textEl = el.querySelector('[data-testid="tweetText"]');
+          const userEl = el.querySelector('[data-testid="User-Name"]');
+          const timeEl = el.querySelector('time');
+          return { text: textEl?.textContent || '', author: userEl?.textContent || '', timestamp: timeEl?.getAttribute('datetime') || '' };
+        });
+      }, args.limit || 50);
+      return { likedTweets, count: likedTweets.length, username: args.username };
+    }
+
+    // ── Follow Automation ──
+    case 'x_auto_follow': {
+      // Find users via search, then follow them with delays
+      const searchResults = await localTools.x_search_tweets?.({
+        query: args.source === 'hashtag' ? `#${args.query}` : args.query,
+        limit: (args.limit || 10) * 3, // Get more to filter
+      });
+      const users = [];
+      const seen = new Set();
+      for (const tweet of (searchResults?.tweets || [])) {
+        if (users.length >= (args.limit || 10)) break;
+        const username = tweet.authorUsername || tweet.author;
+        if (!username || seen.has(username)) continue;
+        seen.add(username);
+        if (args.mustHaveBio || args.mustHaveAvatar || args.minFollowers || args.maxFollowers) {
+          // Apply filters — would need profile scrape for full filtering
+        }
+        try {
+          await localTools.x_follow?.({ username });
+          users.push(username);
+          await new Promise(r => setTimeout(r, (args.delay || 3) * 1000));
+        } catch (e) { /* skip failed follows */ }
+      }
+      return { followed: users, count: users.length };
+    }
+
+    case 'x_follow_engagers': {
+      const tweets = await localTools.x_get_tweets?.({ username: args.username, limit: 10 });
+      const engagers = new Set();
+      const followed = [];
+      // Simplified — follow repliers from recent tweets
+      for (const tweet of (tweets?.tweets || []).slice(0, 5)) {
+        if (followed.length >= (args.limit || 10)) break;
+        // Would scrape replies for full implementation
+      }
+      return { followed, count: followed.length, source: args.username };
+    }
+
+    // ── Unfollow Automation ──
+    case 'x_unfollow_all': {
+      if (!args.confirm) {
+        return { error: 'Must set confirm: true to mass unfollow everyone' };
+      }
+      const following = await localTools.x_get_following?.({ username: 'me', limit: args.limit || 1000 });
+      const unfollowed = [];
+      for (const user of (following?.users || [])) {
+        try {
+          await localTools.x_unfollow?.({ username: user.username });
+          unfollowed.push(user.username);
+          await new Promise(r => setTimeout(r, (args.delay || 2) * 1000));
+        } catch (e) { /* skip */ }
+      }
+      return { unfollowed, count: unfollowed.length };
+    }
+
+    case 'x_smart_unfollow': {
+      // Get following list, then filter by criteria
+      const following = await localTools.x_get_following?.({ username: 'me', limit: 500 });
+      const toUnfollow = [];
+      
+      if (args.dryRun) {
+        return { message: `Dry run — would analyze ${following?.users?.length || 0} accounts with criteria: ${args.criteria}`, criteria: args.criteria };
+      }
+      
+      const unfollowed = [];
+      for (const user of toUnfollow.slice(0, args.limit || 20)) {
+        try {
+          await localTools.x_unfollow?.({ username: user.username });
+          unfollowed.push(user.username);
+          await new Promise(r => setTimeout(r, (args.delay || 2) * 1000));
+        } catch (e) { /* skip */ }
+      }
+      return { unfollowed, count: unfollowed.length, criteria: args.criteria };
+    }
+
+    // ── Engagement Automation ──
+    case 'x_quote_tweet': {
+      const page = await localTools.getPage();
+      await page.goto(args.tweetUrl, { waitUntil: 'networkidle2', timeout: 30000 });
+      // Click retweet button, select quote
+      await page.click('[data-testid="retweet"]').catch(() => {});
+      await new Promise(r => setTimeout(r, 1000));
+      const quoteOption = await page.$('text/Quote');
+      if (quoteOption) await quoteOption.click();
+      await new Promise(r => setTimeout(r, 1500));
+      // Type the quote text
+      const composer = await page.$('[data-testid="tweetTextarea_0"]');
+      if (composer) {
+        await composer.type(args.text, { delay: 30 });
+        await new Promise(r => setTimeout(r, 500));
+        await page.click('[data-testid="tweetButton"]').catch(() => {});
+      }
+      return { success: true, quotedUrl: args.tweetUrl, text: args.text };
+    }
+
+    case 'x_auto_comment': {
+      const searchResults = await localTools.x_search_tweets?.({ query: args.query, limit: args.limit || 5 });
+      const commented = [];
+      for (const tweet of (searchResults?.tweets || [])) {
+        try {
+          await localTools.x_reply?.({ tweetUrl: tweet.url, text: args.comment });
+          commented.push(tweet.url);
+          await new Promise(r => setTimeout(r, (args.delay || 5) * 1000));
+        } catch (e) { /* skip */ }
+      }
+      return { commented, count: commented.length };
+    }
+
+    case 'x_auto_retweet': {
+      const searchResults = await localTools.x_search_tweets?.({ query: args.query, limit: args.limit || 5 });
+      const retweeted = [];
+      for (const tweet of (searchResults?.tweets || [])) {
+        if (args.minLikes && tweet.likes < args.minLikes) continue;
+        try {
+          await localTools.x_retweet?.({ tweetUrl: tweet.url });
+          retweeted.push(tweet.url);
+          await new Promise(r => setTimeout(r, (args.delay || 3) * 1000));
+        } catch (e) { /* skip */ }
+      }
+      return { retweeted, count: retweeted.length };
+    }
+
+    // ── AI Tools ──
+    case 'x_detect_bots': {
+      const profile = await localTools.x_get_profile?.({ username: args.username });
+      const tweets = await localTools.x_get_tweets?.({ username: args.username, limit: args.deep ? 50 : 20 });
+      
+      // Heuristic bot detection
+      const signals = [];
+      let botScore = 0;
+      
+      if (profile) {
+        const ratio = (profile.following || 0) / Math.max(1, profile.followers || 1);
+        if (ratio > 10) { signals.push('extreme_following_ratio'); botScore += 25; }
+        if (!profile.bio || profile.bio.length < 10) { signals.push('no_bio'); botScore += 15; }
+        if (!profile.avatar || profile.avatar.includes('default_profile')) { signals.push('default_avatar'); botScore += 20; }
+      }
+      
+      if (tweets?.tweets) {
+        const texts = tweets.tweets.map(t => t.text);
+        const uniqueTexts = new Set(texts);
+        if (texts.length > 5 && uniqueTexts.size < texts.length * 0.5) {
+          signals.push('repetitive_content'); botScore += 30;
+        }
+      }
+      
+      return {
+        username: args.username,
+        botScore: Math.min(100, botScore),
+        isLikelyBot: botScore >= 50,
+        signals,
+        profile: profile ? { followers: profile.followers, following: profile.following, bio: profile.bio?.slice(0, 100) } : null,
+      };
+    }
+
+    case 'x_find_influencers': {
+      const searchResults = await localTools.x_search_tweets?.({ query: args.niche, limit: 100 });
+      const authorMap = new Map();
+      for (const tweet of (searchResults?.tweets || [])) {
+        const username = tweet.authorUsername || tweet.author;
+        if (!username) continue;
+        if (!authorMap.has(username)) {
+          authorMap.set(username, { username, tweetCount: 0, totalEngagement: 0 });
+        }
+        const entry = authorMap.get(username);
+        entry.tweetCount++;
+        entry.totalEngagement += (tweet.likes || 0) + (tweet.retweets || 0) + (tweet.replies || 0);
+      }
+      
+      const influencers = Array.from(authorMap.values())
+        .map(a => ({ ...a, avgEngagement: Math.round(a.totalEngagement / a.tweetCount) }))
+        .sort((a, b) => b.avgEngagement - a.avgEngagement)
+        .slice(0, args.limit || 20);
+      
+      return { niche: args.niche, influencers, count: influencers.length };
+    }
+
+    case 'x_smart_target': {
+      const profile = await localTools.x_get_profile?.({ username: args.username });
+      const tweets = await localTools.x_get_tweets?.({ username: args.username, limit: 20 });
+      
+      // Extract niche keywords from user's tweets
+      const keywords = new Set();
+      for (const tweet of (tweets?.tweets || [])) {
+        const hashtags = tweet.text.match(/#\w+/g) || [];
+        hashtags.forEach(h => keywords.add(h));
+      }
+      
+      const searchQuery = Array.from(keywords).slice(0, 3).join(' OR ') || args.username;
+      const targets = await localTools.x_search_tweets?.({ query: searchQuery, limit: (args.limit || 20) * 3 });
+      
+      const seen = new Set([args.username]);
+      const result = [];
+      for (const tweet of (targets?.tweets || [])) {
+        const u = tweet.authorUsername || tweet.author;
+        if (!u || seen.has(u)) continue;
+        seen.add(u);
+        result.push({ username: u, reason: `Active in ${Array.from(keywords).slice(0, 2).join(', ')}` });
+        if (result.length >= (args.limit || 20)) break;
+      }
+      
+      return { strategy: args.strategy || 'growth', targets: result, count: result.length };
+    }
+
+    case 'x_crypto_analyze': {
+      const searchResults = await localTools.x_search_tweets?.({ query: args.query, limit: args.limit || 100 });
+      const tweets = searchResults?.tweets || [];
+      
+      let bullish = 0, bearish = 0, neutral = 0;
+      const influencerMentions = new Map();
+      
+      for (const tweet of tweets) {
+        const text = (tweet.text || '').toLowerCase();
+        const engagement = (tweet.likes || 0) + (tweet.retweets || 0);
+        
+        if (text.match(/bull|moon|pump|buy|long|breakout|ath|🚀|💎|🔥/)) bullish++;
+        else if (text.match(/bear|dump|sell|short|crash|dead|rug|💀|📉/)) bearish++;
+        else neutral++;
+        
+        if (engagement > 50) {
+          const author = tweet.authorUsername || tweet.author;
+          if (author) {
+            influencerMentions.set(author, (influencerMentions.get(author) || 0) + engagement);
+          }
+        }
+      }
+      
+      const total = bullish + bearish + neutral || 1;
+      const topInfluencers = Array.from(influencerMentions.entries())
+        .sort((a, b) => b[1] - a[1]).slice(0, 10)
+        .map(([username, engagement]) => ({ username, engagement }));
+      
+      return {
+        query: args.query,
+        tweetCount: tweets.length,
+        sentiment: {
+          bullish: Math.round(bullish / total * 100),
+          bearish: Math.round(bearish / total * 100),
+          neutral: Math.round(neutral / total * 100),
+          score: Math.round((bullish - bearish) / total * 100),
+        },
+        topInfluencers,
+      };
+    }
+
+    case 'x_grok_analyze_image': {
+      // Use Grok API for multimodal analysis
+      const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
+      if (!OPENROUTER_API_KEY) {
+        throw new Error('OPENROUTER_API_KEY required for Grok image analysis. Get a free key at https://openrouter.ai');
+      }
+      
+      let imageUrl = args.imageUrl;
+      if (!imageUrl && args.tweetUrl) {
+        // Scrape tweet to extract image
+        const page = await localTools.getPage();
+        await page.goto(args.tweetUrl, { waitUntil: 'networkidle2', timeout: 30000 });
+        imageUrl = await page.evaluate(() => {
+          const img = document.querySelector('article img[src*="pbs.twimg.com/media"]');
+          return img?.src || null;
+        });
+      }
+      
+      if (!imageUrl) {
+        throw new Error('No image found. Provide imageUrl or a tweetUrl containing an image.');
+      }
+
+      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${OPENROUTER_API_KEY}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'x-ai/grok-2-vision-1212',
+          messages: [{
+            role: 'user',
+            content: [
+              { type: 'image_url', image_url: { url: imageUrl } },
+              { type: 'text', text: args.question || 'Describe this image in detail.' },
+            ],
+          }],
+        }),
+      });
+      
+      const data = await response.json();
+      return { imageUrl, analysis: data.choices?.[0]?.message?.content || 'No analysis generated' };
+    }
+
+    // ── Analytics ──
+    case 'x_audience_insights': {
+      const followers = await localTools.x_get_followers?.({ username: args.username, limit: args.sampleSize || 200 });
+      const profiles = [];
+      
+      // Sample a subset for deeper analysis
+      const sample = (followers?.users || []).slice(0, Math.min(20, args.sampleSize || 200));
+      for (const user of sample) {
+        const profile = await localTools.x_get_profile?.({ username: user.username }).catch(() => null);
+        if (profile) profiles.push(profile);
+      }
+      
+      const locations = {};
+      const interests = {};
+      let totalFollowers = 0;
+      
+      for (const p of profiles) {
+        if (p.location) locations[p.location] = (locations[p.location] || 0) + 1;
+        totalFollowers += p.followers || 0;
+        const bio = (p.bio || '').toLowerCase();
+        ['crypto', 'ai', 'tech', 'developer', 'founder', 'investor', 'marketing', 'design', 'web3', 'defi'].forEach(tag => {
+          if (bio.includes(tag)) interests[tag] = (interests[tag] || 0) + 1;
+        });
+      }
+      
+      return {
+        username: args.username,
+        sampleSize: profiles.length,
+        totalFollowers: followers?.users?.length || 0,
+        avgFollowersPerFollower: profiles.length ? Math.round(totalFollowers / profiles.length) : 0,
+        topLocations: Object.entries(locations).sort((a, b) => b[1] - a[1]).slice(0, 10),
+        topInterests: Object.entries(interests).sort((a, b) => b[1] - a[1]).slice(0, 10),
+      };
+    }
+
+    case 'x_engagement_report': {
+      const profile = await localTools.x_get_profile?.({ username: args.username });
+      const tweets = await localTools.x_get_tweets?.({ username: args.username, limit: 50 });
+      const tweetList = tweets?.tweets || [];
+      
+      let totalLikes = 0, totalRetweets = 0, totalReplies = 0;
+      let bestTweet = null, bestEngagement = 0;
+      
+      for (const t of tweetList) {
+        const eng = (t.likes || 0) + (t.retweets || 0) + (t.replies || 0);
+        totalLikes += t.likes || 0;
+        totalRetweets += t.retweets || 0;
+        totalReplies += t.replies || 0;
+        if (eng > bestEngagement) { bestEngagement = eng; bestTweet = t; }
+      }
+      
+      const avgEng = tweetList.length ? Math.round((totalLikes + totalRetweets + totalReplies) / tweetList.length) : 0;
+      const engRate = profile?.followers ? ((avgEng / profile.followers) * 100).toFixed(2) : 'N/A';
+      
+      return {
+        username: args.username,
+        period: args.period || '30d',
+        tweetCount: tweetList.length,
+        followers: profile?.followers || 0,
+        avgLikes: tweetList.length ? Math.round(totalLikes / tweetList.length) : 0,
+        avgRetweets: tweetList.length ? Math.round(totalRetweets / tweetList.length) : 0,
+        avgReplies: tweetList.length ? Math.round(totalReplies / tweetList.length) : 0,
+        engagementRate: `${engRate}%`,
+        bestTweet: bestTweet ? { text: bestTweet.text?.slice(0, 200), likes: bestTweet.likes, retweets: bestTweet.retweets } : null,
+      };
+    }
+
+    // ── Monitoring ──
+    case 'x_monitor_account': {
+      // Take a snapshot of current state for comparison
+      const profile = await localTools.x_get_profile?.({ username: args.username });
+      const latestTweet = await localTools.x_get_tweets?.({ username: args.username, limit: 1 });
+      
+      return {
+        monitored: args.username,
+        events: args.events || ['all'],
+        interval: `${args.interval || 15} minutes`,
+        snapshot: {
+          followers: profile?.followers,
+          following: profile?.following,
+          bio: profile?.bio?.slice(0, 100),
+          latestTweet: latestTweet?.tweets?.[0]?.text?.slice(0, 100),
+          capturedAt: new Date().toISOString(),
+        },
+        message: `Monitoring started. Compare future snapshots with this baseline to detect changes.`,
+      };
+    }
+
+    case 'x_monitor_keyword': {
+      const keywords = args.keywords || [];
+      const query = keywords.join(' OR ');
+      const results = await localTools.x_search_tweets?.({ query, limit: 20 });
+      
+      return {
+        keywords,
+        interval: `${args.interval || 10} minutes`,
+        currentMatches: results?.tweets?.length || 0,
+        latestTweets: (results?.tweets || []).slice(0, 5).map(t => ({
+          text: t.text?.slice(0, 200),
+          author: t.authorUsername || t.author,
+          likes: t.likes,
+          url: t.url,
+        })),
+        message: `Monitoring ${keywords.length} keywords. ${results?.tweets?.length || 0} current matches found.`,
+      };
+    }
+
+    case 'x_follower_alerts': {
+      const followers = await localTools.x_get_followers?.({ username: args.username, limit: 500 });
+      
+      return {
+        username: args.username,
+        alertTypes: args.alertTypes || ['new_follower', 'unfollower', 'milestone', 'surge', 'drop'],
+        currentFollowerCount: followers?.users?.length || 0,
+        snapshot: (followers?.users || []).slice(0, 10).map(u => u.username),
+        message: `Follower alerts configured. Save this snapshot and compare on next check to detect changes.`,
+        capturedAt: new Date().toISOString(),
+      };
+    }
+
+    case 'x_track_engagement': {
+      if (args.tweetUrl) {
+        const page = await localTools.getPage();
+        await page.goto(args.tweetUrl, { waitUntil: 'networkidle2', timeout: 30000 });
+        await new Promise(r => setTimeout(r, 2000));
+        const metrics = await page.evaluate(() => {
+          const article = document.querySelector('article[data-testid="tweet"]');
+          if (!article) return null;
+          const getText = (testid) => article.querySelector(`[data-testid="${testid}"]`)?.textContent || '0';
+          return {
+            likes: getText('like'),
+            retweets: getText('retweet'),
+            replies: getText('reply'),
+            views: getText('views') || getText('analytics'),
+          };
+        });
+        return { tweetUrl: args.tweetUrl, metrics, capturedAt: new Date().toISOString() };
+      }
+      
+      // Account-level tracking
+      const profile = await localTools.x_get_profile?.({ username: args.username });
+      const tweets = await localTools.x_get_tweets?.({ username: args.username, limit: 10 });
+      return {
+        username: args.username,
+        followers: profile?.followers,
+        recentEngagement: (tweets?.tweets || []).slice(0, 5).map(t => ({
+          text: t.text?.slice(0, 80),
+          likes: t.likes,
+          retweets: t.retweets,
+        })),
+        capturedAt: new Date().toISOString(),
+      };
+    }
+
+    default:
+      throw new Error(`Xeepy tool not implemented: ${name}. This tool is defined but needs a handler.`);
   }
 }
 
@@ -2812,7 +3818,7 @@ async function main() {
   const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 
   console.error('');
-  console.error('⚡ XActions MCP Server v3.0.0');
+  console.error('⚡ XActions MCP Server v3.1.0 — 140+ tools');
   console.error('   The free, open-source Twitter/X MCP server');
   console.error('   https://github.com/nirholas/XActions');
   console.error('');

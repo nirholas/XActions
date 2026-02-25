@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XActions MCP Server Setup Guide | XActions</title>
+  <meta name="description" content="Use AI agents (Claude, Cursor, Windsurf, GPT) to automate X/Twitter — for free.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, open source, mcp, setup, server, guide, guides &amp; reference">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="XActions MCP Server Setup Guide — XActions">
+  <meta property="og:description" content="Use AI agents (Claude, Cursor, Windsurf, GPT) to automate X/Twitter — for free.">
+  <meta property="og:url" content="https://xactions.app/docs/guides/mcp-setup">
+  <meta property="og:site_name" content="XActions">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="XActions MCP Server Setup Guide — XActions">
+  <meta name="twitter:description" content="Use AI agents (Claude, Cursor, Windsurf, GPT) to automate X/Twitter — for free.">
+
+  <link rel="canonical" href="https://xactions.app/docs/guides/mcp-setup">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "XActions MCP Server Setup Guide | XActions",
+    "description": "Use AI agents (Claude, Cursor, Windsurf, GPT) to automate X/Twitter — for free.",
+    "url": "https://xactions.app/docs/guides/mcp-setup",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-25",
+    "dateModified": "2026-02-25",
+    "mainEntityOfPage": "https://xactions.app/docs/guides/mcp-setup",
+    "articleSection": "Guides & Reference",
+    "keywords": "xactions, twitter automation, x automation, free, open source, mcp, setup, server, guide, guides & reference"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Guides & Reference", "item": "https://xactions.app/docs/guides" },
+      { "@type": "ListItem", "position": 4, "name": "XActions MCP Server Setup Guide", "item": "https://xactions.app/docs/guides/mcp-setup" }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .article pre { font-size: 0.75rem; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <main class="main-content">
+      <header class="main-header">
+        <h1>📖 XActions MCP Server Setup Guide</h1>
+        <div class="breadcrumb">
+          <a href="https://xactions.app">Home</a> › <a href="https://xactions.app/docs">Docs</a> › <a href="https://xactions.app/docs/guides">Guides &amp; Reference</a> › XActions MCP Server Setup Guide
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Guides &amp; Reference</span>
+        <h1>XActions MCP Server Setup Guide</h1>
+<blockquote>
+<p>Use AI agents (Claude, Cursor, Windsurf, GPT) to automate X/Twitter — for free.</p>
+</blockquote>
+<h2>Getting Your auth_token</h2>
+<p>Most tools require an X/Twitter session cookie for authentication.</p>
+<ol>
+<li>Go to <a href="https://x.com">x.com</a> and <strong>log in</strong></li>
+<li>Open <strong>DevTools</strong> (F12 or Cmd+Option+I)</li>
+<li>Go to <strong>Application</strong> → <strong>Cookies</strong> → <code>https://x.com</code></li>
+<li>Find the cookie named <strong><code>auth_token</code></strong></li>
+<li>Copy its value (a long hex string)</li>
+</ol>
+<blockquote>
+<p>⚠️ Treat this like a password. Never share it publicly.</p>
+</blockquote>
+<hr>
+<h2>Claude Desktop</h2>
+<h3>1. Open config file</h3>
+<ul>
+<li><strong>macOS</strong>: <code>~/Library/Application Support/Claude/claude_desktop_config.json</code></li>
+<li><strong>Windows</strong>: <code>%APPDATA%\Claude\claude_desktop_config.json</code></li>
+<li><strong>Linux</strong>: <code>~/.config/Claude/claude_desktop_config.json</code></li>
+</ul>
+<h3>2. Add XActions</h3>
+<pre><code class="language-json">{
+  &quot;mcpServers&quot;: {
+    &quot;xactions&quot;: {
+      &quot;command&quot;: &quot;npx&quot;,
+      &quot;args&quot;: [&quot;-y&quot;, &quot;xactions-mcp&quot;],
+      &quot;env&quot;: {
+        &quot;XACTIONS_SESSION_COOKIE&quot;: &quot;your_auth_token_here&quot;
+      }
+    }
+  }
+}
+</code></pre>
+<h3>3. Restart Claude Desktop</h3>
+<p>Quit and reopen Claude Desktop. You should see XActions tools listed.</p>
+<h3>Auto-generate config</h3>
+<pre><code class="language-bash">npx xactions mcp-config
+</code></pre>
+<p>This detects your OS and outputs the correct config snippet. Use <code>--write</code> to write it directly.</p>
+<hr>
+<h2>Cursor</h2>
+<p>Add to your <strong>Cursor Settings</strong> → <strong>MCP Servers</strong>:</p>
+<pre><code class="language-json">{
+  &quot;mcpServers&quot;: {
+    &quot;xactions&quot;: {
+      &quot;command&quot;: &quot;npx&quot;,
+      &quot;args&quot;: [&quot;-y&quot;, &quot;xactions-mcp&quot;],
+      &quot;env&quot;: {
+        &quot;XACTIONS_SESSION_COOKIE&quot;: &quot;your_auth_token_here&quot;
+      }
+    }
+  }
+}
+</code></pre>
+<p>Or add to <code>.cursor/mcp.json</code> in your project root.</p>
+<hr>
+<h2>Windsurf</h2>
+<p>Add to your <strong>Windsurf Settings</strong> (<code>~/.codeium/windsurf/mcp_config.json</code>):</p>
+<pre><code class="language-json">{
+  &quot;mcpServers&quot;: {
+    &quot;xactions&quot;: {
+      &quot;command&quot;: &quot;npx&quot;,
+      &quot;args&quot;: [&quot;-y&quot;, &quot;xactions-mcp&quot;],
+      &quot;env&quot;: {
+        &quot;XACTIONS_SESSION_COOKIE&quot;: &quot;your_auth_token_here&quot;
+      }
+    }
+  }
+}
+</code></pre>
+<hr>
+<h2>VS Code (GitHub Copilot)</h2>
+<p>Add to your <strong>VS Code</strong> user <code>settings.json</code> or <code>.vscode/mcp.json</code>:</p>
+<pre><code class="language-json">{
+  &quot;mcp&quot;: {
+    &quot;servers&quot;: {
+      &quot;xactions&quot;: {
+        &quot;command&quot;: &quot;npx&quot;,
+        &quot;args&quot;: [&quot;-y&quot;, &quot;xactions-mcp&quot;],
+        &quot;env&quot;: {
+          &quot;XACTIONS_SESSION_COOKIE&quot;: &quot;your_auth_token_here&quot;
+        }
+      }
+    }
+  }
+}
+</code></pre>
+<hr>
+<h2>Local Install (Alternative)</h2>
+<p>If you prefer a local install instead of npx:</p>
+<pre><code class="language-bash">npm install -g xactions
+</code></pre>
+<p>Then use <code>xactions-mcp</code> as the command instead of <code>npx</code>:</p>
+<pre><code class="language-json">{
+  &quot;mcpServers&quot;: {
+    &quot;xactions&quot;: {
+      &quot;command&quot;: &quot;xactions-mcp&quot;,
+      &quot;env&quot;: {
+        &quot;XACTIONS_SESSION_COOKIE&quot;: &quot;your_auth_token_here&quot;
+      }
+    }
+  }
+}
+</code></pre>
+<hr>
+<h2>Environment Variables</h2>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>XACTIONS_SESSION_COOKIE</code></td>
+<td>For most tools</td>
+<td>Your X/Twitter <code>auth_token</code> cookie</td>
+</tr>
+<tr>
+<td><code>OPENROUTER_API_KEY</code></td>
+<td>For AI tools</td>
+<td>Free key from <a href="https://openrouter.ai">openrouter.ai</a></td>
+</tr>
+<tr>
+<td><code>XACTIONS_MODE</code></td>
+<td>No</td>
+<td><code>local</code> (default, free) or <code>remote</code></td>
+</tr>
+<tr>
+<td><code>DEBUG</code></td>
+<td>No</td>
+<td>Set to <code>true</code> for verbose error stacks</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Available Tools</h2>
+<h3>Scraping (free, no API key needed)</h3>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>x_get_profile</code></td>
+<td>Get any user&#39;s profile (bio, followers, etc.)</td>
+</tr>
+<tr>
+<td><code>x_get_followers</code></td>
+<td>Scrape a user&#39;s followers list</td>
+</tr>
+<tr>
+<td><code>x_get_following</code></td>
+<td>Scrape who a user follows</td>
+</tr>
+<tr>
+<td><code>x_get_tweets</code></td>
+<td>Scrape a user&#39;s recent tweets</td>
+</tr>
+<tr>
+<td><code>x_search_tweets</code></td>
+<td>Search tweets by keyword</td>
+</tr>
+<tr>
+<td><code>x_get_thread</code></td>
+<td>Unroll and read an entire thread</td>
+</tr>
+<tr>
+<td><code>x_download_video</code></td>
+<td>Extract video download URL from a tweet</td>
+</tr>
+</tbody></table>
+<h3>Analysis</h3>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>x_detect_unfollowers</code></td>
+<td>Snapshot followers to detect unfollowers over time</td>
+</tr>
+<tr>
+<td><code>x_analyze_sentiment</code></td>
+<td>Sentiment analysis (rule-based or LLM)</td>
+</tr>
+<tr>
+<td><code>x_best_time_to_post</code></td>
+<td>Find optimal posting times from tweet history</td>
+</tr>
+<tr>
+<td><code>x_competitor_analysis</code></td>
+<td>Compare metrics across accounts</td>
+</tr>
+<tr>
+<td><code>x_brand_monitor</code></td>
+<td>Monitor brand mentions with sentiment</td>
+</tr>
+</tbody></table>
+<h3>Actions (require auth_token)</h3>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>x_follow</code></td>
+<td>Follow a user</td>
+</tr>
+<tr>
+<td><code>x_unfollow</code></td>
+<td>Unfollow a user</td>
+</tr>
+<tr>
+<td><code>x_like</code></td>
+<td>Like a tweet</td>
+</tr>
+<tr>
+<td><code>x_post_tweet</code></td>
+<td>Post a tweet</td>
+</tr>
+<tr>
+<td><code>x_post_thread</code></td>
+<td>Post a multi-tweet thread</td>
+</tr>
+<tr>
+<td><code>x_reply</code></td>
+<td>Reply to a tweet</td>
+</tr>
+<tr>
+<td><code>x_retweet</code></td>
+<td>Retweet a tweet</td>
+</tr>
+<tr>
+<td><code>x_bookmark</code></td>
+<td>Bookmark a tweet</td>
+</tr>
+<tr>
+<td><code>x_send_dm</code></td>
+<td>Send a direct message</td>
+</tr>
+</tbody></table>
+<h3>AI Tools (require OPENROUTER_API_KEY)</h3>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>x_analyze_voice</code></td>
+<td>Analyze a user&#39;s writing style</td>
+</tr>
+<tr>
+<td><code>x_generate_tweet</code></td>
+<td>Generate tweets in a user&#39;s voice</td>
+</tr>
+<tr>
+<td><code>x_summarize_thread</code></td>
+<td>AI-powered thread summarization</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Example Prompts</h2>
+<p>Try these with Claude, Cursor, or any MCP-compatible AI:</p>
+<h3>Research</h3>
+<blockquote>
+<p>&quot;Get the profile and last 20 tweets from @elonmusk. Summarize the main topics.&quot;</p>
+</blockquote>
+<h3>Growth</h3>
+<blockquote>
+<p>&quot;Find everyone I follow who doesn&#39;t follow me back. Show me the list sorted by how long ago I followed them.&quot;</p>
+</blockquote>
+<h3>Content</h3>
+<blockquote>
+<p>&quot;Analyze @paulg&#39;s writing style, then generate 3 tweet ideas about startups in his voice.&quot;</p>
+</blockquote>
+<h3>Analytics</h3>
+<blockquote>
+<p>&quot;Compare the follower counts, tweet frequency, and engagement of @openai, @anthropic, and @google.&quot;</p>
+</blockquote>
+<h3>Engagement</h3>
+<blockquote>
+<p>&quot;Search for tweets about &#39;AI agents&#39; from the last day. Like the top 5 most engaging ones.&quot;</p>
+</blockquote>
+<hr>
+<h2>Troubleshooting</h2>
+<h3>&quot;Tool not found&quot; or no tools showing</h3>
+<ol>
+<li>Make sure the MCP server is configured correctly in your client</li>
+<li>Restart your AI client after changing config</li>
+<li>Check that Node.js 18+ is installed: <code>node --version</code></li>
+</ol>
+<h3>&quot;Could not follow/unfollow/post&quot;</h3>
+<p>Auth is required for action tools. Make sure <code>XACTIONS_SESSION_COOKIE</code> is set in your MCP config <code>env</code>.</p>
+<h3>&quot;OPENROUTER_API_KEY required&quot;</h3>
+<p>AI tools (voice analysis, tweet generation, thread summarization) need an OpenRouter API key. Get a free one at <a href="https://openrouter.ai">openrouter.ai</a>.</p>
+<h3>Server won&#39;t start</h3>
+<pre><code class="language-bash"># Test manually
+node node_modules/xactions/src/mcp/server.js
+
+# Or if globally installed
+xactions-mcp
+</code></pre>
+<h3>Browser automation errors</h3>
+<p>XActions uses Puppeteer for browser automation. If you see Chrome/Chromium errors:</p>
+<pre><code class="language-bash"># Install Chromium dependencies (Linux)
+npx puppeteer browsers install chrome
+</code></pre>
+<hr>
+<h2>Links</h2>
+<ul>
+<li><strong>GitHub</strong>: <a href="https://github.com/nirholas/XActions">github.com/nirholas/XActions</a></li>
+<li><strong>npm</strong>: <a href="https://www.npmjs.com/package/xactions">npmjs.com/package/xactions</a></li>
+<li><strong>Dashboard</strong>: <a href="https://xactions.app">xactions.app</a></li>
+<li><strong>Issues</strong>: <a href="https://github.com/nirholas/XActions/issues">github.com/nirholas/XActions/issues</a></li>
+</ul>
+<hr>
+<p><em>Built by <a href="https://x.com/nichxbt">@nichxbt</a>. MIT License.</em></p>
+
+
+        <div class="cta-box">
+          <h3>⚡ Explore XActions</h3>
+          <p>100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/docs">Browse All Documentation</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 In This Section</h3>
+                <a href="/docs/guides/getting-started">📖 Getting Started with XActions</a>
+        <a href="/docs/guides/usage">📖 Usage</a>
+        <a href="/docs/guides/automation">📖 XActions Automation Framework Guide</a>
+        <a href="/docs/guides/monitoring">📖 Monitoring Guide</a>
+        <a href="/docs/guides/cli-reference">📖 XActions CLI Reference</a>
+        <a href="/docs/guides/ai-api">📖 XActions AI API Documentation</a>
+        <a href="/docs/guides/api-reference">📖 XActions — API Reference</a>
+        <a href="/docs/guides/deployment">📖 Deployment Guide</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/docs">All Documentation</a>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

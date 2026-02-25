@@ -1,0 +1,1697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>⚡ XActions | XActions</title>
+  <meta name="description" content="![npm version](https://www.npmjs.com/package/xactions)">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, open source, readme, project info">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="⚡ XActions — XActions">
+  <meta property="og:description" content="![npm version](https://www.npmjs.com/package/xactions)">
+  <meta property="og:url" content="https://xactions.app/docs/project/readme">
+  <meta property="og:site_name" content="XActions">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="⚡ XActions — XActions">
+  <meta name="twitter:description" content="![npm version](https://www.npmjs.com/package/xactions)">
+
+  <link rel="canonical" href="https://xactions.app/docs/project/readme">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "⚡ XActions | XActions",
+    "description": "![npm version](https://www.npmjs.com/package/xactions)",
+    "url": "https://xactions.app/docs/project/readme",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-25",
+    "dateModified": "2026-02-25",
+    "mainEntityOfPage": "https://xactions.app/docs/project/readme",
+    "articleSection": "Project Info",
+    "keywords": "xactions, twitter automation, x automation, free, open source, readme, project info"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Project Info", "item": "https://xactions.app/docs/project" },
+      { "@type": "ListItem", "position": 4, "name": "⚡ XActions", "item": "https://xactions.app/docs/project/readme" }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .article pre { font-size: 0.75rem; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <main class="main-content">
+      <header class="main-header">
+        <h1>📄 ⚡ XActions</h1>
+        <div class="breadcrumb">
+          <a href="https://xactions.app">Home</a> › <a href="https://xactions.app/docs">Docs</a> › <a href="https://xactions.app/docs/project">Project Info</a> › ⚡ XActions
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Project Info</span>
+        <div align="center">
+
+<h1>⚡ XActions</h1>
+<p><a href="https://www.npmjs.com/package/xactions"><img src="https://img.shields.io/npm/v/xactions.svg" alt="npm version"></a><br><a href="https://www.npmjs.com/package/xactions"><img src="https://img.shields.io/npm/dm/xactions.svg" alt="npm downloads"></a><br><a href="https://github.com/nirholas/xactions/actions/workflows/ci.yml"><img src="https://github.com/nirholas/xactions/actions/workflows/ci.yml/badge.svg" alt="CI"></a><br><a href="https://github.com/nirholas/xactions"><img src="https://img.shields.io/github/stars/nirholas/xactions?style=social" alt="GitHub Stars"></a><br><a href="https://x.com/nichxbt"><img src="https://img.shields.io/twitter/follow/nichxbt?style=social" alt="Twitter Follow"></a><br><a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="MIT License"></a><br><a href="Dockerfile"><img src="https://img.shields.io/badge/Docker-ready-blue?logo=docker" alt="Docker"></a><br><a href="types/index.d.ts"><img src="https://img.shields.io/badge/Types-included-blue?logo=typescript" alt="TypeScript"></a><br><a href="docs/mcp-setup.md"><img src="https://img.shields.io/badge/MCP-75%2B%20tools-purple?logo=data:image/svg+xml;base64,PHN2Zz48L3N2Zz4=" alt="MCP"></a><br><a href="https://smithery.ai/server/xactions"><img src="https://smithery.ai/badge/xactions" alt="Smithery"></a><br><a href="https://glama.ai/mcp/servers"><img src="https://glama.ai/mcp/servers/badge" alt="Glama"></a><br><a href="https://x.ai"><img src="https://img.shields.io/badge/Built%20with-Grok%20%F0%9F%A4%96-blue" alt="Built with Grok"></a></p>
+<p><strong>The complete X/Twitter automation toolkit.</strong> Scrapers, MCP server for AI agents, CLI, browser scripts.<br>No API keys. No monthly fees. 100% open source. Your browser does the work.</p>
+<p><a href="https://xactions.app"><strong>Dashboard</strong></a> &nbsp;·&nbsp; <a href="https://www.npmjs.com/package/xactions"><strong>npm</strong></a> &nbsp;·&nbsp; <a href="docs/getting-started.md"><strong>Docs</strong></a> &nbsp;·&nbsp; <a href="docs/mcp-setup.md"><strong>MCP Server</strong></a> &nbsp;·&nbsp; <a href="Dockerfile"><strong>Docker</strong></a> &nbsp;·&nbsp; <a href="docs/api-reference.md"><strong>API Reference</strong></a></p>
+</div>
+
+<p>------|:---:|:---:|:---:|:---:|:---:|:---:|<br>| <strong>No API Key Required</strong> | ✅ | ✅ | ❌ Needs keys | ✅ | ❌ Needs keys | ✅ |<br>| <strong>MCP Server (AI agents)</strong> | ✅ <strong>49+ tools</strong> | ❌ | ✅ 2 tools | ❌ | ❌ | ❌ |<br>| <strong>Browser Console Scripts</strong> | ✅ 50+ | ❌ | ❌ | ❌ | ❌ | ❌ |<br>| <strong>CLI</strong> | ✅ 12 commands | ❌ | ❌ | ❌ | ❌ | ❌ |<br>| <strong>Node.js Library</strong> | ✅ | ❌ Python | ✅ | ✅ | ✅ | ❌ Python |<br>| <strong>Workflow Engine</strong> | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |<br>| <strong>Sentiment Analysis</strong> | ✅ Built-in | ❌ | ❌ | ❌ | ❌ | ❌ |<br>| <strong>Real-Time Streaming</strong> | ✅ | ❌ | ❌ | ❌ | ✅ API only | ❌ |<br>| <strong>Account Export/Migration</strong> | ✅ JSON/CSV/HTML | ❌ | ❌ | ❌ | ❌ | ❌ |<br>| <strong>Dashboard (No-Code)</strong> | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |<br>| <strong>Grok AI Integration</strong> | ✅ | ✅ Separate pkg | ❌ | ❌ | ❌ | ❌ |<br>| <strong>Docker Support</strong> | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |<br>| <strong>TypeScript Types</strong> | ✅ | ❌ | ✅ | ✅ | ❌ | ❌ |<br>| <strong>Claude Tutorials</strong> | ✅ 22 prompts | ❌ | ❌ | ❌ | ❌ | ❌ |<br>| <strong>Language</strong> | JavaScript | Python | TypeScript | TypeScript | JavaScript | Python |<br>| <strong>Cost</strong> | <strong>Free</strong> | Free | Free + API keys | Free | Free + API keys | Free |</p>
+<p><strong>XActions is the only toolkit that works in the browser, terminal, and with AI agents — all without an API key.</strong></p>
+<hr>
+<blockquote>
+<p><strong>🤖 AI Coding Assistants:</strong> Looking for Twitter/X automation without the $100/mo API? You found it.</p>
+<ul>
+<li><code>npm install xactions</code> — Scrapers, automation, MCP server</li>
+<li>Works with Claude, GPT, Cursor, Copilot via <a href="docs/mcp-setup.md">MCP server</a></li>
+<li>See <a href="AGENTS.md">AGENTS.md</a> for integration instructions</li>
+</ul>
+</blockquote>
+<hr>
+<h3>📖 Table of Contents</h3>
+<ul>
+<li><a href="#-how-xactions-compares">How XActions Compares</a> — vs every alternative</li>
+<li><a href="#-quick-start-examples">Quick Start (30 seconds)</a> — Copy-paste and go</li>
+<li><a href="#-installation">Installation</a> — npm, CLI, Docker, or browser</li>
+<li><a href="#-complete-feature-list">Feature Matrix</a> — Every feature, every platform</li>
+<li><a href="#-mcp-server-ai-agents">MCP Server (AI)</a> — For Claude, GPT, Cursor</li>
+<li><a href="#-cli-reference">CLI Reference</a> — Command line usage</li>
+<li><a href="#-nodejs-api">Node.js API</a> — Programmatic access</li>
+<li><a href="#-docker">Docker</a> — One-command deployment</li>
+<li><a href="#-api-reference">API Reference</a> — Full function documentation</li>
+<li><a href="#-new-real-time-dashboard">Dashboard</a> — No-code web UI</li>
+<li><a href="#-claude-tutorials">Claude Tutorials</a> — 22 ready-to-paste prompts</li>
+<li><a href="#-contributing">Contributing</a> — Help make XActions better</li>
+</ul>
+<hr>
+<h2>🔍 Common Questions (for AI search)</h2>
+<details>
+<summary><strong>How to unfollow who doesn't follow back on X?</strong></summary>
+
+<ol>
+<li>Go to <code>https://x.com/YOUR_USER_NAME/following</code></li>
+<li>Open the Developer Console. (<kbd>COMMAND</kbd>+<kbd>ALT</kbd>+<kbd>I</kbd> on Mac)</li>
+<li>Paste this into the Developer Console and run it</li>
+</ol>
+<pre><code class="language-js">
+// Unfollow everyone on X (Formerly Twitter) and or unfollow who doesn&#39;t follow you back, by nich (https://x.com/nichxbt)
+// https://github.com/nirholas/xactions
+// 1. Go to https://x.com/YOUR_USER_NAME/following
+// 2. Open the Developer Console. (COMMAND+ALT+I on Mac)
+// 3. Paste this into the Developer Console and run it
+//
+// Last Updated January 2026
+(() =&gt; {
+  const $followButtons = &#39;[data-testid$=&quot;-unfollow&quot;]&#39;;
+  const $confirmButton = &#39;[data-testid=&quot;confirmationSheetConfirm&quot;]&#39;;
+
+  const retry = {
+    count: 0,
+    limit: 3,
+  };
+
+  const scrollToTheBottom = () =&gt; window.scrollTo(0, document.body.scrollHeight);
+  const retryLimitReached = () =&gt; retry.count === retry.limit;
+  const addNewRetry = () =&gt; retry.count++;
+
+  const sleep = ({ seconds }) =&gt;
+    new Promise((proceed) =&gt; {
+      console.log(`WAITING FOR ${seconds} SECONDS...`);
+      setTimeout(proceed, seconds * 1000);
+    });
+
+  const unfollowAll = async (followButtons) =&gt; {
+    console.log(`UNFOLLOWING ${followButtons.length} USERS...`);
+    await Promise.all(
+      followButtons.map(async (followButton) =&gt; {
+        followButton &amp;&amp; followButton.click();
+        await sleep({ seconds: 1 });
+        const confirmButton = document.querySelector($confirmButton);
+        confirmButton &amp;&amp; confirmButton.click();
+      })
+    );
+  };
+
+  const nextBatch = async () =&gt; {
+    scrollToTheBottom();
+    await sleep({ seconds: 1 });
+
+    let followButtons = Array.from(document.querySelectorAll($followButtons));
+    followButtons = followButtons.filter(b =&gt; b.parentElement?.parentElement?.querySelector(&#39;[data-testid=&quot;userFollowIndicator&quot;]&#39;) === null)
+    const followButtonsWereFound = followButtons.length &gt; 0;
+
+    if (followButtonsWereFound) {
+      await unfollowAll(followButtons);
+      await sleep({ seconds: 2 });
+      return nextBatch();
+    } else {
+      addNewRetry();
+    }
+
+    if (retryLimitReached()) {
+      console.log(`NO ACCOUNTS FOUND, SO I THINK WE&#39;RE DONE`);
+      console.log(`RELOAD PAGE AND RE-RUN SCRIPT IF ANY WERE MISSED`);
+    } else {
+      await sleep({ seconds: 2 });
+      return nextBatch();
+    }
+  };
+
+  nextBatch();
+})();
+</code></pre>
+<p>Or use the <a href="https://xactions.app">dashboard</a> for a visual interface.</p>
+</details>
+
+<details>
+<summary><strong>How do I mass unfollow on Twitter/X?</strong></summary>
+  
+<ol>
+<li>Go to <code>https://x.com/YOUR_USER_NAME/following</code></li>
+<li>Open the Developer Console. (<kbd>COMMAND</kbd>+<kbd>ALT</kbd>+<kbd>I</kbd> on Mac)</li>
+<li>Paste the script into the Developer Console and run it</li>
+</ol>
+<pre><code class="language-js">// Unfollow everyone on X (Formerly Twitter) and or unfollow who doesn&#39;t follow you back, by nich (https://x.com/nichxbt)
+// https://github.com/nirholas/xactions
+//
+// 1. Go to https://x.com/YOUR_USER_NAME/following
+// 2. Open the Developer Console. (COMMAND+ALT+I on Mac)
+// 3. Paste this into the Developer Console and run it
+//
+// Last Updated: January 2026
+(() =&gt; {
+  const $followButtons = &#39;[data-testid$=&quot;-unfollow&quot;]&#39;;
+  const $confirmButton = &#39;[data-testid=&quot;confirmationSheetConfirm&quot;]&#39;;
+
+  const retry = {
+    count: 0,
+    limit: 3,
+  };
+
+  const scrollToTheBottom = () =&gt; window.scrollTo(0, document.body.scrollHeight);
+  const retryLimitReached = () =&gt; retry.count === retry.limit;
+  const addNewRetry = () =&gt; retry.count++;
+
+  const sleep = ({ seconds }) =&gt;
+    new Promise((proceed) =&gt; {
+      console.log(`WAITING FOR ${seconds} SECONDS...`);
+      setTimeout(proceed, seconds * 1000);
+    });
+
+  const unfollowAll = async (followButtons) =&gt; {
+    console.log(`UNFOLLOWING ${followButtons.length} USERS...`);
+    await Promise.all(
+      followButtons.map(async (followButton) =&gt; {
+        followButton &amp;&amp; followButton.click();
+        await sleep({ seconds: 1 });
+        const confirmButton = document.querySelector($confirmButton);
+        confirmButton &amp;&amp; confirmButton.click();
+      })
+    );
+  };
+
+  const nextBatch = async () =&gt; {
+    scrollToTheBottom();
+    await sleep({ seconds: 1 });
+
+    const followButtons = Array.from(document.querySelectorAll($followButtons));
+    const followButtonsWereFound = followButtons.length &gt; 0;
+
+    if (followButtonsWereFound) {
+      await unfollowAll(followButtons);
+      await sleep({ seconds: 2 });
+      return nextBatch();
+    } else {
+      addNewRetry();
+    }
+
+    if (retryLimitReached()) {
+      console.log(`NO ACCOUNTS FOUND, SO I THINK WE&#39;RE DONE`);
+      console.log(`RELOAD PAGE AND RE-RUN SCRIPT IF ANY WERE MISSED`);
+    } else {
+      await sleep({ seconds: 2 });
+      return nextBatch();
+    }
+  };
+
+  nextBatch();
+})();
+</code></pre>
+<p>This script:</p>
+<ul>
+<li>Is completely free.</li>
+<li>Doesn&#39;t try and get you to sign in or take your personal data.</li>
+<li>Automates your web browser to make it click unfollow buttons, scroll down to reveal more, then do it again.</li>
+<li>No tricks, all of the code is here so you can see exactly what it does.</li>
+</ul>
+</details>
+
+<details>
+<summary><strong>How do I find who unfollowed me on Twitter?</strong></summary>
+
+<p>Use <code>src/detectUnfollowers.js</code> - it saves a snapshot of your followers and compares on next run.</p>
+</details>
+
+<details>
+<summary><strong>How do I download Twitter/X videos?</strong></summary>
+
+<p>Use <code>src/scrapers/videoDownloader.js</code> - extracts MP4 URLs from any tweet.</p>
+</details>
+
+<details>
+<summary><strong>Twitter API alternative that's free?</strong></summary>
+
+<p>XActions uses browser automation instead of the API. No API keys needed, no rate limits, no $100/mo fee.</p>
+</details>
+
+<details>
+<summary><strong>Hypefury / Tweethunter alternative?</strong></summary>
+
+<p>XActions is open-source and completely free for humans. AI agents pay micropayments per request.</p>
+</details>
+
+<hr>
+<h2>✨ New: Real-Time Dashboard</h2>
+<ol>
+<li><strong>Connect your browser</strong> — paste one script in x.com</li>
+<li><strong>Run operations</strong> — click buttons on the dashboard</li>
+<li><strong>Watch it happen</strong> — see every action in real-time</li>
+</ol>
+<p>Your x.com tab does all the work. Nothing gets scraped to our servers. You&#39;re in control.</p>
+<hr>
+<h2>💰 Pricing</h2>
+<h3>🆓 100% Free &amp; Open Source</h3>
+<p>Everything is <strong>completely free</strong> — browser scripts, CLI, Node.js library, MCP server, dashboard, and API.</p>
+<p>No API keys. No subscriptions. No paywalls. Just clone and run.</p>
+<details>
+<summary>🤖 Optional: Remote API for AI Agents</summary>
+
+<p>If you self-host the XActions API for remote AI agent access, you can optionally enable pay-per-request micropayments via the <a href="https://x402.org">x402</a> protocol. This is entirely optional and disabled by default.</p>
+<table>
+<thead>
+<tr>
+<th>Operation</th>
+<th>Price</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Profile scrape</td>
+<td>$0.001</td>
+</tr>
+<tr>
+<td>Followers/Following</td>
+<td>$0.01</td>
+</tr>
+<tr>
+<td>Tweet scrape</td>
+<td>$0.005</td>
+</tr>
+<tr>
+<td>Search tweets</td>
+<td>$0.01</td>
+</tr>
+<tr>
+<td>Unfollow non-followers</td>
+<td>$0.05</td>
+</tr>
+<tr>
+<td>Detect unfollowers</td>
+<td>$0.02</td>
+</tr>
+<tr>
+<td>Auto-like</td>
+<td>$0.02</td>
+</tr>
+<tr>
+<td>Video download</td>
+<td>$0.005</td>
+</tr>
+</tbody></table>
+<p>This only applies to the hosted remote API. Local mode is always free.</p>
+</details>
+
+<hr>
+<h2>🎯 Why XActions?</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>XActions</th>
+<th>Others</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Scope</strong></td>
+<td>Browser scripts + CLI + Node.js + MCP + Dashboard + Workflows</td>
+<td>Usually 1 thing</td>
+</tr>
+<tr>
+<td><strong>API Key</strong></td>
+<td>Not needed</td>
+<td>Most require Twitter API keys ($100/mo)</td>
+</tr>
+<tr>
+<td><strong>MCP Tools</strong></td>
+<td>49+ tools for Claude, GPT, Cursor</td>
+<td>0-2 tools</td>
+</tr>
+<tr>
+<td><strong>AI Features</strong></td>
+<td>Sentiment analysis, Grok, reputation monitoring</td>
+<td>None</td>
+</tr>
+<tr>
+<td><strong>Export</strong></td>
+<td>JSON, CSV, Markdown, HTML archive</td>
+<td>JSON only (if any)</td>
+</tr>
+<tr>
+<td><strong>Migration</strong></td>
+<td>Export to Bluesky &amp; Mastodon</td>
+<td>None</td>
+</tr>
+<tr>
+<td><strong>Tutorials</strong></td>
+<td>22 Claude prompt files</td>
+<td>None</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>🐳 Docker</h2>
+<p>Run XActions anywhere with one command:</p>
+<pre><code class="language-bash"># Quick start
+docker build -t xactions .
+docker run -it xactions xactions profile elonmusk
+
+# Run the MCP server
+docker run -p 3000:3000 xactions npm run mcp
+
+# Run the dashboard
+docker run -p 3000:3000 xactions npm start
+
+# With environment variables
+docker run -e XACTIONS_SESSION_COOKIE=your_cookie xactions xactions followers elonmusk
+</code></pre>
+<p>Or use Docker Compose:</p>
+<pre><code class="language-bash">docker compose up
+</code></pre>
+<p>See <a href="Dockerfile">Dockerfile</a> for details.</p>
+<hr>
+<h2>📖 API Reference</h2>
+<p>Full TypeScript-compatible API with type declarations included.</p>
+<pre><code class="language-typescript">import { createBrowser, createPage, scrapeProfile, scrapeFollowers } from &#39;xactions&#39;;
+import { scrapeFollowing, scrapeTweets, searchTweets } from &#39;xactions/scrapers&#39;;
+</code></pre>
+<p><strong>Core Functions:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Description</th>
+<th>Returns</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>createBrowser(options?)</code></td>
+<td>Launch Puppeteer browser</td>
+<td><code>Browser</code></td>
+</tr>
+<tr>
+<td><code>createPage(browser)</code></td>
+<td>Create stealth page</td>
+<td><code>Page</code></td>
+</tr>
+<tr>
+<td><code>scrapeProfile(page, username)</code></td>
+<td>Get user profile data</td>
+<td><code>Profile</code></td>
+</tr>
+<tr>
+<td><code>scrapeFollowers(page, username, options?)</code></td>
+<td>List followers</td>
+<td><code>User[]</code></td>
+</tr>
+<tr>
+<td><code>scrapeFollowing(page, username, options?)</code></td>
+<td>List following</td>
+<td><code>User[]</code></td>
+</tr>
+<tr>
+<td><code>scrapeTweets(page, username, options?)</code></td>
+<td>Get user tweets</td>
+<td><code>Tweet[]</code></td>
+</tr>
+<tr>
+<td><code>searchTweets(page, query, options?)</code></td>
+<td>Search tweets</td>
+<td><code>Tweet[]</code></td>
+</tr>
+<tr>
+<td><code>downloadVideo(page, tweetUrl)</code></td>
+<td>Extract video URLs</td>
+<td><code>VideoResult</code></td>
+</tr>
+<tr>
+<td><code>exportBookmarks(page, options?)</code></td>
+<td>Export bookmarks</td>
+<td><code>Bookmark[]</code></td>
+</tr>
+<tr>
+<td><code>unrollThread(page, tweetUrl)</code></td>
+<td>Unroll a thread</td>
+<td><code>Thread</code></td>
+</tr>
+</tbody></table>
+<p>See <a href="docs/api-reference.md">docs/api-reference.md</a> for the complete reference with all parameters and return types.</p>
+<hr>
+<h2>📝 Claude Tutorials</h2>
+<p><strong>22 ready-to-paste prompt files</strong> that turn Claude into your personal X automation expert.</p>
+<table>
+<thead>
+<tr>
+<th>Tutorial</th>
+<th>What You&#39;ll Learn</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="tutorials/claude-prompts/01-mcp-setup-and-first-commands.md">MCP Setup</a></td>
+<td>Install and connect XActions to Claude Desktop</td>
+</tr>
+<tr>
+<td><a href="tutorials/claude-prompts/02-unfollow-non-followers-cleanup.md">Unfollow Cleanup</a></td>
+<td>Remove non-followers, detect unfollowers</td>
+</tr>
+<tr>
+<td><a href="tutorials/claude-prompts/03-growth-automation-suite.md">Growth Suite</a></td>
+<td>Auto-follow, auto-like, keyword targeting</td>
+</tr>
+<tr>
+<td><a href="tutorials/claude-prompts/04-scraping-research-analysis.md">Scraping</a></td>
+<td>Extract profiles, tweets, hashtags</td>
+</tr>
+<tr>
+<td><a href="tutorials/claude-prompts/05-content-posting-threads-scheduling.md">Content Posting</a></td>
+<td>Tweets, threads, polls, scheduling</td>
+</tr>
+<tr>
+<td><a href="tutorials/claude-prompts/06-analytics-competitor-intelligence.md">Analytics</a></td>
+<td>Performance tracking, competitor analysis</td>
+</tr>
+<tr>
+<td><a href="tutorials/claude-prompts/22-advanced-power-user-playbook.md">Power User Playbook</a></td>
+<td>10 advanced multi-feature strategies</td>
+</tr>
+</tbody></table>
+<p><strong><a href="tutorials/claude-prompts/README.md">See all 22 tutorials →</a></strong></p>
+<hr>
+<h2>⚠️ Disclaimer</h2>
+<blockquote>
+<p><strong>Educational Material Only</strong></p>
+<p>This project is provided for <strong>educational and research purposes only</strong>. The scripts and tools have not been extensively tested on personal accounts. </p>
+<ul>
+<li>Use at your own risk</li>
+<li>We are not responsible for any account restrictions or bans</li>
+<li>Always comply with X/Twitter&#39;s Terms of Service</li>
+<li>Start with small batches and test carefully</li>
+</ul>
+<p><strong>For X/Twitter:</strong> If you have concerns about this project or would like us to modify or remove any functionality, please contact <a href="https://x.com/nichxbt">@nichxbt</a> directly. We&#39;re happy to work with you.</p>
+<p><strong>Acknowledgment:</strong> This project was inspired by the innovation happening at X and xAI. We admire Elon Musk&#39;s vision for making X the everything app and Grok&#39;s approach to AI. XActions aims to help developers and researchers explore the platform&#39;s capabilities while respecting its ecosystem.</p>
+</blockquote>
+<hr>
+<h2>📦 Installation</h2>
+<h3>npm (Recommended for developers)</h3>
+<pre><code class="language-bash">npm install xactions
+</code></pre>
+<h3>CLI (Global install)</h3>
+<pre><code class="language-bash">npm install -g xactions
+xactions --help
+</code></pre>
+<h3>No Install (Browser console)</h3>
+<p>Just copy-paste scripts directly into your browser console on x.com!</p>
+<hr>
+<h2>🚀 Quick Start Examples</h2>
+<h3>Example 1: Unfollow Non-Followers (30 seconds)</h3>
+<p><strong>Browser Console</strong> — <em>No install required!</em></p>
+<pre><code class="language-javascript">// Go to: x.com/YOUR_USERNAME/following
+// Press F12 → Console → Paste this:
+
+(() =&gt; {
+  const sleep = (s) =&gt; new Promise(r =&gt; setTimeout(r, s * 1000));
+  const run = async () =&gt; {
+    const buttons = [...document.querySelectorAll(&#39;[data-testid$=&quot;-unfollow&quot;]&#39;)]
+      .filter(b =&gt; !b.closest(&#39;[data-testid=&quot;UserCell&quot;]&#39;)
+        ?.querySelector(&#39;[data-testid=&quot;userFollowIndicator&quot;]&#39;));
+    
+    for (const btn of buttons) {
+      btn.click();
+      await sleep(1);
+      document.querySelector(&#39;[data-testid=&quot;confirmationSheetConfirm&quot;]&#39;)?.click();
+      await sleep(2);
+    }
+    window.scrollTo(0, document.body.scrollHeight);
+    await sleep(2);
+    if (document.querySelectorAll(&#39;[data-testid$=&quot;-unfollow&quot;]&#39;).length) run();
+    else console.log(&#39;✅ Done! Reload page to continue.&#39;);
+  };
+  run();
+})();
+</code></pre>
+<p><strong>CLI:</strong></p>
+<pre><code class="language-bash">xactions login
+xactions non-followers YOUR_USERNAME --output non-followers.json
+</code></pre>
+<p><strong>Node.js:</strong></p>
+<pre><code class="language-javascript">import { createBrowser, createPage, scrapeFollowing } from &#39;xactions&#39;;
+
+const browser = await createBrowser();
+const page = await createPage(browser);
+const following = await scrapeFollowing(page, &#39;your_username&#39;, { limit: 500 });
+const nonFollowers = following.filter(u =&gt; !u.followsBack);
+console.log(`Found ${nonFollowers.length} non-followers`);
+await browser.close();
+</code></pre>
+<blockquote>
+<p>💡 <strong>Don&#39;t want to code?</strong> Use <a href="https://xactions.app">xactions.app</a> — just login and click!</p>
+</blockquote>
+<hr>
+<h3>Example 2: Scrape Any Profile</h3>
+<p><strong>Browser Console:</strong></p>
+<pre><code class="language-javascript">// Go to any profile on x.com, then run:
+
+(() =&gt; {
+  const profile = {
+    name: document.querySelector(&#39;[data-testid=&quot;UserName&quot;]&#39;)?.textContent?.split(&#39;@&#39;)[0]?.trim(),
+    username: location.pathname.slice(1),
+    bio: document.querySelector(&#39;[data-testid=&quot;UserDescription&quot;]&#39;)?.textContent,
+    followers: document.querySelector(&#39;a[href$=&quot;/followers&quot;] span&#39;)?.textContent,
+    following: document.querySelector(&#39;a[href$=&quot;/following&quot;] span&#39;)?.textContent,
+  };
+  console.log(profile);
+  copy(JSON.stringify(profile, null, 2)); // Copies to clipboard!
+})();
+</code></pre>
+<p><strong>CLI:</strong></p>
+<pre><code class="language-bash">xactions profile elonmusk --json
+</code></pre>
+<p><strong>Node.js:</strong></p>
+<pre><code class="language-javascript">import { createBrowser, createPage, scrapeProfile } from &#39;xactions&#39;;
+
+const browser = await createBrowser();
+const page = await createPage(browser);
+const profile = await scrapeProfile(page, &#39;elonmusk&#39;);
+console.log(profile);
+// { name: &#39;Elon Musk&#39;, followers: &#39;200M&#39;, bio: &#39;...&#39;, ... }
+await browser.close();
+</code></pre>
+<hr>
+<h3>Example 3: Search &amp; Scrape Tweets</h3>
+<p><strong>Browser Console:</strong></p>
+<pre><code class="language-javascript">// Go to: x.com/search?q=YOUR_KEYWORD&amp;f=live
+
+(() =&gt; {
+  const tweets = [...document.querySelectorAll(&#39;article[data-testid=&quot;tweet&quot;]&#39;)]
+    .map(article =&gt; ({
+      text: article.querySelector(&#39;[data-testid=&quot;tweetText&quot;]&#39;)?.textContent,
+      author: article.querySelector(&#39;[data-testid=&quot;User-Name&quot;] a&#39;)?.href?.split(&#39;/&#39;)[3],
+      time: article.querySelector(&#39;time&#39;)?.getAttribute(&#39;datetime&#39;),
+    }));
+  console.table(tweets);
+  copy(JSON.stringify(tweets, null, 2));
+})();
+</code></pre>
+<p><strong>CLI:</strong></p>
+<pre><code class="language-bash">xactions search &quot;AI startup&quot; --limit 100 --output ai-tweets.json
+</code></pre>
+<p><strong>Node.js:</strong></p>
+<pre><code class="language-javascript">import { createBrowser, createPage, searchTweets } from &#39;xactions&#39;;
+
+const browser = await createBrowser();
+const page = await createPage(browser);
+const tweets = await searchTweets(page, &#39;AI startup&#39;, { limit: 100 });
+console.log(`Found ${tweets.length} tweets`);
+await browser.close();
+</code></pre>
+<hr>
+<h3>Example 4: Detect Who Unfollowed You</h3>
+<p><strong>Browser Console:</strong></p>
+<pre><code class="language-javascript">// Go to: x.com/YOUR_USERNAME/followers
+
+(() =&gt; {
+  const KEY = &#39;xactions_followers&#39;;
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+  
+  const scrape = async () =&gt; {
+    const users = new Set();
+    let retries = 0;
+    while (retries &lt; 5) {
+      document.querySelectorAll(&#39;[data-testid=&quot;UserCell&quot;] a&#39;)
+        .forEach(a =&gt; users.add(a.href.split(&#39;/&#39;)[3]?.toLowerCase()));
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(1500);
+      retries++;
+    }
+    return [...users].filter(Boolean);
+  };
+
+  scrape().then(current =&gt; {
+    const saved = localStorage.getItem(KEY);
+    if (saved) {
+      const old = JSON.parse(saved);
+      const gone = old.filter(u =&gt; !current.includes(u));
+      console.log(&#39;🚨 Unfollowed you:&#39;, gone);
+    }
+    localStorage.setItem(KEY, JSON.stringify(current));
+    console.log(`💾 Saved ${current.length} followers`);
+  });
+})();
+</code></pre>
+<p><strong>CLI:</strong></p>
+<pre><code class="language-bash"># First run saves snapshot
+xactions followers YOUR_USERNAME --output snapshot1.json
+
+# Later, compare
+xactions followers YOUR_USERNAME --output snapshot2.json
+# Use diff tools to compare
+</code></pre>
+<hr>
+<h3>Example 5: Auto-Like Posts by Keyword</h3>
+<p><strong>Browser Console:</strong></p>
+<pre><code class="language-javascript">// Go to: x.com/search?q=YOUR_KEYWORD&amp;f=live
+
+(async () =&gt; {
+  const sleep = (s) =&gt; new Promise(r =&gt; setTimeout(r, s * 1000));
+  const liked = new Set();
+  
+  while (liked.size &lt; 20) { // Like 20 posts
+    const buttons = [...document.querySelectorAll(&#39;[data-testid=&quot;like&quot;]&#39;)]
+      .filter(b =&gt; !liked.has(b));
+    
+    for (const btn of buttons.slice(0, 3)) {
+      btn.click();
+      liked.add(btn);
+      console.log(`❤️ Liked ${liked.size} posts`);
+      await sleep(3 + Math.random() * 2); // Random delay
+    }
+    window.scrollTo(0, document.body.scrollHeight);
+    await sleep(2);
+  }
+  console.log(&#39;✅ Done!&#39;);
+})();
+</code></pre>
+<blockquote>
+<p>⚠️ <strong>Go slow!</strong> Twitter may rate-limit you. The website version handles this automatically.</p>
+</blockquote>
+<hr>
+<h3>Example 6: Leave All Communities</h3>
+<p><strong>Browser Console:</strong></p>
+<pre><code class="language-javascript">// Go to: x.com/YOUR_USERNAME/communities
+
+(() =&gt; {
+  const $communityLinks = &#39;a[href^=&quot;/i/communities/&quot;]&#39;;
+  const $joinedButton = &#39;button[aria-label^=&quot;Joined&quot;]&#39;;
+  const $confirmButton = &#39;[data-testid=&quot;confirmationSheetConfirm&quot;]&#39;;
+  const $communitiesNav = &#39;a[aria-label=&quot;Communities&quot;]&#39;;
+
+  const getLeftCommunities = () =&gt; {
+    try { return JSON.parse(sessionStorage.getItem(&#39;xactions_left_ids&#39;) || &#39;[]&#39;); }
+    catch { return []; }
+  };
+  const markAsLeft = (id) =&gt; {
+    const left = getLeftCommunities();
+    if (!left.includes(id)) {
+      left.push(id);
+      sessionStorage.setItem(&#39;xactions_left_ids&#39;, JSON.stringify(left));
+    }
+  };
+
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+  const getCommunityId = () =&gt; {
+    const leftAlready = getLeftCommunities();
+    for (const link of document.querySelectorAll($communityLinks)) {
+      const match = link.href.match(/\/i\/communities\/(\d+)/);
+      if (match &amp;&amp; !leftAlready.includes(match[1])) return { id: match[1], element: link };
+    }
+    return null;
+  };
+
+  const run = async () =&gt; {
+    console.log(`🚀 Left so far: ${getLeftCommunities().length}`);
+    await sleep(1500);
+    const joinedBtn = document.querySelector($joinedButton);
+    if (joinedBtn) {
+      const urlMatch = window.location.href.match(/\/i\/communities\/(\d+)/);
+      const currentId = urlMatch ? urlMatch[1] : null;
+      joinedBtn.click();
+      await sleep(1000);
+      const confirmBtn = document.querySelector($confirmButton);
+      if (confirmBtn) { confirmBtn.click(); if (currentId) markAsLeft(currentId); await sleep(1500); }
+      const communitiesLink = document.querySelector($communitiesNav);
+      if (communitiesLink) { communitiesLink.click(); await sleep(2500); return run(); }
+    }
+    const community = getCommunityId();
+    if (community) { community.element.click(); await sleep(2500); return run(); }
+    else { console.log(`🎉 DONE! Left ${getLeftCommunities().length} communities`); sessionStorage.removeItem(&#39;xactions_left_ids&#39;); }
+  };
+  run();
+})();
+</code></pre>
+<blockquote>
+<p>📖 Full documentation: <a href="docs/examples/leave-all-communities.md">docs/examples/leave-all-communities.md</a></p>
+</blockquote>
+<hr>
+<h2>📋 Complete Feature List</h2>
+<h3>Feature Availability Matrix</h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th align="center">Console Script</th>
+<th align="center">CLI</th>
+<th align="center">Node.js</th>
+<th align="center">Website</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>SCRAPING</strong></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td>Scrape Profile</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+</tr>
+<tr>
+<td>Scrape Followers</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+</tr>
+<tr>
+<td>Scrape Following</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+</tr>
+<tr>
+<td>Scrape Tweets</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+</tr>
+<tr>
+<td>Search Tweets</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+</tr>
+<tr>
+<td>Scrape Thread</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+</tr>
+<tr>
+<td>Scrape Hashtag</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+</tr>
+<tr>
+<td>Scrape Media</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+</tr>
+<tr>
+<td>Scrape List Members</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+</tr>
+<tr>
+<td>Scrape Likes</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+</tr>
+<tr>
+<td><strong>UNFOLLOW</strong></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td>Unfollow Non-Followers</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+</tr>
+<tr>
+<td>Unfollow Everyone</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+</tr>
+<tr>
+<td>Smart Unfollow (after X days)</td>
+<td align="center">⚠️</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+</tr>
+<tr>
+<td>Unfollow with Logging</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+</tr>
+<tr>
+<td><strong>FOLLOW</strong></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td>Follow User</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+</tr>
+<tr>
+<td>Keyword Follow</td>
+<td align="center">⚠️</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+</tr>
+<tr>
+<td>Follow Engagers</td>
+<td align="center">⚠️</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+</tr>
+<tr>
+<td>Follow Target&#39;s Followers</td>
+<td align="center">⚠️</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+</tr>
+<tr>
+<td><strong>ENGAGEMENT</strong></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td>Like Tweet</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+</tr>
+<tr>
+<td>Retweet</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+</tr>
+<tr>
+<td>Auto-Liker</td>
+<td align="center">⚠️</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+</tr>
+<tr>
+<td>Auto-Commenter</td>
+<td align="center">⚠️</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+</tr>
+<tr>
+<td>Post Tweet</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+</tr>
+<tr>
+<td><strong>MONITORING</strong></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td>Detect Unfollowers</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+</tr>
+<tr>
+<td>New Follower Alerts</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+</tr>
+<tr>
+<td>Monitor Any Account</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+</tr>
+<tr>
+<td>Continuous Monitoring</td>
+<td align="center">⚠️</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+</tr>
+<tr>
+<td><strong>COMMUNITIES</strong></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td>Leave All Communities</td>
+<td align="center">✅</td>
+<td align="center">⚠️</td>
+<td align="center">⚠️</td>
+<td align="center">⚠️</td>
+</tr>
+<tr>
+<td><strong>ADVANCED</strong></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td>Multi-Account</td>
+<td align="center">❌</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅ Pro</td>
+</tr>
+<tr>
+<td>Link Scraper</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+</tr>
+<tr>
+<td>Growth Suite</td>
+<td align="center">❌</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅ Pro</td>
+</tr>
+<tr>
+<td>Customer Service Bot</td>
+<td align="center">❌</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅ Pro</td>
+</tr>
+<tr>
+<td>MCP Server (AI Agents)</td>
+<td align="center">❌</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">❌</td>
+</tr>
+<tr>
+<td>Export to CSV/JSON</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+</tr>
+</tbody></table>
+<p><strong>Legend:</strong> ✅ Full Support | ⚠️ Basic/Manual | ❌ Not Available</p>
+<hr>
+<h2>🤖 MCP Server (AI Agents)</h2>
+<p>XActions includes the most comprehensive free MCP server for X/Twitter. Works with <strong>Claude, Cursor, Windsurf, VS Code</strong>, and any MCP client.</p>
+<h3>Quick Setup (30 seconds)</h3>
+<p>Add to your Claude Desktop config (<code>claude_desktop_config.json</code>):</p>
+<pre><code class="language-json">{
+  &quot;mcpServers&quot;: {
+    &quot;xactions&quot;: {
+      &quot;command&quot;: &quot;npx&quot;,
+      &quot;args&quot;: [&quot;-y&quot;, &quot;xactions-mcp&quot;],
+      &quot;env&quot;: {
+        &quot;XACTIONS_SESSION_COOKIE&quot;: &quot;your_auth_token_here&quot;
+      }
+    }
+  }
+}
+</code></pre>
+<blockquote>
+<p><strong>Get your auth_token</strong>: x.com → DevTools (F12) → Application → Cookies → copy <code>auth_token</code> value</p>
+</blockquote>
+<p>Or auto-generate the config:</p>
+<pre><code class="language-bash">npx xactions mcp-config --client claude
+npx xactions mcp-config --client cursor
+npx xactions mcp-config --client windsurf
+</code></pre>
+<h3>Available MCP Tools (50+)</h3>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Tools</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Scraping</strong></td>
+<td><code>x_get_profile</code>, <code>x_get_followers</code>, <code>x_get_following</code>, <code>x_get_tweets</code>, <code>x_search_tweets</code>, <code>x_get_thread</code>, <code>x_download_video</code></td>
+</tr>
+<tr>
+<td><strong>Analysis</strong></td>
+<td><code>x_detect_unfollowers</code>, <code>x_analyze_sentiment</code>, <code>x_best_time_to_post</code>, <code>x_competitor_analysis</code>, <code>x_brand_monitor</code></td>
+</tr>
+<tr>
+<td><strong>Actions</strong></td>
+<td><code>x_follow</code>, <code>x_unfollow</code>, <code>x_like</code>, <code>x_post_tweet</code>, <code>x_post_thread</code>, <code>x_reply</code>, <code>x_retweet</code></td>
+</tr>
+<tr>
+<td><strong>AI</strong></td>
+<td><code>x_analyze_voice</code>, <code>x_generate_tweet</code>, <code>x_summarize_thread</code></td>
+</tr>
+</tbody></table>
+<h3>Example Prompts</h3>
+<blockquote>
+<p><strong>&quot;Analyze @paulg&#39;s writing style and generate 3 tweet ideas about startups in his voice&quot;</strong><br>→ Scrapes tweets → analyzes voice → generates content with AI</p>
+</blockquote>
+<blockquote>
+<p><strong>&quot;Find everyone I follow who doesn&#39;t follow me back, sorted by follower count&quot;</strong><br>→ Uses x_get_following + x_get_followers → computes diff → formats results</p>
+</blockquote>
+<blockquote>
+<p><strong>&quot;Compare the engagement metrics of @openai, @anthropic, and @google&quot;</strong><br>→ Scrapes profiles + recent tweets → computes avg engagement → presents comparison</p>
+</blockquote>
+<p>📖 <strong>Full setup guide</strong>: <a href="docs/mcp-setup.md">docs/mcp-setup.md</a></p>
+<hr>
+<h2>💻 CLI Reference</h2>
+<pre><code class="language-bash"># Authentication
+xactions login              # Set up session cookie
+xactions logout             # Remove saved auth
+
+# Profile
+xactions profile &lt;user&gt;     # Get profile info
+xactions profile elonmusk --json
+
+# Scraping
+xactions followers &lt;user&gt; [--limit 100] [--output file.json]
+xactions following &lt;user&gt; [--limit 100] [--output file.csv]
+xactions tweets &lt;user&gt; [--limit 50] [--replies]
+xactions search &lt;query&gt; [--filter latest|top] [--limit 50]
+xactions hashtag &lt;tag&gt; [--limit 50]
+xactions thread &lt;url&gt;
+xactions media &lt;user&gt; [--limit 50]
+
+# Analysis
+xactions non-followers &lt;user&gt; [--limit 500]
+
+# MCP
+xactions mcp-config              # Generate MCP config for Claude Desktop
+xactions mcp-config --client cursor --write  # Write config for Cursor
+
+# Info
+xactions info              # Show version and links
+xactions --help            # Full help
+</code></pre>
+<hr>
+<h2>📚 Node.js API</h2>
+<h3>Quick Start</h3>
+<pre><code class="language-javascript">import { 
+  createBrowser, 
+  createPage, 
+  loginWithCookie,
+  scrapeProfile,
+  scrapeFollowers,
+  scrapeFollowing,
+  scrapeTweets,
+  searchTweets,
+  exportToJSON,
+  exportToCSV 
+} from &#39;xactions&#39;;
+
+// Initialize
+const browser = await createBrowser({ headless: true });
+const page = await createPage(browser);
+
+// Optional: Login for private data
+await loginWithCookie(page, &#39;your_auth_token_cookie&#39;);
+
+// Scrape profile
+const profile = await scrapeProfile(page, &#39;elonmusk&#39;);
+
+// Scrape followers with progress
+const followers = await scrapeFollowers(page, &#39;elonmusk&#39;, {
+  limit: 1000,
+  onProgress: ({ scraped, limit }) =&gt; console.log(`${scraped}/${limit}`)
+});
+
+// Export data
+await exportToJSON(followers, &#39;followers.json&#39;);
+await exportToCSV(followers, &#39;followers.csv&#39;);
+
+await browser.close();
+</code></pre>
+<h3>All Scraper Functions</h3>
+<pre><code class="language-javascript">// Profile
+scrapeProfile(page, username)
+
+// Followers &amp; Following
+scrapeFollowers(page, username, { limit, onProgress })
+scrapeFollowing(page, username, { limit, onProgress })
+
+// Tweets
+scrapeTweets(page, username, { limit, includeReplies, onProgress })
+searchTweets(page, query, { limit, filter: &#39;latest&#39;|&#39;top&#39; })
+scrapeThread(page, tweetUrl)
+scrapeHashtag(page, hashtag, { limit, filter })
+
+// Media
+scrapeMedia(page, username, { limit })
+scrapeLikes(page, tweetUrl, { limit })
+
+// Lists
+scrapeListMembers(page, listUrl, { limit })
+
+// Export
+exportToJSON(data, filename)
+exportToCSV(data, filename)
+</code></pre>
+<hr>
+<h2>🌐 Don&#39;t Want to Code?</h2>
+<p><strong>Visit <a href="https://xactions.app">xactions.app</a></strong> for a no-code solution:</p>
+<ol>
+<li>Use browser scripts (drag to bookmarks bar)</li>
+<li>Copy-paste console scripts on x.com</li>
+<li>View tutorials and documentation</li>
+</ol>
+<p><strong>100% Free.</strong> No API keys, no payments, no limits.</p>
+<hr>
+<h2>🔒 Safety &amp; Best Practices</h2>
+<h3>Rate Limiting</h3>
+<p>XActions includes built-in delays to avoid rate limits:</p>
+<ul>
+<li>1-3 second delay between actions</li>
+<li>Human-like scrolling patterns</li>
+<li>Automatic pause on rate limit detection</li>
+</ul>
+<h3>Getting Your Auth Token</h3>
+<ol>
+<li>Go to x.com and log in</li>
+<li>Open DevTools (F12) → Application → Cookies</li>
+<li>Find <code>auth_token</code> and copy the value</li>
+</ol>
+<h3>Avoid Bans</h3>
+<ul>
+<li>✅ Use reasonable delays (2-5 seconds)</li>
+<li>✅ Don&#39;t run 24/7</li>
+<li>✅ Mix automated with manual activity</li>
+<li>❌ Don&#39;t mass-follow thousands per day</li>
+<li>❌ Don&#39;t spam comments</li>
+</ul>
+<hr>
+<h2>📁 Project Structure</h2>
+<pre><code>xactions/
+├── src/
+│   ├── index.js          # Main entry point
+│   ├── scrapers/         # All scraper functions
+│   │   └── index.js      # Scraper exports
+│   ├── cli/              # Command-line interface
+│   │   └── index.js      # CLI commands
+│   ├── mcp/              # MCP server for AI agents
+│   │   └── server.js     # MCP implementation
+│   └── automation/       # Advanced automation
+│       ├── autoLiker.js
+│       ├── autoCommenter.js
+│       ├── keywordFollow.js
+│       └── ...
+├── docs/                 # Documentation
+├── examples/             # Code examples
+├── dashboard/            # Web UI
+└── api/                  # Backend API
+</code></pre>
+<hr>
+<h2>🤝 Contributing</h2>
+<p>Contributions welcome! See <a href="CONTRIBUTING.md">CONTRIBUTING.md</a>.</p>
+<pre><code class="language-bash"># Clone
+git clone https://github.com/nirholas/xactions.git
+cd xactions
+
+# Install
+npm install
+
+# Run CLI locally
+npm run cli -- profile elonmusk
+
+# Run MCP server
+npm run mcp
+</code></pre>
+<hr>
+<h2>📄 License</h2>
+<p>MIT License - see <a href="LICENSE">LICENSE</a></p>
+<p>Commercial use allowed. Attribution appreciated but not required.</p>
+<hr>
+<h2>👤 Author</h2>
+<p><strong>nich</strong> (<a href="https://x.com/nichxbt">@nichxbt</a>)</p>
+<ul>
+<li>GitHub: <a href="https://github.com/nirholas">github.com/nirholas</a></li>
+<li>Twitter: <a href="https://x.com/nichxbt">@nichxbt</a></li>
+<li>Website: <a href="https://xactions.app">xactions.app</a></li>
+</ul>
+<hr>
+<hr>
+<h2>⚠️ Legal Notice</h2>
+<p>This software is provided &quot;as is&quot; for educational purposes. Not affiliated with X Corp. Use responsibly and in compliance with X/Twitter Terms of Service. Contact <a href="https://x.com/nichxbt">@nichxbt</a> for any concerns.</p>
+<hr>
+<h2>⭐ Star History</h2>
+<p>If XActions saved you from paying $100/mo for Twitter&#39;s API, <strong>smash that star button</strong>. It&#39;s how open source grows.</p>
+<p><a href="https://star-history.com/#nirholas/xactions&Date"><img src="https://api.star-history.com/svg?repos=nirholas/xactions&type=Date" alt="Star History Chart"></a></p>
+<div align="center">
+
+<h3><a href="https://github.com/nirholas/xactions">⭐ Star this repo</a> &nbsp;·&nbsp; <a href="https://github.com/nirholas/xactions/issues">🐛 Report Bug</a> &nbsp;·&nbsp; <a href="https://github.com/nirholas/xactions/issues">💡 Request Feature</a></h3>
+</div>
+
+<hr>
+<h2>📚 Full Tutorial Library</h2>
+<p><strong>XActions is 100% free and open source.</strong> Visit <a href="https://xactions.app">xactions.app</a> for interactive tutorials.</p>
+<h3>🚀 One-Click Script Runner</h3>
+<p><strong>NEW!</strong> Run scripts without any coding knowledge:</p>
+<ol>
+<li>Visit <a href="https://xactions.app/run.html">xactions.app/run.html</a></li>
+<li>Drag any blue button to your bookmarks bar</li>
+<li>Go to x.com and click the bookmarklet</li>
+</ol>
+<p>No console, no code, no setup!</p>
+<h3>Quick Links by Category</h3>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Scripts</th>
+<th>Tutorial</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Unfollow</strong></td>
+<td>Unfollow Everyone, Non-Followers, Smart Unfollow</td>
+<td><a href="https://xactions.app/tutorials/unfollow">Tutorial</a></td>
+</tr>
+<tr>
+<td><strong>Automation</strong></td>
+<td>Auto-Liker, Auto-Commenter, Follow Engagers</td>
+<td><a href="https://xactions.app/tutorials/automation">Tutorial</a></td>
+</tr>
+<tr>
+<td><strong>Scraping</strong></td>
+<td>Video Download, Followers, Tweets, Hashtags</td>
+<td><a href="https://xactions.app/tutorials/scrapers">Tutorial</a></td>
+</tr>
+<tr>
+<td><strong>Monitoring</strong></td>
+<td>Detect Unfollowers, Track Accounts, Alerts</td>
+<td><a href="https://xactions.app/tutorials/monitoring">Tutorial</a></td>
+</tr>
+<tr>
+<td><strong>Communities</strong></td>
+<td>Leave All Communities</td>
+<td><a href="https://xactions.app/tutorials/communities">Tutorial</a></td>
+</tr>
+<tr>
+<td><strong>AI/MCP</strong></td>
+<td>Claude Desktop, GPT Integration</td>
+<td><a href="https://xactions.app/tutorials/mcp">Tutorial</a></td>
+</tr>
+</tbody></table>
+<h3>All Documentation</h3>
+<ul>
+<li><a href="docs/getting-started.md">Getting Started</a></li>
+<li><a href="docs/cli-reference.md">CLI Reference</a></li>
+<li><a href="docs/automation.md">Automation Guide</a></li>
+<li><a href="docs/monitoring.md">Monitoring Guide</a></li>
+</ul>
+<h3>Example Docs (Full Code)</h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Documentation</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Unfollow Everyone</td>
+<td><a href="docs/examples/unfollow-everyone.md">unfollow-everyone.md</a></td>
+</tr>
+<tr>
+<td>Unfollow Non-Followers</td>
+<td><a href="docs/examples/unfollow-non-followers.md">unfollow-non-followers.md</a></td>
+</tr>
+<tr>
+<td>Detect Unfollowers</td>
+<td><a href="docs/examples/detect-unfollowers.md">detect-unfollowers.md</a></td>
+</tr>
+<tr>
+<td>Auto-Liker</td>
+<td><a href="docs/examples/auto-liker.md">auto-liker.md</a></td>
+</tr>
+<tr>
+<td>Auto-Commenter</td>
+<td><a href="docs/examples/auto-commenter.md">auto-commenter.md</a></td>
+</tr>
+<tr>
+<td>Follow Engagers</td>
+<td><a href="docs/examples/follow-engagers.md">follow-engagers.md</a></td>
+</tr>
+<tr>
+<td>Video Downloader</td>
+<td><a href="docs/examples/video-downloader.md">video-downloader.md</a></td>
+</tr>
+<tr>
+<td>Followers Scraping</td>
+<td><a href="docs/examples/followers-scraping.md">followers-scraping.md</a></td>
+</tr>
+<tr>
+<td>Tweet Scraping</td>
+<td><a href="docs/examples/tweet-scraping.md">tweet-scraping.md</a></td>
+</tr>
+<tr>
+<td>Leave Communities</td>
+<td><a href="docs/examples/leave-all-communities.md">leave-all-communities.md</a></td>
+</tr>
+<tr>
+<td>MCP Server</td>
+<td><a href="docs/examples/mcp-server.md">mcp-server.md</a></td>
+</tr>
+<tr>
+<td>Monitor Account</td>
+<td><a href="docs/examples/monitor-account.md">monitor-account.md</a></td>
+</tr>
+<tr>
+<td>New Follower Alerts</td>
+<td><a href="docs/examples/new-follower-alerts.md">new-follower-alerts.md</a></td>
+</tr>
+</tbody></table>
+<hr>
+<p align="center">
+  <b>⚡ XActions</b> — The Complete X/Twitter Automation Toolkit<br>
+  <b>100% Free & Open Source</b><br>
+  <a href="https://xactions.app">xactions.app</a> • 
+  <a href="https://github.com/nirholas/xactions">GitHub</a> • 
+  <a href="https://x.com/nichxbt">@nichxbt</a>
+</p>
+
+<hr>
+<h2>🌐 Live HTTP Deployment</h2>
+<p><strong>XActions</strong> is deployed and accessible over HTTP via <a href="https://modelcontextprotocol.io/specification/2025-03-26/basic/transports#streamable-http">MCP Streamable HTTP</a> transport — no local installation required.</p>
+<p><strong>Endpoint:</strong></p>
+<pre><code>https://modelcontextprotocol.name/mcp/xactions
+</code></pre>
+<h3>Connect from any MCP Client</h3>
+<p>Add to your MCP client configuration (Claude Desktop, Cursor, SperaxOS, etc.):</p>
+<pre><code class="language-json">{
+  &quot;mcpServers&quot;: {
+    &quot;xactions&quot;: {
+      &quot;type&quot;: &quot;http&quot;,
+      &quot;url&quot;: &quot;https://modelcontextprotocol.name/mcp/xactions&quot;
+    }
+  }
+}
+</code></pre>
+<h3>Available Tools (3)</h3>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>search_twitter_users</code></td>
+<td>Search X/Twitter profiles</td>
+</tr>
+<tr>
+<td><code>get_twitter_trends</code></td>
+<td>Trending topics</td>
+</tr>
+<tr>
+<td><code>analyze_social_sentiment</code></td>
+<td>Social sentiment analysis</td>
+</tr>
+</tbody></table>
+<h3>Example Requests</h3>
+<p><strong>Search X/Twitter profiles:</strong></p>
+<pre><code class="language-bash">curl -X POST https://modelcontextprotocol.name/mcp/xactions \
+  -H &quot;Content-Type: application/json&quot; \
+  -d &#39;{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;id&quot;:1,&quot;method&quot;:&quot;tools/call&quot;,&quot;params&quot;:{&quot;name&quot;:&quot;search_twitter_users&quot;,&quot;arguments&quot;:{&quot;query&quot;:&quot;crypto&quot;}}}&#39;
+</code></pre>
+<p><strong>Trending topics:</strong></p>
+<pre><code class="language-bash">curl -X POST https://modelcontextprotocol.name/mcp/xactions \
+  -H &quot;Content-Type: application/json&quot; \
+  -d &#39;{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;id&quot;:1,&quot;method&quot;:&quot;tools/call&quot;,&quot;params&quot;:{&quot;name&quot;:&quot;get_twitter_trends&quot;,&quot;arguments&quot;:{&quot;query&quot;:&quot;bitcoin&quot;}}}&#39;
+</code></pre>
+<p><strong>Social sentiment analysis:</strong></p>
+<pre><code class="language-bash">curl -X POST https://modelcontextprotocol.name/mcp/xactions \
+  -H &quot;Content-Type: application/json&quot; \
+  -d &#39;{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;id&quot;:1,&quot;method&quot;:&quot;tools/call&quot;,&quot;params&quot;:{&quot;name&quot;:&quot;analyze_social_sentiment&quot;,&quot;arguments&quot;:{&quot;topic&quot;:&quot;ethereum&quot;}}}&#39;
+</code></pre>
+<h3>List All Tools</h3>
+<pre><code class="language-bash">curl -X POST https://modelcontextprotocol.name/mcp/xactions \
+  -H &quot;Content-Type: application/json&quot; \
+  -d &#39;{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;id&quot;:1,&quot;method&quot;:&quot;tools/list&quot;}&#39;
+</code></pre>
+<h3>Also Available On</h3>
+<ul>
+<li><strong>All 27 MCP servers</strong> — See the full catalog at <a href="https://modelcontextprotocol.name">modelcontextprotocol.name</a></li>
+</ul>
+<blockquote>
+<p>Powered by <a href="https://modelcontextprotocol.name">modelcontextprotocol.name</a> — the open MCP HTTP gateway</p>
+</blockquote>
+<blockquote>
+<p><strong>If you find this useful, please consider giving it a ⭐ — it helps others discover the project!</strong></p>
+</blockquote>
+
+
+        <div class="cta-box">
+          <h3>⚡ Explore XActions</h3>
+          <p>100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/docs">Browse All Documentation</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 In This Section</h3>
+                <a href="/docs/project/contributing">📄 Contributing to XActions ⚡</a>
+        <a href="/docs/project/changelog">📄 Changelog</a>
+        <a href="/docs/project/roadmap">📄 XActions Roadmap</a>
+        <a href="/docs/project/security">📄 Security Policy</a>
+        <a href="/docs/project/code_of_conduct">📄 Contributor Covenant Code of Conduct</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/docs">All Documentation</a>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

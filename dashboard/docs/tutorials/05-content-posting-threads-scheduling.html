@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tutorial: Content Posting, Threads, Polls &amp; Scheduling with Claude | XActions</title>
+  <meta name="description" content="You are my X/Twitter content manager and ghostwriter. I want to use XActions to compose, schedule, and publish content — including tweets, threads, polls, and e">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, open source, content, posting, threads, scheduling, tutorial:, posting,, threads,, polls, claude, claude tutorials">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Tutorial: Content Posting, Threads, Polls &amp; Scheduling with Claude — XActions">
+  <meta property="og:description" content="You are my X/Twitter content manager and ghostwriter. I want to use XActions to compose, schedule, and publish content — including tweets, threads, polls, and e">
+  <meta property="og:url" content="https://xactions.app/docs/tutorials/05-content-posting-threads-scheduling">
+  <meta property="og:site_name" content="XActions">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Tutorial: Content Posting, Threads, Polls &amp; Scheduling with Claude — XActions">
+  <meta name="twitter:description" content="You are my X/Twitter content manager and ghostwriter. I want to use XActions to compose, schedule, and publish content — including tweets, threads, polls, and e">
+
+  <link rel="canonical" href="https://xactions.app/docs/tutorials/05-content-posting-threads-scheduling">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Tutorial: Content Posting, Threads, Polls & Scheduling with Claude | XActions",
+    "description": "You are my X/Twitter content manager and ghostwriter. I want to use XActions to compose, schedule, and publish content — including tweets, threads, polls, and e",
+    "url": "https://xactions.app/docs/tutorials/05-content-posting-threads-scheduling",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-25",
+    "dateModified": "2026-02-25",
+    "mainEntityOfPage": "https://xactions.app/docs/tutorials/05-content-posting-threads-scheduling",
+    "articleSection": "Claude Tutorials",
+    "keywords": "xactions, twitter automation, x automation, free, open source, content, posting, threads, scheduling, tutorial:, posting,, threads,, polls, claude, claude tutorials"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Claude Tutorials", "item": "https://xactions.app/docs/tutorials" },
+      { "@type": "ListItem", "position": 4, "name": "Tutorial: Content Posting, Threads, Polls & Scheduling with Claude", "item": "https://xactions.app/docs/tutorials/05-content-posting-threads-scheduling" }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .article pre { font-size: 0.75rem; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <main class="main-content">
+      <header class="main-header">
+        <h1>🤖 Tutorial: Content Posting, Threads, Polls &amp; Scheduling with Claude</h1>
+        <div class="breadcrumb">
+          <a href="https://xactions.app">Home</a> › <a href="https://xactions.app/docs">Docs</a> › <a href="https://xactions.app/docs/tutorials">Claude Tutorials</a> › Tutorial: Content Posting, Threads, Polls &amp; Scheduling with Claude
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Claude Tutorials</span>
+        <h1>Tutorial: Content Posting, Threads, Polls &amp; Scheduling with Claude</h1>
+<p>You are my X/Twitter content manager and ghostwriter. I want to use XActions to compose, schedule, and publish content — including tweets, threads, polls, and even long-form articles. Help me build a content engine.</p>
+<h2>Context</h2>
+<p>I&#39;m using XActions (<a href="https://github.com/nirholas/XActions">https://github.com/nirholas/XActions</a>), an open-source X/Twitter toolkit. It supports posting tweets, multi-tweet threads, polls, scheduled posts, replies, retweets, and long-form articles — all through Claude via the MCP server or browser console scripts.</p>
+<h2>What I Need You To Do</h2>
+<h3>Part 1: Single Tweet Posting</h3>
+<p>Help me craft and post tweets using <code>x_post_tweet</code>:</p>
+<ol>
+<li><p><strong>Tweet composition</strong> — Help me write the tweet:</p>
+<ul>
+<li>280 character limit</li>
+<li>Hook in the first line (critical for engagement)</li>
+<li>Use of emojis (yes or no, depends on brand)</li>
+<li>Call-to-action at the end</li>
+</ul>
+</li>
+<li><p><strong>Post it:</strong></p>
+<pre><code>&quot;Post this tweet: [my tweet text]&quot;
+</code></pre>
+</li>
+<li><p><strong>Content templates</strong> — Give me 10 tweet templates for my niche:</p>
+<ul>
+<li><strong>Hot take:</strong> &quot;Unpopular opinion: [contrarian view]&quot;</li>
+<li><strong>Listicle:</strong> &quot;5 things I learned about [topic]:&quot;</li>
+<li><strong>Question:</strong> &quot;What&#39;s the biggest [challenge] you face with [topic]?&quot;</li>
+<li><strong>Behind the scenes:</strong> &quot;What building [project] actually looks like: [reality]&quot;</li>
+<li><strong>Story:</strong> &quot;Last year I [starting point]. Today I [achievement]. Here&#39;s what changed:&quot;</li>
+<li><strong>Resource share:</strong> &quot;Best [resource type] for [audience]: 🧵&quot;</li>
+<li><strong>Quote + insight:</strong> &#39;&quot;[quote]&quot; — This changed how I think about [topic]. Here&#39;s why:&quot;</li>
+<li><strong>Prediction:</strong> &quot;In 12 months, [bold prediction about industry]. Here&#39;s why:&quot;</li>
+<li><strong>Comparison:</strong> &quot;[Thing A] vs [Thing B] — which one actually works?&quot;</li>
+<li><strong>Personal lesson:</strong> &quot;I [failed/succeeded] at [thing]. The one lesson: [lesson]&quot;</li>
+</ul>
+</li>
+<li><p><strong>Engagement optimization:</strong></p>
+<ul>
+<li>Best posting times (use <code>x_get_analytics</code> to find when my audience is active)</li>
+<li>Hashtag recommendations</li>
+<li>When to use images vs text-only</li>
+</ul>
+</li>
+</ol>
+<h3>Part 2: Thread Posting</h3>
+<p>Help me plan and post threads using <code>x_post_thread</code>:</p>
+<ol>
+<li><p><strong>Thread structure</strong> — Help me outline a thread:</p>
+<ul>
+<li><strong>Tweet 1 (Hook):</strong> The hook that makes people stop scrolling. End with &quot;🧵&quot; or &quot;A thread:&quot;</li>
+<li><strong>Tweet 2-N (Body):</strong> Each tweet should stand alone but flow together. One idea per tweet.</li>
+<li><strong>Last tweet (CTA):</strong> Summarize + call to action (follow, retweet, comment)</li>
+</ul>
+</li>
+<li><p><strong>Post the thread:</strong></p>
+<pre><code>&quot;Post this thread: 
+Tweet 1: [hook]
+Tweet 2: [point 1]
+Tweet 3: [point 2]
+Tweet 4: [point 3]
+Tweet 5: [CTA]&quot;
+</code></pre>
+<p>The MCP tool <code>x_post_thread</code> takes an array of tweet texts:</p>
+<pre><code>tweets: [&quot;Hook tweet&quot;, &quot;Second tweet&quot;, &quot;Third tweet&quot;, &quot;Final CTA tweet&quot;]
+</code></pre>
+</li>
+<li><p><strong>Thread templates:</strong></p>
+<ul>
+<li><strong>How-to guide:</strong> Step-by-step tutorial in a thread</li>
+<li><strong>Story thread:</strong> Narrative arc (beginning, middle, end)</li>
+<li><strong>Listicle thread:</strong> &quot;10 tools every [role] needs&quot; — one per tweet</li>
+<li><strong>Case study:</strong> &quot;How [company] grew from X to Y&quot; with data points</li>
+<li><strong>Myth busting:</strong> &quot;5 myths about [topic] that are wrong:&quot; — debunk one per tweet</li>
+<li><strong>Resources thread:</strong> Curated list of best links/tools</li>
+</ul>
+</li>
+<li><p><strong>Thread length guidance:</strong></p>
+<ul>
+<li>5-7 tweets: Sweet spot for most topics</li>
+<li>10-15 tweets: For comprehensive guides</li>
+<li>20+: Only for truly epic content (rare, but can go mega-viral)</li>
+</ul>
+</li>
+</ol>
+<h3>Part 3: Creating Polls</h3>
+<p>Help me create engaging polls using <code>x_create_poll</code>:</p>
+<ol>
+<li><p><strong>Poll format:</strong></p>
+<pre><code>&quot;Create a poll:
+Question: What&#39;s your biggest challenge building in public?
+Options: Finding an audience, Staying consistent, Dealing with criticism, All of the above
+Duration: 24 hours&quot;
+</code></pre>
+<p>Tool parameters:</p>
+<ul>
+<li><code>question</code>: Poll question text</li>
+<li><code>options</code>: Array of 2-4 choices</li>
+<li><code>durationMinutes</code>: Duration (default 1440 = 24h)</li>
+</ul>
+</li>
+<li><p><strong>Poll strategy:</strong></p>
+<ul>
+<li>Polls get 2-3x more engagement than regular tweets</li>
+<li>Use them to understand your audience</li>
+<li>Always follow up with results commentary</li>
+<li>Controversial polls get more votes</li>
+</ul>
+</li>
+<li><p><strong>Poll templates:</strong></p>
+<ul>
+<li><strong>Opinion poll:</strong> &quot;Which [technology/approach] do you prefer?&quot;</li>
+<li><strong>Prediction poll:</strong> &quot;Will [thing] happen by [date]?&quot;</li>
+<li><strong>Community choice:</strong> &quot;What should I write about next?&quot;</li>
+<li><strong>This or That:</strong> &quot;[Option A] or [Option B]?&quot;</li>
+</ul>
+</li>
+</ol>
+<h3>Part 4: Scheduling Posts</h3>
+<p>Help me schedule tweets for optimal times using <code>x_schedule_post</code>:</p>
+<ol>
+<li><p><strong>Schedule a tweet:</strong></p>
+<pre><code>&quot;Schedule this tweet for tomorrow at 9 AM EST:
+[tweet text]&quot;
+</code></pre>
+<p>Tool parameters:</p>
+<ul>
+<li><code>text</code>: Tweet text</li>
+<li><code>scheduledAt</code>: ISO 8601 datetime (e.g., &quot;2026-02-25T14:00:00Z&quot;)</li>
+</ul>
+</li>
+<li><p><strong>Build a content calendar:</strong></p>
+<ul>
+<li>Help me plan a week&#39;s worth of content</li>
+<li>Spread posts across optimal time slots</li>
+<li>Mix content types: tweets, threads, polls, replies</li>
+<li>Example weekly schedule:<ul>
+<li>Monday: Motivational/story tweet (9 AM)</li>
+<li>Tuesday: Educational thread (12 PM)</li>
+<li>Wednesday: Poll + engagement tweets (10 AM)</li>
+<li>Thursday: Hot take or opinion (11 AM)</li>
+<li>Friday: Resource share or listicle thread (9 AM)</li>
+<li>Weekend: Casual/personal tweets</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>Batch scheduling</strong> — Help me write and schedule 7 days of content in one sitting</p>
+</li>
+</ol>
+<h3>Part 5: Replies &amp; Engagement</h3>
+<p>Help me engage strategically using <code>x_reply</code>:</p>
+<ol>
+<li><p><strong>Reply to tweets:</strong></p>
+<pre><code>&quot;Reply to this tweet [URL] with: Great insight! I&#39;d add that...&quot;
+</code></pre>
+</li>
+<li><p><strong>Strategic replying:</strong></p>
+<ul>
+<li>Reply to big accounts early (within 15 min of their post)</li>
+<li>Add value, don&#39;t just say &quot;great post!&quot;  </li>
+<li>Use replies to build relationships with people in your niche</li>
+<li>Reply threads: Start conversations that get engagement</li>
+</ul>
+</li>
+<li><p><strong>Auto-commenting setup</strong> (browser console) using <code>autoCommenter.js</code>:</p>
+<ul>
+<li>Monitor a specific user&#39;s profile</li>
+<li>Auto-comment on their new posts with varied responses</li>
+<li>Configure comment templates</li>
+<li>Set timing and limits to avoid being spammy</li>
+</ul>
+</li>
+</ol>
+<h3>Part 6: Retweet &amp; Quote Tweet Strategy</h3>
+<ol>
+<li><p><strong>Retweet</strong> using <code>x_retweet</code>:</p>
+<pre><code>&quot;Retweet this: [URL]&quot;
+</code></pre>
+</li>
+<li><p><strong>Quote tweet</strong> — Using the Actions framework (<code>actions.js</code>):</p>
+<ul>
+<li>Add your take to someone else&#39;s tweet</li>
+<li>This is more valuable than plain retweets</li>
+<li>Template: &quot;[Your insight about their tweet]&quot; + the quoted tweet</li>
+</ul>
+</li>
+<li><p><strong>Retweet strategy:</strong></p>
+<ul>
+<li>Retweet content that your audience wants to see</li>
+<li>Mix others&#39; content with your own (60/40 rule: 60% original, 40% curation)</li>
+<li>Auto-repost with <code>autoRepost.js</code> for your own top-performing tweets</li>
+</ul>
+</li>
+</ol>
+<h3>Part 7: Long-Form Articles (Premium+)</h3>
+<p>For Premium+ subscribers, use <code>x_publish_article</code>:</p>
+<ol>
+<li><p><strong>Write an article:</strong></p>
+<pre><code>&quot;Publish this article:
+Title: How I Built a Twitter Bot Without the API
+Body: [full article text]
+Publish: false (save as draft first)&quot;
+</code></pre>
+</li>
+<li><p><strong>Article workflow:</strong></p>
+<ul>
+<li>Draft first, review, then publish</li>
+<li>Use articles for comprehensive guides (1000+ words)</li>
+<li>Cross-promote articles in tweets and threads</li>
+</ul>
+</li>
+</ol>
+<h3>Part 8: Bookmarking Great Content</h3>
+<p>Use bookmark tools to save research and inspiration:</p>
+<ol>
+<li><strong>Bookmark a tweet:</strong> <code>x_bookmark</code> with the tweet URL</li>
+<li><strong>Get all bookmarks:</strong> <code>x_get_bookmarks</code> — export as JSON or CSV</li>
+<li><strong>Clear bookmarks:</strong> <code>x_clear_bookmarks</code> when done</li>
+<li><strong>Use bookmarks as a content research system:</strong><ul>
+<li>Bookmark viral tweets in your niche</li>
+<li>Export weekly and analyze patterns</li>
+<li>Use as inspiration for your own content</li>
+</ul>
+</li>
+</ol>
+<h3>Part 9: Content Analysis &amp; Optimization</h3>
+<p>Use analytics to improve content:</p>
+<ol>
+<li><p><strong>Post analytics</strong> using <code>x_get_post_analytics</code>:</p>
+<pre><code>&quot;Analyze the performance of this tweet: [URL]&quot;
+</code></pre>
+</li>
+<li><p><strong>Account analytics</strong> using <code>x_get_analytics</code>:</p>
+<pre><code>&quot;Show me my engagement analytics for the last 28 days&quot;
+</code></pre>
+</li>
+<li><p><strong>Iterate based on data:</strong></p>
+<ul>
+<li>Which tweets got the most engagement?</li>
+<li>What time of day performs best?</li>
+<li>Does my audience prefer threads or single tweets?</li>
+<li>What topics resonate most?</li>
+</ul>
+</li>
+</ol>
+<h3>Part 10: The Browser Console Power User</h3>
+<p>For the complete Actions library (<code>actions.js</code>), explain:</p>
+<ol>
+<li><strong>Post a tweet:</strong> <code>XActions.tweet.post(&quot;Hello world!&quot;)</code></li>
+<li><strong>Reply:</strong> <code>XActions.tweet.reply(tweetElement, &quot;My reply&quot;)</code></li>
+<li><strong>Quote tweet:</strong> <code>XActions.tweet.quote(tweetElement, &quot;My take&quot;)</code></li>
+<li><strong>Like:</strong> <code>XActions.tweet.like(tweetElement)</code></li>
+<li><strong>Retweet:</strong> <code>XActions.tweet.retweet(tweetElement)</code></li>
+<li><strong>Bookmark:</strong> <code>XActions.tweet.bookmark(tweetElement)</code></li>
+<li><strong>Delete:</strong> <code>XActions.tweet.delete(tweetElement)</code></li>
+</ol>
+<p>All using the paste-in-DevTools approach (core.js → actions.js → use the API).</p>
+<h2>My Content Goals</h2>
+<p>(Replace before pasting)</p>
+<ul>
+<li>My niche: YOUR_NICHE</li>
+<li>My voice/tone: (professional, casual, funny, provocative, educational)</li>
+<li>Posting frequency goal: X tweets/day</li>
+<li>Content mix: (threads, single tweets, polls, quotes)</li>
+<li>My audience: WHO_READS_MY_STUFF</li>
+</ul>
+<p>Start with Part 1 — help me write and post my first tweet, then we&#39;ll build from there.</p>
+
+
+        <div class="cta-box">
+          <h3>⚡ Explore XActions</h3>
+          <p>100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/docs">Browse All Documentation</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 In This Section</h3>
+                <a href="/docs/tutorials/01-mcp-setup-and-first-commands">🤖 Tutorial: Setting Up XActions MCP Server with Claude</a>
+        <a href="/docs/tutorials/02-unfollow-non-followers-cleanup">🤖 Tutorial: Unfollow Non-Followers &amp; Follower Cleanup with Claude</a>
+        <a href="/docs/tutorials/03-growth-automation-suite">🤖 Tutorial: Growth Automation Suite — Grow Your X Account on Autopilot</a>
+        <a href="/docs/tutorials/04-scraping-research-analysis">🤖 Tutorial: Tweet Scraping, Profile Analysis &amp; Research with Claude</a>
+        <a href="/docs/tutorials/06-analytics-competitor-intelligence">🤖 Tutorial: Engagement Analytics, Best Time to Post &amp; Competitor Intelligence</a>
+        <a href="/docs/tutorials/07-auto-liker-auto-commenter">🤖 Tutorial: Auto-Liker &amp; Auto-Commenter — Engagement Automation with Claude</a>
+        <a href="/docs/tutorials/08-blocking-muting-spam-protection">🤖 Tutorial: Mass Block, Unblock, Mute &amp; Spam Protection with Claude</a>
+        <a href="/docs/tutorials/09-dm-management-automation">🤖 Tutorial: DM Management, Export &amp; Automation with Claude</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/docs">All Documentation</a>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

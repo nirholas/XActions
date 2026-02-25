@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XActions AI API Documentation | XActions</title>
+  <meta name="description" content="Free &amp; open-source API for AI agents. Use locally with Puppeteer (free, no limits) or self-host the remote API with optional x402 micropayments.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, open source, api, documentation, guides &amp; reference">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="XActions AI API Documentation — XActions">
+  <meta property="og:description" content="Free &amp; open-source API for AI agents. Use locally with Puppeteer (free, no limits) or self-host the remote API with optional x402 micropayments.">
+  <meta property="og:url" content="https://xactions.app/docs/guides/ai-api">
+  <meta property="og:site_name" content="XActions">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="XActions AI API Documentation — XActions">
+  <meta name="twitter:description" content="Free &amp; open-source API for AI agents. Use locally with Puppeteer (free, no limits) or self-host the remote API with optional x402 micropayments.">
+
+  <link rel="canonical" href="https://xactions.app/docs/guides/ai-api">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "XActions AI API Documentation | XActions",
+    "description": "Free & open-source API for AI agents. Use locally with Puppeteer (free, no limits) or self-host the remote API with optional x402 micropayments.",
+    "url": "https://xactions.app/docs/guides/ai-api",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-25",
+    "dateModified": "2026-02-25",
+    "mainEntityOfPage": "https://xactions.app/docs/guides/ai-api",
+    "articleSection": "Guides & Reference",
+    "keywords": "xactions, twitter automation, x automation, free, open source, api, documentation, guides & reference"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Guides & Reference", "item": "https://xactions.app/docs/guides" },
+      { "@type": "ListItem", "position": 4, "name": "XActions AI API Documentation", "item": "https://xactions.app/docs/guides/ai-api" }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .article pre { font-size: 0.75rem; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <main class="main-content">
+      <header class="main-header">
+        <h1>📖 XActions AI API Documentation</h1>
+        <div class="breadcrumb">
+          <a href="https://xactions.app">Home</a> › <a href="https://xactions.app/docs">Docs</a> › <a href="https://xactions.app/docs/guides">Guides &amp; Reference</a> › XActions AI API Documentation
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Guides &amp; Reference</span>
+        <h1>🤖 XActions AI API Documentation</h1>
+<p>Free &amp; open-source API for AI agents. Use locally with Puppeteer (free, no limits) or self-host the remote API with optional x402 micropayments.</p>
+<p>---|--------|------|<br>| <strong>🆓 Local (default)</strong> | Browser scripts, CLI, Node.js library, local MCP server | <strong>FREE</strong> |<br>| <strong>☁️ Remote (self-hosted)</strong> | Self-hosted API for remote AI agent access | <strong>FREE</strong> (optionally supports x402 micropayments) |</p>
+<blockquote>
+<p><strong>Note:</strong> x402 micropayments are entirely optional. They&#39;re only relevant if you self-host the XActions API and want to monetize remote access for AI agents.</p>
+</blockquote>
+<hr>
+<h2>🔐 Authentication</h2>
+<p>All API requests require your X/Twitter session cookie (<code>auth_token</code>) to perform actions on your behalf.</p>
+<h3>Getting Your Session Cookie</h3>
+<ol>
+<li>Log into <a href="https://x.com">x.com</a></li>
+<li>Open Developer Tools (F12)</li>
+<li>Go to Application → Cookies → x.com</li>
+<li>Find <code>auth_token</code> and copy its value</li>
+</ol>
+<h3>Using the Session Cookie</h3>
+<p>Include it in the <code>X-Session-Cookie</code> header:</p>
+<pre><code class="language-http">X-Session-Cookie: your_auth_token_here
+</code></pre>
+<blockquote>
+<p>⚠️ <strong>Security Warning:</strong> Never share your session cookie. It provides full access to your X account.</p>
+</blockquote>
+<hr>
+<h2>💳 x402 Payment Flow (Optional)</h2>
+<p>If you enable x402 on your self-hosted API, the protocol handles HTTP-native micropayments. No API keys needed—agents sign payments with an Ethereum wallet.</p>
+<h3>How It Works</h3>
+<pre><code>┌─────────┐                      ┌─────────┐
+│  Client │                      │  Server │
+└────┬────┘                      └────┬────┘
+     │                                │
+     │  1. POST /api/ai/scrape/profile│
+     │ ─────────────────────────────► │
+     │                                │
+     │  2. 402 Payment Required       │
+     │     X-Payment-Required: {...}  │
+     │ ◄───────────────────────────── │
+     │                                │
+     │  3. Sign payment with wallet   │
+     │     ...                        │
+     │                                │
+     │  4. POST with X-Payment header │
+     │ ─────────────────────────────► │
+     │                                │
+     │  5. 200 OK + Data              │
+     │ ◄───────────────────────────── │
+     │                                │
+</code></pre>
+<h3>Step-by-Step</h3>
+<h4>1. Make Initial Request</h4>
+<pre><code class="language-javascript">const response = await fetch(&#39;https://api.xactions.app/api/ai/scrape/profile&#39;, {
+  method: &#39;POST&#39;,
+  headers: {
+    &#39;Content-Type&#39;: &#39;application/json&#39;,
+    &#39;X-Session-Cookie&#39;: &#39;your_auth_token&#39;
+  },
+  body: JSON.stringify({ username: &#39;elonmusk&#39; })
+});
+</code></pre>
+<h4>2. Receive 402 Response</h4>
+<pre><code class="language-http">HTTP/1.1 402 Payment Required
+X-Payment-Required: eyJhbW91bnQiOiIxMDAwMDAw...
+Content-Type: application/json
+
+{
+  &quot;error&quot;: &quot;payment_required&quot;,
+  &quot;amount&quot;: &quot;0.001&quot;,
+  &quot;currency&quot;: &quot;USD&quot;,
+  &quot;paymentAddress&quot;: &quot;0x...&quot;,
+  &quot;chain&quot;: &quot;base&quot;,
+  &quot;validUntil&quot;: &quot;2026-01-25T12:00:00Z&quot;
+}
+</code></pre>
+<h4>3. Sign Payment</h4>
+<p>Using ethers.js or similar:</p>
+<pre><code class="language-javascript">import { Wallet } from &#39;ethers&#39;;
+
+const wallet = new Wallet(process.env.X402_PRIVATE_KEY);
+const paymentDetails = response.headers.get(&#39;X-Payment-Required&#39;);
+const payload = JSON.parse(atob(paymentDetails));
+
+const signature = await wallet.signMessage(JSON.stringify({
+  amount: payload.amount,
+  recipient: payload.paymentAddress,
+  nonce: payload.nonce,
+  validUntil: payload.validUntil
+}));
+
+const signedPayment = btoa(JSON.stringify({
+  ...payload,
+  signature,
+  payer: wallet.address
+}));
+</code></pre>
+<h4>4. Retry with Payment</h4>
+<pre><code class="language-javascript">const paidResponse = await fetch(&#39;https://api.xactions.app/api/ai/scrape/profile&#39;, {
+  method: &#39;POST&#39;,
+  headers: {
+    &#39;Content-Type&#39;: &#39;application/json&#39;,
+    &#39;X-Session-Cookie&#39;: &#39;your_auth_token&#39;,
+    &#39;X-Payment&#39;: signedPayment
+  },
+  body: JSON.stringify({ username: &#39;elonmusk&#39; })
+});
+
+const data = await paidResponse.json();
+</code></pre>
+<h3>Supported Chains</h3>
+<table>
+<thead>
+<tr>
+<th>Chain</th>
+<th>Chain ID</th>
+<th>Recommended</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Base</td>
+<td>8453</td>
+<td>✅ Yes (low fees)</td>
+</tr>
+<tr>
+<td>Ethereum Mainnet</td>
+<td>1</td>
+<td>For larger amounts</td>
+</tr>
+<tr>
+<td>Arbitrum</td>
+<td>42161</td>
+<td>Alternative</td>
+</tr>
+</tbody></table>
+<h3>Supported Tokens</h3>
+<ul>
+<li><strong>ETH</strong> - Native currency</li>
+<li><strong>USDC</strong> - Stablecoin (recommended)</li>
+</ul>
+<hr>
+<h2>💰 Pricing</h2>
+<p>All prices in USD. Actual payment in ETH or USDC.</p>
+<h3>Scraping Endpoints</h3>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Price</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/api/ai/scrape/profile</code></td>
+<td>$0.001</td>
+<td>Get user profile info</td>
+</tr>
+<tr>
+<td><code>/api/ai/scrape/followers</code></td>
+<td>$0.01</td>
+<td>Scrape followers (up to 100)</td>
+</tr>
+<tr>
+<td><code>/api/ai/scrape/following</code></td>
+<td>$0.01</td>
+<td>Scrape following (up to 100)</td>
+</tr>
+<tr>
+<td><code>/api/ai/scrape/tweets</code></td>
+<td>$0.005</td>
+<td>Scrape tweets (up to 50)</td>
+</tr>
+<tr>
+<td><code>/api/ai/scrape/search</code></td>
+<td>$0.01</td>
+<td>Search tweets</td>
+</tr>
+</tbody></table>
+<h3>Action Endpoints</h3>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Price</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/api/ai/action/unfollow-non-followers</code></td>
+<td>$0.05</td>
+<td>Mass unfollow non-followers</td>
+</tr>
+<tr>
+<td><code>/api/ai/action/unfollow-everyone</code></td>
+<td>$0.10</td>
+<td>Unfollow all accounts</td>
+</tr>
+<tr>
+<td><code>/api/ai/action/detect-unfollowers</code></td>
+<td>$0.02</td>
+<td>Find recent unfollowers</td>
+</tr>
+<tr>
+<td><code>/api/ai/action/auto-like</code></td>
+<td>$0.02</td>
+<td>Auto-like session</td>
+</tr>
+</tbody></table>
+<h3>Monitoring Endpoints</h3>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Price</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/api/ai/monitor/account</code></td>
+<td>$0.01</td>
+<td>Monitor account changes</td>
+</tr>
+<tr>
+<td><code>/api/ai/monitor/follower-alerts</code></td>
+<td>$0.005</td>
+<td>New follower notifications</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>📡 API Endpoints</h2>
+<h3>Scrape Profile</h3>
+<p>Get detailed profile information for any X/Twitter user.</p>
+<p><strong>Endpoint:</strong> <code>POST /api/ai/scrape/profile</code></p>
+<p><strong>Cost:</strong> $0.001</p>
+<p><strong>Request:</strong></p>
+<pre><code class="language-json">{
+  &quot;username&quot;: &quot;elonmusk&quot;
+}
+</code></pre>
+<p><strong>Response:</strong></p>
+<pre><code class="language-json">{
+  &quot;success&quot;: true,
+  &quot;data&quot;: {
+    &quot;username&quot;: &quot;elonmusk&quot;,
+    &quot;name&quot;: &quot;Elon Musk&quot;,
+    &quot;bio&quot;: &quot;Mars &amp; Cars, Chips &amp; Dips&quot;,
+    &quot;location&quot;: &quot;Austin, Texas&quot;,
+    &quot;website&quot;: &quot;https://tesla.com&quot;,
+    &quot;joinDate&quot;: &quot;2009-06-02&quot;,
+    &quot;followersCount&quot;: 150000000,
+    &quot;followingCount&quot;: 500,
+    &quot;tweetsCount&quot;: 35000,
+    &quot;verified&quot;: true,
+    &quot;profileImageUrl&quot;: &quot;https://...&quot;
+  }
+}
+</code></pre>
+<hr>
+<h3>Scrape Followers</h3>
+<p>Scrape a user&#39;s followers list.</p>
+<p><strong>Endpoint:</strong> <code>POST /api/ai/scrape/followers</code></p>
+<p><strong>Cost:</strong> $0.01 per 100 followers</p>
+<p><strong>Request:</strong></p>
+<pre><code class="language-json">{
+  &quot;username&quot;: &quot;nichxbt&quot;,
+  &quot;limit&quot;: 100
+}
+</code></pre>
+<p><strong>Response:</strong></p>
+<pre><code class="language-json">{
+  &quot;success&quot;: true,
+  &quot;data&quot;: {
+    &quot;username&quot;: &quot;nichxbt&quot;,
+    &quot;totalFollowers&quot;: 5000,
+    &quot;scrapedCount&quot;: 100,
+    &quot;followers&quot;: [
+      {
+        &quot;username&quot;: &quot;user1&quot;,
+        &quot;name&quot;: &quot;User One&quot;,
+        &quot;bio&quot;: &quot;Web3 developer&quot;,
+        &quot;followersCount&quot;: 1200
+      }
+    ]
+  }
+}
+</code></pre>
+<hr>
+<h3>Scrape Following</h3>
+<p>Scrape accounts a user follows.</p>
+<p><strong>Endpoint:</strong> <code>POST /api/ai/scrape/following</code></p>
+<p><strong>Cost:</strong> $0.01 per 100</p>
+<p><strong>Request:</strong></p>
+<pre><code class="language-json">{
+  &quot;username&quot;: &quot;nichxbt&quot;,
+  &quot;limit&quot;: 100
+}
+</code></pre>
+<p><strong>Response:</strong></p>
+<pre><code class="language-json">{
+  &quot;success&quot;: true,
+  &quot;data&quot;: {
+    &quot;username&quot;: &quot;nichxbt&quot;,
+    &quot;totalFollowing&quot;: 800,
+    &quot;scrapedCount&quot;: 100,
+    &quot;following&quot;: [
+      {
+        &quot;username&quot;: &quot;account1&quot;,
+        &quot;name&quot;: &quot;Account One&quot;,
+        &quot;followsBack&quot;: true
+      }
+    ]
+  }
+}
+</code></pre>
+<hr>
+<h3>Scrape Tweets</h3>
+<p>Scrape recent tweets from a user&#39;s profile.</p>
+<p><strong>Endpoint:</strong> <code>POST /api/ai/scrape/tweets</code></p>
+<p><strong>Cost:</strong> $0.005 per 50 tweets</p>
+<p><strong>Request:</strong></p>
+<pre><code class="language-json">{
+  &quot;username&quot;: &quot;elonmusk&quot;,
+  &quot;limit&quot;: 50
+}
+</code></pre>
+<p><strong>Response:</strong></p>
+<pre><code class="language-json">{
+  &quot;success&quot;: true,
+  &quot;data&quot;: {
+    &quot;username&quot;: &quot;elonmusk&quot;,
+    &quot;scrapedCount&quot;: 50,
+    &quot;tweets&quot;: [
+      {
+        &quot;id&quot;: &quot;1234567890&quot;,
+        &quot;text&quot;: &quot;The future is electric ⚡&quot;,
+        &quot;timestamp&quot;: &quot;2026-01-25T10:30:00Z&quot;,
+        &quot;likes&quot;: 150000,
+        &quot;retweets&quot;: 25000,
+        &quot;replies&quot;: 8000,
+        &quot;url&quot;: &quot;https://x.com/elonmusk/status/1234567890&quot;
+      }
+    ]
+  }
+}
+</code></pre>
+<hr>
+<h3>Search Tweets</h3>
+<p>Search for tweets matching a query.</p>
+<p><strong>Endpoint:</strong> <code>POST /api/ai/scrape/search</code></p>
+<p><strong>Cost:</strong> $0.01 per search</p>
+<p><strong>Request:</strong></p>
+<pre><code class="language-json">{
+  &quot;query&quot;: &quot;xactions automation&quot;,
+  &quot;limit&quot;: 50,
+  &quot;filter&quot;: &quot;latest&quot;
+}
+</code></pre>
+<p><strong>Filters:</strong> <code>latest</code>, <code>top</code>, <code>people</code>, <code>media</code></p>
+<p><strong>Response:</strong></p>
+<pre><code class="language-json">{
+  &quot;success&quot;: true,
+  &quot;data&quot;: {
+    &quot;query&quot;: &quot;xactions automation&quot;,
+    &quot;resultCount&quot;: 50,
+    &quot;tweets&quot;: [
+      {
+        &quot;id&quot;: &quot;...&quot;,
+        &quot;text&quot;: &quot;...&quot;,
+        &quot;author&quot;: {
+          &quot;username&quot;: &quot;...&quot;,
+          &quot;name&quot;: &quot;...&quot;
+        },
+        &quot;timestamp&quot;: &quot;...&quot;,
+        &quot;likes&quot;: 100,
+        &quot;retweets&quot;: 20
+      }
+    ]
+  }
+}
+</code></pre>
+<hr>
+<h3>Unfollow Non-Followers</h3>
+<p>Mass unfollow accounts that don&#39;t follow you back.</p>
+<p><strong>Endpoint:</strong> <code>POST /api/ai/action/unfollow-non-followers</code></p>
+<p><strong>Cost:</strong> $0.05</p>
+<p><strong>Request:</strong></p>
+<pre><code class="language-json">{
+  &quot;username&quot;: &quot;your_username&quot;,
+  &quot;limit&quot;: 100,
+  &quot;delay&quot;: 2000,
+  &quot;excludeVerified&quot;: false,
+  &quot;excludeList&quot;: [&quot;friend1&quot;, &quot;friend2&quot;]
+}
+</code></pre>
+<p><strong>Response:</strong></p>
+<pre><code class="language-json">{
+  &quot;success&quot;: true,
+  &quot;data&quot;: {
+    &quot;unfollowedCount&quot;: 87,
+    &quot;totalNonFollowers&quot;: 150,
+    &quot;unfollowed&quot;: [
+      { &quot;username&quot;: &quot;user1&quot;, &quot;name&quot;: &quot;User One&quot; }
+    ],
+    &quot;errors&quot;: []
+  }
+}
+</code></pre>
+<hr>
+<h3>Unfollow Everyone</h3>
+<p>Unfollow all accounts.</p>
+<p><strong>Endpoint:</strong> <code>POST /api/ai/action/unfollow-everyone</code></p>
+<p><strong>Cost:</strong> $0.10</p>
+<p><strong>Request:</strong></p>
+<pre><code class="language-json">{
+  &quot;username&quot;: &quot;your_username&quot;,
+  &quot;delay&quot;: 2000,
+  &quot;excludeList&quot;: [&quot;important_friend&quot;]
+}
+</code></pre>
+<p><strong>Response:</strong></p>
+<pre><code class="language-json">{
+  &quot;success&quot;: true,
+  &quot;data&quot;: {
+    &quot;unfollowedCount&quot;: 450,
+    &quot;totalFollowing&quot;: 452,
+    &quot;excluded&quot;: 2
+  }
+}
+</code></pre>
+<hr>
+<h3>Detect Unfollowers</h3>
+<p>Find accounts that recently unfollowed you.</p>
+<p><strong>Endpoint:</strong> <code>POST /api/ai/action/detect-unfollowers</code></p>
+<p><strong>Cost:</strong> $0.02</p>
+<p><strong>Request:</strong></p>
+<pre><code class="language-json">{
+  &quot;username&quot;: &quot;your_username&quot;
+}
+</code></pre>
+<p><strong>Response:</strong></p>
+<pre><code class="language-json">{
+  &quot;success&quot;: true,
+  &quot;data&quot;: {
+    &quot;currentFollowers&quot;: 5000,
+    &quot;previousFollowers&quot;: 5025,
+    &quot;unfollowers&quot;: [
+      {
+        &quot;username&quot;: &quot;former_follower&quot;,
+        &quot;name&quot;: &quot;Former Follower&quot;,
+        &quot;unfollowedAt&quot;: &quot;2026-01-24&quot;
+      }
+    ],
+    &quot;newFollowers&quot;: [
+      {
+        &quot;username&quot;: &quot;new_follower&quot;,
+        &quot;name&quot;: &quot;New Follower&quot;
+      }
+    ]
+  }
+}
+</code></pre>
+<hr>
+<h3>Monitor Account</h3>
+<p>Track changes to any public account.</p>
+<p><strong>Endpoint:</strong> <code>POST /api/ai/monitor/account</code></p>
+<p><strong>Cost:</strong> $0.01 per check</p>
+<p><strong>Request:</strong></p>
+<pre><code class="language-json">{
+  &quot;username&quot;: &quot;target_account&quot;
+}
+</code></pre>
+<p><strong>Response:</strong></p>
+<pre><code class="language-json">{
+  &quot;success&quot;: true,
+  &quot;data&quot;: {
+    &quot;username&quot;: &quot;target_account&quot;,
+    &quot;currentStats&quot;: {
+      &quot;followers&quot;: 10000,
+      &quot;following&quot;: 500,
+      &quot;tweets&quot;: 2500
+    },
+    &quot;changes&quot;: {
+      &quot;followersDelta&quot;: +50,
+      &quot;followingDelta&quot;: -2,
+      &quot;newTweets&quot;: 3
+    },
+    &quot;checkedAt&quot;: &quot;2026-01-25T12:00:00Z&quot;
+  }
+}
+</code></pre>
+<hr>
+<h2>🚨 Error Codes</h2>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>HTTP Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>payment_required</code></td>
+<td>402</td>
+<td>Payment needed for this request</td>
+</tr>
+<tr>
+<td><code>invalid_payment</code></td>
+<td>402</td>
+<td>Payment signature invalid or expired</td>
+</tr>
+<tr>
+<td><code>insufficient_funds</code></td>
+<td>402</td>
+<td>Wallet has insufficient balance</td>
+</tr>
+<tr>
+<td><code>missing_cookie</code></td>
+<td>401</td>
+<td>X-Session-Cookie header required</td>
+</tr>
+<tr>
+<td><code>invalid_cookie</code></td>
+<td>401</td>
+<td>Session cookie expired or invalid</td>
+</tr>
+<tr>
+<td><code>rate_limited</code></td>
+<td>429</td>
+<td>Too many requests, slow down</td>
+</tr>
+<tr>
+<td><code>user_not_found</code></td>
+<td>404</td>
+<td>X/Twitter user doesn&#39;t exist</td>
+</tr>
+<tr>
+<td><code>account_suspended</code></td>
+<td>403</td>
+<td>Target account is suspended</td>
+</tr>
+<tr>
+<td><code>internal_error</code></td>
+<td>500</td>
+<td>Server error, please retry</td>
+</tr>
+</tbody></table>
+<h3>Error Response Format</h3>
+<pre><code class="language-json">{
+  &quot;success&quot;: false,
+  &quot;error&quot;: {
+    &quot;code&quot;: &quot;invalid_cookie&quot;,
+    &quot;message&quot;: &quot;Your session cookie has expired. Please get a new one from x.com.&quot;,
+    &quot;details&quot;: {}
+  }
+}
+</code></pre>
+<hr>
+<h2>⏱️ Rate Limits</h2>
+<p>To protect your X account from detection:</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Limit</th>
+<th>Window</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Scraping</td>
+<td>100 requests</td>
+<td>per minute</td>
+</tr>
+<tr>
+<td>Actions</td>
+<td>30 actions</td>
+<td>per minute</td>
+</tr>
+<tr>
+<td>Monitoring</td>
+<td>60 checks</td>
+<td>per minute</td>
+</tr>
+</tbody></table>
+<p><strong>Best Practices:</strong></p>
+<ul>
+<li>Use 2-3 second delays between actions</li>
+<li>Don&#39;t exceed 100 unfollows per session</li>
+<li>Space out large scraping jobs</li>
+</ul>
+<hr>
+<h2>💻 Code Examples</h2>
+<h3>Python</h3>
+<pre><code class="language-python">import requests
+import json
+from eth_account import Account
+from eth_account.messages import encode_defunct
+import base64
+
+class XActionsClient:
+    def __init__(self, private_key: str, session_cookie: str):
+        self.base_url = &quot;https://api.xactions.app&quot;
+        self.private_key = private_key
+        self.session_cookie = session_cookie
+        self.account = Account.from_key(private_key)
+    
+    def _sign_payment(self, payment_details: dict) -&gt; str:
+        message = json.dumps({
+            &quot;amount&quot;: payment_details[&quot;amount&quot;],
+            &quot;recipient&quot;: payment_details[&quot;paymentAddress&quot;],
+            &quot;nonce&quot;: payment_details[&quot;nonce&quot;],
+            &quot;validUntil&quot;: payment_details[&quot;validUntil&quot;]
+        })
+        signed = self.account.sign_message(encode_defunct(text=message))
+        
+        payload = {
+            **payment_details,
+            &quot;signature&quot;: signed.signature.hex(),
+            &quot;payer&quot;: self.account.address
+        }
+        return base64.b64encode(json.dumps(payload).encode()).decode()
+    
+    def _request(self, endpoint: str, data: dict):
+        headers = {
+            &quot;Content-Type&quot;: &quot;application/json&quot;,
+            &quot;X-Session-Cookie&quot;: self.session_cookie
+        }
+        
+        # Initial request
+        response = requests.post(
+            f&quot;{self.base_url}{endpoint}&quot;,
+            headers=headers,
+            json=data
+        )
+        
+        # Handle 402 Payment Required
+        if response.status_code == 402:
+            payment_b64 = response.headers.get(&quot;X-Payment-Required&quot;)
+            payment_details = json.loads(base64.b64decode(payment_b64))
+            
+            # Sign and retry
+            signed = self._sign_payment(payment_details)
+            headers[&quot;X-Payment&quot;] = signed
+            
+            response = requests.post(
+                f&quot;{self.base_url}{endpoint}&quot;,
+                headers=headers,
+                json=data
+            )
+        
+        return response.json()
+    
+    def get_profile(self, username: str):
+        return self._request(&quot;/api/ai/scrape/profile&quot;, {&quot;username&quot;: username})
+    
+    def get_followers(self, username: str, limit: int = 100):
+        return self._request(&quot;/api/ai/scrape/followers&quot;, {
+            &quot;username&quot;: username,
+            &quot;limit&quot;: limit
+        })
+    
+    def unfollow_non_followers(self, username: str, limit: int = 100):
+        return self._request(&quot;/api/ai/action/unfollow-non-followers&quot;, {
+            &quot;username&quot;: username,
+            &quot;limit&quot;: limit
+        })
+
+# Usage
+client = XActionsClient(
+    private_key=&quot;0x...&quot;,
+    session_cookie=&quot;your_auth_token&quot;
+)
+
+profile = client.get_profile(&quot;elonmusk&quot;)
+print(profile)
+</code></pre>
+<h3>JavaScript/Node.js</h3>
+<pre><code class="language-javascript">import { Wallet } from &#39;ethers&#39;;
+
+class XActionsClient {
+  constructor(privateKey, sessionCookie) {
+    this.baseUrl = &#39;https://api.xactions.app&#39;;
+    this.wallet = new Wallet(privateKey);
+    this.sessionCookie = sessionCookie;
+  }
+
+  async signPayment(paymentDetails) {
+    const message = JSON.stringify({
+      amount: paymentDetails.amount,
+      recipient: paymentDetails.paymentAddress,
+      nonce: paymentDetails.nonce,
+      validUntil: paymentDetails.validUntil
+    });
+    
+    const signature = await this.wallet.signMessage(message);
+    
+    return btoa(JSON.stringify({
+      ...paymentDetails,
+      signature,
+      payer: this.wallet.address
+    }));
+  }
+
+  async request(endpoint, data) {
+    const headers = {
+      &#39;Content-Type&#39;: &#39;application/json&#39;,
+      &#39;X-Session-Cookie&#39;: this.sessionCookie
+    };
+
+    let response = await fetch(`${this.baseUrl}${endpoint}`, {
+      method: &#39;POST&#39;,
+      headers,
+      body: JSON.stringify(data)
+    });
+
+    // Handle 402 Payment Required
+    if (response.status === 402) {
+      const paymentB64 = response.headers.get(&#39;X-Payment-Required&#39;);
+      const paymentDetails = JSON.parse(atob(paymentB64));
+      
+      headers[&#39;X-Payment&#39;] = await this.signPayment(paymentDetails);
+      
+      response = await fetch(`${this.baseUrl}${endpoint}`, {
+        method: &#39;POST&#39;,
+        headers,
+        body: JSON.stringify(data)
+      });
+    }
+
+    return response.json();
+  }
+
+  getProfile(username) {
+    return this.request(&#39;/api/ai/scrape/profile&#39;, { username });
+  }
+
+  getFollowers(username, limit = 100) {
+    return this.request(&#39;/api/ai/scrape/followers&#39;, { username, limit });
+  }
+
+  unfollowNonFollowers(username, limit = 100) {
+    return this.request(&#39;/api/ai/action/unfollow-non-followers&#39;, { username, limit });
+  }
+}
+
+// Usage
+const client = new XActionsClient(
+  &#39;0x...&#39;,
+  &#39;your_auth_token&#39;
+);
+
+const profile = await client.getProfile(&#39;elonmusk&#39;);
+console.log(profile);
+</code></pre>
+<h3>cURL</h3>
+<pre><code class="language-bash"># Step 1: Make initial request (will return 402)
+curl -X POST https://api.xactions.app/api/ai/scrape/profile \
+  -H &quot;Content-Type: application/json&quot; \
+  -H &quot;X-Session-Cookie: your_auth_token&quot; \
+  -d &#39;{&quot;username&quot;: &quot;elonmusk&quot;}&#39;
+
+# Step 2: Sign the payment details from X-Payment-Required header
+# (Use your preferred signing tool)
+
+# Step 3: Retry with payment
+curl -X POST https://api.xactions.app/api/ai/scrape/profile \
+  -H &quot;Content-Type: application/json&quot; \
+  -H &quot;X-Session-Cookie: your_auth_token&quot; \
+  -H &quot;X-Payment: eyJhbW91bnQiOi...&quot; \
+  -d &#39;{&quot;username&quot;: &quot;elonmusk&quot;}&#39;
+</code></pre>
+<hr>
+<h2>🤖 MCP Integration</h2>
+<p>For AI assistants like Claude, use the MCP server with remote mode:</p>
+<h3>Claude Desktop Configuration</h3>
+<pre><code class="language-json">{
+  &quot;mcpServers&quot;: {
+    &quot;xactions&quot;: {
+      &quot;command&quot;: &quot;npx&quot;,
+      &quot;args&quot;: [&quot;xactions-mcp&quot;],
+      &quot;env&quot;: {
+        &quot;XACTIONS_MODE&quot;: &quot;remote&quot;,
+        &quot;X402_PRIVATE_KEY&quot;: &quot;0x...&quot;,
+        &quot;XACTIONS_SESSION_COOKIE&quot;: &quot;your_auth_token&quot;
+      }
+    }
+  }
+}
+</code></pre>
+<h3>Environment Variables</h3>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>XACTIONS_MODE</code></td>
+<td>Yes</td>
+<td>Set to <code>remote</code> for paid API, <code>local</code> for free Puppeteer</td>
+</tr>
+<tr>
+<td><code>X402_PRIVATE_KEY</code></td>
+<td>For remote</td>
+<td>Your Ethereum wallet private key</td>
+</tr>
+<tr>
+<td><code>XACTIONS_SESSION_COOKIE</code></td>
+<td>Yes</td>
+<td>Your X/Twitter auth_token cookie</td>
+</tr>
+</tbody></table>
+<h3>Local vs Remote Mode</h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Local Mode</th>
+<th>Remote Mode</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Cost</td>
+<td><strong>Free</strong></td>
+<td>Pay-per-use</td>
+</tr>
+<tr>
+<td>Setup</td>
+<td>Requires Puppeteer</td>
+<td>Just config</td>
+</tr>
+<tr>
+<td>Speed</td>
+<td>Slower (browser)</td>
+<td>Fast (API)</td>
+</tr>
+<tr>
+<td>Reliability</td>
+<td>May break</td>
+<td>Maintained</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>🆓 Free Alternatives</h2>
+<p>If you don&#39;t need the remote API, use XActions for free:</p>
+<h3>Browser Scripts</h3>
+<p>Copy-paste scripts directly in your browser console.<br>→ <a href="/features">View all scripts</a></p>
+<h3>CLI Tool</h3>
+<pre><code class="language-bash">npm install -g xactions
+xactions unfollow --non-followers
+</code></pre>
+<h3>Node.js Library</h3>
+<pre><code class="language-javascript">import { unfollowNonFollowers } from &#39;xactions&#39;;
+await unfollowNonFollowers({ cookie: &#39;...&#39; });
+</code></pre>
+<h3>Local MCP Server</h3>
+<pre><code class="language-json">{
+  &quot;mcpServers&quot;: {
+    &quot;xactions&quot;: {
+      &quot;command&quot;: &quot;npx&quot;,
+      &quot;args&quot;: [&quot;xactions-mcp&quot;],
+      &quot;env&quot;: {
+        &quot;XACTIONS_MODE&quot;: &quot;local&quot;,
+        &quot;XACTIONS_SESSION_COOKIE&quot;: &quot;...&quot;
+      }
+    }
+  }
+}
+</code></pre>
+<hr>
+<h2>📞 Support</h2>
+<ul>
+<li><strong>GitHub Issues:</strong> <a href="https://github.com/nirholas/XActions/issues">github.com/nirholas/XActions/issues</a></li>
+<li><strong>Twitter/X:</strong> <a href="https://x.com/nichxbt">@nichxbt</a></li>
+<li><strong>Documentation:</strong> <a href="https://xactions.app/docs">xactions.app/docs</a></li>
+</ul>
+<hr>
+<h2>📜 Terms</h2>
+<p>By using the AI API, you agree to:</p>
+<ul>
+<li>Use your own X/Twitter session cookie</li>
+<li>Respect X/Twitter&#39;s terms of service</li>
+<li>Accept usage-based pricing via x402</li>
+<li>Not abuse the API for spam or harassment</li>
+</ul>
+<p>The API is provided as-is. We&#39;re not responsible for actions taken on your X account.</p>
+
+
+        <div class="cta-box">
+          <h3>⚡ Explore XActions</h3>
+          <p>100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/docs">Browse All Documentation</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 In This Section</h3>
+                <a href="/docs/guides/getting-started">📖 Getting Started with XActions</a>
+        <a href="/docs/guides/usage">📖 Usage</a>
+        <a href="/docs/guides/automation">📖 XActions Automation Framework Guide</a>
+        <a href="/docs/guides/monitoring">📖 Monitoring Guide</a>
+        <a href="/docs/guides/cli-reference">📖 XActions CLI Reference</a>
+        <a href="/docs/guides/api-reference">📖 XActions — API Reference</a>
+        <a href="/docs/guides/deployment">📖 Deployment Guide</a>
+        <a href="/docs/guides/dom-selectors">📖 X/Twitter DOM Selector Reference</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/docs">All Documentation</a>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

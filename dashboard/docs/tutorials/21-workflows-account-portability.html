@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tutorial: Workflow Automation &amp; Account Portability with Claude | XActions</title>
+  <meta name="description" content="You are my X/Twitter workflow architect. I want to use XActions' workflow engine to create automated pipelines, and use account portability tools to export/migr">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, open source, workflows, account, portability, tutorial:, workflow, automation, claude, claude tutorials">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Tutorial: Workflow Automation &amp; Account Portability with Claude — XActions">
+  <meta property="og:description" content="You are my X/Twitter workflow architect. I want to use XActions' workflow engine to create automated pipelines, and use account portability tools to export/migr">
+  <meta property="og:url" content="https://xactions.app/docs/tutorials/21-workflows-account-portability">
+  <meta property="og:site_name" content="XActions">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Tutorial: Workflow Automation &amp; Account Portability with Claude — XActions">
+  <meta name="twitter:description" content="You are my X/Twitter workflow architect. I want to use XActions' workflow engine to create automated pipelines, and use account portability tools to export/migr">
+
+  <link rel="canonical" href="https://xactions.app/docs/tutorials/21-workflows-account-portability">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Tutorial: Workflow Automation & Account Portability with Claude | XActions",
+    "description": "You are my X/Twitter workflow architect. I want to use XActions' workflow engine to create automated pipelines, and use account portability tools to export/migr",
+    "url": "https://xactions.app/docs/tutorials/21-workflows-account-portability",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-25",
+    "dateModified": "2026-02-25",
+    "mainEntityOfPage": "https://xactions.app/docs/tutorials/21-workflows-account-portability",
+    "articleSection": "Claude Tutorials",
+    "keywords": "xactions, twitter automation, x automation, free, open source, workflows, account, portability, tutorial:, workflow, automation, claude, claude tutorials"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Claude Tutorials", "item": "https://xactions.app/docs/tutorials" },
+      { "@type": "ListItem", "position": 4, "name": "Tutorial: Workflow Automation & Account Portability with Claude", "item": "https://xactions.app/docs/tutorials/21-workflows-account-portability" }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .article pre { font-size: 0.75rem; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <main class="main-content">
+      <header class="main-header">
+        <h1>🤖 Tutorial: Workflow Automation &amp; Account Portability with Claude</h1>
+        <div class="breadcrumb">
+          <a href="https://xactions.app">Home</a> › <a href="https://xactions.app/docs">Docs</a> › <a href="https://xactions.app/docs/tutorials">Claude Tutorials</a> › Tutorial: Workflow Automation &amp; Account Portability with Claude
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Claude Tutorials</span>
+        <h1>Tutorial: Workflow Automation &amp; Account Portability with Claude</h1>
+<p>You are my X/Twitter workflow architect. I want to use XActions&#39; workflow engine to create automated pipelines, and use account portability tools to export/migrate my data. Help me build powerful multi-step workflows and manage my account data.</p>
+<h2>Context</h2>
+<p>I&#39;m using XActions (<a href="https://github.com/nirholas/XActions">https://github.com/nirholas/XActions</a>), an open-source X/Twitter toolkit. It includes:</p>
+<ul>
+<li>Workflow engine: <code>x_workflow_create</code>, <code>x_workflow_run</code>, <code>x_workflow_list</code>, <code>x_workflow_actions</code></li>
+<li>Account export: <code>x_export_account</code> (profile, tweets, followers, following, bookmarks → JSON/CSV/MD/HTML)</li>
+<li>Account migration: <code>x_migrate_account</code> (X → Bluesky or Mastodon)</li>
+<li>Real-time streams: <code>x_stream_start</code>, <code>x_stream_stop</code>, <code>x_stream_list</code></li>
+</ul>
+<h2>What I Need You To Do</h2>
+<h3>Phase 1: Workflow Automation Engine</h3>
+<p>Create multi-step automated pipelines:</p>
+<ol>
+<li><p><strong>Create a workflow:</strong></p>
+<pre><code>&quot;Create a workflow that scrapes my mentions every hour, analyzes sentiment, and alerts me if sentiment drops below -0.3&quot;
+</code></pre>
+<p>Tool: <code>x_workflow_create</code></p>
+<p>Parameters:</p>
+<ul>
+<li><code>name</code>: Workflow name</li>
+<li><code>description</code>: What it does</li>
+<li><code>trigger</code>: How it starts<ul>
+<li><code>{ type: &quot;manual&quot; }</code> — Run on demand</li>
+<li><code>{ type: &quot;schedule&quot;, cron: &quot;0 * * * *&quot; }</code> — Cron schedule (every hour)</li>
+<li><code>{ type: &quot;webhook&quot; }</code> — Triggered by external HTTP call</li>
+</ul>
+</li>
+<li><code>steps</code>: Array of step objects</li>
+</ul>
+</li>
+<li><p><strong>Step types:</strong></p>
+<pre><code class="language-javascript">// Scrape action
+{ action: &quot;scrapeProfile&quot;, target: &quot;@elonmusk&quot;, output: &quot;profileData&quot; }
+
+// Search action
+{ action: &quot;searchTweets&quot;, query: &quot;XActions&quot;, output: &quot;searchResults&quot; }
+
+// Condition
+{ condition: &quot;searchResults.length &gt; 10&quot; }
+
+// Transform
+{ action: &quot;analyzeSentiment&quot;, input: &quot;searchResults&quot;, output: &quot;sentiment&quot; }
+
+// Notify
+{ action: &quot;webhook&quot;, url: &quot;https://hooks.slack.com/xxx&quot;, body: &quot;sentiment&quot; }
+</code></pre>
+</li>
+<li><p><strong>List available actions:</strong></p>
+<pre><code>&quot;What actions can I use in workflows?&quot;
+</code></pre>
+<p>Tool: <code>x_workflow_actions</code></p>
+<ul>
+<li>Returns all available step types: scrapers, transforms, AI, utilities</li>
+</ul>
+</li>
+<li><p><strong>Run a workflow:</strong></p>
+<pre><code>&quot;Run the sentiment monitoring workflow&quot;
+</code></pre>
+<p>Tool: <code>x_workflow_run</code></p>
+<ul>
+<li><code>workflow</code>: Name or ID</li>
+<li><code>context</code>: Optional initial variables</li>
+<li>Returns: Step-by-step execution logs with results</li>
+</ul>
+</li>
+<li><p><strong>List workflows:</strong></p>
+<pre><code>&quot;Show all my saved workflows&quot;
+</code></pre>
+<p>Tool: <code>x_workflow_list</code></p>
+<ul>
+<li>Shows: name, trigger type, step count, enabled status</li>
+</ul>
+</li>
+</ol>
+<h3>Phase 2: Example Workflows</h3>
+<h4>Growth Pipeline</h4>
+<pre><code>&quot;Create a workflow called &#39;Growth Pipeline&#39; that:
+1. Searches for tweets about &#39;AI tools&#39;
+2. Filters for tweets with &gt;50 likes
+3. Follows the authors who aren&#39;t already following me
+4. Likes those tweets
+5. Runs daily at 10am&quot;
+</code></pre>
+<p>Configuration:</p>
+<pre><code class="language-javascript">{
+  name: &quot;Growth Pipeline&quot;,
+  description: &quot;Find and engage with relevant accounts daily&quot;,
+  trigger: { type: &quot;schedule&quot;, cron: &quot;0 10 * * *&quot; },
+  steps: [
+    { action: &quot;searchTweets&quot;, query: &quot;AI tools min_faves:50&quot;, output: &quot;tweets&quot; },
+    { action: &quot;extractAuthors&quot;, input: &quot;tweets&quot;, output: &quot;authors&quot; },
+    { action: &quot;filterNotFollowing&quot;, input: &quot;authors&quot;, output: &quot;newAuthors&quot; },
+    { action: &quot;follow&quot;, input: &quot;newAuthors&quot;, limit: 20 },
+    { action: &quot;like&quot;, input: &quot;tweets&quot;, limit: 20 }
+  ]
+}
+</code></pre>
+<h4>Content Research</h4>
+<pre><code>&quot;Create a workflow called &#39;Content Research&#39; that:
+1. Gets trending topics
+2. Searches each top topic for viral tweets
+3. Analyzes sentiment of each topic
+4. Outputs a markdown report&quot;
+</code></pre>
+<h4>Competitor Watch</h4>
+<pre><code>&quot;Create a workflow that:
+1. Scrapes @competitor&#39;s latest 20 tweets
+2. Analyzes which ones performed best
+3. Identifies topics and formats
+4. Generates a competitive insights report
+5. Runs weekly on Monday mornings&quot;
+</code></pre>
+<h4>Follower Churn Alert</h4>
+<pre><code>&quot;Create a workflow that:
+1. Gets my current followers
+2. Compares to yesterday&#39;s snapshot
+3. Identifies new unfollowers
+4. Sends a webhook alert if &gt;5 people unfollowed
+5. Runs every 6 hours&quot;
+</code></pre>
+<h3>Phase 3: Real-Time Streaming</h3>
+<p>Set up live event streams:</p>
+<ol>
+<li><p><strong>Start a tweet stream:</strong></p>
+<pre><code>&quot;Start streaming new tweets from @elonmusk&quot;
+</code></pre>
+<p>Tool: <code>x_stream_start</code></p>
+<ul>
+<li><code>type</code>: &quot;tweet&quot; — Watch for new tweets</li>
+<li><code>username</code>: Target account</li>
+<li><code>interval</code>: Poll interval in seconds (default: 60, minimum: 15)</li>
+</ul>
+</li>
+<li><p><strong>Start a follower stream:</strong></p>
+<pre><code>&quot;Start monitoring my followers for changes&quot;
+</code></pre>
+<ul>
+<li><code>type</code>: &quot;follower&quot; — Detect follow/unfollow events</li>
+</ul>
+</li>
+<li><p><strong>Start a mention stream:</strong></p>
+<pre><code>&quot;Stream my mentions in real-time&quot;
+</code></pre>
+<ul>
+<li><code>type</code>: &quot;mention&quot; — Watch for new @mentions</li>
+</ul>
+</li>
+<li><p><strong>How streams work:</strong></p>
+<ul>
+<li>Polls X at your configured interval</li>
+<li>Compares with previous state</li>
+<li>Emits new events via Socket.IO</li>
+<li>Events can trigger webhooks or other actions</li>
+</ul>
+</li>
+<li><p><strong>List active streams:</strong></p>
+<pre><code>&quot;Show all my active streams&quot;
+</code></pre>
+<p>Tool: <code>x_stream_list</code></p>
+<ul>
+<li>Shows: stream ID, type, target, interval, poll count, browser pool info</li>
+</ul>
+</li>
+<li><p><strong>Stop a stream:</strong></p>
+<pre><code>&quot;Stop stream [ID]&quot;
+</code></pre>
+<p>Tool: <code>x_stream_stop</code></p>
+</li>
+</ol>
+<h3>Phase 4: Account Export</h3>
+<p>Export your entire X account:</p>
+<ol>
+<li><p><strong>Full account export:</strong></p>
+<pre><code>&quot;Export my entire X account data&quot;
+</code></pre>
+<p>Tool: <code>x_export_account</code></p>
+<ul>
+<li><code>username</code>: Your handle (without @)</li>
+<li><code>formats</code>: [&quot;json&quot;, &quot;csv&quot;, &quot;md&quot;, &quot;html&quot;] (default: all)</li>
+<li><code>only</code>: Limit to specific data types</li>
+<li><code>limit</code>: Max items per phase (default: 500)</li>
+</ul>
+</li>
+<li><p><strong>What gets exported:</strong></p>
+<ul>
+<li><strong>Profile</strong>: Bio, avatar, header, stats, creation date</li>
+<li><strong>Tweets</strong>: All your tweets with engagement data</li>
+<li><strong>Followers</strong>: Complete follower list with bios</li>
+<li><strong>Following</strong>: Everyone you follow</li>
+<li><strong>Bookmarks</strong>: All saved bookmarks</li>
+<li><strong>Likes</strong>: Your liked tweets</li>
+</ul>
+</li>
+<li><p><strong>Export formats:</strong></p>
+<ul>
+<li><strong>JSON</strong>: Machine-readable, full data</li>
+<li><strong>CSV</strong>: Spreadsheet-compatible</li>
+<li><strong>Markdown</strong>: Human-readable documentation</li>
+<li><strong>HTML</strong>: Self-contained archive viewer (open in browser!)</li>
+</ul>
+</li>
+<li><p><strong>Selective export:</strong></p>
+<pre><code>&quot;Export only my tweets and followers as JSON&quot;
+</code></pre>
+<ul>
+<li><code>only</code>: [&quot;tweets&quot;, &quot;followers&quot;]</li>
+<li><code>formats</code>: [&quot;json&quot;]</li>
+</ul>
+</li>
+<li><p><strong>Resume on failure:</strong></p>
+<ul>
+<li>If the export is interrupted (network issue, rate limit), it can resume from where it left off</li>
+<li>Progress is saved per-phase</li>
+</ul>
+</li>
+<li><p><strong>Export size considerations:</strong></p>
+<ul>
+<li>Large accounts may take a while (thousands of followers)</li>
+<li>Use <code>limit</code> parameter to cap items</li>
+<li>Export in phases: followers first, then tweets, etc.</li>
+</ul>
+</li>
+</ol>
+<h3>Phase 5: Account Migration</h3>
+<p>Move your X presence to Bluesky or Mastodon:</p>
+<ol>
+<li><p><strong>Migrate to Bluesky:</strong></p>
+<pre><code>&quot;Migrate my X account to Bluesky&quot;
+</code></pre>
+<p>Tool: <code>x_migrate_account</code></p>
+<ul>
+<li>Requires a prior <code>x_export_account</code> run</li>
+<li>Maps X profile to Bluesky equivalents</li>
+<li>Can migrate: profile, followers (find on Bluesky), posts</li>
+</ul>
+</li>
+<li><p><strong>Migrate to Mastodon:</strong></p>
+<pre><code>&quot;Migrate my X data to Mastodon&quot;
+</code></pre>
+<ul>
+<li>Similar to Bluesky migration</li>
+<li>Maps to ActivityPub equivalents</li>
+</ul>
+</li>
+<li><p><strong>Dry run mode:</strong></p>
+<pre><code>&quot;Do a dry run migration to Bluesky — don&#39;t actually execute&quot;
+</code></pre>
+<ul>
+<li>Preview what would be migrated</li>
+<li>Shows mapping of X data → target platform</li>
+<li>No actions taken until you confirm</li>
+</ul>
+</li>
+<li><p><strong>Migration workflow:</strong></p>
+<pre><code>Step 1: &quot;Export my full X account&quot; (x_export_account)
+Step 2: &quot;Show a dry-run migration to Bluesky&quot; (x_migrate_account, dry: true)
+Step 3: Review the mapping
+Step 4: &quot;Execute the migration&quot; (x_migrate_account, dry: false)
+</code></pre>
+</li>
+</ol>
+<h3>Phase 6: Data Backup Strategy</h3>
+<p>Set up regular automated backups:</p>
+<h4>Weekly Backup Workflow</h4>
+<pre><code>&quot;Create a workflow called &#39;Weekly Backup&#39; that:
+1. Exports my profile
+2. Exports my latest tweets (limit: 200)
+3. Snapshots my followers list
+4. Snapshots my following list
+5. Exports bookmarks
+6. Saves all as JSON
+7. Runs every Sunday at 2am&quot;
+</code></pre>
+<h4>Monthly Full Archive</h4>
+<pre><code>&quot;Create a monthly workflow that:
+1. Full account export (all formats)
+2. Compare follower list with last month&#39;s
+3. Generate a growth report
+4. Archive everything&quot;
+</code></pre>
+<h3>Phase 7: Combined Power Workflows</h3>
+<h4>Morning Briefing</h4>
+<pre><code>&quot;Create a &#39;Morning Briefing&#39; workflow:
+1. Get my notifications from last 12 hours
+2. Analyze sentiment of mentions
+3. Get my post analytics from yesterday
+4. Check follower count change
+5. Search trending topics in my niche
+6. Output a markdown briefing
+Run at 8am daily&quot;
+</code></pre>
+<h4>Content Calendar</h4>
+<pre><code>&quot;Create a &#39;Content Calendar&#39; workflow:
+1. Research trending topics (x_get_trends)
+2. Analyze what performed well last week (x_get_analytics)
+3. Search for inspiration (viral tweets in niche)
+4. Generate 7 tweet ideas
+5. Schedule them across the week
+Run every Monday at 9am&quot;
+</code></pre>
+<h4>Engagement Autopilot</h4>
+<pre><code>&quot;Create an &#39;Engagement Autopilot&#39; workflow:
+1. Get my latest 5 tweets
+2. For each: check post analytics
+3. Auto-bookmark tweets with &gt;100 likes
+4. Identify top performing content format
+5. Log everything to session
+Run every 4 hours&quot;
+</code></pre>
+<h3>Phase 8: Stream + Workflow Integration</h3>
+<p>Combine real-time streams with workflows:</p>
+<pre><code>&quot;Set up a system where:
+1. A mention stream watches for @mybrand mentions
+2. Each new mention triggers sentiment analysis
+3. Negative mentions (score &lt; -0.3) trigger a Slack webhook
+4. Positive mentions get auto-liked
+5. Generate a daily reputation report&quot;
+</code></pre>
+<p>This combines:</p>
+<ul>
+<li><code>x_stream_start</code> (mention type)</li>
+<li><code>x_analyze_sentiment</code> (per-mention)</li>
+<li><code>x_workflow_create</code> (automation pipeline)</li>
+<li><code>x_monitor_reputation</code> (ongoing tracking)</li>
+<li><code>x_reputation_report</code> (daily output)</li>
+</ul>
+<h2>My Workflow Goals</h2>
+<p>(Replace before pasting)</p>
+<ul>
+<li>Primary workflow I want to build: [describe]</li>
+<li>Do I need account export? Yes/No</li>
+<li>Migration target: Bluesky / Mastodon / Neither</li>
+<li>Streams I want: Tweet / Follower / Mention monitoring</li>
+<li>Schedule: Daily / Weekly / On-demand</li>
+<li>Webhook URL for alerts: [URL or &quot;none&quot;]</li>
+</ul>
+<p>Start with Phase 1 — let&#39;s build my first workflow.</p>
+
+
+        <div class="cta-box">
+          <h3>⚡ Explore XActions</h3>
+          <p>100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/docs">Browse All Documentation</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 In This Section</h3>
+                <a href="/docs/tutorials/01-mcp-setup-and-first-commands">🤖 Tutorial: Setting Up XActions MCP Server with Claude</a>
+        <a href="/docs/tutorials/02-unfollow-non-followers-cleanup">🤖 Tutorial: Unfollow Non-Followers &amp; Follower Cleanup with Claude</a>
+        <a href="/docs/tutorials/03-growth-automation-suite">🤖 Tutorial: Growth Automation Suite — Grow Your X Account on Autopilot</a>
+        <a href="/docs/tutorials/04-scraping-research-analysis">🤖 Tutorial: Tweet Scraping, Profile Analysis &amp; Research with Claude</a>
+        <a href="/docs/tutorials/05-content-posting-threads-scheduling">🤖 Tutorial: Content Posting, Threads, Polls &amp; Scheduling with Claude</a>
+        <a href="/docs/tutorials/06-analytics-competitor-intelligence">🤖 Tutorial: Engagement Analytics, Best Time to Post &amp; Competitor Intelligence</a>
+        <a href="/docs/tutorials/07-auto-liker-auto-commenter">🤖 Tutorial: Auto-Liker &amp; Auto-Commenter — Engagement Automation with Claude</a>
+        <a href="/docs/tutorials/08-blocking-muting-spam-protection">🤖 Tutorial: Mass Block, Unblock, Mute &amp; Spam Protection with Claude</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/docs">All Documentation</a>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

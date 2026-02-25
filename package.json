@@ -28,7 +28,8 @@
   },
   "bin": {
     "xactions": "./src/cli/index.js",
-    "xactions-mcp": "./src/mcp/server.js"
+    "xactions-mcp": "./src/mcp/server.js",
+    "xactions-agent": "./src/agents/thoughtLeaderAgent.js"
   },
   "scripts": {
     "dev": "NODE_ENV=development nodemon api/server.js",
@@ -54,7 +55,11 @@
     "deploy:docker": "bash scripts/deploy.sh docker",
     "docker:up": "docker compose up -d --build",
     "docker:down": "docker compose down",
-    "docker:logs": "docker compose logs -f api"
+    "docker:logs": "docker compose logs -f api",
+    "agent": "node src/agents/thoughtLeaderAgent.js",
+    "agent:login": "node src/agents/thoughtLeaderAgent.js --login",
+    "agent:test": "node src/agents/thoughtLeaderAgent.js --test",
+    "agent:setup": "node src/agents/setup.js"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",
@@ -83,7 +88,10 @@
     "puppeteer-extra-plugin-stealth": "^2.11.2",
     "redis": "^4.6.11",
     "socket.io": "^4.8.3",
-    "stripe": "^14.10.0"
+    "stripe": "^14.10.0",
+    "better-sqlite3": "^11.7.0",
+    "node-cron": "^3.0.3",
+    "nodemailer": "^6.9.16"
   },
   "optionalDependencies": {
     "@atproto/api": "^0.13.35",
@@ -144,7 +152,10 @@
     "twitter-thread-saver",
     "twitter-bookmark-export",
     "vibe-coding",
-    "no-code-twitter"
+    "no-code-twitter",
+    "thought-leader",
+    "algorithm-training",
+    "x-algorithm"
   ],
   "engines": {
     "node": ">=18.0.0"

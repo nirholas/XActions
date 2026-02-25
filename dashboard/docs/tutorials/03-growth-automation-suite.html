@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tutorial: Growth Automation Suite — Grow Your X Account on Autopilot | XActions</title>
+  <meta name="description" content="You are my X/Twitter growth strategist and automation expert. I want to grow my account strategically using XActions. Help me set up a complete growth automatio">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, open source, growth, automation, suite, tutorial:, grow, account, autopilot, claude tutorials">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Tutorial: Growth Automation Suite — Grow Your X Account on Autopilot — XActions">
+  <meta property="og:description" content="You are my X/Twitter growth strategist and automation expert. I want to grow my account strategically using XActions. Help me set up a complete growth automatio">
+  <meta property="og:url" content="https://xactions.app/docs/tutorials/03-growth-automation-suite">
+  <meta property="og:site_name" content="XActions">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Tutorial: Growth Automation Suite — Grow Your X Account on Autopilot — XActions">
+  <meta name="twitter:description" content="You are my X/Twitter growth strategist and automation expert. I want to grow my account strategically using XActions. Help me set up a complete growth automatio">
+
+  <link rel="canonical" href="https://xactions.app/docs/tutorials/03-growth-automation-suite">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Tutorial: Growth Automation Suite — Grow Your X Account on Autopilot | XActions",
+    "description": "You are my X/Twitter growth strategist and automation expert. I want to grow my account strategically using XActions. Help me set up a complete growth automatio",
+    "url": "https://xactions.app/docs/tutorials/03-growth-automation-suite",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-25",
+    "dateModified": "2026-02-25",
+    "mainEntityOfPage": "https://xactions.app/docs/tutorials/03-growth-automation-suite",
+    "articleSection": "Claude Tutorials",
+    "keywords": "xactions, twitter automation, x automation, free, open source, growth, automation, suite, tutorial:, grow, account, autopilot, claude tutorials"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Claude Tutorials", "item": "https://xactions.app/docs/tutorials" },
+      { "@type": "ListItem", "position": 4, "name": "Tutorial: Growth Automation Suite — Grow Your X Account on Autopilot", "item": "https://xactions.app/docs/tutorials/03-growth-automation-suite" }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .article pre { font-size: 0.75rem; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <main class="main-content">
+      <header class="main-header">
+        <h1>🤖 Tutorial: Growth Automation Suite — Grow Your X Account on Autopilot</h1>
+        <div class="breadcrumb">
+          <a href="https://xactions.app">Home</a> › <a href="https://xactions.app/docs">Docs</a> › <a href="https://xactions.app/docs/tutorials">Claude Tutorials</a> › Tutorial: Growth Automation Suite — Grow Your X Account on Autopilot
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Claude Tutorials</span>
+        <h1>Tutorial: Growth Automation Suite — Grow Your X Account on Autopilot</h1>
+<p>You are my X/Twitter growth strategist and automation expert. I want to grow my account strategically using XActions. Help me set up a complete growth automation system that finds my target audience, engages authentically, and cleans up non-followers automatically.</p>
+<h2>Context</h2>
+<p>I&#39;m using XActions (<a href="https://github.com/nirholas/XActions">https://github.com/nirholas/XActions</a>), an open-source X/Twitter automation toolkit. The Growth Suite (<code>src/automation/growthSuite.js</code>) combines keyword following, auto-liking, and smart unfollowing into one automated system. I also have access to individual scripts for each component.</p>
+<h2>What I Need You To Do</h2>
+<h3>Phase 1: Define My Growth Strategy</h3>
+<p>Before we touch any tools, help me define my target audience:</p>
+<ol>
+<li><p><strong>Ask me about my niche</strong> — What do I tweet about? Who do I want to attract?</p>
+</li>
+<li><p><strong>Build a keyword list</strong> — Based on my niche, create 10-15 search keywords that my ideal followers would use. Examples:</p>
+<ul>
+<li>Tech: &quot;web3 developer&quot;, &quot;startup founder&quot;, &quot;building in public&quot;  </li>
+<li>Fitness: &quot;gym motivation&quot;, &quot;meal prep&quot;, &quot;powerlifting&quot;</li>
+<li>AI: &quot;machine learning&quot;, &quot;LLM&quot;, &quot;prompt engineering&quot;</li>
+</ul>
+</li>
+<li><p><strong>Identify target accounts</strong> — Help me find 5-10 accounts in my niche whose followers would be interested in my content. Use <code>x_search_tweets</code> and <code>x_get_profile</code> to research:</p>
+<ul>
+<li>Who are the big accounts in my space?</li>
+<li>Which accounts have engaged, real followers (not just numbers)?</li>
+<li>Who has a follower base that matches my target audience?</li>
+</ul>
+</li>
+<li><p><strong>Set growth targets</strong> — Help me set realistic daily/weekly goals:</p>
+<ul>
+<li>New follows per day: 20-40 (staying under rate limits)</li>
+<li>Likes per day: 30-50</li>
+<li>Unfollows per day: 15-30 (clearing non-followers)</li>
+<li>Expected new followers per week: depends on niche</li>
+</ul>
+</li>
+</ol>
+<h3>Phase 2: Set Up the Growth Suite (Browser Console)</h3>
+<p>Walk me through using the Growth Automation Suite:</p>
+<ol>
+<li><p><strong>Navigate to my X home page</strong> (x.com/home)</p>
+</li>
+<li><p><strong>Paste <code>core.js</code></strong> — the foundation module that provides:</p>
+<ul>
+<li>Shared selectors for X&#39;s DOM elements</li>
+<li><code>sleep()</code>, <code>randomDelay()</code>, <code>scrollBy()</code> utilities</li>
+<li>Rate limiting (MAX_ACTIONS_PER_HOUR: 50, MAX_FOLLOWS_PER_DAY: 100)</li>
+<li>Storage system for tracking state</li>
+<li>Action queue for sequential execution</li>
+</ul>
+</li>
+<li><p><strong>Configure the Growth Suite strategy:</strong></p>
+<pre><code class="language-javascript">const STRATEGY = {
+  KEYWORDS: [/* our keyword list from Phase 1 */],
+  TARGET_ACCOUNTS: [/* our target accounts from Phase 1 */],
+  ACTIONS: {
+    FOLLOW: true,     // Follow users from keyword search
+    LIKE: true,       // Like relevant posts in feed
+    UNFOLLOW: true,   // Auto-unfollow non-followers
+  },
+  LIMITS: {
+    FOLLOWS: 20,      // Per session
+    LIKES: 30,
+    UNFOLLOWS: 15,
+  },
+  TIMING: {
+    UNFOLLOW_AFTER_DAYS: 3,
+    DELAY_BETWEEN_ACTIONS: 3000,
+    SESSION_DURATION_MINUTES: 30,
+  },
+  FILTERS: {
+    MIN_FOLLOWERS: 50,
+    MAX_FOLLOWERS: 50000,
+    MUST_HAVE_BIO: true,
+    SKIP_PRIVATE: true,
+    LANGUAGE: null,
+  },
+};
+</code></pre>
+</li>
+<li><p><strong>Explain what happens when it runs:</strong></p>
+<ul>
+<li>Phase A: Searches each keyword, finds matching users, follows them (with filters)</li>
+<li>Phase B: Scrolls the timeline, likes posts matching your keywords</li>
+<li>Phase C: Checks users you followed 3+ days ago, unfollows non-followers</li>
+<li>All tracked in localStorage so it persists between sessions</li>
+<li>Session automatically stops after the configured duration</li>
+</ul>
+</li>
+<li><p><strong>Paste <code>growthSuite.js</code></strong> and explain the output they&#39;ll see in console</p>
+</li>
+</ol>
+<h3>Phase 3: Individual Component Deep Dives</h3>
+<h4>3A: Keyword Follow (<code>keywordFollow.js</code>)</h4>
+<p>For more control, walk me through the standalone keyword follow script:</p>
+<ol>
+<li>Navigate to <code>x.com/search</code></li>
+<li>Paste core.js, then keywordFollow.js with config:<pre><code class="language-javascript">KEYWORDS: [&#39;web3 developer&#39;, &#39;solidity engineer&#39;],
+MAX_FOLLOWS_PER_KEYWORD: 10,
+MAX_FOLLOWS_TOTAL: 30,
+MIN_FOLLOWERS: 100,
+MAX_FOLLOWERS: 100000,
+MUST_HAVE_BIO: true,
+</code></pre>
+</li>
+<li>How it works:<ul>
+<li>Searches each keyword in the People tab</li>
+<li>Extracts user info from each UserCell</li>
+<li>Applies filters (follower count, bio, etc.)</li>
+<li>Clicks follow with random delays</li>
+<li>Tracks who was followed AND when (critical for smart unfollow later)</li>
+<li>Saves all data to localStorage</li>
+</ul>
+</li>
+</ol>
+<h4>3B: Follow Engagers (<code>followEngagers.js</code>)</h4>
+<p>Walk me through following people who engage with specific posts:</p>
+<ol>
+<li>Find a viral tweet in my niche</li>
+<li>Navigate to that tweet</li>
+<li>Paste core.js, then followEngagers.js with config:<pre><code class="language-javascript">MODE: &#39;likers&#39;,           // &#39;likers&#39;, &#39;retweeters&#39;, &#39;quoters&#39;, or &#39;all&#39;
+TARGET_POSTS: [],          // Leave empty to use current page
+MAX_FOLLOWS_PER_POST: 15,
+TOTAL_MAX_FOLLOWS: 30,
+FILTERS: {
+  MIN_FOLLOWERS: 50,
+  SKIP_PROTECTED: true,
+},
+INTERACT_AFTER_FOLLOW: false, // Set true to also like their posts
+</code></pre>
+</li>
+<li>Why this is powerful: People who liked/retweeted a post in your niche are pre-qualified — they&#39;re already interested in your type of content</li>
+</ol>
+<h4>3C: Follow Target Users&#39; Followers (<code>followTargetUsers.js</code>)</h4>
+<p>Walk me through following the followers of specific accounts:</p>
+<ol>
+<li>How to choose good target accounts (engaged communities, not huge celebrity accounts)</li>
+<li>Configure:<pre><code class="language-javascript">TARGET_ACCOUNTS: [&#39;naval&#39;, &#39;paulg&#39;],
+LIST_TYPE: &#39;followers&#39;,    // or &#39;following&#39;
+MAX_FOLLOWS_PER_ACCOUNT: 20,
+TOTAL_MAX_FOLLOWS: 50,
+FILTERS: {
+  MIN_FOLLOWERS: 100,
+  MAX_FOLLOWERS: 50000,
+  MIN_RATIO: 0.1,
+  MUST_HAVE_BIO: true,
+  BIO_KEYWORDS: [&#39;founder&#39;, &#39;developer&#39;, &#39;building&#39;],
+},
+INTERACT_AFTER_FOLLOW: false,
+</code></pre>
+</li>
+<li>How it navigates to each target account&#39;s followers/following page, scrolls, extracts users, applies filters, and follows</li>
+</ol>
+<h4>3D: Auto-Liker (<code>autoLiker.js</code>)</h4>
+<p>Walk me through the auto-liker for feed engagement:</p>
+<ol>
+<li>Navigate to home feed or a specific profile</li>
+<li>Configure:<pre><code class="language-javascript">LIKE_ALL: false,
+KEYWORDS: [&#39;web3&#39;, &#39;crypto&#39;, &#39;AI&#39;],
+FROM_USERS: [],
+MAX_LIKES: 20,
+ALSO_RETWEET: false,
+SKIP_REPLIES: true,
+SKIP_ADS: true,
+MIN_DELAY: 2000,
+MAX_DELAY: 5000,
+</code></pre>
+</li>
+<li>How it scrolls through tweets, checks for keyword matches, skips already-liked and ads, clicks like with natural delays</li>
+</ol>
+<h3>Phase 4: MCP Server Approach (No Browser Console Needed)</h3>
+<p>If I prefer using Claude directly, walk me through doing growth automation via MCP:</p>
+<ol>
+<li><p><strong>Research phase:</strong></p>
+<pre><code>&quot;Search for tweets about &#39;building in public&#39; and show me the most engaged authors&quot;
+&quot;Get the followers of @ycombinator — show me the first 100&quot;
+&quot;Get profile info for these 5 accounts: [list]&quot;
+</code></pre>
+</li>
+<li><p><strong>Follow phase:</strong></p>
+<pre><code>&quot;Follow these users: @user1, @user2, @user3&quot;
+&quot;Search for tweets about &#39;machine learning engineer&#39; and follow the top 10 most active authors&quot;
+</code></pre>
+</li>
+<li><p><strong>Engage phase:</strong></p>
+<pre><code>&quot;Like the top 5 tweets from @user1&quot;
+&quot;Search for recent tweets about &#39;AI tools&#39; and like the top 20&quot;
+</code></pre>
+</li>
+<li><p><strong>Cleanup phase:</strong></p>
+<pre><code>&quot;Find my non-followers — who doesn&#39;t follow me back?&quot;
+&quot;Preview unfollowing all non-followers (dry run)&quot;
+&quot;Unfollow the first 30 non-followers&quot;
+</code></pre>
+</li>
+</ol>
+<h3>Phase 5: Protect Active Engagers</h3>
+<p>Before unfollowing, help me protect valuable connections using <code>protectActiveUsers.js</code>:</p>
+<ol>
+<li>How it identifies users who actively engage with your content</li>
+<li>How to merge the protection list into smart unfollow&#39;s whitelist</li>
+<li>Using the <code>quotaSupervisor.js</code> to manage rate limits across all scripts</li>
+</ol>
+<h3>Phase 6: Track Everything with Session Logger</h3>
+<p>Set up <code>sessionLogger.js</code> to monitor all automation:</p>
+<ol>
+<li>Paste core.js, then sessionLogger.js</li>
+<li>It automatically tracks: follows, unfollows, likes, comments, retweets</li>
+<li>How to export reports: JSON or CSV</li>
+<li>How to review session stats:<ul>
+<li>Actions per session</li>
+<li>Error rates</li>
+<li>Daily/weekly trends</li>
+</ul>
+</li>
+<li>Using this data to optimize your growth strategy</li>
+</ol>
+<h3>Phase 7: Daily Workflow</h3>
+<p>Help me create a sustainable daily routine:</p>
+<p><strong>Morning (10 min):</strong></p>
+<ol>
+<li>Run keywordFollow.js with 3-5 keywords → follow 20 new targeted users</li>
+<li>Run autoLiker.js on your feed → like 20 posts to boost visibility</li>
+</ol>
+<p><strong>Midday (5 min):</strong><br>3. Find a viral tweet in your niche → run followEngagers.js on its likers<br>4. Like/reply to posts from people who followed you today</p>
+<p><strong>Evening (5 min):</strong><br>5. Run smartUnfollow.js → clean up 3+ day old non-followers<br>6. Check session logger stats for the day</p>
+<p><strong>Weekly:</strong><br>7. Review growth metrics (new followers, follower ratio, engagement rate)<br>8. Adjust keywords and target accounts based on results<br>9. Run follower audit to check quality</p>
+<h2>My Niche &amp; Goals</h2>
+<p>(Replace before pasting)</p>
+<ul>
+<li>My niche: YOUR_NICHE</li>
+<li>My username: YOUR_USERNAME  </li>
+<li>Target audience: WHO_YOU_WANT_TO_ATTRACT</li>
+<li>Current follower count: CURRENT_COUNT</li>
+<li>Goal: FOLLOWER_GOAL by WHEN</li>
+</ul>
+<p>Start with Phase 1 — help me define my strategy before we set up any automation.</p>
+
+
+        <div class="cta-box">
+          <h3>⚡ Explore XActions</h3>
+          <p>100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/docs">Browse All Documentation</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 In This Section</h3>
+                <a href="/docs/tutorials/01-mcp-setup-and-first-commands">🤖 Tutorial: Setting Up XActions MCP Server with Claude</a>
+        <a href="/docs/tutorials/02-unfollow-non-followers-cleanup">🤖 Tutorial: Unfollow Non-Followers &amp; Follower Cleanup with Claude</a>
+        <a href="/docs/tutorials/04-scraping-research-analysis">🤖 Tutorial: Tweet Scraping, Profile Analysis &amp; Research with Claude</a>
+        <a href="/docs/tutorials/05-content-posting-threads-scheduling">🤖 Tutorial: Content Posting, Threads, Polls &amp; Scheduling with Claude</a>
+        <a href="/docs/tutorials/06-analytics-competitor-intelligence">🤖 Tutorial: Engagement Analytics, Best Time to Post &amp; Competitor Intelligence</a>
+        <a href="/docs/tutorials/07-auto-liker-auto-commenter">🤖 Tutorial: Auto-Liker &amp; Auto-Commenter — Engagement Automation with Claude</a>
+        <a href="/docs/tutorials/08-blocking-muting-spam-protection">🤖 Tutorial: Mass Block, Unblock, Mute &amp; Spam Protection with Claude</a>
+        <a href="/docs/tutorials/09-dm-management-automation">🤖 Tutorial: DM Management, Export &amp; Automation with Claude</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/docs">All Documentation</a>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

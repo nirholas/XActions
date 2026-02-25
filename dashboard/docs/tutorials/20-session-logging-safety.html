@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tutorial: Session Logging, Quota Tracking &amp; Safety with Claude | XActions</title>
+  <meta name="description" content="You are my X/Twitter automation safety expert. I want to use XActions' session logging and quota management tools to track all my automation activity, stay with">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, open source, session, logging, safety, tutorial:, logging,, quota, tracking, claude, claude tutorials">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Tutorial: Session Logging, Quota Tracking &amp; Safety with Claude — XActions">
+  <meta property="og:description" content="You are my X/Twitter automation safety expert. I want to use XActions' session logging and quota management tools to track all my automation activity, stay with">
+  <meta property="og:url" content="https://xactions.app/docs/tutorials/20-session-logging-safety">
+  <meta property="og:site_name" content="XActions">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Tutorial: Session Logging, Quota Tracking &amp; Safety with Claude — XActions">
+  <meta name="twitter:description" content="You are my X/Twitter automation safety expert. I want to use XActions' session logging and quota management tools to track all my automation activity, stay with">
+
+  <link rel="canonical" href="https://xactions.app/docs/tutorials/20-session-logging-safety">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Tutorial: Session Logging, Quota Tracking & Safety with Claude | XActions",
+    "description": "You are my X/Twitter automation safety expert. I want to use XActions' session logging and quota management tools to track all my automation activity, stay with",
+    "url": "https://xactions.app/docs/tutorials/20-session-logging-safety",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-25",
+    "dateModified": "2026-02-25",
+    "mainEntityOfPage": "https://xactions.app/docs/tutorials/20-session-logging-safety",
+    "articleSection": "Claude Tutorials",
+    "keywords": "xactions, twitter automation, x automation, free, open source, session, logging, safety, tutorial:, logging,, quota, tracking, claude, claude tutorials"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Claude Tutorials", "item": "https://xactions.app/docs/tutorials" },
+      { "@type": "ListItem", "position": 4, "name": "Tutorial: Session Logging, Quota Tracking & Safety with Claude", "item": "https://xactions.app/docs/tutorials/20-session-logging-safety" }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .article pre { font-size: 0.75rem; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <main class="main-content">
+      <header class="main-header">
+        <h1>🤖 Tutorial: Session Logging, Quota Tracking &amp; Safety with Claude</h1>
+        <div class="breadcrumb">
+          <a href="https://xactions.app">Home</a> › <a href="https://xactions.app/docs">Docs</a> › <a href="https://xactions.app/docs/tutorials">Claude Tutorials</a> › Tutorial: Session Logging, Quota Tracking &amp; Safety with Claude
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Claude Tutorials</span>
+        <h1>Tutorial: Session Logging, Quota Tracking &amp; Safety with Claude</h1>
+<p>You are my X/Twitter automation safety expert. I want to use XActions&#39; session logging and quota management tools to track all my automation activity, stay within rate limits, and generate analytics reports. Help me set up comprehensive tracking so I never get rate-limited or suspended.</p>
+<h2>Context</h2>
+<p>I&#39;m using XActions (<a href="https://github.com/nirholas/XActions">https://github.com/nirholas/XActions</a>), an open-source X/Twitter toolkit. It includes:</p>
+<ul>
+<li><code>src/automation/sessionLogger.js</code> — Track all actions with reports</li>
+<li><code>src/automation/quotaSupervisor.js</code> — Monitor and enforce rate limits</li>
+<li><code>src/automation/protectActiveUsers.js</code> — Safety guardrails for unfollowing</li>
+<li>Built-in rate limiting in <code>core.js</code> — CONFIG.RATE_LIMITS</li>
+</ul>
+<h2>What I Need You To Do</h2>
+<h3>Phase 1: Session Logger</h3>
+<p>Track every action your automation performs:</p>
+<ol>
+<li><p><strong>How to activate:</strong></p>
+<ul>
+<li>Navigate to x.com</li>
+<li>Paste <code>core.js</code> in DevTools</li>
+<li>Paste <code>sessionLogger.js</code></li>
+<li>It starts logging immediately</li>
+</ul>
+</li>
+<li><p><strong>What gets tracked per action:</strong></p>
+<pre><code class="language-javascript">{
+  timestamp: 1704067200000,
+  action: &#39;follow&#39;,       // follow, unfollow, like, comment, retweet, dm
+  target: &#39;@username&#39;,     // Who/what was the target
+  details: {},             // Additional context
+  page: &#39;https://x.com/...&#39;,  // Page URL when action occurred
+}
+</code></pre>
+</li>
+<li><p><strong>Session metadata:</strong></p>
+<ul>
+<li>Unique session ID</li>
+<li>Start time and end time</li>
+<li>User agent</li>
+<li>Starting page</li>
+<li>Running stats (follows, unfollows, likes, comments, retweets, DMs, errors)</li>
+</ul>
+</li>
+<li><p><strong>Configuration:</strong></p>
+<pre><code class="language-javascript">const CONFIG = {
+  LOG_RETENTION_DAYS: 30,     // How long to keep logs
+  SAVE_INTERVAL_SECONDS: 30,  // Auto-save frequency
+  TRACK_ACTIONS: [&#39;follow&#39;, &#39;unfollow&#39;, &#39;like&#39;, &#39;unlike&#39;, &#39;comment&#39;, &#39;retweet&#39;, &#39;dm&#39;],
+  EXPORT_FORMAT: &#39;json&#39;,      // &#39;json&#39; or &#39;csv&#39;
+};
+</code></pre>
+</li>
+<li><p><strong>Runtime commands:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>stats()</code></td>
+<td>All-time statistics report</td>
+</tr>
+<tr>
+<td><code>todayStats()</code></td>
+<td>Today&#39;s activity only</td>
+</tr>
+<tr>
+<td><code>weekStats()</code></td>
+<td>This week&#39;s activity</td>
+</tr>
+<tr>
+<td><code>dailyStats()</code></td>
+<td>Day-by-day breakdown (last 7 days)</td>
+</tr>
+<tr>
+<td><code>sessionStats()</code></td>
+<td>Current session info</td>
+</tr>
+<tr>
+<td><code>exportLogs()</code></td>
+<td>Download all logs as JSON</td>
+</tr>
+<tr>
+<td><code>exportLogs(&#39;today&#39;)</code></td>
+<td>Export today&#39;s logs</td>
+</tr>
+<tr>
+<td><code>exportLogs(&#39;week&#39;)</code></td>
+<td>Export this week&#39;s logs</td>
+</tr>
+</tbody></table>
+</li>
+<li><p><strong>Report output:</strong></p>
+<pre><code>╔═══════════════════════════════════════════════╗
+║  📊 XActions Analytics - All Time              ║
+╠═══════════════════════════════════════════════╣
+║  Sessions: 42                                  ║
+║  Total Duration: 18h 30m                       ║
+╠───────────────────────────────────────────────╣
+║  ACTIONS                                       ║
+║    Follows:   234    │  Unfollows:  189        ║
+║    Likes:     567    │  Comments:   45         ║
+║    Retweets:  78     │  DMs:        12        ║
+╠───────────────────────────────────────────────╣
+║  Net Follow Change: +45                        ║
+║  Errors: 3                                     ║
+╚═══════════════════════════════════════════════╝
+</code></pre>
+</li>
+<li><p><strong>Daily breakdown:</strong></p>
+<pre><code>📅 Daily Activity (Last 7 Days):
+──────────────────────────────────────────────
+Date           | Follows | Unfollows | Likes | Comments
+──────────────────────────────────────────────
+1/15/2025      | 34      | 28        | 89    | 5
+1/14/2025      | 41      | 35        | 102   | 8
+1/13/2025      | 28      | 22        | 67    | 3
+</code></pre>
+</li>
+</ol>
+<h3>Phase 2: Export &amp; Analyze Logs</h3>
+<ol>
+<li><p><strong>Export as JSON:</strong></p>
+<pre><code class="language-javascript">exportLogs(&#39;all&#39;)    // Downloads xactions-logs-all-{timestamp}.json
+exportLogs(&#39;today&#39;)  // Just today
+exportLogs(&#39;week&#39;)   // Last 7 days
+</code></pre>
+<p>JSON structure:</p>
+<pre><code class="language-json">{
+  &quot;exportDate&quot;: &quot;2025-01-15T12:00:00.000Z&quot;,
+  &quot;period&quot;: &quot;all&quot;,
+  &quot;sessions&quot;: [...],
+  &quot;summary&quot;: {
+    &quot;sessions&quot;: 42,
+    &quot;follows&quot;: 234,
+    &quot;unfollows&quot;: 189,
+    &quot;likes&quot;: 567,
+    &quot;netFollows&quot;: 45,
+    &quot;totalDuration&quot;: 66600000
+  }
+}
+</code></pre>
+</li>
+<li><p><strong>Export as CSV:</strong></p>
+<pre><code class="language-javascript">// Call from console
+XActions.Logger.exportCSV()
+</code></pre>
+<p>Downloads a CSV with columns: <code>timestamp, action, target, page</code></p>
+</li>
+<li><p><strong>Analyze exported data:</strong><br>After exporting, ask Claude:</p>
+<pre><code>&quot;Here&#39;s my XActions log export [paste JSON]. Analyze my activity:
+- Am I approaching any rate limits?
+- What&#39;s my follow-to-unfollow ratio?
+- What time of day am I most active?
+- Any patterns in errors?&quot;
+</code></pre>
+</li>
+</ol>
+<h3>Phase 3: Rate Limits &amp; Safety</h3>
+<p>X/Twitter&#39;s rate limits (approximate — they change):</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Safe Limit</th>
+<th>Risky</th>
+<th>XActions Default</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Follows/day</td>
+<td>100</td>
+<td>&gt;200</td>
+<td>100</td>
+</tr>
+<tr>
+<td>Unfollows/day</td>
+<td>100</td>
+<td>&gt;200</td>
+<td>100</td>
+</tr>
+<tr>
+<td>Likes/day</td>
+<td>200</td>
+<td>&gt;500</td>
+<td>200</td>
+</tr>
+<tr>
+<td>Tweets/day</td>
+<td>50</td>
+<td>&gt;100</td>
+<td>50</td>
+</tr>
+<tr>
+<td>DMs/day</td>
+<td>50</td>
+<td>&gt;100</td>
+<td>50</td>
+</tr>
+<tr>
+<td>Follows/hour</td>
+<td>15-20</td>
+<td>&gt;30</td>
+<td>50/hr</td>
+</tr>
+</tbody></table>
+<p><strong>XActions built-in limits</strong> (from <code>core.js</code>):</p>
+<pre><code class="language-javascript">CONFIG.RATE_LIMITS = {
+  ACTIONS_PER_HOUR: 50,      // Any action type
+  FOLLOWS_PER_DAY: 100,      // Follow actions
+  LIKES_PER_DAY: 200,        // Like actions
+}
+</code></pre>
+<p><strong>Best practices:</strong></p>
+<ol>
+<li><strong>Start slow</strong> — Begin with 50% of limits for new accounts</li>
+<li><strong>Vary timing</strong> — Use <code>randomDelay()</code> between actions (built into XActions)</li>
+<li><strong>Take breaks</strong> — Don&#39;t run automation 24/7</li>
+<li><strong>Mix actions</strong> — Don&#39;t just follow; like, comment, and engage naturally</li>
+<li><strong>Monitor for warnings</strong> — If you see CAPTCHAs or temporary locks, stop immediately</li>
+</ol>
+<h3>Phase 4: Quota Supervisor</h3>
+<p>The <code>quotaSupervisor.js</code> script monitors your automation quotas:</p>
+<ol>
+<li><p><strong>How to use:</strong></p>
+<ul>
+<li>Paste <code>core.js</code></li>
+<li>Paste <code>quotaSupervisor.js</code></li>
+<li>It wraps around other automation scripts</li>
+</ul>
+</li>
+<li><p><strong>What it does:</strong></p>
+<ul>
+<li>Tracks action counts per type per time period</li>
+<li>Warns when approaching limits</li>
+<li>Blocks actions when limits reached</li>
+<li>Provides quota status reports</li>
+</ul>
+</li>
+<li><p><strong>Integration with other scripts:</strong><br>When running autoLiker, growthSuite, etc., the quota supervisor intercepts action calls and enforces limits globally.</p>
+</li>
+</ol>
+<h3>Phase 5: Protect Active Users</h3>
+<p>The <code>protectActiveUsers.js</code> prevents unfollowing people who actively engage with you:</p>
+<ol>
+<li><p><strong>How it works:</strong></p>
+<ul>
+<li>Before unfollowing someone, checks their recent interactions</li>
+<li>Protects users who:<ul>
+<li>Recently liked your tweets</li>
+<li>Recently replied to you</li>
+<li>Recently retweeted you</li>
+<li>Are in your whitelist</li>
+</ul>
+</li>
+<li>Prevents accidentally unfollowing valuable connections</li>
+</ul>
+</li>
+<li><p><strong>Integration:</strong></p>
+<ul>
+<li>Works alongside <code>smartUnfollow.js</code></li>
+<li>Adds safety layer to mass unfollow operations</li>
+<li>Configurable protection criteria</li>
+</ul>
+</li>
+</ol>
+<h3>Phase 6: Safety Monitoring Workflow</h3>
+<p>Complete safety workflow combining all tools:</p>
+<p><strong>Before running automation:</strong></p>
+<pre><code>1. Paste core.js
+2. Paste sessionLogger.js
+3. Paste quotaSupervisor.js (if available)
+4. Now paste your automation script (e.g., autoLiker.js)
+</code></pre>
+<p><strong>During automation:</strong></p>
+<pre><code>- Run stats() periodically to check activity
+- Watch for any error messages
+- If you see rate limit warnings, run stopAutoLike() or equivalent
+</code></pre>
+<p><strong>After automation:</strong></p>
+<pre><code>1. Run stats() for final count
+2. Run dailyStats() to see the full picture
+3. Export logs: exportLogs(&#39;today&#39;)
+4. End session: XActions.Logger.endSession()
+</code></pre>
+<p><strong>Regular audits (weekly):</strong></p>
+<pre><code>1. Export week&#39;s logs
+2. Review in Claude:
+   &quot;Analyze this week&#39;s XActions activity. 
+    Am I within safe limits?
+    Any patterns that could trigger X&#39;s anti-spam?&quot;
+3. Adjust CONFIG values if needed
+</code></pre>
+<h3>Phase 7: MCP-Based Monitoring</h3>
+<p>If using XActions via MCP instead of browser scripts:</p>
+<ol>
+<li><p><strong>Check analytics:</strong></p>
+<pre><code>&quot;Show my account analytics for the last 7 days&quot;
+</code></pre>
+<p>Tool: <code>x_get_analytics</code></p>
+</li>
+<li><p><strong>Post analytics:</strong></p>
+<pre><code>&quot;Show analytics for my last 10 posts&quot;
+</code></pre>
+<p>Tool: <code>x_get_post_analytics</code></p>
+</li>
+<li><p><strong>Review activity:</strong></p>
+<pre><code>&quot;How many people have I followed/unfollowed this week?&quot;
+&quot;Show my follower growth trend&quot;
+</code></pre>
+</li>
+</ol>
+<h3>Phase 8: Creating a Safety Checklist</h3>
+<p>Before any automation session:</p>
+<ul>
+<li><input disabled="" type="checkbox"> Session logger loaded</li>
+<li><input disabled="" type="checkbox"> Rate limits configured conservatively</li>
+<li><input disabled="" type="checkbox"> Whitelist populated (for unfollow operations)</li>
+<li><input disabled="" type="checkbox"> <code>requireApproval: true</code> for new templates</li>
+<li><input disabled="" type="checkbox"> Random delays configured (<code>randomDelay()</code> between actions)</li>
+<li><input disabled="" type="checkbox"> Business hours set (if applicable)</li>
+<li><input disabled="" type="checkbox"> Export logs from last session reviewed</li>
+<li><input disabled="" type="checkbox"> No existing CAPTCHAs or account warnings</li>
+</ul>
+<p><strong>Signs to stop immediately:</strong></p>
+<ul>
+<li>CAPTCHA challenges appearing</li>
+<li>&quot;Suspicious activity&quot; warnings</li>
+<li>Account temporarily locked</li>
+<li>Actions failing silently</li>
+<li>Unusual error rates in session stats</li>
+</ul>
+<h2>My Safety Configuration</h2>
+<p>(Replace before pasting)</p>
+<ul>
+<li>Account age: New / Established (&gt;6 months) / Old (&gt;1 year)</li>
+<li>Current follower count: [number]</li>
+<li>Daily automation goals: [follows/likes/unfollows per day]</li>
+<li>Hours per day running automation: [number]</li>
+<li>Risk tolerance: Conservative / Moderate / Aggressive</li>
+</ul>
+<p>Help me configure safe rate limits for my account and set up the full monitoring stack.</p>
+
+
+        <div class="cta-box">
+          <h3>⚡ Explore XActions</h3>
+          <p>100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/docs">Browse All Documentation</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 In This Section</h3>
+                <a href="/docs/tutorials/01-mcp-setup-and-first-commands">🤖 Tutorial: Setting Up XActions MCP Server with Claude</a>
+        <a href="/docs/tutorials/02-unfollow-non-followers-cleanup">🤖 Tutorial: Unfollow Non-Followers &amp; Follower Cleanup with Claude</a>
+        <a href="/docs/tutorials/03-growth-automation-suite">🤖 Tutorial: Growth Automation Suite — Grow Your X Account on Autopilot</a>
+        <a href="/docs/tutorials/04-scraping-research-analysis">🤖 Tutorial: Tweet Scraping, Profile Analysis &amp; Research with Claude</a>
+        <a href="/docs/tutorials/05-content-posting-threads-scheduling">🤖 Tutorial: Content Posting, Threads, Polls &amp; Scheduling with Claude</a>
+        <a href="/docs/tutorials/06-analytics-competitor-intelligence">🤖 Tutorial: Engagement Analytics, Best Time to Post &amp; Competitor Intelligence</a>
+        <a href="/docs/tutorials/07-auto-liker-auto-commenter">🤖 Tutorial: Auto-Liker &amp; Auto-Commenter — Engagement Automation with Claude</a>
+        <a href="/docs/tutorials/08-blocking-muting-spam-protection">🤖 Tutorial: Mass Block, Unblock, Mute &amp; Spam Protection with Claude</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/docs">All Documentation</a>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

@@ -52,6 +52,7 @@ import streamRoutes from './routes/streams.js';
 import automationsRoutes from './routes/automations.js';
 import analyticsRoutes from './routes/analytics.js';
 import workflowRoutes from './routes/workflows.js';
+import agentRoutes from './routes/agent.js';
 import portabilityRoutes from './routes/portability.js';
 import threadRoutes from './routes/thread.js';
 import unfollowersRoutes from './routes/unfollowers.js';
@@ -216,6 +217,15 @@ app.use('/api/portability', portabilityRoutes);
 app.use('/api/unfollowers', unfollowersRoutes);
 app.use('/api/thread', threadRoutes);
 app.use('/api/video', videoRoutes);
+app.use('/api/agent', agentRoutes);
+// Competitive feature routes (09-A through 09-P)
+app.use('/api/analytics', historyRoutes); // history, growth, overlap endpoints augment existing analytics
+app.use('/api/schedule', scheduleRoutes);
+app.use('/api/crm', crmRoutes);
+app.use('/api/datasets', datasetsRoutes);
+app.use('/api/notifications', notificationsRoutes);
+app.use('/api/teams', teamsRoutes);
+app.use('/api/optimizer', optimizerRoutes);
 
 // Plugin routes — mounted under /api/plugins/<plugin-name>/
 function mountPluginRoutes() {
@@ -250,9 +260,22 @@ app.get('/docs', (req, res) => {
   res.sendFile(path.join(__dirname, '../dashboard/docs/index.html'));
 });
 
-// Documentation sub-pages (71 auto-generated SEO pages from docs/examples/*.md)
+// Documentation sub-pages — serves 167 auto-generated SEO pages
+// Nested paths: /docs/guides/:slug, /docs/skills/:slug, /docs/tutorials/:slug, etc.
+app.get('/docs/:section/:slug', (req, res) => {
+  const section = req.params.section.replace(/[^a-zA-Z0-9-]/g, '');
+  const slug = req.params.slug.replace(/[^a-zA-Z0-9-_]/g, '');
+  const filePath = path.join(__dirname, `../dashboard/docs/${section}/${slug}.html`);
+  res.sendFile(filePath, (err) => {
+    if (err) {
+      res.status(404).sendFile(path.join(__dirname, '../dashboard/404.html'));
+    }
+  });
+});
+
+// Flat docs: /docs/:slug (71 pages from docs/examples/*.md)
 app.get('/docs/:slug', (req, res) => {
-  const slug = req.params.slug.replace(/[^a-zA-Z0-9-]/g, ''); // Sanitize
+  const slug = req.params.slug.replace(/[^a-zA-Z0-9-]/g, '');
   const filePath = path.join(__dirname, `../dashboard/docs/${slug}.html`);
   res.sendFile(filePath, (err) => {
     if (err) {
@@ -324,6 +347,10 @@ app.get('/automations', (req, res) => {
   res.sendFile(path.join(__dirname, '../dashboard/automations.html'));
 });
 
+app.get('/agent', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dashboard/agent.html'));
+});
+
 app.get('/monitor', (req, res) => {
   res.sendFile(path.join(__dirname, '../dashboard/monitor.html'));
 });
@@ -347,6 +374,22 @@ app.get('/thread/:tweetId', (req, res) => {
 
 app.get('/video', (req, res) => {
   res.sendFile(path.join(__dirname, '../dashboard/video.html'));
+});
+
+app.get('/analytics-dashboard', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dashboard/analytics-dashboard.html'));
+});
+
+app.get('/calendar', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dashboard/calendar.html'));
+});
+
+app.get('/thread-composer', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dashboard/thread-composer.html'));
+});
+
+app.get('/team', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dashboard/team.html'));
 });
 
 // Error handling middleware

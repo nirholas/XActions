@@ -10,7 +10,7 @@
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Docker](https://img.shields.io/badge/Docker-ready-blue?logo=docker)](Dockerfile)
 [![TypeScript](https://img.shields.io/badge/Types-included-blue?logo=typescript)](types/index.d.ts)
-[![MCP](https://img.shields.io/badge/MCP-75%2B%20tools-purple?logo=data:image/svg+xml;base64,PHN2Zz48L3N2Zz4=)](docs/mcp-setup.md)
+[![MCP](https://img.shields.io/badge/MCP-140%2B%20tools-purple?logo=data:image/svg+xml;base64,PHN2Zz48L3N2Zz4=)](docs/mcp-setup.md)
 [![Smithery](https://smithery.ai/badge/xactions)](https://smithery.ai/server/xactions)
 [![Glama](https://glama.ai/mcp/servers/badge)](https://glama.ai/mcp/servers)
 [![Built with Grok](https://img.shields.io/badge/Built%20with-Grok%20🤖-blue)](https://x.ai)
@@ -31,7 +31,7 @@ No API keys. No monthly fees. 100% open source. Your browser does the work.
 | Feature | **XActions** | twikit | twitter-mcp | agent-twitter-client | twit | twitter-scraper |
 |---------|:---:|:---:|:---:|:---:|:---:|:---:|
 | **No API Key Required** | ✅ | ✅ | ❌ Needs keys | ✅ | ❌ Needs keys | ✅ |
-| **MCP Server (AI agents)** | ✅ **49+ tools** | ❌ | ✅ 2 tools | ❌ | ❌ | ❌ |
+| **MCP Server (AI agents)** | ✅ **140+ tools** | ❌ | ✅ 2 tools | ❌ | ❌ | ❌ |
 | **Browser Console Scripts** | ✅ 50+ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | **CLI** | ✅ 12 commands | ❌ | ❌ | ❌ | ❌ | ❌ |
 | **Node.js Library** | ✅ | ❌ Python | ✅ | ✅ | ✅ | ❌ Python |
@@ -310,7 +310,7 @@ This only applies to the hosted remote API. Local mode is always free.
 |-|---------|--------|
 | **Scope** | Browser scripts + CLI + Node.js + MCP + Dashboard + Workflows | Usually 1 thing |
 | **API Key** | Not needed | Most require Twitter API keys ($100/mo) |
-| **MCP Tools** | 49+ tools for Claude, GPT, Cursor | 0-2 tools |
+| **MCP Tools** | 140+ tools for Claude, GPT, Cursor | 0-2 tools |
 | **AI Features** | Sentiment analysis, Grok, reputation monitoring | None |
 | **Export** | JSON, CSV, Markdown, HTML archive | JSON only (if any) |
 | **Migration** | Export to Bluesky & Mastodon | None |
@@ -776,14 +776,20 @@ npx xactions mcp-config --client cursor
 npx xactions mcp-config --client windsurf
 ```
 
-### Available MCP Tools (50+)
+### Available MCP Tools (140+)
 
 | Category | Tools |
 |----------|-------|
-| **Scraping** | `x_get_profile`, `x_get_followers`, `x_get_following`, `x_get_tweets`, `x_search_tweets`, `x_get_thread`, `x_download_video` |
-| **Analysis** | `x_detect_unfollowers`, `x_analyze_sentiment`, `x_best_time_to_post`, `x_competitor_analysis`, `x_brand_monitor` |
-| **Actions** | `x_follow`, `x_unfollow`, `x_like`, `x_post_tweet`, `x_post_thread`, `x_reply`, `x_retweet` |
-| **AI** | `x_analyze_voice`, `x_generate_tweet`, `x_summarize_thread` |
+| **Scraping** | `x_get_profile`, `x_get_followers`, `x_get_following`, `x_get_tweets`, `x_search_tweets`, `x_get_thread`, `x_download_video`, `x_get_replies`, `x_get_hashtag`, `x_get_likers`, `x_get_retweeters`, `x_get_media`, `x_get_mentions`, `x_get_quote_tweets`, `x_get_likes`, `x_get_recommendations` |
+| **Analysis** | `x_detect_unfollowers`, `x_analyze_sentiment`, `x_best_time_to_post`, `x_competitor_analysis`, `x_brand_monitor`, `x_audience_insights`, `x_engagement_report`, `x_crypto_analyze` |
+| **Actions** | `x_follow`, `x_unfollow`, `x_like`, `x_post_tweet`, `x_post_thread`, `x_reply`, `x_retweet`, `x_quote_tweet`, `x_bookmark`, `x_send_dm`, `x_create_poll`, `x_delete_tweet` |
+| **Automation** | `x_auto_follow`, `x_follow_engagers`, `x_unfollow_all`, `x_smart_unfollow`, `x_auto_comment`, `x_auto_retweet`, `x_auto_like`, `x_unfollow_non_followers` |
+| **AI** | `x_analyze_voice`, `x_generate_tweet`, `x_summarize_thread`, `x_rewrite_tweet`, `x_detect_bots`, `x_find_influencers`, `x_smart_target`, `x_grok_analyze_image` |
+| **Monitoring** | `x_monitor_account`, `x_monitor_keyword`, `x_follower_alerts`, `x_track_engagement`, `x_monitor_reputation`, `x_stream_start` |
+| **Workflows** | `x_workflow_create`, `x_workflow_run`, `x_workflow_list`, `x_workflow_actions` |
+| **Persona** | `x_persona_create`, `x_persona_run`, `x_persona_edit`, `x_persona_list`, `x_persona_presets` |
+| **Portability** | `x_export_account`, `x_migrate_account`, `x_diff_exports`, `x_import_data`, `x_convert_format` |
+| **Graph** | `x_graph_build`, `x_graph_analyze`, `x_graph_recommendations`, `x_graph_list` |
 
 ### Example Prompts
 

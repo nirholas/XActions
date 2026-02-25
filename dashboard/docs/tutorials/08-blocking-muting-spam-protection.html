@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tutorial: Mass Block, Unblock, Mute &amp; Spam Protection with Claude | XActions</title>
+  <meta name="description" content="You are my X/Twitter safety and moderation expert. I want to use XActions to block bots, mute noisy accounts, manage muted words, report spam, and keep my timel">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, open source, blocking, muting, spam, protection, tutorial:, mass, block,, unblock,, mute, claude">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Tutorial: Mass Block, Unblock, Mute &amp; Spam Protection with Claude — XActions">
+  <meta property="og:description" content="You are my X/Twitter safety and moderation expert. I want to use XActions to block bots, mute noisy accounts, manage muted words, report spam, and keep my timel">
+  <meta property="og:url" content="https://xactions.app/docs/tutorials/08-blocking-muting-spam-protection">
+  <meta property="og:site_name" content="XActions">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Tutorial: Mass Block, Unblock, Mute &amp; Spam Protection with Claude — XActions">
+  <meta name="twitter:description" content="You are my X/Twitter safety and moderation expert. I want to use XActions to block bots, mute noisy accounts, manage muted words, report spam, and keep my timel">
+
+  <link rel="canonical" href="https://xactions.app/docs/tutorials/08-blocking-muting-spam-protection">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Tutorial: Mass Block, Unblock, Mute & Spam Protection with Claude | XActions",
+    "description": "You are my X/Twitter safety and moderation expert. I want to use XActions to block bots, mute noisy accounts, manage muted words, report spam, and keep my timel",
+    "url": "https://xactions.app/docs/tutorials/08-blocking-muting-spam-protection",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-25",
+    "dateModified": "2026-02-25",
+    "mainEntityOfPage": "https://xactions.app/docs/tutorials/08-blocking-muting-spam-protection",
+    "articleSection": "Claude Tutorials",
+    "keywords": "xactions, twitter automation, x automation, free, open source, blocking, muting, spam, protection, tutorial:, mass, block,, unblock,, mute, claude"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Claude Tutorials", "item": "https://xactions.app/docs/tutorials" },
+      { "@type": "ListItem", "position": 4, "name": "Tutorial: Mass Block, Unblock, Mute & Spam Protection with Claude", "item": "https://xactions.app/docs/tutorials/08-blocking-muting-spam-protection" }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .article pre { font-size: 0.75rem; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <main class="main-content">
+      <header class="main-header">
+        <h1>🤖 Tutorial: Mass Block, Unblock, Mute &amp; Spam Protection with Claude</h1>
+        <div class="breadcrumb">
+          <a href="https://xactions.app">Home</a> › <a href="https://xactions.app/docs">Docs</a> › <a href="https://xactions.app/docs/tutorials">Claude Tutorials</a> › Tutorial: Mass Block, Unblock, Mute &amp; Spam Protection with Claude
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Claude Tutorials</span>
+        <h1>Tutorial: Mass Block, Unblock, Mute &amp; Spam Protection with Claude</h1>
+<p>You are my X/Twitter safety and moderation expert. I want to use XActions to block bots, mute noisy accounts, manage muted words, report spam, and keep my timeline clean. Help me set up comprehensive account protection.</p>
+<h2>Context</h2>
+<p>I&#39;m using XActions (<a href="https://github.com/nirholas/XActions">https://github.com/nirholas/XActions</a>), an open-source X/Twitter toolkit with blocking, muting, and moderation features — both via MCP tools and browser console scripts.</p>
+<h2>What I Need You To Do</h2>
+<h3>Part 1: Bot Detection &amp; Mass Blocking</h3>
+<p>Help me identify and block bot/spam accounts:</p>
+<ol>
+<li><p><strong>Audit my followers for bots</strong> using <code>x_get_followers</code>:</p>
+<ul>
+<li>Pull my followers list</li>
+<li>Identify suspicious accounts based on:<ul>
+<li>No profile picture (default avatar)</li>
+<li>No bio or generic bio</li>
+<li>Following thousands, very few followers</li>
+<li>Account created recently</li>
+<li>Username looks auto-generated (random letters/numbers)</li>
+</ul>
+</li>
+<li>Present a list of suspected bots</li>
+</ul>
+</li>
+<li><p><strong>Mass block bots</strong> using the <code>blockBots.js</code> browser script:</p>
+<ul>
+<li>Navigate to follower list</li>
+<li>Paste core.js, then blockBots.js</li>
+<li>The script identifies and blocks suspected bot accounts</li>
+<li>Configurable detection criteria</li>
+</ul>
+</li>
+<li><p><strong>Using MCP to block</strong> — Block accounts one by one with targeted approach:</p>
+<pre><code>&quot;Block these accounts: @bot1, @bot2, @bot3&quot;
+</code></pre>
+</li>
+<li><p><strong>Block list from notification spam:</strong></p>
+<ul>
+<li>Use <code>x_get_notifications</code> to check for spam notifications</li>
+<li>Identify patterns (accounts that mass-like old tweets, spam DMs)</li>
+<li>Mass block the offenders</li>
+</ul>
+</li>
+</ol>
+<h3>Part 2: Mass Block Script</h3>
+<p>Walk me through <code>src/massBlock.js</code>:</p>
+<ol>
+<li><p><strong>Use case:</strong> Block a list of specific accounts or block based on criteria</p>
+</li>
+<li><p><strong>Navigate to the account you want to block</strong> or use a prepared list</p>
+</li>
+<li><p><strong>How it works:</strong></p>
+<ul>
+<li>Takes a list of usernames to block</li>
+<li>Navigates to each profile</li>
+<li>Clicks the ⋯ menu → Block</li>
+<li>Confirms the block</li>
+<li>Waits between blocks to avoid rate limits</li>
+<li>Logs all blocks</li>
+</ul>
+</li>
+<li><p><strong>Common blocking scenarios:</strong></p>
+<ul>
+<li>Block all accounts from a harassment campaign</li>
+<li>Block accounts that follow a specific spam account</li>
+<li>Block accounts that reply with scams/spam to your tweets</li>
+</ul>
+</li>
+</ol>
+<h3>Part 3: Mass Unblock</h3>
+<p>When you&#39;ve overblocked or want to start fresh, use <code>src/massUnblock.js</code>:</p>
+<ol>
+<li><p><strong>Check your blocked list</strong> using <code>x_get_blocked</code>:</p>
+<pre><code>&quot;Show me all my blocked accounts&quot;
+</code></pre>
+</li>
+<li><p><strong>Review and selectively unblock:</strong></p>
+<ul>
+<li>Some blocks are deserved, some might have been mistakes</li>
+<li>The script can unblock in bulk</li>
+</ul>
+</li>
+<li><p><strong>Full reset:</strong> Unblock everyone and start with a clean slate</p>
+</li>
+</ol>
+<h3>Part 4: Muting Users</h3>
+<p>For accounts you don&#39;t want to block but don&#39;t want to see:</p>
+<ol>
+<li><p><strong>Mute via MCP</strong> using <code>x_mute_user</code>:</p>
+<pre><code>&quot;Mute these accounts: @annoying1, @annoying2&quot;
+</code></pre>
+</li>
+<li><p><strong>Mass unmute</strong> using <code>x_unmute_user</code> or <code>src/massUnmute.js</code>:</p>
+<pre><code>&quot;Unmute @user1&quot;
+</code></pre>
+<p>Or bulk unmute when your mute list gets too long</p>
+</li>
+<li><p><strong>When to mute vs block:</strong></p>
+<ul>
+<li><strong>Mute:</strong> You don&#39;t want to see their content but don&#39;t want drama. They won&#39;t know.</li>
+<li><strong>Block:</strong> You want them completely cut off. They&#39;ll see they&#39;re blocked.</li>
+<li><strong>Hide reply:</strong> You want to hide a specific reply without blocking</li>
+</ul>
+</li>
+</ol>
+<h3>Part 5: Keyword Muting</h3>
+<p>Control your timeline with <code>src/muteByKeywords.js</code> and <code>src/manageMutedWords.js</code>:</p>
+<ol>
+<li><p><strong>Mute specific keywords/phrases:</strong></p>
+<ul>
+<li>Words that trigger you or cause negative experiences</li>
+<li>Spoilers for shows/events</li>
+<li>Political topics you want to avoid</li>
+<li>Spam phrases</li>
+</ul>
+</li>
+<li><p><strong>Configure <code>muteByKeywords.js</code>:</strong></p>
+<ul>
+<li>Navigate to Settings → Privacy → Muted → Muted words</li>
+<li>Or use the script to add muted words programmatically</li>
+<li>Set duration: Forever, 24 hours, 7 days, 30 days</li>
+</ul>
+</li>
+<li><p><strong>Manage muted words with <code>manageMutedWords.js</code>:</strong></p>
+<ul>
+<li>View all currently muted words</li>
+<li>Add new words in bulk</li>
+<li>Remove words that are no longer relevant</li>
+<li>Export your mute list</li>
+</ul>
+</li>
+<li><p><strong>Smart muting strategies:</strong></p>
+<ul>
+<li>Mute during major events you don&#39;t care about (sports, elections, awards)</li>
+<li>Mute spam patterns (&quot;DM me&quot;, &quot;check my pinned&quot;, &quot;airdrop&quot;)</li>
+<li>Mute negative trigger words</li>
+<li>Unmute after events pass</li>
+</ul>
+</li>
+</ol>
+<h3>Part 6: Report Spam</h3>
+<p>For accounts actively spamming or harassing, use <code>src/reportSpam.js</code>:</p>
+<ol>
+<li><p><strong>How it works:</strong></p>
+<ul>
+<li>Identifies spam accounts from your mentions/notifications</li>
+<li>Reports them to X for review</li>
+<li>Optionally blocks after reporting</li>
+</ul>
+</li>
+<li><p><strong>What qualifies for reporting:</strong></p>
+<ul>
+<li>Crypto scam replies</li>
+<li>Impersonation accounts</li>
+<li>Accounts posting harmful content</li>
+<li>Mass-spam accounts</li>
+</ul>
+</li>
+<li><p><strong>Using MCP to monitor for spam:</strong></p>
+<pre><code>&quot;Check my recent notifications for spam patterns&quot;
+&quot;Search for recent replies to my tweets — are there any spam accounts?&quot;
+</code></pre>
+</li>
+</ol>
+<h3>Part 7: Removing Unwanted Followers</h3>
+<p>Use <code>src/removeFollowers.js</code> to remove followers you don&#39;t want:</p>
+<ol>
+<li><p><strong>Why remove followers?</strong></p>
+<ul>
+<li>Bot followers that hurt your engagement rate</li>
+<li>Toxic accounts you don&#39;t want associated with your profile</li>
+<li>Ex-employees, ex-partners, or people you want to distance from</li>
+</ul>
+</li>
+<li><p><strong>How it works:</strong></p>
+<ul>
+<li>Block then immediately unblock — this removes them as a follower</li>
+<li>They won&#39;t get a notification</li>
+<li>They can follow you again unless you keep them blocked</li>
+</ul>
+</li>
+<li><p><strong>Follower cleanup strategy:</strong></p>
+<ul>
+<li>Audit followers monthly</li>
+<li>Remove obvious bots</li>
+<li>Remove inactive accounts (improve engagement metrics)</li>
+<li>Keep your follower quality high</li>
+</ul>
+</li>
+</ol>
+<h3>Part 8: MCP Tools for Safety</h3>
+<p>Quick reference for MCP-based moderation:</p>
+<ol>
+<li><strong>Block:</strong> Use MCP tools or script</li>
+<li><strong>Mute user:</strong> <code>x_mute_user</code><pre><code>&quot;Mute @username&quot;
+</code></pre>
+</li>
+<li><strong>Unmute user:</strong> <code>x_unmute_user</code><pre><code>&quot;Unmute @username&quot;
+</code></pre>
+</li>
+<li><strong>Get blocked list:</strong> <code>x_get_blocked</code><pre><code>&quot;Show me my blocked accounts&quot;
+</code></pre>
+</li>
+<li><strong>Privacy toggle:</strong> <code>x_toggle_protected</code><pre><code>&quot;Make my account private&quot;
+&quot;Make my account public&quot;
+</code></pre>
+</li>
+<li><strong>Settings check:</strong> <code>x_get_settings</code><pre><code>&quot;Show me my current privacy settings&quot;
+</code></pre>
+</li>
+</ol>
+<h3>Part 9: Proactive Protection Setup</h3>
+<p>Set up ongoing protection:</p>
+<ol>
+<li><p><strong>Brand monitoring</strong> using <code>x_brand_monitor</code>:</p>
+<pre><code>&quot;Monitor mentions of my username for negative sentiment&quot;
+</code></pre>
+<ul>
+<li>Catch harassment early</li>
+<li>Identify coordinated attacks</li>
+<li>Block offending accounts quickly</li>
+</ul>
+</li>
+<li><p><strong>Notification filtering</strong> using <code>x_get_notifications</code>:</p>
+<ul>
+<li>Regular checks for spam patterns</li>
+<li>Auto-identify new bot followers</li>
+<li>Track unusual activity spikes</li>
+</ul>
+</li>
+<li><p><strong>Privacy lockdown checklist:</strong></p>
+<ul>
+<li>Review who can DM you</li>
+<li>Review who can tag you in photos</li>
+<li>Check if email/phone is discoverable</li>
+<li>Review connected apps</li>
+<li>Use <code>x_get_settings</code> to audit everything</li>
+</ul>
+</li>
+</ol>
+<h3>Part 10: Emergency Response</h3>
+<p>If you&#39;re being harassed or brigaded:</p>
+<ol>
+<li><p><strong>Immediate actions:</strong></p>
+<ul>
+<li>Toggle account to protected: <code>x_toggle_protected</code> with <code>enabled: true</code></li>
+<li>This stops new followers and hides your tweets from non-followers</li>
+</ul>
+</li>
+<li><p><strong>Block the source:</strong></p>
+<ul>
+<li>Block the main instigator(s)</li>
+<li>Block accounts replying with harassment</li>
+</ul>
+</li>
+<li><p><strong>Report to X:</strong></p>
+<ul>
+<li>Use reportSpam.js for mass reporting</li>
+<li>Document everything (screenshot before blocking)</li>
+</ul>
+</li>
+<li><p><strong>Recovery:</strong></p>
+<ul>
+<li>Wait for the storm to pass</li>
+<li>Unprotect account when ready</li>
+<li>Review and update your block/mute lists</li>
+<li>Consider adjusting privacy settings long-term</li>
+</ul>
+</li>
+</ol>
+<h2>My Safety Needs</h2>
+<p>(Replace before pasting)</p>
+<ul>
+<li>Am I being harassed? Yes/No</li>
+<li>Estimated bot followers: ROUGH_NUMBER</li>
+<li>Keywords I want to mute: keyword1, keyword2</li>
+<li>Accounts to block: @acc1, @acc2 (or &quot;help me identify them&quot;)</li>
+<li>Privacy level: Open, Moderate, Strict</li>
+</ul>
+<p>Start with Part 1 — help me audit my followers for bots and clean up my account.</p>
+
+
+        <div class="cta-box">
+          <h3>⚡ Explore XActions</h3>
+          <p>100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/docs">Browse All Documentation</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 In This Section</h3>
+                <a href="/docs/tutorials/01-mcp-setup-and-first-commands">🤖 Tutorial: Setting Up XActions MCP Server with Claude</a>
+        <a href="/docs/tutorials/02-unfollow-non-followers-cleanup">🤖 Tutorial: Unfollow Non-Followers &amp; Follower Cleanup with Claude</a>
+        <a href="/docs/tutorials/03-growth-automation-suite">🤖 Tutorial: Growth Automation Suite — Grow Your X Account on Autopilot</a>
+        <a href="/docs/tutorials/04-scraping-research-analysis">🤖 Tutorial: Tweet Scraping, Profile Analysis &amp; Research with Claude</a>
+        <a href="/docs/tutorials/05-content-posting-threads-scheduling">🤖 Tutorial: Content Posting, Threads, Polls &amp; Scheduling with Claude</a>
+        <a href="/docs/tutorials/06-analytics-competitor-intelligence">🤖 Tutorial: Engagement Analytics, Best Time to Post &amp; Competitor Intelligence</a>
+        <a href="/docs/tutorials/07-auto-liker-auto-commenter">🤖 Tutorial: Auto-Liker &amp; Auto-Commenter — Engagement Automation with Claude</a>
+        <a href="/docs/tutorials/09-dm-management-automation">🤖 Tutorial: DM Management, Export &amp; Automation with Claude</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/docs">All Documentation</a>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

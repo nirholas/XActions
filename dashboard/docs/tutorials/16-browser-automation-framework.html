@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tutorial: The Complete XActions Browser Automation Framework | XActions</title>
+  <meta name="description" content="You are my browser automation expert. I want to master the XActions automation framework — the core.js module, the actions.js library, and every automation scri">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, open source, browser, automation, framework, tutorial:, complete, claude tutorials">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Tutorial: The Complete XActions Browser Automation Framework — XActions">
+  <meta property="og:description" content="You are my browser automation expert. I want to master the XActions automation framework — the core.js module, the actions.js library, and every automation scri">
+  <meta property="og:url" content="https://xactions.app/docs/tutorials/16-browser-automation-framework">
+  <meta property="og:site_name" content="XActions">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Tutorial: The Complete XActions Browser Automation Framework — XActions">
+  <meta name="twitter:description" content="You are my browser automation expert. I want to master the XActions automation framework — the core.js module, the actions.js library, and every automation scri">
+
+  <link rel="canonical" href="https://xactions.app/docs/tutorials/16-browser-automation-framework">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Tutorial: The Complete XActions Browser Automation Framework | XActions",
+    "description": "You are my browser automation expert. I want to master the XActions automation framework — the core.js module, the actions.js library, and every automation scri",
+    "url": "https://xactions.app/docs/tutorials/16-browser-automation-framework",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-25",
+    "dateModified": "2026-02-25",
+    "mainEntityOfPage": "https://xactions.app/docs/tutorials/16-browser-automation-framework",
+    "articleSection": "Claude Tutorials",
+    "keywords": "xactions, twitter automation, x automation, free, open source, browser, automation, framework, tutorial:, complete, claude tutorials"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Claude Tutorials", "item": "https://xactions.app/docs/tutorials" },
+      { "@type": "ListItem", "position": 4, "name": "Tutorial: The Complete XActions Browser Automation Framework", "item": "https://xactions.app/docs/tutorials/16-browser-automation-framework" }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .article pre { font-size: 0.75rem; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <main class="main-content">
+      <header class="main-header">
+        <h1>🤖 Tutorial: The Complete XActions Browser Automation Framework</h1>
+        <div class="breadcrumb">
+          <a href="https://xactions.app">Home</a> › <a href="https://xactions.app/docs">Docs</a> › <a href="https://xactions.app/docs/tutorials">Claude Tutorials</a> › Tutorial: The Complete XActions Browser Automation Framework
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Claude Tutorials</span>
+        <h1>Tutorial: The Complete XActions Browser Automation Framework</h1>
+<p>You are my browser automation expert. I want to master the XActions automation framework — the core.js module, the actions.js library, and every automation script. Walk me through the entire system from foundation to advanced techniques.</p>
+<h2>Context</h2>
+<p>I&#39;m using XActions (<a href="https://github.com/nirholas/XActions">https://github.com/nirholas/XActions</a>), an open-source X/Twitter toolkit. The browser automation framework lives in <code>src/automation/</code> and consists of:</p>
+<ul>
+<li><strong>core.js</strong> — Foundation module (paste FIRST, always)</li>
+<li><strong>actions.js</strong> — Complete actions library (2100+ lines, every X action possible)</li>
+<li><strong>15 automation scripts</strong> — Each automates a specific workflow</li>
+</ul>
+<p>Everything works by pasting into the browser developer console on x.com.</p>
+<h2>What I Need You To Do</h2>
+<h3>Part 1: Understanding the Architecture</h3>
+<p>Explain the framework&#39;s design:</p>
+<ol>
+<li><p><strong>The Module System:</strong></p>
+<ul>
+<li>All scripts use <code>window.XActions</code> as a namespace</li>
+<li><code>core.js</code> creates <code>window.XActions.Core</code> with shared utilities</li>
+<li><code>actions.js</code> creates <code>window.XActions</code> with ready-to-use functions</li>
+<li>Individual scripts check for Core and use its utilities</li>
+<li>This means: <strong>Always paste core.js first</strong></li>
+</ul>
+</li>
+<li><p><strong>The Core Foundation (core.js):</strong></p>
+<ul>
+<li><strong>CONFIG</strong>: Timing defaults, rate limits, storage prefix, debug mode</li>
+<li><strong>SELECTORS</strong>: All known X DOM selectors (buttons, tweets, users, inputs)</li>
+<li><strong>Utilities</strong>: sleep, randomDelay, log, scroll functions</li>
+<li><strong>Storage</strong>: localStorage wrapper with JSON serialization</li>
+<li><strong>DOM Helpers</strong>: waitForElement, waitForElements, clickElement, typeText</li>
+<li><strong>User Extraction</strong>: extractUsername, extractTweetInfo</li>
+<li><strong>Rate Limiting</strong>: check, increment, getRemaining (hourly/daily)</li>
+<li><strong>Action Queue</strong>: Sequential action execution with delays</li>
+</ul>
+</li>
+<li><p><strong>The Actions Library (actions.js):</strong><br>Organized into namespaces:</p>
+<pre><code class="language-javascript">XActions.tweet.post(&quot;text&quot;)      // Post a tweet
+XActions.tweet.reply(el, &quot;text&quot;) // Reply to a tweet
+XActions.tweet.quote(el, &quot;text&quot;) // Quote tweet
+XActions.tweet.like(el)          // Like a tweet
+XActions.tweet.retweet(el)       // Retweet
+XActions.tweet.bookmark(el)      // Bookmark
+XActions.tweet.delete(el)        // Delete your tweet
+
+XActions.user.follow(&quot;username&quot;) // Follow a user
+XActions.user.unfollow(&quot;username&quot;) // Unfollow
+XActions.user.block(&quot;username&quot;)  // Block
+XActions.user.mute(&quot;username&quot;)   // Mute
+XActions.user.getInfo(&quot;username&quot;) // Get user info
+
+XActions.dm.send(&quot;username&quot;, &quot;message&quot;) // Send DM
+XActions.dm.read()               // Read DMs
+
+XActions.search.tweets(&quot;query&quot;)  // Search tweets
+XActions.search.users(&quot;query&quot;)   // Search users
+
+XActions.navigate.toProfile(&quot;username&quot;)
+XActions.navigate.toHome()
+XActions.navigate.toFollowers(&quot;username&quot;)
+XActions.navigate.toFollowing(&quot;username&quot;)
+</code></pre>
+</li>
+</ol>
+<h3>Part 2: Setting Up — Your First Automation</h3>
+<p>Walk me through the exact steps:</p>
+<ol>
+<li><p><strong>Open x.com</strong> in your browser (Chrome recommended)</p>
+</li>
+<li><p><strong>Open Developer Tools:</strong></p>
+<ul>
+<li>Windows/Linux: F12 or Ctrl+Shift+I</li>
+<li>Mac: Cmd+Option+I</li>
+</ul>
+</li>
+<li><p><strong>Go to the Console tab</strong></p>
+</li>
+<li><p><strong>Paste core.js</strong> — you&#39;ll see: <code>✅ XActions Core loaded! Ready for automation scripts.</code></p>
+</li>
+<li><p><strong>Test it:</strong></p>
+<pre><code class="language-javascript">// Check it loaded
+window.XActions.Core.log(&#39;Hello from XActions!&#39;, &#39;success&#39;);
+
+// Try a utility  
+await window.XActions.Core.sleep(1000);
+console.log(&#39;Slept for 1 second&#39;);
+</code></pre>
+</li>
+<li><p><strong>Now paste any automation script</strong> (they all automatically detect core.js)</p>
+</li>
+</ol>
+<h3>Part 3: Every X Selector You Need</h3>
+<p>The SELECTORS object in core.js — your roadmap to every X UI element:</p>
+<p><strong>Buttons:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Selector</th>
+<th>Element</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>[data-testid$=&quot;-follow&quot;]</code></td>
+<td>Follow button</td>
+</tr>
+<tr>
+<td><code>[data-testid$=&quot;-unfollow&quot;]</code></td>
+<td>Unfollow button</td>
+</tr>
+<tr>
+<td><code>[data-testid=&quot;like&quot;]</code></td>
+<td>Like button</td>
+</tr>
+<tr>
+<td><code>[data-testid=&quot;unlike&quot;]</code></td>
+<td>Unlike button (already liked)</td>
+</tr>
+<tr>
+<td><code>[data-testid=&quot;retweet&quot;]</code></td>
+<td>Retweet button</td>
+</tr>
+<tr>
+<td><code>[data-testid=&quot;unretweet&quot;]</code></td>
+<td>Unretweet button</td>
+</tr>
+<tr>
+<td><code>[data-testid=&quot;reply&quot;]</code></td>
+<td>Reply button</td>
+</tr>
+<tr>
+<td><code>[data-testid=&quot;confirmationSheetConfirm&quot;]</code></td>
+<td>Confirm dialog button</td>
+</tr>
+<tr>
+<td><code>[data-testid=&quot;confirmationSheetCancel&quot;]</code></td>
+<td>Cancel dialog button</td>
+</tr>
+<tr>
+<td><code>[data-testid=&quot;share&quot;]</code></td>
+<td>Share button</td>
+</tr>
+<tr>
+<td><code>[data-testid=&quot;bookmark&quot;]</code></td>
+<td>Bookmark button</td>
+</tr>
+<tr>
+<td><code>[data-testid=&quot;removeBookmark&quot;]</code></td>
+<td>Remove bookmark</td>
+</tr>
+</tbody></table>
+<p><strong>Tweet Elements:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Selector</th>
+<th>Element</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>[data-testid=&quot;tweet&quot;]</code> (or <code>article</code>)</td>
+<td>Individual tweet</td>
+</tr>
+<tr>
+<td><code>[data-testid=&quot;tweetText&quot;]</code></td>
+<td>Tweet text content</td>
+</tr>
+<tr>
+<td><code>a[href*=&quot;/status/&quot;]</code></td>
+<td>Tweet permalink</td>
+</tr>
+<tr>
+<td><code>[data-testid=&quot;caret&quot;]</code></td>
+<td>Tweet ⋯ menu</td>
+</tr>
+</tbody></table>
+<p><strong>User Elements:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Selector</th>
+<th>Element</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>[data-testid=&quot;UserCell&quot;]</code></td>
+<td>User in a list (followers, following, etc.)</td>
+</tr>
+<tr>
+<td><code>[data-testid=&quot;UserAvatar-Container&quot;]</code></td>
+<td>User avatar</td>
+</tr>
+<tr>
+<td><code>[data-testid=&quot;User-Name&quot;]</code></td>
+<td>User display name</td>
+</tr>
+<tr>
+<td><code>[data-testid=&quot;userFollowIndicator&quot;]</code></td>
+<td>&quot;Follows you&quot; badge</td>
+</tr>
+</tbody></table>
+<p><strong>Input Elements:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Selector</th>
+<th>Element</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>[data-testid=&quot;tweetTextarea_0&quot;]</code></td>
+<td>Tweet compose box</td>
+</tr>
+<tr>
+<td><code>[data-testid=&quot;SearchBox_Search_Input&quot;]</code></td>
+<td>Search input</td>
+</tr>
+<tr>
+<td><code>[data-testid=&quot;dmComposerTextInput&quot;]</code></td>
+<td>DM input</td>
+</tr>
+<tr>
+<td><code>[data-testid=&quot;dmComposerSendButton&quot;]</code></td>
+<td>DM send button</td>
+</tr>
+</tbody></table>
+<p><strong>Navigation:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Selector</th>
+<th>Element</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>[data-testid=&quot;primaryColumn&quot;]</code></td>
+<td>Main content column</td>
+</tr>
+<tr>
+<td><code>[data-testid=&quot;sidebarColumn&quot;]</code></td>
+<td>Sidebar</td>
+</tr>
+<tr>
+<td><code>[data-testid=&quot;app-bar-back&quot;]</code></td>
+<td>Back button</td>
+</tr>
+</tbody></table>
+<h3>Part 4: Complete Script Reference</h3>
+<p>Walk me through every automation script:</p>
+<h4>1. autoLiker.js — Auto-Like Posts</h4>
+<ul>
+<li><strong>Paste after:</strong> core.js</li>
+<li><strong>Run on:</strong> Home feed, profile, or search results</li>
+<li><strong>Config:</strong> keywords, max likes, retweet option, skip replies/ads</li>
+<li><strong>Use case:</strong> Boost visibility by liking relevant content</li>
+</ul>
+<h4>2. autoCommenter.js — Auto-Comment on New Posts</h4>
+<ul>
+<li><strong>Paste after:</strong> core.js</li>
+<li><strong>Run on:</strong> A user&#39;s profile page</li>
+<li><strong>Config:</strong> comment templates, check interval, max comments, keyword filter</li>
+<li><strong>Use case:</strong> Never miss a post from important accounts</li>
+</ul>
+<h4>3. followEngagers.js — Follow Post Likers/Retweeters</h4>
+<ul>
+<li><strong>Paste after:</strong> core.js</li>
+<li><strong>Run on:</strong> A specific tweet, or provide tweet URLs</li>
+<li><strong>Config:</strong> mode (likers/retweeters/quoters/all), max follows, filters</li>
+<li><strong>Use case:</strong> Find and follow people interested in your niche</li>
+</ul>
+<h4>4. followTargetUsers.js — Follow Followers of Accounts</h4>
+<ul>
+<li><strong>Paste after:</strong> core.js</li>
+<li><strong>Run on:</strong> Home page (it navigates automatically)</li>
+<li><strong>Config:</strong> target accounts, list type (followers/following), filters</li>
+<li><strong>Use case:</strong> Grow by following fans of similar accounts</li>
+</ul>
+<h4>5. keywordFollow.js — Search &amp; Follow by Keyword</h4>
+<ul>
+<li><strong>Paste after:</strong> core.js</li>
+<li><strong>Run on:</strong> Search page (x.com/search)</li>
+<li><strong>Config:</strong> keywords, max follows per keyword, follower count filters, bio filters</li>
+<li><strong>Use case:</strong> Find and follow people in your exact niche</li>
+</ul>
+<h4>6. smartUnfollow.js — Time-Based Smart Unfollow</h4>
+<ul>
+<li><strong>Paste after:</strong> core.js</li>
+<li><strong>Run on:</strong> Your following page (x.com/USERNAME/following)</li>
+<li><strong>Config:</strong> days to wait, max unfollows, whitelist, dry run mode</li>
+<li><strong>Use case:</strong> Clean up non-followers after giving them time to follow back</li>
+</ul>
+<h4>7. growthSuite.js — All-in-One Growth</h4>
+<ul>
+<li><strong>Paste after:</strong> core.js</li>
+<li><strong>Run on:</strong> Home page</li>
+<li><strong>Config:</strong> keywords, target accounts, action toggles, limits, filters</li>
+<li><strong>Use case:</strong> Complete growth automation in one script</li>
+</ul>
+<h4>8. customerService.js — Customer Service Bot</h4>
+<ul>
+<li><strong>Paste after:</strong> core.js</li>
+<li><strong>Run on:</strong> Home page</li>
+<li><strong>Config:</strong> response templates, business hours, monitoring options</li>
+<li><strong>Use case:</strong> Automate customer service responses</li>
+</ul>
+<h4>9. multiAccount.js — Multi-Account Manager</h4>
+<ul>
+<li><strong>Paste after:</strong> core.js</li>
+<li><strong>Run on:</strong> Any page</li>
+<li><strong>Config:</strong> account list</li>
+<li><strong>Use case:</strong> Manage multiple X accounts</li>
+</ul>
+<h4>10. linkScraper.js — Extract Shared Links</h4>
+<ul>
+<li><strong>Paste after:</strong> core.js</li>
+<li><strong>Run on:</strong> A user&#39;s profile</li>
+<li><strong>Config:</strong> max links to extract</li>
+<li><strong>Use case:</strong> Find all links someone has shared</li>
+</ul>
+<h4>11. protectActiveUsers.js — Protect Engaged Users</h4>
+<ul>
+<li><strong>Paste after:</strong> core.js</li>
+<li><strong>Run on:</strong> Your profile</li>
+<li><strong>Config:</strong> engagement threshold</li>
+<li><strong>Use case:</strong> Build a whitelist of users who engage with you</li>
+</ul>
+<h4>12. quotaSupervisor.js — Rate Limit Manager</h4>
+<ul>
+<li><strong>Paste after:</strong> core.js</li>
+<li><strong>Auto-loads with any automation</strong></li>
+<li><strong>Config:</strong> hourly/daily limits, stochastic delays</li>
+<li><strong>Use case:</strong> Prevent rate limiting across all scripts</li>
+</ul>
+<h4>13. sessionLogger.js — Action Tracker</h4>
+<ul>
+<li><strong>Paste after:</strong> core.js</li>
+<li><strong>Run on:</strong> Any page (background tracker)</li>
+<li><strong>Config:</strong> retention period, export format</li>
+<li><strong>Use case:</strong> Log all automation actions for review</li>
+</ul>
+<h3>Part 5: Advanced Technique — Chaining Scripts</h3>
+<p>The power of the framework is chaining scripts together:</p>
+<p><strong>Example 1: Growth + Protection + Tracking</strong></p>
+<pre><code>1. Paste core.js
+2. Paste sessionLogger.js (starts logging)
+3. Paste protectActiveUsers.js (builds whitelist)
+4. Paste growthSuite.js (runs the growth automation)
+→ All actions are logged, active engagers are protected from unfollow
+</code></pre>
+<p><strong>Example 2: Research + Follow + Engage</strong></p>
+<pre><code>1. Paste core.js
+2. Paste actions.js (gives you the full XActions API)
+3. Navigate to a viral tweet in your niche
+4. Paste followEngagers.js (follow the likers)
+5. Paste autoLiker.js (like related content)
+→ You follow interested users AND engage with their content
+</code></pre>
+<p><strong>Example 3: Track + Follow + Cleanup Cycle</strong></p>
+<pre><code>Week 1: Paste core.js + keywordFollow.js → Follow 20 users per day
+Week 2: Continue following, all tracked with timestamps
+Week 3: Paste core.js + smartUnfollow.js → Unfollow non-followers from Week 1
+→ Sustainable growth cycle
+</code></pre>
+<h3>Part 6: State &amp; Persistence</h3>
+<p>How data persists between sessions:</p>
+<ol>
+<li><p><strong>localStorage</strong> — Used by core.js storage system</p>
+<ul>
+<li>All tracking data (followed users, liked tweets, etc.)</li>
+<li>Survives browser refresh</li>
+<li>Persists until manually cleared</li>
+<li>Prefix: <code>xactions_</code> for all keys</li>
+</ul>
+</li>
+<li><p><strong>sessionStorage</strong> — Used by navigation scripts</p>
+<ul>
+<li>Tracks processed items during multi-page navigation</li>
+<li>Cleared when tab closes</li>
+<li>Used to prevent revisiting communities/pages</li>
+</ul>
+</li>
+<li><p><strong>How to view stored data:</strong></p>
+<pre><code class="language-javascript">// See all XActions data
+Object.keys(localStorage).filter(k =&gt; k.startsWith(&#39;xactions_&#39;)).forEach(k =&gt; {
+  console.log(k, JSON.parse(localStorage.getItem(k)));
+});
+</code></pre>
+</li>
+<li><p><strong>How to clear data:</strong></p>
+<pre><code class="language-javascript">// Clear all XActions data
+window.XActions.Core.storage.clear();
+</code></pre>
+</li>
+</ol>
+<h3>Part 7: Debugging &amp; Safety</h3>
+<ol>
+<li><strong>Debug mode:</strong> Set <code>CONFIG.DEBUG = true</code> in core.js for verbose logging</li>
+<li><strong>Dry run:</strong> Most scripts support DRY_RUN mode — preview without acting</li>
+<li><strong>Stop running script:</strong> Refresh the page, or set <code>isRunning = false</code> in the script&#39;s state</li>
+<li><strong>Rate limit protection:</strong> Built-in at multiple levels (core, quotaSupervisor, individual scripts)</li>
+<li><strong>If something goes wrong:</strong> Refresh the page — all scripts stop immediately</li>
+</ol>
+<h2>My Learning Goals</h2>
+<p>(Replace before pasting)</p>
+<ul>
+<li>My experience level: Beginner / Intermediate / Advanced JavaScript</li>
+<li>What I mainly want to automate: SPECIFIC_TASKS</li>
+<li>How comfortable am I with DevTools: First time / Some experience / Power user</li>
+</ul>
+<p>Start with Part 1 — help me understand the architecture, then guide me through my first paste-and-run automation.</p>
+
+
+        <div class="cta-box">
+          <h3>⚡ Explore XActions</h3>
+          <p>100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/docs">Browse All Documentation</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 In This Section</h3>
+                <a href="/docs/tutorials/01-mcp-setup-and-first-commands">🤖 Tutorial: Setting Up XActions MCP Server with Claude</a>
+        <a href="/docs/tutorials/02-unfollow-non-followers-cleanup">🤖 Tutorial: Unfollow Non-Followers &amp; Follower Cleanup with Claude</a>
+        <a href="/docs/tutorials/03-growth-automation-suite">🤖 Tutorial: Growth Automation Suite — Grow Your X Account on Autopilot</a>
+        <a href="/docs/tutorials/04-scraping-research-analysis">🤖 Tutorial: Tweet Scraping, Profile Analysis &amp; Research with Claude</a>
+        <a href="/docs/tutorials/05-content-posting-threads-scheduling">🤖 Tutorial: Content Posting, Threads, Polls &amp; Scheduling with Claude</a>
+        <a href="/docs/tutorials/06-analytics-competitor-intelligence">🤖 Tutorial: Engagement Analytics, Best Time to Post &amp; Competitor Intelligence</a>
+        <a href="/docs/tutorials/07-auto-liker-auto-commenter">🤖 Tutorial: Auto-Liker &amp; Auto-Commenter — Engagement Automation with Claude</a>
+        <a href="/docs/tutorials/08-blocking-muting-spam-protection">🤖 Tutorial: Mass Block, Unblock, Mute &amp; Spam Protection with Claude</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/docs">All Documentation</a>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>
