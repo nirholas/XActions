@@ -10,6 +10,8 @@ import { LLMBrain } from './llmBrain.js';
 import { Scheduler } from './scheduler.js';
 import { AgentDatabase } from './database.js';
 import { Persona } from './persona.js';
+import { ContentCalendar } from './contentCalendar.js';
+import { EngagementNetwork } from './engagementNetwork.js';
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
@@ -66,6 +68,16 @@ class ThoughtLeaderAgent {
     this.llm.onUsage = (model, input, output) => {
       this.db.recordLLMUsage(model, input, output);
     };
+
+    this.calendar = new ContentCalendar({
+      persona: config.persona,
+      niche: config.niche,
+      postsPerDay: config.limits?.dailyPosts ?? 5,
+    });
+
+    this.network = config.network?.enabled
+      ? new EngagementNetwork(config.network)
+      : null;
 
     this.limits = {
       dailyLikes: config.limits?.dailyLikes ?? 150,
@@ -363,6 +375,34 @@ class ThoughtLeaderAgent {
       return;
     }
 
+    // Check calendar for scheduled content first
+    const queuedItem = this.calendar.getQueue()?.[0];
+    if (queuedItem?.text) {
+      console.log('📅 Posting scheduled content from calendar...');
+      try {
+        const posted = Array.isArray(queuedItem.text)
+          ? await this.browser.postThread(queuedItem.text)
+          : await this.browser.postTweet(queuedItem.text);
+        if (posted) {
+          this.calendar.markPublished(queuedItem.id);
+          this.db.logAction('post', null, { type: 'scheduled', source: 'calendar' });
+          this.db.recordContent(queuedItem.type || 'tweet', Array.isArray(queuedItem.text) ? queuedItem.text.join('\n---\n') : queuedItem.text);
+          console.log('✅ Scheduled content posted');
+          // Share discovery to network if enabled
+          if (this.network) {
+            this.network.shareDiscovery(this.persona.handle || 'primary', {
+              text: Array.isArray(queuedItem.text) ? queuedItem.text[0] : queuedItem.text,
+              topic: this.config.niche?.name,
+              relevanceScore: 1.0,
+            });
+          }
+          return;
+        }
+      } catch (err) {
+        console.log(`⚠️ Scheduled post failed: ${err.message}`);
+      }
+    }
+
     const types = ['tweet', 'tweet', 'tweet', 'thread']; // Weighted toward tweets
     const type = types[rand(0, types.length - 1)];
 
@@ -372,12 +412,18 @@ class ThoughtLeaderAgent {
       const trends = await this.browser.getTrendingTopics().catch(() => []);
       const recentPosts = this.db.getRecentPosts(20);
 
+      // Pull network discoveries for inspiration if available
+      const networkContent = this.network
+        ? this.network.getDiscoveriesForAgent(this.persona.handle || 'primary', 3)
+        : [];
+
       const content = await this.llm.generateContent({
         type,
         persona: this.persona.toJSON(),
         niche: this.config.niche,
         trends: trends.slice(0, 5),
         recentPosts,
+        networkDiscoveries: networkContent.map((d) => d.content),
       });
 
       // Validate content

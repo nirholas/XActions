@@ -621,6 +621,11 @@ function planSession(persona) {
     plan.activities.push({ type: 'check_notifications' });
   }
 
+  // Smart unfollow — clean up non-followers (15% chance per session)
+  if (Math.random() < 0.15) {
+    plan.activities.push({ type: 'smart_unfollow', count: 3 + Math.floor(Math.random() * 6) });
+  }
+
   // Shuffle middle activities (keep search at start for natural flow)
   const searches = plan.activities.filter(a => a.type === 'search');
   const rest = plan.activities.filter(a => a.type !== 'search');

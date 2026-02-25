@@ -21,7 +21,7 @@ import path from 'path';
 const DATA_DIR = path.resolve('data');
 const NETWORK_FILE = path.join(DATA_DIR, 'engagement-network.json');
 
-export class EngagementNetwork {
+class EngagementNetwork {
   constructor(config = {}) {
     this.config = config;
     this.agents = new Map();
@@ -316,4 +316,5 @@ export class EngagementNetwork {
   }
 }
 
+export { EngagementNetwork };
 export default EngagementNetwork;

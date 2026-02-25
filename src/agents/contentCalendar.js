@@ -14,7 +14,7 @@ import path from 'path';
 const DATA_DIR = path.resolve('data');
 const CALENDAR_FILE = path.join(DATA_DIR, 'content-calendar.json');
 
-export class ContentCalendar {
+class ContentCalendar {
   constructor(config = {}) {
     this.config = config;
     this.persona = config.persona || {};
@@ -362,4 +362,5 @@ export class ContentCalendar {
   }
 }
 
+export { ContentCalendar };
 export default ContentCalendar;

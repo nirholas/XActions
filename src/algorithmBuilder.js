@@ -572,6 +572,75 @@ async function checkNotifications(page) {
   }
 }
 
+/**
+ * Smart unfollow — unfollow users who didn't follow back after the grace period
+ */
+async function smartUnfollow(page, persona, maxUnfollows = 5) {
+  const graceDays = persona.strategy.unfollowAfterDays || 5;
+  const now = Date.now();
+  const graceMs = graceDays * 24 * 60 * 60 * 1000;
+  let unfollowed = 0;
+
+  const candidates = Object.entries(persona.state.followedUsers || {})
+    .filter(([, info]) => {
+      if (info.unfollowed) return false;
+      const followedAt = new Date(info.followedAt).getTime();
+      return (now - followedAt) > graceMs;
+    })
+    .slice(0, maxUnfollows);
+
+  if (candidates.length === 0) return 0;
+
+  log('🧹', `Checking ${candidates.length} users for unfollow (${graceDays}-day grace period)`);
+
+  for (const [username] of candidates) {
+    try {
+      await page.goto(`https://x.com/${username}`, { waitUntil: 'networkidle2', timeout: 30000 });
+      await randomDelay(TIMING.PAGE_LOAD);
+
+      // Check if they follow us back (look for "Follows you" indicator)
+      const followsBack = await page.evaluate(() => {
+        const indicator = document.querySelector('[data-testid="userFollowIndicator"]');
+        return !!indicator;
+      });
+
+      if (followsBack) {
+        log('✅', `@${username} follows back — keeping`);
+        persona.state.followedUsers[username].followsBack = true;
+        continue;
+      }
+
+      // Find and click unfollow button (shows as "Following" button)
+      const unfollowBtn = await page.$('[data-testid$="-unfollow"]');
+      if (unfollowBtn) {
+        await humanClick(page, unfollowBtn);
+        await sleep(randomBetween(1000, 2000));
+
+        // Confirm the unfollow dialog
+        const confirmBtn = await page.$(SELECTORS.confirmButton);
+        if (confirmBtn) {
+          await humanClick(page, confirmBtn);
+        }
+
+        persona.state.followedUsers[username].unfollowed = true;
+        persona.state.followedUsers[username].unfollowedAt = new Date().toISOString();
+        persona.state.totalUnfollows = (persona.state.totalUnfollows || 0) + 1;
+        unfollowed++;
+
+        log('➖', `Unfollowed @${username} (no follow-back after ${graceDays} days)`);
+        await randomDelay(TIMING.BETWEEN_ACTIONS);
+      }
+    } catch (err) {
+      log('⚠️', `Unfollow error for @${username}: ${err.message}`);
+    }
+  }
+
+  if (unfollowed > 0) {
+    log('🧹', `Unfollowed ${unfollowed} non-followers`);
+  }
+  return unfollowed;
+}
+
 // ============================================================================
 // Session Runner — Executes planned activities
 // ============================================================================
@@ -731,6 +800,12 @@ async function runSession(page, persona, plan) {
 
         case 'check_notifications': {
           await checkNotifications(page);
+          break;
+        }
+
+        case 'smart_unfollow': {
+          const unfollowed = await smartUnfollow(page, persona, activity.count || 5);
+          if (unfollowed > 0) stats.unfollows = (stats.unfollows || 0) + unfollowed;
           break;
         }
       }

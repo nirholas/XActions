@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XActions vs Alternatives — Free Twitter Automation</title>
+  <meta name="description" content="Compare XActions to Twitter API, Tweepy, Circleboom, Audiense, and paid tools. Free, open source, no API key required. See the full comparison table.">
+  <meta name="keywords" content="xactions vs tweepy, twitter automation free, twitter api alternative, xactions vs circleboom, free twitter tools, twitter bot comparison, xactions alternative, mass unfollow free">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="XActions vs Alternatives — Free Twitter Automation Compared">
+  <meta property="og:description" content="Compare XActions to Twitter API, Tweepy, paid tools. Free, no API key, 43+ tools. See the full comparison.">
+  <meta property="og:url" content="https://xactions.app/compare">
+  <meta property="og:site_name" content="XActions">
+  <meta property="og:image" content="https://xactions.app/og-compare.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="en_US">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:creator" content="@nichxbt">
+  <meta name="twitter:title" content="XActions vs Alternatives — Free Twitter Automation">
+  <meta name="twitter:description" content="Compare XActions to Twitter API, Tweepy, paid tools. Free, open source, no API needed.">
+  <meta name="twitter:image" content="https://xactions.app/og-compare.png">
+
+  <link rel="canonical" href="https://xactions.app/compare">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  <link rel="manifest" href="/manifest.json">
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "Twitter Automation Tools Comparison",
+    "description": "Comparison of XActions with Twitter API, Tweepy, and paid automation tools",
+    "url": "https://xactions.app/compare",
+    "numberOfItems": 5,
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "XActions", "url": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Twitter API v2" },
+      { "@type": "ListItem", "position": 3, "name": "Tweepy" },
+      { "@type": "ListItem", "position": 4, "name": "DIY Selenium/Playwright" },
+      { "@type": "ListItem", "position": 5, "name": "Paid Tools (Circleboom, Audiense)" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Compare", "item": "https://xactions.app/compare" }
+    ]
+  }
+  </script>
+  <link rel="stylesheet" href="/css/common.css">
+  <style>
+    :root { --bg-primary: #000; --bg-secondary: #16181c; --bg-tertiary: #202327; --accent: #1d9bf0; --accent-hover: #1a8cd8; --accent-light: rgba(29,155,240,0.1); --text-primary: #e7e9ea; --text-secondary: #8b8f94; --border: #2f3336; --success: #00ba7c; --warning: #ffad1f; --danger: #f4212e; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.5; }
+    ::-webkit-scrollbar { width: 16px; } ::-webkit-scrollbar-track { background: var(--bg-primary); } ::-webkit-scrollbar-thumb { background: var(--bg-tertiary); border-radius: 8px; border: 4px solid var(--bg-primary); }
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar-left { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; } .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background 0.2s; } .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; } .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background 0.2s; margin-bottom: 4px; } .nav-item:hover { background: var(--bg-tertiary); } .nav-item.active { font-weight: 700; } .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: white; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background 0.2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; } .action-btn:hover { background: var(--accent-hover); }
+    .main-content { flex: 1; max-width: 600px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,0.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px; z-index: 100; } .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .section { padding: 24px 16px; border-bottom: 1px solid var(--border); }
+    .section-title { font-size: 1.25rem; font-weight: 800; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    h3 { font-size: 1rem; font-weight: 700; margin: 0 0 8px; }
+    p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 12px; }
+    p a { color: var(--accent); text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 2px; }
+
+    /* Comparison Table */
+    .compare-table-wrapper { overflow-x: auto; margin: 0 -16px; padding: 0 16px; }
+    .compare-table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; }
+    .compare-table th, .compare-table td { padding: 10px 8px; text-align: left; border-bottom: 1px solid var(--border); white-space: nowrap; }
+    .compare-table th { font-weight: 700; color: var(--text-primary); position: sticky; top: 0; background: var(--bg-primary); z-index: 10; }
+    .compare-table th:first-child { min-width: 120px; }
+    .compare-table td { color: var(--text-secondary); }
+    .compare-table td:first-child { color: var(--text-primary); font-weight: 600; }
+    .compare-table .highlight { background: rgba(29,155,240,0.05); }
+    .compare-table .highlight td:first-child, .compare-table .highlight th { color: var(--accent); }
+    .icon-yes { color: var(--success); font-weight: 700; }
+    .icon-no { color: var(--danger); font-weight: 700; }
+    .icon-partial { color: var(--warning); font-weight: 700; }
+
+    /* VS Cards */
+    .vs-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+    .vs-card h3 { font-size: 1.0625rem; font-weight: 800; margin-bottom: 12px; color: var(--text-primary); }
+    .vs-card p { color: var(--text-secondary); font-size: 0.9375rem; line-height: 1.6; }
+
+    /* Why XActions */
+    .why-list { list-style: none; padding: 0; }
+    .why-list li { padding: 8px 0; padding-left: 28px; position: relative; color: var(--text-secondary); font-size: 0.9375rem; }
+    .why-list li::before { content: '✅'; position: absolute; left: 0; }
+
+    .sidebar-right { width: 350px; padding: 12px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .promo-card { background: var(--bg-secondary); border-radius: 16px; margin-bottom: 16px; overflow: hidden; } .promo-header { padding: 16px; font-size: 1.25rem; font-weight: 800; } .promo-item { padding: 16px; border-top: 1px solid var(--border); } .promo-item h4 { font-size: 0.9375rem; margin-bottom: 4px; } .promo-item p { color: var(--text-secondary); font-size: 0.8125rem; margin: 0; }
+
+    .site-footer { border-top: 1px solid var(--border); padding: 48px 24px; } .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px; } .footer-brand h3 { font-size: 1.25rem; margin-bottom: 8px; } .footer-brand p { color: var(--text-secondary); font-size: 0.875rem; } .footer-links h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 12px; } .footer-links a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 4px 0; } .footer-links a:hover { color: var(--accent); } .footer-bottom { max-width: 1200px; margin: 24px auto 0; padding-top: 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; } .footer-bottom p { color: var(--text-secondary); font-size: 0.8125rem; } .footer-bottom a { color: var(--text-secondary); } .footer-bottom a:hover { color: var(--accent); }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } .main-content { max-width: 100%; } }
+    @media (max-width: 768px) { .sidebar-left { width: 68px; } .logo a span:last-child, .nav-item span:last-child { display: none; } .nav-item { justify-content: center; } .action-btn { width: 50px; height: 50px; padding: 0; font-size: 0; } .action-btn::before { content: '→'; font-size: 1.5rem; } .footer-content { grid-template-columns: 1fr 1fr; } }
+    .skip-nav { position: absolute; top: -100%; left: 16px; background: var(--accent); color: white; padding: 12px 24px; border-radius: 8px; font-weight: 700; z-index: 9999; text-decoration: none; } .skip-nav:focus { top: 16px; }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    main a:not(.nav-item):not(.btn):not(.nav__link):not(.nav__brand):not(.action-btn), .content a:not(.nav-item):not(.btn):not(.nav__link):not(.nav__brand), footer a { text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 2px; }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
+  <div class="layout">
+    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <script src="/js/sidebar.js"></script>
+
+    <main class="main-content" id="main-content">
+      <header class="main-header"><h1>⚖️ XActions vs Alternatives</h1></header>
+
+      <div class="section">
+        <p>How does XActions compare to other X/Twitter automation tools? Here's a side-by-side breakdown.</p>
+      </div>
+
+      <!-- Comparison Table -->
+      <section class="section">
+        <h2 class="section-title">📊 Comparison Table</h2>
+        <div class="compare-table-wrapper">
+          <table class="compare-table" aria-label="Feature comparison of Twitter automation tools">
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th style="color: var(--accent);">XActions</th>
+                <th>Twitter API v2</th>
+                <th>Tweepy</th>
+                <th>Selenium DIY</th>
+                <th>Paid Tools</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Price</td>
+                <td><strong style="color: var(--success);">Free forever</strong></td>
+                <td>$100/mo+</td>
+                <td>Free (needs API)</td>
+                <td>Free (DIY)</td>
+                <td>$29-299/mo</td>
+              </tr>
+              <tr>
+                <td>API Key Required</td>
+                <td><span class="icon-yes">✅ No</span></td>
+                <td><span class="icon-no">❌ Yes</span></td>
+                <td><span class="icon-no">❌ Yes</span></td>
+                <td><span class="icon-yes">✅ No</span></td>
+                <td><span class="icon-partial">⚠️ Varies</span></td>
+              </tr>
+              <tr>
+                <td>Setup Time</td>
+                <td><strong style="color: var(--success);">30 seconds</strong></td>
+                <td>Hours</td>
+                <td>30 min</td>
+                <td>Hours</td>
+                <td>Minutes</td>
+              </tr>
+              <tr>
+                <td>Mass Unfollow</td>
+                <td><span class="icon-yes">✅</span></td>
+                <td><span class="icon-no">❌ Rate limited</span></td>
+                <td><span class="icon-partial">⚠️</span></td>
+                <td><span class="icon-partial">⚠️ DIY</span></td>
+                <td><span class="icon-yes">✅</span></td>
+              </tr>
+              <tr>
+                <td>Scraping</td>
+                <td><span class="icon-yes">✅ 15+ scrapers</span></td>
+                <td><span class="icon-partial">⚠️ Limited</span></td>
+                <td><span class="icon-partial">⚠️ Limited</span></td>
+                <td><span class="icon-partial">⚠️ DIY</span></td>
+                <td><span class="icon-yes">✅</span></td>
+              </tr>
+              <tr>
+                <td>AI Integration</td>
+                <td><span class="icon-yes">✅ MCP</span></td>
+                <td><span class="icon-no">❌</span></td>
+                <td><span class="icon-no">❌</span></td>
+                <td><span class="icon-no">❌</span></td>
+                <td><span class="icon-partial">⚠️ Some</span></td>
+              </tr>
+              <tr>
+                <td>Video Download</td>
+                <td><span class="icon-yes">✅</span></td>
+                <td><span class="icon-no">❌</span></td>
+                <td><span class="icon-no">❌</span></td>
+                <td><span class="icon-partial">⚠️</span></td>
+                <td><span class="icon-partial">⚠️</span></td>
+              </tr>
+              <tr>
+                <td>Open Source</td>
+                <td><span class="icon-yes">✅ MIT</span></td>
+                <td>N/A</td>
+                <td><span class="icon-yes">✅</span></td>
+                <td><span class="icon-yes">✅</span></td>
+                <td><span class="icon-no">❌</span></td>
+              </tr>
+              <tr>
+                <td>Browser Scripts</td>
+                <td><span class="icon-yes">✅</span></td>
+                <td><span class="icon-no">❌</span></td>
+                <td><span class="icon-no">❌</span></td>
+                <td><span class="icon-no">❌</span></td>
+                <td><span class="icon-no">❌</span></td>
+              </tr>
+              <tr>
+                <td>CLI Tool</td>
+                <td><span class="icon-yes">✅</span></td>
+                <td><span class="icon-no">❌</span></td>
+                <td><span class="icon-yes">✅</span></td>
+                <td><span class="icon-no">❌</span></td>
+                <td><span class="icon-partial">⚠️</span></td>
+              </tr>
+              <tr>
+                <td>No API Rate Limits*</td>
+                <td><span class="icon-yes">✅</span></td>
+                <td><span class="icon-no">❌</span></td>
+                <td><span class="icon-no">❌</span></td>
+                <td><span class="icon-yes">✅</span></td>
+                <td><span class="icon-partial">⚠️</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size: 0.75rem; margin-top: 12px;">*XActions uses browser automation which has X's standard rate limits, but no API-imposed limits.</p>
+      </section>
+
+      <!-- Detailed Comparisons -->
+      <section class="section">
+        <h2 class="section-title">🔍 Detailed Comparisons</h2>
+
+        <div class="vs-card">
+          <h3>XActions vs Twitter API v2</h3>
+          <p>The Twitter API v2 requires a paid developer account ($100/month for basic access), approval process, and significant coding to build any automation. It also imposes strict rate limits that make mass operations like unfollowing impractical.</p>
+          <p>XActions requires no API key, no developer account, and no payment. It uses browser automation to interact with X/Twitter directly, bypassing API limitations. You get 43+ ready-to-use tools instead of building everything from scratch.</p>
+          <p>The API is better if you need official webhooks, streaming endpoints, or compliance with Twitter's API TOS. XActions is better for personal account management, scraping, and automation without the cost barrier.</p>
+        </div>
+
+        <div class="vs-card">
+          <h3>XActions vs Tweepy</h3>
+          <p>Tweepy is a popular Python library for the Twitter API. While it's free and open source, it still requires a Twitter API key — which means you need a developer account and are subject to API rate limits and access tiers.</p>
+          <p>XActions works without any API key. Copy-paste a script in your browser and it runs. No Python, no pip install, no API credentials. XActions also offers a CLI and MCP server for AI integration — capabilities Tweepy doesn't have.</p>
+          <p>Tweepy is better for Python developers building custom API integrations. XActions is better for anyone who wants pre-built tools without the API requirement.</p>
+        </div>
+
+        <div class="vs-card">
+          <h3>XActions vs Paid Tools (Circleboom, Audiense)</h3>
+          <p>Paid tools like Circleboom ($24–79/mo), Audiense ($49–696/mo), and others charge monthly subscriptions for features XActions offers for free. They often have usage limits, watermarks, or feature gating.</p>
+          <p>XActions is 100% free with no limits. Every feature is available to every user. The code is open source —  you can audit it, modify it, and self-host it. No vendor lock-in, no surprise price increases.</p>
+          <p>Paid tools are better if you want a polished UI with customer support and guaranteed uptime. XActions is better if you want maximum capability without paying, and you don't mind a more technical interface.</p>
+        </div>
+
+        <div class="vs-card">
+          <h3>XActions vs DIY Selenium/Playwright</h3>
+          <p>Building your own Twitter automation with Selenium or Playwright gives you full control, but requires significant development time. You need to handle login flows, DOM selectors, rate limiting, error recovery, and keep everything updated as Twitter changes its UI.</p>
+          <p>XActions IS browser automation — but pre-built and battle-tested. We maintain the DOM selectors, handle rate limits, and provide 43+ ready-to-use tools. You get the benefits of browser automation without the maintenance burden.</p>
+          <p>DIY is better if you need highly custom workflows that XActions doesn't cover. XActions is better for 99% of use cases where you want browser automation that just works.</p>
+        </div>
+      </section>
+
+      <!-- Why XActions -->
+      <section class="section">
+        <h2 class="section-title">💡 Why Choose XActions?</h2>
+        <ul class="why-list">
+          <li>No API fees — saves $100-700+/month vs paid alternatives</li>
+          <li>No developer account needed — start in 30 seconds</li>
+          <li>43+ tools ready to use, from unfollow to AI-powered engagement</li>
+          <li>AI agent integration via MCP — control Twitter from Claude, Cursor, Windsurf</li>
+          <li>100% open source (MIT) — audit every line of code</li>
+          <li>Active development with regular updates</li>
+          <li>Your data stays local — nothing sent to external servers</li>
+          <li>Three interfaces: browser scripts, CLI, MCP server</li>
+        </ul>
+      </section>
+
+      <!-- CTA -->
+      <section class="section" style="text-align: center; padding: 32px 16px;">
+        <h2 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 8px;">Ready to try XActions?</h2>
+        <p>Free forever. No signup. Start automating in 30 seconds.</p>
+        <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 16px;">
+          <a href="/run" class="action-btn" style="width: auto; padding: 12px 24px; font-size: 0.9375rem;">⚡ Get Started Free</a>
+          <a href="https://github.com/nirholas/XActions" target="_blank" rel="noopener noreferrer" class="action-btn" style="width: auto; padding: 12px 24px; font-size: 0.9375rem; background: var(--bg-tertiary); border: 1px solid var(--border);">⭐ Star on GitHub</a>
+        </div>
+      </section>
+    </main>
+
+    <aside class="sidebar-right" aria-label="Quick comparison">
+      <div class="promo-card">
+        <div class="promo-header">XActions Wins</div>
+        <div class="promo-item"><h4>💰 Free Forever</h4><p>No API fees, no subscriptions</p></div>
+        <div class="promo-item"><h4>⚡ 30-Second Setup</h4><p>No API key, no dev account</p></div>
+        <div class="promo-item"><h4>🤖 AI Integration</h4><p>MCP server for Claude, Cursor</p></div>
+        <div class="promo-item"><h4>🔓 Open Source</h4><p>MIT license, audit everything</p></div>
+        <div class="promo-item"><h4>🛠️ 43+ Tools</h4><p>Pre-built and battle-tested</p></div>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-brand"><h3>⚡ XActions</h3><p>Free, open-source X/Twitter automation toolkit. Mass unfollow, detect unfollowers, auto-engage, and grow your audience without expensive API fees.</p></div>
+      <div class="footer-links"><h4>Product</h4><a href="/features">Features</a><a href="/video">Video Downloader</a><a href="/pricing">Pricing</a><a href="/run">Run Scripts</a><a href="/dashboard">Dashboard</a><a href="/automations">Automations</a><a href="/workflows">Workflows</a><a href="/analytics">Analytics</a><a href="/monitor">Monitor</a></div>
+      <div class="footer-links"><h4>AI & Developers</h4><a href="/ai">AI Integration</a><a href="/ai-api">AI API</a><a href="/mcp">MCP Server</a><a href="/docs">Documentation</a></div>
+      <div class="footer-links"><h4>Tutorials</h4><a href="/tutorials">All Tutorials</a><a href="/tutorials/unfollow">Mass Unfollow</a><a href="/tutorials/scrapers">Scrapers</a><a href="/tutorials/automation">Automation</a><a href="/tutorials/mcp">MCP Setup</a></div>
+      <div class="footer-links"><h4>Company</h4><a href="/about">About</a><a href="https://github.com/nirholas/XActions" target="_blank" rel="noopener noreferrer">GitHub</a><a href="https://x.com/nichxbt" target="_blank" rel="noopener noreferrer">Twitter</a><a href="/terms">Terms</a><a href="/privacy">Privacy</a></div>
+    </div>
+    <div class="footer-bottom"><p>© 2026 XActions. Not affiliated with X Corp.</p><p>Made with ❤️ by <a href="https://x.com/nichxbt" target="_blank" rel="noopener noreferrer">@nichxbt</a></p></div>
+  </footer>
+</body>
+</html>
