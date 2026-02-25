@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Content Calendar — XActions</title>
+  <style>
+    :root { --bg: #000; --bg2: #111; --bg3: #1a1a1a; --border: #333; --text: #e0e0e0; --text2: #888; --accent: #1d9bf0; --green: #00c853; --red: #ff4444; --yellow: #ffb800; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; display: flex; min-height: 100vh; }
+    .sidebar { width: 240px; background: var(--bg2); border-right: 1px solid var(--border); padding: 20px 0; flex-shrink: 0; }
+    .sidebar .logo { padding: 0 20px 20px; font-size: 20px; font-weight: 700; color: #fff; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 20px; color: var(--text2); text-decoration: none; font-size: 14px; transition: all .2s; }
+    .nav-item:hover, .nav-item.active { color: #fff; background: var(--bg3); }
+    .main { flex: 1; padding: 30px; overflow-y: auto; }
+    h1 { font-size: 24px; margin-bottom: 20px; }
+    .toolbar { display: flex; gap: 12px; align-items: center; margin-bottom: 20px; flex-wrap: wrap; }
+    .btn { padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg3); color: var(--text); cursor: pointer; font-size: 13px; transition: all .2s; }
+    .btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .month-nav { display: flex; align-items: center; gap: 12px; }
+    .month-nav span { font-size: 16px; font-weight: 600; min-width: 160px; text-align: center; }
+    .calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+    .cal-header { background: var(--bg2); padding: 10px; text-align: center; font-size: 12px; color: var(--text2); font-weight: 600; }
+    .cal-day { background: var(--bg3); min-height: 120px; padding: 8px; cursor: pointer; transition: background .2s; position: relative; }
+    .cal-day:hover { background: #222; }
+    .cal-day.other-month { opacity: 0.3; }
+    .cal-day.today { border: 2px solid var(--accent); }
+    .day-num { font-size: 12px; color: var(--text2); margin-bottom: 6px; }
+    .cal-event { font-size: 11px; padding: 3px 6px; border-radius: 4px; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; }
+    .cal-event.tweet { background: rgba(29,155,240,.2); color: var(--accent); }
+    .cal-event.thread { background: rgba(0,200,83,.2); color: var(--green); }
+    .cal-event.draft { background: rgba(255,184,0,.2); color: var(--yellow); }
+    .cal-event.posted { background: rgba(0,200,83,.15); color: var(--green); border-left: 2px solid var(--green); }
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,.7); z-index: 100; align-items: center; justify-content: center; }
+    .modal-overlay.show { display: flex; }
+    .modal { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 24px; width: 480px; max-width: 90vw; }
+    .modal h2 { font-size: 18px; margin-bottom: 16px; }
+    .modal label { display: block; font-size: 13px; color: var(--text2); margin-bottom: 4px; margin-top: 12px; }
+    .modal input, .modal textarea, .modal select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg3); color: var(--text); font-size: 14px; font-family: inherit; }
+    .modal textarea { height: 100px; resize: vertical; }
+    .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
+    .stats-bar { display: flex; gap: 16px; margin-bottom: 20px; }
+    .stat-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; flex: 1; }
+    .stat-card .label { font-size: 12px; color: var(--text2); }
+    .stat-card .value { font-size: 22px; font-weight: 700; color: #fff; margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <nav class="sidebar">
+    <div class="logo">⚡ XActions</div>
+    <a href="index.html" class="nav-item">🏠 Dashboard</a>
+    <a href="analytics.html" class="nav-item">📊 Analytics</a>
+    <a href="calendar.html" class="nav-item active">📅 Calendar</a>
+    <a href="thread.html" class="nav-item">🧵 Thread Composer</a>
+    <a href="automations.html" class="nav-item">🤖 Automations</a>
+    <a href="monitor.html" class="nav-item">👁️ Monitor</a>
+    <a href="unfollowers.html" class="nav-item">👥 Unfollowers</a>
+    <a href="video.html" class="nav-item">🎬 Video DL</a>
+    <a href="workflows.html" class="nav-item">⚙️ Workflows</a>
+  </nav>
+
+  <main class="main">
+    <h1>📅 Content Calendar</h1>
+
+    <div class="stats-bar" id="stats-bar">
+      <div class="stat-card"><div class="label">Scheduled</div><div class="value" id="stat-scheduled">0</div></div>
+      <div class="stat-card"><div class="label">Drafts</div><div class="value" id="stat-drafts">0</div></div>
+      <div class="stat-card"><div class="label">Posted This Month</div><div class="value" id="stat-posted">0</div></div>
+      <div class="stat-card"><div class="label">Engagement Rate</div><div class="value" id="stat-engagement">—</div></div>
+    </div>
+
+    <div class="toolbar">
+      <div class="month-nav">
+        <button class="btn" id="prev-month">◀</button>
+        <span id="current-month">January 2026</span>
+        <button class="btn" id="next-month">▶</button>
+      </div>
+      <button class="btn" id="today-btn">Today</button>
+      <button class="btn primary" id="new-post-btn">+ New Post</button>
+    </div>
+
+    <div class="calendar" id="calendar"></div>
+  </main>
+
+  <!-- New Post Modal -->
+  <div class="modal-overlay" id="modal">
+    <div class="modal">
+      <h2 id="modal-title">Schedule Post</h2>
+      <label>Content</label>
+      <textarea id="post-content" placeholder="What's happening?"></textarea>
+      <label>Date & Time</label>
+      <input type="datetime-local" id="post-datetime">
+      <label>Type</label>
+      <select id="post-type">
+        <option value="tweet">Tweet</option>
+        <option value="thread">Thread</option>
+        <option value="draft">Draft</option>
+      </select>
+      <div class="modal-actions">
+        <button class="btn" id="modal-cancel">Cancel</button>
+        <button class="btn" id="modal-delete" style="color: var(--red); display: none;">Delete</button>
+        <button class="btn primary" id="modal-save">Schedule</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = window.location.origin;
+    let currentDate = new Date();
+    let events = [];
+    let editingEvent = null;
+
+    // ── Calendar Rendering ──
+    function renderCalendar() {
+      const cal = document.getElementById('calendar');
+      const year = currentDate.getFullYear();
+      const month = currentDate.getMonth();
+      const firstDay = new Date(year, month, 1).getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const today = new Date();
+
+      document.getElementById('current-month').textContent =
+        currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
+      let html = '';
+      const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      dayNames.forEach(d => { html += `<div class="cal-header">${d}</div>`; });
+
+      // Previous month padding
+      const prevMonth = new Date(year, month, 0);
+      for (let i = firstDay - 1; i >= 0; i--) {
+        html += `<div class="cal-day other-month"><div class="day-num">${prevMonth.getDate() - i}</div></div>`;
+      }
+
+      // Current month
+      for (let day = 1; day <= daysInMonth; day++) {
+        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        const isToday = today.getFullYear() === year && today.getMonth() === month && today.getDate() === day;
+        const dayEvents = events.filter(e => e.date === dateStr);
+
+        html += `<div class="cal-day${isToday ? ' today' : ''}" data-date="${dateStr}">
+          <div class="day-num">${day}</div>
+          ${dayEvents.map(e => `<div class="cal-event ${e.type} ${e.posted ? 'posted' : ''}" data-id="${e.id}" title="${e.content}">${e.content.substring(0, 30)}</div>`).join('')}
+        </div>`;
+      }
+
+      // Next month padding
+      const totalCells = firstDay + daysInMonth;
+      const remaining = (7 - (totalCells % 7)) % 7;
+      for (let i = 1; i <= remaining; i++) {
+        html += `<div class="cal-day other-month"><div class="day-num">${i}</div></div>`;
+      }
+
+      cal.innerHTML = html;
+
+      // Click handlers
+      cal.querySelectorAll('.cal-day:not(.other-month)').forEach(el => {
+        el.addEventListener('click', (e) => {
+          if (e.target.classList.contains('cal-event')) {
+            const id = e.target.dataset.id;
+            const event = events.find(ev => ev.id === id);
+            if (event) openEditModal(event);
+            return;
+          }
+          openNewModal(el.dataset.date);
+        });
+      });
+
+      updateStats();
+    }
+
+    // ── Stats ──
+    function updateStats() {
+      const month = currentDate.getMonth();
+      const year = currentDate.getFullYear();
+      const monthEvents = events.filter(e => {
+        const d = new Date(e.date);
+        return d.getMonth() === month && d.getFullYear() === year;
+      });
+      document.getElementById('stat-scheduled').textContent = monthEvents.filter(e => e.type !== 'draft' && !e.posted).length;
+      document.getElementById('stat-drafts').textContent = monthEvents.filter(e => e.type === 'draft').length;
+      document.getElementById('stat-posted').textContent = monthEvents.filter(e => e.posted).length;
+    }
+
+    // ── Modal ──
+    function openNewModal(date) {
+      editingEvent = null;
+      document.getElementById('modal-title').textContent = 'Schedule Post';
+      document.getElementById('post-content').value = '';
+      document.getElementById('post-datetime').value = date + 'T12:00';
+      document.getElementById('post-type').value = 'tweet';
+      document.getElementById('modal-delete').style.display = 'none';
+      document.getElementById('modal').classList.add('show');
+    }
+
+    function openEditModal(event) {
+      editingEvent = event;
+      document.getElementById('modal-title').textContent = 'Edit Post';
+      document.getElementById('post-content').value = event.content;
+      document.getElementById('post-datetime').value = event.date + 'T' + (event.time || '12:00');
+      document.getElementById('post-type').value = event.type;
+      document.getElementById('modal-delete').style.display = 'inline-block';
+      document.getElementById('modal').classList.add('show');
+    }
+
+    document.getElementById('modal-cancel').onclick = () => document.getElementById('modal').classList.remove('show');
+    document.getElementById('modal').onclick = (e) => { if (e.target.id === 'modal') document.getElementById('modal').classList.remove('show'); };
+
+    document.getElementById('modal-save').onclick = () => {
+      const content = document.getElementById('post-content').value.trim();
+      if (!content) return;
+      const datetime = document.getElementById('post-datetime').value;
+      const [date, time] = datetime.split('T');
+      const type = document.getElementById('post-type').value;
+
+      if (editingEvent) {
+        editingEvent.content = content;
+        editingEvent.date = date;
+        editingEvent.time = time;
+        editingEvent.type = type;
+      } else {
+        events.push({ id: Date.now().toString(), content, date, time, type, posted: false });
+      }
+
+      saveEvents();
+      renderCalendar();
+      document.getElementById('modal').classList.remove('show');
+    };
+
+    document.getElementById('modal-delete').onclick = () => {
+      if (editingEvent) {
+        events = events.filter(e => e.id !== editingEvent.id);
+        saveEvents();
+        renderCalendar();
+      }
+      document.getElementById('modal').classList.remove('show');
+    };
+
+    // ── Navigation ──
+    document.getElementById('prev-month').onclick = () => { currentDate.setMonth(currentDate.getMonth() - 1); renderCalendar(); };
+    document.getElementById('next-month').onclick = () => { currentDate.setMonth(currentDate.getMonth() + 1); renderCalendar(); };
+    document.getElementById('today-btn').onclick = () => { currentDate = new Date(); renderCalendar(); };
+    document.getElementById('new-post-btn').onclick = () => {
+      const today = new Date().toISOString().split('T')[0];
+      openNewModal(today);
+    };
+
+    // ── Persistence ──
+    function saveEvents() {
+      localStorage.setItem('xactions_calendar_events', JSON.stringify(events));
+    }
+
+    function loadEvents() {
+      try { events = JSON.parse(localStorage.getItem('xactions_calendar_events') || '[]'); } catch { events = []; }
+    }
+
+    // ── Init ──
+    loadEvents();
+    renderCalendar();
+  </script>
+</body>
+</html>

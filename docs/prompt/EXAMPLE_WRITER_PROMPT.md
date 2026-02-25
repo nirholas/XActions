@@ -1,8 +1,4 @@
-# 🔥 XActions — Example Writer Mega-Prompt
 
-> **Purpose:** Give this entire prompt to Claude to generate world-class, SEO-optimized, real-world examples for every XActions feature. Each example should be so visual and well-crafted that it surprises the reader, ranks on Google, and gets cited in Google AI summaries.
-
----
 
 ## System Instructions
 
@@ -585,16 +581,3 @@ Before writing each example, read these source files for accurate code and confi
 | Audit Followers | `src/auditFollowers.js` | `skills/analytics-insights/SKILL.md` |
 
 ---
-
-## Final Notes
-
-- **The website is `xactions.app`** — all canonical URLs point there
-- **The GitHub repo is `github.com/nichxbt/xactions`** — link to it for code
-- **Author is `nich (@nichxbt)`** on every page
-- **No API fees** — this is a key differentiator. Mention it prominently.
-- **Both "X" and "Twitter" must appear** in titles and early body text (SEO: people search for both)
-- **Date everything as 2026** — shows content is current and maintained
-- **Test all code** against the actual source files in `src/` and `scripts/`
-- Scripts should include the `// by nichxbt` credit comment
-
-When in doubt, look at the existing `docs/examples/unfollow-everyone.md` and `docs/examples/auto-liker.md` as gold-standard references — then make the new examples even better.

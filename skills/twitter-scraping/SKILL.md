@@ -18,41 +18,45 @@ All scrapers require an `auth_token` cookie from x.com (DevTools → Application
 `npm install xactions` — all functions from `src/scrapers/index.js`.
 
 ```javascript
-import { createBrowser, createPage, loginWithCookie, scrapeProfile,
-  scrapeFollowers, scrapeFollowing, scrapeTweets, searchTweets,
-  scrapeHashtag, scrapeThread, scrapeMedia, exportToJSON, exportToCSV
-} from 'xactions';
+import { createBrowser, createPage, loginWithCookie, scrapeProfile } from 'xactions';
 
 const browser = await createBrowser();
 const page = await createPage(browser);
 await loginWithCookie(page, AUTH_TOKEN);
+
+const profile = await scrapeProfile(page, 'nichxbt');
+await browser.close();
 ```
 
-### Return shapes
-
-| Function | Returns |
+| Function | Purpose |
 |----------|---------|
-| `scrapeProfile(page, username)` | `{ username, displayName, bio, followers, following, tweets, joined, location, website, verified }` |
-| `scrapeFollowers(page, username, {limit})` | `[{ username, displayName, bio, followsYou }]` |
-| `scrapeFollowing(page, username, {limit})` | `[{ username, displayName, bio, followsYou }]` |
-| `scrapeTweets(page, username, {limit})` | `[{ text, likes, retweets, replies, timestamp, url }]` |
-| `searchTweets(page, query, {limit})` | Same as tweets |
-| `scrapeHashtag(page, tag, {limit})` | Same as tweets |
-| `scrapeThread(page, tweetUrl)` | Array of tweet objects from thread author only |
-| `scrapeMedia(page, username, {limit})` | Media objects with URLs |
-| `exportToJSON(data, path)` / `exportToCSV(data, path)` | Writes file |
-
-Always call `browser.close()` when done.
+| `scrapeProfile(page, username)` | Profile data (bio, followers, following) |
+| `scrapeFollowers(page, username, {limit})` | Follower list |
+| `scrapeFollowing(page, username, {limit})` | Following list |
+| `scrapeTweets(page, username, {limit})` | User's tweets |
+| `searchTweets(page, query, {limit})` | Search results |
+| `scrapeHashtag(page, tag, {limit})` | Hashtag tweets |
+| `scrapeThread(page, tweetUrl)` | Thread tweets |
+| `scrapeMedia(page, username, {limit})` | Media URLs |
+| `exportToJSON(data, path)` / `exportToCSV(data, path)` | File export |
 
 ## Browser console scripts
 
 Standalone IIFEs — paste into DevTools console on x.com. No dependencies.
 
-| Script | Navigate to | What it does |
-|--------|------------|-------------|
-| `src/scrapers/videoDownloader.js` | Tweet with video | Extracts MP4 URLs (all qualities), auto-downloads best |
-| `src/scrapers/bookmarkExporter.js` | `x.com/i/bookmarks` | Exports bookmarks to JSON/CSV (text, engagement, media, links) |
-| `src/scrapers/threadUnroller.js` | Any thread | Saves thread as text/markdown/JSON (author tweets only) |
-| `src/scrapers/viralTweets.js` | User profile | Finds top tweets by engagement, configurable thresholds |
+| Script | Navigate to | Purpose |
+|--------|------------|---------|
+| `src/scrapers/videoDownloader.js` | Tweet with video | Extract MP4 URLs, auto-download best quality |
+| `src/scrapers/bookmarkExporter.js` | `x.com/i/bookmarks` | Export bookmarks to JSON/CSV |
+| `src/scrapers/threadUnroller.js` | Any thread | Save thread as text/markdown/JSON |
+| `src/scrapers/viralTweets.js` | User profile | Find top tweets by engagement |
 
-Browser scripts stop on page navigation — stay on the page while running.
+## Scraper details
+
+**Full return shapes, configs, and per-scraper usage**: See [references/scraper-details.md](references/scraper-details.md)
+
+## Notes
+
+- Always call `browser.close()` when done with Node.js scrapers
+- Browser scripts stop on page navigation — stay on the page while running
+- All scripts support JSON and CSV export

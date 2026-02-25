@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thread Composer — XActions</title>
+  <style>
+    :root { --bg: #000; --bg2: #111; --bg3: #1a1a1a; --border: #333; --text: #e0e0e0; --text2: #888; --accent: #1d9bf0; --green: #00c853; --red: #ff4444; --yellow: #ffb800; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; display: flex; min-height: 100vh; }
+    .sidebar { width: 240px; background: var(--bg2); border-right: 1px solid var(--border); padding: 20px 0; flex-shrink: 0; }
+    .sidebar .logo { padding: 0 20px 20px; font-size: 20px; font-weight: 700; color: #fff; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 20px; color: var(--text2); text-decoration: none; font-size: 14px; transition: all .2s; }
+    .nav-item:hover, .nav-item.active { color: #fff; background: var(--bg3); }
+    .main { flex: 1; display: flex; gap: 24px; padding: 30px; overflow-y: auto; }
+    .editor-panel { flex: 1; }
+    .preview-panel { width: 380px; flex-shrink: 0; }
+    h1 { font-size: 24px; margin-bottom: 16px; }
+    h2 { font-size: 16px; margin-bottom: 12px; color: var(--text2); }
+    .toolbar { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; align-items: center; }
+    .btn { padding: 8px 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg3); color: var(--text); cursor: pointer; font-size: 13px; transition: all .2s; }
+    .btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .btn.danger { border-color: var(--red); color: var(--red); }
+    .btn.danger:hover { background: var(--red); color: #fff; }
+    .tweet-editor { position: relative; margin-bottom: 12px; background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+    .tweet-editor.active { border-color: var(--accent); }
+    .tweet-editor .tweet-num { position: absolute; top: -10px; left: 12px; background: var(--accent); color: #fff; font-size: 11px; padding: 2px 8px; border-radius: 10px; }
+    .tweet-editor textarea { width: 100%; height: 100px; border: none; background: transparent; color: var(--text); font-size: 15px; font-family: inherit; resize: vertical; outline: none; }
+    .tweet-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); }
+    .char-count { font-size: 12px; color: var(--text2); }
+    .char-count.over { color: var(--red); font-weight: 600; }
+    .tweet-actions { display: flex; gap: 6px; }
+    .tweet-actions button { background: none; border: none; color: var(--text2); cursor: pointer; font-size: 16px; padding: 4px; }
+    .tweet-actions button:hover { color: var(--accent); }
+    .format-bar { display: flex; gap: 4px; margin-bottom: 12px; }
+    .format-btn { padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg3); color: var(--text2); cursor: pointer; font-size: 13px; }
+    .format-btn:hover { color: #fff; border-color: var(--accent); }
+    .connector { width: 2px; height: 20px; background: var(--border); margin: 0 auto; }
+    .preview-tweet { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 16px; margin-bottom: 12px; }
+    .preview-tweet .header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .preview-tweet .avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--bg3); display: flex; align-items: center; justify-content: center; font-size: 20px; }
+    .preview-tweet .name { font-weight: 700; font-size: 14px; }
+    .preview-tweet .handle { color: var(--text2); font-size: 13px; }
+    .preview-tweet .body { font-size: 15px; line-height: 1.5; white-space: pre-wrap; word-break: break-word; }
+    .preview-tweet .thread-line { width: 2px; height: 24px; background: var(--border); margin: 0 0 0 19px; }
+    .preview-tweet .char-indicator { font-size: 11px; color: var(--text2); margin-top: 8px; }
+    .total-stats { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 16px; display: flex; gap: 20px; }
+    .total-stats .stat { text-align: center; }
+    .total-stats .stat .num { font-size: 18px; font-weight: 700; color: #fff; }
+    .total-stats .stat .lbl { font-size: 11px; color: var(--text2); }
+    .auto-split-info { background: rgba(29,155,240,.1); border: 1px solid rgba(29,155,240,.3); border-radius: 8px; padding: 10px 14px; font-size: 13px; color: var(--accent); margin-bottom: 12px; }
+  </style>
+</head>
+<body>
+  <nav class="sidebar">
+    <div class="logo">⚡ XActions</div>
+    <a href="index.html" class="nav-item">🏠 Dashboard</a>
+    <a href="analytics.html" class="nav-item">📊 Analytics</a>
+    <a href="calendar.html" class="nav-item">📅 Calendar</a>
+    <a href="thread.html" class="nav-item active">🧵 Thread Composer</a>
+    <a href="automations.html" class="nav-item">🤖 Automations</a>
+    <a href="monitor.html" class="nav-item">👁️ Monitor</a>
+    <a href="unfollowers.html" class="nav-item">👥 Unfollowers</a>
+    <a href="video.html" class="nav-item">🎬 Video DL</a>
+    <a href="workflows.html" class="nav-item">⚙️ Workflows</a>
+  </nav>
+
+  <main class="main">
+    <div class="editor-panel">
+      <h1>🧵 Thread Composer</h1>
+
+      <div class="total-stats" id="total-stats">
+        <div class="stat"><div class="num" id="tweet-count">1</div><div class="lbl">Tweets</div></div>
+        <div class="stat"><div class="num" id="total-chars">0</div><div class="lbl">Total Characters</div></div>
+        <div class="stat"><div class="num" id="est-reading">0m</div><div class="lbl">Est. Reading</div></div>
+      </div>
+
+      <div class="toolbar">
+        <button class="btn primary" id="add-tweet-btn">+ Add Tweet</button>
+        <button class="btn" id="auto-split-btn">✂️ Auto-Split</button>
+        <button class="btn" id="save-draft-btn">💾 Save Draft</button>
+        <button class="btn" id="load-draft-btn">📂 Load Draft</button>
+        <button class="btn" id="clear-btn">🗑️ Clear All</button>
+      </div>
+
+      <div class="format-bar">
+        <button class="format-btn" data-format="bold" title="Bold (𝗕𝗼𝗹𝗱)">𝗕</button>
+        <button class="format-btn" data-format="italic" title="Italic (𝘐𝘵𝘢𝘭𝘪𝘤)">𝘐</button>
+        <button class="format-btn" data-format="mono" title="Monospace (𝚖𝚘𝚗𝚘)">𝙼</button>
+        <button class="format-btn" data-format="numbering" title="Auto-number (1/n)">1/n</button>
+        <button class="format-btn" data-format="hook" title="Add hook">🪝 Hook</button>
+        <button class="format-btn" data-format="cta" title="Add CTA">📢 CTA</button>
+      </div>
+
+      <div id="tweets-container"></div>
+    </div>
+
+    <div class="preview-panel">
+      <h2>Preview</h2>
+      <div id="preview-container"></div>
+    </div>
+  </main>
+
+  <script>
+    const MAX_CHARS = 280;
+    let tweets = [{ text: '', id: Date.now() }];
+    let activeIndex = 0;
+
+    // ── Unicode formatter maps ──
+    const BOLD_MAP = {};
+    const ITALIC_MAP = {};
+    const MONO_MAP = {};
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'.split('').forEach((c, i) => {
+      const bold = '𝗔𝗕𝗖𝗗𝗘𝗙𝗚𝗛𝗜𝗝𝗞𝗟𝗠𝗡𝗢𝗣𝗤𝗥𝗦𝗧𝗨𝗩𝗪𝗫𝗬𝗭𝗮𝗯𝗰𝗱𝗲𝗳𝗴𝗵𝗶𝗷𝗸𝗹𝗺𝗻𝗼𝗽𝗾𝗿𝘀𝘁𝘂𝘃𝘄𝘅𝘆𝘇𝟬𝟭𝟮𝟯𝟰𝟱𝟲𝟳𝟴𝟵';
+      const italic = '𝘈𝘉𝘊𝘋𝘌𝘍𝘎𝘏𝘐𝘑𝘒𝘓𝘔𝘕𝘖𝘗𝘘𝘙𝘚𝘛𝘜𝘝𝘞𝘟𝘠𝘡𝘢𝘣𝘤𝘥𝘦𝘧𝘨𝘩𝘪𝘫𝘬𝘭𝘮𝘯𝘰𝘱𝘲𝘳𝘴𝘵𝘶𝘷𝘸𝘹𝘺𝘻0123456789';
+      const mono = '𝙰𝙱𝙲𝙳𝙴𝙵𝙶𝙷𝙸𝙹𝙺𝙻𝙼𝙽𝙾𝙿𝚀𝚁𝚂𝚃𝚄𝚅𝚆𝚇𝚈𝚉𝚊𝚋𝚌𝚍𝚎𝚏𝚐𝚑𝚒𝚓𝚔𝚕𝚖𝚗𝚘𝚙𝚚𝚛𝚜𝚝𝚞𝚟𝚠𝚡𝚢𝚣𝟶𝟷𝟸𝟹𝟺𝟻𝟼𝟽𝟾𝟿';
+      if (bold[i]) BOLD_MAP[c] = [...bold][i];
+      if (italic[i]) ITALIC_MAP[c] = [...italic][i];
+      if (mono[i]) MONO_MAP[c] = [...mono][i];
+    });
+
+    function toUnicode(text, map) {
+      return [...text].map(c => map[c] || c).join('');
+    }
+
+    // ── Rendering ──
+    function renderEditor() {
+      const container = document.getElementById('tweets-container');
+      let html = '';
+
+      tweets.forEach((tweet, i) => {
+        const charCount = [...tweet.text].length;
+        const isOver = charCount > MAX_CHARS;
+
+        html += `
+          <div class="tweet-editor${i === activeIndex ? ' active' : ''}" data-index="${i}">
+            <div class="tweet-num">${i + 1}/${tweets.length}</div>
+            <textarea placeholder="${i === 0 ? 'Start your thread...' : 'Continue the thread...'}" data-index="${i}">${tweet.text}</textarea>
+            <div class="tweet-meta">
+              <span class="char-count${isOver ? ' over' : ''}">${charCount}/${MAX_CHARS}</span>
+              <div class="tweet-actions">
+                ${i > 0 ? `<button onclick="moveTweet(${i}, -1)" title="Move up">⬆</button>` : ''}
+                ${i < tweets.length - 1 ? `<button onclick="moveTweet(${i}, 1)" title="Move down">⬇</button>` : ''}
+                ${tweets.length > 1 ? `<button onclick="removeTweet(${i})" title="Remove">✕</button>` : ''}
+              </div>
+            </div>
+          </div>
+          ${i < tweets.length - 1 ? '<div class="connector"></div>' : ''}
+        `;
+      });
+
+      container.innerHTML = html;
+
+      // Bind events
+      container.querySelectorAll('textarea').forEach(ta => {
+        ta.addEventListener('input', (e) => {
+          const idx = parseInt(e.target.dataset.index);
+          tweets[idx].text = e.target.value;
+          renderPreview();
+          updateStats();
+          // Update char count only
+          const meta = e.target.closest('.tweet-editor').querySelector('.char-count');
+          const count = [...e.target.value].length;
+          meta.textContent = `${count}/${MAX_CHARS}`;
+          meta.classList.toggle('over', count > MAX_CHARS);
+        });
+        ta.addEventListener('focus', (e) => {
+          activeIndex = parseInt(e.target.dataset.index);
+          container.querySelectorAll('.tweet-editor').forEach(el => el.classList.remove('active'));
+          e.target.closest('.tweet-editor').classList.add('active');
+        });
+      });
+
+      renderPreview();
+      updateStats();
+    }
+
+    function renderPreview() {
+      const container = document.getElementById('preview-container');
+      let html = '';
+
+      tweets.forEach((tweet, i) => {
+        const text = tweet.text || '...';
+        html += `
+          <div class="preview-tweet">
+            <div class="header">
+              <div class="avatar">👤</div>
+              <div>
+                <div class="name">Your Name</div>
+                <div class="handle">@yourhandle</div>
+              </div>
+            </div>
+            <div class="body">${escapeHtml(text)}</div>
+            <div class="char-indicator">${[...text].length} chars${[...text].length > MAX_CHARS ? ' ⚠️ OVER LIMIT' : ''}</div>
+          </div>
+          ${i < tweets.length - 1 ? '<div class="preview-tweet thread-line" style="border:0;background:transparent;padding:0;margin:0 0 0 19px;width:2px;height:16px;background:var(--border);border-radius:0;"></div>' : ''}
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function updateStats() {
+      document.getElementById('tweet-count').textContent = tweets.length;
+      const totalChars = tweets.reduce((sum, t) => sum + [...t.text].length, 0);
+      document.getElementById('total-chars').textContent = totalChars;
+      const words = tweets.reduce((sum, t) => sum + t.text.split(/\s+/).filter(Boolean).length, 0);
+      document.getElementById('est-reading').textContent = Math.max(1, Math.round(words / 200)) + 'm';
+    }
+
+    // ── Actions ──
+    window.moveTweet = (index, dir) => {
+      const target = index + dir;
+      if (target < 0 || target >= tweets.length) return;
+      [tweets[index], tweets[target]] = [tweets[target], tweets[index]];
+      activeIndex = target;
+      renderEditor();
+    };
+
+    window.removeTweet = (index) => {
+      tweets.splice(index, 1);
+      if (activeIndex >= tweets.length) activeIndex = tweets.length - 1;
+      renderEditor();
+    };
+
+    document.getElementById('add-tweet-btn').onclick = () => {
+      tweets.push({ text: '', id: Date.now() });
+      activeIndex = tweets.length - 1;
+      renderEditor();
+      // Focus new textarea
+      setTimeout(() => {
+        const textareas = document.querySelectorAll('.tweet-editor textarea');
+        textareas[textareas.length - 1]?.focus();
+      }, 50);
+    };
+
+    document.getElementById('auto-split-btn').onclick = () => {
+      // Combine all text and re-split at sentence boundaries
+      const fullText = tweets.map(t => t.text).join(' ').trim();
+      if (!fullText) return;
+
+      const sentences = fullText.match(/[^.!?]+[.!?]+\s*/g) || [fullText];
+      const newTweets = [];
+      let current = '';
+
+      for (const sentence of sentences) {
+        if ([...(current + sentence)].length > MAX_CHARS && current) {
+          newTweets.push({ text: current.trim(), id: Date.now() + newTweets.length });
+          current = sentence;
+        } else {
+          current += sentence;
+        }
+      }
+      if (current.trim()) newTweets.push({ text: current.trim(), id: Date.now() + newTweets.length });
+
+      tweets = newTweets.length > 0 ? newTweets : [{ text: fullText, id: Date.now() }];
+      activeIndex = 0;
+      renderEditor();
+    };
+
+    document.getElementById('clear-btn').onclick = () => {
+      if (tweets.some(t => t.text.trim()) && !confirm('Clear all tweets?')) return;
+      tweets = [{ text: '', id: Date.now() }];
+      activeIndex = 0;
+      renderEditor();
+    };
+
+    // ── Format buttons ──
+    document.querySelectorAll('.format-btn').forEach(btn => {
+      btn.onclick = () => {
+        const format = btn.dataset.format;
+        const ta = document.querySelectorAll('.tweet-editor textarea')[activeIndex];
+        if (!ta) return;
+
+        const start = ta.selectionStart;
+        const end = ta.selectionEnd;
+        const selected = ta.value.substring(start, end);
+
+        let replacement = selected;
+        if (format === 'bold') replacement = toUnicode(selected || 'bold text', BOLD_MAP);
+        else if (format === 'italic') replacement = toUnicode(selected || 'italic text', ITALIC_MAP);
+        else if (format === 'mono') replacement = toUnicode(selected || 'monospace', MONO_MAP);
+        else if (format === 'numbering') {
+          tweets.forEach((t, i) => {
+            const prefix = `${i + 1}/${tweets.length} `;
+            // Remove old numbering
+            t.text = t.text.replace(/^\d+\/\d+\s*/, '');
+            t.text = prefix + t.text;
+          });
+          renderEditor();
+          return;
+        }
+        else if (format === 'hook') replacement = '🧵 THREAD: ' + (selected || 'Your compelling hook here');
+        else if (format === 'cta') replacement = (selected ? selected + '\n\n' : '') + '♻️ Repost to share\n❤️ Like if this helped\n🔔 Follow @yourhandle for more';
+
+        tweets[activeIndex].text = ta.value.substring(0, start) + replacement + ta.value.substring(end);
+        renderEditor();
+      };
+    });
+
+    // ── Draft persistence ──
+    document.getElementById('save-draft-btn').onclick = () => {
+      const drafts = JSON.parse(localStorage.getItem('xactions_thread_drafts') || '[]');
+      const name = prompt('Draft name:', `Thread ${new Date().toLocaleDateString()}`);
+      if (!name) return;
+      drafts.push({ name, tweets: tweets.map(t => t.text), savedAt: new Date().toISOString() });
+      localStorage.setItem('xactions_thread_drafts', JSON.stringify(drafts));
+      alert('✅ Draft saved!');
+    };
+
+    document.getElementById('load-draft-btn').onclick = () => {
+      const drafts = JSON.parse(localStorage.getItem('xactions_thread_drafts') || '[]');
+      if (drafts.length === 0) { alert('No drafts saved'); return; }
+      const names = drafts.map((d, i) => `${i + 1}. ${d.name} (${d.savedAt?.split('T')[0]})`).join('\n');
+      const choice = prompt('Select a draft:\n' + names);
+      if (!choice) return;
+      const idx = parseInt(choice) - 1;
+      if (drafts[idx]) {
+        tweets = drafts[idx].tweets.map((text, i) => ({ text, id: Date.now() + i }));
+        activeIndex = 0;
+        renderEditor();
+      }
+    };
+
+    function escapeHtml(text) {
+      return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    // ── Init ──
+    renderEditor();
+  </script>
+</body>
+</html>

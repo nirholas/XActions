@@ -1,6 +1,6 @@
 ---
 name: profile-management
-description: Updates X/Twitter profile information including bio, avatar, header image, display name, and QR code sharing. Use when users want to update their X profile or share profile via QR code.
+description: Updates X/Twitter profile information including bio, avatar, header image, display name, location, website, and QR code sharing. The agent uses this skill when a user wants to update their X profile fields or share their profile via QR code.
 license: MIT
 metadata:
   author: nichxbt
@@ -31,6 +31,29 @@ Programmatically updates profile fields: display name, bio, location, website, b
 2. Open DevTools (F12) → Console
 3. Paste the script → Enter
 
+### Configuration
+
+```javascript
+const CONFIG = {
+  displayName: 'Your Name',
+  bio: 'Your new bio here',
+  location: 'City, Country',
+  website: 'https://example.com',
+};
+```
+
+## Profile Manager
+
+**File:** `src/profileManager.js`
+
+Core module for reading and updating profile data. Used by other scripts that need profile context.
+
+## QR Code Sharing
+
+**File:** `src/qrCodeSharing.js`
+
+Generates a shareable QR code for your X profile. Useful for cross-platform promotion.
+
 ### Key Selectors
 
 | Element | Selector |
@@ -39,16 +62,23 @@ Programmatically updates profile fields: display name, bio, location, website, b
 | Avatar edit | `[data-testid="editProfileAvatar"]` |
 | Header edit | `[data-testid="editProfileHeader"]` |
 | Save button | `[data-testid="Profile_Save_Button"]` |
+| User name display | `[data-testid="UserName"]` |
+| User description | `[data-testid="UserDescription"]` |
 
-## QR Code Sharing
+## Field Limits
 
-**File:** `src/qrCodeSharing.js`
-
-Generates a shareable QR code for your X profile.
+| Field | Limit |
+|-------|-------|
+| Display name | 50 characters |
+| Bio | 160 characters |
+| Location | 30 characters |
+| Website | Valid URL |
+| Avatar | Square image, 400×400px recommended |
+| Header | 1500×500px recommended |
 
 ## Notes
 
-- Bio max: 160 characters
-- Display name max: 50 characters
-- Avatar: square image, recommended 400x400px
-- Header: 1500x500px recommended
+- Profile updates take effect immediately after saving
+- Avatar and header uploads require file input interaction
+- Bio supports line breaks and emoji
+- All scripts include dry-run mode by default

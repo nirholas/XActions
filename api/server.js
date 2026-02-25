@@ -56,6 +56,14 @@ import portabilityRoutes from './routes/portability.js';
 import threadRoutes from './routes/thread.js';
 import unfollowersRoutes from './routes/unfollowers.js';
 import videoRoutes from './routes/video.js';
+// Competitive feature routes (09-A through 09-P)
+import historyRoutes from './routes/history.js';
+import scheduleRoutes from './routes/schedule.js';
+import crmRoutes from './routes/crm.js';
+import datasetsRoutes from './routes/datasets.js';
+import notificationsRoutes from './routes/notifications.js';
+import teamsRoutes from './routes/teams.js';
+import optimizerRoutes from './routes/optimizer.js';
 import { startScheduler } from './services/unfollowerScheduler.js';
 import { initializeSocketIO } from './realtime/socketHandler.js';
 import { initializeLicensing, brandingMiddleware } from './services/licensing.js';

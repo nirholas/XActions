@@ -1,0 +1,51 @@
+{
+  "name": "Web3 & Crypto",
+  "searchTerms": [
+    "DeFi protocols", "crypto trading strategies", "blockchain development",
+    "smart contract security", "Ethereum development", "Solana ecosystem",
+    "web3 startups", "NFT technology", "DAO governance",
+    "layer 2 scaling", "zero knowledge proofs", "ZK rollups",
+    "crypto market analysis", "decentralized exchanges", "yield farming",
+    "tokenomics design", "crypto regulation", "institutional crypto",
+    "Bitcoin halving", "staking rewards", "liquid staking",
+    "cross-chain bridges", "interoperability", "account abstraction",
+    "wallet infrastructure", "crypto payments", "stablecoin design",
+    "on-chain analytics", "MEV extraction", "flashbots",
+    "DeFi security", "smart contract audits", "formal verification",
+    "crypto venture capital", "token launches", "airdrop farming",
+    "decentralized identity", "verifiable credentials", "soulbound tokens",
+    "RWA tokenization", "real world assets crypto", "DePIN",
+    "crypto AI intersection", "prediction markets crypto",
+    "restaking protocols", "eigenlayer", "modularity thesis",
+    "data availability", "blob transactions", "proto-danksharding",
+    "Bitcoin ordinals", "BRC-20 tokens", "Bitcoin L2",
+    "Cosmos ecosystem", "appchains", "rollup as a service",
+    "crypto derivatives", "perpetual futures", "options DeFi"
+  ],
+  "influencers": [
+    "VitalikButerin", "CryptoHayes", "balaborhi_s", "DegenSpartan",
+    "coaborhi_eGecko", "MessariCrypto", "iamDCinvestor", "sassal0x",
+    "Timborhi_eahl", "hasufl", "gaaborhi_gol", "rleshner",
+    "staborhi_l", "fencaborhi_k", "0xMaki", "bantaborhi_g",
+    "DeFi_Dad", "thedeaborhi_iverse", "Pentoshi1", "ZhuSu"
+  ],
+  "keywords": [
+    "DeFi", "crypto", "blockchain", "Ethereum", "Bitcoin", "Solana",
+    "smart contract", "token", "NFT", "DAO", "TVL", "APY", "yield",
+    "staking", "liquidity", "DEX", "CEX", "wallet", "gas",
+    "L1", "L2", "rollup", "ZK", "bridge", "oracle", "MEV",
+    "governance", "protocol", "mainnet", "testnet", "audit",
+    "Web3", "decentralized", "on-chain", "off-chain", "consensus",
+    "validator", "node", "mining", "halvening", "bull", "bear"
+  ],
+  "topics": [
+    "DeFi protocol design", "Smart contract security", "Layer 2 scaling solutions",
+    "Crypto market cycles", "DAO governance models", "Token economics",
+    "Zero knowledge proof applications", "Cross-chain interoperability",
+    "Institutional crypto adoption", "Decentralized identity"
+  ],
+  "hashtagsToFollow": [
+    "DeFi", "Crypto", "Ethereum", "Bitcoin", "Web3",
+    "Blockchain", "NFT", "DAO"
+  ]
+}

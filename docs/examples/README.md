@@ -104,6 +104,25 @@ npx xactions <command> [options]
 
 ---
 
+## 📖 In-Depth Tutorials
+
+Step-by-step tutorials with real-world scenarios, ASCII diagrams, multiple methods (Browser, CLI, MCP), and FAQ sections optimized for SEO.
+
+| Tutorial | Description |
+|----------|-------------|
+| [Unfollow Everyone Tutorial](tutorials/unfollow-everyone-tutorial.md) | Complete fresh start — unfollow all accounts with backup |
+| [Unfollow Non-Followers Tutorial](tutorials/unfollow-non-followers-tutorial.md) | Remove accounts that don't follow you back |
+| [Detect Unfollowers Tutorial](tutorials/detect-unfollowers-tutorial.md) | Find out who unfollowed you |
+| [Video Downloader Tutorial](tutorials/video-downloader-tutorial.md) | Download Twitter videos for free |
+| [Followers Scraping Tutorial](tutorials/followers-scraping-tutorial.md) | Export your entire follower list to CSV |
+| [Auto-Liker Tutorial](tutorials/auto-liker-tutorial.md) | Auto-like tweets by keyword for organic growth |
+| [Tweet Scraping Tutorial](tutorials/tweet-scraping-tutorial.md) | Search and export tweets to JSON/CSV |
+| [Bookmark Exporter Tutorial](tutorials/bookmark-exporter-tutorial.md) | Export all your X bookmarks before they're gone |
+| [Auto-Commenter Tutorial](tutorials/auto-commenter-tutorial.md) | Auto-reply to new tweets for engagement growth |
+| [Profile Scraping Tutorial](tutorials/profile-scraping-tutorial.md) | Extract any profile's data to JSON instantly |
+
+---
+
 <p align="center">
   <b>Built with ❤️ by <a href="https://x.com/nichxbt">@nichxbt</a></b>
 </p>

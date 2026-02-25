@@ -463,7 +463,7 @@
 
         if (res.ok) {
           localStorage.setItem('authToken', data.token);
-          window.location.href = '/dashboard';
+          window.location.href = '/';
         } else {
           showError(data.error || 'Login failed');
           btn.disabled = false;
@@ -497,7 +497,7 @@
 
         if (res.ok) {
           localStorage.setItem('authToken', data.token);
-          window.location.href = '/dashboard';
+          window.location.href = '/';
         } else {
           showError(data.error || 'Registration failed', true);
           btn.disabled = false;
@@ -512,7 +512,7 @@
 
     // Check if already logged in
     if (localStorage.getItem('authToken')) {
-      window.location.href = '/dashboard';
+      window.location.href = '/';
     }
   </script>
 

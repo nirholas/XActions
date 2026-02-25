@@ -1266,6 +1266,493 @@ const TOOLS = [
       properties: {},
     },
   },
+  // ====== Persona & Algorithm Builder ======
+  {
+    name: 'x_persona_create',
+    description: 'Create a new persona for algorithm building and automated account growth. A persona defines niche, topics, engagement strategy, activity patterns, and LLM voice settings. Use presets for quick setup.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        name: {
+          type: 'string',
+          description: 'Persona name (e.g. "Crypto Alpha Hunter")',
+        },
+        preset: {
+          type: 'string',
+          enum: ['crypto-degen', 'tech-builder', 'ai-researcher', 'growth-marketer', 'finance-investor', 'creative-writer', 'custom'],
+          description: 'Niche preset with pre-filled topics, search terms, target accounts, and tone',
+        },
+        strategy: {
+          type: 'string',
+          enum: ['aggressive', 'moderate', 'conservative', 'thoughtleader'],
+          description: 'Engagement strategy (default: moderate). Aggressive = high volume, thoughtleader = quality over quantity',
+        },
+        activityPattern: {
+          type: 'string',
+          enum: ['night-owl', 'early-bird', 'nine-to-five', 'always-on', 'weekend-warrior'],
+          description: 'Activity schedule pattern (default: always-on)',
+        },
+        topics: {
+          type: 'array',
+          items: { type: 'string' },
+          description: 'Custom topics (overrides preset)',
+        },
+        searchTerms: {
+          type: 'array',
+          items: { type: 'string' },
+          description: 'Custom search terms (overrides preset)',
+        },
+        targetAccounts: {
+          type: 'array',
+          items: { type: 'string' },
+          description: 'Target accounts to study and engage with (without @)',
+        },
+      },
+      required: ['name', 'preset'],
+    },
+  },
+  {
+    name: 'x_persona_list',
+    description: 'List all saved personas with their stats (sessions, follows, likes, comments, last active).',
+    inputSchema: {
+      type: 'object',
+      properties: {},
+    },
+  },
+  {
+    name: 'x_persona_status',
+    description: 'Get detailed status and lifetime stats for a specific persona.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        personaId: {
+          type: 'string',
+          description: 'Persona ID',
+        },
+      },
+      required: ['personaId'],
+    },
+  },
+  {
+    name: 'x_persona_edit',
+    description: 'Edit an existing persona configuration (topics, search terms, target accounts, strategy, activity pattern).',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        personaId: {
+          type: 'string',
+          description: 'Persona ID to edit',
+        },
+        topics: {
+          type: 'array',
+          items: { type: 'string' },
+          description: 'New topics list',
+        },
+        searchTerms: {
+          type: 'array',
+          items: { type: 'string' },
+          description: 'New search terms list',
+        },
+        targetAccounts: {
+          type: 'array',
+          items: { type: 'string' },
+          description: 'New target accounts list',
+        },
+        strategy: {
+          type: 'string',
+          enum: ['aggressive', 'moderate', 'conservative', 'thoughtleader'],
+          description: 'New engagement strategy',
+        },
+        activityPattern: {
+          type: 'string',
+          enum: ['night-owl', 'early-bird', 'nine-to-five', 'always-on', 'weekend-warrior'],
+          description: 'New activity pattern',
+        },
+      },
+      required: ['personaId'],
+    },
+  },
+  {
+    name: 'x_persona_delete',
+    description: 'Delete a saved persona and all its stored state.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        personaId: {
+          type: 'string',
+          description: 'Persona ID to delete',
+        },
+      },
+      required: ['personaId'],
+    },
+  },
+  {
+    name: 'x_persona_run',
+    description: 'Start the 24/7 Algorithm Builder for a persona. Launches headless Puppeteer with LLM-powered engagement (search, like, comment, follow, post). Requires auth token and OPENROUTER_API_KEY for AI comments.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        personaId: {
+          type: 'string',
+          description: 'Persona ID to run',
+        },
+        sessions: {
+          type: 'number',
+          description: 'Number of sessions to run (0 = infinite, default: 1 for MCP)',
+        },
+        dryRun: {
+          type: 'boolean',
+          description: 'Preview actions without executing (default: false)',
+        },
+        headless: {
+          type: 'boolean',
+          description: 'Run browser in headless mode (default: true)',
+        },
+      },
+      required: ['personaId'],
+    },
+  },
+  {
+    name: 'x_persona_presets',
+    description: 'List all available niche presets, engagement strategies, and activity patterns for persona creation.',
+    inputSchema: {
+      type: 'object',
+      properties: {},
+    },
+  },
+
+  // ── 09-A: History & Analytics ──
+  {
+    name: 'x_history_get',
+    description: 'Get account history / time-series snapshots for a username. Returns followers, following, tweet count over time.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        username: { type: 'string', description: 'Twitter username' },
+        days: { type: 'number', description: 'Days to look back (default: 30)' },
+        interval: { type: 'string', enum: ['hour', 'day', 'week'], description: 'Grouping interval' },
+      },
+      required: ['username'],
+    },
+  },
+  {
+    name: 'x_history_snapshot',
+    description: 'Take a snapshot of account metrics right now and save to history.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        username: { type: 'string', description: 'Twitter username' },
+      },
+      required: ['username'],
+    },
+  },
+  {
+    name: 'x_growth_rate',
+    description: 'Calculate follower growth rate for an account over N days.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        username: { type: 'string', description: 'Twitter username' },
+        days: { type: 'number', description: 'Number of days (default: 7)' },
+      },
+      required: ['username'],
+    },
+  },
+  {
+    name: 'x_compare_accounts',
+    description: 'Compare multiple accounts on a metric over time.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        usernames: { type: 'array', items: { type: 'string' }, description: 'List of usernames' },
+        metric: { type: 'string', description: 'Metric to compare: followers_count, following_count, tweet_count' },
+        days: { type: 'number', description: 'Days to look back' },
+      },
+      required: ['usernames', 'metric'],
+    },
+  },
+
+  // ── 09-B: Audience Overlap ──
+  {
+    name: 'x_audience_overlap',
+    description: 'Analyze follower overlap between two Twitter accounts.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        username1: { type: 'string', description: 'First username' },
+        username2: { type: 'string', description: 'Second username' },
+        maxFollowers: { type: 'number', description: 'Max followers to fetch per account (default: 5000)' },
+      },
+      required: ['username1', 'username2'],
+    },
+  },
+
+  // ── 09-C: Follower CRM ──
+  {
+    name: 'x_crm_sync',
+    description: 'Sync followers of a username into the CRM database.',
+    inputSchema: {
+      type: 'object',
+      properties: { username: { type: 'string', description: 'Twitter username' } },
+      required: ['username'],
+    },
+  },
+  {
+    name: 'x_crm_tag',
+    description: 'Add a tag to a CRM contact.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        username: { type: 'string', description: 'Contact username' },
+        tag: { type: 'string', description: 'Tag to add' },
+      },
+      required: ['username', 'tag'],
+    },
+  },
+  {
+    name: 'x_crm_search',
+    description: 'Search CRM contacts by username or display name.',
+    inputSchema: {
+      type: 'object',
+      properties: { query: { type: 'string', description: 'Search query' } },
+      required: ['query'],
+    },
+  },
+  {
+    name: 'x_crm_segment',
+    description: 'Get contacts in a CRM segment.',
+    inputSchema: {
+      type: 'object',
+      properties: { name: { type: 'string', description: 'Segment name' } },
+      required: ['name'],
+    },
+  },
+
+  // ── 09-D: Bulk Operations ──
+  {
+    name: 'x_bulk_execute',
+    description: 'Execute bulk follow/unfollow/block/mute from a list of usernames.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        usernames: { type: 'array', items: { type: 'string' }, description: 'List of usernames' },
+        action: { type: 'string', enum: ['follow', 'unfollow', 'block', 'mute', 'dm'], description: 'Action to perform' },
+        delay: { type: 'number', description: 'Delay between actions in ms (default: 2000)' },
+        dryRun: { type: 'boolean', description: 'Preview without executing' },
+      },
+      required: ['usernames', 'action'],
+    },
+  },
+
+  // ── 09-F: Scheduler ──
+  {
+    name: 'x_schedule_add',
+    description: 'Add a cron-scheduled job.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string', description: 'Job name' },
+        cron: { type: 'string', description: 'Cron expression (e.g. "0 9 * * *" for 9am daily)' },
+        action: { type: 'string', description: 'Action/command to run' },
+      },
+      required: ['name', 'cron'],
+    },
+  },
+  {
+    name: 'x_schedule_list',
+    description: 'List all scheduled jobs.',
+    inputSchema: { type: 'object', properties: {} },
+  },
+  {
+    name: 'x_schedule_remove',
+    description: 'Remove a scheduled job.',
+    inputSchema: {
+      type: 'object',
+      properties: { name: { type: 'string', description: 'Job name' } },
+      required: ['name'],
+    },
+  },
+
+  // ── 09-H: Evergreen Recycler ──
+  {
+    name: 'x_evergreen_analyze',
+    description: 'Find top-performing evergreen tweets that can be recycled.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        username: { type: 'string', description: 'Twitter username' },
+        minLikes: { type: 'number', description: 'Min likes threshold (default: 50)' },
+        minAgeDays: { type: 'number', description: 'Min age in days (default: 30)' },
+      },
+      required: ['username'],
+    },
+  },
+
+  // ── 09-I: RSS Monitor ──
+  {
+    name: 'x_rss_add',
+    description: 'Add an RSS feed to monitor.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string', description: 'Feed name' },
+        url: { type: 'string', description: 'Feed URL' },
+        template: { type: 'string', description: 'Post template. Variables: {title}, {link}, {description}' },
+      },
+      required: ['name', 'url'],
+    },
+  },
+  {
+    name: 'x_rss_check',
+    description: 'Check all RSS feeds for new items.',
+    inputSchema: { type: 'object', properties: {} },
+  },
+  {
+    name: 'x_rss_drafts',
+    description: 'View drafts generated from RSS feeds.',
+    inputSchema: { type: 'object', properties: {} },
+  },
+
+  // ── 09-J: AI Content Optimizer ──
+  {
+    name: 'x_optimize_tweet',
+    description: 'AI-optimize a tweet for maximum engagement.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        text: { type: 'string', description: 'Tweet text' },
+        goal: { type: 'string', enum: ['engagement', 'clarity', 'growth', 'viral'], description: 'Optimization goal' },
+      },
+      required: ['text'],
+    },
+  },
+  {
+    name: 'x_suggest_hashtags',
+    description: 'Suggest relevant hashtags for a tweet.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        text: { type: 'string', description: 'Tweet text' },
+        count: { type: 'number', description: 'Number of hashtags (default: 5)' },
+      },
+      required: ['text'],
+    },
+  },
+  {
+    name: 'x_predict_performance',
+    description: 'Predict how well a tweet will perform (score, strengths, weaknesses).',
+    inputSchema: {
+      type: 'object',
+      properties: { text: { type: 'string', description: 'Tweet text' } },
+      required: ['text'],
+    },
+  },
+  {
+    name: 'x_generate_variations',
+    description: 'Generate alternative versions of a tweet.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        text: { type: 'string', description: 'Tweet text' },
+        count: { type: 'number', description: 'Number of variations (default: 3)' },
+      },
+      required: ['text'],
+    },
+  },
+
+  // ── 09-L: Notifications ──
+  {
+    name: 'x_notify_send',
+    description: 'Send a notification to all configured channels (Slack, Discord, Telegram, Email).',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        title: { type: 'string', description: 'Notification title' },
+        message: { type: 'string', description: 'Message body' },
+        severity: { type: 'string', enum: ['info', 'warning', 'critical'], description: 'Severity level' },
+      },
+      required: ['message'],
+    },
+  },
+  {
+    name: 'x_notify_test',
+    description: 'Send a test notification to a specific channel.',
+    inputSchema: {
+      type: 'object',
+      properties: { channel: { type: 'string', enum: ['slack', 'discord', 'telegram', 'email'], description: 'Channel to test' } },
+      required: ['channel'],
+    },
+  },
+
+  // ── 09-M: Datasets ──
+  {
+    name: 'x_dataset_list',
+    description: 'List all stored scraping datasets.',
+    inputSchema: { type: 'object', properties: {} },
+  },
+  {
+    name: 'x_dataset_get',
+    description: 'Get items from a dataset with pagination.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string', description: 'Dataset name' },
+        offset: { type: 'number', description: 'Start offset (default: 0)' },
+        limit: { type: 'number', description: 'Max items (default: 100)' },
+      },
+      required: ['name'],
+    },
+  },
+
+  // ── 09-N: Team Management ──
+  {
+    name: 'x_team_create',
+    description: 'Create a new team.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string', description: 'Team name' },
+        owner: { type: 'string', description: 'Owner username' },
+      },
+      required: ['name', 'owner'],
+    },
+  },
+  {
+    name: 'x_team_members',
+    description: 'List team members.',
+    inputSchema: {
+      type: 'object',
+      properties: { teamId: { type: 'string', description: 'Team ID' } },
+      required: ['teamId'],
+    },
+  },
+
+  // ── 09-P: Import/Export ──
+  {
+    name: 'x_import_data',
+    description: 'Import data from Apify, Phantombuster, or CSV format.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        data: { type: 'string', description: 'JSON string or CSV data to import' },
+        from: { type: 'string', enum: ['apify', 'phantombuster', 'auto'], description: 'Source format (default: auto)' },
+      },
+      required: ['data'],
+    },
+  },
+  {
+    name: 'x_convert_format',
+    description: 'Convert data between Apify/Phantombuster/CSV formats.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        data: { type: 'string', description: 'Data to convert (JSON string or CSV)' },
+        from: { type: 'string', description: 'Source format: apify, phantombuster' },
+        to: { type: 'string', description: 'Target format: apify, phantombuster, csv, socialblade' },
+      },
+      required: ['data', 'from', 'to'],
+    },
+  },
 ];
 
 // ============================================================================
@@ -1342,6 +1829,23 @@ async function executeTool(name, args) {
   // Handle graph tools directly
   if (name.startsWith('x_graph_')) {
     return await executeGraphTool(name, args);
+  }
+
+  // Handle persona/algorithm builder tools
+  if (name.startsWith('x_persona_')) {
+    return await executePersonaTool(name, args);
+  }
+
+  // Handle competitive feature tools (09-A through 09-P)
+  if (name.startsWith('x_history_') || name === 'x_growth_rate' || name === 'x_compare_accounts') {
+    return await executeCompetitiveTool(name, args);
+  }
+  if (name === 'x_audience_overlap' || name.startsWith('x_crm_') || name.startsWith('x_bulk_') ||
+      name.startsWith('x_schedule_') || name.startsWith('x_evergreen_') || name.startsWith('x_rss_') ||
+      name.startsWith('x_optimize_') || name === 'x_suggest_hashtags' || name === 'x_predict_performance' ||
+      name === 'x_generate_variations' || name.startsWith('x_notify_') || name.startsWith('x_dataset_') ||
+      name.startsWith('x_team_') || name === 'x_import_data' || name === 'x_convert_format') {
+    return await executeCompetitiveTool(name, args);
   }
   
   // Check plugin tools first
@@ -1700,6 +2204,351 @@ async function executeGraphTool(name, args) {
 
     default:
       throw new Error(`Unknown graph tool: ${name}`);
+  }
+}
+
+/**
+ * Execute competitive feature tools (09-A through 09-P)
+ */
+async function executeCompetitiveTool(name, args) {
+  switch (name) {
+    // ── 09-A: History ──
+    case 'x_history_get': {
+      const { getAccountHistory } = await import('../analytics/historyStore.js');
+      const days = args.days || 30;
+      const from = new Date(Date.now() - days * 86400000).toISOString();
+      return getAccountHistory(args.username, { from, interval: args.interval || 'day' });
+    }
+    case 'x_history_snapshot': {
+      const { saveAccountSnapshot } = await import('../analytics/historyStore.js');
+      if (localTools) {
+        const profile = await localTools.x_get_profile({ username: args.username });
+        saveAccountSnapshot(args.username, profile);
+        return { status: 'snapshot_saved', username: args.username };
+      }
+      return { status: 'snapshot_saved_empty', note: 'No scraper available — use in local mode' };
+    }
+    case 'x_growth_rate': {
+      const { getGrowthRate } = await import('../analytics/historyStore.js');
+      return getGrowthRate(args.username, args.days || 7);
+    }
+    case 'x_compare_accounts': {
+      const { compareAccounts } = await import('../analytics/historyStore.js');
+      const days = args.days || 30;
+      const from = new Date(Date.now() - days * 86400000).toISOString();
+      return compareAccounts(args.usernames, args.metric, { from });
+    }
+
+    // ── 09-B: Audience Overlap ──
+    case 'x_audience_overlap': {
+      const { analyzeOverlap } = await import('../analytics/audienceOverlap.js');
+      return await analyzeOverlap(args.username1, args.username2, { maxFollowers: args.maxFollowers || 5000 });
+    }
+
+    // ── 09-C: CRM ──
+    case 'x_crm_sync': {
+      const { syncFollowers } = await import('../analytics/followerCRM.js');
+      return await syncFollowers(args.username);
+    }
+    case 'x_crm_tag': {
+      const { tagContact } = await import('../analytics/followerCRM.js');
+      tagContact(args.username, args.tag);
+      return { status: 'tagged', username: args.username, tag: args.tag };
+    }
+    case 'x_crm_search': {
+      const { searchContacts } = await import('../analytics/followerCRM.js');
+      return searchContacts(args.query);
+    }
+    case 'x_crm_segment': {
+      const { getSegment } = await import('../analytics/followerCRM.js');
+      return getSegment(args.name);
+    }
+
+    // ── 09-D: Bulk Operations ──
+    case 'x_bulk_execute': {
+      const { bulkExecute } = await import('../bulk/bulkOperations.js');
+      return await bulkExecute(args.usernames, args.action, { delay: args.delay, dryRun: args.dryRun });
+    }
+
+    // ── 09-F: Scheduler ──
+    case 'x_schedule_add': {
+      const { getScheduler } = await import('../scheduler/scheduler.js');
+      const scheduler = getScheduler();
+      scheduler.addJob({ name: args.name, cron: args.cron, action: args.action || args.name });
+      return { status: 'scheduled', name: args.name, cron: args.cron };
+    }
+    case 'x_schedule_list': {
+      const { getScheduler } = await import('../scheduler/scheduler.js');
+      return getScheduler().listJobs();
+    }
+    case 'x_schedule_remove': {
+      const { getScheduler } = await import('../scheduler/scheduler.js');
+      getScheduler().removeJob(args.name);
+      return { status: 'removed', name: args.name };
+    }
+
+    // ── 09-H: Evergreen ──
+    case 'x_evergreen_analyze': {
+      const { analyzeEvergreenCandidates } = await import('../automation/evergreenRecycler.js');
+      return await analyzeEvergreenCandidates(args.username, { minLikes: args.minLikes, minAgeDays: args.minAgeDays });
+    }
+
+    // ── 09-I: RSS ──
+    case 'x_rss_add': {
+      const { addFeed } = await import('../automation/rssMonitor.js');
+      addFeed({ name: args.name, url: args.url, template: args.template });
+      return { status: 'added', name: args.name };
+    }
+    case 'x_rss_check': {
+      const { checkAllFeeds } = await import('../automation/rssMonitor.js');
+      return await checkAllFeeds();
+    }
+    case 'x_rss_drafts': {
+      const { getDrafts } = await import('../automation/rssMonitor.js');
+      return getDrafts();
+    }
+
+    // ── 09-J: AI Optimizer ──
+    case 'x_optimize_tweet': {
+      const { optimizeTweet } = await import('../ai/contentOptimizer.js');
+      return await optimizeTweet(args.text, { goal: args.goal || 'engagement' });
+    }
+    case 'x_suggest_hashtags': {
+      const { suggestHashtags } = await import('../ai/contentOptimizer.js');
+      return await suggestHashtags(args.text, { count: args.count || 5 });
+    }
+    case 'x_predict_performance': {
+      const { predictPerformance } = await import('../ai/contentOptimizer.js');
+      return await predictPerformance(args.text);
+    }
+    case 'x_generate_variations': {
+      const { generateVariations } = await import('../ai/contentOptimizer.js');
+      return await generateVariations(args.text, args.count || 3);
+    }
+
+    // ── 09-L: Notifications ──
+    case 'x_notify_send': {
+      const { getNotifier } = await import('../notifications/notifier.js');
+      const notifier = await getNotifier();
+      return await notifier.send({ title: args.title, message: args.message, severity: args.severity || 'info' });
+    }
+    case 'x_notify_test': {
+      const { getNotifier } = await import('../notifications/notifier.js');
+      const notifier = await getNotifier();
+      return await notifier.test(args.channel);
+    }
+
+    // ── 09-M: Datasets ──
+    case 'x_dataset_list': {
+      const { listDatasets } = await import('../scraping/paginationEngine.js');
+      return await listDatasets();
+    }
+    case 'x_dataset_get': {
+      const { DatasetStore } = await import('../scraping/paginationEngine.js');
+      const ds = new DatasetStore(args.name);
+      return await ds.getData({ offset: args.offset, limit: args.limit });
+    }
+
+    // ── 09-N: Teams ──
+    case 'x_team_create': {
+      const { createTeam } = await import('../auth/teamManager.js');
+      return await createTeam(args.name, args.owner);
+    }
+    case 'x_team_members': {
+      const { listTeamMembers } = await import('../auth/teamManager.js');
+      return await listTeamMembers(args.teamId);
+    }
+
+    // ── 09-P: Import/Export ──
+    case 'x_import_data': {
+      const { importApifyDataset, importPhantomResult, autoDetectCSV } = await import('../compat/apifyAdapter.js');
+      const parsed = typeof args.data === 'string' ? args.data : JSON.stringify(args.data);
+      if (args.from === 'apify') return importApifyDataset(parsed);
+      if (args.from === 'phantombuster') return importPhantomResult(parsed);
+      try { return importApifyDataset(JSON.parse(parsed)); } catch { return autoDetectCSV(parsed); }
+    }
+    case 'x_convert_format': {
+      const { convertFormat } = await import('../compat/apifyAdapter.js');
+      const data = typeof args.data === 'string' ? args.data : JSON.stringify(args.data);
+      return convertFormat(data.startsWith('[') ? JSON.parse(data) : data, args.from, args.to);
+    }
+
+    default:
+      throw new Error(`Unknown competitive tool: ${name}`);
+  }
+}
+
+/**
+ * Execute persona/algorithm builder tools
+ */
+async function executePersonaTool(name, args) {
+  const personaMod = await import('../personaEngine.js');
+
+  switch (name) {
+    case 'x_persona_create': {
+      if (!args.name) throw new Error('"name" is required');
+      if (!args.preset) throw new Error('"preset" is required');
+
+      const persona = personaMod.createPersona({
+        name: args.name,
+        preset: args.preset,
+        strategy: args.strategy || 'moderate',
+        activityPattern: args.activityPattern || 'always-on',
+        topics: args.topics,
+        searchTerms: args.searchTerms,
+        targetAccounts: args.targetAccounts,
+      });
+
+      const filePath = personaMod.savePersona(persona);
+
+      return {
+        id: persona.id,
+        name: persona.name,
+        preset: args.preset,
+        strategy: persona.strategy.preset,
+        activityPattern: persona.activityPattern.preset,
+        topics: persona.niche.topics,
+        searchTerms: persona.niche.searchTerms.length,
+        targetAccounts: persona.niche.targetAccounts,
+        savedTo: filePath,
+        message: `Persona "${persona.name}" created. Run with x_persona_run or CLI: xactions persona run ${persona.id}`,
+      };
+    }
+
+    case 'x_persona_list': {
+      const personas = personaMod.listPersonas();
+      return {
+        count: personas.length,
+        personas: personas.map(p => ({
+          id: p.id,
+          name: p.name,
+          preset: p.preset,
+          strategy: p.strategy,
+          totalSessions: p.totalSessions,
+          totalFollows: p.totalFollows || 0,
+          totalLikes: p.totalLikes || 0,
+          totalComments: p.totalComments || 0,
+          lastSessionAt: p.lastSessionAt,
+        })),
+      };
+    }
+
+    case 'x_persona_status': {
+      if (!args.personaId) throw new Error('"personaId" is required');
+      const persona = personaMod.loadPersona(args.personaId);
+
+      return {
+        id: persona.id,
+        name: persona.name,
+        preset: persona.preset,
+        createdAt: persona.createdAt,
+        niche: {
+          topics: persona.niche.topics,
+          searchTerms: persona.niche.searchTerms,
+          targetAccounts: persona.niche.targetAccounts,
+        },
+        strategy: persona.strategy.preset,
+        activityPattern: persona.activityPattern.preset,
+        stats: {
+          totalSessions: persona.state.totalSessions,
+          totalLikes: persona.state.totalLikes,
+          totalFollows: persona.state.totalFollows,
+          totalComments: persona.state.totalComments,
+          totalPosts: persona.state.totalPosts,
+          totalSearches: persona.state.totalSearches,
+          totalProfileVisits: persona.state.totalProfileVisits,
+          followedUsersCount: Object.keys(persona.state.followedUsers || {}).length,
+          lastSessionAt: persona.state.lastSessionAt,
+        },
+        goals: persona.goals,
+      };
+    }
+
+    case 'x_persona_edit': {
+      if (!args.personaId) throw new Error('"personaId" is required');
+      const persona = personaMod.loadPersona(args.personaId);
+
+      if (args.topics) persona.niche.topics = args.topics;
+      if (args.searchTerms) persona.niche.searchTerms = args.searchTerms;
+      if (args.targetAccounts) persona.niche.targetAccounts = args.targetAccounts;
+      if (args.strategy && personaMod.ENGAGEMENT_STRATEGIES[args.strategy]) {
+        persona.strategy = { preset: args.strategy, ...personaMod.ENGAGEMENT_STRATEGIES[args.strategy] };
+      }
+      if (args.activityPattern && personaMod.ACTIVITY_PATTERNS[args.activityPattern]) {
+        persona.activityPattern = { preset: args.activityPattern, ...personaMod.ACTIVITY_PATTERNS[args.activityPattern], timezone: persona.activityPattern.timezone };
+      }
+
+      persona.updatedAt = new Date().toISOString();
+      personaMod.savePersona(persona);
+
+      return {
+        id: persona.id,
+        name: persona.name,
+        message: `Persona "${persona.name}" updated`,
+        topics: persona.niche.topics,
+        strategy: persona.strategy.preset,
+        activityPattern: persona.activityPattern.preset,
+      };
+    }
+
+    case 'x_persona_delete': {
+      if (!args.personaId) throw new Error('"personaId" is required');
+      personaMod.deletePersona(args.personaId);
+      return { message: `Persona ${args.personaId} deleted` };
+    }
+
+    case 'x_persona_run': {
+      if (!args.personaId) throw new Error('"personaId" is required');
+      const authToken = SESSION_COOKIE;
+      if (!authToken) throw new Error('XACTIONS_SESSION_COOKIE is required to run algorithm builder');
+
+      const { startAlgorithmBuilder } = await import('../algorithmBuilder.js');
+
+      const result = await startAlgorithmBuilder({
+        personaId: args.personaId,
+        authToken,
+        headless: args.headless !== false,
+        dryRun: args.dryRun || false,
+        maxSessions: args.sessions || 1, // Default 1 session for MCP (not infinite)
+      });
+
+      return {
+        personaId: args.personaId,
+        sessionsCompleted: result.sessionCount,
+        totalLikes: result.persona.state.totalLikes,
+        totalFollows: result.persona.state.totalFollows,
+        totalComments: result.persona.state.totalComments,
+        totalPosts: result.persona.state.totalPosts,
+        message: `Algorithm builder completed ${result.sessionCount} session(s)`,
+      };
+    }
+
+    case 'x_persona_presets': {
+      return {
+        niches: Object.entries(personaMod.NICHE_PRESETS).map(([key, val]) => ({
+          key,
+          name: val.name,
+          topics: val.topics.slice(0, 5),
+          targetAccounts: val.targetAccounts?.slice(0, 3) || [],
+        })),
+        strategies: Object.entries(personaMod.ENGAGEMENT_STRATEGIES).map(([key, val]) => ({
+          key,
+          name: val.name,
+          description: val.description,
+          dailyLimits: val.dailyLimits,
+        })),
+        activityPatterns: Object.entries(personaMod.ACTIVITY_PATTERNS).map(([key, val]) => ({
+          key,
+          name: val.name,
+          description: val.description,
+          activeHoursCount: val.activeHours.length,
+          peakHoursCount: val.peakHours.length,
+        })),
+      };
+    }
+
+    default:
+      throw new Error(`Unknown persona tool: ${name}`);
   }
 }
 

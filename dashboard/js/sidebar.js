@@ -27,7 +27,7 @@
     { href: '/dashboard', label: 'Dashboard', icon: icons.dashboard },
     { href: '/features', label: 'Scripts', icon: icons.scripts },
     { href: '/video', label: 'Video', icon: icons.video },
-    { href: '/thread', label: 'Threads', icon: icons.threads },
+    { href: '/thread', label: 'Thread Reader', icon: icons.threads },
     { href: '/mcp', label: 'AI / MCP', icon: icons.ai },
     { href: '/docs', label: 'Docs', icon: icons.docs },
     { href: '/tutorials', label: 'Tutorials', icon: icons.tutorials },

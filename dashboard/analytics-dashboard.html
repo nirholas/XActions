@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analytics — XActions</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+  <style>
+    :root { --bg: #000; --bg2: #111; --bg3: #1a1a1a; --border: #333; --text: #e0e0e0; --text2: #888; --accent: #1d9bf0; --green: #00c853; --red: #ff4444; --yellow: #ffb800; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; display: flex; min-height: 100vh; }
+    .sidebar { width: 240px; background: var(--bg2); border-right: 1px solid var(--border); padding: 20px 0; flex-shrink: 0; }
+    .sidebar .logo { padding: 0 20px 20px; font-size: 20px; font-weight: 700; color: #fff; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 20px; color: var(--text2); text-decoration: none; font-size: 14px; transition: all .2s; }
+    .nav-item:hover, .nav-item.active { color: #fff; background: var(--bg3); }
+    .main { flex: 1; padding: 30px; overflow-y: auto; }
+    h1 { font-size: 24px; margin-bottom: 20px; }
+    .toolbar { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
+    .input { padding: 8px 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg3); color: var(--text); font-size: 13px; }
+    .btn { padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg3); color: var(--text); cursor: pointer; font-size: 13px; transition: all .2s; }
+    .btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .overview-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
+    .card .label { font-size: 13px; color: var(--text2); margin-bottom: 4px; }
+    .card .value { font-size: 28px; font-weight: 700; color: #fff; }
+    .card .change { font-size: 13px; margin-top: 4px; }
+    .card .change.up { color: var(--green); }
+    .card .change.down { color: var(--red); }
+    .chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+    .chart-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
+    .chart-card h3 { font-size: 15px; margin-bottom: 12px; }
+    .chart-card canvas { max-height: 280px; }
+    .chart-card.full { grid-column: 1 / -1; }
+    .heatmap { display: grid; grid-template-columns: repeat(24, 1fr); gap: 2px; }
+    .heatmap-cell { aspect-ratio: 1; border-radius: 3px; position: relative; cursor: pointer; }
+    .heatmap-cell:hover::after { content: attr(data-tooltip); position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); background: #333; color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 11px; white-space: nowrap; z-index: 10; }
+    .heatmap-labels { display: flex; justify-content: space-between; font-size: 10px; color: var(--text2); margin-top: 4px; }
+    .day-labels { display: flex; flex-direction: column; gap: 2px; font-size: 10px; color: var(--text2); margin-right: 4px; }
+    .top-tweets { margin-bottom: 24px; }
+    .tweet-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 8px; }
+    .tweet-text { flex: 1; font-size: 14px; margin-right: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .tweet-metrics { display: flex; gap: 16px; font-size: 13px; color: var(--text2); flex-shrink: 0; }
+    .tweet-metrics span { white-space: nowrap; }
+    .loading { text-align: center; padding: 40px; color: var(--text2); }
+    select.input { cursor: pointer; }
+  </style>
+</head>
+<body>
+  <nav class="sidebar">
+    <div class="logo">⚡ XActions</div>
+    <a href="index.html" class="nav-item">🏠 Dashboard</a>
+    <a href="analytics.html" class="nav-item active">📊 Analytics</a>
+    <a href="calendar.html" class="nav-item">📅 Calendar</a>
+    <a href="thread.html" class="nav-item">🧵 Thread Composer</a>
+    <a href="automations.html" class="nav-item">🤖 Automations</a>
+    <a href="monitor.html" class="nav-item">👁️ Monitor</a>
+    <a href="unfollowers.html" class="nav-item">👥 Unfollowers</a>
+    <a href="video.html" class="nav-item">🎬 Video DL</a>
+    <a href="workflows.html" class="nav-item">⚙️ Workflows</a>
+  </nav>
+
+  <main class="main">
+    <h1>📊 Analytics Dashboard</h1>
+
+    <div class="toolbar">
+      <input type="text" class="input" id="username-input" placeholder="@username" value="">
+      <select class="input" id="range-select">
+        <option value="7">Last 7 days</option>
+        <option value="30" selected>Last 30 days</option>
+        <option value="90">Last 90 days</option>
+        <option value="365">Last year</option>
+      </select>
+      <button class="btn primary" id="load-btn">Load Analytics</button>
+      <button class="btn" id="export-btn">📥 Export</button>
+      <button class="btn" id="compare-btn">⚔️ Compare</button>
+    </div>
+
+    <div class="overview-cards" id="overview-cards">
+      <div class="card"><div class="label">Followers</div><div class="value" id="card-followers">—</div><div class="change" id="card-followers-change"></div></div>
+      <div class="card"><div class="label">Following</div><div class="value" id="card-following">—</div><div class="change" id="card-following-change"></div></div>
+      <div class="card"><div class="label">Tweets</div><div class="value" id="card-tweets">—</div><div class="change" id="card-tweets-change"></div></div>
+      <div class="card"><div class="label">Avg Engagement</div><div class="value" id="card-engagement">—</div><div class="change" id="card-engagement-change"></div></div>
+      <div class="card"><div class="label">Growth Rate</div><div class="value" id="card-growth">—</div><div class="change" id="card-growth-change"></div></div>
+    </div>
+
+    <div class="chart-grid">
+      <div class="chart-card">
+        <h3>📈 Follower Growth</h3>
+        <canvas id="follower-chart"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3>💬 Engagement Over Time</h3>
+        <canvas id="engagement-chart"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3>❤️ Likes vs Retweets</h3>
+        <canvas id="likes-rts-chart"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3>📊 Content Types</h3>
+        <canvas id="content-type-chart"></canvas>
+      </div>
+      <div class="chart-card full">
+        <h3>🔥 Best Time to Post (Engagement Heatmap)</h3>
+        <div style="display:flex;">
+          <div class="day-labels" id="day-labels"></div>
+          <div style="flex:1;">
+            <div class="heatmap" id="heatmap"></div>
+            <div class="heatmap-labels" id="heatmap-hours"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="top-tweets">
+      <h3 style="margin-bottom: 12px;">🏆 Top Performing Tweets</h3>
+      <div id="top-tweets-list"></div>
+    </div>
+  </main>
+
+  <script>
+    const API_BASE = window.location.origin;
+    let charts = {};
+
+    const chartDefaults = {
+      responsive: true,
+      plugins: { legend: { labels: { color: '#888' } } },
+      scales: {
+        x: { ticks: { color: '#888' }, grid: { color: '#222' } },
+        y: { ticks: { color: '#888' }, grid: { color: '#222' } },
+      },
+    };
+
+    // ── Chart Init ──
+    function initCharts() {
+      const ctx1 = document.getElementById('follower-chart').getContext('2d');
+      charts.followers = new Chart(ctx1, {
+        type: 'line',
+        data: { labels: [], datasets: [{ label: 'Followers', data: [], borderColor: '#1d9bf0', backgroundColor: 'rgba(29,155,240,.1)', fill: true, tension: 0.3 }] },
+        options: chartDefaults,
+      });
+
+      const ctx2 = document.getElementById('engagement-chart').getContext('2d');
+      charts.engagement = new Chart(ctx2, {
+        type: 'line',
+        data: { labels: [], datasets: [
+          { label: 'Likes', data: [], borderColor: '#ff4444', tension: 0.3 },
+          { label: 'Replies', data: [], borderColor: '#1d9bf0', tension: 0.3 },
+          { label: 'Retweets', data: [], borderColor: '#00c853', tension: 0.3 },
+        ] },
+        options: chartDefaults,
+      });
+
+      const ctx3 = document.getElementById('likes-rts-chart').getContext('2d');
+      charts.likesRts = new Chart(ctx3, {
+        type: 'bar',
+        data: { labels: [], datasets: [
+          { label: 'Likes', data: [], backgroundColor: 'rgba(255,68,68,0.6)' },
+          { label: 'Retweets', data: [], backgroundColor: 'rgba(0,200,83,0.6)' },
+        ] },
+        options: chartDefaults,
+      });
+
+      const ctx4 = document.getElementById('content-type-chart').getContext('2d');
+      charts.contentType = new Chart(ctx4, {
+        type: 'doughnut',
+        data: {
+          labels: ['Original', 'Reply', 'Retweet', 'Quote'],
+          datasets: [{ data: [45, 25, 20, 10], backgroundColor: ['#1d9bf0', '#00c853', '#ffb800', '#ff4444'] }],
+        },
+        options: { responsive: true, plugins: { legend: { labels: { color: '#888' } } } },
+      });
+    }
+
+    // ── Heatmap ──
+    function renderHeatmap(data) {
+      const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      const dayLabels = document.getElementById('day-labels');
+      dayLabels.innerHTML = days.map(d => `<div style="height:20px;display:flex;align-items:center;">${d}</div>`).join('');
+
+      const heatmap = document.getElementById('heatmap');
+      heatmap.style.gridTemplateColumns = 'repeat(24, 1fr)';
+      heatmap.style.gridTemplateRows = `repeat(7, 20px)`;
+
+      let html = '';
+      const maxVal = Math.max(...(data || []).flat(), 1);
+
+      for (let day = 0; day < 7; day++) {
+        for (let hour = 0; hour < 24; hour++) {
+          const val = data ? (data[day]?.[hour] || 0) : Math.random() * 100;
+          const intensity = val / maxVal;
+          const bg = `rgba(29, 155, 240, ${0.05 + intensity * 0.9})`;
+          html += `<div class="heatmap-cell" style="background:${bg}" data-tooltip="${days[day]} ${hour}:00 — ${Math.round(val)} engagements"></div>`;
+        }
+      }
+      heatmap.innerHTML = html;
+
+      const hoursLabels = document.getElementById('heatmap-hours');
+      hoursLabels.innerHTML = Array.from({ length: 24 }, (_, i) => `<span>${i}</span>`).join('');
+    }
+
+    // ── Load Data ──
+    async function loadAnalytics() {
+      const username = document.getElementById('username-input').value.replace('@', '').trim();
+      if (!username) { alert('Enter a username'); return; }
+
+      const days = parseInt(document.getElementById('range-select').value);
+
+      try {
+        // Try API first
+        const response = await fetch(`${API_BASE}/api/analytics/history/${username}?days=${days}`);
+        if (response.ok) {
+          const data = await response.json();
+          updateDashboard(data);
+          return;
+        }
+      } catch { /* API not available, use demo data */ }
+
+      // Demo data
+      loadDemoData(username, days);
+    }
+
+    function loadDemoData(username, days) {
+      const labels = [];
+      const followers = [];
+      const likes = [];
+      const replies = [];
+      const retweets = [];
+
+      let base = 10000 + Math.floor(Math.random() * 50000);
+      for (let i = days; i >= 0; i--) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        labels.push(d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+        base += Math.floor(Math.random() * 100 - 30);
+        followers.push(base);
+        likes.push(Math.floor(Math.random() * 500 + 100));
+        replies.push(Math.floor(Math.random() * 100 + 10));
+        retweets.push(Math.floor(Math.random() * 200 + 30));
+      }
+
+      // Update cards
+      const latest = followers[followers.length - 1];
+      const earlier = followers[0];
+      const change = latest - earlier;
+      const pct = ((change / earlier) * 100).toFixed(1);
+      document.getElementById('card-followers').textContent = latest.toLocaleString();
+      document.getElementById('card-followers-change').textContent = `${change >= 0 ? '+' : ''}${change.toLocaleString()} (${pct}%)`;
+      document.getElementById('card-followers-change').className = `change ${change >= 0 ? 'up' : 'down'}`;
+
+      document.getElementById('card-following').textContent = Math.floor(latest * 0.3).toLocaleString();
+      document.getElementById('card-tweets').textContent = Math.floor(latest * 0.5).toLocaleString();
+      document.getElementById('card-engagement').textContent = (Math.random() * 5 + 1).toFixed(1) + '%';
+      document.getElementById('card-growth').textContent = `${pct}%`;
+      document.getElementById('card-growth-change').textContent = `per ${days} days`;
+      document.getElementById('card-growth-change').className = `change ${change >= 0 ? 'up' : 'down'}`;
+
+      // Update charts
+      charts.followers.data.labels = labels;
+      charts.followers.data.datasets[0].data = followers;
+      charts.followers.update();
+
+      charts.engagement.data.labels = labels;
+      charts.engagement.data.datasets[0].data = likes;
+      charts.engagement.data.datasets[1].data = replies;
+      charts.engagement.data.datasets[2].data = retweets;
+      charts.engagement.update();
+
+      // Bar chart — last 10 days
+      const lastLabels = labels.slice(-10);
+      charts.likesRts.data.labels = lastLabels;
+      charts.likesRts.data.datasets[0].data = likes.slice(-10);
+      charts.likesRts.data.datasets[1].data = retweets.slice(-10);
+      charts.likesRts.update();
+
+      // Heatmap
+      renderHeatmap(null);
+
+      // Top tweets
+      renderTopTweets(username);
+    }
+
+    function updateDashboard(data) {
+      if (data.snapshots?.length) {
+        const labels = data.snapshots.map(s => new Date(s.snapshot_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+        const fData = data.snapshots.map(s => s.followers_count);
+        charts.followers.data.labels = labels;
+        charts.followers.data.datasets[0].data = fData;
+        charts.followers.update();
+
+        const latest = fData[fData.length - 1];
+        const earliest = fData[0];
+        const change = latest - earliest;
+        document.getElementById('card-followers').textContent = latest?.toLocaleString() || '—';
+        document.getElementById('card-followers-change').textContent = `${change >= 0 ? '+' : ''}${change}`;
+        document.getElementById('card-followers-change').className = `change ${change >= 0 ? 'up' : 'down'}`;
+      }
+    }
+
+    function renderTopTweets(username) {
+      const container = document.getElementById('top-tweets-list');
+      const demoTweets = [
+        { text: 'This is your most engaging tweet — great thread about building in public! 🧵', likes: 1234, retweets: 456, replies: 89, views: 45000 },
+        { text: 'Hot take: AI is making developers MORE productive, not replacing them', likes: 987, retweets: 321, replies: 67, views: 38000 },
+        { text: 'Just shipped a new feature. Here\'s what I learned...', likes: 756, retweets: 234, replies: 45, views: 28000 },
+        { text: '10 tools every developer should know about (thread) 🧵', likes: 654, retweets: 198, replies: 34, views: 22000 },
+        { text: 'The best time to start building was yesterday. The second best time is now.', likes: 543, retweets: 167, replies: 23, views: 19000 },
+      ];
+
+      container.innerHTML = demoTweets.map(t => `
+        <div class="tweet-row">
+          <div class="tweet-text">${t.text}</div>
+          <div class="tweet-metrics">
+            <span>❤️ ${t.likes.toLocaleString()}</span>
+            <span>🔁 ${t.retweets.toLocaleString()}</span>
+            <span>💬 ${t.replies.toLocaleString()}</span>
+            <span>👁️ ${t.views.toLocaleString()}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // ── Events ──
+    document.getElementById('load-btn').onclick = loadAnalytics;
+    document.getElementById('username-input').addEventListener('keydown', (e) => { if (e.key === 'Enter') loadAnalytics(); });
+
+    document.getElementById('export-btn').onclick = () => {
+      const username = document.getElementById('username-input').value.replace('@', '').trim();
+      if (!username) return;
+      window.open(`${API_BASE}/api/analytics/export/${username}?format=csv`, '_blank');
+    };
+
+    document.getElementById('compare-btn').onclick = () => {
+      const others = prompt('Enter usernames to compare (comma-separated):');
+      if (!others) return;
+      alert('Comparison feature: Use CLI `unfollowx analytics compare` for detailed comparison.');
+    };
+
+    // ── Init ──
+    initCharts();
+    renderHeatmap(null);
+  </script>
+</body>
+</html>

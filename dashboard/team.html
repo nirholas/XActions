@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Team — XActions</title>
+  <style>
+    :root { --bg: #000; --bg2: #111; --bg3: #1a1a1a; --border: #333; --text: #e0e0e0; --text2: #888; --accent: #1d9bf0; --green: #00c853; --red: #ff4444; --yellow: #ffb800; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; display: flex; min-height: 100vh; }
+    .sidebar { width: 240px; background: var(--bg2); border-right: 1px solid var(--border); padding: 20px 0; flex-shrink: 0; }
+    .sidebar .logo { padding: 0 20px 20px; font-size: 20px; font-weight: 700; color: #fff; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 20px; color: var(--text2); text-decoration: none; font-size: 14px; transition: all .2s; }
+    .nav-item:hover, .nav-item.active { color: #fff; background: var(--bg3); }
+    .main { flex: 1; padding: 30px; overflow-y: auto; }
+    h1 { font-size: 24px; margin-bottom: 20px; }
+    h2 { font-size: 18px; margin: 24px 0 12px; }
+    .btn { padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg3); color: var(--text); cursor: pointer; font-size: 13px; transition: all .2s; }
+    .btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .btn.danger { border-color: var(--red); color: var(--red); }
+    .btn.danger:hover { background: var(--red); color: #fff; }
+    .input { padding: 8px 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg3); color: var(--text); font-size: 13px; }
+    .toolbar { display: flex; gap: 10px; margin-bottom: 16px; }
+    .members-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; margin-bottom: 24px; }
+    .member-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 16px; display: flex; align-items: center; gap: 12px; }
+    .member-avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--bg3); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+    .member-info { flex: 1; }
+    .member-name { font-weight: 600; font-size: 14px; }
+    .member-role { font-size: 12px; padding: 2px 8px; border-radius: 10px; display: inline-block; margin-top: 4px; }
+    .role-owner { background: rgba(255,184,0,.2); color: var(--yellow); }
+    .role-admin { background: rgba(29,155,240,.2); color: var(--accent); }
+    .role-member { background: rgba(0,200,83,.2); color: var(--green); }
+    .role-viewer { background: rgba(136,136,136,.2); color: var(--text2); }
+    .member-actions { display: flex; gap: 6px; }
+    .member-actions button { background: none; border: none; color: var(--text2); cursor: pointer; font-size: 14px; }
+    .member-actions button:hover { color: var(--accent); }
+    .activity-log { max-height: 400px; overflow-y: auto; }
+    .activity-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+    .activity-row .time { color: var(--text2); font-size: 12px; min-width: 140px; }
+    .activity-row .user { color: var(--accent); font-weight: 600; }
+    .activity-row .action { color: var(--text); }
+    .permissions-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+    .permissions-table th, .permissions-table td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); font-size: 13px; }
+    .permissions-table th { color: var(--text2); font-weight: 600; }
+    .permissions-table td { color: var(--text); }
+    .check { color: var(--green); }
+    .cross { color: var(--red); }
+    .invite-section { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 24px; }
+  </style>
+</head>
+<body>
+  <nav class="sidebar">
+    <div class="logo">⚡ XActions</div>
+    <a href="index.html" class="nav-item">🏠 Dashboard</a>
+    <a href="analytics.html" class="nav-item">📊 Analytics</a>
+    <a href="calendar.html" class="nav-item">📅 Calendar</a>
+    <a href="thread.html" class="nav-item">🧵 Thread Composer</a>
+    <a href="automations.html" class="nav-item">🤖 Automations</a>
+    <a href="team.html" class="nav-item active">👥 Team</a>
+    <a href="workflows.html" class="nav-item">⚙️ Workflows</a>
+  </nav>
+
+  <main class="main">
+    <h1>👥 Team Management</h1>
+
+    <div class="invite-section">
+      <h2 style="margin-top: 0;">Invite Team Member</h2>
+      <div class="toolbar">
+        <input type="email" class="input" id="invite-email" placeholder="Email address" style="flex: 1;">
+        <select class="input" id="invite-role">
+          <option value="member">Member</option>
+          <option value="admin">Admin</option>
+          <option value="viewer">Viewer</option>
+        </select>
+        <button class="btn primary" id="invite-btn">Send Invite</button>
+      </div>
+    </div>
+
+    <h2>Members</h2>
+    <div class="members-grid" id="members-grid"></div>
+
+    <h2>Role Permissions</h2>
+    <table class="permissions-table">
+      <thead>
+        <tr><th>Permission</th><th>Owner</th><th>Admin</th><th>Member</th><th>Viewer</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>View analytics</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+        <tr><td>Run automations</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td><td class="cross">✗</td></tr>
+        <tr><td>Scrape data</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td><td class="cross">✗</td></tr>
+        <tr><td>Manage members</td><td class="check">✓</td><td class="check">✓</td><td class="cross">✗</td><td class="cross">✗</td></tr>
+        <tr><td>Delete team</td><td class="check">✓</td><td class="cross">✗</td><td class="cross">✗</td><td class="cross">✗</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Activity Log</h2>
+    <div class="activity-log" id="activity-log"></div>
+  </main>
+
+  <script>
+    const API_BASE = window.location.origin;
+
+    // Demo data
+    const demoMembers = [
+      { username: 'nichxbt', role: 'owner', joinedAt: '2025-01-01T00:00:00Z' },
+      { username: 'alice', role: 'admin', joinedAt: '2025-06-15T10:30:00Z' },
+      { username: 'bob', role: 'member', joinedAt: '2025-08-01T14:00:00Z' },
+      { username: 'carol', role: 'viewer', joinedAt: '2025-10-20T09:00:00Z' },
+    ];
+
+    const demoActivity = [
+      { user: 'alice', action: 'Ran bulk unfollow (500 users)', timestamp: '2026-01-15T14:30:00Z' },
+      { user: 'bob', action: 'Exported analytics for @nichxbt', timestamp: '2026-01-15T12:00:00Z' },
+      { user: 'nichxbt', action: 'Invited carol as viewer', timestamp: '2026-01-14T18:00:00Z' },
+      { user: 'alice', action: 'Updated scheduler job "morning-tweet"', timestamp: '2026-01-14T10:00:00Z' },
+      { user: 'bob', action: 'Scraped followers of @elonmusk', timestamp: '2026-01-13T16:00:00Z' },
+      { user: 'nichxbt', action: 'Changed alice role to admin', timestamp: '2026-01-12T09:00:00Z' },
+    ];
+
+    function renderMembers(members) {
+      const grid = document.getElementById('members-grid');
+      const avatars = ['👤', '👩‍💻', '👨‍💻', '🧑‍💻', '👩‍🔬', '👨‍🎨'];
+      grid.innerHTML = members.map((m, i) => `
+        <div class="member-card">
+          <div class="member-avatar">${avatars[i % avatars.length]}</div>
+          <div class="member-info">
+            <div class="member-name">@${m.username}</div>
+            <span class="member-role role-${m.role}">${m.role}</span>
+          </div>
+          ${m.role !== 'owner' ? `
+            <div class="member-actions">
+              <button onclick="changeRole('${m.username}')" title="Change role">✏️</button>
+              <button onclick="removeMember('${m.username}')" title="Remove" style="color:var(--red)">✕</button>
+            </div>
+          ` : ''}
+        </div>
+      `).join('');
+    }
+
+    function renderActivity(activity) {
+      const log = document.getElementById('activity-log');
+      log.innerHTML = activity.map(a => `
+        <div class="activity-row">
+          <span class="time">${new Date(a.timestamp).toLocaleString()}</span>
+          <span class="user">@${a.user}</span>
+          <span class="action">${a.action}</span>
+        </div>
+      `).join('');
+    }
+
+    window.changeRole = (username) => {
+      const newRole = prompt(`New role for @${username}: (admin, member, viewer)`);
+      if (['admin', 'member', 'viewer'].includes(newRole)) {
+        const m = demoMembers.find(m => m.username === username);
+        if (m) { m.role = newRole; renderMembers(demoMembers); }
+      }
+    };
+
+    window.removeMember = (username) => {
+      if (!confirm(`Remove @${username} from team?`)) return;
+      const idx = demoMembers.findIndex(m => m.username === username);
+      if (idx > -1) { demoMembers.splice(idx, 1); renderMembers(demoMembers); }
+    };
+
+    document.getElementById('invite-btn').onclick = () => {
+      const email = document.getElementById('invite-email').value.trim();
+      const role = document.getElementById('invite-role').value;
+      if (!email) { alert('Enter an email'); return; }
+      const username = email.split('@')[0];
+      demoMembers.push({ username, role, joinedAt: new Date().toISOString() });
+      renderMembers(demoMembers);
+      document.getElementById('invite-email').value = '';
+      alert(`✅ Invite sent to ${email} as ${role}`);
+    };
+
+    // Init
+    renderMembers(demoMembers);
+    renderActivity(demoActivity);
+  </script>
+</body>
+</html>

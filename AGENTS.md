@@ -23,37 +23,62 @@ src/           → Core scripts, automation/, scrapers/, cli/, mcp/
 api/           → Express.js backend (routes/, services/, middleware/)
 dashboard/     → Static HTML frontend
 scripts/       → Standalone utility scripts
-skills/        → 25 Agent Skills (skills/*/SKILL.md)
+skills/        → 26 Agent Skills (skills/*/SKILL.md)
 docs/          → Documentation and examples
 archive/       → Legacy browser-only scripts
 prisma/        → Database schema
 bin/           → CLI entry point (unfollowx)
+extension/     → Browser extension (Chrome/Edge)
 ```
 
-## Skills System
+## Skills
 
-26 skills in `skills/*/SKILL.md` covering: unfollow-management, analytics-insights, content-posting, twitter-scraping, growth-automation, algorithm-cultivation, community-management, follower-monitoring, blocking-muting-management, content-cleanup, direct-messages, bookmarks-management, lists-management, profile-management, settings-privacy, notifications-management, premium-subscriptions, spaces-live, discovery-explore, engagement-interaction, grok-ai, articles-longform, business-ads, creator-monetization, xactions-cli, xactions-mcp-server.
+26 skills in `skills/*/SKILL.md`. Read the relevant SKILL.md when a user's request matches a category.
 
-Read the relevant `skills/*/SKILL.md` when a user's request matches a skill category.
+- **Unfollow management** — mass unfollow, non-follower cleanup
+- **Analytics & insights** — engagement, hashtags, competitors, best times
+- **Content posting** — tweets, threads, polls, scheduling, reposts
+- **Twitter scraping** — profiles, followers, tweets, media, bookmarks
+- **Growth automation** — auto-like, follow engagers, keyword follow
+- **Algorithm cultivation** — thought leader training, niche optimization
+- **Community management** — join/leave communities
+- **Follower monitoring** — follower alerts, continuous tracking
+- **Blocking & muting** — bot blocking, bulk mute
+- **Content cleanup** — delete tweets, unlike, clear history
+- **Direct messages** — auto DM, message management
+- **Bookmarks** — export, organize, folder management
+- **Lists** — create, manage, bulk add members
+- **Profile management** — edit profile, avatar, header, bio
+- **Settings & privacy** — protected tweets, notification preferences
+- **Engagement & interaction** — auto-reply, auto-repost, plug replies
+- **Discovery & explore** — trending, topics, search
+- **Premium & subscriptions** — subscription features
+- **Spaces & live** — create, join, schedule spaces
+- **Grok AI** — chat, image generation
+- **Articles & longform** — compose, publish articles
+- **Business & ads** — campaigns, boosts, ads dashboard
+- **Creator monetization** — revenue, analytics
+- **XActions CLI** — `bin/unfollowx` command-line tool
+- **XActions MCP server** — `src/mcp/server.js` for AI agents
 
 ## Key Technical Context
 
 - Browser scripts run in **DevTools console on x.com**, not Node.js
-- DOM selectors change frequently — see [docs/agents/selectors.md](docs/agents/selectors.md)
+- DOM selectors change frequently — see [selectors.md](docs/agents/selectors.md)
 - Scripts in `src/automation/` require pasting `src/automation/core.js` first
 - State persistence uses `sessionStorage` (lost on tab close)
 - CLI entry point: `bin/unfollowx`, installed via `npm install -g xactions`
-- MCP server: `src/mcp/server.js`
+- MCP server: `src/mcp/server.js` — used by Claude Desktop and AI agents
+- Prefer `data-testid` selectors — most stable across X/Twitter UI updates
+- X enforces aggressive rate limits; all automation must include 1-3s delays between actions
 
 ## Patterns & Style
 
-Browser script patterns: [docs/agents/browser-script-patterns.md](docs/agents/browser-script-patterns.md)
-Adding features: [docs/agents/contributing-features.md](docs/agents/contributing-features.md)
-
-- `const` over `let`, async/await, emojis in console.log
+- Browser script patterns: [browser-script-patterns.md](docs/agents/browser-script-patterns.md)
+- Adding features: [contributing-features.md](docs/agents/contributing-features.md)
+- DOM selectors (verified January 2026): [selectors.md](docs/agents/selectors.md)
+- `const` over `let`, async/await, emojis in `console.log`
 - Author credit: `// by nichxbt`
-- 1-3s delays between actions to avoid rate limits
-- Use `data-testid` selectors when available
 
 ## Codespace Performance
 

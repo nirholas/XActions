@@ -23,41 +23,25 @@ Browser console scripts for blocking, unblocking, muting, and managing unwanted 
 | Report Spam | `src/reportSpam.js` | Report accounts for spam/abuse |
 | Remove Followers | `src/removeFollowers.js` | Remove specific followers without blocking |
 
-## Block Bots
+## Quick start
 
-**File:** `src/blockBots.js`
-
-Scans followers and blocks accounts matching bot heuristics: no avatar, random-string usernames, high follow ratio, no bio.
-
-### How to use
-
-1. Navigate to `x.com/YOUR_USERNAME/followers`
+1. Navigate to the required page on x.com
 2. Open DevTools (F12) → Console
 3. Paste the script → Enter
 
-## Mass Block / Unblock
+| Script | Navigate to |
+|--------|-------------|
+| Block Bots | `x.com/YOUR_USERNAME/followers` |
+| Mass Block / Unblock / Unmute | Any page on x.com |
+| Mute by Keywords | Timeline or search results |
+| Remove Followers | `x.com/YOUR_USERNAME/followers` |
+| Report Spam | Profile of target account |
 
-**Files:** `src/massBlock.js`, `src/massUnblock.js`
+## Script details
 
-Block or unblock accounts from a configurable list of usernames.
+**Per-script configs, detection heuristics, and usage guides**: See [references/script-details.md](references/script-details.md)
 
-1. Navigate to any page on x.com
-2. Edit the username list in CONFIG
-3. Paste in DevTools console → Enter
-
-## Mute by Keywords
-
-**File:** `src/muteByKeywords.js`
-
-Mutes accounts that tweet matching keywords. Scans timeline and mutes authors of matching tweets.
-
-## Remove Followers
-
-**File:** `src/removeFollowers.js`
-
-Removes followers without blocking (uses block → immediate unblock pattern).
-
-### Key Selectors
+## Key Selectors
 
 | Element | Selector |
 |---------|----------|

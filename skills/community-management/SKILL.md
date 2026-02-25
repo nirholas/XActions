@@ -4,7 +4,7 @@ description: Manages X/Twitter community memberships. Bulk-leave all communities
 license: MIT
 metadata:
   author: nichxbt
-  version: "4.0"
+  version: "3.0"
 ---
 
 # Community Management

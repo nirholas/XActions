@@ -2341,6 +2341,511 @@ personaCmd
   });
 
 // ============================================================================
+// 09-A: History & Time-Series Analytics
+// ============================================================================
+
+program
+  .command('history <username>')
+  .description('View account history over time')
+  .option('-d, --days <n>', 'Number of days to look back', '30')
+  .option('-i, --interval <interval>', 'Grouping interval: hour, day, week', 'day')
+  .option('-f, --format <format>', 'Export format: json, csv', 'json')
+  .option('--export <path>', 'Export to file')
+  .action(async (username, options) => {
+    try {
+      const { getAccountHistory, exportHistory } = await import('../analytics/historyStore.js');
+      const from = new Date(Date.now() - parseInt(options.days) * 86400000).toISOString();
+      const data = getAccountHistory(username, { from, interval: options.interval });
+      if (options.export) {
+        const exported = exportHistory(username, options.format);
+        const fs = await import('fs/promises');
+        await fs.writeFile(options.export, exported);
+        console.log(chalk.green(`✅ Exported ${data.length} snapshots to ${options.export}`));
+      } else {
+        console.log(JSON.stringify(data, null, 2));
+      }
+    } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+  });
+
+program
+  .command('snapshot <username>')
+  .description('Start auto-snapshotting an account')
+  .option('-i, --interval <minutes>', 'Snapshot interval in minutes', '60')
+  .action(async (username, options) => {
+    try {
+      const { startAutoSnapshot } = await import('../analytics/autoSnapshot.js');
+      const result = startAutoSnapshot(username, parseInt(options.interval));
+      console.log(chalk.green(`✅ Auto-snapshot started for @${username} every ${options.interval}m`));
+      console.log(chalk.dim('Press Ctrl+C to stop'));
+      await new Promise(() => {}); // Keep alive
+    } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+  });
+
+// ============================================================================
+// 09-B: Audience Overlap
+// ============================================================================
+
+program
+  .command('audience <username1> <username2>')
+  .description('Analyze follower overlap between two accounts')
+  .option('--max <n>', 'Max followers to fetch per account', '5000')
+  .action(async (username1, username2, options) => {
+    try {
+      const { analyzeOverlap } = await import('../analytics/audienceOverlap.js');
+      const spin = ora('Analyzing audience overlap...').start();
+      const result = await analyzeOverlap(username1, username2, { maxFollowers: parseInt(options.max) });
+      spin.succeed('Overlap analysis complete');
+      console.log(`\n${chalk.bold('Overlap:')} ${result.overlapCount} users (${result.overlapPercent}%)`);
+      console.log(`${chalk.blue('@' + username1)} unique: ${result.uniqueToA}`);
+      console.log(`${chalk.blue('@' + username2)} unique: ${result.uniqueToB}`);
+    } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+  });
+
+// ============================================================================
+// 09-C: Follower CRM
+// ============================================================================
+
+const crmCmd = program.command('crm').description('Follower CRM — tags, scores, segments');
+
+crmCmd.command('sync <username>').description('Sync followers to CRM').action(async (username) => {
+  try {
+    const { syncFollowers } = await import('../analytics/followerCRM.js');
+    const spin = ora('Syncing followers...').start();
+    const result = await syncFollowers(username);
+    spin.succeed(`Synced: ${result.added} added, ${result.updated} updated`);
+  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+});
+
+crmCmd.command('tag <username> <tag>').description('Tag a contact').action(async (username, tag) => {
+  try {
+    const { tagContact } = await import('../analytics/followerCRM.js');
+    tagContact(username, tag);
+    console.log(chalk.green(`✅ Tagged @${username} with "${tag}"`));
+  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+});
+
+crmCmd.command('search <query>').description('Search contacts').action(async (query) => {
+  try {
+    const { searchContacts } = await import('../analytics/followerCRM.js');
+    const results = searchContacts(query);
+    console.log(JSON.stringify(results.slice(0, 20), null, 2));
+  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+});
+
+crmCmd.command('score').description('Auto-score all contacts').action(async () => {
+  try {
+    const { autoScore } = await import('../analytics/followerCRM.js');
+    const result = autoScore();
+    console.log(chalk.green(`✅ Scored ${result.scored} contacts`));
+  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+});
+
+crmCmd.command('segment <name>').description('Get segment members').action(async (name) => {
+  try {
+    const { getSegment } = await import('../analytics/followerCRM.js');
+    const members = getSegment(name);
+    console.log(JSON.stringify(members, null, 2));
+  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+});
+
+// ============================================================================
+// 09-D: Bulk Operations
+// ============================================================================
+
+program
+  .command('bulk <action> <file>')
+  .description('Bulk follow/unfollow/block/mute/scrape from CSV/JSON/TXT')
+  .option('--delay <ms>', 'Delay between actions', '2000')
+  .option('--dry-run', 'Preview without executing')
+  .option('--resume', 'Resume from last checkpoint')
+  .action(async (action, file, options) => {
+    try {
+      const { parseBulkInput, bulkExecute, bulkScrape } = await import('../bulk/bulkOperations.js');
+      const usernames = await parseBulkInput(file);
+      console.log(chalk.blue(`📋 Loaded ${usernames.length} usernames from ${file}`));
+      if (action === 'scrape') {
+        const result = await bulkScrape(usernames, { delay: parseInt(options.delay), dryRun: options.dryRun });
+        console.log(chalk.green(`✅ Scraped ${result.results?.length || 0} profiles`));
+      } else {
+        const result = await bulkExecute(usernames, action, {
+          delay: parseInt(options.delay), dryRun: options.dryRun, resume: options.resume,
+        });
+        console.log(chalk.green(`✅ Bulk ${action}: ${result.succeeded} succeeded, ${result.failed} failed`));
+      }
+    } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+  });
+
+// ============================================================================
+// 09-F: Scheduler
+// ============================================================================
+
+const schedCmd = program.command('schedule').description('Cron-based task scheduler');
+
+schedCmd.command('add <name> <cron>').description('Add scheduled job').option('-c, --command <cmd>', 'Command to run').action(async (name, cron, options) => {
+  try {
+    const { getScheduler } = await import('../scheduler/scheduler.js');
+    const scheduler = getScheduler();
+    scheduler.addJob({ name, cron, action: options.command || 'echo "Job: ' + name + '"' });
+    console.log(chalk.green(`✅ Job "${name}" scheduled: ${cron}`));
+  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+});
+
+schedCmd.command('list').description('List all jobs').action(async () => {
+  try {
+    const { getScheduler } = await import('../scheduler/scheduler.js');
+    const scheduler = getScheduler();
+    const jobs = scheduler.listJobs();
+    if (jobs.length === 0) { console.log(chalk.dim('No scheduled jobs')); return; }
+    jobs.forEach(j => console.log(`  ${j.enabled ? '🟢' : '🔴'} ${j.name}  ${chalk.dim(j.cron)}  ${chalk.dim('Next: ' + (j.nextRun || '—'))}`));
+  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+});
+
+schedCmd.command('remove <name>').description('Remove a scheduled job').action(async (name) => {
+  try {
+    const { getScheduler } = await import('../scheduler/scheduler.js');
+    getScheduler().removeJob(name);
+    console.log(chalk.green(`✅ Job "${name}" removed`));
+  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+});
+
+schedCmd.command('run <name>').description('Run a job immediately').action(async (name) => {
+  try {
+    const { getScheduler } = await import('../scheduler/scheduler.js');
+    await getScheduler().runJobNow(name);
+    console.log(chalk.green(`✅ Job "${name}" executed`));
+  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+});
+
+// ============================================================================
+// 09-H: Evergreen Content Recycler
+// ============================================================================
+
+program
+  .command('evergreen <username>')
+  .description('Find and recycle top-performing evergreen tweets')
+  .option('--min-likes <n>', 'Min likes threshold', '50')
+  .option('--min-age <days>', 'Min age in days', '30')
+  .option('--analyze', 'Only analyze, don\'t queue')
+  .action(async (username, options) => {
+    try {
+      const { analyzeEvergreenCandidates, createEvergreenQueue } = await import('../automation/evergreenRecycler.js');
+      const spin = ora('Analyzing evergreen candidates...').start();
+      const candidates = await analyzeEvergreenCandidates(username, {
+        minLikes: parseInt(options.minLikes), minAgeDays: parseInt(options.minAge),
+      });
+      spin.succeed(`Found ${candidates.length} evergreen candidates`);
+      candidates.slice(0, 5).forEach((t, i) => {
+        console.log(`  ${i + 1}. ${chalk.dim(t.text?.substring(0, 60))}... (${t.likes} ❤️)`);
+      });
+      if (!options.analyze && candidates.length > 0) {
+        await createEvergreenQueue(username, candidates);
+        console.log(chalk.green(`✅ Evergreen queue created with ${candidates.length} tweets`));
+      }
+    } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+  });
+
+// ============================================================================
+// 09-I: RSS Monitor
+// ============================================================================
+
+const rssCmd = program.command('rss').description('RSS feed monitoring & auto-posting');
+
+rssCmd.command('add <name> <url>').description('Add an RSS feed').option('-t, --template <template>', 'Post template', '📰 {title}\n\n{link}').action(async (name, url, options) => {
+  try {
+    const { addFeed } = await import('../automation/rssMonitor.js');
+    addFeed({ name, url, template: options.template });
+    console.log(chalk.green(`✅ Feed "${name}" added`));
+  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+});
+
+rssCmd.command('list').description('List all feeds').action(async () => {
+  try {
+    const { listFeeds } = await import('../automation/rssMonitor.js');
+    const feeds = listFeeds();
+    if (feeds.length === 0) { console.log(chalk.dim('No feeds configured')); return; }
+    feeds.forEach(f => console.log(`  ${f.enabled ? '🟢' : '🔴'} ${f.name}  ${chalk.dim(f.url)}`));
+  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+});
+
+rssCmd.command('check [name]').description('Check feeds for new items').action(async (name) => {
+  try {
+    const { checkFeed, checkAllFeeds } = await import('../automation/rssMonitor.js');
+    const spin = ora('Checking feeds...').start();
+    const result = name ? await checkFeed(name) : await checkAllFeeds();
+    const count = name ? result.newItems : result.reduce((s, r) => s + r.newItems, 0);
+    spin.succeed(`Found ${count} new items`);
+  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+});
+
+rssCmd.command('drafts').description('View draft posts from feeds').action(async () => {
+  try {
+    const { getDrafts } = await import('../automation/rssMonitor.js');
+    const drafts = getDrafts();
+    if (drafts.length === 0) { console.log(chalk.dim('No drafts')); return; }
+    drafts.forEach((d, i) => console.log(`  ${i + 1}. ${chalk.dim(d.text?.substring(0, 80))}...`));
+  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+});
+
+// ============================================================================
+// 09-J: AI Content Optimizer
+// ============================================================================
+
+program
+  .command('optimize <text>')
+  .description('AI-optimize a tweet for engagement')
+  .option('--goal <goal>', 'Optimization goal: engagement, clarity, growth, viral', 'engagement')
+  .action(async (text, options) => {
+    try {
+      const { optimizeTweet } = await import('../ai/contentOptimizer.js');
+      const spin = ora('Optimizing...').start();
+      const result = await optimizeTweet(text, { goal: options.goal });
+      spin.succeed('Optimized!');
+      console.log(`\n${chalk.bold('Original:')} ${text}`);
+      console.log(`${chalk.bold('Optimized:')} ${result.optimized}`);
+      if (result.suggestions?.length) {
+        console.log(`\n${chalk.bold('Tips:')}`);
+        result.suggestions.forEach(s => console.log(`  💡 ${s}`));
+      }
+    } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+  });
+
+program
+  .command('hashtags <text>')
+  .description('Suggest hashtags for tweet text')
+  .option('-n, --count <n>', 'Number of hashtags', '5')
+  .action(async (text, options) => {
+    try {
+      const { suggestHashtags } = await import('../ai/contentOptimizer.js');
+      const result = await suggestHashtags(text, { count: parseInt(options.count) });
+      console.log(`${chalk.bold('Suggested hashtags:')}`);
+      result.hashtags?.forEach(h => console.log(`  #${h}`));
+    } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+  });
+
+program
+  .command('predict <text>')
+  .description('Predict tweet performance')
+  .action(async (text) => {
+    try {
+      const { predictPerformance } = await import('../ai/contentOptimizer.js');
+      const result = await predictPerformance(text);
+      console.log(`\n${chalk.bold('Performance Prediction:')}`);
+      console.log(`  Score: ${result.score}/100`);
+      console.log(`  Reach: ${result.estimatedReach || '—'}`);
+      if (result.strengths?.length) result.strengths.forEach(s => console.log(`  ✅ ${s}`));
+      if (result.weaknesses?.length) result.weaknesses.forEach(w => console.log(`  ⚠️  ${w}`));
+    } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+  });
+
+program
+  .command('variations <text>')
+  .description('Generate tweet variations')
+  .option('-n, --count <n>', 'Number of variations', '3')
+  .action(async (text, options) => {
+    try {
+      const { generateVariations } = await import('../ai/contentOptimizer.js');
+      const result = await generateVariations(text, parseInt(options.count));
+      console.log(`${chalk.bold('Variations:')}`);
+      result.forEach((v, i) => console.log(`\n  ${i + 1}. ${v}`));
+    } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+  });
+
+// ============================================================================
+// 09-L: Notifications
+// ============================================================================
+
+const notifyCmd = program.command('notify').description('Notification hub — Email, Slack, Discord, Telegram');
+
+notifyCmd.command('test <channel>').description('Send a test notification').action(async (channel) => {
+  try {
+    const { getNotifier } = await import('../notifications/notifier.js');
+    const notifier = await getNotifier();
+    const result = await notifier.test(channel);
+    console.log(chalk.green(`✅ Test notification sent to ${channel}`));
+    console.log(JSON.stringify(result, null, 2));
+  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+});
+
+notifyCmd.command('send <message>').description('Send notification to all channels').option('-t, --title <title>', 'Notification title', 'XActions Alert').option('-s, --severity <level>', 'info, warning, critical', 'info').action(async (message, options) => {
+  try {
+    const { getNotifier } = await import('../notifications/notifier.js');
+    const notifier = await getNotifier();
+    const result = await notifier.send({ title: options.title, message, severity: options.severity });
+    console.log(chalk.green('✅ Notification sent'));
+    console.log(JSON.stringify(result, null, 2));
+  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+});
+
+notifyCmd.command('configure').description('Configure notification channels interactively').action(async () => {
+  try {
+    const { getNotifier } = await import('../notifications/notifier.js');
+    const notifier = await getNotifier();
+    const { channel } = await inquirer.prompt([{ type: 'list', name: 'channel', message: 'Configure which channel?', choices: ['slack', 'discord', 'telegram', 'email'] }]);
+    if (channel === 'slack' || channel === 'discord') {
+      const { webhookUrl } = await inquirer.prompt([{ type: 'input', name: 'webhookUrl', message: `${channel} webhook URL:` }]);
+      notifier.configure({ [channel]: { enabled: true, webhookUrl } });
+    } else if (channel === 'telegram') {
+      const { botToken } = await inquirer.prompt([{ type: 'input', name: 'botToken', message: 'Telegram bot token:' }]);
+      const { chatId } = await inquirer.prompt([{ type: 'input', name: 'chatId', message: 'Telegram chat ID:' }]);
+      notifier.configure({ telegram: { enabled: true, botToken, chatId } });
+    } else if (channel === 'email') {
+      const { host } = await inquirer.prompt([{ type: 'input', name: 'host', message: 'SMTP host:' }]);
+      const { user } = await inquirer.prompt([{ type: 'input', name: 'user', message: 'SMTP user:' }]);
+      const { pass } = await inquirer.prompt([{ type: 'password', name: 'pass', message: 'SMTP password:' }]);
+      const { to } = await inquirer.prompt([{ type: 'input', name: 'to', message: 'Send to email:' }]);
+      notifier.configure({ email: { enabled: true, smtp: { host, user, pass }, to } });
+    }
+    console.log(chalk.green(`✅ ${channel} configured`));
+  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+});
+
+// ============================================================================
+// 09-M: Dataset Management
+// ============================================================================
+
+const datasetCmd = program.command('dataset').description('Manage scraping datasets (Apify-style)');
+
+datasetCmd.command('list').description('List all datasets').action(async () => {
+  try {
+    const { listDatasets } = await import('../scraping/paginationEngine.js');
+    const datasets = await listDatasets();
+    if (datasets.length === 0) { console.log(chalk.dim('No datasets')); return; }
+    datasets.forEach(d => console.log(`  📦 ${d.name}  ${chalk.dim(`${d.itemCount} items, ${d.size}`)}`));
+  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+});
+
+datasetCmd.command('export <name>').description('Export dataset').option('-f, --format <format>', 'json, csv, jsonl', 'json').option('-o, --output <path>', 'Output file path').action(async (name, options) => {
+  try {
+    const { DatasetStore } = await import('../scraping/paginationEngine.js');
+    const ds = new DatasetStore(name);
+    const data = await ds.export(options.format);
+    if (options.output) {
+      const fs = await import('fs/promises');
+      await fs.writeFile(options.output, data);
+      console.log(chalk.green(`✅ Exported to ${options.output}`));
+    } else {
+      console.log(data);
+    }
+  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+});
+
+datasetCmd.command('delete <name>').description('Delete a dataset').action(async (name) => {
+  try {
+    const { DatasetStore } = await import('../scraping/paginationEngine.js');
+    const ds = new DatasetStore(name);
+    await ds.delete();
+    console.log(chalk.green(`✅ Dataset "${name}" deleted`));
+  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+});
+
+// ============================================================================
+// 09-N: Team Management
+// ============================================================================
+
+const teamCmd = program.command('team').description('Team & multi-user management');
+
+teamCmd.command('create <name>').description('Create a new team').option('-u, --owner <username>', 'Owner username').action(async (name, options) => {
+  try {
+    const { createTeam } = await import('../auth/teamManager.js');
+    const result = await createTeam(name, options.owner || 'default');
+    console.log(chalk.green(`✅ Team "${name}" created (ID: ${result.id})`));
+  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+});
+
+teamCmd.command('invite <teamId> <email>').description('Invite user to team').option('-r, --role <role>', 'Role: admin, member, viewer', 'member').action(async (teamId, email, options) => {
+  try {
+    const { inviteUser } = await import('../auth/teamManager.js');
+    const result = await inviteUser(teamId, email, options.role);
+    console.log(chalk.green(`✅ Invite sent to ${email} as ${options.role}`));
+    console.log(chalk.dim(`Token: ${result.token}`));
+  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+});
+
+teamCmd.command('members <teamId>').description('List team members').action(async (teamId) => {
+  try {
+    const { listTeamMembers } = await import('../auth/teamManager.js');
+    const members = await listTeamMembers(teamId);
+    if (members.error) { console.error(chalk.red(members.error)); return; }
+    members.forEach(m => console.log(`  ${m.role === 'owner' ? '👑' : '👤'} @${m.username}  ${chalk.dim(m.role)}`));
+  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+});
+
+teamCmd.command('activity <teamId>').description('View team activity log').option('-l, --limit <n>', 'Max entries', '20').action(async (teamId, options) => {
+  try {
+    const { getActivityLog } = await import('../auth/teamManager.js');
+    const log = await getActivityLog(teamId, { limit: parseInt(options.limit) });
+    log.forEach(a => console.log(`  ${chalk.dim(a.timestamp.split('T')[0])} @${chalk.blue(a.user)} ${a.action} ${JSON.stringify(a.target)}`));
+  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+});
+
+// ============================================================================
+// 09-P: Import/Export Compatibility
+// ============================================================================
+
+program
+  .command('import <file>')
+  .description('Import data from Apify, Phantombuster, or CSV')
+  .option('--from <source>', 'Source format: apify, phantombuster, auto', 'auto')
+  .option('-o, --output <path>', 'Save normalized output to file')
+  .action(async (file, options) => {
+    try {
+      const { importData } = await import('../compat/apifyAdapter.js');
+      const result = await importData(file, options.from);
+      console.log(chalk.green(`✅ Imported ${result.items.length} items (type: ${result.type})`));
+      if (result.unmappedFields?.length) {
+        console.log(chalk.yellow(`⚠️  Unmapped fields: ${result.unmappedFields.join(', ')}`));
+      }
+      if (options.output) {
+        const fs = await import('fs/promises');
+        await fs.writeFile(options.output, JSON.stringify(result.items, null, 2));
+        console.log(chalk.green(`Saved to ${options.output}`));
+      }
+    } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+  });
+
+program
+  .command('export-data <file>')
+  .description('Export data in external tool format')
+  .option('--to <target>', 'Target format: apify, phantombuster, socialblade, csv', 'csv')
+  .option('--type <type>', 'Data type: profile, tweet, followers', 'profile')
+  .option('-o, --output <path>', 'Output file path')
+  .action(async (file, options) => {
+    try {
+      const { exportData } = await import('../compat/apifyAdapter.js');
+      const fs = await import('fs/promises');
+      const data = JSON.parse(await fs.readFile(file, 'utf-8'));
+      const output = exportData(data, options.to, options.type);
+      if (options.output) {
+        await fs.writeFile(options.output, output);
+        console.log(chalk.green(`✅ Exported to ${options.output} (${options.to} format)`));
+      } else {
+        console.log(output);
+      }
+    } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+  });
+
+program
+  .command('convert <file>')
+  .description('Convert between Apify/Phantombuster/CSV formats')
+  .option('--from <source>', 'Source: apify, phantombuster', 'apify')
+  .option('--to <target>', 'Target: apify, phantombuster, csv', 'csv')
+  .option('-o, --output <path>', 'Output file path')
+  .action(async (file, options) => {
+    try {
+      const { convertFormat } = await import('../compat/apifyAdapter.js');
+      const fs = await import('fs/promises');
+      const data = await fs.readFile(file, 'utf-8');
+      const output = convertFormat(data.startsWith('[') ? JSON.parse(data) : data, options.from, options.to);
+      if (options.output) {
+        await fs.writeFile(options.output, output);
+        console.log(chalk.green(`✅ Converted ${options.from} → ${options.to}, saved to ${options.output}`));
+      } else {
+        console.log(output);
+      }
+    } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+  });
+
+// ============================================================================
 // Parse and Run
 // ============================================================================
 

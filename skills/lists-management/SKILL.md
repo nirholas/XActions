@@ -1,6 +1,6 @@
 ---
 name: lists-management
-description: Creates and manages X/Twitter lists including adding members, exporting list data, pinning lists, and organizing curated timelines. Use when users want to create, manage, or automate X lists.
+description: Creates, populates, and exports X/Twitter lists from the browser console. Supports creating public or private lists, bulk-adding members by username, and exporting list members as JSON. Use when users want to create lists, add members to lists, or export list data on X.
 license: MIT
 metadata:
   author: nichxbt
@@ -11,54 +11,91 @@ metadata:
 
 Browser console script for creating and managing X/Twitter lists.
 
-## Available Scripts
+## Script Selection
 
-| Script | File | Purpose |
-|--------|------|---------|
-| List Manager | `src/listManager.js` | Create lists, add/remove members, export member data |
+| Goal | File | Navigate to |
+|------|------|-------------|
+| Create a new list | `src/listManager.js` | `x.com/USERNAME/lists` |
+| Add users to a list | `src/listManager.js` | List page |
+| Export list members | `src/listManager.js` | List members page |
 
 ## List Manager
 
 **File:** `src/listManager.js`
 
-Programmatically creates, populates, and manages X lists.
+Browser console script that creates lists, adds members by username, and exports member data.
+
+### How to Use
+
+1. Navigate to `x.com/YOUR_USERNAME/lists` (or an existing list page)
+2. Open DevTools (F12) → Console
+3. Edit the CONFIG section to enable desired operations
+4. Paste the script → Enter
 
 ### Configuration
 
 ```javascript
 const CONFIG = {
-  createList: { enabled: true, name: 'My List', isPrivate: true },
-  addUsers: { enabled: true, usernames: ['user1', 'user2'] },
-  exportMembers: { enabled: false, maxMembers: 200 },
+  createList: {
+    enabled: false,
+    name: 'My List',
+    description: 'Created by XActions',
+    isPrivate: true,
+  },
+  addUsers: {
+    enabled: true,
+    usernames: ['user1', 'user2'],
+  },
+  exportMembers: {
+    enabled: false,
+    maxMembers: 200,
+  },
+  actionDelay: 2000,
 };
 ```
 
-### How to use
+### Create List
 
-1. Navigate to `x.com/YOUR_USERNAME/lists`
-2. Open DevTools (F12) → Console
-3. Paste the script → Enter
+Sets `createList.enabled: true` to create a new list. Fills in the name, description, and privacy toggle, then saves.
 
-### Features
+### Add Members
 
-- **Create** new lists (public or private)
-- **Add members** by searching usernames
-- **Export** list members as JSON
-- **Pin/unpin** lists for quick access
+Sets `addUsers.enabled: true` with a list of usernames. Opens the add-member search, types each username, clicks the matching user cell, and repeats. Navigate to the target list page first.
 
-### Key Selectors
+### Export Members
+
+Sets `exportMembers.enabled: true`. Scrolls through the list members page and exports all members (username, display name, bio) as a JSON download.
+
+## DOM Selectors
 
 | Element | Selector |
 |---------|----------|
-| Create list | `[data-testid="createList"]` |
-| List name | `[data-testid="listName"]` |
-| List description | `[data-testid="listDescription"]` |
-| Pin list | `[data-testid="pinList"]` |
-| Add member | `[data-testid="addMember"]` |
-| List members | `[data-testid="UserCell"]` |
+| Create list button | `[data-testid="createList"]` |
+| List name input | `[data-testid="listNameInput"]` |
+| List description | `[data-testid="listDescriptionInput"]` |
+| Private toggle | `[data-testid="listPrivateToggle"]` |
+| Save button | `[data-testid="listSaveButton"]` |
+| Add members | `[data-testid="addMembers"]` |
+| Search people | `[data-testid="searchPeople"]` |
+| User cell | `[data-testid="UserCell"]` |
 
-## Notes
+## Rate Limiting
 
-- Lists can be public (visible to anyone) or private (only you see them)
-- Maximum 1,000 lists per account, 5,000 members per list
-- Pinned lists appear in your sidebar for quick access
+- 2s delay between adding individual users
+- 1.5s scroll delay when exporting members
+- Up to 5 retries when no new members load during export scroll
+
+## X List Limits
+
+- Maximum 1,000 lists per account
+- Maximum 5,000 members per list
+- Lists can be public (visible to anyone) or private (only you)
+
+## Troubleshooting
+
+| Problem | Solution |
+|---------|----------|
+| Create button not found | Navigate to `x.com/USERNAME/lists` first |
+| User not found when adding | Verify username spelling; user may have changed handle |
+| Export stops early | Page may have finished scrolling; increase `maxMembers` if needed |
+| Search input not found | Ensure you clicked "Add member" — script expects the search overlay |

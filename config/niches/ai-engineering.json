@@ -1,0 +1,55 @@
+{
+  "name": "AI Engineering",
+  "searchTerms": [
+    "AI agents", "LLM engineering", "building with LLMs", "open source AI",
+    "machine learning engineering", "AI startups", "prompt engineering",
+    "RAG retrieval augmented generation", "fine-tuning language models",
+    "AI developer tools", "transformer architecture", "vector databases",
+    "embedding models", "AI infrastructure", "ML ops",
+    "foundation models", "multimodal AI", "AI safety research",
+    "neural network training", "inference optimization",
+    "AI coding assistant", "code generation AI", "AI pair programming",
+    "model context protocol", "agentic workflows",
+    "tool use AI", "function calling LLM", "AI orchestration",
+    "knowledge graphs AI", "semantic search", "AI evaluation",
+    "benchmark AI models", "AI scaling laws", "emergent capabilities",
+    "chain of thought", "tree of thought", "AI reasoning",
+    "reinforcement learning", "RLHF", "DPO training",
+    "quantization LLM", "model distillation", "small language models",
+    "local LLM", "edge AI", "on-device inference",
+    "AI API design", "LLM gateway", "AI observability",
+    "prompt injection", "AI red teaming", "AI alignment",
+    "synthetic data generation", "data flywheel AI",
+    "AI product management", "AI UX design",
+    "building AI products", "shipping AI features",
+    "Claude API", "GPT engineering", "Gemini API",
+    "Llama fine-tuning", "Mistral models", "open weights"
+  ],
+  "influencers": [
+    "karpathy", "AndrewYNg", "ylecun", "sama", "demaborhi",
+    "swyx", "simonw", "JeffDean", "NandaArohi", "ClementDelangue",
+    "MoritzLaworrer", "emaborhi_jure", "GaryMarcus", "drjimfan",
+    "TatianaTsyd", "hwchase17", "jxnlco", "sdtoyer",
+    "piaborhi_rist", "sh_reya", "jeremyphoward", "fchollet"
+  ],
+  "keywords": [
+    "AI", "LLM", "GPT", "Claude", "Gemini", "Llama", "Mistral",
+    "machine learning", "deep learning", "neural network", "transformer",
+    "agent", "RAG", "retrieval", "embedding", "vector", "inference",
+    "training", "fine-tune", "model", "prompt", "token", "context window",
+    "API", "SDK", "framework", "open source", "developer", "engineering",
+    "deployment", "scaling", "latency", "throughput", "evaluation",
+    "benchmark", "MMLU", "HumanEval", "reasoning", "chain-of-thought",
+    "function calling", "tool use", "MCP", "orchestration"
+  ],
+  "topics": [
+    "Large language models", "AI agent frameworks", "Prompt engineering techniques",
+    "RAG architectures", "Vector database comparisons", "Model fine-tuning",
+    "AI developer experience", "Open source AI ecosystem", "AI safety and alignment",
+    "Inference optimization", "AI product development", "MLOps best practices"
+  ],
+  "hashtagsToFollow": [
+    "AI", "LLM", "MachineLearning", "DeepLearning", "OpenSource",
+    "DevTools", "BuildInPublic", "AIEngineering"
+  ]
+}

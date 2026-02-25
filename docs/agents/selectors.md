@@ -14,6 +14,7 @@
 | Search input | `[data-testid="SearchBox_Search_Input"]` |
 | User actions menu | `[data-testid="userActions"]` |
 | Verification badge | `[data-testid="icon-verified"]` |
+| Toast notification | `[data-testid="toast"]` |
 
 ## Posting & Compose
 
@@ -29,6 +30,7 @@
 | GIF button | `[aria-label="Add a GIF"]` |
 | Emoji button | `[aria-label="Add emoji"]` |
 | Alt text | `[data-testid="altTextInput"]` |
+| Inline post button | `[data-testid="tweetButtonInline"]` |
 
 ## Engagement
 
@@ -82,6 +84,7 @@
 |---------|----------|
 | Communities nav | `a[aria-label="Communities"]` |
 | Community links | `a[href^="/i/communities/"]` |
+| Community name | `[data-testid="communityName"]` |
 | Joined button | `button[aria-label^="Joined"]` |
 
 ## Lists
@@ -122,6 +125,7 @@
 | Publish button | `[data-testid="articlePublish"]` |
 | Draft save | `[data-testid="articleSaveDraft"]` |
 | Cover image | `[data-testid="articleCoverImage"]` |
+| Toolbar | `[data-testid="articleToolbar"]` |
 
 ## Explore & Discovery
 
@@ -148,6 +152,7 @@
 | Response area | `[data-testid="grokResponse"]` |
 | New chat | `[data-testid="grokNewChat"]` |
 | Image gen | `[data-testid="grokImageGen"]` |
+| Loading indicator | `[data-testid="grokLoading"]` |
 
 ## Monetization & Ads
 

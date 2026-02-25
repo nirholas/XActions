@@ -1002,12 +1002,6 @@ Commercial use allowed. Attribution appreciated but not required.
 
 ---
 
-## 🙏 Community & Credits
-
-| Project | Description |
-|---------|-------------|
-| [tweet-price-charts](https://github.com/rohunvora/tweet-price-charts) | Tweet-price correlation analysis — integrated into `scripts/tweetPriceCorrelation.js`, `src/analytics/priceCorrelation.js`, and `POST /api/analytics/price-correlation`. By [@rohunvora](https://github.com/rohunvora) |
-
 ---
 
 ## ⚠️ Legal Notice

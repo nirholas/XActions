@@ -4,7 +4,7 @@ description: Mass unfollow on X/Twitter via browser console scripts. Unfollows e
 license: MIT
 metadata:
   author: nichxbt
-  version: "4.0"
+  version: "3.0"
 ---
 
 # Unfollow Management
