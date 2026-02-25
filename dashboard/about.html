@@ -28,24 +28,49 @@
   <link rel="manifest" href="/manifest.json">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
   
-  <!-- Structured Data -->
+  <!-- Structured Data - Organization (Knowledge Panel primary signal) -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "Organization",
     "name": "XActions",
-    "description": "AI-powered open-source X/Twitter automation toolkit with LLM integration, MCP server support, and GPT/Claude compatibility",
+    "alternateName": ["xactions", "X Actions"],
+    "description": "Free, open-source X/Twitter automation toolkit — scrapers, MCP server for AI agents, CLI, and browser scripts. No API fees.",
     "url": "https://xactions.app",
-    "logo": "https://xactions.app/logo.png",
-    "sameAs": [
-      "https://x.com/nichxbt",
-      "https://github.com/nirholas/XActions"
-    ],
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://xactions.app/logo.png",
+      "width": 512,
+      "height": 512
+    },
+    "foundingDate": "2024",
     "founder": {
       "@type": "Person",
       "name": "nich",
-      "url": "https://x.com/nichxbt"
-    }
+      "alternateName": "nichxbt",
+      "url": "https://x.com/nichxbt",
+      "sameAs": [
+        "https://github.com/nirholas",
+        "https://x.com/nichxbt"
+      ]
+    },
+    "sameAs": [
+      "https://github.com/nirholas/XActions",
+      "https://x.com/nichxbt",
+      "https://www.npmjs.com/package/xactions"
+    ],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "url": "https://xactions.app/contact",
+      "contactType": "customer support"
+    },
+    "knowsAbout": [
+      "X/Twitter automation",
+      "social media scraping",
+      "MCP servers",
+      "browser automation",
+      "AI agents"
+    ]
   }
   </script>
   <script type="application/ld+json">

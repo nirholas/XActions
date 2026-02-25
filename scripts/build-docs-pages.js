@@ -430,14 +430,49 @@ function getRelatedPages(slug, allSlugs) {
   return related.slice(0, 6);
 }
 
+// Tutorials subdirectory category mappings
+const TUTORIAL_CATEGORIES = {
+  'auto-commenter-tutorial': { cat: 'Step-by-Step Tutorials', icon: '📝', priority: 0.8 },
+  'auto-liker-tutorial': { cat: 'Step-by-Step Tutorials', icon: '📝', priority: 0.8 },
+  'bookmark-exporter-tutorial': { cat: 'Step-by-Step Tutorials', icon: '📝', priority: 0.7 },
+  'detect-unfollowers-tutorial': { cat: 'Step-by-Step Tutorials', icon: '📝', priority: 0.8 },
+  'follow-target-followers-tutorial': { cat: 'Step-by-Step Tutorials', icon: '📝', priority: 0.7 },
+  'followers-scraping-tutorial': { cat: 'Step-by-Step Tutorials', icon: '📝', priority: 0.8 },
+  'following-scraping-tutorial': { cat: 'Step-by-Step Tutorials', icon: '📝', priority: 0.7 },
+  'growth-suite-tutorial': { cat: 'Step-by-Step Tutorials', icon: '📝', priority: 0.8 },
+  'hashtag-scraping-tutorial': { cat: 'Step-by-Step Tutorials', icon: '📝', priority: 0.7 },
+  'keyword-follow-tutorial': { cat: 'Step-by-Step Tutorials', icon: '📝', priority: 0.7 },
+  'natural-flow-tutorial': { cat: 'Step-by-Step Tutorials', icon: '📝', priority: 0.7 },
+  'profile-scraping-tutorial': { cat: 'Step-by-Step Tutorials', icon: '📝', priority: 0.8 },
+  'smart-unfollow-tutorial': { cat: 'Step-by-Step Tutorials', icon: '📝', priority: 0.8 },
+  'tweet-scraping-tutorial': { cat: 'Step-by-Step Tutorials', icon: '📝', priority: 0.8 },
+  'unfollow-everyone-tutorial': { cat: 'Step-by-Step Tutorials', icon: '📝', priority: 0.8 },
+  'unfollow-non-followers-tutorial': { cat: 'Step-by-Step Tutorials', icon: '📝', priority: 0.8 },
+  'video-downloader-tutorial': { cat: 'Step-by-Step Tutorials', icon: '📝', priority: 0.8 },
+};
+
+function stripFrontmatter(markdown) {
+  return markdown.replace(/^---[\s\S]*?---\n*/m, '');
+}
+
+function extractFrontmatterField(markdown, field) {
+  const fmMatch = markdown.match(/^---\n([\s\S]*?)\n---/);
+  if (!fmMatch) return null;
+  const fm = fmMatch[1];
+  const fieldMatch = fm.match(new RegExp(`^${field}:\\s*["']?(.+?)["']?\\s*$`, 'm'));
+  return fieldMatch ? fieldMatch[1].trim() : null;
+}
+
 // Main build
 async function build() {
   console.log('🔨 Building SEO doc pages...\n');
 
-  // Ensure output directory exists
+  // Ensure output directories exist
   if (!fs.existsSync(OUT_DIR)) fs.mkdirSync(OUT_DIR, { recursive: true });
+  const tutorialOutDir = path.join(OUT_DIR, 'step-by-step');
+  if (!fs.existsSync(tutorialOutDir)) fs.mkdirSync(tutorialOutDir, { recursive: true });
 
-  // Read all markdown files
+  // ─── Phase 2a: Process docs/examples/*.md (flat) ───
   const files = fs.readdirSync(DOCS_DIR)
     .filter(f => f.endsWith('.md') && f !== 'README.md');
 
@@ -450,10 +485,8 @@ async function build() {
     const mdPath = path.join(DOCS_DIR, file);
     const markdown = fs.readFileSync(mdPath, 'utf-8');
 
-    // Generate HTML
     let html = generateHTML(slug, markdown);
 
-    // Insert related links
     const related = getRelatedPages(slug, allSlugs);
     const relatedHtml = related.map(r => {
       const rInfo = CATEGORIES[r] || { icon: '📄' };
@@ -462,20 +495,88 @@ async function build() {
     }).join('\n');
     html = html.replace('RELATED_LINKS_PLACEHOLDER', relatedHtml);
 
-    // Write file
     const outPath = path.join(OUT_DIR, `${slug}.html`);
     fs.writeFileSync(outPath, html);
 
     const info = CATEGORIES[slug] || { priority: 0.6 };
-    sitemapEntries.push({ slug, priority: info.priority });
+    sitemapEntries.push({ slug, urlPath: `/docs/${slug}`, priority: info.priority });
     count++;
     console.log(`  ✅ ${slug}.html`);
   }
 
-  // Generate sitemap entries for easy copy-paste
+  // ─── Phase 2b: Process docs/examples/tutorials/*.md ───
+  const tutorialDir = path.join(DOCS_DIR, 'tutorials');
+  if (fs.existsSync(tutorialDir)) {
+    const tutorialFiles = fs.readdirSync(tutorialDir)
+      .filter(f => f.endsWith('.md'));
+
+    console.log(`\n📝 Building step-by-step tutorials...\n`);
+
+    for (const file of tutorialFiles) {
+      const slug = file.replace('.md', '');
+      const mdPath = path.join(tutorialDir, file);
+      const rawMarkdown = fs.readFileSync(mdPath, 'utf-8');
+
+      // Extract frontmatter fields if present
+      const fmTitle = extractFrontmatterField(rawMarkdown, 'title');
+      const fmDesc = extractFrontmatterField(rawMarkdown, 'description');
+      const markdown = stripFrontmatter(rawMarkdown);
+      const info = TUTORIAL_CATEGORIES[slug] || { cat: 'Step-by-Step Tutorials', icon: '📝', priority: 0.7 };
+
+      // Use frontmatter title/desc or fall back to extraction
+      const rawTitle = fmTitle || extractTitle(markdown) || slugToTitle(slug);
+      const title = rawTitle.replace(/^X\/Twitter\s*/i, '').trim();
+      const description = fmDesc || extractDescription(markdown) || `${title} — Step-by-step tutorial for XActions.`;
+      const keywords = buildKeywords(slug, title, info.cat);
+      const pageTitle = `${title} | XActions Tutorial`;
+      const canonicalUrl = `${SITE_URL}/docs/step-by-step/${slug}`;
+      const seoDescription = description.length > 160 ? description.slice(0, 157) + '...' : description;
+
+      marked.setOptions({ breaks: true, gfm: true });
+      const htmlContent = marked.parse(markdown);
+
+      // Build the same template but with tutorial-specific paths
+      let html = generateHTML(slug, markdown);
+      // Fix canonical URL for tutorial path
+      html = html.replace(
+        `<link rel="canonical" href="${SITE_URL}/docs/${slug}">`,
+        `<link rel="canonical" href="${canonicalUrl}">`
+      );
+      html = html.replace(
+        `<meta property="og:url" content="${SITE_URL}/docs/${slug}">`,
+        `<meta property="og:url" content="${canonicalUrl}">`
+      );
+      html = html.replace(
+        `"url": "${SITE_URL}/docs/${slug}"`,
+        `"url": "${canonicalUrl}"`
+      );
+      // Fix breadcrumb
+      html = html.replace(
+        `<a href="/docs">Documentation</a>`,
+        `<a href="/docs">Documentation</a> / <a href="/docs#step-by-step">Tutorials</a>`
+      );
+
+      // Related links — other tutorials
+      const tutSlugs = tutorialFiles.map(f => f.replace('.md', ''));
+      const related = tutSlugs.filter(s => s !== slug).slice(0, 5);
+      const relatedHtml = related.map(r => {
+        return `        <a href="/docs/step-by-step/${r}">📝 ${slugToTitle(r)}</a>`;
+      }).join('\n');
+      html = html.replace('RELATED_LINKS_PLACEHOLDER', relatedHtml);
+
+      const outPath = path.join(tutorialOutDir, `${slug}.html`);
+      fs.writeFileSync(outPath, html);
+
+      sitemapEntries.push({ slug, urlPath: `/docs/step-by-step/${slug}`, priority: info.priority });
+      count++;
+      console.log(`  ✅ step-by-step/${slug}.html`);
+    }
+  }
+
+  // Generate sitemap entries
   const sitemapXml = sitemapEntries.map(e => `  <url>
-    <loc>https://xactions.app/docs/${e.slug}</loc>
-    <lastmod>2026-02-24</lastmod>
+    <loc>https://xactions.app${e.urlPath}</loc>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>${e.priority}</priority>
   </url>`).join('\n');
@@ -484,9 +585,6 @@ async function build() {
 
   console.log(`\n✅ Generated ${count} HTML pages in dashboard/docs/`);
   console.log(`📋 Sitemap entries saved to dashboard/docs/_sitemap-entries.xml`);
-  console.log(`\nNext steps:`);
-  console.log(`  1. Add Express route: app.use('/docs', express.static('dashboard/docs'))`);
-  console.log(`  2. Append sitemap entries to public/sitemap.xml`);
 }
 
 build().catch(console.error);

@@ -25,6 +25,12 @@ The XActions CLI provides powerful command-line tools for X/Twitter automation, 
   - [xactions thread](#xactions-thread)
   - [xactions media](#xactions-media)
   - [xactions info](#xactions-info)
+  - [xactions persona create](#xactions-persona-create)
+  - [xactions persona list](#xactions-persona-list)
+  - [xactions persona run](#xactions-persona-run)
+  - [xactions persona status](#xactions-persona-status)
+  - [xactions persona edit](#xactions-persona-edit)
+  - [xactions persona delete](#xactions-persona-delete)
 - [Output Formats](#output-formats)
 - [Environment Variables](#environment-variables)
 - [Configuration](#configuration)
@@ -648,6 +654,258 @@ Run "xactions --help" for all commands
 
 ---
 
+### xactions persona create
+
+Interactively create a new persona for the algorithm builder. Guides you through choosing a niche preset, engagement strategy, and activity pattern.
+
+**Syntax:**
+
+```bash
+xactions persona create [options]
+```
+
+**Options:**
+
+| Option | Description |
+|--------|-------------|
+| `--name <name>` | Persona name (skips prompt) |
+| `--preset <preset>` | Niche preset (skips prompt) |
+| `--strategy <strategy>` | Engagement strategy (skips prompt) |
+| `--activity <pattern>` | Activity pattern (skips prompt) |
+
+**Available Presets:**
+
+| Preset | Description |
+|--------|-------------|
+| `crypto-degen` | Crypto/DeFi/Web3 with degen slang |
+| `tech-builder` | Indie hacker / building in public |
+| `ai-researcher` | AI/ML papers and research |
+| `growth-marketer` | Content strategy and audience growth |
+| `finance-investor` | Markets, investing, economics |
+| `creative-writer` | Writing craft and storytelling |
+| `custom` | Define your own topics and tone |
+
+**Available Strategies:**
+
+| Strategy | Follows/day | Likes/day | Comments/day | Posts/day |
+|----------|-------------|-----------|--------------|-----------|
+| `aggressive` | 80 | 150 | 40 | 5 |
+| `moderate` | 40 | 80 | 20 | 3 |
+| `conservative` | 15 | 40 | 8 | 1 |
+| `thoughtleader` | 20 | 60 | 30 | 4 |
+
+**Available Activity Patterns:**
+
+| Pattern | Description |
+|---------|-------------|
+| `night-owl` | Active late night, peak midnight–2am |
+| `early-bird` | Active from 5am, peak morning |
+| `nine-to-five` | Checks before/after work, active evenings |
+| `always-on` | Active throughout the day |
+| `weekend-warrior` | Light weekdays, heavy weekends |
+
+**Examples:**
+
+```bash
+# Interactive creation
+$ xactions persona create
+
+# One-liner
+$ xactions persona create --name "CryptoBot" --preset crypto-degen --strategy aggressive --activity night-owl
+
+# Custom niche (interactive prompts for topics, search terms, etc.)
+$ xactions persona create --preset custom
+```
+
+---
+
+### xactions persona list
+
+List all saved personas with their stats and last activity.
+
+**Syntax:**
+
+```bash
+xactions persona list
+```
+
+**Example:**
+
+```bash
+$ xactions persona list
+
+🤖 Saved Personas
+
+  ● CryptoBot (persona_1234567890)
+    Preset: crypto-degen | Strategy: aggressive
+    Sessions: 42 | Follows: 320 | Likes: 1200 | Comments: 180
+    Last active: 1/15/2025, 3:42:00 AM
+
+  ○ AIResearcher (persona_0987654321)
+    Preset: ai-researcher | Strategy: thoughtleader
+    Sessions: 0 | Follows: 0 | Likes: 0 | Comments: 0
+```
+
+---
+
+### xactions persona run
+
+Start the 24/7 algorithm builder for a persona. Launches a Puppeteer browser, logs in, and runs automated sessions with sleep cycles.
+
+**Syntax:**
+
+```bash
+xactions persona run <personaId> [options]
+```
+
+**Arguments:**
+
+| Argument | Description | Required |
+|----------|-------------|----------|
+| `personaId` | The persona ID (shown in `persona list`) | Yes |
+
+**Options:**
+
+| Option | Description | Default |
+|--------|-------------|---------|
+| `--headless` | Run browser in headless mode | `true` |
+| `--no-headless` | Show the browser window | - |
+| `--dry-run` | Preview actions without executing | `false` |
+| `--sessions <n>` | Stop after N sessions (0 = infinite) | `0` |
+| `--token <token>` | X auth token (overrides saved config) | - |
+
+**Environment Variables:**
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `XACTIONS_SESSION_COOKIE` | Yes* | X auth token (alt: `--token` or `xactions login`) |
+| `OPENROUTER_API_KEY` | Yes | OpenRouter key for LLM-generated comments/posts |
+
+**Examples:**
+
+```bash
+# Start with saved auth
+$ xactions persona run persona_1234567890
+
+# With visible browser for debugging
+$ xactions persona run persona_1234567890 --no-headless
+
+# Dry run — preview without executing
+$ xactions persona run persona_1234567890 --dry-run
+
+# Run 5 sessions then stop
+$ xactions persona run persona_1234567890 --sessions 5
+
+# Explicit auth token
+$ xactions persona run persona_1234567890 --token "abc123hex..."
+```
+
+---
+
+### xactions persona status
+
+Display detailed status, config, and lifetime stats for a persona.
+
+**Syntax:**
+
+```bash
+xactions persona status <personaId>
+```
+
+**Example:**
+
+```bash
+$ xactions persona status persona_1234567890
+
+🤖 CryptoBot — Status Report
+
+Identity
+  ID: persona_1234567890
+  Preset: crypto-degen
+  Created: 1/10/2025, 9:00:00 AM
+
+Niche
+  Topics: crypto, defi, web3, bitcoin, ethereum, solana, memecoins
+  Search terms: 7
+  Target accounts: 0xCygaar, blaboratory, DefiIgnas
+
+Strategy
+  Growth: aggressive
+  Activity: night-owl
+  Daily limits: 80 follows, 150 likes, 40 comments
+
+Lifetime Stats
+  Sessions: 42
+  Follows: 320
+  Likes: 1200
+  Comments: 180
+  Posts: 24
+  Searches: 89
+  Last active: 1/15/2025, 3:42:00 AM
+
+Follow Graph
+  Users followed: 280
+  Current followers: 145
+  Target: 10,000
+```
+
+---
+
+### xactions persona edit
+
+Modify an existing persona's config without recreating it.
+
+**Syntax:**
+
+```bash
+xactions persona edit <personaId> [options]
+```
+
+**Options:**
+
+| Option | Description |
+|--------|-------------|
+| `--topics <topics>` | Set topics (comma-separated) |
+| `--search-terms <terms>` | Set search terms (comma-separated) |
+| `--target-accounts <accounts>` | Set target accounts (comma-separated, no @) |
+| `--strategy <strategy>` | Set engagement strategy |
+| `--activity <pattern>` | Set activity pattern |
+
+**Examples:**
+
+```bash
+# Change topics
+$ xactions persona edit persona_123 --topics "ai,llm,agents,agi"
+
+# Switch to conservative strategy
+$ xactions persona edit persona_123 --strategy conservative
+
+# Update target accounts
+$ xactions persona edit persona_123 --target-accounts "elonmusk,sama,karpathy"
+```
+
+---
+
+### xactions persona delete
+
+Permanently delete a saved persona and all its data.
+
+**Syntax:**
+
+```bash
+xactions persona delete <personaId>
+```
+
+**Example:**
+
+```bash
+$ xactions persona delete persona_1234567890
+? Delete persona persona_1234567890? This cannot be undone. (y/N) y
+✅ Persona persona_1234567890 deleted
+```
+
+---
+
 ## Output Formats
 
 XActions supports two output formats: **JSON** and **CSV**.
@@ -745,6 +1003,9 @@ XActions stores configuration in `~/.xactions/config.json`.
 ```
 ~/.xactions/
 ├── config.json      # Authentication and settings
+├── personas/        # Saved persona configurations
+│   ├── persona_123.json
+│   └── persona_456.json
 └── cache/           # Temporary cache (optional)
 ```
 
@@ -852,6 +1113,12 @@ DEBUG=xactions:* xactions followers nichxbt
 | `thread`        | Scrape thread                        | `xactions thread <url>`                   |
 | `media`         | Scrape media                         | `xactions media user -l 50`               |
 | `info`          | Show info                            | `xactions info`                           |
+| `persona create`| Create a new persona                 | `xactions persona create`                 |
+| `persona list`  | List all personas                    | `xactions persona list`                   |
+| `persona run`   | Start 24/7 algorithm builder         | `xactions persona run <id>`               |
+| `persona status`| Show persona stats                   | `xactions persona status <id>`            |
+| `persona edit`  | Modify persona config                | `xactions persona edit <id> --strategy aggressive` |
+| `persona delete`| Delete a persona                     | `xactions persona delete <id>`            |
 
 ---
 

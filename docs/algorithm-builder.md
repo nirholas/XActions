@@ -1,0 +1,280 @@
+# Algorithm Builder — 24/7 Niche Growth Automation
+
+> Train your X algorithm around specific topics by mimicking natural human behavior — with optional LLM-powered comments.
+
+## Overview
+
+The Algorithm Builder is a long-running browser automation that systematically interacts with content in your niche to shape your X algorithm. It runs continuously with work/break cycles, engaging with posts the way a real person would:
+
+- **Search** your niche keywords (Top + Latest tabs)
+- **Scroll** feeds naturally with variable speed and reading pauses
+- **Like** relevant posts (probability-based)
+- **Comment** with LLM-generated or curated replies
+- **Follow** viral accounts that match your niche
+- **Browse** home feed, Explore, target accounts, and your own profile
+- **Rest** between sessions (20-45 min work, 5-20 min break)
+
+Two ways to run it:
+1. **Standalone script** — paste `core.js` + `algorithmBuilder.js` into DevTools
+2. **Control Panel** — select "🧠 Algorithm Builder" from the floating panel UI
+
+---
+
+## Quick Start (Standalone)
+
+1. Open [x.com](https://x.com) → DevTools Console
+2. Paste `src/automation/core.js`
+3. Edit the config sections in `src/automation/algorithmBuilder.js`:
+   - Set your `KEYWORDS`, `TARGET_ACCOUNTS`, `BIO_KEYWORDS`
+   - (Optional) Set `LLM_CONFIG.ENABLED = true` and add your `API_KEY`
+4. Paste the script
+5. Let it run — it handles breaks automatically
+
+```javascript
+// Stop anytime
+window.stopAlgoBuilder()
+
+// Check stats
+window.algoStats()
+
+// View config
+window.algoConfig()
+
+// Reset all state
+window.algoReset()
+```
+
+---
+
+## Quick Start (Control Panel)
+
+1. Paste `core.js`, then `controlPanel.js`
+2. Select **🧠 Algorithm Builder** from the dropdown
+3. Fill in: keywords, persona, bio filters, target accounts
+4. (Optional) Paste your OpenRouter API key for LLM comments
+5. Click **▶ Start**
+
+---
+
+## Configuration
+
+### NICHE_CONFIG
+
+```javascript
+const NICHE_CONFIG = {
+  // Your identity (used in LLM system prompt)
+  PERSONA: 'a crypto & web3 builder who shares alpha and builds in public',
+
+  // Keywords the builder searches for
+  KEYWORDS: ['web3 builder', 'crypto alpha', 'DeFi yield', 'solana ecosystem'],
+
+  // Accounts whose posts you want to engage with
+  TARGET_ACCOUNTS: ['@nichxbt', '@VitalikButerin'],
+
+  // Only follow users whose bio contains at least one of these
+  BIO_KEYWORDS: ['crypto', 'web3', 'defi', 'nft', 'blockchain', 'builder'],
+
+  // Topics to look for on Explore page
+  EXPLORE_TOPICS: ['Technology', 'Crypto', 'Business'],
+};
+```
+
+### LLM_CONFIG
+
+```javascript
+const LLM_CONFIG = {
+  ENABLED: false,                    // Set to true to enable AI comments
+  API_URL: 'https://openrouter.ai/api/v1/chat/completions',
+  API_KEY: '',                       // Your OpenRouter or OpenAI API key
+  MODEL: 'google/gemini-flash-1.5',  // Any OpenRouter model
+  SYSTEM_PROMPT: '...',              // Customizable persona prompt
+  MAX_TOKENS: 80,
+  TEMPERATURE: 0.9,                  // Higher = more creative
+  LLM_PROBABILITY: 0.7,             // 70% chance to use LLM vs fallback
+};
+```
+
+Any OpenAI-compatible endpoint works — just change `API_URL`.
+
+### BEHAVIOR
+
+```javascript
+const BEHAVIOR = {
+  // Session timing
+  SESSION_MIN_MINUTES: 20,
+  SESSION_MAX_MINUTES: 45,
+  BREAK_MIN_MINUTES: 5,
+  BREAK_MAX_MINUTES: 20,
+
+  // Peak hours (UTC) — higher activity during these hours
+  PEAK_HOURS_START: 13,   // 1 PM UTC
+  PEAK_HOURS_END: 23,     // 11 PM UTC
+
+  // Action probabilities per tweet (0-1)
+  LIKE_PROBABILITY: 0.35,
+  COMMENT_PROBABILITY: 0.08,
+  RETWEET_PROBABILITY: 0.05,
+  FOLLOW_PROBABILITY: 0.15,
+
+  // Off-peak multiplier (reduces all probabilities)
+  OFF_PEAK_MULTIPLIER: 0.4,
+
+  // Per-session limits
+  MAX_LIKES_PER_SESSION: 25,
+  MAX_COMMENTS_PER_SESSION: 5,
+  MAX_FOLLOWS_PER_SESSION: 15,
+  MAX_RETWEETS_PER_SESSION: 5,
+
+  // Per-day hard limits
+  MAX_LIKES_PER_DAY: 150,
+  MAX_COMMENTS_PER_DAY: 25,
+  MAX_FOLLOWS_PER_DAY: 80,
+  MAX_RETWEETS_PER_DAY: 30,
+
+  // Follow filters
+  MIN_FOLLOWERS_TO_FOLLOW: 10,
+  MAX_FOLLOWERS_TO_FOLLOW: 50000,
+  SKIP_PROTECTED_ACCOUNTS: true,
+};
+```
+
+---
+
+## Activity Cycles
+
+The builder randomly selects activities using weighted probabilities:
+
+| Cycle | Weight | What Happens |
+|-------|--------|-------------|
+| 🔍 **Search & Engage** | 30% | Search a keyword → scroll Top + Latest → like, comment, follow |
+| 🏠 **Browse Home** | 25% | Scroll the "For you" feed, engage naturally |
+| 🎯 **Target Account** | 15% | Visit a configured target's profile, engage with their posts |
+| 🌍 **Explore** | 10% | Browse trending topics, click into trends |
+| 👥 **Search People** | 15% | Search users by keyword, follow those matching bio filters |
+| 👤 **Own Profile** | 5% | Visit your own profile briefly (looks natural) |
+
+This rotation mimics how real users browse X — they don't just like 500 posts in a row.
+
+---
+
+## LLM Comment Generation
+
+When enabled, comments are generated by an LLM that reads the tweet and replies in context:
+
+**System prompt structure:**
+```
+You are {PERSONA} on Twitter/X.
+Generate a short, authentic reply to the tweet below.
+Rules:
+- 1-2 sentences max, casual Twitter tone
+- No hashtags, no emojis unless very natural
+- Be specific to the tweet's content, not generic
+- Sound like a real person, not a bot
+- Occasionally ask a genuine question
+- Never start with "Great post!" or similar generic openers
+```
+
+**Flow:**
+1. Tweet text extracted from the page
+2. 70% chance to send to LLM (configurable)
+3. If LLM fails or skipped → use curated fallback comment
+4. Comment typed character-by-character with random delays
+
+### Fallback Comments
+
+When LLM is disabled or fails, one of 20 curated comments is used:
+
+```
+"This is a really solid take"
+"Been thinking about this a lot lately"
+"Underrated perspective"
+"Interesting — what made you think of this?"
+"This tracks with what I've been researching"
+```
+
+These are intentionally varied in tone and length to avoid detection.
+
+---
+
+## Human Behavior Patterns
+
+The builder employs multiple strategies to appear natural:
+
+| Pattern | Implementation |
+|---------|---------------|
+| **Variable delays** | All timings randomized within ranges (2-6s between actions) |
+| **Reading pauses** | 15% chance of 5-12 second "reading" pause while scrolling |
+| **Peak/off-peak** | Action probabilities drop 60% during off-peak hours |
+| **Session breaks** | 5-20 min breaks between 20-45 min sessions |
+| **Scroll variation** | Scroll distance randomized 300-800px per step |
+| **Typing jitter** | Comments typed at ~60ms/char with ±20ms random variance |
+| **Mixed activities** | Weighted random cycle selection — not repetitive |
+| **Profile visits** | Occasionally visits own profile (5% weight) |
+
+---
+
+## State Persistence
+
+All state is saved to `localStorage` and survives page refreshes:
+
+- Total likes, comments, follows, retweets across all sessions
+- Last 500 engaged tweet IDs (deduplication)
+- Last 500 followed usernames (deduplication)
+- Last 500 commented tweet IDs (no double-commenting)
+- Keyword and target account rotation indices
+- Session start time and break history
+
+Run `window.algoReset()` to clear all state and start fresh.
+
+---
+
+## Console API
+
+| Command | Description |
+|---------|-------------|
+| `window.stopAlgoBuilder()` | Stop after the current action finishes |
+| `window.algoStats()` | Print all-time stats and return stats object |
+| `window.algoReset()` | Clear all saved state |
+| `window.algoConfig()` | Print current configuration |
+| `window.XActions.AlgoBuilder` | Full namespace with state, config, and methods |
+
+### Stats Output
+
+```
+╔═══════════════════════════════════════════════════╗
+║       📊 Algorithm Builder — All Time Stats       ║
+╠═══════════════════════════════════════════════════╣
+║  Runtime:    4.2 hours                             ║
+║  Sessions:   8                                     ║
+║  Searches:   24                                    ║
+║  ❤️  Likes:    187                                  ║
+║  💬 Comments: 14                                    ║
+║  ➕ Follows:  62                                    ║
+║  🔁 Retweets: 11                                   ║
+║  Engaged:    214 unique tweets                     ║
+╚═══════════════════════════════════════════════════╝
+```
+
+---
+
+## Rate Limits
+
+The builder uses XActions' built-in rate limiting (`rateLimit.check()` / `rateLimit.increment()`) to enforce both per-session and per-day caps. When daily limits are hit, those action types are skipped — the builder continues other activities.
+
+| Action | Per Session | Per Day |
+|--------|-------------|---------|
+| Likes | 25 | 150 |
+| Comments | 5 | 25 |
+| Follows | 15 | 80 |
+| Retweets | 5 | 30 |
+
+---
+
+## Tips
+
+- **Start small:** On a fresh account, lower all limits by 50% for the first week
+- **Niche down:** 3-5 focused keywords work better than 20 broad ones
+- **Use LLM sparingly:** `COMMENT_PROBABILITY: 0.08` means ~8% of tweets get a comment — this is intentional
+- **Target accounts matter:** Pick 3-5 thought leaders in your niche whose audiences you want to attract
+- **Monitor your account:** Watch for rate limit warnings in the X UI — if you see them, increase delays
+- **Don't run multiple scripts:** One automation at a time to avoid rate limit stacking

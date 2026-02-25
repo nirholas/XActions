@@ -117,6 +117,15 @@ const SOURCES = [
     section: 'Extensions & Plugins',
     icon: '🔌',
     priority: 0.5
+  },
+  // docs/launch/ — release announcements
+  {
+    dir: 'docs/launch',
+    scanPattern: '*.md',
+    outSubdir: 'launch',
+    section: 'Launch & Releases',
+    icon: '🚀',
+    priority: 0.5
   }
 ];
 
