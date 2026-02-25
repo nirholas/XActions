@@ -105,8 +105,8 @@ describe('ContentCalendar', () => {
   describe('getStats', () => {
     it('should return stats object', () => {
       const stats = cal.getStats();
-      expect(stats).toHaveProperty('totalWeeks');
-      expect(typeof stats.totalWeeks).toBe('number');
+      expect(stats).toHaveProperty('weeksPlanned');
+      expect(typeof stats.weeksPlanned).toBe('number');
     });
   });
 

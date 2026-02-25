@@ -1,0 +1,121 @@
+/* XActions — Top Navigation Bar Layout */
+/* Used by: run, monitor, automations, workflows, unfollowers */
+/* by nichxbt */
+
+.topnav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  height: 53px;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+}
+
+.topnav__brand {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text-primary);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.topnav__brand:hover { opacity: 0.9; }
+
+.topnav__links {
+  display: flex;
+  gap: 4px;
+}
+
+.topnav__link {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 14px;
+  border-radius: 9999px;
+  transition: all 0.2s;
+}
+.topnav__link:hover,
+.topnav__link--active {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.topnav__actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.topnav__content {
+  padding-top: 69px; /* 53px nav + 16px spacing */
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-left: 24px;
+  padding-right: 24px;
+  padding-bottom: 48px;
+}
+
+/* Connection badge */
+.conn-badge {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  border: 1px solid var(--border);
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.conn-badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.conn-badge--on {
+  color: var(--success);
+  border-color: var(--success);
+}
+.conn-badge--on::before { background: var(--success); }
+.conn-badge--off {
+  color: var(--error);
+  border-color: var(--error);
+}
+.conn-badge--off::before { background: var(--error); }
+
+/* Emergency / action buttons */
+.topnav__btn {
+  padding: 6px 16px;
+  border-radius: 9999px;
+  font-size: 13px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.topnav__btn--danger {
+  background: rgba(244, 33, 46, 0.15);
+  color: var(--error);
+  border: 1px solid var(--error);
+}
+.topnav__btn--danger:hover {
+  background: var(--error);
+  color: white;
+}
+
+/* Mobile: hide links, show hamburger */
+@media (max-width: 768px) {
+  .topnav__links { display: none; }
+  .topnav__content { padding-left: 16px; padding-right: 16px; }
+}

@@ -363,4 +363,3 @@ class ContentCalendar {
 }
 
 export { ContentCalendar };
-export default ContentCalendar;

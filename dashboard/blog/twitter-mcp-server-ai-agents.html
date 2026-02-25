@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Control Twitter with AI Using MCP (Claude, Cursor) | XActions</title>
+  <meta name="description" content="Learn how to control Twitter/X with AI using Model Context Protocol (MCP). Set up XActions MCP server with Claude Desktop, Cursor, or Windsurf in minutes.">
+  <meta name="keywords" content="twitter MCP server, model context protocol twitter, claude twitter automation, cursor twitter, AI twitter agent, natural language twitter, xactions MCP setup">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="How to Control Twitter with AI Using MCP (Claude, Cursor, GPT)">
+  <meta property="og:description" content="Set up natural-language Twitter automation with MCP. Control follows, likes, scraping, and more through Claude or Cursor.">
+  <meta property="og:url" content="https://xactions.app/blog/twitter-mcp-server-ai-agents">
+  <meta property="og:site_name" content="XActions">
+  <meta property="og:image" content="https://xactions.app/og-blog-mcp.png">
+  <meta property="article:published_time" content="2026-02-10T12:00:00Z">
+  <meta property="article:author" content="https://x.com/nichxbt">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:creator" content="@nichxbt">
+  <meta name="twitter:title" content="Control Twitter with AI Using MCP">
+  <meta name="twitter:description" content="Natural-language Twitter automation with Claude, Cursor, and MCP.">
+  <meta name="twitter:image" content="https://xactions.app/og-blog-mcp.png">
+
+  <link rel="canonical" href="https://xactions.app/blog/twitter-mcp-server-ai-agents">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  <link rel="manifest" href="/manifest.json">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "How to Control Twitter with AI Using MCP (Claude, Cursor, GPT)",
+    "datePublished": "2026-02-10T12:00:00Z",
+    "dateModified": "2026-02-10T12:00:00Z",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "description": "Learn how to control Twitter/X with AI using Model Context Protocol (MCP).",
+    "url": "https://xactions.app/blog/twitter-mcp-server-ai-agents",
+    "mainEntityOfPage": "https://xactions.app/blog/twitter-mcp-server-ai-agents"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://xactions.app/blog" },
+      { "@type": "ListItem", "position": 3, "name": "Control Twitter with AI Using MCP", "item": "https://xactions.app/blog/twitter-mcp-server-ai-agents" }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="/css/common.css">
+  <style>
+    .main-content { flex: 1; max-width: 700px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,0.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px; z-index: 100; display: flex; align-items: center; gap: 12px; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .back-link { color: var(--text-primary); text-decoration: none; font-size: 1.25rem; padding: 8px; border-radius: 9999px; transition: background 0.2s; }
+    .back-link:hover { background: var(--bg-tertiary); }
+
+    .article-wrapper { padding: 24px 16px; }
+    .article-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; color: var(--text-secondary); font-size: 0.875rem; }
+    .article-meta a { color: var(--accent); text-decoration: none; font-weight: 600; }
+    .article-meta a:hover { text-decoration: underline; }
+
+    article h1 { font-size: 1.75rem; font-weight: 800; line-height: 1.2; margin-bottom: 20px; }
+    article h2 { font-size: 1.25rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    article h3 { font-size: 1.0625rem; font-weight: 700; margin: 24px 0 8px; }
+    article p { color: var(--text-secondary); font-size: 0.9375rem; line-height: 1.7; margin-bottom: 16px; }
+    article ul, article ol { color: var(--text-secondary); font-size: 0.9375rem; line-height: 1.7; margin-bottom: 16px; padding-left: 24px; }
+    article li { margin-bottom: 8px; }
+    article strong { color: var(--text-primary); }
+    article a { color: var(--accent); }
+    article code { background: var(--bg-secondary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', monospace; font-size: 0.85em; }
+
+    .code-block { position: relative; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 16px; overflow-x: auto; }
+    .code-block pre { margin: 0; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.8125rem; line-height: 1.6; white-space: pre; color: var(--text-primary); }
+    .copy-btn { position: absolute; top: 8px; right: 8px; background: var(--accent); color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; transition: background 0.2s; }
+    .copy-btn:hover { background: var(--accent-hover); }
+    .copy-btn.copied { background: var(--success); }
+
+    .tip-box { background: rgba(29,155,240,0.08); border-left: 3px solid var(--accent); padding: 12px 16px; border-radius: 0 8px 8px 0; margin-bottom: 16px; font-size: 0.875rem; color: var(--text-secondary); }
+    .tip-box strong { color: var(--text-primary); }
+
+    .client-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+    .client-card h3 { margin-top: 0; }
+
+    .example-box { background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 12px; }
+    .example-box .prompt { color: var(--accent); font-weight: 600; font-size: 0.9375rem; margin-bottom: 4px; }
+    .example-box .response { color: var(--text-secondary); font-size: 0.8125rem; }
+
+    .article-cta { text-align: center; padding: 32px 16px; margin-top: 32px; border-top: 1px solid var(--border); }
+    .article-cta h3 { margin-bottom: 8px; }
+    .article-cta p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .cta-btn { display: inline-block; padding: 12px 24px; border-radius: 9999px; text-decoration: none; font-weight: 700; font-size: 0.9375rem; transition: all 0.2s; }
+    .cta-primary { background: var(--accent); color: white; }
+    .cta-primary:hover { background: var(--accent-hover); }
+    .cta-secondary { border: 1px solid var(--border); color: var(--text-primary); }
+    .cta-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+    .related-posts { padding: 24px 0; border-top: 1px solid var(--border); margin-top: 32px; }
+    .related-posts h3 { margin-bottom: 16px; font-size: 1.125rem; }
+    .related-link { display: block; padding: 12px 16px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; text-decoration: none; color: var(--text-primary); font-weight: 600; font-size: 0.9375rem; transition: all 0.2s; }
+    .related-link:hover { border-color: var(--accent); background: var(--bg-tertiary); }
+    .related-link span { color: var(--text-secondary); font-weight: 400; font-size: 0.8125rem; display: block; margin-top: 4px; }
+
+    .site-footer { border-top: 1px solid var(--border); padding: 48px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px; }
+    .footer-brand h3 { font-size: 1.25rem; margin-bottom: 8px; }
+    .footer-brand p { color: var(--text-secondary); font-size: 0.875rem; }
+    .footer-links h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 12px; }
+    .footer-links a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 4px 0; }
+    .footer-links a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 24px auto 0; padding-top: 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .footer-bottom p { color: var(--text-secondary); font-size: 0.8125rem; }
+    .footer-bottom a { color: var(--text-secondary); }
+    .footer-bottom a:hover { color: var(--accent); }
+    @media (max-width: 768px) { .footer-content { grid-template-columns: 1fr 1fr; } }
+
+    .skip-nav { position: absolute; top: -100%; left: 16px; background: var(--accent); color: white; padding: 12px 24px; border-radius: 8px; font-weight: 700; z-index: 9999; text-decoration: none; }
+    .skip-nav:focus { top: 16px; }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
+  <div class="layout">
+    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <script src="/js/sidebar.js"></script>
+
+    <main class="main-content" id="main-content">
+      <header class="main-header">
+        <a href="/blog" class="back-link" aria-label="Back to Blog">←</a>
+        <h1>Blog</h1>
+      </header>
+
+      <div class="article-wrapper">
+        <div class="article-meta">
+          <a href="https://x.com/nichxbt" target="_blank" rel="noopener noreferrer">@nichxbt</a>
+          <span>·</span>
+          <span>February 10, 2026</span>
+          <span>·</span>
+          <span>6 min read</span>
+        </div>
+
+        <article>
+          <h1>How to Control Twitter with AI Using MCP (Claude, Cursor, GPT)</h1>
+
+          <p>What if you could tell your AI assistant <em>"Unfollow everyone who hasn't tweeted in 6 months"</em> and it just... did it? That's what <strong>Model Context Protocol (MCP)</strong> enables. And with XActions, you can set it up in under 5 minutes.</p>
+
+          <h2>What is MCP?</h2>
+
+          <p><strong>Model Context Protocol</strong> is an open standard (created by Anthropic) that lets AI assistants connect to external tools. Think of it as "USB for AI" — a universal plug that lets any AI client (Claude, Cursor, Windsurf) talk to any tool server (XActions, GitHub, databases, etc.).</p>
+
+          <p>Before MCP, if you wanted Claude to interact with Twitter, you'd need to:</p>
+          <ol>
+            <li>Write custom API integration code</li>
+            <li>Handle authentication yourself</li>
+            <li>Parse responses into a format Claude understands</li>
+            <li>Deal with errors, rate limits, pagination...</li>
+          </ol>
+
+          <p>With MCP, all of that is handled by the <strong>MCP server</strong> (XActions). You just install it, add one config line, and start talking to your AI in natural language.</p>
+
+          <h2>What Can You Do?</h2>
+
+          <p>XActions MCP server exposes <strong>140+ tools</strong> to your AI assistant. Here are some examples:</p>
+
+          <div class="example-box">
+            <div class="prompt">"Scrape the profile of @elonmusk"</div>
+            <div class="response">→ Returns followers, following, bio, join date, tweet count, verification status</div>
+          </div>
+          <div class="example-box">
+            <div class="prompt">"Unfollow everyone who doesn't follow me back"</div>
+            <div class="response">→ Checks your following list, identifies non-followers, unfollows them one by one</div>
+          </div>
+          <div class="example-box">
+            <div class="prompt">"Find the top 10 tweets about AI from the last week"</div>
+            <div class="response">→ Scrapes search results, ranks by engagement, returns summaries</div>
+          </div>
+          <div class="example-box">
+            <div class="prompt">"Draft a tweet thread about the future of open source"</div>
+            <div class="response">→ Generates a multi-tweet thread matching your writing voice</div>
+          </div>
+          <div class="example-box">
+            <div class="prompt">"Download this video: [tweet URL]"</div>
+            <div class="response">→ Extracts highest-quality MP4 and returns a download link</div>
+          </div>
+
+          <h2>Setup: 3 Steps, 5 Minutes</h2>
+
+          <h3>Step 1: Prerequisites</h3>
+          <p>Make sure you have <strong>Node.js 18+</strong> installed. Check with:</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)" aria-label="Copy node check command">Copy</button>
+            <pre><code>node --version</code></pre>
+          </div>
+
+          <h3>Step 2: Set Your Auth Cookie</h3>
+          <p>XActions needs your X/Twitter session cookie to act on your behalf. Get it from your browser:</p>
+          <ol>
+            <li>Go to <a href="https://x.com" target="_blank" rel="noopener noreferrer">x.com</a> and make sure you're logged in</li>
+            <li>Open DevTools (F12) → Application tab → Cookies → x.com</li>
+            <li>Find the cookie named <code>auth_token</code> and copy its value</li>
+          </ol>
+
+          <p>Set it as an environment variable:</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)" aria-label="Copy environment variable">Copy</button>
+            <pre><code># macOS/Linux
+export X_AUTH_TOKEN="your_auth_token_here"
+
+# Windows PowerShell
+$env:X_AUTH_TOKEN="your_auth_token_here"</code></pre>
+          </div>
+
+          <div class="tip-box">
+            <strong>🔒 Security:</strong> Your auth token stays local. XActions runs entirely on your machine — nothing is sent to external servers.
+          </div>
+
+          <h3>Step 3: Add to Your AI Client</h3>
+
+          <div class="client-card">
+            <h3>Claude Desktop</h3>
+            <p>Add to <code>claude_desktop_config.json</code>:</p>
+            <div class="code-block">
+              <button class="copy-btn" onclick="copyCode(this)" aria-label="Copy Claude config">Copy</button>
+              <pre><code>{
+  "mcpServers": {
+    "xactions": {
+      "command": "npx",
+      "args": ["-y", "xactions", "mcp"],
+      "env": {
+        "X_AUTH_TOKEN": "your_auth_token_here"
+      }
+    }
+  }
+}</code></pre>
+            </div>
+            <p>Config file location:</p>
+            <ul>
+              <li><strong>macOS:</strong> <code>~/Library/Application Support/Claude/claude_desktop_config.json</code></li>
+              <li><strong>Windows:</strong> <code>%APPDATA%\Claude\claude_desktop_config.json</code></li>
+            </ul>
+          </div>
+
+          <div class="client-card">
+            <h3>Cursor</h3>
+            <p>Add to <code>.cursor/mcp.json</code> in your project:</p>
+            <div class="code-block">
+              <button class="copy-btn" onclick="copyCode(this)" aria-label="Copy Cursor config">Copy</button>
+              <pre><code>{
+  "mcpServers": {
+    "xactions": {
+      "command": "npx",
+      "args": ["-y", "xactions", "mcp"],
+      "env": {
+        "X_AUTH_TOKEN": "your_auth_token_here"
+      }
+    }
+  }
+}</code></pre>
+            </div>
+          </div>
+
+          <div class="client-card">
+            <h3>Windsurf</h3>
+            <p>Add to <code>~/.codeium/windsurf/mcp_config.json</code>:</p>
+            <div class="code-block">
+              <button class="copy-btn" onclick="copyCode(this)" aria-label="Copy Windsurf config">Copy</button>
+              <pre><code>{
+  "mcpServers": {
+    "xactions": {
+      "command": "npx",
+      "args": ["-y", "xactions", "mcp"],
+      "env": {
+        "X_AUTH_TOKEN": "your_auth_token_here"
+      }
+    }
+  }
+}</code></pre>
+            </div>
+          </div>
+
+          <div class="tip-box">
+            <strong>💡 Pro tip:</strong> Use the XActions CLI to auto-generate the config: <code>npx xactions mcp-config --client claude --write</code>
+          </div>
+
+          <h2>Tool Categories</h2>
+
+          <p>The 140+ tools are organized into categories:</p>
+
+          <ul>
+            <li><strong>Scraping</strong> — profiles, tweets, followers, following, search, hashtags, media</li>
+            <li><strong>Actions</strong> — follow, unfollow, like, unlike, repost, post, reply, DM</li>
+            <li><strong>Analytics</strong> — engagement rates, best time to post, sentiment analysis</li>
+            <li><strong>Content</strong> — AI tweet writer, thread composer, voice analyzer</li>
+            <li><strong>Account</strong> — detect unfollowers, audit followers, check shadowban</li>
+            <li><strong>Export</strong> — JSON, CSV, bookmarks, media download</li>
+          </ul>
+
+          <h2>How It Works Under the Hood</h2>
+
+          <p>When you say "scrape @elonmusk's profile" to Claude:</p>
+
+          <ol>
+            <li><strong>Claude</strong> recognizes the intent and calls the <code>x_scrape_profile</code> MCP tool</li>
+            <li><strong>XActions MCP server</strong> receives the tool call and opens a Puppeteer browser</li>
+            <li><strong>Puppeteer</strong> navigates to x.com/elonmusk and scrapes the page using <code>data-testid</code> selectors</li>
+            <li><strong>XActions</strong> returns structured JSON data back through MCP</li>
+            <li><strong>Claude</strong> formats the data and presents it to you in natural language</li>
+          </ol>
+
+          <p>All of this happens locally on your machine. No data leaves your computer except the normal browser requests to x.com.</p>
+
+          <h2>Tips for Best Results</h2>
+
+          <ul>
+            <li><strong>Be specific</strong> — "Unfollow the 50 accounts I followed most recently that don't follow me back" is better than "clean up my account"</li>
+            <li><strong>Start small</strong> — test with read-only operations (scraping) before write operations (posting, unfollowing)</li>
+            <li><strong>Check the output</strong> — always review what the AI did before moving on, especially for destructive actions</li>
+            <li><strong>Use Claude's artifacts</strong> — ask Claude to format scraped data as tables or charts</li>
+          </ul>
+
+          <!-- Related Posts -->
+          <div class="related-posts">
+            <h3>Related Posts</h3>
+            <a href="/blog/how-to-mass-unfollow-twitter" class="related-link">
+              How to Mass Unfollow on Twitter/X in 2026 (Free)
+              <span>Four methods: browser script, CLI, AI, and non-follower filter</span>
+            </a>
+            <a href="/blog/best-twitter-automation-tools" class="related-link">
+              7 Best Free Twitter/X Automation Tools in 2026
+              <span>Comparing XActions, Tweepy, Nitter, snscrape, and more</span>
+            </a>
+          </div>
+
+          <!-- CTA -->
+          <div class="article-cta">
+            <h3>Ready to give your AI full Twitter access?</h3>
+            <p>XActions MCP server — 140+ tools, free, runs locally.</p>
+            <div class="cta-buttons">
+              <a href="/mcp" class="cta-btn cta-primary">Full MCP Docs →</a>
+              <a href="https://github.com/nirholas/XActions" target="_blank" rel="noopener noreferrer" class="cta-btn cta-secondary">GitHub ⭐</a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </main>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-brand"><h3>⚡ XActions</h3><p>Free, open-source X/Twitter automation toolkit. Mass unfollow, detect unfollowers, auto-engage, and grow your audience without expensive API fees.</p></div>
+      <div class="footer-links"><h4>Product</h4><a href="/features">Features</a><a href="/video">Video Downloader</a><a href="/pricing">Pricing</a><a href="/run">Run Scripts</a><a href="/dashboard">Dashboard</a></div>
+      <div class="footer-links"><h4>AI & Developers</h4><a href="/ai">AI Integration</a><a href="/ai-api">AI API</a><a href="/mcp">MCP Server</a><a href="/docs">Documentation</a></div>
+      <div class="footer-links"><h4>Tutorials</h4><a href="/tutorials">All Tutorials</a><a href="/tutorials/unfollow">Mass Unfollow</a><a href="/tutorials/scrapers">Scrapers</a><a href="/tutorials/mcp">MCP Setup</a></div>
+      <div class="footer-links"><h4>Company</h4><a href="/about">About</a><a href="https://github.com/nirholas/XActions" target="_blank" rel="noopener noreferrer">GitHub</a><a href="https://x.com/nichxbt" target="_blank" rel="noopener noreferrer">Twitter</a><a href="/terms">Terms</a><a href="/privacy">Privacy</a></div>
+    </div>
+    <div class="footer-bottom"><p>&copy; 2026 XActions. Not affiliated with X Corp.</p><p>Made with ❤️ by <a href="https://x.com/nichxbt" target="_blank" rel="noopener noreferrer">@nichxbt</a></p></div>
+  </footer>
+
+  <script>
+    function copyCode(btn) {
+      const block = btn.closest('.code-block');
+      const code = block.querySelector('code') || block.querySelector('pre');
+      if (!code) return;
+      navigator.clipboard.writeText(code.textContent).then(() => {
+        btn.textContent = '✅ Copied!'; btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+      }).catch(() => { btn.textContent = 'Failed'; setTimeout(() => { btn.textContent = 'Copy'; }, 2000); });
+    }
+  </script>
+</body>
+</html>

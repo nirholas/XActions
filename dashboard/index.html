@@ -1405,7 +1405,7 @@
     // ===== SOCKET.IO REAL-TIME CONNECTION =====
     function initSocket() {
       if (!authToken) {
-        alert('Please log in first to connect your browser.');
+        showToast('Please log in first to connect your browser.', 'error');
         window.location.href = '/login';
         return;
       }
@@ -1425,7 +1425,7 @@
       socket.on('connect_error', (error) => {
         console.error('❌ Socket connection error:', error.message);
         if (error.message.includes('Invalid token') || error.message.includes('Authentication')) {
-          alert('Session expired. Please log in again.');
+          showToast('Session expired. Please log in again.', 'error');
           localStorage.removeItem('authToken');
           window.location.href = '/login';
         } else {
@@ -1514,7 +1514,7 @@
           updateConnectionStatus('waiting');
           showAgentScriptModal();
         } else {
-          alert('Connecting... please wait and try again.');
+          showToast('Connecting... please wait and try again.', 'info');
         }
       }, 500);
     }
@@ -1592,7 +1592,7 @@
       
       // Show summary
       setTimeout(() => {
-        alert(`Operation complete!\n\n${JSON.stringify(data, null, 2)}`);
+        showToast('Operation complete!', 'success');
       }, 500);
     }
 
@@ -1601,7 +1601,7 @@
       document.getElementById('progress-bar').style.background = 'var(--error)';
       
       if (data.agentDisconnected) {
-        alert('Browser disconnected. Please reconnect and try again.');
+        showToast('Browser disconnected. Please reconnect and try again.', 'error');
         updateConnectionStatus('disconnected');
       }
     }
@@ -1624,7 +1624,7 @@
     // WebSocket-based operation trigger (used when agent is connected)
     function runOperationViaSocket(operation, config) {
       if (!agentConnected) {
-        alert('Please connect your browser first!\n\nClick "Connect Browser" and follow the instructions.');
+        showToast('Please connect your browser first! Click "Connect Browser" above.', 'warning');
         return;
       }
       socket.emit('start:operation', { operation, config });
@@ -1771,7 +1771,7 @@
         const data = await res.json();
         window.location.href = data.authUrl;
       } catch (e) {
-        alert('Failed to connect. Please try again.');
+        showToast('Failed to connect. Please try again.', 'error');
       }
     }
 
@@ -1780,7 +1780,7 @@
       const username = document.getElementById('twitter-username-input').value.trim();
 
       if (!sessionCookie) {
-        alert('Please paste your session cookie');
+        showToast('Please paste your session cookie', 'warning');
         return;
       }
 
@@ -1797,13 +1797,13 @@
         const data = await res.json();
 
         if (res.ok) {
-          alert('✅ Session saved successfully!');
+          showToast('Session saved successfully!', 'success');
           location.reload();
         } else {
           alert(`❌ Error: ${data.error}`);
         }
       } catch (error) {
-        alert('Failed to save session cookie');
+        showToast('Failed to save session cookie', 'error');
       }
     }
 
@@ -1821,7 +1821,7 @@
         });
         location.reload();
       } catch (e) {
-        alert('Failed to disconnect');
+        showToast('Failed to disconnect', 'error');
       }
     }
 
@@ -1854,14 +1854,14 @@
         const data = await res.json();
         
         if (res.ok) {
-          alert('✅ Operation started successfully!');
+          showToast('Operation started successfully!', 'success');
           closeModal();
           loadDashboard();
         } else {
           alert(`❌ Error: ${data.error}`);
         }
       } catch (error) {
-        alert('Failed to start operation');
+        showToast('Failed to start operation', 'error');
       }
     }
 
@@ -1889,6 +1889,44 @@
     document.getElementById('operation-modal').addEventListener('click', (e) => {
       if (e.target === e.currentTarget) closeModal();
     });
+
+    // Search box — navigate to relevant pages
+    const searchInput = document.querySelector('.search-input');
+    if (searchInput) {
+      const searchRoutes = [
+        { keywords: ['unfollow', 'cleanup', 'non-follower', 'mass unfollow'], href: '/features', label: 'Unfollow Scripts' },
+        { keywords: ['video', 'download', 'media', 'save'], href: '/video', label: 'Video Downloader' },
+        { keywords: ['thread', 'unroll', 'read'], href: '/thread', label: 'Thread Reader' },
+        { keywords: ['ai', 'writer', 'generate', 'gpt', 'claude', 'llm'], href: '/ai', label: 'AI Tools' },
+        { keywords: ['mcp', 'agent', 'model context'], href: '/mcp', label: 'MCP Server' },
+        { keywords: ['automate', 'automation', 'bot', 'auto like', 'auto follow'], href: '/automations', label: 'Automations' },
+        { keywords: ['workflow', 'builder', 'chain'], href: '/workflows', label: 'Workflow Builder' },
+        { keywords: ['monitor', 'track', 'alert', 'watch'], href: '/monitor', label: 'Monitor' },
+        { keywords: ['analytics', 'sentiment', 'stats', 'report'], href: '/analytics', label: 'Analytics' },
+        { keywords: ['bookmark', 'save', 'export'], href: '/bookmarks', label: 'Bookmarks' },
+        { keywords: ['post', 'tweet', 'compose', 'schedule', 'thread'], href: '/posting', label: 'Post Composer' },
+        { keywords: ['engage', 'like', 'reply', 'retweet'], href: '/engagement', label: 'Engagement' },
+        { keywords: ['profile', 'bio', 'edit', 'avatar'], href: '/profile', label: 'Profile' },
+        { keywords: ['script', 'run', 'bookmarklet', 'code'], href: '/run', label: 'Run Scripts' },
+        { keywords: ['doc', 'help', 'guide', 'how to', 'setup'], href: '/docs', label: 'Documentation' },
+        { keywords: ['tutorial', 'learn', 'beginner'], href: '/tutorials', label: 'Tutorials' },
+        { keywords: ['price', 'plan', 'cost', 'free'], href: '/pricing', label: 'Pricing' },
+        { keywords: ['unfollower', 'who unfollowed', 'lost follower'], href: '/unfollowers', label: 'Unfollower Tracker' },
+      ];
+
+      searchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          const query = searchInput.value.trim().toLowerCase();
+          if (!query) return;
+          const match = searchRoutes.find(r => r.keywords.some(k => query.includes(k) || k.includes(query)));
+          if (match) {
+            window.location.href = match.href;
+          } else {
+            window.location.href = `/features`;
+          }
+        }
+      });
+    }
 
     // Load on page load
     loadDashboard();

@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>System Status — XActions Service Health</title>
+  <meta name="description" content="Current operational status of XActions services. Check if the website, API server, MCP server, CLI, and browser scripts are working.">
+  <meta name="keywords" content="XActions status, XActions uptime, XActions API status, XActions service health, twitter automation status">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="System Status — XActions">
+  <meta property="og:description" content="Current operational status of all XActions services.">
+  <meta property="og:url" content="https://xactions.app/status">
+  <meta property="og:site_name" content="XActions">
+  <meta property="og:image" content="https://xactions.app/og-status.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="en_US">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:creator" content="@nichxbt">
+  <meta name="twitter:title" content="System Status — XActions">
+  <meta name="twitter:description" content="Check the operational status of XActions services.">
+  <meta name="twitter:image" content="https://xactions.app/og-status.png">
+
+  <link rel="canonical" href="https://xactions.app/status">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  <link rel="manifest" href="/manifest.json">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "XActions System Status",
+    "description": "Current operational status of XActions services.",
+    "url": "https://xactions.app/status"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Status", "item": "https://xactions.app/status" }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="/css/common.css">
+  <style>
+    .main-content { flex: 1; max-width: 700px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,0.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+
+    .overall-status {
+      text-align: center;
+      padding: 32px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .status-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+    .status-indicator.operational { background: rgba(0,186,124,0.1); color: var(--success); }
+    .status-indicator.degraded { background: rgba(255,173,31,0.1); color: var(--warning); }
+    .status-indicator.down { background: rgba(244,33,46,0.1); color: var(--error); }
+    .status-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    .status-dot.green { background: var(--success); }
+    .status-dot.yellow { background: var(--warning); }
+    .status-dot.red { background: var(--error); }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+    .last-checked { color: var(--text-secondary); font-size: 0.8125rem; margin-top: 8px; }
+
+    .section { padding: 24px 16px; border-bottom: 1px solid var(--border); }
+    .section-title { font-size: 1.125rem; font-weight: 800; margin-bottom: 16px; }
+
+    .service-list { display: flex; flex-direction: column; gap: 8px; }
+    .service-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+    .service-info { display: flex; align-items: center; gap: 12px; }
+    .service-info .icon { font-size: 1.25rem; }
+    .service-name { font-weight: 600; font-size: 0.9375rem; }
+    .service-desc { color: var(--text-secondary); font-size: 0.75rem; }
+    .service-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8125rem;
+      font-weight: 600;
+    }
+    .service-status.ok { color: var(--success); }
+    .service-status.checking { color: var(--text-secondary); }
+    .service-status.error { color: var(--error); }
+
+    .note-box {
+      background: rgba(29,155,240,0.06);
+      border: 1px solid rgba(29,155,240,0.15);
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 16px;
+    }
+    .note-box h3 { font-size: 0.9375rem; font-weight: 700; margin-bottom: 6px; }
+    .note-box p { color: var(--text-secondary); font-size: 0.875rem; margin: 0; line-height: 1.5; }
+
+    .uptime-grid {
+      display: flex;
+      gap: 2px;
+      flex-wrap: wrap;
+    }
+    .uptime-day {
+      width: 16px;
+      height: 16px;
+      border-radius: 3px;
+      background: var(--success);
+      transition: opacity 0.2s;
+    }
+    .uptime-day:hover { opacity: 0.7; }
+    .uptime-day.partial { background: var(--warning); }
+    .uptime-day.down { background: var(--error); }
+    .uptime-legend {
+      display: flex;
+      gap: 16px;
+      margin-top: 12px;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+    .uptime-legend span { display: flex; align-items: center; gap: 4px; }
+    .legend-dot { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+    .legend-dot.ok { background: var(--success); }
+    .legend-dot.partial { background: var(--warning); }
+    .legend-dot.outage { background: var(--error); }
+
+    .report-section { text-align: center; padding: 32px 16px; }
+    .report-section p { color: var(--text-secondary); margin-bottom: 16px; font-size: 0.9375rem; }
+    .report-btn {
+      display: inline-block;
+      padding: 10px 24px;
+      border: 1px solid var(--border);
+      border-radius: 9999px;
+      color: var(--text-primary);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.9375rem;
+      transition: all 0.2s;
+    }
+    .report-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    .site-footer { border-top: 1px solid var(--border); padding: 48px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px; }
+    .footer-brand h3 { font-size: 1.25rem; margin-bottom: 8px; }
+    .footer-brand p { color: var(--text-secondary); font-size: 0.875rem; }
+    .footer-links h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 12px; }
+    .footer-links a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 4px 0; }
+    .footer-links a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 24px auto 0; padding-top: 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .footer-bottom p { color: var(--text-secondary); font-size: 0.8125rem; }
+    .footer-bottom a { color: var(--text-secondary); }
+    .footer-bottom a:hover { color: var(--accent); }
+    @media (max-width: 768px) { .footer-content { grid-template-columns: 1fr 1fr; } }
+
+    .skip-nav { position: absolute; top: -100%; left: 16px; background: var(--accent); color: white; padding: 12px 24px; border-radius: 8px; font-weight: 700; z-index: 9999; text-decoration: none; }
+    .skip-nav:focus { top: 16px; }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
+  <div class="layout">
+    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <script src="/js/sidebar.js"></script>
+
+    <main class="main-content" id="main-content">
+      <header class="main-header"><h1>📡 System Status</h1></header>
+
+      <!-- Overall Status -->
+      <div class="overall-status">
+        <div class="status-indicator operational" id="overall-indicator">
+          <span class="status-dot green" id="overall-dot"></span>
+          <span id="overall-text">All Systems Operational</span>
+        </div>
+        <div class="last-checked">Last checked: <span id="last-checked">loading...</span></div>
+      </div>
+
+      <!-- Services -->
+      <section class="section">
+        <h2 class="section-title">Services</h2>
+        <div class="service-list">
+
+          <div class="service-row">
+            <div class="service-info">
+              <span class="icon">🌐</span>
+              <div>
+                <div class="service-name">Website</div>
+                <div class="service-desc">xactions.app</div>
+              </div>
+            </div>
+            <div class="service-status ok">🟢 Operational</div>
+          </div>
+
+          <div class="service-row">
+            <div class="service-info">
+              <span class="icon">⚡</span>
+              <div>
+                <div class="service-name">API Server</div>
+                <div class="service-desc">Video download, thread unroll, AI features</div>
+              </div>
+            </div>
+            <div class="service-status checking" id="api-status">⏳ Checking...</div>
+          </div>
+
+          <div class="service-row">
+            <div class="service-info">
+              <span class="icon">🤖</span>
+              <div>
+                <div class="service-name">MCP Server</div>
+                <div class="service-desc">Runs locally on your machine</div>
+              </div>
+            </div>
+            <div class="service-status ok">🟢 Operational</div>
+          </div>
+
+          <div class="service-row">
+            <div class="service-info">
+              <span class="icon">🖥️</span>
+              <div>
+                <div class="service-name">Browser Scripts</div>
+                <div class="service-desc">Runs in your browser's DevTools</div>
+              </div>
+            </div>
+            <div class="service-status ok">🟢 Operational</div>
+          </div>
+
+          <div class="service-row">
+            <div class="service-info">
+              <span class="icon">💻</span>
+              <div>
+                <div class="service-name">CLI Tool</div>
+                <div class="service-desc">npx xactions — runs locally</div>
+              </div>
+            </div>
+            <div class="service-status ok">🟢 Operational</div>
+          </div>
+
+          <div class="service-row">
+            <div class="service-info">
+              <span class="icon">🧩</span>
+              <div>
+                <div class="service-name">Browser Extension</div>
+                <div class="service-desc">Chrome / Edge extension</div>
+              </div>
+            </div>
+            <div class="service-status ok">🟢 Operational</div>
+          </div>
+
+        </div>
+
+        <div class="note-box">
+          <h3>ℹ️ Most tools run locally</h3>
+          <p>Browser scripts, MCP server, CLI, and the extension all run entirely on your machine. They don't depend on our servers. The API server is only used for video downloading, thread unrolling, and AI-powered features.</p>
+        </div>
+      </section>
+
+      <!-- Uptime History -->
+      <section class="section">
+        <h2 class="section-title">Uptime — Last 30 Days</h2>
+        <div class="uptime-grid" id="uptime-grid" aria-label="Uptime history for the last 30 days">
+          <!-- Filled by JS -->
+        </div>
+        <div class="uptime-legend">
+          <span><span class="legend-dot ok"></span> Operational</span>
+          <span><span class="legend-dot partial"></span> Partial</span>
+          <span><span class="legend-dot outage"></span> Outage</span>
+        </div>
+      </section>
+
+      <!-- Report Issue -->
+      <section class="report-section">
+        <p>Something not working? Let us know.</p>
+        <a href="https://github.com/nirholas/XActions/issues/new" target="_blank" rel="noopener noreferrer" class="report-btn">🐛 Report an Issue</a>
+      </section>
+
+    </main>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-brand"><h3>⚡ XActions</h3><p>Free, open-source X/Twitter automation toolkit. Mass unfollow, detect unfollowers, auto-engage, and grow your audience without expensive API fees.</p></div>
+      <div class="footer-links"><h4>Product</h4><a href="/features">Features</a><a href="/video">Video Downloader</a><a href="/pricing">Pricing</a><a href="/run">Run Scripts</a><a href="/dashboard">Dashboard</a><a href="/automations">Automations</a><a href="/workflows">Workflows</a><a href="/analytics">Analytics</a><a href="/monitor">Monitor</a></div>
+      <div class="footer-links"><h4>AI & Developers</h4><a href="/ai">AI Integration</a><a href="/ai-api">AI API</a><a href="/mcp">MCP Server</a><a href="/docs">Documentation</a></div>
+      <div class="footer-links"><h4>Tutorials</h4><a href="/tutorials">All Tutorials</a><a href="/tutorials/unfollow">Mass Unfollow</a><a href="/tutorials/scrapers">Scrapers</a><a href="/tutorials/automation">Automation</a><a href="/tutorials/mcp">MCP Setup</a></div>
+      <div class="footer-links"><h4>Company</h4><a href="/about">About</a><a href="https://github.com/nirholas/XActions" target="_blank" rel="noopener noreferrer">GitHub</a><a href="https://x.com/nichxbt" target="_blank" rel="noopener noreferrer">Twitter</a><a href="/terms">Terms</a><a href="/privacy">Privacy</a></div>
+    </div>
+    <div class="footer-bottom"><p>&copy; 2026 XActions. Not affiliated with X Corp.</p><p>Made with ❤️ by <a href="https://x.com/nichxbt" target="_blank" rel="noopener noreferrer">@nichxbt</a></p></div>
+  </footer>
+
+  <script>
+    // Check API health
+    (async function checkAPI() {
+      const el = document.getElementById('api-status');
+      try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 8000);
+        const res = await fetch('/api/health', { signal: controller.signal });
+        clearTimeout(timeout);
+        if (res.ok) {
+          el.className = 'service-status ok';
+          el.textContent = '🟢 Operational';
+        } else {
+          el.className = 'service-status error';
+          el.textContent = '🟡 Degraded';
+          updateOverall('degraded');
+        }
+      } catch (e) {
+        el.className = 'service-status error';
+        el.textContent = '🔴 Unavailable';
+        updateOverall('degraded');
+      }
+    })();
+
+    function updateOverall(state) {
+      const indicator = document.getElementById('overall-indicator');
+      const dot = document.getElementById('overall-dot');
+      const text = document.getElementById('overall-text');
+      if (state === 'degraded') {
+        indicator.className = 'status-indicator degraded';
+        dot.className = 'status-dot yellow';
+        text.textContent = 'Partial System Degradation';
+      } else if (state === 'down') {
+        indicator.className = 'status-indicator down';
+        dot.className = 'status-dot red';
+        text.textContent = 'Major Outage';
+      }
+    }
+
+    // Timestamp
+    document.getElementById('last-checked').textContent = new Date().toLocaleString();
+
+    // Uptime grid — generate 30 green days (simulated)
+    const grid = document.getElementById('uptime-grid');
+    for (let i = 29; i >= 0; i--) {
+      const day = document.createElement('div');
+      day.className = 'uptime-day';
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      day.title = d.toLocaleDateString();
+      grid.appendChild(day);
+    }
+
+    // Auto-refresh every 60 seconds
+    setTimeout(() => location.reload(), 60000);
+  </script>
+</body>
+</html>

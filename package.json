@@ -64,6 +64,9 @@
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",
     "@prisma/client": "^5.7.1",
+    "@remotion/cli": "^4.0.428",
+    "@remotion/player": "^4.0.428",
+    "@remotion/renderer": "^4.0.428",
     "axios": "^1.6.2",
     "bcryptjs": "^2.4.3",
     "better-sqlite3": "^11.10.0",
@@ -90,14 +93,15 @@
     "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2",
     "redis": "^4.6.11",
+    "remotion": "^4.0.428",
     "socket.io": "^4.8.3",
     "stripe": "^14.10.0"
   },
   "optionalDependencies": {
     "@atproto/api": "^0.13.35",
-    "@x402/core": "^0.1.0",
-    "@x402/evm": "^0.1.0",
-    "@x402/express": "^0.1.0",
+    "@x402/core": "npm:null@^0.1.0",
+    "@x402/evm": "npm:null@^0.1.0",
+    "@x402/express": "npm:null@^0.1.0",
     "viem": "^2.0.0"
   },
   "devDependencies": {

@@ -317,4 +317,3 @@ class EngagementNetwork {
 }
 
 export { EngagementNetwork };
-export default EngagementNetwork;

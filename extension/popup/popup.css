@@ -189,6 +189,38 @@ body::-webkit-scrollbar-thumb {
 .btn-emergency:hover {
   opacity: 0.85;
 }
+.btn-emergency:active {
+  transform: scale(0.88);
+  opacity: 0.6;
+}
+
+.btn-pause {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+.btn-pause:hover {
+  border-color: var(--warning);
+  color: var(--warning);
+}
+.btn-pause:active {
+  transform: scale(0.88);
+  opacity: 0.7;
+}
+.btn-pause.paused {
+  background: rgba(255, 215, 0, 0.12);
+  border-color: var(--warning);
+  color: var(--warning);
+}
 
 /* ============================================ */
 /* ACCOUNT INFO */
@@ -327,6 +359,9 @@ body::-webkit-scrollbar-thumb {
   color: var(--text-primary);
   border-color: var(--border);
 }
+.cat-filter:active {
+  transform: scale(0.95);
+}
 .cat-filter.active {
   background: rgba(29, 155, 240, 0.12);
   color: var(--accent);
@@ -433,6 +468,9 @@ body::-webkit-scrollbar-thumb {
   border-color: var(--text-secondary);
   color: var(--text-primary);
 }
+.speed-btn:active {
+  transform: scale(0.93);
+}
 .speed-btn.active {
   background: rgba(29, 155, 240, 0.12);
   border-color: var(--accent);
@@ -481,9 +519,27 @@ body::-webkit-scrollbar-thumb {
 }
 .automation-card.running {
   border-color: var(--accent);
+  box-shadow: 0 0 12px rgba(29, 155, 240, 0.15), inset 0 0 0 1px rgba(29, 155, 240, 0.1);
+  animation: cardGlow 3s ease-in-out infinite;
+}
+@keyframes cardGlow {
+  0%, 100% { box-shadow: 0 0 12px rgba(29, 155, 240, 0.15), inset 0 0 0 1px rgba(29, 155, 240, 0.1); }
+  50% { box-shadow: 0 0 20px rgba(29, 155, 240, 0.25), inset 0 0 0 1px rgba(29, 155, 240, 0.2); }
 }
 .automation-card.card-hidden {
   display: none;
+}
+
+.no-results-msg {
+  text-align: center;
+  padding: 24px 16px;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+.no-results-msg .no-results-icon {
+  font-size: 28px;
+  display: block;
+  margin-bottom: 6px;
 }
 
 .card-header {
@@ -572,6 +628,11 @@ body::-webkit-scrollbar-thumb {
 .btn-settings:hover,
 .btn-toggle:hover {
   background: var(--bg-hover);
+}
+.btn-settings:active,
+.btn-toggle:active {
+  transform: scale(0.9);
+  opacity: 0.7;
 }
 
 /* Settings Panel */
@@ -785,6 +846,10 @@ body::-webkit-scrollbar-thumb {
 .btn-secondary:hover {
   border-color: var(--accent);
 }
+.btn-secondary:active {
+  transform: scale(0.97);
+  opacity: 0.7;
+}
 
 .btn-danger {
   background: rgba(244, 33, 46, 0.1);
@@ -799,6 +864,10 @@ body::-webkit-scrollbar-thumb {
 .btn-danger:hover {
   background: rgba(244, 33, 46, 0.2);
   border-color: var(--danger);
+}
+.btn-danger:active {
+  transform: scale(0.97);
+  opacity: 0.7;
 }
 
 .settings-footer {
@@ -939,6 +1008,10 @@ body::-webkit-scrollbar-thumb {
 }
 .btn-primary:hover {
   background: var(--accent-hover);
+}
+.btn-primary:active {
+  transform: scale(0.97);
+  opacity: 0.8;
 }
 
 .onboarding-enable {

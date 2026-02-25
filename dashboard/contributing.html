@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contribute to XActions — Open Source Twitter Tools</title>
+  <meta name="description" content="Help build the best free Twitter automation toolkit. Report bugs, submit PRs, improve docs, or spread the word. XActions is open source and community-driven.">
+  <meta name="keywords" content="contribute XActions, open source twitter tools, XActions GitHub, twitter automation open source, contribute to open source, XActions community">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Contribute to XActions — Open Source Twitter Tools">
+  <meta property="og:description" content="Help build the best free Twitter automation toolkit. Open source, community-driven, MIT license.">
+  <meta property="og:url" content="https://xactions.app/contributing">
+  <meta property="og:site_name" content="XActions">
+  <meta property="og:image" content="https://xactions.app/og-contributing.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="en_US">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:creator" content="@nichxbt">
+  <meta name="twitter:title" content="Contribute to XActions">
+  <meta name="twitter:description" content="Help build the best free Twitter automation toolkit. Open source, MIT license.">
+  <meta name="twitter:image" content="https://xactions.app/og-contributing.png">
+
+  <link rel="canonical" href="https://xactions.app/contributing">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  <link rel="manifest" href="/manifest.json">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to Contribute to XActions",
+    "description": "Step-by-step guide to contributing to the XActions open source project.",
+    "url": "https://xactions.app/contributing",
+    "step": [
+      { "@type": "HowToStep", "name": "Fork the repository", "text": "Fork github.com/nirholas/XActions to your GitHub account." },
+      { "@type": "HowToStep", "name": "Create a branch", "text": "Create a feature branch: git checkout -b feature/your-feature" },
+      { "@type": "HowToStep", "name": "Make changes", "text": "Write your code, tests, and documentation." },
+      { "@type": "HowToStep", "name": "Submit a PR", "text": "Push your branch and open a Pull Request." }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Contributing", "item": "https://xactions.app/contributing" }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="/css/common.css">
+  <style>
+    .main-content { flex: 1; max-width: 700px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,0.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .page-intro { padding: 24px 16px; border-bottom: 1px solid var(--border); }
+    .page-intro p { color: var(--text-secondary); font-size: 0.9375rem; line-height: 1.6; }
+
+    .hero-cta { text-align: center; padding: 32px 16px; border-bottom: 1px solid var(--border); background: linear-gradient(180deg, rgba(29,155,240,0.05) 0%, transparent 100%); }
+    .hero-cta h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: 8px; }
+    .hero-cta p { color: var(--text-secondary); margin-bottom: 16px; }
+    .hero-cta a { display: inline-block; padding: 12px 32px; background: var(--accent); color: white; border-radius: 9999px; text-decoration: none; font-weight: 700; font-size: 1rem; transition: background 0.2s; }
+    .hero-cta a:hover { background: var(--accent-hover); }
+
+    .section { padding: 24px 16px; border-bottom: 1px solid var(--border); }
+    .section-title { font-size: 1.25rem; font-weight: 800; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+
+    .contrib-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 12px;
+      transition: border-color 0.2s;
+    }
+    .contrib-card:hover { border-color: var(--accent); }
+    .contrib-card .card-icon { font-size: 1.5rem; margin-bottom: 8px; }
+    .contrib-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
+    .contrib-card p { color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 12px; line-height: 1.5; }
+    .contrib-card a { color: var(--accent); font-weight: 600; font-size: 0.875rem; text-decoration: none; }
+    .contrib-card a:hover { text-decoration: underline; }
+
+    .steps-list { counter-reset: step; }
+    .step-item {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+      padding: 16px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+    .step-number {
+      width: 32px;
+      height: 32px;
+      background: var(--accent);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.875rem;
+      flex-shrink: 0;
+    }
+    .step-content h3 { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+    .step-content p { color: var(--text-secondary); font-size: 0.875rem; margin: 0; line-height: 1.5; }
+    .step-content code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', monospace; font-size: 0.8em; }
+
+    .types-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 500px) { .types-grid { grid-template-columns: 1fr; } }
+    .type-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      text-align: center;
+    }
+    .type-card .type-icon { font-size: 1.75rem; margin-bottom: 6px; }
+    .type-card h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 2px; }
+    .type-card p { color: var(--text-secondary); font-size: 0.75rem; margin: 0; }
+
+    .code-block { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 16px; overflow-x: auto; }
+    .code-block pre { margin: 0; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.8125rem; line-height: 1.6; white-space: pre; color: var(--text-primary); }
+
+    .structure-list { list-style: none; padding: 0; font-family: 'Monaco', 'Menlo', monospace; font-size: 0.8125rem; color: var(--text-secondary); }
+    .structure-list li { padding: 4px 0; }
+    .structure-list .dir { color: var(--accent); font-weight: 600; }
+    .structure-list .desc { color: var(--text-secondary); }
+
+    .site-footer { border-top: 1px solid var(--border); padding: 48px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px; }
+    .footer-brand h3 { font-size: 1.25rem; margin-bottom: 8px; }
+    .footer-brand p { color: var(--text-secondary); font-size: 0.875rem; }
+    .footer-links h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 12px; }
+    .footer-links a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 4px 0; }
+    .footer-links a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 24px auto 0; padding-top: 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .footer-bottom p { color: var(--text-secondary); font-size: 0.8125rem; }
+    .footer-bottom a { color: var(--text-secondary); }
+    .footer-bottom a:hover { color: var(--accent); }
+    @media (max-width: 768px) { .footer-content { grid-template-columns: 1fr 1fr; } }
+
+    .skip-nav { position: absolute; top: -100%; left: 16px; background: var(--accent); color: white; padding: 12px 24px; border-radius: 8px; font-weight: 700; z-index: 9999; text-decoration: none; }
+    .skip-nav:focus { top: 16px; }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
+  <div class="layout">
+    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <script src="/js/sidebar.js"></script>
+
+    <main class="main-content" id="main-content">
+      <header class="main-header"><h1>🤝 Contribute</h1></header>
+
+      <div class="hero-cta">
+        <h2>Help build the best free Twitter toolkit</h2>
+        <p>XActions is open source (MIT license) and community-driven. Every contribution matters.</p>
+        <a href="https://github.com/nirholas/XActions" target="_blank" rel="noopener noreferrer">⭐ Star on GitHub</a>
+      </div>
+
+      <!-- Why Contribute -->
+      <section class="section">
+        <h2 class="section-title">🎯 Why Contribute?</h2>
+        <div class="contrib-card">
+          <p style="margin-bottom:0;">
+            <strong>Learn cutting-edge tech</strong> — browser automation, MCP protocol, AI integration, Puppeteer, Express.js, Prisma.<br>
+            <strong>Get credited</strong> — every contributor is credited in the changelog and README.<br>
+            <strong>Build your portfolio</strong> — contribute to a project used by thousands of people worldwide.<br>
+            <strong>Shape the product</strong> — your features and ideas go directly into the next release.
+          </p>
+        </div>
+      </section>
+
+      <!-- Ways to Contribute -->
+      <section class="section">
+        <h2 class="section-title">🛠️ Ways to Contribute</h2>
+        <div class="types-grid">
+          <div class="type-card">
+            <div class="type-icon">🐛</div>
+            <h4>Report Bugs</h4>
+            <p>Found something broken? Open an issue.</p>
+          </div>
+          <div class="type-card">
+            <div class="type-icon">💡</div>
+            <h4>Request Features</h4>
+            <p>Have an idea? We'd love to hear it.</p>
+          </div>
+          <div class="type-card">
+            <div class="type-icon">🔧</div>
+            <h4>Submit Code</h4>
+            <p>Fix bugs, add features, improve tests.</p>
+          </div>
+          <div class="type-card">
+            <div class="type-icon">📝</div>
+            <h4>Improve Docs</h4>
+            <p>Tutorials, examples, translations.</p>
+          </div>
+          <div class="type-card">
+            <div class="type-icon">🎨</div>
+            <h4>Design & UI</h4>
+            <p>Enhance the dashboard and extension.</p>
+          </div>
+          <div class="type-card">
+            <div class="type-icon">📢</div>
+            <h4>Spread the Word</h4>
+            <p>Star, share, tweet, write about it.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- How to Submit Code -->
+      <section class="section">
+        <h2 class="section-title">🔧 Submit a Pull Request</h2>
+        <div class="steps-list">
+          <div class="step-item">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <h3>Fork &amp; Clone</h3>
+              <p>Fork <a href="https://github.com/nirholas/XActions" target="_blank" rel="noopener noreferrer">github.com/nirholas/XActions</a> and clone your fork locally.</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <h3>Create a Branch</h3>
+              <p><code>git checkout -b feature/your-feature</code> — use descriptive branch names.</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <h3>Install &amp; Develop</h3>
+              <p><code>npm install</code> → <code>cp .env.example .env</code> → <code>npx prisma generate</code> → <code>npm run dev</code></p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <h3>Make Changes</h3>
+              <p>Write clear code with comments. Follow existing patterns: <code>const</code> over <code>let</code>, async/await, <code>data-testid</code> selectors.</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-number">5</div>
+            <div class="step-content">
+              <h3>Submit PR</h3>
+              <p>Push your branch and open a Pull Request. Link related issues. Maintainers aim to respond within 48 hours.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Good First Issues -->
+      <section class="section">
+        <h2 class="section-title">🏷️ Good First Issues</h2>
+        <div class="contrib-card">
+          <p>New to the project? Start with issues labeled <strong>"good first issue"</strong> — they're beginner-friendly tasks hand-picked by maintainers.</p>
+          <a href="https://github.com/nirholas/XActions/labels/good%20first%20issue" target="_blank" rel="noopener noreferrer">Browse Good First Issues →</a>
+        </div>
+      </section>
+
+      <!-- Project Structure -->
+      <section class="section">
+        <h2 class="section-title">📁 Project Structure</h2>
+        <div class="code-block">
+          <pre><code>xactions/
+├── src/           → Core scripts, automation, MCP server, CLI
+├── api/           → Express.js backend (routes, services, middleware)
+├── dashboard/     → Static HTML frontend (dark theme, Twitter-style)
+├── scripts/       → Standalone utility scripts (40+)
+├── skills/        → 31 Agent Skill definitions
+├── docs/          → Documentation, examples, tutorials
+├── prisma/        → Database schema (PostgreSQL)
+├── extension/     → Browser extension (Chrome/Edge)
+├── bin/           → CLI entry point (xactions)
+└── tests/         → Test suite</code></pre>
+        </div>
+      </section>
+
+      <!-- Code Style -->
+      <section class="section">
+        <h2 class="section-title">🎨 Code Style</h2>
+        <div class="contrib-card">
+          <ul style="color:var(--text-secondary);font-size:0.875rem;padding-left:20px;margin:0;line-height:1.8;">
+            <li><code>const</code> over <code>let</code>, <code>async/await</code> over callbacks</li>
+            <li>Prefer <code>data-testid</code> selectors for DOM queries</li>
+            <li>Use emojis in <code>console.log</code> messages (🚀, ✅, ❌, ⏳)</li>
+            <li>Author credit: <code>// by nichxbt</code></li>
+            <li>Small, focused PRs — one feature or fix per PR</li>
+            <li>Include 1–3 second delays in any automation scripts</li>
+          </ul>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-brand"><h3>⚡ XActions</h3><p>Free, open-source X/Twitter automation toolkit. Mass unfollow, detect unfollowers, auto-engage, and grow your audience without expensive API fees.</p></div>
+      <div class="footer-links"><h4>Product</h4><a href="/features">Features</a><a href="/video">Video Downloader</a><a href="/pricing">Pricing</a><a href="/run">Run Scripts</a><a href="/dashboard">Dashboard</a><a href="/automations">Automations</a><a href="/workflows">Workflows</a><a href="/analytics">Analytics</a><a href="/monitor">Monitor</a></div>
+      <div class="footer-links"><h4>AI & Developers</h4><a href="/ai">AI Integration</a><a href="/ai-api">AI API</a><a href="/mcp">MCP Server</a><a href="/docs">Documentation</a></div>
+      <div class="footer-links"><h4>Tutorials</h4><a href="/tutorials">All Tutorials</a><a href="/tutorials/unfollow">Mass Unfollow</a><a href="/tutorials/scrapers">Scrapers</a><a href="/tutorials/automation">Automation</a><a href="/tutorials/mcp">MCP Setup</a></div>
+      <div class="footer-links"><h4>Company</h4><a href="/about">About</a><a href="https://github.com/nirholas/XActions" target="_blank" rel="noopener noreferrer">GitHub</a><a href="https://x.com/nichxbt" target="_blank" rel="noopener noreferrer">Twitter</a><a href="/terms">Terms</a><a href="/privacy">Privacy</a></div>
+    </div>
+    <div class="footer-bottom"><p>&copy; 2026 XActions. Not affiliated with X Corp.</p><p>Made with ❤️ by <a href="https://x.com/nichxbt" target="_blank" rel="noopener noreferrer">@nichxbt</a></p></div>
+  </footer>
+</body>
+</html>

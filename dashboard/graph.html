@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Social Graph Explorer — Network Visualization & Analysis | XActions</title>
+  <meta name="description" content="Visualize your X/Twitter social network — discover clusters, influencers, bridge accounts, and get follow/unfollow recommendations. Interactive force-directed graph.">
+  <meta name="keywords" content="Twitter social graph, network visualization, follower analysis, Twitter clusters, influencer detection, social network map">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Social Graph Explorer — X/Twitter Network Visualization">
+  <meta property="og:description" content="Interactive social graph visualization for X/Twitter. Discover clusters, influencers, bridges, and get smart recommendations. Free.">
+  <meta property="og:url" content="https://xactions.app/graph">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="XActions Social Graph Explorer">
+  <meta name="twitter:description" content="Visualize your X/Twitter social network. Discover clusters, influencers, connections. Free.">
+
+  <link rel="canonical" href="https://xactions.app/graph">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "XActions Social Graph Explorer",
+    "description": "Interactive social graph visualization and network analysis for X/Twitter",
+    "url": "https://xactions.app/graph",
+    "applicationCategory": "AnalyticsApplication",
+    "operatingSystem": "Web Browser",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://xactions.app"},{"@type":"ListItem","position":2,"name":"Social Graph","item":"https://xactions.app/graph"}]}
+  </script>
+
+  <script src="https://d3js.org/d3.v7.min.js" defer></script>
+  <style>
+    :root {
+      --bg-primary: #000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --text-primary: #e7e9ea;
+      --text-secondary: #8b8f94;
+      --accent: #1d9bf0;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg-primary); color: var(--text-primary); font-family: var(--font); height: 100vh; overflow: hidden; }
+
+    /* ── Nav ───────────────────────────────────────── */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 53px;
+      background: rgba(0,0,0,0.75); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between; padding: 0 24px;
+    }
+    .nav__brand { font-size: 20px; font-weight: 800; color: var(--text-primary); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+    .nav__links { display: flex; gap: 4px; }
+    .nav__link { color: var(--text-secondary); text-decoration: none; font-size: 14px; font-weight: 500; padding: 8px 14px; border-radius: 9999px; transition: all 0.2s; }
+    .nav__link:hover, .nav__link--active { background: var(--bg-tertiary); color: var(--text-primary); }
+    .nav__right { display: flex; align-items: center; gap: 8px; }
+
+    /* ── Layout ────────────────────────────────────── */
+    .layout { display: flex; height: calc(100vh - 53px); margin-top: 53px; }
+
+    /* ── Sidebar ───────────────────────────────────── */
+    .sidebar {
+      width: 300px; background: var(--bg-secondary); border-right: 1px solid var(--border);
+      display: flex; flex-direction: column; flex-shrink: 0; overflow: hidden;
+    }
+    .sidebar__section {
+      padding: 14px 16px; border-bottom: 1px solid var(--border);
+    }
+    .sidebar__title {
+      font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+      color: var(--text-secondary); margin-bottom: 10px;
+    }
+    .sidebar__scroll { flex: 1; overflow-y: auto; }
+    .sidebar__scroll::-webkit-scrollbar { width: 4px; }
+    .sidebar__scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+    /* ── Form controls ─────────────────────────────── */
+    .form-row { display: flex; gap: 8px; margin-bottom: 8px; }
+    .form-row > * { flex: 1; }
+    .input {
+      width: 100%; padding: 8px 12px; background: var(--bg-primary); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--text-primary); font-size: 13px; font-family: var(--font);
+      outline: none; transition: border-color 0.15s;
+    }
+    .input:focus { border-color: var(--accent); }
+    .input::placeholder { color: var(--text-secondary); }
+    select.input { cursor: pointer; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 8px 16px; border: none; border-radius: 9999px; font-size: 13px;
+      font-weight: 700; font-family: var(--font); cursor: pointer; transition: all 0.15s;
+    }
+    .btn--primary { background: var(--accent); color: #fff; }
+    .btn--primary:hover { background: #1a8cd8; }
+    .btn--primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn--secondary { background: var(--bg-tertiary); color: var(--text-primary); }
+    .btn--secondary:hover { background: #2c2f33; }
+    .btn--danger { background: var(--error); color: #fff; }
+    .btn--danger:hover { opacity: 0.85; }
+    .btn--sm { padding: 5px 12px; font-size: 12px; }
+    .btn--full { width: 100%; }
+
+    /* ── Card ──────────────────────────────────────── */
+    .card {
+      background: var(--bg-primary); border: 1px solid var(--border); border-radius: 12px;
+      padding: 12px; margin-bottom: 8px; cursor: pointer; transition: border-color 0.15s;
+    }
+    .card:hover { border-color: var(--accent); }
+    .card--active { border-color: var(--accent); background: rgba(29,155,240,0.08); }
+    .card__title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+    .card__meta { font-size: 12px; color: var(--text-secondary); display: flex; gap: 10px; }
+
+    /* ── Stats grid ────────────────────────────────── */
+    .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+    .stat {
+      background: var(--bg-primary); border: 1px solid var(--border); border-radius: 10px;
+      padding: 10px; text-align: center;
+    }
+    .stat__val { font-size: 22px; font-weight: 800; color: var(--accent); }
+    .stat__label { font-size: 10px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+
+    /* ── List ──────────────────────────────────────── */
+    .list-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13px;
+    }
+    .list-item:last-child { border-bottom: none; }
+    .list-item__name { font-weight: 600; }
+    .list-item__meta { color: var(--text-secondary); font-size: 12px; }
+    .badge {
+      display: inline-block; padding: 2px 8px; border-radius: 9999px; font-size: 11px; font-weight: 600;
+    }
+    .badge--blue { background: rgba(29,155,240,0.15); color: var(--accent); }
+    .badge--green { background: rgba(0,186,124,0.15); color: var(--success); }
+    .badge--yellow { background: rgba(255,173,31,0.15); color: var(--warning); }
+    .badge--red { background: rgba(244,33,46,0.15); color: var(--error); }
+
+    /* ── Tabs ──────────────────────────────────────── */
+    .tabs { display: flex; border-bottom: 1px solid var(--border); }
+    .tab {
+      flex: 1; padding: 10px 0; text-align: center; font-size: 12px; font-weight: 600;
+      color: var(--text-secondary); cursor: pointer; border: none; background: none;
+      border-bottom: 2px solid transparent; transition: all 0.15s;
+    }
+    .tab:hover { color: var(--text-primary); }
+    .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+
+    /* ── Graph canvas ──────────────────────────────── */
+    .graph-area { flex: 1; position: relative; overflow: hidden; background: var(--bg-primary); }
+    .graph-area svg { display: block; width: 100%; height: 100%; }
+
+    /* ── Toolbar ───────────────────────────────────── */
+    .toolbar {
+      position: absolute; top: 12px; left: 12px; right: 12px;
+      display: flex; align-items: center; justify-content: space-between;
+      z-index: 10; pointer-events: none;
+    }
+    .toolbar > * { pointer-events: auto; }
+    .toolbar__left, .toolbar__right { display: flex; align-items: center; gap: 6px; }
+    .search-box {
+      width: 240px; padding: 8px 14px 8px 36px; background: rgba(22,24,28,0.9);
+      backdrop-filter: blur(8px); border: 1px solid var(--border); border-radius: 9999px;
+      color: var(--text-primary); font-size: 13px; outline: none; transition: border-color 0.15s;
+    }
+    .search-box:focus { border-color: var(--accent); }
+    .search-icon {
+      position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+      color: var(--text-secondary); font-size: 14px; pointer-events: none;
+    }
+    .toolbar-btn {
+      padding: 7px 14px; background: rgba(22,24,28,0.9); backdrop-filter: blur(8px);
+      border: 1px solid var(--border); border-radius: 9999px; color: var(--text-primary);
+      font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s;
+    }
+    .toolbar-btn:hover { background: var(--bg-tertiary); border-color: #555; }
+
+    /* ── Tooltip ───────────────────────────────────── */
+    .tooltip {
+      position: fixed; padding: 10px 14px; background: var(--bg-secondary);
+      border: 1px solid var(--border); border-radius: 10px; font-size: 12px;
+      pointer-events: none; z-index: 200; box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      opacity: 0; transition: opacity 0.15s;
+    }
+    .tooltip.visible { opacity: 1; }
+    .tooltip__name { font-weight: 700; font-size: 14px; margin-bottom: 4px; }
+    .tooltip__row { color: var(--text-secondary); margin: 2px 0; }
+
+    /* ── Progress bar ──────────────────────────────── */
+    .progress { width: 100%; height: 4px; background: var(--bg-tertiary); border-radius: 2px; overflow: hidden; margin: 8px 0; }
+    .progress__fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.3s; }
+
+    /* ── Empty state ───────────────────────────────── */
+    .empty {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      height: 100%; color: var(--text-secondary); text-align: center; padding: 40px;
+    }
+    .empty__icon { font-size: 48px; margin-bottom: 16px; }
+    .empty__title { font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; }
+    .empty__desc { font-size: 14px; max-width: 360px; line-height: 1.5; margin-bottom: 20px; }
+
+    /* ── Responsive ────────────────────────────────── */
+    @media (max-width: 768px) {
+      .nav__links { display: none; }
+      .sidebar { width: 100%; position: absolute; z-index: 50; left: -100%; transition: left 0.3s; }
+      .sidebar.open { left: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Nav ──────────────────────────────────────── -->
+  <nav class="nav">
+    <a href="/" class="nav__brand">⚡ XActions</a>
+    <div class="nav__links">
+      <a href="/dashboard" class="nav__link">Dashboard</a>
+      <a href="/automations" class="nav__link">Automations</a>
+      <a href="/unfollowers" class="nav__link">Unfollowers</a>
+      <a href="/monitor" class="nav__link">Monitor</a>
+      <a href="/workflows" class="nav__link">Workflows</a>
+      <a href="/graph" class="nav__link nav__link--active">Graph</a>
+      <a href="/run" class="nav__link">Scripts</a>
+      <a href="/docs" class="nav__link">Docs</a>
+    </div>
+    <div class="nav__right">
+      <a href="/docs" class="btn btn--sm btn--secondary">📖 Docs</a>
+    </div>
+  </nav>
+
+  <!-- ── Tooltip ──────────────────────────────────── -->
+  <div class="tooltip" id="tooltip">
+    <div class="tooltip__name" id="tooltipName"></div>
+    <div class="tooltip__row" id="tooltipFollowers"></div>
+    <div class="tooltip__row" id="tooltipCluster"></div>
+    <div class="tooltip__row" id="tooltipInfluence"></div>
+  </div>
+
+  <!-- ── Layout ───────────────────────────────────── -->
+  <div class="layout">
+
+    <!-- ── Sidebar ─────────────────────────────────── -->
+    <aside class="sidebar" id="sidebar">
+
+      <!-- Build section -->
+      <div class="sidebar__section">
+        <div class="sidebar__title">🔨 Build Graph</div>
+        <div class="form-row">
+          <input type="text" class="input" id="seedUser" placeholder="@username" />
+        </div>
+        <div class="form-row">
+          <input type="number" class="input" id="depth" value="2" min="1" max="4" style="width:80px" />
+          <input type="number" class="input" id="maxNodes" value="200" min="10" max="2000" />
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-secondary);margin:-4px 0 8px 0;">
+          <span>Depth</span><span>Max nodes</span>
+        </div>
+        <button class="btn btn--primary btn--full" id="buildBtn">🚀 Build Graph</button>
+        <div class="progress" id="buildProgress" style="display:none;">
+          <div class="progress__fill" id="buildProgressFill" style="width:0%"></div>
+        </div>
+        <div id="buildStatus" style="font-size:12px;color:var(--text-secondary);margin-top:6px;"></div>
+      </div>
+
+      <!-- Saved graphs -->
+      <div class="sidebar__section">
+        <div class="sidebar__title">📁 Saved Graphs</div>
+        <div id="graphList" style="max-height:140px;overflow-y:auto;"></div>
+      </div>
+
+      <!-- Tabs: Analysis / Recommendations -->
+      <div class="tabs">
+        <button class="tab active" data-tab="analysis">📊 Analysis</button>
+        <button class="tab" data-tab="recs">🎯 Recommend</button>
+      </div>
+
+      <div class="sidebar__scroll">
+        <!-- Analysis Tab -->
+        <div class="tab-pane active" data-pane="analysis" id="analysisPane">
+          <div class="sidebar__section" id="analysisContent">
+            <div style="color:var(--text-secondary);font-size:13px;text-align:center;padding:20px 0;">
+              Build or load a graph to see analysis
+            </div>
+          </div>
+        </div>
+
+        <!-- Recommendations Tab -->
+        <div class="tab-pane" data-pane="recs" id="recsPane">
+          <div class="sidebar__section" id="recsContent">
+            <div style="color:var(--text-secondary);font-size:13px;text-align:center;padding:20px 0;">
+              Build or load a graph to see recommendations
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ── Graph Area ──────────────────────────────── -->
+    <main class="graph-area" id="graphArea">
+
+      <!-- Toolbar -->
+      <div class="toolbar">
+        <div class="toolbar__left">
+          <div style="position:relative;">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="search-box" id="searchBox" placeholder="Search accounts..." />
+          </div>
+        </div>
+        <div class="toolbar__right">
+          <button class="toolbar-btn" id="zoomInBtn">＋</button>
+          <button class="toolbar-btn" id="zoomOutBtn">−</button>
+          <button class="toolbar-btn" id="resetBtn">⟲ Reset</button>
+          <button class="toolbar-btn" id="exportBtn">📥 Export</button>
+        </div>
+      </div>
+
+      <!-- Empty state -->
+      <div class="empty" id="emptyState">
+        <div class="empty__icon">🌐</div>
+        <div class="empty__title">Social Graph Explorer</div>
+        <div class="empty__desc">
+          Enter a username and build a graph to visualize your social network.
+          Discover clusters, influencers, bridges, and get smart follow/unfollow recommendations.
+        </div>
+        <button class="btn btn--primary" onclick="document.getElementById('seedUser').focus()">Get Started</button>
+      </div>
+
+      <svg id="graphSvg" style="display:none;"></svg>
+    </main>
+  </div>
+
+  <!-- ── JavaScript ───────────────────────────────── -->
+  <script>
+    const API = '/api/graph';
+    const tooltip = document.getElementById('tooltip');
+    const graphSvg = document.getElementById('graphSvg');
+    const emptyState = document.getElementById('emptyState');
+
+    let currentGraph = null;
+    let simulation = null;
+    let svgGroup = null;
+    let zoom = null;
+
+    // Cluster color palette
+    const COLORS = ['#1d9bf0','#00ba7c','#f4212e','#ffad1f','#7856ff','#f91880','#ff6f00','#00bcd4','#8bc34a','#e91e63'];
+    const clusterColor = (id) => COLORS[id % COLORS.length];
+
+    // ── API helpers ────────────────────────────────────
+    const api = {
+      async build(username, depth, maxNodes) {
+        const res = await fetch(`${API}/build`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: username.replace(/^@/, ''), depth, maxNodes }),
+        });
+        return res.json();
+      },
+      async list() {
+        const res = await fetch(API);
+        return res.json();
+      },
+      async get(id) {
+        const res = await fetch(`${API}/${id}`);
+        return res.json();
+      },
+      async del(id) {
+        await fetch(`${API}/${id}`, { method: 'DELETE' });
+      },
+      async analyze(id) {
+        const res = await fetch(`${API}/${id}/analysis`);
+        return res.json();
+      },
+      async recommend(id) {
+        const res = await fetch(`${API}/${id}/recommendations`);
+        return res.json();
+      },
+      async visualize(id) {
+        const res = await fetch(`${API}/${id}/visualization?format=d3`);
+        return res.json();
+      },
+    };
+
+    // ── Tab switching ──────────────────────────────────
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        document.querySelector(`[data-pane="${tab.dataset.tab}"]`).classList.add('active');
+      });
+    });
+
+    // ── Build graph ────────────────────────────────────
+    const buildBtn = document.getElementById('buildBtn');
+    const buildProgress = document.getElementById('buildProgress');
+    const buildProgressFill = document.getElementById('buildProgressFill');
+    const buildStatus = document.getElementById('buildStatus');
+
+    buildBtn.addEventListener('click', async () => {
+      const username = document.getElementById('seedUser').value.trim();
+      if (!username) return;
+      const depth = parseInt(document.getElementById('depth').value) || 2;
+      const maxNodes = parseInt(document.getElementById('maxNodes').value) || 200;
+
+      buildBtn.disabled = true;
+      buildBtn.textContent = '⏳ Building...';
+      buildProgress.style.display = 'block';
+      buildProgressFill.style.width = '10%';
+      buildStatus.textContent = 'Starting graph crawl...';
+
+      try {
+        const result = await api.build(username, depth, maxNodes);
+
+        if (result.error) {
+          buildStatus.textContent = '❌ ' + result.error;
+          return;
+        }
+
+        // Simulate progress
+        let pct = 10;
+        const ticker = setInterval(() => {
+          pct = Math.min(pct + 8, 90);
+          buildProgressFill.style.width = pct + '%';
+        }, 500);
+
+        // If we got the graph directly (small build)
+        if (result.graph || result.id) {
+          clearInterval(ticker);
+          buildProgressFill.style.width = '100%';
+          buildStatus.textContent = '✅ Graph built!';
+
+          const graphId = result.id || result.graph?.id;
+          if (graphId) {
+            await loadGraph(graphId);
+          }
+          await refreshGraphList();
+        }
+      } catch (err) {
+        buildStatus.textContent = '❌ ' + err.message;
+      } finally {
+        buildBtn.disabled = false;
+        buildBtn.textContent = '🚀 Build Graph';
+        setTimeout(() => { buildProgress.style.display = 'none'; }, 2000);
+      }
+    });
+
+    // ── Load graph ─────────────────────────────────────
+    async function loadGraph(id) {
+      try {
+        const [vizData, analysisData, recsData] = await Promise.all([
+          api.visualize(id),
+          api.analyze(id),
+          api.recommend(id),
+        ]);
+
+        currentGraph = { id, viz: vizData, analysis: analysisData, recs: recsData };
+        renderGraph(vizData);
+        renderAnalysis(analysisData);
+        renderRecommendations(recsData);
+
+        // Highlight active card
+        document.querySelectorAll('.card').forEach(c => c.classList.remove('card--active'));
+        const activeCard = document.querySelector(`[data-graph-id="${id}"]`);
+        if (activeCard) activeCard.classList.add('card--active');
+      } catch (err) {
+        console.error('Failed to load graph:', err);
+      }
+    }
+
+    // ── Render D3 graph ────────────────────────────────
+    function renderGraph(data) {
+      emptyState.style.display = 'none';
+      graphSvg.style.display = 'block';
+
+      // Clear previous
+      d3.select(graphSvg).selectAll('*').remove();
+      if (simulation) simulation.stop();
+
+      const width = graphSvg.clientWidth;
+      const height = graphSvg.clientHeight;
+      const nodes = data.nodes || [];
+      const links = (data.links || []).map(l => ({
+        source: typeof l.source === 'object' ? l.source.id : l.source,
+        target: typeof l.target === 'object' ? l.target.id : l.target,
+      }));
+
+      const svg = d3.select(graphSvg);
+
+      // Zoom
+      zoom = d3.zoom().scaleExtent([0.1, 8]).on('zoom', (e) => {
+        svgGroup.attr('transform', e.transform);
+      });
+      svg.call(zoom);
+
+      svgGroup = svg.append('g');
+
+      // Links
+      const link = svgGroup.append('g')
+        .attr('stroke', '#2f3336')
+        .attr('stroke-opacity', 0.4)
+        .selectAll('line')
+        .data(links)
+        .join('line')
+        .attr('stroke-width', 0.5);
+
+      // Nodes
+      const node = svgGroup.append('g')
+        .selectAll('circle')
+        .data(nodes)
+        .join('circle')
+        .attr('r', d => Math.max(4, Math.min(16, (d.influence || 5) / 5)))
+        .attr('fill', d => clusterColor(d.cluster || 0))
+        .attr('stroke', '#000')
+        .attr('stroke-width', 0.8)
+        .style('cursor', 'pointer')
+        .call(d3.drag()
+          .on('start', (e, d) => { if (!e.active) simulation.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; })
+          .on('drag', (e, d) => { d.fx = e.x; d.fy = e.y; })
+          .on('end', (e, d) => { if (!e.active) simulation.alphaTarget(0); d.fx = null; d.fy = null; })
+        );
+
+      // Labels (only for higher influence nodes)
+      const label = svgGroup.append('g')
+        .selectAll('text')
+        .data(nodes.filter(d => (d.influence || 0) > 30 || d.isSeed))
+        .join('text')
+        .text(d => '@' + d.id)
+        .attr('font-size', 10)
+        .attr('fill', '#e7e9ea')
+        .attr('dx', 12)
+        .attr('dy', 4)
+        .style('pointer-events', 'none')
+        .style('text-shadow', '0 0 4px #000, 0 0 8px #000');
+
+      // Tooltip
+      node.on('mouseover', (e, d) => {
+        tooltip.classList.add('visible');
+        document.getElementById('tooltipName').textContent = '@' + d.id;
+        document.getElementById('tooltipFollowers').textContent = `Connections: ${d.connections || '—'}`;
+        document.getElementById('tooltipCluster').textContent = `Cluster: ${d.cluster ?? '—'}`;
+        document.getElementById('tooltipInfluence').textContent = `Influence: ${(d.influence || 0).toFixed(1)}`;
+      })
+      .on('mousemove', (e) => {
+        tooltip.style.left = (e.clientX + 16) + 'px';
+        tooltip.style.top = (e.clientY - 10) + 'px';
+      })
+      .on('mouseout', () => {
+        tooltip.classList.remove('visible');
+      })
+      .on('click', (e, d) => {
+        window.open(`https://x.com/${d.id}`, '_blank');
+      });
+
+      // Simulation
+      simulation = d3.forceSimulation(nodes)
+        .force('link', d3.forceLink(links).id(d => d.id).distance(60))
+        .force('charge', d3.forceManyBody().strength(-120))
+        .force('center', d3.forceCenter(width / 2, height / 2))
+        .force('collision', d3.forceCollide().radius(d => Math.max(6, (d.influence || 5) / 4)))
+        .on('tick', () => {
+          link.attr('x1', d => d.source.x).attr('y1', d => d.source.y)
+              .attr('x2', d => d.target.x).attr('y2', d => d.target.y);
+          node.attr('cx', d => d.x).attr('cy', d => d.y);
+          label.attr('x', d => d.x).attr('y', d => d.y);
+        });
+    }
+
+    // ── Search ─────────────────────────────────────────
+    document.getElementById('searchBox').addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase();
+      if (!q) {
+        d3.select(graphSvg).selectAll('circle').attr('opacity', 1);
+        d3.select(graphSvg).selectAll('line').attr('opacity', 0.4);
+        return;
+      }
+      d3.select(graphSvg).selectAll('circle')
+        .attr('opacity', d => d.id.toLowerCase().includes(q) ? 1 : 0.1);
+      d3.select(graphSvg).selectAll('line')
+        .attr('opacity', 0.05);
+    });
+
+    // ── Zoom controls ──────────────────────────────────
+    document.getElementById('zoomInBtn').addEventListener('click', () => {
+      d3.select(graphSvg).transition().duration(300).call(zoom.scaleBy, 1.4);
+    });
+    document.getElementById('zoomOutBtn').addEventListener('click', () => {
+      d3.select(graphSvg).transition().duration(300).call(zoom.scaleBy, 0.7);
+    });
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      d3.select(graphSvg).transition().duration(500).call(zoom.transform, d3.zoomIdentity);
+    });
+
+    // ── Export ─────────────────────────────────────────
+    document.getElementById('exportBtn').addEventListener('click', async () => {
+      if (!currentGraph) return;
+      try {
+        const res = await fetch(`${API}/${currentGraph.id}/visualization?format=html`);
+        const html = await res.text();
+        const blob = new Blob([html], { type: 'text/html' });
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+        a.download = `graph-${currentGraph.id}.html`;
+        document.body.appendChild(a); a.click(); a.remove();
+      } catch (err) {
+        console.error('Export failed:', err);
+      }
+    });
+
+    // ── Render analysis ────────────────────────────────
+    function renderAnalysis(data) {
+      const el = document.getElementById('analysisContent');
+      if (!data || data.error) {
+        el.innerHTML = '<div style="color:var(--text-secondary);font-size:13px;padding:12px 0;">Analysis unavailable</div>';
+        return;
+      }
+
+      const clusters = data.clusters || [];
+      const influencers = (data.influenceScores || []).slice(0, 8);
+      const bridges = (data.bridges || []).slice(0, 5);
+      const orbits = data.orbits || {};
+
+      el.innerHTML = `
+        <div class="stats">
+          <div class="stat"><div class="stat__val">${data.totalNodes || 0}</div><div class="stat__label">Nodes</div></div>
+          <div class="stat"><div class="stat__val">${data.totalEdges || 0}</div><div class="stat__label">Edges</div></div>
+          <div class="stat"><div class="stat__val">${clusters.length}</div><div class="stat__label">Clusters</div></div>
+          <div class="stat"><div class="stat__val">${(data.mutualConnections || []).length}</div><div class="stat__label">Mutual</div></div>
+        </div>
+
+        ${influencers.length > 0 ? `
+        <div class="sidebar__title" style="margin-top:8px;">👑 Top Influencers</div>
+        ${influencers.map((u, i) => `
+          <div class="list-item">
+            <span class="list-item__name">${i + 1}. @${u.username}</span>
+            <span class="badge badge--blue">${(u.score || 0).toFixed(1)}</span>
+          </div>
+        `).join('')}` : ''}
+
+        ${bridges.length > 0 ? `
+        <div class="sidebar__title" style="margin-top:12px;">🌉 Bridge Accounts</div>
+        ${bridges.map(u => `
+          <div class="list-item">
+            <span class="list-item__name">@${u.username}</span>
+            <span class="badge badge--yellow">${(u.centrality || 0).toFixed(2)}</span>
+          </div>
+        `).join('')}` : ''}
+
+        ${clusters.length > 0 ? `
+        <div class="sidebar__title" style="margin-top:12px;">🔮 Clusters</div>
+        ${clusters.map((c, i) => `
+          <div class="list-item">
+            <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${clusterColor(i)};margin-right:6px;"></span>Cluster ${i + 1}</span>
+            <span class="list-item__meta">${(c.members || c.nodes || []).length} members</span>
+          </div>
+        `).join('')}` : ''}
+
+        ${orbits && Object.keys(orbits).length > 0 ? `
+        <div class="sidebar__title" style="margin-top:12px;">🛰️ Orbit Rings</div>
+        ${Object.entries(orbits).map(([ring, members]) => `
+          <div class="list-item">
+            <span class="list-item__name">${ring.replace(/([A-Z])/g, ' $1').trim()}</span>
+            <span class="list-item__meta">${Array.isArray(members) ? members.length : 0}</span>
+          </div>
+        `).join('')}` : ''}
+      `;
+    }
+
+    // ── Render recommendations ─────────────────────────
+    function renderRecommendations(data) {
+      const el = document.getElementById('recsContent');
+      if (!data || data.error) {
+        el.innerHTML = '<div style="color:var(--text-secondary);font-size:13px;padding:12px 0;">No recommendations available</div>';
+        return;
+      }
+
+      const sections = [
+        { key: 'follow', title: '➕ Suggested Follows', badge: 'badge--green', items: data.suggestedFollows || [] },
+        { key: 'engage', title: '🔥 Engage With', badge: 'badge--blue', items: data.suggestedEngage || [] },
+        { key: 'watch', title: '👀 Competitor Watch', badge: 'badge--yellow', items: data.competitorWatch || [] },
+        { key: 'unfollow', title: '🧹 Safe Unfollow', badge: 'badge--red', items: data.safeUnfollow || [] },
+      ];
+
+      el.innerHTML = sections.map(s => {
+        if (s.items.length === 0) return '';
+        return `
+          <div style="padding:12px 16px;border-bottom:1px solid var(--border);">
+            <div class="sidebar__title">${s.title}</div>
+            ${s.items.slice(0, 6).map(u => `
+              <div class="list-item">
+                <a href="https://x.com/${u.username || u}" target="_blank" style="color:var(--text-primary);text-decoration:none;font-weight:600;">@${u.username || u}</a>
+                ${u.reason ? `<span class="list-item__meta">${u.reason}</span>` : ''}
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ── Graph list ─────────────────────────────────────
+    async function refreshGraphList() {
+      try {
+        const data = await api.list();
+        const list = data.graphs || data || [];
+        const el = document.getElementById('graphList');
+
+        if (list.length === 0) {
+          el.innerHTML = '<div style="color:var(--text-secondary);font-size:12px;text-align:center;padding:8px 0;">No saved graphs</div>';
+          return;
+        }
+
+        el.innerHTML = list.map(g => `
+          <div class="card${currentGraph?.id === g.id ? ' card--active' : ''}" data-graph-id="${g.id}">
+            <div class="card__title">@${g.seed || g.id}</div>
+            <div class="card__meta">
+              <span>${g.nodeCount || '?'} nodes</span>
+              <span>${g.edgeCount || '?'} edges</span>
+              <span>${g.createdAt ? new Date(g.createdAt).toLocaleDateString() : ''}</span>
+            </div>
+            <div style="margin-top:6px;display:flex;gap:4px;">
+              <button class="btn btn--sm btn--secondary" onclick="event.stopPropagation();loadGraph('${g.id}')">Load</button>
+              <button class="btn btn--sm btn--danger" onclick="event.stopPropagation();deleteGraph('${g.id}')">🗑</button>
+            </div>
+          </div>
+        `).join('');
+
+        // Click-to-load
+        el.querySelectorAll('.card').forEach(card => {
+          card.addEventListener('click', () => loadGraph(card.dataset.graphId));
+        });
+      } catch (err) {
+        console.error('Failed to list graphs:', err);
+      }
+    }
+
+    async function deleteGraph(id) {
+      if (!confirm('Delete this graph?')) return;
+      await api.del(id);
+      if (currentGraph?.id === id) {
+        currentGraph = null;
+        emptyState.style.display = '';
+        graphSvg.style.display = 'none';
+        d3.select(graphSvg).selectAll('*').remove();
+        document.getElementById('analysisContent').innerHTML = '<div style="color:var(--text-secondary);font-size:13px;text-align:center;padding:20px 0;">Build or load a graph to see analysis</div>';
+        document.getElementById('recsContent').innerHTML = '<div style="color:var(--text-secondary);font-size:13px;text-align:center;padding:20px 0;">Build or load a graph to see recommendations</div>';
+      }
+      refreshGraphList();
+    }
+
+    // ── Init ───────────────────────────────────────────
+    refreshGraphList();
+  </script>
+</body>
+</html>

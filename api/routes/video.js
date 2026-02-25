@@ -111,7 +111,7 @@ router.post('/extract', async (req, res) => {
     }
 
     return res.status(500).json({
-      error: 'Failed to extract video. The tweet may be private, deleted, or rate-limited.',
+      error: error.message || 'Failed to extract video. The tweet may be private, deleted, or rate-limited.',
     });
   }
 });

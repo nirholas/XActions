@@ -17,7 +17,8 @@
     </div>
     <div class="header-right">
       <div id="connectionStatus" class="status-dot disconnected" title="Not connected to X"></div>
-      <button id="btnEmergencyStop" class="btn-emergency" title="Emergency Stop All">⏹</button>
+      <button id="btnPauseResume" class="btn-pause" title="Pause All (Ctrl+Shift+P)">⏸</button>
+      <button id="btnEmergencyStop" class="btn-emergency" title="Emergency Stop All (Ctrl+Shift+S)">⏹</button>
     </div>
   </header>
 
@@ -514,10 +515,13 @@
         <div id="quickStatsDisplay" class="stats-display"></div>
       </div>
     </div>
-  </section>
 
-  <!-- ============================================ -->
-  <!-- ACTIVITY TAB -->
+    <!-- Empty state when filter/search yields no results -->
+    <div id="noResultsMsg" class="no-results-msg" style="display:none;">
+      <span class="no-results-icon">🔍</span>
+      No automations match your filter
+    </div>
+  </section>
   <!-- ============================================ -->
   <section id="tab-activity" class="tab-content">
     <div class="activity-header">

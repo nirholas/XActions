@@ -81,24 +81,33 @@
       gap: 12px;
     }
 
-    .token-logo {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      background: var(--bg-tertiary);
+    /* Asset Selector */
+    .asset-selector {
+      position: relative;
       display: flex;
       align-items: center;
-      justify-content: center;
-      font-size: 14px;
+      gap: 10px;
+      cursor: pointer;
+      padding: 4px 12px 4px 4px;
+      border-radius: 8px;
+      transition: background 0.15s;
+    }
+    .asset-selector:hover { background: var(--bg-tertiary); }
+
+    .asset-color-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
     }
 
-    .token-name {
+    .asset-selector .token-name {
       font-size: 18px;
       font-weight: 700;
       color: var(--text-primary);
     }
 
-    .token-badge {
+    .asset-selector .token-badge {
       background: var(--bg-tertiary);
       color: var(--text-secondary);
       font-size: 11px;
@@ -106,6 +115,79 @@
       border-radius: 4px;
       font-weight: 500;
       text-transform: uppercase;
+    }
+
+    .asset-selector .founder-tag {
+      color: var(--text-secondary);
+      font-size: 13px;
+    }
+
+    .selector-arrow {
+      color: var(--text-secondary);
+      font-size: 10px;
+      margin-left: 4px;
+      transition: transform 0.2s;
+    }
+    .asset-selector.open .selector-arrow { transform: rotate(180deg); }
+
+    .asset-dropdown {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      margin-top: 4px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      width: 340px;
+      max-height: 480px;
+      overflow-y: auto;
+      z-index: 200;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+      padding: 6px;
+    }
+    .asset-selector.open .asset-dropdown { display: block; }
+
+    .asset-dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+    .asset-dropdown-item:hover { background: var(--bg-hover); }
+    .asset-dropdown-item.active { background: var(--bg-tertiary); }
+
+    .asset-dropdown-item .item-color {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .asset-dropdown-item .item-name {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text-primary);
+      min-width: 70px;
+    }
+
+    .asset-dropdown-item .item-founder {
+      font-size: 13px;
+      color: var(--text-secondary);
+      flex: 1;
+    }
+
+    .asset-dropdown-item .item-network {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: var(--bg-tertiary);
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      font-weight: 500;
     }
 
     .token-pair {
@@ -214,12 +296,6 @@
       position: relative;
       overflow: hidden;
     }
-    .marker-avatar img {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      object-fit: cover;
-    }
 
     .marker-count {
       position: absolute;
@@ -249,7 +325,7 @@
       border: 1px solid var(--border);
       border-radius: 8px;
       padding: 10px 14px;
-      width: 280px;
+      width: 300px;
       z-index: 30;
       pointer-events: auto;
       box-shadow: 0 8px 32px rgba(0,0,0,0.5);
@@ -257,6 +333,7 @@
     .tweet-marker:hover .tweet-tooltip { display: block; }
     .tweet-tooltip .tt-date { font-size: 11px; color: var(--text-secondary); margin-bottom: 4px; }
     .tweet-tooltip .tt-text { font-size: 13px; color: var(--text-primary); line-height: 1.4; margin-bottom: 6px; }
+    .tweet-tooltip .tt-stats { font-size: 11px; color: var(--text-secondary); margin-bottom: 4px; display: flex; gap: 10px; }
     .tweet-tooltip .tt-impact { display: flex; gap: 12px; font-size: 12px; font-weight: 600; }
     .tweet-tooltip .tt-impact .positive { color: var(--green-bright); }
     .tweet-tooltip .tt-impact .negative { color: var(--red); }
@@ -279,17 +356,6 @@
       gap: 16px;
     }
 
-    .footer-left label {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-    }
-
-    .footer-left input[type="checkbox"] {
-      accent-color: var(--accent);
-    }
-
     .footer-right {
       display: flex;
       align-items: center;
@@ -307,13 +373,9 @@
       height: 8px;
       border-radius: 50%;
     }
-    .legend-dot.single { border: 2px solid var(--text-secondary); background: transparent; }
+    .legend-dot.positive { background: var(--green); }
+    .legend-dot.negative { background: var(--red); }
     .legend-dot.cluster { background: var(--purple); }
-    .legend-line {
-      width: 20px;
-      height: 0;
-      border-top: 2px dashed var(--red);
-    }
 
     /* ===== Timeframe Buttons ===== */
     .timeframe-bar {
@@ -515,22 +577,40 @@
       color: var(--accent);
     }
 
-    .silence-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 14px;
-      margin-bottom: 8px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    .daily-comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 32px;
     }
 
-    .silence-dates { font-size: 13px; color: var(--text-secondary); }
-    .silence-gap { font-size: 14px; font-weight: 600; }
-    .silence-change { font-size: 14px; font-weight: 700; }
+    .comparison-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+    }
 
-    /* Impact scatter mini-chart */
+    .comparison-card h4 {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .comparison-card .big-num {
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .comparison-card .sub-stat {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
     .impact-scatter {
       background: var(--bg-card);
       border: 1px solid var(--border);
@@ -549,118 +629,12 @@
       height: 280px;
     }
 
-    /* ===== Setup Panel (shown when no data) ===== */
-    .setup-panel {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: calc(100vh - 100px);
-      padding: 40px;
-      text-align: center;
-    }
-
-    .setup-panel h2 {
-      font-size: 24px;
-      margin-bottom: 8px;
-    }
-
-    .setup-panel p {
-      color: var(--text-secondary);
-      margin-bottom: 32px;
-      max-width: 500px;
-    }
-
-    .setup-form {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 32px;
-      width: 100%;
-      max-width: 480px;
-    }
-
-    .form-group {
-      margin-bottom: 20px;
-      text-align: left;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-secondary);
-      margin-bottom: 6px;
-    }
-
-    .form-group input, .form-group select {
-      width: 100%;
-      padding: 10px 14px;
-      background: var(--bg-tertiary);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      color: var(--text-primary);
-      font-size: 14px;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-    .form-group input:focus, .form-group select:focus { border-color: var(--accent); }
-
-    .form-group .hint {
-      font-size: 11px;
+    .credit-link {
       color: var(--text-muted);
-      margin-top: 4px;
+      text-decoration: none;
+      transition: color 0.2s;
     }
-
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    .submit-btn {
-      width: 100%;
-      padding: 14px;
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .submit-btn:hover { background: var(--accent-hover); }
-    .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-    .or-divider {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin: 16px 0;
-      color: var(--text-muted);
-      font-size: 12px;
-    }
-    .or-divider::before, .or-divider::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--border);
-    }
-
-    .demo-btn {
-      width: 100%;
-      padding: 12px;
-      background: transparent;
-      color: var(--accent);
-      border: 1px solid var(--accent);
-      border-radius: 10px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .demo-btn:hover { background: rgba(29, 155, 240, 0.1); }
+    .credit-link:hover { color: var(--accent); }
 
     /* Loading */
     .loading-overlay {
@@ -692,19 +666,12 @@
     @media (max-width: 768px) {
       .topbar { flex-wrap: wrap; gap: 8px; }
       .chart-container { height: calc(100vh - 180px); min-height: 400px; }
-      .setup-form { padding: 20px; }
-      .form-row { grid-template-columns: 1fr; }
+      .asset-dropdown { width: 280px; }
       .about-view { padding: 20px; }
       .stats-grid { grid-template-columns: repeat(2, 1fr); }
-      .tweet-tooltip { width: 220px; }
+      .daily-comparison { grid-template-columns: 1fr; }
+      .tweet-tooltip { width: 240px; }
     }
-
-    .credit-link {
-      color: var(--text-muted);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    .credit-link:hover { color: var(--accent); }
   </style>
 </head>
 <body>
@@ -712,9 +679,14 @@
 <!-- Top Bar -->
 <div class="topbar">
   <div class="topbar-left">
-    <div class="token-logo" id="tokenLogo">⚡</div>
-    <span class="token-name" id="tokenName">—</span>
-    <span class="token-badge" id="tokenNetwork">—</span>
+    <div class="asset-selector" id="assetSelector">
+      <span class="asset-color-dot" id="assetDot" style="background:#9945FF"></span>
+      <span class="token-name" id="tokenName">Loading...</span>
+      <span class="token-badge" id="tokenNetwork">—</span>
+      <span class="founder-tag" id="founderTag">@—</span>
+      <span class="selector-arrow">▼</span>
+      <div class="asset-dropdown" id="assetDropdown"></div>
+    </div>
     <span class="token-pair">/USD</span>
   </div>
   <div class="topbar-right">
@@ -742,23 +714,22 @@
     <div id="chart"></div>
     <div class="tweet-markers-layer" id="markersLayer"></div>
     <div class="timeframe-bar">
-      <button class="tf-btn" data-tf="1">1m</button>
-      <button class="tf-btn" data-tf="15">15m</button>
-      <button class="tf-btn" data-tf="60">1h</button>
-      <button class="tf-btn active" data-tf="D">1D</button>
+      <button class="tf-btn" data-tf="15m" data-file="prices_15m.json">15m</button>
+      <button class="tf-btn" data-tf="1h" data-file="prices_1h.json">1h</button>
+      <button class="tf-btn active" data-tf="1D" data-file="prices_1d.json">1D</button>
     </div>
   </div>
 
   <div class="footer-bar">
     <div class="footer-left">
       <span id="founderHandle">@—</span>
-      <label><input type="checkbox" id="onlyMentions"> Only mentions</label>
+      <span id="tweetCountInfo">—</span>
     </div>
     <div class="footer-right">
-      <span class="legend-item"><span class="legend-dot single"></span> 1 tweet</span>
-      <span class="legend-item"><span class="legend-dot cluster"></span> 3+ tweets</span>
-      <span class="legend-item"><span class="legend-line"></span> Quiet period</span>
-      <span id="tweetCountInfo">—</span>
+      <span class="legend-item"><span class="legend-dot positive"></span> Price up</span>
+      <span class="legend-item"><span class="legend-dot negative"></span> Price down</span>
+      <span class="legend-item"><span class="legend-dot cluster"></span> Multi-tweet day</span>
+      <span id="dateRangeInfo">—</span>
     </div>
   </div>
 </div>
@@ -772,13 +743,14 @@
   <table>
     <thead>
       <tr>
-        <th data-sort="datetime">Date <span class="sort-arrow">↕</span></th>
+        <th data-sort="timestamp">Date <span class="sort-arrow">↕</span></th>
         <th data-sort="text">Tweet <span class="sort-arrow">↕</span></th>
-        <th data-sort="priceAtTweet">Price <span class="sort-arrow">↕</span></th>
+        <th data-sort="price_at_tweet">Price <span class="sort-arrow">↕</span></th>
         <th data-sort="likes">Likes <span class="sort-arrow">↕</span></th>
-        <th data-sort="reposts">Reposts <span class="sort-arrow">↕</span></th>
-        <th data-sort="change1h">1h Impact <span class="sort-arrow">↕</span></th>
-        <th data-sort="change24h">24h Impact <span class="sort-arrow">↕</span></th>
+        <th data-sort="retweets">Retweets <span class="sort-arrow">↕</span></th>
+        <th data-sort="impressions">Impressions <span class="sort-arrow">↕</span></th>
+        <th data-sort="change_1h_pct">1h Impact <span class="sort-arrow">↕</span></th>
+        <th data-sort="change_24h_pct">24h Impact <span class="sort-arrow">↕</span></th>
       </tr>
     </thead>
     <tbody id="tableBody"></tbody>
@@ -794,512 +766,287 @@
 
   <div class="stats-grid" id="statsGrid"></div>
 
+  <div class="daily-comparison" id="dailyComparison"></div>
+
   <div class="impact-scatter about-section">
     <h3>Impact Explorer — Tweets vs 24h Price Change</h3>
     <canvas id="impactCanvas"></canvas>
   </div>
 
-  <div class="about-section" id="silencesSection">
-    <h3>Notable Silences</h3>
-    <p style="margin-bottom: 12px; color: var(--text-secondary);">Quiet periods of 48h+ when the founder didn't tweet, and what happened to the price.</p>
-    <div id="silencesList"></div>
-  </div>
-
   <div class="about-section">
     <h3>How It Works</h3>
     <ul>
-      <li>Scrape tweet timestamps from a founder's X/Twitter profile</li>
-      <li>Fetch hourly price data from CoinGecko or GeckoTerminal</li>
-      <li>Align each tweet to the nearest price candle</li>
+      <li>Track founder tweet timestamps from X/Twitter</li>
+      <li>Align each tweet to the nearest price candle on-chain</li>
       <li>Measure 1h and 24h price change after each tweet</li>
-      <li>Detect silence gaps and their price context</li>
+      <li>Compare tweet-day returns vs no-tweet-day returns</li>
+      <li>15 tokens tracked with 4,700+ tweet events</li>
     </ul>
   </div>
 
   <div class="about-section" style="text-align: center; margin-top: 40px;">
     <p style="font-size: 12px;">
-      Inspired by <a href="https://github.com/rohunvora/tweet-price-charts" class="credit-link" target="_blank">tweet-price-charts</a> by rohunvora
+      Data from <a href="https://github.com/rohunvora/tweet-price-charts" class="credit-link" target="_blank">tweet-price-charts</a> by rohunvora
       · Built with <a href="https://github.com/nirholas/XActions" class="credit-link" target="_blank">XActions</a> by nichxbt
     </p>
-  </div>
-</div>
-
-<!-- ===== SETUP PANEL (no data yet) ===== -->
-<div class="setup-panel" id="setupPanel">
-  <h2>📊 Tweet-Price Correlation</h2>
-  <p>Enter a token and founder's Twitter handle to analyze how their tweets correlate with price movements.</p>
-
-  <div class="setup-form">
-    <div class="form-group">
-      <label>Founder's X Handle</label>
-      <input type="text" id="inputHandle" placeholder="@a1lon9" value="">
-      <div class="hint">The founder or key person whose tweets you want to track</div>
-    </div>
-
-    <div class="form-group">
-      <label>Token (CoinGecko ID)</label>
-      <input type="text" id="inputTokenId" placeholder="solana, bitcoin, jupiter-exchange-solana...">
-      <div class="hint">Find it at coingecko.com/en/coins/TOKEN — use the URL slug</div>
-    </div>
-
-    <div class="or-divider">OR use GeckoTerminal (for DEX-only tokens)</div>
-
-    <div class="form-row">
-      <div class="form-group">
-        <label>Network</label>
-        <select id="inputNetwork">
-          <option value="">—</option>
-          <option value="solana">Solana</option>
-          <option value="eth">Ethereum</option>
-          <option value="bsc">BSC</option>
-          <option value="base">Base</option>
-          <option value="arbitrum">Arbitrum</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Pool Address</label>
-        <input type="text" id="inputPoolAddress" placeholder="0x...">
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label>Token Display Name</label>
-      <input type="text" id="inputTokenName" placeholder="$PUMP">
-    </div>
-
-    <button class="submit-btn" id="analyzeBtn">🔍 Analyze Correlation</button>
-
-    <div class="or-divider">or try a demo</div>
-
-    <button class="demo-btn" id="demoBtn">📈 Load Demo Data ($PUMP × @a1lon9)</button>
   </div>
 </div>
 
 <!-- Loading Overlay -->
 <div class="loading-overlay" id="loadingOverlay">
   <div class="spinner"></div>
-  <div class="loading-text" id="loadingText">Fetching data...</div>
+  <div class="loading-text" id="loadingText">Loading data...</div>
 </div>
 
 <script>
 // ============================================================================
 // XActions Tweet-Price Correlation Dashboard
-// Inspired by https://github.com/rohunvora/tweet-price-charts
+// Real data from https://github.com/rohunvora/tweet-price-charts
 // by nichxbt
 // ============================================================================
 
 (() => {
   'use strict';
 
+  // ===== Configuration =====
+  const DATA_BASE = 'data/tweet-price';
+  const DEFAULT_ASSET = 'pump';
+
   // ===== State =====
-  let state = {
-    data: null,        // { aligned, stats, meta }
-    view: 'chart',     // chart | data | about
-    timeframe: 'D',
+  const state = {
+    assets: [],
+    currentAsset: null,
+    events: [],
+    candles: [],
+    stats: null,
+    assetMeta: null,
+    view: 'chart',
+    timeframe: '1D',
     chartRange: 'tweets',
-    sortCol: 'change24h',
+    sortCol: 'change_24h_pct',
     sortDir: -1,
     searchQuery: '',
     chart: null,
     candleSeries: null,
-    markers: [],
+    priceFileMap: {
+      '15m': 'prices_15m.json',
+      '1h': 'prices_1h.json',
+      '1D': 'prices_1d.json',
+    },
   };
 
   // ===== DOM Refs =====
   const $ = (sel) => document.querySelector(sel);
   const $$ = (sel) => document.querySelectorAll(sel);
 
-  // ===== View Switching =====
-  $$('.view-tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      $$('.view-tab').forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      state.view = tab.dataset.view;
-      updateView();
-    });
-  });
+  // ===== Boot =====
+  async function init() {
+    showLoading('Loading assets...');
+    try {
+      const resp = await fetch(`${DATA_BASE}/assets.json`);
+      if (!resp.ok) throw new Error('Could not load assets.json');
+      const data = await resp.json();
+      state.assets = data.assets.filter(a => a.enabled !== false);
 
+      buildAssetDropdown();
+      wireEvents();
+
+      // Load default asset (or from URL hash)
+      const hash = window.location.hash.replace('#', '');
+      const startAsset = state.assets.find(a => a.id === hash) ? hash : DEFAULT_ASSET;
+      await loadAsset(startAsset);
+
+      hideLoading();
+    } catch (err) {
+      hideLoading();
+      console.error('Init error:', err);
+      $('#tokenName').textContent = 'Error loading data';
+    }
+  }
+
+  // ===== Asset Dropdown =====
+  function buildAssetDropdown() {
+    const dropdown = $('#assetDropdown');
+    dropdown.innerHTML = state.assets.map(a => `
+      <div class="asset-dropdown-item" data-asset="${a.id}">
+        <span class="item-color" style="background:${a.color || '#888'}"></span>
+        <span class="item-name">$${a.name}</span>
+        <span class="item-founder">@${a.founder}</span>
+        <span class="item-network">${a.network}</span>
+      </div>
+    `).join('');
+
+    // Asset selector toggle
+    const selector = $('#assetSelector');
+    selector.addEventListener('click', (e) => {
+      if (e.target.closest('.asset-dropdown-item')) return;
+      selector.classList.toggle('open');
+    });
+
+    // Click an asset
+    dropdown.addEventListener('click', async (e) => {
+      const item = e.target.closest('.asset-dropdown-item');
+      if (!item) return;
+      selector.classList.remove('open');
+      const assetId = item.dataset.asset;
+      if (assetId !== state.currentAsset) {
+        showLoading(`Loading $${state.assets.find(a => a.id === assetId)?.name || assetId}...`);
+        await loadAsset(assetId);
+        hideLoading();
+      }
+    });
+
+    // Close dropdown on outside click
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.asset-selector')) {
+        selector.classList.remove('open');
+      }
+    });
+  }
+
+  // ===== Load Asset Data =====
+  async function loadAsset(assetId) {
+    const asset = state.assets.find(a => a.id === assetId);
+    if (!asset) return;
+
+    state.currentAsset = assetId;
+    state.assetMeta = asset;
+    window.location.hash = assetId;
+
+    // Fetch tweet events + prices + stats in parallel
+    const priceFile = state.priceFileMap[state.timeframe] || 'prices_1d.json';
+    const [eventsResp, pricesResp, statsResp] = await Promise.all([
+      fetch(`${DATA_BASE}/${assetId}/tweet_events.json`),
+      fetch(`${DATA_BASE}/${assetId}/${priceFile}`),
+      fetch(`${DATA_BASE}/${assetId}/stats.json`),
+    ]);
+
+    if (!eventsResp.ok) throw new Error(`No tweet events for ${assetId}`);
+    if (!pricesResp.ok) throw new Error(`No price data for ${assetId}`);
+
+    const eventsData = await eventsResp.json();
+    const pricesData = await pricesResp.json();
+    const statsData = statsResp.ok ? await statsResp.json() : null;
+
+    state.events = eventsData.events || [];
+    state.candles = pricesData.candles || [];
+    state.stats = statsData;
+
+    // Update active item in dropdown
+    $$('.asset-dropdown-item').forEach(el => {
+      el.classList.toggle('active', el.dataset.asset === assetId);
+    });
+
+    updateHeader();
+    renderAll();
+  }
+
+  // ===== Switch Timeframe =====
+  async function switchTimeframe(tf) {
+    if (tf === state.timeframe) return;
+    state.timeframe = tf;
+
+    const priceFile = state.priceFileMap[tf];
+    if (!priceFile || !state.currentAsset) return;
+
+    showLoading(`Loading ${tf} candles...`);
+    try {
+      const resp = await fetch(`${DATA_BASE}/${state.currentAsset}/${priceFile}`);
+      if (resp.ok) {
+        const data = await resp.json();
+        state.candles = data.candles || [];
+        renderChart();
+      } else {
+        // Fallback: keep current candles, just notify
+        console.warn(`${priceFile} not available for ${state.currentAsset}`);
+      }
+    } catch (err) {
+      console.error('Timeframe switch error:', err);
+    }
+    hideLoading();
+  }
+
+  // ===== Update Header =====
+  function updateHeader() {
+    const a = state.assetMeta;
+    if (!a) return;
+
+    $('#tokenName').textContent = `$${a.name}`;
+    $('#tokenNetwork').textContent = a.network;
+    $('#assetDot').style.background = a.color || '#888';
+    $('#founderTag').textContent = `@${a.founder}`;
+    $('#founderHandle').textContent = `@${a.founder}`;
+    $('#tweetCountInfo').textContent = `${state.events.length} tweets`;
+
+    if (state.stats?.summary?.date_range) {
+      const dr = state.stats.summary.date_range;
+      $('#dateRangeInfo').textContent = `${dr.start} — ${dr.end}`;
+    }
+  }
+
+  // ===== Wire Events =====
+  function wireEvents() {
+    // View tabs
+    $$('.view-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        $$('.view-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        state.view = tab.dataset.view;
+        updateView();
+      });
+    });
+
+    // Chart range tabs
+    $$('.chart-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        $$('.chart-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        state.chartRange = tab.dataset.range;
+        fitChartRange();
+      });
+    });
+
+    // Timeframe buttons
+    $$('.tf-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        $$('.tf-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        await switchTimeframe(btn.dataset.tf);
+      });
+    });
+
+    // Table sort
+    $$('thead th').forEach(th => {
+      th.addEventListener('click', () => {
+        const col = th.dataset.sort;
+        if (!col) return;
+        if (state.sortCol === col) state.sortDir *= -1;
+        else { state.sortCol = col; state.sortDir = -1; }
+        renderTable();
+      });
+    });
+
+    // Table search
+    $('#tableSearch').addEventListener('input', (e) => {
+      state.searchQuery = e.target.value;
+      renderTable();
+    });
+
+    // CSV export
+    $('#exportCSV').addEventListener('click', exportCSV);
+  }
+
+  // ===== View Switching =====
   function updateView() {
     $('#chartView').style.display = state.view === 'chart' ? '' : 'none';
     $('#dataView').classList.toggle('active', state.view === 'data');
     $('#aboutView').classList.toggle('active', state.view === 'about');
-    if (state.view === 'data' && state.data) renderTable();
-    if (state.view === 'about' && state.data) renderAbout();
-  }
-
-  // ===== Chart Range Tabs =====
-  $$('.chart-tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      $$('.chart-tab').forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      state.chartRange = tab.dataset.range;
-      if (state.data) fitChartRange();
-    });
-  });
-
-  // ===== Timeframe Buttons =====
-  $$('.tf-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      $$('.tf-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      state.timeframe = btn.dataset.tf;
-      // For now we only have daily data, but the buttons are wired up
-    });
-  });
-
-  // ===== Setup / Analyze =====
-  $('#analyzeBtn').addEventListener('click', startAnalysis);
-  $('#demoBtn').addEventListener('click', loadDemo);
-
-  async function startAnalysis() {
-    const handle = $('#inputHandle').value.trim().replace(/^@/, '');
-    const tokenId = $('#inputTokenId').value.trim();
-    const network = $('#inputNetwork').value;
-    const poolAddress = $('#inputPoolAddress').value.trim();
-    const tokenName = $('#inputTokenName').value.trim() || tokenId.toUpperCase() || 'TOKEN';
-
-    if (!handle) return alert('Enter a Twitter handle');
-    if (!tokenId && !(network && poolAddress)) return alert('Enter a CoinGecko token ID or GeckoTerminal network + pool');
-
-    showLoading('Scraping tweets for @' + handle + '...');
-
-    try {
-      // Step 1: Try to call our API if available
-      const apiBase = window.location.origin;
-      const tweets = await scrapeTweetsViaPage(handle);
-
-      if (!tweets.length) {
-        hideLoading();
-        alert('Could not find tweets. Make sure the handle is correct.');
-        return;
-      }
-
-      updateLoading(`Found ${tweets.length} tweets. Fetching prices...`);
-
-      // Step 2: Call our price-correlation API
-      const body = { tweets, windows: [1, 24] };
-      if (tokenId) body.tokenId = tokenId;
-      else { body.network = network; body.poolAddress = poolAddress; }
-
-      let result;
-      try {
-        const resp = await fetch(apiBase + '/api/analytics/price-correlation', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body),
-        });
-        if (resp.ok) {
-          result = await resp.json();
-        } else {
-          throw new Error('API not available');
-        }
-      } catch {
-        // Fallback: fetch prices directly from browser
-        updateLoading('API unavailable. Fetching prices directly...');
-        result = await analyzeLocally(tweets, { tokenId, network, poolAddress });
-      }
-
-      state.data = {
-        ...result,
-        meta: {
-          ...result.meta,
-          handle,
-          tokenName,
-          tokenNetwork: network || 'CoinGecko',
-        },
-      };
-
-      hideLoading();
-      $('#setupPanel').style.display = 'none';
-      renderAll();
-
-    } catch (err) {
-      hideLoading();
-      console.error(err);
-      alert('Error: ' + err.message);
-    }
-  }
-
-  // ===== Tweet scraping via nitter or direct (lightweight) =====
-  async function scrapeTweetsViaPage(handle) {
-    // Try multiple Nitter instances for tweet data
-    const nitterInstances = [
-      `https://nitter.privacydev.net/${handle}`,
-      `https://nitter.poast.org/${handle}`,
-    ];
-
-    for (const url of nitterInstances) {
-      try {
-        const resp = await fetch(url);
-        if (!resp.ok) continue;
-        const html = await resp.text();
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, 'text/html');
-        const tweetEls = doc.querySelectorAll('.timeline-item');
-        if (!tweetEls.length) continue;
-
-        const tweets = [];
-        tweetEls.forEach(el => {
-          const dateEl = el.querySelector('.tweet-date a');
-          const textEl = el.querySelector('.tweet-content');
-          const statsEls = el.querySelectorAll('.tweet-stat .icon-container');
-
-          const dateStr = dateEl?.getAttribute('title');
-          if (!dateStr) return;
-
-          const timestamp = new Date(dateStr).getTime();
-          if (isNaN(timestamp)) return;
-
-          tweets.push({
-            timestamp,
-            text: (textEl?.textContent || '').trim().substring(0, 280),
-            url: `https://x.com/${handle}/status/${(dateEl?.href || '').split('/').pop()}`,
-            likes: parseInt(statsEls[3]?.textContent?.trim()?.replace(/,/g, '')) || 0,
-            reposts: parseInt(statsEls[1]?.textContent?.trim()?.replace(/,/g, '')) || 0,
-            replies: parseInt(statsEls[0]?.textContent?.trim()?.replace(/,/g, '')) || 0,
-          });
-        });
-
-        if (tweets.length) return tweets;
-      } catch { continue; }
-    }
-
-    // If Nitter fails, return empty (user should use DevTools script instead)
-    return [];
-  }
-
-  // ===== Direct browser-side analysis (no API needed) =====
-  async function analyzeLocally(tweets, { tokenId, network, poolAddress }) {
-    const sorted = [...tweets].sort((a, b) => a.timestamp - b.timestamp);
-    const firstTs = Math.floor(sorted[0].timestamp / 1000) - 86400;
-    const lastTs = Math.floor(sorted[sorted.length - 1].timestamp / 1000) + 86400 * 2;
-
-    let prices;
-    if (tokenId) {
-      const url = `https://api.coingecko.com/api/v3/coins/${tokenId}/market_chart/range?vs_currency=usd&from=${firstTs}&to=${lastTs}`;
-      const resp = await fetch(url);
-      if (!resp.ok) throw new Error('CoinGecko API error: ' + resp.status);
-      const data = await resp.json();
-      prices = (data.prices || []).map(([ts, price]) => ({ ts, price }));
-    } else {
-      const url = `https://api.geckoterminal.com/api/v2/networks/${network}/pools/${poolAddress}/ohlcv/hour?aggregate=1&limit=1000`;
-      const resp = await fetch(url);
-      if (!resp.ok) throw new Error('GeckoTerminal API error: ' + resp.status);
-      const data = await resp.json();
-      prices = (data?.data?.attributes?.ohlcv_list || [])
-        .map(([ts, o, h, l, c]) => ({ ts: ts * 1000, price: parseFloat(c), open: parseFloat(o), high: parseFloat(h), low: parseFloat(l), close: parseFloat(c) }))
-        .filter(p => p.ts >= firstTs * 1000 && p.ts <= lastTs * 1000)
-        .sort((a, b) => a.ts - b.ts);
-    }
-
-    if (!prices.length) throw new Error('No price data returned');
-
-    // Align
-    const windows = [1, 24];
-    const aligned = sorted.map(tweet => {
-      const atTweet = closest(prices, tweet.timestamp);
-      if (!atTweet) return { ...tweet, priceAtTweet: null, impact: {} };
-      const impact = {};
-      for (const h of windows) {
-        const futureTs = tweet.timestamp + h * 3600_000;
-        const fp = closest(prices, futureTs);
-        if (fp && Math.abs(fp.ts - futureTs) < h * 3600_000 * 0.5) {
-          impact[`${h}h`] = { price: fp.price, change: Math.round(((fp.price - atTweet.price) / atTweet.price) * 10000) / 100 };
-        }
-      }
-      return { ...tweet, priceAtTweet: atTweet.price, impact };
-    });
-
-    // Stats
-    const withImpact = aligned.filter(r => r.impact?.['24h']);
-    const c24 = withImpact.map(r => r.impact['24h'].change);
-    const avg = arr => arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
-    const med = arr => { const s = [...arr].sort((a, b) => a - b); const m = Math.floor(s.length / 2); return s.length % 2 ? s[m] : (s[m-1]+s[m])/2; };
-
-    const stats = c24.length ? {
-      totalTweets: aligned.length,
-      tweetsWithPriceData: withImpact.length,
-      avgChange24h: Math.round(avg(c24) * 100) / 100,
-      medianChange24h: Math.round(med(c24) * 100) / 100,
-      winRate: Math.round((c24.filter(c => c > 0).length / c24.length) * 10000) / 100,
-      bigMoves: c24.filter(c => Math.abs(c) >= 15).length,
-      bigMovePct: Math.round((c24.filter(c => Math.abs(c) >= 15).length / c24.length) * 10000) / 100,
-      avgHoursBetweenTweets: (() => { const ts = aligned.map(r => r.timestamp).sort(); const g = []; for(let i=1;i<ts.length;i++) g.push((ts[i]-ts[i-1])/3600000); return g.length ? Math.round(avg(g)*10)/10 : null; })(),
-      silences: (() => { const ts = aligned.map(r => r.timestamp).sort((a,b)=>a-b); const s = []; for(let i=1;i<ts.length;i++){ const gh=(ts[i]-ts[i-1])/3600000; if(gh>=48) s.push({startDate:new Date(ts[i-1]).toISOString(),endDate:new Date(ts[i]).toISOString(),gapHours:Math.round(gh)}); } return s; })(),
-      bestTweet: withImpact.reduce((b,r) => r.impact['24h'].change > (b?.impact?.['24h']?.change??-Infinity)?r:b, null),
-      worstTweet: withImpact.reduce((w,r) => r.impact['24h'].change < (w?.impact?.['24h']?.change??Infinity)?r:w, null),
-    } : null;
-
-    return {
-      aligned, stats,
-      meta: { token: tokenId || `${network}/${poolAddress}`, priceSource: tokenId ? 'coingecko' : 'geckoterminal', pricePoints: prices.length },
-      _prices: prices,
-    };
-  }
-
-  function closest(prices, targetTs) {
-    let best = null, bestDiff = Infinity;
-    for (const p of prices) {
-      const d = Math.abs(p.ts - targetTs);
-      if (d < bestDiff) { bestDiff = d; best = p; }
-      if (best && d > bestDiff) break;
-    }
-    return best;
-  }
-
-  // ===== Demo Data =====
-  async function loadDemo() {
-    showLoading('Loading demo data ($PUMP × @a1lon9)...');
-    try {
-      // Generate realistic demo data
-      const demoTweets = generateDemoData();
-      const demoPrices = generateDemoPrices();
-
-      const windows = [1, 24];
-      const aligned = demoTweets.map(tweet => {
-        const atTweet = closest(demoPrices, tweet.timestamp);
-        if (!atTweet) return { ...tweet, priceAtTweet: null, impact: {} };
-        const impact = {};
-        for (const h of windows) {
-          const futureTs = tweet.timestamp + h * 3600_000;
-          const fp = closest(demoPrices, futureTs);
-          if (fp && Math.abs(fp.ts - futureTs) < h * 3600_000 * 0.5) {
-            impact[`${h}h`] = { price: fp.price, change: Math.round(((fp.price - atTweet.price) / atTweet.price) * 10000) / 100 };
-          }
-        }
-        return { ...tweet, priceAtTweet: atTweet.price, impact };
-      });
-
-      const withImpact = aligned.filter(r => r.impact?.['24h']);
-      const c24 = withImpact.map(r => r.impact['24h'].change);
-      const avg = arr => arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
-      const med = arr => { const s = [...arr].sort((a,b)=>a-b); const m = Math.floor(s.length/2); return s.length%2?s[m]:(s[m-1]+s[m])/2; };
-
-      const stats = {
-        totalTweets: aligned.length,
-        tweetsWithPriceData: withImpact.length,
-        avgChange24h: Math.round(avg(c24)*100)/100,
-        medianChange24h: Math.round(med(c24)*100)/100,
-        winRate: Math.round((c24.filter(c=>c>0).length/c24.length)*10000)/100,
-        bigMoves: c24.filter(c=>Math.abs(c)>=15).length,
-        bigMovePct: Math.round((c24.filter(c=>Math.abs(c)>=15).length/c24.length)*10000)/100,
-        avgHoursBetweenTweets: 18.4,
-        silences: [
-          { startDate: '2025-10-15T00:00:00Z', endDate: '2025-10-24T00:00:00Z', gapHours: 216, priceChange: -9.8 },
-          { startDate: '2025-11-20T00:00:00Z', endDate: '2026-01-24T00:00:00Z', gapHours: 1560, priceChange: -29 },
-        ],
-        bestTweet: withImpact.reduce((b,r)=>r.impact['24h'].change>(b?.impact?.['24h']?.change??-Infinity)?r:b,null),
-        worstTweet: withImpact.reduce((w,r)=>r.impact['24h'].change<(w?.impact?.['24h']?.change??Infinity)?r:w,null),
-      };
-
-      state.data = {
-        aligned,
-        stats,
-        meta: { handle: 'a1lon9', tokenName: '$PUMP', tokenNetwork: 'SOLANA', token: 'pump', priceSource: 'geckoterminal', pricePoints: demoPrices.length },
-        _prices: demoPrices,
-      };
-
-      hideLoading();
-      $('#setupPanel').style.display = 'none';
-      renderAll();
-    } catch (err) {
-      hideLoading();
-      console.error(err);
-      alert('Demo error: ' + err.message);
-    }
-  }
-
-  function generateDemoData() {
-    // Simulate ~109 tweets from Aug 2025 to Feb 2026 for $PUMP by @a1lon9
-    const tweets = [];
-    const start = new Date('2025-08-01').getTime();
-    const end = new Date('2026-02-15').getTime();
-    const texts = [
-      'Pump is alive and well 🚀', 'Big things coming for the community',
-      'Just shipped a major update', 'LFG 🔥', 'Market looking interesting rn',
-      'Building through the noise', 'New partnership incoming 👀',
-      'GM to all pump holders', 'Reminds me of early days', 'This is just the beginning',
-      'We dont stop building', 'Number go up technology', 'Stay focused, stay building',
-      'The real ones know 🫡', 'Another milestone reached', 'Community is everything',
-      'This bear market is a gift', 'Innovation never sleeps', 'Chart looking healthy',
-      'We are so back', 'Wagmi frens', 'Just wait and see what happens next',
-    ];
-
-    // Create clusters of tweets (some days have many, some have gaps)
-    const clusterDays = [0, 3, 5, 18, 20, 22, 35, 37, 50, 52, 53, 55, 72, 73, 80, 85, 90, 100, 105, 110, 120, 125, 135, 140, 150, 160, 165, 170, 180, 190, 195, 198];
-    for (const dayOffset of clusterDays) {
-      const dayTs = start + dayOffset * 86400_000;
-      if (dayTs > end) break;
-      const tweetsThisDay = Math.floor(Math.random() * 5) + 1;
-      for (let j = 0; j < tweetsThisDay; j++) {
-        const hourOffset = Math.floor(Math.random() * 16) + 7; // 7am-11pm
-        tweets.push({
-          timestamp: dayTs + hourOffset * 3600_000 + Math.random() * 3600_000,
-          text: texts[Math.floor(Math.random() * texts.length)],
-          url: `https://x.com/a1lon9/status/${Date.now() + tweets.length}`,
-          likes: Math.floor(Math.random() * 500) + 10,
-          reposts: Math.floor(Math.random() * 100) + 2,
-          replies: Math.floor(Math.random() * 80) + 1,
-        });
-      }
-    }
-
-    return tweets.sort((a, b) => a.timestamp - b.timestamp);
-  }
-
-  function generateDemoPrices() {
-    // Generate realistic OHLCV-style price data for $PUMP
-    // Pattern: rise to peak in Sep, crash in Oct, recovery, then decline
-    const prices = [];
-    const start = new Date('2025-07-25').getTime();
-    const end = new Date('2026-02-20').getTime();
-
-    let price = 0.003; // start price
-    const hour = 3600_000;
-
-    for (let ts = start; ts <= end; ts += hour) {
-      const day = (ts - start) / 86400_000;
-
-      // Price trajectory
-      let trend = 0;
-      if (day < 15) trend = 0.002;       // gradual rise
-      else if (day < 35) trend = 0.015;  // strong rise
-      else if (day < 55) trend = 0.008;  // continued rise
-      else if (day < 70) trend = -0.012; // correction
-      else if (day < 85) trend = 0.005;  // bounce
-      else if (day < 100) trend = -0.008; // decline
-      else if (day < 130) trend = -0.003; // slow bleed
-      else if (day < 160) trend = -0.006; // continued decline
-      else if (day < 180) trend = -0.002; // bottoming
-      else trend = 0.004;                // slight recovery
-
-      price *= (1 + trend / 24 + (Math.random() - 0.5) * 0.03);
-      price = Math.max(0.0005, price);
-
-      prices.push({
-        ts,
-        price,
-        open: price * (1 + (Math.random() - 0.5) * 0.01),
-        high: price * (1 + Math.random() * 0.02),
-        low: price * (1 - Math.random() * 0.02),
-        close: price,
-      });
-    }
-
-    return prices;
+    if (state.view === 'data') renderTable();
+    if (state.view === 'about') renderAbout();
   }
 
   // ===== Render All =====
   function renderAll() {
-    const { data } = state;
-    if (!data) return;
-
-    // Update header
-    $('#tokenName').textContent = data.meta.tokenName || data.meta.token;
-    $('#tokenNetwork').textContent = data.meta.tokenNetwork || '';
-    $('#founderHandle').textContent = '@' + (data.meta.handle || '—');
-    $('#tweetCountInfo').textContent = `${data.aligned.length} tweets · ${data.meta.priceSource === 'coingecko' ? 'CoinGecko' : 'GeckoTerminal'}`;
-
     renderChart();
     if (state.view === 'data') renderTable();
     if (state.view === 'about') renderAbout();
@@ -1307,21 +1054,28 @@
 
   // ===== CHART RENDERING =====
   function renderChart() {
-    const { data } = state;
-    if (!data) return;
-
     const chartEl = $('#chart');
     chartEl.innerHTML = '';
     $('#markersLayer').innerHTML = '';
 
-    // Build daily OHLC from price data or aligned tweet prices
-    const prices = data._prices || [];
-    const dailyCandles = buildDailyCandles(prices);
-
-    if (!dailyCandles.length) {
-      chartEl.innerHTML = '<p style="text-align:center;padding:60px;color:var(--text-secondary)">No price data to display</p>';
+    const candles = state.candles;
+    if (!candles.length) {
+      chartEl.innerHTML = '<p style="text-align:center;padding:60px;color:var(--text-secondary)">No price data available for this timeframe</p>';
       return;
     }
+
+    // Convert candles: {t, o, h, l, c, v} → TradingView format
+    const isIntraday = state.timeframe !== '1D';
+    const chartData = candles.map(c => {
+      if (isIntraday) {
+        return { time: c.t, open: c.o, high: c.h, low: c.l, close: c.c };
+      } else {
+        // Daily: convert unix timestamp to YYYY-MM-DD
+        const d = new Date(c.t * 1000);
+        const day = `${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,'0')}-${String(d.getUTCDate()).padStart(2,'0')}`;
+        return { time: day, open: c.o, high: c.h, low: c.l, close: c.c };
+      }
+    });
 
     // Create chart
     const chart = LightweightCharts.createChart(chartEl, {
@@ -1347,7 +1101,7 @@
       },
       timeScale: {
         borderColor: '#2a2e39',
-        timeVisible: false,
+        timeVisible: isIntraday,
         secondsVisible: false,
       },
       handleScroll: { vertTouchDrag: false },
@@ -1362,10 +1116,10 @@
       wickDownColor: '#ef5350',
     });
 
-    candleSeries.setData(dailyCandles);
+    candleSeries.setData(chartData);
 
     // Add tweet markers on TradingView chart
-    const tweetMarkers = buildTweetMarkers(data.aligned);
+    const tweetMarkers = buildTweetMarkers();
     if (tweetMarkers.length) {
       candleSeries.setMarkers(tweetMarkers);
     }
@@ -1374,10 +1128,10 @@
     state.candleSeries = candleSeries;
 
     // Resize handler
-    const resizeObserver = new ResizeObserver(() => {
+    const resizeObs = new ResizeObserver(() => {
       chart.applyOptions({ width: chartEl.clientWidth, height: chartEl.clientHeight });
     });
-    resizeObserver.observe(chartEl);
+    resizeObs.observe(chartEl);
 
     // Price display on crosshair move
     chart.subscribeCrosshairMove(param => {
@@ -1388,7 +1142,7 @@
           const o = data.open;
           const pct = ((c - o) / o * 100).toFixed(2);
           const color = c >= o ? 'var(--green-bright)' : 'var(--red)';
-          $('#priceDisplay').innerHTML = `<span style="color:${color}">$${c.toFixed(6)} (${pct > 0 ? '+' : ''}${pct}%)</span>`;
+          $('#priceDisplay').innerHTML = `<span style="color:${color}">$${formatPrice(c)} (${pct > 0 ? '+' : ''}${pct}%)</span>`;
         }
       }
     });
@@ -1396,121 +1150,113 @@
     fitChartRange();
 
     // Overlay HTML tweet markers (avatar bubbles)
-    renderMarkerOverlays(data.aligned, chart, candleSeries);
+    renderMarkerOverlays(chart, candleSeries);
   }
 
-  function buildDailyCandles(prices) {
-    if (!prices.length) return [];
+  function buildTweetMarkers() {
+    const isIntraday = state.timeframe !== '1D';
 
-    const dayMap = new Map();
-    for (const p of prices) {
-      const date = new Date(p.ts);
-      const key = `${date.getUTCFullYear()}-${String(date.getUTCMonth()+1).padStart(2,'0')}-${String(date.getUTCDate()).padStart(2,'0')}`;
-      if (!dayMap.has(key)) {
-        dayMap.set(key, { time: key, open: p.price, high: p.price, low: p.price, close: p.price });
+    // Group events by time bucket
+    const bucketMap = new Map();
+    for (const evt of state.events) {
+      let key;
+      if (isIntraday) {
+        // Round to nearest candle time
+        key = evt.timestamp;
       } else {
-        const c = dayMap.get(key);
-        c.high = Math.max(c.high, p.price);
-        c.low = Math.min(c.low, p.price);
-        c.close = p.price;
+        const d = new Date(evt.timestamp * 1000);
+        key = `${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,'0')}-${String(d.getUTCDate()).padStart(2,'0')}`;
       }
-    }
-
-    return [...dayMap.values()].sort((a, b) => a.time.localeCompare(b.time));
-  }
-
-  function buildTweetMarkers(aligned) {
-    // Group tweets by day, add markers
-    const dayMap = new Map();
-    for (const t of aligned) {
-      if (!t.priceAtTweet) continue;
-      const d = new Date(t.timestamp);
-      const key = `${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,'0')}-${String(d.getUTCDate()).padStart(2,'0')}`;
-      if (!dayMap.has(key)) dayMap.set(key, []);
-      dayMap.get(key).push(t);
+      if (!bucketMap.has(key)) bucketMap.set(key, []);
+      bucketMap.get(key).push(evt);
     }
 
     const markers = [];
-    dayMap.forEach((tweets, day) => {
-      const change24 = tweets[0]?.impact?.['24h']?.change;
+    bucketMap.forEach((events, time) => {
+      const change24 = events[0]?.change_24h_pct;
       const color = change24 != null ? (change24 > 0 ? '#26a69a' : '#ef5350') : '#a855f7';
       markers.push({
-        time: day,
+        time: isIntraday ? time : time,
         position: 'aboveBar',
         color,
         shape: 'circle',
-        text: tweets.length > 1 ? String(tweets.length) : '🐦',
-        size: tweets.length > 3 ? 2 : 1,
+        text: events.length > 1 ? String(events.length) : '🐦',
+        size: events.length > 3 ? 2 : 1,
       });
     });
 
-    return markers.sort((a, b) => a.time.localeCompare(b.time));
+    return markers.sort((a, b) => {
+      if (typeof a.time === 'string') return a.time.localeCompare(b.time);
+      return a.time - b.time;
+    });
   }
 
-  function renderMarkerOverlays(aligned, chart, series) {
-    // This renders HTML avatar bubbles over the chart
-    // We group tweets by day and position them on the chart
+  function renderMarkerOverlays(chart, series) {
     const layer = $('#markersLayer');
     layer.innerHTML = '';
+    const isIntraday = state.timeframe !== '1D';
 
+    // Group events by day for overlays
     const dayMap = new Map();
-    for (const t of aligned) {
-      if (!t.priceAtTweet) continue;
-      const d = new Date(t.timestamp);
-      const key = `${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,'0')}-${String(d.getUTCDate()).padStart(2,'0')}`;
+    for (const evt of state.events) {
+      const d = new Date(evt.timestamp * 1000);
+      const key = isIntraday
+        ? evt.timestamp
+        : `${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,'0')}-${String(d.getUTCDate()).padStart(2,'0')}`;
       if (!dayMap.has(key)) dayMap.set(key, []);
-      dayMap.get(key).push(t);
+      dayMap.get(key).push(evt);
     }
 
     const updatePositions = () => {
       layer.innerHTML = '';
       const timeScale = chart.timeScale();
 
-      dayMap.forEach((tweets, day) => {
-        const x = timeScale.timeToCoordinate(day);
+      dayMap.forEach((events, time) => {
+        const x = timeScale.timeToCoordinate(time);
         if (x === null || x < 0) return;
 
-        const high = Math.max(...tweets.map(t => t.priceAtTweet));
-        const y = series.priceToCoordinate(high);
+        const highPrice = Math.max(...events.map(e => e.price_at_tweet || 0));
+        if (!highPrice) return;
+        const y = series.priceToCoordinate(highPrice);
         if (y === null) return;
 
-        const count = tweets.length;
-        const change24 = tweets[0]?.impact?.['24h']?.change;
+        const count = events.length;
+        const first = events[0];
+        const change24 = first.change_24h_pct;
         const borderColor = change24 != null ? (change24 > 0 ? 'var(--green)' : 'var(--red)') : 'var(--purple)';
 
         const marker = document.createElement('div');
         marker.className = 'tweet-marker';
         marker.style.left = (x - 16) + 'px';
-        marker.style.top = (y - 44) + 'px';
+        marker.style.top = (y - 48) + 'px';
 
         const avatarHTML = `<div class="marker-avatar" style="border-color:${borderColor}">🐦</div>`;
         const countHTML = count > 1 ? `<div class="marker-count">${count}</div>` : '';
 
-        // Tooltip
-        const firstTweet = tweets[0];
-        const dateStr = new Date(firstTweet.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        const dateStr = new Date(first.timestamp * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+        const statsHTML = `<div class="tt-stats">❤️ ${fmtNum(first.likes)} · 🔁 ${fmtNum(first.retweets)} · 👁 ${fmtNum(first.impressions)}</div>`;
         const impactHTML = [];
-        if (firstTweet.impact?.['1h']) {
-          const c = firstTweet.impact['1h'].change;
-          impactHTML.push(`<span class="${c >= 0 ? 'positive' : 'negative'}">1h: ${c > 0 ? '+' : ''}${c}%</span>`);
+        if (first.change_1h_pct != null) {
+          const c = first.change_1h_pct;
+          impactHTML.push(`<span class="${c >= 0 ? 'positive' : 'negative'}">1h: ${c > 0 ? '+' : ''}${c.toFixed(2)}%</span>`);
         }
-        if (firstTweet.impact?.['24h']) {
-          const c = firstTweet.impact['24h'].change;
-          impactHTML.push(`<span class="${c >= 0 ? 'positive' : 'negative'}">24h: ${c > 0 ? '+' : ''}${c}%</span>`);
+        if (first.change_24h_pct != null) {
+          const c = first.change_24h_pct;
+          impactHTML.push(`<span class="${c >= 0 ? 'positive' : 'negative'}">24h: ${c > 0 ? '+' : ''}${c.toFixed(2)}%</span>`);
         }
 
         marker.innerHTML = `
           ${avatarHTML}${countHTML}
           <div class="tweet-tooltip">
-            <div class="tt-date">${dateStr} · ${count} tweet${count > 1 ? 's' : ''} · $${firstTweet.priceAtTweet.toFixed(6)}</div>
-            <div class="tt-text">${firstTweet.text.substring(0, 140)}${firstTweet.text.length > 140 ? '...' : ''}</div>
+            <div class="tt-date">${dateStr} · ${count} tweet${count > 1 ? 's' : ''} · $${formatPrice(first.price_at_tweet)}</div>
+            <div class="tt-text">${escapeHtml((first.text || '').substring(0, 160))}${(first.text || '').length > 160 ? '...' : ''}</div>
+            ${statsHTML}
             <div class="tt-impact">${impactHTML.join(' ')}</div>
           </div>
         `;
 
-        // Click to open tweet
         marker.addEventListener('click', () => {
-          if (firstTweet.url) window.open(firstTweet.url, '_blank');
+          if (first.tweet_id) window.open(`https://x.com/${state.assetMeta?.founder}/status/${first.tweet_id}`, '_blank');
         });
 
         layer.appendChild(marker);
@@ -1519,90 +1265,79 @@
 
     updatePositions();
     chart.timeScale().subscribeVisibleLogicalRangeChange(updatePositions);
-    chart.subscribeCrosshairMove(() => {}); // triggers re-render
     window.addEventListener('resize', updatePositions);
   }
 
   function fitChartRange() {
-    if (!state.chart || !state.data) return;
+    if (!state.chart || !state.events.length) return;
     const ts = state.chart.timeScale();
-    const aligned = state.data.aligned.filter(t => t.priceAtTweet);
+    const isIntraday = state.timeframe !== '1D';
 
-    if (!aligned.length) { ts.fitContent(); return; }
+    const timestamps = state.events.map(e => e.timestamp).sort((a, b) => a - b);
+    const first = timestamps[0];
+    const last = timestamps[timestamps.length - 1];
 
-    const toDay = (ms) => {
-      const d = new Date(ms);
+    const toTime = (unix, offsetDays = 0) => {
+      const adjusted = unix + offsetDays * 86400;
+      if (isIntraday) return adjusted;
+      const d = new Date(adjusted * 1000);
       return `${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,'0')}-${String(d.getUTCDate()).padStart(2,'0')}`;
     };
 
-    switch (state.chartRange) {
-      case 'first': {
-        const first = toDay(aligned[0].timestamp);
-        ts.setVisibleRange({ from: first, to: toDay(aligned[0].timestamp + 7 * 86400_000) });
-        break;
+    try {
+      switch (state.chartRange) {
+        case 'first':
+          ts.setVisibleRange({ from: toTime(first, -1), to: toTime(first, 7) });
+          break;
+        case 'last':
+          ts.setVisibleRange({ from: toTime(last, -7), to: toTime(last, 1) });
+          break;
+        case 'tweets':
+          ts.setVisibleRange({ from: toTime(first, -2), to: toTime(last, 2) });
+          break;
+        default:
+          ts.fitContent();
       }
-      case 'last': {
-        const last = aligned[aligned.length - 1].timestamp;
-        ts.setVisibleRange({ from: toDay(last - 7 * 86400_000), to: toDay(last + 86400_000) });
-        break;
-      }
-      case 'tweets': {
-        const from = toDay(aligned[0].timestamp - 2 * 86400_000);
-        const to = toDay(aligned[aligned.length - 1].timestamp + 2 * 86400_000);
-        ts.setVisibleRange({ from, to });
-        break;
-      }
-      default:
-        ts.fitContent();
+    } catch {
+      ts.fitContent();
     }
   }
 
   // ===== DATA TABLE =====
   function renderTable() {
-    const { data } = state;
-    if (!data) return;
-
-    let rows = data.aligned.map(t => ({
-      datetime: t.timestamp,
-      dateStr: new Date(t.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: '2-digit', hour: '2-digit', minute: '2-digit' }),
-      text: t.text || '',
-      priceAtTweet: t.priceAtTweet,
-      likes: t.likes || 0,
-      reposts: t.reposts || 0,
-      change1h: t.impact?.['1h']?.change ?? null,
-      change24h: t.impact?.['24h']?.change ?? null,
-      url: t.url,
-    }));
+    let rows = state.events.map(e => ({ ...e }));
 
     // Filter
     if (state.searchQuery) {
       const q = state.searchQuery.toLowerCase();
-      rows = rows.filter(r => r.text.toLowerCase().includes(q) || r.dateStr.toLowerCase().includes(q));
+      rows = rows.filter(r => (r.text || '').toLowerCase().includes(q));
     }
 
     // Sort
     rows.sort((a, b) => {
       let va = a[state.sortCol] ?? -Infinity;
       let vb = b[state.sortCol] ?? -Infinity;
-      if (state.sortCol === 'change24h' || state.sortCol === 'change1h') {
-        // Sort by absolute impact by default
-        va = Math.abs(va); vb = Math.abs(vb);
-      }
+      if (typeof va === 'string') return va.localeCompare(vb) * state.sortDir;
       return (va > vb ? 1 : va < vb ? -1 : 0) * state.sortDir;
     });
 
     const tbody = $('#tableBody');
-    tbody.innerHTML = rows.map(r => `
-      <tr onclick="window.open('${r.url}', '_blank')">
-        <td>${r.dateStr}</td>
-        <td class="tweet-text-cell">${escapeHtml(r.text.substring(0, 120))}${r.text.length > 120 ? '...' : ''}</td>
-        <td>${r.priceAtTweet != null ? '$' + r.priceAtTweet.toFixed(6) : '—'}</td>
-        <td>${fmtNum(r.likes)}</td>
-        <td>${fmtNum(r.reposts)}</td>
-        <td class="${r.change1h != null ? (r.change1h >= 0 ? 'change-positive' : 'change-negative') : 'change-neutral'}">${r.change1h != null ? (r.change1h > 0 ? '+' : '') + r.change1h + '%' : '—'}</td>
-        <td class="${r.change24h != null ? (r.change24h >= 0 ? 'change-positive' : 'change-negative') : 'change-neutral'}">${r.change24h != null ? (r.change24h > 0 ? '+' : '') + r.change24h + '%' : '—'}</td>
-      </tr>
-    `).join('');
+    tbody.innerHTML = rows.map(r => {
+      const dateStr = new Date(r.timestamp * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: '2-digit', hour: '2-digit', minute: '2-digit' });
+      const c1h = r.change_1h_pct;
+      const c24h = r.change_24h_pct;
+      return `
+      <tr onclick="window.open('https://x.com/${state.assetMeta?.founder}/status/${r.tweet_id}', '_blank')">
+        <td>${dateStr}</td>
+        <td class="tweet-text-cell">${escapeHtml((r.text || '').substring(0, 140))}${(r.text || '').length > 140 ? '...' : ''}</td>
+        <td>$${formatPrice(r.price_at_tweet)}</td>
+        <td>${fmtNum(r.likes || 0)}</td>
+        <td>${fmtNum(r.retweets || 0)}</td>
+        <td>${fmtNum(r.impressions || 0)}</td>
+        <td class="${c1h != null ? (c1h >= 0 ? 'change-positive' : 'change-negative') : 'change-neutral'}">${c1h != null ? (c1h > 0 ? '+' : '') + c1h.toFixed(2) + '%' : '—'}</td>
+        <td class="${c24h != null ? (c24h >= 0 ? 'change-positive' : 'change-negative') : 'change-neutral'}">${c24h != null ? (c24h > 0 ? '+' : '') + c24h.toFixed(2) + '%' : '—'}</td>
+      </tr>`;
+    }).join('');
 
     // Update sort arrows
     $$('thead th').forEach(th => {
@@ -1610,94 +1345,91 @@
     });
   }
 
-  // Table sort
-  $$('thead th').forEach(th => {
-    th.addEventListener('click', () => {
-      const col = th.dataset.sort;
-      if (!col) return;
-      if (state.sortCol === col) state.sortDir *= -1;
-      else { state.sortCol = col; state.sortDir = -1; }
-      renderTable();
+  // ===== CSV Export =====
+  function exportCSV() {
+    if (!state.events.length) return;
+    const headers = ['date', 'tweet_id', 'text', 'price_at_tweet', 'likes', 'retweets', 'replies', 'impressions', 'change_1h_pct', 'change_24h_pct', 'market_cap_at_tweet'];
+    const csvRows = state.events.map(e => {
+      return [
+        e.timestamp_iso || new Date(e.timestamp * 1000).toISOString(),
+        e.tweet_id || '',
+        `"${(e.text || '').replace(/"/g, '""')}"`,
+        e.price_at_tweet ?? '',
+        e.likes ?? '',
+        e.retweets ?? '',
+        e.replies ?? '',
+        e.impressions ?? '',
+        e.change_1h_pct ?? '',
+        e.change_24h_pct ?? '',
+        e.market_cap_at_tweet ?? '',
+      ].join(',');
     });
-  });
-
-  // Table search
-  $('#tableSearch').addEventListener('input', (e) => {
-    state.searchQuery = e.target.value;
-    renderTable();
-  });
-
-  // CSV export
-  $('#exportCSV').addEventListener('click', () => {
-    if (!state.data) return;
-    const rows = state.data.aligned.map(t => ({
-      date: new Date(t.timestamp).toISOString(),
-      text: (t.text || '').replace(/"/g, '""'),
-      price: t.priceAtTweet,
-      likes: t.likes || 0,
-      reposts: t.reposts || 0,
-      change_1h: t.impact?.['1h']?.change ?? '',
-      change_24h: t.impact?.['24h']?.change ?? '',
-      url: t.url || '',
-    }));
-    const headers = Object.keys(rows[0]);
-    const csv = [headers.join(','), ...rows.map(r => headers.map(h => {
-      const v = r[h] ?? '';
-      return typeof v === 'string' && (v.includes(',') || v.includes('"') || v.includes('\n')) ? `"${v}"` : v;
-    }).join(','))].join('\n');
-    downloadBlob(csv, `tweet-price-${state.data.meta.handle || 'export'}.csv`, 'text/csv');
-  });
+    const csv = [headers.join(','), ...csvRows].join('\n');
+    downloadBlob(csv, `tweet-price-${state.currentAsset}-${state.assetMeta?.founder || 'export'}.csv`, 'text/csv');
+  }
 
   // ===== ABOUT VIEW =====
   function renderAbout() {
-    const { stats, meta, aligned } = state.data;
+    const stats = state.stats;
     if (!stats) {
-      $('#statsGrid').innerHTML = '<p style="color:var(--text-secondary)">Not enough data for statistics</p>';
+      $('#statsGrid').innerHTML = '<p style="color:var(--text-secondary)">No statistics available for this asset</p>';
+      $('#dailyComparison').innerHTML = '';
       return;
     }
 
+    const s = stats.summary || {};
+    const dc = stats.daily_comparison || {};
+
     // Stats cards
     $('#statsGrid').innerHTML = [
-      { value: stats.totalTweets, label: 'Total Tweets' },
-      { value: stats.avgChange24h + '%', label: 'Avg 24h Change', color: stats.avgChange24h >= 0 ? 'var(--green-bright)' : 'var(--red)' },
-      { value: stats.winRate + '%', label: 'Win Rate (24h)', color: stats.winRate >= 50 ? 'var(--green-bright)' : 'var(--red)' },
-      { value: stats.bigMoves, label: 'Big Moves (±15%)' },
-      { value: stats.medianChange24h + '%', label: 'Median 24h', color: stats.medianChange24h >= 0 ? 'var(--green-bright)' : 'var(--red)' },
-      { value: stats.avgHoursBetweenTweets ? stats.avgHoursBetweenTweets + 'h' : '—', label: 'Avg Tweet Gap' },
-    ].map(s => `
+      { value: s.total_tweets || state.events.length, label: 'Total Tweets' },
+      { value: (dc.tweet_day_avg_return != null ? dc.tweet_day_avg_return.toFixed(2) + '%' : '—'), label: 'Avg Tweet-Day Return', color: dc.tweet_day_avg_return >= 0 ? 'var(--green-bright)' : 'var(--red)' },
+      { value: (dc.tweet_day_win_rate != null ? dc.tweet_day_win_rate + '%' : '—'), label: 'Tweet-Day Win Rate', color: dc.tweet_day_win_rate >= 50 ? 'var(--green-bright)' : 'var(--red)' },
+      { value: s.total_days_analyzed || '—', label: 'Days Analyzed' },
+      { value: (dc.no_tweet_day_avg_return != null ? dc.no_tweet_day_avg_return.toFixed(2) + '%' : '—'), label: 'Avg No-Tweet Return', color: dc.no_tweet_day_avg_return >= 0 ? 'var(--green-bright)' : 'var(--red)' },
+      { value: (dc.no_tweet_day_win_rate != null ? dc.no_tweet_day_win_rate + '%' : '—'), label: 'No-Tweet Win Rate', color: dc.no_tweet_day_win_rate >= 50 ? 'var(--green-bright)' : 'var(--red)' },
+    ].map(c => `
       <div class="stat-card">
-        <div class="stat-value" ${s.color ? `style="color:${s.color}"` : ''}>${s.value}</div>
-        <div class="stat-label">${s.label}</div>
+        <div class="stat-value" ${c.color ? `style="color:${c.color}"` : ''}>${c.value}</div>
+        <div class="stat-label">${c.label}</div>
       </div>
     `).join('');
 
-    // Silences
-    const silences = stats.silences || [];
-    if (silences.length) {
-      $('#silencesSection').style.display = '';
-      $('#silencesList').innerHTML = silences.map(s => {
-        const days = Math.round(s.gapHours / 24);
-        const changeColor = s.priceChange != null ? (s.priceChange >= 0 ? 'var(--green-bright)' : 'var(--red)') : 'var(--text-secondary)';
-        return `
-          <div class="silence-card">
-            <div>
-              <div class="silence-dates">${new Date(s.startDate).toLocaleDateString()} → ${new Date(s.endDate).toLocaleDateString()}</div>
-              <div class="silence-gap">${days}d silence</div>
-            </div>
-            <div class="silence-change" style="color:${changeColor}">${s.priceChange != null ? (s.priceChange > 0 ? '+' : '') + s.priceChange + '%' : '—'}</div>
+    // Daily comparison cards
+    if (dc.tweet_day_distribution && dc.no_tweet_day_distribution) {
+      const td = dc.tweet_day_distribution;
+      const nd = dc.no_tweet_day_distribution;
+      $('#dailyComparison').innerHTML = `
+        <div class="comparison-card">
+          <h4>📅 Tweet Days (${dc.tweet_day_count || td.count})</h4>
+          <div class="big-num" style="color:${dc.tweet_day_avg_return >= 0 ? 'var(--green-bright)' : 'var(--red)'}">
+            ${dc.tweet_day_avg_return > 0 ? '+' : ''}${dc.tweet_day_avg_return?.toFixed(2) || '0'}%
           </div>
-        `;
-      }).join('');
+          <div class="sub-stat">Median: ${td.median?.toFixed(2)}% · Std: ${td.std_dev?.toFixed(2)}%</div>
+          <div class="sub-stat">Min: ${td.min?.toFixed(2)}% · Max: +${td.max?.toFixed(2)}%</div>
+          <div class="sub-stat">Win rate: ${dc.tweet_day_win_rate}% (${td.positive_count}↑ / ${td.negative_count}↓)</div>
+        </div>
+        <div class="comparison-card">
+          <h4>🤫 No-Tweet Days (${dc.no_tweet_day_count || nd.count})</h4>
+          <div class="big-num" style="color:${dc.no_tweet_day_avg_return >= 0 ? 'var(--green-bright)' : 'var(--red)'}">
+            ${dc.no_tweet_day_avg_return > 0 ? '+' : ''}${dc.no_tweet_day_avg_return?.toFixed(2) || '0'}%
+          </div>
+          <div class="sub-stat">Median: ${nd.median?.toFixed(2)}% · Std: ${nd.std_dev?.toFixed(2)}%</div>
+          <div class="sub-stat">Min: ${nd.min?.toFixed(2)}% · Max: +${nd.max?.toFixed(2)}%</div>
+          <div class="sub-stat">Win rate: ${dc.no_tweet_day_win_rate}% (${nd.positive_count}↑ / ${nd.negative_count}↓)</div>
+        </div>
+      `;
     } else {
-      $('#silencesSection').style.display = 'none';
+      $('#dailyComparison').innerHTML = '';
     }
 
     // Impact scatter plot
-    renderImpactScatter(aligned);
+    renderImpactScatter();
   }
 
-  function renderImpactScatter(aligned) {
+  function renderImpactScatter() {
     const canvas = $('#impactCanvas');
+    if (!canvas) return;
     const ctx = canvas.getContext('2d');
     const rect = canvas.parentElement.getBoundingClientRect();
     canvas.width = rect.width - 40;
@@ -1709,11 +1441,11 @@
 
     ctx.clearRect(0, 0, w, h);
 
-    const withImpact = aligned.filter(t => t.impact?.['24h'] && t.priceAtTweet);
+    const withImpact = state.events.filter(e => e.change_24h_pct != null);
     if (!withImpact.length) return;
 
-    const changes = withImpact.map(t => t.impact['24h'].change);
-    const maxAbs = Math.max(Math.abs(Math.min(...changes)), Math.abs(Math.max(...changes)), 20);
+    const changes = withImpact.map(e => e.change_24h_pct);
+    const maxAbs = Math.max(Math.abs(Math.min(...changes)), Math.abs(Math.max(...changes)), 10);
 
     // Background
     ctx.fillStyle = '#1a1e2e';
@@ -1742,9 +1474,9 @@
     const plotW = w - pad.left - pad.right;
     const plotH = h - pad.top - pad.bottom;
 
-    withImpact.forEach((t, i) => {
+    withImpact.forEach((e, i) => {
       const x = pad.left + (i / (withImpact.length - 1 || 1)) * plotW;
-      const change = t.impact['24h'].change;
+      const change = e.change_24h_pct;
       const y = zeroY - (change / maxAbs) * (plotH / 2);
       const r = Math.min(6, Math.max(3, Math.abs(change) / 5));
 
@@ -1760,12 +1492,19 @@
 
   // ===== Utilities =====
   function showLoading(text) { $('#loadingOverlay').classList.add('active'); $('#loadingText').textContent = text; }
-  function updateLoading(text) { $('#loadingText').textContent = text; }
   function hideLoading() { $('#loadingOverlay').classList.remove('active'); }
 
+  function formatPrice(p) {
+    if (p == null) return '—';
+    if (p >= 1) return p.toFixed(2);
+    if (p >= 0.01) return p.toFixed(4);
+    return p.toFixed(6);
+  }
+
   function fmtNum(n) {
-    if (n >= 1e6) return (n/1e6).toFixed(1) + 'M';
-    if (n >= 1e3) return (n/1e3).toFixed(1) + 'K';
+    if (n == null) return '—';
+    if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M';
+    if (n >= 1e3) return (n / 1e3).toFixed(1) + 'K';
     return String(n);
   }
 
@@ -1784,6 +1523,7 @@
 
   // ===== Init =====
   updateView();
+  init();
 
 })();
 </script>

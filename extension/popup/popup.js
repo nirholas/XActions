@@ -39,6 +39,8 @@
     dashSessionTime: $('#dashSessionTime'),
     automationSearch: $('#automationSearch'),
     logFilter: $('#logFilter'),
+    btnPauseResume: $('#btnPauseResume'),
+    noResultsMsg: $('#noResultsMsg'),
   };
 
   // ============================================
@@ -50,6 +52,7 @@
   let currentLogFilter = 'all';
   let sessionTimerInterval = null;
   let earliestStartTime = null;
+  let globalPaused = false;
 
   // ============================================
   // INITIALIZATION
@@ -70,6 +73,8 @@
     await checkRateLimit();
     startActivityPolling();
     startSessionTimer();
+    setupKeyboardShortcuts();
+    loadPauseState();
   }
 
   // ============================================
@@ -114,12 +119,16 @@
 
   function filterCards() {
     const searchTerm = DOM.automationSearch.value.toLowerCase().trim();
+    let visibleCount = 0;
     $$('.automation-card').forEach(card => {
       const catMatch = currentCategory === 'all' || card.dataset.category === currentCategory;
       const searchMatch = !searchTerm || (card.dataset.searchable || '').toLowerCase().includes(searchTerm)
         || card.querySelector('.card-title')?.textContent.toLowerCase().includes(searchTerm);
-      card.classList.toggle('card-hidden', !(catMatch && searchMatch));
+      const visible = catMatch && searchMatch;
+      card.classList.toggle('card-hidden', !visible);
+      if (visible) visibleCount++;
     });
+    DOM.noResultsMsg.style.display = visibleCount === 0 ? '' : 'none';
   }
 
   // ============================================
@@ -406,11 +415,56 @@
           automationState[id].running = false;
           updateCardUI(id, false);
         });
+        globalPaused = false;
+        updatePauseButton();
         addLocalLog('stop', 'all', 'Emergency stop — all automations halted');
         showToast('All automations stopped', 'warning');
         updateDashboard();
       }
     });
+
+    // Pause / Resume toggle
+    DOM.btnPauseResume.addEventListener('click', togglePause);
+  }
+
+  async function togglePause() {
+    if (globalPaused) {
+      const response = await chrome.runtime.sendMessage({ type: 'GLOBAL_RESUME' });
+      if (response?.success) {
+        globalPaused = false;
+        updatePauseButton();
+        showToast('Automations resumed', 'success');
+        addLocalLog('start', 'system', 'All automations resumed');
+      }
+    } else {
+      const response = await chrome.runtime.sendMessage({ type: 'GLOBAL_PAUSE' });
+      if (response?.success) {
+        globalPaused = true;
+        updatePauseButton();
+        showToast('Automations paused', 'warning');
+        addLocalLog('stop', 'system', 'All automations paused');
+      }
+    }
+  }
+
+  function updatePauseButton() {
+    if (globalPaused) {
+      DOM.btnPauseResume.textContent = '▶️';
+      DOM.btnPauseResume.title = 'Resume All (Ctrl+Shift+P)';
+      DOM.btnPauseResume.classList.add('paused');
+    } else {
+      DOM.btnPauseResume.textContent = '⏸';
+      DOM.btnPauseResume.title = 'Pause All (Ctrl+Shift+P)';
+      DOM.btnPauseResume.classList.remove('paused');
+    }
+  }
+
+  async function loadPauseState() {
+    try {
+      const data = await chrome.storage.local.get('globalPaused');
+      globalPaused = !!data.globalPaused;
+      updatePauseButton();
+    } catch { /* noop */ }
   }
 
   // ============================================
@@ -562,7 +616,7 @@
     }
 
     const html = filtered.slice(0, 100).map(entry => {
-      const time = new Date(entry.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      const relTime = formatRelativeTime(entry.time);
       const icon = {
         action: '🔧',
         start: '▶️',
@@ -573,7 +627,7 @@
 
       return `
         <div class="log-entry type-${entry.type}">
-          <span class="log-time">${time}</span>
+          <span class="log-time" title="${new Date(entry.time).toLocaleTimeString()}">${relTime}</span>
           <span class="log-icon">${icon}</span>
           <span class="log-message">${escapeHtml(entry.message)}</span>
         </div>
@@ -593,6 +647,44 @@
     const div = document.createElement('div');
     div.textContent = str;
     return div.innerHTML;
+  }
+
+  function formatRelativeTime(ts) {
+    const diff = Date.now() - ts;
+    if (diff < 5000) return 'now';
+    if (diff < 60000) return `${Math.floor(diff / 1000)}s ago`;
+    if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`;
+    if (diff < 86400000) return `${Math.floor(diff / 3600000)}h ago`;
+    return `${Math.floor(diff / 86400000)}d ago`;
+  }
+
+  // ============================================
+  // KEYBOARD SHORTCUTS
+  // ============================================
+  function setupKeyboardShortcuts() {
+    document.addEventListener('keydown', (e) => {
+      // Ctrl+Shift+S → Emergency stop
+      if (e.ctrlKey && e.shiftKey && e.key === 'S') {
+        e.preventDefault();
+        DOM.btnEmergencyStop.click();
+      }
+      // Ctrl+Shift+P → Pause/Resume
+      if (e.ctrlKey && e.shiftKey && e.key === 'P') {
+        e.preventDefault();
+        DOM.btnPauseResume.click();
+      }
+      // Escape → clear search
+      if (e.key === 'Escape' && document.activeElement === DOM.automationSearch) {
+        DOM.automationSearch.value = '';
+        filterCards();
+        DOM.automationSearch.blur();
+      }
+      // / → focus search
+      if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+        e.preventDefault();
+        DOM.automationSearch.focus();
+      }
+    });
   }
 
   // ============================================

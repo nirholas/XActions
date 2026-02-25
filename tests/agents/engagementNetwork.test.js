@@ -109,11 +109,21 @@ describe('EngagementNetwork', () => {
 
   describe('checkEthics', () => {
     it('should allow ethical interactions', () => {
+      // Create network with requireHumanReview disabled so content_share is allowed
+      const permissiveNetwork = new EngagementNetwork({ requireHumanReview: false });
+      permissiveNetwork.registerAgent('a1', { niche: { name: 'AI' } });
+      permissiveNetwork.registerAgent('a2', { niche: { name: 'AI' } });
+      const result = permissiveNetwork.checkEthics('a1', 'a2', 'content_share');
+      expect(result.allowed).toBe(true);
+      expect(result.violations).toEqual([]);
+    });
+
+    it('should block when requireHumanReview is enabled (default)', () => {
       network.registerAgent('a1', { niche: { name: 'AI' } });
       network.registerAgent('a2', { niche: { name: 'AI' } });
       const result = network.checkEthics('a1', 'a2', 'content_share');
-      expect(result.allowed).toBe(true);
-      expect(result.violations).toEqual([]);
+      expect(result.allowed).toBe(false);
+      expect(result.violations.length).toBeGreaterThan(0);
     });
   });
 
@@ -136,8 +146,8 @@ describe('EngagementNetwork', () => {
     it('should return stats', () => {
       network.registerAgent('a1', { niche: { name: 'AI' } });
       const stats = network.getNetworkStats();
-      expect(stats).toHaveProperty('agentCount');
-      expect(stats.agentCount).toBe(1);
+      expect(stats).toHaveProperty('totalAgents');
+      expect(stats.totalAgents).toBe(1);
     });
   });
 

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Integrations — AI Tools, CLI, Extensions | XActions</title>
+  <meta name="description" content="XActions integrates with Claude Desktop, Cursor, Windsurf, VS Code, Node.js CLI, Chrome extension, and more. See all supported AI tools and platforms.">
+  <meta name="keywords" content="XActions integrations, twitter Claude MCP, twitter Cursor integration, twitter AI tools, twitter CLI, twitter Chrome extension, MCP client twitter">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Integrations — XActions Works With Your Favorite AI Tools">
+  <meta property="og:description" content="Claude, Cursor, Windsurf, VS Code, CLI, Chrome extension. See how XActions connects to your workflow.">
+  <meta property="og:url" content="https://xactions.app/integrations">
+  <meta property="og:site_name" content="XActions">
+  <meta property="og:image" content="https://xactions.app/og-integrations.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="en_US">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:creator" content="@nichxbt">
+  <meta name="twitter:title" content="Integrations — XActions + AI Tools">
+  <meta name="twitter:description" content="Claude, Cursor, Windsurf, CLI, Chrome extension — XActions works everywhere.">
+  <meta name="twitter:image" content="https://xactions.app/og-integrations.png">
+
+  <link rel="canonical" href="https://xactions.app/integrations">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  <link rel="manifest" href="/manifest.json">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "XActions Integrations",
+    "description": "See how XActions integrates with Claude Desktop, Cursor, Windsurf, VS Code, CLI tools, and browser extensions.",
+    "url": "https://xactions.app/integrations"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Integrations", "item": "https://xactions.app/integrations" }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="/css/common.css">
+  <style>
+    .main-content { flex: 1; max-width: 700px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,0.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .page-intro { padding: 24px 16px; border-bottom: 1px solid var(--border); }
+    .page-intro p { color: var(--text-secondary); font-size: 0.9375rem; line-height: 1.6; }
+
+    .tier-section { padding: 24px 16px; border-bottom: 1px solid var(--border); }
+    .tier-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent); margin-bottom: 4px; }
+    .tier-title { font-size: 1.25rem; font-weight: 800; margin-bottom: 16px; }
+
+    .integration-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 500px) { .integration-grid { grid-template-columns: 1fr; } }
+
+    .int-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.2s;
+      display: block;
+    }
+    .int-card:hover { border-color: var(--accent); background: var(--bg-tertiary); }
+    .int-card .int-icon { font-size: 2rem; margin-bottom: 8px; }
+    .int-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+    .int-card p { color: var(--text-secondary); font-size: 0.8125rem; margin: 0 0 8px; line-height: 1.4; }
+    .int-card .int-link { color: var(--accent); font-size: 0.8125rem; font-weight: 600; }
+
+    .int-card.coming-soon { opacity: 0.5; pointer-events: none; }
+    .coming-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; background: rgba(255,173,31,0.15); color: var(--warning); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; margin-left: 8px; }
+
+    .site-footer { border-top: 1px solid var(--border); padding: 48px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px; }
+    .footer-brand h3 { font-size: 1.25rem; margin-bottom: 8px; }
+    .footer-brand p { color: var(--text-secondary); font-size: 0.875rem; }
+    .footer-links h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 12px; }
+    .footer-links a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 4px 0; }
+    .footer-links a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 24px auto 0; padding-top: 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .footer-bottom p { color: var(--text-secondary); font-size: 0.8125rem; }
+    .footer-bottom a { color: var(--text-secondary); }
+    .footer-bottom a:hover { color: var(--accent); }
+    @media (max-width: 768px) { .footer-content { grid-template-columns: 1fr 1fr; } }
+
+    .skip-nav { position: absolute; top: -100%; left: 16px; background: var(--accent); color: white; padding: 12px 24px; border-radius: 8px; font-weight: 700; z-index: 9999; text-decoration: none; }
+    .skip-nav:focus { top: 16px; }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
+  <div class="layout">
+    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <script src="/js/sidebar.js"></script>
+
+    <main class="main-content" id="main-content">
+      <header class="main-header"><h1>🔌 Integrations</h1></header>
+
+      <div class="page-intro">
+        <p>XActions connects to your favorite AI tools, developer platforms, and browsers. Use Twitter automation wherever you work — from AI assistants to the command line.</p>
+      </div>
+
+      <!-- Tier 1: AI Assistants -->
+      <section class="tier-section">
+        <div class="tier-label">Tier 1</div>
+        <h2 class="tier-title">🤖 AI Assistants (via MCP)</h2>
+        <div class="integration-grid">
+          <a href="/tutorials/mcp" class="int-card">
+            <div class="int-icon">🟣</div>
+            <h3>Claude Desktop</h3>
+            <p>Full MCP integration. Ask Claude to manage your Twitter through natural language.</p>
+            <span class="int-link">Setup Guide →</span>
+          </a>
+          <a href="/tutorials/mcp" class="int-card">
+            <div class="int-icon">🔵</div>
+            <h3>Cursor</h3>
+            <p>Twitter data in your IDE. Scrape profiles and analyze engagement while coding.</p>
+            <span class="int-link">Setup Guide →</span>
+          </a>
+          <a href="/tutorials/mcp" class="int-card">
+            <div class="int-icon">🌊</div>
+            <h3>Windsurf</h3>
+            <p>AI-powered Twitter automation inside Windsurf. Same config, same 140+ tools.</p>
+            <span class="int-link">Setup Guide →</span>
+          </a>
+          <a href="/mcp" class="int-card">
+            <div class="int-icon">🔗</div>
+            <h3>Any MCP Client</h3>
+            <p>XActions works with any MCP-compatible client. Standard protocol, universal compatibility.</p>
+            <span class="int-link">MCP Docs →</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- Tier 2: Developer Tools -->
+      <section class="tier-section">
+        <div class="tier-label">Tier 2</div>
+        <h2 class="tier-title">💻 Developer Tools</h2>
+        <div class="integration-grid">
+          <a href="/docs" class="int-card">
+            <div class="int-icon">📦</div>
+            <h3>Node.js / npm</h3>
+            <p><code style="background:var(--bg-tertiary);padding:2px 6px;border-radius:4px;font-size:0.8em;">npx xactions</code> — full CLI with 43+ commands. Install globally or use with npx.</p>
+            <span class="int-link">CLI Docs →</span>
+          </a>
+          <a href="https://github.com/nirholas/XActions" target="_blank" rel="noopener noreferrer" class="int-card">
+            <div class="int-icon">⚙️</div>
+            <h3>GitHub Actions</h3>
+            <p>Automate on schedule with CI/CD. Run XActions scripts on a cron in your GitHub workflow.</p>
+            <span class="int-link">View on GitHub →</span>
+          </a>
+          <a href="/docs" class="int-card">
+            <div class="int-icon">⏰</div>
+            <h3>Cron / Task Scheduler</h3>
+            <p>Set up recurring automations with cron (Linux/macOS) or Task Scheduler (Windows).</p>
+            <span class="int-link">Scheduling Docs →</span>
+          </a>
+          <a href="/docs" class="int-card">
+            <div class="int-icon">🐳</div>
+            <h3>Docker</h3>
+            <p>Run XActions in a container. Dockerfile and docker-compose included for easy deployment.</p>
+            <span class="int-link">Docker Setup →</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- Tier 3: Data & Export -->
+      <section class="tier-section">
+        <div class="tier-label">Tier 3</div>
+        <h2 class="tier-title">📊 Data &amp; Export</h2>
+        <div class="integration-grid">
+          <a href="/features#scrapers" class="int-card">
+            <div class="int-icon">📋</div>
+            <h3>JSON Export</h3>
+            <p>All scrapers output structured JSON by default. Pipe into any data pipeline.</p>
+            <span class="int-link">View Scrapers →</span>
+          </a>
+          <a href="/features#bookmark-exporter" class="int-card">
+            <div class="int-icon">📄</div>
+            <h3>CSV Export</h3>
+            <p>Built-in CSV export for spreadsheets, databases, and data tools.</p>
+            <span class="int-link">Export Guide →</span>
+          </a>
+          <a href="/features#bookmark-exporter" class="int-card">
+            <div class="int-icon">📊</div>
+            <h3>Google Sheets</h3>
+            <p>Export to CSV and import into Google Sheets. Plugin available for direct integration.</p>
+            <span class="int-link">Sheets Plugin →</span>
+          </a>
+          <a href="/features#bookmark-exporter" class="int-card">
+            <div class="int-icon">📝</div>
+            <h3>Notion</h3>
+            <p>Paste exported data into Notion databases. Works with JSON and CSV formats.</p>
+            <span class="int-link">Export Docs →</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- Tier 4: Browser -->
+      <section class="tier-section">
+        <div class="tier-label">Tier 4</div>
+        <h2 class="tier-title">🌐 Browser</h2>
+        <div class="integration-grid">
+          <a href="/features" class="int-card">
+            <div class="int-icon">🧩</div>
+            <h3>Chrome Extension</h3>
+            <p>Install from source. One-click access to XActions tools from your browser toolbar.</p>
+            <span class="int-link">Install →</span>
+          </a>
+          <a href="/run" class="int-card">
+            <div class="int-icon">🖥️</div>
+            <h3>DevTools Console</h3>
+            <p>Copy-paste scripts directly into the browser console on x.com. Zero install needed.</p>
+            <span class="int-link">Run a Script →</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- Coming Soon -->
+      <section class="tier-section">
+        <div class="tier-label">Coming Soon</div>
+        <h2 class="tier-title">🔮 On the Roadmap</h2>
+        <div class="integration-grid">
+          <div class="int-card coming-soon">
+            <div class="int-icon">⚡</div>
+            <h3>Zapier / Make <span class="coming-badge">Soon</span></h3>
+            <p>Trigger XActions tools from Zapier or Make workflows.</p>
+          </div>
+          <div class="int-card coming-soon">
+            <div class="int-icon">💬</div>
+            <h3>Discord Bot <span class="coming-badge">Soon</span></h3>
+            <p>Control Twitter automations from a Discord server.</p>
+          </div>
+          <div class="int-card coming-soon">
+            <div class="int-icon">✈️</div>
+            <h3>Telegram Bot <span class="coming-badge">Soon</span></h3>
+            <p>Manage automations and receive alerts via Telegram.</p>
+          </div>
+          <div class="int-card coming-soon">
+            <div class="int-icon">📖</div>
+            <h3>REST API + OpenAPI <span class="coming-badge">Soon</span></h3>
+            <p>Full REST API with OpenAPI spec for custom integrations.</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-brand"><h3>⚡ XActions</h3><p>Free, open-source X/Twitter automation toolkit. Mass unfollow, detect unfollowers, auto-engage, and grow your audience without expensive API fees.</p></div>
+      <div class="footer-links"><h4>Product</h4><a href="/features">Features</a><a href="/video">Video Downloader</a><a href="/pricing">Pricing</a><a href="/run">Run Scripts</a><a href="/dashboard">Dashboard</a><a href="/automations">Automations</a><a href="/workflows">Workflows</a><a href="/analytics">Analytics</a><a href="/monitor">Monitor</a></div>
+      <div class="footer-links"><h4>AI & Developers</h4><a href="/ai">AI Integration</a><a href="/ai-api">AI API</a><a href="/mcp">MCP Server</a><a href="/docs">Documentation</a></div>
+      <div class="footer-links"><h4>Tutorials</h4><a href="/tutorials">All Tutorials</a><a href="/tutorials/unfollow">Mass Unfollow</a><a href="/tutorials/scrapers">Scrapers</a><a href="/tutorials/automation">Automation</a><a href="/tutorials/mcp">MCP Setup</a></div>
+      <div class="footer-links"><h4>Company</h4><a href="/about">About</a><a href="https://github.com/nirholas/XActions" target="_blank" rel="noopener noreferrer">GitHub</a><a href="https://x.com/nichxbt" target="_blank" rel="noopener noreferrer">Twitter</a><a href="/terms">Terms</a><a href="/privacy">Privacy</a></div>
+    </div>
+    <div class="footer-bottom"><p>&copy; 2026 XActions. Not affiliated with X Corp.</p><p>Made with ❤️ by <a href="https://x.com/nichxbt" target="_blank" rel="noopener noreferrer">@nichxbt</a></p></div>
+  </footer>
+</body>
+</html>

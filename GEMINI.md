@@ -23,7 +23,7 @@ src/           → Core scripts, automation/, scrapers/, cli/, mcp/
 api/           → Express.js backend (routes/, services/, middleware/)
 dashboard/     → Static HTML frontend
 scripts/       → Standalone utility scripts
-skills/        → 26 Agent Skills (skills/*/SKILL.md)
+skills/        → 31 Agent Skills (skills/*/SKILL.md)
 docs/          → Documentation and examples
 archive/       → Legacy browser-only scripts
 prisma/        → Database schema
@@ -33,7 +33,7 @@ extension/     → Browser extension (Chrome/Edge)
 
 ## Skills
 
-26 skills in `skills/*/SKILL.md`. Read the relevant SKILL.md when a user's request matches a category.
+31 skills in `skills/*/SKILL.md`. Read the relevant SKILL.md when a user's request matches a category.
 
 - **Unfollow management** — mass unfollow, non-follower cleanup
 - **Analytics & insights** — engagement, hashtags, competitors, best times
@@ -50,6 +50,7 @@ extension/     → Browser extension (Chrome/Edge)
 - **Lists** — create, manage, bulk add members
 - **Profile management** — edit profile, avatar, header, bio
 - **Settings & privacy** — protected tweets, notification preferences
+- **Notifications management** — filtering, auto-response, notification controls
 - **Engagement & interaction** — auto-reply, auto-repost, plug replies
 - **Discovery & explore** — trending, topics, search
 - **Premium & subscriptions** — subscription features
@@ -58,6 +59,11 @@ extension/     → Browser extension (Chrome/Edge)
 - **Articles & longform** — compose, publish articles
 - **Business & ads** — campaigns, boosts, ads dashboard
 - **Creator monetization** — revenue, analytics
+- **Community health monitoring** — follower quality audits, engagement authenticity
+- **Competitor intelligence** — competitor profile, content, and audience analysis
+- **Content repurposing** — repackage top tweets into threads, carousels, variations
+- **Lead generation** — find and qualify B2B leads from X conversations
+- **Viral thread generation** — research trends and generate high-engagement threads
 - **XActions CLI** — `bin/unfollowx` command-line tool
 - **XActions MCP server** — `src/mcp/server.js` for AI agents
 

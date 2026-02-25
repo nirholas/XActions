@@ -54,6 +54,7 @@ import analyticsRoutes from './routes/analytics.js';
 import workflowRoutes from './routes/workflows.js';
 import agentRoutes from './routes/agent.js';
 import portabilityRoutes from './routes/portability.js';
+import graphRoutes from './routes/graph.js';
 import threadRoutes from './routes/thread.js';
 import unfollowersRoutes from './routes/unfollowers.js';
 import videoRoutes from './routes/video.js';
@@ -214,6 +215,7 @@ app.use('/api/settings', settingsRoutes);
 app.use('/api/workflows', workflowRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/portability', portabilityRoutes);
+app.use('/api/graph', graphRoutes);
 app.use('/api/unfollowers', unfollowersRoutes);
 app.use('/api/thread', threadRoutes);
 app.use('/api/video', videoRoutes);
@@ -261,7 +263,9 @@ app.get('/pricing', (req, res) => {
 app.get('/docs', (req, res) => {
   res.sendFile(path.join(__dirname, '../dashboard/docs/index.html'));
 });
-
+app.get('/graph', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dashboard/graph.html'));
+});
 // Documentation sub-pages — serves 167 auto-generated SEO pages
 // Nested paths: /docs/guides/:slug, /docs/skills/:slug, /docs/tutorials/:slug, etc.
 app.get('/docs/:section/:slug', (req, res) => {

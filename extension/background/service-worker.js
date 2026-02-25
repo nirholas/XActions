@@ -254,12 +254,14 @@ function updateBadge() {
 
   if (activeCount === 0) {
     chrome.action.setBadgeText({ text: '' });
-  } else if (state.totalActions > 0) {
-    const text = state.totalActions > 999 ? '999+' : String(state.totalActions);
-    chrome.action.setBadgeText({ text });
   } else {
     chrome.action.setBadgeText({ text: String(activeCount) });
   }
+
+  // Color: green when running, default blue otherwise
+  chrome.action.setBadgeBackgroundColor({
+    color: activeCount > 0 ? '#00ba7c' : '#1d9bf0',
+  });
 }
 
 async function syncState() {

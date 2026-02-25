@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog — Twitter Automation Tips &amp; Guides | XActions</title>
+  <meta name="description" content="Tips, guides, and updates from the XActions team. Learn how to automate X/Twitter, mass unfollow, use MCP with AI agents, and more.">
+  <meta name="keywords" content="twitter automation blog, mass unfollow guide, twitter MCP tutorial, twitter bot tips, XActions updates, twitter scraper guide, AI twitter automation">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Blog — Twitter Automation Tips & Guides | XActions">
+  <meta property="og:description" content="Tips, guides, and updates from the XActions team. Learn how to automate X/Twitter for free.">
+  <meta property="og:url" content="https://xactions.app/blog">
+  <meta property="og:site_name" content="XActions">
+  <meta property="og:image" content="https://xactions.app/og-blog.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="en_US">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:creator" content="@nichxbt">
+  <meta name="twitter:title" content="Blog — Twitter Automation Tips & Guides">
+  <meta name="twitter:description" content="Tips, guides, and updates from XActions. Free Twitter automation for everyone.">
+  <meta name="twitter:image" content="https://xactions.app/og-blog.png">
+
+  <link rel="canonical" href="https://xactions.app/blog">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  <link rel="manifest" href="/manifest.json">
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "XActions Blog",
+    "description": "Tips, guides, and updates from the XActions team about X/Twitter automation.",
+    "url": "https://xactions.app/blog"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://xactions.app/blog" }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="/css/common.css">
+  <style>
+    .main-content { flex: 1; max-width: 700px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,0.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .page-intro { padding: 24px 16px; border-bottom: 1px solid var(--border); }
+    .page-intro p { color: var(--text-secondary); font-size: 0.9375rem; line-height: 1.6; }
+
+    .blog-grid { padding: 16px; display: flex; flex-direction: column; gap: 16px; }
+
+    .blog-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.2s;
+      display: block;
+    }
+    .blog-card:hover { border-color: var(--accent); background: var(--bg-tertiary); }
+
+    .blog-card-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+    }
+    .blog-category {
+      padding: 2px 10px;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .blog-category.guide { background: rgba(29,155,240,0.15); color: var(--accent); }
+    .blog-category.tutorial { background: rgba(0,186,124,0.15); color: var(--success); }
+    .blog-category.comparison { background: rgba(168,85,247,0.15); color: var(--purple); }
+
+    .blog-card h2 {
+      font-size: 1.125rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+    .blog-card p {
+      color: var(--text-secondary);
+      font-size: 0.9375rem;
+      line-height: 1.5;
+      margin: 0;
+    }
+    .blog-read-more {
+      display: inline-block;
+      margin-top: 12px;
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 0.875rem;
+    }
+
+    .site-footer { border-top: 1px solid var(--border); padding: 48px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px; }
+    .footer-brand h3 { font-size: 1.25rem; margin-bottom: 8px; }
+    .footer-brand p { color: var(--text-secondary); font-size: 0.875rem; }
+    .footer-links h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 12px; }
+    .footer-links a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 4px 0; }
+    .footer-links a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 24px auto 0; padding-top: 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .footer-bottom p { color: var(--text-secondary); font-size: 0.8125rem; }
+    .footer-bottom a { color: var(--text-secondary); }
+    .footer-bottom a:hover { color: var(--accent); }
+    @media (max-width: 768px) { .footer-content { grid-template-columns: 1fr 1fr; } }
+
+    .skip-nav { position: absolute; top: -100%; left: 16px; background: var(--accent); color: white; padding: 12px 24px; border-radius: 8px; font-weight: 700; z-index: 9999; text-decoration: none; }
+    .skip-nav:focus { top: 16px; }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
+  <div class="layout">
+    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <script src="/js/sidebar.js"></script>
+
+    <main class="main-content" id="main-content">
+      <header class="main-header"><h1>📝 Blog</h1></header>
+
+      <div class="page-intro">
+        <p>Tips, guides, and updates from the XActions team. Learn how to automate X/Twitter, grow your audience, and integrate AI — all for free.</p>
+      </div>
+
+      <div class="blog-grid">
+
+        <!-- Post 1 -->
+        <a href="/blog/how-to-mass-unfollow-twitter" class="blog-card">
+          <div class="blog-card-meta">
+            <span class="blog-category tutorial">Tutorial</span>
+            <span>February 20, 2026</span>
+            <span>·</span>
+            <span>5 min read</span>
+          </div>
+          <h2>How to Mass Unfollow on Twitter/X in 2026 (Free Method)</h2>
+          <p>Step-by-step guide to unfollowing hundreds or thousands of accounts on X/Twitter using a free, open-source browser script. No API key needed, works in 30 seconds.</p>
+          <span class="blog-read-more">Read more →</span>
+        </a>
+
+        <!-- Post 2 -->
+        <a href="/blog/best-twitter-automation-tools" class="blog-card">
+          <div class="blog-card-meta">
+            <span class="blog-category comparison">Comparison</span>
+            <span>February 15, 2026</span>
+            <span>·</span>
+            <span>8 min read</span>
+          </div>
+          <h2>7 Best Free Twitter/X Automation Tools in 2026</h2>
+          <p>Comparing the top free tools for automating Twitter/X — from browser scripts to API wrappers to AI agents. See which tool fits your workflow.</p>
+          <span class="blog-read-more">Read more →</span>
+        </a>
+
+        <!-- Post 3 -->
+        <a href="/blog/twitter-mcp-server-ai-agents" class="blog-card">
+          <div class="blog-card-meta">
+            <span class="blog-category guide">Guide</span>
+            <span>February 10, 2026</span>
+            <span>·</span>
+            <span>6 min read</span>
+          </div>
+          <h2>How to Control Twitter with AI Using MCP (Claude, Cursor, GPT)</h2>
+          <p>Learn what Model Context Protocol (MCP) is, why it matters for AI agents, and how to set up XActions MCP server to control Twitter through natural language.</p>
+          <span class="blog-read-more">Read more →</span>
+        </a>
+
+      </div>
+    </main>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-brand"><h3>⚡ XActions</h3><p>Free, open-source X/Twitter automation toolkit. Mass unfollow, detect unfollowers, auto-engage, and grow your audience without expensive API fees.</p></div>
+      <div class="footer-links"><h4>Product</h4><a href="/features">Features</a><a href="/video">Video Downloader</a><a href="/pricing">Pricing</a><a href="/run">Run Scripts</a><a href="/dashboard">Dashboard</a><a href="/automations">Automations</a><a href="/workflows">Workflows</a><a href="/analytics">Analytics</a><a href="/monitor">Monitor</a></div>
+      <div class="footer-links"><h4>AI & Developers</h4><a href="/ai">AI Integration</a><a href="/ai-api">AI API</a><a href="/mcp">MCP Server</a><a href="/docs">Documentation</a></div>
+      <div class="footer-links"><h4>Tutorials</h4><a href="/tutorials">All Tutorials</a><a href="/tutorials/unfollow">Mass Unfollow</a><a href="/tutorials/scrapers">Scrapers</a><a href="/tutorials/automation">Automation</a><a href="/tutorials/mcp">MCP Setup</a></div>
+      <div class="footer-links"><h4>Company</h4><a href="/about">About</a><a href="https://github.com/nirholas/XActions" target="_blank" rel="noopener noreferrer">GitHub</a><a href="https://x.com/nichxbt" target="_blank" rel="noopener noreferrer">Twitter</a><a href="/terms">Terms</a><a href="/privacy">Privacy</a></div>
+    </div>
+    <div class="footer-bottom"><p>&copy; 2026 XActions. Not affiliated with X Corp.</p><p>Made with ❤️ by <a href="https://x.com/nichxbt" target="_blank" rel="noopener noreferrer">@nichxbt</a></p></div>
+  </footer>
+</body>
+</html>
