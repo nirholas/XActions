@@ -1,0 +1,147 @@
+{
+  "generated_at": "2025-12-29T04:38:10.145767Z",
+  "asset": "gork",
+  "asset_name": "GORK",
+  "founder": "elonmusk",
+  "summary": {
+    "total_tweets": 106,
+    "tweets_with_price": 106,
+    "date_range": {
+      "start": "2025-05-02",
+      "end": "2025-11-14"
+    },
+    "total_days_analyzed": 243
+  },
+  "daily_comparison": {
+    "tweet_day_count": 22,
+    "tweet_day_avg_return": 7.68,
+    "tweet_day_win_rate": 54.5,
+    "tweet_day_distribution": {
+      "count": 22,
+      "mean": 7.68,
+      "median": 4.85,
+      "std_dev": 34.68,
+      "min": -37.25,
+      "max": 124.77,
+      "q1": -15.09,
+      "q3": 21.44,
+      "positive_count": 12,
+      "negative_count": 10
+    },
+    "no_tweet_day_count": 220,
+    "no_tweet_day_avg_return": -1.07,
+    "no_tweet_day_win_rate": 39.1,
+    "no_tweet_day_distribution": {
+      "count": 220,
+      "mean": -1.07,
+      "median": -2.05,
+      "std_dev": 12.39,
+      "min": -54.57,
+      "max": 55.04,
+      "q1": -7.18,
+      "q3": 3.96,
+      "positive_count": 86,
+      "negative_count": 134
+    },
+    "t_statistic": 2.469,
+    "p_value": 0.0142,
+    "significant": true,
+    "confidence_label": "weak"
+  },
+  "correlation": {
+    "correlation_7d": 0.73,
+    "p_value": 0.0,
+    "significant": true,
+    "sample_size": 243,
+    "strength_label": "strong"
+  },
+  "current_status": {
+    "days_since_last_tweet": 45,
+    "price_change_during_silence": -21.7,
+    "last_tweet_date": "2025-11-14"
+  },
+  "limitations": {
+    "sample_size_warning": true,
+    "borderline_significance": false,
+    "short_history": true,
+    "notes": [
+      "Small sample: only 22 tweet-days analyzed",
+      "Limited history: 243 days may not capture full market cycles",
+      "Win rate of 54.5% is near random (50%)",
+      "Correlation does not imply causation"
+    ]
+  },
+  "quiet_periods": [
+    {
+      "start_ts": 1747529880,
+      "end_ts": 1747859340,
+      "gap_days": 3.8,
+      "start_date": "2025-05-18",
+      "end_date": "2025-05-21",
+      "price_start": 0.02121494,
+      "price_end": 0.0222552,
+      "change_pct": 4.9
+    },
+    {
+      "start_ts": 1747865940,
+      "end_ts": 1749273240,
+      "gap_days": 16.3,
+      "start_date": "2025-05-21",
+      "end_date": "2025-06-07",
+      "price_start": 0.0233356,
+      "price_end": 0.00939497,
+      "change_pct": -59.7
+    },
+    {
+      "start_ts": 1749370260,
+      "end_ts": 1750833780,
+      "gap_days": 16.9,
+      "start_date": "2025-06-08",
+      "end_date": "2025-06-25",
+      "price_start": 0.00945987,
+      "price_end": 0.00547309,
+      "change_pct": -42.1
+    },
+    {
+      "start_ts": 1750833780,
+      "end_ts": 1751621700,
+      "gap_days": 9.1,
+      "start_date": "2025-06-25",
+      "end_date": "2025-07-04",
+      "price_start": 0.00512307,
+      "price_end": 0.00731337,
+      "change_pct": 42.8
+    },
+    {
+      "start_ts": 1751621700,
+      "end_ts": 1752689700,
+      "gap_days": 12.4,
+      "start_date": "2025-07-04",
+      "end_date": "2025-07-16",
+      "price_start": 0.00788182,
+      "price_end": 0.00840072,
+      "change_pct": 6.6
+    },
+    {
+      "start_ts": 1752689700,
+      "end_ts": 1763112960,
+      "gap_days": 120.6,
+      "start_date": "2025-07-16",
+      "end_date": "2025-11-14",
+      "price_start": 0.00821453,
+      "price_end": 0.0014911,
+      "change_pct": -81.8
+    },
+    {
+      "start_ts": 1763112960,
+      "end_ts": 1767001090,
+      "gap_days": 45.0,
+      "start_date": "2025-11-14",
+      "end_date": "ongoing",
+      "is_current": true,
+      "price_start": 0.00142852,
+      "price_end": 0.00111795,
+      "change_pct": -21.7
+    }
+  ]
+}

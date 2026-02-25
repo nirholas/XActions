@@ -352,7 +352,7 @@
 
     // ── Auth ───────────────────────────────────────
     function getToken() {
-      return localStorage.getItem('xactions_token') || sessionStorage.getItem('xactions_token');
+      return localStorage.getItem('authToken');
     }
 
     function authHeaders() {

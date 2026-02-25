@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Changelog — XActions | What's New</title>
+  <meta name="description" content="See what's new in XActions: latest features, improvements, and fixes for the free X/Twitter automation toolkit. Active development, regular updates.">
+  <meta name="keywords" content="xactions changelog, xactions updates, xactions new features, twitter automation updates, xactions release notes, xactions version history">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Changelog — XActions | What's New">
+  <meta property="og:description" content="Latest features, improvements, and fixes for XActions — the free X/Twitter automation toolkit.">
+  <meta property="og:url" content="https://xactions.app/changelog">
+  <meta property="og:site_name" content="XActions">
+  <meta property="og:image" content="https://xactions.app/og-changelog.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="en_US">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:creator" content="@nichxbt">
+  <meta name="twitter:title" content="Changelog — XActions | What's New">
+  <meta name="twitter:description" content="Latest features, improvements, and fixes for XActions.">
+  <meta name="twitter:image" content="https://xactions.app/og-changelog.png">
+
+  <link rel="canonical" href="https://xactions.app/changelog">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  <link rel="manifest" href="/manifest.json">
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Changelog", "item": "https://xactions.app/changelog" }
+    ]
+  }
+  </script>
+  <link rel="stylesheet" href="/css/common.css">
+  <style>
+    :root { --bg-primary: #000; --bg-secondary: #16181c; --bg-tertiary: #202327; --accent: #1d9bf0; --accent-hover: #1a8cd8; --accent-light: rgba(29,155,240,0.1); --text-primary: #e7e9ea; --text-secondary: #8b8f94; --border: #2f3336; --success: #00ba7c; --warning: #ffad1f; --danger: #f4212e; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.5; }
+    ::-webkit-scrollbar { width: 16px; } ::-webkit-scrollbar-track { background: var(--bg-primary); } ::-webkit-scrollbar-thumb { background: var(--bg-tertiary); border-radius: 8px; border: 4px solid var(--bg-primary); }
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar-left { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; } .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background 0.2s; } .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; } .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background 0.2s; margin-bottom: 4px; } .nav-item:hover { background: var(--bg-tertiary); } .nav-item.active { font-weight: 700; } .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: white; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background 0.2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; } .action-btn:hover { background: var(--accent-hover); }
+    .main-content { flex: 1; max-width: 600px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,0.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px; z-index: 100; } .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .section { padding: 24px 16px; border-bottom: 1px solid var(--border); }
+    .section-title { font-size: 1.25rem; font-weight: 800; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    h3 { font-size: 1rem; font-weight: 700; margin: 0 0 8px; }
+    p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 12px; }
+    p a { color: var(--accent); text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 2px; }
+
+    /* Timeline */
+    .version-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 16px; position: relative; }
+    .version-card::before { content: ''; position: absolute; left: -25px; top: 28px; width: 12px; height: 12px; background: var(--accent); border-radius: 50%; border: 2px solid var(--bg-primary); }
+    .version-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+    .version-badge { background: var(--accent); color: white; padding: 4px 12px; border-radius: 9999px; font-size: 0.8125rem; font-weight: 700; }
+    .version-date { color: var(--text-secondary); font-size: 0.8125rem; }
+    .change-group { margin-bottom: 12px; }
+    .change-group:last-child { margin-bottom: 0; }
+    .change-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; }
+    .change-tag.added { background: rgba(0,186,124,0.15); color: var(--success); }
+    .change-tag.improved { background: rgba(29,155,240,0.15); color: var(--accent); }
+    .change-tag.fixed { background: rgba(255,173,31,0.15); color: var(--warning); }
+    .change-tag.removed { background: rgba(244,33,46,0.15); color: var(--danger); }
+    .change-list { list-style: none; padding: 0; }
+    .change-list li { color: var(--text-secondary); font-size: 0.9375rem; padding: 4px 0; padding-left: 20px; position: relative; }
+    .change-list li::before { content: '•'; position: absolute; left: 4px; color: var(--text-secondary); }
+    .timeline { padding-left: 24px; border-left: 2px solid var(--border); margin-left: 8px; }
+
+    .sidebar-right { width: 350px; padding: 12px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .promo-card { background: var(--bg-secondary); border-radius: 16px; margin-bottom: 16px; overflow: hidden; } .promo-header { padding: 16px; font-size: 1.25rem; font-weight: 800; } .promo-item { padding: 16px; border-top: 1px solid var(--border); } .promo-item h4 { font-size: 0.9375rem; margin-bottom: 4px; } .promo-item p { color: var(--text-secondary); font-size: 0.8125rem; margin: 0; }
+
+    .site-footer { border-top: 1px solid var(--border); padding: 48px 24px; } .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px; } .footer-brand h3 { font-size: 1.25rem; margin-bottom: 8px; } .footer-brand p { color: var(--text-secondary); font-size: 0.875rem; } .footer-links h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 12px; } .footer-links a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 4px 0; } .footer-links a:hover { color: var(--accent); } .footer-bottom { max-width: 1200px; margin: 24px auto 0; padding-top: 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; } .footer-bottom p { color: var(--text-secondary); font-size: 0.8125rem; } .footer-bottom a { color: var(--text-secondary); } .footer-bottom a:hover { color: var(--accent); }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } .main-content { max-width: 100%; } }
+    @media (max-width: 768px) { .sidebar-left { width: 68px; } .logo a span:last-child, .nav-item span:last-child { display: none; } .nav-item { justify-content: center; } .action-btn { width: 50px; height: 50px; padding: 0; font-size: 0; } .action-btn::before { content: '→'; font-size: 1.5rem; } .footer-content { grid-template-columns: 1fr 1fr; } }
+    .skip-nav { position: absolute; top: -100%; left: 16px; background: var(--accent); color: white; padding: 12px 24px; border-radius: 8px; font-weight: 700; z-index: 9999; text-decoration: none; } .skip-nav:focus { top: 16px; }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    main a:not(.nav-item):not(.btn):not(.nav__link):not(.nav__brand), .content a:not(.nav-item):not(.btn):not(.nav__link):not(.nav__brand), footer a { text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 2px; }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
+  <div class="layout">
+    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <script src="/js/sidebar.js"></script>
+
+    <main class="main-content" id="main-content">
+      <header class="main-header"><h1>📋 Changelog</h1></header>
+
+      <div class="section">
+        <p>What's new in XActions. Follow <a href="https://github.com/nirholas/XActions/releases" target="_blank" rel="noopener noreferrer">GitHub Releases</a> for real-time updates.</p>
+      </div>
+
+      <section class="section">
+        <div class="timeline">
+
+          <!-- v3.0 -->
+          <div class="version-card">
+            <div class="version-header">
+              <span class="version-badge">v3.0</span>
+              <span class="version-date">February 2026</span>
+            </div>
+            <div class="change-group">
+              <span class="change-tag added">Added</span>
+              <ul class="change-list">
+                <li>🤖 MCP server with 140+ tools for AI agents (Claude, Cursor, Windsurf)</li>
+                <li>📊 Real-time analytics dashboard with engagement metrics</li>
+                <li>🔍 Detect unfollowers with snapshot comparison</li>
+                <li>🎥 Video downloader with quality selection</li>
+                <li>🧵 Thread unroller and summarizer</li>
+                <li>🧠 AI-powered tweet generation via OpenRouter</li>
+                <li>📈 Sentiment analysis and reputation monitoring</li>
+                <li>🔄 Account portability — export/import across platforms</li>
+                <li>📱 Browser extension for Chrome and Edge</li>
+                <li>🌐 Cross-platform scraping: Bluesky, Mastodon, Threads</li>
+                <li>🔗 Social graph visualization and network mapping</li>
+                <li>📅 Content calendar and scheduling system</li>
+                <li>🏷️ Follower CRM with segmentation and tagging</li>
+                <li>🔌 Plugin system with Google Sheets and Excel support</li>
+              </ul>
+            </div>
+            <div class="change-group">
+              <span class="change-tag improved">Improved</span>
+              <ul class="change-list">
+                <li>⚡ 2x faster mass unfollow with adaptive delays</li>
+                <li>🎨 Complete dark theme redesign matching X/Twitter</li>
+                <li>📦 CLI overhaul with <code style="background:var(--bg-tertiary);padding:2px 6px;border-radius:4px;">npx xactions</code> support</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- v2.0 -->
+          <div class="version-card">
+            <div class="version-header">
+              <span class="version-badge">v2.0</span>
+              <span class="version-date">January 2026</span>
+            </div>
+            <div class="change-group">
+              <span class="change-tag added">Added</span>
+              <ul class="change-list">
+                <li>📝 Auto-commenter with AI-generated replies</li>
+                <li>🔄 Auto-repost with scheduling</li>
+                <li>📋 Bookmark exporter (JSON, CSV, Markdown)</li>
+                <li>🏷️ Hashtag scraper with engagement metrics</li>
+                <li>🤖 Algorithm trainer for niche optimization</li>
+                <li>🔔 Follower monitoring with real-time alerts</li>
+                <li>🚫 Bot blocker with heuristic detection</li>
+                <li>📊 Competitor analysis and tracking</li>
+                <li>🧵 Thread composer with preview</li>
+                <li>⏰ Best time to post analyzer</li>
+              </ul>
+            </div>
+            <div class="change-group">
+              <span class="change-tag improved">Improved</span>
+              <ul class="change-list">
+                <li>🛡️ Better rate limit handling with exponential backoff</li>
+                <li>📱 Mobile-responsive dashboard</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- v1.0 -->
+          <div class="version-card">
+            <div class="version-header">
+              <span class="version-badge">v1.0</span>
+              <span class="version-date">December 2025</span>
+            </div>
+            <div class="change-group">
+              <span class="change-tag added">Added</span>
+              <ul class="change-list">
+                <li>🚀 Initial release</li>
+                <li>👋 Mass unfollow — everyone and non-followers</li>
+                <li>🔍 15+ scraping tools (profiles, tweets, followers, media)</li>
+                <li>❤️ Auto-liker with keyword targeting</li>
+                <li>👤 Auto-follower for niche engagement</li>
+                <li>📊 Basic analytics and engagement tracking</li>
+                <li>💻 CLI tool (<code style="background:var(--bg-tertiary);padding:2px 6px;border-radius:4px;">npx xactions</code>)</li>
+                <li>🌐 Static dashboard website</li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- CTA -->
+      <section class="section" style="text-align: center; padding: 32px 16px;">
+        <h2 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 8px;">Get notified of updates</h2>
+        <p>Watch the repo on GitHub to receive release notifications.</p>
+        <a href="https://github.com/nirholas/XActions" target="_blank" rel="noopener noreferrer" class="action-btn" style="width: auto; padding: 12px 24px; font-size: 0.9375rem; display: inline-block;">⭐ Star & Watch on GitHub</a>
+      </section>
+    </main>
+
+    <aside class="sidebar-right" aria-label="Version history">
+      <div class="promo-card">
+        <div class="promo-header">Versions</div>
+        <div class="promo-item"><h4>v3.0 — Latest</h4><p>MCP server, analytics, 140+ tools</p></div>
+        <div class="promo-item"><h4>v2.0</h4><p>Auto-engage, algorithm trainer, bot blocker</p></div>
+        <div class="promo-item"><h4>v1.0</h4><p>Initial release — 15+ tools</p></div>
+      </div>
+      <div class="promo-card">
+        <div class="promo-header">Links</div>
+        <div class="promo-item"><h4><a href="https://github.com/nirholas/XActions/releases" target="_blank" rel="noopener noreferrer" style="color: var(--text-primary); text-decoration: none;">📦 GitHub Releases</a></h4><p>Download specific versions</p></div>
+        <div class="promo-item"><h4><a href="https://github.com/nirholas/XActions/commits/main" target="_blank" rel="noopener noreferrer" style="color: var(--text-primary); text-decoration: none;">📝 Commit History</a></h4><p>See every change</p></div>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-brand"><h3>⚡ XActions</h3><p>Free, open-source X/Twitter automation toolkit. Mass unfollow, detect unfollowers, auto-engage, and grow your audience without expensive API fees.</p></div>
+      <div class="footer-links"><h4>Product</h4><a href="/features">Features</a><a href="/video">Video Downloader</a><a href="/pricing">Pricing</a><a href="/run">Run Scripts</a><a href="/dashboard">Dashboard</a><a href="/automations">Automations</a><a href="/workflows">Workflows</a><a href="/analytics">Analytics</a><a href="/monitor">Monitor</a></div>
+      <div class="footer-links"><h4>AI & Developers</h4><a href="/ai">AI Integration</a><a href="/ai-api">AI API</a><a href="/mcp">MCP Server</a><a href="/docs">Documentation</a></div>
+      <div class="footer-links"><h4>Tutorials</h4><a href="/tutorials">All Tutorials</a><a href="/tutorials/unfollow">Mass Unfollow</a><a href="/tutorials/scrapers">Scrapers</a><a href="/tutorials/automation">Automation</a><a href="/tutorials/mcp">MCP Setup</a></div>
+      <div class="footer-links"><h4>Company</h4><a href="/about">About</a><a href="https://github.com/nirholas/XActions" target="_blank" rel="noopener noreferrer">GitHub</a><a href="https://x.com/nichxbt" target="_blank" rel="noopener noreferrer">Twitter</a><a href="/terms">Terms</a><a href="/privacy">Privacy</a></div>
+    </div>
+    <div class="footer-bottom"><p>© 2026 XActions. Not affiliated with X Corp.</p><p>Made with ❤️ by <a href="https://x.com/nichxbt" target="_blank" rel="noopener noreferrer">@nichxbt</a></p></div>
+  </footer>
+</body>
+</html>

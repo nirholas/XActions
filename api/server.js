@@ -243,8 +243,10 @@ app.use('/api/automations', automationsRoutes);
 app.use('/api/streams', streamRoutes);
 
 // Dashboard routes
+// '/' serves the main dashboard — login.html is at /login
+// Auth check happens client-side (config.js requireAuth)
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../dashboard/login.html'));
+  res.sendFile(path.join(__dirname, '../dashboard/index.html'));
 });
 
 app.get('/dashboard', (req, res) => {

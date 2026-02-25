@@ -1,0 +1,146 @@
+{
+  "generated_at": "2026-01-15T19:19:03.423499Z",
+  "asset": "pump",
+  "asset_name": "PUMP",
+  "founder": "a1lon9",
+  "summary": {
+    "total_tweets": 109,
+    "tweets_with_price": 109,
+    "date_range": {
+      "start": "2025-07-14",
+      "end": "2026-01-15"
+    },
+    "total_days_analyzed": 186
+  },
+  "daily_comparison": {
+    "tweet_day_count": 72,
+    "tweet_day_avg_return": 1.52,
+    "tweet_day_win_rate": 54.2,
+    "tweet_day_distribution": {
+      "count": 72,
+      "mean": 1.52,
+      "median": 1.57,
+      "std_dev": 9.05,
+      "min": -19.26,
+      "max": 20.03,
+      "q1": -3.93,
+      "q3": 7.35,
+      "positive_count": 39,
+      "negative_count": 33
+    },
+    "no_tweet_day_count": 113,
+    "no_tweet_day_avg_return": -1.06,
+    "no_tweet_day_win_rate": 39.8,
+    "no_tweet_day_distribution": {
+      "count": 113,
+      "mean": -1.06,
+      "median": -1.66,
+      "std_dev": 7.3,
+      "min": -27.46,
+      "max": 16.38,
+      "q1": -6.21,
+      "q3": 3.31,
+      "positive_count": 45,
+      "negative_count": 68
+    },
+    "t_statistic": 2.115,
+    "p_value": 0.0358,
+    "significant": true,
+    "confidence_label": "weak"
+  },
+  "correlation": {
+    "correlation_7d": 0.539,
+    "p_value": 0.0,
+    "significant": true,
+    "sample_size": 186,
+    "strength_label": "moderate"
+  },
+  "current_status": {
+    "days_since_last_tweet": 0,
+    "price_change_during_silence": null,
+    "last_tweet_date": "2026-01-15"
+  },
+  "limitations": {
+    "sample_size_warning": true,
+    "borderline_significance": false,
+    "short_history": true,
+    "notes": [
+      "Small sample: only 72 tweet-days analyzed",
+      "Limited history: 186 days may not capture full market cycles",
+      "Win rate of 54.2% is near random (50%)",
+      "Correlation does not imply causation"
+    ]
+  },
+  "quiet_periods": [
+    {
+      "start_ts": 1753300637,
+      "end_ts": 1754342282,
+      "gap_days": 12.1,
+      "start_date": "2025-07-23",
+      "end_date": "2025-08-04",
+      "price_start": 0.00264938,
+      "price_end": 0.00311385,
+      "change_pct": 17.5
+    },
+    {
+      "start_ts": 1758322361,
+      "end_ts": 1758581717,
+      "gap_days": 3.0,
+      "start_date": "2025-09-19",
+      "end_date": "2025-09-22",
+      "price_start": 0.00696762,
+      "price_end": 0.00571604,
+      "change_pct": -18.0
+    },
+    {
+      "start_ts": 1759773950,
+      "end_ts": 1760037989,
+      "gap_days": 3.1,
+      "start_date": "2025-10-06",
+      "end_date": "2025-10-09",
+      "price_start": 0.00641473,
+      "price_end": 0.00552965,
+      "change_pct": -13.8
+    },
+    {
+      "start_ts": 1760037989,
+      "end_ts": 1760821520,
+      "gap_days": 9.1,
+      "start_date": "2025-10-09",
+      "end_date": "2025-10-18",
+      "price_start": 0.00401144,
+      "price_end": 0.00396999,
+      "change_pct": -1.0
+    },
+    {
+      "start_ts": 1761935621,
+      "end_ts": 1762360100,
+      "gap_days": 4.9,
+      "start_date": "2025-10-31",
+      "end_date": "2025-11-05",
+      "price_start": 0.0046439,
+      "price_end": 0.00414608,
+      "change_pct": -10.7
+    },
+    {
+      "start_ts": 1762360100,
+      "end_ts": 1767979414,
+      "gap_days": 65.0,
+      "start_date": "2025-11-05",
+      "end_date": "2026-01-09",
+      "price_start": 0.00370517,
+      "price_end": 0.00235429,
+      "change_pct": -36.5
+    },
+    {
+      "start_ts": 1767979415,
+      "end_ts": 1768250803,
+      "gap_days": 3.1,
+      "start_date": "2026-01-09",
+      "end_date": "2026-01-12",
+      "price_start": 0.00228577,
+      "price_end": 0.00243567,
+      "change_pct": 6.6
+    }
+  ]
+}

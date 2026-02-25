@@ -1,0 +1,156 @@
+{
+  "generated_at": "2026-01-15T19:19:32.326748Z",
+  "asset": "xpl",
+  "asset_name": "XPL",
+  "founder": "pauliepunt",
+  "summary": {
+    "total_tweets": 27,
+    "tweets_with_price": 27,
+    "date_range": {
+      "start": "2025-09-25",
+      "end": "2025-12-30"
+    },
+    "total_days_analyzed": 113
+  },
+  "daily_comparison": {
+    "tweet_day_count": 11,
+    "tweet_day_avg_return": -0.77,
+    "tweet_day_win_rate": 36.4,
+    "tweet_day_distribution": {
+      "count": 11,
+      "mean": -0.77,
+      "median": -4.07,
+      "std_dev": 8.53,
+      "min": -10.77,
+      "max": 14.2,
+      "q1": -6.82,
+      "q3": 5.33,
+      "positive_count": 4,
+      "negative_count": 7
+    },
+    "no_tweet_day_count": 101,
+    "no_tweet_day_avg_return": -1.5,
+    "no_tweet_day_win_rate": 42.6,
+    "no_tweet_day_distribution": {
+      "count": 101,
+      "mean": -1.5,
+      "median": -0.79,
+      "std_dev": 9.1,
+      "min": -36.64,
+      "max": 32.9,
+      "q1": -6.12,
+      "q3": 2.37,
+      "positive_count": 43,
+      "negative_count": 58
+    },
+    "t_statistic": 0.254,
+    "p_value": 0.8,
+    "significant": false,
+    "confidence_label": "none"
+  },
+  "correlation": {
+    "correlation_7d": 0.027,
+    "p_value": 0.7805,
+    "significant": false,
+    "sample_size": 113,
+    "strength_label": "negligible"
+  },
+  "current_status": {
+    "days_since_last_tweet": 16,
+    "price_change_during_silence": -6.2,
+    "last_tweet_date": "2025-12-30"
+  },
+  "limitations": {
+    "sample_size_warning": true,
+    "borderline_significance": false,
+    "short_history": true,
+    "notes": [
+      "Small sample: only 11 tweet-days analyzed",
+      "Limited history: 113 days may not capture full market cycles",
+      "Correlation does not imply causation"
+    ]
+  },
+  "quiet_periods": [
+    {
+      "start_ts": 1759058443,
+      "end_ts": 1759353067,
+      "gap_days": 3.4,
+      "start_date": "2025-09-28",
+      "end_date": "2025-10-01",
+      "price_start": 1.19419074,
+      "price_end": 0.94416494,
+      "change_pct": -20.9
+    },
+    {
+      "start_ts": 1759353067,
+      "end_ts": 1759772307,
+      "gap_days": 4.9,
+      "start_date": "2025-10-01",
+      "end_date": "2025-10-06",
+      "price_start": 0.93068699,
+      "price_end": 1.0382918,
+      "change_pct": 11.6
+    },
+    {
+      "start_ts": 1759842797,
+      "end_ts": 1760289804,
+      "gap_days": 5.2,
+      "start_date": "2025-10-07",
+      "end_date": "2025-10-12",
+      "price_start": 0.87933735,
+      "price_end": 0.45075343,
+      "change_pct": -48.7
+    },
+    {
+      "start_ts": 1760289804,
+      "end_ts": 1763041096,
+      "gap_days": 31.8,
+      "start_date": "2025-10-12",
+      "end_date": "2025-11-13",
+      "price_start": 0.46266121,
+      "price_end": 0.24313947,
+      "change_pct": -47.4
+    },
+    {
+      "start_ts": 1763041096,
+      "end_ts": 1764144443,
+      "gap_days": 12.8,
+      "start_date": "2025-11-13",
+      "end_date": "2025-11-26",
+      "price_start": 0.23110084,
+      "price_end": 0.2188379,
+      "change_pct": -5.3
+    },
+    {
+      "start_ts": 1764144443,
+      "end_ts": 1765282489,
+      "gap_days": 13.2,
+      "start_date": "2025-11-26",
+      "end_date": "2025-12-09",
+      "price_start": 0.21226906,
+      "price_end": 0.17809725,
+      "change_pct": -16.1
+    },
+    {
+      "start_ts": 1765464238,
+      "end_ts": 1767114391,
+      "gap_days": 19.1,
+      "start_date": "2025-12-11",
+      "end_date": "2025-12-30",
+      "price_start": 0.14842133,
+      "price_end": 0.15359127,
+      "change_pct": 3.5
+    },
+    {
+      "start_ts": 1767114391,
+      "end_ts": 1768522772,
+      "gap_days": 16.3,
+      "start_date": "2025-12-30",
+      "end_date": "ongoing",
+      "is_current": true,
+      "price_start": 0.17053312,
+      "price_end": 0.15993257,
+      "change_pct": -6.2
+    }
+  ]
+}

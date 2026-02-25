@@ -1,0 +1,105 @@
+{
+  "generated_at": "2026-01-15T19:17:37.137164Z",
+  "asset": "aster",
+  "asset_name": "ASTER",
+  "founder": "cz_binance",
+  "summary": {
+    "total_tweets": 355,
+    "tweets_with_price": 355,
+    "date_range": {
+      "start": "2025-09-17",
+      "end": "2026-01-15"
+    },
+    "total_days_analyzed": 121
+  },
+  "daily_comparison": {
+    "tweet_day_count": 100,
+    "tweet_day_avg_return": 1.39,
+    "tweet_day_win_rate": 45.0,
+    "tweet_day_distribution": {
+      "count": 100,
+      "mean": 1.39,
+      "median": -0.27,
+      "std_dev": 13.98,
+      "min": -25.29,
+      "max": 88.34,
+      "q1": -3.98,
+      "q3": 2.32,
+      "positive_count": 45,
+      "negative_count": 55
+    },
+    "no_tweet_day_count": 20,
+    "no_tweet_day_avg_return": 0.07,
+    "no_tweet_day_win_rate": 55.0,
+    "no_tweet_day_distribution": {
+      "count": 20,
+      "mean": 0.07,
+      "median": 0.26,
+      "std_dev": 3.43,
+      "min": -9.51,
+      "max": 6.33,
+      "q1": -0.96,
+      "q3": 1.67,
+      "positive_count": 11,
+      "negative_count": 9
+    },
+    "t_statistic": 0.414,
+    "p_value": 0.6796,
+    "significant": false,
+    "confidence_label": "none"
+  },
+  "correlation": {
+    "correlation_7d": 0.461,
+    "p_value": 0.0,
+    "significant": true,
+    "sample_size": 121,
+    "strength_label": "moderate"
+  },
+  "current_status": {
+    "days_since_last_tweet": 0,
+    "price_change_during_silence": null,
+    "last_tweet_date": "2026-01-15"
+  },
+  "limitations": {
+    "sample_size_warning": false,
+    "borderline_significance": false,
+    "short_history": true,
+    "notes": [
+      "Limited history: 121 days may not capture full market cycles",
+      "Win rate of 45.0% is near random (50%)",
+      "Correlation does not imply causation"
+    ]
+  },
+  "quiet_periods": [
+    {
+      "start_ts": 1764395629,
+      "end_ts": 1764669541,
+      "gap_days": 3.2,
+      "start_date": "2025-11-29",
+      "end_date": "2025-12-02",
+      "price_start": 1.05179239,
+      "price_end": 0.953895,
+      "change_pct": -9.3
+    },
+    {
+      "start_ts": 1766720504,
+      "end_ts": 1767070815,
+      "gap_days": 4.1,
+      "start_date": "2025-12-26",
+      "end_date": "2025-12-30",
+      "price_start": 0.72244826,
+      "price_end": 0.68994886,
+      "change_pct": -4.5
+    },
+    {
+      "start_ts": 1767220996,
+      "end_ts": 1767499592,
+      "gap_days": 3.2,
+      "start_date": "2025-12-31",
+      "end_date": "2026-01-04",
+      "price_start": 0.7095964,
+      "price_end": 0.77660048,
+      "change_pct": 9.4
+    }
+  ]
+}

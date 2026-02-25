@@ -1,0 +1,159 @@
+{
+  "version": "2.0.0",
+  "generated_at": "2026-01-15T19:17:23.955171Z",
+  "assets": [
+    {
+      "id": "pump",
+      "name": "PUMP",
+      "founder": "a1lon9",
+      "network": "solana",
+      "launch_date": "2025-07-14T00:00:00Z",
+      "color": "#9945FF",
+      "logo": "/logos/pump.png",
+      "enabled": true
+    },
+    {
+      "id": "hype",
+      "name": "HYPE",
+      "founder": "chameleon_jeff",
+      "network": "hyperliquid",
+      "launch_date": "2024-11-29T00:00:00Z",
+      "color": "#00D1FF",
+      "logo": "/logos/hype.png",
+      "enabled": true,
+      "data_note": "15m data unavailable - CoinGecko only supports 1h/1d, Hyperliquid API doesn't retain historical 15m"
+    },
+    {
+      "id": "aster",
+      "name": "ASTER",
+      "founder": "cz_binance",
+      "network": "bsc",
+      "launch_date": "2025-09-17T00:00:00Z",
+      "color": "#F0B90B",
+      "logo": "/logos/aster.png",
+      "enabled": true,
+      "data_note": "Sept 17-18 hourly prices reconstructed from DexScreener charts (API historical data unavailable)"
+    },
+    {
+      "id": "believe",
+      "name": "LAUNCHCOIN",
+      "founder": "pasternak",
+      "network": "solana",
+      "launch_date": "2025-01-28T00:00:00Z",
+      "color": "#FF6B6B",
+      "logo": "/logos/believe.png",
+      "enabled": true
+    },
+    {
+      "id": "jup",
+      "name": "JUP",
+      "founder": "weremeow",
+      "network": "solana",
+      "launch_date": "2024-01-31T00:00:00Z",
+      "color": "#19FB9B",
+      "logo": "/logos/jup.png",
+      "enabled": true
+    },
+    {
+      "id": "monad",
+      "name": "MON",
+      "founder": "keoneHD",
+      "network": "monad",
+      "launch_date": "2025-11-24T00:00:00Z",
+      "color": "#836EF9",
+      "logo": "/logos/monad.png",
+      "enabled": true
+    },
+    {
+      "id": "useless",
+      "name": "USELESS",
+      "founder": "theunipcs",
+      "network": "solana",
+      "launch_date": "2025-05-23T00:00:00Z",
+      "color": "#FF4081",
+      "logo": "/logos/useless.png",
+      "enabled": true
+    },
+    {
+      "id": "zora",
+      "name": "ZORA",
+      "founder": "js_horne",
+      "network": "base",
+      "launch_date": "2025-04-23T00:00:00Z",
+      "color": "#5B5BD6",
+      "logo": "/logos/zora.png",
+      "enabled": true
+    },
+    {
+      "id": "meta",
+      "name": "META",
+      "founder": "metaproph3t",
+      "network": "solana",
+      "launch_date": "2025-10-06T00:00:00Z",
+      "color": "#3B82F6",
+      "logo": "/logos/meta.png",
+      "enabled": true
+    },
+    {
+      "id": "wif",
+      "name": "WIF",
+      "founder": "blknoiz06",
+      "network": "solana",
+      "launch_date": "2023-12-01T00:00:00Z",
+      "color": "#D4A76A",
+      "logo": "/logos/wif.png",
+      "enabled": true
+    },
+    {
+      "id": "xpl",
+      "name": "XPL",
+      "founder": "pauliepunt",
+      "network": "bsc",
+      "launch_date": "2025-09-25T00:00:00Z",
+      "color": "#7B3FE4",
+      "logo": "/logos/xpl.png",
+      "enabled": true
+    },
+    {
+      "id": "fartcoin",
+      "name": "FARTCOIN",
+      "founder": "DipWheeler",
+      "network": "solana",
+      "launch_date": "2024-10-18T00:00:00Z",
+      "color": "#8B4513",
+      "logo": "/logos/fartcoin.png",
+      "enabled": true
+    },
+    {
+      "id": "wld",
+      "name": "WLD",
+      "founder": "sama",
+      "network": "ethereum",
+      "launch_date": "2023-07-24T00:00:00Z",
+      "color": "#000000",
+      "logo": "/logos/wld.png",
+      "enabled": true
+    },
+    {
+      "id": "zec",
+      "name": "ZEC",
+      "founder": "mert",
+      "network": "zcash",
+      "launch_date": "2016-10-28T00:00:00Z",
+      "color": "#F4B728",
+      "logo": "/logos/zec.png",
+      "enabled": true,
+      "data_note": "ADOPTER ASSET (mert tweets about ZEC). Limited 1h granularity pre-2021. Only 38 tweet-days analyzed with 47.4% win rate (near random). Correlation weak (0.224) but statistically significant. Skip 15m/1m timeframes due to CoinGecko API limits for legacy coins."
+    },
+    {
+      "id": "gork",
+      "name": "GORK",
+      "founder": "elonmusk",
+      "network": "solana",
+      "launch_date": "2025-04-30T00:00:00Z",
+      "color": "#3B82F6",
+      "logo": "/logos/gork.png",
+      "enabled": true
+    }
+  ]
+}

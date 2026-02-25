@@ -1,0 +1,95 @@
+{
+  "generated_at": "2026-01-15T19:19:20.069203Z",
+  "asset": "wld",
+  "asset_name": "WLD",
+  "founder": "sama",
+  "summary": {
+    "total_tweets": 2,
+    "tweets_with_price": 2,
+    "date_range": {
+      "start": "2023-07-26",
+      "end": "2024-11-11"
+    },
+    "total_days_analyzed": 906
+  },
+  "daily_comparison": {
+    "tweet_day_count": 2,
+    "tweet_day_avg_return": 3.27,
+    "tweet_day_win_rate": 100.0,
+    "tweet_day_distribution": {
+      "count": 2,
+      "mean": 3.27,
+      "median": 3.27,
+      "std_dev": 0.84,
+      "min": 2.43,
+      "max": 4.11,
+      "q1": 2.85,
+      "q3": 3.69,
+      "positive_count": 2,
+      "negative_count": 0
+    },
+    "no_tweet_day_count": 903,
+    "no_tweet_day_avg_return": 0.1,
+    "no_tweet_day_win_rate": 44.4,
+    "no_tweet_day_distribution": {
+      "count": 903,
+      "mean": 0.1,
+      "median": -0.57,
+      "std_dev": 7.27,
+      "min": -26.01,
+      "max": 55.23,
+      "q1": -3.91,
+      "q3": 3.49,
+      "positive_count": 401,
+      "negative_count": 478
+    },
+    "t_statistic": null,
+    "p_value": null,
+    "significant": false,
+    "confidence_label": "insufficient_data"
+  },
+  "correlation": {
+    "correlation_7d": 0.004,
+    "p_value": 0.8924,
+    "significant": false,
+    "sample_size": 906,
+    "strength_label": "negligible"
+  },
+  "current_status": {
+    "days_since_last_tweet": 430,
+    "price_change_during_silence": -75.8,
+    "last_tweet_date": "2024-11-11"
+  },
+  "limitations": {
+    "sample_size_warning": true,
+    "borderline_significance": null,
+    "short_history": false,
+    "notes": [
+      "Small sample: only 2 tweet-days analyzed",
+      "Correlation does not imply causation"
+    ]
+  },
+  "quiet_periods": [
+    {
+      "start_ts": 1690402800,
+      "end_ts": 1731361860,
+      "gap_days": 474.1,
+      "start_date": "2023-07-26",
+      "end_date": "2024-11-11",
+      "price_start": 2.24,
+      "price_end": 2.11,
+      "change_pct": -5.8
+    },
+    {
+      "start_ts": 1731361860,
+      "end_ts": 1768522760,
+      "gap_days": 430.1,
+      "start_date": "2024-11-11",
+      "end_date": "ongoing",
+      "is_current": true,
+      "price_start": 2.48,
+      "price_end": 0.599649,
+      "change_pct": -75.8
+    }
+  ]
+}

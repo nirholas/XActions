@@ -1,0 +1,95 @@
+{
+  "generated_at": "2026-01-15T19:18:51.125665Z",
+  "asset": "monad",
+  "asset_name": "MON",
+  "founder": "keoneHD",
+  "summary": {
+    "total_tweets": 82,
+    "tweets_with_price": 82,
+    "date_range": {
+      "start": "2025-11-24",
+      "end": "2026-01-15"
+    },
+    "total_days_analyzed": 53
+  },
+  "daily_comparison": {
+    "tweet_day_count": 33,
+    "tweet_day_avg_return": 0.28,
+    "tweet_day_win_rate": 39.4,
+    "tweet_day_distribution": {
+      "count": 33,
+      "mean": 0.28,
+      "median": -1.9,
+      "std_dev": 11.81,
+      "min": -14.35,
+      "max": 52.39,
+      "q1": -6.17,
+      "q3": 4.19,
+      "positive_count": 13,
+      "negative_count": 20
+    },
+    "no_tweet_day_count": 19,
+    "no_tweet_day_avg_return": -0.68,
+    "no_tweet_day_win_rate": 36.8,
+    "no_tweet_day_distribution": {
+      "count": 19,
+      "mean": -0.68,
+      "median": -1.82,
+      "std_dev": 7.01,
+      "min": -12.17,
+      "max": 12.48,
+      "q1": -6.59,
+      "q3": 4.45,
+      "positive_count": 7,
+      "negative_count": 12
+    },
+    "t_statistic": 0.317,
+    "p_value": 0.7526,
+    "significant": false,
+    "confidence_label": "none"
+  },
+  "correlation": {
+    "correlation_7d": 0.25,
+    "p_value": 0.0709,
+    "significant": false,
+    "sample_size": 53,
+    "strength_label": "weak"
+  },
+  "current_status": {
+    "days_since_last_tweet": 0,
+    "price_change_during_silence": null,
+    "last_tweet_date": "2026-01-15"
+  },
+  "limitations": {
+    "sample_size_warning": true,
+    "borderline_significance": false,
+    "short_history": true,
+    "notes": [
+      "Small sample: only 33 tweet-days analyzed",
+      "Limited history: 53 days may not capture full market cycles",
+      "Correlation does not imply causation"
+    ]
+  },
+  "quiet_periods": [
+    {
+      "start_ts": 1766015773,
+      "end_ts": 1766387228,
+      "gap_days": 4.3,
+      "start_date": "2025-12-17",
+      "end_date": "2025-12-22",
+      "price_start": 0.01692383,
+      "price_end": 0.02028378,
+      "change_pct": 19.9
+    },
+    {
+      "start_ts": 1767400755,
+      "end_ts": 1768251760,
+      "gap_days": 9.8,
+      "start_date": "2026-01-03",
+      "end_date": "2026-01-12",
+      "price_start": 0.02876675,
+      "price_end": 0.02305447,
+      "change_pct": -19.9
+    }
+  ]
+}

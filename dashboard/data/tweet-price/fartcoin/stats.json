@@ -1,0 +1,374 @@
+{
+  "generated_at": "2026-01-15T19:17:42.499622Z",
+  "asset": "fartcoin",
+  "asset_name": "FARTCOIN",
+  "founder": "DipWheeler",
+  "summary": {
+    "total_tweets": 1917,
+    "tweets_with_price": 1917,
+    "date_range": {
+      "start": "2024-10-24",
+      "end": "2026-01-14"
+    },
+    "total_days_analyzed": 454
+  },
+  "daily_comparison": {
+    "tweet_day_count": 300,
+    "tweet_day_avg_return": 1.16,
+    "tweet_day_win_rate": 49.7,
+    "tweet_day_distribution": {
+      "count": 300,
+      "mean": 1.16,
+      "median": -0.05,
+      "std_dev": 12.18,
+      "min": -41.72,
+      "max": 50.34,
+      "q1": -5.71,
+      "q3": 6.2,
+      "positive_count": 149,
+      "negative_count": 151
+    },
+    "no_tweet_day_count": 153,
+    "no_tweet_day_avg_return": 2.75,
+    "no_tweet_day_win_rate": 49.0,
+    "no_tweet_day_distribution": {
+      "count": 153,
+      "mean": 2.75,
+      "median": -0.25,
+      "std_dev": 17.48,
+      "min": -38.15,
+      "max": 81.43,
+      "q1": -8.33,
+      "q3": 10.36,
+      "positive_count": 75,
+      "negative_count": 78
+    },
+    "t_statistic": -1.121,
+    "p_value": 0.2631,
+    "significant": false,
+    "confidence_label": "none"
+  },
+  "correlation": {
+    "correlation_7d": 0.362,
+    "p_value": 0.0,
+    "significant": true,
+    "sample_size": 454,
+    "strength_label": "weak"
+  },
+  "current_status": {
+    "days_since_last_tweet": 0,
+    "price_change_during_silence": null,
+    "last_tweet_date": "2026-01-14"
+  },
+  "limitations": {
+    "sample_size_warning": false,
+    "borderline_significance": false,
+    "short_history": false,
+    "notes": [
+      "Win rate of 49.7% is near random (50%)",
+      "Correlation does not imply causation"
+    ]
+  },
+  "quiet_periods": [
+    {
+      "start_ts": 1729813680,
+      "end_ts": 1730320200,
+      "gap_days": 5.9,
+      "start_date": "2024-10-24",
+      "end_date": "2024-10-30",
+      "price_start": 0.04407099,
+      "price_end": 0.02343994,
+      "change_pct": -46.8
+    },
+    {
+      "start_ts": 1730413500,
+      "end_ts": 1730816400,
+      "gap_days": 4.7,
+      "start_date": "2024-10-31",
+      "end_date": "2024-11-05",
+      "price_start": 0.03445278,
+      "price_end": 0.05980978,
+      "change_pct": 73.6
+    },
+    {
+      "start_ts": 1731018780,
+      "end_ts": 1731509640,
+      "gap_days": 5.7,
+      "start_date": "2024-11-07",
+      "end_date": "2024-11-13",
+      "price_start": 0.07737094,
+      "price_end": 0.18470363,
+      "change_pct": 138.7
+    },
+    {
+      "start_ts": 1731627840,
+      "end_ts": 1732080960,
+      "gap_days": 5.2,
+      "start_date": "2024-11-14",
+      "end_date": "2024-11-20",
+      "price_start": 0.24952549,
+      "price_end": 0.29796426,
+      "change_pct": 19.4
+    },
+    {
+      "start_ts": 1732232460,
+      "end_ts": 1732683420,
+      "gap_days": 5.2,
+      "start_date": "2024-11-21",
+      "end_date": "2024-11-27",
+      "price_start": 0.32605428,
+      "price_end": 0.3602884,
+      "change_pct": 10.5
+    },
+    {
+      "start_ts": 1732834020,
+      "end_ts": 1733202000,
+      "gap_days": 4.3,
+      "start_date": "2024-11-28",
+      "end_date": "2024-12-03",
+      "price_start": 0.35009193,
+      "price_end": 0.18604868,
+      "change_pct": -46.9
+    },
+    {
+      "start_ts": 1733440440,
+      "end_ts": 1733936580,
+      "gap_days": 5.7,
+      "start_date": "2024-12-05",
+      "end_date": "2024-12-11",
+      "price_start": 0.22372192,
+      "price_end": 0.53601348,
+      "change_pct": 139.6
+    },
+    {
+      "start_ts": 1734047700,
+      "end_ts": 1734566640,
+      "gap_days": 6.0,
+      "start_date": "2024-12-12",
+      "end_date": "2024-12-19",
+      "price_start": 0.69833676,
+      "price_end": 1.0949864,
+      "change_pct": 56.8
+    },
+    {
+      "start_ts": 1734658860,
+      "end_ts": 1735067220,
+      "gap_days": 4.7,
+      "start_date": "2024-12-20",
+      "end_date": "2024-12-24",
+      "price_start": 0.79758398,
+      "price_end": 1.20511684,
+      "change_pct": 51.1
+    },
+    {
+      "start_ts": 1735850100,
+      "end_ts": 1736187300,
+      "gap_days": 3.9,
+      "start_date": "2025-01-02",
+      "end_date": "2025-01-06",
+      "price_start": 1.52743006,
+      "price_end": 1.16879527,
+      "change_pct": -23.5
+    },
+    {
+      "start_ts": 1736466000,
+      "end_ts": 1737057960,
+      "gap_days": 6.9,
+      "start_date": "2025-01-09",
+      "end_date": "2025-01-16",
+      "price_start": 0.83814034,
+      "price_end": 1.31893516,
+      "change_pct": 57.4
+    },
+    {
+      "start_ts": 1737070920,
+      "end_ts": 1737617640,
+      "gap_days": 6.3,
+      "start_date": "2025-01-16",
+      "end_date": "2025-01-23",
+      "price_start": 1.41118823,
+      "price_end": 1.36227856,
+      "change_pct": -3.5
+    },
+    {
+      "start_ts": 1737672000,
+      "end_ts": 1738127220,
+      "gap_days": 5.3,
+      "start_date": "2025-01-23",
+      "end_date": "2025-01-29",
+      "price_start": 1.24636363,
+      "price_end": 1.00597057,
+      "change_pct": -19.3
+    },
+    {
+      "start_ts": 1738281180,
+      "end_ts": 1738699020,
+      "gap_days": 4.8,
+      "start_date": "2025-01-30",
+      "end_date": "2025-02-04",
+      "price_start": 0.89075194,
+      "price_end": 0.64279546,
+      "change_pct": -27.8
+    },
+    {
+      "start_ts": 1739485800,
+      "end_ts": 1739938080,
+      "gap_days": 5.2,
+      "start_date": "2025-02-13",
+      "end_date": "2025-02-19",
+      "price_start": 0.4887656,
+      "price_end": 0.29772987,
+      "change_pct": -39.1
+    },
+    {
+      "start_ts": 1741298940,
+      "end_ts": 1741650900,
+      "gap_days": 4.1,
+      "start_date": "2025-03-06",
+      "end_date": "2025-03-10",
+      "price_start": 0.25041464,
+      "price_end": 0.21801586,
+      "change_pct": -12.9
+    },
+    {
+      "start_ts": 1741906740,
+      "end_ts": 1742246520,
+      "gap_days": 3.9,
+      "start_date": "2025-03-13",
+      "end_date": "2025-03-17",
+      "price_start": 0.28461337,
+      "price_end": 0.32270719,
+      "change_pct": 13.4
+    },
+    {
+      "start_ts": 1742513040,
+      "end_ts": 1742841720,
+      "gap_days": 3.8,
+      "start_date": "2025-03-20",
+      "end_date": "2025-03-24",
+      "price_start": 0.42693373,
+      "price_end": 0.57205635,
+      "change_pct": 34.0
+    },
+    {
+      "start_ts": 1743723540,
+      "end_ts": 1744058340,
+      "gap_days": 3.9,
+      "start_date": "2025-04-03",
+      "end_date": "2025-04-07",
+      "price_start": 0.51176094,
+      "price_end": 0.55179215,
+      "change_pct": 7.8
+    },
+    {
+      "start_ts": 1744320060,
+      "end_ts": 1744745700,
+      "gap_days": 4.9,
+      "start_date": "2025-04-10",
+      "end_date": "2025-04-15",
+      "price_start": 0.87785061,
+      "price_end": 0.80731267,
+      "change_pct": -8.0
+    },
+    {
+      "start_ts": 1744931820,
+      "end_ts": 1745334120,
+      "gap_days": 4.7,
+      "start_date": "2025-04-17",
+      "end_date": "2025-04-22",
+      "price_start": 0.73070772,
+      "price_end": 1.12923249,
+      "change_pct": 54.5
+    },
+    {
+      "start_ts": 1745539140,
+      "end_ts": 1745891400,
+      "gap_days": 4.1,
+      "start_date": "2025-04-24",
+      "end_date": "2025-04-29",
+      "price_start": 1.0302588,
+      "price_end": 1.10856629,
+      "change_pct": 7.6
+    },
+    {
+      "start_ts": 1746140640,
+      "end_ts": 1746472440,
+      "gap_days": 3.8,
+      "start_date": "2025-05-01",
+      "end_date": "2025-05-05",
+      "price_start": 1.14967259,
+      "price_end": 1.13567673,
+      "change_pct": -1.2
+    },
+    {
+      "start_ts": 1746743940,
+      "end_ts": 1747168980,
+      "gap_days": 4.9,
+      "start_date": "2025-05-08",
+      "end_date": "2025-05-13",
+      "price_start": 1.37513499,
+      "price_end": 1.43652597,
+      "change_pct": 4.5
+    },
+    {
+      "start_ts": 1747352520,
+      "end_ts": 1747710360,
+      "gap_days": 4.1,
+      "start_date": "2025-05-15",
+      "end_date": "2025-05-20",
+      "price_start": 1.19163439,
+      "price_end": 1.3004767,
+      "change_pct": 9.1
+    },
+    {
+      "start_ts": 1748541540,
+      "end_ts": 1748876940,
+      "gap_days": 3.9,
+      "start_date": "2025-05-29",
+      "end_date": "2025-06-02",
+      "price_start": 1.05683058,
+      "price_end": 1.14570549,
+      "change_pct": 8.4
+    },
+    {
+      "start_ts": 1750371900,
+      "end_ts": 1750787880,
+      "gap_days": 4.8,
+      "start_date": "2025-06-19",
+      "end_date": "2025-06-24",
+      "price_start": 0.93006704,
+      "price_end": 1.03041645,
+      "change_pct": 10.8
+    },
+    {
+      "start_ts": 1750981200,
+      "end_ts": 1751322240,
+      "gap_days": 3.9,
+      "start_date": "2025-06-26",
+      "end_date": "2025-06-30",
+      "price_start": 1.00381014,
+      "price_end": 1.14299268,
+      "change_pct": 13.9
+    },
+    {
+      "start_ts": 1763153113,
+      "end_ts": 1763415273,
+      "gap_days": 3.0,
+      "start_date": "2025-11-14",
+      "end_date": "2025-11-17",
+      "price_start": 0.24286291,
+      "price_end": 0.24123771,
+      "change_pct": -0.7
+    },
+    {
+      "start_ts": 1767074305,
+      "end_ts": 1767369132,
+      "gap_days": 3.4,
+      "start_date": "2025-12-30",
+      "end_date": "2026-01-02",
+      "price_start": 0.29017907,
+      "price_end": 0.3347201,
+      "change_pct": 15.3
+    }
+  ]
+}

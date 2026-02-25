@@ -117,8 +117,8 @@ describe('LLMBrain', () => {
     it('should strip surrounding quotes from reply', async () => {
       mockFetch.mockResolvedValue(mockResponse('"This is my reply."'));
       const reply = await brain.generateReply(tweet, persona);
-      expect(reply).not.toStartWith('"');
-      expect(reply).not.toEndWith('"');
+      expect(reply.startsWith('"')).toBe(false);
+      expect(reply.endsWith('"')).toBe(false);
     });
   });
 

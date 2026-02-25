@@ -1,0 +1,51 @@
+{
+  "generated_at": "2025-12-22T05:25:59.691791Z",
+  "asset": "wld",
+  "asset_name": "WLD",
+  "founder": "sama",
+  "founder_type": "founder",
+  "price_definition": "candle close at minute boundary",
+  "count": 2,
+  "events": [
+    {
+      "tweet_id": "1684297687708098565",
+      "asset_id": "wld",
+      "asset_name": "WLD",
+      "founder": "sama",
+      "asset_color": "#000000",
+      "timestamp": 1690402800,
+      "timestamp_iso": "2023-07-26T16:20:00Z",
+      "text": "day 3 of @worldcoin launch, crazy lines around the world. one person getting verified every 8 seconds now.",
+      "likes": 0,
+      "retweets": 0,
+      "replies": 0,
+      "impressions": 0,
+      "price_at_tweet": 2.3,
+      "price_1h": 2.26,
+      "price_24h": 2.18,
+      "change_1h_pct": -1.74,
+      "change_24h_pct": -5.22
+    },
+    {
+      "tweet_id": "1856092483266195598",
+      "asset_id": "wld",
+      "asset_name": "WLD",
+      "founder": "sama",
+      "asset_color": "#000000",
+      "timestamp": 1731361860,
+      "timestamp_iso": "2024-11-11T16:51:00Z",
+      "text": "amazing progress at world (fka worldcoin) over the past year, super proud of the team and especially @alexblania's leadership! rare combo of vision and execution ability.",
+      "likes": 0,
+      "retweets": 0,
+      "replies": 0,
+      "impressions": 0,
+      "price_at_tweet": 2.16,
+      "price_1h": 2.19,
+      "price_24h": 2.39,
+      "change_1h_pct": 1.39,
+      "change_24h_pct": 10.65
+    }
+  ],
+  "keyword_filter": "worldcoin,wld,world coin,world id",
+  "tweet_filter_note": "Only tweets mentioning Worldcoin/WLD"
+}

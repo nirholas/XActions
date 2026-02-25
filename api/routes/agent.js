@@ -109,7 +109,7 @@ router.get('/actions', (req, res) => {
       return res.json({ actions: [], total: 0, message: 'Agent not running or no database' });
     }
 
-    const actions = agentInstance.db.getRecentActions(limit, offset, type);
+    const actions = agentInstance.db.getRecentActions(limit, type);
     const total = agentInstance.db.getActionsToday(type);
 
     res.json({ actions, total, limit, offset });
