@@ -1,94 +1,95 @@
 ---
 name: blocking-muting-management
-description: Mass block, unblock, mute, and manage unwanted accounts on X/Twitter. Includes bot detection, keyword-based muting, spam reporting, and follower removal via soft-block. The agent uses this skill when a user wants to block bots, mass block or unblock accounts, mute by keywords, report spam, or remove followers.
+description: Mass block, unblock, mute, unmute, and manage accounts on X/Twitter. Includes bot detection and blocking, keyword-based muting, muted word management, spam reporting, and follower removal via soft-block. Use when users want to block bots, mass block/unblock accounts, mute by keywords, manage muted words, or remove followers.
 license: MIT
 metadata:
   author: nichxbt
-  version: "3.0"
+  version: "4.0"
 ---
 
 # Blocking & Muting Management
 
-Browser console scripts for blocking, unblocking, muting, and managing unwanted accounts.
+Browser console scripts for blocking, unblocking, muting, and managing unwanted accounts on X/Twitter.
 
-## Available Scripts
+## Script Selection
 
-| Script | File | Purpose |
-|--------|------|---------|
-| Mass Block | `src/massBlock.js` | Block multiple accounts from a list or visible on page |
-| Mass Unblock | `src/massUnblock.js` | Unblock multiple accounts with keep-blocked filter |
-| Mass Unmute | `src/massUnmute.js` | Unmute multiple accounts with keep-muted filter |
-| Block Bots | `src/blockBots.js` | Detect and block bot/spam accounts by heuristics |
-| Mute by Keywords | `src/muteByKeywords.js` | Mute accounts tweeting specific keywords |
-| Report Spam | `src/reportSpam.js` | Report accounts for spam/abuse |
-| Remove Followers | `src/removeFollowers.js` | Remove followers without blocking (soft-block) |
+| Goal | File | Navigate to |
+|------|------|-------------|
+| Block multiple accounts | `src/massBlock.js` | Any page on x.com |
+| Unblock all blocked accounts | `src/massUnblock.js` | `x.com/settings/blocked/all` |
+| Unmute all muted accounts | `src/massUnmute.js` | `x.com/settings/muted/all` |
+| Detect and block bots | `src/blockBots.js` | `x.com/USERNAME/followers` |
+| Mute users by keywords | `src/muteByKeywords.js` | Timeline or search results |
+| Manage muted words | `src/manageMutedWords.js` | Any page |
+| Report spam | `src/reportSpam.js` | Target account profile |
+| Remove followers (soft-block) | `src/removeFollowers.js` | `x.com/USERNAME/followers` |
 
-## Quick Start
+## Script Details
 
-| Script | Navigate to |
-|--------|-------------|
-| Block Bots | `x.com/YOUR_USERNAME/followers` |
-| Mass Block | Any x.com page (list mode) or spam reply thread (visible mode) |
-| Mass Unblock | `x.com/settings/blocked/all` |
-| Mass Unmute | `x.com/settings/muted/all` |
-| Mute by Keywords | Timeline or search results |
-| Remove Followers | `x.com/YOUR_USERNAME/followers` |
-| Report Spam | Any x.com page |
+### massBlock.js
+Blocks a list of usernames by navigating to each profile and clicking Block. Configurable delay between blocks. Tracks progress and exports block list.
 
-1. Navigate to the required page
-2. Open DevTools (F12) → Console
-3. Set `dryRun: false` when ready → Paste and run
+**Controls:** `window.XActions.pause()`, `.resume()`, `.abort()`
 
-## Block Bots — `src/blockBots.js`
+### massUnblock.js
+Navigates to blocked accounts page and clicks Unblock on each. Scrolls for more. Progress tracking with auto JSON export.
 
-Scans followers and blocks accounts matching bot heuristics: no avatar, random-string usernames, high follow ratio, no bio, zero tweets.
+### massUnmute.js
+Same pattern as massUnblock but for muted accounts. Navigate to `x.com/settings/muted/all` first.
 
-## Mass Block / Unblock — `src/massBlock.js`, `src/massUnblock.js`
+### blockBots.js
+Scans your followers using heuristics to detect bot accounts:
+- Default avatar / no profile picture
+- Very low follower count with high following count
+- Account age < 30 days with high activity
+- Bio contains spam keywords
+- No tweets or only retweets
 
-Block or unblock accounts from a configurable username list. Mass Block also supports `'visible'` mode that blocks all users on the current page (useful for spam reply threads).
+Flags accounts as suspicious before blocking. Review mode available.
 
-## Mass Unmute — `src/massUnmute.js`
+### muteByKeywords.js
+Scans timeline or search results for tweets containing specific keywords. Mutes the authors. Configurable keyword list.
 
-Unmute all or selected accounts. Supports keep-muted filter to preserve specific mutes.
+### manageMutedWords.js
+Bulk-adds words/phrases to X's muted words list. Navigates to settings and adds each word programmatically.
 
-## Mute by Keywords — `src/muteByKeywords.js`
+### removeFollowers.js
+Removes followers using the block-then-immediately-unblock method. They stop following you without being permanently blocked. Processes one-by-one with safety delays.
 
-Scans timeline for tweets matching keywords and mutes the authors. Useful for filtering recurring spam topics.
+**Controls:** `window.XActions.pause()`, `.resume()`, `.abort()`
 
-## Report Spam — `src/reportSpam.js`
-
-Report multiple accounts for spam or abuse. Configurable reason (`spam`, `abuse`, `fake`) with optional block-after-report.
-
-## Remove Followers — `src/removeFollowers.js`
-
-Removes followers using soft-block (block → immediate unblock). Three modes: `list` (specific users), `all` (all visible), `smart` (heuristic-based filtering).
-
-## Shared Features
-
-Production-grade scripts (`massBlock`, `massUnblock`, `massUnmute`, `removeFollowers`) include:
-
-- **Pause/resume/abort** — `window.XActions.pause()` / `.resume()` / `.abort()` / `.status()`
-- **Dry-run mode** — preview actions before executing
-- **Rate-limit detection** — auto-cooldown on 429 responses
-- **Progress tracking** — real-time console output with counts
-- **JSON export** — download results on completion
-
-## Key Selectors
+## DOM Selectors
 
 | Element | Selector |
 |---------|----------|
 | Block option | `[data-testid="block"]` |
-| Confirmation dialog | `[data-testid="confirmationSheetConfirm"]` |
+| Unblock button | `[data-testid="unblock"]` or `[data-testid$="-unblock"]` |
+| Confirmation | `[data-testid="confirmationSheetConfirm"]` |
 | User actions menu | `[data-testid="userActions"]` |
 | User cell | `[data-testid="UserCell"]` |
-| Mute option | `[data-testid="muteLink"]` |
-| Report option | `[data-testid="report"]` |
-| Tweet caret menu | `[data-testid="caret"]` |
+| Mute option | `[data-testid="mute"]` |
+
+## Rate Limiting & Safety
+
+- 1-2s delays between block/unblock/mute actions
+- Bot detection uses heuristics — review flagged accounts before blocking
+- X may restrict after ~100 blocks in quick succession
+- Soft-block (block+unblock) is the safest way to remove followers
+
+## Strategy Guide
+
+### Cleaning up after a bot attack
+1. Run `src/blockBots.js` on your followers page
+2. Review flagged accounts in the console output
+3. Let the script block confirmed bots
+4. Run `src/auditFollowers.js` to verify remaining follower quality
+
+### Mass cleanup of muted/blocked accounts
+1. Run `src/massUnblock.js` on `x.com/settings/blocked/all` to clear block list
+2. Run `src/massUnmute.js` on `x.com/settings/muted/all` to clear mute list
+3. Set up fresh keyword mutes with `src/manageMutedWords.js`
 
 ## Notes
-
-- Mass operations use 1-3s random delays between actions to avoid rate limits
-- Bot detection uses heuristics — review flagged accounts before blocking
-- Remove followers: block then immediately unblock (they stop following you)
-- Report spam sends the report to X — use responsibly, only for genuine spam
-- All scripts default to `dryRun: true` for safety
+- Block/unblock operations are final — X doesn't have a bulk undo
+- Soft-block (removeFollowers) is invisible to the removed user
+- Bot detection heuristics may flag legitimate new accounts — always review

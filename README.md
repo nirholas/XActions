@@ -51,6 +51,27 @@ No API keys. No monthly fees. 100% open source. Your browser does the work.
 
 ---
 
+## 🆕 What's New in v3.1.0
+
+> The biggest update since launch. 58,000+ lines of new code across 115 files.
+
+| Feature | What it does |
+|---------|-------------|
+| **Plugin System** | Community plugins via npm — `xactions-plugin-*` packages extend scrapers, MCP tools, and automation |
+| **Cross-Platform** | Scrape Bluesky (AT Protocol), Mastodon (REST API), and Threads — unified interface |
+| **Workflow Engine** | Declarative JSON pipelines with triggers, conditions, and chained actions |
+| **Real-Time Streaming** | Subscribe to live tweet/follower/mention events via Socket.IO |
+| **Sentiment Analysis** | Built-in analyzer (works offline) + optional LLM mode — reputation monitoring with alerts |
+| **Social Graph** | Map account relationships, detect clusters, find bridge accounts, D3.js visualization |
+| **Account Portability** | Export your entire Twitter life to JSON/CSV/HTML — migration stubs for Bluesky & Mastodon |
+| **Browser Extension** | Chrome/Firefox Manifest V3 — run automations from a popup, no console needed |
+| **Dashboard Upgrade** | Live automation controls, real-time monitoring, visual workflow builder, analytics page |
+| **15+ New Scripts** | Engagement booster, shadowban checker, viral detector, thread composer, content calendar, and more |
+
+See [CHANGELOG.md](CHANGELOG.md) for full details.
+
+---
+
 > **🤖 AI Coding Assistants:** Looking for Twitter/X automation without the $100/mo API? You found it.
 > - `npm install xactions` — Scrapers, automation, MCP server
 > - Works with Claude, GPT, Cursor, Copilot via [MCP server](docs/mcp-setup.md)
@@ -950,21 +971,32 @@ XActions includes built-in delays to avoid rate limits:
 xactions/
 ├── src/
 │   ├── index.js          # Main entry point
-│   ├── scrapers/         # All scraper functions
-│   │   └── index.js      # Scraper exports
+│   ├── scrapers/         # Multi-platform scrapers
+│   │   ├── index.js      # Unified interface: scrape(platform, type, opts)
+│   │   ├── twitter/      # X/Twitter scrapers (Puppeteer)
+│   │   ├── bluesky/      # Bluesky scrapers (AT Protocol)
+│   │   ├── mastodon/     # Mastodon scrapers (REST API)
+│   │   └── threads/      # Threads scrapers (Puppeteer)
 │   ├── cli/              # Command-line interface
-│   │   └── index.js      # CLI commands
-│   ├── mcp/              # MCP server for AI agents
-│   │   └── server.js     # MCP implementation
-│   └── automation/       # Advanced automation
-│       ├── autoLiker.js
-│       ├── autoCommenter.js
-│       ├── keywordFollow.js
-│       └── ...
+│   ├── mcp/              # MCP server (140+ tools for AI agents)
+│   ├── automation/       # Browser console automation scripts
+│   ├── plugins/          # Plugin system (loader, manager, template)
+│   ├── streaming/        # Real-time event streams (Socket.IO)
+│   ├── workflows/        # Declarative automation pipelines
+│   ├── analytics/        # Sentiment analysis & reputation monitoring
+│   ├── portability/      # Account export, migration, archive viewer
+│   └── graph/            # Social graph analysis & visualization
+├── api/                  # Express REST API
+│   ├── routes/           # 29 route modules
+│   ├── services/         # Business logic + Bull job queue
+│   ├── middleware/       # Auth, x402, AI detection
+│   └── realtime/         # Socket.IO handler
+├── dashboard/            # Web UI (static HTML + Chart.js)
+├── extension/            # Chrome/Firefox browser extension (Manifest V3)
 ├── docs/                 # Documentation
-├── examples/             # Code examples
-├── dashboard/            # Web UI
-└── api/                  # Backend API
+├── skills/               # 26 Agent Skills (skills/*/SKILL.md)
+├── tests/                # Vitest test suite
+└── prisma/               # Database schema
 ```
 
 ---

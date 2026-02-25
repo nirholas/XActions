@@ -1,10 +1,10 @@
 ---
 name: lead-generation
-description: Finds and qualifies B2B leads from X/Twitter conversations using keyword search, profile analysis, and intent scoring. Use when prospecting, finding potential customers, or mining social conversations for leads.
+description: Finds and qualifies B2B leads from X/Twitter conversations using keyword search, profile analysis, and intent scoring. Combines MCP tools for automated prospecting pipelines. Use when prospecting, finding potential customers, or mining social conversations for leads.
 license: MIT
 metadata:
   author: nichxbt
-  version: "3.0"
+  version: "4.0"
 ---
 
 # Lead Generation
@@ -23,18 +23,30 @@ MCP-powered workflow for finding and qualifying B2B leads from X/Twitter convers
 
 ## Workflow
 
-1. **Define search queries** — Build 3-5 keyword queries combining pain points, competitor names, or buying signals (e.g., "looking for {tool}", "anyone recommend {category}", "switching from {competitor}").
-2. **Search conversations** — Call `x_search_tweets` for each query with `limit: 30`. Collect unique usernames from results.
-3. **Qualify profiles** — For each unique username, call `x_get_profile`. Filter by: has bio, follower count > 100, account age > 6 months, posts in English (or target language).
-4. **Score intent** — Assign 1-5 score based on:
+1. **Define search queries** -- Build 3-5 keyword queries combining pain points, competitor names, or buying signals (e.g., "looking for {tool}", "anyone recommend {category}", "switching from {competitor}").
+2. **Search conversations** -- Call `x_search_tweets` for each query with `limit: 30`. Collect unique usernames.
+3. **Qualify profiles** -- Call `x_get_profile` for each. Filter by: has bio, followers > 100, account age > 6 months.
+4. **Score intent** -- Assign 1-5 score:
    - 5: Explicit buying intent ("need a tool for...", "budget approved")
    - 4: Comparing solutions ("X vs Y", "switching from")
-   - 3: Pain point discussion ("struggling with...", "frustrated by")
+   - 3: Pain point discussion ("struggling with...")
    - 2: Topic interest (engages with industry content)
    - 1: Tangential mention
-5. **Gather context** — For top-scored leads (4-5), call `x_get_tweets` with `limit: 20` to identify recent interests, tech stack mentions, and engagement patterns.
-6. **Check network** — Call `x_get_following` for high-value leads to see if they follow competitors or relevant accounts.
-7. **Export lead list** — Format as CSV-ready output using the template below.
+5. **Gather context** -- For top leads (4-5), call `x_get_tweets` with `limit: 20`.
+6. **Check network** -- Call `x_get_following` for high-value leads to see competitor follows.
+7. **Export lead list** -- Format as structured output.
+
+## Browser Script Integration
+
+Enhance MCP workflows with browser scripts:
+
+| Goal | Script |
+|------|--------|
+| Monitor keywords in real-time | `src/keywordMonitor.js` |
+| Analyze potential lead's audience | `src/audienceDemographics.js` |
+| Check overlap with your audience | `src/audienceOverlap.js` |
+| Engage with leads' content | `src/engagementBooster.js` |
+| Auto-follow qualified leads | `src/automation/keywordFollow.js` |
 
 ## Output Template
 
@@ -42,21 +54,20 @@ MCP-powered workflow for finding and qualifying B2B leads from X/Twitter convers
 ## Lead List: {search_topic}
 Generated: {date} | Total qualified: {count}
 
-| Username | Score | Followers | Bio Summary | Signal | Tweet URL | Notes |
-|----------|-------|-----------|-------------|--------|-----------|-------|
-| @{user}  | {1-5} | {count}   | {summary}   | {type} | {url}     | {note}|
+| Username | Score | Followers | Signal | Tweet URL |
+|----------|-------|-----------|--------|-----------|
+| @{user}  | {1-5} | {count}   | {type} | {url}     |
 
 ### High-Priority Leads (Score 4-5)
 
-**@{username}** — Score: {n}/5
+**@{username}** -- Score: {n}/5
 - Signal: "{tweet excerpt}"
 - Bio: {bio}
-- Followers: {count} | Industry: {industry}
 - Suggested approach: {personalized outreach note}
 ```
 
 ## Tips
-
 - Run searches at different times to catch varied audiences
-- Refresh weekly — buying signals are time-sensitive
-- Cross-reference with `x_get_followers` to find warm intros through mutual connections
+- Refresh weekly -- buying signals are time-sensitive
+- Cross-reference with `x_get_followers` to find warm intros
+- Use `src/keywordMonitor.js` for ongoing keyword monitoring

@@ -1,89 +1,82 @@
 ---
 name: creator-monetization
-description: Accesses X/Twitter creator monetization tools — account analytics, post-level analytics, revenue and earnings data, and subscriber management. Provides a combined creator dashboard view. Use when users want to check earnings, view analytics, manage subscribers, or access monetization settings on X.
+description: Manages X/Twitter creator monetization features including ad revenue analytics, subscription management, tipping, and creator dashboard insights. Tracks earnings, analyzes monetization performance, and optimizes for revenue. Use when users want to check earnings, manage subscriptions, optimize monetization, or analyze ad revenue on X.
 license: MIT
 metadata:
   author: nichxbt
-  version: "3.0"
+  version: "4.0"
 ---
 
 # Creator Monetization
 
-Browser automation for X/Twitter creator monetization — analytics, revenue tracking, and subscriber management.
+Browser console scripts for managing and analyzing X/Twitter creator monetization features.
 
 ## Script Selection
 
 | Goal | File | Navigate to |
 |------|------|-------------|
-| Account analytics overview | `src/creatorStudio.js` | `x.com/i/account_analytics` |
-| Post-level analytics | `src/creatorStudio.js` | Tweet URL |
-| Revenue & earnings | `src/creatorStudio.js` | `x.com/settings/monetization` |
-| Subscriber list | `src/creatorStudio.js` | `x.com/settings/monetization/subscribers` |
-| Combined dashboard | `src/creatorStudio.js` | `x.com/i/account_analytics` |
+| Creator dashboard analytics | `src/creatorStudio.js` | `x.com/i/monetization` |
+| Subscription management | `src/subscriptionManager.js` | `x.com/i/monetization` |
+| Content performance for monetization | `src/tweetPerformance.js` | `x.com/USERNAME` |
+| Audience demographics | `src/audienceDemographics.js` | `x.com/USERNAME/followers` |
 
 ## Creator Studio
 
 **File:** `src/creatorStudio.js`
 
-Puppeteer-based module for accessing X's creator analytics and monetization pages.
+Scrapes and analyzes creator monetization data from X's dashboard.
 
-### Functions
+### Features
+- Ad revenue tracking (daily/weekly/monthly)
+- Impression and engagement rate for monetized content
+- Subscriber count and revenue
+- Tipping analytics
+- Monetization eligibility check
 
-| Function | Purpose |
-|----------|---------|
-| `getAccountAnalytics(page, { period })` | Scrape account-level analytics metrics |
-| `getPostAnalytics(page, postUrl)` | Get likes, reposts, replies, bookmarks, views for a post |
-| `getRevenue(page)` | Access monetization settings and revenue data |
-| `getSubscribers(page, { limit })` | List subscribers with names and subscription dates |
-| `getCreatorDashboard(page)` | Combined analytics + revenue snapshot |
+### Eligibility Requirements
 
-### Account Analytics
-
-Navigates to `x.com/i/account_analytics` and extracts available metrics from stat cards. Supports period configuration (default: 28 days).
-
-### Post Analytics
-
-Visits a specific tweet URL and extracts engagement breakdown: likes, reposts, replies, bookmarks, and view/impression count.
-
-### Revenue
-
-Navigates to `x.com/settings/monetization` and extracts available text from the monetization page. Revenue data requires Premium subscription and eligibility.
-
-### Subscribers
-
-Lists subscribers from the monetization subscribers page with display name, username, and subscription start date.
+| Feature | Requirements |
+|---------|-------------|
+| Ad Revenue Sharing | Premium + 500 followers + 5M organic impressions (90 days) |
+| Subscriptions | Premium + 500 followers |
+| Tipping | Any account |
+| Media Studio | Premium |
 
 ## DOM Selectors
 
 | Element | Selector |
 |---------|----------|
-| Analytics nav | `a[href="/i/account_analytics"]` |
-| Monetization nav | `a[href="/settings/monetization"]` |
-| Impressions | `[data-testid="impressions"]` |
-| Analytics button | `[data-testid="analyticsButton"]` |
-| Like count | `[data-testid="like"] span` |
-| Repost count | `[data-testid="retweet"] span` |
-| Reply count | `[data-testid="reply"] span` |
-| User cell | `[data-testid="UserCell"]` |
+| Monetization nav | `a[href="/i/monetization"]` |
+| Revenue display | `[data-testid="revenueAmount"]` |
+| Analytics tabs | `[role="tab"]` |
+| Subscription info | `[data-testid="subscriptionInfo"]` |
+| Earnings chart | `[data-testid="earningsChart"]` |
 
-## Eligibility Requirements
+## Monetization Strategy
 
-- **Ad Revenue Sharing:** X Premium + 500 followers + 5M impressions in last 3 months
-- **Subscriptions:** Verified + 500 followers + active 30+ days
-- **Tips:** Any account can enable
-- **Minimum payout:** $10
+### Maximizing ad revenue
+1. `src/tweetPerformance.js` -- identify high-impression content types
+2. `src/tweetScheduleOptimizer.js` -- post at peak times for maximum reach
+3. `src/contentRepurposer.js` -- multiply high-performing content
+4. Focus on original tweets, not replies (replies don't earn ad revenue)
+5. Threads generate more impressions than single tweets
 
-## Rate Limiting
+### Growing subscriptions
+1. `src/audienceDemographics.js` -- understand who your audience is
+2. Post subscriber-only previews with `src/postThread.js`
+3. Use `src/autoPlugReplies.js` to promote subscription on viral tweets
+4. Track subscriber growth with `src/followerGrowthTracker.js`
 
-- 2–3s delay between page navigations
-- Post analytics requires visiting each tweet individually (~4s per post)
-- Dashboard function chains analytics + revenue pages sequentially
+### Content that earns
+| Content Type | Revenue Potential | Why |
+|-------------|------------------|-----|
+| Threads (5+ tweets) | High | Multiple impressions per reader |
+| Hot takes/opinions | High | Engagement-driven reach |
+| Tutorials/how-tos | Medium | Bookmarks + shares |
+| Reply threads | None | Replies excluded from ad sharing |
 
-## Troubleshooting
-
-| Problem | Solution |
-|---------|----------|
-| Monetization tab not visible | Requires X Premium and eligibility criteria |
-| Revenue shows $0 | Revenue updates are delayed 24–48 hours |
-| Subscriber count mismatch | Dashboard may show pending vs. confirmed subscribers |
-| Analytics empty | Ensure account has public tweets with impressions |
+## Notes
+- Ad revenue is paid monthly with a minimum threshold
+- Revenue data may lag 24-48 hours behind real-time
+- Only organic impressions count (not promoted/ad views)
+- Creator dashboard is only accessible to eligible accounts

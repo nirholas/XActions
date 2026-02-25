@@ -1,102 +1,90 @@
 ---
 name: discovery-explore
-description: Searches tweets, scrapes trending topics, browses explore feed tabs, follows topics, and performs advanced filtered searches on X/Twitter. Supports date filters, engagement minimums, media filters, and all X search operators. Use when users want to search X, explore trends, or discover content.
+description: Explores X/Twitter trending topics, searches for content, and discovers new accounts. Includes trending topic monitoring, keyword search, explore page scraping, and topic discovery. Use when users want to explore trends, search for content, or discover new accounts and topics on X.
 license: MIT
 metadata:
   author: nichxbt
-  version: "3.0"
+  version: "4.0"
 ---
 
 # Discovery & Explore
 
-Browser automation for X/Twitter search, trending topics, and content discovery.
+Browser console scripts and MCP tools for exploring trends, searching content, and discovering accounts on X/Twitter.
 
 ## Script Selection
 
 | Goal | File | Navigate to |
 |------|------|-------------|
-| Search tweets | `src/discoveryExplore.js` | `x.com/search?q=QUERY` |
-| Get trending topics | `src/discoveryExplore.js` | `x.com/explore/tabs/trending` |
-| Browse explore feed | `src/discoveryExplore.js` | `x.com/explore` |
-| Follow a topic | `src/discoveryExplore.js` | Topic search page |
-| Advanced filtered search | `src/discoveryExplore.js` | `x.com/search` |
+| Monitor trending topics | `src/trendingTopicMonitor.js` | `x.com/explore/tabs/trending` |
+| Search tweets | `scripts/scrapeSearch.js` | Search results page |
+| Scrape hashtag | `scripts/scrapeHashtag.js` | `x.com/hashtag/TAG` |
+| Find viral tweets | `src/viralTweetDetector.js` | Any profile |
+| Keyword monitoring | `src/keywordMonitor.js` | Any page |
+| Scrape explore page | `src/exploreScraper.js` | `x.com/explore` |
 
-## Discovery Explore
+## MCP Tools
 
-**File:** `src/discoveryExplore.js`
+| Tool | Description |
+|------|-------------|
+| `x_get_trends` | Current trending topics |
+| `x_get_explore` | Explore page content |
+| `x_search_tweets` | Full-text tweet search |
 
-Puppeteer-based module for search, trends, explore feed, and topic management.
+## Trending Topic Monitor
 
-### Functions
+**File:** `src/trendingTopicMonitor.js`
 
-| Function | Purpose |
-|----------|---------|
-| `searchTweets(page, query, { limit, tab, since, until })` | Search with optional date range and tab (latest/people/media) |
-| `getTrends(page, { location })` | Scrape all visible trending topics with rank, name, category, tweet count |
-| `getExploreFeed(page, { limit, tab })` | Get tweets from explore tabs (foryou/trending/news/sports/entertainment) |
-| `followTopic(page, topicName)` | Follow a topic via search |
-| `advancedSearch(page, filters)` | Multi-filter search with all X operators |
+Real-time trending topic scraper with niche classification.
 
-### Search Tweets
+### Controls
+- `XActions.scan()` -- Scrape current trends
+- `XActions.track()` -- Log trend snapshot with timestamp
+- `XActions.history()` -- Show all tracked snapshots
+- `XActions.forNiche(keyword)` -- Filter trends by niche keyword
+- `XActions.export()` -- Download trend data as JSON
 
-Navigates to X search with the given query and scrolls to collect results. Supports `tab` parameter: `'latest'` (default), `'people'`, `'media'`. Returns tweet text, author, time, link, likes, and reposts.
+### Features
+- Categorizes trends by niche (tech, politics, entertainment, sports, crypto, etc.)
+- Tracks trend velocity (rising/falling)
+- Identifies trending hashtags vs organic trends
+- Alerts on niche-relevant trends
 
-### Get Trends
+## Keyword Monitor
 
-Visits `x.com/explore/tabs/trending` and extracts all trend items with rank, name, category label, and tweet count.
+**File:** `src/keywordMonitor.js`
 
-### Advanced Search
+Monitors X for mentions of specific keywords with sentiment classification.
 
-Builds a query from structured filters:
+### Controls
+- `XActions.setKeywords(['keyword1', 'keyword2'])` -- Configure keywords
+- `XActions.scan()` -- Run one search cycle
+- `XActions.autoScan(intervalMs)` -- Continuous monitoring
+- `XActions.stop()` -- Stop auto-scanning
+- `XActions.report()` -- Show summary with sentiment breakdown
+- `XActions.export()` -- Download results as JSON
 
-```javascript
-await advancedSearch(page, {
-  allWords: 'javascript',
-  from: 'nichxbt',
-  since: '2025-01-01',
-  minLikes: 100,
-  hasMedia: true,
-  lang: 'en',
-  limit: 50,
-});
-```
+## Strategy Guide
 
-**Available filters:** `allWords`, `exactPhrase`, `anyWords`, `noneOfWords`, `hashtags`, `from`, `to`, `mentioning`, `since`, `until`, `minLikes`, `minRetweets`, `hasMedia`, `hasLinks`, `lang`.
+### Trend-jacking workflow
+1. Run `src/trendingTopicMonitor.js` -> `XActions.forNiche('your_niche')`
+2. Identify relevant trends with momentum
+3. Craft timely content using `src/threadComposer.js` or `src/contentRepurposer.js`
+4. Post within the first 2 hours of trend emergence for maximum visibility
+5. Track performance with `src/tweetPerformance.js`
 
-## X Search Operators
+### Content ideation from search
+1. Use `scripts/scrapeSearch.js` or `x_search_tweets` for niche keywords
+2. Analyze top results for content gaps
+3. Use `src/viralTweetDetector.js` on popular accounts in your niche
+4. Repurpose successful formats with `src/contentRepurposer.js`
 
-| Operator | Example | Description |
-|----------|---------|-------------|
-| `from:` | `from:elonmusk` | Tweets from specific user |
-| `to:` | `to:elonmusk` | Replies to specific user |
-| `since:` / `until:` | `since:2024-01-01` | Date range |
-| `min_faves:` | `min_faves:100` | Minimum likes |
-| `min_retweets:` | `min_retweets:50` | Minimum retweets |
-| `filter:media` | `-filter:retweets` | Include/exclude filters |
-| `lang:` | `lang:en` | Language filter |
+### Building a discovery routine
+1. Daily: `src/trendingTopicMonitor.js` -> `XActions.track()` for trend log
+2. Weekly: Review `XActions.history()` for recurring themes
+3. Set `src/keywordMonitor.js` for brand/topic monitoring
 
-## DOM Selectors
-
-| Element | Selector |
-|---------|----------|
-| Search input | `[data-testid="SearchBox_Search_Input"]` |
-| Trend item | `[data-testid="trend"]` |
-| Topic follow | `[data-testid="TopicFollow"]` |
-| Tab buttons | `[role="tab"]` |
-| Tweet | `article[data-testid="tweet"]` |
-| Tweet text | `[data-testid="tweetText"]` |
-
-## Rate Limiting
-
-- 1.5s delay between scroll cycles
-- 3s initial wait after page navigation
-- Scrolls cap at `limit * 2` attempts to avoid infinite loops
-
-## Troubleshooting
-
-| Problem | Solution |
-|---------|----------|
-| No trends visible | Trends are location-specific — check account region settings |
-| Search returns no results | Try broader keywords or remove date/engagement filters |
-| Topic follow button not found | Topic may not exist as a followable entity |
-| Explore feed empty | Ensure you're logged in with an active account |
+## Notes
+- Explore page content varies by region and account history
+- Trends refresh every ~15 minutes on X
+- Keyword monitor uses X search (subject to standard rate limits)
+- Trending data is publicly accessible (no auth needed for viewing)

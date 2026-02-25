@@ -1,35 +1,68 @@
 ---
 name: premium-subscriptions
-description: Manages X/Twitter Premium subscription features including plan details, feature access, and subscription settings. The agent uses this skill when a user wants to check Premium status, manage subscriptions, or understand which features require Premium.
+description: Manages X/Twitter Premium subscription features including plan detection, feature access verification, and subscription-dependent script guidance. Use when checking Premium status, understanding which features require Premium, or managing subscription-gated functionality.
 license: MIT
 metadata:
   author: nichxbt
-  version: "3.0"
+  version: "4.0"
 ---
 
-# Premium Subscriptions
+# Premium & Subscriptions
 
 Browser console script for checking and managing X/Twitter Premium subscription information.
 
-## Available Scripts
+## Script Selection
 
-| Script | File | Purpose |
-|--------|------|---------|
-| Premium Manager | `src/premiumManager.js` | Check status, manage features, subscription info |
+| Goal | File | Navigate to |
+|------|------|-------------|
+| Check Premium status | `src/premiumManager.js` | `x.com/settings/account` |
+| Manage articles (Premium+) | `src/articlePublisher.js` | `x.com/compose/article` |
+| Schedule posts (Premium) | `src/schedulePosts.js` | `x.com` |
+| Creator monetization | `src/creatorStudio.js` | `x.com/i/monetization` |
 
 ## Premium Manager
 
 **File:** `src/premiumManager.js`
 
-Interacts with X Premium subscription pages to check current tier, feature access, and subscription status.
+Checks current Premium tier, feature access, and subscription status.
 
-### How to use
+### How to Use
+1. Navigate to `x.com/settings/account` or `x.com/i/premium_sign_up`
+2. Open DevTools (F12) -> Console
+3. Paste the script -> Enter
 
-1. Navigate to `x.com/i/premium_sign_up` or `x.com/settings/account`
-2. Open DevTools (F12) → Console
-3. Paste the script → Enter
+## Premium Tiers
 
-### Key Selectors
+| Tier | Price | Key Features |
+|------|-------|-------------|
+| Basic | $3/mo | Edit posts, longer posts (25K chars), bookmark folders |
+| Premium | $8/mo | Blue checkmark, scheduling, analytics, Grok, reduced ads |
+| Premium+ | $16/mo | Articles, no ads, creator monetization, highest reply boost |
+
+## XActions Feature Gating
+
+Several scripts depend on Premium:
+
+| Feature | Required Tier | Script |
+|---------|---------------|--------|
+| Scheduling | Premium+ | `src/schedulePosts.js` |
+| Articles | Premium+ | `src/articlePublisher.js` |
+| Advanced analytics | Premium | `src/creatorStudio.js` |
+| Edit posts | Basic+ | N/A (manual edit) |
+| Longer posts (25K) | Basic+ | `src/postComposer.js` |
+| Grok AI | Premium+ | `src/grokIntegration.js` |
+| Ad revenue sharing | Premium (500+ followers + 5M impressions) | `src/creatorStudio.js` |
+| Subscriptions | Premium (500+ followers) | `src/creatorStudio.js` |
+
+Scripts that work on ALL tiers (including free):
+- All scraping scripts
+- All unfollow/follow scripts
+- All analytics scripts (browser-based)
+- Engagement automation
+- Blocking/muting management
+- All monitoring scripts
+
+## DOM Selectors
 
 | Element | Selector |
 |---------|----------|
@@ -37,27 +70,8 @@ Interacts with X Premium subscription pages to check current tier, feature acces
 | Verification badge | `[data-testid="icon-verified"]` |
 | Premium nav | `a[href="/i/premium_sign_up"]` |
 
-## Premium Tiers
-
-| Tier | Key Features |
-|------|-------------|
-| Basic | Edit posts, longer posts, bookmark folders |
-| Premium | Blue checkmark, scheduling, analytics, Grok |
-| Premium+ | Articles, no ads, creator monetization |
-
-## Feature Gating
-
-Several XActions scripts depend on Premium features:
-
-- **Scheduling** — `src/schedulePosts.js` requires Premium or Premium+
-- **Articles** — `src/articlePublisher.js` requires Premium+
-- **Analytics** — advanced analytics require Premium
-- **Edit posts** — requires Basic or higher
-- **Longer posts** — 25,000+ characters requires Basic or higher
-
 ## Notes
-
-- Premium features gate many XActions capabilities
-- Subscription status affects which scripts are fully usable
-- The script reads subscription info — it does not modify subscriptions
-- Badge verification status can be checked on any profile page
+- Premium features gate some XActions capabilities but most scripts work on free tier
+- The script reads subscription info -- it does not modify subscriptions
+- Badge verification can be checked on any profile page
+- Premium status affects reply ranking in threads

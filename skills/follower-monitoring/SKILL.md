@@ -1,54 +1,93 @@
 ---
 name: follower-monitoring
-description: Monitors X/Twitter follower changes using browser console scripts. Detects who unfollowed, tracks new followers with welcome message templates, monitors any public account's followers or following list, and runs continuous monitoring with browser notifications and audio alerts. Use when tracking follower changes, detecting unfollowers, or monitoring Twitter accounts.
+description: Monitors X/Twitter follower changes using browser console scripts. Detects who unfollowed, tracks new followers with welcome messages, monitors any public account, runs continuous monitoring with alerts, tracks follower growth over time, and analyzes follower demographics. Use when tracking follower changes, detecting unfollowers, or monitoring Twitter accounts.
 license: MIT
 metadata:
   author: nichxbt
-  version: "3.0"
+  version: "4.0"
 ---
 
 # Follower Monitoring
 
-Browser console scripts. Paste into DevTools on the appropriate followers/following page.
+Browser console scripts for tracking follower changes on X/Twitter. All scripts use localStorage for persistent snapshot comparison.
 
-## Script selection
+## Script Selection
 
-| Goal | Navigate to | File |
-|------|------------|------|
-| Detect who unfollowed you | `x.com/USERNAME/followers` | `src/detectUnfollowers.js` |
-| Track any public account's changes | `x.com/TARGET/followers` or `/following` | `src/monitorAccount.js` |
-| Auto-refresh monitoring with alerts | `x.com/USERNAME/followers` | `src/continuousMonitor.js` |
-| New follower tracking + welcome messages | `x.com/USERNAME/followers` | `src/newFollowersAlert.js` |
+| Goal | File | Navigate to |
+|------|------|-------------|
+| Detect who unfollowed you | `src/detectUnfollowers.js` | `x.com/USERNAME/followers` |
+| Monitor any public account | `src/monitorAccount.js` | `x.com/TARGET/followers` |
+| Continuous monitoring + alerts | `src/continuousMonitor.js` | `x.com/USERNAME/followers` |
+| New follower tracking + welcome | `src/newFollowersAlert.js` | `x.com/USERNAME/followers` |
+| Follower growth over time | `src/followerGrowthTracker.js` | `x.com/USERNAME/followers` |
+| Follower demographics | `src/audienceDemographics.js` | `x.com/USERNAME/followers` |
+| Audit follower quality | `src/auditFollowers.js` | `x.com/USERNAME/followers` |
+| Follow ratio management | `src/followRatioManager.js` | `x.com/USERNAME` |
 
-## How they work
+## How They Work
 
-All scripts use the same snapshot-compare pattern:
+All scripts use the same **snapshot-compare pattern**:
+1. First run: Scrapes visible users by scrolling, saves snapshot to localStorage
+2. Subsequent runs: Scrapes current list, compares against saved snapshot, reports additions/removals
 
-1. **First run**: Scrapes all visible users by scrolling, saves snapshot to `localStorage`, reports total count
-2. **Subsequent runs**: Scrapes current list, compares against saved snapshot, reports additions and removals, updates snapshot
+### detectUnfollowers.js
+Compares follower snapshots. Auto-downloads unfollowers as `.txt` file. Simple two-run workflow: paste once to baseline, paste again later to detect changes.
 
-### Storage keys
+### monitorAccount.js
+Works on ANY public account (not just yours). Tracks both followers and following list changes. Downloads removed accounts list.
 
-| Script | localStorage key | Value format |
-|--------|-----------------|-------------|
-| detectUnfollowers | `xactions_my_followers` | `[{ username, displayName }]` |
-| monitorAccount | `xactions_monitor_{username}_{type}` | `[{ username, displayName }]` |
-| newFollowersAlert | `xactions_new_followers` | `Map` with display names |
+### continuousMonitor.js
+Long-running script with auto-refresh on interval (default: 5 minutes). Sends browser Notification API alerts and plays Web Audio API sounds on changes. Tab must stay open.
 
-### Script-specific behavior
+### newFollowersAlert.js
+Tracks new followers with display names. Generates welcome message templates. Also reports unfollowers as secondary output.
 
-**detectUnfollowers.js** — Auto-downloads unfollower list as `.txt` on detection.
+### followerGrowthTracker.js
+Records follower count snapshots over time with timestamps. Calculates daily/weekly/monthly growth rates. Projects future milestones. Visual growth chart in console.
 
-**monitorAccount.js** — Works on ANY public account (not just yours). Downloads lists of removed accounts.
+**Controls:** `XActions.track()`, `XActions.history()`, `XActions.project(target)`
 
-**continuousMonitor.js** — Long-running. Auto-checks on interval (default: `CHECK_INTERVAL_MINUTES = 5` at top of script). Sends browser Notification API alerts and plays Web Audio API sounds on changes. Tab must stay open.
+### audienceDemographics.js
+Scrapes follower profiles and classifies by niche, account size, bot likelihood, and verified status. Visual distribution charts.
 
-**newFollowersAlert.js** — Tracks new followers with display names and generates welcome message templates. Also reports unfollowers as secondary output.
+### followRatioManager.js
+Navigate to profile page. Monitors follower/following ratio with letter grades. Generates improvement plans.
 
-## Resetting data
+**Controls:** `XActions.track()`, `XActions.plan()`, `XActions.history()`
 
+## Storage Keys
+
+| Script | localStorage Key |
+|--------|-----------------|
+| detectUnfollowers | `xactions_my_followers` |
+| monitorAccount | `xactions_monitor_{username}_{type}` |
+| newFollowersAlert | `xactions_new_followers` |
+| followerGrowthTracker | `xactions_follower_growth` |
+| followRatioManager | `xactions_ratio_history` |
+
+## Strategy Guide
+
+### Daily monitoring setup
+1. Open `x.com/USERNAME/followers` in a pinned tab
+2. Paste `src/continuousMonitor.js` — it auto-refreshes every 5 minutes
+3. Enable browser notifications when prompted
+4. Check back periodically for alerts
+
+### Weekly follower health check
+1. `src/followerGrowthTracker.js` -> `XActions.track()` to log this week
+2. `src/followRatioManager.js` -> `XActions.track()` for ratio snapshot
+3. `src/auditFollowers.js` to check for new bot followers
+4. `src/audienceDemographics.js` to verify audience quality
+
+### Resetting data
 ```javascript
 localStorage.removeItem('xactions_my_followers')
-// or for monitored accounts:
-localStorage.removeItem('xactions_monitor_username_followers')
+localStorage.removeItem('xactions_follower_growth')
+localStorage.removeItem('xactions_ratio_history')
 ```
+
+## Notes
+- All scripts auto-export results as downloadable JSON
+- `continuousMonitor.js` requires the tab to stay open (Chrome throttles background timers)
+- Monitoring accuracy improves with more scroll rounds (increase in CONFIG)
+- localStorage persists across browser sessions but NOT across browser profiles

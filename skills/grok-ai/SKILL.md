@@ -1,88 +1,106 @@
 ---
 name: grok-ai
-description: Interacts with X/Twitter's Grok AI chatbot — sends text prompts, generates images, summarizes topics and threads, and analyzes post performance predictions. Requires X Premium. Use when users want to automate Grok conversations, generate AI images, or get AI-powered content analysis.
+description: Integrates with X/Twitter's Grok AI for chat, image generation, tweet analysis, and content creation. Automates Grok prompts, scrapes Grok responses, and uses Grok for content strategy. Requires X Premium+. Use when users want to use Grok AI for content generation, analysis, or chat automation on X.
 license: MIT
 metadata:
   author: nichxbt
-  version: "3.0"
+  version: "4.0"
 ---
 
 # Grok AI Integration
 
-Browser automation for interacting with X's Grok AI chatbot — prompts, image generation, summarization, and post analysis.
+Browser console scripts for automating interactions with X's built-in Grok AI assistant.
 
 ## Script Selection
 
 | Goal | File | Navigate to |
 |------|------|-------------|
-| Send prompts to Grok | `src/grokIntegration.js` | `x.com/i/grok` |
-| Generate images with Grok | `src/grokIntegration.js` | `x.com/i/grok` |
-| Summarize a topic or thread | `src/grokIntegration.js` | `x.com/i/grok` |
-| Analyze a post's engagement potential | `src/grokIntegration.js` | `x.com/i/grok` |
+| Chat with Grok | `src/grokIntegration.js` | `x.com/i/grok` |
+| Generate images | `src/grokIntegration.js` | `x.com/i/grok` |
+| Analyze tweet with Grok | `src/grokIntegration.js` | Any tweet |
 
 ## Grok Integration
 
 **File:** `src/grokIntegration.js`
 
-Puppeteer-based module for programmatic Grok AI interactions.
+Automates Grok AI prompts and response scraping.
 
-### Functions
+### How to Use
+1. Navigate to `x.com/i/grok`
+2. Open DevTools (F12) -> Console
+3. Paste the script -> Enter
 
-| Function | Purpose |
-|----------|---------|
-| `queryGrok(page, query, { newChat?, waitTime? })` | Send a text prompt and extract the response |
-| `generateImage(page, prompt)` | Generate an AI image (Premium+ may be required) |
-| `summarize(page, topicOrUrl)` | Summarize a topic or thread URL |
-| `analyzePost(page, postText)` | Rate a post 1–10 and get improvement suggestions |
+### Controls
+- `XActions.ask(prompt)` -- Send a prompt to Grok
+- `XActions.scrapeResponse()` -- Capture Grok's latest response
+- `XActions.generateImage(prompt)` -- Request image generation
+- `XActions.batchAsk(prompts[])` -- Send multiple prompts sequentially
+- `XActions.export()` -- Download conversation history as JSON
 
-### queryGrok
-
-Navigates to `x.com/i/grok`, optionally starts a new chat, types the query, sends it, waits for the response to complete, and extracts the response text.
-
-**Options:**
-- `newChat: true` — start a fresh conversation (default: true)
-- `waitTime: 15000` — milliseconds to wait for response (default: 15s)
-
-### generateImage
-
-Sends an image generation prompt to Grok and waits up to 20s for the image to render. Extracts the image URL if available.
-
-### summarize
-
-Accepts a topic string or URL. If URL, asks Grok to summarize the thread/post. If text, asks for a summary of the latest discussion on that topic. Uses Grok's real-time X data access.
-
-### analyzePost
-
-Sends a post's text to Grok and asks for a 1–10 engagement rating with improvement suggestions.
+### Features
+- Automated prompt submission with response capture
+- Batch prompting for content generation workflows
+- Image generation prompt automation
+- Conversation history export
+- Rate-limited to avoid triggering restrictions
 
 ## DOM Selectors
 
 | Element | Selector |
 |---------|----------|
-| Chat input | `[data-testid="grokInput"]` |
-| Send button | `[data-testid="grokSendButton"]` |
-| Response area | `[data-testid="grokResponse"]` |
-| Response text | `[data-testid="grokResponseText"]` |
-| New chat | `[data-testid="grokNewChat"]` |
-| Image gen toggle | `[data-testid="grokImageGen"]` |
+| Grok input | `[data-testid="grokInput"]` or `textarea[placeholder]` |
+| Send button | `[data-testid="grokSend"]` |
+| Response container | `[data-testid="grokResponse"]` |
+| Image output | `[data-testid="grokImage"]` |
+| Grok nav | `a[href="/i/grok"]` |
 
-## Prerequisites
+## Content Strategy with Grok
 
-- **Grok access:** Requires X Premium subscription
-- **Image generation:** May require Premium+; daily limits (~10–25 images/day)
+### Using Grok for content ideation
+1. `XActions.ask("What are the top 5 trending topics in {niche} right now?")`
+2. `XActions.ask("Write 3 tweet variations about {topic}")`
+3. `XActions.ask("Analyze this tweet for engagement: {tweet_text}")`
+4. Capture responses with `XActions.scrapeResponse()`
+5. Feed into `src/threadComposer.js` for thread creation
 
-## Rate Limiting
+### Batch content generation
+```javascript
+await XActions.batchAsk([
+  "Write a hot take about AI agents",
+  "Write a thread hook about productivity",
+  "Write a poll question about remote work",
+  "Suggest 5 tweet ideas about {niche}",
+]);
+XActions.export(); // Download all responses
+```
 
-- 5s built-in wait between queued prompts
-- 15s default wait for text responses, 20s for image generation
-- Grok may limit requests per hour during high traffic
+### Image generation workflow
+1. `XActions.generateImage("Professional headshot, tech founder, minimalist")`
+2. Wait for generation (10-30 seconds)
+3. Right-click generated image to save
+4. Use as profile picture, header, or tweet media
 
-## Troubleshooting
+## Requirements
+- X Premium or Premium+ subscription
+- Grok access varies by region and account tier
+- Image generation requires Premium+ in most regions
+- Rate limits: ~20 prompts/hour for chat, ~5 images/hour
 
-| Problem | Solution |
-|---------|----------|
-| Grok not responding | Check X Premium subscription status |
-| Response not captured | Increase `waitTime` — Grok may still be streaming |
-| Image generation fails | Daily limit may be hit — try again tomorrow |
-| "Grok is at capacity" | High traffic — retry in a few minutes |
-| Input field not found | Grok UI may have updated — inspect for new selectors |
+## MCP Alternative
+
+For programmatic AI content without Grok, the XActions MCP server includes AI tools powered by OpenRouter:
+
+| MCP Tool | Purpose |
+|----------|---------|
+| `x_analyze_voice` | Analyze account's writing style |
+| `x_generate_tweet` | Generate tweet in user's voice |
+| `x_rewrite_tweet` | Rewrite tweet for better engagement |
+| `x_summarize_thread` | Summarize a thread |
+
+These require an `OPENROUTER_API_KEY` env var but work without Premium.
+
+## Notes
+- Grok responses are AI-generated and should be reviewed before posting
+- Grok has real-time X data access -- can reference current trends
+- Image generation creates original images (not screenshots/existing images)
+- Conversation context is maintained within a chat session

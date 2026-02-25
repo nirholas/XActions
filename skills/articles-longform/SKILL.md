@@ -1,83 +1,89 @@
 ---
 name: articles-longform
-description: Publishes long-form articles on X/Twitter using the Premium+ article editor. Creates articles with titles, body content, and cover images, saves drafts, lists published articles, and retrieves article analytics. Use when users want to publish, draft, or manage articles on X.
+description: Compose, preview, publish, and manage long-form Articles on X/Twitter. Premium+ feature. Includes article creation, formatting, media insertion, and performance tracking. Use when users want to write, publish, manage, or analyze X Articles.
 license: MIT
 metadata:
   author: nichxbt
-  version: "3.0"
+  version: "4.0"
 ---
 
-# Articles & Long-Form Content
+# Articles & Longform
 
-Browser automation for publishing and managing long-form articles on X/Twitter. Requires Premium+ subscription.
+Browser console scripts for creating and managing X/Twitter Articles (Premium+ feature).
 
 ## Script Selection
 
 | Goal | File | Navigate to |
 |------|------|-------------|
-| Publish or draft an article | `src/articlePublisher.js` | `x.com/compose/article` |
-| List published articles | `src/articlePublisher.js` | `x.com/USERNAME/articles` |
-| Get article analytics | `src/articlePublisher.js` | Article URL |
+| Publish an article | `src/articlePublisher.js` | `x.com/compose/article` |
+| Convert thread to article | `src/contentRepurposer.js` | `x.com/USERNAME` |
+| Track article performance | `src/tweetPerformance.js` | `x.com/USERNAME` |
+| Generate blog outline | `src/contentRepurposer.js` | `x.com/USERNAME` |
 
 ## Article Publisher
 
 **File:** `src/articlePublisher.js`
 
-Puppeteer-based module for creating, drafting, listing, and analyzing long-form articles.
+Assists with article composition on X's article editor.
 
-### Functions
+### Features
+- Title and subtitle insertion
+- Body text formatting (headings, bold, italic, lists)
+- Image and media embedding
+- Draft saving
+- Publish with cover image
 
-| Function | Purpose |
-|----------|---------|
-| `publishArticle(page, { title, body, coverImage? })` | Publish with optional cover image |
-| `saveDraft(page, { title, body })` | Save article as draft |
-| `getArticles(page, username)` | List all published articles for a user |
-| `getArticleAnalytics(page, articleUrl)` | Get likes, reposts, views for an article |
+### How to Use
 
-### How It Works
+1. Navigate to `x.com/compose/article`
+2. Open DevTools (F12) -> Console
+3. Paste the script -> Enter
+4. Use controls to compose
 
-1. Navigates to `x.com/compose/article`
-2. Types title into the title field, body into the rich text editor
-3. Optionally uploads a cover image via file chooser
-4. Clicks Publish or Save Draft
-5. Returns success status with metadata (title, body length, timestamp)
-
-### Usage (Node.js / Puppeteer)
-
-```javascript
-import { publishArticle, saveDraft } from './src/articlePublisher.js';
-
-await publishArticle(page, {
-  title: 'My Article',
-  body: 'Full article content...',
-  coverImage: '/path/to/cover.jpg', // optional
-});
-
-await saveDraft(page, { title: 'Draft', body: 'Content...' });
-```
+### Controls
+- `XActions.setTitle(text)` -- Set article title
+- `XActions.setSubtitle(text)` -- Set subtitle
+- `XActions.addParagraph(text)` -- Add body paragraph
+- `XActions.addHeading(text, level)` -- Add heading (h2, h3)
+- `XActions.addImage(url, alt)` -- Insert image
+- `XActions.preview()` -- Preview formatted article
+- `XActions.publish()` -- Publish (with confirmation prompt)
 
 ## DOM Selectors
 
 | Element | Selector |
 |---------|----------|
-| Title input | `[data-testid="articleTitle"]` |
+| Article editor | `[data-testid="articleEditor"]` |
+| Title field | `[data-testid="articleTitle"]` |
 | Body editor | `[data-testid="articleBody"]` |
-| Publish button | `[data-testid="articlePublish"]` |
-| Save draft | `[data-testid="articleSaveDraft"]` |
 | Cover image | `[data-testid="articleCoverImage"]` |
-| Article card | `[data-testid="articleCard"]` |
+| Publish button | `[data-testid="articlePublishButton"]` |
+| Save draft | `[data-testid="articleSaveDraft"]` |
 
-## Prerequisites & Limits
+## Content Strategy
 
-- **Premium+ subscription** ($16/mo) required for article publishing
-- Cover images: JPEG/PNG, under 5MB
-- 3s delay after navigation, 5s wait after publish to confirm
+### Thread-to-Article pipeline
+1. Run `src/tweetPerformance.js` to find your best-performing threads
+2. Run `src/contentRepurposer.js` -> `XActions.toBlog(i)` to generate article outline
+3. Navigate to `x.com/compose/article`
+4. Use `src/articlePublisher.js` to format and publish
+5. Share the article link as a tweet for promotion
 
-## Troubleshooting
+### SEO and reach optimization
+- Use `src/contentRepurposer.js` -> `XActions.toBlog(i)` for keyword suggestions
+- Articles get indexed by Google (unlike regular tweets)
+- Include 1-2 images per 500 words for better engagement
+- Link back to your profile and other articles
 
-| Problem | Solution |
-|---------|----------|
-| "Premium+ required" error | Article compose requires Premium+ subscription |
-| Cover image upload fails | Check file format (JPEG/PNG) and size (< 5MB) |
-| Article not appearing in feeds | May take a few minutes to surface |
-| Empty title/body error | Both fields are required to publish |
+## Requirements
+- X Premium+ subscription ($16/mo) required
+- Articles support rich text, images, and embedded tweets
+- No word count limit
+- Articles are publicly accessible (even to non-X users)
+- Articles have their own URL structure: `x.com/USERNAME/articles/ID`
+
+## Notes
+- Articles persist permanently (unlike tweets which get buried)
+- Google indexes X Articles -- good for SEO
+- Cover image recommended for social sharing preview
+- Draft auto-saves periodically

@@ -1,71 +1,73 @@
 ---
 name: business-ads
-description: Monitors brand mentions with sentiment analysis, analyzes audience demographics, and compares competitor profiles on X/Twitter. Provides social listening, audience insights, and competitive intelligence via browser automation. Use when users want brand monitoring, audience analysis, or competitor comparison on X.
+description: Manages X/Twitter business intelligence including brand monitoring, audience insights, competitor analysis, tweet A/B testing, auto-plug replies for promotion, and content performance optimization. Use when users want brand monitoring, audience analysis, competitor comparison, or promotion optimization on X.
 license: MIT
 metadata:
   author: nichxbt
-  version: "3.0"
+  version: "4.0"
 ---
 
 # Business & Ads Tools
 
-Browser automation for X/Twitter business intelligence — brand monitoring, audience insights, and competitor analysis.
+Browser console scripts and automation for X/Twitter business intelligence and promotion.
 
 ## Script Selection
 
 | Goal | File | Navigate to |
 |------|------|-------------|
-| Monitor brand mentions | `src/businessTools.js` | Search results page |
+| Brand monitoring & sentiment | `src/businessTools.js` | Search results page |
 | Audience insights | `src/businessTools.js` | `x.com/USERNAME/followers` |
-| Competitor analysis | `src/businessTools.js` | Any profile page |
+| Competitor comparison | `src/businessTools.js` | Any profile page |
+| A/B test tweet performance | `src/tweetABTester.js` | `x.com/USERNAME` |
+| Auto-plug viral tweets | `src/autoPlugReplies.js` | `x.com/USERNAME` |
+| Audience demographics | `src/audienceDemographics.js` | `x.com/USERNAME/followers` |
+| Content performance | `src/tweetPerformance.js` | `x.com/USERNAME` |
 
 ## Business Tools
 
 **File:** `src/businessTools.js`
 
-Puppeteer-based module with three core functions for business intelligence.
+Puppeteer-based module for business intelligence.
 
 ### Functions
 
 | Function | Purpose |
 |----------|---------|
-| `monitorBrandMentions(page, brandName, { limit, since })` | Search for brand mentions with sentiment tagging |
-| `getAudienceInsights(page, username, { sampleSize })` | Analyze follower bios for interests and demographics |
-| `analyzeCompetitors(page, ['user1', 'user2'])` | Compare follower counts, bios, and verification status |
+| `monitorBrandMentions(page, brand, {limit, since})` | Search mentions with sentiment |
+| `getAudienceInsights(page, username, {sampleSize})` | Follower bio analysis |
+| `analyzeCompetitors(page, ['user1', 'user2'])` | Side-by-side comparison |
 
-### Brand Mention Monitoring
+## Tweet A/B Testing
 
-Searches X for a brand name or handle and collects mentions with basic sentiment analysis (positive/negative/neutral based on keyword matching).
+**File:** `src/tweetABTester.js`
 
-**Returns:** mention text, author, timestamp, link, likes, reposts, and sentiment breakdown.
+Test tweet variations with statistical comparison.
 
-### Audience Insights
+**Controls:** `XActions.createTest(name, textA, textB)`, `XActions.setUrl(name, variant, url)`, `XActions.measure(name)`, `XActions.results(name)`
 
-Scrapes a sample of followers and analyzes their bios to extract common interests (e.g., developer, founder, crypto, AI). Reports verified follower percentage.
+## Auto-Plug Replies
 
-### Competitor Analysis
+**File:** `src/autoPlugReplies.js`
 
-Visits each competitor's profile page and collects follower/following counts, verification status, and bio. Returns side-by-side comparison.
+Automatically reply to your viral tweets with promotional content.
 
-## DOM Selectors
+**Controls:** `XActions.setPlug(text)`, `XActions.setThreshold(n)`, `XActions.scan()`, `XActions.autoScan(ms)`
 
-| Element | Selector |
-|---------|----------|
-| Tweet | `article[data-testid="tweet"]` |
-| Tweet text | `[data-testid="tweetText"]` |
-| User cell | `[data-testid="UserCell"]` |
-| Search input | `[data-testid="SearchBox_Search_Input"]` |
-| User description | `[data-testid="UserDescription"]` |
-| Verified icon | `[data-testid="icon-verified"]` |
+## Strategy Guide
 
-## Rate Limiting
+### Low-budget promotion (no ads spend)
+1. A/B test content styles with `src/tweetABTester.js`
+2. Set up `src/autoPlugReplies.js` to promote on viral tweets
+3. Find trends with `src/trendingTopicMonitor.js` for timely content
+4. Analyze audience with `src/audienceDemographics.js` for targeting
+5. Track results with `src/tweetPerformance.js`
 
-- 1.5s delay between scroll cycles
-- 1–2s delay between competitor profile visits
-- Each competitor takes ~5s to analyze
+### Brand monitoring
+1. Use `src/businessTools.js` -> `monitorBrandMentions()` for sentiment
+2. Set up `src/keywordMonitor.js` for real-time brand mention alerts
+3. Export data for reporting
 
 ## Notes
-
-- Sentiment analysis is keyword-based (not ML) — useful for quick polarity, not nuanced analysis
-- Audience insights sample a configurable number of followers (default: 50)
-- No X Ads API integration — this is browser-side intelligence gathering
+- Sentiment analysis is keyword-based (not ML) -- quick polarity assessment
+- A/B testing requires manually posting both tweet variants
+- No X Ads API integration -- this is browser-side intelligence
