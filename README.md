@@ -1,12 +1,17 @@
 <div align="center">
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset=".github/xshare.png">
-  <source media="(prefers-color-scheme: light)" srcset=".github/xshare.png">
-  <img alt="XActions — The Complete X/Twitter Automation Toolkit" src=".github/xshare.png" width="700">
-</picture>
+<pre align="center">
+██╗  ██╗ █████╗  ██████╗████████╗██╗ ██████╗ ███╗   ██╗███████╗
+╚██╗██╔╝██╔══██╗██╔════╝╚══██╔══╝██║██╔═══██╗████╗  ██║██╔════╝
+ ╚███╔╝ ███████║██║        ██║   ██║██║   ██║██╔██╗ ██║███████╗
+ ██╔██╗ ██╔══██║██║        ██║   ██║██║   ██║██║╚██╗██║╚════██║
+██╔╝ ██╗██║  ██║╚██████╗   ██║   ██║╚██████╔╝██║ ╚████║███████║
+╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚══════╝
+</pre>
 
-<br>
+<p>
+  <img src=".github/xactions-ascii.svg" alt="XActions — The Complete X/Twitter Automation Toolkit" width="720">
+</p>
 
 <h3>The complete X/Twitter automation toolkit</h3>
 
@@ -25,7 +30,7 @@ Scrapers &nbsp;·&nbsp; MCP Server for AI Agents &nbsp;·&nbsp; CLI &nbsp;·&nbs
 <p>
   <a href="docs/mcp-setup.md"><img src="https://img.shields.io/badge/MCP_Tools-140%2B-8B5CF6?style=flat-square&logo=data:image/svg+xml;base64,PHN2Zz48L3N2Zz4=" alt="140+ MCP Tools"></a>&nbsp;
   <a href="https://smithery.ai/server/xactions"><img src="https://smithery.ai/badge/xactions" alt="Smithery"></a>&nbsp;
-  <a href="https://glama.ai/mcp/servers"><img src="https://glama.ai/mcp/servers/badge" alt="Glama"></a>&nbsp;
+  <a href="https://registry.modelcontextprotocol.io"><img src="https://img.shields.io/badge/MCP_Registry-deployed-6366f1?style=flat-square&logo=data:image/svg+xml;base64,PHN2Zz48L3N2Zz4=" alt="MCP Registry"></a>&nbsp;
   <a href="Dockerfile"><img src="https://img.shields.io/badge/Docker-ready-2496ED?style=flat-square&logo=docker&logoColor=white" alt="Docker"></a>&nbsp;
   <a href="types/index.d.ts"><img src="https://img.shields.io/badge/TypeScript-types_included-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript"></a>
 </p>
@@ -67,18 +72,6 @@ Scrapers &nbsp;·&nbsp; MCP Server for AI Agents &nbsp;·&nbsp; CLI &nbsp;·&nbs
 | **MCP Server (AI agents)** | ✅ **140+ tools** | ❌ | ✅ 2 tools | ❌ | ❌ | ❌ |
 | **Browser Console Scripts** | ✅ 50+ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | **CLI** | ✅ 12 commands | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **Node.js Library** | ✅ | ❌ Python | ✅ | ✅ | ✅ | ❌ Python |
-| **Workflow Engine** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **Sentiment Analysis** | ✅ Built-in | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **Real-Time Streaming** | ✅ | ❌ | ❌ | ❌ | ✅ API only | ❌ |
-| **Account Export/Migration** | ✅ JSON/CSV/HTML | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **Dashboard (No-Code)** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **Grok AI Integration** | ✅ | ✅ Separate pkg | ❌ | ❌ | ❌ | ❌ |
-| **Docker Support** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **TypeScript Types** | ✅ | ❌ | ✅ | ✅ | ❌ | ❌ |
-| **Claude Tutorials** | ✅ 22 prompts | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **Language** | JavaScript | Python | TypeScript | TypeScript | JavaScript | Python |
-| **Cost** | **Free** | Free | Free + API keys | Free | Free + API keys | Free |
 
 **XActions is the only toolkit that works in the browser, terminal, and with AI agents — all without an API key.**
 
@@ -1244,3 +1237,24 @@ curl -X POST https://modelcontextprotocol.name/mcp/xactions \
 - **All 27 MCP servers** — See the full catalog at [modelcontextprotocol.name](https://modelcontextprotocol.name)
 
 > Powered by [modelcontextprotocol.name](https://modelcontextprotocol.name) — the open MCP HTTP gateway
+
+---
+
+## 🏆 Full Comparison Matrix
+
+> Extended feature-by-feature comparison with every alternative.
+
+| Feature | **XActions** | twikit | twitter-mcp | agent-twitter-client | twit | twitter-scraper |
+|---------|:---:|:---:|:---:|:---:|:---:|:---:|
+| **Node.js Library** | ✅ | ❌ Python | ✅ | ✅ | ✅ | ❌ Python |
+| **Workflow Engine** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Sentiment Analysis** | ✅ Built-in | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Real-Time Streaming** | ✅ | ❌ | ❌ | ❌ | ✅ API only | ❌ |
+| **Account Export/Migration** | ✅ JSON/CSV/HTML | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Dashboard (No-Code)** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Grok AI Integration** | ✅ | ✅ Separate pkg | ❌ | ❌ | ❌ | ❌ |
+| **Docker Support** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **TypeScript Types** | ✅ | ❌ | ✅ | ✅ | ❌ | ❌ |
+| **Claude Tutorials** | ✅ 22 prompts | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Language** | JavaScript | Python | TypeScript | TypeScript | JavaScript | Python |
+| **Cost** | **Free** | Free | Free + API keys | Free | Free + API keys | Free |
