@@ -17,6 +17,7 @@
     ".": "./src/index.js",
     "./scrapers": "./src/scrapers/index.js",
     "./scrapers/twitter": "./src/scrapers/twitter/index.js",
+    "./scrapers/twitter/http": "./src/scrapers/twitter/http/index.js",
     "./scrapers/bluesky": "./src/scrapers/bluesky/index.js",
     "./scrapers/mastodon": "./src/scrapers/mastodon/index.js",
     "./scrapers/threads": "./src/scrapers/threads/index.js",

@@ -47,9 +47,9 @@ registerBuiltin('cheerio', () => import('./cheerio.js'));
 registerBuiltin('crawlee', () => import('./crawlee.js'));
 registerBuiltin('got-jsdom', () => import('./got-jsdom.js'));
 registerBuiltin('selenium', () => import('./selenium.js'));
+registerBuiltin('http', () => import('./http.js'));
 
 // Aliases
-registerBuiltin('http', () => import('./cheerio.js'));
 registerBuiltin('pw', () => import('./playwright.js'));
 registerBuiltin('pptr', () => import('./puppeteer.js'));
 registerBuiltin('got', () => import('./got-jsdom.js'));

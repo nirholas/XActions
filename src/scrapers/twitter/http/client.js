@@ -15,6 +15,7 @@ import {
   REST_BASE,
   DEFAULT_FEATURES,
   USER_AGENTS,
+  buildGraphQLUrl,
 } from './endpoints.js';
 import {
   TwitterApiError,
@@ -91,6 +92,8 @@ export class TwitterHttpClient {
     } else {
       this._rateLimitStrategy = new ErrorRateLimitStrategy();
     }
+
+    this._debug = options.debug || false;
 
     if (options.cookies) {
       this.setCookies(options.cookies);
@@ -181,8 +184,13 @@ export class TwitterHttpClient {
 
     let lastError;
     for (let attempt = 0; attempt <= this._maxRetries; attempt++) {
+      const startTime = Date.now();
       try {
         const res = await this._fetch(url, { method, headers, body });
+        const elapsed = Date.now() - startTime;
+        if (this._debug) {
+          console.log(`[TwitterHttpClient] ${method} ${url} → ${res.status} (${elapsed}ms)`);
+        }
 
         // Rate-limit detection from headers
         const remaining = parseInt(res.headers?.get?.('x-rate-limit-remaining') ?? '', 10);
@@ -209,6 +217,10 @@ export class TwitterHttpClient {
 
         return json;
       } catch (err) {
+        const elapsed = Date.now() - startTime;
+        if (this._debug) {
+          console.log(`[TwitterHttpClient] ${method} ${url} → ERROR (${elapsed}ms): ${err.message}`);
+        }
         lastError = err;
         // Don't retry auth / not-found / explicit API errors
         if (
@@ -246,20 +258,107 @@ export class TwitterHttpClient {
     const features = options.features || DEFAULT_FEATURES;
     const isMutation = options.mutation === true;
 
+    let json;
     if (isMutation) {
       const url = `${GRAPHQL_BASE}/${queryId}/${operationName}`;
-      return this.request(url, {
+      json = await this.request(url, {
         method: 'POST',
         body: { variables, features, queryId },
       });
+    } else {
+      const url = buildGraphQLUrl(queryId, operationName, variables, features);
+      json = await this.request(url);
     }
 
-    const params = new URLSearchParams({
-      variables: JSON.stringify(variables),
-      features: JSON.stringify(features),
-    });
-    const url = `${GRAPHQL_BASE}/${queryId}/${operationName}?${params}`;
-    return this.request(url);
+    // Extract bottom cursor for pagination
+    const cursor = this._extractCursor(json);
+    return { data: json, cursor };
+  }
+
+  /**
+   * Auto-paginating async generator over a GraphQL query.
+   *
+   * @param {string} queryId
+   * @param {string} operationName
+   * @param {object} variables
+   * @param {object} [options]
+   * @param {object} [options.features]
+   * @param {number} [options.limit=Infinity] - Stop after this many items
+   * @param {function} [options.onProgress] - Called with `{ fetched, limit }`
+   * @yields {{ data: object, cursor: string|null }}
+   */
+  async *graphqlPaginate(queryId, operationName, variables, options = {}) {
+    const limit = options.limit ?? Infinity;
+    let cursor = null;
+    let fetched = 0;
+
+    while (fetched < limit) {
+      const vars = cursor ? { ...variables, cursor } : { ...variables };
+      const result = await this.graphql(queryId, operationName, vars, options);
+
+      yield result;
+      fetched += 1;
+
+      if (options.onProgress) {
+        options.onProgress({ fetched, limit: limit === Infinity ? null : limit });
+      }
+
+      cursor = result.cursor;
+      if (!cursor) break;
+    }
+  }
+
+  // ---- Cursor extraction --------------------------------------------------
+
+  /**
+   * Extract the "bottom" cursor from a Twitter timeline GraphQL response.
+   * Twitter nests cursors in timeline instruction entries with entryId
+   * starting with "cursor-bottom".
+   *
+   * @param {object} json
+   * @returns {string|null}
+   * @private
+   */
+  _extractCursor(json) {
+    try {
+      // Walk common timeline response shapes
+      const instructions = this._findInstructions(json);
+      if (!instructions) return null;
+
+      for (const instruction of instructions) {
+        const entries = instruction.entries || instruction.moduleItems || [];
+        for (const entry of entries) {
+          const id = entry.entryId || entry.entry_id || '';
+          if (id.startsWith('cursor-bottom')) {
+            return (
+              entry.content?.value ||
+              entry.content?.itemContent?.value ||
+              entry.content?.cursorType === 'Bottom' && entry.content?.value ||
+              null
+            );
+          }
+        }
+      }
+      return null;
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Recursively search the response for a timeline instructions array.
+   * @param {object} obj
+   * @returns {Array|null}
+   * @private
+   */
+  _findInstructions(obj) {
+    if (!obj || typeof obj !== 'object') return null;
+    if (Array.isArray(obj.instructions)) return obj.instructions;
+    for (const key of Object.keys(obj)) {
+      const result = this._findInstructions(obj[key]);
+      if (result) return result;
+    }
+    return null;
   }
 
   // ---- REST helper --------------------------------------------------------

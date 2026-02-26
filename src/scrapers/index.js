@@ -40,6 +40,14 @@ import mastodon from './mastodon/index.js';
 import threads from './threads/index.js';
 
 // ============================================================================
+// HTTP Scraper (Direct GraphQL — no browser required)
+// Usage: createBrowser({ adapter: 'http', cookies: '...' })
+// Or:   import { createHttpScraper } from 'xactions/scrapers/twitter/http';
+// ============================================================================
+
+export { createHttpScraper } from './twitter/http/index.js';
+
+// ============================================================================
 // Adapter System (Multi-Framework Support)
 // ============================================================================
 
