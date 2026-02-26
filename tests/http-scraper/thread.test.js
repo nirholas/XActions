@@ -703,8 +703,8 @@ describe('scrapeFullThread', () => {
 
     const result = await scrapeFullThread(client, '1003');
 
-    // Should have walked: 1003 → 1002 → 1001, then scraped from 1001
-    expect(client.graphql).toHaveBeenCalledTimes(3);
+    // Should have walked: 1003 → 1002 → 1001 (3 calls), then scrapeThread from 1001 (1 call)
+    expect(client.graphql).toHaveBeenCalledTimes(4);
     expect(result.rootTweet).toBeDefined();
     expect(result.rootTweet.id).toBe('1001');
   });
