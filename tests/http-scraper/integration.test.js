@@ -537,8 +537,8 @@ describe('Integration: Media Upload Flow', () => {
   });
 
   it('splits large files into multiple APPEND chunks', async () => {
-    // 12 MB buffer → should be split into 3 chunks (5MB + 5MB + 2MB)
-    const largeBuffer = Buffer.alloc(12 * 1024 * 1024, 0xab);
+    // 11 MB buffer → should be split into 3 chunks (5MB + 5MB + 1MB)
+    const largeBuffer = Buffer.alloc(11 * 1024 * 1024, 0xab);
 
     const restMock = vi.fn()
       .mockResolvedValueOnce(MEDIA_INIT_RESPONSE)   // INIT

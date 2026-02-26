@@ -1,6 +1,6 @@
 /**
  * XActions Client — Error Classes
- * Comprehensive error hierarchy for Twitter API interactions.
+ * Comprehensive error hierarchy for all Twitter API and scraper errors.
  *
  * @author nich (@nichxbt) - https://github.com/nirholas
  * @license MIT
@@ -11,43 +11,35 @@
 // ============================================================================
 
 /**
- * Base error class for all XActions client errors.
+ * Base error class for all XActions scraper errors.
  */
 export class ScraperError extends Error {
   /**
-   * @param {string} message - Human-readable error message
+   * @param {string} message - Human-readable error description
    * @param {string} [code='SCRAPER_ERROR'] - Machine-readable error code
-   * @param {Object} [details={}] - Additional error context
+   * @param {Object} [options={}]
+   * @param {string} [options.endpoint] - The API endpoint that produced the error
+   * @param {number} [options.httpStatus] - HTTP status code
+   * @param {Date|null} [options.rateLimitReset] - When the rate limit resets
    */
-  constructor(message, code = 'SCRAPER_ERROR', details = {}) {
+  constructor(message, code = 'SCRAPER_ERROR', options = {}) {
     super(message);
     this.name = 'ScraperError';
+    /** @type {string} */
     this.code = code;
-    this.endpoint = details.endpoint || null;
-    this.httpStatus = details.httpStatus || null;
-    this.rateLimitReset = details.rateLimitReset || null;
-    this.timestamp = new Date();
+    /** @type {string|undefined} */
+    this.endpoint = options.endpoint;
+    /** @type {number|undefined} */
+    this.httpStatus = options.httpStatus;
+    /** @type {Date|null} */
+    this.rateLimitReset = options.rateLimitReset || null;
   }
 
-  /** @returns {string} Formatted error string */
   toString() {
-    const parts = [`[${this.code}] ${this.message}`];
-    if (this.endpoint) parts.push(`endpoint=${this.endpoint}`);
-    if (this.httpStatus) parts.push(`http=${this.httpStatus}`);
-    return parts.join(' | ');
-  }
-
-  /** @returns {Object} JSON-serializable error representation */
-  toJSON() {
-    return {
-      name: this.name,
-      code: this.code,
-      message: this.message,
-      endpoint: this.endpoint,
-      httpStatus: this.httpStatus,
-      rateLimitReset: this.rateLimitReset,
-      timestamp: this.timestamp.toISOString(),
-    };
+    let str = `${this.name} [${this.code}]: ${this.message}`;
+    if (this.endpoint) str += ` (endpoint: ${this.endpoint})`;
+    if (this.httpStatus) str += ` (HTTP ${this.httpStatus})`;
+    return str;
   }
 }
 
@@ -61,11 +53,11 @@ export class ScraperError extends Error {
 export class AuthenticationError extends ScraperError {
   /**
    * @param {string} message
-   * @param {string} [code='AUTH_FAILED'] - AUTH_FAILED | AUTH_REQUIRED | ACCOUNT_SUSPENDED | ACCOUNT_LOCKED
-   * @param {Object} [details={}]
+   * @param {'AUTH_FAILED'|'AUTH_REQUIRED'|'ACCOUNT_SUSPENDED'|'ACCOUNT_LOCKED'|'INVALID_TOKEN'|'PROTECTED_TWEETS'} [code='AUTH_FAILED']
+   * @param {Object} [options]
    */
-  constructor(message, code = 'AUTH_FAILED', details = {}) {
-    super(message, code, details);
+  constructor(message, code = 'AUTH_FAILED', options = {}) {
+    super(message, code, options);
     this.name = 'AuthenticationError';
   }
 }
@@ -75,30 +67,30 @@ export class AuthenticationError extends ScraperError {
 // ============================================================================
 
 /**
- * Thrown when Twitter rate limits are exceeded.
+ * Thrown when a Twitter rate limit is hit.
  */
 export class RateLimitError extends ScraperError {
   /**
-   * @param {string} [message='Rate limit exceeded']
-   * @param {Object} [details={}]
+   * @param {string} message
+   * @param {Object} [options={}]
+   * @param {number} [options.retryAfter] - Seconds until retry is safe
+   * @param {number} [options.limit] - Total requests allowed in window
+   * @param {number} [options.remaining] - Requests remaining in window
+   * @param {Date|null} [options.resetAt] - When the limit resets
+   * @param {string} [options.endpoint]
+   * @param {number} [options.httpStatus]
    */
-  constructor(message = 'Rate limit exceeded', details = {}) {
-    super(message, 'RATE_LIMITED', details);
+  constructor(message, options = {}) {
+    super(message, 'RATE_LIMITED', options);
     this.name = 'RateLimitError';
-    this.retryAfter = details.retryAfter || null;
-    this.limit = details.limit || null;
-    this.remaining = details.remaining || 0;
-    this.resetAt = details.resetAt || null;
-  }
-
-  /**
-   * Milliseconds until rate limit resets.
-   * @returns {number}
-   */
-  get retryAfterMs() {
-    if (this.resetAt) return Math.max(0, this.resetAt.getTime() - Date.now());
-    if (this.retryAfter) return this.retryAfter * 1000;
-    return 60_000;
+    /** @type {number|undefined} */
+    this.retryAfter = options.retryAfter;
+    /** @type {number|undefined} */
+    this.limit = options.limit;
+    /** @type {number|undefined} */
+    this.remaining = options.remaining;
+    /** @type {Date|null} */
+    this.resetAt = options.resetAt || null;
   }
 }
 
@@ -112,175 +104,119 @@ export class RateLimitError extends ScraperError {
 export class NotFoundError extends ScraperError {
   /**
    * @param {string} message
-   * @param {string} [code='NOT_FOUND'] - USER_NOT_FOUND | TWEET_NOT_FOUND | LIST_NOT_FOUND
-   * @param {Object} [details={}]
+   * @param {'USER_NOT_FOUND'|'TWEET_NOT_FOUND'|'LIST_NOT_FOUND'} [code='NOT_FOUND']
+   * @param {Object} [options]
    */
-  constructor(message, code = 'NOT_FOUND', details = {}) {
-    super(message, code, details);
+  constructor(message, code = 'NOT_FOUND', options = {}) {
+    super(message, code, options);
     this.name = 'NotFoundError';
   }
 }
 
 // ============================================================================
-// Twitter API Error
+// Twitter API Errors
 // ============================================================================
 
 /**
- * Wraps raw Twitter API errors with structured metadata.
+ * Maps Twitter's internal error codes to structured error classes.
+ * @type {Record<number, {ErrorClass: typeof ScraperError, code: string, message: string}>}
+ */
+const TWITTER_ERROR_MAP = {
+  34:  { ErrorClass: NotFoundError, code: 'NOT_FOUND', message: 'Resource not found' },
+  50:  { ErrorClass: NotFoundError, code: 'USER_NOT_FOUND', message: 'User not found' },
+  63:  { ErrorClass: AuthenticationError, code: 'ACCOUNT_SUSPENDED', message: 'Account suspended' },
+  64:  { ErrorClass: AuthenticationError, code: 'ACCOUNT_SUSPENDED', message: 'Account suspended' },
+  88:  { ErrorClass: RateLimitError, code: 'RATE_LIMITED', message: 'Rate limit exceeded' },
+  89:  { ErrorClass: AuthenticationError, code: 'INVALID_TOKEN', message: 'Invalid or expired token' },
+  130: { ErrorClass: ScraperError, code: 'OVER_CAPACITY', message: 'Twitter is over capacity' },
+  131: { ErrorClass: ScraperError, code: 'INTERNAL_ERROR', message: 'Twitter internal error' },
+  135: { ErrorClass: AuthenticationError, code: 'AUTH_FAILED', message: 'Could not authenticate you' },
+  144: { ErrorClass: NotFoundError, code: 'TWEET_NOT_FOUND', message: 'Tweet not found' },
+  179: { ErrorClass: AuthenticationError, code: 'PROTECTED_TWEETS', message: 'Protected tweets' },
+  185: { ErrorClass: RateLimitError, code: 'RATE_LIMITED', message: 'User-level tweet limit reached' },
+  187: { ErrorClass: ScraperError, code: 'DUPLICATE_TWEET', message: 'Status is a duplicate' },
+  326: { ErrorClass: AuthenticationError, code: 'ACCOUNT_LOCKED', message: 'Account locked' },
+  349: { ErrorClass: ScraperError, code: 'DM_NOT_ALLOWED', message: 'Cannot send DM to this user' },
+  385: { ErrorClass: ScraperError, code: 'REPLY_RESTRICTED', message: 'Reply restricted by author' },
+};
+
+/**
+ * Thrown for general Twitter API errors.
  */
 export class TwitterApiError extends ScraperError {
   /**
    * @param {string} message
-   * @param {Object} [details={}]
+   * @param {Object} [options={}]
+   * @param {number} [options.twitterErrorCode]
+   * @param {string} [options.twitterMessage]
+   * @param {string} [options.endpoint]
+   * @param {number} [options.httpStatus]
    */
-  constructor(message, details = {}) {
-    super(message, 'API_ERROR', details);
+  constructor(message, options = {}) {
+    super(message, 'API_ERROR', options);
     this.name = 'TwitterApiError';
-    this.twitterErrorCode = details.twitterErrorCode || null;
-    this.twitterMessage = details.twitterMessage || null;
+    /** @type {number|undefined} */
+    this.twitterErrorCode = options.twitterErrorCode;
+    /** @type {string|undefined} */
+    this.twitterMessage = options.twitterMessage;
   }
-}
 
-// ============================================================================
-// Error Mapping
-// ============================================================================
-
-/** @private Twitter API error code → XActions error mapping */
-const TWITTER_ERROR_MAP = {
-  34: (msg) => new NotFoundError(msg || 'Resource not found', 'NOT_FOUND'),
-  50: (msg) => new NotFoundError(msg || 'User not found', 'USER_NOT_FOUND'),
-  63: (msg) => new AuthenticationError(msg || 'Account suspended', 'ACCOUNT_SUSPENDED'),
-  64: (msg) => new AuthenticationError(msg || 'Account suspended', 'ACCOUNT_SUSPENDED'),
-  88: (msg) => new RateLimitError(msg || 'Rate limit exceeded'),
-  89: (msg) => new AuthenticationError(msg || 'Invalid or expired token', 'AUTH_FAILED'),
-  130: (msg) => new TwitterApiError(msg || 'Twitter over capacity', { twitterErrorCode: 130 }),
-  131: (msg) => new TwitterApiError(msg || 'Internal error', { twitterErrorCode: 131 }),
-  135: (msg) => new AuthenticationError(msg || 'Could not authenticate', 'AUTH_FAILED'),
-  144: (msg) => new NotFoundError(msg || 'Tweet not found', 'TWEET_NOT_FOUND'),
-  179: (msg) => new AuthenticationError(msg || 'Protected tweets', 'AUTH_REQUIRED'),
-  185: (msg) => new RateLimitError(msg || 'Tweet update limit'),
-  187: (msg) => new TwitterApiError(msg || 'Duplicate tweet', { twitterErrorCode: 187 }),
-  326: (msg) => new AuthenticationError(msg || 'Account locked', 'ACCOUNT_LOCKED'),
-  349: (msg) => new TwitterApiError(msg || 'DM not allowed', { twitterErrorCode: 349 }),
-  385: (msg) => new TwitterApiError(msg || 'Reply restricted', { twitterErrorCode: 385 }),
-};
-
-/**
- * Convert a raw Twitter API error response into a typed XActions error.
- *
- * @param {Object} data - Parsed Twitter API response body
- * @param {number} [httpStatus] - HTTP status code
- * @param {string} [endpoint] - API endpoint that returned the error
- * @returns {ScraperError|null} Typed error, or null if no error detected
- */
-export function detectTwitterError(data, httpStatus, endpoint) {
-  if (!data) return null;
-
-  // Format A: { errors: [{ code, message }] }
-  if (Array.isArray(data.errors) && data.errors.length > 0) {
-    const err = data.errors[0];
-    const code = err.code;
-    const message = err.message;
-    const factory = TWITTER_ERROR_MAP[code];
-    if (factory) {
-      const error = factory(message);
-      error.endpoint = endpoint;
-      error.httpStatus = httpStatus;
-      return error;
+  /**
+   * Create an error from a Twitter API error response body.
+   *
+   * Twitter returns errors in multiple formats:
+   *   a. { errors: [{ code: 88, message: "Rate limit exceeded" }] }
+   *   b. { data: { errors: [{ message: "..." }] } }  (GraphQL)
+   *   c. { error: "Not authorized." }
+   *
+   * @param {Object} body - Parsed JSON response body
+   * @param {Object} [context={}]
+   * @returns {ScraperError}
+   */
+  static fromResponse(body, context = {}) {
+    if (!body || typeof body !== 'object') {
+      return new TwitterApiError('Unknown Twitter API error', context);
     }
-    return new TwitterApiError(message || 'Unknown Twitter error', {
-      twitterErrorCode: code,
-      twitterMessage: message,
-      endpoint,
-      httpStatus,
-    });
-  }
 
-  // Format B: GraphQL { data: { errors: [{ message }] } }
-  if (data.data?.errors?.length > 0) {
-    const msg = data.data.errors[0].message;
-    return new TwitterApiError(msg || 'GraphQL error', { endpoint, httpStatus });
-  }
+    // Format a: { errors: [{ code, message }] }
+    if (Array.isArray(body.errors) && body.errors.length > 0) {
+      const first = body.errors[0];
+      const code = first.code;
+      const message = first.message || 'Unknown error';
 
-  // Format C: { error: "Not authorized." }
-  if (typeof data.error === 'string') {
-    return new AuthenticationError(data.error, 'AUTH_FAILED', { endpoint, httpStatus });
-  }
+      const mapped = TWITTER_ERROR_MAP[code];
+      if (mapped) {
+        return new mapped.ErrorClass(mapped.message, mapped.code || 'API_ERROR', {
+          ...context,
+          twitterErrorCode: code,
+          twitterMessage: message,
+        });
+      }
 
-  return null;
-}
-
-/**
- * Extract rate limit info from HTTP response headers.
- *
- * @param {Headers|Object} headers - Response headers
- * @returns {{ limit: number, remaining: number, resetAt: Date }|null}
- */
-export function extractRateLimitHeaders(headers) {
-  const get = (name) =>
-    typeof headers.get === 'function' ? headers.get(name) : headers[name];
-
-  const limit = get('x-rate-limit-limit');
-  const remaining = get('x-rate-limit-remaining');
-  const reset = get('x-rate-limit-reset');
-
-  if (!limit && !remaining && !reset) return null;
-
-  return {
-    limit: limit ? parseInt(limit, 10) : null,
-    remaining: remaining ? parseInt(remaining, 10) : 0,
-    resetAt: reset ? new Date(parseInt(reset, 10) * 1000) : null,
-  };
-}
-
-/**
- * Detect shadow rate limiting — Twitter returns 200 OK but empty data.
- *
- * @param {Object} data - Parsed response data
- * @param {string} endpoint - Endpoint name for context
- * @returns {boolean}
- */
-export function detectShadowRateLimit(data, endpoint) {
-  if (!data) return false;
-
-  const timeline =
-    data?.data?.user?.result?.timeline_v2?.timeline ||
-    data?.data?.search_by_raw_query?.search_timeline?.timeline;
-
-  if (timeline) {
-    const instructions = timeline.instructions || [];
-    const addEntries = instructions.find((i) => i.type === 'TimelineAddEntries');
-    if (addEntries && (!addEntries.entries || addEntries.entries.length === 0)) {
-      return true;
+      return new TwitterApiError(message, {
+        ...context,
+        twitterErrorCode: code,
+        twitterMessage: message,
+      });
     }
-  }
 
-  return false;
-}
-
-/**
- * Parse a JSON response body, handling non-JSON responses gracefully.
- *
- * @param {Response} response - Fetch Response object
- * @returns {Promise<{ data: Object, headers: Headers, status: number }>}
- * @throws {TwitterApiError} If response is not valid JSON
- */
-export async function parseJsonResponse(response) {
-  const status = response.status;
-  const headers = response.headers;
-
-  let data;
-  try {
-    const text = await response.text();
-    if (!text || text.trim().length === 0) {
-      if (status >= 200 && status < 300) return { data: {}, headers, status };
-      throw new TwitterApiError(`Empty response with status ${status}`, { httpStatus: status });
+    // Format b: GraphQL errors
+    if (body.data?.errors && Array.isArray(body.data.errors) && body.data.errors.length > 0) {
+      const first = body.data.errors[0];
+      return new TwitterApiError(first.message || 'GraphQL error', {
+        ...context,
+        twitterMessage: first.message,
+      });
     }
-    data = JSON.parse(text);
-  } catch (err) {
-    if (err instanceof TwitterApiError) throw err;
-    throw new TwitterApiError(`Non-JSON response: ${err.message}`, { httpStatus: status });
-  }
 
-  return { data, headers, status };
+    // Format c: { error: "string" }
+    if (typeof body.error === 'string') {
+      if (body.error.toLowerCase().includes('not authorized')) {
+        return new AuthenticationError(body.error, 'AUTH_FAILED', context);
+      }
+      return new TwitterApiError(body.error, context);
+    }
+
+    return new TwitterApiError('Unknown Twitter API error', context);
+  }
 }
