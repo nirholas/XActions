@@ -25,7 +25,8 @@
     "./analytics": "./src/analytics/index.js",
     "./plugins": "./src/plugins/index.js",
     "./mcp": "./src/mcp/server.js",
-    "./cli": "./src/cli/index.js"
+    "./cli": "./src/cli/index.js",
+    "./client": "./src/client/index.js"
   },
   "bin": {
     "xactions": "./src/cli/index.js",

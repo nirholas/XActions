@@ -258,19 +258,19 @@ export class TwitterHttpClient {
     const features = options.features || DEFAULT_FEATURES;
     const isMutation = options.mutation === true;
 
-    let json;
     if (isMutation) {
       const url = `${GRAPHQL_BASE}/${queryId}/${operationName}`;
-      json = await this.request(url, {
+      // Mutations don't paginate — return raw JSON
+      return this.request(url, {
         method: 'POST',
         body: { variables, features, queryId },
       });
-    } else {
-      const url = buildGraphQLUrl(queryId, operationName, variables, features);
-      json = await this.request(url);
     }
 
-    // Extract bottom cursor for pagination
+    const url = buildGraphQLUrl(queryId, operationName, variables, features);
+    const json = await this.request(url);
+
+    // Extract bottom cursor for pagination (queries only)
     const cursor = this._extractCursor(json);
     return { data: json, cursor };
   }

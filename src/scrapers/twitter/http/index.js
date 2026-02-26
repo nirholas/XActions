@@ -14,6 +14,8 @@ export { GuestTokenManager } from './guest.js';
 
 // Scraping functions
 export { scrapeProfile, scrapeProfileById, parseUserData } from './profile.js';
+export { scrapeTweets, scrapeTweetsAndReplies, scrapeTweetById, parseTweetData, parseTimelineInstructions } from './tweets.js';
+export { scrapeThread, scrapeFullThread, scrapeConversation, parseConversationModule, reconstructThread } from './thread.js';
 export { scrapeFollowers, scrapeFollowing, scrapeNonFollowers, scrapeLikers, scrapeRetweeters, scrapeListMembers } from './relationships.js';
 
 // Action functions (mutations)
@@ -56,9 +58,10 @@ export async function createHttpScraper(options = {}) {
     const auth = new TwitterAuth(client);
     await auth.loginWithCookies(options.cookies);
   }
-
-  // Lazy-import scraping modules so barrel stays light when unused
-  const [profileMod, relationshipsMod, actionsMod, engagementMod, mediaMod] = await Promise.all([
+threadMod, actionsMod, engagementMod, mediaMod] = await Promise.all([
+    import('./profile.js'),
+    import('./relationships.js'),
+    import('./threadonshipsMod, actionsMod, engagementMod, mediaMod] = await Promise.all([
     import('./profile.js'),
     import('./relationships.js'),
     import('./actions.js'),
@@ -79,7 +82,14 @@ export async function createHttpScraper(options = {}) {
     scrapeFollowing: (username, opts) => relationshipsMod.scrapeFollowing(client, username, opts),
     scrapeNonFollowers: (username, opts) => relationshipsMod.scrapeNonFollowers(client, username, opts),
     scrapeLikers: (tweetId, opts) => relationshipsMod.scrapeLikers(client, tweetId, opts),
-    scrapeRetweeters: (tweetId, opts) => relationshipsMod.scrapeRetweeters(client, tweetId, opts),
+    scrThread
+    scrapeThread: (tweetId, opts) => threadMod.scrapeThread(client, tweetId, opts),
+    scrapeFullThread: (tweetId, opts) => threadMod.scrapeFullThread(client, tweetId, opts),
+    scrapeConversation: (tweetId, opts) => threadMod.scrapeConversation(client, tweetId, opts),
+    reconstructThread: threadMod.reconstructThread,
+    parseConversationModule: threadMod.parseConversationModule,
+
+    // apeRetweeters: (tweetId, opts) => relationshipsMod.scrapeRetweeters(client, tweetId, opts),
     scrapeListMembers: (listId, opts) => relationshipsMod.scrapeListMembers(client, listId, opts),
 
     // Actions (mutations)

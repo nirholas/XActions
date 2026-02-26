@@ -6,19 +6,21 @@
 
 ## Gap Analysis Summary
 
-| # | Track | Priority | Competitor Reference | Status |
-|---|-------|----------|---------------------|--------|
-| 1 | Programmatic Scraper Class | P0 | the-convocation/twitter-scraper, agent-twitter-client | `01-SCRAPER-LIBRARY.md` |
-| 2 | Cookie Auth + Persistence | P0 | twikit, agent-twitter-client | `02-AUTH-SYSTEM.md` |
-| 3 | Rate Limit + Adaptive Backoff | P1 | the-convocation/twitter-scraper | `03-RATE-LIMITING.md` |
-| 4 | Comprehensive Test Suite | P1 | all top repos | `04-TEST-SUITE.md` |
-| 5 | AsyncGenerator Pagination | P1 | the-convocation/twitter-scraper | `05-ASYNC-PAGINATION.md` |
-| 6 | Media Upload Pipeline | P2 | agent-twitter-client | `06-MEDIA-PIPELINE.md` |
-| 7 | Twitter API v2 Hybrid | P2 | agent-twitter-client | `07-V2-API-HYBRID.md` |
-| 8 | Cloudflare TLS Bypass | P2 | the-convocation/twitter-scraper | `08-TLS-BYPASS.md` |
-| 9 | Python SDK | P3 | twikit, bisguzar/twitter-scraper | `09-PYTHON-SDK.md` |
-| 10 | Internationalization | P3 | twikit | `10-I18N.md` |
-| 11 | CORS Proxy + Frontend Embedding | P3 | the-convocation/twitter-scraper | `11-CORS-PROXY.md` |
+| # | Track | Priority | Competitor Reference | Prompt File | Prompts |
+|---|-------|----------|---------------------|-------------|---------|
+| 1 | Programmatic Scraper Class | P0 | the-convocation/twitter-scraper, agent-twitter-client | `01-SCRAPER-LIBRARY.md` | 15 ✅ |
+| 2 | Cookie Auth + Persistence | P0 | twikit, agent-twitter-client | `02-AUTH-SYSTEM.md` | 15 ✅ |
+| 3 | Rate Limit + Adaptive Backoff | P1 | the-convocation/twitter-scraper | `03-RATE-LIMITING.md` | 15 ✅ |
+| 4 | Comprehensive Test Suite | P1 | all top repos | `04-TEST-SUITE.md` | 15 ✅ |
+| 5 | AsyncGenerator Pagination | P1 | the-convocation/twitter-scraper | `05-ASYNC-PAGINATION.md` | 15 ✅ |
+| 6 | Media Upload Pipeline | P2 | agent-twitter-client | `06-MEDIA-PIPELINE.md` | 15 ✅ |
+| 7 | Twitter API v2 Hybrid | P2 | agent-twitter-client | `07-V2-API-HYBRID.md` | 15 ✅ |
+| 8 | Cloudflare TLS Bypass | P2 | the-convocation/twitter-scraper | `08-TLS-BYPASS.md` | 15 ✅ |
+| 9 | Python SDK | P3 | twikit, bisguzar/twitter-scraper | `09-PYTHON-SDK.md` | 15 ✅ |
+| 10 | Internationalization | P3 | twikit | `10-I18N.md` | 15 ✅ |
+| 11 | CORS Proxy + Frontend Embedding | P3 | the-convocation/twitter-scraper | `11-CORS-PROXY.md` | 15 ✅ |
+
+**Total: 165 agent-executable prompts across 11 tracks. All prompt files complete.**
 
 ---
 

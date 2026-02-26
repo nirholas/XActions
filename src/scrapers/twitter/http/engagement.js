@@ -261,12 +261,11 @@ export async function followByUsername(client, username) {
     withSafetyModeUserFields: true,
   });
 
-  // Twitter may nest user under data.user.result or data.user
+  // graphql() returns { data: rawJson, cursor } for queries
+  const raw = response?.data;
   const userId =
-    response?.data?.user?.result?.rest_id ||
-    response?.data?.user?.rest_id ||
-    response?.data?.user?.result?.id_str ||
-    response?.data?.user?.id_str;
+    raw?.data?.user?.result?.rest_id ||
+    raw?.data?.user?.rest_id;
 
   if (!userId) {
     throw new NotFoundError(`User @${cleanName} not found`);

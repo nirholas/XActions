@@ -1261,7 +1261,73 @@ export async function x_creator_analytics({ period = '28d' }) {
 }
 
 // ============================================================================
-// Tool Map — all 49 tools matching server.js TOOLS (excluding streaming)
+// HTTP Client Tools (no Puppeteer — faster, lightweight)
+// ============================================================================
+
+import { Scraper, SearchMode } from '../client/index.js';
+
+/**
+ * Helper: create a Scraper instance with saved cookies if available.
+ */
+async function getClientScraper() {
+  const scraper = new Scraper();
+  const cookiePath = path.join(os.homedir(), '.xactions', 'cookies.json');
+  try {
+    await fs.access(cookiePath);
+    await scraper.loadCookies(cookiePath);
+  } catch {
+    // No saved cookies — will use guest token for read-only operations
+  }
+  return scraper;
+}
+
+/** Get a user's profile using the HTTP client (no browser needed). */
+export async function x_client_get_profile({ username }) {
+  const scraper = await getClientScraper();
+  return scraper.getProfile(username);
+}
+
+/** Get a single tweet by ID using the HTTP client. */
+export async function x_client_get_tweet({ tweetId }) {
+  const scraper = await getClientScraper();
+  return scraper.getTweet(tweetId);
+}
+
+/** Search tweets using the HTTP client. */
+export async function x_client_search({ query, count = 20, mode = 'Latest' }) {
+  const scraper = await getClientScraper();
+  const results = [];
+  for await (const tweet of scraper.searchTweets(query, count, mode)) {
+    results.push(tweet);
+  }
+  return results;
+}
+
+/** Post a tweet using the HTTP client (requires saved auth cookies). */
+export async function x_client_send_tweet({ text }) {
+  const scraper = await getClientScraper();
+  return scraper.sendTweet(text);
+}
+
+/** Get a user's followers using the HTTP client. */
+export async function x_client_get_followers({ username, count = 100 }) {
+  const scraper = await getClientScraper();
+  const profile = await scraper.getProfile(username);
+  const followers = [];
+  for await (const follower of scraper.getFollowers(profile.id, count)) {
+    followers.push(follower);
+  }
+  return followers;
+}
+
+/** Get trending topics using the HTTP client. */
+export async function x_client_get_trends() {
+  const scraper = await getClientScraper();
+  return scraper.getTrends();
+}
+
+// ============================================================================
+// Tool Map — all tools matching server.js TOOLS (excluding streaming)
 // ============================================================================
 
 export const toolMap = {
@@ -1334,6 +1400,13 @@ export const toolMap = {
   x_check_premium,
   x_publish_article,
   x_creator_analytics,
+  // ── HTTP Client Tools (no Puppeteer — faster) ───────────────────────────
+  x_client_get_profile,
+  x_client_get_tweet,
+  x_client_search,
+  x_client_send_tweet,
+  x_client_get_followers,
+  x_client_get_trends,
   // Utility (not an MCP tool, used by server.js cleanup)
   closeBrowser,
 };

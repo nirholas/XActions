@@ -28,6 +28,12 @@ import scrapers from './scrapers/index.js';
 export { scrapers };
 
 // ============================================================================
+// Programmatic Client (HTTP-only, no Puppeteer)
+// ============================================================================
+
+export { Scraper, SearchMode, Tweet, Profile, ScraperError } from './client/index.js';
+
+// ============================================================================
 // Plugin System
 // ============================================================================
 
