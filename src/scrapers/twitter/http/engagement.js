@@ -18,7 +18,6 @@ import {
   RateLimitError,
   NotFoundError,
   TwitterApiError,
-  parseTwitterErrors,
 } from './errors.js';
 
 // ---------------------------------------------------------------------------
@@ -56,15 +55,56 @@ async function graphqlMutation(client, endpoint, variables) {
     { mutation: true },
   );
 
-  // Check for Twitter-specific errors first
-  if (response?.errors) {
-    const { handled, result } = parseTwitterErrors(
-      response,
-      200,
-      endpoint.operationName,
+  // Parse Twitter error responses inline for reliable throw propagation
+  const errors = response?.errors;
+  if (errors && errors.length > 0) {
+    for (const err of errors) {
+      const msg = (err.message || '').toLowerCase();
+
+      // Idempotent cases — already done, treat as success
+      if (
+        msg.includes('already favorited') ||
+        msg.includes('already retweeted') ||
+        msg.includes('already bookmarked') ||
+        msg.includes('you have already') ||
+        msg.includes('not found in list of retweets')
+      ) {
+        return { success: true };
+      }
+
+      // Rate limiting
+      if (
+        msg.includes('rate limit') ||
+        msg.includes('to protect our users from spam') ||
+        msg.includes('too many requests')
+      ) {
+        throw new RateLimitError(err.message || 'Rate limited', {
+          endpoint: endpoint.operationName,
+        });
+      }
+
+      // Not found
+      if (msg.includes('cannot find specified user') || msg.includes('user not found')) {
+        throw new NotFoundError(err.message || 'Not found', {
+          endpoint: endpoint.operationName,
+          data: response,
+        });
+      }
+
+      // Suspended
+      if (msg.includes('suspended')) {
+        throw new TwitterApiError(err.message, {
+          endpoint: endpoint.operationName,
+          data: response,
+        });
+      }
+    }
+
+    // Unrecognised error
+    throw new TwitterApiError(
+      errors.map((e) => e.message).join('; ') || 'Twitter API error',
+      { endpoint: endpoint.operationName, data: response },
     );
-    if (handled) return result;
-    // parseTwitterErrors throws for real errors — reaching here means no errors array
   }
 
   return { success: true };
@@ -83,9 +123,41 @@ async function restMutation(client, path, body) {
 
   const response = await client.rest(path, { method: 'POST', body });
 
-  if (response?.errors) {
-    const { handled, result } = parseTwitterErrors(response, 200, path);
-    if (handled) return result;
+  const errors = response?.errors;
+  if (errors && errors.length > 0) {
+    for (const err of errors) {
+      const msg = (err.message || '').toLowerCase();
+
+      if (
+        msg.includes('already favorited') ||
+        msg.includes('already retweeted') ||
+        msg.includes('already bookmarked') ||
+        msg.includes('you have already')
+      ) {
+        return { success: true };
+      }
+
+      if (
+        msg.includes('rate limit') ||
+        msg.includes('to protect our users from spam') ||
+        msg.includes('too many requests')
+      ) {
+        throw new RateLimitError(err.message || 'Rate limited', { endpoint: path });
+      }
+
+      if (msg.includes('cannot find specified user') || msg.includes('user not found')) {
+        throw new NotFoundError(err.message || 'Not found', { endpoint: path, data: response });
+      }
+
+      if (msg.includes('suspended')) {
+        throw new TwitterApiError(err.message, { endpoint: path, data: response });
+      }
+    }
+
+    throw new TwitterApiError(
+      errors.map((e) => e.message).join('; ') || 'Twitter API error',
+      { endpoint: path, data: response },
+    );
   }
 
   return { success: true };
@@ -181,15 +253,23 @@ export async function unfollowUser(client, userId) {
  */
 export async function followByUsername(client, username) {
   requireAuth(client);
+
+  const cleanName = username.replace(/^@/, '');
   const { queryId, operationName } = GRAPHQL.UserByScreenName;
   const response = await client.graphql(queryId, operationName, {
-    screen_name: username.replace(/^@/, ''),
+    screen_name: cleanName,
     withSafetyModeUserFields: true,
   });
 
-  const userId = response?.data?.user?.result?.rest_id;
+  // Twitter may nest user under data.user.result or data.user
+  const userId =
+    response?.data?.user?.result?.rest_id ||
+    response?.data?.user?.rest_id ||
+    response?.data?.user?.result?.id_str ||
+    response?.data?.user?.id_str;
+
   if (!userId) {
-    throw new NotFoundError(`User @${username} not found`);
+    throw new NotFoundError(`User @${cleanName} not found`);
   }
 
   return followUser(client, userId);

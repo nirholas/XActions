@@ -12,9 +12,9 @@
  *   5. Copy the queryId from the request URL path:
  *      /i/api/graphql/{queryId}/{operationName}
  *
- * Last verified: January 2026
+ * Last verified: February 2026
  *
- * @author nich (@nichxbt)
+ * @author nich (@nichxbt) - https://github.com/nirholas
  * @license MIT
  */
 
@@ -23,20 +23,79 @@
 // ============================================================================
 
 /**
- * Twitter's public bearer token — embedded in their web app JS bundle.
- * Used for both guest and authenticated requests in the Authorization header.
+ * Twitter's public bearer token — embedded in their web client JavaScript.
+ * This is NOT a secret. Every Twitter scraper uses this same token.
  * @type {string}
  */
 export const BEARER_TOKEN =
   'AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA';
 
 // ============================================================================
-// Default Feature Flags
+// API Base URLs
+// ============================================================================
+
+export const API_BASE = 'https://api.x.com';
+export const GRAPHQL_BASE = 'https://x.com/i/api/graphql';
+export const UPLOAD_BASE = 'https://upload.x.com';
+
+// ============================================================================
+// GraphQL Query IDs — Last verified February 2026
+// ============================================================================
+
+export const QUERY_IDS = {
+  // User operations
+  UserByScreenName: 'xmU6X_CKVnQ5lSrCbAmJsg',
+  UserByRestId: 'oPppcargziU1lDQXSQjT7g',
+  UserTweets: 'E3opETHurmVJflFsUBVuUQ',
+  UserTweetsAndReplies: 'vMkJyzx1wdQ6_ME2_R-bhA',
+  UserMedia: 'dexO_2tohK86JDudXXG3Yw',
+  UserLikes: '9MSTt44HoGjVFSg_u3rHDw',
+
+  // Tweet operations
+  TweetDetail: 'xOhkmRac04YFZDOzSHB3Hg',
+  TweetResultByRestId: '0hWvDhmW8YQ-S_ib3azIrw',
+  CreateTweet: 'a1p9RWpkYKBjWv_I3WzS-A',
+  DeleteTweet: 'VaenaVgh5q5ih7kvyVjgtg',
+
+  // Engagement operations
+  FavoriteTweet: 'lI07N6Otwv1PhnEgXILM7A',
+  UnfavoriteTweet: 'ZYKSe-w7KEslx3JhSIk5LA',
+  CreateRetweet: 'ojPdsZsimiJrUGLR1sjUtA',
+  DeleteRetweet: 'iQtK4dl5hBmXewYZuEOKVw',
+
+  // Follow operations
+  Follow: 'lI07N6Otwv1PhnEgXILM7A',
+  Unfollow: 'ZYKSe-w7KEslx3JhSIk5LA',
+  Followers: 'rRXFSG5vR6drKr5M37YOTw',
+  Following: 'iSicc7LrzWGBgDPL0tM_TQ',
+
+  // Search
+  SearchTimeline: 'gkjsKepM6gl_HmFWoWKfgg',
+
+  // Lists
+  ListLatestTweetsTimeline: '2P8XForueTr_nZ-Sp5GNBg',
+  ListMembers: 'P4NpVZDqUD_7MEM84L-8nw',
+
+  // Trends
+  GenericTimelineById: 'V1ze5q3ijDS1VeLwLY0m7g',
+
+  // Bookmarks
+  Bookmarks: 'tmd4ifV0Kn5Yt4bOBKJMxA',
+  CreateBookmark: 'aoDbu3RHznuiSkQ9aNM67Q',
+  DeleteBookmark: 'Wlmlj2-xISPAGIOTv_GRAW',
+
+  // DMs
+  DMInbox: 'xkJhsTyOTqYGPszxBiz6qw',
+  DMConversation: 'OoHmpAKGCgMPED7A3RfJig',
+  SendDM: 'MaxK2PKX1F9Z-9UwHD4A8Q',
+};
+
+// ============================================================================
+// GraphQL Default Variables & Features
 // ============================================================================
 
 /**
- * Default feature flags sent with every GraphQL request.
- * Twitter uses these to toggle server-side behavior.
+ * Default feature flags sent with most GraphQL requests.
  * @type {Object}
  */
 export const DEFAULT_FEATURES = {
@@ -63,244 +122,47 @@ export const DEFAULT_FEATURES = {
   longform_notetweets_rich_text_read_enabled: true,
   longform_notetweets_inline_media_enabled: true,
   responsive_web_enhance_cards_enabled: false,
-  subscriptions_verification_info_is_identity_verified_enabled: true,
-  subscriptions_verification_info_verified_since_enabled: true,
-  hidden_profile_subscriptions_enabled: true,
-  highlights_tweets_tab_ui_enabled: true,
-  responsive_web_twitter_article_notes_tab_enabled: true,
-  subscriptions_feature_can_gift_premium: true,
 };
-
-// ============================================================================
-// Field Toggles
-// ============================================================================
-
-/** @type {Object} */
-export const DEFAULT_FIELD_TOGGLES = {
-  withArticlePlainText: false,
-};
-
-// ============================================================================
-// GraphQL Endpoint Registry
-// ============================================================================
 
 /**
- * @typedef {Object} GraphQLEndpoint
- * @property {string|null} queryId
- * @property {string|null} operationName
- * @property {'GET'|'POST'} method
- * @property {Function} [url]
- * @property {Object} [defaultVariables]
- * @property {Object} [defaultFeatures]
- */
-
-/** @type {Record<string, GraphQLEndpoint>} */
-export const GRAPHQL_ENDPOINTS = {
-  // ── User Queries ────────────────────────────────────────────────────────
-  UserByScreenName: {
-    queryId: 'xc8f1g7BYqr6VTzTbvNLGg',
-    operationName: 'UserByScreenName',
-    method: 'GET',
-    url: (queryId) => `https://x.com/i/api/graphql/${queryId}/UserByScreenName`,
-    defaultVariables: { withSafetyModeUserFields: true },
-    defaultFeatures: {
-      hidden_profile_subscriptions_enabled: true,
-      rweb_tipjar_consumption_enabled: true,
-      responsive_web_graphql_exclude_directive_enabled: true,
-      verified_phone_label_enabled: false,
-      subscriptions_verification_info_is_identity_verified_enabled: true,
-      subscriptions_verification_info_verified_since_enabled: true,
-      highlights_tweets_tab_ui_enabled: true,
-      responsive_web_twitter_article_notes_tab_enabled: true,
-      subscriptions_feature_can_gift_premium: true,
-      creator_subscriptions_tweet_preview_api_enabled: true,
-      responsive_web_graphql_skip_user_profile_image_extensions_enabled: false,
-      responsive_web_graphql_timeline_navigation_enabled: true,
-    },
-  },
-
-  UserByRestId: {
-    queryId: 'tD8zKvQzwY3kdx5yz6YmOw',
-    operationName: 'UserByRestId',
-    method: 'GET',
-    url: (queryId) => `https://x.com/i/api/graphql/${queryId}/UserByRestId`,
-    defaultVariables: { withSafetyModeUserFields: true },
-  },
-
-  // ── Tweet Queries ───────────────────────────────────────────────────────
-  UserTweets: {
-    queryId: 'E3opETHurmVJflFsUBVuUQ',
-    operationName: 'UserTweets',
-    method: 'GET',
-    url: (queryId) => `https://x.com/i/api/graphql/${queryId}/UserTweets`,
-  },
-
-  UserTweetsAndReplies: {
-    queryId: 'bt4TKuFz4T7Ckk-VvQVSow',
-    operationName: 'UserTweetsAndReplies',
-    method: 'GET',
-    url: (queryId) => `https://x.com/i/api/graphql/${queryId}/UserTweetsAndReplies`,
-  },
-
-  TweetDetail: {
-    queryId: 'BbCrSoXIR7z93lLCVFlQ2Q',
-    operationName: 'TweetDetail',
-    method: 'GET',
-    url: (queryId) => `https://x.com/i/api/graphql/${queryId}/TweetDetail`,
-  },
-
-  // ── Search ──────────────────────────────────────────────────────────────
-  SearchTimeline: {
-    queryId: 'gkjsKepM6gl_HmFWoWKfgg',
-    operationName: 'SearchTimeline',
-    method: 'GET',
-    url: (queryId) => `https://x.com/i/api/graphql/${queryId}/SearchTimeline`,
-  },
-
-  // ── Social Graph ────────────────────────────────────────────────────────
-  Followers: {
-    queryId: 'djdTXDIk2qhd4OStqlUFeQ',
-    operationName: 'Followers',
-    method: 'GET',
-    url: (queryId) => `https://x.com/i/api/graphql/${queryId}/Followers`,
-  },
-
-  Following: {
-    queryId: 'IWP6Zt14sARO29lJT35bBw',
-    operationName: 'Following',
-    method: 'GET',
-    url: (queryId) => `https://x.com/i/api/graphql/${queryId}/Following`,
-  },
-
-  // ── Engagement ──────────────────────────────────────────────────────────
-  Likes: {
-    queryId: 'eSSNbhECHHBBew2wkHY_Bw',
-    operationName: 'Likes',
-    method: 'GET',
-    url: (queryId) => `https://x.com/i/api/graphql/${queryId}/Likes`,
-  },
-
-  CreateTweet: {
-    queryId: 'a1p9RWpkYKBjWv_I3WzS-A',
-    operationName: 'CreateTweet',
-    method: 'POST',
-    url: (queryId) => `https://x.com/i/api/graphql/${queryId}/CreateTweet`,
-  },
-
-  DeleteTweet: {
-    queryId: 'VaenaVgh5q5ih7kvyVjgtg',
-    operationName: 'DeleteTweet',
-    method: 'POST',
-    url: (queryId) => `https://x.com/i/api/graphql/${queryId}/DeleteTweet`,
-  },
-
-  FavoriteTweet: {
-    queryId: 'lI07N6Otwv1PhnEgXILM7A',
-    operationName: 'FavoriteTweet',
-    method: 'POST',
-    url: (queryId) => `https://x.com/i/api/graphql/${queryId}/FavoriteTweet`,
-  },
-
-  UnfavoriteTweet: {
-    queryId: 'ZYKSe-w7KEslx3JhSIk5LA',
-    operationName: 'UnfavoriteTweet',
-    method: 'POST',
-    url: (queryId) => `https://x.com/i/api/graphql/${queryId}/UnfavoriteTweet`,
-  },
-
-  CreateRetweet: {
-    queryId: 'ojPdsZsimiJrUGLR1sjUtA',
-    operationName: 'CreateRetweet',
-    method: 'POST',
-    url: (queryId) => `https://x.com/i/api/graphql/${queryId}/CreateRetweet`,
-  },
-
-  DeleteRetweet: {
-    queryId: 'iQtK4dl5hBmXewYZCnMPAA',
-    operationName: 'DeleteRetweet',
-    method: 'POST',
-    url: (queryId) => `https://x.com/i/api/graphql/${queryId}/DeleteRetweet`,
-  },
-
-  // ── Follow / Unfollow (REST v1.1) ──────────────────────────────────────
-  CreateFollow: {
-    queryId: null,
-    operationName: null,
-    method: 'POST',
-    url: () => 'https://x.com/i/api/1.1/friendships/create.json',
-  },
-
-  DestroyFollow: {
-    queryId: null,
-    operationName: null,
-    method: 'POST',
-    url: () => 'https://x.com/i/api/1.1/friendships/destroy.json',
-  },
-
-  // ── DMs (REST v1.1) ────────────────────────────────────────────────────
-  SendDm: {
-    queryId: null,
-    operationName: null,
-    method: 'POST',
-    url: () => 'https://x.com/i/api/1.1/dm/new2.json',
-  },
-
-  // ── Lists ───────────────────────────────────────────────────────────────
-  ListLatestTweetsTimeline: {
-    queryId: '2Vjeyo_L0nizAUhHe3fKyA',
-    operationName: 'ListLatestTweetsTimeline',
-    method: 'GET',
-    url: (queryId) => `https://x.com/i/api/graphql/${queryId}/ListLatestTweetsTimeline`,
-  },
-
-  ListMembers: {
-    queryId: 'BQp2IEYkgxuSxqbTAr1e1g',
-    operationName: 'ListMembers',
-    method: 'GET',
-    url: (queryId) => `https://x.com/i/api/graphql/${queryId}/ListMembers`,
-  },
-
-  ListByRestId: {
-    queryId: 'tHANqN2gDG3V6MZBq3VEzQ',
-    operationName: 'ListByRestId',
-    method: 'GET',
-    url: (queryId) => `https://x.com/i/api/graphql/${queryId}/ListByRestId`,
-  },
-
-  GenericTimelineById: {
-    queryId: null,
-    operationName: 'GenericTimelineById',
-    method: 'GET',
-  },
-};
-
-// ============================================================================
-// URL Builder
-// ============================================================================
-
-/**
- * Build a full GraphQL request URL with encoded query parameters.
+ * Build a GraphQL API URL for a given operation.
  *
- * @param {GraphQLEndpoint} endpoint - Endpoint descriptor
- * @param {Object} [variables={}] - GraphQL variables
+ * @param {string} operationName - The operation name (key in QUERY_IDS)
+ * @param {Object} variables - The GraphQL variables
  * @param {Object} [features] - Feature flags (defaults to DEFAULT_FEATURES)
- * @returns {string} Full URL
+ * @returns {string} The full API URL
  */
-export function buildGraphQLUrl(endpoint, variables = {}, features = null) {
-  const urlFn = endpoint.url || ((id) => `https://x.com/i/api/graphql/${id}/${endpoint.operationName}`);
-  const baseUrl = urlFn(endpoint.queryId);
-
-  if (endpoint.method === 'POST') {
-    return baseUrl;
+export function buildGraphqlUrl(operationName, variables, features = DEFAULT_FEATURES) {
+  const queryId = QUERY_IDS[operationName];
+  if (!queryId) {
+    throw new Error(`Unknown GraphQL operation: ${operationName}`);
   }
+  const params = new URLSearchParams({
+    variables: JSON.stringify(variables),
+    features: JSON.stringify(features),
+  });
+  return `${GRAPHQL_BASE}/${queryId}/${operationName}?${params}`;
+}
 
-  const mergedVars = { ...endpoint.defaultVariables, ...variables };
-  const mergedFeatures = features || endpoint.defaultFeatures || DEFAULT_FEATURES;
-
-  const params = new URLSearchParams();
-  params.set('variables', JSON.stringify(mergedVars));
-  params.set('features', JSON.stringify(mergedFeatures));
-  params.set('fieldToggles', JSON.stringify(DEFAULT_FIELD_TOGGLES));
-
-  return `${baseUrl}?${params.toString()}`;
+/**
+ * Build a GraphQL mutation request body.
+ *
+ * @param {string} operationName - The operation name
+ * @param {Object} variables - The GraphQL variables
+ * @param {Object} [features] - Feature flags
+ * @returns {{ url: string, body: string }} URL and JSON body for POST
+ */
+export function buildGraphqlMutation(operationName, variables, features = DEFAULT_FEATURES) {
+  const queryId = QUERY_IDS[operationName];
+  if (!queryId) {
+    throw new Error(`Unknown GraphQL operation: ${operationName}`);
+  }
+  return {
+    url: `${GRAPHQL_BASE}/${queryId}/${operationName}`,
+    body: JSON.stringify({
+      variables,
+      features,
+      queryId,
+    }),
+  };
 }

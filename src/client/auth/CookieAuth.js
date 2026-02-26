@@ -1,355 +1,300 @@
 /**
- * XActions Client — CookieAuth
- *
- * Cookie management class that stores, serializes, and loads Twitter session cookies.
- * Supports file persistence, environment variable loading, and cookie string parsing.
+ * XActions Client — Cookie Authentication
+ * Main authentication class that combines CookieJar, CredentialAuth, and TokenManager.
+ * This is the primary auth interface used by the Scraper class.
  *
  * @author nich (@nichxbt) - https://github.com/nirholas
  * @license MIT
  */
 
-import { promises as fs } from 'node:fs';
-import { dirname } from 'node:path';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
+import { CookieJar } from './CookieJar.js';
+import { CredentialAuth } from './CredentialAuth.js';
+import { TokenManager } from './TokenManager.js';
+import {
+  updateJarFromResponse,
+  extractCsrfToken,
+  extractUserId,
+} from './CookieParser.js';
+import { AuthenticationError } from '../errors.js';
 
-// ============================================================================
-// Constants
-// ============================================================================
-
-/** Default cookie storage path */
 const DEFAULT_COOKIE_PATH = join(homedir(), '.xactions', 'cookies.json');
 
-/** Environment variable name for session cookie */
-const ENV_SESSION_COOKIE = 'XACTIONS_SESSION_COOKIE';
-
-// ============================================================================
-// CookieAuth Class
-// ============================================================================
-
 /**
- * Manages Twitter session cookies — storage, serialization, persistence.
- *
- * Usage:
- *   const auth = new CookieAuth();
- *   auth.set('auth_token', 'abc123');
- *   auth.set('ct0', 'xyz789');
- *   await auth.save('cookies.json');
- *
- * Twitter's critical cookies:
- *   - auth_token — session token (persists across restarts)
- *   - ct0 — CSRF token (changes frequently, must match x-csrf-token header)
- *   - guest_id — guest session ID (optional)
- *   - twid — user ID in format u%3D1234567890 (optional)
- *   - personalization_id — tracking cookie (optional)
+ * Main authentication class for the Scraper.
+ * Manages cookies, tokens, and login flows.
  */
 export class CookieAuth {
-  /** @type {Map<string, string>} */
-  #cookies;
-
-  /** @type {string|null} */
-  #username;
-
-  /** @type {string|null} */
-  #created;
+  /**
+   * @param {Object} http - HttpClient or fetch function
+   */
+  constructor(http) {
+    /** @private */
+    this._http = http;
+    /** @type {CookieJar} */
+    this._cookieJar = new CookieJar();
+    /** @type {TokenManager} */
+    this._tokenManager = new TokenManager(
+      http.fetch ? http.fetch.bind(http) : http,
+    );
+    /** @type {CredentialAuth} */
+    this._credentialAuth = new CredentialAuth(http, this._tokenManager);
+    /** @type {string|null} */
+    this._authenticatedUserId = null;
+  }
 
   /**
-   * Creates a new CookieAuth instance.
-   * @param {Object} [options]
-   * @param {Record<string, string>} [options.cookies] - Initial cookies
-   * @param {string} [options.username] - Associated Twitter username
+   * Login with username and password.
+   *
+   * @param {Object} credentials
+   * @param {string} credentials.username
+   * @param {string} credentials.password
+   * @param {string} [credentials.email]
+   * @param {string} [credentials.twoFactorCode]
+   * @param {Function} [credentials.onTwoFactorRequired]
+   * @returns {Promise<void>}
+   * @throws {AuthenticationError}
    */
-  constructor(options = {}) {
-    this.#cookies = new Map();
-    this.#username = options.username || null;
-    this.#created = new Date().toISOString();
+  async login({ username, password, email, twoFactorCode, onTwoFactorRequired }) {
+    const cookies = await this._credentialAuth.login(username, password, email, {
+      twoFactorCode,
+      onTwoFactorRequired,
+    });
 
-    if (options.cookies) {
-      for (const [name, value] of Object.entries(options.cookies)) {
-        this.#cookies.set(name, String(value));
+    // Update our cookie jar with login cookies
+    for (const cookie of cookies.getAll()) {
+      this._cookieJar.set(cookie);
+    }
+
+    // Extract CSRF token from ct0 cookie
+    const csrfToken = extractCsrfToken(this._cookieJar);
+    if (csrfToken) {
+      this._tokenManager.setCsrfToken(csrfToken);
+    }
+
+    // Extract user ID from twid cookie
+    const userId = extractUserId(this._cookieJar);
+    if (userId) {
+      this._authenticatedUserId = userId;
+    }
+
+    console.log(`✅ Logged in as @${username}`);
+  }
+
+  /**
+   * Login using existing cookies (no password required).
+   * Accepts CookieJar, Array<Cookie>, or JSON string.
+   *
+   * @param {CookieJar|Array|string} cookies
+   * @returns {Promise<void>}
+   * @throws {AuthenticationError}
+   */
+  async loginWithCookies(cookies) {
+    if (typeof cookies === 'string') {
+      try {
+        const parsed = JSON.parse(cookies);
+        this._cookieJar = CookieJar.fromJSON(parsed);
+      } catch {
+        throw new AuthenticationError('Invalid cookie JSON string', 'INVALID_COOKIES');
       }
+    } else if (cookies instanceof CookieJar) {
+      this._cookieJar = cookies.clone();
+    } else if (Array.isArray(cookies)) {
+      this._cookieJar = new CookieJar(cookies);
+    } else {
+      throw new AuthenticationError('Invalid cookies format', 'INVALID_COOKIES');
+    }
+
+    // Extract CSRF token
+    const csrfToken = extractCsrfToken(this._cookieJar);
+    if (csrfToken) {
+      this._tokenManager.setCsrfToken(csrfToken);
+    }
+
+    // Extract user ID
+    const userId = extractUserId(this._cookieJar);
+    if (userId) {
+      this._authenticatedUserId = userId;
+    }
+
+    // Validate the session
+    await this._validateSession();
+  }
+
+  /**
+   * Validate the current session by calling verify_credentials.
+   * @private
+   * @throws {AuthenticationError}
+   */
+  async _validateSession() {
+    try {
+      const fetchFn = this._http.fetch ? this._http.fetch.bind(this._http) : this._http;
+      const response = await fetchFn(
+        'https://x.com/i/api/1.1/account/verify_credentials.json',
+        {
+          method: 'GET',
+          headers: this.getHeaders(),
+        },
+      );
+
+      if (!response.ok) {
+        throw new AuthenticationError(
+          'Cookie session is invalid or expired',
+          'INVALID_COOKIES',
+          { httpStatus: response.status },
+        );
+      }
+
+      const data = await response.json();
+      if (data.id_str) {
+        this._authenticatedUserId = data.id_str;
+      }
+
+      // Update cookies from response
+      updateJarFromResponse(this._cookieJar, response);
+    } catch (err) {
+      if (err instanceof AuthenticationError) throw err;
+      throw new AuthenticationError(
+        'Failed to validate session: ' + err.message,
+        'INVALID_COOKIES',
+      );
     }
   }
 
   /**
-   * Set a cookie value.
-   * @param {string} name - Cookie name
-   * @param {string} value - Cookie value
-   * @returns {CookieAuth} this (for chaining)
-   */
-  set(name, value) {
-    this.#cookies.set(name, String(value));
-    return this;
-  }
-
-  /**
-   * Get a cookie value.
-   * @param {string} name - Cookie name
-   * @returns {string|undefined} Cookie value or undefined if not set
-   */
-  get(name) {
-    return this.#cookies.get(name);
-  }
-
-  /**
-   * Check if a cookie exists.
-   * @param {string} name - Cookie name
-   * @returns {boolean}
-   */
-  has(name) {
-    return this.#cookies.has(name);
-  }
-
-  /**
-   * Delete a cookie.
-   * @param {string} name - Cookie name
-   * @returns {boolean} true if the cookie existed and was removed
-   */
-  delete(name) {
-    return this.#cookies.delete(name);
-  }
-
-  /**
-   * Remove all cookies.
-   * @returns {CookieAuth} this (for chaining)
-   */
-  clear() {
-    this.#cookies.clear();
-    return this;
-  }
-
-  /**
-   * Get all cookies as a plain object.
-   * @returns {Record<string, string>}
-   */
-  getAll() {
-    const obj = {};
-    for (const [name, value] of this.#cookies) {
-      obj[name] = value;
-    }
-    return obj;
-  }
-
-  /**
-   * Get the number of stored cookies.
-   * @returns {number}
-   */
-  get size() {
-    return this.#cookies.size;
-  }
-
-  /**
-   * Get or set the associated username.
-   * @returns {string|null}
-   */
-  get username() {
-    return this.#username;
-  }
-
-  set username(value) {
-    this.#username = value || null;
-  }
-
-  /**
-   * Format cookies as an HTTP Cookie header string.
-   * @returns {string} "name1=value1; name2=value2"
-   */
-  toString() {
-    const parts = [];
-    for (const [name, value] of this.#cookies) {
-      parts.push(`${name}=${value}`);
-    }
-    return parts.join('; ');
-  }
-
-  /**
-   * Check if the session is authenticated.
-   * Returns true only if both auth_token AND ct0 are present.
+   * Check if the user is authenticated.
    * @returns {boolean}
    */
   isAuthenticated() {
-    return this.#cookies.has('auth_token') && this.#cookies.has('ct0') &&
-      this.#cookies.get('auth_token') !== '' && this.#cookies.get('ct0') !== '';
+    return !!(
+      this._authenticatedUserId &&
+      this._cookieJar.has('auth_token') &&
+      !this._cookieJar.isExpired('auth_token')
+    );
   }
 
   /**
-   * Get headers required for authenticated Twitter API requests.
-   * @returns {{ Cookie: string, 'x-csrf-token': string }}
+   * Get the authenticated user's ID.
+   * @returns {string}
+   * @throws {AuthenticationError}
    */
-  getAuthHeaders() {
-    return {
-      'Cookie': this.toString(),
-      'x-csrf-token': this.get('ct0') || '',
-    };
-  }
-
-  /**
-   * Extract the authenticated user ID from the twid cookie.
-   * twid format: "u%3D1234567890" → decodeURIComponent → "u=1234567890" → "1234567890"
-   * @returns {string|null}
-   */
-  getUserId() {
-    const twid = this.get('twid');
-    if (!twid) return null;
-    try {
-      const decoded = decodeURIComponent(twid);
-      return decoded.replace('u=', '');
-    } catch {
-      return null;
+  getAuthenticatedUserId() {
+    if (!this._authenticatedUserId) {
+      throw new AuthenticationError('Not authenticated', 'AUTH_REQUIRED');
     }
+    return this._authenticatedUserId;
   }
 
   /**
-   * Serialize cookies to a JSON-safe object.
-   * @returns {{ cookies: Record<string, string>, created: string, username: string|null }}
+   * Get the current CookieJar.
+   * @returns {CookieJar}
    */
-  toJSON() {
-    return {
-      cookies: this.getAll(),
-      created: this.#created,
-      username: this.#username,
-    };
+  getCookies() {
+    return this._cookieJar;
+  }
+
+  /**
+   * Replace the cookie jar contents.
+   * @param {Array<import('./CookieJar.js').Cookie>} cookies
+   */
+  setCookies(cookies) {
+    this._cookieJar = new CookieJar(cookies);
+    const csrfToken = extractCsrfToken(this._cookieJar);
+    if (csrfToken) {
+      this._tokenManager.setCsrfToken(csrfToken);
+    }
+    const userId = extractUserId(this._cookieJar);
+    if (userId) {
+      this._authenticatedUserId = userId;
+    }
   }
 
   /**
    * Save cookies to a JSON file.
-   * Creates the directory if it doesn't exist.
-   * @param {string} [filePath] - Path to save to (default: ~/.xactions/cookies.json)
-   * @returns {Promise<void>}
+   * @param {string} [filePath] - Defaults to ~/.xactions/cookies.json
+   * @param {Object} [options]
+   * @param {boolean} [options.encrypt]
+   * @param {string} [options.password]
    */
-  async save(filePath = DEFAULT_COOKIE_PATH) {
-    const dir = dirname(filePath);
-    await fs.mkdir(dir, { recursive: true });
-    const data = JSON.stringify(this.toJSON(), null, 2);
-    await fs.writeFile(filePath, data, 'utf-8');
+  async saveCookies(filePath = DEFAULT_COOKIE_PATH, options = {}) {
+    // Encryption support will be added via Encryption.js
+    await this._cookieJar.saveToFile(filePath);
   }
 
   /**
    * Load cookies from a JSON file.
-   * @param {string} [filePath] - Path to load from (default: ~/.xactions/cookies.json)
-   * @returns {Promise<CookieAuth>} New CookieAuth instance with loaded cookies
-   * @throws {Error} If the file doesn't exist or is invalid JSON
+   * @param {string} [filePath] - Defaults to ~/.xactions/cookies.json
    */
-  static async load(filePath = DEFAULT_COOKIE_PATH) {
-    const raw = await fs.readFile(filePath, 'utf-8');
-    const data = JSON.parse(raw);
-
-    if (!data || typeof data.cookies !== 'object') {
-      throw new Error(`Invalid cookie file format: ${filePath}`);
-    }
-
-    const auth = new CookieAuth({
-      cookies: data.cookies,
-      username: data.username || null,
-    });
-    auth.#created = data.created || new Date().toISOString();
-    return auth;
-  }
-
-  /**
-   * Create a CookieAuth instance from the XACTIONS_SESSION_COOKIE environment variable.
-   * The env var should contain the auth_token value.
-   * @returns {CookieAuth}
-   */
-  static fromEnv() {
-    const auth = new CookieAuth();
-    const sessionCookie = process.env[ENV_SESSION_COOKIE];
-    if (sessionCookie) {
-      auth.set('auth_token', sessionCookie);
-    }
-    return auth;
-  }
-
-  /**
-   * Create a CookieAuth instance from a plain object.
-   * @param {Record<string, string>} obj - { auth_token: '...', ct0: '...', ... }
-   * @returns {CookieAuth}
-   */
-  static fromObject(obj) {
-    return new CookieAuth({ cookies: obj });
-  }
-
-  /**
-   * Parse a "name=value; name2=value2" cookie string into a CookieAuth instance.
-   * @param {string} cookieString - HTTP Cookie header value
-   * @returns {CookieAuth}
-   */
-  static parse(cookieString) {
-    const auth = new CookieAuth();
-    if (!cookieString || typeof cookieString !== 'string') {
-      return auth;
-    }
-
-    const pairs = cookieString.split(';');
-    for (const pair of pairs) {
-      const trimmed = pair.trim();
-      if (!trimmed) continue;
-      const eqIndex = trimmed.indexOf('=');
-      if (eqIndex === -1) continue;
-      const name = trimmed.slice(0, eqIndex).trim();
-      const value = trimmed.slice(eqIndex + 1).trim();
-      if (name) {
-        auth.set(name, value);
+  async loadCookies(filePath = DEFAULT_COOKIE_PATH) {
+    const jar = await CookieJar.loadFromFile(filePath);
+    if (jar.size > 0) {
+      this._cookieJar = jar;
+      const csrfToken = extractCsrfToken(this._cookieJar);
+      if (csrfToken) {
+        this._tokenManager.setCsrfToken(csrfToken);
+      }
+      const userId = extractUserId(this._cookieJar);
+      if (userId) {
+        this._authenticatedUserId = userId;
       }
     }
+  }
 
-    return auth;
+  /**
+   * Build headers for authenticated Twitter API requests.
+   * @returns {Object}
+   */
+  getHeaders() {
+    const isAuth = this.isAuthenticated();
+    return {
+      ...this._tokenManager.getHeaders(isAuth),
+      Cookie: this._cookieJar.toCookieString(),
+      ...(isAuth && this._cookieJar.getValue('ct0')
+        ? { 'x-csrf-token': this._cookieJar.getValue('ct0') }
+        : {}),
+    };
+  }
+
+  /**
+   * Refresh the CSRF token from the latest ct0 cookie.
+   */
+  async refreshCsrf() {
+    const ct0 = this._cookieJar.getValue('ct0');
+    if (ct0) {
+      this._tokenManager.setCsrfToken(ct0);
+    }
+  }
+
+  /**
+   * Logout and clear all auth state.
+   */
+  logout() {
+    this._cookieJar.clear();
+    this._authenticatedUserId = null;
+    this._tokenManager.setCsrfToken(null);
+    this._tokenManager.invalidateGuestToken();
+  }
+
+  /**
+   * Get the TokenManager instance.
+   * @returns {TokenManager}
+   */
+  getTokenManager() {
+    return this._tokenManager;
+  }
+
+  /**
+   * Update cookie jar from an HTTP response.
+   * Should be called after every API request.
+   * @param {Response} response
+   */
+  updateFromResponse(response) {
+    updateJarFromResponse(this._cookieJar, response);
+    // Refresh CSRF if ct0 changed
+    const ct0 = this._cookieJar.getValue('ct0');
+    if (ct0) {
+      this._tokenManager.setCsrfToken(ct0);
+    }
   }
 }
-
-// ============================================================================
-// Factory Function
-// ============================================================================
-
-/**
- * Auto-detect the best cookie source and create a CookieAuth instance.
- *
- * Priority:
- *   1. options.cookies (object) → fromObject
- *   2. options.cookieString → parse
- *   3. options.filePath → load from file
- *   4. options.authToken → set auth_token directly
- *   5. XACTIONS_SESSION_COOKIE env var → fromEnv
- *   6. Default cookie file (~/.xactions/cookies.json) → try to load
- *   7. Empty CookieAuth
- *
- * @param {Object} [options]
- * @param {Record<string, string>} [options.cookies] - Cookie object
- * @param {string} [options.cookieString] - Cookie header string
- * @param {string} [options.filePath] - Path to cookie JSON file
- * @param {string} [options.authToken] - Single auth_token value
- * @returns {Promise<CookieAuth>}
- */
-export async function createCookieAuth(options = {}) {
-  if (options.cookies) {
-    return CookieAuth.fromObject(options.cookies);
-  }
-
-  if (options.cookieString) {
-    return CookieAuth.parse(options.cookieString);
-  }
-
-  if (options.filePath) {
-    return CookieAuth.load(options.filePath);
-  }
-
-  if (options.authToken) {
-    const auth = new CookieAuth();
-    auth.set('auth_token', options.authToken);
-    return auth;
-  }
-
-  if (process.env[ENV_SESSION_COOKIE]) {
-    return CookieAuth.fromEnv();
-  }
-
-  // Try default cookie file
-  try {
-    return await CookieAuth.load();
-  } catch {
-    // No saved cookies found — return empty instance
-    return new CookieAuth();
-  }
-}
-
-export default CookieAuth;
