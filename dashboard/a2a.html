@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A2A Multi-Agent Dashboard — XActions</title>
+  <link rel="stylesheet" href="/css/common.css">
+  <style>
+    :root {
+      --bg-primary: #000;
+      --bg-secondary: #16181c;
+      --bg-card: #1e2025;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffd93d;
+      --error: #f4212e;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.5;
+    }
+    .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+    header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 16px 0; border-bottom: 1px solid var(--border); margin-bottom: 24px;
+    }
+    header h1 { font-size: 22px; color: var(--accent); }
+    header h1 span { color: var(--text-secondary); font-weight: 400; font-size: 14px; margin-left: 8px; }
+    .status-badge {
+      padding: 4px 12px; border-radius: 16px; font-size: 12px; font-weight: 600;
+    }
+    .status-healthy { background: rgba(0,186,124,.15); color: var(--success); }
+    .status-unhealthy { background: rgba(244,33,46,.15); color: var(--error); }
+
+    /* Grid layout */
+    .grid { display: grid; gap: 20px; }
+    .grid-2 { grid-template-columns: 1fr 1fr; }
+    .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+    @media (max-width: 900px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+    /* Cards */
+    .card {
+      background: var(--bg-secondary); border: 1px solid var(--border);
+      border-radius: 12px; padding: 20px;
+    }
+    .card h2 { font-size: 16px; margin-bottom: 12px; color: var(--text-primary); }
+    .card h2 .count { color: var(--accent); font-size: 14px; margin-left: 6px; }
+
+    /* Stats row */
+    .stats { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+    .stat-card {
+      flex: 1; min-width: 140px; background: var(--bg-secondary);
+      border: 1px solid var(--border); border-radius: 12px; padding: 16px; text-align: center;
+    }
+    .stat-card .number { font-size: 28px; font-weight: 700; color: var(--accent); }
+    .stat-card .label { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+
+    /* Tables */
+    table { width: 100%; border-collapse: collapse; }
+    th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); font-size: 13px; }
+    th { color: var(--text-secondary); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .5px; }
+    tr:hover td { background: rgba(29,155,240,.04); }
+
+    /* Task state badges */
+    .state { padding: 2px 8px; border-radius: 8px; font-size: 11px; font-weight: 600; }
+    .state-submitted { background: rgba(29,155,240,.15); color: var(--accent); }
+    .state-working { background: rgba(255,217,61,.15); color: var(--warning); }
+    .state-completed { background: rgba(0,186,124,.15); color: var(--success); }
+    .state-failed { background: rgba(244,33,46,.15); color: var(--error); }
+    .state-canceled { background: rgba(113,118,123,.15); color: var(--text-secondary); }
+
+    /* Skill tags */
+    .tag {
+      display: inline-block; padding: 2px 8px; margin: 2px;
+      border-radius: 8px; font-size: 11px;
+      background: rgba(29,155,240,.1); color: var(--accent);
+    }
+
+    /* Live log */
+    #live-log {
+      max-height: 300px; overflow-y: auto; font-family: 'SF Mono', Menlo, monospace;
+      font-size: 12px; background: #0a0a0a; border-radius: 8px; padding: 12px;
+    }
+    .log-entry { padding: 2px 0; border-bottom: 1px solid rgba(47,51,54,.3); }
+    .log-time { color: var(--text-secondary); margin-right: 8px; }
+
+    /* Buttons */
+    .btn {
+      padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer;
+      font-size: 13px; font-weight: 600; transition: background .15s;
+    }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-sm { padding: 4px 10px; font-size: 12px; }
+
+    /* Search */
+    .search-bar {
+      width: 100%; padding: 10px 14px; border-radius: 8px;
+      border: 1px solid var(--border); background: var(--bg-card);
+      color: var(--text-primary); font-size: 14px; margin-bottom: 12px;
+    }
+    .search-bar::placeholder { color: var(--text-secondary); }
+
+    /* Orchestration visualizer */
+    .orch-step {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px; border-left: 3px solid var(--border); margin-left: 10px;
+    }
+    .orch-step.active { border-left-color: var(--accent); }
+    .orch-step.done { border-left-color: var(--success); }
+    .orch-step.error { border-left-color: var(--error); }
+    .step-num {
+      width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center;
+      justify-content: center; font-weight: 700; font-size: 12px; flex-shrink: 0;
+      background: var(--bg-card); border: 2px solid var(--border);
+    }
+
+    /* Trust chart */
+    .trust-bar { height: 6px; border-radius: 3px; background: var(--bg-card); margin-top: 6px; }
+    .trust-fill { height: 100%; border-radius: 3px; background: var(--accent); transition: width .3s; }
+
+    /* Connection indicator */
+    .conn-dot {
+      width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 6px;
+    }
+    .conn-dot.connected { background: var(--success); }
+    .conn-dot.disconnected { background: var(--error); }
+
+    /* Task composer */
+    .task-input {
+      width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border);
+      background: var(--bg-card); color: var(--text-primary); font-size: 14px;
+      resize: vertical; min-height: 60px;
+    }
+    .flex-end { display: flex; justify-content: flex-end; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <h1>⚡ A2A Dashboard <span>Multi-Agent Protocol</span></h1>
+      <div id="health-badge" class="status-badge status-unhealthy">Connecting…</div>
+    </header>
+
+    <!-- Stats -->
+    <div class="stats" id="stats">
+      <div class="stat-card"><div class="number" id="stat-skills">-</div><div class="label">Skills</div></div>
+      <div class="stat-card"><div class="number" id="stat-agents">-</div><div class="label">Agents</div></div>
+      <div class="stat-card"><div class="number" id="stat-tasks">-</div><div class="label">Tasks</div></div>
+      <div class="stat-card"><div class="number" id="stat-uptime">-</div><div class="label">Uptime</div></div>
+    </div>
+
+    <!-- Task Composer -->
+    <div class="card" style="margin-bottom: 20px;">
+      <h2>Send Task</h2>
+      <textarea class="task-input" id="task-input" placeholder="Describe a task… e.g. &quot;analyze @nichxbt and post the findings&quot;"></textarea>
+      <div class="flex-end">
+        <button class="btn btn-primary" id="btn-plan" style="margin-right:8px;">Plan</button>
+        <button class="btn btn-primary" id="btn-send">Send</button>
+      </div>
+      <div id="plan-output" style="margin-top:12px;"></div>
+    </div>
+
+    <!-- Main grid -->
+    <div class="grid grid-2">
+      <!-- Left: Tasks -->
+      <div class="card">
+        <h2>Tasks <span class="count" id="task-count">0</span></h2>
+        <table>
+          <thead><tr><th>ID</th><th>State</th><th>Created</th><th></th></tr></thead>
+          <tbody id="task-body"></tbody>
+        </table>
+      </div>
+
+      <!-- Right: Connected Agents -->
+      <div class="card">
+        <h2>Connected Agents <span class="count" id="agent-count">0</span></h2>
+        <input class="search-bar" id="agent-search" placeholder="Search agents…">
+        <table>
+          <thead><tr><th>Name</th><th>URL</th><th>Trust</th><th>Status</th></tr></thead>
+          <tbody id="agent-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Skills & Orchestration -->
+    <div class="grid grid-2" style="margin-top: 20px;">
+      <!-- Skills -->
+      <div class="card">
+        <h2>Skills Registry <span class="count" id="skill-count">0</span></h2>
+        <input class="search-bar" id="skill-search" placeholder="Search skills…">
+        <div id="skill-list" style="max-height:400px;overflow-y:auto;"></div>
+      </div>
+
+      <!-- Orchestration Visualizer -->
+      <div class="card">
+        <h2>Orchestration</h2>
+        <div id="orch-viz">
+          <p style="color:var(--text-secondary);font-size:13px;">Plan or send a multi-step task to visualize orchestration.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live log -->
+    <div class="card" style="margin-top:20px;">
+      <h2>Live Activity <span class="conn-dot disconnected" id="sse-dot"></span></h2>
+      <div id="live-log"></div>
+    </div>
+  </div>
+
+  <script>
+    // ── Config ──────────────────────────────────────────────────────────────
+    const API = window.location.hostname === 'localhost'
+      ? 'http://localhost:3100'
+      : window.location.origin;
+
+    // ── State ───────────────────────────────────────────────────────────────
+    let allSkills = [];
+    let allAgents = [];
+    let allTasks = [];
+    let sseSource = null;
+
+    // ── Fetch helpers ───────────────────────────────────────────────────────
+    async function api(path, opts) {
+      try {
+        const res = await fetch(`${API}${path}`, opts);
+        return await res.json();
+      } catch { return null; }
+    }
+
+    // ── Health ──────────────────────────────────────────────────────────────
+    async function refreshHealth() {
+      const data = await api('/a2a/health');
+      const badge = document.getElementById('health-badge');
+      if (data?.status === 'healthy') {
+        badge.textContent = 'Healthy';
+        badge.className = 'status-badge status-healthy';
+        document.getElementById('stat-uptime').textContent = formatUptime(data.uptime);
+        document.getElementById('stat-skills').textContent = data.skills;
+        document.getElementById('stat-tasks').textContent = data.tasks?.total ?? '-';
+      } else {
+        badge.textContent = 'Unreachable';
+        badge.className = 'status-badge status-unhealthy';
+      }
+    }
+
+    function formatUptime(s) {
+      if (s < 60) return `${Math.floor(s)}s`;
+      if (s < 3600) return `${Math.floor(s/60)}m`;
+      return `${Math.floor(s/3600)}h ${Math.floor((s%3600)/60)}m`;
+    }
+
+    // ── Skills ──────────────────────────────────────────────────────────────
+    async function refreshSkills() {
+      const data = await api('/a2a/skills');
+      if (!data) return;
+      allSkills = data.skills || [];
+      document.getElementById('skill-count').textContent = data.total;
+      document.getElementById('stat-skills').textContent = data.total;
+      renderSkills(allSkills);
+    }
+
+    function renderSkills(skills) {
+      const list = document.getElementById('skill-list');
+      list.innerHTML = skills.map(s => `
+        <div style="padding:8px 0;border-bottom:1px solid var(--border);">
+          <strong style="font-size:13px;">${esc(s.name)}</strong>
+          <span style="color:var(--text-secondary);font-size:12px;margin-left:6px;">${esc(s.id)}</span>
+          <div style="font-size:12px;color:var(--text-secondary);margin-top:2px;">${esc(s.description || '')}</div>
+          <div>${(s.tags||[]).map(t => `<span class="tag">${esc(t)}</span>`).join('')}</div>
+        </div>
+      `).join('');
+    }
+
+    document.getElementById('skill-search').addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase();
+      renderSkills(allSkills.filter(s =>
+        s.name.toLowerCase().includes(q) ||
+        s.id.toLowerCase().includes(q) ||
+        (s.description||'').toLowerCase().includes(q)
+      ));
+    });
+
+    // ── Agents ──────────────────────────────────────────────────────────────
+    async function refreshAgents() {
+      const data = await api('/a2a/agents');
+      if (!data) return;
+      allAgents = data.agents || [];
+      document.getElementById('agent-count').textContent = data.total;
+      document.getElementById('stat-agents').textContent = data.total;
+      renderAgents(allAgents);
+    }
+
+    function renderAgents(agents) {
+      const body = document.getElementById('agent-body');
+      if (agents.length === 0) {
+        body.innerHTML = '<tr><td colspan="4" style="color:var(--text-secondary)">No agents discovered</td></tr>';
+        return;
+      }
+      body.innerHTML = agents.map(a => `
+        <tr>
+          <td>${esc(a.card?.name || 'Unknown')}</td>
+          <td style="font-size:12px;color:var(--text-secondary)">${esc(a.url)}</td>
+          <td>
+            <div class="trust-bar" style="width:80px">
+              <div class="trust-fill" style="width:${a.trust || 50}%"></div>
+            </div>
+          </td>
+          <td><span class="conn-dot ${a.healthy ? 'connected' : 'disconnected'}"></span>${a.healthy ? 'Up' : 'Down'}</td>
+        </tr>
+      `).join('');
+    }
+
+    document.getElementById('agent-search').addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase();
+      renderAgents(allAgents.filter(a =>
+        (a.card?.name||'').toLowerCase().includes(q) || a.url.toLowerCase().includes(q)
+      ));
+    });
+
+    // ── Tasks ───────────────────────────────────────────────────────────────
+    function renderTasks() {
+      const body = document.getElementById('task-body');
+      document.getElementById('task-count').textContent = allTasks.length;
+      if (allTasks.length === 0) {
+        body.innerHTML = '<tr><td colspan="4" style="color:var(--text-secondary)">No tasks yet</td></tr>';
+        return;
+      }
+      body.innerHTML = allTasks.slice(-20).reverse().map(t => `
+        <tr>
+          <td style="font-family:monospace;font-size:11px">${esc(t.id?.slice(0,8) || 'n/a')}</td>
+          <td><span class="state state-${t.status?.state || 'submitted'}">${t.status?.state || '?'}</span></td>
+          <td style="font-size:12px;color:var(--text-secondary)">${new Date(t.status?.timestamp || Date.now()).toLocaleTimeString()}</td>
+          <td>
+            ${t.status?.state === 'submitted' ? `<button class="btn btn-sm" onclick="cancelTask('${t.id}')">Cancel</button>` : ''}
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    async function cancelTask(id) {
+      await fetch(`${API}/a2a/tasks/${id}/cancel`, { method: 'POST' });
+      await refreshTaskList();
+    }
+
+    async function refreshTaskList() {
+      // We don't have a list endpoint, so rely on tasks we've tracked
+      renderTasks();
+    }
+
+    // ── Send Task ───────────────────────────────────────────────────────────
+    document.getElementById('btn-send').addEventListener('click', async () => {
+      const text = document.getElementById('task-input').value.trim();
+      if (!text) return;
+      const data = await api('/a2a/tasks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          jsonrpc: '2.0',
+          method: 'tasks/sendSubscribe',
+          params: { message: { role: 'user', parts: [{ type: 'text', text }] } },
+          id: `dash-${Date.now()}`,
+        }),
+      });
+      if (data?.result) {
+        allTasks.push(data.result);
+        renderTasks();
+        connectSSE(data.result.id);
+        addLog(`Task created: ${data.result.id}`);
+      }
+    });
+
+    // ── Plan ────────────────────────────────────────────────────────────────
+    document.getElementById('btn-plan').addEventListener('click', async () => {
+      const text = document.getElementById('task-input').value.trim();
+      if (!text) return;
+      const plan = await api('/a2a/orchestrate/plan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ description: text }),
+      });
+      if (plan) renderOrchPlan(plan);
+    });
+
+    function renderOrchPlan(plan) {
+      const viz = document.getElementById('orch-viz');
+      if (!plan?.steps?.length) {
+        viz.innerHTML = '<p style="color:var(--text-secondary);font-size:13px;">No decomposition needed — this is a single-step task.</p>';
+        return;
+      }
+      viz.innerHTML = plan.steps.map((s, i) => `
+        <div class="orch-step">
+          <div class="step-num">${s.step}</div>
+          <div>
+            <div style="font-size:13px;font-weight:600;">${esc(s.label)}</div>
+            <div style="font-size:11px;color:var(--text-secondary);">
+              Skill: ${esc(s.skill || 'NLP')} · Agent: ${esc(s.agent)}
+              ${s.deps.length ? ' · Deps: ' + s.deps.join(', ') : ''}
+            </div>
+          </div>
+        </div>
+      `).join('');
+      const out = document.getElementById('plan-output');
+      out.innerHTML = `<span style="font-size:12px;color:var(--text-secondary);">${plan.totalSteps} steps planned</span>`;
+    }
+
+    // ── SSE ─────────────────────────────────────────────────────────────────
+    function connectSSE(taskId) {
+      if (sseSource) sseSource.close();
+      const dot = document.getElementById('sse-dot');
+      try {
+        sseSource = new EventSource(`${API}/a2a/tasks/${taskId}/stream`);
+        dot.className = 'conn-dot connected';
+        sseSource.addEventListener('status', (e) => {
+          try {
+            const data = JSON.parse(e.data);
+            addLog(`[${taskId.slice(0,8)}] State → ${data.state}`);
+            // Update task in list
+            const t = allTasks.find(t => t.id === taskId);
+            if (t) t.status = { state: data.state, timestamp: new Date().toISOString() };
+            renderTasks();
+          } catch {}
+        });
+        sseSource.addEventListener('artifact', (e) => {
+          addLog(`[${taskId.slice(0,8)}] Artifact received`);
+        });
+        sseSource.addEventListener('progress', (e) => {
+          try {
+            const data = JSON.parse(e.data);
+            addLog(`[${taskId.slice(0,8)}] Progress: ${data.message || data.percent || ''}`);
+          } catch {}
+        });
+        sseSource.onerror = () => {
+          dot.className = 'conn-dot disconnected';
+        };
+      } catch {
+        dot.className = 'conn-dot disconnected';
+      }
+    }
+
+    // ── Live Log ────────────────────────────────────────────────────────────
+    function addLog(msg) {
+      const log = document.getElementById('live-log');
+      const now = new Date().toLocaleTimeString();
+      const entry = document.createElement('div');
+      entry.className = 'log-entry';
+      entry.innerHTML = `<span class="log-time">${now}</span>${esc(msg)}`;
+      log.appendChild(entry);
+      log.scrollTop = log.scrollHeight;
+    }
+
+    // ── Util ────────────────────────────────────────────────────────────────
+    function esc(s) {
+      if (!s) return '';
+      const d = document.createElement('div');
+      d.textContent = s;
+      return d.innerHTML;
+    }
+
+    // ── Init ────────────────────────────────────────────────────────────────
+    async function init() {
+      addLog('Dashboard starting…');
+      await refreshHealth();
+      await refreshSkills();
+      await refreshAgents();
+      renderTasks();
+      addLog('Dashboard ready');
+      // Auto-refresh every 15s
+      setInterval(refreshHealth, 15000);
+      setInterval(refreshAgents, 30000);
+    }
+
+    init();
+  </script>
+</body>
+</html>
