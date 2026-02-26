@@ -16,60 +16,54 @@ import { pipeline } from 'node:stream/promises';
 import { extname, resolve } from 'node:path';
 
 // ---------------------------------------------------------------------------
-// Try to import from endpoints.js (Build 01-01). If it doesn't exist yet,
-// fall back to inline constants so this module works standalone.
+// GraphQL endpoint constants — will be imported from endpoints.js (Build 01-01)
+// once it exists. Defined inline here so this module works standalone.
+// Sources: the-convocation/twitter-scraper, d60/twikit (MIT)
 // ---------------------------------------------------------------------------
 
-let GRAPHQL_ENDPOINTS;
-let DEFAULT_FEATURES;
+let _endpointsModule;
+try { _endpointsModule = await import('./endpoints.js'); } catch { /* not yet created */ }
 
-try {
-  const endpoints = await import('./endpoints.js');
-  GRAPHQL_ENDPOINTS = endpoints.GRAPHQL_ENDPOINTS;
-  DEFAULT_FEATURES = endpoints.DEFAULT_FEATURES;
-} catch {
-  // endpoints.js not yet created — define minimal query IDs inline
-  // Sources: the-convocation/twitter-scraper, d60/twikit (MIT)
-  GRAPHQL_ENDPOINTS = {
-    UserByScreenName: {
-      queryId: 'qW5u-DAen42o5BN1EFcoLA',
-      operationName: 'UserByScreenName',
-    },
-    UserMedia: {
-      queryId: 'dexO_2tohK86JDudXXG3Yw',
-      operationName: 'UserMedia',
-    },
-    TweetResultByRestId: {
-      queryId: '0hWvDhmW8YQ-S_ib3azIrw',
-      operationName: 'TweetResultByRestId',
-    },
-  };
-  DEFAULT_FEATURES = {
-    rweb_tipjar_consumption_enabled: true,
-    responsive_web_graphql_exclude_directive_enabled: true,
-    verified_phone_label_enabled: false,
-    creator_subscriptions_tweet_preview_api_enabled: true,
-    responsive_web_graphql_timeline_navigation_enabled: true,
-    responsive_web_graphql_skip_user_profile_image_extensions_enabled: false,
-    communities_web_enable_tweet_community_results_fetch: true,
-    c9s_tweet_anatomy_moderator_badge_enabled: true,
-    articles_preview_enabled: true,
-    responsive_web_edit_tweet_api_enabled: true,
-    graphql_is_translatable_rweb_tweet_is_translatable_enabled: true,
-    view_counts_everywhere_api_enabled: true,
-    longform_notetweets_consumption_enabled: true,
-    responsive_web_twitter_article_tweet_consumption_enabled: true,
-    tweet_awards_web_tipping_enabled: false,
-    creator_subscriptions_quote_tweet_preview_enabled: false,
-    freedom_of_speech_not_reach_fetch_enabled: true,
-    standardized_nudges_misinfo: true,
-    tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled: true,
-    rweb_video_timestamps_enabled: true,
-    longform_notetweets_rich_text_read_enabled: true,
-    longform_notetweets_inline_media_enabled: true,
-    responsive_web_enhance_cards_enabled: false,
-  };
-}
+const GRAPHQL_ENDPOINTS = _endpointsModule?.GRAPHQL_ENDPOINTS ?? {
+  UserByScreenName: {
+    queryId: 'qW5u-DAen42o5BN1EFcoLA',
+    operationName: 'UserByScreenName',
+  },
+  UserMedia: {
+    queryId: 'dexO_2tohK86JDudXXG3Yw',
+    operationName: 'UserMedia',
+  },
+  TweetResultByRestId: {
+    queryId: '0hWvDhmW8YQ-S_ib3azIrw',
+    operationName: 'TweetResultByRestId',
+  },
+};
+
+const DEFAULT_FEATURES = _endpointsModule?.DEFAULT_FEATURES ?? {
+  rweb_tipjar_consumption_enabled: true,
+  responsive_web_graphql_exclude_directive_enabled: true,
+  verified_phone_label_enabled: false,
+  creator_subscriptions_tweet_preview_api_enabled: true,
+  responsive_web_graphql_timeline_navigation_enabled: true,
+  responsive_web_graphql_skip_user_profile_image_extensions_enabled: false,
+  communities_web_enable_tweet_community_results_fetch: true,
+  c9s_tweet_anatomy_moderator_badge_enabled: true,
+  articles_preview_enabled: true,
+  responsive_web_edit_tweet_api_enabled: true,
+  graphql_is_translatable_rweb_tweet_is_translatable_enabled: true,
+  view_counts_everywhere_api_enabled: true,
+  longform_notetweets_consumption_enabled: true,
+  responsive_web_twitter_article_tweet_consumption_enabled: true,
+  tweet_awards_web_tipping_enabled: false,
+  creator_subscriptions_quote_tweet_preview_enabled: false,
+  freedom_of_speech_not_reach_fetch_enabled: true,
+  standardized_nudges_misinfo: true,
+  tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled: true,
+  rweb_video_timestamps_enabled: true,
+  longform_notetweets_rich_text_read_enabled: true,
+  longform_notetweets_inline_media_enabled: true,
+  responsive_web_enhance_cards_enabled: false,
+};
 
 // ---------------------------------------------------------------------------
 // Constants
