@@ -1,0 +1,16 @@
+{
+    "schema_version": "v1",
+    "name_for_human": "xeepy",
+    "name_for_model": "xeepy",
+    "description_for_human": "Python \ud83d\udc0d Free X/Twitter automation toolkit. Scrape replies, followers, tweets. Mass unfollow non-followers. AI-powered engagement. No API keys needed - uses browser automation. Extract Replies to a Specific Tweet using Python and Tweepy - Scrape Any Tweet Reply",
+    "description_for_model": "Python \ud83d\udc0d Free X/Twitter automation toolkit. Scrape replies, followers, tweets. Mass unfollow non-followers. AI-powered engagement. No API keys needed - uses browser automation. Extract Replies to a Specific Tweet using Python and Tweepy - Scrape Any Tweet Reply",
+    "auth": {
+        "type": "none"
+    },
+    "api": {
+        "type": "none"
+    },
+    "logo_url": "https://github.com/nirholas.png",
+    "contact_email": "nirholas@users.noreply.github.com",
+    "legal_info_url": "https://github.com/nirholas/xeepy/blob/main/LICENSE"
+}

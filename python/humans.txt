@@ -1,0 +1,10 @@
+/* TEAM */
+Creator: nirholas
+GitHub: https://github.com/nirholas
+From: Earth
+
+/* SITE */
+Last update: 2026-02-11
+Language: English
+Doctype: Markdown
+Tools: VS Code, GitHub Codespaces, GitHub Copilot, Claude Code

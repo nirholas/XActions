@@ -1,0 +1,18 @@
+# xeepy
+
+> Python 🐍 Free X/Twitter automation toolkit. Scrape replies, followers, tweets. Mass unfollow non-followers. AI-powered engagement. No API keys needed - uses browser automation. Extract Replies to a Specific Tweet using Python and Tweepy - Scrape Any Tweet Reply
+
+## Overview
+
+xeepy is an open-source project by nirholas. Python 🐍 Free X/Twitter automation toolkit. Scrape replies, followers, tweets. Mass unfollow non-followers. AI-powered engagement. No API keys needed - uses browser automation. Extract Replies to a Specific Tweet using Python and Tweepy - Scrape Any Tweet Reply
+
+## Repository
+
+- URL: https://github.com/nirholas/xeepy
+- Language: HTML
+- License: MIT
+- Author: nirholas
+
+## Contributing
+
+Contributions are welcome. See CONTRIBUTING.md for guidelines.

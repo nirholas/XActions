@@ -1,0 +1,119 @@
+# llms.txt - AI Discovery File for Xeepy
+# https://llmstxt.org/
+
+# Xeepy - Python X/Twitter Automation Toolkit
+# Educational toolkit for X/Twitter automation using browser automation
+
+## Overview
+
+Xeepy is a comprehensive Python toolkit for X/Twitter automation. It uses 
+Playwright browser automation instead of the expensive Twitter API ($100-5000/month).
+
+### Key Features
+
+- 12 Scrapers (replies, followers, following, tweets, hashtags, search, etc.)
+- Follow/Unfollow Operations (non-followers, mass unfollow, smart unfollow)
+- Engagement Automation (like, comment, retweet, bookmark)
+- Monitoring (unfollower tracking, account monitoring, keyword alerts)
+- AI Integration (OpenAI GPT, Anthropic Claude, Ollama local models)
+
+### Quick Start
+
+```python
+from xeepy import Xeepy
+
+async with Xeepy() as x:
+    # Get tweet replies
+    replies = await x.scrape.replies("https://x.com/user/status/123")
+    
+    # Unfollow non-followers  
+    await x.unfollow.non_followers(max_unfollows=100)
+    
+    # Auto-like by keyword
+    await x.engage.auto_like(keywords=["python"])
+    
+    # Check who unfollowed
+    report = await x.monitor.unfollowers()
+```
+
+### Installation
+
+```bash
+pip install xeepy
+playwright install chromium
+```
+
+### CLI Usage
+
+```bash
+xeepy auth login
+xeepy scrape replies <url>
+xeepy unfollow non-followers
+xeepy engage auto-like "keyword"
+xeepy monitor unfollowers
+```
+
+## API Reference
+
+### Scraping
+
+- `x.scrape.replies(url, limit)` - Get tweet replies
+- `x.scrape.profile(username)` - Get user profile
+- `x.scrape.followers(username, limit)` - Get followers
+- `x.scrape.following(username, limit)` - Get following
+- `x.scrape.tweets(username, limit)` - Get user tweets
+- `x.scrape.hashtag(hashtag, limit)` - Get tweets by hashtag
+- `x.scrape.search(query, limit)` - Search tweets
+
+### Follow/Unfollow
+
+- `x.follow.user(username)` - Follow a user
+- `x.follow.by_hashtag(hashtag, limit)` - Follow users from hashtag
+- `x.follow.by_keyword(keyword, limit)` - Follow from search
+- `x.unfollow.non_followers(max, whitelist)` - Unfollow non-followers
+- `x.unfollow.everyone(dry_run)` - Mass unfollow
+- `x.unfollow.smart(days_threshold)` - Smart unfollow
+
+### Engagement
+
+- `x.engage.like(url)` - Like a tweet
+- `x.engage.auto_like(keywords, limit)` - Auto-like by keywords
+- `x.engage.comment(url, text)` - Post comment
+- `x.engage.retweet(url)` - Retweet
+
+### Monitoring
+
+- `x.monitor.unfollowers()` - Detect unfollowers
+- `x.monitor.account(username)` - Monitor account changes
+- `x.monitor.keywords(keywords)` - Monitor keywords
+
+### AI Features
+
+- `ai.generate_reply(text, style)` - Generate AI reply
+- `ai.analyze_sentiment(tweets)` - Sentiment analysis
+- `ai.detect_bot(profile)` - Bot detection
+
+## Documentation
+
+- Quick Start: docs/QUICKSTART.md
+- CLI Reference: docs/CLI_REFERENCE.md
+- AI Features: docs/AI_FEATURES.md
+- Examples: docs/EXAMPLES.md
+- FAQ: docs/FAQ.md
+
+## Links
+
+- Repository: https://github.com/nirholas/Get-Tweet-Replies-With-Python-Tweepy
+- Issues: https://github.com/nirholas/Get-Tweet-Replies-With-Python-Tweepy/issues
+- Related: https://github.com/nirholas/xactions (JavaScript version)
+
+## Legal
+
+Educational purposes only. Do not use to violate X/Twitter Terms of Service.
+MIT License.
+
+## Links
+
+- Repository: https://github.com/nirholas/xeepy
+- Author: https://github.com/nirholas
+- Full documentation: https://raw.githubusercontent.com/nirholas/xeepy/main/llms-full.txt

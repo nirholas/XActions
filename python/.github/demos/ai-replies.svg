@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420">
+  <style>
+    @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+    .terminal { font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace; font-size: 14px; }
+    .prompt { fill: #50fa7b; }
+    .command { fill: #f8f8f2; }
+    .string { fill: #f1fa8c; }
+    .keyword { fill: #ff79c6; }
+    .function { fill: #8be9fd; }
+    .number { fill: #bd93f9; }
+    .comment { fill: #6272a4; }
+    .success { fill: #50fa7b; }
+    .ai { fill: #ff79c6; animation: pulse 2s infinite; }
+    .l1 { animation: fadeIn 0.3s ease-in 0.3s forwards; opacity: 0; }
+    .l2 { animation: fadeIn 0.3s ease-in 0.8s forwards; opacity: 0; }
+    .l3 { animation: fadeIn 0.3s ease-in 1.3s forwards; opacity: 0; }
+    .l4 { animation: fadeIn 0.3s ease-in 1.8s forwards; opacity: 0; }
+    .l5 { animation: fadeIn 0.3s ease-in 2.3s forwards; opacity: 0; }
+    .l6 { animation: fadeIn 0.3s ease-in 2.8s forwards; opacity: 0; }
+    .l7 { animation: fadeIn 0.3s ease-in 3.3s forwards; opacity: 0; }
+    .l8 { animation: fadeIn 0.3s ease-in 3.8s forwards; opacity: 0; }
+    .l9 { animation: fadeIn 0.3s ease-in 4.3s forwards; opacity: 0; }
+  </style>
+  
+  <rect width="800" height="420" rx="10" fill="#282a36"/>
+  <rect width="800" height="30" rx="10" fill="#44475a"/>
+  <circle cx="20" cy="15" r="6" fill="#ff5555"/>
+  <circle cx="40" cy="15" r="6" fill="#f1fa8c"/>
+  <circle cx="60" cy="15" r="6" fill="#50fa7b"/>
+  <text x="400" y="20" text-anchor="middle" fill="#f8f8f2" font-family="Monaco, monospace" font-size="12">🤖 AI-Powered Replies — python3</text>
+  
+  <g class="terminal" transform="translate(20, 50)">
+    <g class="l1">
+      <text y="20"><tspan class="prompt">>>> </tspan><tspan class="keyword">from</tspan><tspan class="command"> xeepy.ai </tspan><tspan class="keyword">import</tspan><tspan class="function"> ContentGenerator</tspan></text>
+    </g>
+    <g class="l2">
+      <text y="50"><tspan class="prompt">>>> </tspan><tspan class="command">ai = </tspan><tspan class="function">ContentGenerator</tspan><tspan class="command">(provider=</tspan><tspan class="string">"openai"</tspan><tspan class="command">)</tspan></text>
+    </g>
+    <g class="l3">
+      <text y="90"><tspan class="prompt">>>> </tspan><tspan class="comment"># Generate a contextual reply</tspan></text>
+    </g>
+    <g class="l4">
+      <text y="120"><tspan class="prompt">>>> </tspan><tspan class="command">reply = </tspan><tspan class="keyword">await</tspan><tspan class="command"> ai.</tspan><tspan class="function">generate_reply</tspan><tspan class="command">(</tspan></text>
+    </g>
+    <g class="l5">
+      <text y="150"><tspan class="prompt">...     </tspan><tspan class="command">tweet_text=</tspan><tspan class="string">"Just launched my new Python project!"</tspan><tspan class="command">,</tspan></text>
+    </g>
+    <g class="l6">
+      <text y="180"><tspan class="prompt">...     </tspan><tspan class="command">style=</tspan><tspan class="string">"supportive"</tspan></text>
+    </g>
+    <g class="l7">
+      <text y="210"><tspan class="prompt">... </tspan><tspan class="command">)</tspan></text>
+    </g>
+    <g class="l8">
+      <text y="250"><tspan class="ai">🤖 AI generating reply...</tspan></text>
+    </g>
+    <g class="l9">
+      <text y="290"><tspan class="success">"Congrats on the launch! 🚀 What problem does it solve? </tspan></text>
+      <text y="315"><tspan class="success">Would love to check it out and give feedback!"</tspan></text>
+    </g>
+  </g>
+  
+  <text x="400" y="405" text-anchor="middle" fill="#6272a4" font-family="Monaco, monospace" font-size="11">ai.generate_reply() — OpenAI, Claude, or Ollama powered</text>
+</svg>

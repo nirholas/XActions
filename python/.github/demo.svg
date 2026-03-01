@@ -1,0 +1,228 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <style>
+    @keyframes typing {
+      from { width: 0 }
+      to { width: 100% }
+    }
+    @keyframes blink {
+      0%, 50% { opacity: 1 }
+      51%, 100% { opacity: 0 }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0 }
+      to { opacity: 1 }
+    }
+    .terminal {
+      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+      font-size: 14px;
+    }
+    .prompt { fill: #50fa7b; }
+    .command { fill: #f8f8f2; }
+    .comment { fill: #6272a4; }
+    .string { fill: #f1fa8c; }
+    .keyword { fill: #ff79c6; }
+    .function { fill: #8be9fd; }
+    .output { fill: #bd93f9; }
+    .success { fill: #50fa7b; }
+    .info { fill: #8be9fd; }
+    
+    .line1 { animation: fadeIn 0.3s ease-in 0.5s forwards; opacity: 0; }
+    .line2 { animation: fadeIn 0.3s ease-in 1s forwards; opacity: 0; }
+    .line3 { animation: fadeIn 0.3s ease-in 1.5s forwards; opacity: 0; }
+    .line4 { animation: fadeIn 0.3s ease-in 2s forwards; opacity: 0; }
+    .line5 { animation: fadeIn 0.3s ease-in 2.5s forwards; opacity: 0; }
+    .line6 { animation: fadeIn 0.3s ease-in 3s forwards; opacity: 0; }
+    .line7 { animation: fadeIn 0.3s ease-in 3.5s forwards; opacity: 0; }
+    .line8 { animation: fadeIn 0.3s ease-in 4s forwards; opacity: 0; }
+    .line9 { animation: fadeIn 0.3s ease-in 4.5s forwards; opacity: 0; }
+    .line10 { animation: fadeIn 0.3s ease-in 5s forwards; opacity: 0; }
+    .line11 { animation: fadeIn 0.3s ease-in 5.5s forwards; opacity: 0; }
+    .line12 { animation: fadeIn 0.3s ease-in 6s forwards; opacity: 0; }
+    .line13 { animation: fadeIn 0.3s ease-in 6.5s forwards; opacity: 0; }
+    .line14 { animation: fadeIn 0.3s ease-in 7s forwards; opacity: 0; }
+    .line15 { animation: fadeIn 0.3s ease-in 7.5s forwards; opacity: 0; }
+    .line16 { animation: fadeIn 0.3s ease-in 8s forwards; opacity: 0; }
+    .line17 { animation: fadeIn 0.3s ease-in 8.5s forwards; opacity: 0; }
+    .line18 { animation: fadeIn 0.3s ease-in 9s forwards; opacity: 0; }
+    .line19 { animation: fadeIn 0.3s ease-in 9.5s forwards; opacity: 0; }
+    .line20 { animation: fadeIn 0.3s ease-in 10s forwards; opacity: 0; }
+  </style>
+  
+  <!-- Terminal background -->
+  <rect width="800" height="500" rx="10" fill="#282a36"/>
+  
+  <!-- Terminal header -->
+  <rect width="800" height="30" rx="10" fill="#44475a"/>
+  <circle cx="20" cy="15" r="6" fill="#ff5555"/>
+  <circle cx="40" cy="15" r="6" fill="#f1fa8c"/>
+  <circle cx="60" cy="15" r="6" fill="#50fa7b"/>
+  <text x="400" y="20" text-anchor="middle" fill="#f8f8f2" font-family="Monaco, monospace" font-size="12">🐦 Xeepy Demo — python3</text>
+  
+  <g class="terminal" transform="translate(20, 50)">
+    <!-- Line 1: Import -->
+    <g class="line1">
+      <text y="20">
+        <tspan class="prompt">>>> </tspan>
+        <tspan class="keyword">from</tspan>
+        <tspan class="command"> xeepy </tspan>
+        <tspan class="keyword">import</tspan>
+        <tspan class="function"> Xeepy</tspan>
+      </text>
+    </g>
+    
+    <!-- Line 2: Async context -->
+    <g class="line2">
+      <text y="45">
+        <tspan class="prompt">>>> </tspan>
+        <tspan class="keyword">async with</tspan>
+        <tspan class="function"> Xeepy</tspan>
+        <tspan class="command">() </tspan>
+        <tspan class="keyword">as</tspan>
+        <tspan class="command"> x:</tspan>
+      </text>
+    </g>
+    
+    <!-- Line 3: Scrape comment -->
+    <g class="line3">
+      <text y="70">
+        <tspan class="prompt">...     </tspan>
+        <tspan class="comment"># Scrape replies from @nichxbt's tweet</tspan>
+      </text>
+    </g>
+    
+    <!-- Line 4: Scrape replies -->
+    <g class="line4">
+      <text y="95">
+        <tspan class="prompt">...     </tspan>
+        <tspan class="command">replies = </tspan>
+        <tspan class="keyword">await</tspan>
+        <tspan class="command"> x.scrape.</tspan>
+        <tspan class="function">replies</tspan>
+        <tspan class="command">(</tspan>
+        <tspan class="string">"https://x.com/nichxbt/status/1972556264917119260"</tspan>
+        <tspan class="command">)</tspan>
+      </text>
+    </g>
+    
+    <!-- Line 5: Output 1 -->
+    <g class="line5">
+      <text y="125">
+        <tspan class="success">✅ Found 47 replies!</tspan>
+      </text>
+    </g>
+    
+    <!-- Line 6: Profile comment -->
+    <g class="line6">
+      <text y="155">
+        <tspan class="prompt">...     </tspan>
+        <tspan class="comment"># Get user profile</tspan>
+      </text>
+    </g>
+    
+    <!-- Line 7: Profile scrape -->
+    <g class="line7">
+      <text y="180">
+        <tspan class="prompt">...     </tspan>
+        <tspan class="command">profile = </tspan>
+        <tspan class="keyword">await</tspan>
+        <tspan class="command"> x.scrape.</tspan>
+        <tspan class="function">profile</tspan>
+        <tspan class="command">(</tspan>
+        <tspan class="string">"nichxbt"</tspan>
+        <tspan class="command">)</tspan>
+      </text>
+    </g>
+    
+    <!-- Line 8: Profile output -->
+    <g class="line8">
+      <text y="210">
+        <tspan class="info">👤 @nichxbt - 12,847 followers</tspan>
+      </text>
+    </g>
+    
+    <!-- Line 9: Unfollow comment -->
+    <g class="line9">
+      <text y="240">
+        <tspan class="prompt">...     </tspan>
+        <tspan class="comment"># Find non-followers</tspan>
+      </text>
+    </g>
+    
+    <!-- Line 10: Unfollow -->
+    <g class="line10">
+      <text y="265">
+        <tspan class="prompt">...     </tspan>
+        <tspan class="command">result = </tspan>
+        <tspan class="keyword">await</tspan>
+        <tspan class="command"> x.unfollow.</tspan>
+        <tspan class="function">non_followers</tspan>
+        <tspan class="command">(dry_run=</tspan>
+        <tspan class="keyword">True</tspan>
+        <tspan class="command">)</tspan>
+      </text>
+    </g>
+    
+    <!-- Line 11: Unfollow output -->
+    <g class="line11">
+      <text y="295">
+        <tspan class="output">👻 23 users don't follow you back</tspan>
+      </text>
+    </g>
+    
+    <!-- Line 12: Engage comment -->
+    <g class="line12">
+      <text y="325">
+        <tspan class="prompt">...     </tspan>
+        <tspan class="comment"># Auto-like tweets about Python</tspan>
+      </text>
+    </g>
+    
+    <!-- Line 13: Auto like -->
+    <g class="line13">
+      <text y="350">
+        <tspan class="prompt">...     </tspan>
+        <tspan class="keyword">await</tspan>
+        <tspan class="command"> x.engage.</tspan>
+        <tspan class="function">auto_like</tspan>
+        <tspan class="command">(keywords=[</tspan>
+        <tspan class="string">"python"</tspan>
+        <tspan class="command">,</tspan>
+        <tspan class="string">"automation"</tspan>
+        <tspan class="command">], limit=</tspan>
+        <tspan class="output">10</tspan>
+        <tspan class="command">)</tspan>
+      </text>
+    </g>
+    
+    <!-- Line 14: Like output -->
+    <g class="line14">
+      <text y="380">
+        <tspan class="success">🔥 Liked 10 tweets!</tspan>
+      </text>
+    </g>
+    
+    <!-- Line 15: Export -->
+    <g class="line15">
+      <text y="410">
+        <tspan class="prompt">...     </tspan>
+        <tspan class="command">x.export.</tspan>
+        <tspan class="function">to_csv</tspan>
+        <tspan class="command">(replies, </tspan>
+        <tspan class="string">"replies.csv"</tspan>
+        <tspan class="command">)</tspan>
+      </text>
+    </g>
+    
+    <!-- Line 16: Export output -->
+    <g class="line16">
+      <text y="440">
+        <tspan class="info">📁 Exported to replies.csv</tspan>
+      </text>
+    </g>
+  </g>
+  
+  <!-- Footer -->
+  <text x="400" y="485" text-anchor="middle" fill="#6272a4" font-family="Monaco, monospace" font-size="11">
+    pip install xeepy • No API keys required • github.com/nirholas/xeepy
+  </text>
+</svg>

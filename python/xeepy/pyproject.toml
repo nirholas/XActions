@@ -1,0 +1,100 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "xeepy"
+version = "0.1.0"
+description = "X/Twitter Automation Toolkit - AI-powered scraping, engagement, and automation"
+readme = "docs/README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+authors = [
+    {name = "Xeepy Team"}
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Internet :: WWW/HTTP :: Browsers",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+keywords = ["twitter", "x", "scraping", "automation", "ai", "sentiment", "content-generation"]
+
+dependencies = [
+    "playwright>=1.40.0",
+    "aiofiles>=23.2.1",
+    "pydantic>=2.5.0",
+    "pydantic-settings>=2.0.0",
+    "loguru>=0.7.2",
+    "rich>=13.7.0",
+    "tqdm>=4.66.1",
+    "pyyaml>=6.0.1",
+    "python-dotenv>=1.0.0",
+    "aiosqlite>=0.19.0",
+    "fake-useragent>=1.4.0",
+    "click>=8.1.7",
+    "httpx>=0.25.0",
+]
+
+[project.optional-dependencies]
+ai = [
+    "openai>=1.0.0",
+    "anthropic>=0.7.0",
+    "vaderSentiment>=3.3.2",
+]
+api = [
+    "fastapi>=0.100.0",
+    "uvicorn>=0.23.0",
+]
+all = [
+    "openai>=1.0.0",
+    "anthropic>=0.7.0",
+    "vaderSentiment>=3.3.2",
+    "fastapi>=0.100.0",
+    "uvicorn>=0.23.0",
+]
+dev = [
+    "pytest>=7.4.3",
+    "pytest-asyncio>=0.23.2",
+    "pytest-cov>=4.1.0",
+    "black>=23.12.1",
+    "ruff>=0.1.9",
+    "mypy>=1.8.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/xeepy/xeepy"
+Repository = "https://github.com/xeepy/xeepy"
+Documentation = "https://github.com/xeepy/xeepy#readme"
+
+[project.scripts]
+xeepy = "xeepy.cli.main:main"
+xeepy-api = "xeepy.api.server:run_server"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["xeepy*"]
+
+[tool.black]
+line-length = 100
+target-version = ["py310", "py311", "py312"]
+
+[tool.ruff]
+line-length = 100
+select = ["E", "F", "W", "I", "N", "UP", "ANN", "B", "C4", "SIM"]
+ignore = ["ANN101", "ANN102"]
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]

@@ -1,0 +1,124 @@
+name: Bug Report
+description: File a bug report
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+
+  - type: input
+    id: version
+    attributes:
+      label: Xeepy Version
+      description: What version of Xeepy are you using?
+      placeholder: ex. 1.0.0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating System
+      description: What OS are you using?
+      options:
+        - macOS
+        - Windows
+        - Linux
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: python-version
+    attributes:
+      label: Python Version
+      description: What version of Python?
+      placeholder: ex. 3.10.0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: feature
+    attributes:
+      label: Feature Area
+      description: What feature is affected?
+      options:
+        - Scraping (replies, followers, etc.)
+        - Follow/Unfollow
+        - Engagement (like, comment)
+        - Monitoring
+        - AI Features
+        - CLI
+        - Authentication
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: A clear description of the bug
+      placeholder: Tell us what you see!
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen?
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to Reproduce
+      description: Steps to reproduce the behavior
+      placeholder: |
+        1. Run this code...
+        2. With these parameters...
+        3. See error...
+    validations:
+      required: true
+
+  - type: textarea
+    id: code
+    attributes:
+      label: Code Sample
+      description: Minimal code to reproduce
+      render: python
+      placeholder: |
+        from xeepy import Xeepy
+        
+        async with Xeepy() as x:
+            # Your code here
+
+  - type: textarea
+    id: error
+    attributes:
+      label: Error Message
+      description: Full error traceback
+      render: shell
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant Log Output
+      description: Any additional log output
+      render: shell
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Checklist
+      options:
+        - label: I have searched existing issues for duplicates
+          required: true
+        - label: I am using the latest version
+          required: true
+        - label: I have read the documentation
+          required: true

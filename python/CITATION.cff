@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "If you use xeepy, please cite it as below."
+type: software
+title: "xeepy"
+abstract: "Python 🐍 Free X/Twitter automation toolkit. Scrape replies, followers, tweets. Mass unfollow non-followers. AI-powered engagement. No API keys needed - uses browser automation. Extract Replies to a Specific Tweet using Python and Tweepy - Scrape Any Tweet Reply"
+authors:
+  - alias: nirholas
+    name: nirholas
+repository-code: "https://github.com/nirholas/xeepy"
+url: "https://github.com/nirholas/xeepy"
+license: MIT
+version: "1.0.0"
+date-released: "2026-02-11"
+keywords:
+  - open-source
+  - nirholas

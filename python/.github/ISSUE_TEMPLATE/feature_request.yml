@@ -1,0 +1,79 @@
+name: Feature Request
+description: Suggest a new feature
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a feature! We love new ideas.
+
+  - type: dropdown
+    id: feature-area
+    attributes:
+      label: Feature Area
+      description: What area would this feature belong to?
+      options:
+        - Scraping (new scraper)
+        - Follow/Unfollow
+        - Engagement
+        - Monitoring/Analytics
+        - AI Features
+        - CLI
+        - Export/Storage
+        - Notifications
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement
+      description: What problem does this solve?
+      placeholder: I want to be able to...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: How would you like it to work?
+      placeholder: |
+        I think it should work like this...
+        
+        ```python
+        # Example code
+        await x.new_feature()
+        ```
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: What alternatives have you considered?
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: How important is this to you?
+      options:
+        - Nice to have
+        - Would be useful
+        - Important for my use case
+        - Critical blocker
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      options:
+        - label: I would be willing to help implement this feature
+        - label: I can help with testing
+        - label: I can help with documentation

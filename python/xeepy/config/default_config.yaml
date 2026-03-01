@@ -1,0 +1,60 @@
+# XTools Default Configuration
+# Copy to config.yaml and customize as needed
+
+# AI Provider Settings
+ai:
+  provider: "openai"  # openai, anthropic, or local
+  model: "gpt-4-turbo-preview"
+  temperature: 0.7
+  max_tokens: 1000
+  
+  # For local models (Ollama)
+  local_base_url: "http://localhost:11434"
+  local_model: "llama2"
+
+# Rate Limiting (be careful with these values)
+rate_limit:
+  requests_per_minute: 60
+  delay_between_actions: 2.0
+  delay_between_follows: 5.0
+  delay_between_unfollows: 3.0
+  delay_between_likes: 1.0
+  max_follows_per_day: 200
+  max_unfollows_per_day: 200
+  max_likes_per_day: 500
+
+# Export Settings
+export:
+  default_format: "json"
+  output_dir: "./output"
+  timestamp_files: true
+
+# API Server Settings
+api:
+  host: "0.0.0.0"
+  port: 8000
+  cors_origins:
+    - "*"
+  debug: false
+
+# Monitoring Settings
+monitor:
+  unfollower_check_interval: 3600  # seconds
+  snapshot_retention_days: 30
+  alert_on_unfollower: true
+  alert_threshold: 5  # minimum unfollowers to trigger alert
+  webhook_url: ""  # optional webhook for notifications
+
+# General Settings
+debug: false
+log_level: "INFO"
+data_dir: "./data"
+
+# Twitter/X API Settings (if using official API)
+# These can also be set via environment variables
+twitter:
+  api_key: ""
+  api_secret: ""
+  access_token: ""
+  access_token_secret: ""
+  bearer_token: ""

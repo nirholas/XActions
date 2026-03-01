@@ -1,0 +1,261 @@
+/* Xeepy Documentation Custom Styles */
+
+:root {
+    --xeepy-primary: #1DA1F2;
+    --xeepy-secondary: #14171A;
+    --xeepy-accent: #657786;
+}
+
+/* Hero section styling */
+.hero {
+    background: linear-gradient(135deg, var(--xeepy-primary) 0%, #0d8ecf 100%);
+    padding: 3rem 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    color: white;
+}
+
+.hero h1 {
+    margin: 0;
+    font-size: 2.5rem;
+}
+
+.hero p {
+    font-size: 1.25rem;
+    opacity: 0.9;
+}
+
+/* Feature cards */
+.feature-card {
+    border: 1px solid var(--md-default-fg-color--lightest);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.feature-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Code block improvements */
+.highlight pre {
+    border-radius: 8px;
+}
+
+/* Comparison tables */
+.comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.comparison-table th {
+    background: var(--xeepy-primary);
+    color: white;
+    padding: 12px;
+}
+
+.comparison-table td {
+    padding: 10px;
+    border-bottom: 1px solid var(--md-default-fg-color--lightest);
+}
+
+.comparison-table tr:nth-child(even) {
+    background: var(--md-default-fg-color--lightest);
+}
+
+/* Status badges */
+.badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.badge-success {
+    background: #28a745;
+    color: white;
+}
+
+.badge-warning {
+    background: #ffc107;
+    color: black;
+}
+
+.badge-danger {
+    background: #dc3545;
+    color: white;
+}
+
+.badge-info {
+    background: var(--xeepy-primary);
+    color: white;
+}
+
+/* Terminal output styling */
+.terminal {
+    background: #1e1e1e;
+    color: #d4d4d4;
+    padding: 1rem;
+    border-radius: 8px;
+    font-family: 'Fira Code', monospace;
+    overflow-x: auto;
+}
+
+.terminal .prompt {
+    color: #4ec9b0;
+}
+
+.terminal .command {
+    color: #9cdcfe;
+}
+
+.terminal .output {
+    color: #d4d4d4;
+}
+
+.terminal .success {
+    color: #4ec9b0;
+}
+
+.terminal .error {
+    color: #f44747;
+}
+
+/* Callout boxes */
+.callout {
+    padding: 1rem;
+    border-radius: 8px;
+    margin: 1rem 0;
+}
+
+.callout-tip {
+    background: rgba(40, 167, 69, 0.1);
+    border-left: 4px solid #28a745;
+}
+
+.callout-warning {
+    background: rgba(255, 193, 7, 0.1);
+    border-left: 4px solid #ffc107;
+}
+
+.callout-danger {
+    background: rgba(220, 53, 69, 0.1);
+    border-left: 4px solid #dc3545;
+}
+
+.callout-info {
+    background: rgba(29, 161, 242, 0.1);
+    border-left: 4px solid var(--xeepy-primary);
+}
+
+/* Grid improvements */
+.md-typeset .grid {
+    margin-top: 1rem;
+}
+
+.md-typeset .grid.cards > ul > li {
+    border-radius: 8px;
+    transition: transform 0.2s;
+}
+
+.md-typeset .grid.cards > ul > li:hover {
+    transform: translateY(-4px);
+}
+
+/* Button styling */
+.md-button {
+    border-radius: 6px;
+    font-weight: 500;
+}
+
+.md-button--primary {
+    background: var(--xeepy-primary);
+}
+
+.md-button--primary:hover {
+    background: #0d8ecf;
+}
+
+/* Navigation improvements */
+.md-nav__link--active {
+    font-weight: 600;
+}
+
+/* Footer */
+.md-footer-meta {
+    background: var(--xeepy-secondary);
+}
+
+/* Responsive improvements */
+@media screen and (max-width: 76.1875em) {
+    .hero h1 {
+        font-size: 2rem;
+    }
+    
+    .hero p {
+        font-size: 1rem;
+    }
+}
+
+/* Print styles */
+@media print {
+    .md-header,
+    .md-sidebar,
+    .md-footer {
+        display: none;
+    }
+    
+    .md-content {
+        margin: 0;
+        padding: 0;
+    }
+}
+
+/* Syntax highlighting improvements */
+.highlight .c,
+.highlight .cm,
+.highlight .c1 {
+    color: #6a9955;
+}
+
+.highlight .k,
+.highlight .kn,
+.highlight .kd {
+    color: #569cd6;
+}
+
+.highlight .s,
+.highlight .s1,
+.highlight .s2 {
+    color: #ce9178;
+}
+
+.highlight .n,
+.highlight .nf {
+    color: #dcdcaa;
+}
+
+/* Mermaid diagram improvements */
+.mermaid {
+    text-align: center;
+    margin: 1rem 0;
+}
+
+/* Table of contents styling */
+.md-nav--secondary .md-nav__link {
+    font-size: 0.7rem;
+}
+
+/* Search improvements */
+.md-search__input {
+    border-radius: 20px;
+}
+
+/* Tag styling */
+.md-tag {
+    border-radius: 4px;
+}

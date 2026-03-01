@@ -1,0 +1,343 @@
+site_name: Xeepy Documentation
+site_description: The Ultimate X/Twitter Automation Toolkit - No API Keys Required
+site_author: Xeepy Team
+site_url: https://xeepy.dev
+
+repo_name: nirholas/Get-Tweet-Replies-With-Python-Tweepy
+repo_url: https://github.com/nirholas/Get-Tweet-Replies-With-Python-Tweepy
+edit_uri: edit/master/docs/
+
+copyright: Copyright &copy; 2024-2026 Xeepy Team
+
+theme:
+  name: material
+  custom_dir: docs/overrides
+  logo: assets/logo.svg
+  favicon: assets/favicon.png
+  icon:
+    repo: fontawesome/brands/github
+  palette:
+    # Light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: blue
+      accent: light blue
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Dark mode  
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: blue
+      accent: light blue
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.instant
+    - navigation.instant.prefetch
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.path
+    - navigation.indexes
+    - navigation.top
+    - navigation.footer
+    - toc.follow
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+    - content.tooltips
+    - announce.dismiss
+
+plugins:
+  - search:
+      separator: '[\s\-,:!=\[\]()"/]+|(?!\b)(?=[A-Z][a-z])|\.(?!\d)|&[lg]t;'
+  - minify:
+      minify_html: true
+  - git-revision-date-localized:
+      enable_creation_date: true
+  - tags
+  - social:
+      cards_layout_options:
+        background_color: "#1DA1F2"
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - toc:
+      permalink: true
+      toc_depth: 3
+  - tables
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.magiclink:
+      repo_url_shorthand: true
+      user: nirholas
+      repo: Get-Tweet-Replies-With-Python-Tweepy
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.snippets:
+      auto_append:
+        - includes/abbreviations.md
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+      combine_header_slug: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+extra:
+  version:
+    provider: mike
+  analytics:
+    provider: google
+    property: G-XXXXXXXXXX
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/nirholas/Get-Tweet-Replies-With-Python-Tweepy
+    - icon: fontawesome/brands/x-twitter
+      link: https://x.com/xeepy_dev
+    - icon: fontawesome/brands/discord
+      link: https://discord.gg/xeepy
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/xeepy/
+  consent:
+    title: Cookie consent
+    description: >- 
+      We use cookies to recognize your repeated visits and preferences, as well
+      as to measure the effectiveness of our documentation and whether users
+      find what they're searching for. With your consent, you're helping us to
+      make our documentation better.
+  status:
+    new: Recently added
+    deprecated: Deprecated
+    beta: Beta feature
+
+extra_css:
+  - stylesheets/extra.css
+
+extra_javascript:
+  - javascripts/extra.js
+  - javascripts/mathjax.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+nav:
+  - Home:
+    - index.md
+    - Why Xeepy?: why-xeepy.md
+    - Changelog: changelog.md
+    - Roadmap: community/roadmap.md
+    
+  - Getting Started:
+    - getting-started/index.md
+    - Installation: getting-started/installation.md
+    - Quick Start: getting-started/quickstart.md
+    - Authentication: getting-started/authentication.md
+    - Configuration: getting-started/configuration.md
+    - First Script: getting-started/first-script.md
+    
+  - Guides:
+    - guides/index.md
+    - Scraping:
+      - guides/scraping/index.md
+      - Tweet Replies: guides/scraping/replies.md
+      - User Profiles: guides/scraping/profiles.md
+      - Followers & Following: guides/scraping/followers.md
+      - Following Lists: guides/scraping/following.md
+      - User Tweets: guides/scraping/tweets.md
+      - Threads: guides/scraping/threads.md
+      - Search: guides/scraping/search.md
+      - Hashtags: guides/scraping/hashtags.md
+      - Media: guides/scraping/media.md
+      - Lists: guides/scraping/lists.md
+    - Actions:
+      - guides/actions/index.md
+      - Follow Users: guides/actions/follow.md
+      - Unfollow Users: guides/actions/unfollow.md
+      - Engagement: guides/actions/engagement.md
+      - Mass Operations: guides/actions/mass-operations.md
+    - Monitoring:
+      - guides/monitoring/index.md
+      - Unfollower Detection: guides/monitoring/unfollowers.md
+      - Growth Tracking: guides/monitoring/growth.md
+      - Account Monitoring: guides/monitoring/accounts.md
+      - Keyword Alerts: guides/monitoring/keywords.md
+      - Engagement Tracking: guides/monitoring/engagement.md
+    - Analytics:
+      - guides/analytics/index.md
+      - Growth Analytics: guides/analytics/growth.md
+      - Engagement Analysis: guides/analytics/engagement.md
+      - Best Time to Post: guides/analytics/best-time.md
+      - Audience Insights: guides/analytics/audience.md
+      - Competitor Analysis: guides/analytics/competitors.md
+      - Report Generation: guides/analytics/reports.md
+    - AI Features:
+      - guides/ai/index.md
+      - Content Generation: guides/ai/content.md
+      - Reply Generation: guides/ai/replies.md
+      - Sentiment Analysis: guides/ai/sentiment.md
+      - Bot Detection: guides/ai/bot-detection.md
+      - Smart Targeting: guides/ai/targeting.md
+    - Notifications:
+      - guides/notifications/index.md
+    - Data Export:
+      - guides/export/index.md
+      
+  - Cookbook:
+    - cookbook/index.md
+    - Growth Hacking:
+      - cookbook/growth/index.md
+      - Viral Content: cookbook/growth/viral-content.md
+      - Engagement Pods: cookbook/growth/engagement-pods.md
+      - Hashtag Strategy: cookbook/growth/hashtag-strategy.md
+      - Optimal Timing: cookbook/growth/optimal-timing.md
+    - Automation:
+      - cookbook/automation/index.md
+      - Scheduled Posts: cookbook/automation/scheduled-posts.md
+      - Content Calendar: cookbook/automation/content-calendar.md
+    - Data Science:
+      - cookbook/data-science/index.md
+      - Sentiment Dashboard: cookbook/data-science/sentiment-dashboard.md
+      - Network Analysis: cookbook/data-science/network-analysis.md
+      - Trend Prediction: cookbook/data-science/trend-prediction.md
+    - Business Intelligence:
+      - cookbook/business/index.md
+      - Competitor Intel: cookbook/business/competitor-intel.md
+      - Lead Generation: cookbook/business/lead-generation.md
+      - Brand Monitoring: cookbook/business/brand-monitoring.md
+      - Crisis Detection: cookbook/business/crisis-detection.md
+      - Influencer Mapping: cookbook/business/influencer-mapping.md
+    - Research:
+      - cookbook/research/index.md
+      - Academic Scraping: cookbook/research/academic-scraping.md
+      
+  - CLI Reference:
+    - cli/index.md
+    - Command Reference: cli/commands/reference.md
+      
+  - API Reference:
+    - api/index.md
+    - Core:
+      - api/core/xeepy.md
+      - api/core/browser.md
+      - api/core/auth.md
+      - api/core/config.md
+      - api/core/rate_limiter.md
+    - Scrapers:
+      - api/scrapers/replies.md
+      - api/scrapers/profile.md
+      - api/scrapers/followers.md
+      - api/scrapers/following.md
+      - api/scrapers/tweets.md
+      - api/scrapers/thread.md
+      - api/scrapers/search.md
+      - api/scrapers/hashtag.md
+      - api/scrapers/media.md
+      - api/scrapers/likes.md
+      - api/scrapers/lists.md
+      - api/scrapers/mentions.md
+      - api/scrapers/spaces.md
+      - api/scrapers/downloads.md
+      - api/scrapers/recommendations.md
+    - Actions:
+      - api/actions/follow.md
+      - api/actions/unfollow.md
+      - api/actions/engage.md
+      - api/actions/messaging.md
+      - api/actions/scheduling.md
+      - api/actions/polls.md
+      - api/actions/settings.md
+    - Monitoring:
+      - api/monitoring/unfollowers.md
+      - api/monitoring/growth.md
+      - api/monitoring/keywords.md
+      - api/monitoring/account.md
+    - Analytics:
+      - api/analytics/growth.md
+      - api/analytics/engagement.md
+      - api/analytics/audience.md
+      - api/analytics/competitors.md
+      - api/analytics/content.md
+    - AI:
+      - api/ai/providers.md
+      - api/ai/content.md
+      - api/ai/sentiment.md
+      - api/ai/detection.md
+    - Models:
+      - api/models/tweet.md
+      - api/models/user.md
+      - api/models/engagement.md
+    - Storage:
+      - api/storage/database.md
+      - api/storage/export.md
+    - Notifications:
+      - api/notifications/discord.md
+      - api/notifications/telegram.md
+      - api/notifications/email.md
+    - REST & GraphQL:
+      - api/graphql.md
+      - api/server.md
+      
+  - Advanced:
+    - advanced/index.md
+    - Architecture: advanced/architecture.md
+    - Plugin System: advanced/plugins.md
+    - Custom Scrapers: advanced/custom-scrapers.md
+    - Performance Tuning: advanced/performance.md
+    - Proxy Configuration: advanced/proxies.md
+    - Stealth Mode: advanced/stealth.md
+    - Distributed Scraping: advanced/distributed.md
+    - Docker Deployment: advanced/docker.md
+    - Testing Guide: advanced/testing.md
+    - Error Handling: advanced/errors.md
+    - Webhooks: advanced/webhooks.md
+    - API Server: advanced/api-server.md
+    - Rate Limiting: advanced/rate-limiting.md
+    - Scheduling: advanced/scheduling.md
+    - Multi-Account: advanced/multi-account.md
+    
+  - Community:
+    - community/index.md
+    - Contributing: community/contributing.md
+    - Code of Conduct: community/code-of-conduct.md
+    - FAQ: community/faq.md
+  
+  - Reference Docs:
+    - Installation Guide: INSTALLATION.md
+    - Quick Start Guide: QUICKSTART.md
+    - API Reference: API_REFERENCE.md
+    - CLI Reference: CLI_REFERENCE.md
+    - AI Features: AI_FEATURES.md
+    - Examples: EXAMPLES.md
+    - Comparison: COMPARISON.md
+    - FAQ: FAQ.md
+    - Agent Development: AGENT_DEVELOPMENT.md
