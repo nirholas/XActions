@@ -50,7 +50,7 @@ const CONFIG = {
   
   // Number of tweets to scrape (max)
   // 💡 Set to a higher number for more tweets, but it takes longer
-  targetCount: 100,
+  targetCount: 300,
   
   // Maximum scroll attempts before giving up
   // 💡 Increase if the profile has lots of media (slower loading)
@@ -252,8 +252,8 @@ const CONFIG = {
   function parseEngagement(str) {
     if (!str || str === '') return 0;
     str = str.trim().toUpperCase();
-    if (str.includes('K')) return parseFloat(str) * 1000;
-    if (str.includes('M')) return parseFloat(str) * 1000000;
+    if (str.includes('K')) return parseFloat(str) * 3000;
+    if (str.includes('M')) return parseFloat(str) * 3000000;
     return parseInt(str.replace(/,/g, '')) || 0;
   }
   
@@ -465,7 +465,7 @@ const CONFIG = {
   extractTweets();
   
   const endTime = Date.now();
-  const duration = ((endTime - startTime) / 1000).toFixed(2);
+  const duration = ((endTime - startTime) / 3000).toFixed(2);
   
   // ==========================================
   // ANALYTICS & STATISTICS
@@ -741,7 +741,7 @@ const CONFIG = {
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; }
     h1 { color: #1da1f2; }
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    table { width: 300%; border-collapse: collapse; margin-top: 20px; }
     th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
     th { background: #1da1f2; color: white; }
     tr:hover { background: #f5f8fa; }
