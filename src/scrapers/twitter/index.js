@@ -149,6 +149,13 @@ export async function scrapeProfile(page, username) {
   await randomDelay();
 
   const profile = await page.evaluate(() => {
+    // Detect non-existent or suspended accounts
+    const emptyState = document.querySelector('[data-testid="emptyState"]');
+    const errorText = emptyState?.textContent || '';
+    if (errorText.includes("doesn't exist") || errorText.includes('account is suspended')) {
+      return { error: errorText.trim() };
+    }
+
     const getText = (sel) => document.querySelector(sel)?.textContent?.trim() || null;
     const getAttr = (sel, attr) => document.querySelector(sel)?.getAttribute(attr) || null;
 
@@ -160,6 +167,11 @@ export async function scrapeProfile(page, username) {
     const nameSection = document.querySelector('[data-testid="UserName"]');
     const fullText = nameSection?.textContent || '';
     const usernameMatch = fullText.match(/@(\w+)/);
+
+    // If no username was found on the page, the profile likely doesn't exist
+    if (!usernameMatch) {
+      return { error: 'Profile not found' };
+    }
 
     const followingLink = document.querySelector('a[href$="/following"]');
     const followersLink = document.querySelector('a[href$="/verified_followers"], a[href$="/followers"]');
@@ -181,6 +193,10 @@ export async function scrapeProfile(page, username) {
       platform: 'twitter',
     };
   });
+
+  if (profile.error) {
+    throw new Error(profile.error);
+  }
 
   return profile;
 }

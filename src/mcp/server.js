@@ -92,6 +92,21 @@ const TOOLS = [
     },
   },
   {
+    name: 'x_get_profiles',
+    description: 'Get profile information for multiple users in a single request with human-like delays between each. Returns array of profile objects.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        usernames: {
+          type: 'array',
+          items: { type: 'string' },
+          description: 'List of usernames (without @)',
+        },
+      },
+      required: ['usernames'],
+    },
+  },
+  {
     name: 'x_get_followers',
     description: 'Scrape followers for an account. Supports Twitter, Bluesky, Mastodon, and Threads.',
     inputSchema: {

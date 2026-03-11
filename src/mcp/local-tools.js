@@ -171,6 +171,21 @@ export async function x_get_profile({ username }) {
   return scrapeProfile(pg, username);
 }
 
+export async function x_get_profiles({ usernames }) {
+  const { page: pg } = await ensureBrowser();
+  const results = [];
+  for (let i = 0; i < usernames.length; i++) {
+    if (i > 0) await randomDelay();
+    try {
+      const profile = await scrapeProfile(pg, usernames[i]);
+      results.push({ username: usernames[i], ...profile });
+    } catch (err) {
+      results.push({ username: usernames[i], error: err.message });
+    }
+  }
+  return results;
+}
+
 export async function x_get_followers({ username, limit = 100 }) {
   const { page: pg } = await ensureBrowser();
   return scrapeFollowers(pg, username, { limit });
@@ -1359,6 +1374,7 @@ export const toolMap = {
   x_login,
   // Scraping (delegated to scrapers/index.js — single source of truth)
   x_get_profile,
+  x_get_profiles,
   x_get_followers,
   x_get_following,
   x_get_non_followers,
