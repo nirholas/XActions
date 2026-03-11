@@ -26,7 +26,28 @@ puppeteer.use(StealthPlugin());
 // ============================================================================
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-const randomDelay = (min = 1000, max = 3000) => sleep(min + Math.random() * (max - min));
+export const randomDelay = (min = 2000, max = 7000) => {
+  const u1 = Math.random();
+  const u2 = Math.random();
+  const z = Math.sqrt(-2 * Math.log(u1 || 1e-10)) * Math.cos(2 * Math.PI * u2);
+  const median = min + (max - min) * 0.4;
+  const spread = (max - min) * 0.25;
+  const base = median + z * spread;
+  const distraction = Math.random() < 0.08 ? 8000 + Math.random() * 12000 : 0;
+  const delay = Math.max(min, Math.min(base, max)) + distraction;
+  return sleep(delay);
+};
+
+/**
+ * Check if the current page has been redirected to a login page.
+ * Throws a clear error if auth has failed.
+ */
+function checkAuth(page) {
+  const url = page.url();
+  if (url.includes('/login') || url.includes('/i/flow/login')) {
+    throw new Error('Authentication failed — cookie may be expired.\n\nRun: xactions login');
+  }
+}
 
 /**
  * Create a browser instance with stealth settings.
@@ -675,8 +696,9 @@ export async function scrapeBookmarks(page, options = {}) {
   const { limit = 100, scrollDelay = 2000 } = options;
   
   await page.goto('https://x.com/i/bookmarks', { waitUntil: 'networkidle2' });
+  checkAuth(page);
   await randomDelay(2000, 3000);
-  
+
   const bookmarks = [];
   const seen = new Set();
   let scrolls = 0;
@@ -709,6 +731,78 @@ export async function scrapeBookmarks(page, options = {}) {
   }
   
   return bookmarks.slice(0, limit);
+}
+
+// ============================================================================
+// Liked Tweets Scraper (a user's liked tweets page)
+// ============================================================================
+
+/**
+ * Scrape a user's liked tweets (x.com/username/likes).
+ * Different from scrapeLikes which scrapes who liked a specific tweet.
+ */
+export async function scrapeLikedTweets(page, username, options = {}) {
+  const { limit = 100, scrollDelay = 2000 } = options;
+
+  if (!username) {
+    // Try config file first to avoid an extra page load
+    try {
+      const config = JSON.parse(await fs.readFile(`${process.env.HOME}/.xactions/config.json`, 'utf-8'));
+      username = config.username || null;
+    } catch {}
+    // Fall back to resolving from the page, then save for next time
+    if (!username) {
+      await page.goto('https://x.com/home', { waitUntil: 'networkidle2' });
+      checkAuth(page);
+      username = await page.evaluate(() => {
+        const link = document.querySelector('a[data-testid="AppTabBar_Profile_Link"]');
+        return link?.getAttribute('href')?.replace('/', '') || null;
+      });
+      if (!username) throw new Error('Could not determine authenticated username');
+      try {
+        const configPath = `${process.env.HOME}/.xactions/config.json`;
+        const config = JSON.parse(await fs.readFile(configPath, 'utf-8'));
+        config.username = username;
+        await fs.writeFile(configPath, JSON.stringify(config, null, 2));
+      } catch {}
+    }
+  }
+
+  await page.goto(`https://x.com/${username}/likes`, { waitUntil: 'networkidle2' });
+  checkAuth(page);
+  await randomDelay(2000, 3000);
+
+  const likes = [];
+  const seen = new Set();
+  let scrolls = 0;
+  const maxScrolls = Math.ceil(limit / 5);
+
+  while (likes.length < limit && scrolls < maxScrolls) {
+    const tweets = await page.$$('article[data-testid="tweet"]');
+    for (const tweet of tweets) {
+      const data = await tweet.evaluate((article) => {
+        const text = article.querySelector('[data-testid="tweetText"]')?.innerText || '';
+        const author = article.querySelector('[data-testid="User-Name"] a')?.getAttribute('href')?.replace('/', '') || '';
+        const time = article.querySelector('time')?.getAttribute('datetime') || '';
+        const likeCount = article.querySelector('[data-testid="like"] span')?.innerText || '0';
+        const retweets = article.querySelector('[data-testid="retweet"] span')?.innerText || '0';
+        const link = article.querySelector('a[href*="/status/"]')?.getAttribute('href') || '';
+        return { author, text, time, likes: likeCount, retweets, link: link ? `https://x.com${link}` : '', platform: 'twitter' };
+      });
+
+      const key = data.link || data.text.slice(0, 80);
+      if (!seen.has(key) && key) {
+        seen.add(key);
+        likes.push(data);
+      }
+    }
+
+    await page.evaluate(() => window.scrollBy(0, window.innerHeight * 2));
+    await sleep(scrollDelay);
+    scrolls++;
+  }
+
+  return likes.slice(0, limit);
 }
 
 // ============================================================================
@@ -942,10 +1036,12 @@ export default {
   scrapeMedia,
   scrapeListMembers,
   scrapeBookmarks,
+  scrapeLikedTweets,
   scrapeNotifications,
   scrapeTrending,
   scrapeCommunityMembers,
   scrapeSpaces,
+  randomDelay,
   exportToJSON,
   exportToCSV,
 };

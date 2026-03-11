@@ -77,7 +77,8 @@ extension/     → Browser extension (Chrome/Edge)
 - CLI entry point: `bin/unfollowx`, installed via `npm install -g xactions`
 - MCP server: `src/mcp/server.js` — used by Claude Desktop and AI agents
 - Prefer `data-testid` selectors — most stable across X/Twitter UI updates
-- X enforces aggressive rate limits; all automation must include 1-3s delays between actions
+- X enforces aggressive rate limits; all automation uses human-like log-normal delays (2-7s base + occasional distraction spikes)
+- **NEVER run multiple MCP/scraper/CLI requests in parallel** — the MCP server shares a single browser instance. Concurrent requests cause overlapping navigations that break scraping and defeat the human-like timing simulation. Always run one request at a time and wait for it to complete.
 
 ## Patterns & Style
 

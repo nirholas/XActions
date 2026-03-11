@@ -1857,14 +1857,13 @@ const TOOLS = [
   },
   {
     name: 'x_get_likes',
-    description: 'Scrape tweets that a user has liked. Shows what content a user engages with.',
+    description: 'Export liked tweets. Defaults to the authenticated user.',
     inputSchema: {
       type: 'object',
       properties: {
-        username: { type: 'string', description: 'Username (without @)' },
+        username: { type: 'string', description: 'Username (without @). Omit for your own likes.' },
         limit: { type: 'number', description: 'Maximum liked tweets (default: 50)' },
       },
-      required: ['username'],
     },
   },
 
@@ -2425,18 +2424,7 @@ async function executeXeepyTool(name, args) {
     }
 
     case 'x_get_likes': {
-      const page = await localTools.getPage();
-      await page.goto(`https://x.com/${args.username}/likes`, { waitUntil: 'networkidle2', timeout: 30000 });
-      await new Promise(r => setTimeout(r, 3000));
-      const likedTweets = await page.evaluate((limit) => {
-        const articles = document.querySelectorAll('article[data-testid="tweet"]');
-        return Array.from(articles).slice(0, limit).map(el => {
-          const textEl = el.querySelector('[data-testid="tweetText"]');
-          const userEl = el.querySelector('[data-testid="User-Name"]');
-          const timeEl = el.querySelector('time');
-          return { text: textEl?.textContent || '', author: userEl?.textContent || '', timestamp: timeEl?.getAttribute('datetime') || '' };
-        });
-      }, args.limit || 50);
+      const likedTweets = await localTools.x_get_likes({ username: args.username, limit: args.limit || 50 });
       return { likedTweets, count: likedTweets.length, username: args.username };
     }
 

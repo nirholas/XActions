@@ -214,3 +214,10 @@ export function buildGraphQLUrl(endpoint, variables = {}, features) {
 
   return `${base}?${params.toString()}`;
 }
+
+/**
+ * Default field toggles for GraphQL requests.
+ */
+export const DEFAULT_FIELD_TOGGLES = {
+  withArticlePlainText: false,
+};

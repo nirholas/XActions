@@ -144,9 +144,29 @@ program
 
     const config = await loadConfig();
     config.authToken = cookie;
-    await saveConfig(config);
 
-    console.log(chalk.green('\n✓ Authentication saved!\n'));
+    // Resolve and save the authenticated username
+    try {
+      const browser = await scrapers.createBrowser();
+      const page = await scrapers.createPage(browser);
+      await scrapers.loginWithCookie(page, cookie);
+      await page.goto('https://x.com/home', { waitUntil: 'networkidle2' });
+      const username = await page.evaluate(() => {
+        const link = document.querySelector('a[data-testid="AppTabBar_Profile_Link"]');
+        return link?.getAttribute('href')?.replace('/', '') || null;
+      });
+      await browser.close();
+      if (username) {
+        config.username = username;
+        console.log(chalk.green(`\n✓ Authenticated as @${username}!\n`));
+      } else {
+        console.log(chalk.green('\n✓ Authentication saved!\n'));
+      }
+    } catch {
+      console.log(chalk.green('\n✓ Authentication saved!\n'));
+    }
+
+    await saveConfig(config);
   });
 
 program
@@ -155,6 +175,7 @@ program
   .action(async () => {
     const config = await loadConfig();
     delete config.authToken;
+    delete config.username;
     await saveConfig(config);
     console.log(chalk.green('\n✓ Logged out successfully\n'));
   });
@@ -1742,7 +1763,7 @@ const scrapeCmd = program
       };
 
       // Set the right target field based on action
-      if (['profile', 'followers', 'following', 'tweets', 'posts'].includes(action)) {
+      if (['profile', 'followers', 'following', 'tweets', 'posts', 'likes', 'media'].includes(action)) {
         if (!username) throw new Error(`Action "${action}" requires a username. Usage: xactions scrape ${action} <username> --platform ${platform}`);
         scrapeOptions.username = username;
       } else if (['search'].includes(action)) {

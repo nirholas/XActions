@@ -23,6 +23,7 @@ import {
   scrapeMedia,
   scrapeListMembers,
   scrapeBookmarks,
+  scrapeLikedTweets,
   scrapeNotifications,
   scrapeTrending,
   scrapeSpaces,
@@ -40,8 +41,17 @@ let browser = null;
 let page = null;
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-const randomDelay = (min = 1000, max = 3000) =>
-  sleep(min + Math.random() * (max - min));
+const randomDelay = (min = 2000, max = 7000) => {
+  const u1 = Math.random();
+  const u2 = Math.random();
+  const z = Math.sqrt(-2 * Math.log(u1 || 1e-10)) * Math.cos(2 * Math.PI * u2);
+  const median = min + (max - min) * 0.4;
+  const spread = (max - min) * 0.25;
+  const base = median + z * spread;
+  const distraction = Math.random() < 0.08 ? 8000 + Math.random() * 12000 : 0;
+  const delay = Math.max(min, Math.min(base, max)) + distraction;
+  return sleep(delay);
+};
 
 /**
  * Ensure a browser/page pair is available, creating if needed.
@@ -56,6 +66,11 @@ async function ensureBrowser() {
     }
     browser = await createBrowser();
     page = await createPage(browser);
+
+    const cookie = process.env.XACTIONS_SESSION_COOKIE;
+    if (cookie) {
+      await loginWithCookie(page, cookie);
+    }
   }
   return { browser, page };
 }
@@ -627,6 +642,11 @@ export async function x_bookmark({ url }) {
 export async function x_get_bookmarks({ limit = 100 }) {
   const { page: pg } = await ensureBrowser();
   return scrapeBookmarks(pg, { limit });
+}
+
+export async function x_get_likes({ username, limit = 50 }) {
+  const { page: pg } = await ensureBrowser();
+  return scrapeLikedTweets(pg, username || null, { limit });
 }
 
 export async function x_clear_bookmarks() {
@@ -1368,6 +1388,7 @@ export const toolMap = {
   x_reply,
   x_bookmark,
   x_get_bookmarks,
+  x_get_likes,
   x_clear_bookmarks,
   x_auto_like,
   // Discovery
