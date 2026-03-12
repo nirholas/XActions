@@ -23,9 +23,13 @@ import {
   scrapeMedia,
   scrapeListMembers,
   scrapeBookmarks,
+  scrapeLikedTweets,
   scrapeNotifications,
   scrapeTrending,
   scrapeSpaces,
+  scrapeDmConversations,
+  scrapeDmMessages,
+  randomDelay,
 } from '../scrapers/index.js';
 
 import fs from 'fs/promises';
@@ -40,8 +44,6 @@ let browser = null;
 let page = null;
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-const randomDelay = (min = 1000, max = 3000) =>
-  sleep(min + Math.random() * (max - min));
 
 /**
  * Ensure a browser/page pair is available, creating if needed.
@@ -56,6 +58,11 @@ async function ensureBrowser() {
     }
     browser = await createBrowser();
     page = await createPage(browser);
+
+    const cookie = process.env.XACTIONS_SESSION_COOKIE;
+    if (cookie) {
+      await loginWithCookie(page, cookie);
+    }
   }
   return { browser, page };
 }
@@ -70,6 +77,15 @@ export async function closeBrowser() {
     } catch {}
     browser = null;
     page = null;
+  }
+}
+
+async function loadDmConfig() {
+  try {
+    const p = path.join(os.homedir(), '.xactions', 'config.json');
+    return JSON.parse(await fs.readFile(p, 'utf-8'));
+  } catch {
+    return {};
   }
 }
 
@@ -154,6 +170,21 @@ export async function x_login({ cookie }) {
 export async function x_get_profile({ username }) {
   const { page: pg } = await ensureBrowser();
   return scrapeProfile(pg, username);
+}
+
+export async function x_get_profiles({ usernames }) {
+  const { page: pg } = await ensureBrowser();
+  const results = [];
+  for (let i = 0; i < usernames.length; i++) {
+    if (i > 0) await randomDelay();
+    try {
+      const profile = await scrapeProfile(pg, usernames[i]);
+      results.push({ username: usernames[i], ...profile });
+    } catch (err) {
+      results.push({ username: usernames[i], error: err.message });
+    }
+  }
+  return results;
 }
 
 export async function x_get_followers({ username, limit = 100 }) {
@@ -629,6 +660,12 @@ export async function x_get_bookmarks({ limit = 100 }) {
   return scrapeBookmarks(pg, { limit });
 }
 
+export async function x_get_likes({ username, limit = 50 }) {
+  const { page: pg } = await ensureBrowser();
+  const likedTweets = await scrapeLikedTweets(pg, username || null, { limit });
+  return { likedTweets, count: likedTweets.length, username: username || 'me' };
+}
+
 export async function x_clear_bookmarks() {
   const { page: pg } = await ensureBrowser();
   await pg.goto('https://x.com/i/bookmarks', { waitUntil: 'networkidle2' });
@@ -779,68 +816,41 @@ export async function x_send_dm({ username, message }) {
 
 export async function x_get_conversations({ limit = 20 }) {
   const { page: pg } = await ensureBrowser();
-  await pg.goto('https://x.com/messages', { waitUntil: 'networkidle2' });
-  await randomDelay(2000, 3000);
-
-  const conversations = await pg.evaluate((max) => {
-    const els = document.querySelectorAll('[data-testid="conversation"]');
-    return Array.from(els)
-      .slice(0, max)
-      .map((el) => {
-        const nameEl = el.querySelector('[dir="ltr"] > span');
-        const previewEl = el.querySelector('[dir="auto"]');
-        const timeEl = el.querySelector('time');
-        return {
-          name: nameEl?.textContent || null,
-          preview: previewEl?.textContent || null,
-          time: timeEl?.getAttribute('datetime') || null,
-        };
-      });
-  }, limit);
-
-  return conversations;
+  const config = await loadDmConfig();
+  return scrapeDmConversations(pg, { limit, passcode: config.dmPasscode });
 }
 
 export async function x_export_dms({ limit = 100 }) {
   const { page: pg } = await ensureBrowser();
-  await pg.goto('https://x.com/messages', { waitUntil: 'networkidle2' });
-  await randomDelay(2000, 3000);
+  const config = await loadDmConfig();
+  const passcode = config.dmPasscode;
 
-  const convos = await x_get_conversations({ limit: 10 });
+  const convos = await scrapeDmConversations(pg, { limit: Math.ceil(limit / 10), passcode });
+  if (convos.length === 0) return { conversations: [], total: 0 };
   const allMessages = [];
-  const convEls = await pg.$$('[data-testid="conversation"]');
-  const toProcess = Math.min(convEls.length, Math.ceil(limit / 10));
 
-  for (let i = 0; i < toProcess; i++) {
-    // Re-query because DOM may have changed after navigation
-    const currentConvEls = await pg.$$('[data-testid="conversation"]');
-    if (!currentConvEls[i]) break;
-    await currentConvEls[i].click();
-    await sleep(2000);
-
-    const messages = await pg.evaluate(() => {
-      const msgEls = document.querySelectorAll('[data-testid="messageEntry"]');
-      return Array.from(msgEls).map((msg) => {
-        const text =
-          msg.querySelector('[data-testid="tweetText"]')?.textContent ||
-          msg.innerText?.slice(0, 500);
-        const time = msg.querySelector('time')?.getAttribute('datetime');
-        return { text, time };
-      });
-    });
-
+  for (const convo of convos) {
+    const messages = await scrapeDmMessages(pg, convo.name, { passcode, limit: Math.ceil(limit / convos.length), skipNavigation: true });
     allMessages.push({
-      conversation: convos[i]?.name || `Conversation ${i + 1}`,
+      conversation: convo.name,
       messages,
     });
-
-    await clickIfPresent(pg, '[data-testid="app-bar-back"]');
-    await sleep(1000);
   }
 
   return {
     conversations: allMessages,
     total: allMessages.reduce((sum, c) => sum + c.messages.length, 0),
+  };
+}
+
+export async function x_read_dms({ username, limit = 50 }) {
+  const { page: pg } = await ensureBrowser();
+  const config = await loadDmConfig();
+  const messages = await scrapeDmMessages(pg, username, { limit, passcode: config.dmPasscode });
+  return {
+    messages,
+    total: messages.length,
+    conversation: username,
   };
 }
 
@@ -1339,6 +1349,7 @@ export const toolMap = {
   x_login,
   // Scraping (delegated to scrapers/index.js — single source of truth)
   x_get_profile,
+  x_get_profiles,
   x_get_followers,
   x_get_following,
   x_get_non_followers,
@@ -1368,6 +1379,7 @@ export const toolMap = {
   x_reply,
   x_bookmark,
   x_get_bookmarks,
+  x_get_likes,
   x_clear_bookmarks,
   x_auto_like,
   // Discovery
@@ -1381,6 +1393,7 @@ export const toolMap = {
   x_send_dm,
   x_get_conversations,
   x_export_dms,
+  x_read_dms,
   // Grok AI
   x_grok_query,
   x_grok_summarize,

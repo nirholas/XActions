@@ -83,10 +83,15 @@ export const {
   scrapeMedia,
   scrapeListMembers,
   scrapeBookmarks,
+  scrapeLikedTweets,
   scrapeNotifications,
   scrapeTrending,
   scrapeCommunityMembers,
   scrapeSpaces,
+  handleDmPasscodeGate,
+  scrapeDmConversations,
+  scrapeDmMessages,
+  randomDelay,
   exportToJSON,
   exportToCSV,
 } = twitter;
@@ -175,6 +180,7 @@ export async function scrape(platform, action, options = {}) {
     media: 'scrapeMedia',
     listMembers: 'scrapeListMembers',
     bookmarks: 'scrapeBookmarks',
+    likedTweets: 'scrapeLikedTweets',
     notifications: 'scrapeNotifications',
     communityMembers: 'scrapeCommunityMembers',
     spaces: 'scrapeSpaces',
@@ -221,19 +227,20 @@ export async function scrape(platform, action, options = {}) {
     // Actions that only take page + options (no target)
     const noTargetActions = ['scrapeBookmarks', 'scrapeNotifications', 'scrapeTrending'];
     
-    let result;
-    if (noTargetActions.includes(fnName)) {
-      result = await fn(page, options);
-    } else {
-      result = await fn(page, target, options);
+    try {
+      let result;
+      if (noTargetActions.includes(fnName)) {
+        result = await fn(page, options);
+      } else {
+        result = await fn(page, target, options);
+      }
+      return result;
+    } finally {
+      // Auto-close browser if we created it
+      if (page.__xactions_browser && options.autoClose !== false) {
+        await page.__xactions_browser.close();
+      }
     }
-
-    // Auto-close browser if we created it
-    if (page.__xactions_browser && options.autoClose !== false) {
-      await page.__xactions_browser.close();
-    }
-
-    return result;
   }
 
   if (needsClient) {
@@ -312,11 +319,16 @@ export default {
   scrapeMedia,
   scrapeListMembers,
   scrapeBookmarks,
+  scrapeLikedTweets,
   scrapeNotifications,
   scrapeTrending,
   scrapeCommunityMembers,
   scrapeSpaces,
-  
+  handleDmPasscodeGate,
+  scrapeDmConversations,
+  scrapeDmMessages,
+  randomDelay,
+
   // Export utilities
   exportToJSON,
   exportToCSV,
