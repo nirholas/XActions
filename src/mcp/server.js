@@ -2238,7 +2238,7 @@ async function executeTool(name, args) {
   const xeepyTools = [
     'x_get_replies', 'x_get_hashtag', 'x_get_likers', 'x_get_retweeters',
     'x_get_media', 'x_get_recommendations', 'x_get_mentions', 'x_get_quote_tweets',
-    'x_get_likes', 'x_auto_follow', 'x_follow_engagers', 'x_unfollow_all',
+    'x_auto_follow', 'x_follow_engagers', 'x_unfollow_all',
     'x_smart_unfollow', 'x_quote_tweet', 'x_auto_comment', 'x_auto_retweet',
     'x_detect_bots', 'x_find_influencers', 'x_smart_target', 'x_crypto_analyze',
     'x_grok_analyze_image', 'x_audience_insights', 'x_engagement_report',
@@ -2438,10 +2438,8 @@ async function executeXeepyTool(name, args) {
       return { quotes, count: quotes.length };
     }
 
-    case 'x_get_likes': {
-      const likedTweets = await localTools.x_get_likes({ username: args.username, limit: args.limit || 50 });
-      return { likedTweets, count: likedTweets.length, username: args.username };
-    }
+    case 'x_get_likes':
+      return localTools.x_get_likes({ username: args.username, limit: args.limit || 50 });
 
     // ── Follow Automation ──
     case 'x_auto_follow': {

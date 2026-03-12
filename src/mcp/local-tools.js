@@ -661,7 +661,8 @@ export async function x_get_bookmarks({ limit = 100 }) {
 
 export async function x_get_likes({ username, limit = 50 }) {
   const { page: pg } = await ensureBrowser();
-  return scrapeLikedTweets(pg, username || null, { limit });
+  const likedTweets = await scrapeLikedTweets(pg, username || null, { limit });
+  return { likedTweets, count: likedTweets.length, username: username || 'me' };
 }
 
 export async function x_clear_bookmarks() {
