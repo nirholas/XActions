@@ -88,6 +88,9 @@ export const {
   scrapeTrending,
   scrapeCommunityMembers,
   scrapeSpaces,
+  handleDmPasscodeGate,
+  scrapeDmConversations,
+  scrapeDmMessages,
   randomDelay,
   exportToJSON,
   exportToCSV,
@@ -321,6 +324,9 @@ export default {
   scrapeTrending,
   scrapeCommunityMembers,
   scrapeSpaces,
+  handleDmPasscodeGate,
+  scrapeDmConversations,
+  scrapeDmMessages,
   randomDelay,
 
   // Export utilities

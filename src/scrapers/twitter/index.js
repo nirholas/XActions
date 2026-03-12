@@ -18,6 +18,11 @@
 import puppeteer from 'puppeteer-extra';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import fs from 'fs/promises';
+import {
+  handleDmPasscodeGate,
+  scrapeDmConversations,
+  scrapeDmMessages,
+} from './dm.puppeteer.js';
 
 puppeteer.use(StealthPlugin());
 
@@ -1034,6 +1039,16 @@ export async function exportToCSV(data, filename) {
 }
 
 // ============================================================================
+// Encrypted DM Scraper (re-export from dedicated module)
+// ============================================================================
+
+export {
+  handleDmPasscodeGate,
+  scrapeDmConversations,
+  scrapeDmMessages,
+};
+
+// ============================================================================
 // Default Export
 // ============================================================================
 
@@ -1057,6 +1072,9 @@ export default {
   scrapeTrending,
   scrapeCommunityMembers,
   scrapeSpaces,
+  handleDmPasscodeGate,
+  scrapeDmConversations,
+  scrapeDmMessages,
   randomDelay,
   exportToJSON,
   exportToCSV,

@@ -545,6 +545,219 @@ program
   });
 
 // ============================================================================
+// DM Commands
+// ============================================================================
+
+const dmsCmd = program.command('dms').description('Direct message commands');
+
+async function promptAndSavePasscode(passcode) {
+  const config = await loadConfig();
+  if (config.dmPasscode === passcode) return;
+  const { save } = await inquirer.prompt([{
+    type: 'confirm',
+    name: 'save',
+    message: 'Save passcode for future use? (stored alongside auth_token in ~/.xactions/config.json)',
+    default: true,
+  }]);
+  if (save) {
+    config.dmPasscode = passcode;
+    await saveConfig(config);
+    console.log(chalk.green('Passcode saved.'));
+  }
+}
+
+dmsCmd
+  .command('list')
+  .description('List DM conversations')
+  .option('-l, --limit <number>', 'Maximum conversations', '20')
+  .option('-o, --output <file>', 'Output file (json, csv, or xlsx)')
+  .option('--passcode <code>', 'DM encryption passcode (4 digits)')
+  .action(async (options) => {
+    const limit = parseInt(options.limit);
+    const spinner = ora('Fetching DM conversations').start();
+
+    try {
+      const browser = await scrapers.createBrowser();
+      const page = await scrapers.createPage(browser);
+
+      const config = await loadConfig();
+      if (config.authToken) {
+        await scrapers.loginWithCookie(page, config.authToken);
+      }
+
+      let passcode = options.passcode || config.dmPasscode;
+
+      let conversations;
+      try {
+        conversations = await scrapers.scrapeDmConversations(page, { limit, passcode });
+      } catch (err) {
+        if (err.message.includes('passcode required') && !passcode) {
+          spinner.stop();
+          const answers = await inquirer.prompt([{
+            type: 'password',
+            name: 'passcode',
+            message: 'Enter your 4-digit DM encryption passcode:',
+            mask: '*',
+          }]);
+          passcode = answers.passcode;
+          spinner.start('Retrying with passcode...');
+          conversations = await scrapers.scrapeDmConversations(page, { limit, passcode });
+        } else {
+          throw err;
+        }
+      }
+
+      await browser.close();
+      spinner.succeed(`Found ${conversations.length} conversations`);
+      if (passcode && passcode !== config.dmPasscode) await promptAndSavePasscode(passcode);
+      await smartOutput(conversations, options, 'dm-conversations');
+    } catch (error) {
+      spinner.fail('Failed to fetch conversations');
+      console.error(chalk.red(error.message));
+    }
+  });
+
+dmsCmd
+  .command('read <username>')
+  .description('Read DMs with a specific user')
+  .option('-l, --limit <number>', 'Maximum messages', '50')
+  .option('-o, --output <file>', 'Output file (json, csv, or xlsx)')
+  .option('--passcode <code>', 'DM encryption passcode (4 digits)')
+  .action(async (username, options) => {
+    const limit = parseInt(options.limit);
+    const spinner = ora(`Reading DMs with @${username}`).start();
+
+    try {
+      const browser = await scrapers.createBrowser();
+      const page = await scrapers.createPage(browser);
+
+      const config = await loadConfig();
+      if (config.authToken) {
+        await scrapers.loginWithCookie(page, config.authToken);
+      }
+
+      let passcode = options.passcode || config.dmPasscode;
+
+      let messages;
+      try {
+        messages = await scrapers.scrapeDmMessages(page, username, { limit, passcode });
+      } catch (err) {
+        if (err.message.includes('passcode required') && !passcode) {
+          spinner.stop();
+          const answers = await inquirer.prompt([{
+            type: 'password',
+            name: 'passcode',
+            message: 'Enter your 4-digit DM encryption passcode:',
+            mask: '*',
+          }]);
+          passcode = answers.passcode;
+          spinner.start('Retrying with passcode...');
+          messages = await scrapers.scrapeDmMessages(page, username, { limit, passcode });
+        } else {
+          throw err;
+        }
+      }
+
+      await browser.close();
+      spinner.succeed(`Read ${messages.length} messages with @${username}`);
+      if (passcode && passcode !== config.dmPasscode) await promptAndSavePasscode(passcode);
+
+      if (!options.output) {
+        for (const msg of messages) {
+          const who = msg.sender === 'me' ? chalk.blue('YOU') : chalk.green(username.toUpperCase());
+          const media = msg.hasMedia ? chalk.yellow(' [+media]') : '';
+          const time = msg.time ? chalk.gray(msg.time) : '';
+          console.log(`[${who}] ${time} — ${msg.text}${media}`);
+        }
+      } else {
+        await smartOutput(messages, options, `dms-${username}`);
+      }
+    } catch (error) {
+      spinner.fail(`Failed to read DMs with @${username}`);
+      console.error(chalk.red(error.message));
+    }
+  });
+
+dmsCmd
+  .command('export')
+  .description('Export all DM conversations and messages')
+  .option('-l, --limit <number>', 'Maximum total messages', '100')
+  .option('-o, --output <file>', 'Output file (json, csv, or xlsx)')
+  .option('--passcode <code>', 'DM encryption passcode (4 digits)')
+  .action(async (options) => {
+    const limit = parseInt(options.limit);
+    const spinner = ora('Exporting DMs').start();
+
+    try {
+      const browser = await scrapers.createBrowser();
+      const page = await scrapers.createPage(browser);
+
+      const config = await loadConfig();
+      if (config.authToken) {
+        await scrapers.loginWithCookie(page, config.authToken);
+      }
+
+      let passcode = options.passcode || config.dmPasscode;
+
+      let convos;
+      try {
+        convos = await scrapers.scrapeDmConversations(page, { limit: Math.ceil(limit / 10), passcode });
+      } catch (err) {
+        if (err.message.includes('passcode required') && !passcode) {
+          spinner.stop();
+          const answers = await inquirer.prompt([{
+            type: 'password',
+            name: 'passcode',
+            message: 'Enter your 4-digit DM encryption passcode:',
+            mask: '*',
+          }]);
+          passcode = answers.passcode;
+          spinner.start('Retrying with passcode...');
+          convos = await scrapers.scrapeDmConversations(page, { limit: Math.ceil(limit / 10), passcode });
+        } else {
+          throw err;
+        }
+      }
+
+      if (convos.length === 0) {
+        await browser.close();
+        spinner.succeed('No conversations found');
+        return;
+      }
+
+      const allMessages = [];
+      for (let i = 0; i < convos.length; i++) {
+        spinner.text = `Exporting DMs (${i + 1}/${convos.length}: ${convos[i].name})`;
+        const messages = await scrapers.scrapeDmMessages(page, convos[i].name, {
+          passcode,
+          limit: Math.ceil(limit / convos.length),
+          skipNavigation: true,
+        });
+        allMessages.push({ conversation: convos[i].name, messages });
+      }
+
+      await browser.close();
+
+      const total = allMessages.reduce((sum, c) => sum + c.messages.length, 0);
+      spinner.succeed(`Exported ${total} messages from ${allMessages.length} conversations`);
+      if (passcode && passcode !== config.dmPasscode) await promptAndSavePasscode(passcode);
+
+      const exportData = { conversations: allMessages, total };
+      if (options.output) {
+        const flat = allMessages.flatMap(c =>
+          c.messages.map(m => ({ conversation: c.conversation, ...m }))
+        );
+        await smartOutput(flat, options, 'dm-export');
+      } else {
+        console.log(JSON.stringify(exportData, null, 2));
+      }
+    } catch (error) {
+      spinner.fail('Failed to export DMs');
+      console.error(chalk.red(error.message));
+    }
+  });
+
+// ============================================================================
 // Plugin Commands
 // ============================================================================
 

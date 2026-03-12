@@ -70,6 +70,7 @@ extension/     → Browser extension (Chrome/Edge)
 
 ## Key Technical Context
 
+- **ALWAYS use XActions' stealth infrastructure** for any browser automation. NEVER call Puppeteer (or Playwright) directly/raw. Use `createBrowser()`, `createPage()`, `loginWithCookie()`, and `randomDelay()` from `src/scrapers/index.js` — these include puppeteer-extra-plugin-stealth, anti-detection launch args, realistic viewports/user agents, and human-like log-normal delays. See also `src/agents/antiDetection.js` for advanced behavioral simulation (Bezier mouse, human typing, circadian patterns).
 - Browser scripts run in **DevTools console on x.com**, not Node.js
 - DOM selectors change frequently — see [selectors.md](docs/agents/selectors.md)
 - Scripts in `src/automation/` require pasting `src/automation/core.js` first

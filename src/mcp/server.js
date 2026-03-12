@@ -566,6 +566,18 @@ const TOOLS = [
       },
     },
   },
+  {
+    name: 'x_read_dms',
+    description: 'Read DM messages with a specific user. Supports encrypted DMs.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        username: { type: 'string', description: 'Username to read DMs with (without @)' },
+        limit: { type: 'number', description: 'Maximum messages to return (default: 50)' },
+      },
+      required: ['username'],
+    },
+  },
   // ====== Grok AI ======
   {
     name: 'x_grok_query',
@@ -2437,9 +2449,6 @@ async function executeXeepyTool(name, args) {
       }, args.limit || 50);
       return { quotes, count: quotes.length };
     }
-
-    case 'x_get_likes':
-      return localTools.x_get_likes({ username: args.username, limit: args.limit || 50 });
 
     // ── Follow Automation ──
     case 'x_auto_follow': {

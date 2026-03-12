@@ -27,6 +27,9 @@ import {
   scrapeNotifications,
   scrapeTrending,
   scrapeSpaces,
+  scrapeDmConversations,
+  scrapeDmMessages,
+  randomDelay,
 } from '../scrapers/index.js';
 
 import fs from 'fs/promises';
@@ -41,17 +44,6 @@ let browser = null;
 let page = null;
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-const randomDelay = (min = 2000, max = 7000) => {
-  const u1 = Math.random();
-  const u2 = Math.random();
-  const z = Math.sqrt(-2 * Math.log(u1 || 1e-10)) * Math.cos(2 * Math.PI * u2);
-  const median = min + (max - min) * 0.4;
-  const spread = (max - min) * 0.25;
-  const base = median + z * spread;
-  const distraction = Math.random() < 0.08 ? 8000 + Math.random() * 12000 : 0;
-  const delay = Math.max(min, Math.min(base, max)) + distraction;
-  return sleep(delay);
-};
 
 /**
  * Ensure a browser/page pair is available, creating if needed.
@@ -85,6 +77,15 @@ export async function closeBrowser() {
     } catch {}
     browser = null;
     page = null;
+  }
+}
+
+async function loadDmConfig() {
+  try {
+    const p = path.join(os.homedir(), '.xactions', 'config.json');
+    return JSON.parse(await fs.readFile(p, 'utf-8'));
+  } catch {
+    return {};
   }
 }
 
@@ -815,68 +816,41 @@ export async function x_send_dm({ username, message }) {
 
 export async function x_get_conversations({ limit = 20 }) {
   const { page: pg } = await ensureBrowser();
-  await pg.goto('https://x.com/messages', { waitUntil: 'networkidle2' });
-  await randomDelay(2000, 3000);
-
-  const conversations = await pg.evaluate((max) => {
-    const els = document.querySelectorAll('[data-testid="conversation"]');
-    return Array.from(els)
-      .slice(0, max)
-      .map((el) => {
-        const nameEl = el.querySelector('[dir="ltr"] > span');
-        const previewEl = el.querySelector('[dir="auto"]');
-        const timeEl = el.querySelector('time');
-        return {
-          name: nameEl?.textContent || null,
-          preview: previewEl?.textContent || null,
-          time: timeEl?.getAttribute('datetime') || null,
-        };
-      });
-  }, limit);
-
-  return conversations;
+  const config = await loadDmConfig();
+  return scrapeDmConversations(pg, { limit, passcode: config.dmPasscode });
 }
 
 export async function x_export_dms({ limit = 100 }) {
   const { page: pg } = await ensureBrowser();
-  await pg.goto('https://x.com/messages', { waitUntil: 'networkidle2' });
-  await randomDelay(2000, 3000);
+  const config = await loadDmConfig();
+  const passcode = config.dmPasscode;
 
-  const convos = await x_get_conversations({ limit: 10 });
+  const convos = await scrapeDmConversations(pg, { limit: Math.ceil(limit / 10), passcode });
+  if (convos.length === 0) return { conversations: [], total: 0 };
   const allMessages = [];
-  const convEls = await pg.$$('[data-testid="conversation"]');
-  const toProcess = Math.min(convEls.length, Math.ceil(limit / 10));
 
-  for (let i = 0; i < toProcess; i++) {
-    // Re-query because DOM may have changed after navigation
-    const currentConvEls = await pg.$$('[data-testid="conversation"]');
-    if (!currentConvEls[i]) break;
-    await currentConvEls[i].click();
-    await sleep(2000);
-
-    const messages = await pg.evaluate(() => {
-      const msgEls = document.querySelectorAll('[data-testid="messageEntry"]');
-      return Array.from(msgEls).map((msg) => {
-        const text =
-          msg.querySelector('[data-testid="tweetText"]')?.textContent ||
-          msg.innerText?.slice(0, 500);
-        const time = msg.querySelector('time')?.getAttribute('datetime');
-        return { text, time };
-      });
-    });
-
+  for (const convo of convos) {
+    const messages = await scrapeDmMessages(pg, convo.name, { passcode, limit: Math.ceil(limit / convos.length), skipNavigation: true });
     allMessages.push({
-      conversation: convos[i]?.name || `Conversation ${i + 1}`,
+      conversation: convo.name,
       messages,
     });
-
-    await clickIfPresent(pg, '[data-testid="app-bar-back"]');
-    await sleep(1000);
   }
 
   return {
     conversations: allMessages,
     total: allMessages.reduce((sum, c) => sum + c.messages.length, 0),
+  };
+}
+
+export async function x_read_dms({ username, limit = 50 }) {
+  const { page: pg } = await ensureBrowser();
+  const config = await loadDmConfig();
+  const messages = await scrapeDmMessages(pg, username, { limit, passcode: config.dmPasscode });
+  return {
+    messages,
+    total: messages.length,
+    conversation: username,
   };
 }
 
@@ -1419,6 +1393,7 @@ export const toolMap = {
   x_send_dm,
   x_get_conversations,
   x_export_dms,
+  x_read_dms,
   // Grok AI
   x_grok_query,
   x_grok_summarize,
