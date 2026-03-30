@@ -19,19 +19,19 @@ const FRONTEND_URL = (() => {
   const url = process.env.FRONTEND_URL;
   if (!url) {
     if (process.env.NODE_ENV === 'production') {
-      console.error('❌ FRONTEND_URL is required in production');
-      process.exit(1);
+      console.error('❌ FRONTEND_URL is required in production — OAuth redirects will fail');
+    } else {
+      console.warn('⚠️  FRONTEND_URL not set — defaulting to http://localhost:3001');
     }
-    console.warn('⚠️  FRONTEND_URL not set — defaulting to http://localhost:3001');
-    return 'http://localhost:3001';
+    return url || 'http://localhost:3001';
   }
   try {
     const parsed = new URL(url);
     if (!['http:', 'https:'].includes(parsed.protocol)) throw new Error('Bad protocol');
     return url.replace(/\/$/, ''); // Strip trailing slash
   } catch {
-    console.error(`❌ FRONTEND_URL is not a valid URL: "${url}"`);
-    process.exit(1);
+    console.error(`❌ FRONTEND_URL is not a valid URL: "${url}" — OAuth redirects will fail`);
+    return 'http://localhost:3001';
   }
 })();
 
