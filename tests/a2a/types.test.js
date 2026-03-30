@@ -164,8 +164,8 @@ describe('isValidTransition', () => {
 
 describe('jsonRpcSuccess', () => {
   it('wraps result correctly', () => {
-    // jsonRpcSuccess(result, id) — result first, id second
-    const resp = jsonRpcSuccess({ data: 42 }, 'req-1');
+    // jsonRpcSuccess(id, result) — id first, result second
+    const resp = jsonRpcSuccess('req-1', { data: 42 });
     expect(resp.jsonrpc).toBe('2.0');
     expect(resp.id).toBe('req-1');
     expect(resp.result.data).toBe(42);
@@ -174,8 +174,8 @@ describe('jsonRpcSuccess', () => {
 
 describe('jsonRpcError', () => {
   it('wraps error correctly', () => {
-    // jsonRpcError(code, message, data, id)
-    const resp = jsonRpcError(-32600, 'Bad request', undefined, 'req-2');
+    // jsonRpcError(id, code, message, data)
+    const resp = jsonRpcError('req-2', -32600, 'Bad request', undefined);
     expect(resp.jsonrpc).toBe('2.0');
     expect(resp.id).toBe('req-2');
     expect(resp.error.code).toBe(-32600);

@@ -46,7 +46,8 @@ const _remoteCardCache = new Map(); // agentUrl → { card, fetchedAt }
  */
 export function generateAgentCard(options = {}) {
   const {
-    url: baseUrl = 'http://localhost:3100',
+    url,
+    baseUrl: _baseUrl,
     name: customName,
     description: customDescription,
     capabilities: capabilityOverrides,
@@ -55,6 +56,8 @@ export function generateAgentCard(options = {}) {
     authSchemes = ['bearer'],
     includeSkills = 'all',
   } = options;
+
+  const baseUrl = url || _baseUrl || 'http://localhost:3100';
 
   let skills;
   if (includeSkills === 'all') {
@@ -162,14 +165,14 @@ export function generateMinimalCard(fullCard) {
  * @returns {object} Diff { added, removed, changed }
  */
 export function diffCards(cardA, cardB) {
-  const changes = [];
+  const changed = [];
   const added = [];
   const removed = [];
 
   // Compare top-level fields
-  for (const key of ['name', 'description', 'url', 'version']) {
-    if (cardA[key] !== cardB[key]) {
-      changes.push(`${key}: "${cardA[key]}" → "${cardB[key]}"`);
+  for (const field of ['name', 'description', 'url', 'version']) {
+    if (cardA[field] !== cardB[field]) {
+      changed.push({ field, from: cardA[field], to: cardB[field] });
     }
   }
 
@@ -188,13 +191,12 @@ export function diffCards(cardA, cardB) {
   if (cardA.capabilities && cardB.capabilities) {
     for (const cap of ['streaming', 'pushNotifications', 'stateTransitionHistory']) {
       if (cardA.capabilities[cap] !== cardB.capabilities[cap]) {
-        changes.push(`capabilities.${cap}: ${cardA.capabilities[cap]} → ${cardB.capabilities[cap]}`);
+        changed.push({ field: `capabilities.${cap}`, from: cardA.capabilities[cap], to: cardB.capabilities[cap] });
       }
     }
   }
 
-  const hasChanges = changes.length > 0 || added.length > 0 || removed.length > 0;
-  return { changed: hasChanges, changes, added, removed };
+  return { changed, added, removed };
 }
 
 /**

@@ -245,30 +245,33 @@ function getInputSchema(operation) {
     // Posting
     'posting:tweet': {
       type: 'object',
-      required: ['text'],
-      properties: {
-        sessionCookie: { type: 'string', description: 'X/Twitter auth_token cookie' },
-        text: { type: 'string', maxLength: 280, description: 'Tweet text' },
-        mediaUrls: { type: 'array', items: { type: 'string' } },
-      },
     },
     'posting:thread': {
       type: 'object',
       required: ['tweets'],
-      properties: {
-        sessionCookie: { type: 'string', description: 'X/Twitter auth_token cookie' },
-        tweets: { type: 'array', items: { type: 'string' }, description: 'Array of tweet texts' },
-      },
-    },
     'posting:poll': {
-      type: 'object',
-      required: ['text', 'options'],
-      properties: {
-        sessionCookie: { type: 'string', description: 'X/Twitter auth_token cookie' },
-        text: { type: 'string', description: 'Poll question' },
-        options: { type: 'array', items: { type: 'string' }, minItems: 2, maxItems: 4 },
-        durationMinutes: { type: 'integer', default: 1440 },
       },
+/**
+ * x402 discovery router
+ *
+ * This route wrapper delegates to the canonical OpenAPI generators.
+ * Keep discovery logic in api/openapi.js.
+ */
+
+import express from 'express';
+import { generateSpec, generateWellKnown } from '../openapi.js';
+
+const router = express.Router();
+
+router.get('/openapi.json', (req, res) => {
+  res.type('application/json').json(generateSpec());
+});
+
+router.get('/.well-known/x402', (req, res) => {
+  res.type('application/json').json(generateWellKnown());
+});
+
+export default router;
     },
     'posting:schedule': {
       type: 'object',
