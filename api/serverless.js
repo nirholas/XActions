@@ -11,6 +11,7 @@ dotenv.config();
 import authRoutes from './routes/auth.js';
 import userRoutes from './routes/user.js';
 import { generateSpec, generateWellKnown } from './openapi.js';
+import { x402Middleware, x402HealthCheck, x402Pricing } from './middleware/x402.js';
 
 const app = express();
 
@@ -47,6 +48,20 @@ app.get('/openapi.json', (req, res) => {
 
 app.get('/.well-known/x402', (req, res) => {
   res.type('application/json').json(generateWellKnown());
+});
+
+// AI API — free info endpoints
+app.get('/api/ai/health', x402HealthCheck);
+app.get('/api/ai/pricing', x402Pricing);
+
+// AI API — x402 payment gate for all paid endpoints
+// The middleware returns 402 when no X-PAYMENT header is present.
+// Actual AI execution is handled by the Railway deployment.
+app.use('/api/ai', x402Middleware, (req, res) => {
+  res.status(503).json({
+    error: 'AI execution requires Railway deployment',
+    message: 'Payment accepted. Connect to the Railway API for execution.',
+  });
 });
 
 // Auth routes
