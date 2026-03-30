@@ -106,7 +106,7 @@ app.use(helmet({
       scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.socket.io", "https://cdn.jsdelivr.net"],
       styleSrc: ["'self'", "'unsafe-inline'"],
       imgSrc: ["'self'", "data:", "https:"],
-      connectSrc: ["'self'", "wss:", "https:"],
+      connectSrc: ["'self'", "wss:", "https:", ...(process.env.NODE_ENV !== 'production' ? ["http://localhost:*"] : [])],
       fontSrc: ["'self'", "https:", "data:"],
       objectSrc: ["'none'"],
       frameSrc: ["'self'"]
