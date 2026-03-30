@@ -592,7 +592,7 @@
             <a class="bookmarklet" href="javascript:(function(){const videos=document.querySelectorAll('video');if(!videos.length){alert('No video found on this page!');return}const urls=[];videos.forEach(v=>{if(v.src)urls.push(v.src);const sources=v.querySelectorAll('source');sources.forEach(s=>urls.push(s.src))});if(urls.length){console.log('🎬 Video URLs found:',urls);const win=window.open('','_blank');win.document.write('<h2>Video URLs Found</h2><ul>'+urls.map(u=>'<li><a href=%22'+u+'%22 target=%22_blank%22>'+u+'</a></li>').join('')+'</ul><p>Right-click and Save As to download</p>')}else{alert('Could not extract video URL. Try the full script.')}})();">⚡ Get Video URL</a>
             <button class="copy-btn" data-script="videoDownloader">📋 Copy Script</button>
           </div>
-          <a href="tutorials/scrapers.html#video" class="tutorial-link">📚 Full Tutorial →</a>
+          <a href="/tutorials/scrapers#video" class="tutorial-link">📚 Full Tutorial →</a>
         </div>
 
         <!-- Bookmark Exporter -->
@@ -607,7 +607,7 @@
             <a class="bookmarklet" href="javascript:(function(){if(!location.pathname.includes('/bookmarks')){alert('Go to x.com/i/bookmarks first!');return}const sleep=ms=>new Promise(r=>setTimeout(r,ms));const bookmarks=[];async function run(){let lastCount=0,retries=0;while(retries<5){document.querySelectorAll('article').forEach(a=>{const text=a.querySelector('[data-testid=%22tweetText%22]')?.textContent||'';const time=a.querySelector('time')?.closest('a')?.href||'';if(text%26%26!bookmarks.find(b=>b.text===text))bookmarks.push({text,url:time})});if(bookmarks.length===lastCount)retries++;else retries=0;lastCount=bookmarks.length;window.scrollTo(0,document.body.scrollHeight);await sleep(1500)}console.table(bookmarks);const blob=new Blob([JSON.stringify(bookmarks,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='bookmarks.json';a.click();alert('Exported '+bookmarks.length+' bookmarks!')}run()})();">⚡ Export Bookmarks</a>
             <button class="copy-btn" data-script="bookmarkExporter">📋 Copy Script</button>
           </div>
-          <a href="tutorials/scrapers.html#bookmarks" class="tutorial-link">📚 Full Tutorial →</a>
+          <a href="/tutorials/scrapers#bookmarks" class="tutorial-link">📚 Full Tutorial →</a>
         </div>
 
         <!-- Thread Unroller -->
@@ -622,7 +622,7 @@
             <a class="bookmarklet" href="javascript:(function(){const author=location.pathname.match(/\/(\w+)\/status/)?.[1];if(!author){alert('Go to a tweet first!');return}const sleep=ms=>new Promise(r=>setTimeout(r,ms));const tweets=[];async function run(){let retries=0;while(retries<5){document.querySelectorAll('article').forEach(a=>{const text=a.querySelector('[data-testid=%22tweetText%22]')?.textContent||'';const handle=a.querySelector('[data-testid=%22User-Name%22]')?.textContent?.match(/@(\w+)/)?.[1]||'';if(handle.toLowerCase()===author.toLowerCase()%26%26text%26%26!tweets.includes(text))tweets.push(text)});window.scrollBy(0,500);await sleep(1000);retries++}const thread='🧵 Thread by @'+author+'\\n\\n'+tweets.map((t,i)=>(i+1)+'. '+t).join('\\n\\n');console.log(thread);navigator.clipboard.writeText(thread);alert('Thread copied! '+tweets.length+' tweets')}run()})();">⚡ Unroll Thread</a>
             <button class="copy-btn" data-script="threadUnroller">📋 Copy Script</button>
           </div>
-          <a href="tutorials/scrapers.html#threads" class="tutorial-link">📚 Full Tutorial →</a>
+          <a href="/tutorials/scrapers#threads" class="tutorial-link">📚 Full Tutorial →</a>
         </div>
 
         <!-- Viral Tweets -->
@@ -637,7 +637,7 @@
             <a class="bookmarklet" href="javascript:(function(){const sleep=ms=>new Promise(r=>setTimeout(r,ms));const tweets=[];const parseNum=s=>{if(!s)return 0;const n=parseFloat(s.replace(/,/g,''));if(s.includes('K'))return n*1000;if(s.includes('M'))return n*1000000;return n};async function run(){let scrolls=0;while(scrolls<20){document.querySelectorAll('article').forEach(a=>{const text=a.querySelector('[data-testid=%22tweetText%22]')?.textContent||'';const url=a.querySelector('time')?.closest('a')?.href||'';const btns=a.querySelectorAll('[role=%22group%22] button');let likes=0;btns.forEach(b=>{const l=b.getAttribute('aria-label')||'';if(l.includes('like'))likes=parseNum(l.match(/[\d,.]+[KM]?/)?.[0]||'0')});if(text%26%26likes>=100%26%26!tweets.find(t=>t.url===url))tweets.push({text:text.slice(0,100),likes,url})});window.scrollBy(0,500);await sleep(1000);scrolls++}tweets.sort((a,b)=>b.likes-a.likes);console.table(tweets.slice(0,20));alert('Found '+tweets.length+' viral tweets! Check console.')}run()})();">⚡ Find Viral Tweets</a>
             <button class="copy-btn" data-script="viralTweets">📋 Copy Script</button>
           </div>
-          <a href="tutorials/scrapers.html#viral" class="tutorial-link">📚 Full Tutorial →</a>
+          <a href="/tutorials/scrapers#viral" class="tutorial-link">📚 Full Tutorial →</a>
         </div>
       </div>
     </section>
@@ -660,7 +660,7 @@
             <a class="bookmarklet" href="javascript:(function(){const sleep=ms=>new Promise(r=>setTimeout(r,ms));const followers=new Set();async function scrape(){let retries=0;while(retries<5){document.querySelectorAll('[data-testid=%22UserCell%22] a[href^=%22/%22]').forEach(a=>{const u=a.getAttribute('href')?.replace('/','');if(u)followers.add(u.toLowerCase())});window.scrollTo(0,document.body.scrollHeight);await sleep(1500);retries++}}async function run(){await scrape();const prev=JSON.parse(localStorage.getItem('xactions_followers')||'[]');const current=Array.from(followers);if(prev.length){const lost=prev.filter(u=>!followers.has(u));const gained=current.filter(u=>!prev.includes(u));console.log('❌ Unfollowed you:',lost);console.log('✅ New followers:',gained);alert('Lost: '+lost.length+' | Gained: '+gained.length)}localStorage.setItem('xactions_followers',JSON.stringify(current));alert('Saved '+current.length+' followers. Run again later to compare!')}run()})();">⚡ Check Unfollowers</a>
             <button class="copy-btn" data-script="detectUnfollowers">📋 Copy Script</button>
           </div>
-          <a href="tutorials/monitoring.html#unfollowers" class="tutorial-link">📚 Full Tutorial →</a>
+          <a href="/tutorials/monitoring#unfollowers" class="tutorial-link">📚 Full Tutorial →</a>
         </div>
 
         <!-- Monitor Account -->
@@ -675,7 +675,7 @@
             <a class="bookmarklet" href="javascript:(function(){const user=location.pathname.split('/')[1];if(!user){alert('Go to a profile page first!');return}const data={user,followers:document.querySelector('[href$=%22/followers%22]')?.textContent||'0',following:document.querySelector('[href$=%22/following%22]')?.textContent||'0',bio:document.querySelector('[data-testid=%22UserDescription%22]')?.textContent||'',time:new Date().toISOString()};const key='xactions_monitor_'+user;const prev=JSON.parse(localStorage.getItem(key)||'null');localStorage.setItem(key,JSON.stringify(data));if(prev){const changes=[];if(prev.followers!==data.followers)changes.push('Followers: '+prev.followers+' → '+data.followers);if(prev.following!==data.following)changes.push('Following: '+prev.following+' → '+data.following);if(prev.bio!==data.bio)changes.push('Bio changed!');alert(changes.length?'Changes detected:\\n'+changes.join('\\n'):'No changes since last check')}else{alert('Snapshot saved for @'+user+'. Run again later to detect changes!')}})();">⚡ Monitor Account</a>
             <button class="copy-btn" data-script="monitorAccount">📋 Copy Script</button>
           </div>
-          <a href="tutorials/monitoring.html#monitor" class="tutorial-link">📚 Full Tutorial →</a>
+          <a href="/tutorials/monitoring#monitor" class="tutorial-link">📚 Full Tutorial →</a>
         </div>
       </div>
     </section>
@@ -698,7 +698,7 @@
             <a class="bookmarklet" href="javascript:(function(){const sleep=ms=>new Promise(r=>setTimeout(r,ms));const processed=JSON.parse(sessionStorage.getItem('xactions_communities')||'[]');async function run(){const communityLinks=Array.from(document.querySelectorAll('a[href^=%22/i/communities/%22]')).map(a=>a.href).filter((v,i,a)=>a.indexOf(v)===i%26%26!processed.includes(v));if(!communityLinks.length){const nav=document.querySelector('a[aria-label=%22Communities%22]');if(nav%26%26!location.pathname.includes('/communities')){nav.click();await sleep(2000);return run()}alert('No communities found or all processed!');return}const url=communityLinks[0];processed.push(url);sessionStorage.setItem('xactions_communities',JSON.stringify(processed));window.location.href=url}if(location.pathname.includes('/i/communities/')){setTimeout(async()=>{const joined=document.querySelector('button[aria-label^=%22Joined%22]');if(joined){joined.click();await sleep(500);const leave=Array.from(document.querySelectorAll('[role=%22menuitem%22]')).find(el=>el.textContent.includes('Leave'));leave?.click();await sleep(500);document.querySelector('[data-testid=%22confirmationSheetConfirm%22]')?.click();await sleep(1000)}history.back()},1000)}else{run()}})();">⚡ Leave All Communities</a>
             <button class="copy-btn" data-script="leaveAllCommunities">📋 Copy Script</button>
           </div>
-          <a href="tutorials/communities.html" class="tutorial-link">📚 Full Tutorial →</a>
+          <a href="/tutorials/communities" class="tutorial-link">📚 Full Tutorial →</a>
         </div>
       </div>
     </section>
@@ -728,7 +728,7 @@
           <div class="script-actions">
             <button class="copy-btn" data-script="autoLiker">📋 Copy Script</button>
           </div>
-          <a href="tutorials/automation.html#liker" class="tutorial-link">📚 Full Tutorial →</a>
+          <a href="/tutorials/automation#liker" class="tutorial-link">📚 Full Tutorial →</a>
         </div>
 
         <!-- Auto Commenter -->
@@ -742,7 +742,7 @@
           <div class="script-actions">
             <button class="copy-btn" data-script="autoCommenter">📋 Copy Script</button>
           </div>
-          <a href="tutorials/automation.html#commenter" class="tutorial-link">📚 Full Tutorial →</a>
+          <a href="/tutorials/automation#commenter" class="tutorial-link">📚 Full Tutorial →</a>
         </div>
 
         <!-- Follow Engagers -->
@@ -756,7 +756,7 @@
           <div class="script-actions">
             <button class="copy-btn" data-script="followEngagers">📋 Copy Script</button>
           </div>
-          <a href="tutorials/automation.html#engagers" class="tutorial-link">📚 Full Tutorial →</a>
+          <a href="/tutorials/automation#engagers" class="tutorial-link">📚 Full Tutorial →</a>
         </div>
 
         <!-- Keyword Follow -->
@@ -770,7 +770,7 @@
           <div class="script-actions">
             <button class="copy-btn" data-script="keywordFollow">📋 Copy Script</button>
           </div>
-          <a href="tutorials/automation.html#keyword" class="tutorial-link">📚 Full Tutorial →</a>
+          <a href="/tutorials/automation#keyword" class="tutorial-link">📚 Full Tutorial →</a>
         </div>
 
         <!-- Smart Unfollow -->
@@ -784,7 +784,7 @@
           <div class="script-actions">
             <button class="copy-btn" data-script="smartUnfollow">📋 Copy Script</button>
           </div>
-          <a href="tutorials/automation.html#smart" class="tutorial-link">📚 Full Tutorial →</a>
+          <a href="/tutorials/automation#smart" class="tutorial-link">📚 Full Tutorial →</a>
         </div>
 
         <!-- Growth Suite -->
@@ -798,7 +798,7 @@
           <div class="script-actions">
             <button class="copy-btn" data-script="growthSuite">📋 Copy Script</button>
           </div>
-          <a href="tutorials/automation.html#growth" class="tutorial-link">📚 Full Tutorial →</a>
+          <a href="/tutorials/automation#growth" class="tutorial-link">📚 Full Tutorial →</a>
         </div>
       </div>
     </section>
