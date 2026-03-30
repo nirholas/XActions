@@ -127,9 +127,10 @@ router.get('/automation/:name', async (req, res) => {
  *   sessionCookie {string}  required  X auth_token cookie value
  *   params        {object}  optional  CONFIG overrides (dryRun, maxUnfollows, …)
  *   startUrl      {string}  optional  Page to navigate to before running (default: x.com/home)
+ *   callbackUrl   {string}  optional  POST job result here when complete
  */
 router.post('/run', async (req, res) => {
-  const { script, sessionCookie, params = {}, startUrl } = req.body;
+  const { script, sessionCookie, params = {}, startUrl, callbackUrl } = req.body;
 
   if (!script) {
     return res.status(400).json({ error: 'script is required' });
@@ -164,6 +165,18 @@ router.post('/run', async (req, res) => {
     return res.status(400).json({ error: 'startUrl must be an x.com or twitter.com URL' });
   }
 
+  // Sanitise callbackUrl — must be http/https if provided
+  if (callbackUrl) {
+    try {
+      const u = new URL(callbackUrl);
+      if (!['http:', 'https:'].includes(u.protocol)) {
+        return res.status(400).json({ error: 'callbackUrl must use http or https' });
+      }
+    } catch {
+      return res.status(400).json({ error: 'callbackUrl is not a valid URL' });
+    }
+  }
+
   const operationId = `script-run-${Date.now()}-${crypto.randomBytes(4).toString('hex')}`;
 
   try {
@@ -175,6 +188,7 @@ router.post('/run', async (req, res) => {
         scriptPath,
         sessionCookie,
         params,
+        callbackUrl: callbackUrl || null,
         ...(startUrl ? { startUrl } : {}),
       },
       source: 'scripts-api',

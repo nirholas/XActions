@@ -78,6 +78,18 @@ export function initializeSocketIO(httpServer) {
       console.log(`📡 Socket ${socket.id} left stream room: ${streamId}`);
     });
 
+    // ===== JOB PROGRESS ROOMS =====
+    // Subscribe to a specific job's lifecycle events (active, progress, completed, failed).
+    // Usage: socket.emit('job:join', operationId)
+    socket.on('job:join', (jobId) => {
+      socket.join(`job:${jobId}`);
+      console.log(`📡 Socket ${socket.id} joined job room: ${jobId}`);
+    });
+
+    socket.on('job:leave', (jobId) => {
+      socket.leave(`job:${jobId}`);
+    });
+
     socket.on('disconnect', () => {
       console.log(`🔌 Socket disconnected: ${socket.id}`);
       handleDisconnection(io, socket);

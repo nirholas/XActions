@@ -222,10 +222,11 @@ export async function x402Middleware(req, res, next) {
     return next();
   }
 
-  // Free endpoints: AI health/pricing + scripts listing
+  // Free endpoints: AI health/pricing + scripts listing + session validation
   if (
     req.path === '/api/ai/health' ||
     req.path === '/api/ai/pricing' ||
+    req.path === '/api/ai/action/validate-session' ||
     req.path === '/api/scripts' ||
     req.path === '/api/scripts/'
   ) {

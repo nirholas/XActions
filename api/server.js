@@ -78,6 +78,7 @@ import { initializePlugins, getPluginRoutes } from '../src/plugins/index.js';
 // Optional: x402 micropayment support for remote AI API (disabled by default)
 import { x402Middleware, x402HealthCheck, x402Pricing } from './middleware/x402.js';
 import scriptsRoutes from './routes/scripts.js';
+import a2aRoutes from './routes/a2a.js';
 import aiDetectorMiddleware from './middleware/ai-detector.js';
 import { validateConfig as validateX402Config } from './config/x402-config.js';
 import { generateSpec as generateOpenAPISpec, generateWellKnown as generateX402WellKnown } from './openapi.js';
@@ -252,6 +253,7 @@ app.get('/api/ai/health', x402HealthCheck);
 app.get('/api/ai/pricing', x402Pricing);
 app.use('/api/ai', aiRoutes);
 app.use('/api/scripts', scriptsRoutes);
+app.use('/api/a2a', a2aRoutes);
 
 // Serve public assets (icons, OG images, logo)
 app.use(express.static(path.join(__dirname, '../public'), {

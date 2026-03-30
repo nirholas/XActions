@@ -4096,3 +4096,6 @@ main().catch((error) => {
   }
   process.exit(1);
 });
+
+// Export for testing without starting the stdio transport
+export { TOOLS };
