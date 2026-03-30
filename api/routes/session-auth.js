@@ -96,7 +96,7 @@ router.post('/save-session',
         authMethod: 'session'
       });
     } catch (error) {
-      console.error('❌ Save session error:', error);
+      console.error('❌ Save session error:', error.message);
       res.status(500).json({ error: 'Failed to save session' });
     }
   }
@@ -117,7 +117,7 @@ router.delete('/remove-session',
 
       res.json({ message: 'Session removed successfully' });
     } catch (error) {
-      console.error('❌ Remove session error:', error);
+      console.error('❌ Remove session error:', error.message);
       res.status(500).json({ error: 'Failed to remove session' });
     }
   }
@@ -148,7 +148,7 @@ router.get('/auth-method',
         username: user.twitterUsername
       });
     } catch (error) {
-      console.error('❌ Get auth method error:', error);
+      console.error('❌ Get auth method error:', error.message);
       res.status(500).json({ error: 'Failed to get auth method' });
     }
   }

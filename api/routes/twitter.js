@@ -208,7 +208,7 @@ router.post('/disconnect', authMiddleware, async (req, res) => {
 
     res.json({ message: 'Twitter account disconnected' });
   } catch (error) {
-    console.error('❌ Twitter disconnect error:', error);
+    console.error('❌ Twitter disconnect error:', error.message);
     res.status(500).json({ error: 'Failed to disconnect Twitter account' });
   }
 });
@@ -247,7 +247,7 @@ async function refreshTwitterToken(user) {
 
     return access_token;
   } catch (error) {
-    console.error('❌ Token refresh error:', error);
+    console.error('❌ Token refresh error:', error.message);
     throw new Error('Failed to refresh Twitter token');
   }
 }

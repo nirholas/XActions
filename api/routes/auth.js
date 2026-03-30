@@ -83,7 +83,7 @@ router.post('/register',
         }
       });
     } catch (error) {
-      console.error('❌ Registration error:', error);
+      console.error('❌ Registration error:', error.message);
       res.status(500).json({ error: 'Registration failed' });
     }
   }
@@ -152,7 +152,7 @@ router.post('/login',
         }
       });
     } catch (error) {
-      console.error('❌ Login error:', error);
+      console.error('❌ Login error:', error.message);
       res.status(500).json({ error: 'Login failed' });
     }
   }
