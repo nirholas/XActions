@@ -826,14 +826,245 @@ Free alternatives: Browser scripts, CLI, and Node.js library at https://xactions
  * Generate /.well-known/x402 response.
  * Lists all payable resources as "METHOD /path" entries per x402scan spec.
  */
-export function generateWellKnown() {
-  const spec = generateSpec();
-  const resources = Object.entries(spec.paths)
-    .filter(([_, methods]) => methods?.post?.['x-payment-info'])
-    .map(([routePath]) => `POST ${routePath}`);
+/**
+ * Complete list of all paid resources across all AI route modules.
+ * Kept in sync with api/routes/ai/*.js route definitions.
+ */
+const ALL_PAID_RESOURCES = [
+  // ── Scraping ──────────────────────────────────────────────────────
+  'POST /api/ai/scrape/profile',
+  'POST /api/ai/scrape/followers',
+  'POST /api/ai/scrape/following',
+  'POST /api/ai/scrape/tweets',
+  'POST /api/ai/scrape/search',
+  'POST /api/ai/scrape/thread',
+  'POST /api/ai/scrape/hashtag',
+  'POST /api/ai/scrape/media',
+  'POST /api/ai/scrape/likes',
+  'POST /api/ai/scrape/retweets',
+  'POST /api/ai/scrape/replies',
+  'POST /api/ai/scrape/quote-tweets',
+  'POST /api/ai/scrape/user-likes',
+  'POST /api/ai/scrape/mentions',
+  'POST /api/ai/scrape/recommendations',
 
+  // ── Actions ───────────────────────────────────────────────────────
+  'POST /api/ai/action/unfollow-non-followers',
+  'POST /api/ai/action/unfollow-everyone',
+  'POST /api/ai/action/detect-unfollowers',
+  'POST /api/ai/action/auto-like',
+  'POST /api/ai/action/follow-engagers',
+  'POST /api/ai/action/keyword-follow',
+  'POST /api/ai/action/auto-comment',
+  'POST /api/ai/action/follow',
+  'POST /api/ai/action/unfollow',
+  'POST /api/ai/action/like',
+  'POST /api/ai/action/retweet',
+  'POST /api/ai/action/quote-tweet',
+  'POST /api/ai/action/post-tweet',
+  'POST /api/ai/action/auto-follow',
+  'POST /api/ai/action/smart-unfollow',
+  'POST /api/ai/action/auto-retweet',
+  'POST /api/ai/action/bulk-execute',
+  'POST /api/ai/action/cancel/:operationId',
+  'GET /api/ai/action/status/:operationId',
+  'GET /api/ai/action/history',
+
+  // ── Monitoring ────────────────────────────────────────────────────
+  'POST /api/ai/monitor/account',
+  'POST /api/ai/monitor/followers',
+  'POST /api/ai/monitor/following',
+  'POST /api/ai/monitor/compare',
+  'POST /api/ai/monitor/keyword',
+  'POST /api/ai/monitor/follower-alerts',
+  'POST /api/ai/monitor/track-engagement',
+  'GET /api/ai/monitor/snapshot/:username',
+  'DELETE /api/ai/monitor/snapshot/:username',
+  'GET /api/ai/monitor/list',
+  // /alert/* alias (same router, different prefix)
+  'POST /api/ai/alert/account',
+  'POST /api/ai/alert/followers',
+  'POST /api/ai/alert/following',
+  'POST /api/ai/alert/new-followers',
+  'POST /api/ai/alert/compare',
+  'POST /api/ai/alert/keyword',
+  'POST /api/ai/alert/follower-alerts',
+  'POST /api/ai/alert/track-engagement',
+
+  // ── Posting ───────────────────────────────────────────────────────
+  'POST /api/ai/posting/tweet',
+  'POST /api/ai/posting/thread',
+  'POST /api/ai/posting/poll',
+  'POST /api/ai/posting/schedule',
+  'POST /api/ai/posting/delete',
+  'POST /api/ai/posting/reply',
+  'POST /api/ai/posting/bookmark',
+  'POST /api/ai/posting/bookmarks',
+  'POST /api/ai/posting/clear-bookmarks',
+  'POST /api/ai/posting/article',
+
+  // ── Engagement ────────────────────────────────────────────────────
+  'POST /api/ai/engagement/follow',
+  'POST /api/ai/engagement/unfollow',
+  'POST /api/ai/engagement/like',
+  'POST /api/ai/engagement/retweet',
+  'POST /api/ai/engagement/quote-tweet',
+  'POST /api/ai/engagement/auto-follow',
+  'POST /api/ai/engagement/smart-unfollow',
+  'POST /api/ai/engagement/auto-retweet',
+  'POST /api/ai/engagement/bulk-execute',
+  'POST /api/ai/engagement/notifications',
+  'POST /api/ai/engagement/mute',
+  'POST /api/ai/engagement/unmute',
+  'POST /api/ai/engagement/trends',
+  'POST /api/ai/engagement/explore',
+  'POST /api/ai/engagement/detect-bots',
+  'POST /api/ai/engagement/find-influencers',
+  'POST /api/ai/engagement/smart-target',
+  'POST /api/ai/engagement/crypto-analyze',
+  'POST /api/ai/engagement/audience-insights',
+  'POST /api/ai/engagement/engagement-report',
+
+  // ── Analytics ─────────────────────────────────────────────────────
+  'POST /api/ai/analytics/account',
+  'POST /api/ai/analytics/post',
+  'POST /api/ai/analytics/creator',
+  'POST /api/ai/analytics/brand-monitor',
+  'POST /api/ai/analytics/competitor',
+  'POST /api/ai/analytics/audience-overlap',
+  'POST /api/ai/analytics/history',
+  'POST /api/ai/analytics/snapshot',
+  'POST /api/ai/analytics/growth-rate',
+  'POST /api/ai/analytics/compare-accounts',
+  'POST /api/ai/analytics/analyze-voice',
+  'POST /api/ai/analytics/generate-tweet',
+  'POST /api/ai/analytics/rewrite-tweet',
+  'POST /api/ai/analytics/summarize-thread',
+  'POST /api/ai/analytics/best-time',
+
+  // ── Messages ──────────────────────────────────────────────────────
+  'POST /api/ai/messages/send',
+  'POST /api/ai/messages/conversations',
+  'POST /api/ai/messages/export',
+
+  // ── Profile ───────────────────────────────────────────────────────
+  'POST /api/ai/profile/update',
+  'POST /api/ai/profile/check-premium',
+  'POST /api/ai/profile/settings',
+  'POST /api/ai/profile/toggle-protected',
+  'POST /api/ai/profile/blocked',
+
+  // ── Grok ──────────────────────────────────────────────────────────
+  'POST /api/ai/grok/query',
+  'POST /api/ai/grok/summarize',
+  'POST /api/ai/grok/analyze-image',
+
+  // ── Lists ─────────────────────────────────────────────────────────
+  'POST /api/ai/lists/all',
+  'POST /api/ai/lists/members',
+
+  // ── Spaces ────────────────────────────────────────────────────────
+  'POST /api/ai/spaces/list',
+  'POST /api/ai/spaces/scrape',
+  'POST /api/ai/spaces/join',
+  'POST /api/ai/spaces/leave',
+  'POST /api/ai/spaces/status',
+  'POST /api/ai/spaces/transcript',
+
+  // ── Sentiment ─────────────────────────────────────────────────────
+  'POST /api/ai/sentiment/analyze',
+  'POST /api/ai/sentiment/monitor',
+  'POST /api/ai/sentiment/report',
+
+  // ── Streams ───────────────────────────────────────────────────────
+  'POST /api/ai/streams/start',
+  'POST /api/ai/streams/stop',
+  'POST /api/ai/streams/list',
+  'POST /api/ai/streams/pause',
+  'POST /api/ai/streams/resume',
+  'POST /api/ai/streams/status',
+  'POST /api/ai/streams/history',
+
+  // ── Workflows ─────────────────────────────────────────────────────
+  'POST /api/ai/workflows/actions',
+  'POST /api/ai/workflows/create',
+  'POST /api/ai/workflows/run',
+  'POST /api/ai/workflows/list',
+
+  // ── Portability ───────────────────────────────────────────────────
+  'POST /api/ai/portability/platforms',
+  'POST /api/ai/portability/export-account',
+  'POST /api/ai/portability/migrate',
+  'POST /api/ai/portability/diff',
+  'POST /api/ai/portability/import',
+  'POST /api/ai/portability/convert',
+
+  // ── Personas ──────────────────────────────────────────────────────
+  'POST /api/ai/personas/presets',
+  'POST /api/ai/personas/create',
+  'POST /api/ai/personas/list',
+  'POST /api/ai/personas/status',
+  'POST /api/ai/personas/edit',
+  'POST /api/ai/personas/delete',
+  'POST /api/ai/personas/run',
+
+  // ── Graph ─────────────────────────────────────────────────────────
+  'POST /api/ai/graph/build',
+  'POST /api/ai/graph/analyze',
+  'POST /api/ai/graph/recommendations',
+  'POST /api/ai/graph/list',
+
+  // ── CRM ───────────────────────────────────────────────────────────
+  'POST /api/ai/crm/sync',
+  'POST /api/ai/crm/tag',
+  'POST /api/ai/crm/search',
+  'POST /api/ai/crm/segment',
+
+  // ── Scheduler ─────────────────────────────────────────────────────
+  'POST /api/ai/schedule/add',
+  'POST /api/ai/schedule/list',
+  'POST /api/ai/schedule/remove',
+  'POST /api/ai/schedule/rss-add',
+  'POST /api/ai/schedule/rss-check',
+  'POST /api/ai/schedule/rss-drafts',
+  'POST /api/ai/schedule/evergreen',
+
+  // ── Optimizer ─────────────────────────────────────────────────────
+  'POST /api/ai/optimizer/optimize',
+  'POST /api/ai/optimizer/hashtags',
+  'POST /api/ai/optimizer/predict',
+  'POST /api/ai/optimizer/variations',
+
+  // ── Writer ────────────────────────────────────────────────────────
+  'POST /api/ai/writer/analyze-voice',
+  'POST /api/ai/writer/generate',
+  'POST /api/ai/writer/rewrite',
+  'POST /api/ai/writer/calendar',
+  'POST /api/ai/writer/reply',
+
+  // ── Utility ───────────────────────────────────────────────────────
+  'POST /api/ai/download/video',
+  'POST /api/ai/export/bookmarks',
+  'POST /api/ai/unroll/thread',
+  'POST /api/ai/analyze/profile',
+  'POST /api/ai/analyze/tweet',
+
+  // ── Notifications ─────────────────────────────────────────────────
+  'POST /api/ai/notify/send',
+  'POST /api/ai/notify/test',
+
+  // ── Datasets ──────────────────────────────────────────────────────
+  'POST /api/ai/datasets/list',
+  'POST /api/ai/datasets/get',
+
+  // ── Teams ─────────────────────────────────────────────────────────
+  'POST /api/ai/teams/create',
+  'POST /api/ai/teams/members',
+];
+
+export function generateWellKnown() {
   return {
     version: 1,
-    resources,
+    resources: ALL_PAID_RESOURCES,
   };
 }
