@@ -89,7 +89,47 @@
     },
     {
       "src": "/pricing",
-      "dest": "/dashboard/docs.html"
+      "dest": "/dashboard/pricing.html"
+    },
+    {
+      "src": "/blog",
+      "dest": "/dashboard/blog.html"
+    },
+    {
+      "src": "/changelog",
+      "dest": "/dashboard/changelog.html"
+    },
+    {
+      "src": "/compare",
+      "dest": "/dashboard/compare.html"
+    },
+    {
+      "src": "/contact",
+      "dest": "/dashboard/contact.html"
+    },
+    {
+      "src": "/contributing",
+      "dest": "/dashboard/contributing.html"
+    },
+    {
+      "src": "/integrations",
+      "dest": "/dashboard/integrations.html"
+    },
+    {
+      "src": "/price-correlation",
+      "dest": "/dashboard/price-correlation.html"
+    },
+    {
+      "src": "/security",
+      "dest": "/dashboard/security.html"
+    },
+    {
+      "src": "/status",
+      "dest": "/dashboard/status.html"
+    },
+    {
+      "src": "/use-cases",
+      "dest": "/dashboard/use-cases.html"
     },
     {
       "src": "/about",
