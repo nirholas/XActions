@@ -453,9 +453,9 @@ export async function createX402Client(config) {
     x_get_mentions: '/api/ai/scrape/mentions',
     x_get_recommendations: '/api/ai/scrape/recommendations',
 
-    // Analysis
-    x_get_non_followers: '/api/ai/analysis/non-followers',
-    x_detect_unfollowers: '/api/ai/analysis/detect-unfollowers',
+    // Analysis (via action routes)
+    x_get_non_followers: '/api/ai/action/unfollow-non-followers',
+    x_detect_unfollowers: '/api/ai/action/detect-unfollowers',
 
     // Core actions
     x_follow: '/api/ai/action/follow',
@@ -603,13 +603,13 @@ export async function createX402Client(config) {
     x_crm_segment: '/api/ai/crm/segment',
 
     // Scheduler
-    x_schedule_add: '/api/ai/scheduler/add',
-    x_schedule_list: '/api/ai/scheduler/list',
-    x_schedule_remove: '/api/ai/scheduler/remove',
-    x_rss_add: '/api/ai/scheduler/rss-add',
-    x_rss_check: '/api/ai/scheduler/rss-check',
-    x_rss_drafts: '/api/ai/scheduler/rss-drafts',
-    x_evergreen_analyze: '/api/ai/scheduler/evergreen',
+    x_schedule_add: '/api/ai/schedule/add',
+    x_schedule_list: '/api/ai/schedule/list',
+    x_schedule_remove: '/api/ai/schedule/remove',
+    x_rss_add: '/api/ai/schedule/rss-add',
+    x_rss_check: '/api/ai/schedule/rss-check',
+    x_rss_drafts: '/api/ai/schedule/rss-drafts',
+    x_evergreen_analyze: '/api/ai/schedule/evergreen',
 
     // Optimizer
     x_optimize_tweet: '/api/ai/optimizer/optimize',
