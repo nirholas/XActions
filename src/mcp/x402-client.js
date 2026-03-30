@@ -433,30 +433,201 @@ export async function createX402Client(config) {
   
   // Map tool names to API endpoints
   const toolEndpoints = {
-    // Scraping tools
+    // Auth
+    x_login: '/api/ai/auth/login',
+
+    // Scraping
     x_get_profile: '/api/ai/scrape/profile',
     x_get_followers: '/api/ai/scrape/followers',
     x_get_following: '/api/ai/scrape/following',
     x_get_tweets: '/api/ai/scrape/tweets',
     x_search_tweets: '/api/ai/scrape/search',
-    
-    // Analysis tools
+    x_get_thread: '/api/ai/scrape/thread',
+    x_get_hashtag: '/api/ai/scrape/hashtag',
+    x_get_likers: '/api/ai/scrape/likers',
+    x_get_retweeters: '/api/ai/scrape/retweets',
+    x_get_media: '/api/ai/scrape/media',
+    x_get_replies: '/api/ai/scrape/replies',
+    x_get_quote_tweets: '/api/ai/scrape/quote-tweets',
+    x_get_likes: '/api/ai/scrape/user-likes',
+    x_get_mentions: '/api/ai/scrape/mentions',
+    x_get_recommendations: '/api/ai/scrape/recommendations',
+
+    // Analysis
     x_get_non_followers: '/api/ai/analysis/non-followers',
     x_detect_unfollowers: '/api/ai/analysis/detect-unfollowers',
-    
-    // Action tools
+
+    // Core actions
     x_follow: '/api/ai/action/follow',
     x_unfollow: '/api/ai/action/unfollow',
     x_unfollow_non_followers: '/api/ai/action/unfollow-non-followers',
+    x_unfollow_all: '/api/ai/action/unfollow-everyone',
+    x_follow_engagers: '/api/ai/action/follow-engagers',
     x_post_tweet: '/api/ai/action/post-tweet',
     x_like: '/api/ai/action/like',
     x_retweet: '/api/ai/action/retweet',
-    
-    // Download tools
+    x_quote_tweet: '/api/ai/action/quote-tweet',
+    x_auto_like: '/api/ai/action/auto-like',
+    x_auto_follow: '/api/ai/action/auto-follow',
+    x_smart_unfollow: '/api/ai/action/smart-unfollow',
+    x_auto_retweet: '/api/ai/action/auto-retweet',
+    x_auto_comment: '/api/ai/action/auto-comment',
+    x_bulk_execute: '/api/ai/action/bulk-execute',
+
+    // Download
     x_download_video: '/api/ai/download/video',
-    
-    // Auth tools
-    x_login: '/api/ai/auth/login',
+
+    // Posting
+    x_post_thread: '/api/ai/posting/thread',
+    x_create_poll: '/api/ai/posting/poll',
+    x_schedule_post: '/api/ai/posting/schedule',
+    x_delete_tweet: '/api/ai/posting/delete',
+    x_reply: '/api/ai/posting/reply',
+    x_bookmark: '/api/ai/posting/bookmark',
+    x_get_bookmarks: '/api/ai/posting/bookmarks',
+    x_clear_bookmarks: '/api/ai/posting/clear-bookmarks',
+    x_publish_article: '/api/ai/posting/article',
+
+    // Engagement
+    x_get_notifications: '/api/ai/engagement/notifications',
+    x_mute_user: '/api/ai/engagement/mute',
+    x_unmute_user: '/api/ai/engagement/unmute',
+    x_get_trends: '/api/ai/engagement/trends',
+    x_get_explore: '/api/ai/engagement/explore',
+    x_detect_bots: '/api/ai/engagement/detect-bots',
+    x_find_influencers: '/api/ai/engagement/find-influencers',
+    x_smart_target: '/api/ai/engagement/smart-target',
+    x_crypto_analyze: '/api/ai/engagement/crypto-analyze',
+    x_audience_insights: '/api/ai/engagement/audience-insights',
+    x_engagement_report: '/api/ai/engagement/engagement-report',
+
+    // Messages / DMs
+    x_send_dm: '/api/ai/messages/send',
+    x_get_conversations: '/api/ai/messages/conversations',
+    x_export_dms: '/api/ai/messages/export',
+
+    // Profile
+    x_update_profile: '/api/ai/profile/update',
+    x_check_premium: '/api/ai/profile/check-premium',
+    x_get_settings: '/api/ai/profile/settings',
+    x_toggle_protected: '/api/ai/profile/toggle-protected',
+    x_get_blocked: '/api/ai/profile/blocked',
+
+    // Grok AI
+    x_grok_query: '/api/ai/grok/query',
+    x_grok_summarize: '/api/ai/grok/summarize',
+    x_grok_analyze_image: '/api/ai/grok/analyze-image',
+
+    // Lists
+    x_get_lists: '/api/ai/lists/all',
+    x_get_list_members: '/api/ai/lists/members',
+
+    // Spaces
+    x_get_spaces: '/api/ai/spaces/list',
+    x_scrape_space: '/api/ai/spaces/scrape',
+    x_space_join: '/api/ai/spaces/join',
+    x_space_leave: '/api/ai/spaces/leave',
+    x_space_status: '/api/ai/spaces/status',
+    x_space_transcript: '/api/ai/spaces/transcript',
+
+    // Analytics
+    x_get_analytics: '/api/ai/analytics/account',
+    x_get_post_analytics: '/api/ai/analytics/post',
+    x_creator_analytics: '/api/ai/analytics/creator',
+    x_brand_monitor: '/api/ai/analytics/brand-monitor',
+    x_competitor_analysis: '/api/ai/analytics/competitor',
+    x_audience_overlap: '/api/ai/analytics/audience-overlap',
+    x_history_get: '/api/ai/analytics/history',
+    x_history_snapshot: '/api/ai/analytics/snapshot',
+    x_growth_rate: '/api/ai/analytics/growth-rate',
+    x_compare_accounts: '/api/ai/analytics/compare-accounts',
+    x_analyze_voice: '/api/ai/analytics/analyze-voice',
+    x_generate_tweet: '/api/ai/analytics/generate-tweet',
+    x_rewrite_tweet: '/api/ai/analytics/rewrite-tweet',
+    x_summarize_thread: '/api/ai/analytics/summarize-thread',
+    x_best_time_to_post: '/api/ai/analytics/best-time',
+
+    // Sentiment & Reputation
+    x_analyze_sentiment: '/api/ai/sentiment/analyze',
+    x_monitor_reputation: '/api/ai/sentiment/monitor',
+    x_reputation_report: '/api/ai/sentiment/report',
+
+    // Streams
+    x_stream_start: '/api/ai/streams/start',
+    x_stream_stop: '/api/ai/streams/stop',
+    x_stream_list: '/api/ai/streams/list',
+    x_stream_pause: '/api/ai/streams/pause',
+    x_stream_resume: '/api/ai/streams/resume',
+    x_stream_status: '/api/ai/streams/status',
+    x_stream_history: '/api/ai/streams/history',
+
+    // Workflows
+    x_workflow_actions: '/api/ai/workflows/actions',
+    x_workflow_create: '/api/ai/workflows/create',
+    x_workflow_run: '/api/ai/workflows/run',
+    x_workflow_list: '/api/ai/workflows/list',
+
+    // Graph
+    x_graph_build: '/api/ai/graph/build',
+    x_graph_analyze: '/api/ai/graph/analyze',
+    x_graph_recommendations: '/api/ai/graph/recommendations',
+    x_graph_list: '/api/ai/graph/list',
+
+    // Portability
+    x_export_account: '/api/ai/portability/export-account',
+    x_migrate_account: '/api/ai/portability/migrate',
+    x_diff_exports: '/api/ai/portability/diff',
+    x_list_platforms: '/api/ai/portability/platforms',
+    x_import_data: '/api/ai/portability/import',
+    x_convert_format: '/api/ai/portability/convert',
+
+    // Personas
+    x_persona_create: '/api/ai/personas/create',
+    x_persona_list: '/api/ai/personas/list',
+    x_persona_status: '/api/ai/personas/status',
+    x_persona_edit: '/api/ai/personas/edit',
+    x_persona_delete: '/api/ai/personas/delete',
+    x_persona_run: '/api/ai/personas/run',
+    x_persona_presets: '/api/ai/personas/presets',
+
+    // Monitoring
+    x_monitor_account: '/api/ai/monitor/account',
+    x_monitor_keyword: '/api/ai/monitor/keyword',
+    x_follower_alerts: '/api/ai/monitor/follower-alerts',
+    x_track_engagement: '/api/ai/monitor/track-engagement',
+
+    // CRM
+    x_crm_sync: '/api/ai/crm/sync',
+    x_crm_tag: '/api/ai/crm/tag',
+    x_crm_search: '/api/ai/crm/search',
+    x_crm_segment: '/api/ai/crm/segment',
+
+    // Scheduler
+    x_schedule_add: '/api/ai/scheduler/add',
+    x_schedule_list: '/api/ai/scheduler/list',
+    x_schedule_remove: '/api/ai/scheduler/remove',
+    x_rss_add: '/api/ai/scheduler/rss-add',
+    x_rss_check: '/api/ai/scheduler/rss-check',
+    x_rss_drafts: '/api/ai/scheduler/rss-drafts',
+    x_evergreen_analyze: '/api/ai/scheduler/evergreen',
+
+    // Optimizer
+    x_optimize_tweet: '/api/ai/optimizer/optimize',
+    x_suggest_hashtags: '/api/ai/optimizer/hashtags',
+    x_predict_performance: '/api/ai/optimizer/predict',
+    x_generate_variations: '/api/ai/optimizer/variations',
+
+    // Notifications
+    x_notify_send: '/api/ai/notify/send',
+    x_notify_test: '/api/ai/notify/test',
+
+    // Datasets
+    x_dataset_list: '/api/ai/datasets/list',
+    x_dataset_get: '/api/ai/datasets/get',
+
+    // Teams
+    x_team_create: '/api/ai/teams/create',
+    x_team_members: '/api/ai/teams/members',
   };
   
   /**

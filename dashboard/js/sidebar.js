@@ -190,6 +190,8 @@
     .nav-icon { width: 26px !important; height: 26px; display: flex !important; align-items: center; justify-content: center; flex-shrink: 0; font-size: unset !important; text-align: unset !important; }
     .nav-icon svg { width: 26px; height: 26px; }
     .nav-item.active .nav-icon svg { stroke-width: 2.5; }
+    .sidebar-left nav { overflow-y: auto; }
+    .sidebar-left nav::-webkit-scrollbar { width: 0; }
     .user-menu { padding: 12px; border-radius: 9999px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: background 0.2s; margin-bottom: 12px; text-decoration: none; color: var(--text-primary); }
     .user-menu:hover { background: var(--bg-tertiary, #202327); }
     .user-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--accent) 0%, #7856ff 100%); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.1rem; flex-shrink: 0; }
