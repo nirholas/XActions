@@ -814,6 +814,39 @@
       text-decoration: underline;
     }
 
+    /* Nav Links Card */
+    .nav-links-grid {
+      padding: 4px 0 8px;
+    }
+
+    .nav-links-section {
+      padding: 8px 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .nav-links-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 6px;
+    }
+
+    .nav-links-section a {
+      display: inline-block;
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      text-decoration: none;
+      margin-right: 12px;
+      margin-bottom: 4px;
+      transition: color 0.15s;
+    }
+
+    .nav-links-section a:hover {
+      color: var(--accent);
+    }
+
     .disclaimer-links {
       display: flex;
       flex-wrap: wrap;
@@ -1260,6 +1293,67 @@
           <div class="tip-desc">No API keys needed — runs in your browser console</div>
         </div>
         <a href="/features" class="show-more">Show more</a>
+      </div>
+
+      <!-- Navigation Links -->
+      <div class="tips-card">
+        <h3 class="tips-header">Navigate</h3>
+        <div class="nav-links-grid">
+          <div class="nav-links-section">
+            <div class="nav-links-label">Tools</div>
+            <a href="/run">Run</a>
+            <a href="/scripts">Scripts</a>
+            <a href="/features">Features</a>
+            <a href="/automations">Automations</a>
+            <a href="/workflows">Workflows</a>
+          </div>
+          <div class="nav-links-section">
+            <div class="nav-links-label">Automate</div>
+            <a href="/agent">AI Agent</a>
+            <a href="/monitor">Monitor</a>
+            <a href="/unfollowers">Unfollowers</a>
+            <a href="/video">Video</a>
+            <a href="/thread">Thread Reader</a>
+            <a href="/thread-composer">Threads</a>
+            <a href="/calendar">Calendar</a>
+          </div>
+          <div class="nav-links-section">
+            <div class="nav-links-label">AI / MCP</div>
+            <a href="/mcp">AI / MCP</a>
+            <a href="/a2a">A2A Protocol</a>
+            <a href="/ai">AI Tools</a>
+            <a href="/ai-api">AI API</a>
+          </div>
+          <div class="nav-links-section">
+            <div class="nav-links-label">Data</div>
+            <a href="/analytics-dashboard">Analytics</a>
+            <a href="/analytics">Engagement</a>
+            <a href="/price-correlation">Price Charts</a>
+            <a href="/graph">Social Graph</a>
+          </div>
+          <div class="nav-links-section">
+            <div class="nav-links-label">Platform</div>
+            <a href="/integrations">Integrations</a>
+            <a href="/team">Team</a>
+            <a href="/admin">Admin</a>
+            <a href="/login">Login</a>
+          </div>
+          <div class="nav-links-section">
+            <div class="nav-links-label">Resources</div>
+            <a href="/docs">Docs</a>
+            <a href="/tutorials">Tutorials</a>
+            <a href="/blog">Blog</a>
+            <a href="/use-cases">Use Cases</a>
+            <a href="/compare">Compare</a>
+            <a href="/pricing">Pricing</a>
+            <a href="/faq">FAQ</a>
+            <a href="/changelog">Changelog</a>
+            <a href="/contact">Contact</a>
+            <a href="/status">Status</a>
+            <a href="/about">About</a>
+            <a href="https://github.com/nirholas/XActions" target="_blank" rel="noopener noreferrer">GitHub</a>
+          </div>
+        </div>
       </div>
 
       <!-- Disclaimer Footer -->
