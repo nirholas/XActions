@@ -73,6 +73,7 @@ Scrapers &nbsp;·&nbsp; MCP Server for AI Agents &nbsp;·&nbsp; CLI &nbsp;·&nbs
 | **No API Key Required** | ✅ | ✅ | ❌ Needs keys | ✅ | ❌ Needs keys | ✅ |
 | **MCP Server (AI agents)** | ✅ **140+ tools** | ❌ | ✅ 2 tools | ❌ | ❌ | ❌ |
 | **Browser Console Scripts** | ✅ 50+ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **AI Voice Agent in Spaces** | ✅ Join, listen, speak | ❌ | ❌ | ❌ | ❌ | ❌ |
 | **CLI** | ✅ 12 commands | ❌ | ❌ | ❌ | ❌ | ❌ |
 
 **XActions is the only toolkit that works in the browser, terminal, and with AI agents — all without an API key.**
@@ -115,6 +116,7 @@ See [CHANGELOG.md](CHANGELOG.md) for full details.
 - [Installation](#-installation) — npm, CLI, Docker, or browser
 - [Feature Matrix](#-complete-feature-list) — Every feature, every platform
 - [MCP Server (AI)](#-mcp-server-ai-agents) — For Claude, GPT, Cursor
+- [Space Agent (AI Voice)](#-autonomous-space-agent) — AI agents in live Spaces
 - [CLI Reference](#-cli-reference) — Command line usage
 - [Node.js API](#-nodejs-api) — Programmatic access
 - [Docker](#-docker) — One-command deployment
@@ -810,6 +812,11 @@ xactions followers YOUR_USERNAME --output snapshot2.json
 | Continuous Monitoring | ⚠️ | ✅ | ✅ | ✅ |
 | **COMMUNITIES** |
 | Leave All Communities | ✅ | ⚠️ | ⚠️ | ⚠️ |
+| **SPACES** |
+| Discover Live Spaces | ✅ | ✅ | ✅ | ✅ |
+| Scrape Space Metadata | ✅ | ✅ | ✅ | ✅ |
+| AI Agent Joins Space | ❌ | ✅ | ✅ | ❌ |
+| Agent Listens & Speaks | ❌ | ✅ | ✅ | ❌ |
 | **ADVANCED** |
 | Multi-Account | ❌ | ✅ | ✅ | ✅ Pro |
 | Link Scraper | ✅ | ✅ | ✅ | ✅ |
@@ -865,6 +872,7 @@ npx xactions mcp-config --client windsurf
 | **Workflows** | `x_workflow_create`, `x_workflow_run`, `x_workflow_list`, `x_workflow_actions` |
 | **Persona** | `x_persona_create`, `x_persona_run`, `x_persona_edit`, `x_persona_list`, `x_persona_presets` |
 | **Portability** | `x_export_account`, `x_migrate_account`, `x_diff_exports`, `x_import_data`, `x_convert_format` |
+| **Spaces** | `x_get_spaces`, `x_scrape_space`, `x_space_join`, `x_space_leave`, `x_space_status`, `x_space_transcript` |
 | **Graph** | `x_graph_build`, `x_graph_analyze`, `x_graph_recommendations`, `x_graph_list` |
 
 ### Example Prompts
@@ -879,6 +887,66 @@ npx xactions mcp-config --client windsurf
 > → Scrapes profiles + recent tweets → computes avg engagement → presents comparison
 
 📖 **Full setup guide**: [docs/mcp-setup.md](docs/mcp-setup.md)
+
+---
+
+## 🎙️ Autonomous Space Agent
+
+AI agents can **join live X Spaces**, listen to conversations, and speak autonomously using voice AI. Powered by the [`xspace-agent`](https://github.com/nirholas/xspace-agent) SDK.
+
+### What It Does
+
+1. Launches a headless browser and joins an X Space
+2. Transcribes other speakers in real time (Whisper STT)
+3. Generates intelligent responses with your chosen LLM (OpenAI, Claude, or Groq)
+4. Speaks responses back into the Space via text-to-speech (ElevenLabs, OpenAI, or browser)
+5. Handles turn-taking, context tracking, and graceful shutdown
+
+### Setup
+
+```bash
+npm install xactions xspace-agent
+```
+
+Set your credentials:
+```bash
+export X_AUTH_TOKEN="your_auth_token"     # From x.com cookies
+export X_CT0="your_ct0_token"            # From x.com cookies
+export OPENAI_API_KEY="sk-..."           # Or ANTHROPIC_API_KEY / GROQ_API_KEY
+```
+
+### Usage
+
+**MCP (Claude Desktop / Cursor):**
+> *"Join this Space as an AI agent: https://x.com/i/spaces/1abc123"*
+
+Claude calls `x_space_join` and your agent enters the Space.
+
+**Node.js:**
+```javascript
+import { joinSpace, leaveSpace } from 'xactions/spaces/agent';
+
+await joinSpace({
+  url: 'https://x.com/i/spaces/1abc123',
+  provider: 'openai',
+  systemPrompt: 'You are a helpful AI participant. Keep responses concise.',
+});
+
+// Later...
+const summary = await leaveSpace();
+// { duration: '300s', transcriptions: 42, responses: 8 }
+```
+
+**MCP Tools:**
+
+| Tool | Description |
+|------|-------------|
+| `x_space_join` | Join a Space with an autonomous AI voice agent |
+| `x_space_leave` | Leave the active Space and get session summary |
+| `x_space_status` | Get agent status (duration, transcription/response counts) |
+| `x_space_transcript` | Get recent transcriptions from the active Space |
+
+📖 **Full guide**: [docs/spaces-agent.md](docs/spaces-agent.md) — configuration, environment variables, events, multi-agent setup, and examples.
 
 ---
 
@@ -1055,6 +1123,7 @@ xactions/
 │   │   └── threads/      # Threads scrapers (Puppeteer)
 │   ├── cli/              # Command-line interface
 │   ├── mcp/              # MCP server (140+ tools for AI agents)
+│   ├── spaces/           # Autonomous Space agent (xspace-agent integration)
 │   ├── automation/       # Browser console automation scripts
 │   ├── plugins/          # Plugin system (loader, manager, template)
 │   ├── streaming/        # Real-time event streams (Socket.IO)

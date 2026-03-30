@@ -70,8 +70,8 @@
     profile.location = locationEl?.textContent || '';
 
     // Website
-    const websiteEl = document.querySelector('[data-testid="UserUrl"] a');
-    profile.website = websiteEl?.href || websiteEl?.textContent || '';
+    const websiteEl = document.querySelector('[data-testid="UserUrl"]');
+    profile.website = websiteEl?.href || websiteEl?.querySelector('a')?.href || websiteEl?.textContent || '';
 
     // Join date
     const joinDateEl = document.querySelector('[data-testid="UserJoinDate"]');

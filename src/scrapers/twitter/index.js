@@ -148,7 +148,7 @@ export async function scrapeProfile(page, username) {
       username: usernameMatch?.[1] || null,
       bio: getText('[data-testid="UserDescription"]'),
       location: getText('[data-testid="UserLocation"]'),
-      website: getAttr('[data-testid="UserUrl"] a', 'href'),
+      website: getAttr('[data-testid="UserUrl"]', 'href') || getAttr('[data-testid="UserUrl"] a', 'href'),
       joined: getText('[data-testid="UserJoinDate"]'),
       birthday: getText('[data-testid="UserBirthday"]'),
       following: followingLink?.querySelector('span')?.textContent || null,

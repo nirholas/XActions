@@ -48,7 +48,7 @@
     }
 
     /* Sidebar */
-    .sidebar {
+    .sidebar-left {
       border-right: 1px solid var(--border);
       padding: 20px;
       position: sticky;
@@ -390,7 +390,7 @@
     /* Responsive */
     @media (max-width: 1024px) {
       .layout { grid-template-columns: 1fr; }
-      .sidebar { display: none; }
+      .sidebar-left { display: none; }
       .stats-grid { grid-template-columns: repeat(2, 1fr); }
       .two-col { grid-template-columns: 1fr; }
     }
@@ -399,17 +399,7 @@
 <body>
   <div class="layout">
     <!-- Sidebar -->
-    <nav class="sidebar">
-      <a href="/dashboard" class="sidebar-logo">⚡ XActions</a>
-      <a href="/dashboard" class="nav-link">🏠 Dashboard</a>
-      <a href="/analytics" class="nav-link">📊 Analytics</a>
-      <a href="/automations" class="nav-link">🤖 Automations</a>
-      <a href="/agent" class="nav-link active">🧠 AI Agent</a>
-      <a href="/monitor" class="nav-link">👁️ Monitor</a>
-      <a href="/workflows" class="nav-link">⚙️ Workflows</a>
-      <a href="/unfollowers" class="nav-link">👥 Unfollowers</a>
-      <a href="/docs" class="nav-link">📖 Docs</a>
-    </nav>
+    <aside class="sidebar-left"></aside>
 
     <!-- Main Content -->
     <main class="main">
@@ -769,5 +759,6 @@
       setTimeout(() => { toast.classList.remove('show'); }, 3000);
     }
   </script>
+<script src="/js/sidebar.js"></script>
 </body>
 </html>

@@ -18,7 +18,7 @@
     "xactions-mcp": "./bin.js"
   },
   "dependencies": {
-    "xactions": "^3.1.0"
+    "xactions": "^3.0.44"
   },
   "keywords": [
     "xactions",

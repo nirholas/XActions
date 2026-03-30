@@ -90,8 +90,8 @@
   stats.location = locationEl?.textContent || '';
 
   // Website
-  const urlEl = document.querySelector('[data-testid="UserUrl"] a');
-  stats.website = urlEl?.getAttribute('href') || urlEl?.textContent || '';
+  const urlEl = document.querySelector('[data-testid="UserUrl"]');
+  stats.website = urlEl?.getAttribute('href') || urlEl?.querySelector('a')?.getAttribute('href') || urlEl?.textContent || '';
 
   // Join date
   const joinEl = document.querySelector('[data-testid="UserJoinDate"]');

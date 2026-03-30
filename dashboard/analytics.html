@@ -89,7 +89,7 @@
     }
 
     /* Sidebar */
-    .sidebar {
+    .sidebar-left {
       border-right: 1px solid var(--border);
       padding: 20px;
       position: sticky;
@@ -807,7 +807,7 @@
     /* Responsive */
     @media (max-width: 768px) {
       .layout { grid-template-columns: 1fr; }
-      .sidebar { display: none; }
+      .sidebar-left { display: none; }
       .main { padding: 16px; }
       .grid-2, .grid-3 { grid-template-columns: 1fr; }
       .comparison-grid { grid-template-columns: 1fr; }
@@ -867,17 +867,7 @@
   <a href="#main-content" class="skip-nav">Skip to main content</a>
   <div class="layout">
     <!-- Sidebar -->
-    <nav class="sidebar" aria-label="Main navigation">
-      <a href="/dashboard" class="sidebar-logo">⚡ XActions</a>
-      <a href="/dashboard" class="nav-link">🏠 Dashboard</a>
-      <a href="/run" class="nav-link">▶️ Run</a>
-      <a href="/thread" class="nav-link">🧵 Thread Reader</a>
-      <a href="/analytics" class="nav-link active">📊 Analytics</a>
-      <a href="/docs" class="nav-link">📖 Docs</a>
-      <a href="/mcp" class="nav-link">🤖 MCP</a>
-      <a href="/admin" class="nav-link">⚙️ Admin</a>
-      <a href="/about" class="nav-link">ℹ️ About</a>
-    </nav>
+    <aside class="sidebar-left"></aside>
 
     <!-- Main -->
     <main class="main" id="main-content">
@@ -1178,5 +1168,6 @@
   <script src="/js/config.js"></script>
   <script>requireAuth();</script>
   <script src="/js/analytics.js"></script>
+<script src="/js/sidebar.js"></script>
 </body>
 </html>

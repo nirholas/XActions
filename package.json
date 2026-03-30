@@ -104,14 +104,14 @@
     "puppeteer-extra-plugin-stealth": "^2.11.2",
     "redis": "^4.6.11",
     "remotion": "^4.0.428",
-    "socket.io": "^4.8.3",
+    "socket.io": "^4.7.5",
     "stripe": "^14.10.0"
   },
   "optionalDependencies": {
     "@atproto/api": "^0.13.35",
-    "@x402/core": "npm:null@^0.1.0",
-    "@x402/evm": "npm:null@^0.1.0",
-    "@x402/express": "npm:null@^0.1.0",
+    "@x402/core": "^2.8.0",
+    "@x402/evm": "^2.8.0",
+    "@x402/express": "^2.8.0",
     "viem": "^2.0.0",
     "xspace-agent": "^0.1.0"
   },

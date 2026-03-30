@@ -161,9 +161,13 @@ class ProfileScraper(BaseScraper):
             # Website
             website = ""
             try:
-                website_element = page.locator('[data-testid="UserUrl"] a')
+                website_element = page.locator('[data-testid="UserUrl"]')
                 if await website_element.count() > 0:
                     website = await website_element.get_attribute("href") or ""
+                    if not website:
+                        child_a = website_element.locator('a')
+                        if await child_a.count() > 0:
+                            website = await child_a.get_attribute("href") or ""
             except Exception:
                 pass
             

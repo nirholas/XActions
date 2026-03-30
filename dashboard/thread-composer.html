@@ -8,8 +8,8 @@
     :root { --bg: #000; --bg2: #111; --bg3: #1a1a1a; --border: #333; --text: #e0e0e0; --text2: #888; --accent: #1d9bf0; --green: #00c853; --red: #ff4444; --yellow: #ffb800; }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; display: flex; min-height: 100vh; }
-    .sidebar { width: 240px; background: var(--bg2); border-right: 1px solid var(--border); padding: 20px 0; flex-shrink: 0; }
-    .sidebar .logo { padding: 0 20px 20px; font-size: 20px; font-weight: 700; color: #fff; }
+    .sidebar-left { width: 240px; background: var(--bg2); border-right: 1px solid var(--border); padding: 20px 0; flex-shrink: 0; }
+    .sidebar-left .logo { padding: 0 20px 20px; font-size: 20px; font-weight: 700; color: #fff; }
     .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 20px; color: var(--text2); text-decoration: none; font-size: 14px; transition: all .2s; }
     .nav-item:hover, .nav-item.active { color: #fff; background: var(--bg3); }
     .main { flex: 1; display: flex; gap: 24px; padding: 30px; overflow-y: auto; }
@@ -53,18 +53,7 @@
   </style>
 </head>
 <body>
-  <nav class="sidebar">
-    <div class="logo">⚡ XActions</div>
-    <a href="index.html" class="nav-item">🏠 Dashboard</a>
-    <a href="analytics.html" class="nav-item">📊 Analytics</a>
-    <a href="calendar.html" class="nav-item">📅 Calendar</a>
-    <a href="thread.html" class="nav-item active">🧵 Thread Composer</a>
-    <a href="automations.html" class="nav-item">🤖 Automations</a>
-    <a href="monitor.html" class="nav-item">👁️ Monitor</a>
-    <a href="unfollowers.html" class="nav-item">👥 Unfollowers</a>
-    <a href="video.html" class="nav-item">🎬 Video DL</a>
-    <a href="workflows.html" class="nav-item">⚙️ Workflows</a>
-  </nav>
+  <aside class="sidebar-left"></aside>
 
   <main class="main">
     <div class="editor-panel">
@@ -330,5 +319,6 @@
     // ── Init ──
     renderEditor();
   </script>
+<script src="/js/sidebar.js"></script>
 </body>
 </html>

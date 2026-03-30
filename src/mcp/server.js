@@ -668,7 +668,7 @@ const TOOLS = [
   // ====== Analytics ======
   {
     name: 'x_get_analytics',
-    description: 'Get your account engagement analytics.'
+    description: 'Get your account engagement analytics.',
     inputSchema: {
       type: 'object',
       properties: {
