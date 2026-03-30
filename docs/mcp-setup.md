@@ -238,6 +238,35 @@ Try these with Claude, Cursor, or any MCP-compatible AI:
 
 ## Troubleshooting
 
+### `npx xactions-mcp` returns 404 / package not found
+
+Make sure you have the latest version. If the `xactions-mcp` package hasn't been published yet, use either of these alternatives:
+
+```bash
+# Option 1: Use the -p flag to install from the xactions package
+npx -p xactions xactions-mcp
+
+# Option 2: Install globally first
+npm install -g xactions
+xactions-mcp
+```
+
+For MCP client configs, the `-p` flag approach:
+
+```json
+{
+  "mcpServers": {
+    "xactions": {
+      "command": "npx",
+      "args": ["-y", "-p", "xactions", "xactions-mcp"],
+      "env": {
+        "XACTIONS_SESSION_COOKIE": "your_auth_token_here"
+      }
+    }
+  }
+}
+```
+
 ### "Tool not found" or no tools showing
 
 1. Make sure the MCP server is configured correctly in your client

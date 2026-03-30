@@ -52,18 +52,13 @@ Scrapers &nbsp;·&nbsp; MCP Server for AI Agents &nbsp;·&nbsp; CLI &nbsp;·&nbs
 
 ### ⚡ See it in action
 
-<video src="https://raw.githubusercontent.com/nirholas/XActions/main/public/demo.mp4" controls width="720"></video>
-
-<details>
-<summary>Can't see the video? Click for static preview</summary>
-
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="public/demo.svg">
   <source media="(prefers-color-scheme: light)" srcset="public/demo.svg">
   <img alt="XActions CLI demo — profile lookup, tweet search, non-follower detection" src="public/demo.svg" width="720">
 </picture>
 
-</details>
+<video src="https://raw.githubusercontent.com/nirholas/XActions/main/public/demo.mp4" controls width="720"></video>
 
 </div>
 
