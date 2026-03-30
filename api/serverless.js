@@ -11,6 +11,7 @@ dotenv.config();
 
 import authRoutes from './routes/auth.js';
 import userRoutes from './routes/user.js';
+import twitterRoutes from './routes/twitter.js';
 import { generateSpec, generateWellKnown } from './openapi.js';
 import {
   PAY_TO_ADDRESS,
@@ -166,6 +167,9 @@ app.use('/api/ai', (req, res) => {
 app.use('/api/auth/login', authLimiter);
 app.use('/api/auth/register', authLimiter);
 app.use('/api/auth', authRoutes);
+
+// Twitter OAuth routes
+app.use('/api/twitter', twitterRoutes);
 
 // User routes
 app.use('/api/user', userRoutes);

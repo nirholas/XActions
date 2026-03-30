@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider      = "prisma-client-js"
   binaryTargets = ["native", "debian-openssl-3.0.x"]
@@ -12,174 +9,130 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String?  @unique  // Optional - users can register with just username
-  username  String   @unique
-  password  String?  // Nullable for guest users
-  credits   Int      @default(0)
-  
-  // Quick start / Guest user flags
-  isGuest           Boolean  @default(false)
-  emailVerified     Boolean  @default(false)
-  isAdmin           Boolean  @default(false)
-  followBonusClaimed Boolean @default(false)  // Track if they claimed follow bonus
-  
-  // Twitter OAuth
-  twitterId           String?  @unique
+  id                  String          @id @default(cuid())
+  email               String?         @unique
+  username            String          @unique
+  password            String?
+  credits             Int             @default(0)
+  isGuest             Boolean         @default(false)
+  emailVerified       Boolean         @default(false)
+  isAdmin             Boolean         @default(false)
+  followBonusClaimed  Boolean         @default(false)
+  twitterId           String?         @unique
   twitterUsername     String?
   twitterAccessToken  String?
   twitterRefreshToken String?
   twitterTokenExpiry  DateTime?
-  
-  // Browser Automation (Session Cookie)
   sessionCookie       String?
-  authMethod          String?  // 'oauth' or 'session'
-  
-  // Relationships
-  subscription    Subscription?
-  operations      Operation[]
-  payments        Payment[]
-  cryptoPayments  CryptoPayment[]
-  
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  
+  authMethod          String?
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+  cryptoPayments      CryptoPayment[]
+  operations          Operation[]
+  payments            Payment[]
+  subscription        Subscription?
+
   @@index([email])
   @@index([username])
 }
 
 model Subscription {
-  id              String   @id @default(cuid())
-  userId          String   @unique
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  tier            String   // 'free', 'basic', 'pro', 'enterprise'
-  status          String   // 'active', 'cancelled', 'expired', 'past_due'
-  
-  stripeCustomerId       String?  @unique
-  stripeSubscriptionId   String?  @unique
-  stripePriceId          String?
-  
-  startDate       DateTime
-  endDate         DateTime?
-  cancelAt        DateTime?
-  
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  
+  id                   String    @id @default(cuid())
+  userId               String    @unique
+  tier                 String
+  status               String
+  stripeCustomerId     String?   @unique
+  stripeSubscriptionId String?   @unique
+  stripePriceId        String?
+  startDate            DateTime
+  endDate              DateTime?
+  cancelAt             DateTime?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+  user                 User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@index([userId])
   @@index([stripeCustomerId])
-  @@index([status, endDate])
 }
 
 model Operation {
-  id          String   @id @default(cuid())
-  userId      String
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  type        String   // 'unfollowNonFollowers', 'unfollowEveryone', 'detectUnfollowers', etc.
-  status      String   // 'pending', 'processing', 'completed', 'failed', 'cancelled'
-  
-  // Operation details
-  config      String?  // Configuration for the operation (JSON string)
-  result      String?  // Result data (JSON string)
-  
-  // Stats
-  unfollowedCount Int?  @default(0)
-  followedCount   Int?  @default(0)
-  creditsUsed     Int   @default(0)
-  
-  // Timing
-  startedAt   DateTime?
-  completedAt DateTime?
-  
-  // Error handling
-  error       String?
-  retryCount  Int      @default(0)
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
+  id              String    @id @default(cuid())
+  userId          String
+  type            String
+  status          String
+  config          String?
+  result          String?
+  unfollowedCount Int?      @default(0)
+  followedCount   Int?      @default(0)
+  creditsUsed     Int       @default(0)
+  startedAt       DateTime?
+  completedAt     DateTime?
+  error           String?
+  retryCount      Int       @default(0)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@index([userId, status])
-  @@index([userId, type, status])
   @@index([createdAt])
 }
 
 model Payment {
   id              String   @id @default(cuid())
   userId          String
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  type            String   // 'subscription', 'credits'
+  type            String
   amount          Float
   currency        String   @default("usd")
-  
   stripePaymentId String?  @unique
   stripeInvoiceId String?
-  
-  status          String   // 'pending', 'succeeded', 'failed'
-  
-  // For credit purchases
+  status          String
   creditsAdded    Int?
-  
-  metadata        String?  // JSON string
-  
+  metadata        String?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
-  
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@index([userId])
   @@index([createdAt])
 }
 
 model JobQueue {
-  id          String   @id @default(cuid())
-  
-  type        String   // Job type
-  data        String   // Job data (JSON string)
-  status      String   // 'waiting', 'active', 'completed', 'failed'
-  
-  priority    Int      @default(0)
-  attempts    Int      @default(0)
-  maxAttempts Int      @default(3)
-  
+  id          String    @id @default(cuid())
+  type        String
+  data        String
+  status      String
+  priority    Int       @default(0)
+  attempts    Int       @default(0)
+  maxAttempts Int       @default(3)
   processedAt DateTime?
   failedAt    DateTime?
   error       String?
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
   @@index([status, priority])
   @@index([createdAt])
 }
 
 model CryptoPayment {
-  id          String   @id @default(cuid())
-  paymentId   String   @unique // Our internal payment ID
-  
+  id          String    @id @default(cuid())
+  paymentId   String    @unique
   userId      String?
-  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
-  
-  email       String?  // For guest users
-  
-  package     String   // Package name: 'starter', 'small', 'medium', 'large', 'unlimited'
-  credits     Int      // Credits to add
-  
-  amountUSD   Float    // USD value
-  currency    String   // Crypto currency: BTC, ETH, USDC, SOL
-  amount      Float    // Amount in crypto
-  
-  status      String   @default("pending") // 'pending', 'completed', 'expired', 'failed'
-  
-  txHash      String?  // Transaction hash
-  provider    String?  // 'coinbase', 'nowpayments', 'btcpay', 'manual'
-  
+  email       String?
+  package     String
+  credits     Int
+  amountUSD   Float
+  currency    String
+  amount      Float
+  status      String    @default("pending")
+  txHash      String?
+  provider    String?
   expiresAt   DateTime
   confirmedAt DateTime?
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  user        User?     @relation(fields: [userId], references: [id])
+
   @@index([paymentId])
   @@index([userId])
   @@index([status])
@@ -187,44 +140,28 @@ model CryptoPayment {
 }
 
 model License {
-  id          String   @id @default(cuid())
-  
-  key         String   @unique  // XACT-XXXX-XXXX-XXXX-XXXX
-  tier        String   // 'starter', 'business', 'enterprise'
-  
-  // Customer info
+  id              String    @id @default(cuid())
+  key             String    @unique
+  tier            String
   customerName    String?
   customerEmail   String?
   companyName     String?
-  
-  // Limits
-  maxUsers        Int      @default(500)
-  maxInstances    Int      @default(1)
-  
-  // Features
-  whiteLabel      Boolean  @default(false)
-  customDomain    Boolean  @default(false)
-  apiAccess       Boolean  @default(false)
-  
-  // Tracking
-  activations     Int      @default(0)
+  maxUsers        Int       @default(500)
+  maxInstances    Int       @default(1)
+  whiteLabel      Boolean   @default(false)
+  customDomain    Boolean   @default(false)
+  apiAccess       Boolean   @default(false)
+  activations     Int       @default(0)
   lastActivatedAt DateTime?
-  instanceIds     String?  // JSON array of activated instance IDs
-  
-  // Status
-  status          String   @default("active") // 'active', 'suspended', 'revoked', 'expired'
+  instanceIds     String?
+  status          String    @default("active")
   expiresAt       DateTime?
-  
-  // Payment reference
   paymentId       String?
   amountPaid      Float?
-  
-  // Notes
   notes           String?
-  
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
   @@index([key])
   @@index([customerEmail])
   @@index([status])
@@ -234,20 +171,20 @@ model AccountSnapshot {
   id        String   @id @default(cuid())
   username  String
   type      String   @default("full")
-  data      String   @db.Text
+  data      String
   createdAt DateTime @default(now())
-  
+
   @@index([username, type])
   @@index([createdAt])
 }
 
 model FollowerSnapshot {
-  id          String   @id @default(cuid())
-  userId      String   // the monitored account (XActions user ID)
-  username    String   // Twitter username being tracked
-  followers   String   @db.Text // JSON array of { username, name, avatarUrl, followedSince }
-  totalCount  Int
-  createdAt   DateTime @default(now())
+  id         String   @id @default(cuid())
+  userId     String
+  username   String
+  followers  String
+  totalCount Int
+  createdAt  DateTime @default(now())
 
   @@index([userId])
   @@index([username, createdAt])
@@ -255,28 +192,28 @@ model FollowerSnapshot {
 
 model FollowerChange {
   id            String    @id @default(cuid())
-  userId        String    // XActions user ID
-  type          String    // "gained" or "lost"
-  username      String    // the follower who followed/unfollowed
+  userId        String
+  type          String
+  username      String
   name          String?
   avatarUrl     String?
   detectedAt    DateTime  @default(now())
-  followedSince DateTime? // for "lost" — when they originally followed
+  followedSince DateTime?
 
   @@index([userId, detectedAt])
   @@index([userId, type])
 }
 
 model UnfollowerSchedule {
-  id        String   @id @default(cuid())
-  userId    String   @unique
-  interval  String   // 'hourly', 'every6h', 'daily'
-  active    Boolean  @default(true)
-  lastRunAt DateTime?
-  nextRunAt DateTime?
+  id         String    @id @default(cuid())
+  userId     String    @unique
+  interval   String
+  active     Boolean   @default(true)
+  lastRunAt  DateTime?
+  nextRunAt  DateTime?
   webhookUrl String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 
   @@index([active, nextRunAt])
 }
