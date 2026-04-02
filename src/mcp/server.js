@@ -1903,7 +1903,7 @@ const TOOLS = [
   },
   {
     name: 'x_get_likes',
-    description: 'Scrape tweets that a user has liked. Shows what content a user engages with.',
+    description: 'Export liked tweets with rich data: text, author, images, quoted tweets, articles, cards, and engagement stats.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -2275,7 +2275,7 @@ async function executeTool(name, args) {
   const xeepyTools = [
     'x_get_replies', 'x_get_hashtag', 'x_get_likers', 'x_get_retweeters',
     'x_get_media', 'x_get_recommendations', 'x_get_mentions', 'x_get_quote_tweets',
-    'x_get_likes', 'x_auto_follow', 'x_follow_engagers', 'x_unfollow_all',
+    'x_auto_follow', 'x_follow_engagers', 'x_unfollow_all',
     'x_smart_unfollow', 'x_quote_tweet', 'x_auto_comment', 'x_auto_retweet',
     'x_detect_bots', 'x_find_influencers', 'x_smart_target', 'x_crypto_analyze',
     'x_grok_analyze_image', 'x_audience_insights', 'x_engagement_report',
@@ -2473,22 +2473,6 @@ async function executeXeepyTool(name, args) {
         });
       }, args.limit || 50);
       return { quotes, count: quotes.length };
-    }
-
-    case 'x_get_likes': {
-      const page = await localTools.getPage();
-      await page.goto(`https://x.com/${args.username}/likes`, { waitUntil: 'networkidle2', timeout: 30000 });
-      await new Promise(r => setTimeout(r, 3000));
-      const likedTweets = await page.evaluate((limit) => {
-        const articles = document.querySelectorAll('article[data-testid="tweet"]');
-        return Array.from(articles).slice(0, limit).map(el => {
-          const textEl = el.querySelector('[data-testid="tweetText"]');
-          const userEl = el.querySelector('[data-testid="User-Name"]');
-          const timeEl = el.querySelector('time');
-          return { text: textEl?.textContent || '', author: userEl?.textContent || '', timestamp: timeEl?.getAttribute('datetime') || '' };
-        });
-      }, args.limit || 50);
-      return { likedTweets, count: likedTweets.length, username: args.username };
     }
 
     // ── Follow Automation ──

@@ -713,6 +713,175 @@ export async function scrapeBookmarks(page, options = {}) {
 }
 
 // ============================================================================
+// Liked Tweets Scraper
+// ============================================================================
+
+/**
+ * Scrape a user's liked tweets (x.com/username/likes).
+ * Different from scrapeLikes which scrapes who liked a specific tweet.
+ *
+ * Returns rich data per tweet: text, author, handle, timestamp, link, images,
+ * quotedTweet, article, card, and engagement stats.
+ */
+export async function scrapeLikedTweets(page, username, options = {}) {
+  const { limit = 50, scrollDelay = 2000 } = options;
+
+  if (!username) {
+    throw new Error('Username is required for scrapeLikedTweets');
+  }
+
+  await page.goto(`https://x.com/${username}/likes`, { waitUntil: 'networkidle2', timeout: 30000 });
+  await randomDelay(2000, 3000);
+
+  const likedTweets = [];
+  const seenLinks = new Set();
+  let emptyScrolls = 0;
+
+  while (likedTweets.length < limit && emptyScrolls < 5) {
+    // Expand truncated tweets by clicking "Show more" buttons one at a time.
+    // X re-renders the DOM after each click, detaching all other button refs.
+    for (let sm = 0; sm < 20; sm++) {
+      const btn = await page.$('button[data-testid="tweet-text-show-more-link"]');
+      if (!btn) break;
+      try {
+        await btn.evaluate(b => b.scrollIntoView({ block: 'center' }));
+        await new Promise(r => setTimeout(r, 300));
+        await btn.click();
+        await new Promise(r => setTimeout(r, 1200));
+      } catch { break; }
+    }
+
+    const newTweets = await page.evaluate(() => {
+      return Array.from(document.querySelectorAll('article[data-testid="tweet"]')).map(el => {
+        // Main author handle from first UserAvatar-Container
+        const avatarContainers = el.querySelectorAll('[data-testid^="UserAvatar-Container-"]');
+        const mainHandle = avatarContainers[0]?.getAttribute('data-testid')?.replace('UserAvatar-Container-', '') || '';
+
+        // Detect quoted tweet via second UserAvatar-Container
+        let quotedTweet = null;
+        if (avatarContainers.length >= 2) {
+          const qtHandle = avatarContainers[1]?.getAttribute('data-testid')?.replace('UserAvatar-Container-', '') || '';
+          const allTexts = el.querySelectorAll('[data-testid="tweetText"]');
+          const qtText = allTexts.length >= 2 ? allTexts[1].textContent || '' : '';
+          const allTimes = el.querySelectorAll('time');
+          const qtTime = allTimes.length >= 2 ? allTimes[1].getAttribute('datetime') || '' : '';
+          const allUserNames = el.querySelectorAll('[data-testid="User-Name"]');
+          const qtDisplayName = allUserNames.length >= 2 ? allUserNames[1].querySelector('span')?.textContent || '' : '';
+          const qtImages = [];
+          if (qtHandle) {
+            el.querySelectorAll('a[href*="/photo/"]').forEach(a => {
+              if (a.href.includes('/' + qtHandle + '/')) {
+                const img = a.querySelector('img');
+                if (img?.src) qtImages.push(img.src);
+              }
+            });
+          }
+          const qtLinkEl = el.querySelector('a[href*="/' + qtHandle + '/status/"]');
+          quotedTweet = {
+            text: qtText,
+            author: qtDisplayName,
+            handle: qtHandle,
+            timestamp: qtTime,
+            link: qtLinkEl?.href || '',
+            images: qtImages,
+          };
+        }
+
+        // Main tweet text (first tweetText element)
+        const allTexts = el.querySelectorAll('[data-testid="tweetText"]');
+        const text = allTexts[0]?.textContent || '';
+
+        const userEl = el.querySelector('[data-testid="User-Name"]');
+        const timeEl = el.querySelector('time');
+        const linkEl = el.querySelector('a[href*="/status/"]');
+
+        // Main tweet images (only those from the main author)
+        const images = [];
+        el.querySelectorAll('a[href*="/photo/"]').forEach(a => {
+          if (a.href.includes('/' + mainHandle + '/')) {
+            const img = a.querySelector('img');
+            if (img?.src) images.push(img.src);
+          }
+        });
+
+        // X Article (data-testid="article-cover-image")
+        let article = null;
+        const articleCover = el.querySelector('[data-testid="article-cover-image"]');
+        if (articleCover) {
+          const contentDiv = articleCover.nextElementSibling;
+          const childDivs = contentDiv ? contentDiv.querySelectorAll(':scope > div') : [];
+          const title = childDivs[0]?.textContent?.trim() || '';
+          const description = childDivs[1]?.textContent?.trim() || '';
+          const coverImage = articleCover.querySelector('img')?.src || '';
+          article = { title, description, coverImage };
+        }
+
+        // Card/link preview (data-testid="card.wrapper")
+        let card = null;
+        const cardWrapper = el.querySelector('[data-testid="card.wrapper"]');
+        if (cardWrapper) {
+          const cardA = cardWrapper.querySelector('a[href]');
+          const headingEl = cardWrapper.querySelector('[role="heading"]');
+          const title = headingEl?.textContent || cardA?.getAttribute('aria-label') || '';
+          card = {
+            title: title || cardWrapper.textContent?.trim()?.slice(0, 280) || '',
+            link: cardA?.href || '',
+          };
+        }
+
+        // Engagement stats from role="group" aria-label
+        const groupEl = el.querySelector('[role="group"]');
+        const groupLabel = groupEl?.getAttribute('aria-label') || '';
+        const parseNum = (pattern) => { const m = groupLabel.match(pattern); return m ? m[1] : '0'; };
+
+        const handle = userEl?.querySelector('a[href^="/"]')?.getAttribute('href')?.replace('/', '') || '';
+        const displayName = userEl?.querySelector('span')?.textContent || '';
+        const tweetLink = linkEl?.href || '';
+
+        // Build article URL for direct articles (not from quoted tweets)
+        if (article && !quotedTweet && tweetLink) {
+          const statusMatch = tweetLink.match(/\/status\/(\d+)/);
+          if (statusMatch) article.url = `https://x.com/${handle}/article/${statusMatch[1]}`;
+        }
+        if (article) article.tweetUrl = tweetLink;
+
+        return {
+          text,
+          author: displayName,
+          handle,
+          timestamp: timeEl?.getAttribute('datetime') || '',
+          link: tweetLink,
+          images,
+          quotedTweet,
+          article,
+          card,
+          replies: parseNum(/([\d,]+)\s*repl/),
+          retweets: parseNum(/([\d,]+)\s*repost/),
+          likes: parseNum(/([\d,]+)\s*like/),
+          views: parseNum(/([\d,]+)\s*view/),
+        };
+      });
+    });
+
+    let added = 0;
+    for (const t of newTweets) {
+      if (t.link && !seenLinks.has(t.link) && likedTweets.length < limit) {
+        seenLinks.add(t.link);
+        likedTweets.push(t);
+        added++;
+      }
+    }
+    if (added === 0) emptyScrolls++;
+    else emptyScrolls = 0;
+
+    await page.evaluate(() => window.scrollBy(0, window.innerHeight * 2));
+    await sleep(scrollDelay);
+  }
+
+  return likedTweets;
+}
+
+// ============================================================================
 // Notifications Scraper
 // ============================================================================
 
@@ -943,6 +1112,7 @@ export default {
   scrapeMedia,
   scrapeListMembers,
   scrapeBookmarks,
+  scrapeLikedTweets,
   scrapeNotifications,
   scrapeTrending,
   scrapeCommunityMembers,
