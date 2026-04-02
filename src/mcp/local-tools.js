@@ -24,6 +24,7 @@ import {
   scrapeMedia,
   scrapeListMembers,
   scrapeBookmarks,
+  scrapeArticle,
   scrapeNotifications,
   scrapeTrending,
   scrapeSpaces,
@@ -628,6 +629,11 @@ export async function x_bookmark({ url }) {
 export async function x_get_bookmarks({ limit = 100 }) {
   const { page: pg } = await ensureBrowser();
   return scrapeBookmarks(pg, { limit });
+}
+
+export async function x_read_article({ url }) {
+  const { page: pg } = await ensureBrowser();
+  return scrapeArticle(pg, url);
 }
 
 export async function x_clear_bookmarks() {
@@ -1369,6 +1375,7 @@ export const toolMap = {
   x_reply,
   x_bookmark,
   x_get_bookmarks,
+  x_read_article,
   x_clear_bookmarks,
   x_auto_like,
   // Discovery

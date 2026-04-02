@@ -713,6 +713,102 @@ export async function scrapeBookmarks(page, options = {}) {
 }
 
 // ============================================================================
+// Article Scraper
+// ============================================================================
+
+/**
+ * Scrape the full content of an X Article.
+ *
+ * Accepts either a tweet URL (x.com/user/status/ID) or a direct article URL
+ * (x.com/user/article/ID). For tweet URLs, discovers the article link by
+ * checking for anchor tags or clicking the article-cover-image element.
+ *
+ * @param {import('puppeteer').Page} page - Puppeteer page instance
+ * @param {string} url - Tweet or article URL
+ * @returns {{ title, author, handle, text, images, url }}
+ */
+export async function scrapeArticle(page, url) {
+  // If given a tweet URL, discover the article URL first
+  if (url.includes('/status/') && !url.includes('/article/')) {
+    await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 });
+    await randomDelay(3000, 5000);
+
+    // Try finding a direct article link on the page
+    let articleUrl = await page.evaluate(() => {
+      const links = [...document.querySelectorAll('a[href*="/article/"]')];
+      const match = links.find(a => a.href.match(/\/article\/\d+$/));
+      return match?.href || '';
+    });
+
+    // Fallback: click article-cover-image (handles quoted-tweet articles)
+    if (!articleUrl) {
+      const cover = await page.$('[data-testid="article-cover-image"]');
+      if (cover) {
+        await cover.click();
+        await new Promise(r => setTimeout(r, 5000));
+        articleUrl = await page.evaluate(() => {
+          const links = [...document.querySelectorAll('a[href*="/article/"]')];
+          const match = links.find(a => a.href.match(/\/article\/\d+$/));
+          return match?.href || '';
+        });
+        if (!articleUrl) {
+          const hasReadView = await page.evaluate(() =>
+            !!document.querySelector('[data-testid="twitterArticleReadView"]'));
+          if (hasReadView) articleUrl = page.url();
+        }
+      }
+    }
+
+    if (!articleUrl) throw new Error('No article found on this tweet');
+    url = articleUrl;
+  }
+
+  await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 });
+  await randomDelay(3000, 5000);
+
+  // Scroll to load lazy content
+  for (let i = 0; i < 25; i++) {
+    await page.evaluate(() => window.scrollBy(0, 800));
+    await new Promise(r => setTimeout(r, 500));
+  }
+
+  const article = await page.evaluate(() => {
+    const title = document.querySelector('[data-testid="twitter-article-title"]')?.textContent?.trim() || '';
+    const readView = document.querySelector('[data-testid="twitterArticleReadView"]');
+    if (!readView) return null;
+
+    const userNameEl = document.querySelector('[data-testid="User-Name"]');
+    const authorName = userNameEl?.querySelector('span')?.textContent?.trim() || '';
+    const authorHandle = userNameEl?.querySelector('a[href^="/"]')?.getAttribute('href')?.replace('/', '') || '';
+
+    // Clean the article text — strip header (author, timestamp, stats) and footer (bio)
+    const fullText = readView.innerText;
+    const lines = fullText.split('\n');
+    let startIdx = 0;
+    for (let i = 0; i < Math.min(lines.length, 15); i++) {
+      if (lines[i].length > 100) { startIdx = i; break; }
+    }
+    let endIdx = lines.length;
+    for (let i = lines.length - 1; i > Math.max(0, lines.length - 10); i--) {
+      if (lines[i] === authorName || lines[i] === '@' + authorHandle || lines[i] === 'Following') {
+        endIdx = Math.min(endIdx, i);
+      }
+    }
+    const cleanText = lines.slice(startIdx, endIdx).join('\n').trim();
+
+    // Filter out profile images
+    const images = [...readView.querySelectorAll('img')]
+      .map(i => i.src)
+      .filter(s => s.includes('twimg') && !s.includes('_normal.') && !s.includes('_bigger.') && !s.includes('profile_images'));
+
+    return { title, author: authorName, handle: authorHandle, text: cleanText, images, url: location.href };
+  });
+
+  if (!article) throw new Error('Article content not found');
+  return article;
+}
+
+// ============================================================================
 // Notifications Scraper
 // ============================================================================
 
@@ -943,6 +1039,7 @@ export default {
   scrapeMedia,
   scrapeListMembers,
   scrapeBookmarks,
+  scrapeArticle,
   scrapeNotifications,
   scrapeTrending,
   scrapeCommunityMembers,

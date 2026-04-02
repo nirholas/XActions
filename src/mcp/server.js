@@ -772,6 +772,17 @@ const TOOLS = [
       required: ['title', 'body'],
     },
   },
+  {
+    name: 'x_read_article',
+    description: 'Read the full content of an X Article. Accepts a tweet URL or direct article URL. For quote tweets containing articles, discovers the real article by clicking through.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        url: { type: 'string', description: 'Tweet URL (x.com/user/status/ID) or article URL (x.com/user/article/ID)' },
+      },
+      required: ['url'],
+    },
+  },
   // ====== Creator ======
   {
     name: 'x_creator_analytics',
