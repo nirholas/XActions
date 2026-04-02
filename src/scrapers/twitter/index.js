@@ -443,6 +443,10 @@ export async function searchTweets(page, query, options = {}) {
  * Scrape a full tweet thread
  */
 export async function scrapeThread(page, tweetUrl) {
+  const tweetUrlObject = new URL(tweetUrl);
+  const mainTweetId = tweetUrlObject.pathname.match(/status\/(\d+)/)?.[1] || null;
+  const mainAuthor = tweetUrlObject.pathname.split('/').filter(Boolean)[0] || null;
+
   await page.goto(tweetUrl, { waitUntil: 'networkidle2' });
   await randomDelay();
 
@@ -451,36 +455,61 @@ export async function scrapeThread(page, tweetUrl) {
     await randomDelay(1000, 2000);
   }
 
-  const thread = await page.evaluate(() => {
-    const articles = document.querySelectorAll('article[data-testid="tweet"]');
-    const mainTweetId = window.location.pathname.match(/status\/(\d+)/)?.[1];
-    
-    const mainArticle = Array.from(articles).find(a => 
-      a.querySelector(`a[href*="/status/${mainTweetId}"]`)
-    );
-    const mainAuthor = mainArticle?.querySelector('[data-testid="User-Name"] a')?.href?.split('/')[3];
+  const thread = await page.evaluate(({ mainTweetId, mainAuthor }) => {
+    const articles = Array.from(document.querySelectorAll('article[data-testid="tweet"]'));
 
-    return Array.from(articles)
-      .map((article) => {
-        const textEl = article.querySelector('[data-testid="tweetText"]');
-        const authorLink = article.querySelector('[data-testid="User-Name"] a[href^="/"]');
-        const timeEl = article.querySelector('time');
-        const linkEl = article.querySelector('a[href*="/status/"]');
-        
-        const author = authorLink?.href?.split('/')[3];
-        
-        return {
-          id: linkEl?.href?.match(/status\/(\d+)/)?.[1] || null,
-          text: textEl?.textContent || null,
-          author,
-          timestamp: timeEl?.getAttribute('datetime') || null,
-          url: linkEl?.href || null,
-          isMainAuthor: author === mainAuthor,
-          platform: 'twitter',
-        };
-      })
-      .filter(t => t.id && t.isMainAuthor);
-  });
+    const extractAuthor = (article) => {
+      const userName = article.querySelector('[data-testid="User-Name"]');
+      if (userName) {
+        const links = Array.from(userName.querySelectorAll('a[href^="/"]'));
+        for (const link of links) {
+          const href = link.getAttribute('href') || '';
+          const handle = href.split('/').filter(Boolean)[0] || null;
+          if (handle && handle !== 'i' && handle !== 'home' && handle !== 'search') {
+            return handle;
+          }
+        }
+      }
+
+      const fallbackLink = article.querySelector('a[href^="/"][href*="/status/"]');
+      const fallbackHandle = fallbackLink?.getAttribute('href')?.split('/').filter(Boolean)[0] || null;
+      return fallbackHandle;
+    };
+
+    const dedup = new Map();
+
+    for (const article of articles) {
+      const textEl = article.querySelector('[data-testid="tweetText"]');
+      const authorLink = article.querySelector('[data-testid="User-Name"] a[href^="/"]');
+      const timeEl = article.querySelector('time');
+      const linkEl = article.querySelector('a[href*="/status/"]');
+
+      const id = linkEl?.href?.match(/status\/(\d+)/)?.[1] || null;
+      const author = extractAuthor(article) || authorLink?.href?.split('/').filter(Boolean)[0] || null;
+      const isMainTweet = Boolean(mainTweetId && id === mainTweetId);
+      const isMainAuthor = Boolean(mainAuthor && author === mainAuthor);
+
+      if (!id) continue;
+      if (!isMainTweet && !isMainAuthor) continue;
+
+      dedup.set(id, {
+        id,
+        text: textEl?.textContent || null,
+        author,
+        timestamp: timeEl?.getAttribute('datetime') || null,
+        url: linkEl?.href || null,
+        isMainAuthor,
+        isMainTweet,
+        platform: 'twitter',
+      });
+    }
+
+    return Array.from(dedup.values()).sort((a, b) => {
+      const ta = a.timestamp ? new Date(a.timestamp).getTime() : 0;
+      const tb = b.timestamp ? new Date(b.timestamp).getTime() : 0;
+      return ta - tb;
+    });
+  }, { mainTweetId, mainAuthor });
 
   return thread;
 }
