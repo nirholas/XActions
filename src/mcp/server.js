@@ -1129,6 +1129,17 @@ const TOOLS = [
       required: ['url'],
     },
   },
+  {
+    name: 'x_read_post',
+    description: 'Read a tweet/post with full rich data. Returns thread if the post is part of one (author self-replies only). Recursively resolves quoted tweets — if a quoted tweet is itself a thread or contains its own quote tweet, those are fetched too. Each tweet includes: text, media (images + video URLs), X Articles, cards (link previews), external URLs, and engagement stats.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        url: { type: 'string', description: 'URL of the tweet/post' },
+      },
+      required: ['url'],
+    },
+  },
   // ====== Posting Analytics ======
   {
     name: 'x_best_time_to_post',

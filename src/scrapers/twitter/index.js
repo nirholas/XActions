@@ -667,6 +667,69 @@ export async function scrapeThread(page, tweetUrl) {
 }
 
 // ============================================================================
+// Post Scraper (rich data + recursive quoted tweets)
+// ============================================================================
+
+/**
+ * Scrape a single post or thread with full rich data.
+ *
+ * Returns the thread (1 tweet if single post, N if thread) with rich data
+ * per tweet: text, media, article, card, external URLs, engagement, and
+ * recursively resolved quoted posts (which may themselves be threads).
+ *
+ * @param {import('puppeteer').Page} page
+ * @param {string} tweetUrl
+ * @param {number} [maxDepth=5] - Max recursion depth for nested quote tweets
+ */
+export async function scrapePost(page, tweetUrl, maxDepth = 5) {
+  const mainTweetId = new URL(tweetUrl).pathname.match(/status\/(\d+)/)?.[1] || null;
+  const mainAuthor = new URL(tweetUrl).pathname.split('/').filter(Boolean)[0] || null;
+  if (!mainTweetId || !mainAuthor) throw new Error('Invalid tweet URL');
+
+  // Ensure we're on x.com for cookie access
+  if (!page.url().includes('x.com')) {
+    await page.goto('https://x.com', { waitUntil: 'networkidle2', timeout: 30000 });
+    checkAuth(page);
+    await randomDelay(2000, 3000);
+  }
+
+  return _scrapePostRecursive(page, mainTweetId, mainAuthor, maxDepth, 0);
+}
+
+async function _scrapePostRecursive(page, tweetId, author, maxDepth, depth) {
+  const graphqlData = await fetchTweetDetail(page, tweetId);
+  if (!graphqlData) return { thread: [] };
+
+  const entries = extractEntries(graphqlData);
+  const thread = parseThreadFromEntries(entries, author, tweetId);
+  if (thread.length === 0) return { thread: [] };
+
+  // For each thread tweet, resolve its quoted post recursively
+  for (const tweet of thread) {
+    if (tweet.quotedTweetId && depth < maxDepth) {
+      const qtData = await fetchTweetDetail(page, tweet.quotedTweetId);
+      if (qtData) {
+        const qtEntries = extractEntries(qtData);
+        const focalEntry = qtEntries.find(e =>
+          e.entryId?.includes(tweet.quotedTweetId));
+        const focalResult = unwrapResult(
+          focalEntry?.content?.itemContent?.tweet_results?.result);
+        const qtAuthor = focalResult ? getScreenName(focalResult) : '';
+
+        if (qtAuthor) {
+          tweet.quotedPost = await _scrapePostRecursive(
+            page, tweet.quotedTweetId, qtAuthor, maxDepth, depth + 1);
+        }
+      }
+    }
+    delete tweet.quotedTweetId;
+    delete tweet.inReplyTo;
+  }
+
+  return { thread };
+}
+
+// ============================================================================
 // Likes Scraper
 // ============================================================================
 
@@ -1119,6 +1182,7 @@ export default {
   scrapeTweets,
   searchTweets,
   scrapeThread,
+  scrapePost,
   scrapeLikes,
   scrapeHashtag,
   scrapeMedia,

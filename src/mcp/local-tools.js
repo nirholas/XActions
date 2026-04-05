@@ -20,6 +20,7 @@ import {
   scrapeTweets,
   searchTweets,
   scrapeThread,
+  scrapePost,
   scrapeLikes,
   scrapeMedia,
   scrapeListMembers,
@@ -200,6 +201,11 @@ export async function x_search_tweets({ query, limit = 50 }) {
 export async function x_get_thread({ url }) {
   const { page: pg } = await ensureBrowser();
   return scrapeThread(pg, url);
+}
+
+export async function x_read_post({ url }) {
+  const { page: pg } = await ensureBrowser();
+  return scrapePost(pg, url);
 }
 
 export async function x_best_time_to_post({ username, limit = 100 }) {
@@ -1346,6 +1352,7 @@ export const toolMap = {
   x_get_tweets,
   x_search_tweets,
   x_get_thread,
+  x_read_post,
   x_best_time_to_post,
   // Core actions
   x_follow,
