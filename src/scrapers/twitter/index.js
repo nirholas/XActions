@@ -518,6 +518,9 @@ export async function scrapeLikedTweets(page, username, options = {}) {
   if (page.url().includes('/login') || page.url().includes('/i/flow/login')) {
     throw new Error('Authentication failed — cookie may be expired.\n\nRun: xactions login');
   }
+  // Expand viewport so X renders multiple tweets (default 800px only fits ~1)
+  await page.setViewport({ width: 1280, height: 2400 });
+  await page.waitForSelector('article[data-testid="tweet"]', { timeout: 10000 }).catch(() => {});
   await randomDelay(2000, 3000);
 
   const likedTweets = [];
@@ -525,7 +528,7 @@ export async function scrapeLikedTweets(page, username, options = {}) {
   let emptyScrolls = 0;
   let passedFromDate = false;
 
-  while (likedTweets.length < limit && emptyScrolls < 5 && !passedFromDate) {
+  while (likedTweets.length < limit && emptyScrolls < 8 && !passedFromDate) {
     // Click "Show more" buttons one at a time — X re-renders the DOM after
     // each click, detaching all other button references.
     for (let sm = 0; sm < 20; sm++) {
@@ -657,11 +660,26 @@ export async function scrapeLikedTweets(page, username, options = {}) {
       }
     }
 
-    emptyScrolls = added === 0 ? emptyScrolls + 1 : 0;
-    await page.evaluate(() => window.scrollBy(0, 1200));
-    await randomDelay();
+    if (added === 0) {
+      emptyScrolls++;
+      await randomDelay(2000 + emptyScrolls * 1000, 4000 + emptyScrolls * 1500);
+    } else {
+      emptyScrolls = 0;
+    }
+
+    // Scroll to load more content, then wait for DOM to update
+    await page.evaluate(() => window.scrollBy(0, window.innerHeight));
+    await page.evaluate(() => new Promise(resolve => {
+      const target = document.querySelector('[data-testid="primaryColumn"]') || document.body;
+      const observer = new MutationObserver(() => { observer.disconnect(); resolve(); });
+      observer.observe(target, { childList: true, subtree: true });
+      setTimeout(() => { observer.disconnect(); resolve(); }, 3000);
+    }));
+    await randomDelay(1000, 2000);
   }
 
+  // Restore viewport
+  await page.setViewport({ width: 1280, height: 800 });
   return likedTweets;
 }
 
