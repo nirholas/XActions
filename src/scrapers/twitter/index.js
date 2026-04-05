@@ -438,51 +438,209 @@ export async function searchTweets(page, query, options = {}) {
 // ============================================================================
 // Thread Scraper
 // ============================================================================
+// TweetDetail GraphQL helpers (shared by scrapeThread and scrapePost)
+// ============================================================================
 
 /**
- * Scrape a full tweet thread
+ * Fetch TweetDetail GraphQL API from the page context using session cookies.
+ * The page must already be on x.com (for cookies to be available).
  */
-export async function scrapeThread(page, tweetUrl) {
-  await page.goto(tweetUrl, { waitUntil: 'networkidle2' });
-  await randomDelay();
+async function fetchTweetDetail(page, tweetId) {
+  return page.evaluate(async (id) => {
+    const ct0 = document.cookie.match(/ct0=([^;]+)/)?.[1];
+    if (!ct0) return null;
+    const variables = JSON.stringify({
+      focalTweetId: id, with_rux_injections: false, rankingMode: 'Relevance',
+      includePromotedContent: false, withCommunity: true,
+      withQuickPromoteEligibilityTweetFields: true, withBirdwatchNotes: true, withVoice: true,
+    });
+    const features = JSON.stringify({
+      rweb_video_screen_enabled: false, responsive_web_graphql_timeline_navigation_enabled: true,
+      responsive_web_graphql_skip_user_profile_image_extensions_enabled: false,
+      creator_subscriptions_tweet_preview_api_enabled: true,
+      longform_notetweets_consumption_enabled: true,
+      responsive_web_twitter_article_tweet_consumption_enabled: true,
+      responsive_web_edit_tweet_api_enabled: true,
+      graphql_is_translatable_rweb_tweet_is_translatable_enabled: true,
+      view_counts_everywhere_api_enabled: true,
+      freedom_of_speech_not_reach_fetch_enabled: true,
+      tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled: true,
+      longform_notetweets_rich_text_read_enabled: true,
+    });
+    const url = `https://x.com/i/api/graphql/t66713qxyDI9pc4Jyb6wxQ/TweetDetail?variables=${encodeURIComponent(variables)}&features=${encodeURIComponent(features)}`;
+    try {
+      const resp = await fetch(url, {
+        headers: {
+          'authorization': 'Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA',
+          'x-csrf-token': ct0, 'x-twitter-active-user': 'yes', 'x-twitter-auth-type': 'OAuth2Session',
+        },
+        credentials: 'include',
+      });
+      return await resp.json();
+    } catch { return null; }
+  }, tweetId);
+}
 
-  for (let i = 0; i < 5; i++) {
-    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-    await randomDelay(1000, 2000);
+/** Extract timeline entries from a TweetDetail GraphQL response. */
+function extractEntries(graphqlData) {
+  const instructions = graphqlData?.data?.threaded_conversation_with_injections_v2?.instructions || [];
+  const entries = [];
+  for (const inst of instructions) {
+    if (inst.entries) entries.push(...inst.entries);
   }
+  return entries;
+}
 
-  const thread = await page.evaluate(() => {
-    const articles = document.querySelectorAll('article[data-testid="tweet"]');
-    const mainTweetId = window.location.pathname.match(/status\/(\d+)/)?.[1];
-    
-    const mainArticle = Array.from(articles).find(a => 
-      a.querySelector(`a[href*="/status/${mainTweetId}"]`)
-    );
-    const mainAuthor = mainArticle?.querySelector('[data-testid="User-Name"] a')?.href?.split('/')[3];
+/** Unwrap TweetWithVisibilityResults wrapper. */
+function unwrapResult(result) {
+  if (result?.__typename === 'TweetWithVisibilityResults') return result.tweet;
+  return result;
+}
 
-    return Array.from(articles)
-      .map((article) => {
-        const textEl = article.querySelector('[data-testid="tweetText"]');
-        const authorLink = article.querySelector('[data-testid="User-Name"] a[href^="/"]');
-        const timeEl = article.querySelector('time');
-        const linkEl = article.querySelector('a[href*="/status/"]');
-        
-        const author = authorLink?.href?.split('/')[3];
-        
-        return {
-          id: linkEl?.href?.match(/status\/(\d+)/)?.[1] || null,
-          text: textEl?.textContent || null,
-          author,
-          timestamp: timeEl?.getAttribute('datetime') || null,
-          url: linkEl?.href || null,
-          isMainAuthor: author === mainAuthor,
-          platform: 'twitter',
-        };
-      })
-      .filter(t => t.id && t.isMainAuthor);
+/** Get screen_name from a user result (handles both new core and legacy paths). */
+function getScreenName(result) {
+  const user = result?.core?.user_results?.result;
+  return user?.core?.screen_name || user?.legacy?.screen_name || '';
+}
+
+/**
+ * Parse rich data from a single tweet GraphQL result.
+ * Does NOT recurse into quoted tweets — returns quotedTweetId for the caller to handle.
+ */
+function parseTweetResult(result) {
+  result = unwrapResult(result);
+  if (!result?.legacy) return null;
+
+  const legacy = result.legacy;
+  const author = getScreenName(result);
+  const text = result.note_tweet?.note_tweet_results?.result?.text || legacy.full_text || '';
+
+  // Media: images and videos
+  const media = (legacy.extended_entities?.media || []).map(m => {
+    const item = { type: m.type, url: m.media_url_https };
+    if (m.type === 'video' || m.type === 'animated_gif') {
+      const best = m.video_info?.variants
+        ?.filter(v => v.content_type === 'video/mp4')
+        .sort((a, b) => (b.bitrate || 0) - (a.bitrate || 0))[0];
+      if (best) item.videoUrl = best.url;
+    }
+    return item;
   });
 
-  return thread;
+  // Article (X Articles — long-form posts)
+  let article = null;
+  if (result.article?.article_results?.result) {
+    const a = result.article.article_results.result;
+    article = {
+      id: a.rest_id || null,
+      title: a.title || null,
+      coverImage: a.cover_media?.media_info?.original_img_url || null,
+      url: `https://x.com/${author}/article/${result.rest_id}`,
+    };
+  }
+
+  // Card (link previews — external URLs)
+  let card = null;
+  if (result.card?.legacy?.binding_values) {
+    const vals = {};
+    for (const v of result.card.legacy.binding_values) {
+      vals[v.key] = v.value?.string_value || v.value?.scribe_value?.value || v.value?.image_value?.url || '';
+    }
+    if (vals.title || vals.card_url) {
+      card = { title: vals.title || '', description: vals.description || '', url: vals.card_url || '', image: vals.thumbnail_image_original || '' };
+    }
+  }
+
+  // URLs: external links in tweet text (from both legacy and note_tweet entities)
+  const rawUrls = [
+    ...(legacy.entities?.urls || []),
+    ...(result.note_tweet?.note_tweet_results?.result?.entity_set?.urls || []),
+  ];
+  const urls = rawUrls
+    .map(u => ({ url: u.expanded_url || u.url || '', display: u.display_url || '' }))
+    .filter(u => u.url && !u.url.includes('x.com/') && !u.url.includes('twitter.com/'));
+
+  // Quoted tweet ID (for recursive fetching — not parsed from this response)
+  const quotedTweetId = result.quoted_status_result?.result?.rest_id || legacy.quoted_status_id_str || null;
+
+  return {
+    id: result.rest_id,
+    author,
+    text,
+    timestamp: legacy.created_at ? new Date(legacy.created_at).toISOString() : null,
+    url: `https://x.com/${author}/status/${result.rest_id}`,
+    media,
+    article,
+    card,
+    urls: urls.length > 0 ? urls : undefined,
+    quotedTweetId,
+    inReplyTo: legacy.in_reply_to_status_id_str || null,
+    replies: legacy.reply_count || 0,
+    retweets: legacy.retweet_count || 0,
+    likes: legacy.favorite_count || 0,
+    views: result.views?.count || '0',
+    platform: 'twitter',
+  };
+}
+
+/**
+ * From a list of entries, collect all tweets by a given author and filter
+ * to the self-reply thread chain (root tweet + author replying to themselves).
+ */
+function parseThreadFromEntries(entries, mainAuthor, mainTweetId) {
+  const candidates = new Map();
+
+  for (const entry of entries) {
+    const result = unwrapResult(entry.content?.itemContent?.tweet_results?.result);
+    if (result && getScreenName(result).toLowerCase() === mainAuthor.toLowerCase()) {
+      const parsed = parseTweetResult(result);
+      if (parsed) candidates.set(parsed.id, parsed);
+    }
+    for (const item of (entry.content?.items || [])) {
+      const r = unwrapResult(item.item?.itemContent?.tweet_results?.result);
+      if (r && getScreenName(r).toLowerCase() === mainAuthor.toLowerCase()) {
+        const parsed = parseTweetResult(r);
+        if (parsed) candidates.set(parsed.id, parsed);
+      }
+    }
+  }
+
+  const threadIds = new Set(candidates.keys());
+  return Array.from(candidates.values())
+    .filter(t => t.id === mainTweetId || (t.inReplyTo && threadIds.has(t.inReplyTo)))
+    .sort((a, b) => {
+      const ta = t => t.timestamp ? new Date(t.timestamp).getTime() : 0;
+      return ta(a) - ta(b);
+    });
+}
+
+// ============================================================================
+// Thread Scraper
+// ============================================================================
+
+/**
+ * Scrape a full tweet thread (author's self-reply chain).
+ *
+ * Uses the TweetDetail GraphQL API directly instead of DOM scraping —
+ * X doesn't render self-reply threads as article elements in the DOM,
+ * especially for high-engagement tweets.
+ */
+export async function scrapeThread(page, tweetUrl) {
+  const mainTweetId = new URL(tweetUrl).pathname.match(/status\/(\d+)/)?.[1] || null;
+  const mainAuthor = new URL(tweetUrl).pathname.split('/').filter(Boolean)[0] || null;
+  if (!mainTweetId || !mainAuthor) return [];
+
+  await page.goto(tweetUrl, { waitUntil: 'networkidle2', timeout: 30000 });
+  await randomDelay(2000, 3000);
+
+  const graphqlData = await fetchTweetDetail(page, mainTweetId);
+  if (!graphqlData) return [];
+
+  const entries = extractEntries(graphqlData);
+  const thread = parseThreadFromEntries(entries, mainAuthor, mainTweetId);
+
+  // Strip internal fields for backward compatibility
+  return thread.map(({ inReplyTo, quotedTweetId, media, article, card, urls, ...rest }) => rest);
 }
 
 // ============================================================================
