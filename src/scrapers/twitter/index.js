@@ -486,7 +486,187 @@ export async function scrapeThread(page, tweetUrl) {
 }
 
 // ============================================================================
-// Likes Scraper
+// Liked Tweets Scraper (a user's liked tweets page)
+// ============================================================================
+
+/**
+ * Scrape a user's liked tweets (x.com/username/likes).
+ * Different from scrapeLikes which scrapes who liked a specific tweet.
+ *
+ * Returns rich data per tweet: text, author, handle, timestamp, link, images,
+ * quotedTweet, article, card, and engagement stats.
+ *
+ * @param {import('puppeteer').Page} page
+ * @param {string} username
+ * @param {object} options
+ * @param {number} [options.limit=50] - Max tweets to return
+ * @param {string} [options.from] - Only include likes from this date onward (stops scrolling when older)
+ * @param {string} [options.to] - Only include likes up to this date (skips newer, keeps scrolling)
+ */
+export async function scrapeLikedTweets(page, username, options = {}) {
+  const { limit = 50, from, to } = options;
+
+  if (!username) throw new Error('Username is required for scrapeLikedTweets');
+
+  const fromDate = from ? new Date(from) : null;
+  const toDate = to ? new Date(to) : null;
+  if (fromDate && isNaN(fromDate.getTime())) throw new Error(`Invalid "from" date: ${from}`);
+  if (toDate && isNaN(toDate.getTime())) throw new Error(`Invalid "to" date: ${to}`);
+
+  await page.goto(`https://x.com/${username}/likes`, { waitUntil: 'networkidle2', timeout: 30000 });
+  // Auth check — fail fast on expired cookie
+  if (page.url().includes('/login') || page.url().includes('/i/flow/login')) {
+    throw new Error('Authentication failed — cookie may be expired.\n\nRun: xactions login');
+  }
+  await randomDelay(2000, 3000);
+
+  const likedTweets = [];
+  const seenLinks = new Set();
+  let emptyScrolls = 0;
+  let passedFromDate = false;
+
+  while (likedTweets.length < limit && emptyScrolls < 5 && !passedFromDate) {
+    // Click "Show more" buttons one at a time — X re-renders the DOM after
+    // each click, detaching all other button references.
+    for (let sm = 0; sm < 20; sm++) {
+      const btn = await page.$('button[data-testid="tweet-text-show-more-link"]');
+      if (!btn) break;
+      try {
+        await btn.evaluate(b => b.scrollIntoView({ block: 'center' }));
+        await new Promise(r => setTimeout(r, 300));
+        await btn.click();
+        await new Promise(r => setTimeout(r, 1200));
+      } catch { break; }
+    }
+
+    const newTweets = await page.evaluate(() => {
+      return Array.from(document.querySelectorAll('article[data-testid="tweet"]')).map(el => {
+        const avatarContainers = el.querySelectorAll('[data-testid^="UserAvatar-Container-"]');
+        const mainHandle = avatarContainers[0]?.getAttribute('data-testid')?.replace('UserAvatar-Container-', '') || '';
+
+        // Detect quoted tweet via second UserAvatar-Container
+        let quotedTweet = null;
+        if (avatarContainers.length >= 2) {
+          const qtHandle = avatarContainers[1]?.getAttribute('data-testid')?.replace('UserAvatar-Container-', '') || '';
+          const allTexts = el.querySelectorAll('[data-testid="tweetText"]');
+          const qtText = allTexts.length >= 2 ? allTexts[1].textContent || '' : '';
+          const allTimes = el.querySelectorAll('time');
+          const qtTime = allTimes.length >= 2 ? allTimes[1].getAttribute('datetime') || '' : '';
+          const allUserNames = el.querySelectorAll('[data-testid="User-Name"]');
+          const qtDisplayName = allUserNames.length >= 2 ? allUserNames[1].querySelector('span')?.textContent || '' : '';
+          const qtImages = [];
+          if (qtHandle) {
+            el.querySelectorAll('a[href*="/photo/"]').forEach(a => {
+              if (a.href.includes('/' + qtHandle + '/')) {
+                const img = a.querySelector('img');
+                if (img?.src) qtImages.push(img.src);
+              }
+            });
+          }
+          const qtLinkEl = el.querySelector('a[href*="/' + qtHandle + '/status/"]');
+          quotedTweet = {
+            text: qtText, author: qtDisplayName, handle: qtHandle,
+            timestamp: qtTime, link: qtLinkEl?.href || '', images: qtImages,
+          };
+        }
+
+        // Main tweet text
+        const allTexts = el.querySelectorAll('[data-testid="tweetText"]');
+        const text = allTexts[0]?.textContent || '';
+        const userEl = el.querySelector('[data-testid="User-Name"]');
+        const timeEl = el.querySelector('time');
+        const linkEl = el.querySelector('a[href*="/status/"]');
+
+        // Main tweet images
+        const images = [];
+        el.querySelectorAll('a[href*="/photo/"]').forEach(a => {
+          if (a.href.includes('/' + mainHandle + '/')) {
+            const img = a.querySelector('img');
+            if (img?.src) images.push(img.src);
+          }
+        });
+
+        // X Article
+        let article = null;
+        const articleCover = el.querySelector('[data-testid="article-cover-image"]');
+        if (articleCover) {
+          const contentDiv = articleCover.nextElementSibling;
+          const childDivs = contentDiv ? contentDiv.querySelectorAll(':scope > div') : [];
+          article = {
+            title: childDivs[0]?.textContent?.trim() || '',
+            description: childDivs[1]?.textContent?.trim() || '',
+            coverImage: articleCover.querySelector('img')?.src || '',
+          };
+        }
+
+        // Card/link preview
+        let card = null;
+        const cardWrapper = el.querySelector('[data-testid="card.wrapper"]');
+        if (cardWrapper) {
+          const cardA = cardWrapper.querySelector('a[href]');
+          const headingEl = cardWrapper.querySelector('[role="heading"]');
+          card = {
+            title: headingEl?.textContent || cardA?.getAttribute('aria-label') || '',
+            link: cardA?.href || '',
+          };
+        }
+
+        // Engagement stats
+        const groupEl = el.querySelector('[role="group"]');
+        const groupLabel = groupEl?.getAttribute('aria-label') || '';
+        const parseNum = (p) => { const m = groupLabel.match(p); return m ? m[1] : '0'; };
+
+        const handle = userEl?.querySelector('a[href^="/"]')?.getAttribute('href')?.replace('/', '') || '';
+        const displayName = userEl?.querySelector('span')?.textContent || '';
+        const tweetLink = linkEl?.href || '';
+
+        if (article) {
+          article.tweetUrl = tweetLink;
+          if (!quotedTweet && tweetLink) {
+            const statusMatch = tweetLink.match(/\/status\/(\d+)/);
+            if (statusMatch) article.url = `https://x.com/${handle}/article/${statusMatch[1]}`;
+          }
+        }
+
+        return {
+          text, author: displayName, handle,
+          timestamp: timeEl?.getAttribute('datetime') || '',
+          link: tweetLink, images, quotedTweet, article, card,
+          replies: parseNum(/([\d,]+)\s*repl/),
+          retweets: parseNum(/([\d,]+)\s*repost/),
+          likes: parseNum(/([\d,]+)\s*like/),
+          views: parseNum(/([\d,]+)\s*view/),
+        };
+      });
+    });
+
+    let added = 0;
+    for (const t of newTweets) {
+      if (!t.link || seenLinks.has(t.link)) continue;
+      seenLinks.add(t.link);
+
+      const tweetDate = t.timestamp ? new Date(t.timestamp) : null;
+      if (tweetDate) {
+        if (fromDate && tweetDate < fromDate) { passedFromDate = true; break; }
+        if (toDate && tweetDate > toDate) continue;
+      }
+
+      if (likedTweets.length < limit) {
+        likedTweets.push(t);
+        added++;
+      }
+    }
+
+    emptyScrolls = added === 0 ? emptyScrolls + 1 : 0;
+    await page.evaluate(() => window.scrollBy(0, 1200));
+    await randomDelay();
+  }
+
+  return likedTweets;
+}
+
+// ============================================================================
+// Likes Scraper (who liked a specific tweet)
 // ============================================================================
 
 /**
@@ -938,6 +1118,7 @@ export default {
   scrapeTweets,
   searchTweets,
   scrapeThread,
+  scrapeLikedTweets,
   scrapeLikes,
   scrapeHashtag,
   scrapeMedia,

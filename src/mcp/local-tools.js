@@ -20,6 +20,7 @@ import {
   scrapeTweets,
   searchTweets,
   scrapeThread,
+  scrapeLikedTweets,
   scrapeLikes,
   scrapeMedia,
   scrapeListMembers,
@@ -628,6 +629,12 @@ export async function x_bookmark({ url }) {
 export async function x_get_bookmarks({ limit = 100 }) {
   const { page: pg } = await ensureBrowser();
   return scrapeBookmarks(pg, { limit });
+}
+
+export async function x_get_likes({ username, limit = 50, from, to }) {
+  const { page: pg } = await ensureBrowser();
+  const likedTweets = await scrapeLikedTweets(pg, username, { limit, from, to });
+  return { likedTweets, count: likedTweets.length, username };
 }
 
 export async function x_clear_bookmarks() {
@@ -1369,6 +1376,7 @@ export const toolMap = {
   x_reply,
   x_bookmark,
   x_get_bookmarks,
+  x_get_likes,
   x_clear_bookmarks,
   x_auto_like,
   // Discovery
