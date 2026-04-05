@@ -27,7 +27,27 @@ puppeteer.use(StealthPlugin());
 // ============================================================================
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-const randomDelay = (min = 1000, max = 3000) => sleep(min + Math.random() * (max - min));
+
+/** Human-like delay using log-normal distribution with occasional distraction spikes. */
+const randomDelay = (min = 2000, max = 7000) => {
+  const u1 = Math.random();
+  const u2 = Math.random();
+  const z = Math.sqrt(-2 * Math.log(u1 || 1e-10)) * Math.cos(2 * Math.PI * u2);
+  const median = min + (max - min) * 0.4;
+  const spread = (max - min) * 0.25;
+  const base = median + z * spread;
+  const distraction = Math.random() < 0.08 ? 8000 + Math.random() * 12000 : 0;
+  const delay = Math.max(min, Math.min(base, max)) + distraction;
+  return sleep(delay);
+};
+
+/** Throw if the page redirected to login (expired/invalid cookie). */
+function checkAuth(page) {
+  const url = page.url();
+  if (url.includes('/login') || url.includes('/i/flow/login')) {
+    throw new Error('Authentication failed — cookie may be expired.\n\nRun: xactions login');
+  }
+}
 
 /**
  * Create a browser instance with stealth settings.
@@ -444,8 +464,10 @@ export async function searchTweets(page, query, options = {}) {
 /**
  * Fetch TweetDetail GraphQL API from the page context using session cookies.
  * The page must already be on x.com (for cookies to be available).
+ * Includes a human-like delay before each call.
  */
 async function fetchTweetDetail(page, tweetId) {
+  await randomDelay(2000, 5000);
   return page.evaluate(async (id) => {
     const ct0 = document.cookie.match(/ct0=([^;]+)/)?.[1];
     if (!ct0) return null;
@@ -631,6 +653,7 @@ export async function scrapeThread(page, tweetUrl) {
   if (!mainTweetId || !mainAuthor) return [];
 
   await page.goto(tweetUrl, { waitUntil: 'networkidle2', timeout: 30000 });
+  checkAuth(page);
   await randomDelay(2000, 3000);
 
   const graphqlData = await fetchTweetDetail(page, mainTweetId);
