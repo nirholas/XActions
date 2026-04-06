@@ -667,7 +667,117 @@ export async function scrapeThread(page, tweetUrl) {
 }
 
 // ============================================================================
-// Likes Scraper
+// Liked Tweets Scraper (via Likes GraphQL API)
+// ============================================================================
+
+/**
+ * Scrape a user's liked tweets via the Likes GraphQL API.
+ * Different from scrapeLikes which scrapes who liked a specific tweet.
+ *
+ * Uses cursor-based pagination — no DOM scraping or scroll limits.
+ * Writes results incrementally to a JSONL file.
+ *
+ * @param {import('puppeteer').Page} page
+ * @param {string} username
+ * @param {object} options
+ * @param {number} [options.limit=50]
+ * @param {string} [options.from] - Only include likes from this date onward
+ * @param {string} [options.to] - Only include likes up to this date
+ */
+export async function scrapeLikedTweets(page, username, options = {}) {
+  const { limit = 50, from, to } = options;
+  if (!username) throw new Error('Username is required for scrapeLikedTweets');
+
+  const fromDate = from ? new Date(from) : null;
+  const toDate = to ? new Date(to) : null;
+  if (fromDate && isNaN(fromDate.getTime())) throw new Error(`Invalid "from" date: ${from}`);
+  if (toDate && isNaN(toDate.getTime())) throw new Error(`Invalid "to" date: ${to}`);
+
+  if (!page.url().includes('x.com')) {
+    await page.goto('https://x.com', { waitUntil: 'networkidle2', timeout: 30000 });
+    checkAuth(page);
+    await randomDelay(2000, 3000);
+  }
+
+  const userId = await page.evaluate(async (screenName) => {
+    const ct0 = document.cookie.match(/ct0=([^;]+)/)?.[1];
+    if (!ct0) return null;
+    const variables = JSON.stringify({ screen_name: screenName, withSafetyModeUserFields: true });
+    const features = JSON.stringify({ hidden_profile_subscriptions_enabled: true, responsive_web_graphql_skip_user_profile_image_extensions_enabled: false, responsive_web_graphql_timeline_navigation_enabled: true });
+    try {
+      const resp = await fetch(`https://x.com/i/api/graphql/IGgvgiOx4QZndDHuD3x9TQ/UserByScreenName?variables=${encodeURIComponent(variables)}&features=${encodeURIComponent(features)}`, {
+        headers: { 'authorization': 'Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA', 'x-csrf-token': ct0, 'x-twitter-active-user': 'yes', 'x-twitter-auth-type': 'OAuth2Session' },
+        credentials: 'include',
+      });
+      const data = await resp.json();
+      return data?.data?.user?.result?.rest_id || null;
+    } catch { return null; }
+  }, username);
+  if (!userId) throw new Error(`Could not resolve userId for @${username}`);
+
+  const exportDir = `${process.env.HOME || '/tmp'}/.xactions/exports`;
+  await fs.mkdir(exportDir, { recursive: true });
+  const ts = new Date().toISOString().replace(/[:.]/g, '-');
+  const filePath = `${exportDir}/likes-${username}-${ts}.jsonl`;
+
+  let count = 0, cursor = null, firstTimestamp = null, lastTimestamp = null, emptyPages = 0, passedFromDate = false;
+
+  while (count < limit && emptyPages < 3 && !passedFromDate) {
+    await randomDelay(2000, 5000);
+    const pageData = await page.evaluate(async ({ userId, cursor, pageSize }) => {
+      const ct0 = document.cookie.match(/ct0=([^;]+)/)?.[1];
+      if (!ct0) return null;
+      const variables = { userId, count: pageSize, includePromotedContent: false, withClientEventToken: false, withBirdwatchNotes: false, withVoice: true };
+      if (cursor) variables.cursor = cursor;
+      const features = { rweb_video_screen_enabled: false, responsive_web_graphql_timeline_navigation_enabled: true, responsive_web_graphql_skip_user_profile_image_extensions_enabled: false, creator_subscriptions_tweet_preview_api_enabled: true, longform_notetweets_consumption_enabled: true, responsive_web_twitter_article_tweet_consumption_enabled: true, responsive_web_edit_tweet_api_enabled: true, graphql_is_translatable_rweb_tweet_is_translatable_enabled: true, view_counts_everywhere_api_enabled: true, freedom_of_speech_not_reach_fetch_enabled: true, tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled: true, longform_notetweets_rich_text_read_enabled: true };
+      try {
+        const resp = await fetch(`https://x.com/i/api/graphql/KPuet6dGbC8LB2sOLx7tZQ/Likes?variables=${encodeURIComponent(JSON.stringify(variables))}&features=${encodeURIComponent(JSON.stringify(features))}`, {
+          headers: { 'authorization': 'Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA', 'x-csrf-token': ct0, 'x-twitter-active-user': 'yes', 'x-twitter-auth-type': 'OAuth2Session' },
+          credentials: 'include',
+        });
+        return await resp.json();
+      } catch { return null; }
+    }, { userId, cursor, pageSize: Math.min(20, limit - count) });
+
+    if (!pageData) { emptyPages++; continue; }
+    const instructions = pageData?.data?.user?.result?.timeline?.timeline?.instructions || [];
+    const entries = [];
+    for (const inst of instructions) { if (inst.entries) entries.push(...inst.entries); }
+    const cursorEntry = entries.find(e => e.entryId?.startsWith('cursor-bottom'));
+    cursor = cursorEntry?.content?.value || null;
+
+    const batch = [];
+    for (const entry of entries) {
+      const result = entry.content?.itemContent?.tweet_results?.result;
+      if (!result) continue;
+      const parsed = parseTweetResult(result);
+      if (!parsed) continue;
+      const tweetDate = parsed.timestamp ? new Date(parsed.timestamp) : null;
+      if (tweetDate) {
+        if (fromDate && tweetDate < fromDate) { passedFromDate = true; break; }
+        if (toDate && tweetDate > toDate) continue;
+      }
+      delete parsed.quotedTweetId;
+      delete parsed.inReplyTo;
+      if (!firstTimestamp && parsed.timestamp) firstTimestamp = parsed.timestamp;
+      if (parsed.timestamp) lastTimestamp = parsed.timestamp;
+      batch.push(parsed);
+      count++;
+      if (count >= limit) break;
+    }
+
+    if (batch.length > 0) {
+      await fs.appendFile(filePath, batch.map(t => JSON.stringify(t)).join('\n') + '\n');
+      emptyPages = 0;
+    } else { emptyPages++; }
+    if (!cursor) break;
+  }
+
+  return { file: filePath, count, username, dateRange: { from: firstTimestamp, to: lastTimestamp } };
+}
+
+// ============================================================================
+// Likes Scraper (who liked a specific tweet)
 // ============================================================================
 
 /**
@@ -1119,6 +1229,7 @@ export default {
   scrapeTweets,
   searchTweets,
   scrapeThread,
+  scrapeLikedTweets,
   scrapeLikes,
   scrapeHashtag,
   scrapeMedia,
