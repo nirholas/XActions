@@ -772,6 +772,17 @@ const TOOLS = [
       required: ['title', 'body'],
     },
   },
+  {
+    name: 'x_read_article',
+    description: 'Read the full content of an X article given a tweet URL or article URL.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        url: { type: 'string', description: 'Tweet URL (x.com/user/status/ID) or article URL (x.com/user/article/ID)' },
+      },
+      required: ['url'],
+    },
+  },
   // ====== Creator ======
   {
     name: 'x_creator_analytics',
@@ -1131,7 +1142,7 @@ const TOOLS = [
   },
   {
     name: 'x_read_post',
-    description: 'Read a tweet/post with full rich data. Returns thread if the post is part of one (author self-replies only). Recursively resolves quoted tweets. Each tweet includes: text, media (images + video URLs), X Articles, cards (link previews), external URLs, and engagement stats.',
+    description: 'Read a tweet/post with full rich data. Returns thread if the post is part of one (author self-replies only). Recursively resolves quoted tweets — if a quoted tweet is itself a thread or contains its own quote tweet, those are fetched too. Each tweet includes: text, media (images + video URLs), article, card (link preview), and engagement stats.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -1914,12 +1925,29 @@ const TOOLS = [
   },
   {
     name: 'x_get_likes',
-    description: 'Scrape tweets that a user has liked. Shows what content a user engages with.',
+    description: 'Scrape tweets that a user has liked. Shows what content a user engages with. Supports timestamp filtering — likes are reverse chronological, so scrolling stops early when it passes the "from" date.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        username: { type: 'string', description: 'Username (without @)' },
+        limit: { type: 'number', description: 'Maximum liked tweets to return (default: 50)' },
+        from: { type: 'string', description: 'Only include likes from this date onward (e.g. "2026-03-01"). Stops scrolling when older tweets are reached.' },
+        to: { type: 'string', description: 'Only include likes up to this date (e.g. "2026-03-31"). Skips newer tweets but keeps scrolling.' },
+      },
+      required: ['username'],
+    },
+  },
+
+  {
+    name: 'x_discover_likes',
+    description: 'Fetch liked tweets and deep-read each one with human-like pacing. Produces two JSONL files: a likes index (summary per tweet) and deep reads (full thread/quote tweet data per tweet via scrapePost). Timing mimics a human browsing their likes tab — scrolling, pausing, tapping into posts, reading, going back. Long-running — check the JSONL files on disk for progress.',
     inputSchema: {
       type: 'object',
       properties: {
         username: { type: 'string', description: 'Username (without @)' },
         limit: { type: 'number', description: 'Maximum liked tweets (default: 50)' },
+        from: { type: 'string', description: 'Only include likes from this date onward' },
+        to: { type: 'string', description: 'Only include likes up to this date' },
       },
       required: ['username'],
     },
@@ -2286,7 +2314,7 @@ async function executeTool(name, args) {
   const xeepyTools = [
     'x_get_replies', 'x_get_hashtag', 'x_get_likers', 'x_get_retweeters',
     'x_get_media', 'x_get_recommendations', 'x_get_mentions', 'x_get_quote_tweets',
-    'x_get_likes', 'x_auto_follow', 'x_follow_engagers', 'x_unfollow_all',
+    'x_read_article', 'x_auto_follow', 'x_follow_engagers', 'x_unfollow_all',
     'x_smart_unfollow', 'x_quote_tweet', 'x_auto_comment', 'x_auto_retweet',
     'x_detect_bots', 'x_find_influencers', 'x_smart_target', 'x_crypto_analyze',
     'x_grok_analyze_image', 'x_audience_insights', 'x_engagement_report',
@@ -2486,20 +2514,84 @@ async function executeXeepyTool(name, args) {
       return { quotes, count: quotes.length };
     }
 
-    case 'x_get_likes': {
-      const page = await localTools.getPage();
-      await page.goto(`https://x.com/${args.username}/likes`, { waitUntil: 'networkidle2', timeout: 30000 });
-      await new Promise(r => setTimeout(r, 3000));
-      const likedTweets = await page.evaluate((limit) => {
-        const articles = document.querySelectorAll('article[data-testid="tweet"]');
-        return Array.from(articles).slice(0, limit).map(el => {
-          const textEl = el.querySelector('[data-testid="tweetText"]');
-          const userEl = el.querySelector('[data-testid="User-Name"]');
-          const timeEl = el.querySelector('time');
-          return { text: textEl?.textContent || '', author: userEl?.textContent || '', timestamp: timeEl?.getAttribute('datetime') || '' };
+    case 'x_read_article': {
+      const { getPage } = await import('./local-tools.js');
+      const page = await getPage();
+      let url = args.url;
+      // Convert tweet URL to article URL if needed — navigate to tweet first to discover article URL
+      if (url.includes('/status/') && !url.includes('/article/')) {
+        await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 });
+        await new Promise(r => setTimeout(r, 4000));
+        // Try finding an article link directly on the page
+        let articleUrl = await page.evaluate(() => {
+          const links = [...document.querySelectorAll('a[href*="/article/"]')];
+          const articleLink = links.find(a => a.href.match(/\/article\/\d+$/));
+          return articleLink?.href || '';
         });
-      }, args.limit || 50);
-      return { likedTweets, count: likedTweets.length, username: args.username };
+        // Fallback: click the article-cover-image to navigate to the real article
+        // (handles quote tweets where the article belongs to the quoted author)
+        if (!articleUrl) {
+          const cover = await page.$('[data-testid="article-cover-image"]');
+          if (cover) {
+            await cover.click();
+            await new Promise(r => setTimeout(r, 5000));
+            // Check if we navigated to an article or a tweet with an article
+            articleUrl = await page.evaluate(() => {
+              // Check for direct article links
+              const links = [...document.querySelectorAll('a[href*="/article/"]')];
+              const articleLink = links.find(a => a.href.match(/\/article\/\d+$/));
+              return articleLink?.href || '';
+            });
+            // If we landed on a tweet page with twitterArticleReadView, use current URL
+            if (!articleUrl) {
+              const hasReadView = await page.evaluate(() => !!document.querySelector('[data-testid="twitterArticleReadView"]'));
+              if (hasReadView) articleUrl = page.url();
+            }
+          }
+        }
+        if (!articleUrl) return { content: [{ type: 'text', text: JSON.stringify({ error: 'No article found on this tweet' }) }] };
+        url = articleUrl;
+      }
+      await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 });
+      await new Promise(r => setTimeout(r, 4000));
+      // Scroll through to load lazy content
+      for (let i = 0; i < 25; i++) {
+        await page.evaluate(() => window.scrollBy(0, 800));
+        await new Promise(r => setTimeout(r, 500));
+      }
+      const article = await page.evaluate(() => {
+        const title = document.querySelector('[data-testid="twitter-article-title"]')?.textContent?.trim() || '';
+        const readView = document.querySelector('[data-testid="twitterArticleReadView"]');
+        if (!readView) return { error: 'Article content not found' };
+        // Get author from User-Name
+        const userNameEl = document.querySelector('[data-testid="User-Name"]');
+        const authorName = userNameEl?.querySelector('span')?.textContent?.trim() || '';
+        const authorHandle = userNameEl?.querySelector('a[href^="/"]')?.getAttribute('href')?.replace('/', '') || '';
+        // Get clean article text — innerText includes header/footer noise
+        const fullText = readView.innerText;
+        // Strip header: title, author, @handle, timestamp, engagement numbers
+        // The header pattern is: title\nauthor\n@handle\n·\ntimestamp\nengagement...
+        const lines = fullText.split('\n');
+        let startIdx = 0;
+        // Skip past the header — find first line that's actual content (long paragraph)
+        for (let i = 0; i < Math.min(lines.length, 15); i++) {
+          if (lines[i].length > 100) { startIdx = i; break; }
+        }
+        // Strip footer: author name, @handle, "Following", bio at the end
+        let endIdx = lines.length;
+        for (let i = lines.length - 1; i > Math.max(0, lines.length - 10); i--) {
+          if (lines[i] === authorName || lines[i] === '@' + authorHandle || lines[i] === 'Following') {
+            endIdx = Math.min(endIdx, i);
+          }
+        }
+        const cleanText = lines.slice(startIdx, endIdx).join('\n').trim();
+        // Filter images — exclude profile pics (small thumbnails)
+        const images = [...readView.querySelectorAll('img')]
+          .map(i => i.src)
+          .filter(s => s.includes('twimg') && !s.includes('_normal.') && !s.includes('_bigger.') && !s.includes('profile_images'));
+        return { title, author: authorName, handle: authorHandle, text: cleanText, images, url: location.href };
+      });
+      return { content: [{ type: 'text', text: JSON.stringify(article, null, 2) }] };
     }
 
     // ── Follow Automation ──

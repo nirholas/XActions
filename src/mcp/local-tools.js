@@ -21,6 +21,8 @@ import {
   searchTweets,
   scrapeThread,
   scrapePost,
+  scrapeLikedTweets,
+  discoverLikes,
   scrapeLikes,
   scrapeMedia,
   scrapeListMembers,
@@ -76,6 +78,11 @@ async function newTab(timeout = 60000) {
 /**
  * Close browser (called by server.js on SIGINT/SIGTERM)
  */
+export async function getPage() {
+  const { page } = await ensureBrowser();
+  return page;
+}
+
 export async function closeBrowser() {
   if (browser) {
     try {
@@ -647,6 +654,18 @@ export async function x_bookmark({ url }) {
 export async function x_get_bookmarks({ limit = 100 }) {
   const { page: pg } = await ensureBrowser();
   return scrapeBookmarks(pg, { limit });
+}
+
+export async function x_get_likes({ username, limit = 50, from, to }) {
+  const tab = await newTab();
+  try { return await scrapeLikedTweets(tab, username, { limit, from, to }); }
+  finally { await tab.close().catch(() => {}); }
+}
+
+export async function x_discover_likes({ username, limit = 50, from, to }) {
+  const tab = await newTab();
+  try { return await discoverLikes(tab, username, { limit, from, to }); }
+  finally { await tab.close().catch(() => {}); }
 }
 
 export async function x_clear_bookmarks() {
@@ -1355,6 +1374,8 @@ export async function x_client_get_trends() {
 // ============================================================================
 
 export const toolMap = {
+  // Internal helper used by xeepy tools
+  getPage,
   // Auth
   x_login,
   // Scraping (delegated to scrapers/index.js — single source of truth)
@@ -1389,6 +1410,8 @@ export const toolMap = {
   x_reply,
   x_bookmark,
   x_get_bookmarks,
+  x_get_likes,
+  x_discover_likes,
   x_clear_bookmarks,
   x_auto_like,
   // Discovery

@@ -760,6 +760,343 @@ async function _scrapePostRecursive(page, tweetId, author, maxDepth, depth) {
 }
 
 // ============================================================================
+// Liked Tweets Scraper (a user's liked tweets page)
+// ============================================================================
+
+/**
+ * Scrape a user's liked tweets via the Likes GraphQL API.
+ *
+ * Uses cursor-based pagination — no DOM scraping or scroll limits.
+ * Writes results incrementally to a JSONL file so progress survives
+ * crashes and memory stays bounded for large pulls.
+ *
+ * Returns { file, count, username, dateRange } — the caller reads the
+ * file for the full data.
+ *
+ * @param {import('puppeteer').Page} page
+ * @param {string} username
+ * @param {object} options
+ * @param {number} [options.limit=50] - Max tweets to return
+ * @param {string} [options.from] - Only include likes from this date onward (stops when older)
+ * @param {string} [options.to] - Only include likes up to this date (skips newer)
+ */
+export async function scrapeLikedTweets(page, username, options = {}) {
+  const { limit = 50, from, to } = options;
+
+  if (!username) throw new Error('Username is required for scrapeLikedTweets');
+
+  const fromDate = from ? new Date(from) : null;
+  const toDate = to ? new Date(to) : null;
+  if (fromDate && isNaN(fromDate.getTime())) throw new Error(`Invalid "from" date: ${from}`);
+  if (toDate && isNaN(toDate.getTime())) throw new Error(`Invalid "to" date: ${to}`);
+
+  // Ensure we're on x.com for cookie access
+  if (!page.url().includes('x.com')) {
+    await page.goto('https://x.com', { waitUntil: 'networkidle2', timeout: 30000 });
+    checkAuth(page);
+    await randomDelay(2000, 3000);
+  }
+
+  // Resolve numeric userId from username
+  const userId = await page.evaluate(async (screenName) => {
+    const ct0 = document.cookie.match(/ct0=([^;]+)/)?.[1];
+    if (!ct0) return null;
+    const variables = JSON.stringify({ screen_name: screenName, withSafetyModeUserFields: true });
+    const features = JSON.stringify({ hidden_profile_subscriptions_enabled: true, responsive_web_graphql_skip_user_profile_image_extensions_enabled: false, responsive_web_graphql_timeline_navigation_enabled: true });
+    const url = `https://x.com/i/api/graphql/IGgvgiOx4QZndDHuD3x9TQ/UserByScreenName?variables=${encodeURIComponent(variables)}&features=${encodeURIComponent(features)}`;
+    try {
+      const resp = await fetch(url, {
+        headers: { 'authorization': 'Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA', 'x-csrf-token': ct0, 'x-twitter-active-user': 'yes', 'x-twitter-auth-type': 'OAuth2Session' },
+        credentials: 'include',
+      });
+      const data = await resp.json();
+      return data?.data?.user?.result?.rest_id || null;
+    } catch { return null; }
+  }, username);
+
+  if (!userId) throw new Error(`Could not resolve userId for @${username}`);
+
+  // Set up JSONL output file
+  const exportDir = `${process.env.HOME || '/tmp'}/.xactions/exports`;
+  await fs.mkdir(exportDir, { recursive: true });
+  const ts = new Date().toISOString().replace(/[:.]/g, '-');
+  const filePath = `${exportDir}/likes-${username}-${ts}.jsonl`;
+
+  let count = 0;
+  let cursor = null;
+  let firstTimestamp = null;
+  let lastTimestamp = null;
+  let emptyPages = 0;
+  let passedFromDate = false;
+
+  while (count < limit && emptyPages < 3 && !passedFromDate) {
+    await randomDelay(2000, 5000);
+
+    const pageData = await page.evaluate(async ({ userId, cursor, pageSize }) => {
+      const ct0 = document.cookie.match(/ct0=([^;]+)/)?.[1];
+      if (!ct0) return null;
+      const variables = { userId, count: pageSize, includePromotedContent: false, withClientEventToken: false, withBirdwatchNotes: false, withVoice: true };
+      if (cursor) variables.cursor = cursor;
+      const features = {
+        rweb_video_screen_enabled: false, responsive_web_graphql_timeline_navigation_enabled: true,
+        responsive_web_graphql_skip_user_profile_image_extensions_enabled: false,
+        creator_subscriptions_tweet_preview_api_enabled: true,
+        longform_notetweets_consumption_enabled: true,
+        responsive_web_twitter_article_tweet_consumption_enabled: true,
+        responsive_web_edit_tweet_api_enabled: true,
+        graphql_is_translatable_rweb_tweet_is_translatable_enabled: true,
+        view_counts_everywhere_api_enabled: true,
+        freedom_of_speech_not_reach_fetch_enabled: true,
+        tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled: true,
+        longform_notetweets_rich_text_read_enabled: true,
+      };
+      const url = `https://x.com/i/api/graphql/KPuet6dGbC8LB2sOLx7tZQ/Likes?variables=${encodeURIComponent(JSON.stringify(variables))}&features=${encodeURIComponent(JSON.stringify(features))}`;
+      try {
+        const resp = await fetch(url, {
+          headers: { 'authorization': 'Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA', 'x-csrf-token': ct0, 'x-twitter-active-user': 'yes', 'x-twitter-auth-type': 'OAuth2Session' },
+          credentials: 'include',
+        });
+        return await resp.json();
+      } catch { return null; }
+    }, { userId, cursor, pageSize: Math.min(20, limit - count) });
+
+    if (!pageData) { emptyPages++; continue; }
+
+    // Extract entries from timeline (path: data.user.result.timeline.timeline.instructions)
+    const instructions = pageData?.data?.user?.result?.timeline?.timeline?.instructions || [];
+    const entries = [];
+    for (const inst of instructions) {
+      if (inst.entries) entries.push(...inst.entries);
+    }
+
+    // Find cursor for next page
+    const cursorEntry = entries.find(e => e.entryId?.startsWith('cursor-bottom'));
+    cursor = cursorEntry?.content?.value || null;
+
+    // Parse tweets
+    const batch = [];
+    for (const entry of entries) {
+      const result = entry.content?.itemContent?.tweet_results?.result;
+      if (!result) continue;
+      const parsed = parseTweetResult(result);
+      if (!parsed) continue;
+
+      const tweetDate = parsed.timestamp ? new Date(parsed.timestamp) : null;
+      if (tweetDate) {
+        if (fromDate && tweetDate < fromDate) { passedFromDate = true; break; }
+        if (toDate && tweetDate > toDate) continue;
+      }
+
+      // Clean internal fields
+      delete parsed.quotedTweetId;
+      delete parsed.inReplyTo;
+
+      if (!firstTimestamp && parsed.timestamp) firstTimestamp = parsed.timestamp;
+      if (parsed.timestamp) lastTimestamp = parsed.timestamp;
+      batch.push(parsed);
+      count++;
+      if (count >= limit) break;
+    }
+
+    if (batch.length > 0) {
+      const lines = batch.map(t => JSON.stringify(t)).join('\n') + '\n';
+      await fs.appendFile(filePath, lines);
+      emptyPages = 0;
+    } else {
+      emptyPages++;
+    }
+
+    if (!cursor) break;
+  }
+
+  return { file: filePath, count, username, dateRange: { from: firstTimestamp, to: lastTimestamp } };
+}
+
+// ============================================================================
+// Discover Likes (interleaved fetch + deep read with human-like pacing)
+// ============================================================================
+
+/**
+ * Fetch liked tweets and deep-read each one, interleaved with human-like
+ * timing. Produces two JSONL files:
+ *   - likes index (summary per tweet from the Likes API)
+ *   - deep reads (full scrapePost output per tweet)
+ *
+ * The pacing mimics a human browsing their likes: scroll through a page,
+ * pause, tap into a post, read it, go back, scroll more.
+ *
+ * @param {import('puppeteer').Page} page
+ * @param {string} username
+ * @param {object} options
+ * @param {number} [options.limit=50] - Max tweets
+ * @param {string} [options.from] - Only likes from this date onward
+ * @param {string} [options.to] - Only likes up to this date
+ */
+export async function discoverLikes(page, username, options = {}) {
+  const { limit = 50, from, to } = options;
+
+  if (!username) throw new Error('Username is required');
+
+  const fromDate = from ? new Date(from) : null;
+  const toDate = to ? new Date(to) : null;
+  if (fromDate && isNaN(fromDate.getTime())) throw new Error(`Invalid "from" date: ${from}`);
+  if (toDate && isNaN(toDate.getTime())) throw new Error(`Invalid "to" date: ${to}`);
+
+  // Ensure we're on x.com
+  if (!page.url().includes('x.com')) {
+    await page.goto('https://x.com', { waitUntil: 'networkidle2', timeout: 30000 });
+    checkAuth(page);
+    await randomDelay(2000, 3000);
+  }
+
+  // Resolve userId
+  const userId = await page.evaluate(async (screenName) => {
+    const ct0 = document.cookie.match(/ct0=([^;]+)/)?.[1];
+    if (!ct0) return null;
+    const variables = JSON.stringify({ screen_name: screenName, withSafetyModeUserFields: true });
+    const features = JSON.stringify({ hidden_profile_subscriptions_enabled: true, responsive_web_graphql_skip_user_profile_image_extensions_enabled: false, responsive_web_graphql_timeline_navigation_enabled: true });
+    const url = `https://x.com/i/api/graphql/IGgvgiOx4QZndDHuD3x9TQ/UserByScreenName?variables=${encodeURIComponent(variables)}&features=${encodeURIComponent(features)}`;
+    try {
+      const resp = await fetch(url, {
+        headers: { 'authorization': 'Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA', 'x-csrf-token': ct0, 'x-twitter-active-user': 'yes', 'x-twitter-auth-type': 'OAuth2Session' },
+        credentials: 'include',
+      });
+      const data = await resp.json();
+      return data?.data?.user?.result?.rest_id || null;
+    } catch { return null; }
+  }, username);
+
+  if (!userId) throw new Error(`Could not resolve userId for @${username}`);
+
+  // Set up output files
+  const exportDir = `${process.env.HOME || '/tmp'}/.xactions/exports`;
+  await fs.mkdir(exportDir, { recursive: true });
+  const ts = new Date().toISOString().replace(/[:.]/g, '-');
+  const likesFile = `${exportDir}/likes-${username}-${ts}.jsonl`;
+  const deepFile = `${exportDir}/likes-${username}-${ts}-deep.jsonl`;
+
+  let count = 0;
+  let deepCount = 0;
+  let cursor = null;
+  let firstTimestamp = null;
+  let lastTimestamp = null;
+  let emptyPages = 0;
+  let passedFromDate = false;
+
+  while (count < limit && emptyPages < 3 && !passedFromDate) {
+    // Pause between pages — like scrolling through the feed
+    await randomDelay(3000, 8000);
+
+    // Fetch a page of likes
+    const pageData = await page.evaluate(async ({ userId, cursor, pageSize }) => {
+      const ct0 = document.cookie.match(/ct0=([^;]+)/)?.[1];
+      if (!ct0) return null;
+      const variables = { userId, count: pageSize, includePromotedContent: false, withClientEventToken: false, withBirdwatchNotes: false, withVoice: true };
+      if (cursor) variables.cursor = cursor;
+      const features = {
+        rweb_video_screen_enabled: false, responsive_web_graphql_timeline_navigation_enabled: true,
+        responsive_web_graphql_skip_user_profile_image_extensions_enabled: false,
+        creator_subscriptions_tweet_preview_api_enabled: true,
+        longform_notetweets_consumption_enabled: true,
+        responsive_web_twitter_article_tweet_consumption_enabled: true,
+        responsive_web_edit_tweet_api_enabled: true,
+        graphql_is_translatable_rweb_tweet_is_translatable_enabled: true,
+        view_counts_everywhere_api_enabled: true,
+        freedom_of_speech_not_reach_fetch_enabled: true,
+        tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled: true,
+        longform_notetweets_rich_text_read_enabled: true,
+      };
+      const url = `https://x.com/i/api/graphql/KPuet6dGbC8LB2sOLx7tZQ/Likes?variables=${encodeURIComponent(JSON.stringify(variables))}&features=${encodeURIComponent(JSON.stringify(features))}`;
+      try {
+        const resp = await fetch(url, {
+          headers: { 'authorization': 'Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA', 'x-csrf-token': ct0, 'x-twitter-active-user': 'yes', 'x-twitter-auth-type': 'OAuth2Session' },
+          credentials: 'include',
+        });
+        return await resp.json();
+      } catch { return null; }
+    }, { userId, cursor, pageSize: Math.min(20, limit - count) });
+
+    if (!pageData) { emptyPages++; continue; }
+
+    const instructions = pageData?.data?.user?.result?.timeline?.timeline?.instructions || [];
+    const entries = [];
+    for (const inst of instructions) {
+      if (inst.entries) entries.push(...inst.entries);
+    }
+
+    const cursorEntry = entries.find(e => e.entryId?.startsWith('cursor-bottom'));
+    cursor = cursorEntry?.content?.value || null;
+
+    // Process each tweet in the page
+    const batch = [];
+    for (const entry of entries) {
+      const result = entry.content?.itemContent?.tweet_results?.result;
+      if (!result) continue;
+      const parsed = parseTweetResult(result);
+      if (!parsed) continue;
+
+      const tweetDate = parsed.timestamp ? new Date(parsed.timestamp) : null;
+      if (tweetDate) {
+        if (fromDate && tweetDate < fromDate) { passedFromDate = true; break; }
+        if (toDate && tweetDate > toDate) continue;
+      }
+
+      delete parsed.quotedTweetId;
+      delete parsed.inReplyTo;
+
+      if (!firstTimestamp && parsed.timestamp) firstTimestamp = parsed.timestamp;
+      if (parsed.timestamp) lastTimestamp = parsed.timestamp;
+      batch.push(parsed);
+      count++;
+      if (count >= limit) break;
+    }
+
+    // Write likes batch
+    if (batch.length > 0) {
+      const lines = batch.map(t => JSON.stringify(t)).join('\n') + '\n';
+      await fs.appendFile(likesFile, lines);
+      emptyPages = 0;
+    } else {
+      emptyPages++;
+    }
+
+    // Deep read each tweet — interleaved with human-like pauses
+    for (const tweet of batch) {
+      // Pause before tapping in — decision time
+      await randomDelay(2000, 5000);
+
+      try {
+        const tweetUrl = tweet.url;
+        if (!tweetUrl) continue;
+        const author = new URL(tweetUrl).pathname.split('/').filter(Boolean)[0];
+        const tweetId = new URL(tweetUrl).pathname.match(/status\/(\d+)/)?.[1];
+        if (!tweetId || !author) continue;
+
+        const deepData = await _scrapePostRecursive(page, tweetId, author, 5, 0);
+        if (deepData.thread.length > 0) {
+          await fs.appendFile(deepFile, JSON.stringify(deepData) + '\n');
+          deepCount++;
+        }
+      } catch {}
+
+      // Pause after reading — absorbing the content
+      await randomDelay(5000, 15000);
+    }
+
+    if (!cursor) break;
+  }
+
+  return {
+    likesFile,
+    deepReadsFile: deepFile,
+    likesCount: count,
+    deepReadsCount: deepCount,
+    username,
+    dateRange: { from: firstTimestamp, to: lastTimestamp },
+  };
+}
+
+// ============================================================================
 // Likes Scraper (who liked a specific tweet)
 // ============================================================================
 
@@ -1213,6 +1550,8 @@ export default {
   searchTweets,
   scrapeThread,
   scrapePost,
+  scrapeLikedTweets,
+  discoverLikes,
   scrapeLikes,
   scrapeHashtag,
   scrapeMedia,
