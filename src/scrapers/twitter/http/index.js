@@ -13,6 +13,9 @@ export { TwitterHttpClient, WaitingRateLimitStrategy, ErrorRateLimitStrategy } f
 export { TwitterAuth } from './auth.js';
 export { GuestTokenManager } from './guest.js';
 
+// Zero-credential session harvesting via Playwright (no API key required)
+export { harvestSession, SessionPool, createClientFromSession, DEFAULT_SESSION_TTL } from './playwright-session.js';
+
 // Scraping functions
 export { scrapeProfile, scrapeProfileById, parseUserData } from './profile.js';
 export { scrapeTweets, scrapeTweetsAndReplies, scrapeTweetById, parseTweetData, parseTimelineInstructions } from './tweets.js';
