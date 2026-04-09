@@ -330,18 +330,37 @@ export async function x_detect_unfollowers({ username }) {
 
 export async function x_post_tweet({ text }) {
   const { page: pg } = await ensureBrowser();
-  await pg.goto('https://x.com/compose/tweet', { waitUntil: 'networkidle2' });
+
+  // Go to home first to establish session properly (X changed compose route)
+  await pg.goto('https://x.com/home', { waitUntil: 'networkidle2', timeout: 15000 });
   await randomDelay();
 
-  const textbox = await pg.$('[data-testid="tweetTextarea_0"]');
-  if (textbox) {
-    await textbox.type(text, { delay: 50 });
-    await sleep(500);
-    if (await clickIfPresent(pg, '[data-testid="tweetButton"]')) {
-      await randomDelay();
-      return { success: true, message: 'Tweet posted successfully' };
-    }
+  // Click the compose button in the sidebar
+  const composeLink = await pg.$('a[href="/compose/tweet"]');
+  if (composeLink) {
+    await composeLink.click();
+    await pg.waitForSelector('[data-testid="tweetTextarea_0"]', { timeout: 5000 });
+  } else {
+    await pg.goto('https://x.com/compose/tweet', { waitUntil: 'networkidle2' });
   }
+  await randomDelay();
+
+  // Type using keyboard (React contenteditable needs keyboard events)
+  await pg.keyboard.type(text, { delay: 30 });
+  await sleep(1000);
+
+  // Click post via evaluate (React needs programmatic click)
+  await pg.evaluate(() => {
+    const btn = document.querySelector('[data-testid="tweetButton"]');
+    if (btn) btn.click();
+  });
+  await sleep(2000);
+
+  const url = pg.url();
+  if (!url.includes('/compose/')) {
+    return { success: true, message: 'Tweet posted successfully' };
+  }
+
   return { success: false, message: 'Could not post tweet' };
 }
 
