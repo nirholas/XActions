@@ -795,16 +795,24 @@ export async function scrapeNotifications(page, options = {}) {
  * Scrape trending topics from the Explore page
  */
 export async function scrapeTrending(page, options = {}) {
-  const { limit = 30 } = options;
-  
-  await page.goto('https://x.com/explore/tabs/trending', { waitUntil: 'networkidle2' });
+  const { category = 'trending', limit = 30 } = options;
+  const tab = ({
+    trending: 'trending',
+    news: 'news',
+    sports: 'sports',
+    entertainment: 'entertainment',
+    for_you: 'foryou',
+    'for-you': 'foryou',
+  })[category] || 'trending';
+
+  await page.goto(`https://x.com/explore/tabs/${tab}`, { waitUntil: 'networkidle2' });
   await randomDelay(2000, 3000);
-  
+
   for (let i = 0; i < 3; i++) {
     await page.evaluate(() => window.scrollBy(0, window.innerHeight));
     await sleep(1500);
   }
-  
+
   const trends = await page.$$eval('[data-testid="trend"]', (els) =>
     els.map((el) => {
       // A trend cell renders as [rank, "·", category, topic, ...context], e.g.
@@ -835,9 +843,9 @@ export async function scrapeTrending(page, options = {}) {
         texts.find((t) => /\d[\d.,]*\s*[KMB]?\s+(posts?|tweets?)/i.test(t)) || null;
 
       return { rank, category, topic, posts, platform: 'twitter' };
-    })
+    }).filter((item) => item.topic)
   );
-  
+
   return trends.slice(0, limit);
 }
 
