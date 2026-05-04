@@ -61,6 +61,11 @@ async function ensureBrowser() {
   return { browser, page };
 }
 
+export async function getPage() {
+  const { page } = await ensureBrowser();
+  return page;
+}
+
 /**
  * Close browser (called by server.js on SIGINT/SIGTERM)
  */
@@ -691,13 +696,107 @@ export async function x_auto_like({ keywords = [], maxLikes = 20 }) {
 
 export async function x_get_trends({ category, limit = 30 }) {
   const { page: pg } = await ensureBrowser();
-  return scrapeTrending(pg, { limit });
+  return scrapeTrending(pg, { category: category || 'trending', limit });
 }
 
 export async function x_get_explore({ category, limit = 30 }) {
   const { page: pg } = await ensureBrowser();
   // Explore and trending share the same underlying page data
-  return scrapeTrending(pg, { limit });
+  return scrapeTrending(pg, { category: category || 'trending', limit });
+}
+
+export async function x_get_home_timeline({ timeline = 'for_you', limit = 25 }) {
+  const { page: pg } = await ensureBrowser();
+
+  const normalizedTimeline = timeline === 'following' ? 'following' : 'for_you';
+  const targetLabel = normalizedTimeline === 'following' ? 'Following' : 'For you';
+
+  await pg.goto('https://x.com/home', { waitUntil: 'networkidle2', timeout: 30000 });
+  await randomDelay(2000, 3000);
+  await pg.waitForSelector('article[data-testid="tweet"]', { timeout: 30000 }).catch(() => {});
+
+  await pg.evaluate(async (label) => {
+    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+    const tabs = Array.from(document.querySelectorAll('[data-testid="ScrollSnap-List"] a, [role="tab"]'));
+    const wanted = tabs.find((tab) => (tab.textContent || '').trim().toLowerCase().includes(label.toLowerCase()));
+    if (wanted && wanted.getAttribute('aria-selected') !== 'true') {
+      wanted.click();
+      await sleep(2000);
+    }
+  }, targetLabel);
+
+  const posts = new Map();
+  let emptyScrolls = 0;
+
+  while (posts.size < limit && emptyScrolls < 5) {
+    const batch = await pg.evaluate(() => {
+      const parseMetric = (value) => {
+        if (!value) return 0;
+        const cleaned = String(value).replace(/,/g, '').trim();
+        const match = cleaned.match(/([\d.]+)\s*([KMB]?)/i);
+        if (!match) return 0;
+        const num = parseFloat(match[1]);
+        const suffix = (match[2] || '').toUpperCase();
+        const mult = suffix === 'K' ? 1e3 : suffix === 'M' ? 1e6 : suffix === 'B' ? 1e9 : 1;
+        return Math.round(num * mult);
+      };
+
+      return Array.from(document.querySelectorAll('article[data-testid="tweet"]')).map((tweet) => {
+        const text = tweet.querySelector('[data-testid="tweetText"]')?.textContent?.trim() || '';
+        const timeEl = tweet.querySelector('time');
+        const statusLink = tweet.querySelector('a[href*="/status/"]');
+        const userLinks = Array.from(tweet.querySelectorAll('[data-testid="User-Name"] a[href^="/"]'));
+
+        let username = '';
+        let displayName = '';
+        for (const link of userLinks) {
+          const href = link.getAttribute('href') || '';
+          if (!href.startsWith('/') || href.includes('/status/')) continue;
+          if (!username) username = href.replace(/^\//, '');
+          if (!displayName) displayName = link.textContent?.trim() || '';
+        }
+
+        const replyAria = tweet.querySelector('[data-testid="reply"]')?.getAttribute('aria-label') || '';
+        const retweetAria = tweet.querySelector('[data-testid="retweet"]')?.getAttribute('aria-label') || '';
+        const likeAria = tweet.querySelector('[data-testid="like"], [data-testid="unlike"]')?.getAttribute('aria-label') || '';
+        const viewText = tweet.querySelector('[data-testid="app-text-transition-container"]')?.textContent?.trim() || '';
+        const quotedText = Array.from(tweet.querySelectorAll('[data-testid="tweetText"]')).slice(1).map((el) => el.textContent?.trim()).filter(Boolean);
+
+        return {
+          id: statusLink?.getAttribute('href') || `${username}:${text.slice(0, 80)}`,
+          username,
+          displayName,
+          text,
+          timestamp: timeEl?.getAttribute('datetime') || '',
+          url: statusLink ? `https://x.com${statusLink.getAttribute('href')}` : '',
+          replies: parseMetric(replyAria),
+          retweets: parseMetric(retweetAria),
+          likes: parseMetric(likeAria),
+          views: parseMetric(viewText),
+          quotedText,
+          isRepost: !!tweet.querySelector('[data-testid="socialContext"]'),
+        };
+      }).filter((item) => item.id && item.text);
+    });
+
+    const before = posts.size;
+    for (const item of batch) {
+      if (!posts.has(item.id)) posts.set(item.id, item);
+      if (posts.size >= limit) break;
+    }
+
+    emptyScrolls = posts.size === before ? emptyScrolls + 1 : 0;
+    if (posts.size >= limit) break;
+
+    await pg.evaluate(() => window.scrollBy(0, window.innerHeight * 1.5));
+    await sleep(1800);
+  }
+
+  return {
+    timeline: normalizedTimeline,
+    count: Math.min(posts.size, limit),
+    posts: Array.from(posts.values()).slice(0, limit),
+  };
 }
 
 // ============================================================================
@@ -1374,6 +1473,7 @@ export const toolMap = {
   // Discovery
   x_get_trends,
   x_get_explore,
+  x_get_home_timeline,
   // Notifications
   x_get_notifications,
   x_mute_user,
@@ -1413,6 +1513,7 @@ export const toolMap = {
   x_client_get_followers,
   x_client_get_trends,
   // Utility (not an MCP tool, used by server.js cleanup)
+  getPage,
   closeBrowser,
 };
 
