@@ -1642,7 +1642,7 @@ program
       console.log(chalk.gray(`   ID: ${monitor.id}`));
 
       // Keep process alive
-      process.on('SIGINT', () => {
+      process.on('SIGINT', async () => {
         const { stopMonitor: stop } = await import('../analytics/reputation.js');
         stop(monitor.id);
         console.log(chalk.yellow('\n🛑 Monitor stopped.'));
