@@ -6,7 +6,8 @@
 Thumbs.db
 ehthumbs.db
 Desktop.ini
-
+_bmad
+.agents
 # Linux/Ubuntu system files
 *~
 *.swp
