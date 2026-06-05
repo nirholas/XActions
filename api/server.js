@@ -265,10 +265,15 @@ app.use(express.static(path.join(__dirname, '../public'), {
 
 // Serve dashboard static files with cache headers
 app.use(express.static(path.join(__dirname, '../dashboard'), {
-  maxAge: '1h',        // Cache HTML for 1 hour (content changes frequently)
+  maxAge: '1h',
   etag: true,          // Enable ETag for conditional requests
   lastModified: true,
   setHeaders: (res, filePath) => {
+    if (filePath.endsWith('.html')) {
+      res.setHeader('Cache-Control', 'no-cache, must-revalidate');
+      return;
+    }
+
     // Long cache for immutable assets (if any)
     if (filePath.endsWith('.png') || filePath.endsWith('.jpg') || filePath.endsWith('.svg') || filePath.endsWith('.ico') || filePath.endsWith('.woff2')) {
       res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
