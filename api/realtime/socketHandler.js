@@ -13,11 +13,18 @@ const activeSessions = new Map(); // odessId -> { odess, dashboard, user, status
 const adminSockets = new Set(); // Admin sockets watching all sessions
 
 export function initializeSocketIO(httpServer) {
+  const configuredOrigins = [
+    'https://xactions.app',
+    process.env.FRONTEND_URL,
+    process.env.API_URL,
+    process.env.API_BASE_URL,
+    process.env.LEGACY_FRONTEND_URL,
+    ...(process.env.ADDITIONAL_FRONTEND_ORIGINS || '').split(',')
+  ].map(origin => origin?.trim()).filter(Boolean);
+
   const io = new Server(httpServer, {
     cors: {
-      origin: process.env.FRONTEND_URL
-        ? [process.env.FRONTEND_URL]
-        : (process.env.NODE_ENV === 'production' ? ['https://xactions.app'] : true),
+      origin: process.env.NODE_ENV === 'production' ? configuredOrigins : true,
       methods: ['GET', 'POST'],
       credentials: true
     }

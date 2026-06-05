@@ -1421,15 +1421,50 @@
     let currentOperation = null;
     let authToken = localStorage.getItem('authToken');
     let socket = null;
+    let socketLoadingPromise = null;
+    let connectModalRequested = false;
     let sessionId = null;
     let agentConnected = false;
 
     // ===== SOCKET.IO REAL-TIME CONNECTION =====
-    function initSocket() {
+    function ensureSocketIO() {
+      if (typeof io === 'function') return Promise.resolve();
+
+      if (!socketLoadingPromise) {
+        socketLoadingPromise = new Promise((resolve, reject) => {
+          const existing = document.querySelector('script[data-socketio-client]');
+          if (existing) {
+            existing.addEventListener('load', resolve, { once: true });
+            existing.addEventListener('error', reject, { once: true });
+            return;
+          }
+
+          const script = document.createElement('script');
+          script.src = 'https://cdn.socket.io/4.7.2/socket.io.min.js';
+          script.dataset.socketioClient = 'true';
+          script.onload = resolve;
+          script.onerror = () => reject(new Error('Failed to load Socket.IO client'));
+          document.head.appendChild(script);
+        });
+      }
+
+      return socketLoadingPromise;
+    }
+
+    async function initSocket() {
       if (!authToken) {
         showToast('Please log in first to connect your browser.', 'error');
         window.location.href = '/login';
         return;
+      }
+
+      if (socket) return socket;
+
+      try {
+        await ensureSocketIO();
+      } catch (error) {
+        showToast('Failed to load browser connector. Please refresh and try again.', 'error');
+        throw error;
       }
 
       socket = io(WS_URL, {
@@ -1461,6 +1496,11 @@
         // Store agent script for display
         window.agentScript = data.agentScript;
         document.getElementById('connection-substatus').textContent = 'Session ready! Click Connect Browser to continue.';
+        if (connectModalRequested) {
+          connectModalRequested = false;
+          updateConnectionStatus('waiting');
+          showAgentScriptModal();
+        }
       });
 
       socket.on('agent:connected', () => {
@@ -1527,18 +1567,36 @@
       }
     }
 
-    function connectBrowser() {
-      if (!socket) initSocket();
-      
-      // Wait for session to be created
-      setTimeout(() => {
+    async function connectBrowser() {
+      connectModalRequested = true;
+      const btn = document.getElementById('connect-browser-btn');
+      btn.disabled = true;
+      btn.textContent = 'Connecting...';
+
+      try {
+        if (!socket) await initSocket();
+
         if (window.agentScript) {
+          connectModalRequested = false;
           updateConnectionStatus('waiting');
           showAgentScriptModal();
-        } else {
-          showToast('Connecting... please wait and try again.', 'info');
+          return;
         }
-      }, 500);
+
+        showToast('Preparing browser connection...', 'info');
+
+        setTimeout(() => {
+          if (!window.agentScript && connectModalRequested) {
+            connectModalRequested = false;
+            updateConnectionStatus('disconnected');
+            showToast('Could not create browser session. Refresh and try again.', 'error');
+          }
+        }, 10000);
+      } catch (error) {
+        connectModalRequested = false;
+        updateConnectionStatus('disconnected');
+        console.error('Failed to connect browser:', error);
+      }
     }
 
     function showAgentScriptModal() {
@@ -1654,7 +1712,7 @@
 
     // Initialize socket on page load
     if (authToken) {
-      initSocket();
+      initSocket().catch((error) => console.error('Socket initialization failed:', error));
     }
 
     // Load dashboard data
@@ -2001,4 +2059,3 @@
 <script src="/js/sidebar.js"></script>
 </body>
 </html>
-
