@@ -15,6 +15,8 @@ const adminSockets = new Set(); // Admin sockets watching all sessions
 export function initializeSocketIO(httpServer) {
   const configuredOrigins = [
     'https://xactions.app',
+    'https://x.com',
+    'https://twitter.com',
     process.env.FRONTEND_URL,
     process.env.API_URL,
     process.env.API_BASE_URL,
@@ -406,38 +408,88 @@ function generateAgentScript(sessionId) {
 (function() {
   const XACTIONS_SESSION = '${sessionId}';
   const XACTIONS_WS = '${wsUrl}';
-  
-  // Load Socket.io client
-  const script = document.createElement('script');
-  script.src = 'https://cdn.socket.io/4.7.2/socket.io.min.js';
-  script.onload = function() {
-    // Connect to XActions
-    const socket = io(XACTIONS_WS, {
-      auth: { role: 'agent', sessionId: XACTIONS_SESSION }
-    });
-    
-    socket.on('connect', () => {
-      console.log('✅ Connected to XActions');
-      showNotification('Connected to XActions Dashboard!');
-    });
-    
-    socket.on('execute', async (data) => {
-      console.log('🚀 Executing:', data.operation);
-      try {
-        await executeOperation(socket, data.operation, data.config);
-      } catch (error) {
-        socket.emit('error', { message: error.message });
+
+  function createSocketBridge(baseUrl, auth) {
+    const handlers = {};
+    const base = new URL(baseUrl);
+    const protocol = base.protocol === 'https:' ? 'wss:' : 'ws:';
+    const url = protocol + '//' + base.host + '/socket.io/?EIO=4&transport=websocket';
+    const ws = new WebSocket(url);
+    const socket = {
+      on(event, handler) {
+        handlers[event] = handlers[event] || [];
+        handlers[event].push(handler);
+      },
+      emit(event, data) {
+        const send = () => ws.send('42' + JSON.stringify([event, data || {}]));
+        if (ws.readyState === WebSocket.OPEN) send();
+        else ws.addEventListener('open', send, { once: true });
+      },
+      disconnect() {
+        ws.close();
+      }
+    };
+
+    function dispatch(event, data) {
+      (handlers[event] || []).forEach(handler => handler(data));
+    }
+
+    ws.addEventListener('message', event => {
+      const packet = String(event.data || '');
+      if (packet.startsWith('0')) {
+        ws.send('40' + JSON.stringify(auth));
+        return;
+      }
+      if (packet === '2') {
+        ws.send('3');
+        return;
+      }
+      if (packet.startsWith('40')) {
+        dispatch('connect');
+        return;
+      }
+      if (packet.startsWith('42')) {
+        try {
+          const [eventName, payload] = JSON.parse(packet.slice(2));
+          dispatch(eventName, payload);
+        } catch (error) {
+          console.error('XActions packet parse failed:', error);
+        }
       }
     });
-    
-    socket.on('stop', () => {
-      window.XACTIONS_STOP = true;
-      console.log('⏹️ Stop requested');
-    });
-    
-    window.XACTIONS_SOCKET = socket;
-  };
-  document.head.appendChild(script);
+
+    ws.addEventListener('error', () => dispatch('connect_error', new Error('WebSocket connection failed')));
+    ws.addEventListener('close', () => dispatch('disconnect'));
+    return socket;
+  }
+
+  const socket = createSocketBridge(XACTIONS_WS, { role: 'agent', sessionId: XACTIONS_SESSION });
+
+  socket.on('connect', () => {
+    console.log('✅ Connected to XActions');
+    showNotification('Connected to XActions Dashboard!');
+  });
+
+  socket.on('connect_error', (error) => {
+    console.error('❌ XActions connection failed:', error.message);
+    showNotification('XActions connection failed. Check console for details.');
+  });
+
+  socket.on('execute', async (data) => {
+    console.log('🚀 Executing:', data.operation);
+    try {
+      await executeOperation(socket, data.operation, data.config);
+    } catch (error) {
+      socket.emit('error', { message: error.message });
+    }
+  });
+
+  socket.on('stop', () => {
+    window.XACTIONS_STOP = true;
+    console.log('⏹️ Stop requested');
+  });
+
+  window.XACTIONS_SOCKET = socket;
   
   function showNotification(msg) {
     const div = document.createElement('div');
