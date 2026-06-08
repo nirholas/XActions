@@ -4,7 +4,7 @@
 baseline_commit: 17e476abaf6629de3eb93991ac6c9c48e5d4302e
 ---
 
-Status: review
+Status: done
 
 ## Change Log
 
@@ -158,9 +158,40 @@ sonnet-4.6
 - 29 tests total: cookie error handling (4), dispatcher wiring (7), module exports (4+3), normalizeProfile pure unit tests (6), scrapeProfile browser-free tests (5), dispatcher end-to-end routing test (1)
 
 ### File List
-
 - src/scrapers/facebook/index.js
 - src/scrapers/index.js
 - tests/scrapers/facebook.test.js
 - docs/agents/selectors-facebook.md
 - _bmad-output/implementation-artifacts/1-2-scrape-profile.md
+
+## Review Findings
+
+> Code review 2026-06-08 (Blind Hunter + Edge Case Hunter + Acceptance Auditor) on Story 1.2 delta. Reviewer verified 29/29 tests pass. Acceptance Auditor: 10 COVERED, 3 PARTIAL, 0 VIOLATED. **Note:** reviewer flagged 3 false positives that I disproved by running node directly (see Dismissed).
+
+### Decision needed
+
+- [x] [Review][Decision→Patch] Facebook caller passing `authToken` (string) gets a misleading error — RESOLVED per user (option 1): add a guard. See Patch P4 below.
+
+### Patch
+
+- [x] [Review][Patch] Handle normalization leaks subpath/query into `username` and URL [src/scrapers/facebook/index.js:160-163] — FIXED 2026-06-08: after stripping domain/@, cut at first `/` and `?`, preserving `profile.php?id=<n>` as a known identifier. Added 3 tests (subpath, query, profile.php).
+- [x] [Review][Patch] `domFollowers` stores full match not the number [src/scrapers/facebook/index.js:177-178] — FIXED: capture `followerMatch[1]`; normalizer updated to use `domFollowers` directly (it's now the extracted count) and only regex-parse `ogDescription`. Test fixture updated to new contract.
+- [x] [Review][Patch] Blocked-profile check only catches English "Facebook" [src/scrapers/facebook/index.js:190] — FIXED (partial): added English login-wall title patterns + explicit comment documenting the non-English limitation (deferred refinement). Recommends running authenticated.
+- [x] [Review][Patch] Guard `authToken` misuse for Facebook (from decision) [src/scrapers/index.js] — FIXED: fail-fast guard before browser launch throws "Facebook uses options.authCookie ({ c_user, xs }), not options.authToken". Test added.
+
+### Deferred (pre-existing / beyond scope)
+
+- [x] [Review][Defer] `page.goto` in `scrapeProfile` + `loginWithCookie` has no try/catch → browser leak on timeout [src/scrapers/facebook/index.js:165,141] — deferred, same pre-existing dispatcher cleanup-ordering issue carried from Story 1.1 (deferred-work.md); affects threads sibling too.
+- [x] [Review][Defer] Follower regex unanchored → false positive on bio text "...1,000 followers..." [src/scrapers/facebook/index.js:87] — deferred, same unanchored pattern as threads template; meta-first usually safe. Revisit when verifying on live data.
+- [x] [Review][Defer] Bio strip regex requires trailing period; no-period descriptions keep follower prefix [src/scrapers/facebook/index.js:97] — deferred, cosmetic best-effort field; revisit with live data samples.
+- [x] [Review][Defer] AC5.13 dispatcher routing test is partly proxy + one integration test; `needsPuppeteer` not directly asserted [tests/scrapers/facebook.test.js] — deferred, array is a local const; integration test at :310 covers real routing.
+
+### Dismissed (false positive / noise / by-design)
+
+- **"Regex `[\||-]` throws SyntaxError (range out of order)"** — FALSE. Verified with node: regex compiles fine; `|`,`|`,`-` are literals in the class, no range. 29 tests run proves it compiles.
+- **"`Coca-Cola | Facebook` truncates to `Coca`"** — FALSE. Verified: `"Coca-Cola | Facebook"` → `"Coca-Cola"`, `"Spider-Man Official | Facebook"` → `"Spider-Man Official"`. The separator only matches when immediately followed by `Facebook`, so internal hyphens are safe. (Rare real edge: a name literally containing "- Facebook"/"| Facebook" mid-string, e.g. "Tom - Facebook Expert | Facebook" → "Tom" — low, accepted.)
+- **"`FACEBOOK_BASE` undefined → ReferenceError"** — FALSE. Defined at src/scrapers/facebook/index.js:27. Blind Hunter lacked file context.
+- **"normalizeProfile not on default export"** — by design; named export, tests import it named. Not required on default.
+- **"Both authToken+authCookie → authCookie ignored"** — folded into the Decision item above.
+- **"makePageWithMeta helper unused (dead code) in test"** — minor; harmless test-only dead code, not worth a patch cycle.
+- **Selector doc still says UNVERIFIED at file header** — by design; honest disclosure (no live session tested). Profile rows ARE updated to real approach.

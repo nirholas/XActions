@@ -80,15 +80,16 @@ export function normalizeProfile(raw, inputHandle) {
     name = ogTitle.replace(/\s*[\||-]\s*Facebook.*$/i, '').trim() || null;
   }
 
-  // Parse follower count best-effort from og:description or dom text
+  // Parse follower count best-effort.
+  // ogDescription is free text → regex-extract the count.
+  // domFollowers is already the extracted count (e.g. "1.2M") → use directly.
   let followers = null;
-  const followerSources = [ogDescription, domFollowers].filter(Boolean);
-  for (const src of followerSources) {
-    const match = src.match(/([\d,.]+[KkMmBb]?)\s*(followers?|people follow)/i);
-    if (match) {
-      followers = match[1];
-      break;
-    }
+  if (ogDescription) {
+    const match = ogDescription.match(/([\d,.]+[KkMmBb]?)\s*(followers?|people follow)/i);
+    if (match) followers = match[1];
+  }
+  if (!followers && domFollowers) {
+    followers = domFollowers;
   }
 
   // Parse bio from og:description — strip leading follower count line
@@ -161,6 +162,13 @@ export async function scrapeProfile(page, username) {
   }
   handle = handle.replace(/^@/, '');
 
+  // profile.php?id=<numeric> is a first-class Facebook identifier — keep it whole.
+  // Otherwise strip any subpath (zuck/photos → zuck) and query string (zuck?fref=nf → zuck)
+  // so the handle stays clean for both navigation and the returned username field.
+  if (!/^profile\.php\?id=\d+/i.test(handle)) {
+    handle = handle.split('/')[0].split('?')[0];
+  }
+
   const url = `${FACEBOOK_BASE}/${handle}`;
   await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 });
   await randomDelay(2000, 4000);
@@ -171,11 +179,11 @@ export async function scrapeProfile(page, username) {
       return el?.getAttribute('content') || null;
     };
 
-    // DOM fallback for followers
+    // DOM fallback for followers — capture just the count (group 1), not the full match
     let domFollowers = null;
     const allText = document.body?.innerText || '';
     const followerMatch = allText.match(/([\d,.]+[KkMmBb]?)\s*followers?/i);
-    if (followerMatch) domFollowers = followerMatch[0];
+    if (followerMatch) domFollowers = followerMatch[1];
 
     return {
       ogTitle: getMeta('og:title'),
@@ -186,8 +194,12 @@ export async function scrapeProfile(page, username) {
     };
   });
 
-  // Detect blocked/non-existent profile — og:title missing or generic FB title
-  if (!raw.ogTitle || /^facebook$/i.test(raw.ogTitle.trim())) {
+  // Detect blocked/non-existent profile — og:title missing or a Facebook login wall.
+  // NOTE: login-wall detection is English-biased ("Facebook", "Log into Facebook").
+  // Non-English login walls may not be caught here — see deferred-work.md. Prefer
+  // running authenticated (authCookie) so profile pages render fully.
+  const title = raw.ogTitle?.trim() || '';
+  if (!title || /^facebook$/i.test(title) || /^log\s*in(to)?\s+facebook|^facebook\s*[–-]\s*log\s*in/i.test(title)) {
     throw new Error(`❌ Facebook profile not found or blocked: "${handle}"`);
   }
 

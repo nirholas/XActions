@@ -179,7 +179,7 @@ describe('normalizeProfile', () => {
       ogTitle: 'Test Page | Facebook',
       ogDescription: 'Just a bio.',
       ogImage: null,
-      domFollowers: '5.2K followers',
+      domFollowers: '5.2K', // already-extracted count (scrapeProfile captures group 1)
       pageUrl: 'https://www.facebook.com/testpage',
     };
     const result = normalizeProfile(raw, 'testpage');
@@ -300,6 +300,51 @@ describe('scrapeProfile input normalization', () => {
     const result = await scrapeProfile(fakePage, 'https://www.facebook.com/NASA');
     expect(result.username).toBe('NASA');
   });
+
+  it('scrapeProfile strips subpath from handle (zuck/photos → zuck)', async () => {
+    const fakePage = {
+      goto: async () => {},
+      evaluate: async () => ({
+        ogTitle: 'Mark Zuckerberg | Facebook',
+        ogDescription: '100M followers.',
+        ogImage: null,
+        domFollowers: null,
+        pageUrl: 'https://www.facebook.com/zuck',
+      }),
+    };
+    const result = await scrapeProfile(fakePage, 'https://www.facebook.com/zuck/photos');
+    expect(result.username).toBe('zuck');
+  });
+
+  it('scrapeProfile strips query string from bare handle (zuck?fref=nf → zuck)', async () => {
+    const fakePage = {
+      goto: async () => {},
+      evaluate: async () => ({
+        ogTitle: 'Mark Zuckerberg | Facebook',
+        ogDescription: '100M followers.',
+        ogImage: null,
+        domFollowers: null,
+        pageUrl: 'https://www.facebook.com/zuck',
+      }),
+    };
+    const result = await scrapeProfile(fakePage, 'zuck?fref=nf');
+    expect(result.username).toBe('zuck');
+  });
+
+  it('scrapeProfile preserves profile.php?id= numeric identifier', async () => {
+    const fakePage = {
+      goto: async () => {},
+      evaluate: async () => ({
+        ogTitle: 'Some User | Facebook',
+        ogDescription: null,
+        ogImage: null,
+        domFollowers: null,
+        pageUrl: 'https://www.facebook.com/profile.php?id=100069',
+      }),
+    };
+    const result = await scrapeProfile(fakePage, 'https://www.facebook.com/profile.php?id=100069');
+    expect(result.username).toBe('profile.php?id=100069');
+  });
 });
 
 // ============================================================================
@@ -327,5 +372,11 @@ describe('dispatcher scrape() facebook routing', () => {
 
     expect(result.platform).toBe('facebook');
     expect(result.username).toBe('testpage');
+  });
+
+  it('scrape("facebook",...) rejects authToken with a clear message (must use authCookie)', async () => {
+    await expect(
+      scrape('facebook', 'profile', { username: 'zuck', authToken: 'some-string-token' })
+    ).rejects.toThrow(/authCookie.*not.*authToken/i);
   });
 });

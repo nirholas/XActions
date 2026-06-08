@@ -205,6 +205,14 @@ export async function scrape(platform, action, options = {}) {
   if (needsPuppeteer) {
     let page = options.page;
 
+    // Facebook uses a cookie-object ({ c_user, xs }) via authCookie, not a string authToken.
+    // Reject the wrong key early (before launching a browser) with a clear message.
+    if ((platformName === 'facebook' || platformName === 'fb') && options.authToken) {
+      throw new Error(
+        '❌ Facebook uses options.authCookie ({ c_user, xs }), not options.authToken'
+      );
+    }
+
     // Auto-create browser/page if not provided
     if (!page) {
       const browser = await mod.createBrowser(options.browserOptions || {});
