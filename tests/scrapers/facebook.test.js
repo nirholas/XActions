@@ -1070,3 +1070,52 @@ describe('dispatcher scrape() search routing', () => {
     expect(typeof facebook.searchTweets).toBe('function');
   });
 });
+
+// ============================================================================
+// TEA Round 2 — Story 1.5 gap coverage
+// ============================================================================
+
+describe('[TEA] searchTweets — edge cases', () => {
+  it('[P1] exports searchTweets as named export', () => {
+    expect(typeof searchTweets).toBe('function');
+  });
+
+  it('[P1] encodes special characters in query URL', async () => {
+    const visitedUrls = [];
+    const page = {
+      goto: async (url) => { visitedUrls.push(url); },
+      evaluate: async (fn) => {
+        if (fn.toString().includes('scrollTo')) return undefined;
+        return [];
+      },
+    };
+    await searchTweets(page, 'hello world & #test', { delay: () => {}, maxRetries: 1 });
+    expect(visitedUrls[0]).toContain('hello%20world');
+    expect(visitedUrls[0]).toContain('%23test');
+  });
+
+  it('[P1] stops at maxRetries and returns partial results', async () => {
+    let callCount = 0;
+    const page = {
+      goto: async () => {},
+      evaluate: async (fn) => {
+        if (fn.toString().includes('scrollTo')) return undefined;
+        callCount++;
+        if (callCount === 1) {
+          return [{ id: 'r1', text: 'first', author: 'x', timestamp: null, url: 'https://www.facebook.com/x/posts/1' }];
+        }
+        return [];
+      },
+    };
+    const result = await searchTweets(page, 'test', { delay: () => {}, maxRetries: 3 });
+    expect(result.length).toBe(1);
+    expect(result[0].id).toBe('r1');
+  });
+});
+
+describe('[TEA] normalizeSearchResult — edge cases', () => {
+  it('[P2] sets timestamp to null when missing', () => {
+    const result = normalizeSearchResult({ id: 'x', text: 'hi', author: 'a', timestamp: undefined, url: null });
+    expect(result.timestamp).toBeNull();
+  });
+});
