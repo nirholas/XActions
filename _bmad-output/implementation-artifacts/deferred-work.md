@@ -25,3 +25,10 @@
 - **`id = text.slice(0,60)` fallback collisions** [src/scrapers/facebook/index.js:305] — distinct posts with same opening text collide in the Map and are dropped. Depends on real `text` + permalink extraction; revisit during live verify.
 - **Engagement regex over full `article.textContent`** [src/scrapers/facebook/index.js:294-295] — grabs first/nested/label count, not the post's own. Needs verified per-element selectors (aria-label on reaction/comment controls).
 - **Image filter leaks avatars** [src/scrapers/facebook/index.js:300-302] — `!static && !emoji` misses `scontent` profile pics. Needs live CDN URL patterns: positive-filter `scontent` + exclude profile-photo path segments.
+
+## Deferred from: code review of story-1.4 (2026-06-08)
+
+> DOM-accuracy items needing a live authenticated session. Tie to selectors-facebook.md Followers verify checklist (Q3).
+
+- **Follower name selector grabs first span/strong** [src/scrapers/facebook/index.js:321] — `item.querySelector('span, strong')` may return a UI label ("Follow", icon wrapper) not the person's name. Needs live DOM to pick a name-specific anchor.
+- **`id = url || name` collision on name-only rows** [src/scrapers/facebook/index.js:330] — two followers with same name and no parseable url collide in the Map. Low once username/url parsing is fixed (BLOCKER patch); revisit during live verify.

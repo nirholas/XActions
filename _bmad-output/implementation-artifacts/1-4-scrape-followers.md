@@ -4,7 +4,7 @@
 baseline_commit: 3f27fe8e6eeed57bf67eaf8cbf89055063e52bf6
 ---
 
-Status: review
+Status: done
 
 ## Change Log
 
@@ -148,3 +148,24 @@ sonnet-4.6
 - tests/scrapers/facebook.test.js
 - docs/agents/selectors-facebook.md
 - _bmad-output/implementation-artifacts/1-4-scrape-followers.md
+
+## Review Findings
+
+> Code review 2026-06-08 (Blind Hunter + Edge Case Hunter + Acceptance Auditor). All 3 reviewers CONVERGED on the same core defect. Reviewer-verified: 81/81 tests pass — but this is GREEN-FALSE: the restricted-path test mocks `evaluate` to return `false` directly, bypassing the broken detection logic it claims to cover. Acceptance Auditor verdict: **AC2.6 VIOLATED** (the core of the story).
+
+### Patch
+
+- [x] [Review][Patch][BLOCKER] `isExposed` detection defeats FR-3 — FIXED 2026-06-08: dropped the `/followers?/i` free-text branch; detection now relies SOLELY on `[role="listitem"].length`. The exposure check returns a count (number) — `0` → restricted note path; `>0` → array path. Test mocks updated to exercise the real condition (count vs boolean).
+- [x] [Review][Patch][BLOCKER] `profile.php?id=N` malformed followers URL — FIXED: branch URL build — `profile.php?id=N&sk=followers` for numeric id, `/<handle>/followers` for vanity. Two tests added (goto spy verifies the URL).
+- [x] [Review][Patch] Username regex captures path segments not usernames — FIXED: extraction now scans all anchors per listitem; matches `profile.php?id=N` to canonical `profile.php?id=<digits>` first; for vanity, skips `NON_PROFILE` segments (`photo`, `groups`, `watch`, `events`, `marketplace`, `pages`, `people`, `friends`, `reel(s)`, `stories`).
+
+### Deferred (DOM-accuracy — needs live session; tie to verify checklist)
+
+- [x] [Review][Defer] First `<span>/<strong>` in listitem may be a UI label not the name [src/scrapers/facebook/index.js:321] — deferred: correct name selector needs live DOM; selectors UNVERIFIED. Add to verify checklist.
+- [x] [Review][Defer] `id = url || name` collision when url null + same name [src/scrapers/facebook/index.js:330] — deferred: depends on real URL extraction (patch above) landing first; low once usernames parse correctly.
+
+### Dismissed
+
+- **`page.goto` no try/catch** — KNOWN-DEFERRED, identical pattern in scrapeProfile/scrapeTweets/threads. Not new.
+- **retry resets on progress → long run on sparse lazy list** — bounded by `limit`; same pattern as scrapeTweets, accepted.
+- **81/81 "passing"** — NOT a clean signal: green-false because the restricted test mocks past the defect. Recorded as evidence, not a finding to fix beyond the test-realism patch folded into BLOCKER 1.

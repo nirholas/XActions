@@ -294,19 +294,24 @@ export function normalizeFollower(raw) {
 export async function scrapeFollowers(page, username, options = {}) {
   const { limit = 100, onProgress, maxRetries = 10, delay = randomDelay } = options;
   const handle = normalizeHandle(username);
-  const followersUrl = `${FACEBOOK_BASE}/${handle}/followers`;
+  // profile.php?id=N takes the followers tab via &sk=followers, not a /followers path
+  // (appending /followers to a query string lands inside the query value and breaks).
+  const followersUrl = /^profile\.php\?id=\d+/i.test(handle)
+    ? `${FACEBOOK_BASE}/${handle}&sk=followers`
+    : `${FACEBOOK_BASE}/${handle}/followers`;
 
   await page.goto(followersUrl, { waitUntil: 'networkidle2', timeout: 30000 });
   await delay(2000, 4000);
 
-  const isExposed = await page.evaluate(() => {
-    const listItems = document.querySelectorAll('[role="listitem"]');
-    const bodyText = document.body?.innerText?.slice(0, 2000) || '';
-    const hasFollowerHeading = /followers?/i.test(bodyText);
-    return listItems.length > 0 || hasFollowerHeading;
-  });
+  // Deterministic exposure check: a real, public follower list renders follower
+  // rows as [role="listitem"]. The mere presence of the word "followers" in page
+  // chrome/headings is NOT a signal (it appears on every /followers page, including
+  // restricted profiles) — so we rely solely on actual list-item rows.
+  const exposedCount = await page.evaluate(
+    () => document.querySelectorAll('[role="listitem"]').length
+  );
 
-  if (!isExposed) {
+  if (exposedCount === 0) {
     return {
       note: 'Facebook follower list is not publicly exposed for this profile. Only Pages with public follower settings expose individual follower data.',
       username: handle,
@@ -320,18 +325,32 @@ export async function scrapeFollowers(page, username, options = {}) {
   while (followers.size < limit && retries < maxRetries) {
     const rawFollowers = await page.evaluate(() => {
       const items = document.querySelectorAll('[role="listitem"]');
+      // Path segments that are NOT profile handles — skip these anchors.
+      const NON_PROFILE = new Set(['photo', 'photo.php', 'groups', 'watch', 'events', 'marketplace', 'pages', 'people', 'friends', 'reel', 'reels', 'stories']);
       return Array.from(items).map((item) => {
-        const linkEl = item.querySelector('a[href*="facebook.com"], a[href^="/"]');
-        const nameEl = item.querySelector('span, strong');
-        const href = linkEl?.getAttribute('href') || null;
-        const name = nameEl?.textContent?.trim() || null;
+        const anchors = Array.from(item.querySelectorAll('a[href]'));
         let url = null;
         let username = null;
-        if (href) {
-          url = href.startsWith('http') ? href : `https://www.facebook.com${href}`;
-          const match = url.match(/facebook\.com\/([^/?&#]+)/);
-          username = match ? match[1] : null;
+        for (const a of anchors) {
+          const href = a.getAttribute('href') || '';
+          const abs = href.startsWith('http') ? href : `https://www.facebook.com${href}`;
+          // profile.php?id=N → canonical numeric identifier
+          const idMatch = abs.match(/facebook\.com\/profile\.php\?id=(\d+)/i);
+          if (idMatch) {
+            url = `https://www.facebook.com/profile.php?id=${idMatch[1]}`;
+            username = `profile.php?id=${idMatch[1]}`;
+            break;
+          }
+          // vanity handle as first path segment (skip known non-profile segments)
+          const segMatch = abs.match(/facebook\.com\/([^/?&#]+)/i);
+          if (segMatch && !NON_PROFILE.has(segMatch[1].toLowerCase())) {
+            url = abs.split('?')[0];
+            username = segMatch[1];
+            break;
+          }
         }
+        const nameEl = item.querySelector('span, strong');
+        const name = nameEl?.textContent?.trim() || null;
         const id = url || name;
         return { id, name, username, url };
       }).filter((f) => f.id);

@@ -796,31 +796,31 @@ describe('normalizeFollower', () => {
 // ============================================================================
 
 describe('scrapeFollowers', () => {
+  // Detection evaluate returns a COUNT of [role="listitem"] rows (number).
+  // Extraction evaluate (contains NON_PROFILE) returns the raw follower rows.
   const makeRestrictedPage = () => ({
     goto: async () => {},
     evaluate: async (fn) => {
       const fnStr = fn.toString();
       if (fnStr.includes('scrollTo')) return undefined;
-      if (fnStr.includes('listitem')) return false; // isExposed check
-      return [];
+      if (fnStr.includes('NON_PROFILE')) return []; // extraction (not reached)
+      return 0; // exposedCount: no listitem rows → restricted
     },
   });
 
   const makeExposedPage = (rawFollowers = []) => {
-    let callCount = 0;
+    let extractCalls = 0;
     return {
       goto: async () => {},
       evaluate: async (fn) => {
         const fnStr = fn.toString();
         if (fnStr.includes('scrollTo')) return undefined;
-        // First evaluate call: isExposed detection
-        if (fnStr.includes('listitem') && callCount === 0) {
-          callCount++;
-          return true;
+        if (fnStr.includes('NON_PROFILE')) {
+          // extraction: return raw followers once, then empty (triggers maxRetries)
+          extractCalls++;
+          return extractCalls === 1 ? rawFollowers : [];
         }
-        // Subsequent calls: return raw followers once, then empty (triggers maxRetries)
-        callCount++;
-        return callCount === 2 ? rawFollowers : [];
+        return rawFollowers.length || 1; // exposedCount: positive → exposed
       },
     };
   };
@@ -857,6 +857,37 @@ describe('scrapeFollowers', () => {
     const result = await scrapeFollowers(page, 'testpage', { limit: 3, delay: () => {}, maxRetries: 2 });
     expect(result.length).toBeLessThanOrEqual(3);
   });
+
+  it('builds &sk=followers URL for profile.php?id= (not a broken /followers path)', async () => {
+    let navigated = null;
+    const page = {
+      goto: async (url) => { navigated = url; },
+      evaluate: async (fn) => {
+        const fnStr = fn.toString();
+        if (fnStr.includes('scrollTo')) return undefined;
+        if (fnStr.includes('NON_PROFILE')) return [];
+        return 0;
+      },
+    };
+    await scrapeFollowers(page, 'https://www.facebook.com/profile.php?id=100069', { delay: () => {} });
+    expect(navigated).toBe('https://www.facebook.com/profile.php?id=100069&sk=followers');
+    expect(navigated).not.toMatch(/id=100069\/followers/); // not the broken form
+  });
+
+  it('builds /<handle>/followers URL for vanity handles', async () => {
+    let navigated = null;
+    const page = {
+      goto: async (url) => { navigated = url; },
+      evaluate: async (fn) => {
+        const fnStr = fn.toString();
+        if (fnStr.includes('scrollTo')) return undefined;
+        if (fnStr.includes('NON_PROFILE')) return [];
+        return 0;
+      },
+    };
+    await scrapeFollowers(page, 'zuck', { delay: () => {} });
+    expect(navigated).toBe('https://www.facebook.com/zuck/followers');
+  });
 });
 
 // ============================================================================
@@ -870,7 +901,8 @@ describe('dispatcher scrape() followers routing', () => {
       evaluate: async (fn) => {
         const fnStr = fn.toString();
         if (fnStr.includes('scrollTo')) return undefined;
-        return false; // restricted — returns note object quickly
+        if (fnStr.includes('NON_PROFILE')) return [];
+        return 0; // restricted — returns note object quickly
       },
     };
     const result = await scrape('facebook', 'followers', { page, username: 'testuser' });
