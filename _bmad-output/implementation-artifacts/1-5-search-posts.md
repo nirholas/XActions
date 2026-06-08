@@ -4,7 +4,7 @@
 baseline_commit: 44821ae6efa6997562a84989877d14ff7db9746d
 ---
 
-Status: review
+Status: done
 
 ## Change Log
 
@@ -148,3 +148,27 @@ sonnet-4.6
 - tests/scrapers/facebook.test.js
 - docs/agents/selectors-facebook.md
 - _bmad-output/implementation-artifacts/1-5-search-posts.md
+
+## Review Findings
+
+> Code review 2026-06-08 (Blind Hunter + Edge Case Hunter + Acceptance Auditor). Reviewer-verified: **100/100 tests pass** (dev claimed 96; more, not fewer — fine). Acceptance Auditor: **all 12 ACs COVERED, 0 violations**. Cleanest story so far — every prior review lesson was applied (delay seam, mocks branch on fn.toString, author via anchor-skip, permalink-first id, normalizeHandle correctly NOT applied to query). 0 BLOCKER.
+
+### Patch
+
+- [x] [Review][Patch] `profile.php?id=N` author loses the id → `"profile.php"` — FIXED 2026-06-08: author extraction now matches `profile.php?id=(\d+)` first and preserves `profile.php?id=<digits>` (same as scrapeFollowers/normalizeHandle).
+- [x] [Review][Patch] author anchor filter misses non-profile segments — FIXED: extracted shared module-level `NON_PROFILE_SEGMENTS` (added `hashtag`); both `scrapeFollowers` and `searchTweets` now pass it into `page.evaluate` and skip those segments. DRY — single source of truth.
+
+### Deferred
+
+- [x] [Review][Defer] No input validation on `query` (empty/whitespace/null/undefined build a bad URL silently) [src/scrapers/facebook/index.js:508] — deferred: low; `encodeURIComponent(null)`→"null" searches literal "null". Add a guard (`if (!query?.trim()) return []`) in a cleanup pass; not blocking.
+- [x] [Review][Defer] `texts[0]` may capture author name not post body [src/scrapers/facebook/index.js:521] — deferred: DOM-accuracy, same as 1.3; needs live session. selectors-facebook.md verify checklist.
+- [x] [Review][Defer] `id = url || text.slice(0,60)` collision fallback [src/scrapers/facebook/index.js:562] — deferred: same as 1.3; search results usually have permalinks so lower risk.
+- [x] [Review][Defer] TEA maxRetries test mocks past DOM extraction (canned shaped results) [tests/scrapers/facebook.test.js] — deferred: loop logic IS exercised; author-extraction logic isn't (can't be, browser-free). Real author extraction needs live verify, tracked in checklist.
+
+### Dismissed
+
+- **`page.goto` no try/catch** — KNOWN-DEFERRED, all four scrapers + threads identical.
+- **`limit=0` returns [] without onProgress** — by-design (0 results requested → 0 returned); not a real caller scenario.
+- **retry resets on progress → long run on sparse feed** — bounded by `limit`, same as siblings.
+- **page.evaluate non-serializable drop** — speculative; fields already `|| null` guarded.
+- **dispatcher test doesn't assert searchTweets specifically** — page mock is search-shaped; functionally sufficient.

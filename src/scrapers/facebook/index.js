@@ -26,6 +26,14 @@ const randomDelay = (min = 1000, max = 3000) => sleep(min + Math.random() * (max
 
 const FACEBOOK_BASE = 'https://www.facebook.com';
 
+// Path segments after facebook.com/ that are NOT user/page profile handles.
+// Shared by scrapeFollowers and searchTweets author extraction. Passed into
+// page.evaluate as an argument (arrays serialize across the bridge; Sets do not).
+const NON_PROFILE_SEGMENTS = [
+  'photo', 'photo.php', 'groups', 'watch', 'events', 'marketplace',
+  'pages', 'people', 'friends', 'reel', 'reels', 'stories', 'hashtag',
+];
+
 /**
  * Create a browser instance for Facebook scraping
  * @param {Object} options - Browser launch options
@@ -323,10 +331,9 @@ export async function scrapeFollowers(page, username, options = {}) {
   let retries = 0;
 
   while (followers.size < limit && retries < maxRetries) {
-    const rawFollowers = await page.evaluate(() => {
+    const rawFollowers = await page.evaluate((nonProfile) => {
       const items = document.querySelectorAll('[role="listitem"]');
-      // Path segments that are NOT profile handles — skip these anchors.
-      const NON_PROFILE = new Set(['photo', 'photo.php', 'groups', 'watch', 'events', 'marketplace', 'pages', 'people', 'friends', 'reel', 'reels', 'stories']);
+      const NON_PROFILE = new Set(nonProfile);
       return Array.from(items).map((item) => {
         const anchors = Array.from(item.querySelectorAll('a[href]'));
         let url = null;
@@ -354,7 +361,7 @@ export async function scrapeFollowers(page, username, options = {}) {
         const id = url || name;
         return { id, name, username, url };
       }).filter((f) => f.id);
-    });
+    }, NON_PROFILE_SEGMENTS);
 
     const prevSize = followers.size;
     rawFollowers.forEach((raw) => {
@@ -514,7 +521,8 @@ export async function searchTweets(page, query, options = {}) {
   let retries = 0;
 
   while (results.size < limit && retries < maxRetries) {
-    const rawResults = await page.evaluate(() => {
+    const rawResults = await page.evaluate((nonProfile) => {
+      const NON_PROFILE = new Set(nonProfile);
       const articles = document.querySelectorAll('[role="article"]');
       return Array.from(articles).map((article) => {
         // Text content — first substantial [dir="auto"] element
@@ -524,25 +532,19 @@ export async function searchTweets(page, query, options = {}) {
           .filter((t) => t && t.length > 5);
         const text = texts[0] || null;
 
-        // Author — first profile link in article (not a post permalink)
+        // Author — first real profile link in article (skip permalinks + non-profile segments)
         const allLinks = Array.from(article.querySelectorAll('a[href]'));
-        const authorLink = allLinks.find((a) => {
-          const href = a.getAttribute('href') || '';
-          return (
-            (href.includes('facebook.com/') || href.startsWith('/')) &&
-            !href.includes('/posts/') &&
-            !href.includes('/permalink/') &&
-            !href.includes('story_fbid') &&
-            !href.includes('/search/')
-          );
-        });
-        const authorHref = authorLink?.getAttribute('href') || null;
         let author = null;
-        if (authorHref) {
-          const clean = authorHref.startsWith('http')
-            ? authorHref.replace(/^https?:\/\/(www\.)?facebook\.com\//, '')
-            : authorHref.replace(/^\//, '');
-          author = clean.split('/')[0].split('?')[0] || null;
+        for (const a of allLinks) {
+          const href = a.getAttribute('href') || '';
+          if (!href.includes('facebook.com/') && !href.startsWith('/')) continue;
+          if (href.includes('/posts/') || href.includes('/permalink/') || href.includes('story_fbid') || href.includes('/search/')) continue;
+          const abs = href.startsWith('http') ? href : `https://www.facebook.com${href}`;
+          // profile.php?id=N → preserve the canonical numeric identifier
+          const idMatch = abs.match(/facebook\.com\/profile\.php\?id=(\d+)/i);
+          if (idMatch) { author = `profile.php?id=${idMatch[1]}`; break; }
+          const segMatch = abs.match(/facebook\.com\/([^/?&#]+)/i);
+          if (segMatch && !NON_PROFILE.has(segMatch[1].toLowerCase())) { author = segMatch[1]; break; }
         }
 
         // Timestamp
@@ -562,7 +564,7 @@ export async function searchTweets(page, query, options = {}) {
         const id = url || text?.slice(0, 60) || null;
         return { id, text, author, timestamp, url };
       }).filter((r) => r.id);
-    });
+    }, NON_PROFILE_SEGMENTS);
 
     const prevSize = results.size;
     rawResults.forEach((raw) => {
