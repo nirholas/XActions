@@ -1119,3 +1119,224 @@ describe('[TEA] normalizeSearchResult — edge cases', () => {
     expect(result.timestamp).toBeNull();
   });
 });
+
+// ============================================================================
+// TEA Round 3 — Full Epic 1 comprehensive gap sweep
+// ============================================================================
+
+describe('[TEA-R3] normalizeHandle — comprehensive edge cases', () => {
+  it('[P1] handles http:// URL without www', () => {
+    expect(normalizeHandle('http://facebook.com/zuck')).toBe('zuck');
+  });
+
+  it('[P1] strips trailing slash from URL', () => {
+    expect(normalizeHandle('https://www.facebook.com/zuck/')).toBe('zuck');
+  });
+
+  it('[P1] handles URL with path after handle', () => {
+    expect(normalizeHandle('https://www.facebook.com/zuck/about')).toBe('zuck');
+  });
+
+  it('[P2] handles double @@ prefix gracefully', () => {
+    // Single @ stripped, second @ becomes part of handle
+    const result = normalizeHandle('@@handle');
+    expect(result).toBe('@handle'); // strips only leading @
+  });
+});
+
+describe('[TEA-R3] normalizeProfile — comprehensive edge cases', () => {
+  it('[P1] parses "people follow" variant for followers count', () => {
+    const raw = {
+      ogTitle: 'Test Page | Facebook',
+      ogDescription: '5.2M people follow this.',
+      ogImage: null,
+      domFollowers: null,
+      pageUrl: 'https://www.facebook.com/testpage',
+    };
+    expect(normalizeProfile(raw, 'testpage').followers).toBe('5.2M');
+  });
+
+  it('[P2] parses follower count with comma-separated thousands', () => {
+    const raw = {
+      ogTitle: 'Test | Facebook',
+      ogDescription: '1,234 followers. Bio here.',
+      ogImage: null,
+      domFollowers: null,
+      pageUrl: null,
+    };
+    expect(normalizeProfile(raw, 'test').followers).toBe('1,234');
+  });
+
+  it('[P2] handles em-dash separator in title (Name — Facebook)', () => {
+    const raw = { ogTitle: 'NASA — Facebook', ogDescription: null, ogImage: null, domFollowers: null, pageUrl: null };
+    expect(normalizeProfile(raw, 'NASA').name).toBe('NASA');
+  });
+
+  it('[P1] bio is null when description only contains follower count', () => {
+    const raw = {
+      ogTitle: 'Test | Facebook',
+      ogDescription: '100K followers.',
+      ogImage: null,
+      domFollowers: null,
+      pageUrl: null,
+    };
+    const result = normalizeProfile(raw, 'test');
+    expect(result.bio).toBeNull();
+    expect(result.followers).toBe('100K');
+  });
+});
+
+describe('[TEA-R3] loginWithCookie — edge cases', () => {
+  it('[P1] throws when xs is whitespace-only', async () => {
+    const fakePage = { setCookie: async () => {}, goto: async () => {} };
+    await expect(loginWithCookie(fakePage, { c_user: '123456789', xs: '   ' }))
+      .rejects.toThrow('❌ Facebook login requires both c_user and xs cookies');
+  });
+
+  it('[P1] throws when c_user is whitespace-only', async () => {
+    const fakePage = { setCookie: async () => {}, goto: async () => {} };
+    await expect(loginWithCookie(fakePage, { c_user: '   ', xs: 'some-xs' }))
+      .rejects.toThrow('❌ Facebook login requires both c_user and xs cookies');
+  });
+
+  it('[P1] calls setCookie with correct domain and flags', async () => {
+    const cookiesSet = [];
+    const fakePage = {
+      setCookie: async (...cookies) => { cookiesSet.push(...cookies); },
+      goto: async () => {},
+    };
+    await loginWithCookie(fakePage, { c_user: '12345', xs: 'xs-token' });
+    const cUserCookie = cookiesSet.find(c => c.name === 'c_user');
+    const xsCookie = cookiesSet.find(c => c.name === 'xs');
+    expect(cUserCookie.domain).toBe('.facebook.com');
+    expect(cUserCookie.httpOnly).toBe(true);
+    expect(cUserCookie.secure).toBe(true);
+    expect(xsCookie.domain).toBe('.facebook.com');
+    expect(xsCookie.httpOnly).toBe(true);
+    expect(xsCookie.secure).toBe(true);
+  });
+});
+
+describe('[TEA-R3] normalizePost — edge cases', () => {
+  it('[P2] hasVideo null/undefined → false', () => {
+    const raw = { id: 'p1', text: 'hi', timestamp: null, likes: '0', comments: '0', postUrl: null, images: [], hasVideo: null };
+    expect(normalizePost(raw).media.hasVideo).toBe(false);
+  });
+
+  it('[P2] images undefined → empty array', () => {
+    const raw = { id: 'p1', text: 'hi', timestamp: null, likes: '0', comments: '0', postUrl: null, images: undefined, hasVideo: false };
+    expect(normalizePost(raw).media.images).toEqual([]);
+  });
+
+  it('[P2] text null with postUrl → id from postUrl', () => {
+    const raw = { id: 'https://www.facebook.com/x/posts/1', text: null, timestamp: null, likes: '0', comments: '0', postUrl: 'https://www.facebook.com/x/posts/1', images: [], hasVideo: false };
+    expect(normalizePost(raw).url).toBe('https://www.facebook.com/x/posts/1');
+  });
+});
+
+describe('[TEA-R3] normalizeFollower — edge cases', () => {
+  it('[P2] empty string url → null', () => {
+    expect(normalizeFollower({ name: 'X', username: 'x', url: '' }).url).toBeNull();
+  });
+
+  it('[P2] empty string name → null', () => {
+    expect(normalizeFollower({ name: '', username: 'x', url: 'https://www.facebook.com/x' }).name).toBeNull();
+  });
+});
+
+describe('[TEA-R3] normalizeSearchResult — edge cases', () => {
+  it('[P2] empty string text → null', () => {
+    expect(normalizeSearchResult({ id: 'x', text: '', author: 'a', timestamp: null, url: null }).text).toBeNull();
+  });
+
+  it('[P2] empty string author → null', () => {
+    expect(normalizeSearchResult({ id: 'x', text: 'hi', author: '', timestamp: null, url: null }).author).toBeNull();
+  });
+});
+
+describe('[TEA-R3] scrapeProfile — login-wall detection comprehensive', () => {
+  const makeWallPage = (title) => ({
+    goto: async () => {},
+    evaluate: async () => ({
+      ogTitle: title,
+      ogDescription: null,
+      ogImage: null,
+      domFollowers: null,
+      pageUrl: 'https://www.facebook.com/login',
+    }),
+  });
+
+  it('[P1] throws on "Facebook — Log in" em-dash variant', async () => {
+    await expect(scrapeProfile(makeWallPage('Facebook — Log in'), 'target'))
+      .rejects.toThrow(/profile not found or blocked/i);
+  });
+
+  it('[P2] does NOT throw on legitimate page with "Facebook" in bio title', async () => {
+    const page = {
+      goto: async () => {},
+      evaluate: async () => ({
+        ogTitle: 'I Love Facebook | Some Page',
+        ogDescription: '100 followers. A page about Facebook.',
+        ogImage: null,
+        domFollowers: null,
+        pageUrl: 'https://www.facebook.com/ilovefacebook',
+      }),
+    };
+    const result = await scrapeProfile(page, 'ilovefacebook');
+    expect(result.platform).toBe('facebook');
+  });
+});
+
+describe('[TEA-R3] scrapeTweets — edge cases', () => {
+  it('[P1] uses normalizeHandle on username (strips @)', async () => {
+    const visitedUrls = [];
+    const page = {
+      goto: async (url) => { visitedUrls.push(url); },
+      evaluate: async (fn) => {
+        if (fn.toString().includes('scrollTo')) return undefined;
+        return [];
+      },
+    };
+    await scrapeTweets(page, '@zuck', { delay: () => {}, maxRetries: 1 });
+    expect(visitedUrls[0]).toContain('/zuck');
+    expect(visitedUrls[0]).not.toContain('/@zuck');
+  });
+});
+
+describe('[TEA-R3] searchTweets — edge cases', () => {
+  it('[P2] encodes % in query', async () => {
+    const visitedUrls = [];
+    const page = {
+      goto: async (url) => { visitedUrls.push(url); },
+      evaluate: async (fn) => {
+        if (fn.toString().includes('scrollTo')) return undefined;
+        return [];
+      },
+    };
+    await searchTweets(page, '50% off', { delay: () => {}, maxRetries: 1 });
+    expect(visitedUrls[0]).toContain('50%25%20off');
+  });
+});
+
+describe('[TEA-R3] dispatcher — negative routing', () => {
+  it('[P2] scrape("facebook","hashtag",...) throws "not available"', async () => {
+    const page = { goto: async () => {}, evaluate: async () => ({}) };
+    await expect(scrape('facebook', 'hashtag', { page, hashtag: 'test' }))
+      .rejects.toThrow(/not available/i);
+  });
+
+  it('[P2] scrape("facebook","bookmarks",...) throws "not available"', async () => {
+    const page = { goto: async () => {}, evaluate: async () => ({}) };
+    await expect(scrape('facebook', 'bookmarks', { page }))
+      .rejects.toThrow(/not available/i);
+  });
+});
+
+describe('[TEA-R3] default export — complete export check', () => {
+  it('[P1] default export has all 7 expected functions', () => {
+    const expected = ['createBrowser', 'createPage', 'loginWithCookie', 'scrapeProfile', 'scrapeFollowers', 'scrapeTweets', 'searchTweets'];
+    expected.forEach(fn => {
+      expect(typeof facebook[fn]).toBe('function');
+    });
+  });
+});

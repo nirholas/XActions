@@ -174,7 +174,7 @@ export function normalizeProfile(raw, inputHandle) {
  * @throws {Error} If either cookie is missing or empty
  */
 export async function loginWithCookie(page, { c_user, xs }) {
-  if (!c_user || !xs) {
+  if (!c_user?.trim() || !xs?.trim()) {
     throw new Error('❌ Facebook login requires both c_user and xs cookies');
   }
 
