@@ -65,6 +65,55 @@ export async function createPage(browser) {
 // Profile Normalizer (pure — testable without Puppeteer)
 // ============================================================================
 
+// ============================================================================
+// Handle Normalization (shared — used by scrapeProfile and scrapeTweets)
+// ============================================================================
+
+/**
+ * Normalize a Facebook handle input to a clean handle string.
+ * Accepts: handle, @handle, full facebook.com URL.
+ * Preserves profile.php?id=<n> identifiers.
+ * @param {string} input
+ * @returns {string} Normalized handle
+ */
+export function normalizeHandle(input) {
+  let handle = input;
+  if (handle.startsWith('https://') || handle.startsWith('http://')) {
+    handle = handle.replace(/^https?:\/\/(www\.)?facebook\.com\//, '').replace(/\/$/, '');
+  }
+  handle = handle.replace(/^@/, '');
+  if (!/^profile\.php\?id=\d+/i.test(handle)) {
+    handle = handle.split('/')[0].split('?')[0];
+  }
+  return handle;
+}
+
+// ============================================================================
+// Post Normalizer (pure — testable without Puppeteer)
+// ============================================================================
+
+/**
+ * Normalize a raw post object from page.evaluate into the standard post shape.
+ * @param {Object} raw - Raw post fields from page.evaluate
+ * @returns {Object} Normalized post
+ */
+export function normalizePost(raw) {
+  const { id, text, timestamp, likes, comments, postUrl, images, hasVideo } = raw;
+  return {
+    id: id || null,
+    text: text || null,
+    timestamp: timestamp || null,
+    likes: likes || '0',
+    comments: comments || '0',
+    url: postUrl || null,
+    media: {
+      images: images || [],
+      hasVideo: hasVideo || false,
+    },
+    platform: 'facebook',
+  };
+}
+
 /**
  * Normalize raw meta/DOM values into the standard profile shape.
  * @param {Object} raw - Raw values from page.evaluate
@@ -154,20 +203,7 @@ export async function loginWithCookie(page, { c_user, xs }) {
  * @returns {Object} Normalized profile data
  */
 export async function scrapeProfile(page, username) {
-  // Normalize input to a handle
-  let handle = username;
-  if (handle.startsWith('https://') || handle.startsWith('http://')) {
-    // Extract handle from full URL: https://www.facebook.com/zuck → zuck
-    handle = handle.replace(/^https?:\/\/(www\.)?facebook\.com\//, '').replace(/\/$/, '');
-  }
-  handle = handle.replace(/^@/, '');
-
-  // profile.php?id=<numeric> is a first-class Facebook identifier — keep it whole.
-  // Otherwise strip any subpath (zuck/photos → zuck) and query string (zuck?fref=nf → zuck)
-  // so the handle stays clean for both navigation and the returned username field.
-  if (!/^profile\.php\?id=\d+/i.test(handle)) {
-    handle = handle.split('/')[0].split('?')[0];
-  }
+  const handle = normalizeHandle(username);
 
   const url = `${FACEBOOK_BASE}/${handle}`;
   await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 });
@@ -207,6 +243,94 @@ export async function scrapeProfile(page, username) {
 }
 
 // ============================================================================
+// Posts Scraper
+// ============================================================================
+
+/**
+ * Scrape recent posts from a Facebook profile or page
+ * @param {Page} page - Puppeteer page instance
+ * @param {string} username - Handle, @handle, or full facebook.com URL
+ * @param {Object} options
+ * @param {number} [options.limit=50] - Max posts to return
+ * @param {Function} [options.onProgress] - Called each scroll: ({ scraped, limit })
+ * @returns {Promise<Array>} Normalized post array
+ */
+export async function scrapeTweets(page, username, options = {}) {
+  const { limit = 50, onProgress } = options;
+  const handle = normalizeHandle(username);
+  const profileUrl = `${FACEBOOK_BASE}/${handle}`;
+
+  await page.goto(profileUrl, { waitUntil: 'networkidle2', timeout: 30000 });
+  await randomDelay(2000, 4000);
+
+  const posts = new Map();
+  let retries = 0;
+  const maxRetries = 10;
+
+  while (posts.size < limit && retries < maxRetries) {
+    const rawPosts = await page.evaluate(() => {
+      const articles = document.querySelectorAll('[role="article"]');
+      return Array.from(articles).map((article) => {
+        // Text content
+        const textEls = article.querySelectorAll('[dir="auto"]');
+        const texts = Array.from(textEls)
+          .map((el) => el.textContent?.trim())
+          .filter((t) => t && t.length > 5);
+        const text = texts[0] || null;
+
+        // Timestamp
+        const timeEl = article.querySelector('abbr, time');
+        const timestamp = timeEl?.getAttribute('data-utime') || timeEl?.getAttribute('datetime') || timeEl?.textContent?.trim() || null;
+
+        // Post URL
+        const linkEls = article.querySelectorAll('a[href*="/posts/"], a[href*="/permalink/"], a[href*="story_fbid"]');
+        const postLink = linkEls[0]?.getAttribute('href') || null;
+        const postUrl = postLink
+          ? postLink.startsWith('http') ? postLink : `https://www.facebook.com${postLink}`
+          : null;
+
+        // Engagement — prefer aria-label on reaction/comment buttons
+        const allText = article.textContent || '';
+        const likesMatch = allText.match(/([\d,.]+[KkMm]?)\s*(like|reaction)/i);
+        const commentsMatch = allText.match(/([\d,.]+[KkMm]?)\s*comment/i);
+        const likes = likesMatch ? likesMatch[1] : '0';
+        const comments = commentsMatch ? commentsMatch[1] : '0';
+
+        // Media
+        const images = Array.from(article.querySelectorAll('img'))
+          .map((img) => img.src)
+          .filter((src) => src && !src.includes('static') && !src.includes('emoji') && src.startsWith('http'));
+        const hasVideo = !!article.querySelector('video');
+
+        const id = postUrl || text?.slice(0, 60) || null;
+
+        return { id, text, timestamp, likes, comments, postUrl, images, hasVideo };
+      }).filter((p) => p.id);
+    });
+
+    const prevSize = posts.size;
+    rawPosts.forEach((raw) => {
+      if (!posts.has(raw.id)) {
+        posts.set(raw.id, normalizePost(raw));
+      }
+    });
+
+    if (onProgress) onProgress({ scraped: posts.size, limit });
+
+    if (posts.size === prevSize) {
+      retries++;
+    } else {
+      retries = 0;
+    }
+
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await randomDelay(1500, 3000);
+  }
+
+  return Array.from(posts.values()).slice(0, limit);
+}
+
+// ============================================================================
 // Default Export
 // ============================================================================
 
@@ -215,4 +339,5 @@ export default {
   createPage,
   loginWithCookie,
   scrapeProfile,
+  scrapeTweets,
 };

@@ -4,7 +4,10 @@ import facebook, {
   createPage,
   loginWithCookie,
   normalizeProfile,
+  normalizePost,
+  normalizeHandle,
   scrapeProfile,
+  scrapeTweets,
 } from '../../src/scrapers/facebook/index.js';
 import { getPlatform, platforms, scrape } from '../../src/scrapers/index.js';
 
@@ -378,5 +381,172 @@ describe('dispatcher scrape() facebook routing', () => {
     await expect(
       scrape('facebook', 'profile', { username: 'zuck', authToken: 'some-string-token' })
     ).rejects.toThrow(/authCookie.*not.*authToken/i);
+  });
+});
+
+// ============================================================================
+// Story 1.3 — normalizeHandle
+// ============================================================================
+
+describe('normalizeHandle', () => {
+  it('strips leading @', () => {
+    expect(normalizeHandle('@zuck')).toBe('zuck');
+  });
+
+  it('extracts handle from full URL', () => {
+    expect(normalizeHandle('https://www.facebook.com/zuck')).toBe('zuck');
+  });
+
+  it('extracts handle from URL without www', () => {
+    expect(normalizeHandle('https://facebook.com/NASA')).toBe('NASA');
+  });
+
+  it('strips subpath', () => {
+    expect(normalizeHandle('zuck/photos')).toBe('zuck');
+  });
+
+  it('strips query string', () => {
+    expect(normalizeHandle('zuck?fref=nf')).toBe('zuck');
+  });
+
+  it('preserves profile.php?id= identifier', () => {
+    expect(normalizeHandle('profile.php?id=123456789')).toBe('profile.php?id=123456789');
+  });
+
+  it('passes through plain handle unchanged', () => {
+    expect(normalizeHandle('markzuckerberg')).toBe('markzuckerberg');
+  });
+});
+
+// ============================================================================
+// Story 1.3 — normalizePost
+// ============================================================================
+
+describe('normalizePost', () => {
+  it('returns full normalized post shape', () => {
+    const raw = {
+      id: 'post-123',
+      text: 'Hello world',
+      timestamp: '2026-01-01T00:00:00Z',
+      likes: '42',
+      comments: '7',
+      postUrl: 'https://www.facebook.com/zuck/posts/123',
+      images: ['https://cdn.fb.com/img1.jpg'],
+      hasVideo: false,
+    };
+    const result = normalizePost(raw);
+    expect(result.id).toBe('post-123');
+    expect(result.text).toBe('Hello world');
+    expect(result.timestamp).toBe('2026-01-01T00:00:00Z');
+    expect(result.likes).toBe('42');
+    expect(result.comments).toBe('7');
+    expect(result.url).toBe('https://www.facebook.com/zuck/posts/123');
+    expect(result.media.images).toEqual(['https://cdn.fb.com/img1.jpg']);
+    expect(result.media.hasVideo).toBe(false);
+    expect(result.platform).toBe('facebook');
+  });
+
+  it('sets hasVideo true when present', () => {
+    const raw = { id: 'v1', text: 'vid', timestamp: null, likes: '0', comments: '0', postUrl: null, images: [], hasVideo: true };
+    expect(normalizePost(raw).media.hasVideo).toBe(true);
+  });
+
+  it('defaults likes and comments to "0" when absent', () => {
+    const raw = { id: 'p1', text: 'test', timestamp: null, likes: undefined, comments: undefined, postUrl: null, images: [], hasVideo: false };
+    const result = normalizePost(raw);
+    expect(result.likes).toBe('0');
+    expect(result.comments).toBe('0');
+  });
+
+  it('sets images to empty array when absent', () => {
+    const raw = { id: 'p2', text: 'test', timestamp: null, likes: '1', comments: '0', postUrl: null, images: undefined, hasVideo: false };
+    expect(normalizePost(raw).media.images).toEqual([]);
+  });
+
+  it('always sets platform to "facebook"', () => {
+    const raw = { id: 'p3', text: 'x', timestamp: null, likes: '0', comments: '0', postUrl: null, images: [], hasVideo: false };
+    expect(normalizePost(raw).platform).toBe('facebook');
+  });
+});
+
+// ============================================================================
+// Story 1.3 — scrapeTweets (browser-free via fake page)
+// ============================================================================
+
+describe('scrapeTweets', () => {
+  const makeFakePage = (rawPosts = []) => ({
+    goto: async () => {},
+    evaluate: async (fn) => {
+      // If fn is the scroll call (no return value needed), skip
+      if (fn.toString().includes('scrollTo')) return undefined;
+      // Otherwise return canned raw posts
+      return rawPosts;
+    },
+  });
+
+  it('returns empty array when no posts', async () => {
+    const page = makeFakePage([]);
+    const result = await scrapeTweets(page, 'zuck', { limit: 10 });
+    expect(Array.isArray(result)).toBe(true);
+    expect(result.length).toBe(0);
+  });
+
+  it('returns normalized posts with platform: facebook', async () => {
+    const rawPosts = [
+      { id: 'post-1', text: 'Hello', timestamp: null, likes: '5', comments: '2', postUrl: 'https://www.facebook.com/zuck/posts/1', images: [], hasVideo: false },
+      { id: 'post-2', text: 'World', timestamp: null, likes: '10', comments: '3', postUrl: 'https://www.facebook.com/zuck/posts/2', images: [], hasVideo: false },
+    ];
+    const page = makeFakePage(rawPosts);
+    const result = await scrapeTweets(page, 'zuck', { limit: 10 });
+    expect(result.length).toBe(2);
+    expect(result[0].platform).toBe('facebook');
+    expect(result[0].id).toBe('post-1');
+  });
+
+  it('respects limit', async () => {
+    const rawPosts = Array.from({ length: 10 }, (_, i) => ({
+      id: `post-${i}`, text: `text ${i}`, timestamp: null, likes: '0', comments: '0',
+      postUrl: `https://www.facebook.com/zuck/posts/${i}`, images: [], hasVideo: false,
+    }));
+    const page = makeFakePage(rawPosts);
+    const result = await scrapeTweets(page, 'zuck', { limit: 3 });
+    expect(result.length).toBe(3);
+  });
+
+  it('calls onProgress each iteration', async () => {
+    const progressCalls = [];
+    const page = makeFakePage([]);
+    await scrapeTweets(page, 'zuck', { limit: 5, onProgress: (p) => progressCalls.push(p) });
+    expect(progressCalls.length).toBeGreaterThan(0);
+    expect(progressCalls[0]).toHaveProperty('scraped');
+    expect(progressCalls[0]).toHaveProperty('limit');
+  });
+});
+
+// ============================================================================
+// Story 1.3 — dispatcher routing for posts/tweets
+// ============================================================================
+
+describe('dispatcher scrape() posts/tweets routing', () => {
+  const makeFakePage = (rawPosts = []) => ({
+    goto: async () => {},
+    evaluate: async (fn) => {
+      if (fn.toString().includes('scrollTo')) return undefined;
+      return rawPosts;
+    },
+  });
+
+  it('scrape("facebook","posts",...) returns post array', async () => {
+    const rawPosts = [
+      { id: 'p1', text: 'Post 1', timestamp: null, likes: '1', comments: '0', postUrl: 'https://www.facebook.com/x/posts/1', images: [], hasVideo: false },
+    ];
+    const result = await scrape('facebook', 'posts', { page: makeFakePage(rawPosts), username: 'testpage' });
+    expect(Array.isArray(result)).toBe(true);
+    expect(result[0].platform).toBe('facebook');
+  });
+
+  it('scrape("facebook","tweets",...) also routes to scrapeTweets', async () => {
+    const result = await scrape('facebook', 'tweets', { page: makeFakePage([]), username: 'testpage' });
+    expect(Array.isArray(result)).toBe(true);
   });
 });

@@ -31,15 +31,18 @@ Mọi selector phải bọc trong helper một chỗ để khi Facebook đổi D
 
 ## Posts (FR-2)
 
-| Element | Selector đề xuất (UNVERIFIED) | Ghi chú |
+| Element | Selector / Approach | Ghi chú |
 |---|---|---|
-| Post container | `[role="article"]` | FB dùng `role="article"` cho feed post |
-| Post text | `[data-ad-comet-preview="message"]` hoặc `[dir="auto"]` trong article | Cần verify attribute còn tồn tại |
-| Timestamp | `a[role="link"]` chứa text thời gian / `abbr` | FB ẩn timestamp trong link |
-| Likes count | text anchor gần icon like | Parse số |
-| Comments count | text anchor "comment"/"bình luận" | Parse số |
-| Media images | `img` trong article (loại avatar) | Filter theo src pattern |
+| Post container | `[role="article"]` | **Primary** — used in scrapeTweets |
+| Post text | `[dir="auto"]` trong article → first non-trivial textContent | Prefer first element with length > 5 |
+| Timestamp | `abbr[data-utime]` hoặc `time[datetime]` hoặc text fallback | Best-effort; FB hides timestamps in links |
+| Post URL | `a[href*="/posts/"]`, `a[href*="/permalink/"]`, `a[href*="story_fbid"]` | First match wins |
+| Likes count | Regex `/([\d,.]+[KkMm]?)\s*(like\|reaction)/i` on article.textContent | Best-effort; default "0" |
+| Comments count | Regex `/([\d,.]+[KkMm]?)\s*comment/i` on article.textContent | Best-effort; default "0" |
+| Media images | `img` trong article → filter static/emoji/non-http | Avatar images filtered by `static`/`emoji` keywords |
 | Video presence | `video` element trong article | boolean hasVideo |
+
+> **Approach used in `scrapeTweets`:** `[role="article"]` container, text from `[dir="auto"]`, regex-based engagement extraction from article text, scroll-based pagination with bounded retries. Still UNVERIFIED on a live authenticated session — selectors may differ when logged in vs. public view.
 
 ## Search (FR-4)
 
