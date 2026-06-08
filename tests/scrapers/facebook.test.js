@@ -575,6 +575,189 @@ describe('dispatcher scrape() posts/tweets routing', () => {
 });
 
 // ============================================================================
+// TEA Expansion — Gap Coverage (stories 1.1–1.4)
+// ============================================================================
+
+describe('[TEA] normalizeHandle — edge cases', () => {
+  it('[P1] throws on empty string', () => {
+    expect(() => normalizeHandle('')).toThrow(/handle is required/i);
+  });
+
+  it('[P1] throws on whitespace-only string', () => {
+    expect(() => normalizeHandle('   ')).toThrow(/handle is required/i);
+  });
+});
+
+describe('[TEA] normalizeProfile — edge cases', () => {
+  it('[P1] parses name when dash separator used (Name – Facebook)', () => {
+    const raw = { ogTitle: 'SpaceX – Facebook', ogDescription: null, ogImage: null, domFollowers: null, pageUrl: null };
+    const result = normalizeProfile(raw, 'spacex');
+    expect(result.name).toBe('SpaceX');
+  });
+
+  it('[P1] sets bio to null when ogDescription is null', () => {
+    const raw = { ogTitle: 'Test | Facebook', ogDescription: null, ogImage: null, domFollowers: null, pageUrl: null };
+    expect(normalizeProfile(raw, 'test').bio).toBeNull();
+  });
+
+  it('[P2] sets avatar to null when ogImage is null', () => {
+    const raw = { ogTitle: 'Test | Facebook', ogDescription: null, ogImage: null, domFollowers: null, pageUrl: null };
+    expect(normalizeProfile(raw, 'test').avatar).toBeNull();
+  });
+
+  it('[P2] constructs url from FACEBOOK_BASE when pageUrl is null', () => {
+    const raw = { ogTitle: 'Test | Facebook', ogDescription: null, ogImage: null, domFollowers: null, pageUrl: null };
+    expect(normalizeProfile(raw, 'testpage').url).toBe('https://www.facebook.com/testpage');
+  });
+});
+
+describe('[TEA] normalizePost — edge cases', () => {
+  it('[P2] sets url to null when postUrl is null', () => {
+    const raw = { id: 'p1', text: 'x', timestamp: null, likes: '0', comments: '0', postUrl: null, images: [], hasVideo: false };
+    expect(normalizePost(raw).url).toBeNull();
+  });
+
+  it('[P1] sets id to null when raw.id is falsy', () => {
+    const raw = { id: '', text: 'x', timestamp: null, likes: '0', comments: '0', postUrl: null, images: [], hasVideo: false };
+    expect(normalizePost(raw).id).toBeNull();
+  });
+});
+
+describe('[TEA] scrapeTweets — scroll loop behavior', () => {
+  it('[P1] deduplicates posts with the same id', async () => {
+    let callCount = 0;
+    const page = {
+      goto: async () => {},
+      evaluate: async (fn) => {
+        const fnStr = fn.toString();
+        if (fnStr.includes('scrollTo')) return undefined;
+        callCount++;
+        // Return same post twice on first two scrape calls
+        if (callCount <= 2) {
+          return [{ id: 'dup-id', text: 'same post', timestamp: null, likes: '1', comments: '0', postUrl: 'https://www.facebook.com/x/posts/1', images: [], hasVideo: false }];
+        }
+        return [];
+      },
+    };
+    const result = await scrapeTweets(page, 'zuck', { limit: 10, delay: () => {}, maxRetries: 3 });
+    expect(result.filter(p => p.id === 'dup-id').length).toBe(1);
+  });
+
+  it('[P1] stops when maxRetries exhausted and returns partial results', async () => {
+    let callCount = 0;
+    const page = {
+      goto: async () => {},
+      evaluate: async (fn) => {
+        const fnStr = fn.toString();
+        if (fnStr.includes('scrollTo')) return undefined;
+        callCount++;
+        // Return 1 post on first call, then nothing
+        if (callCount === 1) {
+          return [{ id: 'p1', text: 'post', timestamp: null, likes: '0', comments: '0', postUrl: 'https://www.facebook.com/x/posts/1', images: [], hasVideo: false }];
+        }
+        return [];
+      },
+    };
+    const result = await scrapeTweets(page, 'zuck', { limit: 50, delay: () => {}, maxRetries: 3 });
+    expect(result.length).toBe(1);
+    expect(result[0].id).toBe('p1');
+  });
+});
+
+describe('[TEA] scrapeFollowers — edge cases', () => {
+  it('[P2] calls onProgress during exposed-list scrolling', async () => {
+    const progressCalls = [];
+    let callCount = 0;
+    const page = {
+      goto: async () => {},
+      evaluate: async (fn) => {
+        const fnStr = fn.toString();
+        if (fnStr.includes('scrollTo')) return undefined;
+        callCount++;
+        if (callCount === 1) return true; // isExposed
+        return [{ id: 'https://www.facebook.com/u1', name: 'User', username: 'u1', url: 'https://www.facebook.com/u1' }];
+      },
+    };
+    await scrapeFollowers(page, 'testpage', {
+      delay: () => {},
+      maxRetries: 2,
+      onProgress: (p) => progressCalls.push(p),
+    });
+    expect(progressCalls.length).toBeGreaterThan(0);
+    expect(progressCalls[0]).toHaveProperty('scraped');
+    expect(progressCalls[0]).toHaveProperty('limit');
+  });
+
+  it('[P2] normalizeFollower handles null username in row gracefully', () => {
+    const result = normalizeFollower({ name: 'Anonymous', username: null, url: 'https://www.facebook.com/anon' });
+    expect(result.username).toBeNull();
+    expect(result.name).toBe('Anonymous');
+    expect(result.platform).toBe('facebook');
+  });
+});
+
+describe('[TEA] scrapeProfile — login-wall detection variants', () => {
+  const makeLoginWallPage = (title) => ({
+    goto: async () => {},
+    evaluate: async () => ({
+      ogTitle: title,
+      ogDescription: null,
+      ogImage: null,
+      domFollowers: null,
+      pageUrl: 'https://www.facebook.com/login',
+    }),
+  });
+
+  it('[P1] throws on "Log in to Facebook" login-wall title', async () => {
+    await expect(scrapeProfile(makeLoginWallPage('Log in to Facebook'), 'target'))
+      .rejects.toThrow(/profile not found or blocked/i);
+  });
+
+  it('[P1] throws on "Log into Facebook" login-wall title', async () => {
+    await expect(scrapeProfile(makeLoginWallPage('Log into Facebook'), 'target'))
+      .rejects.toThrow(/profile not found or blocked/i);
+  });
+
+  it('[P1] throws on "Facebook – Log in" login-wall title', async () => {
+    await expect(scrapeProfile(makeLoginWallPage('Facebook – Log in'), 'target'))
+      .rejects.toThrow(/profile not found or blocked/i);
+  });
+});
+
+describe('[TEA] default export completeness', () => {
+  it('[P1] default export contains scrapeFollowers', () => {
+    expect(typeof facebook.scrapeFollowers).toBe('function');
+  });
+
+  it('[P1] default export contains scrapeTweets', () => {
+    expect(typeof facebook.scrapeTweets).toBe('function');
+  });
+});
+
+describe('[TEA] dispatcher — alias and negative routing', () => {
+  it('[P1] scrape("fb","profile",...) alias routes correctly', async () => {
+    const fakePage = {
+      goto: async () => {},
+      evaluate: async () => ({
+        ogTitle: 'Test Page | Facebook',
+        ogDescription: '1K followers. Test bio.',
+        ogImage: null,
+        domFollowers: null,
+        pageUrl: 'https://www.facebook.com/testpage',
+      }),
+    };
+    const result = await scrape('fb', 'profile', { page: fakePage, username: 'testpage' });
+    expect(result.platform).toBe('facebook');
+  });
+
+  it('[P2] scrape("facebook","following",...) throws "not available" error', async () => {
+    const fakePage = { goto: async () => {}, evaluate: async () => ({}) };
+    await expect(scrape('facebook', 'following', { page: fakePage, username: 'zuck' }))
+      .rejects.toThrow(/not available/i);
+  });
+});
+
+// ============================================================================
 // Story 1.4 — normalizeFollower
 // ============================================================================
 

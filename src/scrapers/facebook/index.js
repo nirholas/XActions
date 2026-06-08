@@ -133,7 +133,7 @@ export function normalizeProfile(raw, inputHandle) {
   // Parse name from og:title: "Name | Facebook" or "Name (username) | Facebook"
   let name = null;
   if (ogTitle) {
-    name = ogTitle.replace(/\s*[\||-]\s*Facebook.*$/i, '').trim() || null;
+    name = ogTitle.replace(/\s*[\||\-–—]\s*Facebook.*$/i, '').trim() || null;
   }
 
   // Parse follower count best-effort.
@@ -242,7 +242,12 @@ export async function scrapeProfile(page, username) {
   // Non-English login walls may not be caught here — see deferred-work.md. Prefer
   // running authenticated (authCookie) so profile pages render fully.
   const title = raw.ogTitle?.trim() || '';
-  if (!title || /^facebook$/i.test(title) || /^log\s*in(to)?\s+facebook|^facebook\s*[–-]\s*log\s*in/i.test(title)) {
+  const isLoginWall = !title
+    || /^facebook$/i.test(title)
+    || /^log\s+in\s+(to\s+)?facebook/i.test(title)
+    || /^log\s*into\s+facebook/i.test(title)
+    || /^facebook[\s–—-]+log/i.test(title);
+  if (isLoginWall) {
     throw new Error(`❌ Facebook profile not found or blocked: "${handle}"`);
   }
 
