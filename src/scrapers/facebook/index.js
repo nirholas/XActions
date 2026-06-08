@@ -77,12 +77,19 @@ export async function createPage(browser) {
  * @returns {string} Normalized handle
  */
 export function normalizeHandle(input) {
+  if (typeof input !== 'string' || !input.trim()) {
+    throw new Error('❌ Facebook handle is required (handle, @handle, or facebook.com URL)');
+  }
   let handle = input;
   if (handle.startsWith('https://') || handle.startsWith('http://')) {
     handle = handle.replace(/^https?:\/\/(www\.)?facebook\.com\//, '').replace(/\/$/, '');
   }
   handle = handle.replace(/^@/, '');
-  if (!/^profile\.php\?id=\d+/i.test(handle)) {
+  if (/^profile\.php\?id=\d+/i.test(handle)) {
+    // Preserve only the canonical profile.php?id=<digits>, dropping any &trailing params
+    const m = handle.match(/^profile\.php\?id=\d+/i);
+    handle = m[0];
+  } else {
     handle = handle.split('/')[0].split('?')[0];
   }
   return handle;
@@ -256,16 +263,22 @@ export async function scrapeProfile(page, username) {
  * @returns {Promise<Array>} Normalized post array
  */
 export async function scrapeTweets(page, username, options = {}) {
-  const { limit = 50, onProgress } = options;
+  const {
+    limit = 50,
+    onProgress,
+    maxRetries = 10,
+    // Injectable delay seam — defaults to human-like jitter, override (e.g. () => {})
+    // in tests to keep the scroll loop fast and browser-free.
+    delay = randomDelay,
+  } = options;
   const handle = normalizeHandle(username);
   const profileUrl = `${FACEBOOK_BASE}/${handle}`;
 
   await page.goto(profileUrl, { waitUntil: 'networkidle2', timeout: 30000 });
-  await randomDelay(2000, 4000);
+  await delay(2000, 4000);
 
   const posts = new Map();
   let retries = 0;
-  const maxRetries = 10;
 
   while (posts.size < limit && retries < maxRetries) {
     const rawPosts = await page.evaluate(() => {
@@ -324,7 +337,7 @@ export async function scrapeTweets(page, username, options = {}) {
     }
 
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-    await randomDelay(1500, 3000);
+    await delay(1500, 3000);
   }
 
   return Array.from(posts.values()).slice(0, limit);

@@ -4,7 +4,7 @@
 baseline_commit: b370b3d87dfee86c52db8064366964f6ff304631
 ---
 
-Status: review
+Status: done
 
 ## Change Log
 
@@ -156,3 +156,28 @@ sonnet-4.6
 - tests/scrapers/facebook.test.js
 - docs/agents/selectors-facebook.md
 - _bmad-output/implementation-artifacts/1-3-scrape-posts.md
+
+## Review Findings
+
+> Code review 2026-06-08 (Blind Hunter + Edge Case Hunter + Acceptance Auditor) on Story 1.3 delta. **Reviewer-verified by re-running, NOT trusting the dev record:** suite is actually **50 passed / 1 FAILED** (timeout), runtime **166s** — the Dev Agent Record claim of "51/51 passing" is FALSE. `normalizeHandle(null)` confirmed to throw. Acceptance Auditor (logic-only) found ACs covered, but missed that the suite is red and slow.
+
+### Patch
+
+- [x] [Review][Patch][BLOCKER] Test suite is RED + 166s — FIXED 2026-06-08: added injectable `delay` seam (default `randomDelay`) + `maxRetries` option to `scrapeTweets`; all browser-free tests pass `delay: () => {}`. Suite now **53 passed, 25s** (the residual ~25s is from 1.2's scrapeProfile randomDelay tests, pre-existing).
+- [x] [Review][Patch][BLOCKER] `normalizeHandle` throws on null/undefined/non-string — FIXED: guard `typeof input !== 'string' || !input.trim()` throws "❌ Facebook handle is required". Test added (null/undefined/123/'').
+- [x] [Review][Patch] `profile.php?id=N&extra` retains trailing query — FIXED: preserve only `profile.php?id=<digits>` via match. Test added.
+
+### Deferred (DOM-accuracy — cannot fix blind; tie to live-verify checklist)
+
+- [x] [Review][Defer] `texts[0]` likely captures author NAME not post body in FB DOM order [src/scrapers/facebook/index.js:275-279] — deferred: selectors are explicitly UNVERIFIED; correct fix requires a live session to confirm DOM order. Add to selectors-facebook.md verify checklist. Compounds the id-collision issue below.
+- [x] [Review][Defer] `id = text.slice(0,60)` fallback silently drops posts on collision [src/scrapers/facebook/index.js:305] — deferred: depends on what `text` actually is (see above) and on real postUrl extraction; revisit during live verify. Mitigation: a real permalink usually exists once selectors are verified.
+- [x] [Review][Defer] Engagement regex on full `article.textContent` grabs nested/label/first-match counts [src/scrapers/facebook/index.js:294-295] — deferred: per-element extraction needs verified selectors; current unanchored approach mirrors threads. Tie to live verify.
+- [x] [Review][Defer] Image filter leaks poster/commenter avatars into `media.images` [src/scrapers/facebook/index.js:300-302] — deferred: needs live CDN URL patterns to filter correctly (`scontent` positive-filter + profile-path exclusion). Revisit during live verify.
+
+### Dismissed
+
+- **"`limit=0` infinite loop"** — FALSE (Blind Hunter self-corrected): `0 < 0` is false → loop skipped → returns `[]` immediately.
+- **`page.goto` no try/catch** — KNOWN-DEFERRED from 1.1/1.2 (deferred-work.md), same pattern as threads. Not new.
+- **No scrollHeight-change guard** — KNOWN pattern, same as threads template; bounded by `maxRetries` + `limit`.
+- **`likes/comments` stored as "1.2K" strings, no numeric normalization** — by-design (all platforms return display strings); consistent with siblings.
+- **retry resets on any new post → could run long on sparse infinite feed** — bounded by `limit` in practice; same as threads. Low.

@@ -16,3 +16,12 @@
 - **Follower regex unanchored → false positive** [src/scrapers/facebook/index.js:87] — bio text like "...helped 1,000 followers..." matches. Same unanchored pattern as threads template. Revisit when verifying on live Facebook data (tie to selectors-facebook.md verify checklist).
 - **Bio strip regex requires trailing period** [src/scrapers/facebook/index.js:97] — descriptions without a period after the follower phrase keep the follower prefix in `bio`. Cosmetic best-effort field; revisit with live data samples.
 - **AC5.13 dispatcher routing test partly proxy** [tests/scrapers/facebook.test.js] — `needsPuppeteer` membership not directly asserted (local const). Integration test at :310 covers real routing end-to-end, so coverage is adequate but not exhaustive.
+
+## Deferred from: code review of story-1.3 (2026-06-08)
+
+> All four are DOM-accuracy issues that cannot be fixed without a live authenticated Facebook session. Tie resolution to the selectors-facebook.md verify checklist (Open Question Q3).
+
+- **`texts[0]` may capture author name not post body** [src/scrapers/facebook/index.js:275-279] — `[dir="auto"]` matches both author header and body; FB DOM order likely puts author first. Confirm real order on a live session; switch to a body-specific anchor. Compounds the id-collision fallback.
+- **`id = text.slice(0,60)` fallback collisions** [src/scrapers/facebook/index.js:305] — distinct posts with same opening text collide in the Map and are dropped. Depends on real `text` + permalink extraction; revisit during live verify.
+- **Engagement regex over full `article.textContent`** [src/scrapers/facebook/index.js:294-295] — grabs first/nested/label count, not the post's own. Needs verified per-element selectors (aria-label on reaction/comment controls).
+- **Image filter leaks avatars** [src/scrapers/facebook/index.js:300-302] — `!static && !emoji` misses `scontent` profile pics. Needs live CDN URL patterns: positive-filter `scontent` + exclude profile-photo path segments.

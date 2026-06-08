@@ -416,6 +416,17 @@ describe('normalizeHandle', () => {
   it('passes through plain handle unchanged', () => {
     expect(normalizeHandle('markzuckerberg')).toBe('markzuckerberg');
   });
+
+  it('strips trailing params from profile.php?id=', () => {
+    expect(normalizeHandle('https://www.facebook.com/profile.php?id=100069&fref=nf')).toBe('profile.php?id=100069');
+  });
+
+  it('throws on null/undefined/non-string input', () => {
+    expect(() => normalizeHandle(null)).toThrow(/handle is required/i);
+    expect(() => normalizeHandle(undefined)).toThrow(/handle is required/i);
+    expect(() => normalizeHandle(123)).toThrow(/handle is required/i);
+    expect(() => normalizeHandle('')).toThrow(/handle is required/i);
+  });
 });
 
 // ============================================================================
@@ -486,7 +497,7 @@ describe('scrapeTweets', () => {
 
   it('returns empty array when no posts', async () => {
     const page = makeFakePage([]);
-    const result = await scrapeTweets(page, 'zuck', { limit: 10 });
+    const result = await scrapeTweets(page, 'zuck', { limit: 10, maxRetries: 2, delay: () => {} });
     expect(Array.isArray(result)).toBe(true);
     expect(result.length).toBe(0);
   });
@@ -497,7 +508,7 @@ describe('scrapeTweets', () => {
       { id: 'post-2', text: 'World', timestamp: null, likes: '10', comments: '3', postUrl: 'https://www.facebook.com/zuck/posts/2', images: [], hasVideo: false },
     ];
     const page = makeFakePage(rawPosts);
-    const result = await scrapeTweets(page, 'zuck', { limit: 10 });
+    const result = await scrapeTweets(page, 'zuck', { limit: 10, maxRetries: 2, delay: () => {} });
     expect(result.length).toBe(2);
     expect(result[0].platform).toBe('facebook');
     expect(result[0].id).toBe('post-1');
@@ -509,14 +520,14 @@ describe('scrapeTweets', () => {
       postUrl: `https://www.facebook.com/zuck/posts/${i}`, images: [], hasVideo: false,
     }));
     const page = makeFakePage(rawPosts);
-    const result = await scrapeTweets(page, 'zuck', { limit: 3 });
+    const result = await scrapeTweets(page, 'zuck', { limit: 3, delay: () => {} });
     expect(result.length).toBe(3);
   });
 
   it('calls onProgress each iteration', async () => {
     const progressCalls = [];
     const page = makeFakePage([]);
-    await scrapeTweets(page, 'zuck', { limit: 5, onProgress: (p) => progressCalls.push(p) });
+    await scrapeTweets(page, 'zuck', { limit: 5, maxRetries: 2, onProgress: (p) => progressCalls.push(p), delay: () => {} });
     expect(progressCalls.length).toBeGreaterThan(0);
     expect(progressCalls[0]).toHaveProperty('scraped');
     expect(progressCalls[0]).toHaveProperty('limit');
@@ -540,13 +551,23 @@ describe('dispatcher scrape() posts/tweets routing', () => {
     const rawPosts = [
       { id: 'p1', text: 'Post 1', timestamp: null, likes: '1', comments: '0', postUrl: 'https://www.facebook.com/x/posts/1', images: [], hasVideo: false },
     ];
-    const result = await scrape('facebook', 'posts', { page: makeFakePage(rawPosts), username: 'testpage' });
+    const result = await scrape('facebook', 'posts', {
+      page: makeFakePage(rawPosts),
+      username: 'testpage',
+      limit: 1,
+      delay: () => {},
+    });
     expect(Array.isArray(result)).toBe(true);
     expect(result[0].platform).toBe('facebook');
   });
 
   it('scrape("facebook","tweets",...) also routes to scrapeTweets', async () => {
-    const result = await scrape('facebook', 'tweets', { page: makeFakePage([]), username: 'testpage' });
+    const result = await scrape('facebook', 'tweets', {
+      page: makeFakePage([]),
+      username: 'testpage',
+      maxRetries: 1,
+      delay: () => {},
+    });
     expect(Array.isArray(result)).toBe(true);
   });
 });
