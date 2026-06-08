@@ -16,6 +16,9 @@ user_name: 'Luisphan'
 date: '2026-06-05'
 status: 'brownfield-as-built'
 prd_status: 'not-found-in-bmad-output'
+lastUpdate: '2026-06-07'
+addenda:
+  - facebook-platform-extension
 ---
 
 # XActions Brownfield Architecture
@@ -401,4 +404,132 @@ Do not mock external behavior when the objective is verification of real integra
 ## 15. Continuation Notes
 
 This file intentionally captures the current brownfield architecture instead of waiting for a missing PRD. If a PRD is later created, update this document by adding a requirements trace section rather than rewriting the as-built system map.
+
+---
+
+# Addendum A — Facebook Platform Extension
+
+> Bổ sung ngày 2026-06-07. Tài liệu này mở rộng kiến trúc as-built ở trên để thêm Facebook như nền tảng thứ năm, hỗ trợ cả **scrape** (đọc profile/posts/followers) và **automate** (post/like/comment). Tuân theo Section 15 (Continuation Notes): đây là phần bổ sung, không viết lại system map gốc.
+
+## A.1. Phạm Vi và Động Lực
+
+XActions hiện hỗ trợ Twitter, Bluesky, Mastodon, Threads qua adapter pattern (Section 8, ADR-002). Yêu cầu mới: thêm Facebook với hai năng lực:
+
+- **Scrape (đọc)**: profile, posts, followers, search — rủi ro thấp hơn.
+- **Automate (ghi)**: post, like, comment — rủi ro account cao hơn đáng kể.
+
+Quyết định nền tảng: Facebook không có public API miễn phí đầy đủ cho các thao tác này, nên đi theo ADR-001 (browser automation là chiến lược tích hợp chính). Facebook là sản phẩm Meta giống Threads, nên `src/scrapers/threads/index.js` là template kỹ thuật gần nhất cho phần scrape.
+
+## A.2. Ranh Giới Code (Code Boundaries)
+
+Facebook tách thành hai vùng code riêng vì scrape và automate có vòng đời và risk profile khác nhau:
+
+| Năng lực | Vùng code | Template tham chiếu | Runtime |
+|---|---|---|---|
+| Scrape | `src/scrapers/facebook/index.js` | `src/scrapers/threads/index.js` | Puppeteer + Stealth |
+| Automate | `api/services/facebookAutomation.js` + `src/automation/facebook/*.js` | `api/services/browserAutomation.js`, `src/automation/autoLiker.js`, `autoCommenter.js` | Puppeteer (server-side) |
+
+Nguyên tắc giữ ranh giới:
+
+- Scraper trả về **normalized shape** giống các platform khác; không để format riêng của Facebook rò rỉ ra caller (theo rule của `src/scrapers/`).
+- Automate phải tách logic mutating vào `api/services/`, route chỉ orchestrate + validate (theo ADR và Section 5 `api/`).
+- Selector knowledge của Facebook tập trung vào một tài liệu riêng `docs/agents/selectors-facebook.md`, không hard-code rải rác (theo Section 8 decision và Backlog item về canonical selector module).
+
+## A.3. Wiring — Đăng Ký Platform
+
+Dispatcher `scrape(platform, action, options)` trong `src/scrapers/index.js` tra cứu module qua object `platforms`. Thêm Facebook là thao tác wiring thuần code:
+
+```js
+// src/scrapers/index.js
+import facebook from './facebook/index.js';
+
+export const platforms = {
+  twitter, x: twitter,
+  bluesky, bsky: bluesky,
+  mastodon, masto: mastodon,
+  threads,
+  facebook, fb: facebook,   // ← đăng ký module
+};
+```
+
+Vì Facebook dùng Puppeteer (giống Twitter/Threads), thêm `'facebook'` và alias `'fb'` vào mảng `needsPuppeteer` trong hàm `scrape()` (hiện ở dòng ~199). Sau đó dispatcher tự lo: auto-create browser, login bằng cookie, autoClose. Không cần đụng logic dispatch khác.
+
+Login Facebook khác Twitter: cần cặp cookie `c_user` + `xs` (thay vì một `auth_token`). Vì vậy `facebook.loginWithCookie(page, { c_user, xs })` nhận object, không phải string. Đây là điểm lệch contract cần ghi rõ trong tài liệu module.
+
+## A.4. Normalized Output Shape
+
+Caller (CLI/MCP/API) tiêu thụ chung một shape bất kể platform. Facebook scraper phải map về đúng shape các platform khác đang trả, kèm `platform: 'facebook'`:
+
+```js
+// Profile shape (khớp với threads/twitter)
+{
+  name, username, bio, avatar,
+  followers,            // số hoặc chuỗi "1.2K" — giữ nhất quán với platform hiện có
+  url,
+  platform: 'facebook',
+}
+
+// Post shape
+{
+  id, text, timestamp,
+  likes, comments,      // Facebook dùng "comments" thay "replies"
+  url,
+  media: { images, hasVideo },
+  platform: 'facebook',
+}
+```
+
+Lưu ý chuẩn hóa: Facebook gọi là "comments" còn shape Twitter/Threads dùng "replies". Quyết định: giữ field gốc theo ngữ nghĩa nền tảng (`comments` cho Facebook) nhưng tài liệu hóa rõ trong module để analytics layer biết đường map khi tổng hợp cross-platform.
+
+## A.5. Architecture Decisions
+
+### ADR-006: Facebook scrape đi qua adapter pattern hiện có
+
+Status: Accepted.
+
+Reasoning: Facebook là sản phẩm Meta giống Threads, không có public API miễn phí đầy đủ. Adapter pattern (ADR-002) và dispatcher `scrape()` đã hỗ trợ thêm nền tảng mà không sửa caller. Clone `threads/index.js` là đường ngắn nhất và nhất quán nhất.
+
+Consequences:
+
+- `src/scrapers/facebook/index.js` export đúng bộ hàm chuẩn: `createBrowser`, `createPage`, `loginWithCookie`, `scrapeProfile`, `scrapeTweets` (alias `scrapePosts`), `scrapeFollowers`, `searchTweets`.
+- Một số action có thể bị giới hạn như Threads (follower list không lộ công khai). Khi đó trả về data có trường `note` giải thích, không ném lỗi cứng.
+- Selector instability là rủi ro chính: Facebook không có `data-testid` sạch. Phải tách selector ra `docs/agents/selectors-facebook.md` và bọc trong helper để cập nhật một chỗ.
+- Test ở tầng thấp nhất: unit test cho parser/normalizer; smoke test gated bởi session/env như chiến lược test hiện tại (Section 13).
+
+### ADR-007: Facebook automate tách khỏi scrape, mặc định dry-run
+
+Status: Accepted with guardrails.
+
+Reasoning: Thao tác ghi (post/like/comment) là tín hiệu detect bot mạnh nhất và rủi ro khóa account cao hơn đọc nhiều lần. Security Architecture (Section 7) yêu cầu mọi mutating X action phải có dry-run/preview, delay, bounded batch. Facebook cần áp dụng nghiêm hơn.
+
+Consequences:
+
+- Logic automate nằm ở `api/services/facebookAutomation.js`; các script vòng lặp ở `src/automation/facebook/` (mirror `autoLiker.js`/`autoCommenter.js`).
+- **Dry-run là mặc định**: mọi hàm ghi nhận tham số `dryRun` và mặc định `true`. Caller phải chủ động tắt để thực thi thật.
+- Bắt buộc delay 1-3s giữa các action, bounded batch size, bounded retries, stop condition rõ ràng (theo ADR-001).
+- Mọi action ghi phải log qua `Operation` (Section 6) để theo dõi và scope theo `userId`.
+- Cảnh báo account risk hiển thị cho người dùng trước khi chạy batch ghi đầu tiên.
+- Không bao giờ log cặp cookie `c_user`/`xs` hay bất kỳ session field nào (Section 7 guardrail).
+
+## A.6. Known Risks (Facebook-specific)
+
+| Risk | Impact | Mitigation |
+|---|---|---|
+| Selector obfuscation | Class names randomized, không có `data-testid` sạch → scrape/automate gãy thường xuyên | Tách selector ra `selectors-facebook.md`, bọc helper, ưu tiên `role`/`aria-label`/text-anchor thay class |
+| Anti-bot gắt (checkpoint, fingerprint) | Account bị challenge hoặc khóa | Stealth plugin, delay rộng hơn Twitter, batch nhỏ, dùng account thử nghiệm khi dò selector ghi |
+| Login phức tạp (`c_user`+`xs`, 2FA) | Session khó tạo và dễ hết hạn | Tài liệu hóa cách lấy cookie; fail rõ ràng khi thiếu/ hết hạn, không retry mù |
+| Mutating action risk | Like/comment/post tự động dễ trigger khóa | ADR-007: dry-run mặc định, bounded batch, cảnh báo người dùng |
+| ToS/pháp lý Meta | Rủi ro cao hơn Twitter | Giữ tính năng ở mức người dùng tự chịu trách nhiệm, tài liệu cảnh báo rõ |
+
+## A.7. Lộ Trình Triển Khai (Implementation Phases)
+
+Đề xuất chia nhỏ theo nhánh, làm scrape trước automate (giảm rủi ro account khi dò selector):
+
+1. **Phase 1 — Scrape core**: tạo `src/scrapers/facebook/index.js` (clone từ `threads/`), làm `scrapeProfile` + `scrapePosts` trước. Tạo `docs/agents/selectors-facebook.md`. Unit test cho normalizer.
+2. **Phase 2 — Đăng ký + test**: wiring vào `platforms` registry và mảng `needsPuppeteer`. Smoke test gated bởi session.
+3. **Phase 3 — Expose surfaces**: thêm `--platform facebook` cho CLI, option cho MCP tool. Contract test cho public surface thay đổi.
+4. **Phase 4 — Automate (ghi)**: `api/services/facebookAutomation.js` với dry-run mặc định; `src/automation/facebook/` cho vòng lặp. Operation tracking + Socket.IO updates.
+5. **Phase 5 — Persisted workflows** (nếu cần): model state vào Prisma, retention policy cho snapshot mới.
+
+Điểm quyết định trước Phase 4: chuẩn bị account Facebook thử nghiệm (không phải account chính) để dò selector ghi mà không mạo hiểm account thật.
 
