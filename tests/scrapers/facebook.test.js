@@ -6,8 +6,10 @@ import facebook, {
   normalizeProfile,
   normalizePost,
   normalizeHandle,
+  normalizeFollower,
   scrapeProfile,
   scrapeTweets,
+  scrapeFollowers,
 } from '../../src/scrapers/facebook/index.js';
 import { getPlatform, platforms, scrape } from '../../src/scrapers/index.js';
 
@@ -569,5 +571,127 @@ describe('dispatcher scrape() posts/tweets routing', () => {
       delay: () => {},
     });
     expect(Array.isArray(result)).toBe(true);
+  });
+});
+
+// ============================================================================
+// Story 1.4 — normalizeFollower
+// ============================================================================
+
+describe('normalizeFollower', () => {
+  it('returns full normalized follower shape', () => {
+    const raw = { name: 'Mark Zuckerberg', username: 'zuck', url: 'https://www.facebook.com/zuck' };
+    const result = normalizeFollower(raw);
+    expect(result.name).toBe('Mark Zuckerberg');
+    expect(result.username).toBe('zuck');
+    expect(result.url).toBe('https://www.facebook.com/zuck');
+    expect(result.platform).toBe('facebook');
+  });
+
+  it('sets null for missing name', () => {
+    const result = normalizeFollower({ name: undefined, username: 'x', url: 'https://www.facebook.com/x' });
+    expect(result.name).toBeNull();
+  });
+
+  it('sets null for missing username', () => {
+    const result = normalizeFollower({ name: 'X', username: undefined, url: 'https://www.facebook.com/x' });
+    expect(result.username).toBeNull();
+  });
+
+  it('sets null for missing url', () => {
+    const result = normalizeFollower({ name: 'X', username: 'x', url: undefined });
+    expect(result.url).toBeNull();
+  });
+
+  it('always sets platform to facebook', () => {
+    expect(normalizeFollower({ name: 'X', username: 'x', url: null }).platform).toBe('facebook');
+  });
+});
+
+// ============================================================================
+// Story 1.4 — scrapeFollowers (browser-free via fake page + delay seam)
+// ============================================================================
+
+describe('scrapeFollowers', () => {
+  const makeRestrictedPage = () => ({
+    goto: async () => {},
+    evaluate: async (fn) => {
+      const fnStr = fn.toString();
+      if (fnStr.includes('scrollTo')) return undefined;
+      if (fnStr.includes('listitem')) return false; // isExposed check
+      return [];
+    },
+  });
+
+  const makeExposedPage = (rawFollowers = []) => {
+    let callCount = 0;
+    return {
+      goto: async () => {},
+      evaluate: async (fn) => {
+        const fnStr = fn.toString();
+        if (fnStr.includes('scrollTo')) return undefined;
+        // First evaluate call: isExposed detection
+        if (fnStr.includes('listitem') && callCount === 0) {
+          callCount++;
+          return true;
+        }
+        // Subsequent calls: return raw followers once, then empty (triggers maxRetries)
+        callCount++;
+        return callCount === 2 ? rawFollowers : [];
+      },
+    };
+  };
+
+  it('returns note object when follower list is restricted', async () => {
+    const page = makeRestrictedPage();
+    const result = await scrapeFollowers(page, 'someuser', { delay: () => {} });
+    expect(Array.isArray(result)).toBe(false);
+    expect(result).toHaveProperty('note');
+    expect(result.username).toBe('someuser');
+    expect(result.platform).toBe('facebook');
+    expect(result.note).toMatch(/not publicly exposed/i);
+  });
+
+  it('returns array when follower list is exposed', async () => {
+    const rawFollowers = [
+      { id: 'https://www.facebook.com/user1', name: 'User One', username: 'user1', url: 'https://www.facebook.com/user1' },
+    ];
+    const page = makeExposedPage(rawFollowers);
+    const result = await scrapeFollowers(page, 'testpage', { delay: () => {}, maxRetries: 2 });
+    expect(Array.isArray(result)).toBe(true);
+    expect(result[0].platform).toBe('facebook');
+    expect(result[0].name).toBe('User One');
+  });
+
+  it('respects limit on exposed list', async () => {
+    const rawFollowers = Array.from({ length: 10 }, (_, i) => ({
+      id: `https://www.facebook.com/user${i}`,
+      name: `User ${i}`,
+      username: `user${i}`,
+      url: `https://www.facebook.com/user${i}`,
+    }));
+    const page = makeExposedPage(rawFollowers);
+    const result = await scrapeFollowers(page, 'testpage', { limit: 3, delay: () => {}, maxRetries: 2 });
+    expect(result.length).toBeLessThanOrEqual(3);
+  });
+});
+
+// ============================================================================
+// Story 1.4 — dispatcher routing for followers
+// ============================================================================
+
+describe('dispatcher scrape() followers routing', () => {
+  it('scrape("facebook","followers",...) routes to scrapeFollowers', async () => {
+    const page = {
+      goto: async () => {},
+      evaluate: async (fn) => {
+        const fnStr = fn.toString();
+        if (fnStr.includes('scrollTo')) return undefined;
+        return false; // restricted — returns note object quickly
+      },
+    };
+    const result = await scrape('facebook', 'followers', { page, username: 'testuser' });
+    expect(result).toHaveProperty('note');
+    expect(result.platform).toBe('facebook');
   });
 });

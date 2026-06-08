@@ -62,13 +62,24 @@ Mọi selector phải bọc trong helper một chỗ để khi Facebook đổi D
 | **Personal profile** | **Thường KHÔNG** | FB ẩn friend/follower list cho hầu hết profile từ ~2020. Chỉ thấy "followed by X mutual" khi đã login & có liên hệ. |
 | **Profile có "Followers" public** | Tùy setting user | Một số profile bật "Public" cho followers — hiếm. |
 
-**Hệ quả thiết kế (đã phản ánh trong FR-3):** Adapter PHẢI xử lý case "không lộ list" bằng cách trả object có `note` thay vì lỗi cứng. Không giả định luôn lấy được list.
+**Hệ quả thiết kế (đã phản ánh trong FR-3 và Story 1.4):** `scrapeFollowers` điều hướng đến `/<handle>/followers`, detect exposure bằng sự hiện diện của `[role="listitem"]` hoặc text "followers" trong body, rồi trả về:
+- **Array** `[{ name, username, url, platform }]` nếu list hiển thị
+- **Object** `{ note, username, platform }` nếu list bị ẩn — KHÔNG throw, KHÔNG trả mảng rỗng vô nghĩa
 
-| Element | Selector đề xuất (UNVERIFIED) | Ghi chú |
+**Phương pháp detect (UNVERIFIED on live session):**
+- Navigate to `facebook.com/<handle>/followers`
+- Check `document.querySelectorAll('[role="listitem"]').length > 0` OR `/followers?/i` in body text
+- If neither → restricted fallback
+
+| Element | Selector / Approach | Ghi chú |
 |---|---|---|
-| Followers tab (Page) | text anchor "Followers"/"Người theo dõi" | Chỉ có ở Page |
-| Follower cell | `[role="listitem"]` hoặc `a[role="link"]` trong followers dialog | Cần verify |
-| "Followed by" widget | text anchor "Followed by" | Chỉ subset nhỏ |
+| Followers URL | `/${handle}/followers` | Page follower surface — UNVERIFIED |
+| Follower row container | `[role="listitem"]` | UNVERIFIED — may differ on live session |
+| Follower link | `a[href*="facebook.com"], a[href^="/"]` trong listitem | UNVERIFIED |
+| Follower name | `span, strong` trong listitem | UNVERIFIED — pick first non-empty |
+| Restricted detect | No `[role="listitem"]` AND no "followers" heading | Returns note object |
+
+> **Open Question Q3 (PRD) — Resolution:** Based on Story 1.4 design, personal profiles return the `note` fallback. Pages with public followers are the only viable scrape target. Live verification required to confirm `[role="listitem"]` selector accuracy and whether `/followers` URL works for all Page types.
 
 ## Automate selectors (FR-6, FR-7, FR-8) — Epic 2
 
