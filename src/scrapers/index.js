@@ -39,6 +39,7 @@ import twitter from './twitter/index.js';
 import bluesky from './bluesky/index.js';
 import mastodon from './mastodon/index.js';
 import threads from './threads/index.js';
+import facebook from './facebook/index.js';
 
 // ============================================================================
 // HTTP Scraper (Direct GraphQL — no browser required)
@@ -107,6 +108,8 @@ export const platforms = {
   mastodon,
   masto: mastodon, // alias
   threads,
+  facebook,
+  fb: facebook, // alias
 };
 
 /**
@@ -117,7 +120,7 @@ export const platforms = {
 export function getPlatform(platform) {
   const mod = platforms[platform?.toLowerCase()];
   if (!mod) {
-    const available = Object.keys(platforms).filter(k => !['x', 'bsky', 'masto'].includes(k));
+    const available = Object.keys(platforms).filter(k => !['x', 'bsky', 'masto', 'fb'].includes(k));
     throw new Error(
       `Unknown platform "${platform}". Available: ${available.join(', ')}`
     );
@@ -196,7 +199,7 @@ export async function scrape(platform, action, options = {}) {
 
   // Determine the first argument based on platform type
   // Twitter & Threads use Puppeteer page; Bluesky & Mastodon use API clients
-  const needsPuppeteer = ['twitter', 'x', 'threads'].includes(platformName);
+  const needsPuppeteer = ['twitter', 'x', 'threads', 'facebook', 'fb'].includes(platformName);
   const needsClient = ['bluesky', 'bsky', 'mastodon', 'masto'].includes(platformName);
 
   if (needsPuppeteer) {
@@ -207,9 +210,12 @@ export async function scrape(platform, action, options = {}) {
       const browser = await mod.createBrowser(options.browserOptions || {});
       page = await mod.createPage(browser);
 
-      // Login if auth token provided (Twitter only)
+      // Login if auth token provided (Twitter string path — unchanged)
       if (options.authToken && mod.loginWithCookie) {
         await mod.loginWithCookie(page, options.authToken);
+      } else if (options.authCookie && mod.loginWithCookie) {
+        // Cookie-object path for Facebook ({ c_user, xs }) — additive, does not affect Twitter
+        await mod.loginWithCookie(page, options.authCookie);
       }
 
       // Store browser ref for cleanup
@@ -332,6 +338,7 @@ export default {
   bluesky,
   mastodon,
   threads,
+  facebook,
   
   // Plugin scrapers lookup
   getPluginScraper,

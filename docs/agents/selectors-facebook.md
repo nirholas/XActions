@@ -18,15 +18,16 @@ Mọi selector phải bọc trong helper một chỗ để khi Facebook đổi D
 
 ## Profile (FR-1)
 
-| Element | Selector đề xuất (UNVERIFIED) | Ghi chú |
+| Element | Selector / Approach | Ghi chú |
 |---|---|---|
-| Profile name | `h1` trong `[role="main"]` | Thường là `h1` đầu tiên |
-| Bio/intro | text trong intro card | Cần verify card structure |
-| Avatar | `image`/`svg[role="img"]` trong header | FB render avatar phức tạp |
-| Follower count | text anchor "followers"/"người theo dõi" | Parse số từ text lân cận |
-| Meta fallback | `meta[property="og:title"]`, `og:description`, `og:image` | **Ổn định nhất** — giống cách Threads adapter parse |
+| Profile name | `meta[property="og:title"]` → strip ` \| Facebook` suffix | **Primary** — stable, meta-first |
+| Bio/intro | `meta[property="og:description"]` → strip leading follower count | Fallback: DOM text |
+| Avatar | `meta[property="og:image"]` | CDN URL, stable |
+| Follower count | Regex `/([\d,.]+[KkMm]?)\s*followers?/i` from `og:description` or `document.body.innerText` | Best-effort, `null` if absent |
+| Meta fallback | `meta[property="og:title"]`, `og:description`, `og:image` | **Ổn định nhất** — ưu tiên hơn DOM |
+| Blocked/missing detect | `og:title` absent or equals `"Facebook"` → throw error | Avoids returning empty objects |
 
-> 💡 **Khuyến nghị:** Như Threads adapter (`src/scrapers/threads/index.js`), ưu tiên parse từ `og:` meta tags trước, fallback sang DOM. Meta tags ít đổi hơn DOM.
+> **Approach used in `scrapeProfile`:** meta-first (`og:` tags via `page.evaluate`), DOM body text fallback for follower count. Still UNVERIFIED on a live authenticated session — DOM selectors may differ when logged in vs. public view.
 
 ## Posts (FR-2)
 
