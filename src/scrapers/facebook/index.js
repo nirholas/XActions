@@ -468,6 +468,120 @@ export async function scrapeTweets(page, username, options = {}) {
 }
 
 // ============================================================================
+// Search Normalizer (pure — testable without Puppeteer)
+// ============================================================================
+
+/**
+ * Normalize a raw search result into the standard search result shape.
+ * @param {Object} raw
+ * @returns {{ id, text, author, timestamp, url, platform }}
+ */
+export function normalizeSearchResult(raw) {
+  const { id, text, author, timestamp, url } = raw;
+  return {
+    id: id || null,
+    text: text || null,
+    author: author || null,
+    timestamp: timestamp || null,
+    url: url || null,
+    platform: 'facebook',
+  };
+}
+
+// ============================================================================
+// Search Posts
+// ============================================================================
+
+/**
+ * Search Facebook posts by query
+ * @param {Page} page - Puppeteer page instance
+ * @param {string} query - Search query string
+ * @param {Object} options
+ * @param {number} [options.limit=30] - Max results to return
+ * @param {Function} [options.onProgress] - Called each scroll: ({ scraped, limit })
+ * @param {number} [options.maxRetries=8] - Stop after N consecutive empty scrolls
+ * @param {Function} [options.delay=randomDelay] - Injectable delay seam
+ * @returns {Promise<Array>} Normalized search result array
+ */
+export async function searchTweets(page, query, options = {}) {
+  const { limit = 30, onProgress, maxRetries = 8, delay = randomDelay } = options;
+  const searchUrl = `${FACEBOOK_BASE}/search/posts?q=${encodeURIComponent(query)}`;
+
+  await page.goto(searchUrl, { waitUntil: 'networkidle2', timeout: 30000 });
+  await delay(2000, 4000);
+
+  const results = new Map();
+  let retries = 0;
+
+  while (results.size < limit && retries < maxRetries) {
+    const rawResults = await page.evaluate(() => {
+      const articles = document.querySelectorAll('[role="article"]');
+      return Array.from(articles).map((article) => {
+        // Text content — first substantial [dir="auto"] element
+        const textEls = article.querySelectorAll('[dir="auto"]');
+        const texts = Array.from(textEls)
+          .map((el) => el.textContent?.trim())
+          .filter((t) => t && t.length > 5);
+        const text = texts[0] || null;
+
+        // Author — first profile link in article (not a post permalink)
+        const allLinks = Array.from(article.querySelectorAll('a[href]'));
+        const authorLink = allLinks.find((a) => {
+          const href = a.getAttribute('href') || '';
+          return (
+            (href.includes('facebook.com/') || href.startsWith('/')) &&
+            !href.includes('/posts/') &&
+            !href.includes('/permalink/') &&
+            !href.includes('story_fbid') &&
+            !href.includes('/search/')
+          );
+        });
+        const authorHref = authorLink?.getAttribute('href') || null;
+        let author = null;
+        if (authorHref) {
+          const clean = authorHref.startsWith('http')
+            ? authorHref.replace(/^https?:\/\/(www\.)?facebook\.com\//, '')
+            : authorHref.replace(/^\//, '');
+          author = clean.split('/')[0].split('?')[0] || null;
+        }
+
+        // Timestamp
+        const timeEl = article.querySelector('abbr, time');
+        const timestamp = timeEl?.getAttribute('data-utime') || timeEl?.getAttribute('datetime') || timeEl?.textContent?.trim() || null;
+
+        // Post URL — prefer permalink
+        const postLinkEl = allLinks.find((a) => {
+          const href = a.getAttribute('href') || '';
+          return href.includes('/posts/') || href.includes('/permalink/') || href.includes('story_fbid');
+        });
+        const postHref = postLinkEl?.getAttribute('href') || null;
+        const url = postHref
+          ? postHref.startsWith('http') ? postHref : `https://www.facebook.com${postHref}`
+          : null;
+
+        const id = url || text?.slice(0, 60) || null;
+        return { id, text, author, timestamp, url };
+      }).filter((r) => r.id);
+    });
+
+    const prevSize = results.size;
+    rawResults.forEach((raw) => {
+      if (!results.has(raw.id)) {
+        results.set(raw.id, normalizeSearchResult(raw));
+      }
+    });
+
+    if (onProgress) onProgress({ scraped: results.size, limit });
+    if (results.size === prevSize) { retries++; } else { retries = 0; }
+
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await delay(1500, 3000);
+  }
+
+  return Array.from(results.values()).slice(0, limit);
+}
+
+// ============================================================================
 // Default Export
 // ============================================================================
 
@@ -478,4 +592,5 @@ export default {
   scrapeProfile,
   scrapeFollowers,
   scrapeTweets,
+  searchTweets,
 };

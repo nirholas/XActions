@@ -46,11 +46,16 @@ Mọi selector phải bọc trong helper một chỗ để khi Facebook đổi D
 
 ## Search (FR-4)
 
-| Element | Selector đề xuất (UNVERIFIED) | Ghi chú |
+| Element | Selector / Approach | Ghi chú |
 |---|---|---|
-| Result container | `[role="article"]` trong search results | URL: `facebook.com/search/posts?q=...` |
-| Result author | `a[role="link"]` đầu tiên trong article | |
-| Result text | `[dir="auto"]` trong article | |
+| Search URL | `${FACEBOOK_BASE}/search/posts?q=<encodeURIComponent(query)>` | Posts-specific search surface |
+| Result container | `[role="article"]` | **Primary** — same as scrapeTweets (UNVERIFIED on live session) |
+| Result text | First `[dir="auto"]` with length > 5 | UNVERIFIED — may grab author name instead of post body |
+| Author | First `a[href]` in article that is NOT a post permalink/search link | Extracts vanity handle from href; UNVERIFIED |
+| Timestamp | `abbr[data-utime]` or `time[datetime]` or text fallback | UNVERIFIED |
+| Post URL (id) | `a[href*="/posts/"]`, `a[href*="/permalink/"]`, `a[href*="story_fbid"]` | Preferred for stable `id`; text fallback if absent |
+
+> **Approach used in `searchTweets`:** Navigate to `/search/posts?q=...`, extract `[role="article"]` containers, author from first non-permalink profile link, text from first `[dir="auto"]`. All UNVERIFIED on live authenticated session. Search results may not render without login.
 
 ## Followers (FR-3) — ĐẶC BIỆT CẦN VERIFY
 
