@@ -5,6 +5,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import {
   runGuardedBatch,
+  randomDelay,
   ACCOUNT_RISK_WARNING,
 } from '../../api/services/facebookAutomation.js';
 
@@ -13,6 +14,42 @@ const noDelay = () => {};
 describe('runGuardedBatch', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
+  });
+
+  // -------------------------------------------------------------------------
+  // Input validation
+  // -------------------------------------------------------------------------
+
+  describe('input validation', () => {
+    it('throws when items is null', async () => {
+      await expect(runGuardedBatch(null, vi.fn())).rejects.toThrow(/items must be an array/i);
+    });
+
+    it('throws when items is undefined', async () => {
+      await expect(runGuardedBatch(undefined, vi.fn())).rejects.toThrow(/items must be an array/i);
+    });
+
+    it('throws when items is a string', async () => {
+      await expect(runGuardedBatch('post-1', vi.fn())).rejects.toThrow(/items must be an array/i);
+    });
+
+    it('throws when maxBatch is NaN', async () => {
+      await expect(
+        runGuardedBatch([], vi.fn(), { dryRun: false, maxBatch: NaN })
+      ).rejects.toThrow(/maxBatch/i);
+    });
+
+    it('throws when maxBatch is 0', async () => {
+      await expect(
+        runGuardedBatch([], vi.fn(), { dryRun: false, maxBatch: 0 })
+      ).rejects.toThrow(/maxBatch/i);
+    });
+
+    it('throws when maxBatch is negative', async () => {
+      await expect(
+        runGuardedBatch([], vi.fn(), { dryRun: false, maxBatch: -5 })
+      ).rejects.toThrow(/maxBatch/i);
+    });
   });
 
   // -------------------------------------------------------------------------
@@ -54,6 +91,18 @@ describe('runGuardedBatch', () => {
       const actionFn = vi.fn();
       await runGuardedBatch(['post-1'], actionFn, { dryRun: true, delay: noDelay });
       expect(actionFn).not.toHaveBeenCalled();
+    });
+
+    it('dry-run also enforces maxBatch — throws on oversized batch', async () => {
+      const items = Array.from({ length: 21 }, (_, i) => `post-${i}`);
+      await expect(
+        runGuardedBatch(items, vi.fn(), { dryRun: true })
+      ).rejects.toThrow(/maxBatch/i);
+    });
+
+    it('dry-run accepts exactly maxBatch items', async () => {
+      const items = Array.from({ length: 20 }, (_, i) => `post-${i}`);
+      await expect(runGuardedBatch(items, vi.fn(), { dryRun: true })).resolves.not.toThrow();
     });
   });
 
@@ -102,6 +151,7 @@ describe('runGuardedBatch', () => {
       const result = await runGuardedBatch(['a', 'b', 'c'], actionFn, {
         dryRun: false,
         delay: noDelay,
+        maxRetry: 0,
       });
 
       expect(result.succeeded).toBe(2);
@@ -133,17 +183,38 @@ describe('runGuardedBatch', () => {
       });
       expect(result.preview).toEqual([]);
     });
+
+    it('skips null items and records them as failed', async () => {
+      const actionFn = vi.fn().mockResolvedValue(undefined);
+      const result = await runGuardedBatch([null, 'post-1', undefined], actionFn, {
+        dryRun: false,
+        delay: noDelay,
+        maxRetry: 0,
+      });
+
+      expect(actionFn).toHaveBeenCalledTimes(1);
+      expect(actionFn).toHaveBeenCalledWith('post-1');
+      expect(result.failed).toBe(2);
+      expect(result.succeeded).toBe(1);
+    });
   });
 
   // -------------------------------------------------------------------------
-  // AC2.6 — batch over maxBatch is rejected
+  // AC2.6 — batch over maxBatch is rejected (dry-run AND real)
   // -------------------------------------------------------------------------
 
   describe('maxBatch enforcement', () => {
-    it('throws when items.length > maxBatch (default 20)', async () => {
+    it('throws when items.length > maxBatch (default 20) — real run', async () => {
       const items = Array.from({ length: 21 }, (_, i) => `post-${i}`);
       await expect(
         runGuardedBatch(items, vi.fn(), { dryRun: false, delay: noDelay })
+      ).rejects.toThrow(/maxBatch/i);
+    });
+
+    it('throws when items.length > maxBatch (default 20) — dry-run', async () => {
+      const items = Array.from({ length: 21 }, (_, i) => `post-${i}`);
+      await expect(
+        runGuardedBatch(items, vi.fn(), { dryRun: true })
       ).rejects.toThrow(/maxBatch/i);
     });
 
@@ -161,13 +232,6 @@ describe('runGuardedBatch', () => {
       await expect(
         runGuardedBatch(items, vi.fn(), { dryRun: false, delay: noDelay, maxBatch: 5 })
       ).rejects.toThrow(/maxBatch/i);
-    });
-
-    it('does NOT throw on oversized batch in dry-run (no real action)', async () => {
-      const items = Array.from({ length: 100 }, (_, i) => `post-${i}`);
-      await expect(
-        runGuardedBatch(items, vi.fn(), { dryRun: true })
-      ).resolves.not.toThrow();
     });
   });
 
@@ -195,7 +259,6 @@ describe('runGuardedBatch', () => {
       });
 
       expect(warnSpy).toHaveBeenCalledWith(ACCOUNT_RISK_WARNING);
-      // Warning fires before first actionFn call
       const warnOrder = warnSpy.mock.invocationCallOrder[0];
       const firstActionOrder = actionFn.mock.invocationCallOrder[0];
       expect(warnOrder).toBeLessThan(firstActionOrder);
@@ -261,7 +324,6 @@ describe('runGuardedBatch', () => {
         delay: delaySpy,
       });
 
-      // delay called between items: N-1 times for N items
       expect(delaySpy).toHaveBeenCalledTimes(items.length - 1);
     });
 
@@ -269,6 +331,174 @@ describe('runGuardedBatch', () => {
       const delaySpy = vi.fn();
       await runGuardedBatch(['a', 'b'], vi.fn(), { dryRun: true, delay: delaySpy });
       expect(delaySpy).not.toHaveBeenCalled();
+    });
+
+    it('batch continues when delay throws — does not abort', async () => {
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      const delayThatThrows = vi.fn().mockRejectedValue(new Error('delay failed'));
+      const actionFn = vi.fn().mockResolvedValue(undefined);
+
+      const result = await runGuardedBatch(['a', 'b', 'c'], actionFn, {
+        dryRun: false,
+        delay: delayThatThrows,
+      });
+
+      expect(actionFn).toHaveBeenCalledTimes(3);
+      expect(result.succeeded).toBe(3);
+    });
+  });
+
+  // -------------------------------------------------------------------------
+  // maxRetry — bounded retry per item
+  // -------------------------------------------------------------------------
+
+  describe('maxRetry', () => {
+    it('retries failed item up to maxRetry times', async () => {
+      const actionFn = vi.fn()
+        .mockRejectedValueOnce(new Error('transient'))
+        .mockResolvedValueOnce(undefined);
+
+      const result = await runGuardedBatch(['post-1'], actionFn, {
+        dryRun: false,
+        delay: noDelay,
+        maxRetry: 1,
+      });
+
+      expect(actionFn).toHaveBeenCalledTimes(2);
+      expect(result.succeeded).toBe(1);
+      expect(result.failed).toBe(0);
+    });
+
+    it('records failed after exhausting retries', async () => {
+      const actionFn = vi.fn().mockRejectedValue(new Error('persistent'));
+
+      const result = await runGuardedBatch(['post-1'], actionFn, {
+        dryRun: false,
+        delay: noDelay,
+        maxRetry: 2,
+      });
+
+      expect(actionFn).toHaveBeenCalledTimes(3); // 1 attempt + 2 retries
+      expect(result.failed).toBe(1);
+      expect(result.succeeded).toBe(0);
+    });
+
+    it('maxRetry=0 means no retry — single attempt only', async () => {
+      const actionFn = vi.fn().mockRejectedValue(new Error('fail'));
+
+      const result = await runGuardedBatch(['post-1'], actionFn, {
+        dryRun: false,
+        delay: noDelay,
+        maxRetry: 0,
+      });
+
+      expect(actionFn).toHaveBeenCalledTimes(1);
+      expect(result.failed).toBe(1);
+    });
+  });
+
+  // -------------------------------------------------------------------------
+  // shouldStop — explicit stop condition
+  // -------------------------------------------------------------------------
+
+  describe('shouldStop', () => {
+    it('stops batch early when shouldStop returns true', async () => {
+      const actionFn = vi.fn().mockResolvedValue(undefined);
+      let callCount = 0;
+      const shouldStop = vi.fn().mockImplementation(() => {
+        callCount++;
+        return callCount >= 2; // stop after 2 items
+      });
+
+      const result = await runGuardedBatch(['a', 'b', 'c', 'd', 'e'], actionFn, {
+        dryRun: false,
+        delay: noDelay,
+        shouldStop,
+      });
+
+      expect(actionFn).toHaveBeenCalledTimes(2);
+      expect(result.succeeded).toBe(2);
+    });
+
+    it('shouldStop receives current results array', async () => {
+      const actionFn = vi.fn().mockResolvedValue(undefined);
+      const capturedResults = [];
+      const shouldStop = vi.fn().mockImplementation((results) => {
+        capturedResults.push([...results]);
+        return false;
+      });
+
+      await runGuardedBatch(['a', 'b'], actionFn, {
+        dryRun: false,
+        delay: noDelay,
+        shouldStop,
+      });
+
+      expect(capturedResults[0]).toHaveLength(1);
+      expect(capturedResults[1]).toHaveLength(2);
+    });
+
+    it('does not call shouldStop in dry-run', async () => {
+      const shouldStop = vi.fn().mockReturnValue(false);
+      await runGuardedBatch(['a', 'b'], vi.fn(), { dryRun: true, shouldStop });
+      expect(shouldStop).not.toHaveBeenCalled();
+    });
+  });
+
+  // -------------------------------------------------------------------------
+  // onProgress — guarded against non-function and throwing callbacks
+  // -------------------------------------------------------------------------
+
+  describe('onProgress', () => {
+    it('calls onProgress after each item with correct counts', async () => {
+      const onProgress = vi.fn();
+      await runGuardedBatch(['a', 'b', 'c'], vi.fn().mockResolvedValue(undefined), {
+        dryRun: false,
+        delay: noDelay,
+        onProgress,
+      });
+
+      expect(onProgress).toHaveBeenCalledTimes(3);
+      expect(onProgress).toHaveBeenNthCalledWith(1, { attempted: 1, total: 3 });
+      expect(onProgress).toHaveBeenNthCalledWith(3, { attempted: 3, total: 3 });
+    });
+
+    it('non-function onProgress does not throw', async () => {
+      await expect(
+        runGuardedBatch(['a'], vi.fn().mockResolvedValue(undefined), {
+          dryRun: false,
+          delay: noDelay,
+          onProgress: true,
+        })
+      ).resolves.not.toThrow();
+    });
+
+    it('throwing onProgress does not corrupt batch state', async () => {
+      const actionFn = vi.fn().mockResolvedValue(undefined);
+      const onProgress = vi.fn().mockImplementation(() => { throw new Error('progress error'); });
+
+      const result = await runGuardedBatch(['a', 'b', 'c'], actionFn, {
+        dryRun: false,
+        delay: noDelay,
+        onProgress,
+      });
+
+      expect(result.succeeded).toBe(3);
+      expect(result.failed).toBe(0);
+    });
+  });
+
+  // -------------------------------------------------------------------------
+  // randomDelay — guard min > max
+  // -------------------------------------------------------------------------
+
+  describe('randomDelay', () => {
+    it('throws when min > max', () => {
+      expect(() => randomDelay(3000, 1000)).toThrow(/min.*max/i);
+    });
+
+    it('accepts equal min and max', async () => {
+      await expect(randomDelay(0, 0)).resolves.toBeUndefined();
     });
   });
 });

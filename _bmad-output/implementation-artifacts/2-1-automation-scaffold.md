@@ -4,7 +4,7 @@ baseline_commit: 3a975430d0c25a768c57d1b9ebbbcdeda6239b6c
 
 # Story 2.1: Automation service scaffold + shared guardrails
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -60,6 +60,31 @@ so that every write action is protected by dry-run, delay, and batch limits by d
   - [x] Create `tests/services/facebook-automation.test.js` (matched repo convention — `tests/` mirroring source)
   - [x] Spy `actionFn` (counts calls), `delay: () => {}`: assert dry-run default calls actionFn 0 times + returns preview; `dryRun:false` calls actionFn N times; over-maxBatch rejected/capped; warning present
   - [x] Run the relevant vitest path
+
+### Review Findings (AI) — 2026-06-08
+
+#### Decision Needed
+
+- [x] [Review][Decision] `maxBatch` không được kiểm tra trong dry-run — **Resolved: apply maxBatch to dry-run too** — dry-run với >maxBatch items throw, preview phản ánh đúng real-run constraint
+- [x] [Review][Decision] Missing bounded retry logic (AC2.4) — **Resolved: add `maxRetry` option** — `options.maxRetry = 1`, retry từng item trước khi ghi failed
+- [x] [Review][Decision] Missing explicit stop condition (AC2.4) — **Resolved: add `shouldStop` callback seam** — `options.shouldStop = (results) => boolean`, check sau mỗi item
+
+#### Patches
+
+- [x] [Review][Patch] `items` không được validate là array — `items.map` throws `TypeError` với no context nếu null/undefined [api/services/facebookAutomation.js:31]
+- [x] [Review][Patch] `null`/`undefined` item trong array passed thẳng vào `actionFn` — nên skip với error entry thay vì crash downstream [api/services/facebookAutomation.js:75]
+- [x] [Review][Patch] `onProgress` không check `typeof === 'function'` — truthy non-function (e.g. `true`) throws `TypeError` trong loop, escapes `actionFn` try/catch [api/services/facebookAutomation.js:91]
+- [x] [Review][Patch] `onProgress` throwing escapes `actionFn` try/catch — partial results bị mất [api/services/facebookAutomation.js:91]
+- [x] [Review][Patch] `delay` throwing/rejecting aborts batch mid-way — partial results không trả về caller [api/services/facebookAutomation.js:94]
+- [x] [Review][Patch] `randomDelay(min, max)` với `min > max` — `setTimeout` nhận negative ms, fires ngay lập tức (no actual delay) [api/services/facebookAutomation.js:15]
+- [x] [Review][Patch] `maxBatch=NaN` bypass silently — `items.length > NaN` luôn `false`, không reject bất kỳ batch size nào [api/services/facebookAutomation.js:66]
+
+#### Deferred
+
+- [x] [Review][Defer] Empty array `[]` với `dryRun=false` emit `ACCOUNT_RISK_WARNING` dù không có item nào được xử lý — minor UX noise [api/services/facebookAutomation.js:70] — deferred, minor UX
+- [x] [Review][Defer] Duplicate items trong array — cùng target bị action N lần silently, không có dedup guard — deferred, caller responsibility
+- [x] [Review][Defer] `loginWithCookie` re-export untested — smoke test nice-to-have — deferred, import chain verified
+- [x] [Review][Defer] Items array mutated externally during loop — defensive copy là perf tradeoff, không có spec requirement — deferred, pre-existing pattern
 
 ## Dev Notes
 
