@@ -195,7 +195,7 @@ export { loginWithCookie, createBrowser, createPage };
  * @returns {Promise<{element: Object, alreadyLiked: boolean}>}
  * @throws {Error} If Like button not found (locale unsupported or post unreachable)
  */
-async function findLikeButton(page) {
+export async function findLikeButton(page) {
   // Supported locales: en, vi (from docs/agents/selectors-facebook.md)
   const likeSelectors = [
     '[aria-label="Like"]',      // en
@@ -207,31 +207,36 @@ async function findLikeButton(page) {
     '[aria-label="Bỏ thích"]',    // vi
   ];
 
-  // Check if already liked first
+  // Single combined wait: block until ANY like/unlike button renders.
+  // Fixes (a) the race where page.$ missed a slow-loading already-liked button
+  // (causing a spurious re-like), and (b) the 5s×N sequential timeouts on
+  // unsupported locales — now one 5s wait total, not one per selector.
+  const allSelectors = [...unlikeSelectors, ...likeSelectors].join(', ');
+  try {
+    await page.waitForSelector(allSelectors, { timeout: 5000 });
+  } catch (_) {
+    throw new Error(
+      `❌ Like button not found; locale unsupported or post unreachable`
+    );
+  }
+
+  // Reaction area has rendered — now check already-liked state first (no race).
   for (const selector of unlikeSelectors) {
-    try {
-      const element = await page.$(selector);
-      if (element) {
-        return { element, alreadyLiked: true };
-      }
-    } catch (_) {
-      // Continue to next selector
+    const element = await page.$(selector);
+    if (element) {
+      return { element, alreadyLiked: true };
     }
   }
 
-  // Check for unliked state
+  // Otherwise it is in the unliked state.
   for (const selector of likeSelectors) {
-    try {
-      const element = await page.waitForSelector(selector, { timeout: 5000 });
-      if (element) {
-        return { element, alreadyLiked: false };
-      }
-    } catch (_) {
-      // Continue to next selector
+    const element = await page.$(selector);
+    if (element) {
+      return { element, alreadyLiked: false };
     }
   }
 
-  // Button not found in any locale
+  // Combined selector matched but neither specific selector resolved (defensive)
   throw new Error(
     `❌ Like button not found; locale unsupported or post unreachable`
   );
@@ -284,7 +289,11 @@ async function likeSinglePost(page, postUrl) {
  * @returns {Promise<Object>} Result with dryRun, preview, results, attempted, succeeded, failed
  */
 export async function likeFacebookPosts(page, postUrls, options = {}) {
-  const { likeFn = likeSinglePost, ...guardedOptions } = options;
+  // Nullish-coalesce so an explicit `likeFn: null` falls back to the default
+  // (JS destructuring defaults apply only to `undefined`) — same class of guard
+  // as the dryRun gate. Otherwise every item fails with an opaque TypeError.
+  const { likeFn: likeFnOpt, ...guardedOptions } = options;
+  const likeFn = likeFnOpt ?? likeSinglePost;
 
   // Capture return values from likeFn via closure (AC3.9)
   const capturedResults = new Map();
