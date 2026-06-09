@@ -160,6 +160,147 @@ program
     console.log(chalk.green('\n✓ Logged out successfully\n'));
   });
 
+
+// ============================================================================
+// Unified Scrape Command (Story 3.1 — multi-platform via dispatcher)
+// ============================================================================
+
+program
+  .command('scrape')
+  .description('Scrape data from any platform (facebook, threads, bluesky, mastodon, twitter)')
+  .requiredOption('--platform <platform>', 'Platform: facebook/fb, threads, bluesky, mastodon, twitter/x')
+  .requiredOption('--action <action>', 'Action: profile, posts, followers, search')
+  .option('--username <username>', 'Target username or handle')
+  .option('--query <query>', 'Search query (for search action)')
+  .option('--limit <number>', 'Maximum results', '20')
+  .option('--auth-cookie <json>', 'Auth cookie as JSON — required for facebook: \'{"c_user":"...","xs":"..."}\'')
+  .option('--auth-token <token>', 'Auth token string (for twitter/threads)')
+  .option('-o, --output <file>', 'Output file (.json or .csv)')
+  .action(async (options) => {
+    const { scrape: dispatchScrape } = await import('../scrapers/index.js');
+    const platform = options.platform.toLowerCase();
+    const action = options.action.toLowerCase();
+    const spinner = ora(`Scraping ${action} on ${platform}...`).start();
+
+    try {
+      // Facebook requires authCookie object, not authToken string
+      if ((platform === 'facebook' || platform === 'fb') && !options.authCookie) {
+        spinner.fail('Facebook requires --auth-cookie \'{"c_user":"...","xs":"..."}\' (not --auth-token)');
+        process.exit(1);
+      }
+
+      // Parse authCookie JSON if provided
+      let authCookie;
+      if (options.authCookie) {
+        try {
+          authCookie = JSON.parse(options.authCookie);
+        } catch {
+          spinner.fail('--auth-cookie must be valid JSON: \'{"c_user":"...","xs":"..."}\'');
+          process.exit(1);
+        }
+      }
+
+      const scrapeOptions = {
+        username: options.username,
+        query: options.query,
+        limit: parseInt(options.limit, 10),
+        authToken: options.authToken,
+        authCookie,
+      };
+
+      const data = await dispatchScrape(platform, action, scrapeOptions);
+      spinner.succeed(`Scraped ${action} on ${platform}`);
+
+      if (options.output) {
+        await smartOutput(Array.isArray(data) ? data : [data], options);
+      } else {
+        console.log(JSON.stringify(data, null, 2));
+      }
+    } catch (err) {
+      spinner.fail(`Failed: ${err.message}`);
+      process.exit(1);
+    }
+  });
+
+// ============================================================================
+// Unified Automate Command (Story 3.1 — facebook automation via service)
+// ============================================================================
+
+program
+  .command('automate')
+  .description('Automate write actions on Facebook (dry-run on by default)')
+  .requiredOption('--platform <platform>', 'Platform: facebook/fb')
+  .requiredOption('--action <action>', 'Action: like, comment, post')
+  .option('--urls <urls>', 'Comma-separated post URLs (for like/comment)')
+  .option('--text <text>', 'Comment text or post content (for comment/post)')
+  .option('--auth-cookie <json>', 'Auth cookie JSON: \'{"c_user":"...","xs":"..."}\'')
+  .option('--no-dry-run', 'Execute real writes (default: dry-run enabled)')
+  .option('--max-batch <number>', 'Max items per batch', '20')
+  .action(async (options) => {
+    const platform = options.platform.toLowerCase();
+    if (platform !== 'facebook' && platform !== 'fb') {
+      console.error(chalk.red(`❌ automate only supports facebook/fb. Got: ${platform}`));
+      process.exit(1);
+    }
+
+    const { loginWithCookie, createBrowser, createPage } = await import('../scrapers/facebook/index.js');
+    const { likeFacebookPosts, commentOnFacebookPosts, createFacebookPost } = await import('../../api/services/facebookAutomation.js');
+
+    // Parse authCookie
+    let authCookie;
+    if (options.authCookie) {
+      try {
+        authCookie = JSON.parse(options.authCookie);
+      } catch {
+        console.error(chalk.red('❌ --auth-cookie must be valid JSON'));
+        process.exit(1);
+      }
+    }
+
+    const dryRun = options.dryRun !== false;
+    const spinner = ora(`${dryRun ? '[DRY RUN] ' : ''}Running ${options.action} on ${platform}...`).start();
+
+    let browser, page;
+    try {
+      browser = await createBrowser();
+      page = await createPage(browser);
+      if (authCookie) await loginWithCookie(page, authCookie);
+
+      const guardedOptions = {
+        dryRun,
+        maxBatch: parseInt(options.maxBatch, 10),
+        delay: dryRun ? () => {} : undefined,
+      };
+
+      let result;
+      const action = options.action.toLowerCase();
+
+      if (action === 'like') {
+        const urls = (options.urls || '').split(',').map(u => u.trim()).filter(Boolean);
+        if (!urls.length) { spinner.fail('--urls required for like action'); process.exit(1); }
+        result = await likeFacebookPosts(page, urls, guardedOptions);
+      } else if (action === 'comment') {
+        const urls = (options.urls || '').split(',').map(u => u.trim()).filter(Boolean);
+        if (!urls.length || !options.text) { spinner.fail('--urls and --text required for comment action'); process.exit(1); }
+        result = await commentOnFacebookPosts(page, urls, options.text, guardedOptions);
+      } else if (action === 'post') {
+        if (!options.text) { spinner.fail('--text required for post action'); process.exit(1); }
+        result = await createFacebookPost(page, options.text, guardedOptions);
+      } else {
+        spinner.fail(`Unknown action "${action}". Supported: like, comment, post`);
+        process.exit(1);
+      }
+
+      spinner.succeed(`${dryRun ? '[DRY RUN] ' : ''}${action} complete`);
+      console.log(JSON.stringify(result, null, 2));
+    } catch (err) {
+      spinner.fail(`Failed: ${err.message}`);
+      process.exit(1);
+    } finally {
+      if (browser) await browser.close().catch(() => {});
+    }
+  });
+
 // ============================================================================
 // Profile Commands
 // ============================================================================
