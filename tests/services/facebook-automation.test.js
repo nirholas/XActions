@@ -5,6 +5,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import {
   commentOnFacebookPosts,
+  createFacebookPost,
   runGuardedBatch,
   randomDelay,
   ACCOUNT_RISK_WARNING,
@@ -826,6 +827,149 @@ describe('commentOnFacebookPosts', () => {
       await expect(
         commentOnFacebookPosts(fakePage, postUrls, commentText, { dryRun: false, delay: noDelay })
       ).rejects.toThrow(/maxBatch/i);
+    });
+  });
+});
+
+// =============================================================================
+// createFacebookPost (Story 2.4)
+// =============================================================================
+
+describe('createFacebookPost', () => {
+  beforeEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  // -------------------------------------------------------------------------
+  // AC1, AC3.9 — dry-run default (no createPostFn invocation, preview returned)
+  // -------------------------------------------------------------------------
+
+  describe('dry-run default', () => {
+    it('returns preview without calling createPostFn', async () => {
+      const fakePage = {};
+      const createPostFnSpy = vi.fn();
+      const content = 'Hello from XActions!';
+
+      const result = await createFacebookPost(fakePage, content, { createPostFn: createPostFnSpy });
+
+      expect(createPostFnSpy).not.toHaveBeenCalled();
+      expect(result.dryRun).toBe(true);
+      expect(result.preview).toHaveLength(1);
+      expect(result.preview[0].target).toBe(content);
+      expect(result.preview[0].previewContent).toBe(content);
+    });
+  });
+
+  // -------------------------------------------------------------------------
+  // AC1.3 — dryRun:false invokes createPostFn with content
+  // -------------------------------------------------------------------------
+
+  describe('dryRun:false — real write', () => {
+    it('calls createPostFn once with correct content', async () => {
+      const fakePage = {};
+      const createPostFnSpy = vi.fn().mockResolvedValue({ posted: true, postUrl: 'https://facebook.com/posts/123' });
+      const content = 'Test post content';
+
+      const result = await createFacebookPost(fakePage, content, {
+        dryRun: false,
+        createPostFn: createPostFnSpy,
+        delay: noDelay,
+      });
+
+      expect(createPostFnSpy).toHaveBeenCalledTimes(1);
+      expect(createPostFnSpy).toHaveBeenCalledWith(fakePage, content);
+      expect(result.dryRun).toBe(false);
+      expect(result.succeeded).toBe(1);
+    });
+
+    it('routes through single-item batch for guardrail consistency', async () => {
+      const fakePage = {};
+      const createPostFnSpy = vi.fn().mockResolvedValue({ posted: true });
+      const content = 'Single post content';
+
+      const result = await createFacebookPost(fakePage, content, {
+        dryRun: false,
+        createPostFn: createPostFnSpy,
+        delay: noDelay,
+      });
+
+      expect(result.attempted).toBe(1);
+      expect(result.results).toHaveLength(1);
+      expect(result.results[0].target).toBe(content);
+    });
+  });
+
+  // -------------------------------------------------------------------------
+  // AC3.10 — content field in result
+  // -------------------------------------------------------------------------
+
+  describe('content in results', () => {
+    it('includes content in real-run results', async () => {
+      const fakePage = {};
+      const createPostFnSpy = vi.fn().mockResolvedValue({ posted: true });
+      const content = 'My post text';
+
+      const result = await createFacebookPost(fakePage, content, {
+        dryRun: false,
+        createPostFn: createPostFnSpy,
+        delay: noDelay,
+      });
+
+      expect(result.results[0].ok).toBe(true);
+      expect(result.results[0].content).toBe(content);
+    });
+  });
+
+  // -------------------------------------------------------------------------
+  // AC2.8 — composer not found error propagates as result.ok=false
+  // -------------------------------------------------------------------------
+
+  describe('error handling', () => {
+    it('records ok:false when createPostFn throws (composer not found)', async () => {
+      const fakePage = {};
+      const createPostFnSpy = vi.fn().mockRejectedValue(new Error('❌ Post composer not found'));
+      const content = 'Test post';
+
+      const result = await createFacebookPost(fakePage, content, {
+        dryRun: false,
+        createPostFn: createPostFnSpy,
+        delay: noDelay,
+        maxRetry: 0,
+      });
+
+      expect(result.results[0].ok).toBe(false);
+      expect(result.results[0].error).toContain('Post composer not found');
+      expect(result.failed).toBe(1);
+    });
+  });
+
+  // -------------------------------------------------------------------------
+  // AC4 — account-risk warning fires before real write
+  // -------------------------------------------------------------------------
+
+  describe('account-risk warning', () => {
+    it('surfaces account-risk warning on real run', async () => {
+      const fakePage = {};
+      const createPostFnSpy = vi.fn().mockResolvedValue({ posted: true });
+      const content = 'Test post';
+
+      const result = await createFacebookPost(fakePage, content, {
+        dryRun: false,
+        createPostFn: createPostFnSpy,
+        delay: noDelay,
+      });
+
+      expect(result.warning).toBeTruthy();
+      expect(result.warning).toMatch(/warning/i);
+    });
+
+    it('no warning on dry-run', async () => {
+      const fakePage = {};
+      const content = 'Test post';
+
+      const result = await createFacebookPost(fakePage, content, { createPostFn: vi.fn() });
+
+      expect(result.warning).toBeNull();
     });
   });
 });

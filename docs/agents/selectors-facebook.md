@@ -100,6 +100,10 @@ Mọi selector phải bọc trong helper một chỗ để khi Facebook đổi D
 | Post submit | `[aria-label="Post"]` / `[aria-label="Đăng"]` | |
 
 ⚠️ **aria-label phụ thuộc locale.** Account đặt tiếng Việt sẽ có "Thích", "Bình luận", "Đăng". Helper phải hỗ trợ đa locale hoặc ép locale `en_US` khi login.
+| Post composer (en) | `[aria-label*="What's on your mind"]`, `[role="textbox"][data-text*="What's on your mind"]` | Story 2.4; substring match |
+| Post composer (vi) | `[aria-label*="Bạn đang nghĩ gì"]`, `[role="textbox"][data-text*="Bạn đang nghĩ gì"]` | Story 2.4; Vietnamese locale |
+| Post submit (en) | `[aria-label="Post"]` | Story 2.4 |
+| Post submit (vi) | `[aria-label="Đăng"]` | Story 2.4; Vietnamese locale |
 
 ## Verify Checklist
 

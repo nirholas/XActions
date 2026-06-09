@@ -432,6 +432,157 @@ export async function commentOnFacebookPosts(page, postUrls, commentText, option
   return batchResult;
 }
 
+// ============================================================================
+// Facebook Post Creation (Story 2.4)
+// ============================================================================
+
+/**
+ * Find post composer with locale-aware selectors.
+ *
+ * @param {Object} page - Puppeteer page
+ * @returns {Promise<Object>} Post composer element
+ * @throws {Error} If post composer not found (locale unsupported or page unreachable)
+ */
+async function findPostComposer(page) {
+  // Supported locales: en, vi (from docs/agents/selectors-facebook.md)
+  const composerSelectors = [
+    '[aria-label*="What\'s on your mind"]',      // en
+    '[role="textbox"][data-text*="What\'s on your mind"]',  // en fallback
+    '[aria-label*="Bạn đang nghĩ gì"]',          // vi
+    '[role="textbox"][data-text*="Bạn đang nghĩ gì"]',      // vi fallback
+  ];
+
+  for (const selector of composerSelectors) {
+    try {
+      const element = await page.waitForSelector(selector, { timeout: 5000 });
+      if (element) {
+        return element;
+      }
+    } catch (_) {
+      // Continue to next selector
+    }
+  }
+
+  // Composer not found in any locale
+  throw new Error(
+    `❌ Post composer not found; locale unsupported or page unreachable`
+  );
+}
+
+/**
+ * Find post submit button with locale-aware selectors.
+ *
+ * @param {Object} page - Puppeteer page
+ * @returns {Promise<Object>} Submit button element
+ * @throws {Error} If submit button not found
+ */
+async function findPostSubmitButton(page) {
+  const submitSelectors = [
+    '[aria-label="Post"]',     // en
+    '[aria-label="Đăng"]',     // vi
+  ];
+
+  for (const selector of submitSelectors) {
+    try {
+      const element = await page.waitForSelector(selector, { timeout: 3000 });
+      if (element) {
+        return element;
+      }
+    } catch (_) {
+      // Continue to next selector
+    }
+  }
+
+  throw new Error(`❌ Post submit button not found`);
+}
+
+/**
+ * Create a single Facebook post (AC2).
+ * Internal helper for createFacebookPost.
+ *
+ * @param {Object} page - Puppeteer page
+ * @param {string} content - User-provided post content
+ * @returns {Promise<{posted: boolean, postUrl?: string}>}
+ * @throws {Error} If post composer or submit button not found
+ */
+async function createSinglePost(page, content) {
+  // Navigate to Facebook home (AC2.5)
+  await page.goto('https://facebook.com/', { waitUntil: 'networkidle2', timeout: 30000 });
+
+  // Small delay for stability
+  await sleep(500);
+
+  // Find post composer with locale-aware lookup (AC2.6)
+  const composerElement = await findPostComposer(page);
+
+  // Click to focus composer
+  await composerElement.click();
+  await sleep(300);
+
+  // Type post content (AC2.6)
+  await page.keyboard.type(content);
+  await sleep(200);
+
+  // Find and click submit button (AC2.7)
+  const submitElement = await findPostSubmitButton(page);
+  await submitElement.click();
+
+  // Wait for post to be created
+  await sleep(2000);
+
+  // Try to extract post URL from current page location
+  const currentUrl = page.url();
+  const postUrl = currentUrl.includes('/posts/') || currentUrl.includes('/permalink/') 
+    ? currentUrl 
+    : undefined;
+
+  return { posted: true, postUrl };
+}
+
+/**
+ * Create a Facebook text post with dry-run preview (Story 2.4).
+ *
+ * @param {Object} page - Puppeteer page (authenticated)
+ * @param {string} content - User-provided post content
+ * @param {Object} options - Configuration options
+ * @param {boolean} [options.dryRun=true] - Preview mode (default); set false for real writes
+ * @param {Function} [options.delay] - Injectable delay (not used for single post)
+ * @param {number} [options.maxBatch=20] - Max batch size (enforced even for single item)
+ * @param {number} [options.maxRetry=1] - Retry attempts on failure
+ * @param {Function} [options.createPostFn] - Injectable create function (for testing); defaults to createSinglePost
+ * @returns {Promise<Object>} Result with dryRun, preview, results, attempted, succeeded, failed
+ */
+export async function createFacebookPost(page, content, options = {}) {
+  const { createPostFn = createSinglePost, ...guardedOptions } = options;
+
+  // Build actionFn that wraps createPostFn with page (AC1.2)
+  const actionFn = async (contentItem) => {
+    return await createPostFn(page, contentItem);
+  };
+
+  // Route through runGuardedBatch with single-item array — ensures guardrail consistency (AC4.13)
+  const batchResult = await runGuardedBatch([content], actionFn, guardedOptions);
+
+  // Enhance dry-run preview with content preview (AC3.9)
+  if (batchResult.dryRun && batchResult.preview.length > 0) {
+    batchResult.preview = batchResult.preview.map((p) => ({
+      ...p,
+      previewContent: p.target,
+    }));
+  }
+
+  // Enhance real-run results with content and postUrl (AC3.10)
+  if (!batchResult.dryRun && batchResult.results.length > 0) {
+    batchResult.results = batchResult.results.map((r) => ({
+      ...r,
+      content: r.target,
+      // postUrl will be in captured results if createPostFn returned it
+    }));
+  }
+
+  return batchResult;
+}
+
 export default {
   runGuardedBatch,
   randomDelay,
@@ -441,4 +592,5 @@ export default {
   createPage,
   likeFacebookPosts,
   commentOnFacebookPosts,
+  createFacebookPost,
 };
