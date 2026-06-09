@@ -10,7 +10,7 @@
 // No real browser is launched — all tested paths throw before the first await
 // that touches Puppeteer.
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 import { executeFacebookAutomateTool } from '../../src/mcp/server.js';
 
 // ---------------------------------------------------------------------------
@@ -188,5 +188,34 @@ describe('executeFacebookAutomateTool — dryRun strict gate (schema / contract)
     const tool = TOOLS.find((t) => t.name === 'x_facebook_automate');
     const required = tool?.inputSchema?.required ?? [];
     expect(required).not.toContain('dryRun');
+  });
+});
+
+// ============================================================================
+// Partial authCookie edge cases — still throws before browser launch
+// ============================================================================
+
+describe('executeFacebookAutomateTool — partial authCookie edge cases', () => {
+  let executeFacebookAutomateTool;
+  beforeAll(async () => {
+    ({ executeFacebookAutomateTool } = await import('../../src/mcp/server.js'));
+  });
+
+  it('throws when c_user is present but xs is missing', async () => {
+    await expect(
+      executeFacebookAutomateTool({ action: 'like', urls: ['https://fb.com/p/1'], authCookie: { c_user: 'valid_id' } })
+    ).rejects.toThrow(/authCookie/i);
+  });
+
+  it('throws when xs is present but c_user is missing', async () => {
+    await expect(
+      executeFacebookAutomateTool({ action: 'like', urls: ['https://fb.com/p/1'], authCookie: { xs: 'valid_xs' } })
+    ).rejects.toThrow(/authCookie/i);
+  });
+
+  it('throws when authCookie is a string (not an object)', async () => {
+    await expect(
+      executeFacebookAutomateTool({ action: 'like', urls: ['https://fb.com/p/1'], authCookie: 'c_user=123;xs=abc' })
+    ).rejects.toThrow(/authCookie/i);
   });
 });
