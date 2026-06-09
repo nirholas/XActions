@@ -33,9 +33,10 @@
 - **Follower name selector grabs first span/strong** [src/scrapers/facebook/index.js:321] — `item.querySelector('span, strong')` may return a UI label ("Follow", icon wrapper) not the person's name. Needs live DOM to pick a name-specific anchor.
 - **`id = url || name` collision on name-only rows** [src/scrapers/facebook/index.js:330] — two followers with same name and no parseable url collide in the Map. Low once username/url parsing is fixed (BLOCKER patch); revisit during live verify.
 
-## Deferred from: code review of story-2.1 (2026-06-08)
+## Deferred from: code review of story-2.1 (2026-06-09)
 
-- **Empty array `[]` với `dryRun=false` emits `ACCOUNT_RISK_WARNING`** [api/services/facebookAutomation.js:70] — warning fires even when zero items are processed; minor UX noise. Fix: guard `if (items.length === 0) return early` before warning.
-- **Duplicate items trong array** — same target actioned N times silently, no dedup guard. Caller responsibility per current design; revisit if rate-limit incidents occur.
-- **`loginWithCookie` re-export untested** [api/services/facebookAutomation.js:115] — re-export exists but no smoke test asserts it. Import chain verified; add test when login integration tests land in Epic 3.
-- **Items array mutated externally during loop** [api/services/facebookAutomation.js:75-97] — defensive copy (`[...items]`) would prevent mid-loop length changes; perf tradeoff, no spec requirement. Revisit if mutation bugs surface in 2.2-2.4.
+> Guardrail polish items — low risk, defer to a cleanup pass (not blocking Epic 2 progress).
+
+- **`shouldStop` receives mutable full `results` array** [api/services/facebookAutomation.js:137] — caller predicate sees the raw growing accumulator and could mutate it. Pass a summary `{ attempted, succeeded, failed, lastResult }` instead (consistent with onProgress).
+- **`attempted` counts null-skipped items** [api/services/facebookAutomation.js:153] — semantics are "processed" not "writes attempted"; `onProgress.attempted` similarly inflated on null-item batches. Document in JSDoc or rename to `processed`.
+- **`maxRetry: -1` was silently clamped (now thrown after patch)** — NOTE: the 2.1 review patch made maxRetry validation strict (throws on negative/Infinity/NaN), so the original "silent clamp" concern is resolved. Kept here only as a record; no action needed.

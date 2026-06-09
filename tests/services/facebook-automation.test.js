@@ -50,6 +50,86 @@ describe('runGuardedBatch', () => {
         runGuardedBatch([], vi.fn(), { dryRun: false, maxBatch: -5 })
       ).rejects.toThrow(/maxBatch/i);
     });
+
+    // Patch: maxRetry must be finite (Infinity would hang the loop on persistent failures)
+    it('throws when maxRetry is Infinity', async () => {
+      await expect(
+        runGuardedBatch(['x'], vi.fn(), { dryRun: false, maxRetry: Infinity })
+      ).rejects.toThrow(/maxRetry/i);
+    });
+
+    it('throws when maxRetry is NaN', async () => {
+      await expect(
+        runGuardedBatch(['x'], vi.fn(), { dryRun: false, maxRetry: NaN })
+      ).rejects.toThrow(/maxRetry/i);
+    });
+
+    it('throws when maxRetry is negative', async () => {
+      await expect(
+        runGuardedBatch(['x'], vi.fn(), { dryRun: false, maxRetry: -1 })
+      ).rejects.toThrow(/maxRetry/i);
+    });
+
+    // Patch: actionFn must be a function for real writes (else silent per-item TypeError)
+    it('throws when actionFn is null and dryRun is false', async () => {
+      await expect(
+        runGuardedBatch(['x'], null, { dryRun: false })
+      ).rejects.toThrow(/actionFn must be a function/i);
+    });
+
+    it('throws when actionFn is undefined and dryRun is false', async () => {
+      await expect(
+        runGuardedBatch(['x'], undefined, { dryRun: false })
+      ).rejects.toThrow(/actionFn must be a function/i);
+    });
+
+    it('throws when actionFn is a string and dryRun is false', async () => {
+      await expect(
+        runGuardedBatch(['x'], 'notAFunction', { dryRun: false })
+      ).rejects.toThrow(/actionFn must be a function/i);
+    });
+
+    // dryRun=true with non-function actionFn should NOT throw — preview path doesn't call it
+    it('does NOT validate actionFn in dry-run mode (preview path)', async () => {
+      const result = await runGuardedBatch(['x'], null);
+      expect(result.dryRun).toBe(true);
+      expect(result.preview).toHaveLength(1);
+    });
+  });
+
+  // -------------------------------------------------------------------------
+  // Patch: strict dry-run gate — falsy non-boolean must NOT trigger real writes
+  // -------------------------------------------------------------------------
+
+  describe('strict dryRun gate (HIGH safety guard)', () => {
+    it('dryRun: null stays in dry-run (does NOT enable real writes)', async () => {
+      const actionFn = vi.fn();
+      const result = await runGuardedBatch(['x'], actionFn, { dryRun: null, delay: noDelay });
+      expect(actionFn).not.toHaveBeenCalled();
+      expect(result.dryRun).toBe(true);
+      expect(result.warning).toBeNull();
+    });
+
+    it('dryRun: 0 stays in dry-run', async () => {
+      const actionFn = vi.fn();
+      const result = await runGuardedBatch(['x'], actionFn, { dryRun: 0, delay: noDelay });
+      expect(actionFn).not.toHaveBeenCalled();
+      expect(result.dryRun).toBe(true);
+    });
+
+    it('dryRun: "" stays in dry-run', async () => {
+      const actionFn = vi.fn();
+      const result = await runGuardedBatch(['x'], actionFn, { dryRun: '', delay: noDelay });
+      expect(actionFn).not.toHaveBeenCalled();
+      expect(result.dryRun).toBe(true);
+    });
+
+    it('only explicit dryRun:false enables real writes', async () => {
+      const actionFn = vi.fn().mockResolvedValue(undefined);
+      const result = await runGuardedBatch(['x'], actionFn, { dryRun: false, delay: noDelay });
+      expect(actionFn).toHaveBeenCalledTimes(1);
+      expect(result.dryRun).toBe(false);
+    });
   });
 
   // -------------------------------------------------------------------------

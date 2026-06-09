@@ -61,6 +61,11 @@ export async function runGuardedBatch(items, actionFn, options = {}) {
     throw new Error(`❌ runGuardedBatch: maxBatch must be a finite number >= 1, got ${maxBatch}`);
   }
 
+  // maxRetry must be finite & non-negative — Infinity would hang the loop on persistent failures
+  if (typeof maxRetry !== 'number' || !Number.isFinite(maxRetry) || maxRetry < 0) {
+    throw new Error(`❌ runGuardedBatch: maxRetry must be a finite number >= 0, got ${maxRetry}`);
+  }
+
   // maxBatch enforced in both dry-run and real — preview must reflect real constraints
   if (items.length > maxBatch) {
     throw new Error(
@@ -69,8 +74,13 @@ export async function runGuardedBatch(items, actionFn, options = {}) {
     );
   }
 
+  // Strict dry-run gate: anything except explicit `false` stays in dry-run.
+  // JS destructuring only substitutes the default for `undefined`, so `dryRun: null`
+  // would otherwise be falsy and trigger real writes — unsafe for an automation guardrail.
+  const isRealRun = dryRun === false;
+
   // --- dry-run branch ---
-  if (dryRun) {
+  if (!isRealRun) {
     const preview = items.map((item) => ({ target: item, action: 'pending' }));
     return {
       dryRun: true,
@@ -85,6 +95,12 @@ export async function runGuardedBatch(items, actionFn, options = {}) {
   }
 
   // --- real-write branch ---
+
+  // Validate actionFn before any real write — otherwise null/non-function actionFn
+  // is silently caught per-item, marking every target failed with an opaque TypeError.
+  if (typeof actionFn !== 'function') {
+    throw new Error('❌ runGuardedBatch: actionFn must be a function for real writes');
+  }
 
   // Surface account-risk warning before first real write (AC2.7)
   console.warn(ACCOUNT_RISK_WARNING);
