@@ -126,3 +126,44 @@ inputDocuments:
 - **Total service tests:** 83 pass, 0 fail
 - **Regressions:** 0
 - **Technique:** fake page objects + `vi.useFakeTimers()` for internal `sleep()` bypass
+
+---
+
+## TEA Round — Epic 3 MCP Behavior Tests (2026-06-10)
+
+### Coverage Gaps Addressed
+
+| Gap | Priority | Resolution |
+|---|---|---|
+| `executeFacebookAutomateTool` auth guard — 0 tests | P0 | 7 unit tests added |
+| `executeFacebookAutomateTool` arg validation — 0 tests | P0 | 9 unit tests added |
+| dryRun strict gate (schema / contract) — 0 tests | P1 | 2 contract tests added |
+| `server.test.js` silently skipped (node:test → vitest) | P1 | fixed; 24 tests now running |
+
+### New Test Files
+
+**`tests/mcp/facebook-automate-behavior.test.js`** (18 tests)
+- Auth guard (7): absent, null, empty object, empty c_user, whitespace c_user, empty xs, whitespace xs
+- Arg validation like (3): empty urls, absent urls, string instead of array
+- Arg validation comment (4): empty urls, absent text, empty text, whitespace text
+- Arg validation post (2): absent text, whitespace text
+- dryRun schema gate (2): boolean type verified, not in required array
+
+**`tests/mcp/server.test.js`** (24 tests — pre-existing, now running)
+- Fixed: replaced `node:test` imports with vitest, `before` → `beforeAll`
+- Covers: TOOLS array structure, x_ prefix convention, unique names, required fields
+
+### Modified Files
+
+**`src/mcp/server.js`**
+- Added `executeFacebookAutomateTool` to named export for test access
+
+### Final Results
+
+- **New tests:** +18 behavior (facebook-automate-behavior.test.js)
+- **Unlocked tests:** +24 (server.test.js was silently skipped, now passing)
+- **MCP test total:** 55 (13 schema/contract + 18 behavior + 24 server definitions)
+- **Full suite (mcp + services + scrapers):** 263 pass, 0 fail
+- **Regressions:** 0
+
+## Status: COMPLETE
