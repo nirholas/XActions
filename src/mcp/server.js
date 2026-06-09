@@ -2382,8 +2382,19 @@ async function executeTool(name, args) {
 async function executeFacebookAutomateTool(args) {
   const { action, urls = [], text = '', dryRun, authCookie, maxBatch } = args;
 
-  // Hard auth guard (AC3.7, mirrors CLI 3.1 pattern)
-  if (!authCookie?.c_user?.trim() || !authCookie?.xs?.trim()) {
+  // Action allowlist BEFORE browser launch (fail-fast — was previously thrown
+  // only after createBrowser+login, wasting a full session on a bad action).
+  const VALID_ACTIONS = ['like', 'comment', 'post'];
+  if (!VALID_ACTIONS.includes(action)) {
+    throw new Error(`❌ x_facebook_automate: unknown action "${action}". Valid values: like, comment, post.`);
+  }
+
+  // Hard auth guard (AC3.7, mirrors CLI 3.1). Coerce to string first — c_user is a
+  // numeric Facebook UID and may arrive as a JSON number, which would crash on
+  // .trim() instead of producing the clear auth error.
+  const cUser = String(authCookie?.c_user ?? '').trim();
+  const xs = String(authCookie?.xs ?? '').trim();
+  if (!cUser || !xs) {
     throw new Error('❌ x_facebook_automate requires authCookie { c_user, xs }. Provide a valid Facebook session cookie.');
   }
 
@@ -2398,31 +2409,32 @@ async function executeFacebookAutomateTool(args) {
   // Strict dryRun gate — only explicit false enables real writes (ADR-007, SM-2)
   const resolvedDryRun = dryRun === false ? false : true;
 
-  const { createBrowser, createPage, loginWithCookie } = await import('../scrapers/facebook/index.js');
   const { likeFacebookPosts, commentOnFacebookPosts, createFacebookPost } = await import('../../api/services/facebookAutomation.js');
+  const options = { dryRun: resolvedDryRun, ...(maxBatch != null && { maxBatch }) };
 
+  const dispatch = async (page) => {
+    if (action === 'like') return await likeFacebookPosts(page, urls, options);
+    if (action === 'comment') return await commentOnFacebookPosts(page, urls, text, options);
+    return await createFacebookPost(page, text, options);
+  };
+
+  // Dry-run never touches the DOM (runGuardedBatch skips actionFn), so do NOT
+  // launch a browser or perform a real Facebook login for a preview — that would
+  // incur account risk + latency with no benefit.
+  if (resolvedDryRun) {
+    return await dispatch(null);
+  }
+
+  const { createBrowser, createPage, loginWithCookie } = await import('../scrapers/facebook/index.js');
   const browser = await createBrowser({ headless: true });
   try {
     const page = await createPage(browser);
     // authCookie values are never logged (NFR3)
-    await loginWithCookie(page, { c_user: authCookie.c_user, xs: authCookie.xs });
-
-    const options = {
-      dryRun: resolvedDryRun,
-      ...(maxBatch != null && { maxBatch }),
-    };
-
-    if (action === 'like') {
-      return await likeFacebookPosts(page, urls, options);
-    } else if (action === 'comment') {
-      return await commentOnFacebookPosts(page, urls, text, options);
-    } else if (action === 'post') {
-      return await createFacebookPost(page, text, options);
-    } else {
-      throw new Error(`❌ Unknown action: "${action}". Valid values: like, comment, post.`);
-    }
+    await loginWithCookie(page, { c_user: cUser, xs });
+    return await dispatch(page);
   } finally {
-    await browser.close();
+    // Swallow close errors so they never mask the original failure
+    await browser.close().catch(() => {});
   }
 }
 

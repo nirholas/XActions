@@ -56,3 +56,11 @@
 
 - **`findCommentInput` 4×5s sequential timeout** [api/services/facebookAutomation.js:findCommentInput] — up to 20s wait on unsupported locale. Collapse to a single combined `waitForSelector` like the findLikeButton patch. Low priority.
 - **createPost `postUrl` detection unreliable** [api/services/facebookAutomation.js:createSinglePost] — Facebook composer submits via XHR without navigating; `page.url()` stays on home feed so postUrl is usually undefined even on success. Needs live DOM verify (watch for permalink/toast). Tie to selectors-facebook.md Automate verify checklist.
+
+## Deferred from: code review of story-3.2 (2026-06-09)
+
+> 4 patches fixed inline (action allowlist fail-fast, numeric c_user coercion, dry-run skips browser/login, browser.close catch). Below deferred:
+
+- **MCP automate `maxBatch` validated downstream** [src/mcp/server.js:executeFacebookAutomateTool] — runGuardedBatch throws on bad maxBatch, but only in the real-run path after browser launch. Fold a numeric check into the fail-fast block. Low.
+- **MCP automate `urls` entries not validated** [src/mcp/server.js:executeFacebookAutomateTool] — array non-empty checked, but individual entries aren't validated as FB post URLs. Add a format check; tie to live verify. Low.
+- **`tests/mcp/server.test.js` fails under Vitest** [tests/mcp/server.test.js] — PRE-EXISTING (uses node:test imports, not Vitest). Not a Facebook regression; flagged for separate cleanup (convert to Vitest or exclude).

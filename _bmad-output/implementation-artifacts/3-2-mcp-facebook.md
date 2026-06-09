@@ -150,3 +150,20 @@ claude-sonnet-4-5
 
 **New Files:**
 - `tests/mcp/facebook-tools.test.js` — 30 browser-free contract tests
+
+## Review Findings
+
+> Code review 2026-06-09 (Blind Hunter). Contract tests 30/30 pass. Code applied all prior lessons (hard auth guard, fail-fast, strict dryRun gate, no cookie logging). Note: `tests/mcp/server.test.js` fails with "No test suite found" — PRE-EXISTING (node:test imports under Vitest, not in 3.2 commit, last touched by an x402 commit). Not a 3.2 regression.
+
+### Patch
+- [x] [Review][Patch][HIGH] Unknown action launched browser + login before throwing — FIXED: action allowlist guard moved before browser launch (true fail-fast).
+- [x] [Review][Patch][MEDIUM] Numeric `c_user` crashed on `.trim()` → opaque TypeError instead of auth error — FIXED: `String(authCookie?.c_user ?? '').trim()` coercion. Verified: numeric c_user previously threw TypeError.
+- [x] [Review][Patch][MEDIUM] Dry-run still launched browser + real Facebook login (account risk, no benefit) — FIXED: dry-run dispatches with `page=null`, no browser/login (runGuardedBatch skips actionFn in dry-run).
+- [x] [Review][Patch][MEDIUM] `browser.close()` in finally could mask original error — FIXED: `.close().catch(() => {})`.
+
+### Deferred
+- [x] [Review][Defer][LOW] `maxBatch` validated downstream (after launch in real-run) — runGuardedBatch throws; could fold into fail-fast. Cleanup pass.
+- [x] [Review][Defer][LOW] Individual `urls` entries not validated (only array non-empty) — needs FB-URL format check; tie to live verify.
+
+### Dismissed
+- **Cookie echo in result** — VERIFIED: runGuardedBatch result shape has no c_user/xs. No leak.
