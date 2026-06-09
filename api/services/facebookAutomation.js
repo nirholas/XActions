@@ -315,6 +315,123 @@ export async function likeFacebookPosts(page, postUrls, options = {}) {
   return batchResult;
 }
 
+// ============================================================================
+// Facebook Comment Automation (Story 2.3)
+// ============================================================================
+
+/**
+ * Find comment input with locale-aware selectors.
+ *
+ * @param {Object} page - Puppeteer page
+ * @returns {Promise<Object>} Comment input element
+ * @throws {Error} If comment input not found (locale unsupported or post unreachable)
+ */
+async function findCommentInput(page) {
+  // Supported locales: en, vi (from docs/agents/selectors-facebook.md)
+  const commentSelectors = [
+    '[aria-label*="Write a comment"]',      // en
+    '[placeholder*="Write a comment"]',     // en fallback
+    '[aria-label*="Viết bình luận"]',       // vi
+    '[placeholder*="Viết bình luận"]',      // vi fallback
+  ];
+
+  for (const selector of commentSelectors) {
+    try {
+      const element = await page.waitForSelector(selector, { timeout: 5000 });
+      if (element) {
+        return element;
+      }
+    } catch (_) {
+      // Continue to next selector
+    }
+  }
+
+  // Input not found in any locale
+  throw new Error(
+    `❌ Comment input not found; locale unsupported or post unreachable`
+  );
+}
+
+/**
+ * Comment on a single Facebook post (AC2).
+ * Internal helper for commentOnFacebookPosts.
+ *
+ * @param {Object} page - Puppeteer page
+ * @param {string} postUrl - Full URL to Facebook post
+ * @param {string} commentText - User-provided comment content
+ * @returns {Promise<{commented: boolean}>}
+ * @throws {Error} If comment input not found
+ */
+async function commentSinglePost(page, postUrl, commentText) {
+  // Navigate to post (AC2.5)
+  await page.goto(postUrl, { waitUntil: 'networkidle2', timeout: 30000 });
+
+  // Small delay for stability
+  await sleep(500);
+
+  // Find comment input with locale-aware lookup (AC2.6)
+  const inputElement = await findCommentInput(page);
+
+  // Click to focus
+  await inputElement.click();
+  await sleep(200);
+
+  // Type comment text (AC2.6)
+  await page.keyboard.type(commentText);
+
+  // Submit via Enter key (AC2.7)
+  await page.keyboard.press('Enter');
+
+  // Brief wait for comment to post
+  await sleep(500);
+
+  return { commented: true };
+}
+
+/**
+ * Auto-comment on one or more Facebook posts with dry-run preview (Story 2.3).
+ *
+ * @param {Object} page - Puppeteer page (authenticated)
+ * @param {string[]} postUrls - Array of Facebook post URLs to comment on
+ * @param {string} commentText - User-provided comment content
+ * @param {Object} options - Configuration options
+ * @param {boolean} [options.dryRun=true] - Preview mode (default); set false for real writes
+ * @param {Function} [options.delay] - Injectable delay between actions
+ * @param {number} [options.maxBatch=20] - Max posts per batch
+ * @param {number} [options.maxRetry=1] - Retry attempts per post on failure
+ * @param {Function} [options.commentFn] - Injectable comment function (for testing); defaults to commentSinglePost
+ * @returns {Promise<Object>} Result with dryRun, preview, results, attempted, succeeded, failed
+ */
+export async function commentOnFacebookPosts(page, postUrls, commentText, options = {}) {
+  const { commentFn = commentSinglePost, ...guardedOptions } = options;
+
+  // Build actionFn that wraps commentFn with page and commentText (AC1.2)
+  const actionFn = async (postUrl) => {
+    return await commentFn(page, postUrl, commentText);
+  };
+
+  // Route through runGuardedBatch — single chokepoint (AC1.2)
+  const batchResult = await runGuardedBatch(postUrls, actionFn, guardedOptions);
+
+  // Enhance dry-run preview with comment text (AC3.9)
+  if (batchResult.dryRun && batchResult.preview.length > 0) {
+    batchResult.preview = batchResult.preview.map((p) => ({
+      ...p,
+      previewComment: commentText,
+    }));
+  }
+
+  // Enhance real-run results with comment text (AC3.10)
+  if (!batchResult.dryRun && batchResult.results.length > 0) {
+    batchResult.results = batchResult.results.map((r) => ({
+      ...r,
+      commentText,
+    }));
+  }
+
+  return batchResult;
+}
+
 export default {
   runGuardedBatch,
   randomDelay,
@@ -323,4 +440,5 @@ export default {
   createBrowser,
   createPage,
   likeFacebookPosts,
+  commentOnFacebookPosts,
 };

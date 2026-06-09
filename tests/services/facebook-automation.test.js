@@ -4,6 +4,7 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import {
+  commentOnFacebookPosts,
   runGuardedBatch,
   randomDelay,
   ACCOUNT_RISK_WARNING,
@@ -706,6 +707,124 @@ describe('likeFacebookPosts', () => {
 
       await expect(
         likeFacebookPosts(fakePage, postUrls, { dryRun: false, delay: noDelay })
+      ).rejects.toThrow(/maxBatch/i);
+    });
+  });
+});
+
+// =============================================================================
+// commentOnFacebookPosts (Story 2.3)
+// =============================================================================
+
+describe('commentOnFacebookPosts', () => {
+  beforeEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  // -------------------------------------------------------------------------
+  // AC1, AC3.9 — dry-run default (no commentFn invocation, preview returned)
+  // -------------------------------------------------------------------------
+
+  describe('dry-run default', () => {
+    it('returns preview without calling commentFn', async () => {
+      const fakePage = {};
+      const commentFnSpy = vi.fn();
+      const postUrls = ['https://facebook.com/post/1', 'https://facebook.com/post/2'];
+      const commentText = 'Great post!';
+
+      const result = await commentOnFacebookPosts(fakePage, postUrls, commentText, { commentFn: commentFnSpy });
+
+      expect(commentFnSpy).not.toHaveBeenCalled();
+      expect(result.dryRun).toBe(true);
+      expect(result.preview).toHaveLength(2);
+      expect(result.preview[0].target).toBe(postUrls[0]);
+      expect(result.preview[0].previewComment).toBe(commentText);
+    });
+  });
+
+  // -------------------------------------------------------------------------
+  // AC1.3 — dryRun:false invokes commentFn per URL with delay seam
+  // -------------------------------------------------------------------------
+
+  describe('dryRun:false — real write', () => {
+    it('calls commentFn once per URL through runGuardedBatch', async () => {
+      const fakePage = {};
+      const commentFnSpy = vi.fn().mockResolvedValue({ commented: true });
+      const postUrls = ['https://facebook.com/post/1', 'https://facebook.com/post/2'];
+      const commentText = 'Nice work!';
+
+      const result = await commentOnFacebookPosts(fakePage, postUrls, commentText, {
+        dryRun: false,
+        commentFn: commentFnSpy,
+        delay: noDelay,
+      });
+
+      expect(commentFnSpy).toHaveBeenCalledTimes(2);
+      expect(commentFnSpy).toHaveBeenNthCalledWith(1, fakePage, postUrls[0], commentText);
+      expect(commentFnSpy).toHaveBeenNthCalledWith(2, fakePage, postUrls[1], commentText);
+      expect(result.dryRun).toBe(false);
+      expect(result.succeeded).toBe(2);
+    });
+  });
+
+  // -------------------------------------------------------------------------
+  // AC3.10 — commentText field in result
+  // -------------------------------------------------------------------------
+
+  describe('commentText in results', () => {
+    it('includes commentText in real-run results', async () => {
+      const fakePage = {};
+      const commentFnSpy = vi.fn().mockResolvedValue({ commented: true });
+      const postUrls = ['https://facebook.com/post/test'];
+      const commentText = 'Test comment';
+
+      const result = await commentOnFacebookPosts(fakePage, postUrls, commentText, {
+        dryRun: false,
+        commentFn: commentFnSpy,
+        delay: noDelay,
+      });
+
+      expect(result.results[0].ok).toBe(true);
+      expect(result.results[0].commentText).toBe(commentText);
+    });
+  });
+
+  // -------------------------------------------------------------------------
+  // AC2.8 — comment input not found error propagates as result.ok=false
+  // -------------------------------------------------------------------------
+
+  describe('error handling', () => {
+    it('records ok:false when commentFn throws (input not found)', async () => {
+      const fakePage = {};
+      const commentFnSpy = vi.fn().mockRejectedValue(new Error('❌ Comment input not found'));
+      const postUrls = ['https://facebook.com/post/broken'];
+      const commentText = 'Test';
+
+      const result = await commentOnFacebookPosts(fakePage, postUrls, commentText, {
+        dryRun: false,
+        commentFn: commentFnSpy,
+        delay: noDelay,
+        maxRetry: 0,
+      });
+
+      expect(result.results[0].ok).toBe(false);
+      expect(result.results[0].error).toContain('Comment input not found');
+      expect(result.failed).toBe(1);
+    });
+  });
+
+  // -------------------------------------------------------------------------
+  // AC1.2 — over-maxBatch throws (inherited from runGuardedBatch)
+  // -------------------------------------------------------------------------
+
+  describe('maxBatch enforcement', () => {
+    it('throws when postUrls.length > maxBatch (inherited)', async () => {
+      const fakePage = {};
+      const postUrls = Array.from({ length: 21 }, (_, i) => `https://facebook.com/post/${i}`);
+      const commentText = 'Test';
+
+      await expect(
+        commentOnFacebookPosts(fakePage, postUrls, commentText, { dryRun: false, delay: noDelay })
       ).rejects.toThrow(/maxBatch/i);
     });
   });

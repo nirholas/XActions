@@ -94,9 +94,9 @@ Mọi selector phải bọc trong helper một chỗ để khi Facebook đổi D
 |---|---|---|
 | Like button (not liked) | `[aria-label="Like"]` / `[aria-label="Thích"]` | aria-label đổi theo locale; Story 2.2 |
 | Like button (already liked) | `[aria-label="Remove Like"]` / `[aria-label="Bỏ thích"]` | Detect already-liked state; Story 2.2 |
-| Comment box | `[aria-label="Write a comment"]` / `[role="textbox"]` | |
-| Comment submit | Enter key hoặc `[aria-label="Comment"]` | FB thường submit bằng Enter |
-| Post composer | `[role="button"]` text "What's on your mind" | |
+| Comment input (en) | `[aria-label*="Write a comment"]`, `[placeholder*="Write a comment"]` | Story 2.3; substring match for flexibility |
+| Comment input (vi) | `[aria-label*="Viết bình luận"]`, `[placeholder*="Viết bình luận"]` | Story 2.3; Vietnamese locale |
+| Comment submit | Enter key (`page.keyboard.press('Enter')`) | Story 2.3; most reliable method |
 | Post submit | `[aria-label="Post"]` / `[aria-label="Đăng"]` | |
 
 ⚠️ **aria-label phụ thuộc locale.** Account đặt tiếng Việt sẽ có "Thích", "Bình luận", "Đăng". Helper phải hỗ trợ đa locale hoặc ép locale `en_US` khi login.
