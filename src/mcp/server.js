@@ -83,8 +83,8 @@ const TOOLS = [
         },
         platform: {
           type: 'string',
-          enum: ['twitter', 'bluesky', 'mastodon', 'threads'],
-          description: 'Platform to scrape (default: twitter)',
+          enum: ['twitter', 'bluesky', 'mastodon', 'threads', 'facebook', 'fb'],
+          description: 'Platform to scrape: twitter, bluesky, mastodon, threads, facebook, fb. Default: twitter.',
         },
         instance: {
           type: 'string',
@@ -110,8 +110,8 @@ const TOOLS = [
         },
         platform: {
           type: 'string',
-          enum: ['twitter', 'bluesky', 'mastodon', 'threads'],
-          description: 'Platform to scrape (default: twitter)',
+          enum: ['twitter', 'bluesky', 'mastodon', 'threads', 'facebook', 'fb'],
+          description: 'Platform to scrape: twitter, bluesky, mastodon, threads, facebook, fb. Default: twitter.',
         },
         instance: {
           type: 'string',
@@ -137,8 +137,8 @@ const TOOLS = [
         },
         platform: {
           type: 'string',
-          enum: ['twitter', 'bluesky', 'mastodon', 'threads'],
-          description: 'Platform to scrape (default: twitter)',
+          enum: ['twitter', 'bluesky', 'mastodon', 'threads', 'facebook', 'fb'],
+          description: 'Platform to scrape: twitter, bluesky, mastodon, threads, facebook, fb. Default: twitter.',
         },
         instance: {
           type: 'string',
@@ -178,8 +178,8 @@ const TOOLS = [
         },
         platform: {
           type: 'string',
-          enum: ['twitter', 'bluesky', 'mastodon', 'threads'],
-          description: 'Platform to scrape (default: twitter)',
+          enum: ['twitter', 'bluesky', 'mastodon', 'threads', 'facebook', 'fb'],
+          description: 'Platform to scrape: twitter, bluesky, mastodon, threads, facebook, fb. Default: twitter.',
         },
         instance: {
           type: 'string',
@@ -205,8 +205,8 @@ const TOOLS = [
         },
         platform: {
           type: 'string',
-          enum: ['twitter', 'bluesky', 'mastodon', 'threads'],
-          description: 'Platform to search (default: twitter)',
+          enum: ['twitter', 'bluesky', 'mastodon', 'threads', 'facebook', 'fb'],
+          description: 'Platform to search: twitter, bluesky, mastodon, threads, facebook, fb. Default: twitter.',
         },
         instance: {
           type: 'string',
@@ -1247,10 +1247,52 @@ const TOOLS = [
   // ====== Cross-Platform ======
   {
     name: 'x_list_platforms',
-    description: 'List all supported social media platforms (Twitter, Bluesky, Mastodon, Threads) and their capabilities.',
+    description: 'List all supported social media platforms (Twitter, Bluesky, Mastodon, Threads, Facebook) and their capabilities.',
     inputSchema: {
       type: 'object',
       properties: {},
+    },
+  },
+  // ====== Facebook Automation ======
+  {
+    name: 'x_facebook_automate',
+    description: 'Auto-like, comment on, or create Facebook posts with dry-run preview. Requires Facebook session cookie. Dry-run is default — set dryRun:false to execute real writes.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        action: {
+          type: 'string',
+          enum: ['like', 'comment', 'post'],
+          description: 'Action: like posts, comment on posts, or create a new post',
+        },
+        urls: {
+          type: 'array',
+          items: { type: 'string' },
+          description: 'Facebook post URLs (required for like and comment actions)',
+        },
+        text: {
+          type: 'string',
+          description: 'Comment text or post content (required for comment and post actions)',
+        },
+        dryRun: {
+          type: 'boolean',
+          description: 'Preview mode — no real writes. Defaults to true. Set false to execute.',
+        },
+        authCookie: {
+          type: 'object',
+          properties: {
+            c_user: { type: 'string', description: 'Facebook c_user cookie value' },
+            xs: { type: 'string', description: 'Facebook xs cookie value' },
+          },
+          required: ['c_user', 'xs'],
+          description: 'Facebook session cookie. Values are never logged (NFR3).',
+        },
+        maxBatch: {
+          type: 'number',
+          description: 'Max posts per batch (default: 20)',
+        },
+      },
+      required: ['action', 'authCookie'],
     },
   },
   // ====== Social Graph ======
@@ -2303,6 +2345,11 @@ async function executeTool(name, args) {
     return await pluginTool.handler(args, { localTools, SESSION_COOKIE });
   }
 
+  // Handle Facebook automation
+  if (name === 'x_facebook_automate') {
+    return await executeFacebookAutomateTool(args);
+  }
+
   if (MODE === 'remote') {
     return await remoteClient.execute(name, args);
   } else {
@@ -2325,6 +2372,57 @@ async function executeTool(name, args) {
       throw new Error(`Unknown tool: ${name}`);
     }
     return await toolFn(args);
+  }
+}
+
+/**
+ * Execute Facebook automation tool (x_facebook_automate).
+ * Dispatches to likeFacebookPosts / commentOnFacebookPosts / createFacebookPost.
+ */
+async function executeFacebookAutomateTool(args) {
+  const { action, urls = [], text = '', dryRun, authCookie, maxBatch } = args;
+
+  // Hard auth guard (AC3.7, mirrors CLI 3.1 pattern)
+  if (!authCookie?.c_user?.trim() || !authCookie?.xs?.trim()) {
+    throw new Error('❌ x_facebook_automate requires authCookie { c_user, xs }. Provide a valid Facebook session cookie.');
+  }
+
+  // Fail-fast arg validation before browser launch (AC3.8)
+  if ((action === 'like' || action === 'comment') && (!Array.isArray(urls) || urls.length === 0)) {
+    throw new Error(`❌ action "${action}" requires at least one URL in the urls array.`);
+  }
+  if ((action === 'comment' || action === 'post') && !String(text ?? '').trim()) {
+    throw new Error(`❌ action "${action}" requires non-empty text.`);
+  }
+
+  // Strict dryRun gate — only explicit false enables real writes (ADR-007, SM-2)
+  const resolvedDryRun = dryRun === false ? false : true;
+
+  const { createBrowser, createPage, loginWithCookie } = await import('../scrapers/facebook/index.js');
+  const { likeFacebookPosts, commentOnFacebookPosts, createFacebookPost } = await import('../../api/services/facebookAutomation.js');
+
+  const browser = await createBrowser({ headless: true });
+  try {
+    const page = await createPage(browser);
+    // authCookie values are never logged (NFR3)
+    await loginWithCookie(page, { c_user: authCookie.c_user, xs: authCookie.xs });
+
+    const options = {
+      dryRun: resolvedDryRun,
+      ...(maxBatch != null && { maxBatch }),
+    };
+
+    if (action === 'like') {
+      return await likeFacebookPosts(page, urls, options);
+    } else if (action === 'comment') {
+      return await commentOnFacebookPosts(page, urls, text, options);
+    } else if (action === 'post') {
+      return await createFacebookPost(page, text, options);
+    } else {
+      throw new Error(`❌ Unknown action: "${action}". Valid values: like, comment, post.`);
+    }
+  } finally {
+    await browser.close();
   }
 }
 
