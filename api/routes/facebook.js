@@ -2,6 +2,9 @@
 // by nichxbt
 import express from 'express';
 import { authMiddleware } from '../middleware/auth.js';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 const router = express.Router();
 router.use(authMiddleware);
@@ -123,6 +126,28 @@ router.post('/automate', async (req, res) => {
       createFacebookPost,
     } = await import('../services/facebookAutomation.js');
 
+    // Create Operation record for real (non-dry-run) runs — Story 3.4
+    // config intentionally excludes authCookie — never persist cookie values (NFR3)
+    let operation = null;
+    if (!resolvedDryRun) {
+      operation = await prisma.operation.create({
+        data: {
+          userId: req.user.id,
+          type: `facebook_${action}`,
+          status: 'running',
+          startedAt: new Date(),
+          config: JSON.stringify({ action, urls, text, maxBatch: maxBatch ?? null }),
+        },
+      });
+      global.io?.emit('facebook:operation', {
+        event: 'start',
+        operationId: operation.id,
+        userId: req.user.id,
+        type: operation.type,
+        status: 'running',
+      });
+    }
+
     const browser = await createBrowser({ headless: true });
     let result;
     try {
@@ -142,6 +167,36 @@ router.post('/automate', async (req, res) => {
       } else {
         result = await createFacebookPost(page, text, options);
       }
+
+      // Persist result + emit completion event
+      if (operation) {
+        await prisma.operation.update({
+          where: { id: operation.id },
+          data: { status: 'completed', completedAt: new Date(), result: JSON.stringify(result) },
+        });
+        global.io?.emit('facebook:operation', {
+          event: 'complete',
+          operationId: operation.id,
+          userId: req.user.id,
+          status: 'completed',
+        });
+      }
+    } catch (browserError) {
+      // Persist failure + emit error event, then re-throw for outer catch
+      if (operation) {
+        await prisma.operation.update({
+          where: { id: operation.id },
+          data: { status: 'failed', completedAt: new Date(), error: browserError.message },
+        });
+        global.io?.emit('facebook:operation', {
+          event: 'error',
+          operationId: operation.id,
+          userId: req.user.id,
+          status: 'failed',
+          error: browserError.message,
+        });
+      }
+      throw browserError;
     } finally {
       await browser.close();
     }
@@ -151,6 +206,7 @@ router.post('/automate', async (req, res) => {
       action,
       dryRun: resolvedDryRun,
       userId: req.user.id,
+      operationId: operation?.id ?? null,
       ...result,
     });
   } catch (error) {
