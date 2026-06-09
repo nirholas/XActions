@@ -4196,4 +4196,4 @@ main().catch((error) => {
 });
 
 // Export for testing without starting the stdio transport
-export { TOOLS };
+export { TOOLS, executeFacebookAutomateTool };
