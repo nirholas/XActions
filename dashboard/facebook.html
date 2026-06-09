@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Facebook Automation — XActions</title>
+  <meta name="description" content="Scrape Facebook profiles, posts, followers. Auto-like, comment, and post with dry-run preview. No API fees.">
+  <meta name="author" content="nich (@nichxbt)">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📘</text></svg>">
+  <style>
+    :root {
+      --bg-primary: #000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --text-primary: #e7e9ea;
+      --text-secondary: #8b8f94;
+      --accent: #1877f2;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --radius: 12px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg-primary); color: var(--text-primary); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; min-height: 100vh; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    nav {
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-brand { font-size: 1.2rem; font-weight: 700; color: var(--text-primary); }
+    .nav-links { display: flex; gap: 20px; font-size: 0.9rem; }
+    .nav-links a { color: var(--text-secondary); }
+    .nav-links a:hover, .nav-links a.active { color: var(--text-primary); text-decoration: none; }
+
+    .container { max-width: 820px; margin: 0 auto; padding: 32px 16px; }
+    h1 { font-size: 1.6rem; font-weight: 700; margin-bottom: 8px; }
+    .subtitle { color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 24px; }
+
+    .card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 24px; }
+    .card h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; }
+    .badge { background: var(--accent); color: #fff; font-size: 0.65rem; font-weight: 600; padding: 2px 7px; border-radius: 99px; margin-left: 8px; vertical-align: middle; }
+
+    .field { margin-bottom: 16px; }
+    .field label { display: block; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 6px; }
+    .field input, .field select, .field textarea {
+      width: 100%;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-size: 0.9rem;
+      padding: 10px 14px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--accent); }
+    .field textarea { resize: vertical; min-height: 80px; }
+    .field select option { background: var(--bg-tertiary); }
+
+    .cookie-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 12px; }
+    .hint { font-size: 0.78rem; color: var(--text-secondary); margin-top: 4px; }
+
+    .check-row { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; cursor: pointer; }
+    .check-row input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; }
+    .check-row span { font-size: 0.9rem; }
+
+    .btn { background: var(--accent); color: #fff; border: none; border-radius: 99px; padding: 10px 24px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: opacity 0.15s; }
+    .btn:hover { opacity: 0.85; }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    .result {
+      margin-top: 16px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      font-size: 0.82rem;
+      font-family: 'Menlo', 'Monaco', monospace;
+      white-space: pre-wrap;
+      word-break: break-all;
+      max-height: 320px;
+      overflow-y: auto;
+      display: none;
+    }
+    .result.ok { border-color: var(--success); }
+    .result.err { border-color: var(--error); }
+
+    .dryrun-notice {
+      background: #ffad1f18;
+      border: 1px solid var(--warning);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 0.83rem;
+      color: var(--warning);
+      margin-bottom: 16px;
+    }
+    .disclaimer {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+    details summary { cursor: pointer; font-size: 0.85rem; color: var(--text-secondary); }
+    details summary:hover { color: var(--text-primary); }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" href="/">⚡ XActions</a>
+  <div class="nav-links">
+    <a href="/automations.html">Automations</a>
+    <a href="/analytics.html">Analytics</a>
+    <a href="/monitor.html">Monitor</a>
+    <a href="/facebook.html" class="active">Facebook</a>
+    <a href="/mcp.html">MCP</a>
+    <a href="/docs.html">Docs</a>
+  </div>
+</nav>
+
+<div class="container">
+  <h1>📘 Facebook Automation</h1>
+  <p class="subtitle">Scrape profiles, posts &amp; followers — or auto-like, comment, and post. All automation defaults to dry-run preview.</p>
+
+  <div class="disclaimer">
+    ⚠️ Facebook automation uses browser automation via your session cookie. Selectors are unverified until live-tested.
+    Use responsibly. Facebook UI must be in <strong>English</strong> or <strong>Vietnamese</strong> for automation actions.
+    Cookie values are <strong>never logged or stored</strong> by XActions (NFR3).
+  </div>
+
+  <!-- ===== SCRAPE SECTION ===== -->
+  <div class="card">
+    <h2>Scrape <span class="badge">READ ONLY</span></h2>
+
+    <div class="field">
+      <label for="scrape-action">Action</label>
+      <select id="scrape-action" onchange="updateScrapeFields()">
+        <option value="profile">Profile</option>
+        <option value="posts">Posts</option>
+        <option value="followers">Followers</option>
+        <option value="search">Search</option>
+      </select>
+    </div>
+
+    <div class="field" id="scrape-url-field">
+      <label for="scrape-url">Facebook Profile / Page URL</label>
+      <input type="url" id="scrape-url" placeholder="https://www.facebook.com/username">
+    </div>
+
+    <div class="field" id="scrape-query-field" style="display:none">
+      <label for="scrape-query">Search Query</label>
+      <input type="text" id="scrape-query" placeholder="e.g. open source community">
+    </div>
+
+    <details>
+      <summary>🔑 Facebook Session Cookie (optional — for authenticated scrape)</summary>
+      <div class="cookie-grid">
+        <div class="field">
+          <label for="scrape-cuser">c_user</label>
+          <input type="password" id="scrape-cuser" placeholder="c_user value" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="scrape-xs">xs</label>
+          <input type="password" id="scrape-xs" placeholder="xs value" autocomplete="off">
+        </div>
+      </div>
+      <p class="hint" style="margin-top:8px">Find these in DevTools → Application → Cookies → facebook.com</p>
+    </details>
+
+    <br>
+    <button class="btn" id="scrape-btn" onclick="runScrape()">▶ Run Scrape</button>
+    <pre class="result" id="scrape-result"></pre>
+  </div>
+
+  <!-- ===== AUTOMATE SECTION ===== -->
+  <div class="card">
+    <h2>Automate <span class="badge" style="background:var(--warning);color:#000">DRY-RUN DEFAULT</span></h2>
+
+    <div class="dryrun-notice" id="dryrun-notice">
+      🛡️ <strong>Dry-run is ON.</strong> No real writes happen until you uncheck the box below.
+    </div>
+
+    <div class="field">
+      <label for="auto-action">Action</label>
+      <select id="auto-action" onchange="updateAutoFields()">
+        <option value="like">Like posts</option>
+        <option value="comment">Comment on posts</option>
+        <option value="post">Create new post</option>
+      </select>
+    </div>
+
+    <div class="field" id="auto-urls-field">
+      <label for="auto-urls">Post URLs (one per line)</label>
+      <textarea id="auto-urls" placeholder="https://www.facebook.com/permalink/...&#10;https://www.facebook.com/permalink/..."></textarea>
+      <p class="hint">Required for <em>like</em> and <em>comment</em> actions.</p>
+    </div>
+
+    <div class="field" id="auto-text-field" style="display:none">
+      <label for="auto-text">Text (comment or post content)</label>
+      <textarea id="auto-text" placeholder="Write your comment or post content here…"></textarea>
+    </div>
+
+    <div class="field">
+      <label for="auto-maxbatch">Max Batch (default: 20)</label>
+      <input type="number" id="auto-maxbatch" placeholder="20" min="1" max="100" style="max-width:130px">
+    </div>
+
+    <label class="check-row">
+      <input type="checkbox" id="auto-dryrun" checked onchange="updateDryRunNotice()">
+      <span>🛡️ Dry-run (preview only — no real writes)</span>
+    </label>
+
+    <details>
+      <summary>🔑 Facebook Session Cookie (required for automation)</summary>
+      <div class="cookie-grid">
+        <div class="field">
+          <label for="auto-cuser">c_user</label>
+          <input type="password" id="auto-cuser" placeholder="c_user value" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="auto-xs">xs</label>
+          <input type="password" id="auto-xs" placeholder="xs value" autocomplete="off">
+        </div>
+      </div>
+      <p class="hint" style="margin-top:8px">Find in DevTools → Application → Cookies → facebook.com. Never logged (NFR3).</p>
+    </details>
+
+    <br>
+    <button class="btn" id="auto-btn" onclick="runAutomate()">▶ Run Automate</button>
+    <pre class="result" id="auto-result"></pre>
+  </div>
+
+</div><!-- /.container -->
+
+<script>
+  function updateScrapeFields() {
+    const a = document.getElementById('scrape-action').value;
+    document.getElementById('scrape-url-field').style.display = a !== 'search' ? '' : 'none';
+    document.getElementById('scrape-query-field').style.display = a === 'search' ? '' : 'none';
+  }
+  function updateAutoFields() {
+    const a = document.getElementById('auto-action').value;
+    document.getElementById('auto-urls-field').style.display = ['like','comment'].includes(a) ? '' : 'none';
+    document.getElementById('auto-text-field').style.display = ['comment','post'].includes(a) ? '' : 'none';
+  }
+  function updateDryRunNotice() {
+    document.getElementById('dryrun-notice').style.display =
+      document.getElementById('auto-dryrun').checked ? '' : 'none';
+  }
+  function showResult(id, data, isError) {
+    const el = document.getElementById(id);
+    el.textContent = JSON.stringify(data, null, 2);
+    el.className = 'result ' + (isError ? 'err' : 'ok');
+    el.style.display = 'block';
+    el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+  async function apiCall(path, body) {
+    const token = localStorage.getItem('xactions_token') || '';
+    const res = await fetch(path, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify(body),
+    });
+    return { ok: res.ok, data: await res.json() };
+  }
+  async function runScrape() {
+    const btn = document.getElementById('scrape-btn');
+    const action = document.getElementById('scrape-action').value;
+    const url = document.getElementById('scrape-url').value.trim();
+    const query = document.getElementById('scrape-query').value.trim();
+    const cuser = document.getElementById('scrape-cuser').value.trim();
+    const xs = document.getElementById('scrape-xs').value.trim();
+    const body = { action };
+    if (url) body.url = url;
+    if (query) body.query = query;
+    if (cuser && xs) body.authCookie = { c_user: cuser, xs };
+    btn.disabled = true; btn.textContent = '⏳ Scraping…';
+    try {
+      const { ok, data } = await apiCall('/api/facebook/scrape', body);
+      showResult('scrape-result', data, !ok);
+    } catch (err) {
+      showResult('scrape-result', { error: err.message }, true);
+    } finally { btn.disabled = false; btn.textContent = '▶ Run Scrape'; }
+  }
+  async function runAutomate() {
+    const btn = document.getElementById('auto-btn');
+    const action = document.getElementById('auto-action').value;
+    const urls = document.getElementById('auto-urls').value.split('\n').map(s=>s.trim()).filter(Boolean);
+    const text = document.getElementById('auto-text').value.trim();
+    const maxBatch = document.getElementById('auto-maxbatch').value;
+    const dryRun = document.getElementById('auto-dryrun').checked;
+    const cuser = document.getElementById('auto-cuser').value.trim();
+    const xs = document.getElementById('auto-xs').value.trim();
+    const body = { action, dryRun, authCookie: { c_user: cuser, xs } };
+    if (urls.length) body.urls = urls;
+    if (text) body.text = text;
+    if (maxBatch) body.maxBatch = Number(maxBatch);
+    btn.disabled = true; btn.textContent = dryRun ? '⏳ Previewing…' : '⏳ Running…';
+    try {
+      const { ok, data } = await apiCall('/api/facebook/automate', body);
+      showResult('auto-result', data, !ok);
+    } catch (err) {
+      showResult('auto-result', { error: err.message }, true);
+    } finally { btn.disabled = false; btn.textContent = '▶ Run Automate'; }
+  }
+  updateScrapeFields();
+  updateAutoFields();
+</script>
+</body>
+</html>
+
+  <!-- ===== AUTOMATE SECTION ===== -->
+  <div class="card">
+    <h2>Automate <span class="badge" style="background:var(--warning);color:#000">DRY-RUN DEFAULT</span></h2>
+
+    <div class="dryrun-notice">
+      🛡️ <strong>Dry-run is ON by default.</strong> No real writes happen unless you uncheck the box below.
+      Always preview first before executing real actions.
+    </div>
+
+    <div class="field">
+      <label for="auto-action">Action</label>
+      <select id="auto-action" onchange="updateAutoFields()">
+        <option value="like">Like posts</option>
+        <option value="comment">Comment on posts</option>
+        <option value="post">Create post</option>
+      </select>
+    </div>
+
+    <div class="field" id="auto-urls-field">
+      <label for="auto-urls">Post URLs (one per line)</label>
+      <textarea id="auto-urls" placeholder="https://www.facebook.com/permalink/...&#10;https://www.facebook.com/permalink/..."></textarea>
+      <p class="hint">One Facebook post URL per line for like and comment actions.</p>
+    </div>
+
+    <div class="field" id="auto-text-field" style="display:none">
+      <label for="auto-text">Text (comment or post content)</label>
+      <textarea id="auto-text" placeholder="Write your comment or post content here..."></textarea>
+    </div>
+
+    <div class="field">
+      <label for="auto-maxbatch">Max Batch (default: 20)</label>
+      <input type="number" id="auto-maxbatch" placeholder="20" min="1" max="100" style="max-width:120px">
+    </div>
+
+    <label class="check-row">
+      <input type="checkbox" id="auto-dryrun" checked onchange="updateDryRunNotice()">
+      <span>🛡️ Dry-run (preview only — no real writes)</span>
+    </label>
+
+    <details>
+      <summary>🔑 Facebook Session Cookie (required for real writes)</summary>
+      <div class="cookie-grid">
+        <div class="field">
+          <label for="auto-cuser">c_user</label>
+          <input type="password" id="auto-cuser" placeholder="c_user value" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="auto-xs">xs</label>
+          <input type="password" id="auto-xs" placeholder="xs value" autocomplete="off">
+        </div>
+      </div>
+      <p class="hint" style="margin-top:8px">Required for automate actions. Never logged or stored (NFR3).</p>
+    </details>
+
+    <br>
+    <button class="btn" id="auto-btn" onclick="runAutomate()">▶ Run Automate</button>
+    <pre class="result" id="auto-result"></pre>
+  </div>
+
+</div><!-- /.container -->
+
+<script>
+  // -- UI helpers --
+
+  function updateScrapeFields() {
+    const action = document.getElementById('scrape-action').value;
+    document.getElementById('scrape-url-field').style.display = action !== 'search' ? '' : 'none';
+    document.getElementById('scrape-query-field').style.display = action === 'search' ? '' : 'none';
+  }
+
+  function updateAutoFields() {
+    const action = document.getElementById('auto-action').value;
+    document.getElementById('auto-urls-field').style.display = ['like','comment'].includes(action) ? '' : 'none';
+    document.getElementById('auto-text-field').style.display = ['comment','post'].includes(action) ? '' : 'none';
+  }
+
+  function updateDryRunNotice() {
+    const isDry = document.getElementById('auto-dryrun').checked;
+    document.querySelector('.dryrun-notice').style.display = isDry ? '' : 'none';
+  }
+
+  function showResult(id, data, isError) {
+    const el = document.getElementById(id);
+    el.textContent = JSON.stringify(data, null, 2);
+    el.className = 'result ' + (isError ? 'err' : 'ok');
+    el.style.display = 'block';
+  }
+
+  // -- API calls --
+
+  async function runScrape() {
+    const btn = document.getElementById('scrape-btn');
+    const action = document.getElementById('scrape-action').value;
+    const url = document.getElementById('scrape-url').value.trim();
+    const query = document.getElementById('scrape-query').value.trim();
+    const cuser = document.getElementById('scrape-cuser').value.trim();
+    const xs = document.getElementById('scrape-xs').value.trim();
+
+    const body = { action };
+    if (url) body.url = url;
+    if (query) body.query = query;
+    if (cuser && xs) body.authCookie = { c_user: cuser, xs };
+
+    btn.disabled = true;
+    btn.textContent = '⏳ Running…';
+    try {
+      const token = localStorage.getItem('xactions_token') || '';
+      const res = await fetch('/api/facebook/scrape', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json();
+      showResult('scrape-result', data, !res.ok);
+    } catch (err) {
+      showResult('scrape-result', { error: err.message }, true);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '▶ Run Scrape';
+    }
+  }
+
+  async function runAutomate() {
+    const btn = document.getElementById('auto-btn');
+    const action = document.getElementById('auto-action').value;
+    const urlsRaw = document.getElementById('auto-urls').value;
+    const text = document.getElementById('auto-text').value.trim();
+    const maxBatch = document.getElementById('auto-maxbatch').value;
+    const dryRun = document.getElementById('auto-dryrun').checked;
+    const cuser = document.getElementById('auto-cuser').value.trim();
+    const xs = document.getElementById('auto-xs').value.trim();
+
+    const urls = urlsRaw.split('\n').map(s => s.trim()).filter(Boolean);
+
+    const body = {
+      action,
+      dryRun,
+      authCookie: { c_user: cuser, xs },
+    };
+    if (urls.length) body.urls = urls;
+    if (text) body.text = text;
+    if (maxBatch) body.maxBatch = Number(maxBatch);
+
+    btn.disabled = true;
+    btn.textContent = dryRun ? '⏳ Previewing…' : '⏳ Running…';
+    try {
+      const token = localStorage.getItem('xactions_token') || '';
+      const res = await fetch('/api/facebook/automate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json();
+      showResult('auto-result', data, !res.ok);
+    } catch (err) {
+      showResult('auto-result', { error: err.message }, true);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '▶ Run Automate';
+    }
+  }
+
+  // Init
+  updateScrapeFields();
+  updateAutoFields();
+</script>
+</body>
+</html>

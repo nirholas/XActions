@@ -79,6 +79,7 @@ import { initializePlugins, getPluginRoutes } from '../src/plugins/index.js';
 import { x402Middleware, x402HealthCheck, x402Pricing } from './middleware/x402.js';
 import scriptsRoutes from './routes/scripts.js';
 import a2aRoutes from './routes/a2a.js';
+import facebookRoutes from './routes/facebook.js';
 import aiDetectorMiddleware from './middleware/ai-detector.js';
 import { validateConfig as validateX402Config } from './config/x402-config.js';
 import { generateSpec as generateOpenAPISpec, generateWellKnown as generateX402WellKnown } from './openapi.js';
@@ -172,6 +173,7 @@ const heavyLimiter = rateLimit({
 app.use('/api/graph', heavyLimiter);
 app.use('/api/operations', heavyLimiter);
 app.use('/api/crm', heavyLimiter);
+app.use('/api/facebook/automate', heavyLimiter);
 
 const analyticsLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -291,6 +293,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/operations', operationRoutes);
 app.use('/api/twitter', twitterRoutes);
+app.use('/api/facebook', facebookRoutes);
 app.use('/api/session', sessionAuthRoutes);
 app.use('/api/license', licenseRoutes);
 app.use('/api/admin', adminRoutes);
