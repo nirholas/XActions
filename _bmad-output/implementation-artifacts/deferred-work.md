@@ -40,3 +40,12 @@
 - **`shouldStop` receives mutable full `results` array** [api/services/facebookAutomation.js:137] — caller predicate sees the raw growing accumulator and could mutate it. Pass a summary `{ attempted, succeeded, failed, lastResult }` instead (consistent with onProgress).
 - **`attempted` counts null-skipped items** [api/services/facebookAutomation.js:153] — semantics are "processed" not "writes attempted"; `onProgress.attempted` similarly inflated on null-item batches. Document in JSDoc or rename to `processed`.
 - **`maxRetry: -1` was silently clamped (now thrown after patch)** — NOTE: the 2.1 review patch made maxRetry validation strict (throws on negative/Infinity/NaN), so the original "silent clamp" concern is resolved. Kept here only as a record; no action needed.
+
+## Deferred from: code review of story-2.2 (2026-06-09)
+
+> 2 fixed inline (likeFn null guard, findLikeButton combined-wait). Below deferred:
+
+- **Selector ambiguity — `[aria-label="Like"]` matches comment Like buttons** [api/services/facebookAutomation.js:200] — first DOM match may be a comment's Like, not the post's. Scope into the post `[role="article"]` container; needs live DOM to verify. Tie to selectors-facebook.md Automate verify checklist.
+- **Hardcoded `sleep(500/300)` in likeSinglePost** [api/services/facebookAutomation.js:254,268] — not the injectable delay seam; can't be sped up in direct unit tests. Refactor to accept a delay param in a cleanup pass. Minor (single-post scope).
+- **Duplicate URLs collide in capturedResults Map** [api/services/facebookAutomation.js:296] — two identical URLs → second result overwrites first in the alreadyLiked merge (reporting only, counts unaffected). Key by index if needed.
+- **AC4.12 locale JSDoc** [api/services/facebookAutomation.js:286] — add explicit "caller is responsible for ensuring a supported Facebook locale" to likeFacebookPosts JSDoc.

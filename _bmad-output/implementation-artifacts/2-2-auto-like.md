@@ -4,7 +4,7 @@ baseline_commit: 42ad98f0f1377d3f363ae795872694132e810adc
 
 # Story 2.2: Auto-like Facebook posts (dry-run default)
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -190,3 +190,26 @@ AC says "an Operation record is created scoped by userId". Prisma persistence li
 - All functionality routes through existing `runGuardedBatch` guardrail
 - Updated selectors documentation in `docs/agents/selectors-facebook.md`
 - 59/59 tests pass with no regressions
+
+## Review Findings
+
+> Code review 2026-06-09 (3-layer adversarial). Reviewer-verified: tests pass (59 → 71 after patches). Acceptance Auditor: 12/13 COVERED, 1 PARTIAL (locale JSDoc). All 3 reviewers converged.
+
+### Patch
+
+- [x] [Review][Patch][HIGH] `likeFn: null` bypasses default → silent all-failed [api/services/facebookAutomation.js:287] — FIXED 2026-06-09: nullish-coalesce `likeFn = options.likeFn ?? likeSinglePost`. Same class as Story 2.1's dryRun-null guard. Tests added.
+- [x] [Review][Patch][MEDIUM] `findLikeButton` race → spurious re-like on slow load [api/services/facebookAutomation.js:198] — FIXED: single combined `waitForSelector` (like+unlike) blocks until reaction area renders, THEN checks already-liked state via `page.$`. Eliminates the page.$-no-wait race AND collapses the 5s×N sequential-timeout latency on unsupported locales to one 5s wait. Tests added.
+
+### Deferred (need live DOM / cosmetic)
+
+- [x] [Review][Defer][MEDIUM] Selector ambiguity — `[aria-label="Like"]` also matches comment Like buttons, not just the post [api/services/facebookAutomation.js:200] — needs live DOM to scope into the post `[role="article"]` container. Tie to selectors-facebook.md verify checklist.
+- [x] [Review][Defer][MEDIUM] Hardcoded `sleep(500/300)` in likeSinglePost not injectable [api/services/facebookAutomation.js:254,268] — minor within single-post scope; refactor to delay seam in a cleanup pass.
+- [x] [Review][Defer][LOW] Duplicate URLs in postUrls → captured-result Map collision (reporting only) [api/services/facebookAutomation.js:296] — key by index if dedup not desired; low impact.
+- [x] [Review][Defer][LOW] AC4.12 PARTIAL — add explicit "caller responsible for supported locale" to likeFacebookPosts JSDoc.
+
+### Dismissed
+
+- **Already-liked race → double-click** — REFUTED by Edge Case Hunter itself: no double-click path; worst case was spurious re-like (now fixed by patch 2).
+- **`element.click()` throw** — CONFIRMED OK: caught by runGuardedBatch per-item try/catch + retry.
+- **`goto` networkidle2 no try/catch** — KNOWN-DEFERRED (same pattern across all Epic 1 scrapers).
+- **Silent error suppression in selector loops** — resolved by patch 2 (combined wait removes the per-selector try/catch swallowing).
