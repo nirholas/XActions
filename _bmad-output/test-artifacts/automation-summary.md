@@ -1,7 +1,7 @@
 ---
 stepsCompleted: ['step-01-preflight-and-context', 'step-02-identify-targets', 'step-03-write-tests', 'step-04-verify-tests']
 lastStep: 'step-04-verify-tests'
-lastSaved: '2026-06-10'
+lastSaved: '2026-06-09'
 inputDocuments:
   - '/Users/luisphan/Documents/GitHub/XActions/_bmad/tea/config.yaml'
   - '/Users/luisphan/Documents/GitHub/XActions/.claude/worktrees/linear-stirring-reef/package.json'
@@ -14,25 +14,28 @@ inputDocuments:
 ## Stack / Mode
 - Stack: fullstack
 - Mode: BMad-integrated
-- Scope: story 2.1 Facebook automation guardrails
+- Scope: Epic 2 — Facebook Automation (Stories 2.1–2.4)
 
 ## Targets
 
 ### Unit
 - `api/services/facebookAutomation.js`
-  - `runGuardedBatch`
-  - `randomDelay`
+  - `runGuardedBatch` (Story 2.1)
+  - `randomDelay` (Story 2.1)
+  - `likeFacebookPosts` (Story 2.2)
+  - `commentOnFacebookPosts` (Story 2.3)
+  - `createFacebookPost` (Story 2.4)
 - Priority: P0/P1
-- Why: core guardrail logic is pure-ish and risk-bearing; should be exercised directly with spy `actionFn` and injectable `delay`
+- Why: core guardrail logic and write actions are risk-bearing; exercised directly with spy actionFn/likeFn/commentFn/createPostFn and injectable delay
 
 ### No additional levels
-- No API/E2E/browser flows for this story
+- No API/E2E/browser flows for these stories
 - No duplication of scraper tests
 - No contract tests; no external provider involved
 
 ## Coverage focus
-- Default `dryRun=true`
-- Preview shape + no action invocation
+- Default `dryRun=true` across all functions
+- Preview shape + no action invocation in dry-run
 - `dryRun=false` path with per-item action execution
 - `maxBatch` enforcement in dry-run + real run
 - bounded retry
@@ -40,6 +43,10 @@ inputDocuments:
 - `onProgress` guard and failure isolation
 - null/undefined item handling
 - `randomDelay(min, max)` validation
+- `alreadyLiked` idempotency (Story 2.2)
+- `commentText` pass-through in results (Story 2.3)
+- `previewContent` / `content` in results (Story 2.4)
+- account-risk warning before first real write
 
 ## Priority rationale
 - P0: guardrails, safety defaults, batch bounds, retry/stop semantics
@@ -50,8 +57,8 @@ inputDocuments:
 
 - File: `tests/services/facebook-automation.test.js`
 - Runner: vitest v4.0.18
-- Run date: 2026-06-10
-- Result: **59 passed, 0 failed** (duration: 220ms)
+- Run date: 2026-06-09
+- Result: **71 passed, 0 failed** (duration: ~223ms)
 
 ### Suites verified
 - `runGuardedBatch > input validation` — 13 tests
@@ -71,5 +78,15 @@ inputDocuments:
 - `likeFacebookPosts > alreadyLiked handling` — 2 tests
 - `likeFacebookPosts > error handling` — 1 test
 - `likeFacebookPosts > maxBatch enforcement` — 1 test
+- `commentOnFacebookPosts > dry-run default` — 1 test
+- `commentOnFacebookPosts > dryRun:false — real write` — 1 test
+- `commentOnFacebookPosts > commentText in results` — 1 test
+- `commentOnFacebookPosts > error handling` — 1 test
+- `commentOnFacebookPosts > maxBatch enforcement` — 1 test
+- `createFacebookPost > dry-run default` — 1 test
+- `createFacebookPost > dryRun:false — real write` — 2 tests
+- `createFacebookPost > content in results` — 1 test
+- `createFacebookPost > error handling` — 1 test
+- `createFacebookPost > account-risk warning` — 2 tests
 
 ## Status: COMPLETE
