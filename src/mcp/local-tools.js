@@ -28,6 +28,17 @@ import {
   scrapeTrending,
   scrapeSpaces,
 } from '../scrapers/index.js';
+import {
+  createBrowser as fbCreateBrowser,
+  createPage as fbCreatePage,
+  loginWithCookie as fbLoginWithCookie,
+} from '../scrapers/facebook/index.js';
+import { scrape as dispatchScrape } from '../scrapers/index.js';
+import {
+  likeFacebookPosts,
+  commentOnFacebookPosts,
+  createFacebookPost,
+} from '../../api/services/facebookAutomation.js';
 
 import fs from 'fs/promises';
 import path from 'path';
@@ -1335,6 +1346,65 @@ export async function x_client_get_trends() {
 // Tool Map — all tools matching server.js TOOLS (excluding streaming)
 // ============================================================================
 
+
+// ============================================================================
+// Facebook MCP Tools (Story 3.2)
+// ============================================================================
+
+let fbBrowser = null;
+let fbPage = null;
+
+async function ensureFbBrowser() {
+  if (!fbBrowser || !fbBrowser.isConnected()) {
+    if (fbBrowser) { try { await fbBrowser.close(); } catch {} }
+    fbBrowser = await fbCreateBrowser();
+    fbPage = await fbCreatePage(fbBrowser);
+  }
+  return { browser: fbBrowser, page: fbPage };
+}
+
+export async function fb_login({ c_user, xs }) {
+  const { page: pg } = await ensureFbBrowser();
+  await fbLoginWithCookie(pg, { c_user, xs });
+  return { ok: true, message: 'Facebook session cookie applied' };
+}
+
+export async function fb_get_profile({ username }) {
+  const { page: pg } = await ensureFbBrowser();
+  return dispatchScrape('facebook', 'profile', { page: pg, username });
+}
+
+export async function fb_get_posts({ username, limit = 20 }) {
+  const { page: pg } = await ensureFbBrowser();
+  return dispatchScrape('facebook', 'posts', { page: pg, username, limit });
+}
+
+export async function fb_get_followers({ username, limit = 50 }) {
+  const { page: pg } = await ensureFbBrowser();
+  return dispatchScrape('facebook', 'followers', { page: pg, username, limit });
+}
+
+export async function fb_search({ query, limit = 20 }) {
+  const { page: pg } = await ensureFbBrowser();
+  return dispatchScrape('facebook', 'search', { page: pg, query, limit });
+}
+
+export async function fb_like({ urls, dryRun = true }) {
+  const { page: pg } = await ensureFbBrowser();
+  const postUrls = Array.isArray(urls) ? urls : [urls];
+  return likeFacebookPosts(pg, postUrls, { dryRun, delay: dryRun ? () => {} : undefined });
+}
+
+export async function fb_comment({ urls, text, dryRun = true }) {
+  const { page: pg } = await ensureFbBrowser();
+  const postUrls = Array.isArray(urls) ? urls : [urls];
+  return commentOnFacebookPosts(pg, postUrls, text, { dryRun, delay: dryRun ? () => {} : undefined });
+}
+
+export async function fb_post({ text, dryRun = true }) {
+  const { page: pg } = await ensureFbBrowser();
+  return createFacebookPost(pg, text, { dryRun });
+}
 export const toolMap = {
   // Auth
   x_login,
@@ -1412,6 +1482,15 @@ export const toolMap = {
   x_client_send_tweet,
   x_client_get_followers,
   x_client_get_trends,
+  // ── Facebook Tools (Story 3.2) ────────────────────────────────────────
+  fb_login,
+  fb_get_profile,
+  fb_get_posts,
+  fb_get_followers,
+  fb_search,
+  fb_like,
+  fb_comment,
+  fb_post,
   // Utility (not an MCP tool, used by server.js cleanup)
   closeBrowser,
 };
