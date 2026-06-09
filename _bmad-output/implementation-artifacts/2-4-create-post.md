@@ -4,7 +4,7 @@ baseline_commit: 5082917
 
 # Story 2.4: Create Facebook post (dry-run default)
 
-Status: ready
+Status: done
 
 ## Story
 
@@ -100,3 +100,14 @@ Post flow:
 - [ ] Write browser-free unit tests (dry-run, real write, error cases)
 - [ ] Optional: smoke test with real Facebook session
 - [ ] Update automation-summary.md after test verification
+## Review Findings
+
+> Batch code review 2026-06-09 (3-layer adversarial). Tests 71/71 pass.
+
+### Patch
+- [x] [Review][Patch][HIGH] `createPostFn: null` bypasses destructuring default → silent all-fail — FIXED: nullish-coalesce `createPostFn = options.createPostFn ?? createSinglePost`.
+- [x] [Review][Patch][HIGH] `postUrl` discarded by runGuardedBatch; comment claimed "captured" but no Map existed — FIXED: added `captured` Map (same pattern as likeFacebookPosts) to surface `postUrl` into real-run results; documented best-effort caveat.
+- [x] [Review][Patch][MEDIUM] Empty `content` types nothing then submits blank post — FIXED: validate non-empty string at entry, throws clear error.
+
+### Deferred
+- [x] [Review][Defer][MEDIUM] `postUrl` detection unreliable: Facebook composer submits via XHR without navigating, so `page.url()` stays on home feed → postUrl often undefined even on success [api/services/facebookAutomation.js:createSinglePost] — needs live DOM verify (e.g. watch for toast/permalink element). Tie to selectors-facebook.md verify checklist.

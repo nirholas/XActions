@@ -49,3 +49,10 @@
 - **Hardcoded `sleep(500/300)` in likeSinglePost** [api/services/facebookAutomation.js:254,268] — not the injectable delay seam; can't be sped up in direct unit tests. Refactor to accept a delay param in a cleanup pass. Minor (single-post scope).
 - **Duplicate URLs collide in capturedResults Map** [api/services/facebookAutomation.js:296] — two identical URLs → second result overwrites first in the alreadyLiked merge (reporting only, counts unaffected). Key by index if needed.
 - **AC4.12 locale JSDoc** [api/services/facebookAutomation.js:286] — add explicit "caller is responsible for ensuring a supported Facebook locale" to likeFacebookPosts JSDoc.
+
+## Deferred from: batch code review of stories 2.3 / 2.4 / 3.1 (2026-06-09)
+
+> 6 patches fixed inline (null-guards on commentFn/createPostFn, content/commentText validation, createPost postUrl capture Map, CLI hard auth guard, CLI fail-fast validation). Below deferred:
+
+- **`findCommentInput` 4×5s sequential timeout** [api/services/facebookAutomation.js:findCommentInput] — up to 20s wait on unsupported locale. Collapse to a single combined `waitForSelector` like the findLikeButton patch. Low priority.
+- **createPost `postUrl` detection unreliable** [api/services/facebookAutomation.js:createSinglePost] — Facebook composer submits via XHR without navigating; `page.url()` stays on home feed so postUrl is usually undefined even on success. Needs live DOM verify (watch for permalink/toast). Tie to selectors-facebook.md Automate verify checklist.

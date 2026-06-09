@@ -257,6 +257,30 @@ program
       }
     }
 
+    // Hard auth guard — Facebook automate requires a session cookie (mirror scrape command).
+    // Without it the browser would silently run unauthenticated and every action fails
+    // with confusing selector errors instead of a clear auth message.
+    if (!authCookie) {
+      console.error(chalk.red('❌ Facebook automate requires --auth-cookie \'{"c_user":"...","xs":"..."}\''));
+      process.exit(1);
+    }
+
+    // Validate action + required args BEFORE launching the browser (fail fast, no wasted launch).
+    const action = options.action.toLowerCase();
+    const urls = (options.urls || '').split(',').map(u => u.trim()).filter(Boolean);
+    if (action === 'like' && !urls.length) {
+      console.error(chalk.red('❌ --urls required for like action')); process.exit(1);
+    }
+    if (action === 'comment' && (!urls.length || !options.text)) {
+      console.error(chalk.red('❌ --urls and --text required for comment action')); process.exit(1);
+    }
+    if (action === 'post' && !options.text) {
+      console.error(chalk.red('❌ --text required for post action')); process.exit(1);
+    }
+    if (!['like', 'comment', 'post'].includes(action)) {
+      console.error(chalk.red(`❌ Unknown action "${action}". Supported: like, comment, post`)); process.exit(1);
+    }
+
     const dryRun = options.dryRun !== false;
     const spinner = ora(`${dryRun ? '[DRY RUN] ' : ''}Running ${options.action} on ${platform}...`).start();
 
@@ -264,7 +288,7 @@ program
     try {
       browser = await createBrowser();
       page = await createPage(browser);
-      if (authCookie) await loginWithCookie(page, authCookie);
+      await loginWithCookie(page, authCookie);
 
       const guardedOptions = {
         dryRun,
@@ -273,22 +297,13 @@ program
       };
 
       let result;
-      const action = options.action.toLowerCase();
 
       if (action === 'like') {
-        const urls = (options.urls || '').split(',').map(u => u.trim()).filter(Boolean);
-        if (!urls.length) { spinner.fail('--urls required for like action'); process.exit(1); }
         result = await likeFacebookPosts(page, urls, guardedOptions);
       } else if (action === 'comment') {
-        const urls = (options.urls || '').split(',').map(u => u.trim()).filter(Boolean);
-        if (!urls.length || !options.text) { spinner.fail('--urls and --text required for comment action'); process.exit(1); }
         result = await commentOnFacebookPosts(page, urls, options.text, guardedOptions);
       } else if (action === 'post') {
-        if (!options.text) { spinner.fail('--text required for post action'); process.exit(1); }
         result = await createFacebookPost(page, options.text, guardedOptions);
-      } else {
-        spinner.fail(`Unknown action "${action}". Supported: like, comment, post`);
-        process.exit(1);
       }
 
       spinner.succeed(`${dryRun ? '[DRY RUN] ' : ''}${action} complete`);

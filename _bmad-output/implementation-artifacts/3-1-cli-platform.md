@@ -4,7 +4,7 @@ baseline_commit: fdb9cb4
 
 # Story 3.1: CLI `--platform facebook`
 
-Status: ready
+Status: done
 
 ## Story
 
@@ -81,3 +81,14 @@ xactions automate --platform facebook --action post --text "content" [--no-dry-r
 - [ ] Route scrape actions through unified `scrape()` dispatcher
 - [ ] Route automate actions through facebookAutomation exports
 - [ ] Surface clear errors for unknown platform/action/missing auth
+
+## Review Findings
+
+> Batch code review 2026-06-09 (3-layer adversarial). Tests 71/71 pass.
+
+### Patch
+- [x] [Review][Patch][HIGH] `automate` command missing hard auth guard — `if (authCookie) loginWithCookie(...)` ran unauthenticated when --auth-cookie omitted, every action failing with confusing selector errors — FIXED: hard guard rejects missing --auth-cookie up front (mirrors scrape command); login now unconditional.
+- [x] [Review][Patch][MEDIUM] `--text`/`--urls` validated after browser launch (wasted launch on bad args) — FIXED: action + required-arg validation moved before createBrowser(); removed duplicate in-try checks.
+
+### Notes
+- `dryRun = options.dryRun !== false` is safe (Commander `--no-dry-run` sets dryRun=false explicitly; undefined/true → dry-run). Not a bug — verified.

@@ -412,7 +412,14 @@ async function commentSinglePost(page, postUrl, commentText) {
  * @returns {Promise<Object>} Result with dryRun, preview, results, attempted, succeeded, failed
  */
 export async function commentOnFacebookPosts(page, postUrls, commentText, options = {}) {
-  const { commentFn = commentSinglePost, ...guardedOptions } = options;
+  // Nullish-coalesce so explicit `commentFn: null` falls back to default (same guard class as dryRun/likeFn).
+  const { commentFn: commentFnOpt, ...guardedOptions } = options;
+  const commentFn = commentFnOpt ?? commentSinglePost;
+
+  // Validate comment content — empty text would type nothing then submit a blank comment.
+  if (typeof commentText !== 'string' || !commentText.trim()) {
+    throw new Error('❌ commentOnFacebookPosts: commentText must be a non-empty string');
+  }
 
   // Build actionFn that wraps commentFn with page and commentText (AC1.2)
   const actionFn = async (postUrl) => {
@@ -562,11 +569,23 @@ async function createSinglePost(page, content) {
  * @returns {Promise<Object>} Result with dryRun, preview, results, attempted, succeeded, failed
  */
 export async function createFacebookPost(page, content, options = {}) {
-  const { createPostFn = createSinglePost, ...guardedOptions } = options;
+  // Nullish-coalesce so explicit `createPostFn: null` falls back to default (same guard class as dryRun/likeFn).
+  const { createPostFn: createPostFnOpt, ...guardedOptions } = options;
+  const createPostFn = createPostFnOpt ?? createSinglePost;
 
-  // Build actionFn that wraps createPostFn with page (AC1.2)
+  // Validate content — empty content would type nothing then submit a blank post.
+  if (typeof content !== 'string' || !content.trim()) {
+    throw new Error('❌ createFacebookPost: content must be a non-empty string');
+  }
+
+  // Capture per-item return values (e.g. postUrl) — runGuardedBatch discards actionFn
+  // return values, so surface them via a side-channel Map keyed by content (same
+  // pattern as likeFacebookPosts).
+  const captured = new Map();
   const actionFn = async (contentItem) => {
-    return await createPostFn(page, contentItem);
+    const r = await createPostFn(page, contentItem);
+    captured.set(contentItem, r);
+    return r;
   };
 
   // Route through runGuardedBatch with single-item array — ensures guardrail consistency (AC4.13)
@@ -580,13 +599,18 @@ export async function createFacebookPost(page, content, options = {}) {
     }));
   }
 
-  // Enhance real-run results with content and postUrl (AC3.10)
+  // Enhance real-run results with content + captured postUrl (AC3.10)
   if (!batchResult.dryRun && batchResult.results.length > 0) {
-    batchResult.results = batchResult.results.map((r) => ({
-      ...r,
-      content: r.target,
-      // postUrl will be in captured results if createPostFn returned it
-    }));
+    batchResult.results = batchResult.results.map((r) => {
+      const cap = captured.get(r.target);
+      return {
+        ...r,
+        content: r.target,
+        // postUrl best-effort: Facebook composer submits via XHR without navigating,
+        // so postUrl is frequently undefined even on success (see deferred-work).
+        ...(cap && r.ok ? { postUrl: cap.postUrl ?? null } : {}),
+      };
+    });
   }
 
   return batchResult;

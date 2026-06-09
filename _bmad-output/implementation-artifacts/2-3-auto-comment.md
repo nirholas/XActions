@@ -4,7 +4,7 @@ baseline_commit: b08a462
 
 # Story 2.3: Auto-comment on Facebook posts (dry-run default)
 
-Status: ready
+Status: done
 
 ## Story
 
@@ -92,3 +92,14 @@ Submit strategy:
 - [ ] Write browser-free unit tests (dry-run, real write, error cases)
 - [ ] Optional: smoke test with real Facebook session
 - [ ] Update automation-summary.md after test verification
+
+## Review Findings
+
+> Batch code review 2026-06-09 (3-layer adversarial). Tests 71/71 pass.
+
+### Patch
+- [x] [Review][Patch][HIGH] `commentFn: null` bypasses destructuring default → silent all-fail — FIXED: nullish-coalesce `commentFn = options.commentFn ?? commentSinglePost` (same class as likeFn/dryRun guard).
+- [x] [Review][Patch][MEDIUM] Empty `commentText` types nothing then submits blank — FIXED: validate non-empty string at function entry, throws clear error.
+
+### Deferred
+- [x] [Review][Defer][LOW] `findCommentInput` 4 selectors × 5s sequential = up to 20s wait — collapse to combined `waitForSelector` (like findLikeButton patch). Cleanup pass.

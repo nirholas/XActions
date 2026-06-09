@@ -1,6 +1,6 @@
 ---
 stepsCompleted: ['step-01-preflight-and-context', 'step-02-identify-targets', 'step-03-write-tests', 'step-04-verify-tests']
-lastStep: 'step-04-verify-tests'
+lastStep: 'step-03b-subagent-backend-tea-round2'
 lastSaved: '2026-06-09'
 inputDocuments:
   - '/Users/luisphan/Documents/GitHub/XActions/_bmad/tea/config.yaml'
@@ -90,3 +90,39 @@ inputDocuments:
 - `createFacebookPost > account-risk warning` — 2 tests
 
 ## Status: COMPLETE
+
+---
+
+## TEA Round 2 — Story 2.2 Gap Coverage (2026-06-09)
+
+### Coverage Gaps Addressed
+
+| Gap | Priority | Resolution |
+|---|---|---|
+| `findLikeButton` — 0 tests | P0 | 6 unit tests added |
+| `likeSinglePost` (private) — 0 tests | P1 | 6 integration tests via real stack |
+
+### New Test Files
+
+**`tests/services/facebookAutomation.findLikeButton.test.js`** (6 tests)
+- English Like button → `{ alreadyLiked: false }`
+- Vietnamese Like button (Thích) → `{ alreadyLiked: false }`
+- English already-liked (Remove Like) → `{ alreadyLiked: true }`
+- Vietnamese already-liked (Bỏ thích) → `{ alreadyLiked: true }`
+- waitForSelector timeout → throws `/Like button not found/i`
+- alreadyLiked priority over liked state
+
+**`tests/services/facebook-automation.integration.test.js`** (6 tests)
+- Navigate + click English Like → `ok:true, alreadyLiked:false`
+- Navigate + click Vietnamese Like → `ok:true, alreadyLiked:false`
+- Already liked en (Remove Like) → no click, `alreadyLiked:true`
+- Already liked vi (Bỏ thích) → no click, `alreadyLiked:true`
+- Button not found → `ok:false`, error matches `/Like button not found/i`
+- Dry-run safety gate → no `goto`, no click
+
+### Final Results
+
+- **New tests:** +12 (6 unit + 6 integration)
+- **Total service tests:** 83 pass, 0 fail
+- **Regressions:** 0
+- **Technique:** fake page objects + `vi.useFakeTimers()` for internal `sleep()` bypass
