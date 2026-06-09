@@ -167,3 +167,25 @@ inputDocuments:
 - **Regressions:** 0
 
 ## Status: COMPLETE
+
+---
+
+## TEA Round 3 — MCP Partial authCookie Edge Cases (2026-06-10)
+
+### Coverage Gaps Addressed
+
+| Gap | Priority | Resolution |
+|---|---|---|
+| `authCookie: { xs }` only (c_user missing) | P2 | 1 test added |
+| `authCookie: { c_user }` only (xs missing) | P2 | 1 test added |
+| `authCookie` as plain string (not object) | P2 | 1 test added |
+
+### Modified File
+
+**`tests/mcp/facebook-automate-behavior.test.js`** (+3 tests → 21 total)
+
+### Final MCP Results
+
+- **Total MCP tests:** 58 (21 behavior + 30 contract + 7 server structure)
+- **Full suite:** 1,138 pass, 23 fail (x402 server-required, pre-existing), 0 regressions
+- Commit: `e977482`
