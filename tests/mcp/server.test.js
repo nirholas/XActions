@@ -6,7 +6,7 @@
  * Follows the same no-mock pattern as the rest of the test suite.
  */
 
-import { describe, it, before } from 'node:test';
+import { describe, it, beforeAll } from 'vitest';
 import assert from 'node:assert/strict';
 
 // We need to stub the stdio transport before importing the server so it
@@ -19,7 +19,7 @@ import assert from 'node:assert/strict';
 let TOOLS;
 
 describe('MCP Tool Definitions', () => {
-  before(async () => {
+  beforeAll(async () => {
     // Dynamically import so vitest has time to apply any setup
     const mod = await import('../../src/mcp/server.js');
     TOOLS = mod.TOOLS;
