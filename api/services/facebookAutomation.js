@@ -182,3 +182,145 @@ export async function runGuardedBatch(items, actionFn, options = {}) {
 // ============================================================================
 
 export { loginWithCookie, createBrowser, createPage };
+
+// ============================================================================
+// Facebook Like Automation (Story 2.2)
+// ============================================================================
+
+/**
+ * Find Like button with locale-aware selectors.
+ * Single chokepoint for locale strings (AC2.5).
+ *
+ * @param {Object} page - Puppeteer page
+ * @returns {Promise<{element: Object, alreadyLiked: boolean}>}
+ * @throws {Error} If Like button not found (locale unsupported or post unreachable)
+ */
+async function findLikeButton(page) {
+  // Supported locales: en, vi (from docs/agents/selectors-facebook.md)
+  const likeSelectors = [
+    '[aria-label="Like"]',      // en
+    '[aria-label="Thích"]',     // vi
+  ];
+
+  const unlikeSelectors = [
+    '[aria-label="Remove Like"]', // en
+    '[aria-label="Bỏ thích"]',    // vi
+  ];
+
+  // Check if already liked first
+  for (const selector of unlikeSelectors) {
+    try {
+      const element = await page.$(selector);
+      if (element) {
+        return { element, alreadyLiked: true };
+      }
+    } catch (_) {
+      // Continue to next selector
+    }
+  }
+
+  // Check for unliked state
+  for (const selector of likeSelectors) {
+    try {
+      const element = await page.waitForSelector(selector, { timeout: 5000 });
+      if (element) {
+        return { element, alreadyLiked: false };
+      }
+    } catch (_) {
+      // Continue to next selector
+    }
+  }
+
+  // Button not found in any locale
+  throw new Error(
+    `❌ Like button not found; locale unsupported or post unreachable`
+  );
+}
+
+/**
+ * Like a single Facebook post (AC2).
+ * Internal helper for likeFacebookPosts.
+ *
+ * @param {Object} page - Puppeteer page
+ * @param {string} postUrl - Full URL to Facebook post
+ * @returns {Promise<{liked: boolean, alreadyLiked: boolean}>}
+ * @throws {Error} If Like button not found
+ */
+async function likeSinglePost(page, postUrl) {
+  // Navigate to post (AC2.4)
+  await page.goto(postUrl, { waitUntil: 'networkidle2', timeout: 30000 });
+
+  // Small delay for stability (AC2.4 mentions delay seam if available)
+  await sleep(500);
+
+  // Find Like button with locale-aware lookup (AC2.5)
+  const { element, alreadyLiked } = await findLikeButton(page);
+
+  // If already liked, return without clicking (AC2.6)
+  if (alreadyLiked) {
+    return { liked: false, alreadyLiked: true };
+  }
+
+  // Click to like (AC2.4)
+  await element.click();
+
+  // Brief wait for click to register
+  await sleep(300);
+
+  return { liked: true, alreadyLiked: false };
+}
+
+/**
+ * Auto-like one or more Facebook posts with dry-run preview (Story 2.2).
+ *
+ * @param {Object} page - Puppeteer page (authenticated)
+ * @param {string[]} postUrls - Array of Facebook post URLs to like
+ * @param {Object} options - Configuration options
+ * @param {boolean} [options.dryRun=true] - Preview mode (default); set false for real writes
+ * @param {Function} [options.delay] - Injectable delay between actions
+ * @param {number} [options.maxBatch=20] - Max posts per batch
+ * @param {number} [options.maxRetry=1] - Retry attempts per post on failure
+ * @param {Function} [options.likeFn] - Injectable like function (for testing); defaults to likeSinglePost
+ * @returns {Promise<Object>} Result with dryRun, preview, results, attempted, succeeded, failed
+ */
+export async function likeFacebookPosts(page, postUrls, options = {}) {
+  const { likeFn = likeSinglePost, ...guardedOptions } = options;
+
+  // Capture return values from likeFn via closure (AC3.9)
+  const capturedResults = new Map();
+
+  // Build actionFn that wraps likeFn with page (AC1.2)
+  const actionFn = async (postUrl) => {
+    const result = await likeFn(page, postUrl);
+    // Capture the return value so we can merge it into results later
+    capturedResults.set(postUrl, result);
+    return result;
+  };
+
+  // Route through runGuardedBatch — single chokepoint (AC1.2)
+  const batchResult = await runGuardedBatch(postUrls, actionFn, guardedOptions);
+
+  // Post-process real-run results to include alreadyLiked field (AC3.9)
+  if (!batchResult.dryRun && batchResult.results.length > 0) {
+    batchResult.results = batchResult.results.map((r) => {
+      const captured = capturedResults.get(r.target);
+      // Only add alreadyLiked for successful results where we have captured data
+      if (captured && r.ok) {
+        return { ...r, alreadyLiked: captured.alreadyLiked };
+      }
+      return r;
+    });
+  }
+
+  return batchResult;
+}
+
+export default {
+  runGuardedBatch,
+  randomDelay,
+  ACCOUNT_RISK_WARNING,
+  loginWithCookie,
+  createBrowser,
+  createPage,
+  likeFacebookPosts,
+};

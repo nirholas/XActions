@@ -92,7 +92,8 @@ Mọi selector phải bọc trong helper một chỗ để khi Facebook đổi D
 
 | Element | Selector đề xuất (UNVERIFIED) | Ghi chú |
 |---|---|---|
-| Like button | `[aria-label="Like"]` / `[aria-label="Thích"]` | aria-label đổi theo locale |
+| Like button (not liked) | `[aria-label="Like"]` / `[aria-label="Thích"]` | aria-label đổi theo locale; Story 2.2 |
+| Like button (already liked) | `[aria-label="Remove Like"]` / `[aria-label="Bỏ thích"]` | Detect already-liked state; Story 2.2 |
 | Comment box | `[aria-label="Write a comment"]` / `[role="textbox"]` | |
 | Comment submit | Enter key hoặc `[aria-label="Comment"]` | FB thường submit bằng Enter |
 | Post composer | `[role="button"]` text "What's on your mind" | |

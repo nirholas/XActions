@@ -7,6 +7,7 @@ import {
   runGuardedBatch,
   randomDelay,
   ACCOUNT_RISK_WARNING,
+  likeFacebookPosts,
 } from '../../api/services/facebookAutomation.js';
 
 const noDelay = () => {};
@@ -579,6 +580,133 @@ describe('runGuardedBatch', () => {
 
     it('accepts equal min and max', async () => {
       await expect(randomDelay(0, 0)).resolves.toBeUndefined();
+    });
+  });
+});
+
+// =============================================================================
+// likeFacebookPosts (Story 2.2)
+// =============================================================================
+
+describe('likeFacebookPosts', () => {
+  beforeEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  // -------------------------------------------------------------------------
+  // AC1, AC3.8 — dry-run default (no likeFn invocation, preview returned)
+  // -------------------------------------------------------------------------
+
+  describe('dry-run default', () => {
+    it('returns preview without calling likeFn', async () => {
+      const fakePage = {};
+      const likeFnSpy = vi.fn();
+      const postUrls = ['https://facebook.com/post/1', 'https://facebook.com/post/2'];
+
+      const result = await likeFacebookPosts(fakePage, postUrls, { likeFn: likeFnSpy });
+
+      expect(likeFnSpy).not.toHaveBeenCalled();
+      expect(result.dryRun).toBe(true);
+      expect(result.preview).toHaveLength(2);
+      expect(result.preview[0].target).toBe(postUrls[0]);
+    });
+  });
+
+  // -------------------------------------------------------------------------
+  // AC1.3 — dryRun:false invokes likeFn per URL with delay seam
+  // -------------------------------------------------------------------------
+
+  describe('dryRun:false — real write', () => {
+    it('calls likeFn once per URL through runGuardedBatch', async () => {
+      const fakePage = {};
+      const likeFnSpy = vi.fn().mockResolvedValue({ liked: true, alreadyLiked: false });
+      const postUrls = ['https://facebook.com/post/1', 'https://facebook.com/post/2'];
+
+      const result = await likeFacebookPosts(fakePage, postUrls, {
+        dryRun: false,
+        likeFn: likeFnSpy,
+        delay: noDelay,
+      });
+
+      expect(likeFnSpy).toHaveBeenCalledTimes(2);
+      expect(likeFnSpy).toHaveBeenNthCalledWith(1, fakePage, postUrls[0]);
+      expect(likeFnSpy).toHaveBeenNthCalledWith(2, fakePage, postUrls[1]);
+      expect(result.dryRun).toBe(false);
+      expect(result.succeeded).toBe(2);
+    });
+  });
+
+  // -------------------------------------------------------------------------
+  // AC3.9 — alreadyLiked field in result
+  // -------------------------------------------------------------------------
+
+  describe('alreadyLiked handling', () => {
+    it('includes alreadyLiked:true in result when post already liked', async () => {
+      const fakePage = {};
+      const likeFnSpy = vi.fn().mockResolvedValue({ liked: false, alreadyLiked: true });
+      const postUrls = ['https://facebook.com/post/already-liked'];
+
+      const result = await likeFacebookPosts(fakePage, postUrls, {
+        dryRun: false,
+        likeFn: likeFnSpy,
+        delay: noDelay,
+      });
+
+      expect(result.results[0].ok).toBe(true);
+      expect(result.results[0].alreadyLiked).toBe(true);
+    });
+
+    it('includes alreadyLiked:false when newly liked', async () => {
+      const fakePage = {};
+      const likeFnSpy = vi.fn().mockResolvedValue({ liked: true, alreadyLiked: false });
+      const postUrls = ['https://facebook.com/post/new'];
+
+      const result = await likeFacebookPosts(fakePage, postUrls, {
+        dryRun: false,
+        likeFn: likeFnSpy,
+        delay: noDelay,
+      });
+
+      expect(result.results[0].ok).toBe(true);
+      expect(result.results[0].alreadyLiked).toBe(false);
+    });
+  });
+
+  // -------------------------------------------------------------------------
+  // AC2.7 — button not found error propagates as result.ok=false
+  // -------------------------------------------------------------------------
+
+  describe('error handling', () => {
+    it('records ok:false when likeFn throws (button not found)', async () => {
+      const fakePage = {};
+      const likeFnSpy = vi.fn().mockRejectedValue(new Error('❌ Like button not found'));
+      const postUrls = ['https://facebook.com/post/broken'];
+
+      const result = await likeFacebookPosts(fakePage, postUrls, {
+        dryRun: false,
+        likeFn: likeFnSpy,
+        delay: noDelay,
+        maxRetry: 0,
+      });
+
+      expect(result.results[0].ok).toBe(false);
+      expect(result.results[0].error).toContain('Like button not found');
+      expect(result.failed).toBe(1);
+    });
+  });
+
+  // -------------------------------------------------------------------------
+  // AC1.2, AC4.11 — over-maxBatch throws (inherited from runGuardedBatch)
+  // -------------------------------------------------------------------------
+
+  describe('maxBatch enforcement', () => {
+    it('throws when postUrls.length > maxBatch (inherited)', async () => {
+      const fakePage = {};
+      const postUrls = Array.from({ length: 21 }, (_, i) => `https://facebook.com/post/${i}`);
+
+      await expect(
+        likeFacebookPosts(fakePage, postUrls, { dryRun: false, delay: noDelay })
+      ).rejects.toThrow(/maxBatch/i);
     });
   });
 });
