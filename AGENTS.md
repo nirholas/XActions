@@ -108,28 +108,26 @@ Common resource hogs: `tsgo --noEmit` (~500% CPU), vitest workers (15x ~100% CPU
 
 ## Hermes Integration
 
-This repo is integrated with Hermes Agent for AI-powered content generation and posting.
+This repo is integrated with Hermes Agent for AI-powered content generation.
 
 ### Content Pipeline
 
 1. Hermes generates security content (vulnerability threads, exploit analysis)
 2. All content is deslopped (no AI patterns, em dashes, hedging)
-3. Hermes sends content to the user for approval via Telegram
-4. Approved content is posted via XActions browser automation
-5. **Nothing auto-posts without explicit user approval**
+3. Hermes sends content to the user via Telegram
+4. **User posts manually** — no automation, no API keys needed
 
 ### Key Files
 
 | File | Purpose |
 |------|---------|
 | `skills/hermes-integration/SKILL.md` | Full integration guide |
-| `scripts/hermes-poster.js` | Format content for XActions posting |
-| `.env.example` | Environment variable template |
+| `scripts/hermes-poster.js` | Format content for manual posting |
+| `.env.example` | Environment variable template (for future automation) |
 
 ### Environment
 
 - `.env` is in `.gitignore` — never commit secrets
-- Session cookies go in `.env`, referenced as `XACTIONS_SESSION_COOKIE`
 - Content directory: `~/.hermes/cron/output/`
 
 ## Mandatory Rules
@@ -137,6 +135,6 @@ This repo is integrated with Hermes Agent for AI-powered content generation and 
 1. **Never mock, stub, or fake anything.** Real implementations only.
 2. **TypeScript strict mode** — no `any`, no `@ts-ignore`.
 3. **Always kill terminals** after commands complete.
-4. **Always commit and push** as `nirholas`.
+4. **Always commit and push** as `preciousnwankwo`.
 5. **Never commit `.env` files, session cookies, or API keys.**
-6. **Never auto-post content without explicit user approval.**
+6. **Never auto-post content. The user posts all content manually.**
