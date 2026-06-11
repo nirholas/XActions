@@ -34,7 +34,9 @@ extension/     → Browser extension (Chrome/Edge)
 
 ## Skills
 
-31 skills in `skills/*/SKILL.md`. Read the relevant SKILL.md when a user's request matches a category.
+32 skills in `skills/*/SKILL.md`. Read the relevant SKILL.md when a user's request matches a category.
+
+- **Hermes integration** — `skills/hermes-integration/SKILL.md` — content pipeline from Hermes to X/Twitter
 
 - **Unfollow management** — mass unfollow, non-follower cleanup
 - **Analytics & insights** — engagement, hashtags, competitors, best times
@@ -104,9 +106,37 @@ Common resource hogs: `tsgo --noEmit` (~500% CPU), vitest workers (15x ~100% CPU
 - Do not reuse foreground shell sessions — stale sessions block future operations
 - If a terminal appears unresponsive, kill it and create a new one
 
+## Hermes Integration
+
+This repo is integrated with Hermes Agent for AI-powered content generation and posting.
+
+### Content Pipeline
+
+1. Hermes generates security content (vulnerability threads, exploit analysis)
+2. All content is deslopped (no AI patterns, em dashes, hedging)
+3. Hermes sends content to the user for approval via Telegram
+4. Approved content is posted via XActions browser automation
+5. **Nothing auto-posts without explicit user approval**
+
+### Key Files
+
+| File | Purpose |
+|------|---------|
+| `skills/hermes-integration/SKILL.md` | Full integration guide |
+| `scripts/hermes-poster.js` | Format content for XActions posting |
+| `.env.example` | Environment variable template |
+
+### Environment
+
+- `.env` is in `.gitignore` — never commit secrets
+- Session cookies go in `.env`, referenced as `XACTIONS_SESSION_COOKIE`
+- Content directory: `~/.hermes/cron/output/`
+
 ## Mandatory Rules
 
 1. **Never mock, stub, or fake anything.** Real implementations only.
 2. **TypeScript strict mode** — no `any`, no `@ts-ignore`.
 3. **Always kill terminals** after commands complete.
 4. **Always commit and push** as `nirholas`.
+5. **Never commit `.env` files, session cookies, or API keys.**
+6. **Never auto-post content without explicit user approval.**
