@@ -20,6 +20,7 @@ import {
   scrapeTweets,
   searchTweets,
   scrapeThread,
+  scrapePost,
   scrapeLikes,
   scrapeMedia,
   scrapeListMembers,
@@ -59,6 +60,17 @@ async function ensureBrowser() {
     page = await createPage(browser);
   }
   return { browser, page };
+}
+
+/**
+ * Create a new tab in the shared browser for isolated work.
+ * Shares cookies/auth with all other tabs. Caller must close the tab when done.
+ */
+async function newTab(timeout = 60000) {
+  const { browser: br } = await ensureBrowser();
+  const tab = await createPage(br);
+  tab.setDefaultTimeout(timeout);
+  return tab;
 }
 
 /**
@@ -198,8 +210,15 @@ export async function x_search_tweets({ query, limit = 50 }) {
 // ============================================================================
 
 export async function x_get_thread({ url }) {
-  const { page: pg } = await ensureBrowser();
-  return scrapeThread(pg, url);
+  const tab = await newTab();
+  try { return await scrapeThread(tab, url); }
+  finally { await tab.close().catch(() => {}); }
+}
+
+export async function x_read_post({ url }) {
+  const tab = await newTab();
+  try { return await scrapePost(tab, url); }
+  finally { await tab.close().catch(() => {}); }
 }
 
 export async function x_best_time_to_post({ username, limit = 100 }) {
@@ -1346,6 +1365,7 @@ export const toolMap = {
   x_get_tweets,
   x_search_tweets,
   x_get_thread,
+  x_read_post,
   x_best_time_to_post,
   // Core actions
   x_follow,
