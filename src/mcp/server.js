@@ -487,6 +487,17 @@ const TOOLS = [
       },
     },
   },
+  {
+    name: 'x_get_home_timeline',
+    description: 'Read posts from your home timeline on X/Twitter. Supports For You or Following.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        timeline: { type: 'string', enum: ['for_you', 'following'], description: 'Which home timeline to read (default: for_you)' },
+        limit: { type: 'number', description: 'Maximum posts to collect (default: 25)' },
+      },
+    },
+  },
   // ====== Notifications ======
   {
     name: 'x_get_notifications',

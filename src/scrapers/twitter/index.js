@@ -768,27 +768,40 @@ export async function scrapeNotifications(page, options = {}) {
  * Scrape trending topics from the Explore page
  */
 export async function scrapeTrending(page, options = {}) {
-  const { limit = 30 } = options;
-  
-  await page.goto('https://x.com/explore/tabs/trending', { waitUntil: 'networkidle2' });
+  const { category = 'trending', limit = 30 } = options;
+  const tab = ({
+    trending: 'trending',
+    news: 'news',
+    sports: 'sports',
+    entertainment: 'entertainment',
+    for_you: 'foryou',
+    'for-you': 'foryou',
+  })[category] || 'trending';
+
+  await page.goto(`https://x.com/explore/tabs/${tab}`, { waitUntil: 'networkidle2' });
   await randomDelay(2000, 3000);
-  
+
   for (let i = 0; i < 3; i++) {
     await page.evaluate(() => window.scrollBy(0, window.innerHeight));
     await sleep(1500);
   }
-  
+
   const trends = await page.$$eval('[data-testid="trend"]', (els) =>
     els.map((el) => {
       const spans = el.querySelectorAll('span');
-      const texts = Array.from(spans).map(s => s.innerText).filter(Boolean);
-      const category = texts[0] || '';
-      const topic = texts.find(t => t.startsWith('#') || t.length > 3) || texts[1] || '';
-      const posts = texts.find(t => /posts|tweets/i.test(t)) || '';
-      return { category, topic, posts, platform: 'twitter' };
-    })
+      const texts = Array.from(spans).map((s) => s.innerText.trim()).filter(Boolean);
+      const posts = texts.find((t) => /posts|tweets/i.test(t)) || '';
+      const rank = texts.find((t) => /^\d+$/.test(t)) || '';
+      const context = texts.find((t) => /trending|news|sports|entertainment|for you/i.test(t)) || '';
+      const topic = texts.find((t, idx) => idx > 1 && !/^\d+$/.test(t) && !/posts|tweets/i.test(t) && !/trending|news|sports|entertainment|for you/i.test(t))
+        || texts.find((t) => t.startsWith('#'))
+        || texts[2]
+        || texts[1]
+        || '';
+      return { rank, category: context, topic, posts, platform: 'twitter' };
+    }).filter((item) => item.topic)
   );
-  
+
   return trends.slice(0, limit);
 }
 
