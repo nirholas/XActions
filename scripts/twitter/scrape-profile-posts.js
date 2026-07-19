@@ -8,8 +8,8 @@
  * @description Scrapes posts from any Twitter/X profile with filtering,
  *              multiple export formats, and analytics
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     2.0.0
- * @date        2026-01-26
+ * @version     2.1.0
+ * @date        2026-07-19
  * @repository  https://github.com/nirholas/XActions
  * 
  * ============================================================
@@ -342,23 +342,25 @@ const CONFIG = {
     
     tweetElements.forEach(tweet => {
       try {
-        // Get tweet link (contains the unique ID)
-        const tweetLink = tweet.querySelector('a[href*="/status/"]');
-        const tweetUrl = tweetLink ? tweetLink.href : null;
-        const tweetId = tweetUrl ? tweetUrl.split('/status/')[1]?.split('?')[0] : null;
-        
-        // Skip if we've already seen this tweet or couldn't get ID
-        if (!tweetId || seenIds.has(tweetId)) return;
-        seenIds.add(tweetId);
-        
-        // Get the tweet text content
-        const textElement = tweet.querySelector('[data-testid="tweetText"]');
-        const text = textElement ? textElement.innerText : '';
-        
-        // Get the timestamp
+        // Get the timestamp element first: its enclosing anchor is the tweet's
+        // own permalink. Grabbing the first /status/ link in the article can
+        // return a quoted tweet's URL and attribute the wrong ID.
         const timeElement = tweet.querySelector('time');
         const timestamp = timeElement ? timeElement.getAttribute('datetime') : null;
         const displayTime = timeElement ? timeElement.innerText : '';
+
+        const permalinkAnchor = timeElement ? timeElement.closest('a[href*="/status/"]') : null;
+        const tweetLink = permalinkAnchor || tweet.querySelector('a[href*="/status/"]');
+        const tweetUrl = tweetLink ? tweetLink.href : null;
+        const tweetId = tweetUrl ? tweetUrl.split('/status/')[1]?.split(/[?/]/)[0] : null;
+
+        // Skip if we've already seen this tweet or couldn't get ID
+        if (!tweetId || seenIds.has(tweetId)) return;
+        seenIds.add(tweetId);
+
+        // Get the tweet text content
+        const textElement = tweet.querySelector('[data-testid="tweetText"]');
+        const text = textElement ? textElement.innerText : '';
         
         // Helper function to extract engagement metrics
         const getMetric = (testId) => {
@@ -378,14 +380,22 @@ const CONFIG = {
         
         // Check for media attachments
         const hasImage = tweet.querySelector('[data-testid="tweetPhoto"]') !== null;
-        const hasVideo = tweet.querySelector('[data-testid="videoPlayer"]') !== null;
+        const hasVideo = tweet.querySelector('[data-testid="videoPlayer"], [data-testid="videoComponent"]') !== null;
         const hasCard = tweet.querySelector('[data-testid="card.wrapper"]') !== null;
-        
-        // Check if it's a retweet
-        const isRetweet = tweet.querySelector('[data-testid="socialContext"]')?.innerText?.includes('reposted') || false;
-        
-        // Check if it's a reply
-        const isReply = tweet.querySelector('[data-testid="socialContext"]')?.innerText?.includes('Replying to') || false;
+
+        // Retweets render socialContext as an <a> linking to the reposter's
+        // profile; pinned posts render it as a plain element. Checking the tag
+        // instead of the text keeps this working on non-English UIs and stops
+        // pinned posts being counted as retweets.
+        const socialContext = tweet.querySelector('[data-testid="socialContext"]');
+        const isRetweet = !!socialContext && socialContext.closest('a') !== null;
+        const isPinned = !!socialContext && !isRetweet;
+
+        // Reply detection: the "Replying to @user" line only renders with an
+        // English UI, so also check the structural marker X uses for replies.
+        const isReply = tweet.querySelector('[data-testid="in-reply-to"]') !== null ||
+          Array.from(tweet.querySelectorAll('div[dir]')).some(el =>
+            el.innerText.startsWith('Replying to'));
         
         const tweetData = {
           id: tweetId,
@@ -406,7 +416,8 @@ const CONFIG = {
           },
           type: {
             isRetweet: isRetweet,
-            isReply: isReply
+            isReply: isReply,
+            isPinned: isPinned
           },
           extracted: {
             hashtags: extractHashtags(text),
@@ -440,13 +451,16 @@ const CONFIG = {
   
   while (tweets.length < CONFIG.targetCount && scrollAttempts < CONFIG.maxScrollAttempts) {
     const newCount = extractTweets();
-    
-    // Log progress
-    if (CONFIG.verbose && tweets.length !== lastTweetCount) {
-      console.log(`📊 Progress: ${tweets.length}/${CONFIG.targetCount} tweets (${newCount} new this scroll)`);
+
+    // Track stalls independently of logging so the end-of-timeline check
+    // still works when verbose is off
+    if (tweets.length !== lastTweetCount) {
+      if (CONFIG.verbose) {
+        console.log(`📊 Progress: ${tweets.length}/${CONFIG.targetCount} tweets (${newCount} new this scroll)`);
+      }
       lastTweetCount = tweets.length;
       noNewTweetsCount = 0;
-    } else if (tweets.length === lastTweetCount) {
+    } else {
       noNewTweetsCount++;
       if (noNewTweetsCount >= 5) {
         console.log('⚠️ No new tweets found after 5 scroll attempts. May have reached the end.');
@@ -467,7 +481,7 @@ const CONFIG = {
   extractTweets();
   
   const endTime = Date.now();
-  const duration = ((endTime - startTime) / 3000).toFixed(2);
+  const duration = ((endTime - startTime) / 1000).toFixed(2);
   
   // ==========================================
   // ANALYTICS & STATISTICS
@@ -707,7 +721,7 @@ const CONFIG = {
    */
   function toPlainText() {
     let txt = `TWEETS FROM @${profileName.toUpperCase()}\n`;
-    txt += `${'='.repeat(300)}\n`;
+    txt += `${'='.repeat(60)}\n`;
     txt += `Scraped: ${result.scrapedAt}\n`;
     txt += `Total: ${result.totalTweets} tweets\n\n`;
     
@@ -718,7 +732,7 @@ const CONFIG = {
     txt += `Average Likes: ${stats.avgLikes}\n\n`;
     
     txt += `TWEETS\n`;
-    txt += `${'='.repeat(300)}\n\n`;
+    txt += `${'='.repeat(60)}\n\n`;
     
     finalTweets.forEach((t, i) => {
       txt += `[${i + 1}] ${t.displayTime}\n`;
@@ -726,7 +740,7 @@ const CONFIG = {
       txt += `${t.text}\n\n`;
       txt += `Likes: ${t.metrics.likes} | RTs: ${t.metrics.retweets} | Replies: ${t.metrics.replies} | Views: ${t.metrics.views}\n`;
       txt += `URL: ${t.url}\n`;
-      txt += `\n${'='.repeat(300)}\n\n`;
+      txt += `\n${'='.repeat(60)}\n\n`;
     });
     
     return txt;
@@ -743,7 +757,7 @@ const CONFIG = {
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; }
     h1 { color: #1da1f2; }
-    table { width: 300%; border-collapse: collapse; margin-top: 20px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
     th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
     th { background: #1da1f2; color: white; }
     tr:hover { background: #f5f8fa; }
@@ -785,7 +799,7 @@ const CONFIG = {
       <tr>
         <td>${i + 1}</td>
         <td>${t.displayTime}</td>
-        <td class="tweet-text">${t.text.substring(0, 1300).replace(/</g, '&lt;').replace(/>/g, '&gt;')}${t.text.length > 1300 ? '...' : ''}</td>
+        <td class="tweet-text">${t.text.substring(0, 300).replace(/</g, '&lt;').replace(/>/g, '&gt;')}${t.text.length > 300 ? '...' : ''}</td>
         <td>${t.metrics.likes}</td>
         <td>${t.metrics.retweets}</td>
         <td>${t.metrics.replies}</td>
