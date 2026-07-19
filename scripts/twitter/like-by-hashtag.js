@@ -79,6 +79,20 @@
     window.scrollBy(0, window.innerHeight * 0.8);
   };
 
+  // Navigate within the SPA. Assigning window.location.href triggers a full
+  // page load, which destroys this console script before it can continue.
+  const spaNavigate = (url) => {
+    try {
+      const target = new URL(url, window.location.href);
+      if (target.origin === window.location.origin) {
+        window.history.pushState({}, '', target.href);
+        window.dispatchEvent(new PopStateEvent('popstate', { state: {} }));
+        return;
+      }
+    } catch (e) {}
+    window.location.href = url;
+  };
+
   const log = {
     info: (msg) => console.log(`ℹ️ ${msg}`),
     success: (msg) => console.log(`✅ ${msg}`),
@@ -129,10 +143,13 @@
           break;
         }
 
-        // Generate unique tweet ID based on text content
+        // Unique tweet ID from the permalink around the timestamp (the first
+        // /status/ link can belong to a quoted tweet); text is the fallback
         const tweetText = tweet.querySelector(SELECTORS.tweetText)?.textContent || '';
-        const tweetId = tweetText.substring(0, 100);
-        
+        const timeAnchor = tweet.querySelector('time')?.closest('a[href*="/status/"]');
+        const idMatch = timeAnchor?.href.match(/\/status\/(\d+)/);
+        const tweetId = idMatch ? idMatch[1] : tweetText.substring(0, 100);
+
         if (processedTweets.has(tweetId)) {
           continue;
         }
@@ -140,8 +157,10 @@
         foundNewTweet = true;
 
         try {
-          // Skip retweets if configured
-          if (CONFIG.skipRetweets && tweet.querySelector(SELECTORS.retweetIndicator)) {
+          // Skip retweets if configured (socialContext inside an <a> = repost;
+          // a plain socialContext is a pinned post, not a repost)
+          const socialContext = tweet.querySelector(SELECTORS.retweetIndicator);
+          if (CONFIG.skipRetweets && socialContext && socialContext.closest('a') !== null) {
             stats.skipped++;
             continue;
           }
@@ -203,8 +222,8 @@
 
   const navigateToHashtag = async (hashtag) => {
     const searchUrl = `https://x.com/search?q=%23${encodeURIComponent(hashtag)}&src=typed_query&f=live`;
-    window.location.href = searchUrl;
-    
+    spaNavigate(searchUrl);
+
     // Wait for page to load
     await sleep(3000);
     

@@ -55,7 +55,7 @@ const CONFIG = {
   const sleep = (ms) => new Promise(r => setTimeout(r, ms));
   
   // DOM Selectors
-  const $joinButton = 'button[aria-label^="Join"]';
+  const $joinButton = 'button[aria-label^="Join"]:not([aria-label^="Joined"])';
   const $joinedButton = 'button[aria-label^="Joined"]';
   const $pendingButton = 'button[aria-label^="Pending"]';
   
@@ -150,6 +150,7 @@ const CONFIG = {
     // Navigate to community if not there
     if (currentId !== communityId) {
       console.log(`📍 Navigating to community ${index + 1}/${CONFIG.communities.length}: ${communityId}`);
+      console.log('💡 Re-paste this script after the page loads to continue (progress is saved).');
       window.location.href = `https://x.com/i/communities/${communityId}`;
       return;
     }

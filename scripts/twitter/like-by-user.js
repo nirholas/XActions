@@ -68,7 +68,7 @@
     unlikeButton: '[data-testid="unlike"]',
     tweetText: '[data-testid="tweetText"]',
     retweetIndicator: '[data-testid="socialContext"]',
-    tweetMedia: '[data-testid="tweetPhoto"], [data-testid="videoPlayer"]',
+    tweetMedia: '[data-testid="tweetPhoto"], [data-testid="videoPlayer"], [data-testid="videoComponent"]',
     quoteTweet: '[data-testid="tweet"] [data-testid="tweet"]',
     userAvatar: '[data-testid="Tweet-User-Avatar"]',
     likeCount: '[data-testid="like"] span, [data-testid="unlike"] span',
@@ -105,6 +105,9 @@
     }
     if (cleaned.endsWith('M')) {
       return parseFloat(cleaned) * 1000000;
+    }
+    if (cleaned.endsWith('B')) {
+      return parseFloat(cleaned) * 1000000000;
     }
     return parseInt(cleaned) || 0;
   };
@@ -152,17 +155,18 @@
   log.info(`Skip retweets: ${CONFIG.skipRetweets}`);
 
   const isReply = (tweet) => {
-    const tweetContent = tweet.textContent || '';
-    return tweetContent.includes('Replying to');
+    // Structural marker first (locale-independent), then the English UI text
+    if (tweet.querySelector('[data-testid="in-reply-to"]') !== null) return true;
+    return Array.from(tweet.querySelectorAll('div[dir]')).some(el =>
+      el.innerText.startsWith('Replying to'));
   };
 
   const isRetweet = (tweet) => {
+    // Reposts render socialContext inside an <a> linking to the reposter;
+    // pinned posts render it as a plain element. The structural check works
+    // on every UI language, unlike matching "reposted"/"Retweeted" text.
     const socialContext = tweet.querySelector(SELECTORS.retweetIndicator);
-    if (socialContext) {
-      const text = socialContext.textContent || '';
-      return text.includes('reposted') || text.includes('Retweeted');
-    }
-    return false;
+    return !!socialContext && socialContext.closest('a') !== null;
   };
 
   const isQuoteTweet = (tweet) => {
@@ -183,13 +187,22 @@
   };
 
   const getTweetIdentifier = (tweet) => {
+    // Prefer the permalink around the timestamp: the first /status/ link in
+    // the article can belong to a quoted tweet and give the wrong ID
+    const timeAnchor = tweet.querySelector('time')?.closest('a[href*="/status/"]');
+    if (timeAnchor) {
+      const match = timeAnchor.href.match(/\/status\/(\d+)/);
+      if (match) return match[1];
+    }
     const links = tweet.querySelectorAll('a[href*="/status/"]');
     for (const link of links) {
       const match = link.href.match(/\/status\/(\d+)/);
       if (match) return match[1];
     }
+    // Text fallback. Do NOT append Date.now(): a changing ID makes the same
+    // tweet look new on every pass, defeating deduplication entirely.
     const text = tweet.querySelector(SELECTORS.tweetText)?.textContent || '';
-    return text.substring(0, 100) + Date.now();
+    return text.substring(0, 100);
   };
 
   let scrollAttempts = 0;

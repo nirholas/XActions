@@ -258,12 +258,13 @@ const CONFIG = {
       }
       
       chart.push('       └' + '─'.repeat(recent.length));
-      chart.push('        ' + recent.map((h, i) => i % 3 === 0 ? formatDate(h.date).slice(0, 3) : '   ').join('').slice(0, recent.length));
+      // One column per entry: a 3-char label every 3rd entry lines up with its column
+      chart.push('        ' + recent.map((h, i) => i % 3 === 0 ? formatDate(h.date).slice(0, 3).padEnd(3) : '').join('').slice(0, recent.length + 2));
       
       chart.forEach(line => console.log(line));
     }
 
-    console.log('\n─'.repeat(50));
+    console.log('\n' + '─'.repeat(50));
   } else {
     console.log('\n📸 First snapshot saved!');
     console.log('   Run this script again later to see growth metrics.');

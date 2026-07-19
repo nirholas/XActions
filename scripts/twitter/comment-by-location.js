@@ -117,7 +117,11 @@
   };
 
   const getTweetId = (tweet) => {
-    const link = tweet.querySelector('a[href*="/status/"]');
+    // The timestamp's enclosing anchor is the tweet's own permalink; the first
+    // /status/ link in the article can belong to a quoted tweet
+    const timeEl = tweet.querySelector('time');
+    const link = (timeEl && timeEl.closest('a[href*="/status/"]')) ||
+                 tweet.querySelector('a[href*="/status/"]');
     if (link) {
       const match = link.href.match(/\/status\/(\d+)/);
       return match ? match[1] : null;
@@ -136,8 +140,11 @@
   };
 
   const isRetweet = (tweet) => {
+    // Retweets render socialContext as a link to the reposter's profile;
+    // pinned posts render it as a plain element. Structural check works on
+    // any UI language.
     const socialContext = tweet.querySelector(SELECTORS.retweet);
-    return socialContext?.textContent?.toLowerCase().includes('reposted') || false;
+    return !!socialContext && socialContext.closest('a') !== null;
   };
 
   // ===========================================================================
@@ -157,10 +164,21 @@
   };
 
   const navigateToSearch = async () => {
-    log(`🔍 Searching for tweets near "${CONFIG.location}"...`);
+    // Assigning location.href reloads the page and kills this script, so only
+    // navigate when not already on the matching search results, and tell the
+    // user to re-run after the reload (processed IDs persist in sessionStorage)
+    const query = CONFIG.geocode ? `geocode:${CONFIG.geocode}` : (CONFIG.location ? `near:"${CONFIG.location}"` : '');
+    const onSearch = window.location.pathname === '/search' &&
+      decodeURIComponent(window.location.search).toLowerCase().includes(query.toLowerCase());
+    if (onSearch) {
+      log(`🔍 On search results for "${CONFIG.location || CONFIG.geocode}"`);
+      return true;
+    }
+    log(`🔍 Navigating to the location search. The page will reload; paste and run this script again to start commenting.`, 'warn');
     const searchUrl = buildSearchUrl();
     window.location.href = searchUrl;
     await sleep(4000);
+    return false;
   };
 
   const postComment = async (tweet, comment) => {
@@ -319,8 +337,9 @@
   };
   
   try {
-    await navigateToSearch();
-    await processTweets(stats);
+    if (await navigateToSearch()) {
+      await processTweets(stats);
+    }
   } catch (err) {
     log(`Fatal error: ${err.message}`, 'error');
     console.error(err);

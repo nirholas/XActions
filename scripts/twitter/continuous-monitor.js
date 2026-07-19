@@ -165,7 +165,20 @@ const CONFIG = {
   /**
    * Perform a check
    */
+  let checkRunning = false;
   async function performCheck() {
+    // A scrape can take longer than a short check interval; never let two
+    // checks scroll the page at the same time
+    if (checkRunning) return;
+    checkRunning = true;
+    try {
+      await runCheck();
+    } finally {
+      checkRunning = false;
+    }
+  }
+
+  async function runCheck() {
     const checkTime = new Date().toLocaleTimeString();
     console.log(`\n🔄 [${checkTime}] Checking for changes...`);
     

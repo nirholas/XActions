@@ -260,19 +260,6 @@ ${CONFIG.dryRun ? '║  ⚠️  DRY RUN MODE - No accounts will be blocked      
     console.log(`\n... and ${suspectedBots.length - 20} more`);
   }
 
-  // Block function
-  const blockUser = async (username) => {
-    // Navigate to user's profile
-    const profileUrl = `https://x.com/${username}`;
-    
-    // For now, we'll use the API approach via the more menu
-    // In practice, blocking from the followers list is complex
-    // This is a simplified version
-    
-    console.log(`   Would block @${username}...`);
-    return true;
-  };
-
   if (CONFIG.dryRun) {
     console.log('\n' + '═'.repeat(60));
     console.log('⚠️  DRY RUN MODE');

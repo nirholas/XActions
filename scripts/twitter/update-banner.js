@@ -47,7 +47,7 @@ const CONFIG = {
   
   // DOM Selectors
   const $editProfileBtn = '[data-testid="editProfileButton"]';
-  const $addBannerBtn = '[data-testid="addBannerButton"]';
+  const $addBannerBtn = '[data-testid="addBannerButton"], [data-testid="editProfileHeader"]';
   const $bannerImageInput = 'input[data-testid="fileInput"]';
   const $saveButton = '[data-testid="Profile_Save_Button"]';
   const $cancelBtn = '[data-testid="cancelButton"]';

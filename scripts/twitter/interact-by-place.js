@@ -145,17 +145,23 @@ const CONFIG = {
     interact: async () => {
       console.log('🚀 Starting location-based interaction...');
       state.isRunning = true;
-      
+
+      let stalledScrolls = 0;
+      let lastProcessedCount = state.processedTweets.size;
+
       while (state.isRunning && state.stats.likes < CONFIG.limits.likes) {
         const tweets = document.querySelectorAll(SELECTORS.tweet);
-        
+
         for (const tweet of tweets) {
           if (!state.isRunning) break;
           if (state.stats.likes >= CONFIG.limits.likes) break;
-          
-          const tweetLink = tweet.querySelector('a[href*="/status/"]');
+
+          // The anchor around the timestamp is the tweet's own permalink; the
+          // first /status/ link can belong to a quoted tweet
+          const timeEl = tweet.querySelector('time');
+          const tweetLink = (timeEl && timeEl.closest('a[href*="/status/"]')) || tweet.querySelector('a[href*="/status/"]');
           const tweetId = tweetLink?.href?.match(/status\/(\d+)/)?.[1];
-          
+
           if (!tweetId || state.processedTweets.has(tweetId)) continue;
           state.processedTweets.add(tweetId);
           
@@ -202,8 +208,20 @@ const CONFIG = {
         
         window.scrollBy(0, window.innerHeight);
         await sleep(CONFIG.scrollDelay);
+
+        // End-of-results detection so the loop cannot scroll forever
+        if (state.processedTweets.size === lastProcessedCount) {
+          stalledScrolls++;
+          if (stalledScrolls >= 10) {
+            console.log('⚠️ No new tweets after 10 scrolls. Stopping.');
+            break;
+          }
+        } else {
+          stalledScrolls = 0;
+          lastProcessedCount = state.processedTweets.size;
+        }
       }
-      
+
       console.log('');
       console.log('╔════════════════════════════════════════════════════════════╗');
       console.log('║  🎉 LOCATION INTERACTION COMPLETE!                         ║');

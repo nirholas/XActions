@@ -92,6 +92,7 @@ const CONFIG = {
     str = str.trim().toUpperCase();
     if (str.includes('K')) return parseFloat(str) * 1000;
     if (str.includes('M')) return parseFloat(str) * 1000000;
+    if (str.includes('B')) return parseFloat(str) * 1000000000;
     return parseInt(str.replace(/,/g, '')) || 0;
   }
   
@@ -100,19 +101,23 @@ const CONFIG = {
    */
   function extractTweet(tweetEl) {
     try {
-      // Get ID
-      const link = tweetEl.querySelector('a[href*="/status/"]');
+      // Get ID from the timestamp's permalink anchor; the first /status/
+      // link in the article can belong to a quoted tweet
+      const timeAnchor = tweetEl.querySelector('time')?.closest('a[href*="/status/"]');
+      const link = timeAnchor || tweetEl.querySelector('a[href*="/status/"]');
       if (!link) return null;
-      
+
       const match = link.href.match(/\/status\/(\d+)/);
       if (!match) return null;
-      
+
       const tweetId = match[1];
       if (seenIds.has(tweetId)) return null;
       seenIds.add(tweetId);
-      
-      // Get author
-      const authorLink = tweetEl.querySelector('a[href^="/"][role="link"]');
+
+      // Get author (User-Name block, not the first profile link, which is
+      // the reposter on retweets)
+      const authorLink = tweetEl.querySelector('div[data-testid="User-Name"] a[href^="/"]') ||
+                         tweetEl.querySelector('a[href^="/"][role="link"]');
       const username = authorLink ? authorLink.getAttribute('href').replace('/', '').split('/')[0] : 'unknown';
       
       // Get text
@@ -146,7 +151,7 @@ const CONFIG = {
       
       // Check for media
       const hasImage = tweetEl.querySelector('[data-testid="tweetPhoto"]') !== null;
-      const hasVideo = tweetEl.querySelector('[data-testid="videoPlayer"]') !== null;
+      const hasVideo = tweetEl.querySelector('[data-testid="videoPlayer"], [data-testid="videoComponent"]') !== null;
       
       return {
         id: tweetId,
@@ -183,11 +188,13 @@ const CONFIG = {
       if (tweet) tweets.push(tweet);
     });
     
-    if (tweets.length === lastCount) {
+    // Stall detection tracks all tweets seen, not just qualifying ones:
+    // long stretches below the viral thresholds must not end the scan early
+    if (seenIds.size === lastCount) {
       retries++;
     } else {
       retries = 0;
-      lastCount = tweets.length;
+      lastCount = seenIds.size;
     }
     
     console.log(`📊 Found ${tweets.length} viral tweets...`);
@@ -254,8 +261,8 @@ const CONFIG = {
       t.metrics.retweets,
       t.metrics.replies,
       t.metrics.engagement,
-      `"${t.text.replace(/"/g, '""').replace(/\n/g, ' ').substring(0, 200)}"`,
-      t.displayTime,
+      `"${t.text.substring(0, 200).replace(/"/g, '""').replace(/\n/g, ' ')}"`,
+      `"${(t.displayTime || '').replace(/"/g, '""')}"`,
       t.hasImage,
       t.hasVideo,
       t.url

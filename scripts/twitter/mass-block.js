@@ -48,6 +48,20 @@ const CONFIG = {
 (async function massBlock() {
   const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
+  // Navigate within the SPA. Assigning window.location.href triggers a full
+  // page load, which destroys this console script after the first user.
+  const spaNavigate = (url) => {
+    try {
+      const target = new URL(url, window.location.href);
+      if (target.origin === window.location.origin) {
+        window.history.pushState({}, '', target.href);
+        window.dispatchEvent(new PopStateEvent('popstate', { state: {} }));
+        return;
+      }
+    } catch (e) {}
+    window.location.href = url;
+  };
+
   console.log(`
 ╔══════════════════════════════════════════════════════════════╗
 ║  🚫 XActions — Mass Block                                    ║
@@ -87,19 +101,20 @@ ${CONFIG.dryRun ? '║  ⚠️  DRY RUN MODE - No accounts will be blocked      
     console.log(`\n⏳ Processing @${username}...`);
 
     try {
-      // Navigate to user's profile
+      // Navigate to user's profile (SPA navigation keeps this script alive)
       const profileUrl = `https://x.com/${username}`;
-      
-      // Create a fetch to check if profile exists
-      // Then use the menu approach
-      
-      // Open the profile in current tab
-      window.location.href = profileUrl;
+      spaNavigate(profileUrl);
       await sleep(3000); // Wait for page load
 
-      // Find the more button
-      const moreButton = document.querySelector('[data-testid="userActions"]');
-      
+      // Find the more button (poll briefly: profiles can render slowly)
+      let moreButton = document.querySelector('[data-testid="userActions"]');
+      let waited = 0;
+      while (!moreButton && waited < 5000) {
+        await sleep(500);
+        waited += 500;
+        moreButton = document.querySelector('[data-testid="userActions"]');
+      }
+
       if (!moreButton) {
         console.log(`   ❌ Could not find user menu for @${username}`);
         results.notFound.push(username);

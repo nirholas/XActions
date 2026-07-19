@@ -117,9 +117,11 @@ const CONFIG = {
     const textEl = tweetEl.querySelector($tweetText);
     const text = textEl ? textEl.innerText.toLowerCase() : '';
     
-    // Check if from specific users
+    // Check if from specific users (User-Name block is the author; the first
+    // profile link in the article can be a reposter's socialContext link)
     if (CONFIG.fromUsers.length > 0) {
-      const userLink = tweetEl.querySelector('a[href^="/"]');
+      const userLink = tweetEl.querySelector('[data-testid="User-Name"] a[href^="/"]') ||
+                       tweetEl.querySelector('a[href^="/"]');
       const username = userLink ? userLink.getAttribute('href').replace('/', '').toLowerCase() : '';
       if (!CONFIG.fromUsers.some(u => u.toLowerCase() === username)) {
         return false;
@@ -133,15 +135,22 @@ const CONFIG = {
       }
     }
     
-    // Skip replies
+    // Skip replies (structural marker first; English text as fallback)
     if (CONFIG.skipReplies) {
-      const isReply = tweetEl.querySelector('[data-testid="socialContext"]')?.innerText?.includes('Replying');
+      const isReply = tweetEl.querySelector('[data-testid="in-reply-to"]') !== null ||
+        Array.from(tweetEl.querySelectorAll('div[dir]')).some(el =>
+          el.innerText.startsWith('Replying to'));
       if (isReply) return false;
     }
-    
-    // Skip ads
+
+    // Skip ads: placementTracking wraps promoted tweets; the label check needs
+    // an exact span match ("Ad" as a substring hits words like "Advice")
     if (CONFIG.skipAds) {
-      const isAd = tweetEl.innerText.includes('Promoted') || tweetEl.innerText.includes('Ad');
+      const isAd = tweetEl.querySelector('[data-testid="placementTracking"]') !== null ||
+        Array.from(tweetEl.querySelectorAll('span')).some(s => {
+          const t = s.innerText.trim();
+          return t === 'Ad' || t === 'Promoted';
+        });
       if (isAd) return false;
     }
     
@@ -152,7 +161,11 @@ const CONFIG = {
    * Get tweet ID
    */
   function getTweetId(tweetEl) {
-    const link = tweetEl.querySelector('a[href*="/status/"]');
+    // The timestamp's enclosing anchor is the tweet's own permalink; the first
+    // /status/ link in the article can belong to a quoted tweet
+    const timeEl = tweetEl.querySelector('time');
+    const link = (timeEl && timeEl.closest('a[href*="/status/"]')) ||
+                 tweetEl.querySelector('a[href*="/status/"]');
     if (link) {
       const match = link.href.match(/\/status\/(\d+)/);
       return match ? match[1] : null;

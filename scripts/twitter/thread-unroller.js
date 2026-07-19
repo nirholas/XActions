@@ -99,18 +99,21 @@ const CONFIG = {
    */
   function extractTweet(tweetEl) {
     try {
-      // Get tweet ID
-      const link = tweetEl.querySelector('a[href*="/status/"]');
+      // Get tweet ID from the timestamp's permalink anchor; the first
+      // /status/ link in the article can belong to a quoted tweet
+      const timeAnchor = tweetEl.querySelector('time')?.closest('a[href*="/status/"]');
+      const link = timeAnchor || tweetEl.querySelector('a[href*="/status/"]');
       if (!link) return null;
-      
+
       const match = link.href.match(/\/status\/(\d+)/);
       if (!match) return null;
-      
+
       const tweetId = match[1];
       if (seenIds.has(tweetId)) return null;
-      
+
       // Check if from thread author
-      const authorLink = tweetEl.querySelector('a[href^="/"][role="link"]');
+      const authorLink = tweetEl.querySelector('div[data-testid="User-Name"] a[href^="/"]') ||
+                         tweetEl.querySelector('a[href^="/"][role="link"]');
       const tweetAuthor = authorLink ? authorLink.getAttribute('href').replace('/', '').split('/')[0].toLowerCase() : null;
       
       if (tweetAuthor !== threadAuthor) return null;
@@ -161,14 +164,28 @@ const CONFIG = {
   }
   
   // Scroll and extract
+  let lastCount = 0;
+  let noNewCount = 0;
   while (tweets.length < CONFIG.maxTweets && scrolls < maxScrolls) {
     document.querySelectorAll($tweet).forEach(el => {
       const tweet = extractTweet(el);
       if (tweet) tweets.push(tweet);
     });
-    
+
     console.log(`📊 Extracted ${tweets.length} tweets from thread...`);
-    
+
+    // Stop early once scrolling stops producing new tweets
+    if (tweets.length === lastCount) {
+      noNewCount++;
+      if (noNewCount >= 5) {
+        console.log('📭 No new tweets after 5 scrolls. End of thread.');
+        break;
+      }
+    } else {
+      noNewCount = 0;
+      lastCount = tweets.length;
+    }
+
     window.scrollTo(0, document.body.scrollHeight);
     await sleep(CONFIG.scrollDelay);
     scrolls++;

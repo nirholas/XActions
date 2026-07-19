@@ -106,7 +106,7 @@ const CONFIG = {
       console.log('🔍 Found "Joined" button, clicking...');
       joinedBtn.click();
       await sleep(CONFIG.leaveDelay);
-      
+
       // Click confirm
       const confirmBtn = document.querySelector($confirmButton);
       if (confirmBtn) {
@@ -114,7 +114,16 @@ const CONFIG = {
         console.log('✅ Left community!');
         if (communityId) markAsLeft(communityId);
         await sleep(CONFIG.confirmDelay);
+      } else {
+        // Mark as processed anyway so we don't re-enter this community forever
+        console.log('⚠️ Confirmation dialog not found. Skipping this community.');
+        if (communityId) markAsLeft(communityId);
       }
+    } else {
+      // No Joined button (admins cannot leave, or the page failed to load).
+      // Mark as processed so the script does not loop back here forever.
+      console.log('⚠️ "Joined" button not found (admin or load issue). Skipping this community.');
+      if (communityId) markAsLeft(communityId);
     }
     
     // Navigate back to communities list

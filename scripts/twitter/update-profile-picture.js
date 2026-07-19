@@ -48,7 +48,7 @@ const CONFIG = {
   // DOM Selectors
   const $editProfileBtn = '[data-testid="editProfileButton"]';
   const $avatarImageInput = 'input[data-testid="fileInput"][accept*="image"]';
-  const $addAvatarBtn = '[data-testid="addAvatarButton"]';
+  const $addAvatarBtn = '[data-testid="addAvatarButton"], [data-testid="editProfileAvatar"]';
   const $avatarContainer = '[data-testid="UserAvatar-Container"]';
   const $saveButton = '[data-testid="Profile_Save_Button"]';
   

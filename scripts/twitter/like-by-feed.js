@@ -66,7 +66,7 @@
     retweetIndicator: '[data-testid="socialContext"]',
     replyIndicator: 'div[data-testid="Tweet-User-Avatar"] + div a[href*="/status/"]',
     promotedLabel: '[data-testid="placementTracking"]',
-    tweetMedia: '[data-testid="tweetPhoto"], [data-testid="videoPlayer"]'
+    tweetMedia: '[data-testid="tweetPhoto"], [data-testid="videoPlayer"], [data-testid="videoComponent"]'
   };
 
   // ============================================
@@ -131,20 +131,27 @@
   let noNewTweetsCount = 0;
 
   const isReply = (tweet) => {
-    // Check if tweet shows "Replying to" text
-    const tweetContent = tweet.textContent || '';
-    return tweetContent.includes('Replying to');
+    // Structural marker first (locale-independent), then the English UI text
+    if (tweet.querySelector('[data-testid="in-reply-to"]') !== null) return true;
+    return Array.from(tweet.querySelectorAll('div[dir]')).some(el =>
+      el.innerText.startsWith('Replying to'));
   };
 
   const isAd = (tweet) => {
-    // Check for promoted/ad indicators
-    return tweet.querySelector(SELECTORS.promotedLabel) !== null ||
-           tweet.textContent?.includes('Promoted') ||
-           tweet.textContent?.includes('Ad');
+    // Check for promoted/ad indicators. Only match exact "Ad"/"Promoted" label
+    // spans; a substring check on the whole tweet also hits words like "Advice".
+    if (tweet.querySelector(SELECTORS.promotedLabel) !== null) return true;
+    return Array.from(tweet.querySelectorAll('span')).some(el => {
+      const t = el.textContent.trim();
+      return t === 'Ad' || t === 'Promoted';
+    });
   };
 
   const isRetweet = (tweet) => {
-    return tweet.querySelector(SELECTORS.retweetIndicator) !== null;
+    // Reposts render socialContext inside an <a>; pinned posts render it as a
+    // plain element. Checking the tag keeps pinned posts from matching.
+    const socialContext = tweet.querySelector(SELECTORS.retweetIndicator);
+    return !!socialContext && socialContext.closest('a') !== null;
   };
 
   const hasMedia = (tweet) => {
@@ -152,7 +159,13 @@
   };
 
   const getTweetIdentifier = (tweet) => {
-    // Try to get a unique identifier for the tweet
+    // Prefer the permalink around the timestamp: the first /status/ link in
+    // the article can belong to a quoted tweet and give the wrong ID
+    const timeAnchor = tweet.querySelector('time')?.closest('a[href*="/status/"]');
+    if (timeAnchor) {
+      const match = timeAnchor.href.match(/\/status\/(\d+)/);
+      if (match) return match[1];
+    }
     const links = tweet.querySelectorAll('a[href*="/status/"]');
     for (const link of links) {
       const match = link.href.match(/\/status\/(\d+)/);

@@ -93,6 +93,7 @@ const CONFIG = {
   const keptList = [];
   let retries = 0;
   const startTime = new Date();
+  const seenUsers = new Set();
   
   /**
    * Extract username from user cell
@@ -129,8 +130,8 @@ const CONFIG = {
       continue;
     }
     
-    retries = 0;
-    
+    let progressThisPass = 0;
+
     for (const btn of buttons) {
       if (CONFIG.maxUnfollows > 0 && unfollowedList.length >= CONFIG.maxUnfollows) {
         console.log(`\n✅ Reached limit of ${CONFIG.maxUnfollows} unfollows!`);
@@ -142,11 +143,21 @@ const CONFIG = {
         const userCell = btn.closest($userCell);
         const username = getUsername(userCell);
         const displayName = getDisplayName(userCell);
-        
+
+        // Track accounts by handle so re-rendered cells aren't logged twice
+        // and a tail of mutual followers can't keep this loop alive forever
+        const isNewUser = username && !seenUsers.has(username);
+        if (isNewUser) {
+          seenUsers.add(username);
+          progressThisPass++;
+        }
+
         // Check if follows you
         if (userCell?.querySelector($followsYou)) {
-          keptList.push({ username, displayName });
-          console.log(`💚 Keeping: @${username} (${displayName})`);
+          if (isNewUser || !username) {
+            keptList.push({ username, displayName });
+            console.log(`💚 Keeping: @${username} (${displayName})`);
+          }
           continue;
         }
         
@@ -166,14 +177,24 @@ const CONFIG = {
           });
           
           console.log(`🚫 Unfollowed #${unfollowedList.length}: @${username} (${displayName})`);
+          progressThisPass++;
           await sleep(CONFIG.confirmDelay);
         }
-        
+
         await sleep(CONFIG.unfollowDelay);
-        
+
       } catch (e) {
         console.warn('⚠️ Error:', e.message);
       }
+    }
+
+    // Only reset retries on real progress (new accounts seen or unfollows
+    // done); visible mutual cells alone must not keep the loop spinning
+    if (progressThisPass > 0) {
+      retries = 0;
+    } else {
+      retries++;
+      console.log(`⏳ No new accounts this pass. Retry ${retries}/${CONFIG.maxRetries}...`);
     }
   }
   

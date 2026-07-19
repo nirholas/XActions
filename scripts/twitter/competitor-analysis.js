@@ -148,7 +148,7 @@ const CONFIG = {
 
       // Check for media
       const hasImage = tweet.querySelector('[data-testid="tweetPhoto"]') !== null;
-      const hasVideo = tweet.querySelector('[data-testid="videoPlayer"]') !== null;
+      const hasVideo = tweet.querySelector('[data-testid="videoPlayer"], [data-testid="videoComponent"]') !== null;
       const hasLink = tweet.querySelector('a[href*="t.co"]') !== null;
 
       // Extract hashtags

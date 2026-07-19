@@ -132,7 +132,9 @@ const CONFIG = {
       console.log('🚀 Starting to follow likers...');
       state.isRunning = true;
       state.stats = { followed: 0, skipped: 0 };
-      
+
+      let emptyScrolls = 0;
+
       while (state.isRunning && state.stats.followed < CONFIG.limits.follows) {
         const userCells = document.querySelectorAll(SELECTORS.userCell);
         
@@ -177,6 +179,17 @@ const CONFIG = {
         if (allProcessed && newCells.length > 0) {
           console.log('📄 Reached end of likers list.');
           break;
+        }
+
+        // Nothing rendered at all: stop after a few tries instead of looping forever
+        if (newCells.length === 0) {
+          emptyScrolls++;
+          if (emptyScrolls >= 5) {
+            console.log('⚠️ No likers found after 5 scrolls. Stopping.');
+            break;
+          }
+        } else {
+          emptyScrolls = 0;
         }
       }
       

@@ -58,6 +58,20 @@ const CONFIG = {
 
 (async function protectActiveUsers() {
   const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+  // Navigate within the SPA. Assigning window.location.href triggers a full
+  // page load, which destroys this console script before the first scan.
+  const spaNavigate = (url) => {
+    try {
+      const target = new URL(url, window.location.href);
+      if (target.origin === window.location.origin) {
+        window.history.pushState({}, '', target.href);
+        window.dispatchEvent(new PopStateEvent('popstate', { state: {} }));
+        return;
+      }
+    } catch (e) {}
+    window.location.href = url;
+  };
   
   const $tweet = 'article[data-testid="tweet"]';
   const $userCell = '[data-testid="UserCell"]';
@@ -156,15 +170,19 @@ const CONFIG = {
       
       if (author !== myUsername.toLowerCase()) return;
       
-      // Get tweet ID
-      const tweetLink = tweet.querySelector('a[href*="/status/"]');
+      // Get tweet ID. Prefer the permalink around the timestamp: the first
+      // /status/ link can belong to a quoted tweet.
+      const timeAnchor = tweet.querySelector('time')?.closest('a[href*="/status/"]');
+      const tweetLink = timeAnchor || tweet.querySelector('a[href*="/status/"]');
       if (!tweetLink) return;
-      
+
       const match = tweetLink.href.match(/\/status\/(\d+)/);
       if (!match || seenTweets.has(match[1])) return;
-      
-      // Check if it's a retweet
-      const isRetweet = tweet.querySelector('[data-testid="socialContext"]')?.innerText?.includes('reposted');
+
+      // Check if it's a retweet: reposts render socialContext inside an <a>;
+      // pinned posts don't. Structural check works on any UI language.
+      const socialContext = tweet.querySelector('[data-testid="socialContext"]');
+      const isRetweet = !!socialContext && socialContext.closest('a') !== null;
       if (isRetweet) return;
       
       seenTweets.add(match[1]);
@@ -187,8 +205,8 @@ const CONFIG = {
     const tweet = myTweets[i];
     console.log(`🔍 Scanning post ${i + 1}/${CONFIG.postsToScan}: ${tweet.url}`);
     
-    // Navigate to tweet
-    window.location.href = tweet.url;
+    // Navigate to tweet (SPA navigation keeps this script alive)
+    spaNavigate(tweet.url);
     await sleep(2000);
     
     // Get likers

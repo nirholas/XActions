@@ -130,13 +130,24 @@
   };
   
   // Storage helpers
+  // Deep-clone so callers never mutate the shared defaults through the
+  // nested category objects a shallow spread would alias.
   const getFilters = () => {
+    const base = structuredClone(defaultFilters);
     try {
       const data = localStorage.getItem(STORAGE_KEY);
-      return data ? { ...defaultFilters, ...JSON.parse(data) } : { ...defaultFilters };
+      if (data) Object.assign(base, JSON.parse(data));
     } catch {
-      return { ...defaultFilters };
+      // Ignore corrupt stored config and fall back to defaults
     }
+    // JSON cannot represent Infinity: stored max values round-trip as null,
+    // which would make every max comparison fail. Restore them.
+    Object.values(base).forEach(settings => {
+      if (settings && typeof settings === 'object' && 'max' in settings && settings.max == null) {
+        settings.max = Infinity;
+      }
+    });
+    return base;
   };
   
   const saveFilters = (filters) => {

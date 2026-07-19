@@ -111,8 +111,8 @@ const CONFIG = {
       continue;
     }
     
-    retries = 0; // Reset retries when we find buttons
-    
+    let confirmedThisPass = 0;
+
     for (const btn of buttons) {
       // Check max unfollows limit
       if (CONFIG.maxUnfollows > 0 && totalUnfollowed >= CONFIG.maxUnfollows) {
@@ -131,15 +131,25 @@ const CONFIG = {
         if (confirmBtn) {
           confirmBtn.click();
           totalUnfollowed++;
+          confirmedThisPass++;
           console.log(`✅ Unfollowed #${totalUnfollowed}`);
           await sleep(CONFIG.confirmDelay);
         }
-        
+
         await sleep(CONFIG.unfollowDelay);
-        
+
       } catch (e) {
         console.warn('⚠️ Error unfollowing:', e.message);
       }
+    }
+
+    // Only reset retries on real progress; otherwise a button that never
+    // confirms would keep this loop spinning forever
+    if (confirmedThisPass > 0) {
+      retries = 0;
+    } else {
+      retries++;
+      console.log(`⏳ No unfollows confirmed this pass. Retry ${retries}/${CONFIG.maxRetries}...`);
     }
   }
   

@@ -47,6 +47,14 @@ const CONFIG = {
 
 (async function updateBio() {
   const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+  // Set an input's value through the native setter so React's value tracker
+  // registers the change (direct .value assignment gets ignored by React and
+  // the old bio would be saved).
+  const setNativeValue = (el, value) => {
+    const desc = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(el), 'value');
+    if (desc && desc.set) desc.set.call(el, value);
+    else el.value = value;
+  };
   
   // DOM Selectors
   const $bioTextarea = 'textarea[name="description"]';
@@ -111,13 +119,13 @@ const CONFIG = {
   await sleep(100);
   
   // Clear current content
-  bioField.value = '';
+  setNativeValue(bioField, '');
   bioField.textContent = '';
   bioField.dispatchEvent(new Event('input', { bubbles: true }));
   await sleep(300);
-  
+
   // Type new bio
-  bioField.value = CONFIG.newBio;
+  setNativeValue(bioField, CONFIG.newBio);
   bioField.textContent = CONFIG.newBio;
   bioField.dispatchEvent(new Event('input', { bubbles: true }));
   bioField.dispatchEvent(new Event('change', { bubbles: true }));

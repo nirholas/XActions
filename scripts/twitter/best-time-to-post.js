@@ -235,7 +235,8 @@ const CONFIG = {
     heatmapData[key].engagement += p.engagement;
   });
 
-  const maxHeat = Math.max(...Object.values(heatmapData).map(d => d.engagement / d.count) || [1]);
+  const heatValues = Object.values(heatmapData).map(d => d.engagement / d.count);
+  const maxHeat = heatValues.length > 0 ? Math.max(...heatValues) : 0;
   const heatChars = [' ', '░', '▒', '▓', '█'];
 
   dayNames.forEach((day, d) => {
@@ -244,7 +245,9 @@ const CONFIG = {
       const key = `${d}-${h}`;
       const data = heatmapData[key];
       if (data) {
-        const intensity = Math.floor((data.engagement / data.count) / maxHeat * 4);
+        const intensity = maxHeat > 0
+          ? Math.min(4, Math.floor((data.engagement / data.count) / maxHeat * 4))
+          : 0;
         row += heatChars[intensity] + '    ';
       } else {
         row += '·    ';

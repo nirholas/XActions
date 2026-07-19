@@ -147,22 +147,26 @@ const CONFIG = {
     state,
     history,
     
-    // Interact with a single user's profile
+    // Interact with a single user's profile (must already be open, a console
+    // script does not survive a page navigation)
     interactWith: async (username) => {
       const cleanUsername = username.replace('@', '').toLowerCase();
+
+      const currentPath = window.location.pathname.toLowerCase().replace(/^\//, '').split('/')[0];
+      if (currentPath !== cleanUsername) {
+        console.error(`❌ You are not on @${cleanUsername}'s profile.`);
+        console.log(`📍 Navigate to https://x.com/${cleanUsername} first, then run this again.`);
+        return;
+      }
+
       console.log(`👤 Starting interaction with @${cleanUsername}...`);
-      
+
       state.currentUser = cleanUsername;
       state.isRunning = true;
-      
-      // Navigate to user's profile
-      console.log(`📍 Navigate to: https://x.com/${cleanUsername}`);
-      
-      await sleep(1000);
-      
+
       // Wait for tweets to load
       await sleep(2000);
-      
+
       const tweets = document.querySelectorAll(SELECTORS.tweet);
       console.log(`🔍 Found ${tweets.length} tweets`);
       
@@ -221,33 +225,24 @@ const CONFIG = {
       state.currentUser = null;
     },
     
-    // Interact with all target users
+    // Interact with all target users: a console script cannot navigate between
+    // profiles without being wiped, so this walks you through the sequence
     interactAll: async () => {
       if (CONFIG.targetUsers.length === 0) {
         console.error('❌ No target users configured!');
         console.log('Add usernames to CONFIG.targetUsers array.');
         return;
       }
-      
-      console.log(`🚀 Starting interaction with ${CONFIG.targetUsers.length} users...`);
-      state.isRunning = true;
-      
-      for (const username of CONFIG.targetUsers) {
-        if (!state.isRunning) break;
-        
-        await window.XActions.InteractUsers.interactWith(username);
-        
-        if (state.isRunning) {
-          console.log(`⏳ Waiting before next user...`);
-          await sleep(CONFIG.delayBetweenUsers);
-        }
-      }
-      
+
+      console.log(`🚀 Processing ${CONFIG.targetUsers.length} users...`);
       console.log('');
-      console.log('╔════════════════════════════════════════════════════════════╗');
-      console.log('║  🎉 ALL INTERACTIONS COMPLETE!                             ║');
-      console.log('╚════════════════════════════════════════════════════════════╝');
-      window.XActions.InteractUsers.stats();
+      console.log('📋 For each user, open their profile and run:');
+      CONFIG.targetUsers.forEach((username, i) => {
+        console.log(`   ${i + 1}. https://x.com/${username}`);
+        console.log(`      Then: XActions.InteractUsers.interactWith("${username}")`);
+      });
+      console.log('');
+      console.log('💡 Re-paste this script after each page navigation.');
     },
     
     // Add user to target list

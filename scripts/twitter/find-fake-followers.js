@@ -171,13 +171,16 @@ const CONFIG = {
       result.flags.push(`High following (${result.following.toLocaleString()})`);
     }
 
-    // Check follower count
-    if (result.followers === 0) {
-      result.score += CONFIG.scoring.noFollowers;
-      result.flags.push('Zero followers');
-    } else if (result.followers < 10) {
-      result.score += CONFIG.scoring.veryFewFollowers;
-      result.flags.push(`Very few followers (${result.followers})`);
+    // Check follower count (only when the count was actually present in the
+    // cell; a failed parse defaults to 0 and must not read as "zero followers")
+    if (followersMatch) {
+      if (result.followers === 0) {
+        result.score += CONFIG.scoring.noFollowers;
+        result.flags.push('Zero followers');
+      } else if (result.followers < 10) {
+        result.score += CONFIG.scoring.veryFewFollowers;
+        result.flags.push(`Very few followers (${result.followers})`);
+      }
     }
 
     // Check for default avatar
@@ -242,6 +245,11 @@ const CONFIG = {
     window.scrollTo(0, document.body.scrollHeight);
     await sleep(CONFIG.scrollDelay);
     scrollCount++;
+  }
+
+  if (allFollowers.length === 0) {
+    console.error('❌ No followers found. Make sure the follower list has loaded.');
+    return;
   }
 
   // Categorize

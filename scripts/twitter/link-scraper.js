@@ -87,6 +87,7 @@ const CONFIG = {
   let scrolls = 0;
   let retries = 0;
   let lastLinkCount = 0;
+  let lastTweetCount = 0;
   
   /**
    * Extract domain from URL
@@ -125,10 +126,12 @@ const CONFIG = {
    * Extract links from tweet
    */
   function extractLinks(tweetEl) {
-    // Get tweet ID for deduplication
-    const tweetLink = tweetEl.querySelector('a[href*="/status/"]');
+    // Get tweet ID for deduplication. Prefer the permalink around the
+    // timestamp: the first /status/ link can belong to a quoted tweet.
+    const timeAnchor = tweetEl.querySelector('time')?.closest('a[href*="/status/"]');
+    const tweetLink = timeAnchor || tweetEl.querySelector('a[href*="/status/"]');
     if (!tweetLink) return [];
-    
+
     const match = tweetLink.href.match(/\/status\/(\d+)/);
     if (!match) return [];
     
@@ -186,11 +189,14 @@ const CONFIG = {
       });
     });
     
-    if (links.size === lastLinkCount) {
+    // Progress means new links OR new tweets scanned; tracking links alone
+    // would stop the scan early on stretches of tweets with no links
+    if (links.size === lastLinkCount && seenTweets.size === lastTweetCount) {
       retries++;
     } else {
       retries = 0;
       lastLinkCount = links.size;
+      lastTweetCount = seenTweets.size;
     }
     
     console.log(`📊 Found ${links.size} unique links from ${seenTweets.size} tweets...`);
@@ -252,14 +258,15 @@ const CONFIG = {
     URL.revokeObjectURL(jsonUrl);
     console.log('💾 JSON downloaded!');
     
-    // CSV
+    // CSV (quote every field: URLs can contain commas and quotes)
+    const csvEscape = (v) => `"${String(v).replace(/"/g, '""')}"`;
     const headers = ['URL', 'Domain', 'Times Shared', 'First Tweet'];
     const rows = result.allLinks.map(l => [
       l.url,
       l.domain,
       l.tweetCount,
       l.tweets[0]
-    ].join(','));
+    ].map(csvEscape).join(','));
     
     const csv = [headers.join(','), ...rows].join('\n');
     const csvBlob = new Blob([csv], { type: 'text/csv' });

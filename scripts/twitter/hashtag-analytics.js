@@ -208,7 +208,7 @@ const CONFIG = {
   console.log(`   Avg engagement WITH hashtags:    ${formatNum(avgWithHashtags)}`);
   console.log(`   Avg engagement WITHOUT hashtags: ${formatNum(avgWithoutHashtags)}`);
   
-  if (avgWithHashtags > avgWithoutHashtags) {
+  if (avgWithHashtags > avgWithoutHashtags && avgWithoutHashtags > 0) {
     const improvement = ((avgWithHashtags - avgWithoutHashtags) / avgWithoutHashtags * 100).toFixed(0);
     console.log(`   📈 Hashtags improve engagement by ${improvement}%`);
   } else if (avgWithoutHashtags > avgWithHashtags) {

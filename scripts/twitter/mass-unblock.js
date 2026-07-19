@@ -156,6 +156,7 @@ ${CONFIG.dryRun ? '║  ⚠️  DRY RUN MODE - No accounts will be unblocked    
   console.log('═'.repeat(60));
 
   let unblocked = 0;
+  const unblockedUsers = [];
 
   for (const [username, data] of toUnblock) {
     try {
@@ -173,6 +174,7 @@ ${CONFIG.dryRun ? '║  ⚠️  DRY RUN MODE - No accounts will be unblocked    
       }
 
       unblocked++;
+      unblockedUsers.push(username);
       console.log(`✅ Unblocked @${username}`);
 
       await sleep(CONFIG.unblockDelay);
@@ -189,7 +191,9 @@ ${CONFIG.dryRun ? '║  ⚠️  DRY RUN MODE - No accounts will be unblocked    
   const storageKey = 'xactions_unblock_log';
   const log = {
     timestamp: new Date().toISOString(),
-    unblocked: toUnblock.slice(0, unblocked).map(([u]) => u)
+    // Record the accounts actually unblocked; slicing the candidate list
+    // logs the wrong names whenever an unblock in the middle failed
+    unblocked: unblockedUsers
   };
   const existing = JSON.parse(localStorage.getItem(storageKey) || '[]');
   existing.push(log);

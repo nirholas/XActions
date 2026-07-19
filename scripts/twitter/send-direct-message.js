@@ -70,6 +70,13 @@ Best,
 
 (async function sendDirectMessage() {
   const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+  // Set an input's value through the native setter so React's value tracker
+  // registers the change (direct .value assignment gets ignored by React).
+  const setNativeValue = (el, value) => {
+    const desc = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(el), 'value');
+    if (desc && desc.set) desc.set.call(el, value);
+    else el.value = value;
+  };
   const randomDelay = (base) => {
     if (CONFIG.options.randomizeDelay) {
       return sleep(base + Math.random() * base * 0.5);
@@ -161,17 +168,18 @@ Best,
         
         // Type username
         searchInput.focus();
-        searchInput.value = cleanUsername;
+        setNativeValue(searchInput, cleanUsername);
         searchInput.dispatchEvent(new Event('input', { bubbles: true }));
         await sleep(2000);
         
-        // Click on user
+        // Click on user - match the exact @handle so a prefix like "john"
+        // can't select "johnny" (wrong DM recipient)
         const userCells = document.querySelectorAll(SELECTORS.userCell);
+        const handleRe = new RegExp('@' + cleanUsername.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '(?![a-zA-Z0-9_])', 'i');
         let found = false;
-        
+
         for (const cell of userCells) {
-          const cellText = cell.textContent.toLowerCase();
-          if (cellText.includes(cleanUsername)) {
+          if (handleRe.test(cell.textContent)) {
             cell.click();
             found = true;
             await sleep(1500);

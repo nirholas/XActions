@@ -79,9 +79,14 @@ const CONFIG = {
   const getCurrentUsername = () => {
     const accountBtn = document.querySelector('[data-testid="SideNav_AccountSwitcher_Button"]');
     if (accountBtn) {
-      const usernameEl = accountBtn.querySelector('div[dir="ltr"] span');
-      if (usernameEl) {
-        return usernameEl.textContent.replace('@', '').toLowerCase();
+      // The button holds both the display name and the @handle; the first
+      // span is the display name, so look for the span starting with "@"
+      const spans = accountBtn.querySelectorAll('span');
+      for (const span of spans) {
+        const text = span.textContent.trim();
+        if (text.startsWith('@')) {
+          return text.slice(1).toLowerCase();
+        }
       }
     }
     return null;
@@ -303,10 +308,13 @@ const CONFIG = {
       const json = JSON.stringify(accounts, null, 2);
       console.log('📋 Account data (copy this):');
       console.log(json);
-      
-      // Also copy to clipboard
-      navigator.clipboard?.writeText(json);
-      console.log('✅ Copied to clipboard!');
+
+      // Also copy to clipboard (only claim success when the write succeeds)
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(json)
+          .then(() => console.log('✅ Copied to clipboard!'))
+          .catch(() => console.warn('⚠️ Clipboard copy failed. Copy the JSON above manually.'));
+      }
     },
     
     // Import accounts

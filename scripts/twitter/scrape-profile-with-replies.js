@@ -213,6 +213,7 @@ const CONFIG = {
     str = str.trim().toUpperCase();
     if (str.includes('K')) return Math.round(parseFloat(str) * 1_000);
     if (str.includes('M')) return Math.round(parseFloat(str) * 1_000_000);
+    if (str.includes('B')) return Math.round(parseFloat(str) * 1_000_000_000);
     return parseInt(str.replace(/,/g, ''), 10) || 0;
   }
 
@@ -248,7 +249,14 @@ const CONFIG = {
    */
   function extractTweetFromElement(article) {
     try {
-      const linkEl = article.querySelector('a[href*="/status/"]');
+      // The timestamp's enclosing anchor is the tweet's own permalink.
+      // The first /status/ link in the article can belong to a quoted tweet.
+      const timeEl = article.querySelector('time');
+      const timestamp = timeEl ? timeEl.getAttribute('datetime') : null;
+      const displayTime = timeEl ? timeEl.innerText : '';
+
+      const permalinkEl = timeEl ? timeEl.closest('a[href*="/status/"]') : null;
+      const linkEl = permalinkEl || article.querySelector('a[href*="/status/"]');
       if (!linkEl) return null;
       const url = linkEl.href;
       const id = url.split('/status/')[1]?.split(/[?/]/)[0];
@@ -256,10 +264,6 @@ const CONFIG = {
 
       const textEl = article.querySelector('[data-testid="tweetText"]');
       const text = textEl ? textEl.innerText : '';
-
-      const timeEl = article.querySelector('time');
-      const timestamp = timeEl ? timeEl.getAttribute('datetime') : null;
-      const displayTime = timeEl ? timeEl.innerText : '';
 
       const metric = (testId) => {
         const el = article.querySelector(`[data-testid="${testId}"]`);
@@ -275,14 +279,19 @@ const CONFIG = {
       const views = viewsEl ? viewsEl.innerText : '0';
 
       const hasImage = !!article.querySelector('[data-testid="tweetPhoto"]');
-      const hasVideo = !!article.querySelector('[data-testid="videoPlayer"]');
+      const hasVideo = !!article.querySelector('[data-testid="videoPlayer"], [data-testid="videoComponent"]');
       const hasCard = !!article.querySelector('[data-testid="card.wrapper"]');
 
-      const socialCtx = article.querySelector('[data-testid="socialContext"]')?.innerText || '';
-      const isRetweet = socialCtx.includes('reposted');
-      const isReply = !!article.querySelector('[data-testid="tweetText"]')
-        ?.closest('article')
-        ?.querySelector('div[id] > div > div > div > div > a[href*="/status/"]');
+      // Retweets render socialContext inside an <a> linking to the reposter;
+      // pinned posts render it as a plain element. The structural check works
+      // on any UI language and stops pinned posts counting as retweets.
+      const socialCtxEl = article.querySelector('[data-testid="socialContext"]');
+      const isRetweet = !!socialCtxEl && socialCtxEl.closest('a') !== null;
+
+      // Reply detection: structural marker first, English UI text as fallback.
+      const isReply = article.querySelector('[data-testid="in-reply-to"]') !== null ||
+        Array.from(article.querySelectorAll('div[dir]')).some(el =>
+          el.innerText.startsWith('Replying to'));
 
       // Get the author handle from the tweet
       const authorEl = article.querySelector('div[data-testid="User-Name"] a[href^="/"]');
@@ -302,7 +311,7 @@ const CONFIG = {
         displayTime,
         metrics: { replies, retweets, likes, views },
         media: { hasImage, hasVideo, hasCard },
-        type: { isRetweet, isReply: socialCtx.includes('Replying to') },
+        type: { isRetweet, isReply },
         extracted: {
           hashtags: extractHashtags(text),
           mentions: extractMentions(text),
@@ -700,7 +709,7 @@ const CONFIG = {
       p.id,
       p.url,
       p.author?.handle || '',
-      p.displayTime,
+      '"' + (p.displayTime || '').replace(/"/g, '""') + '"',
       '"' + (p.text || '').replace(/"/g, '""').replace(/\n/g, ' ') + '"',
       parseEngagement(p.metrics.likes),
       parseEngagement(p.metrics.retweets),
@@ -723,7 +732,7 @@ const CONFIG = {
           r.url,
           '"' + (r.author?.name || '').replace(/"/g, '""') + '"',
           r.author?.handle || '',
-          r.displayTime,
+          '"' + (r.displayTime || '').replace(/"/g, '""') + '"',
           '"' + (r.text || '').replace(/"/g, '""').replace(/\n/g, ' ') + '"',
           parseEngagement(r.metrics?.likes),
           parseEngagement(r.metrics?.retweets),

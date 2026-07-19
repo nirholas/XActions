@@ -86,10 +86,12 @@ const CONFIG = {
    */
   function extractBookmark(tweet) {
     try {
-      // Get tweet ID
-      const link = tweet.querySelector('a[href*="/status/"]');
+      // Get tweet ID: the timestamp's enclosing anchor is the tweet's own
+      // permalink; the first /status/ link can belong to a quoted tweet
+      const timeAnchor = tweet.querySelector('time')?.closest('a[href*="/status/"]');
+      const link = timeAnchor || tweet.querySelector('a[href*="/status/"]');
       if (!link) return null;
-      
+
       const href = link.getAttribute('href');
       const match = href.match(/\/status\/(\d+)/);
       if (!match) return null;
@@ -124,7 +126,7 @@ const CONFIG = {
       
       // Check for media
       const hasImage = tweet.querySelector('[data-testid="tweetPhoto"]') !== null;
-      const hasVideo = tweet.querySelector('[data-testid="videoPlayer"]') !== null;
+      const hasVideo = tweet.querySelector('[data-testid="videoPlayer"], [data-testid="videoComponent"]') !== null;
       
       // Get image URLs
       const images = [];
@@ -230,7 +232,7 @@ const CONFIG = {
       `"${b.author.name.replace(/"/g, '""')}"`,
       b.author.username,
       `"${b.text.replace(/"/g, '""').replace(/\n/g, ' ')}"`,
-      b.displayTime,
+      `"${b.displayTime.replace(/"/g, '""')}"`,
       b.metrics.likes,
       b.metrics.retweets,
       b.metrics.replies,

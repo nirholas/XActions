@@ -146,6 +146,7 @@ ${CONFIG.dryRun ? '║  ⚠️  DRY RUN MODE - No accounts will be unmuted      
   console.log('═'.repeat(60));
 
   let unmuted = 0;
+  const unmutedUsers = [];
 
   for (const [username, data] of toUnmute) {
     try {
@@ -159,6 +160,7 @@ ${CONFIG.dryRun ? '║  ⚠️  DRY RUN MODE - No accounts will be unmuted      
         unmuteBtn.click();
         await sleep(300);
         unmuted++;
+        unmutedUsers.push(username);
         console.log(`✅ Unmuted @${username}`);
       } else {
         // Try via the more menu
@@ -171,6 +173,7 @@ ${CONFIG.dryRun ? '║  ⚠️  DRY RUN MODE - No accounts will be unmuted      
           if (unmuteOption) {
             unmuteOption.click();
             unmuted++;
+            unmutedUsers.push(username);
             console.log(`✅ Unmuted @${username}`);
           }
           
@@ -192,7 +195,9 @@ ${CONFIG.dryRun ? '║  ⚠️  DRY RUN MODE - No accounts will be unmuted      
   const storageKey = 'xactions_unmute_log';
   const log = {
     timestamp: new Date().toISOString(),
-    unmuted: toUnmute.slice(0, unmuted).map(([u]) => u)
+    // Record the accounts actually unmuted; slicing the candidate list
+    // logs the wrong names whenever an unmute in the middle failed
+    unmuted: unmutedUsers
   };
   const existing = JSON.parse(localStorage.getItem(storageKey) || '[]');
   existing.push(log);

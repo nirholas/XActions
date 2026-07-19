@@ -200,7 +200,10 @@ const CONFIG = {
     const likeBtn = tweet.querySelector(SELECTORS.likeButton);
     if (!likeBtn) return false;
     
-    const tweetLink = tweet.querySelector('a[href*="/status/"]');
+    // The first /status/ link can belong to a quoted tweet; the anchor around
+    // the timestamp is the tweet's own permalink
+    const timeEl = tweet.querySelector('time');
+    const tweetLink = (timeEl && timeEl.closest('a[href*="/status/"]')) || tweet.querySelector('a[href*="/status/"]');
     const tweetId = tweetLink?.href?.match(/status\/(\d+)/)?.[1];
     if (!tweetId || liked.has(tweetId)) return false;
     

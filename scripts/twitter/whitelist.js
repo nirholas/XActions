@@ -200,8 +200,14 @@ const CONFIG = {
       const usernames = list.map(u => u.username);
       console.log('📋 Whitelist (copy this):');
       console.log(JSON.stringify(usernames));
-      navigator.clipboard?.writeText(JSON.stringify(usernames));
-      console.log('✅ Copied to clipboard!');
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(JSON.stringify(usernames)).then(
+          () => console.log('✅ Copied to clipboard!'),
+          () => console.log('⚠️ Clipboard copy failed. Copy the JSON above manually.')
+        );
+      } else {
+        console.log('⚠️ Clipboard unavailable. Copy the JSON above manually.');
+      }
       return usernames;
     },
     

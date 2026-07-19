@@ -130,9 +130,10 @@ const CONFIG = {
     moreBtn.click();
     await sleep(500);
     
-    const removeBtn = document.querySelector($removeFromBookmarks) ||
-                      document.querySelector('[data-testid="Dropdown"]')?.querySelector('[role="menuitem"]');
-    
+    // Only click an actual remove-bookmark item; clicking the first menu item
+    // blindly would trigger an unrelated action (Not interested, Mute, etc.)
+    const removeBtn = document.querySelector($removeFromBookmarks);
+
     if (removeBtn) {
       removeBtn.click();
       await sleep(300);

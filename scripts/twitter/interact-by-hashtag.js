@@ -108,36 +108,62 @@ const CONFIG = {
     processedTweets: new Set(),
   };
   
+  // Parse counts like "1,234" / "5.2K" from button aria-labels
+  const parseCount = (str) => {
+    if (!str) return 0;
+    const match = str.replace(/,/g, '').match(/([\d.]+)([KMB])?/i);
+    if (!match) return 0;
+    let num = parseFloat(match[1]);
+    const multipliers = { 'K': 1000, 'M': 1000000, 'B': 1000000000 };
+    if (match[2]) num *= multipliers[match[2].toUpperCase()];
+    return Math.round(num) || 0;
+  };
+
   // Helper to check if tweet passes filters
   const passesFilters = (tweet) => {
     // Check if already liked
     if (tweet.querySelector(SELECTORS.unlikeButton)) return false;
-    
-    // Check for replies
+
+    // Check for replies (structural marker first; text only works on English UIs)
     if (CONFIG.filters.skipReplies) {
-      const isReply = tweet.textContent.includes('Replying to');
+      const isReply = tweet.querySelector('[data-testid="in-reply-to"]') !== null ||
+        Array.from(tweet.querySelectorAll('div[dir]')).some(el =>
+          el.innerText.startsWith('Replying to'));
       if (isReply) return false;
     }
-    
-    // Check for retweets
+
+    // Check for retweets: socialContext inside an <a> = repost (locale-independent);
+    // a plain socialContext is a pinned post
     if (CONFIG.filters.skipRetweets) {
       const socialContext = tweet.querySelector('[data-testid="socialContext"]');
-      if (socialContext?.textContent?.toLowerCase().includes('repost')) return false;
+      if (socialContext && socialContext.closest('a')) return false;
     }
-    
+
     // Check for media
     if (CONFIG.filters.requireMedia) {
-      const hasMedia = tweet.querySelector('[data-testid="tweetPhoto"]') || 
-                       tweet.querySelector('[data-testid="videoPlayer"]');
+      const hasMedia = tweet.querySelector('[data-testid="tweetPhoto"]') ||
+                       tweet.querySelector('[data-testid="videoPlayer"], [data-testid="videoComponent"]');
       if (!hasMedia) return false;
     }
-    
+
+    // Check engagement minimums
+    if (CONFIG.filters.minLikes > 0) {
+      const likeEl = tweet.querySelector(`${SELECTORS.likeButton}, ${SELECTORS.unlikeButton}`);
+      if (parseCount(likeEl?.getAttribute('aria-label')) < CONFIG.filters.minLikes) return false;
+    }
+    if (CONFIG.filters.minRetweets > 0) {
+      const rtEl = tweet.querySelector(`${SELECTORS.retweetButton}, [data-testid="unretweet"]`);
+      if (parseCount(rtEl?.getAttribute('aria-label')) < CONFIG.filters.minRetweets) return false;
+    }
+
     return true;
   };
-  
-  // Get tweet ID
+
+  // Get tweet ID: the anchor around the timestamp is the tweet's own permalink;
+  // the first /status/ link can belong to a quoted tweet
   const getTweetId = (tweet) => {
-    const link = tweet.querySelector('a[href*="/status/"]');
+    const timeEl = tweet.querySelector('time');
+    const link = (timeEl && timeEl.closest('a[href*="/status/"]')) || tweet.querySelector('a[href*="/status/"]');
     return link?.href?.match(/status\/(\d+)/)?.[1];
   };
   
@@ -167,7 +193,10 @@ const CONFIG = {
       state.isRunning = true;
       
       let processed = 0;
-      
+      let stalledScrolls = 0;
+      let lastProcessedCount = state.processedTweets.size;
+      let warnedAboutVolume = false;
+
       while (state.isRunning && state.stats.likes < CONFIG.limits.likes) {
         const tweets = document.querySelectorAll(SELECTORS.tweet);
         
@@ -225,8 +254,21 @@ const CONFIG = {
         // Scroll for more
         window.scrollBy(0, window.innerHeight);
         await sleep(CONFIG.scrollDelay);
-        
-        if (processed > 50) {
+
+        // End-of-results detection so the loop cannot scroll forever
+        if (state.processedTweets.size === lastProcessedCount) {
+          stalledScrolls++;
+          if (stalledScrolls >= 10) {
+            console.log('⚠️ No new tweets after 10 scrolls. Stopping.');
+            break;
+          }
+        } else {
+          stalledScrolls = 0;
+          lastProcessedCount = state.processedTweets.size;
+        }
+
+        if (processed > 50 && !warnedAboutVolume) {
+          warnedAboutVolume = true;
           console.log('⚠️ Processed many tweets. Consider stopping to avoid rate limits.');
         }
       }

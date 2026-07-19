@@ -102,7 +102,8 @@ const CONFIG = {
   let totalUnfollowed = 0;
   let totalKept = 0;
   let retries = 0;
-  
+  const seenUsers = new Set();
+
   while (retries < CONFIG.maxRetries) {
     // Scroll to bottom to load more users
     window.scrollTo(0, document.body.scrollHeight);
@@ -118,8 +119,8 @@ const CONFIG = {
       continue;
     }
     
-    retries = 0;
-    
+    let progressThisPass = 0;
+
     for (const btn of buttons) {
       // Check max unfollows limit
       if (CONFIG.maxUnfollows > 0 && totalUnfollowed >= CONFIG.maxUnfollows) {
@@ -131,18 +132,30 @@ const CONFIG = {
       try {
         // Find the parent UserCell to check for "Follows you" badge
         const userCell = btn.closest($userCell);
-        
+
+        // Track accounts by handle so re-rendered cells aren't recounted and
+        // so a tail of mutual followers can't keep this loop alive forever
+        const userLink = userCell?.querySelector('a[href^="/"]');
+        const username = userLink ? userLink.getAttribute('href').replace('/', '').split('/')[0] : null;
+        const isNewUser = username && !seenUsers.has(username);
+        if (isNewUser) {
+          seenUsers.add(username);
+          progressThisPass++;
+        }
+
         if (userCell) {
           // Check if this user follows you back
           const followsYou = userCell.querySelector($followsYou);
-          
+
           if (followsYou) {
-            // This user follows you - KEEP them
-            totalKept++;
-            if (CONFIG.logKept) {
-              const nameEl = userCell.querySelector('[dir="ltr"] span');
-              const name = nameEl ? nameEl.textContent : 'Unknown';
-              console.log(`💚 Keeping: ${name} (follows you)`);
+            // This user follows you - KEEP them (count each account once)
+            if (isNewUser || !username) {
+              totalKept++;
+              if (CONFIG.logKept) {
+                const nameEl = userCell.querySelector('[dir="ltr"] span');
+                const name = nameEl ? nameEl.textContent : 'Unknown';
+                console.log(`💚 Keeping: ${name} (follows you)`);
+              }
             }
             continue;
           }
@@ -157,20 +170,30 @@ const CONFIG = {
         if (confirmBtn) {
           confirmBtn.click();
           totalUnfollowed++;
-          
+          progressThisPass++;
+
           // Try to get username
           const nameEl = userCell?.querySelector('[dir="ltr"] span');
           const name = nameEl ? nameEl.textContent : `User #${totalUnfollowed}`;
           console.log(`🚫 Unfollowed: ${name}`);
-          
+
           await sleep(CONFIG.confirmDelay);
         }
-        
+
         await sleep(CONFIG.unfollowDelay);
-        
+
       } catch (e) {
         console.warn('⚠️ Error:', e.message);
       }
+    }
+
+    // Only reset retries on real progress (new accounts seen or unfollows
+    // done); visible mutual cells alone must not keep the loop spinning
+    if (progressThisPass > 0) {
+      retries = 0;
+    } else {
+      retries++;
+      console.log(`⏳ No new accounts this pass. Retry ${retries}/${CONFIG.maxRetries}...`);
     }
   }
   
