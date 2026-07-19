@@ -34,7 +34,8 @@ You can deploy them together (Docker, Fly.io, Railway) or split them across serv
 
 | Platform | Frontend | Backend | Free Tier | Config File |
 |---|---|---|---|---|
-| **Cloudflare Workers** | ✅ | Edge API + proxy | 100k req/day | `wrangler.toml` |
+| **Cloudflare Pages/Workers** | ✅ | Edge API + proxy | 100k req/day | `wrangler.toml` |
+| **Google Cloud Run** | ❌ | ✅ | Pay-per-use, no idle cost | `deploy/gcp/cloudbuild-api.yaml` |
 | **Vercel** | ✅ | ❌ | 100GB bandwidth | `vercel.json` |
 | **Railway** | ❌ | ✅ | $5 credit/mo | `railway.json` |
 | **Fly.io** | ❌ | ✅ | 3 shared VMs | `fly.toml` |
@@ -42,7 +43,7 @@ You can deploy them together (Docker, Fly.io, Railway) or split them across serv
 | **Docker** | ✅ | ✅ | Free (self-host) | `docker-compose.yml` |
 | **Coolify** | ✅ | ✅ | Free (self-host) | `docker-compose.coolify.yml` |
 
-**Recommended combo:** Cloudflare Workers (site + edge API) + Railway or Docker (for reads/analytics backend, optional)
+**Recommended combo (what xactions.app runs today):** Cloudflare Pages (static site + dashboard) + Google Cloud Run (`xactions-api`, backed by Cloud SQL Postgres and a shared Memorystore Redis instance). Railway, Fly, and Render remain fully supported for self-hosters who prefer them.
 
 ---
 
@@ -85,15 +86,17 @@ npm run deploy:cloudflare   # builds dist-cloudflare/ and deploys the Worker
 ### Connect a backend (optional)
 
 Reads (server-side scraping, analytics) and account features can run on the
-full Node backend. Deploy it with Railway, Fly, or Docker (below), then point
-the Worker at it:
+full Node backend. Deploy it to Google Cloud Run (below, what production
+uses), Railway, Fly, or Docker, then point the Worker/Pages proxy at it:
 
 ```bash
 npx wrangler deploy --var API_ORIGIN:https://your-api.example.com
 ```
 
-or set `API_ORIGIN` in `wrangler.toml`. Until it is set, those routes return a
-503 explaining exactly this, and everything else keeps working.
+or set `API_ORIGIN` in `wrangler.toml`. On Cloudflare Pages, the same wiring
+is a `dashboard/_redirects` rule (`/api/* https://your-api.example.com/api/:splat 200`).
+Until it is set, those routes return a 503 explaining exactly this, and
+everything else keeps working.
 
 ### Custom Domain
 
@@ -101,6 +104,42 @@ Cloudflare dashboard → Workers & Pages → `xactions` → Settings → Domains
 Routes → Add → `xactions.app`. If the DNS zone is already on Cloudflare this is
 one step; TLS is automatic. (Delete any leftover apex A/CNAME record pointing
 at a previous host first, or the attach is refused.)
+
+---
+
+## Google Cloud Run (Backend, current production)
+
+xactions.app's `/api/*` traffic is proxied to a Cloud Run service named
+`xactions-api`, backed by a dedicated Cloud SQL Postgres instance and a
+Memorystore Redis instance shared with other services on the same GCP
+project (Bull queue keys are namespaced with a `xactions` prefix so they
+never collide — see `api/services/jobQueue.js`).
+
+### One-time setup
+
+```bash
+gcloud auth login   # once per machine — needs a browser
+bash deploy/gcp/provision-api.sh
+```
+
+This creates the Cloud SQL instance, Secret Manager entries
+(`xactions-database-url`, `xactions-jwt-secret`, `xactions-session-secret`,
+`xactions-admin-api-key`), the required IAM bindings, then builds and deploys
+the image via Cloud Build. It prints the Cloud Run URL and the command to map
+`api.xactions.app` to it.
+
+### Redeploy after a code change
+
+```bash
+gcloud builds submit --config deploy/gcp/cloudbuild-api.yaml \
+  --region us-central1 --project aerial-vehicle-466722-p5
+```
+
+### Health check
+
+```bash
+curl https://api.xactions.app/api/health
+```
 
 ---
 
