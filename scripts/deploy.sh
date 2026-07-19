@@ -38,7 +38,7 @@ if [ "$PLATFORM" = "auto" ]; then
     echo ""
     echo "Available platforms:"
     echo "  railway     — Railway.app (recommended, already configured)"
-    echo "  cloudflare  — Cloudflare Pages (static frontend only)"
+    echo "  cloudflare  — Cloudflare Workers (full site + edge API)"
     echo "  fly         — Fly.io (full stack)"
     echo "  render      — Render.com (full stack)"
     echo "  docker      — Docker Compose (self-host)"
@@ -64,10 +64,14 @@ deploy_railway() {
 }
 
 deploy_cloudflare() {
-  command -v wrangler &> /dev/null || err "Wrangler CLI not installed. Run: npm install -g wrangler"
-  echo "📦 Deploying dashboard to Cloudflare Pages..."
-  wrangler pages deploy dashboard --project-name=xactions
-  log "Cloudflare Pages deploy complete!"
+  echo "📦 Building static bundle (site + dashboard + public)..."
+  node scripts/build-cloudflare.mjs
+  echo "📦 Deploying Worker + static assets to Cloudflare..."
+  npx wrangler deploy
+  log "Cloudflare deploy complete!"
+  echo ""
+  echo "📝 Full site + edge API live on the Worker. Heavy API routes proxy to"
+  echo "   API_ORIGIN (wrangler.toml) — point it at your Railway/Fly/Docker API."
 }
 
 deploy_fly() {

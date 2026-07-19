@@ -56,6 +56,7 @@
     "audit:verbose": "node scripts/audit-console-errors.js --verbose",
     "deploy": "bash scripts/deploy.sh",
     "deploy:railway": "bash scripts/deploy.sh railway",
+    "build:cloudflare": "node scripts/build-cloudflare.mjs",
     "deploy:cloudflare": "bash scripts/deploy.sh cloudflare",
     "deploy:fly": "bash scripts/deploy.sh fly",
     "deploy:docker": "bash scripts/deploy.sh docker",

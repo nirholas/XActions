@@ -1,16 +1,35 @@
-# Cloudflare Pages Configuration for XActions Static Frontend
-# Deploy: npx wrangler pages deploy dashboard --project-name xactions
+# Cloudflare Worker configuration for xactions.app
 #
-# This config is for the static dashboard/site only.
-# The API backend runs on Railway (or Docker).
+# Deploy:  npm run deploy:cloudflare
+#   (= node scripts/build-cloudflare.mjs && wrangler deploy)
+#
+# One Worker serves everything:
+#   - static site/dashboard/public from dist-cloudflare/ (Workers static assets)
+#   - the edge API surface (health, x402 discovery, 402 payment gate)
+#   - a proxy for the heavy API routes to API_ORIGIN (the Node backend with
+#     Postgres, Redis and Puppeteer: Railway, Fly, or Docker self-host)
 #
 # by nichxbt
 
 name = "xactions"
-compatibility_date = "2024-12-01"
+main = "worker/index.js"
+compatibility_date = "2025-10-01"
+compatibility_flags = ["nodejs_compat"]
 
-# Pages-specific config
-pages_build_output_dir = "dashboard"
+[assets]
+directory = "dist-cloudflare"
+binding = "ASSETS"
+not_found_handling = "404-page"
+run_worker_first = ["/api/*", "/openapi.json", "/.well-known/*", "/thread/*"]
 
-# Custom headers for security
-# These are also defined in dashboard/_headers
+[vars]
+NODE_ENV = "production"
+# Origin of the full Node API. Heavy routes (auth, user, unfollowers, video,
+# paid AI execution) proxy here. Empty string = those routes answer 503 with
+# setup instructions while the static site and edge API keep working.
+# Point it at your Railway/Fly/Docker deployment when one is live, e.g.
+# API_ORIGIN = "https://xactions-api.up.railway.app"
+API_ORIGIN = ""
+
+[observability]
+enabled = true

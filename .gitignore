@@ -59,6 +59,7 @@ bun.lockb
 
 # Build outputs
 dist/
+dist-cloudflare/
 es/
 /lib/
 .next/
