@@ -31,7 +31,10 @@
  * ============================================================
  */
 
-const CONFIG = {
+// `var` (not `const`): this script's whole point is "run it again later" in
+// the same tab, and DevTools throws "already been declared" on a repeated
+// top-level `const` paste - which would silently break that workflow.
+var CONFIG = {
   // Delay between scrolls
   scrollDelay: 2000,
   

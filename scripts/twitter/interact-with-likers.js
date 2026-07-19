@@ -35,7 +35,9 @@
  * ============================================================
  */
 
-const CONFIG = {
+// `var` (not `const`): a repeated top-level `const` paste in the same
+// DevTools tab throws "already been declared" instead of re-running.
+var CONFIG = {
   // Actions
   actions: {
     follow: true,
@@ -75,6 +77,8 @@ const CONFIG = {
     unfollowButton: '[data-testid$="-unfollow"]',
     verifiedBadge: '[data-testid="icon-verified"]',
     userName: '[data-testid="User-Name"]',
+    protectedIcon: '[data-testid="icon-lock"]',
+    defaultAvatar: 'img[src*="default_profile"]',
   };
   
   console.log('╔════════════════════════════════════════════════════════════╗');
@@ -106,12 +110,22 @@ const CONFIG = {
   const passesFilters = (userCell) => {
     // Skip if already following
     if (userCell.querySelector(SELECTORS.unfollowButton)) return false;
-    
+
     // Skip verified if configured
     if (CONFIG.filters.skipVerified && userCell.querySelector(SELECTORS.verifiedBadge)) {
       return false;
     }
-    
+
+    // Skip protected/private accounts if configured (was declared but never checked)
+    if (CONFIG.filters.skipPrivate && userCell.querySelector(SELECTORS.protectedIcon)) {
+      return false;
+    }
+
+    // Skip accounts still on the default avatar if configured (was declared but never checked)
+    if (CONFIG.filters.skipNoPhoto && userCell.querySelector(SELECTORS.defaultAvatar)) {
+      return false;
+    }
+
     return true;
   };
   

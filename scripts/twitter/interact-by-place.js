@@ -35,7 +35,9 @@
  * ============================================================
  */
 
-const CONFIG = {
+// `var` (not `const`): a repeated top-level `const` paste in the same
+// DevTools tab throws "already been declared" instead of re-running.
+var CONFIG = {
   // Target locations
   locations: [
     { name: 'New York', query: 'near:"New York"' },
@@ -111,7 +113,7 @@ const CONFIG = {
     state,
     
     // Search by location
-    search: (locationName, keyword = '') => {
+    search: async (locationName, keyword = '') => {
       let location = CONFIG.locations.find(l => 
         l.name.toLowerCase() === locationName?.toLowerCase()
       );
@@ -136,9 +138,24 @@ const CONFIG = {
       }
       
       console.log(`📍 Searching: ${searchQuery}`);
-      
-      const encodedQuery = encodeURIComponent(searchQuery);
-      window.location.href = `https://x.com/search?q=${encodedQuery}&src=typed_query&f=live`;
+
+      // Type into X's own search box and submit through it (a real in-app
+      // search) instead of assigning location.href. Setting location.href
+      // forces a hard page reload, which wipes this injected script (window.XActions
+      // included) before interact() could ever be called on the results.
+      const input = document.querySelector(SELECTORS.searchInput);
+      if (input) {
+        const setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+        setter.call(input, searchQuery);
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        await sleep(300);
+        input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', code: 'Enter', keyCode: 13, which: 13, bubbles: true }));
+        console.log('✅ Search submitted. Once results load, run XActions.Place.interact().');
+      } else {
+        console.warn('⚠️ Search box not found on this page. Falling back to a full navigation - this reloads the page and clears the script, so paste it again once results load.');
+        const encodedQuery = encodeURIComponent(searchQuery);
+        window.location.href = `https://x.com/search?q=${encodedQuery}&src=typed_query&f=live`;
+      }
     },
     
     // Interact with search results

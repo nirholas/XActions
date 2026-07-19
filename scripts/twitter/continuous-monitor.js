@@ -29,7 +29,11 @@
  * ============================================================
  */
 
-const CONFIG = {
+// `var` (not `const`/`let`): DevTools keeps top-level lexical bindings alive
+// across separate console pastes, so a `const` here throws "already been
+// declared" the second time this script is pasted in the same tab -
+// breaking the documented "run again to keep monitoring" workflow.
+var CONFIG = {
   // How often to check (minutes)
   checkIntervalMinutes: 5,
   
@@ -57,7 +61,13 @@ const CONFIG = {
 
 (async function continuousMonitor() {
   const sleep = (ms) => new Promise(r => setTimeout(r, ms));
-  
+
+  // Re-pasting the script must not stack a second timer on top of a still-running
+  // one - that would double (then triple, ...) every check and every notification.
+  if (typeof window.stopMonitor === 'function') {
+    try { window.stopMonitor(); } catch (e) { /* ignore */ }
+  }
+
   const $userCell = '[data-testid="UserCell"]';
   
   console.log('╔════════════════════════════════════════════════════════════╗');

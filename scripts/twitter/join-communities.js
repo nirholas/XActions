@@ -25,7 +25,10 @@
  * ============================================================
  */
 
-const CONFIG = {
+// `var` (not `const`): this script explicitly asks you to re-paste it across
+// page navigations to resume, and a repeated top-level `const` paste in the
+// same tab throws "already been declared" instead of resuming.
+var CONFIG = {
   // Community IDs to join (get from URL: x.com/i/communities/1234567890)
   communities: [
     // '1234567890123456789',

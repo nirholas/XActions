@@ -35,7 +35,9 @@
  * ============================================================
  */
 
-const CONFIG = {
+// `var` (not `const`): a repeated top-level `const` paste in the same
+// DevTools tab throws "already been declared" instead of re-running.
+var CONFIG = {
   // Target usernames to interact with
   targetUsers: [
     // 'nichxbt',
@@ -199,11 +201,42 @@ const CONFIG = {
             // Confirm retweet
             const confirmBtn = document.querySelector('[data-testid="retweetConfirm"]');
             if (confirmBtn) confirmBtn.click();
-            
+
             userRetweets++;
             state.stats.retweets++;
             recordInteraction(cleanUsername, 'retweets');
             console.log(`🔄 Retweeted ${userRetweets}/${CONFIG.limits.retweetsPerUser}`);
+            await randomDelay(CONFIG.delayBetweenActions, CONFIG.delayBetweenActions * 1.5);
+          }
+        }
+
+        // Reply (was declared in CONFIG/SELECTORS but never wired up)
+        if (CONFIG.actions.reply && userReplies < CONFIG.limits.repliesPerUser) {
+          const replyBtn = tweet.querySelector(SELECTORS.replyButton);
+          if (replyBtn) {
+            replyBtn.click();
+            await sleep(1000);
+
+            const input = document.querySelector(SELECTORS.tweetInput);
+            const submitBtn = document.querySelector(SELECTORS.tweetSubmit);
+            if (input && submitBtn) {
+              input.focus();
+              document.execCommand('insertText', false, randomItem(CONFIG.replyTemplates));
+              await sleep(300);
+              if (!submitBtn.disabled) {
+                submitBtn.click();
+                userReplies++;
+                state.stats.replies++;
+                recordInteraction(cleanUsername, 'replies');
+                console.log(`💬 Replied ${userReplies}/${CONFIG.limits.repliesPerUser}`);
+                await sleep(800);
+              } else {
+                console.warn('⚠️ Reply button stayed disabled; closing composer.');
+                document.activeElement?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+              }
+            } else {
+              console.warn('⚠️ Reply composer did not open as expected.');
+            }
             await randomDelay(CONFIG.delayBetweenActions, CONFIG.delayBetweenActions * 1.5);
           }
         }

@@ -24,7 +24,10 @@
  * ============================================================
  */
 
-const CONFIG = {
+// `var` (not `const`): this script's whole point is "run it periodically" in
+// the same tab, and DevTools throws "already been declared" on a repeated
+// top-level `const` paste - which would silently break that workflow.
+var CONFIG = {
   // Storage key prefix
   storageKey: 'xactions_growth_tracker',
   

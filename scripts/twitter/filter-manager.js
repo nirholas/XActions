@@ -310,7 +310,49 @@
           failures.push('not verified');
         }
       }
-      
+
+      // Follower/following ratio (declared in defaultFilters but never checked)
+      if (filters.ratio.enabled && userData.following > 0) {
+        const ratio = userData.followers / userData.following;
+        if (ratio < filters.ratio.min) failures.push(`ratio < ${filters.ratio.min}`);
+        if (ratio > filters.ratio.max) failures.push(`ratio > ${filters.ratio.max}`);
+      }
+
+      // Account age (declared in defaultFilters but never checked)
+      if (filters.accountAge.enabled && typeof userData.accountAgeDays === 'number') {
+        if (userData.accountAgeDays < filters.accountAge.min) {
+          failures.push(`account younger than ${filters.accountAge.min} days`);
+        }
+      }
+
+      // Language (declared in defaultFilters but never checked)
+      if (filters.language.enabled && filters.language.allowed.length > 0 && userData.lang) {
+        if (!filters.language.allowed.includes(userData.lang)) {
+          failures.push(`language "${userData.lang}" not allowed`);
+        }
+      }
+
+      // Activity / last tweet recency (declared in defaultFilters but never checked)
+      if (filters.activity.enabled && typeof userData.lastTweetDaysAgo === 'number') {
+        if (userData.lastTweetDaysAgo > filters.activity.lastTweetDays) {
+          failures.push(`inactive for ${userData.lastTweetDaysAgo} days`);
+        }
+      }
+
+      // Spam heuristics (declared in defaultFilters, enabled by default, but never checked)
+      if (filters.spam.enabled) {
+        if (filters.spam.skipNoTweets && userData.tweets === 0) {
+          failures.push('no tweets (spam heuristic)');
+        }
+        if (filters.spam.skipSuspicious && userData.following > 0) {
+          const followRatio = userData.following / (userData.followers || 1);
+          if (followRatio > 50) failures.push('suspicious following/followers ratio (spam heuristic)');
+        }
+        if (filters.spam.skipBotPatterns && userData.username && /\d{6,}$/.test(userData.username)) {
+          failures.push('username matches bot pattern (spam heuristic)');
+        }
+      }
+
       return {
         passes: failures.length === 0,
         failures

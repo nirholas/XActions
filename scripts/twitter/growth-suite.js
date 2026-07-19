@@ -35,7 +35,9 @@
  * ============================================================
  */
 
-const CONFIG = {
+// `var` (not `const`): a repeated top-level `const` paste in the same
+// DevTools tab throws "already been declared" instead of re-running.
+var CONFIG = {
   // ============================================
   // TARGETING
   // ============================================
@@ -261,7 +263,8 @@ const CONFIG = {
     // Run auto-like on current feed
     autoLike: async () => {
       log('Starting auto-like on current feed...');
-      
+      state.isRunning = true; // re-arm: stop() latches this false for every action
+
       while (checkLimits().canLike && !isSessionExpired() && state.isRunning) {
         const tweets = document.querySelectorAll(SELECTORS.tweet);
         
@@ -289,7 +292,8 @@ const CONFIG = {
     autoFollow: async () => {
       log('Starting auto-follow...');
       log('📍 Navigate to a search results or followers list first');
-      
+      state.isRunning = true; // re-arm: stop() latches this false for every action
+
       while (checkLimits().canFollow && !isSessionExpired() && state.isRunning) {
         const userCells = document.querySelectorAll(SELECTORS.userCell);
         
@@ -310,7 +314,8 @@ const CONFIG = {
     smartUnfollow: async () => {
       log('Starting smart unfollow...');
       log('📍 Navigate to your Following list first');
-      
+      state.isRunning = true; // re-arm: stop() latches this false for every action
+
       while (checkLimits().canUnfollow && !isSessionExpired() && state.isRunning) {
         const userCells = document.querySelectorAll(SELECTORS.userCell);
         

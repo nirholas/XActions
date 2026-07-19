@@ -24,7 +24,10 @@
  * ============================================================
  */
 
-const CONFIG = {
+// `var` (not `const`): DevTools keeps top-level `const` bindings alive across
+// separate pastes, so re-running this script in the same tab would throw
+// "already been declared" and never execute.
+var CONFIG = {
   // Number of posts to analyze
   maxPosts: 50,
   

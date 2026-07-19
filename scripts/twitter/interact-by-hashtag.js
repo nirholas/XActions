@@ -35,7 +35,9 @@
  * ============================================================
  */
 
-const CONFIG = {
+// `var` (not `const`): a repeated top-level `const` paste in the same
+// DevTools tab throws "already been declared" instead of re-running.
+var CONFIG = {
   // Hashtags to target (without #)
   hashtags: [
     'crypto',
@@ -182,9 +184,24 @@ const CONFIG = {
       }
       
       console.log(`🔍 Searching for #${tag}...`);
-      
-      // Navigate to search
-      window.location.href = `https://x.com/search?q=%23${tag}&src=typed_query&f=live`;
+
+      // Type into X's own search box and submit through it (a real in-app
+      // search) instead of assigning location.href. Setting location.href
+      // forces a hard page reload, which wipes this injected script (window.XActions
+      // included) - so the "run search(), then run interact()" flow documented
+      // above would break as soon as search() ran.
+      const input = document.querySelector(SELECTORS.searchInput);
+      if (input) {
+        const setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+        setter.call(input, `#${tag}`);
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        await sleep(300);
+        input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', code: 'Enter', keyCode: 13, which: 13, bubbles: true }));
+        console.log('✅ Search submitted. Once results load, run XActions.Hashtag.interact().');
+      } else {
+        console.warn('⚠️ Search box not found on this page. Falling back to a full navigation - this reloads the page and clears the script, so paste it again once results load.');
+        window.location.href = `https://x.com/search?q=%23${tag}&src=typed_query&f=live`;
+      }
     },
     
     // Interact with current search results
