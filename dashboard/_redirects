@@ -32,6 +32,6 @@
 /analytics /analytics.html 200
 /calendar /calendar.html 200
 
-# API proxy to backend — set XACTIONS_API_URL in Cloudflare Pages env vars
-# to your Railway deployment URL (e.g. https://xactions-api.up.railway.app)
-/api/* https://web-production-2eb69.up.railway.app/api/:splat 200
+# API proxy to backend — Cloud Run service "xactions-api", mapped to
+# api.xactions.app (see deploy/gcp/provision-api.sh)
+/api/* https://api.xactions.app/api/:splat 200

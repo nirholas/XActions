@@ -16,9 +16,6 @@ const CONFIG = {
     ? 'http://localhost:3001'
     : window.location.origin,
   
-  // Railway API URL (if needed for cross-origin)
-  RAILWAY_URL: 'https://web-production-2eb69.up.railway.app',
-  
   // App version
   VERSION: '1.0.0',
   
