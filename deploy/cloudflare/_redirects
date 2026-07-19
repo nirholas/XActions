@@ -1,0 +1,12 @@
+# Cloudflare Pages auto-serves foo.html at /foo and auto-indexes directories
+# with an index.html (verified: /about, /docs, /tutorials, /blog, /scripts
+# all resolve correctly without an explicit rule). Only true edge cases and
+# the API proxy need a rule here.
+
+# Wildcard thread viewer: /thread/<id> all serve the same SPA shell
+/thread/:id /thread.html 200
+
+# API proxy to backend — Railway URL is currently dead (404), needs a live
+# backend deployed before this route works. Set XACTIONS_API_URL in
+# Cloudflare Pages env vars once one exists.
+/api/* https://web-production-2eb69.up.railway.app/api/:splat 200

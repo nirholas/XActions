@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [3.2.2] - 2026-07-19
+
+### Added
+
+#### xactions.app is live again, on Cloudflare Pages (free)
+- `deploy/cloudflare/`: build script + `_redirects` deploying the full site
+  (landing page, dashboard app, docs, tutorials, blog, scripts directory)
+  to Cloudflare Pages, free of charge (the prior Vercel deployment was
+  disabled and the domain has been down)
+- Live now at the Pages project URL; `xactions.app` custom domain pending
+  the nameserver switch to Cloudflare at the registrar
+- `deploy/gcp/` (Cloud Run + nginx) kept as a fallback path for
+  environments without Cloudflare access
+
 ## [3.2.1] - 2026-07-19
 
 ### Fixed

@@ -131,3 +131,4 @@ e2e/reports
 .vercel
 
 audit-report.json
+pages-out/
