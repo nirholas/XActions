@@ -71,3 +71,37 @@ body { line-height: 1.6; }
   .footer-content { grid-template-columns: 1fr 1fr; }
   .article pre { font-size: 0.75rem; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════ */
+/* GLOW-UP + FIX: cap tall code blocks so docs pages aren't 20,000px tall       */
+/* Some docs embed a full script source (500+ lines). Give long code its own    */
+/* scroll region instead of stretching the whole page.                          */
+/* ═══════════════════════════════════════════════════════════════════════════ */
+.article pre {
+  max-height: 520px;
+  overflow: auto;
+  box-shadow: var(--shadow-1);
+  scrollbar-width: thin;
+}
+.article pre::-webkit-scrollbar { width: 10px; height: 10px; }
+.article pre::-webkit-scrollbar-thumb { background: var(--bg-tertiary); border-radius: 6px; border: 2px solid var(--bg-secondary); }
+.article pre::-webkit-scrollbar-thumb:hover { background: #33404b; }
+
+/* Article polish */
+.article h2 { letter-spacing: -0.01em; }
+.article h3 { color: var(--accent); }
+.article code { color: #7fc8ff; }
+.cat-badge { box-shadow: inset 0 0 0 1px var(--border-glow); }
+.cta-box { position: relative; overflow: hidden; box-shadow: var(--shadow-2); }
+.cta-box::before { content: ""; position: absolute; inset: 0; background: radial-gradient(120% 140% at 50% 0%, rgba(29,155,240,0.12), transparent 60%); pointer-events: none; }
+.cta-box a { background: var(--grad); box-shadow: 0 8px 22px -8px rgba(29,155,240,0.6); transition: transform 0.16s var(--ease), filter 0.2s; }
+.cta-box a:hover { background: var(--grad); filter: brightness(1.06); transform: translateY(-2px); }
+
+/* Related-links sidebar cards: depth + hover */
+.sidebar-card { border: 1px solid var(--border); transition: border-color 0.24s, box-shadow 0.24s; }
+.sidebar-card:hover { border-color: var(--border-glow); box-shadow: var(--shadow-1); }
+.sidebar-card a { transition: color 0.18s, padding-left 0.18s var(--ease); }
+.sidebar-card a:hover { color: var(--accent); padding-left: 4px; }
+
+/* Docs footer: force vertical columns (same fix as common.css) */
+.site-footer .footer-content > div { display: flex; flex-direction: column; align-items: flex-start; }
