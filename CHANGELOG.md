@@ -20,6 +20,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Wired into the integrations page, footer, and sitemap
 - Hosted service no longer executes X account actions server-side: follow/unfollow/like/reply/post routes return `501` pointing to the extension, so the service never custodies your session token or drives your account from a datacenter. Paid reads (scrape, analytics) are unaffected
 
+#### One-command Google Cloud Run backend
+- `deploy/gcp/deploy.sh` (+ `npm run deploy:gcp`): builds the repo Dockerfile (Node 24 + system Chromium) and deploys the API backend to Cloud Run, generating `JWT_SECRET`/`SESSION_SECRET`/`ADMIN_API_KEY` into Secret Manager automatically
+- Boots and serves the read surface (scrapers, analytics, paid x402 reads) with zero external credentials; `DATABASE_URL`, Twitter OAuth, and Stripe are optional add-ons wired via `deploy/gcp/.env.gcp` (gitignored)
+- Prints the exact `wrangler` command to point the Cloudflare Worker's `API_ORIGIN` at the new service
+
 ## [3.2.2] - 2026-07-19
 
 ### Added

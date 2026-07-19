@@ -134,3 +134,6 @@ e2e/reports
 audit-report.json
 pages-out/
 .wrangler/
+
+# GCP deploy secrets (never commit)
+deploy/gcp/.env.gcp
