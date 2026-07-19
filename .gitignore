@@ -132,3 +132,4 @@ e2e/reports
 
 audit-report.json
 pages-out/
+.wrangler/
