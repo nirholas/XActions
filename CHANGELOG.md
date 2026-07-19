@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [3.2.0] - 2026-07-19
+
+### Added
+
+#### Scraper Toolbox (browser console)
+- `scripts/twitter/scraper-toolbox.js`: interactive on-page control panel for scraping any X timeline (profile, search, list, likes, bookmarks, home)
+- Start / pause / resume / stop, live progress, draggable panel, settings persisted in localStorage
+- Captures X's own GraphQL responses: exact like/repost/reply/view/bookmark counts, full text of long posts, media URLs, language codes; promoted posts skipped
+- Live filters applied at export time: keywords (include/exclude), only/skip specific users, min likes/reposts/views, date range, repost/reply/quote/pinned toggles, media, language
+- Exports: JSON, CSV, Markdown, TXT, HTML downloads plus clipboard copy (JSON or clear text)
+- Console API: `window.XActionsToolbox`
+- Docs: `scripts/twitter/README-scraper-toolbox.md`
+
+### Fixed
+
+#### scrape-profile-posts.js (v2.1.0)
+- Elapsed time was reported 3x too small (divided by 3000 instead of 1000)
+- HTML export table rendered at 300% width; text export separators were 300 chars wide
+- Tweet IDs could be attributed to a quoted tweet's URL instead of the post itself
+- Pinned posts were counted as reposts; repost/reply detection no longer depends on the English UI
+- End-of-timeline detection never triggered when `verbose: false`
+- Video attachments using the newer `videoComponent` testid were not detected
+
 ## [3.1.0] - 2026-02-25
 
 ### Added

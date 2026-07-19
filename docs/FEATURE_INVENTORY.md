@@ -384,7 +384,8 @@ XActions delivers features through **5 delivery modes**:
 | 23 | `update-banner.js` (161 lines) | Helper for updating profile banner image | `x.com/USERNAME` |
 | 24 | `update-bio.js` (147 lines) | Update profile bio text | `x.com/settings/profile` |
 | 25 | `update-profile-picture.js` (162 lines) | Helper for updating profile picture | `x.com/USERNAME` |
-| 26 | `scrape-profile-posts.js` (872 lines) | Advanced tweet scraper with filtering, analytics, multi-format export | Any profile page |
+| 26 | `scrape-profile-posts.js` (887 lines) | Advanced tweet scraper with filtering, analytics, multi-format export | Any profile page |
+| 27 | `scraper-toolbox.js` (1309 lines) | Interactive scraper control panel: GraphQL capture (exact counts, full long-post text), start/pause/stop, live filters, user exclusions, 5 export formats + clipboard | Any timeline (profile, search, list, likes, bookmarks, home) |
 
 ### 8.2 Scripts that MIRROR `src/` features (shared as standalone versions)
 
