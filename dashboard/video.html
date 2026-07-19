@@ -179,6 +179,30 @@
     .skip-nav { position: absolute; top: -100%; left: 16px; background: var(--accent); color: white; padding: 12px 24px; border-radius: 8px; font-weight: 700; z-index: 9999; text-decoration: none; }
     .skip-nav:focus { top: 16px; }
     :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+    /* Offline notice (backend degraded) */
+    .offline-note{display:flex;gap:12px;align-items:flex-start;background:rgba(29,155,240,0.06);border:1px solid rgba(29,155,240,0.3);border-radius:14px;padding:16px 18px;color:#aab4c0;font-size:.92rem;margin:0 24px 16px}
+    .offline-note strong{color:#e7e9ea}.offline-note a{color:#1d9bf0}.offline-note .offline-ic{font-size:1.2rem;line-height:1.3}
+
+    /* Glow-up (subtle accent polish, layout unchanged) */
+    body::before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;background:radial-gradient(1000px 560px at 82% -6%,rgba(29,155,240,.1),transparent 60%)}
+    .download-btn, .quality-btn.best{
+      background:linear-gradient(135deg,#1d9bf0,#22d3ee);
+      box-shadow:0 8px 24px -8px rgba(29,155,240,.6);
+    }
+    .download-btn:hover{ background:linear-gradient(135deg,#1a8cd8,#1fbfd8); transform:translateY(-2px); }
+    .quality-btn.best:hover{ background:linear-gradient(135deg,#1a8cd8,#1fbfd8); }
+    .result-card, .recent-item{
+      transition:transform .26s cubic-bezier(.22,1,.36,1), border-color .26s cubic-bezier(.22,1,.36,1), box-shadow .26s cubic-bezier(.22,1,.36,1);
+    }
+    .result-card:hover, .recent-item:hover{
+      transform:translateY(-3px);
+      border-color:rgba(29,155,240,.4);
+      box-shadow:0 10px 34px -12px rgba(0,0,0,.6);
+    }
+    input:focus-visible, button:focus-visible, .quality-btn:focus-visible{
+      box-shadow:0 0 0 3px rgba(29,155,240,.28);
+    }
   </style>
 </head>
 <body>
@@ -208,6 +232,12 @@
 
       <!-- Error Message -->
       <div class="error-msg" id="error-msg" role="alert"></div>
+
+      <!-- Offline notice (shown when the video API is unreachable) -->
+      <div class="offline-note" id="offline-note" role="status" style="display:none">
+        <span class="offline-ic">📡</span>
+        <div><strong>Backend offline.</strong> The hosted API is being migrated. Browser scripts, the CLI, and docs work without it. <a href="/docs">Read the docs →</a></div>
+      </div>
 
       <!-- Loading -->
       <div class="loading" id="loading">
@@ -355,6 +385,7 @@
 
       // Reset UI
       hideError();
+      hideOffline();
       hideResult();
       showLoading();
       downloadBtn.disabled = true;
@@ -371,9 +402,9 @@
         try {
           data = await res.json();
         } catch {
-          throw new Error(res.status === 404
-            ? 'Video API is temporarily unavailable. Please try again later.'
-            : 'Failed to extract video. Server returned an unexpected response.');
+          const e = new Error('Video API is temporarily unavailable. Please try again later.');
+          if (res.status === 404 || res.status >= 500) e.offline = true;
+          throw e;
         }
 
         if (!res.ok) {
@@ -384,7 +415,13 @@
         showResult(data);
         saveToHistory(data, url);
       } catch (err) {
-        showError(err.message || 'Failed to extract video. Please try again.');
+        // A rejected fetch (dead host / CORS) or 404/5xx means the backend is offline.
+        if (err.offline || err instanceof TypeError) {
+          console.warn('Video API unavailable:', err.message);
+          showOffline();
+        } else {
+          showError(err.message || 'Failed to extract video. Please try again.');
+        }
       } finally {
         hideLoading();
         downloadBtn.disabled = false;
@@ -396,6 +433,8 @@
     function hideLoading() { loadingEl.classList.remove('visible'); }
     function showError(msg) { errorEl.textContent = msg; errorEl.classList.add('visible'); }
     function hideError() { errorEl.classList.remove('visible'); }
+    function showOffline() { document.getElementById('offline-note').style.display = 'flex'; }
+    function hideOffline() { document.getElementById('offline-note').style.display = 'none'; }
     function hideResult() { resultEl.classList.remove('visible'); }
 
     function showResult(data) {

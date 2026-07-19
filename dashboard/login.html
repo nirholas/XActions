@@ -365,6 +365,29 @@
     .footer-bottom a:hover { color: var(--accent); }
     @media (max-width: 768px) { .footer-content { grid-template-columns: 1fr 1fr; } }
     @media (max-width: 480px) { .footer-content { grid-template-columns: 1fr; } }
+
+    /* Offline notice (backend degraded) */
+    .offline-note{display:flex;gap:12px;align-items:flex-start;background:rgba(29,155,240,0.06);border:1px solid rgba(29,155,240,0.3);border-radius:14px;padding:16px 18px;color:#aab4c0;font-size:.92rem;margin:0 0 20px}
+    .offline-note strong{color:#e7e9ea}.offline-note a{color:#1d9bf0}.offline-note .offline-ic{font-size:1.2rem;line-height:1.3}
+
+    /* Glow-up (subtle accent polish, layout unchanged) */
+    body::before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;background:radial-gradient(1000px 560px at 82% -6%,rgba(29,155,240,.1),transparent 60%)}
+    .btn{
+      background:linear-gradient(135deg,#1d9bf0,#22d3ee);
+      box-shadow:0 8px 24px -8px rgba(29,155,240,.6);
+    }
+    .btn:hover{ background:linear-gradient(135deg,#1a8cd8,#1fbfd8); transform:translateY(-2px); }
+    .card{
+      transition:transform .26s cubic-bezier(.22,1,.36,1), border-color .26s cubic-bezier(.22,1,.36,1), box-shadow .26s cubic-bezier(.22,1,.36,1);
+    }
+    .card:hover{
+      transform:translateY(-3px);
+      border-color:rgba(29,155,240,.4);
+      box-shadow:0 10px 34px -12px rgba(0,0,0,.6);
+    }
+    .form-input:focus-visible, .btn:focus-visible, .btn-x:focus-visible{
+      box-shadow:0 0 0 3px rgba(29,155,240,.28);
+    }
   </style>
   <script src="/js/config.js" defer></script>
 </head>
@@ -554,7 +577,8 @@
           btn.textContent = 'Sign in';
         }
       } catch (error) {
-        showError('Network error. Please try again.');
+        console.warn('Login API unavailable:', error.message);
+        showError('Sign-in is temporarily unavailable while the backend is being migrated. Browser scripts and the CLI work without an account. Please try again later.');
         btn.disabled = false;
         btn.textContent = 'Sign in';
       }
@@ -589,7 +613,8 @@
           btn.textContent = 'Create account';
         }
       } catch (error) {
-        showError('Network error. Please try again.', true);
+        console.warn('Register API unavailable:', error.message);
+        showError('Account creation is temporarily unavailable while the backend is being migrated. Browser scripts and the CLI work without an account. Please try again later.', true);
         btn.disabled = false;
         btn.textContent = 'Create account';
       }

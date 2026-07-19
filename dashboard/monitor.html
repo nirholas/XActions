@@ -224,6 +224,25 @@
       text-decoration-color: var(--accent);
       text-underline-offset: 2px;
     }
+
+    /* Glow-up (subtle accent polish, layout unchanged) */
+    body::before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;background:radial-gradient(1000px 560px at 82% -6%,rgba(29,155,240,.1),transparent 60%)}
+    .action-btn{
+      background:linear-gradient(135deg,#1d9bf0,#22d3ee);
+      box-shadow:0 8px 24px -8px rgba(29,155,240,.6);
+    }
+    .action-btn:hover{ transform:translateY(-2px); }
+    .chart-card{
+      transition:transform .26s cubic-bezier(.22,1,.36,1), border-color .26s cubic-bezier(.22,1,.36,1), box-shadow .26s cubic-bezier(.22,1,.36,1);
+    }
+    .chart-card:hover{
+      transform:translateY(-3px);
+      border-color:rgba(29,155,240,.4);
+      box-shadow:0 10px 34px -12px rgba(0,0,0,.6);
+    }
+    input:focus-visible, button:focus-visible{
+      box-shadow:0 0 0 3px rgba(29,155,240,.28);
+    }
   </style>
 </head>
 <body>

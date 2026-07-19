@@ -583,6 +583,36 @@
     .skip-nav { position: absolute; top: -100%; left: 16px; background: var(--accent); color: white; padding: 12px 24px; border-radius: 8px; font-weight: 700; z-index: 9999; text-decoration: none; }
     .skip-nav:focus { top: 16px; }
     :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+    /* ================================================================
+       Offline notice (backend degraded)
+       ================================================================ */
+    .offline-note{display:flex;gap:12px;align-items:flex-start;background:rgba(29,155,240,0.06);border:1px solid rgba(29,155,240,0.3);border-radius:14px;padding:16px 18px;color:#aab4c0;font-size:.92rem;margin:16px}
+    .offline-note strong{color:#e7e9ea}.offline-note a{color:#1d9bf0}.offline-note .offline-ic{font-size:1.2rem;line-height:1.3}
+
+    /* ================================================================
+       Glow-up (subtle accent polish, layout unchanged)
+       ================================================================ */
+    body::before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;background:radial-gradient(1000px 560px at 82% -6%,rgba(29,155,240,.1),transparent 60%)}
+    .read-btn, .footer-btn.primary, .bookmarklet-link{
+      background:linear-gradient(135deg,#1d9bf0,#22d3ee);
+      box-shadow:0 8px 24px -8px rgba(29,155,240,.6);
+    }
+    .read-btn:hover, .footer-btn.primary:hover, .bookmarklet-link:hover{
+      background:linear-gradient(135deg,#1a8cd8,#1fbfd8);
+      transform:translateY(-2px);
+    }
+    .tweet-card, .sidebar-panel, .bookmarklet-section{
+      transition:transform .26s cubic-bezier(.22,1,.36,1), border-color .26s cubic-bezier(.22,1,.36,1), box-shadow .26s cubic-bezier(.22,1,.36,1), background .15s;
+    }
+    .sidebar-panel:hover, .bookmarklet-section:hover{
+      transform:translateY(-3px);
+      border:1px solid rgba(29,155,240,.4);
+      box-shadow:0 10px 34px -12px rgba(0,0,0,.6);
+    }
+    input:focus-visible, button:focus-visible, .footer-btn:focus-visible{
+      box-shadow:0 0 0 3px rgba(29,155,240,.28);
+    }
   </style>
 </head>
 <body>
@@ -619,6 +649,12 @@
         </form>
         <p class="input-error" id="input-error"></p>
       </section>
+
+      <!-- Offline notice (shown when the thread API is unreachable) -->
+      <div class="offline-note" id="offline-note" role="status" style="display:none">
+        <span class="offline-ic">📡</span>
+        <div><strong>Backend offline.</strong> The hosted API is being migrated. Browser scripts, the CLI, and docs work without it. <a href="/docs">Read the docs →</a></div>
+      </div>
 
       <!-- Skeleton Loader -->
       <div class="skeleton-container" id="skeleton">
@@ -777,6 +813,7 @@
       }
 
       hideError();
+      hideOffline();
       showSkeleton();
       hideResult();
 
@@ -815,12 +852,14 @@
         updateMeta(currentThread);
 
       } catch (error) {
+        console.warn('Thread unroll unavailable:', error.message);
         hideSkeleton();
-        showError(error.message || 'Something went wrong. Please try again.');
+        showOffline();
       }
     }
 
     async function loadThreadById(tweetId) {
+      hideOffline();
       showSkeleton();
       hideResult();
 
@@ -832,8 +871,9 @@
         fetchSummary(currentThread);
         updateMeta(currentThread);
       } catch (error) {
+        console.warn('Thread load unavailable:', error.message);
         hideSkeleton();
-        showError('Could not load thread. Try pasting the URL manually.');
+        showOffline();
       }
     }
 
@@ -935,6 +975,7 @@
           $('#ai-summary-toggle').setAttribute('aria-expanded', 'true');
         }
       } catch (e) {
+        console.warn('Thread summary unavailable:', e.message);
         content.innerHTML = '<p class="ai-unavailable">AI summary unavailable for this thread.</p>';
       }
     }
@@ -1067,6 +1108,8 @@
     function hideResult() { $('#thread-result').classList.remove('visible'); }
     function showError(msg) { const el = $('#input-error'); el.textContent = msg; el.classList.add('visible'); }
     function hideError() { $('#input-error').classList.remove('visible'); }
+    function showOffline() { $('#offline-note').style.display = 'flex'; }
+    function hideOffline() { $('#offline-note').style.display = 'none'; }
 
     function escapeHtml(text) {
       const div = document.createElement('div');

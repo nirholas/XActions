@@ -251,9 +251,27 @@
     .content a:not(.nav-item):not(.btn):not(.nav__link):not(.nav__brand),
     footer a {
       text-decoration: underline;
-      text-decoration-color: var(--accent);
+      text-decoration-color: #1d9bf0;
       text-underline-offset: 2px;
     }
+
+    /* Glow-up */
+    body::before { content: ""; position: fixed; inset: 0; z-index: -2; pointer-events: none; background: radial-gradient(1000px 560px at 82% -6%, rgba(29,155,240,.1), transparent 60%); }
+    .btn-green { box-shadow: 0 8px 24px -8px rgba(0,186,124,.6); }
+    .btn-purple { box-shadow: 0 8px 24px -8px rgba(168,85,247,.6); }
+    .btn { transition: transform .18s cubic-bezier(.22,1,.36,1), box-shadow .18s, opacity .2s; }
+    .btn:hover { transform: translateY(-2px) scale(1.03); }
+    .btn-green:hover { box-shadow: 0 12px 30px -8px rgba(0,186,124,.7); }
+    .btn-purple:hover { box-shadow: 0 12px 30px -8px rgba(168,85,247,.7); }
+    .tier-card { transition: transform .26s cubic-bezier(.22,1,.36,1), box-shadow .26s; }
+    .tier-card:hover { transform: translateY(-3px); box-shadow: 0 10px 34px -12px rgba(0,0,0,.6); }
+    .nav-item.active, .nav-item--active {
+      background: linear-gradient(135deg, rgba(29,155,240,.18), rgba(34,211,238,.1));
+      box-shadow: inset 0 0 0 1px rgba(29,155,240,.4);
+      color: #fff;
+    }
+    :focus-visible { outline: 2px solid #1d9bf0; outline-offset: 2px; }
+    a:focus-visible, .btn:focus-visible { box-shadow: 0 0 0 3px rgba(29,155,240,.28); }
   </style>
 </head>
 <body>

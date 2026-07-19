@@ -218,6 +218,30 @@
       text-decoration-color: var(--accent);
       text-underline-offset: 2px;
     }
+
+    /* Glow-up */
+    body::before { content: ""; position: fixed; inset: 0; z-index: -2; pointer-events: none; background: radial-gradient(1000px 560px at 82% -6%, rgba(29,155,240,.1), transparent 60%); }
+    .tbtn--primary {
+      background: linear-gradient(135deg, #1d9bf0, #22d3ee);
+      border-color: transparent;
+      box-shadow: 0 8px 24px -8px rgba(29,155,240,.6);
+      transition: transform .18s cubic-bezier(.22,1,.36,1), box-shadow .18s;
+    }
+    .tbtn--primary:hover {
+      background: linear-gradient(135deg, #1d9bf0, #22d3ee);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px -8px rgba(29,155,240,.7);
+    }
+    .palette-btn { transition: transform .26s cubic-bezier(.22,1,.36,1), border-color .26s, box-shadow .26s, background .15s; }
+    .palette-btn:hover { transform: translateY(-3px); border-color: rgba(29,155,240,.4); box-shadow: 0 10px 34px -12px rgba(0,0,0,.6); }
+    .nav-item.active, .nav-item--active {
+      background: linear-gradient(135deg, rgba(29,155,240,.18), rgba(34,211,238,.1));
+      box-shadow: inset 0 0 0 1px rgba(29,155,240,.4);
+      color: var(--text-primary);
+    }
+    input:focus-visible, button:focus-visible, .tbtn:focus-visible, .btn--danger:focus-visible, textarea:focus-visible, select:focus-visible, a:focus-visible {
+      box-shadow: 0 0 0 3px rgba(29,155,240,.28);
+    }
   </style>
 </head>
 <body>
