@@ -15,6 +15,20 @@
   --error: #f4212e;
   --warning: #ffad1f;
   --purple: #a855f7;
+
+  /* ---- Glow-up layer: gradients, glow, depth (X-clone identity kept) ---- */
+  --accent-2: #22d3ee;                 /* cyan companion to the X blue */
+  --accent-3: #4f8cff;
+  --grad: linear-gradient(135deg, #1d9bf0 0%, #22d3ee 100%);
+  --grad-soft: linear-gradient(135deg, rgba(29,155,240,0.18), rgba(34,211,238,0.10));
+  --grad-text: linear-gradient(120deg, #6fc3ff 0%, #57e6f2 100%);
+  --border-glow: rgba(29, 155, 240, 0.4);
+  --glow-accent: 0 0 0 1px rgba(29,155,240,0.28), 0 10px 40px -10px rgba(29,155,240,0.45);
+  --shadow-1: 0 1px 2px rgba(0,0,0,0.4);
+  --shadow-2: 0 10px 34px -12px rgba(0,0,0,0.6);
+  --shadow-3: 0 26px 70px -24px rgba(0,0,0,0.75);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ring: 0 0 0 3px rgba(29,155,240,0.28);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -207,4 +221,96 @@ nav::-webkit-scrollbar { width: 0; }
 
 @media (max-width: 480px) {
   .footer-content { grid-template-columns: 1fr; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════ */
+/* GLOW-UP LAYER  — depth, gradient, motion on top of the X-clone base         */
+/* Enhances visuals only; layout structure and class names are unchanged.      */
+/* ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Ambient depth: faint accent glows fixed behind everything */
+body { position: relative; }
+body::before {
+  content: "";
+  position: fixed; inset: 0; z-index: -2; pointer-events: none;
+  background:
+    radial-gradient(1000px 560px at 82% -6%, rgba(29,155,240,0.10), transparent 60%),
+    radial-gradient(760px 520px at 6% 4%, rgba(34,211,238,0.05), transparent 55%);
+}
+
+::selection { background: rgba(29,155,240,0.30); color: #fff; }
+
+/* Smoother, glowier scrollbar */
+::-webkit-scrollbar-thumb { background: var(--bg-tertiary); border-radius: 8px; border: 4px solid var(--bg-primary); transition: background 0.2s; }
+::-webkit-scrollbar-thumb:hover { background: #33404b; }
+
+/* Sidebar structure: soften the hard borders with a hairline + subtle glass */
+.sidebar-left { border-right: 1px solid var(--border); backdrop-filter: blur(6px); }
+.main-content { border-right: 1px solid var(--border); }
+
+/* Logo: gradient bolt lockup */
+.logo a { gap: 10px; font-weight: 800; letter-spacing: -0.02em; }
+
+/* Nav items: gradient pill on hover/active + slide */
+.nav-item {
+  position: relative;
+  transition: background 0.22s var(--ease), color 0.2s, transform 0.16s var(--ease);
+}
+.nav-item:hover { background: var(--bg-tertiary); transform: translateX(2px); }
+.nav-item.active {
+  background: var(--grad-soft);
+  box-shadow: inset 0 0 0 1px var(--border-glow);
+}
+.nav-item.active .nav-icon { filter: drop-shadow(0 0 6px rgba(29,155,240,0.5)); }
+
+/* Primary sidebar action button: gradient + glow + lift */
+.action-btn {
+  background: var(--grad);
+  box-shadow: 0 8px 24px -8px rgba(29,155,240,0.65);
+  transition: transform 0.16s var(--ease), box-shadow 0.25s var(--ease), filter 0.2s;
+}
+.action-btn:hover { background: var(--grad); filter: brightness(1.06); transform: translateY(-2px); box-shadow: 0 14px 34px -8px rgba(29,155,240,0.75); }
+.action-btn:active { transform: translateY(0); }
+
+/* Sticky header: richer glass */
+.main-header { background: rgba(0,0,0,0.55); backdrop-filter: saturate(160%) blur(14px); }
+
+/* Focus ring upgrade */
+:focus-visible { outline: none; box-shadow: var(--ring); border-radius: 6px; }
+
+/* ---- Footer: fix misalignment + glow ----
+   The old layout let heading text sit inline with the first link on some
+   pages. Force each column to a vertical block with the heading on its own
+   row, and give the footer a top accent hairline. */
+.site-footer { position: relative; }
+.site-footer::before {
+  content: ""; position: absolute; top: -1px; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-glow), transparent);
+}
+.footer-content > div { display: flex; flex-direction: column; align-items: flex-start; }
+.footer-content h3, .footer-content h4 { width: 100%; }
+.footer-brand h3 { display: flex; align-items: center; gap: 8px; font-size: 1.15rem; }
+.footer-links h4, .footer-section h4 {
+  font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text-secondary); font-weight: 700; margin-bottom: 12px;
+}
+.footer-links a, .footer-section a { transition: color 0.18s, transform 0.18s var(--ease); }
+.footer-links a:hover, .footer-section a:hover { color: var(--accent); transform: translateX(2px); }
+
+/* ---- Motion: gentle entrance for content on load ---- */
+@media (prefers-reduced-motion: no-preference) {
+  .main-content > section, .card, .stat-card, .promo-card {
+    animation: xaRise 0.5s var(--ease) both;
+  }
+}
+@keyframes xaRise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+/* Utility: gradient text + glow chip, available site-wide */
+.grad-text { background: var(--grad-text); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; }
+
+/* Mobile: give the collapsed icon rail a touch more breathing room */
+@media (max-width: 768px) {
+  .sidebar-left { width: 72px; }
+  .nav-item { transform: none; }
+  .nav-item:hover { transform: none; }
 }

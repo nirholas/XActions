@@ -514,3 +514,56 @@ footer a {
 .justify-between { justify-content: space-between; }
 .hidden { display: none !important; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+
+/* ═══════════════════════════════════════════════════════════════════════════ */
+/* GLOW-UP LAYER — richer cards, buttons, badges, code (visuals only)          */
+/* ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Cards: depth + hover lift + gradient hairline */
+.card {
+  position: relative;
+  background:
+    linear-gradient(var(--bg-secondary), var(--bg-secondary)) padding-box,
+    linear-gradient(180deg, rgba(255,255,255,0.05), transparent) border-box;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-1);
+  transition: transform 0.26s var(--ease), border-color 0.26s, box-shadow 0.26s, background 0.26s;
+}
+.card:hover {
+  transform: translateY(-3px);
+  border-color: var(--border-glow);
+  box-shadow: var(--shadow-2), var(--glow-accent);
+}
+.stat-card, .promo-card { transition: transform 0.24s var(--ease), border-color 0.24s, box-shadow 0.24s; }
+.stat-card:hover, .promo-card:hover { transform: translateY(-2px); border-color: var(--border-glow); box-shadow: var(--shadow-2); }
+.stat-card__value { background: var(--grad-text); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+
+/* Buttons: gradient primary + lift + glow */
+.btn { transition: transform 0.16s var(--ease), box-shadow 0.24s var(--ease), background 0.2s, color 0.2s, filter 0.2s; }
+.btn--primary { background: var(--grad); box-shadow: 0 6px 20px -8px rgba(29,155,240,0.6); }
+.btn--primary:hover:not(:disabled) { background: var(--grad); filter: brightness(1.07); transform: translateY(-2px); box-shadow: 0 12px 30px -8px rgba(29,155,240,0.7); }
+.btn--primary:active:not(:disabled) { transform: translateY(0); }
+.btn--secondary:hover:not(:disabled) { box-shadow: 0 0 0 1px var(--border-glow), 0 8px 24px -12px rgba(29,155,240,0.5); }
+
+/* Badges: subtle glow on the accent variants */
+.badge--accent { box-shadow: inset 0 0 0 1px rgba(29,155,240,0.25), 0 0 14px -6px rgba(29,155,240,0.5); }
+.badge--success { box-shadow: inset 0 0 0 1px rgba(0,186,124,0.25); }
+
+/* Code blocks: deeper, with a window-dot header accent */
+.code-block { box-shadow: var(--shadow-1); }
+.code-block__header { background: linear-gradient(180deg, var(--bg-tertiary), var(--bg-secondary)); }
+.copy-btn { transition: all 0.18s var(--ease); }
+.copy-btn:hover { color: var(--text-primary); border-color: var(--accent); background: var(--accent-light); }
+.copy-btn.copied { color: var(--success); border-color: var(--success); }
+
+/* Tabs: glowy active underline */
+.tab.active { border-bottom-color: var(--accent); box-shadow: inset 0 -2px 0 var(--accent), 0 6px 16px -12px rgba(29,155,240,0.6); }
+
+/* Inputs: focus glow */
+.input:focus, .select:focus, textarea.input:focus { border-color: var(--accent); box-shadow: var(--ring); }
+
+/* Empty state icon: gradient wash */
+.empty-state__icon { filter: drop-shadow(0 6px 20px rgba(29,155,240,0.25)); }
+
+/* Section titles: allow a gradient accent when marked */
+.section__title .accent, .section-title .accent { background: var(--grad-text); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
