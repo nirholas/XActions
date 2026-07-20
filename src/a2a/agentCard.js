@@ -10,6 +10,7 @@
  * @license MIT
  */
 
+import { VERSION } from '../version.js';
 import { getAllSkills, getSkillCategories } from './skillRegistry.js';
 import { createAgentCard, validateAgentCard } from './types.js';
 
@@ -17,7 +18,7 @@ import { createAgentCard, validateAgentCard } from './types.js';
 // Constants
 // ============================================================================
 
-const XACTIONS_VERSION = '3.1.0';
+const XACTIONS_VERSION = VERSION;
 const XACTIONS_HOMEPAGE = 'https://xactions.app';
 const CARD_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 const REMOTE_FETCH_TIMEOUT = 5000;

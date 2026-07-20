@@ -10,6 +10,7 @@
  */
 
 import { Command } from 'commander';
+import { VERSION } from '../version.js';
 import chalk from 'chalk';
 import ora from 'ora';
 import inquirer from 'inquirer';
@@ -118,7 +119,7 @@ async function smartOutput(data, options, defaultName = 'data') {
 program
   .name('xactions')
   .description(chalk.bold('⚡ XActions - The Complete X/Twitter Automation Toolkit'))
-  .version('3.0.0');
+  .version(VERSION);
 
 // ============================================================================
 // Auth Commands

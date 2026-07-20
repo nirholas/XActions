@@ -134,3 +134,9 @@ e2e/reports
 audit-report.json
 pages-out/
 .wrangler/
+
+# Stray editor/agent backups (never commit or publish)
+*.backup
+*.bak
+*.orig
+*.rej

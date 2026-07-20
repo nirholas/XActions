@@ -23,6 +23,7 @@
  * @license MIT
  */
 
+import { VERSION } from '../version.js';
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
@@ -3795,7 +3796,7 @@ function createMcpServer() {
   const srv = new Server(
     {
       name: 'xactions-mcp',
-      version: '3.1.0',
+      version: VERSION,
     },
     {
       capabilities: {
