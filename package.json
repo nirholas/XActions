@@ -183,5 +183,10 @@
   ],
   "engines": {
     "node": ">=18.0.0"
-  }
+  },
+  "files": [
+    "src",
+    "types",
+    "api/config/x402-config.js"
+  ]
 }
