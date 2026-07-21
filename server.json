@@ -14,7 +14,7 @@
     "url": "https://github.com/nirholas/XActions",
     "source": "github"
   },
-  "version": "3.4.2",
+  "version": "3.4.3",
   "links": {
     "homepage": "https://github.com/nirholas/XActions",
     "bugs": "https://github.com/nirholas/XActions/issues",
@@ -30,7 +30,7 @@
     {
       "registryType": "npm",
       "identifier": "xactions",
-      "version": "3.4.2",
+      "version": "3.4.3",
       "runtimeHint": "npx",
       "transport": {
         "type": "stdio"
