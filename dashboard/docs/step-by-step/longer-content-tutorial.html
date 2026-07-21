@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Post Longer Content &amp; Longer Videos -- Tutorial — Free X/Twitter Tools Tool | XActions</title>
+  <meta name="description" content="Step-by-step guide to posting extended tweets, long-form articles, and longer videos using XActions with Premium/Premium+ tiers.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, longer, content, tutorial, post, videos, tools, longer content tutorial twitter, twitter longer content tutorial">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Post Longer Content &amp; Longer Videos -- Tutorial — XActions">
+  <meta property="og:description" content="Step-by-step guide to posting extended tweets, long-form articles, and longer videos using XActions with Premium/Premium+ tiers.">
+  <meta property="og:url" content="https://xactions.app/docs/step-by-step/longer-content-tutorial">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Post Longer Content &amp; Longer Videos -- Tutorial — Free X/Twitter Tool">
+  <meta name="twitter:description" content="Step-by-step guide to posting extended tweets, long-form articles, and longer videos using XActions with Premium/Premium+ tiers.">
+
+  <link rel="canonical" href="https://xactions.app/docs/step-by-step/longer-content-tutorial">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Post Longer Content & Longer Videos -- Tutorial — Free X/Twitter Tools Tool | XActions",
+    "description": "Step-by-step guide to posting extended tweets, long-form articles, and longer videos using XActions with Premium/Premium+ tiers.",
+    "url": "https://xactions.app/docs/step-by-step/longer-content-tutorial",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/longer-content-tutorial",
+    "articleSection": "Tools",
+    "keywords": "xactions, twitter automation, x automation, free, longer, content, tutorial, post, videos, tools, longer content tutorial twitter, twitter longer content tutorial"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Post Longer Content & Longer Videos -- Tutorial", "item": "https://xactions.app/docs/longer-content-tutorial" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use Post Longer Content &amp; Longer Videos -- Tutorial",
+    "description": "Step-by-step guide to posting extended tweets, long-form articles, and longer videos using XActions with Premium/Premium+ tiers.",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions Post Longer Content &amp; Longer Videos -- Tutorial script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>⚡ Post Longer Content &amp; Longer Videos -- Tutorial</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › Post Longer Content &amp; Longer Videos -- Tutorial
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Tools</span>
+        <h1>Post Longer Content &amp; Longer Videos -- Tutorial</h1>
+<blockquote>
+<p>Step-by-step guide to posting extended tweets, long-form articles, and longer videos using XActions with Premium/Premium+ tiers.</p>
+</blockquote>
+<h2>Prerequisites</h2>
+<ul>
+<li>Logged into x.com in your browser</li>
+<li>Browser DevTools console (F12 -&gt; Console tab)</li>
+<li><strong>X Premium or Premium+ subscription</strong> (required for extended limits)</li>
+<li>For Node.js usage: <code>npm install xactions</code> and a valid session cookie</li>
+</ul>
+<h2>Quick Start</h2>
+<ol>
+<li>Navigate to x.com</li>
+<li>Open DevTools (F12)</li>
+<li>Use <code>src/postComposer.js</code> for extended tweets or <code>src/articlePublisher.js</code> for articles</li>
+<li>Premium subscribers can post up to 25,000 characters per tweet</li>
+</ol>
+<h2>Content Limits by Tier</h2>
+<h3>Character Limits</h3>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Tweet Length</th>
+<th>Thread Tweet Length</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Free</td>
+<td>280 characters</td>
+<td>280 per tweet</td>
+</tr>
+<tr>
+<td>Premium</td>
+<td>25,000 characters</td>
+<td>25,000 per tweet</td>
+</tr>
+<tr>
+<td>Premium+</td>
+<td>25,000 characters</td>
+<td>25,000 per tweet</td>
+</tr>
+</tbody></table>
+<h3>Video Limits</h3>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Max Length</th>
+<th>Max File Size</th>
+<th>Max Resolution</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Free</td>
+<td>2 min 20 sec</td>
+<td>512MB</td>
+<td>1920x1200</td>
+</tr>
+<tr>
+<td>Premium</td>
+<td>60 minutes</td>
+<td>2GB</td>
+<td>1920x1200</td>
+</tr>
+<tr>
+<td>Premium+</td>
+<td>3 hours</td>
+<td>8GB</td>
+<td>4K</td>
+</tr>
+</tbody></table>
+<h3>Articles (Premium+ Only)</h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Limit</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Title</td>
+<td>No strict limit</td>
+</tr>
+<tr>
+<td>Body</td>
+<td>No strict character limit</td>
+</tr>
+<tr>
+<td>Cover image</td>
+<td>Yes, optional</td>
+</tr>
+<tr>
+<td>Drafts</td>
+<td>Unlimited</td>
+</tr>
+<tr>
+<td>Rich formatting</td>
+<td>Yes</td>
+</tr>
+</tbody></table>
+<h2>Posting Extended Tweets</h2>
+<h3>Node.js / Puppeteer</h3>
+<p>Extended tweets work the same as regular tweets -- just type more text:</p>
+<pre><code class="language-js">import { postTweet } from &#39;./src/postComposer.js&#39;;
+
+const longText = `This is an extended tweet that goes well beyond the 280-character limit.
+
+With X Premium, you can write up to 25,000 characters in a single tweet. This is useful for detailed explanations, stories, or technical content that would otherwise require a thread.
+
+The full text appears in the timeline with a &quot;Show more&quot; button for viewers.`;
+
+await postTweet(page, longText);
+</code></pre>
+<h3>Browser Console</h3>
+<pre><code class="language-js">// Open compose dialog
+document.querySelector(&#39;[data-testid=&quot;SideNav_NewTweet_Button&quot;]&#39;).click();
+
+// Wait, then type extended content
+setTimeout(() =&gt; {
+  const textarea = document.querySelector(&#39;[data-testid=&quot;tweetTextarea_0&quot;]&#39;);
+  textarea.focus();
+  document.execCommand(&#39;insertText&#39;, false, &#39;Your very long post content here...&#39;);
+}, 1500);
+</code></pre>
+<h3>Extended Tweets vs Threads</h3>
+<table>
+<thead>
+<tr>
+<th>Approach</th>
+<th>Best For</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Extended tweet (25k chars)</td>
+<td>Long-form explanations, stories, detailed takes</td>
+</tr>
+<tr>
+<td>Thread (multiple 280-char tweets)</td>
+<td>Structured arguments, numbered points, engagement</td>
+</tr>
+<tr>
+<td>Article (Premium+)</td>
+<td>Blog-style content with formatting, cover images</td>
+</tr>
+</tbody></table>
+<p>Extended tweets display with a &quot;Show more&quot; button in the timeline. Not all users click it, so put your hook in the first 280 characters.</p>
+<h2>Publishing Articles (Premium+)</h2>
+<p>Articles are X&#39;s long-form content format, similar to blog posts.</p>
+<h3>Node.js / Puppeteer (<code>src/articlePublisher.js</code>)</h3>
+<pre><code class="language-js">import { publishArticle, saveDraft, getArticles } from &#39;./src/articlePublisher.js&#39;;
+
+// Publish an article
+const result = await publishArticle(page, {
+  title: &#39;Why Browser Automation Beats API Access&#39;,
+  body: `Full article body goes here. Articles support long-form content
+with paragraphs, and you can include as much detail as needed.
+
+This is the second paragraph of the article. Unlike tweets, articles
+are displayed in a reader-friendly format with proper typography.`,
+  coverImage: &#39;/path/to/cover.jpg&#39;,  // Optional
+});
+
+// Save as draft instead of publishing
+const draft = await saveDraft(page, {
+  title: &#39;Draft: Upcoming Feature Analysis&#39;,
+  body: &#39;Work in progress...&#39;,
+});
+
+// List your published articles
+const articles = await getArticles(page, &#39;nichxbt&#39;);
+console.log(articles);
+</code></pre>
+<h3>Article Functions</h3>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>publishArticle(page, { title, body, coverImage? })</code></td>
+<td>Publish an article</td>
+</tr>
+<tr>
+<td><code>saveDraft(page, { title, body })</code></td>
+<td>Save article as draft</td>
+</tr>
+<tr>
+<td><code>getArticles(page, username)</code></td>
+<td>List published articles</td>
+</tr>
+<tr>
+<td><code>getArticleAnalytics(page, articleUrl)</code></td>
+<td>Get article engagement stats</td>
+</tr>
+</tbody></table>
+<h3>How Article Publishing Works</h3>
+<ol>
+<li>Navigate to <code>https://x.com/compose/article</code></li>
+<li>Click the title input (<code>[data-testid=&quot;articleTitle&quot;]</code>) and type the title</li>
+<li>Click the body editor (<code>[data-testid=&quot;articleBody&quot;]</code>) and type the content</li>
+<li>Optionally upload a cover image via <code>[data-testid=&quot;articleCoverImage&quot;]</code></li>
+<li>Click publish (<code>[data-testid=&quot;articlePublish&quot;]</code>) or save draft (<code>[data-testid=&quot;articleSaveDraft&quot;]</code>)</li>
+</ol>
+<h3>Article Features</h3>
+<ul>
+<li><strong>Rich formatting</strong>: Articles support headers, paragraphs, and text styling</li>
+<li><strong>Cover images</strong>: Add a hero image that appears at the top of the article</li>
+<li><strong>Drafts</strong>: Save work in progress and return to it later</li>
+<li><strong>Analytics</strong>: Track views, likes, reposts, and engagement on your articles</li>
+<li><strong>Shareable</strong>: Articles get their own URL and preview card when shared</li>
+</ul>
+<h2>Uploading Longer Videos</h2>
+<h3>Premium Video Upload (up to 60 minutes)</h3>
+<pre><code class="language-js">import { postTweet } from &#39;./src/postComposer.js&#39;;
+
+// Upload a longer video (Premium accounts)
+await postTweet(page, &#39;Full tutorial walkthrough - 45 minutes of content!&#39;, {
+  media: &#39;/path/to/long-tutorial.mp4&#39;,
+});
+</code></pre>
+<p>For large video files, you may need to increase wait times since processing takes longer:</p>
+<pre><code class="language-js">// The default 2-second wait in postComposer.js may not be enough
+// For production use, poll for upload completion
+</code></pre>
+<h3>Video Best Practices</h3>
+<ul>
+<li><strong>Compress first</strong>: Use ffmpeg or HandBrake to compress videos before uploading</li>
+<li><strong>Format</strong>: MP4 with H.264 video codec and AAC audio codec works best</li>
+<li><strong>Thumbnail</strong>: X auto-generates a thumbnail from the first frame</li>
+<li><strong>Captions</strong>: Add captions using <code>src/videoCaptions.js</code> for accessibility (see the video captions tutorial)</li>
+<li><strong>Processing time</strong>: Large videos can take several minutes to process on X&#39;s servers</li>
+</ul>
+<h2>Extended Content Strategy</h2>
+<h3>When to Use Extended Tweets</h3>
+<ul>
+<li>Detailed explanations that lose meaning when split into thread chunks</li>
+<li>Stories or narratives that flow better as continuous text</li>
+<li>Technical documentation or tutorials</li>
+<li>Responses to complex questions</li>
+</ul>
+<h3>When to Use Threads Instead</h3>
+<ul>
+<li>Numbered lists or step-by-step guides</li>
+<li>Content designed for maximum engagement (threads get more interaction)</li>
+<li>Content where each point stands alone</li>
+<li>Building suspense or narrative tension</li>
+</ul>
+<h3>When to Use Articles</h3>
+<ul>
+<li>Blog-style content with structure and formatting</li>
+<li>Content you want discoverable via your profile&#39;s Articles tab</li>
+<li>Evergreen content that should be easy to find later</li>
+<li>Long tutorials, guides, or analyses</li>
+</ul>
+<h2>Tips &amp; Tricks</h2>
+<ul>
+<li><strong>First 280 characters matter</strong>: Even in extended tweets, the timeline only shows the first ~280 characters with a &quot;Show more&quot; button. Hook readers early.</li>
+<li><strong>Video compression</strong>: A 60-minute video at 1080p can be several gigabytes. Compress to a reasonable bitrate (5-8 Mbps for 1080p).</li>
+<li><strong>Article SEO</strong>: Article titles appear in search results. Use clear, descriptive titles.</li>
+<li><strong>Draft regularly</strong>: For articles, use <code>saveDraft()</code> frequently to avoid losing work.</li>
+<li><strong>Premium check</strong>: The script will fail gracefully if Premium features are not available, returning an error message instead of crashing.</li>
+</ul>
+<h2>Troubleshooting</h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Character count exceeded (free tier)</td>
+<td>Upgrade to Premium for 25,000-character tweets, or split into a thread.</td>
+</tr>
+<tr>
+<td>Video too long (free tier)</td>
+<td>Free accounts are limited to 2:20. Upgrade to Premium for 60 minutes.</td>
+</tr>
+<tr>
+<td>Article compose not available</td>
+<td>Articles require Premium+. The script returns an error if not available.</td>
+</tr>
+<tr>
+<td>Video processing stuck</td>
+<td>Large videos can take 5-10 minutes. Refresh the page and check if processing completed.</td>
+</tr>
+<tr>
+<td>Cover image upload failed</td>
+<td>Verify the image file exists and is a valid format (JPG, PNG).</td>
+</tr>
+<tr>
+<td>Article draft not saving</td>
+<td>Check that you have Premium+ and the title field is filled in.</td>
+</tr>
+</tbody></table>
+<h2>Related Scripts</h2>
+<ul>
+<li><code>src/postComposer.js</code> -- Standard tweet posting (supports extended tweets)</li>
+<li><code>src/articlePublisher.js</code> -- Article publishing and management</li>
+<li><code>src/postThread.js</code> -- Thread posting (alternative to extended tweets)</li>
+<li><code>src/videoCaptions.js</code> -- Add captions to longer videos</li>
+<li><code>src/schedulePosts.js</code> -- Schedule extended tweets for later</li>
+</ul>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try Post Longer Content &amp; Longer Videos -- Tutorial?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/step-by-step/add-media-tutorial">📝 Add Media Tutorial</a>
+        <a href="/docs/step-by-step/ads-campaigns-tutorial">📝 Ads Campaigns Tutorial</a>
+        <a href="/docs/step-by-step/affiliate-benefits-tutorial">📝 Affiliate Benefits Tutorial</a>
+        <a href="/docs/step-by-step/alt-text-tutorial">📝 Alt Text Tutorial</a>
+        <a href="/docs/step-by-step/auto-commenter-tutorial">📝 Auto Commenter Tutorial</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a> / <a href="/docs#step-by-step">Tutorials</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

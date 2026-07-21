@@ -73,13 +73,121 @@
   }
   </script>
 
-  <link rel="stylesheet" href="/css/common.css">
-  <link rel="stylesheet" href="/css/docs.css">
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
 </head>
 <body>
   <div class="layout">
     <!-- Sidebar -->
-    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
 
     <!-- Main Content -->
     <main class="main-content">
@@ -132,12 +240,187 @@
 <li>Copy and paste the script from <a href="https://github.com/nirholas/XActions/blob/main/src/massUnblock.js"><code>src/massUnblock.js</code></a></li>
 <li>Press Enter to run</li>
 </ol>
-<pre><code class="language-javascript">// Quick start — copy the full script from:
-// src/massUnblock.js
-//
-// Or install via npm and use the CLI:
-// npm install -g xactions
-// xactions --help
+<pre><code class="language-javascript">/**
+ * ============================================================
+ * 🔓 Mass Unblock Users — Production Grade
+ * ============================================================
+ *
+ * @name        massUnblock.js
+ * @description Unblock all or selected users from your blocked
+ *              list. Supports whitelist (keep-blocked), rate-limit
+ *              detection, pause/resume, progress tracking, export.
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     2.0.0
+ * @date        2026-02-24
+ * @repository  https://github.com/nirholas/XActions
+ *
+ * ============================================================
+ * 📋 USAGE:
+ *
+ * 1. Go to: https://x.com/settings/blocked/all
+ * 2. Open DevTools Console (F12)
+ * 3. Paste and run
+ *
+ * 🎮 CONTROLS:
+ *   window.XActions.pause()  / .resume() / .abort() / .status()
+ * ============================================================
+ */
+(() =&gt; {
+  &#39;use strict&#39;;
+
+  const CONFIG = {
+    maxUnblocks: Infinity,
+    keepBlocked: [],                  // Keep these users blocked (without @)
+    dryRun: false,
+    minDelay: 1000,
+    maxDelay: 2800,
+    scrollDelay: 2000,
+    maxEmptyScrolls: 6,
+    maxConsecutiveErrors: 10,
+    rateLimitCooldown: 60000,
+    exportOnComplete: true,
+  };
+
+  const SEL = {
+    unblockBtn:  [&#39;[data-testid$=&quot;-unblock&quot;]&#39;, &#39;button[aria-label*=&quot;Unblock&quot;]&#39;, &#39;button[aria-label*=&quot;Blocked&quot;]&#39;],
+    confirmBtn:  [&#39;[data-testid=&quot;confirmationSheetConfirm&quot;]&#39;],
+    userCell:    [&#39;[data-testid=&quot;UserCell&quot;]&#39;],
+    toast:       [&#39;[data-testid=&quot;toast&quot;]&#39;, &#39;[role=&quot;alert&quot;]&#39;],
+  };
+
+  const $ = (s, c = document) =&gt; { for (const x of (Array.isArray(s) ? s : [s])) { const e = c.querySelector(x); if (e) return e; } return null; };
+  const $$ = (s, c = document) =&gt; { for (const x of (Array.isArray(s) ? s : [s])) { const e = c.querySelectorAll(x); if (e.length) return [...e]; } return []; };
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+  const gaussian = (a, b) =&gt; Math.floor(a + ((Math.random() + Math.random()) / 2) * (b - a));
+  const isRateLimited = () =&gt; { const t = $(SEL.toast); return t &amp;&amp; /rate limit|try again|too many|slow down/i.test(t.textContent); };
+
+  let paused = false, aborted = false;
+  let unblocked = 0, skipped = 0, errors = 0, consecutiveErrors = 0;
+  const startTime = Date.now();
+  const unblockedLog = [];
+  const processedUsers = new Set();
+  const keepSet = new Set(CONFIG.keepBlocked.map(u =&gt; u.toLowerCase().replace(/^@/, &#39;&#39;)));
+
+  window.XActions = {
+    pause()  { paused = true;  console.log(&#39;⏸️ Paused.&#39;); },
+    resume() { paused = false; console.log(&#39;▶️ Resumed.&#39;); },
+    abort()  { aborted = true; console.log(&#39;🛑 Aborting...&#39;); },
+    status() {
+      const el = ((Date.now() - startTime) / 1000).toFixed(0);
+      console.log(`📊 Unblocked: ${unblocked} | Skipped: ${skipped} | Errors: ${errors} | ${el}s`);
+    },
+  };
+
+  const shouldContinue = async () =&gt; { while (paused &amp;&amp; !aborted) await sleep(500); return !aborted; };
+
+  const getUsername = (cell) =&gt; {
+    const link = cell.querySelector(&#39;a[href^=&quot;/&quot;]&#39;);
+    if (link) {
+      const match = (link.getAttribute(&#39;href&#39;) || &#39;&#39;).match(/^\/([A-Za-z0-9_]+)/);
+      if (match) return match[1];
+    }
+    const spans = cell.querySelectorAll(&#39;span&#39;);
+    for (const s of spans) { const m = s.textContent.match(/^@([A-Za-z0-9_]+)$/); if (m) return m[1]; }
+    return null;
+  };
+
+  const run = async () =&gt; {
+    const W = 60;
+    console.log(&#39;╔&#39; + &#39;═&#39;.repeat(W) + &#39;╗&#39;);
+    console.log(&#39;║  🔓 MASS UNBLOCK USERS&#39; + &#39; &#39;.repeat(W - 24) + &#39;║&#39;);
+    console.log(&#39;║  by nichxbt — v2.0&#39; + &#39; &#39;.repeat(W - 21) + &#39;║&#39;);
+    console.log(&#39;╚&#39; + &#39;═&#39;.repeat(W) + &#39;╝&#39;);
+
+    if (!window.location.href.includes(&#39;/blocked&#39;)) {
+      console.error(&#39;❌ Navigate to x.com/settings/blocked/all first!&#39;);
+      return;
+    }
+
+    console.log(`⚙️ Max: ${CONFIG.maxUnblocks === Infinity ? &#39;∞&#39; : CONFIG.maxUnblocks} | Dry run: ${CONFIG.dryRun} | Keep blocked: ${keepSet.size}`);
+
+    let emptyScrolls = 0;
+
+    while (unblocked &lt; CONFIG.maxUnblocks &amp;&amp; emptyScrolls &lt; CONFIG.maxEmptyScrolls) {
+      if (!(await shouldContinue())) break;
+      if (isRateLimited()) { console.warn(&#39;🚨 Rate limit!&#39;); await sleep(CONFIG.rateLimitCooldown); continue; }
+
+      const cells = $$(SEL.userCell);
+      let foundNew = false;
+
+      for (const cell of cells) {
+        if (!(await shouldContinue())) break;
+        if (unblocked &gt;= CONFIG.maxUnblocks) break;
+
+        const username = getUsername(cell);
+        if (!username || processedUsers.has(username.toLowerCase())) continue;
+        processedUsers.add(username.toLowerCase());
+        foundNew = true;
+
+        if (keepSet.has(username.toLowerCase())) {
+          skipped++;
+          console.log(`   🛡️ Keeping blocked: @${username}`);
+          continue;
+        }
+
+        const btn = cell.querySelector(&#39;[data-testid$=&quot;-unblock&quot;]&#39;) || cell.querySelector(&#39;button[aria-label*=&quot;Blocked&quot;]&#39;);
+        if (!btn) { errors++; consecutiveErrors++; continue; }
+
+        if (CONFIG.dryRun) {
+          console.log(`   🔍 Would unblock: @${username}`);
+          unblockedLog.push({ username, timestamp: new Date().toISOString(), dryRun: true });
+          unblocked++;
+          continue;
+        }
+
+        try {
+          btn.click();
+          await sleep(gaussian(400, 700));
+          const confirm = $(SEL.confirmBtn);
+          if (confirm) { confirm.click(); await sleep(gaussian(300, 500)); }
+
+          unblocked++;
+          consecutiveErrors = 0;
+          unblockedLog.push({ username, timestamp: new Date().toISOString() });
+
+          if (unblocked % 10 === 0) {
+            const rate = (unblocked / ((Date.now() - startTime) / 60000)).toFixed(1);
+            console.log(`🔓 Unblocked ${unblocked} users | ${rate}/min`);
+          }
+          await sleep(gaussian(CONFIG.minDelay, CONFIG.maxDelay));
+        } catch (e) {
+          errors++;
+          consecutiveErrors++;
+          if (consecutiveErrors &gt;= CONFIG.maxConsecutiveErrors) { console.error(&#39;❌ Too many errors.&#39;); break; }
+        }
+      }
+
+      if (consecutiveErrors &gt;= CONFIG.maxConsecutiveErrors) break;
+      if (!foundNew) emptyScrolls++; else emptyScrolls = 0;
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(gaussian(CONFIG.scrollDelay, CONFIG.scrollDelay + 800));
+    }
+
+    const elapsed = ((Date.now() - startTime) / 1000).toFixed(0);
+    console.log(&#39;\n╔&#39; + &#39;═&#39;.repeat(48) + &#39;╗&#39;);
+    console.log(&#39;║  📊 MASS UNBLOCK — RESULTS&#39; + &#39; &#39;.repeat(21) + &#39;║&#39;);
+    console.log(&#39;╠&#39; + &#39;═&#39;.repeat(48) + &#39;╣&#39;);
+    console.log(`║  Unblocked:   ${String(unblocked).padEnd(31)}║`);
+    console.log(`║  Skipped:     ${String(skipped).padEnd(31)}║`);
+    console.log(`║  Errors:      ${String(errors).padEnd(31)}║`);
+    console.log(`║  Duration:    ${(elapsed + &#39;s&#39;).padEnd(31)}║`);
+    console.log(&#39;╚&#39; + &#39;═&#39;.repeat(48) + &#39;╝&#39;);
+
+    if (CONFIG.exportOnComplete &amp;&amp; unblockedLog.length &gt; 0) {
+      const blob = new Blob([JSON.stringify({ summary: { unblocked, skipped, errors }, accounts: unblockedLog }, null, 2)], { type: &#39;application/json&#39; });
+      const a = document.createElement(&#39;a&#39;); a.href = URL.createObjectURL(blob);
+      a.download = `xactions-unblocked-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a); a.click(); a.remove();
+      console.log(&#39;📥 Results exported.&#39;);
+    }
+  };
+
+  run();
+})();
 </code></pre>
 <h2>⚙️ Configuration</h2>
 <table>
@@ -151,7 +434,7 @@
 <tbody><tr>
 <td><code>maxUnblocks</code></td>
 <td><code>Infinity</code></td>
-<td>max Unblocks</td>
+<td>Max unblocks</td>
 </tr>
 <tr>
 <td><code>keepBlocked</code></td>
@@ -161,42 +444,42 @@
 <tr>
 <td><code>dryRun</code></td>
 <td><code>false</code></td>
-<td>dry Run</td>
+<td>Dry run</td>
 </tr>
 <tr>
 <td><code>minDelay</code></td>
 <td><code>1000</code></td>
-<td>min Delay</td>
+<td>Min delay</td>
 </tr>
 <tr>
 <td><code>maxDelay</code></td>
 <td><code>2800</code></td>
-<td>max Delay</td>
+<td>Max delay</td>
 </tr>
 <tr>
 <td><code>scrollDelay</code></td>
 <td><code>2000</code></td>
-<td>scroll Delay</td>
+<td>Scroll delay</td>
 </tr>
 <tr>
 <td><code>maxEmptyScrolls</code></td>
 <td><code>6</code></td>
-<td>max Empty Scrolls</td>
+<td>Max empty scrolls</td>
 </tr>
 <tr>
 <td><code>maxConsecutiveErrors</code></td>
 <td><code>10</code></td>
-<td>max Consecutive Errors</td>
+<td>Max consecutive errors</td>
 </tr>
 <tr>
 <td><code>rateLimitCooldown</code></td>
 <td><code>60000</code></td>
-<td>rate Limit Cooldown</td>
+<td>Rate limit cooldown</td>
 </tr>
 <tr>
 <td><code>exportOnComplete</code></td>
 <td><code>true</code></td>
-<td>export On Complete</td>
+<td>Export on complete</td>
 </tr>
 </tbody></table>
 <hr>
@@ -243,7 +526,7 @@ xactions --help
 <pre><code class="language-bash"># Start MCP server
 npm run mcp
 </code></pre>
-<p>See the <a href="/docs/guides/mcp-setup">MCP Setup Guide</a> for integration with Claude Desktop, Cursor, and other AI tools.</p>
+<p>See the <a href="../mcp-setup.md">MCP Setup Guide</a> for integration with Claude Desktop, Cursor, and other AI tools.</p>
 <hr>
 <h2>📁 Source Files</h2>
 <table>
@@ -268,15 +551,15 @@ npm run mcp
 </tr>
 </thead>
 <tbody><tr>
-<td><a href="/docs/manage-muted-words">Manage Muted Words</a></td>
+<td><a href="manage-muted-words.md">Manage Muted Words</a></td>
 <td>Bulk add, remove, and manage muted words and phrases</td>
 </tr>
 <tr>
-<td><a href="/docs/mass-block">Mass Block</a></td>
+<td><a href="mass-block.md">Mass Block</a></td>
 <td>Block multiple accounts at once from a list or timeline</td>
 </tr>
 <tr>
-<td><a href="/docs/mute-by-keywords">Mute by Keywords</a></td>
+<td><a href="mute-by-keywords.md">Mute by Keywords</a></td>
 <td>Mute users whose posts contain specific keywords</td>
 </tr>
 </tbody></table>
@@ -353,6 +636,5 @@ npm run mcp
       <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
     </div>
   </footer>
-<script src="/js/sidebar.js"></script>
 </body>
 </html>

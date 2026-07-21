@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subscribe to X Premium — Tutorial — Free X/Twitter Tools Tool | XActions</title>
+  <meta name="description" content="Step-by-step guide to comparing X Premium tiers, checking your current status, and navigating through the subscription flow using XActions.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, subscribe, premium, tutorial, tools, subscribe premium tutorial twitter, twitter subscribe premium tutorial">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Subscribe to X Premium — Tutorial — XActions">
+  <meta property="og:description" content="Step-by-step guide to comparing X Premium tiers, checking your current status, and navigating through the subscription flow using XActions.">
+  <meta property="og:url" content="https://xactions.app/docs/step-by-step/subscribe-premium-tutorial">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Subscribe to X Premium — Tutorial — Free X/Twitter Tool">
+  <meta name="twitter:description" content="Step-by-step guide to comparing X Premium tiers, checking your current status, and navigating through the subscription flow using XActions.">
+
+  <link rel="canonical" href="https://xactions.app/docs/step-by-step/subscribe-premium-tutorial">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Subscribe to X Premium — Tutorial — Free X/Twitter Tools Tool | XActions",
+    "description": "Step-by-step guide to comparing X Premium tiers, checking your current status, and navigating through the subscription flow using XActions.",
+    "url": "https://xactions.app/docs/step-by-step/subscribe-premium-tutorial",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/subscribe-premium-tutorial",
+    "articleSection": "Tools",
+    "keywords": "xactions, twitter automation, x automation, free, subscribe, premium, tutorial, tools, subscribe premium tutorial twitter, twitter subscribe premium tutorial"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Subscribe to X Premium — Tutorial", "item": "https://xactions.app/docs/subscribe-premium-tutorial" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use Subscribe to X Premium — Tutorial",
+    "description": "Step-by-step guide to comparing X Premium tiers, checking your current status, and navigating through the subscription flow using XActions.",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions Subscribe to X Premium — Tutorial script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>⚡ Subscribe to X Premium — Tutorial</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › Subscribe to X Premium — Tutorial
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Tools</span>
+        <h1>Subscribe to X Premium — Tutorial</h1>
+<blockquote>
+<p>Step-by-step guide to comparing X Premium tiers, checking your current status, and navigating through the subscription flow using XActions.</p>
+</blockquote>
+<p><strong>Works on:</strong> Browser Console<br><strong>Difficulty:</strong> Beginner<br><strong>Time:</strong> 2-5 minutes<br><strong>Requirements:</strong> Logged into x.com in your browser</p>
+<hr>
+<h2>Prerequisites</h2>
+<ul>
+<li>Logged into x.com in your browser</li>
+<li>Browser DevTools console (F12 or Cmd+Option+J on Mac)</li>
+<li>A payment method for subscribing</li>
+</ul>
+<hr>
+<h2>Quick Start</h2>
+<ol>
+<li>Go to any page on x.com</li>
+<li>Open DevTools Console (F12, then click the <strong>Console</strong> tab)</li>
+<li>Paste the script below to check status, compare tiers, and navigate to signup</li>
+<li>Review the tier comparison in the console</li>
+<li>Follow the on-screen prompts to complete your subscription</li>
+</ol>
+<hr>
+<h2>Configuration</h2>
+<pre><code class="language-javascript">const CONFIG = {
+  autoNavigate: true,          // Navigate to Premium signup page automatically
+  showTierComparison: true,    // Display tier comparison table in console
+  checkCurrentStatus: true,    // Check if you already have Premium
+  delayBetweenActions: 2000,   // ms between navigation steps
+};
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>autoNavigate</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Auto-navigate to the Premium signup page</td>
+</tr>
+<tr>
+<td><code>showTierComparison</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Print tier comparison to console</td>
+</tr>
+<tr>
+<td><code>checkCurrentStatus</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Check if you already have Premium</td>
+</tr>
+<tr>
+<td><code>delayBetweenActions</code></td>
+<td>number</td>
+<td><code>2000</code></td>
+<td>Delay between UI actions in ms</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Step-by-Step Guide</h2>
+<h3>Step 1: Check Your Current Status and Compare Tiers</h3>
+<pre><code class="language-javascript">(() =&gt; {
+  &#39;use strict&#39;;
+
+  console.log(&#39;💎 X PREMIUM — XActions by nichxbt&#39;);
+  console.log(&#39;&#39;);
+
+  // Check current status
+  const verifiedBadge = document.querySelector(&#39;[data-testid=&quot;icon-verified&quot;]&#39;);
+  const premiumLinks = document.querySelectorAll(&#39;a[href=&quot;/i/premium_sign_up&quot;]&#39;);
+
+  if (verifiedBadge) {
+    console.log(&#39;✅ You appear to have a verified badge (Premium active).&#39;);
+    console.log(&#39;💡 Manage your subscription: x.com/settings/manage_subscription&#39;);
+  } else {
+    console.log(&#39;⚠️ No verified badge detected — you may not have Premium.&#39;);
+  }
+
+  // Tier comparison
+  console.log(&#39;\n══════════════════════════════════════════════════&#39;);
+  console.log(&#39;💎 X PREMIUM TIER COMPARISON&#39;);
+  console.log(&#39;══════════════════════════════════════════════════\n&#39;);
+
+  const tiers = {
+    &#39;Basic — $3/mo&#39;: [
+      &#39;Small blue checkmark&#39;,
+      &#39;Edit posts (5 per post, within 30 min)&#39;,
+      &#39;Longer posts (up to 10,000 characters)&#39;,
+      &#39;Longer video uploads (up to 2 hours)&#39;,
+      &#39;Bookmark folders&#39;,
+      &#39;Fewer ads in For You and Following&#39;,
+    ],
+    &#39;Premium — $8/mo&#39;: [
+      &#39;Everything in Basic&#39;,
+      &#39;Blue checkmark&#39;,
+      &#39;Prioritized rankings in replies &amp; search&#39;,
+      &#39;Half the ads&#39;,
+      &#39;Creator Subscriptions&#39;,
+      &#39;Grok AI assistant&#39;,
+      &#39;Media Studio access&#39;,
+      &#39;Analytics dashboard&#39;,
+    ],
+    &#39;Premium+ — $16/mo&#39;: [
+      &#39;Everything in Premium&#39;,
+      &#39;Largest blue checkmark boost&#39;,
+      &#39;No ads&#39;,
+      &#39;Largest reply boost&#39;,
+      &#39;Write Articles&#39;,
+      &#39;Revenue sharing eligible&#39;,
+      &#39;X Pro (TweetDeck) access&#39;,
+      &#39;Highest priority support&#39;,
+    ],
+  };
+
+  for (const [tier, features] of Object.entries(tiers)) {
+    console.log(`\n🏷️  ${tier}`);
+    console.log(&#39;─&#39;.repeat(40));
+    features.forEach(f =&gt; console.log(`   ✓ ${f}`));
+  }
+
+  console.log(&#39;\n══════════════════════════════════════════════════&#39;);
+  console.log(&#39;💡 Annual billing saves ~12% on all tiers.&#39;);
+  console.log(&#39;💡 Subscribe at: x.com/i/premium_sign_up&#39;);
+})();
+</code></pre>
+<h3>Step 2: Navigate to the Signup Page</h3>
+<pre><code class="language-javascript">(async () =&gt; {
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+
+  console.log(&#39;🚀 Navigating to Premium signup page...&#39;);
+
+  const premiumLink = document.querySelector(&#39;a[href=&quot;/i/premium_sign_up&quot;]&#39;)
+    || document.querySelector(&#39;nav a[href=&quot;/i/premium_sign_up&quot;]&#39;);
+
+  if (premiumLink) {
+    premiumLink.click();
+    console.log(&#39;✅ Clicked Premium signup link.&#39;);
+    await sleep(2000);
+  } else {
+    console.log(&#39;⚠️ No Premium link in sidebar. Navigating directly...&#39;);
+    window.location.href = &#39;https://x.com/i/premium_sign_up&#39;;
+    await sleep(4000);
+  }
+
+  // Check for tier options on the page
+  const tierElements = document.querySelectorAll(&#39;[data-testid=&quot;premiumTier&quot;]&#39;);
+  if (tierElements.length &gt; 0) {
+    console.log(`✅ Found ${tierElements.length} tier option(s) on the page.`);
+  } else {
+    console.log(&#39;ℹ️ Tier elements loading... Follow the on-screen prompts.&#39;);
+  }
+
+  console.log(&#39;\n✅ Follow the on-screen prompts to complete your subscription.&#39;);
+})();
+</code></pre>
+<h3>Full Script (All-in-One)</h3>
+<p>Run the complete <code>src/subscribePremium.js</code> script for the full experience including status check, tier comparison, and auto-navigation:</p>
+<pre><code class="language-javascript">// Copy the full contents of src/subscribePremium.js and paste into console
+// The script will:
+// 1. Check if you already have Premium
+// 2. Display a tier comparison table
+// 3. Navigate to the signup page
+</code></pre>
+<h3>Expected Console Output</h3>
+<pre><code>═══════════════════════════════════════════
+💎 XActions — Subscribe to X Premium
+═══════════════════════════════════════════
+
+🔍 Checking current Premium status...
+⚠️ No verified badge detected — you may not have Premium.
+💡 Premium signup link found in sidebar — subscription may not be active.
+
+══════════════════════════════════════════════════
+💎 X PREMIUM TIER COMPARISON
+══════════════════════════════════════════════════
+
+🏷️  Basic — $3/mo
+────────────────────────────────────────
+   ✓ Small blue checkmark
+   ✓ Edit posts (5 per post, within 30 min)
+   ✓ Longer posts (up to 10,000 characters)
+   ✓ Longer video uploads (up to 2 hours)
+   ✓ Bookmark folders
+   ✓ Fewer ads in For You and Following
+
+🏷️  Premium — $8/mo
+────────────────────────────────────────
+   ✓ Everything in Basic
+   ✓ Blue checkmark
+   ✓ Prioritized rankings in replies &amp; search
+   ✓ Half the ads
+   ✓ Creator Subscriptions
+   ✓ Grok AI assistant
+   ✓ Media Studio access
+   ✓ Analytics dashboard
+
+🏷️  Premium+ — $16/mo
+────────────────────────────────────────
+   ✓ Everything in Premium
+   ✓ Largest blue checkmark boost
+   ✓ No ads
+   ✓ Largest reply boost
+   ✓ Write Articles
+   ✓ Revenue sharing eligible
+   ✓ X Pro (TweetDeck) access
+   ✓ Highest priority support
+
+══════════════════════════════════════════════════
+💡 Annual billing saves ~12% on all tiers.
+
+🚀 Navigating to Premium signup page...
+✅ Clicked Premium signup link.
+
+✅ Done! Follow the on-screen prompts to complete your subscription.
+</code></pre>
+<hr>
+<h2>Tips &amp; Tricks</h2>
+<ol>
+<li><p><strong>Annual billing saves money</strong> -- All tiers offer annual billing at approximately 12% discount compared to monthly.</p>
+</li>
+<li><p><strong>Check before subscribing</strong> -- The script checks for an existing verified badge so you do not accidentally double-subscribe.</p>
+</li>
+<li><p><strong>Manage existing subscription</strong> -- If you already have Premium, manage it at <code>x.com/settings/manage_subscription</code>.</p>
+</li>
+<li><p><strong>Regional pricing</strong> -- Prices may vary by country. The signup page will show your local pricing.</p>
+</li>
+<li><p><strong>Trial periods</strong> -- X occasionally offers free trial periods for new subscribers. Check the signup page for current promotions.</p>
+</li>
+</ol>
+<hr>
+<h2>Troubleshooting</h2>
+<table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&quot;No Premium link in sidebar&quot;</td>
+<td>The link may not be visible if you already have Premium. Check <code>x.com/settings/manage_subscription</code>.</td>
+</tr>
+<tr>
+<td>Signup page not loading</td>
+<td>Try navigating directly to <code>x.com/i/premium_sign_up</code>. Clear browser cache if needed.</td>
+</tr>
+<tr>
+<td>Payment fails</td>
+<td>Ensure your payment method is valid. Try a different card or payment method.</td>
+</tr>
+<tr>
+<td>Already subscribed but no badge</td>
+<td>Verification can take up to 24 hours after subscribing. Check <code>x.com/settings/verification</code>.</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Related Scripts</h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Script</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Blue Checkmark &amp; Fewer Ads</td>
+<td><code>src/premiumManager.js</code></td>
+<td>Manage Premium features and check tier</td>
+</tr>
+<tr>
+<td>Premium Gifting</td>
+<td><code>src/premiumGifting.js</code></td>
+<td>Gift Premium to another user</td>
+</tr>
+<tr>
+<td>ID Verification</td>
+<td><code>src/idVerification.js</code></td>
+<td>Complete identity verification</td>
+</tr>
+<tr>
+<td>Creator Revenue</td>
+<td><code>src/creatorSubscriptions.js</code></td>
+<td>Set up revenue sharing</td>
+</tr>
+</tbody></table>
+<hr>
+<footer>
+Built with XActions by <a href="https://x.com/nichxbt">@nichxbt</a> · <a href="https://xactions.app">xactions.app</a> · <a href="https://github.com/nichxbt/xactions">GitHub</a>
+</footer>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try Subscribe to X Premium — Tutorial?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/step-by-step/add-media-tutorial">📝 Add Media Tutorial</a>
+        <a href="/docs/step-by-step/ads-campaigns-tutorial">📝 Ads Campaigns Tutorial</a>
+        <a href="/docs/step-by-step/affiliate-benefits-tutorial">📝 Affiliate Benefits Tutorial</a>
+        <a href="/docs/step-by-step/alt-text-tutorial">📝 Alt Text Tutorial</a>
+        <a href="/docs/step-by-step/auto-commenter-tutorial">📝 Auto Commenter Tutorial</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a> / <a href="/docs#step-by-step">Tutorials</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

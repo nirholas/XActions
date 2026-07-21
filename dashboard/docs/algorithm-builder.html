@@ -73,13 +73,121 @@
   }
   </script>
 
-  <link rel="stylesheet" href="/css/common.css">
-  <link rel="stylesheet" href="/css/docs.css">
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
 </head>
 <body>
   <div class="layout">
     <!-- Sidebar -->
-    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
 
     <!-- Main Content -->
     <main class="main-content">
@@ -132,12 +240,1017 @@
 <li>Copy and paste the script from <a href="https://github.com/nirholas/XActions/blob/main/src/algorithmBuilder.js"><code>src/algorithmBuilder.js</code></a></li>
 <li>Press Enter to run</li>
 </ol>
-<pre><code class="language-javascript">// Quick start — copy the full script from:
-// src/algorithmBuilder.js
-//
-// Or install via npm and use the CLI:
-// npm install -g xactions
-// xactions --help
+<pre><code class="language-javascript">/**
+ * XActions Algorithm Builder
+ * 
+ * 24/7 automated account growth engine powered by Puppeteer + LLM.
+ * Builds up your X/Twitter algorithm and persona by:
+ * - Searching niche topics and scrolling through results
+ * - Liking, commenting, and following relevant accounts
+ * - Creating original posts in your persona&#39;s voice
+ * - Visiting profiles, checking notifications, browsing timeline
+ * - Maintaining human-like activity patterns with sleep cycles
+ * 
+ * Everything is driven by a Persona config (see personaEngine.js).
+ * LLM generates all comments and posts via OpenRouter.
+ * 
+ * Usage:
+ *   import { startAlgorithmBuilder } from &#39;./algorithmBuilder.js&#39;;
+ *   await startAlgorithmBuilder({ personaId: &#39;my_persona&#39;, authToken: &#39;...&#39; });
+ * 
+ * @author nich (@nichxbt) - https://github.com/nirholas
+ * @license Apache-2.0
+ */
+
+import {
+  loadPersona,
+  savePersona,
+  buildPersonaSystemPrompt,
+  buildCommentPrompt,
+  buildPostPrompt,
+  shouldBeActive,
+  getSessionDuration,
+  getDelayUntilNextSession,
+  planSession,
+} from &#39;./personaEngine.js&#39;;
+
+import {
+  createBrowser,
+  createPage,
+  loginWithCookie,
+} from &#39;./scrapers/index.js&#39;;
+
+// ============================================================================
+// Configuration
+// ============================================================================
+
+const OPENROUTER_URL = &#39;https://openrouter.ai/api/v1/chat/completions&#39;;
+
+const TIMING = {
+  // Human-like delays with jitter
+  BETWEEN_ACTIONS: { min: 2000, max: 5000 },
+  SCROLL_PAUSE: { min: 1500, max: 4000 },
+  READ_TIME: { min: 2000, max: 8000 },
+  TYPE_DELAY: { min: 30, max: 100 },  // per character
+  BEFORE_CLICK: { min: 300, max: 1000 },
+  PAGE_LOAD: { min: 3000, max: 6000 },
+  SEARCH_PAUSE: { min: 2000, max: 5000 },
+  LONG_BREAK: { min: 30000, max: 120000 },  // occasional longer pauses
+};
+
+const SELECTORS = {
+  // Tweet elements
+  tweet: &#39;article[data-testid=&quot;tweet&quot;]&#39;,
+  tweetText: &#39;[data-testid=&quot;tweetText&quot;]&#39;,
+  likeButton: &#39;[data-testid=&quot;like&quot;]&#39;,
+  unlikeButton: &#39;[data-testid=&quot;unlike&quot;]&#39;,
+  replyButton: &#39;[data-testid=&quot;reply&quot;]&#39;,
+  retweetButton: &#39;[data-testid=&quot;retweet&quot;]&#39;,
+  bookmarkButton: &#39;[data-testid=&quot;bookmark&quot;]&#39;,
+
+  // User elements
+  userCell: &#39;[data-testid=&quot;UserCell&quot;]&#39;,
+  followButton: &#39;[data-testid$=&quot;-follow&quot;]&#39;,
+  userAvatar: &#39;[data-testid=&quot;UserAvatar&quot;]&#39;,
+
+  // Compose
+  tweetTextarea: &#39;[data-testid=&quot;tweetTextarea_0&quot;]&#39;,
+  tweetButton: &#39;[data-testid=&quot;tweetButton&quot;]&#39;,
+  replyTextarea: &#39;[data-testid=&quot;tweetTextarea_0&quot;]&#39;,
+
+  // Navigation
+  searchInput: &#39;[data-testid=&quot;SearchBox_Search_Input&quot;]&#39;,
+  searchTab: &#39;a[href*=&quot;/search?&quot;]&#39;,
+  topTab: &#39;a[role=&quot;tab&quot;]:first-child&#39;,
+  latestTab: &#39;a[role=&quot;tab&quot;]:nth-child(2)&#39;,
+
+  // Profile
+  profileBio: &#39;[data-testid=&quot;UserDescription&quot;]&#39;,
+  followersCount: &#39;a[href$=&quot;/followers&quot;] span span&#39;,
+  followingCount: &#39;a[href$=&quot;/following&quot;] span span&#39;,
+
+  // Misc
+  confirmButton: &#39;[data-testid=&quot;confirmationSheetConfirm&quot;]&#39;,
+  backButton: &#39;[data-testid=&quot;app-bar-back&quot;]&#39;,
+  primaryColumn: &#39;[data-testid=&quot;primaryColumn&quot;]&#39;,
+  timeline: &#39;section[role=&quot;region&quot;]&#39;,
+};
+
+// ============================================================================
+// Utility Functions
+// ============================================================================
+
+function sleep(ms) {
+  return new Promise(resolve =&gt; setTimeout(resolve, ms));
+}
+
+function randomBetween(min, max) {
+  return Math.floor(min + Math.random() * (max - min));
+}
+
+function randomDelay(timing) {
+  return sleep(randomBetween(timing.min, timing.max));
+}
+
+function log(emoji, message) {
+  const timestamp = new Date().toLocaleTimeString();
+  console.log(`${emoji} [${timestamp}] ${message}`);
+}
+
+/**
+ * Human-like mouse movement simulation
+ */
+async function humanClick(page, element) {
+  try {
+    await randomDelay(TIMING.BEFORE_CLICK);
+    const box = await element.boundingBox();
+    if (!box) return false;
+
+    // Move to element with slight offset (humans don&#39;t click exact center)
+    const x = box.x + box.width * (0.3 + Math.random() * 0.4);
+    const y = box.y + box.height * (0.3 + Math.random() * 0.4);
+
+    await page.mouse.move(x, y, { steps: randomBetween(5, 15) });
+    await sleep(randomBetween(50, 200));
+    await page.mouse.click(x, y);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Human-like typing with variable speed
+ */
+async function humanType(page, selector, text) {
+  try {
+    await page.waitForSelector(selector, { timeout: 10000 });
+    await page.focus(selector);
+    await sleep(randomBetween(200, 500));
+
+    for (const char of text) {
+      await page.keyboard.type(char, {
+        delay: randomBetween(TIMING.TYPE_DELAY.min, TIMING.TYPE_DELAY.max),
+      });
+      // Occasional longer pause (simulates thinking)
+      if (Math.random() &lt; 0.05) {
+        await sleep(randomBetween(300, 800));
+      }
+    }
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Human-like scrolling with variable speed and pauses
+ */
+async function humanScroll(page, options = {}) {
+  const scrolls = options.scrolls || randomBetween(3, 8);
+  const direction = options.direction || &#39;down&#39;;
+
+  for (let i = 0; i &lt; scrolls; i++) {
+    const distance = randomBetween(200, 600) * (direction === &#39;up&#39; ? -1 : 1);
+    await page.evaluate((d) =&gt; window.scrollBy(0, d), distance);
+    await randomDelay(TIMING.SCROLL_PAUSE);
+
+    // Sometimes pause longer to &quot;read&quot; content
+    if (Math.random() &lt; 0.3) {
+      await randomDelay(TIMING.READ_TIME);
+    }
+  }
+}
+
+// ============================================================================
+// LLM Integration
+// ============================================================================
+
+/**
+ * Call OpenRouter for text generation
+ */
+async function callLLM(messages, persona) {
+  const apiKey = persona.llm.apiKey || process.env.OPENROUTER_API_KEY;
+  if (!apiKey) {
+    log(&#39;⚠️&#39;, &#39;No OpenRouter API key — skipping LLM generation&#39;);
+    return null;
+  }
+
+  const model = persona.llm.models.comment;
+
+  try {
+    const response = await fetch(OPENROUTER_URL, {
+      method: &#39;POST&#39;,
+      headers: {
+        &#39;Authorization&#39;: `Bearer ${apiKey}`,
+        &#39;Content-Type&#39;: &#39;application/json&#39;,
+        &#39;HTTP-Referer&#39;: &#39;https://xactions.app&#39;,
+        &#39;X-Title&#39;: &#39;XActions Algorithm Builder&#39;,
+      },
+      body: JSON.stringify({
+        model,
+        messages,
+        temperature: persona.llm.temperature,
+        max_tokens: 300,
+      }),
+    });
+
+    if (!response.ok) {
+      const err = await response.text();
+      log(&#39;❌&#39;, `LLM error: ${err.slice(0, 100)}`);
+      return null;
+    }
+
+    const data = await response.json();
+    return data.choices?.[0]?.message?.content?.trim() || null;
+  } catch (err) {
+    log(&#39;❌&#39;, `LLM request failed: ${err.message}`);
+    return null;
+  }
+}
+
+/**
+ * Generate a comment for a tweet using persona&#39;s voice
+ */
+async function generateComment(tweetText, tweetAuthor, persona) {
+  const systemPrompt = buildPersonaSystemPrompt(persona);
+  const userPrompt = buildCommentPrompt(persona, tweetText, tweetAuthor);
+
+  const content = await callLLM([
+    { role: &#39;system&#39;, content: systemPrompt },
+    { role: &#39;user&#39;, content: userPrompt },
+  ], persona);
+
+  if (!content) return null;
+
+  // Clean the response — remove quotes, labels
+  return content
+    .replace(/^[&quot;&#39;]|[&quot;&#39;]$/g, &#39;&#39;)
+    .replace(/^(reply|comment|response):\s*/i, &#39;&#39;)
+    .trim();
+}
+
+/**
+ * Generate an original post using persona&#39;s voice
+ */
+async function generatePost(persona, context = {}) {
+  const systemPrompt = buildPersonaSystemPrompt(persona);
+  const userPrompt = buildPostPrompt(persona, context);
+
+  const content = await callLLM([
+    { role: &#39;system&#39;, content: systemPrompt },
+    { role: &#39;user&#39;, content: userPrompt },
+  ], persona);
+
+  if (!content) return null;
+
+  return content
+    .replace(/^[&quot;&#39;]|[&quot;&#39;]$/g, &#39;&#39;)
+    .trim();
+}
+
+// ============================================================================
+// Page Actions — Individual browser automation tasks
+// ============================================================================
+
+/**
+ * Extract visible tweets from the current page
+ */
+async function extractVisibleTweets(page) {
+  return page.evaluate((sel) =&gt; {
+    const tweets = document.querySelectorAll(sel.tweet);
+    return Array.from(tweets).slice(0, 20).map(tweet =&gt; {
+      const textEl = tweet.querySelector(sel.tweetText);
+      const text = textEl?.textContent || &#39;&#39;;
+
+      // Extract author from the tweet
+      const links = tweet.querySelectorAll(&#39;a[role=&quot;link&quot;]&#39;);
+      let author = &#39;&#39;;
+      for (const link of links) {
+        const href = link.getAttribute(&#39;href&#39;);
+        if (href &amp;&amp; href.startsWith(&#39;/&#39;) &amp;&amp; !href.includes(&#39;/status/&#39;) &amp;&amp; href.split(&#39;/&#39;).length === 2) {
+          author = href.slice(1);
+          break;
+        }
+      }
+
+      // Check if already liked
+      const isLiked = !!tweet.querySelector(sel.unlikeButton);
+
+      // Get metrics
+      const likeBtn = tweet.querySelector(sel.likeButton) || tweet.querySelector(sel.unlikeButton);
+      const likes = parseInt(likeBtn?.getAttribute(&#39;aria-label&#39;)?.match(/\d+/)?.[0] || &#39;0&#39;);
+
+      return { text, author, isLiked, likes, index: Array.from(tweets).indexOf(tweet) };
+    }).filter(t =&gt; t.text.length &gt; 10);
+  }, SELECTORS);
+}
+
+/**
+ * Extract visible user cells from the current page
+ */
+async function extractVisibleUsers(page) {
+  return page.evaluate((sel) =&gt; {
+    const cells = document.querySelectorAll(sel.userCell);
+    return Array.from(cells).slice(0, 15).map(cell =&gt; {
+      const links = cell.querySelectorAll(&#39;a[role=&quot;link&quot;]&#39;);
+      let username = &#39;&#39;;
+      for (const link of links) {
+        const href = link.getAttribute(&#39;href&#39;);
+        if (href &amp;&amp; href.startsWith(&#39;/&#39;) &amp;&amp; href.split(&#39;/&#39;).length === 2) {
+          username = href.slice(1);
+          break;
+        }
+      }
+      const bio = cell.querySelector(&#39;[data-testid=&quot;UserDescription&quot;]&#39;)?.textContent || &#39;&#39;;
+      const hasFollowButton = !!cell.querySelector(&#39;[data-testid$=&quot;-follow&quot;]&#39;);
+      return { username, bio, hasFollowButton };
+    }).filter(u =&gt; u.username);
+  }, SELECTORS);
+}
+
+/**
+ * Search for a term on X
+ */
+async function doSearch(page, term, tab = &#39;top&#39;) {
+  log(&#39;🔍&#39;, `Searching: &quot;${term}&quot; (${tab})`);
+  try {
+    await page.goto(`https://x.com/search?q=${encodeURIComponent(term)}&amp;src=typed_query&amp;f=${tab === &#39;latest&#39; ? &#39;live&#39; : &#39;top&#39;}`, {
+      waitUntil: &#39;networkidle2&#39;,
+      timeout: 30000,
+    });
+    await randomDelay(TIMING.PAGE_LOAD);
+    await humanScroll(page, { scrolls: randomBetween(2, 5) });
+    return true;
+  } catch (err) {
+    log(&#39;⚠️&#39;, `Search failed: ${err.message}`);
+    return false;
+  }
+}
+
+/**
+ * Browse home timeline
+ */
+async function browseHome(page) {
+  log(&#39;🏠&#39;, &#39;Browsing home timeline&#39;);
+  try {
+    await page.goto(&#39;https://x.com/home&#39;, { waitUntil: &#39;networkidle2&#39;, timeout: 30000 });
+    await randomDelay(TIMING.PAGE_LOAD);
+    await humanScroll(page, { scrolls: randomBetween(3, 8) });
+    return true;
+  } catch (err) {
+    log(&#39;⚠️&#39;, `Home browse failed: ${err.message}`);
+    return false;
+  }
+}
+
+/**
+ * Like a tweet on the current page
+ */
+async function likeTweet(page, tweetIndex = null) {
+  try {
+    const likeButtons = await page.$$(SELECTORS.likeButton);
+    if (likeButtons.length === 0) return false;
+
+    const idx = tweetIndex ?? randomBetween(0, Math.min(likeButtons.length - 1, 5));
+    const btn = likeButtons[idx];
+    if (!btn) return false;
+
+    // Get tweet info for logging
+    const tweets = await extractVisibleTweets(page);
+    const tweet = tweets[idx];
+
+    const clicked = await humanClick(page, btn);
+    if (clicked) {
+      log(&#39;❤️&#39;, `Liked tweet by @${tweet?.author || &#39;unknown&#39;}: &quot;${(tweet?.text || &#39;&#39;).slice(0, 60)}...&quot;`);
+    }
+    await randomDelay(TIMING.BETWEEN_ACTIONS);
+    return clicked;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Follow a user on the current page
+ */
+async function followUser(page, persona, username = null) {
+  try {
+    if (username) {
+      // Navigate to specific user&#39;s profile
+      await page.goto(`https://x.com/${username}`, { waitUntil: &#39;networkidle2&#39;, timeout: 30000 });
+      await randomDelay(TIMING.PAGE_LOAD);
+    }
+
+    const followButtons = await page.$$(SELECTORS.followButton);
+    if (followButtons.length === 0) return null;
+
+    const btn = followButtons[0];
+    const clicked = await humanClick(page, btn);
+
+    if (clicked) {
+      const followed = username || &#39;user&#39;;
+      log(&#39;➕&#39;, `Followed @${followed}`);
+
+      // Track in persona state
+      persona.state.followedUsers[followed] = {
+        followedAt: new Date().toISOString(),
+        unfollowed: false,
+      };
+    }
+
+    await randomDelay(TIMING.BETWEEN_ACTIONS);
+    return clicked ? username : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Comment on a tweet using LLM-generated text
+ */
+async function commentOnTweet(page, persona, tweet) {
+  if (!tweet?.text || !tweet?.author) return false;
+
+  // Generate a comment
+  const comment = await generateComment(tweet.text, tweet.author, persona);
+  if (!comment) {
+    log(&#39;⚠️&#39;, &#39;Could not generate comment, skipping&#39;);
+    return false;
+  }
+
+  log(&#39;💬&#39;, `Commenting on @${tweet.author}: &quot;${comment.slice(0, 80)}...&quot;`);
+
+  try {
+    // Find and click reply button on the tweet
+    const tweets = await page.$$(SELECTORS.tweet);
+    if (!tweets[tweet.index]) return false;
+
+    const replyBtn = await tweets[tweet.index].$(SELECTORS.replyButton);
+    if (!replyBtn) return false;
+
+    await humanClick(page, replyBtn);
+    await sleep(randomBetween(1500, 3000));
+
+    // Type the comment
+    const typed = await humanType(page, SELECTORS.replyTextarea, comment);
+    if (!typed) return false;
+
+    await sleep(randomBetween(500, 1500));
+
+    // Click the reply/post button
+    const postBtn = await page.$(SELECTORS.tweetButton);
+    if (postBtn) {
+      await humanClick(page, postBtn);
+      log(&#39;✅&#39;, &#39;Comment posted&#39;);
+      await randomDelay(TIMING.BETWEEN_ACTIONS);
+      return true;
+    }
+    return false;
+  } catch (err) {
+    log(&#39;⚠️&#39;, `Comment failed: ${err.message}`);
+    return false;
+  }
+}
+
+/**
+ * Create an original post using LLM
+ */
+async function createPost(page, persona) {
+  const postText = await generatePost(persona);
+  if (!postText) {
+    log(&#39;⚠️&#39;, &#39;Could not generate post, skipping&#39;);
+    return false;
+  }
+
+  log(&#39;✍️&#39;, `Creating post: &quot;${postText.slice(0, 80)}...&quot;`);
+
+  try {
+    // Navigate to compose
+    await page.goto(&#39;https://x.com/compose/post&#39;, { waitUntil: &#39;networkidle2&#39;, timeout: 30000 });
+    await sleep(randomBetween(1500, 3000));
+
+    // Type the post with human-like speed
+    const typed = await humanType(page, SELECTORS.tweetTextarea, postText);
+    if (!typed) return false;
+
+    // Pause like you&#39;re re-reading what you wrote
+    await sleep(randomBetween(2000, 5000));
+
+    // Click post button
+    const postBtn = await page.$(SELECTORS.tweetButton);
+    if (postBtn) {
+      await humanClick(page, postBtn);
+      log(&#39;🚀&#39;, &#39;Post published!&#39;);
+      persona.state.lastPostAt = new Date().toISOString();
+      await randomDelay(TIMING.BETWEEN_ACTIONS);
+      return true;
+    }
+    return false;
+  } catch (err) {
+    log(&#39;⚠️&#39;, `Post failed: ${err.message}`);
+    return false;
+  }
+}
+
+/**
+ * Visit a user&#39;s profile and browse it
+ */
+async function visitProfile(page, username) {
+  log(&#39;👤&#39;, `Visiting @${username}&#39;s profile`);
+  try {
+    await page.goto(`https://x.com/${username}`, { waitUntil: &#39;networkidle2&#39;, timeout: 30000 });
+    await randomDelay(TIMING.PAGE_LOAD);
+
+    // Scroll through their tweets like a human would
+    await humanScroll(page, { scrolls: randomBetween(2, 6) });
+
+    // Sometimes read the bio
+    if (Math.random() &lt; 0.5) {
+      await sleep(randomBetween(1000, 3000));
+    }
+
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Check own profile (natural behavior)
+ */
+async function checkOwnProfile(page) {
+  log(&#39;🪞&#39;, &#39;Checking own profile&#39;);
+  try {
+    // Click profile link in sidebar or navigate
+    await page.goto(&#39;https://x.com/home&#39;, { waitUntil: &#39;networkidle2&#39; });
+    await sleep(1000);
+
+    // Look for profile link in nav
+    const profileLink = await page.$(&#39;a[data-testid=&quot;AppTabBar_Profile_Link&quot;]&#39;);
+    if (profileLink) {
+      await humanClick(page, profileLink);
+      await randomDelay(TIMING.PAGE_LOAD);
+      await humanScroll(page, { scrolls: randomBetween(1, 3) });
+    }
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Check notifications
+ */
+async function checkNotifications(page) {
+  log(&#39;🔔&#39;, &#39;Checking notifications&#39;);
+  try {
+    await page.goto(&#39;https://x.com/notifications&#39;, { waitUntil: &#39;networkidle2&#39;, timeout: 30000 });
+    await randomDelay(TIMING.PAGE_LOAD);
+    await humanScroll(page, { scrolls: randomBetween(1, 4) });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Smart unfollow — unfollow users who didn&#39;t follow back after the grace period
+ */
+async function smartUnfollow(page, persona, maxUnfollows = 5) {
+  const graceDays = persona.strategy.unfollowAfterDays || 5;
+  const now = Date.now();
+  const graceMs = graceDays * 24 * 60 * 60 * 1000;
+  let unfollowed = 0;
+
+  const candidates = Object.entries(persona.state.followedUsers || {})
+    .filter(([, info]) =&gt; {
+      if (info.unfollowed) return false;
+      const followedAt = new Date(info.followedAt).getTime();
+      return (now - followedAt) &gt; graceMs;
+    })
+    .slice(0, maxUnfollows);
+
+  if (candidates.length === 0) return 0;
+
+  log(&#39;🧹&#39;, `Checking ${candidates.length} users for unfollow (${graceDays}-day grace period)`);
+
+  for (const [username] of candidates) {
+    try {
+      await page.goto(`https://x.com/${username}`, { waitUntil: &#39;networkidle2&#39;, timeout: 30000 });
+      await randomDelay(TIMING.PAGE_LOAD);
+
+      // Check if they follow us back (look for &quot;Follows you&quot; indicator)
+      const followsBack = await page.evaluate(() =&gt; {
+        const indicator = document.querySelector(&#39;[data-testid=&quot;userFollowIndicator&quot;]&#39;);
+        return !!indicator;
+      });
+
+      if (followsBack) {
+        log(&#39;✅&#39;, `@${username} follows back — keeping`);
+        persona.state.followedUsers[username].followsBack = true;
+        continue;
+      }
+
+      // Find and click unfollow button (shows as &quot;Following&quot; button)
+      const unfollowBtn = await page.$(&#39;[data-testid$=&quot;-unfollow&quot;]&#39;);
+      if (unfollowBtn) {
+        await humanClick(page, unfollowBtn);
+        await sleep(randomBetween(1000, 2000));
+
+        // Confirm the unfollow dialog
+        const confirmBtn = await page.$(SELECTORS.confirmButton);
+        if (confirmBtn) {
+          await humanClick(page, confirmBtn);
+        }
+
+        persona.state.followedUsers[username].unfollowed = true;
+        persona.state.followedUsers[username].unfollowedAt = new Date().toISOString();
+        persona.state.totalUnfollows = (persona.state.totalUnfollows || 0) + 1;
+        unfollowed++;
+
+        log(&#39;➖&#39;, `Unfollowed @${username} (no follow-back after ${graceDays} days)`);
+        await randomDelay(TIMING.BETWEEN_ACTIONS);
+      }
+    } catch (err) {
+      log(&#39;⚠️&#39;, `Unfollow error for @${username}: ${err.message}`);
+    }
+  }
+
+  if (unfollowed &gt; 0) {
+    log(&#39;🧹&#39;, `Unfollowed ${unfollowed} non-followers`);
+  }
+  return unfollowed;
+}
+
+// ============================================================================
+// Session Runner — Executes planned activities
+// ============================================================================
+
+/**
+ * Run a single session with the given activity plan
+ */
+async function runSession(page, persona, plan) {
+  const startTime = Date.now();
+  const maxDuration = plan.duration * 60 * 1000;
+  const stats = {
+    searches: 0,
+    likes: 0,
+    follows: 0,
+    comments: 0,
+    posts: 0,
+    profileVisits: 0,
+    errors: 0,
+  };
+
+  log(&#39;🎬&#39;, `Starting session — ${plan.activities.length} activities planned, ~${plan.duration}min`);
+
+  // Collect tweets and users as we browse
+  let collectedTweets = [];
+  let collectedUsers = [];
+  let tweetCursor = 0;
+  let userCursor = 0;
+
+  for (const activity of plan.activities) {
+    // Check time limit
+    if (Date.now() - startTime &gt; maxDuration) {
+      log(&#39;⏰&#39;, &#39;Session time limit reached&#39;);
+      break;
+    }
+
+    try {
+      switch (activity.type) {
+        case &#39;search&#39;: {
+          const searched = await doSearch(page, activity.term, activity.tab);
+          if (searched) {
+            stats.searches++;
+            // Collect tweets and users from search results
+            const newTweets = await extractVisibleTweets(page);
+            const newUsers = await extractVisibleUsers(page);
+            collectedTweets.push(...newTweets.filter(t =&gt; !persona.state.engagedPosts.has(t.text.slice(0, 50))));
+            collectedUsers.push(...newUsers);
+          }
+          break;
+        }
+
+        case &#39;browse_home&#39;: {
+          await browseHome(page);
+          const newTweets = await extractVisibleTweets(page);
+          collectedTweets.push(...newTweets.filter(t =&gt; !persona.state.engagedPosts.has(t.text.slice(0, 50))));
+          break;
+        }
+
+        case &#39;like&#39;: {
+          // First make sure we have tweets to like
+          if (collectedTweets.length === 0) {
+            await browseHome(page);
+            collectedTweets = await extractVisibleTweets(page);
+          }
+
+          // Like a tweet on the current page
+          const liked = await likeTweet(page);
+          if (liked) {
+            stats.likes++;
+            // Mark as engaged
+            if (collectedTweets[tweetCursor]) {
+              persona.state.engagedPosts.add(collectedTweets[tweetCursor].text.slice(0, 50));
+              tweetCursor++;
+            }
+          }
+          break;
+        }
+
+        case &#39;follow&#39;: {
+          // Follow from collected users or target accounts
+          let followed = null;
+          if (collectedUsers.length &gt; userCursor &amp;&amp; collectedUsers[userCursor]?.hasFollowButton) {
+            const user = collectedUsers[userCursor];
+            followed = await followUser(page, persona, user.username);
+            userCursor++;
+          } else if (persona.niche.targetAccounts.length &gt; 0) {
+            // Visit a target account&#39;s followers and follow some
+            const target = persona.niche.targetAccounts[Math.floor(Math.random() * persona.niche.targetAccounts.length)];
+            await page.goto(`https://x.com/${target}/followers`, { waitUntil: &#39;networkidle2&#39;, timeout: 30000 });
+            await randomDelay(TIMING.PAGE_LOAD);
+            await humanScroll(page, { scrolls: randomBetween(1, 3) });
+            const users = await extractVisibleUsers(page);
+            if (users.length &gt; 0) {
+              const user = users[Math.floor(Math.random() * Math.min(users.length, 5))];
+              followed = await followUser(page, persona, user.username);
+            }
+          }
+          if (followed) stats.follows++;
+          break;
+        }
+
+        case &#39;comment&#39;: {
+          // Find a good tweet to comment on
+          if (collectedTweets.length === 0) {
+            await browseHome(page);
+            collectedTweets = await extractVisibleTweets(page);
+          }
+
+          // Pick a tweet with decent engagement to comment on
+          const goodTweets = collectedTweets.filter(t =&gt; t.likes &gt; 5 &amp;&amp; !t.isLiked);
+          const target = goodTweets.length &gt; 0
+            ? goodTweets[Math.floor(Math.random() * Math.min(goodTweets.length, 5))]
+            : collectedTweets[0];
+
+          if (target) {
+            // Navigate back to search or home to find the tweet
+            const searchTerm = persona.niche.searchTerms[Math.floor(Math.random() * persona.niche.searchTerms.length)];
+            await doSearch(page, searchTerm, &#39;top&#39;);
+            const freshTweets = await extractVisibleTweets(page);
+            
+            if (freshTweets.length &gt; 0) {
+              const tweetToComment = freshTweets[Math.floor(Math.random() * Math.min(freshTweets.length, 3))];
+              const commented = await commentOnTweet(page, persona, tweetToComment);
+              if (commented) {
+                stats.comments++;
+                persona.state.engagedPosts.add(tweetToComment.text.slice(0, 50));
+              }
+            }
+          }
+          break;
+        }
+
+        case &#39;create_post&#39;: {
+          const posted = await createPost(page, persona);
+          if (posted) stats.posts++;
+          break;
+        }
+
+        case &#39;profile_visit&#39;: {
+          // Visit a target account or discovered user
+          let username;
+          if (collectedUsers.length &gt; 0 &amp;&amp; Math.random() &gt; 0.3) {
+            username = collectedUsers[Math.floor(Math.random() * collectedUsers.length)].username;
+          } else if (persona.niche.targetAccounts.length &gt; 0) {
+            username = persona.niche.targetAccounts[Math.floor(Math.random() * persona.niche.targetAccounts.length)];
+          }
+          if (username) {
+            await visitProfile(page, username);
+            stats.profileVisits++;
+          }
+          break;
+        }
+
+        case &#39;check_own_profile&#39;: {
+          await checkOwnProfile(page);
+          break;
+        }
+
+        case &#39;check_notifications&#39;: {
+          await checkNotifications(page);
+          break;
+        }
+
+        case &#39;smart_unfollow&#39;: {
+          const unfollowed = await smartUnfollow(page, persona, activity.count || 5);
+          if (unfollowed &gt; 0) stats.unfollows = (stats.unfollows || 0) + unfollowed;
+          break;
+        }
+      }
+
+      // Random: take a longer break between some actions (10% chance)
+      if (Math.random() &lt; 0.1) {
+        const breakTime = randomBetween(TIMING.LONG_BREAK.min, TIMING.LONG_BREAK.max);
+        log(&#39;☕&#39;, `Taking a ${Math.round(breakTime / 1000)}s break`);
+        await sleep(breakTime);
+      }
+
+    } catch (err) {
+      stats.errors++;
+      log(&#39;❌&#39;, `Activity &quot;${activity.type}&quot; error: ${err.message}`);
+      // Don&#39;t crash the session — continue with next activity
+    }
+  }
+
+  // Update persona state
+  const duration = Math.round((Date.now() - startTime) / 60000);
+  log(&#39;📊&#39;, `Session complete in ${duration}min — ${stats.likes} likes, ${stats.follows} follows, ${stats.comments} comments, ${stats.posts} posts, ${stats.searches} searches`);
+
+  persona.state.totalSessions++;
+  persona.state.totalLikes += stats.likes;
+  persona.state.totalFollows += stats.follows;
+  persona.state.totalComments += stats.comments;
+  persona.state.totalPosts += stats.posts;
+  persona.state.totalSearches += stats.searches;
+  persona.state.totalProfileVisits += stats.profileVisits;
+  persona.state.lastSessionAt = new Date().toISOString();
+
+  return stats;
+}
+
+// ============================================================================
+// Main Loop — 24/7 Operation
+// ============================================================================
+
+/**
+ * Start the algorithm builder — runs continuously with human-like patterns.
+ * 
+ * @param {Object} options
+ * @param {string} options.personaId - Persona ID to load
+ * @param {string} options.authToken - X/Twitter auth_token cookie value
+ * @param {boolean} [options.headless=true] - Run browser in headless mode
+ * @param {boolean} [options.dryRun=false] - Log actions without executing
+ * @param {number} [options.maxSessions=0] - 0 = infinite, or stop after N sessions
+ * @param {Function} [options.onSessionComplete] - Callback after each session
+ * @param {AbortSignal} [options.signal] - AbortController signal to stop
+ */
+async function startAlgorithmBuilder(options = {}) {
+  const {
+    personaId,
+    authToken,
+    headless = true,
+    dryRun = false,
+    maxSessions = 0,
+    onSessionComplete,
+    signal,
+  } = options;
+
+  if (!personaId) throw new Error(&#39;personaId is required&#39;);
+  if (!authToken &amp;&amp; !process.env.XACTIONS_SESSION_COOKIE) {
+    throw new Error(&#39;authToken or XACTIONS_SESSION_COOKIE env var required&#39;);
+  }
+
+  const cookie = authToken || process.env.XACTIONS_SESSION_COOKIE;
+  let persona = loadPersona(personaId);
+
+  log(&#39;🤖&#39;, `Algorithm Builder starting for persona: ${persona.name} (${persona.preset})`);
+  log(&#39;📋&#39;, `Strategy: ${persona.strategy.preset} | Activity: ${persona.activityPattern.preset}`);
+  log(&#39;🎯&#39;, `Topics: ${persona.niche.topics.join(&#39;, &#39;)}`);
+  log(&#39;🧠&#39;, `LLM: ${persona.llm.models.comment}`);
+
+  if (dryRun) {
+    log(&#39;🧪&#39;, &#39;DRY RUN MODE — no actions will be executed&#39;);
+  }
+
+  // Launch browser
+  let browser, page;
+  try {
+    browser = await createBrowser({ headless: headless ? &#39;new&#39; : false });
+    page = await createPage(browser);
+    await loginWithCookie(page, cookie);
+    log(&#39;✅&#39;, &#39;Logged in to X successfully&#39;);
+  } catch (err) {
+    log(&#39;💀&#39;, `Failed to launch browser: ${err.message}`);
+    throw err;
+  }
+
+  let sessionCount = 0;
+  let running = true;
+
+  // Handle abort signal
+  if (signal) {
+    signal.addEventListener(&#39;abort&#39;, () =&gt; {
+      running = false;
+      log(&#39;🛑&#39;, &#39;Abort signal received — stopping after current session&#39;);
+    });
+  }
+
+  // Handle SIGINT/SIGTERM
+  const gracefulShutdown = () =&gt; {
+    running = false;
+    log(&#39;🛑&#39;, &#39;Shutdown signal — stopping after current session&#39;);
+  };
+  process.on(&#39;SIGINT&#39;, gracefulShutdown);
+  process.on(&#39;SIGTERM&#39;, gracefulShutdown);
+
+  try {
+    while (running) {
+      // Check if we should be active right now
+      if (!shouldBeActive(persona)) {
+        const sleepMin = randomBetween(10, 30);
+        log(&#39;😴&#39;, `Sleeping (outside active hours) — checking again in ${sleepMin}min`);
+        await sleep(sleepMin * 60 * 1000);
+        continue;
+      }
+
+      // Plan and execute a session
+      const plan = planSession(persona);
+
+      if (!dryRun) {
+        const stats = await runSession(page, persona, plan);
+
+        // Save persona state after each session
+        savePersona(persona);
+
+        // Callback
+        if (onSessionComplete) {
+          onSessionComplete({ persona, stats, sessionCount: sessionCount + 1 });
+        }
+      } else {
+        log(&#39;🧪&#39;, `[DRY RUN] Would execute ${plan.activities.length} activities over ~${plan.duration}min`);
+        plan.activities.forEach(a =&gt; log(&#39;  📌&#39;, `${a.type}${a.term ? &#39;: &#39; + a.term : &#39;&#39;}`));
+      }
+
+      sessionCount++;
+      
+      // Check session limit
+      if (maxSessions &gt; 0 &amp;&amp; sessionCount &gt;= maxSessions) {
+        log(&#39;🏁&#39;, `Reached max sessions (${maxSessions})`);
+        break;
+      }
+
+      // Calculate delay until next session
+      const delayMin = getDelayUntilNextSession(persona);
+      log(&#39;⏳&#39;, `Next session in ~${delayMin}min`);
+      
+      // Wait with periodic checks for abort signal
+      const delayMs = delayMin * 60 * 1000;
+      const checkInterval = 30000; // check every 30s
+      let waited = 0;
+      while (waited &lt; delayMs &amp;&amp; running) {
+        await sleep(Math.min(checkInterval, delayMs - waited));
+        waited += checkInterval;
+      }
+    }
+  } finally {
+    // Cleanup
+    log(&#39;🧹&#39;, &#39;Cleaning up...&#39;);
+    savePersona(persona);
+    try { await browser?.close(); } catch { /* ignore */ }
+    process.removeListener(&#39;SIGINT&#39;, gracefulShutdown);
+    process.removeListener(&#39;SIGTERM&#39;, gracefulShutdown);
+    log(&#39;👋&#39;, `Algorithm Builder stopped. ${sessionCount} sessions completed.`);
+  }
+
+  return { sessionCount, persona };
+}
+
+/**
+ * Run a single session (useful for testing)
+ */
+async function runSingleSession(options = {}) {
+  return startAlgorithmBuilder({ ...options, maxSessions: 1 });
+}
+
+// ============================================================================
+// Exports
+// ============================================================================
+
+export {
+  startAlgorithmBuilder,
+  runSingleSession,
+
+  // Individual actions (for use in other scripts)
+  doSearch,
+  browseHome,
+  likeTweet,
+  followUser,
+  commentOnTweet,
+  createPost,
+  visitProfile,
+  checkOwnProfile,
+  checkNotifications,
+  extractVisibleTweets,
+  extractVisibleUsers,
+
+  // LLM
+  generateComment,
+  generatePost,
+};
 </code></pre>
 <hr>
 <h2>📖 Step-by-Step Tutorial</h2>
@@ -183,7 +1296,7 @@ xactions --help
 <pre><code class="language-bash"># Start MCP server
 npm run mcp
 </code></pre>
-<p>See the <a href="/docs/guides/mcp-setup">MCP Setup Guide</a> for integration with Claude Desktop, Cursor, and other AI tools.</p>
+<p>See the <a href="../mcp-setup.md">MCP Setup Guide</a> for integration with Claude Desktop, Cursor, and other AI tools.</p>
 <hr>
 <h2>📁 Source Files</h2>
 <table>
@@ -208,15 +1321,15 @@ npm run mcp
 </tr>
 </thead>
 <tbody><tr>
-<td><a href="/docs/follow-ratio-manager">Follow Ratio Manager</a></td>
+<td><a href="follow-ratio-manager.md">Follow Ratio Manager</a></td>
 <td>Monitor and optimize your follower/following ratio</td>
 </tr>
 <tr>
-<td><a href="/docs/persona-engine">Persona Engine</a></td>
+<td><a href="persona-engine.md">Persona Engine</a></td>
 <td>Define and manage persona configurations for the algorithm builder</td>
 </tr>
 <tr>
-<td><a href="/docs/thought-leader-cultivator">Thought Leader Cultivator</a></td>
+<td><a href="thought-leader-cultivator.md">Thought Leader Cultivator</a></td>
 <td>Train the X algorithm for your niche by simulating natural browsing</td>
 </tr>
 </tbody></table>
@@ -293,6 +1406,5 @@ npm run mcp
       <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
     </div>
   </footer>
-<script src="/js/sidebar.js"></script>
 </body>
 </html>

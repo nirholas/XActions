@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Posts -- Tutorial — Free X/Twitter Tools Tool | XActions</title>
+  <meta name="description" content="Step-by-step guide to editing existing posts on X/Twitter using XActions browser scripts.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, edit, post, tutorial, posts, tools, edit post tutorial twitter, twitter edit post tutorial">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Edit Posts -- Tutorial — XActions">
+  <meta property="og:description" content="Step-by-step guide to editing existing posts on X/Twitter using XActions browser scripts.">
+  <meta property="og:url" content="https://xactions.app/docs/step-by-step/edit-post-tutorial">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Edit Posts -- Tutorial — Free X/Twitter Tool">
+  <meta name="twitter:description" content="Step-by-step guide to editing existing posts on X/Twitter using XActions browser scripts.">
+
+  <link rel="canonical" href="https://xactions.app/docs/step-by-step/edit-post-tutorial">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Edit Posts -- Tutorial — Free X/Twitter Tools Tool | XActions",
+    "description": "Step-by-step guide to editing existing posts on X/Twitter using XActions browser scripts.",
+    "url": "https://xactions.app/docs/step-by-step/edit-post-tutorial",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/edit-post-tutorial",
+    "articleSection": "Tools",
+    "keywords": "xactions, twitter automation, x automation, free, edit, post, tutorial, posts, tools, edit post tutorial twitter, twitter edit post tutorial"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Edit Posts -- Tutorial", "item": "https://xactions.app/docs/edit-post-tutorial" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use Edit Posts -- Tutorial",
+    "description": "Step-by-step guide to editing existing posts on X/Twitter using XActions browser scripts.",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions Edit Posts -- Tutorial script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>⚡ Edit Posts -- Tutorial</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › Edit Posts -- Tutorial
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Tools</span>
+        <h1>Edit Posts -- Tutorial</h1>
+<blockquote>
+<p>Step-by-step guide to editing existing posts on X/Twitter using XActions browser scripts.</p>
+</blockquote>
+<h2>Prerequisites</h2>
+<ul>
+<li>Logged into x.com in your browser</li>
+<li>Browser DevTools console (F12 -&gt; Console tab)</li>
+<li><strong>X Premium subscription</strong> (edit is a Premium-only feature)</li>
+<li>The post must be your own and less than 1 hour old</li>
+</ul>
+<h2>Quick Start</h2>
+<ol>
+<li>Navigate to the post you want to edit on x.com</li>
+<li>Open DevTools (F12)</li>
+<li>Copy the script from <code>src/editPost.js</code></li>
+<li>Set <code>CONFIG.mode = &#39;edit&#39;</code></li>
+<li>Set <code>CONFIG.postUrl</code> and <code>CONFIG.newText</code></li>
+<li>Paste into Console and press Enter</li>
+</ol>
+<h2>Edit Limitations</h2>
+<table>
+<thead>
+<tr>
+<th>Constraint</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Subscription</td>
+<td>X Premium required</td>
+</tr>
+<tr>
+<td>Time window</td>
+<td>1 hour after posting</td>
+</tr>
+<tr>
+<td>Max edits</td>
+<td>5 edits per post</td>
+</tr>
+<tr>
+<td>Edit history</td>
+<td>Visible to all users</td>
+</tr>
+<tr>
+<td>Media</td>
+<td>Can be modified during edit</td>
+</tr>
+<tr>
+<td>Engagement</td>
+<td>Likes, reposts, and replies are preserved</td>
+</tr>
+</tbody></table>
+<h2>Configuration</h2>
+<pre><code class="language-js">const CONFIG = {
+  mode: &#39;edit&#39;,
+  postUrl: &#39;https://x.com/yourhandle/status/123456789&#39;,
+  newText: &#39;Updated text for this post&#39;,
+
+  // Timing
+  minDelay: 1000,
+  maxDelay: 2000,
+  navigationDelay: 3000,
+};
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>mode</code></td>
+<td><code>string</code></td>
+<td><code>&#39;edit&#39;</code></td>
+<td>Set to <code>&#39;edit&#39;</code> for editing posts</td>
+</tr>
+<tr>
+<td><code>postUrl</code></td>
+<td><code>string</code></td>
+<td><code>&#39;&#39;</code></td>
+<td>Full URL of the post to edit</td>
+</tr>
+<tr>
+<td><code>newText</code></td>
+<td><code>string</code></td>
+<td><code>&#39;&#39;</code></td>
+<td>Replacement text for the post</td>
+</tr>
+<tr>
+<td><code>navigationDelay</code></td>
+<td><code>number</code></td>
+<td><code>3000</code></td>
+<td>Wait time for page/modal to load</td>
+</tr>
+</tbody></table>
+<h2>Step-by-Step Guide</h2>
+<h3>Editing a Post (Browser Console)</h3>
+<ol>
+<li>Copy <code>src/editPost.js</code></li>
+<li>Set your configuration:<pre><code class="language-js">const CONFIG = {
+  mode: &#39;edit&#39;,
+  postUrl: &#39;https://x.com/nichxbt/status/123456789&#39;,
+  newText: &#39;Fixed the typo in this post!&#39;,
+};
+</code></pre>
+</li>
+<li>Paste and run in DevTools</li>
+</ol>
+<p>The script performs these steps:</p>
+<ol>
+<li><strong>Navigate</strong>: Goes to the post URL if not already there</li>
+<li><strong>Find the tweet</strong>: Locates the tweet article element (<code>article[data-testid=&quot;tweet&quot;]</code>)</li>
+<li><strong>Open menu</strong>: Clicks the three-dot menu (<code>[data-testid=&quot;caret&quot;]</code>) on the tweet</li>
+<li><strong>Click Edit</strong>: Finds and clicks &quot;Edit post&quot; (<code>[data-testid=&quot;editTweet&quot;]</code>)</li>
+<li><strong>Clear text</strong>: Selects all existing text with <code>selectAll</code></li>
+<li><strong>Type new text</strong>: Inserts the replacement text using <code>insertText</code></li>
+<li><strong>Save</strong>: Clicks the save button (<code>[data-testid=&quot;tweetButton&quot;]</code>)</li>
+</ol>
+<h3>How the Edit Flow Works Internally</h3>
+<pre><code class="language-js">// From src/editPost.js -- key steps:
+
+// 1. Find the tweet on the page
+const tweet = await waitForElement(&#39;article[data-testid=&quot;tweet&quot;]&#39;);
+
+// 2. Open the three-dot menu
+const caret = tweet.querySelector(&#39;[data-testid=&quot;caret&quot;]&#39;);
+caret.click();
+
+// 3. Click &quot;Edit post&quot;
+const editBtn = await waitForElement(&#39;[data-testid=&quot;editTweet&quot;]&#39;);
+editBtn.click();
+
+// 4. Clear and replace text
+const textarea = await waitForElement(&#39;[data-testid=&quot;tweetTextarea_0&quot;]&#39;);
+textarea.focus();
+document.execCommand(&#39;selectAll&#39;, false, null);
+document.execCommand(&#39;insertText&#39;, false, CONFIG.newText);
+
+// 5. Save
+const saveBtn = await waitForElement(&#39;[data-testid=&quot;tweetButton&quot;]&#39;);
+saveBtn.click();
+</code></pre>
+<h3>Edit History</h3>
+<p>Every edit is tracked and visible to all users:</p>
+<ul>
+<li>An &quot;Edited&quot; label appears on the post</li>
+<li>Users can click it to see the full edit history</li>
+<li>Each version of the post is preserved with its timestamp</li>
+</ul>
+<p>This means you cannot silently fix mistakes -- all versions are public.</p>
+<h3>What You Can Edit</h3>
+<ul>
+<li>Tweet text content</li>
+<li>Attached media (add, remove, or replace)</li>
+<li>Alt text on images</li>
+<li>Tagged users</li>
+</ul>
+<h3>What You Cannot Edit</h3>
+<ul>
+<li>Poll options or duration (polls cannot be edited)</li>
+<li>The post&#39;s timestamp</li>
+<li>Engagement metrics (likes, reposts carry over)</li>
+<li>Thread structure (cannot add/remove tweets from a thread)</li>
+</ul>
+<h2>Tips &amp; Tricks</h2>
+<ul>
+<li><strong>Act fast</strong>: You only have 1 hour from the original post time to make edits</li>
+<li><strong>5 edit limit</strong>: Each post can only be edited 5 times total, so make your changes count</li>
+<li><strong>Proofread first</strong>: Since edit history is public, try to get it right in fewer edits</li>
+<li><strong>No silent fixes</strong>: All versions are visible, so major content changes will be noticed</li>
+<li><strong>Media edits</strong>: You can swap out images or add/remove media during an edit</li>
+<li><strong>Edit vs delete and repost</strong>: For major errors within the first few minutes, deleting and reposting may be preferable to editing (no edit history trail)</li>
+</ul>
+<h2>Troubleshooting</h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&quot;Edit post&quot; not in menu</td>
+<td>You need X Premium. Free accounts cannot edit posts.</td>
+</tr>
+<tr>
+<td>Edit option grayed out</td>
+<td>The 1-hour window has expired. You can no longer edit this post.</td>
+</tr>
+<tr>
+<td>&quot;5 edits reached&quot;</td>
+<td>Each post allows a maximum of 5 edits. No more changes are possible.</td>
+</tr>
+<tr>
+<td>Caret/menu not found</td>
+<td>Make sure you are on the post&#39;s direct URL (not in the timeline view).</td>
+</tr>
+<tr>
+<td>Text not replacing</td>
+<td>The <code>selectAll</code> + <code>insertText</code> method may fail if the editor has changed. Try clearing manually first.</td>
+</tr>
+<tr>
+<td>Post not yours</td>
+<td>You can only edit your own posts. The edit option will not appear for others&#39; posts.</td>
+</tr>
+</tbody></table>
+<h2>Related Scripts</h2>
+<ul>
+<li><code>src/editPost.js</code> (undo mode) -- Undo a recently posted tweet</li>
+<li><code>src/postComposer.js</code> -- Create new posts</li>
+<li><code>docs/examples/tutorials/undo-post-tutorial.md</code> -- Undo post guide</li>
+</ul>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try Edit Posts -- Tutorial?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/step-by-step/add-media-tutorial">📝 Add Media Tutorial</a>
+        <a href="/docs/step-by-step/ads-campaigns-tutorial">📝 Ads Campaigns Tutorial</a>
+        <a href="/docs/step-by-step/affiliate-benefits-tutorial">📝 Affiliate Benefits Tutorial</a>
+        <a href="/docs/step-by-step/alt-text-tutorial">📝 Alt Text Tutorial</a>
+        <a href="/docs/step-by-step/auto-commenter-tutorial">📝 Auto Commenter Tutorial</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a> / <a href="/docs#step-by-step">Tutorials</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

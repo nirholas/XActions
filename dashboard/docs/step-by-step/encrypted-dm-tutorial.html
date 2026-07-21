@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Encrypted Direct Messages — Tutorial — Free X/Twitter Tools Tool | XActions</title>
+  <meta name="description" content="Step-by-step guide to enabling encryption, checking encryption status, and sending encrypted DMs on X/Twitter using XActions browser scripts.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, encrypted, tutorial, direct, messages, tools, encrypted dm tutorial twitter, twitter encrypted dm tutorial">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Encrypted Direct Messages — Tutorial — XActions">
+  <meta property="og:description" content="Step-by-step guide to enabling encryption, checking encryption status, and sending encrypted DMs on X/Twitter using XActions browser scripts.">
+  <meta property="og:url" content="https://xactions.app/docs/step-by-step/encrypted-dm-tutorial">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Encrypted Direct Messages — Tutorial — Free X/Twitter Tool">
+  <meta name="twitter:description" content="Step-by-step guide to enabling encryption, checking encryption status, and sending encrypted DMs on X/Twitter using XActions browser scripts.">
+
+  <link rel="canonical" href="https://xactions.app/docs/step-by-step/encrypted-dm-tutorial">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Encrypted Direct Messages — Tutorial — Free X/Twitter Tools Tool | XActions",
+    "description": "Step-by-step guide to enabling encryption, checking encryption status, and sending encrypted DMs on X/Twitter using XActions browser scripts.",
+    "url": "https://xactions.app/docs/step-by-step/encrypted-dm-tutorial",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/encrypted-dm-tutorial",
+    "articleSection": "Tools",
+    "keywords": "xactions, twitter automation, x automation, free, encrypted, tutorial, direct, messages, tools, encrypted dm tutorial twitter, twitter encrypted dm tutorial"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Encrypted Direct Messages — Tutorial", "item": "https://xactions.app/docs/encrypted-dm-tutorial" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use Encrypted Direct Messages — Tutorial",
+    "description": "Step-by-step guide to enabling encryption, checking encryption status, and sending encrypted DMs on X/Twitter using XActions browser scripts.",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions Encrypted Direct Messages — Tutorial script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>⚡ Encrypted Direct Messages — Tutorial</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › Encrypted Direct Messages — Tutorial
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Tools</span>
+        <h1>Encrypted Direct Messages — Tutorial</h1>
+<blockquote>
+<p>Step-by-step guide to enabling encryption, checking encryption status, and sending encrypted DMs on X/Twitter using XActions browser scripts.</p>
+</blockquote>
+<p><strong>Works on:</strong> Browser Console<br><strong>Difficulty:</strong> Intermediate<br><strong>Time:</strong> 2-5 minutes<br><strong>Requirements:</strong> Both users must have X Premium (verified) for encrypted DMs</p>
+<hr>
+<h2>Prerequisites</h2>
+<ul>
+<li>Logged into x.com in your browser</li>
+<li>Browser DevTools console (F12 -&gt; Console tab)</li>
+<li>Both you and the recipient must have X Premium (verified accounts)</li>
+<li>Navigate to <code>https://x.com/messages</code> before running</li>
+</ul>
+<hr>
+<h2>Quick Start</h2>
+<ol>
+<li>Open x.com and navigate to <strong>Messages</strong> (<code>https://x.com/messages</code>)</li>
+<li>Press <strong>F12</strong> to open DevTools, then click the <strong>Console</strong> tab</li>
+<li>Copy the script from <code>src/encryptedDM.js</code></li>
+<li>Set <code>CONFIG.action</code> to <code>&#39;send&#39;</code>, <code>&#39;check&#39;</code>, or <code>&#39;enable&#39;</code></li>
+<li>Paste into the console and press Enter</li>
+</ol>
+<hr>
+<h2>Configuration</h2>
+<pre><code class="language-js">const CONFIG = {
+  action: &#39;send&#39;,              // &#39;send&#39;, &#39;check&#39;, or &#39;enable&#39;
+
+  // Message settings (for &#39;send&#39; action)
+  username: &#39;target_user&#39;,     // Username to message (without @)
+  message: &#39;This is a secret encrypted message&#39;,
+
+  // Timing
+  navigationDelay: 3000,
+  actionDelay: 2000,
+  typeCharDelay: 50,
+
+  // Safety
+  dryRun: true,                // Set to false to actually send
+};
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>action</code></td>
+<td><code>string</code></td>
+<td><code>&#39;send&#39;</code></td>
+<td>Action to perform: <code>&#39;send&#39;</code>, <code>&#39;check&#39;</code>, or <code>&#39;enable&#39;</code></td>
+</tr>
+<tr>
+<td><code>username</code></td>
+<td><code>string</code></td>
+<td><code>&#39;target_user&#39;</code></td>
+<td>Recipient username for the <code>&#39;send&#39;</code> action</td>
+</tr>
+<tr>
+<td><code>message</code></td>
+<td><code>string</code></td>
+<td><code>&#39;This is a secret...&#39;</code></td>
+<td>Message text for the <code>&#39;send&#39;</code> action</td>
+</tr>
+<tr>
+<td><code>navigationDelay</code></td>
+<td><code>number</code></td>
+<td><code>3000</code></td>
+<td>Milliseconds to wait for page loads</td>
+</tr>
+<tr>
+<td><code>actionDelay</code></td>
+<td><code>number</code></td>
+<td><code>2000</code></td>
+<td>Milliseconds between UI actions</td>
+</tr>
+<tr>
+<td><code>typeCharDelay</code></td>
+<td><code>number</code></td>
+<td><code>50</code></td>
+<td>Milliseconds between keystrokes</td>
+</tr>
+<tr>
+<td><code>dryRun</code></td>
+<td><code>boolean</code></td>
+<td><code>true</code></td>
+<td>Preview mode -- no actions are actually performed</td>
+</tr>
+</tbody></table>
+<h3>Available Actions</h3>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>&#39;send&#39;</code></td>
+<td>Send an encrypted message to a user. Opens a new encrypted conversation, searches for the user, and sends the message</td>
+</tr>
+<tr>
+<td><code>&#39;check&#39;</code></td>
+<td>Check if the current open conversation is encrypted. Navigate to a DM conversation first</td>
+</tr>
+<tr>
+<td><code>&#39;enable&#39;</code></td>
+<td>Enable encrypted mode on the currently open conversation</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Step-by-Step Guide</h2>
+<h3>Checking Encryption Status</h3>
+<p>Use this to verify whether an existing conversation uses end-to-end encryption.</p>
+<p><strong>Step 1 -- Open a DM conversation</strong></p>
+<p>Navigate to any DM conversation in <code>x.com/messages</code>.</p>
+<p><strong>Step 2 -- Configure the script</strong></p>
+<pre><code class="language-js">const CONFIG = {
+  action: &#39;check&#39;,
+  dryRun: false,  // Safe for &#39;check&#39; -- it only reads, never writes
+};
+</code></pre>
+<p><strong>Step 3 -- Run and check output</strong></p>
+<pre><code>Checking encryption status of current conversation...
+This conversation IS encrypted
+End-to-end encryption is active
+</code></pre>
+<p>Or if not encrypted:</p>
+<pre><code>This conversation is NOT encrypted
+Both users must be verified (Premium) to use encrypted DMs
+</code></pre>
+<h3>Enabling Encryption on an Existing Conversation</h3>
+<p><strong>Step 1 -- Open the conversation</strong></p>
+<p>Navigate to the DM conversation you want to encrypt.</p>
+<p><strong>Step 2 -- Configure</strong></p>
+<pre><code class="language-js">const CONFIG = {
+  action: &#39;enable&#39;,
+  dryRun: true,   // Preview first
+};
+</code></pre>
+<p><strong>Step 3 -- Run for real</strong></p>
+<p>Set <code>dryRun: false</code> and paste again. The script will find and click the encrypted DM toggle.</p>
+<h3>Sending an Encrypted Message</h3>
+<p><strong>Step 1 -- Configure</strong></p>
+<pre><code class="language-js">const CONFIG = {
+  action: &#39;send&#39;,
+  username: &#39;nichxbt&#39;,
+  message: &#39;This conversation is end-to-end encrypted. Only we can read this.&#39;,
+  dryRun: true,
+};
+</code></pre>
+<p><strong>Step 2 -- Preview</strong></p>
+<p>Paste and check the dry run output:</p>
+<pre><code>Action: send
+Sending encrypted message to @nichxbt...
+Opening new encrypted conversation...
+Enabling encryption for this conversation...
+Searching for @nichxbt...
+Typing encrypted message...
+Encrypted message sent!
+</code></pre>
+<p><strong>Step 3 -- Send for real</strong></p>
+<p>Set <code>dryRun: false</code> and paste again. The script will:</p>
+<ol>
+<li>Click &quot;New Message&quot;</li>
+<li>Toggle the encryption mode on</li>
+<li>Search for the recipient</li>
+<li>Select them and start the conversation</li>
+<li>Type and send the encrypted message</li>
+</ol>
+<hr>
+<h2>Tips &amp; Tricks</h2>
+<ul>
+<li><strong>Premium required.</strong> Encrypted DMs are only available between X Premium (verified) users. If either party does not have Premium, the encryption toggle will not appear.</li>
+<li><strong>Use <code>&#39;check&#39;</code> freely.</strong> The check action is read-only and safe to run with <code>dryRun: false</code> since it does not modify anything.</li>
+<li><strong>Encryption is per-conversation.</strong> Enabling encryption on one conversation does not affect others.</li>
+<li><strong>Look for the lock icon.</strong> Encrypted conversations display a lock icon in the conversation header.</li>
+<li><strong>State tracking.</strong> Progress is saved to <code>sessionStorage</code> under <code>xactions_encryptedDM</code>.</li>
+</ul>
+<hr>
+<h2>Troubleshooting</h2>
+<table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&quot;Could not find encrypted DM toggle&quot;</td>
+<td>Both users must have X Premium. Check that you and the recipient are verified</td>
+</tr>
+<tr>
+<td>&quot;Could not find New DM button&quot;</td>
+<td>Navigate to <code>x.com/messages</code> first</td>
+</tr>
+<tr>
+<td>&quot;Could not find @username in results&quot;</td>
+<td>The username may be misspelled, or the user may not be eligible for encrypted DMs</td>
+</tr>
+<tr>
+<td>Check says &quot;NOT encrypted&quot; but you enabled it</td>
+<td>Encryption may require both users to have set up encryption keys. Check X&#39;s encrypted DM settings</td>
+</tr>
+<tr>
+<td>Toggle found but encryption not activating</td>
+<td>There may be additional confirmation steps. Try manually first to understand the flow</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Related Scripts</h2>
+<ul>
+<li><code>src/sendDirectMessage.js</code> -- Send regular (non-encrypted) DMs</li>
+<li><code>src/groupDM.js</code> -- Create group DM conversations</li>
+<li><code>src/dmCalls.js</code> -- Start audio/video calls in DMs</li>
+<li><code>src/dmManager.js</code> -- Node.js DM management library</li>
+</ul>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try Encrypted Direct Messages — Tutorial?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/step-by-step/add-media-tutorial">📝 Add Media Tutorial</a>
+        <a href="/docs/step-by-step/ads-campaigns-tutorial">📝 Ads Campaigns Tutorial</a>
+        <a href="/docs/step-by-step/affiliate-benefits-tutorial">📝 Affiliate Benefits Tutorial</a>
+        <a href="/docs/step-by-step/alt-text-tutorial">📝 Alt Text Tutorial</a>
+        <a href="/docs/step-by-step/auto-commenter-tutorial">📝 Auto Commenter Tutorial</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a> / <a href="/docs#step-by-step">Tutorials</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

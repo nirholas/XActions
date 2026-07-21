@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business Ads &amp; Campaigns — Tutorial — Free X/Twitter Tools Tool | XActions</title>
+  <meta name="description" content="Step-by-step guide to navigating the ads dashboard, creating campaigns, boosting posts, and viewing campaign analytics on X/Twitter.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, ads, campaigns, tutorial, business, tools, ads campaigns tutorial twitter, twitter ads campaigns tutorial">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Business Ads &amp; Campaigns — Tutorial — XActions">
+  <meta property="og:description" content="Step-by-step guide to navigating the ads dashboard, creating campaigns, boosting posts, and viewing campaign analytics on X/Twitter.">
+  <meta property="og:url" content="https://xactions.app/docs/step-by-step/ads-campaigns-tutorial">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Business Ads &amp; Campaigns — Tutorial — Free X/Twitter Tool">
+  <meta name="twitter:description" content="Step-by-step guide to navigating the ads dashboard, creating campaigns, boosting posts, and viewing campaign analytics on X/Twitter.">
+
+  <link rel="canonical" href="https://xactions.app/docs/step-by-step/ads-campaigns-tutorial">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Business Ads & Campaigns — Tutorial — Free X/Twitter Tools Tool | XActions",
+    "description": "Step-by-step guide to navigating the ads dashboard, creating campaigns, boosting posts, and viewing campaign analytics on X/Twitter.",
+    "url": "https://xactions.app/docs/step-by-step/ads-campaigns-tutorial",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/ads-campaigns-tutorial",
+    "articleSection": "Tools",
+    "keywords": "xactions, twitter automation, x automation, free, ads, campaigns, tutorial, business, tools, ads campaigns tutorial twitter, twitter ads campaigns tutorial"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Business Ads & Campaigns — Tutorial", "item": "https://xactions.app/docs/ads-campaigns-tutorial" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use Business Ads &amp; Campaigns — Tutorial",
+    "description": "Step-by-step guide to navigating the ads dashboard, creating campaigns, boosting posts, and viewing campaign analytics on X/Twitter.",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions Business Ads &amp; Campaigns — Tutorial script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>⚡ Business Ads &amp; Campaigns — Tutorial</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › Business Ads &amp; Campaigns — Tutorial
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Tools</span>
+        <h1>Business Ads &amp; Campaigns — Tutorial</h1>
+<blockquote>
+<p>Step-by-step guide to navigating the ads dashboard, creating campaigns, boosting posts, and viewing campaign analytics on X/Twitter.</p>
+</blockquote>
+<p><strong>Works on:</strong> Browser Console<br><strong>Difficulty:</strong> Intermediate<br><strong>Time:</strong> 10-20 minutes<br><strong>Requirements:</strong> Logged into x.com, X ads account (ads.x.com)</p>
+<hr>
+<h2>Prerequisites</h2>
+<ul>
+<li>Logged into x.com in your browser</li>
+<li>Browser DevTools console (F12 or Cmd+Option+J on Mac)</li>
+<li>An X ads account (create one at <code>ads.x.com</code> if needed)</li>
+<li>A valid payment method for ad spend</li>
+</ul>
+<hr>
+<h2>Quick Start</h2>
+<ol>
+<li>Go to your profile page on x.com (for boosting) or <code>ads.x.com</code> (for campaigns)</li>
+<li>Open DevTools Console (F12, then click the <strong>Console</strong> tab)</li>
+<li>Paste the script to view the campaign guide and find boostable posts</li>
+<li>Navigate to <code>ads.x.com</code> for full campaign management</li>
+<li>Follow the campaign creation guide</li>
+</ol>
+<hr>
+<h2>Configuration</h2>
+<pre><code class="language-javascript">const CONFIG = {
+  autoNavigate: true,          // Navigate to ads dashboard
+  scanCampaigns: true,         // Scan and list existing campaigns
+  showBoostablePost: true,     // Find posts eligible for boosting
+  maxCampaignsToScan: 50,      // Max campaigns to scan
+  showCampaignGuide: true,     // Display campaign creation guide
+  delayBetweenActions: 2000,   // ms between UI actions
+};
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>autoNavigate</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Auto-navigate to ads dashboard</td>
+</tr>
+<tr>
+<td><code>scanCampaigns</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>List existing campaigns</td>
+</tr>
+<tr>
+<td><code>showBoostablePost</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Find posts to boost</td>
+</tr>
+<tr>
+<td><code>maxCampaignsToScan</code></td>
+<td>number</td>
+<td><code>50</code></td>
+<td>Max campaigns to collect</td>
+</tr>
+<tr>
+<td><code>showCampaignGuide</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Show creation guide</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Step-by-Step Guide</h2>
+<h3>Step 1: View Campaign Objectives and Guide</h3>
+<pre><code class="language-javascript">(() =&gt; {
+  console.log(&#39;📢 ADS MANAGER - XActions by nichxbt\n&#39;);
+
+  console.log(&#39;══════════════════════════════════════════════════&#39;);
+  console.log(&#39;📚 CAMPAIGN CREATION GUIDE&#39;);
+  console.log(&#39;══════════════════════════════════════════════════\n&#39;);
+
+  const objectives = {
+    &#39;📢 Reach&#39;: &#39;Get your post seen by more people&#39;,
+    &#39;💬 Engagements&#39;: &#39;Drive likes, replies, and reposts&#39;,
+    &#39;👥 Followers&#39;: &#39;Grow your audience&#39;,
+    &#39;🔗 Website Traffic&#39;: &#39;Drive clicks to your website&#39;,
+    &#39;🎯 Conversions&#39;: &#39;Drive actions on your website&#39;,
+    &#39;📱 App Installs&#39;: &#39;Drive app downloads&#39;,
+    &#39;🎥 Video Views&#39;: &#39;Get more video views&#39;,
+    &#39;🌍 Awareness&#39;: &#39;Build brand awareness&#39;,
+  };
+
+  console.log(&#39;Campaign Objectives:&#39;);
+  for (const [name, desc] of Object.entries(objectives)) {
+    console.log(`   ${name} — ${desc}`);
+  }
+
+  console.log(&#39;\n📝 Steps to create a campaign:&#39;);
+  console.log(&#39;   1. Go to ads.x.com and click &quot;Create campaign&quot;&#39;);
+  console.log(&#39;   2. Choose your objective (reach, engagement, etc.)&#39;);
+  console.log(&#39;   3. Set your budget (daily or total)&#39;);
+  console.log(&#39;   4. Define your audience (location, interests, demographics)&#39;);
+  console.log(&#39;   5. Select posts to promote or create new ad content&#39;);
+  console.log(&#39;   6. Review and launch&#39;);
+
+  console.log(&#39;\n💡 Quick Boost (from your timeline):&#39;);
+  console.log(&#39;   • Click the bar chart icon on any of your posts&#39;);
+  console.log(&#39;   • Select &quot;Boost this post&quot;&#39;);
+  console.log(&#39;   • Set budget and audience&#39;);
+  console.log(&#39;   • Confirm payment&#39;);
+
+  console.log(&#39;\n💰 Budget recommendations:&#39;);
+  console.log(&#39;   • Start small: $5-10/day to test&#39;);
+  console.log(&#39;   • Scale what works: increase budget on high-performing ads&#39;);
+  console.log(&#39;   • A/B test: run 2-3 variations simultaneously&#39;);
+  console.log(&#39;══════════════════════════════════════════════════\n&#39;);
+})();
+</code></pre>
+<h3>Step 2: Find Boostable Posts on Your Profile</h3>
+<p>Navigate to your profile page first, then paste:</p>
+<pre><code class="language-javascript">(async () =&gt; {
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+
+  console.log(&#39;🚀 FIND BOOSTABLE POSTS - XActions by nichxbt\n&#39;);
+
+  const tweets = document.querySelectorAll(&#39;article[data-testid=&quot;tweet&quot;]&#39;);
+  const boostable = [];
+
+  tweets.forEach(tweet =&gt; {
+    const text = tweet.querySelector(&#39;[data-testid=&quot;tweetText&quot;]&#39;)?.textContent?.trim()?.substring(0, 80) || &#39;No text&#39;;
+    const views = tweet.querySelector(&#39;[data-testid=&quot;app-text-transition-container&quot;]&#39;)?.textContent?.trim() || &#39;0&#39;;
+    const boostBtn = tweet.querySelector(&#39;[data-testid=&quot;boostButton&quot;]&#39;)
+      || tweet.querySelector(&#39;[data-testid=&quot;promoteTweet&quot;]&#39;)
+      || tweet.querySelector(&#39;[aria-label*=&quot;Promote&quot;]&#39;);
+    const timestamp = tweet.querySelector(&#39;time&#39;)?.getAttribute(&#39;datetime&#39;) || &#39;&#39;;
+
+    boostable.push({
+      text,
+      views,
+      hasBoostButton: !!boostBtn,
+      timestamp,
+    });
+  });
+
+  if (boostable.length &gt; 0) {
+    console.log(`📋 Posts available for boosting (${boostable.length}):`);
+    console.log(&#39;─&#39;.repeat(60));
+
+    boostable.slice(0, 10).forEach((post, i) =&gt; {
+      const icon = post.hasBoostButton ? &#39;🚀&#39; : &#39;📝&#39;;
+      console.log(`   ${i + 1}. ${icon} &quot;${post.text.substring(0, 50)}${post.text.length &gt; 50 ? &#39;...&#39; : &#39;&#39;}&quot;`);
+      console.log(`      👁️ ${post.views} views ${post.hasBoostButton ? &#39;| ✅ Boost available&#39; : &#39;| ⚠️ No boost button&#39;}`);
+    });
+  } else {
+    console.log(&#39;ℹ️ No posts found on current page.&#39;);
+    console.log(&#39;💡 Navigate to your profile to find posts to boost.&#39;);
+  }
+})();
+</code></pre>
+<h3>Step 3: Navigate to Ads Dashboard</h3>
+<pre><code class="language-javascript">(async () =&gt; {
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+
+  console.log(&#39;🚀 Opening Ads dashboard...&#39;);
+
+  const adsLink = document.querySelector(&#39;a[href*=&quot;ads.x.com&quot;]&#39;)
+    || document.querySelector(&#39;a[href*=&quot;business.x.com&quot;]&#39;);
+
+  if (adsLink) {
+    adsLink.click();
+    console.log(&#39;✅ Clicked Ads dashboard link.&#39;);
+  } else {
+    window.open(&#39;https://ads.x.com&#39;, &#39;_blank&#39;);
+    console.log(&#39;✅ Opened ads.x.com in a new tab.&#39;);
+    console.log(&#39;💡 Run campaign scan scripts on ads.x.com.&#39;);
+  }
+})();
+</code></pre>
+<h3>Step 4: Scan Existing Campaigns (Run on ads.x.com)</h3>
+<pre><code class="language-javascript">(async () =&gt; {
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+
+  console.log(&#39;📊 SCAN CAMPAIGNS - XActions by nichxbt\n&#39;);
+
+  const campaigns = [];
+  let previousCount = 0;
+  let retries = 0;
+
+  while (retries &lt; 5 &amp;&amp; campaigns.length &lt; 50) {
+    const rows = document.querySelectorAll(
+      &#39;[data-testid*=&quot;campaign&quot;], [class*=&quot;campaign-row&quot;], table tbody tr&#39;
+    );
+
+    rows.forEach(row =&gt; {
+      const nameEl = row.querySelector(&#39;a, [class*=&quot;campaign-name&quot;], td:first-child&#39;);
+      const name = nameEl?.textContent?.trim() || &#39;&#39;;
+
+      if (name &amp;&amp; !campaigns.find(c =&gt; c.name === name)) {
+        const statusEl = row.querySelector(&#39;[class*=&quot;status&quot;], td:nth-child(2)&#39;);
+        const budgetEl = row.querySelector(&#39;[class*=&quot;budget&quot;], td:nth-child(3)&#39;);
+        const spentEl = row.querySelector(&#39;[class*=&quot;spent&quot;], td:nth-child(4)&#39;);
+        const impressionsEl = row.querySelector(&#39;[class*=&quot;impressions&quot;], td:nth-child(5)&#39;);
+
+        campaigns.push({
+          name: name.substring(0, 60),
+          status: statusEl?.textContent?.trim() || &#39;Unknown&#39;,
+          budget: budgetEl?.textContent?.trim() || &#39;-&#39;,
+          spent: spentEl?.textContent?.trim() || &#39;-&#39;,
+          impressions: impressionsEl?.textContent?.trim() || &#39;-&#39;,
+        });
+      }
+    });
+
+    if (campaigns.length === previousCount) retries++;
+    else { retries = 0; previousCount = campaigns.length; }
+
+    window.scrollTo(0, document.body.scrollHeight);
+    await sleep(2000);
+  }
+
+  if (campaigns.length &gt; 0) {
+    console.log(`📋 Campaigns (${campaigns.length}):`);
+    console.log(&#39;─&#39;.repeat(70));
+
+    campaigns.forEach((c, i) =&gt; {
+      const icon = c.status.toLowerCase().includes(&#39;active&#39;) ? &#39;🟢&#39;
+        : c.status.toLowerCase().includes(&#39;paused&#39;) ? &#39;🟡&#39;
+        : c.status.toLowerCase().includes(&#39;completed&#39;) ? &#39;⚪&#39; : &#39;🔵&#39;;
+      console.log(`   ${i + 1}. ${icon} ${c.name}`);
+      console.log(`      Status: ${c.status} | Budget: ${c.budget} | Spent: ${c.spent} | Impressions: ${c.impressions}`);
+    });
+
+    sessionStorage.setItem(&#39;xactions_ads&#39;, JSON.stringify({
+      scannedAt: new Date().toISOString(),
+      campaigns,
+    }));
+    console.log(&#39;\n💾 Campaign data saved to sessionStorage.&#39;);
+  } else {
+    console.log(&#39;ℹ️ No campaigns found.&#39;);
+  }
+})();
+</code></pre>
+<h3>Expected Console Output (Boostable Posts)</h3>
+<pre><code>🚀 FIND BOOSTABLE POSTS - XActions by nichxbt
+
+📋 Posts available for boosting (8):
+────────────────────────────────────────────────────────────────
+   1. 🚀 &quot;Just shipped a new feature that lets you automate yo...&quot;
+      👁️ 125K views | ✅ Boost available
+   2. 📝 &quot;Thread: How I grew from 0 to 10K followers in 3 mon...&quot;
+      👁️ 98K views | ⚠️ No boost button
+   3. 🚀 &quot;Hot take: The best marketing is a great product...&quot;
+      👁️ 67K views | ✅ Boost available
+</code></pre>
+<hr>
+<h2>Tips &amp; Tricks</h2>
+<ol>
+<li><p><strong>Start with boosts</strong> -- Boosting an existing high-performing post is the easiest way to start with ads. No campaign setup needed.</p>
+</li>
+<li><p><strong>Budget wisely</strong> -- Start with $5-10/day to test. Scale up only after you see what performs well.</p>
+</li>
+<li><p><strong>Target your audience</strong> -- The more specific your targeting (location, interests, demographics), the better your ad spend efficiency.</p>
+</li>
+<li><p><strong>A/B test</strong> -- Run multiple variations of your ad to find what resonates. Change one variable at a time (image, text, CTA).</p>
+</li>
+<li><p><strong>Separate domain</strong> -- The ads dashboard runs on <code>ads.x.com</code>. Campaign management scripts must be run on that domain.</p>
+</li>
+<li><p><strong>Business center</strong> -- For organizational ad accounts, use <code>business.x.com</code> for multi-user access and billing management.</p>
+</li>
+</ol>
+<hr>
+<h2>Troubleshooting</h2>
+<table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>No boost button on posts</td>
+<td>Not all posts are eligible for boosting. The post must be public and from your account.</td>
+</tr>
+<tr>
+<td>Cannot access ads.x.com</td>
+<td>You need to create an ads account. Sign up at <code>ads.x.com</code> with your X credentials.</td>
+</tr>
+<tr>
+<td>No campaigns found</td>
+<td>If you have not created any campaigns, the list will be empty. Click &quot;Create campaign&quot; in the ads dashboard.</td>
+</tr>
+<tr>
+<td>Payment declined</td>
+<td>Verify your payment method at <code>ads.x.com/settings/billing</code>.</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Related Scripts</h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Script</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>View Analytics</td>
+<td><code>src/viewAnalytics.js</code></td>
+<td>Track post and account performance</td>
+</tr>
+<tr>
+<td>Creator Revenue</td>
+<td><code>src/creatorSubscriptions.js</code></td>
+<td>Monetization and revenue sharing</td>
+</tr>
+<tr>
+<td>Subscribe to Premium</td>
+<td><code>src/subscribePremium.js</code></td>
+<td>Get Premium for advanced features</td>
+</tr>
+<tr>
+<td>Grok AI</td>
+<td><code>src/grokIntegration.js</code></td>
+<td>Use AI to analyze ad copy effectiveness</td>
+</tr>
+</tbody></table>
+<hr>
+<footer>
+Built with XActions by <a href="https://x.com/nichxbt">@nichxbt</a> · <a href="https://xactions.app">xactions.app</a> · <a href="https://github.com/nichxbt/xactions">GitHub</a>
+</footer>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try Business Ads &amp; Campaigns — Tutorial?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/step-by-step/add-media-tutorial">📝 Add Media Tutorial</a>
+        <a href="/docs/step-by-step/affiliate-benefits-tutorial">📝 Affiliate Benefits Tutorial</a>
+        <a href="/docs/step-by-step/alt-text-tutorial">📝 Alt Text Tutorial</a>
+        <a href="/docs/step-by-step/auto-commenter-tutorial">📝 Auto Commenter Tutorial</a>
+        <a href="/docs/step-by-step/auto-liker-tutorial">📝 Auto Liker Tutorial</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a> / <a href="/docs#step-by-step">Tutorials</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

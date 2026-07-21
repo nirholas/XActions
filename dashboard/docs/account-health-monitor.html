@@ -73,13 +73,121 @@
   }
   </script>
 
-  <link rel="stylesheet" href="/css/common.css">
-  <link rel="stylesheet" href="/css/docs.css">
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
 </head>
 <body>
   <div class="layout">
     <!-- Sidebar -->
-    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
 
     <!-- Main Content -->
     <main class="main-content">
@@ -132,12 +240,372 @@
 <li>Copy and paste the script from <a href="https://github.com/nirholas/XActions/blob/main/src/accountHealthMonitor.js"><code>src/accountHealthMonitor.js</code></a></li>
 <li>Press Enter to run</li>
 </ol>
-<pre><code class="language-javascript">// Quick start — copy the full script from:
-// src/accountHealthMonitor.js
-//
-// Or install via npm and use the CLI:
-// npm install -g xactions
-// xactions --help
+<pre><code class="language-javascript">/**
+ * ============================================================
+ * 🏥 Account Health Monitor — Production Grade
+ * ============================================================
+ *
+ * @name        accountHealthMonitor.js
+ * @description Comprehensive health check for your X/Twitter account.
+ *              Generates a composite health score (0–100) across
+ *              engagement, growth, content quality, and risk factors.
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.0.0
+ * @date        2026-02-24
+ * @repository  https://github.com/nirholas/XActions
+ *
+ * ============================================================
+ * 📋 USAGE:
+ *
+ * 1. Go to: https://x.com/YOUR_USERNAME
+ * 2. Open DevTools Console (F12)
+ * 3. Paste this script and press Enter
+ * 4. Wait ~60s for full analysis
+ *
+ * ============================================================
+ */
+(() =&gt; {
+  &#39;use strict&#39;;
+
+  const CONFIG = {
+    postsToAnalyze: 50,
+    scrollDelay: 1500,
+    maxScrolls: 30,
+  };
+
+  const sleep = ms =&gt; new Promise(r =&gt; setTimeout(r, ms + ms * 0.1 * Math.random()));
+
+  const parseCount = (str) =&gt; {
+    if (!str) return 0;
+    if (typeof str === &#39;number&#39;) return str;
+    str = str.replace(/,/g, &#39;&#39;).trim();
+    const m = str.match(/([\d.]+)\s*([KMBkmb])?/);
+    if (!m) return 0;
+    let n = parseFloat(m[1]);
+    if (m[2]) n *= { k: 1e3, m: 1e6, b: 1e9 }[m[2].toLowerCase()] || 1;
+    return Math.round(n);
+  };
+
+  const fmt = (n) =&gt; n &gt;= 1e6 ? (n/1e6).toFixed(1)+&#39;M&#39; : n &gt;= 1e3 ? (n/1e3).toFixed(1)+&#39;K&#39; : String(Math.round(n));
+
+  (async () =&gt; {
+    const W = 60;
+    console.log(&#39;╔&#39; + &#39;═&#39;.repeat(W) + &#39;╗&#39;);
+    console.log(&#39;║  🏥 ACCOUNT HEALTH MONITOR&#39; + &#39; &#39;.repeat(W - 29) + &#39;║&#39;);
+    console.log(&#39;║  by nichxbt — v1.0&#39; + &#39; &#39;.repeat(W - 21) + &#39;║&#39;);
+    console.log(&#39;╚&#39; + &#39;═&#39;.repeat(W) + &#39;╝&#39;);
+
+    // Detect profile
+    const pathMatch = window.location.pathname.match(/^\/([A-Za-z0-9_]+)/);
+    if (!pathMatch || [&#39;home&#39;, &#39;explore&#39;, &#39;notifications&#39;, &#39;messages&#39;, &#39;i&#39;].includes(pathMatch[1])) {
+      console.error(&#39;❌ Navigate to a profile page first!&#39;);
+      return;
+    }
+    const username = pathMatch[1];
+    console.log(`\n🔍 Analyzing @${username}...\n`);
+
+    // ── Phase 1: Collect Profile Stats ──────────────────────
+
+    console.log(&#39;📋 Phase 1: Collecting profile data...&#39;);
+
+    const profileData = {};
+
+    // Followers / Following counts
+    const statsLinks = document.querySelectorAll(&#39;a[href*=&quot;/followers&quot;], a[href*=&quot;/following&quot;]&#39;);
+    for (const link of statsLinks) {
+      const href = link.getAttribute(&#39;href&#39;) || &#39;&#39;;
+      const count = parseCount(link.textContent);
+      if (href.includes(&#39;/following&#39;)) profileData.following = count;
+      else if (href.includes(&#39;/verified_followers&#39;)) profileData.verifiedFollowers = count;
+      else if (href.includes(&#39;/followers&#39;)) profileData.followers = count;
+    }
+
+    // Bio
+    const bioEl = document.querySelector(&#39;[data-testid=&quot;UserDescription&quot;]&#39;);
+    profileData.bio = bioEl?.textContent || &#39;&#39;;
+    profileData.hasBio = profileData.bio.length &gt; 0;
+    profileData.bioLength = profileData.bio.length;
+
+    // Avatar
+    const avatarEl = document.querySelector(&#39;a[href$=&quot;/photo&quot;] img, [data-testid=&quot;UserAvatar&quot;] img&#39;);
+    profileData.hasCustomAvatar = avatarEl ? !avatarEl.src.includes(&#39;default_profile&#39;) : false;
+
+    // Header
+    const headerEl = document.querySelector(&#39;a[href$=&quot;/header_photo&quot;]&#39;);
+    profileData.hasCustomHeader = !!headerEl;
+
+    // Verified
+    profileData.isVerified = !!document.querySelector(&#39;[data-testid=&quot;icon-verified&quot;]&#39;);
+
+    // Join date
+    const joinEl = document.querySelector(&#39;[data-testid=&quot;UserJoinDate&quot;]&#39;);
+    profileData.joinDate = joinEl?.textContent || &#39;&#39;;
+
+    // Location &amp; website
+    profileData.hasLocation = !!document.querySelector(&#39;[data-testid=&quot;UserLocation&quot;]&#39;);
+    profileData.hasWebsite = !!document.querySelector(&#39;a[data-testid=&quot;UserUrl&quot;]&#39;);
+
+    console.log(`   👥 Followers: ${fmt(profileData.followers || 0)}`);
+    console.log(`   👤 Following: ${fmt(profileData.following || 0)}`);
+
+    // ── Phase 2: Analyze Recent Posts ───────────────────────
+
+    console.log(&#39;\n📋 Phase 2: Analyzing recent posts...&#39;);
+
+    const posts = new Map();
+    let retries = 0;
+
+    for (let i = 0; i &lt; CONFIG.maxScrolls &amp;&amp; posts.size &lt; CONFIG.postsToAnalyze; i++) {
+      const prevSize = posts.size;
+
+      document.querySelectorAll(&#39;article[data-testid=&quot;tweet&quot;]&#39;).forEach(article =&gt; {
+        const authorLink = article.querySelector(`a[href=&quot;/${username}&quot;]`);
+        if (!authorLink) return;
+
+        const timeLink = article.querySelector(&#39;a[href*=&quot;/status/&quot;] time&#39;)?.closest(&#39;a&#39;);
+        const tweetUrl = timeLink?.getAttribute(&#39;href&#39;) || &#39;&#39;;
+        const tweetId = tweetUrl.split(&#39;/status/&#39;)[1]?.split(/[?/]/)[0];
+        if (!tweetId || posts.has(tweetId)) return;
+
+        const text = article.querySelector(&#39;[data-testid=&quot;tweetText&quot;]&#39;)?.textContent || &#39;&#39;;
+        const timeEl = article.querySelector(&#39;time&#39;);
+        const timestamp = timeEl?.getAttribute(&#39;datetime&#39;) || &#39;&#39;;
+
+        const likeBtn = article.querySelector(&#39;[data-testid=&quot;like&quot;], [data-testid=&quot;unlike&quot;]&#39;);
+        const rtBtn = article.querySelector(&#39;[data-testid=&quot;retweet&quot;], [data-testid=&quot;unretweet&quot;]&#39;);
+        const replyBtn = article.querySelector(&#39;[data-testid=&quot;reply&quot;]&#39;);
+        const viewsEl = article.querySelector(&#39;a[href*=&quot;/analytics&quot;]&#39;);
+
+        const likes = parseCount(likeBtn?.getAttribute(&#39;aria-label&#39;)?.match(/([\d,.]+[KMBkmb]?)/)?.[1] || &#39;0&#39;);
+        const retweets = parseCount(rtBtn?.getAttribute(&#39;aria-label&#39;)?.match(/([\d,.]+[KMBkmb]?)/)?.[1] || &#39;0&#39;);
+        const replies = parseCount(replyBtn?.getAttribute(&#39;aria-label&#39;)?.match(/([\d,.]+[KMBkmb]?)/)?.[1] || &#39;0&#39;);
+        const views = parseCount(viewsEl?.textContent || &#39;0&#39;);
+
+        const hasMedia = !!article.querySelector(&#39;[data-testid=&quot;tweetPhoto&quot;], video, [data-testid=&quot;card.wrapper&quot;]&#39;);
+        const hasLinks = !!article.querySelector(&#39;a[href*=&quot;t.co&quot;]&#39;);
+        const hashtags = (text.match(/#\w+/g) || []);
+        const isThread = !!article.querySelector(&#39;[data-testid=&quot;tweet-thread-indicator&quot;]&#39;);
+        const isReply = text.startsWith(&#39;@&#39;);
+
+        posts.set(tweetId, {
+          text, timestamp, likes, retweets, replies, views,
+          hasMedia, hasLinks, hashtags, isThread, isReply,
+          engagement: likes + retweets + replies,
+        });
+      });
+
+      if (posts.size === prevSize) { retries++; if (retries &gt;= 3) break; }
+      else retries = 0;
+
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(CONFIG.scrollDelay);
+    }
+
+    const postsArray = [...posts.values()];
+    console.log(`   📝 Collected ${postsArray.length} posts for analysis`);
+
+    // ── Phase 3: Calculate Health Metrics ───────────────────
+
+    console.log(&#39;\n📋 Phase 3: Computing health metrics...\n&#39;);
+
+    const metrics = {};
+
+    // 1. Engagement Health (25 points)
+    const totalEngagement = postsArray.reduce((s, p) =&gt; s + p.engagement, 0);
+    const avgEngagement = postsArray.length &gt; 0 ? totalEngagement / postsArray.length : 0;
+    const totalViews = postsArray.reduce((s, p) =&gt; s + p.views, 0);
+    const engagementRate = totalViews &gt; 0 ? (totalEngagement / totalViews) * 100 : 0;
+
+    let engagementScore = 0;
+    if (engagementRate &gt;= 5) engagementScore = 25;
+    else if (engagementRate &gt;= 3) engagementScore = 22;
+    else if (engagementRate &gt;= 2) engagementScore = 18;
+    else if (engagementRate &gt;= 1) engagementScore = 14;
+    else if (engagementRate &gt;= 0.5) engagementScore = 10;
+    else if (engagementRate &gt; 0) engagementScore = 5;
+    metrics.engagement = { score: engagementScore, max: 25, rate: engagementRate.toFixed(2) + &#39;%&#39;, avg: avgEngagement.toFixed(1) };
+
+    // 2. Profile Completeness (20 points)
+    let profileScore = 0;
+    if (profileData.hasBio) profileScore += 4;
+    if (profileData.bioLength &gt; 50) profileScore += 2;
+    if (profileData.hasCustomAvatar) profileScore += 4;
+    if (profileData.hasCustomHeader) profileScore += 3;
+    if (profileData.hasLocation) profileScore += 2;
+    if (profileData.hasWebsite) profileScore += 3;
+    if (profileData.isVerified) profileScore += 2;
+    profileScore = Math.min(profileScore, 20);
+    metrics.profile = { score: profileScore, max: 20, details: profileData };
+
+    // 3. Content Quality (25 points)
+    let contentScore = 0;
+    const postsWithMedia = postsArray.filter(p =&gt; p.hasMedia).length;
+    const mediaPct = postsArray.length &gt; 0 ? postsWithMedia / postsArray.length : 0;
+    if (mediaPct &gt;= 0.3) contentScore += 6; // Using media
+    else if (mediaPct &gt;= 0.1) contentScore += 3;
+
+    const avgLength = postsArray.reduce((s, p) =&gt; s + p.text.length, 0) / (postsArray.length || 1);
+    if (avgLength &gt;= 100) contentScore += 5;
+    else if (avgLength &gt;= 50) contentScore += 3;
+
+    const postsWithHashtags = postsArray.filter(p =&gt; p.hashtags.length &gt; 0).length;
+    if (postsWithHashtags &gt; 0) contentScore += 3;
+
+    const threads = postsArray.filter(p =&gt; p.isThread).length;
+    if (threads &gt; 0) contentScore += 4;
+
+    // Posting frequency (check time span)
+    const timestamps = postsArray.map(p =&gt; new Date(p.timestamp).getTime()).filter(t =&gt; t &gt; 0).sort();
+    if (timestamps.length &gt;= 2) {
+      const spanDays = (timestamps[timestamps.length - 1] - timestamps[0]) / 86400000;
+      const postsPerDay = spanDays &gt; 0 ? postsArray.length / spanDays : 0;
+      if (postsPerDay &gt;= 1 &amp;&amp; postsPerDay &lt;= 10) contentScore += 5; // Active but not spammy
+      else if (postsPerDay &gt; 0.3) contentScore += 3;
+      else if (postsPerDay &gt; 0) contentScore += 1;
+      metrics.postingFrequency = postsPerDay.toFixed(2) + &#39;/day&#39;;
+    }
+    contentScore = Math.min(contentScore, 25);
+    metrics.content = { score: contentScore, max: 25, mediaPct: (mediaPct * 100).toFixed(0) + &#39;%&#39;, avgLength: avgLength.toFixed(0) };
+
+    // 4. Growth &amp; Ratio Health (15 points)
+    let growthScore = 0;
+    const followers = profileData.followers || 0;
+    const following = profileData.following || 0;
+    const ratio = following &gt; 0 ? followers / following : followers;
+
+    if (ratio &gt;= 2) growthScore += 8;
+    else if (ratio &gt;= 1) growthScore += 6;
+    else if (ratio &gt;= 0.5) growthScore += 4;
+    else if (ratio &gt;= 0.2) growthScore += 2;
+
+    if (followers &gt;= 10000) growthScore += 4;
+    else if (followers &gt;= 1000) growthScore += 3;
+    else if (followers &gt;= 100) growthScore += 2;
+    else if (followers &gt;= 10) growthScore += 1;
+
+    // Following too many = red flag
+    if (following &gt; 5000 &amp;&amp; ratio &lt; 0.5) growthScore -= 2;
+    growthScore = Math.max(0, Math.min(growthScore, 15));
+    metrics.growth = { score: growthScore, max: 15, ratio: ratio.toFixed(2) };
+
+    // 5. Risk Factors (15 points — deducted from 15)
+    let riskScore = 15;
+    const riskFactors = [];
+
+    if (following &gt; 5000 &amp;&amp; ratio &lt; 0.3) {
+      riskFactors.push(&#39;Following too many accounts (spam signal)&#39;);
+      riskScore -= 4;
+    }
+    if (!profileData.hasBio) {
+      riskFactors.push(&#39;No bio (looks like bot)&#39;);
+      riskScore -= 2;
+    }
+    if (!profileData.hasCustomAvatar) {
+      riskFactors.push(&#39;Default avatar (bot signal)&#39;);
+      riskScore -= 3;
+    }
+
+    // Check for repetitive content
+    const uniqueTexts = new Set(postsArray.map(p =&gt; p.text.toLowerCase().trim()));
+    const uniqueRatio = postsArray.length &gt; 0 ? uniqueTexts.size / postsArray.length : 1;
+    if (uniqueRatio &lt; 0.8) {
+      riskFactors.push(&#39;Repetitive content detected&#39;);
+      riskScore -= 3;
+    }
+
+    // All reply posts = low-quality signal
+    const replyPct = postsArray.filter(p =&gt; p.isReply).length / (postsArray.length || 1);
+    if (replyPct &gt; 0.8) {
+      riskFactors.push(&#39;Almost all posts are replies&#39;);
+      riskScore -= 2;
+    }
+
+    riskScore = Math.max(0, riskScore);
+    metrics.risk = { score: riskScore, max: 15, factors: riskFactors };
+
+    // ── Total Score ─────────────────────────────────────────
+
+    const totalScore = engagementScore + profileScore + contentScore + growthScore + riskScore;
+    const maxScore = 100;
+
+    let grade, gradeEmoji;
+    if (totalScore &gt;= 90) { grade = &#39;A+&#39;; gradeEmoji = &#39;🏆&#39;; }
+    else if (totalScore &gt;= 80) { grade = &#39;A&#39;; gradeEmoji = &#39;🌟&#39;; }
+    else if (totalScore &gt;= 70) { grade = &#39;B&#39;; gradeEmoji = &#39;👍&#39;; }
+    else if (totalScore &gt;= 60) { grade = &#39;C&#39;; gradeEmoji = &#39;⚡&#39;; }
+    else if (totalScore &gt;= 50) { grade = &#39;D&#39;; gradeEmoji = &#39;⚠️&#39;; }
+    else { grade = &#39;F&#39;; gradeEmoji = &#39;🚨&#39;; }
+
+    // ── Display Results ─────────────────────────────────────
+
+    console.log(&#39;╔&#39; + &#39;═&#39;.repeat(W) + &#39;╗&#39;);
+    console.log(&#39;║  🏥 ACCOUNT HEALTH REPORT&#39; + &#39; &#39;.repeat(W - 28) + &#39;║&#39;);
+    console.log(&#39;║  &#39; + `@${username}`.padEnd(W - 2) + &#39;║&#39;);
+    console.log(&#39;╠&#39; + &#39;═&#39;.repeat(W) + &#39;╣&#39;);
+
+    const bar = (score, max) =&gt; {
+      const filled = Math.round((score / max) * 20);
+      return &#39;█&#39;.repeat(filled) + &#39;░&#39;.repeat(20 - filled) + ` ${score}/${max}`;
+    };
+
+    console.log(&#39;║&#39; + &#39; &#39;.repeat(W) + &#39;║&#39;);
+    console.log(&#39;║  &#39; + `📊 Engagement:  ${bar(engagementScore, 25)}`.padEnd(W - 2) + &#39;║&#39;);
+    console.log(&#39;║  &#39; + `👤 Profile:     ${bar(profileScore, 20)}`.padEnd(W - 2) + &#39;║&#39;);
+    console.log(&#39;║  &#39; + `📝 Content:     ${bar(contentScore, 25)}`.padEnd(W - 2) + &#39;║&#39;);
+    console.log(&#39;║  &#39; + `📈 Growth:      ${bar(growthScore, 15)}`.padEnd(W - 2) + &#39;║&#39;);
+    console.log(&#39;║  &#39; + `🛡️ Risk:        ${bar(riskScore, 15)}`.padEnd(W - 2) + &#39;║&#39;);
+    console.log(&#39;║&#39; + &#39; &#39;.repeat(W) + &#39;║&#39;);
+    console.log(&#39;╠&#39; + &#39;═&#39;.repeat(W) + &#39;╣&#39;);
+    console.log(&#39;║  &#39; + `${gradeEmoji} OVERALL SCORE: ${totalScore}/${maxScore} (Grade: ${grade})`.padEnd(W - 2) + &#39;║&#39;);
+    console.log(&#39;╚&#39; + &#39;═&#39;.repeat(W) + &#39;╝&#39;);
+
+    // Detailed breakdown
+    console.log(&#39;\n━━━ 📊 ENGAGEMENT ━━━&#39;);
+    console.log(`  Rate: ${metrics.engagement.rate} | Avg: ${metrics.engagement.avg}/post`);
+
+    console.log(&#39;\n━━━ 👤 PROFILE ━━━&#39;);
+    console.log(`  Bio: ${profileData.hasBio ? &#39;✅&#39; : &#39;❌&#39;} (${profileData.bioLength} chars)`);
+    console.log(`  Avatar: ${profileData.hasCustomAvatar ? &#39;✅&#39; : &#39;❌&#39;} | Header: ${profileData.hasCustomHeader ? &#39;✅&#39; : &#39;❌&#39;}`);
+    console.log(`  Location: ${profileData.hasLocation ? &#39;✅&#39; : &#39;❌&#39;} | Website: ${profileData.hasWebsite ? &#39;✅&#39; : &#39;❌&#39;}`);
+    console.log(`  Verified: ${profileData.isVerified ? &#39;✅&#39; : &#39;❌&#39;}`);
+
+    console.log(&#39;\n━━━ 📝 CONTENT ━━━&#39;);
+    console.log(`  Posts analyzed: ${postsArray.length}`);
+    console.log(`  Media usage: ${metrics.content.mediaPct}`);
+    console.log(`  Avg length: ${metrics.content.avgLength} chars`);
+    if (metrics.postingFrequency) console.log(`  Frequency: ${metrics.postingFrequency}`);
+
+    console.log(&#39;\n━━━ 📈 GROWTH ━━━&#39;);
+    console.log(`  Followers: ${fmt(followers)} | Following: ${fmt(following)}`);
+    console.log(`  Ratio: ${metrics.growth.ratio} (${ratio &gt;= 1 ? &#39;healthy&#39; : &#39;room to improve&#39;})`);
+
+    if (riskFactors.length &gt; 0) {
+      console.log(&#39;\n━━━ 🚨 RISK FACTORS ━━━&#39;);
+      riskFactors.forEach(f =&gt; console.log(`  ⚠️ ${f}`));
+    }
+
+    // Recommendations
+    console.log(&#39;\n━━━ 💡 RECOMMENDATIONS ━━━&#39;);
+    const recs = [];
+    if (!profileData.hasBio) recs.push(&#39;Add a bio to establish credibility&#39;);
+    if (!profileData.hasCustomAvatar) recs.push(&#39;Upload a custom profile picture&#39;);
+    if (!profileData.hasCustomHeader) recs.push(&#39;Add a header/banner image&#39;);
+    if (!profileData.hasWebsite) recs.push(&#39;Add a website link to your profile&#39;);
+    if (engagementRate &lt; 1) recs.push(&#39;Boost engagement: ask questions, use polls, add media&#39;);
+    if (mediaPct &lt; 0.2) recs.push(&#39;Add more images/videos — they get 2-3x more engagement&#39;);
+    if (ratio &lt; 0.5) recs.push(&#39;Unfollow inactive accounts to improve your ratio&#39;);
+    if (avgLength &lt; 50) recs.push(&#39;Write longer, more thoughtful posts&#39;);
+    if (replyPct &gt; 0.7) recs.push(&#39;Post more original content, not just replies&#39;);
+    if (recs.length === 0) recs.push(&#39;Your account looks great! Keep it up! 🎉&#39;);
+    recs.forEach((r, i) =&gt; console.log(`  ${i + 1}. ${r}`));
+
+    // Save
+    const report = { username, timestamp: new Date().toISOString(), totalScore, grade, metrics, profileData };
+    localStorage.setItem(`xactions_health_${username}`, JSON.stringify(report));
+    console.log(`\n💾 Report saved. Track changes over time.`);
+    console.log(`   JSON.parse(localStorage.getItem(&quot;xactions_health_${username}&quot;))\n`);
+  })();
+})();
 </code></pre>
 <h2>⚙️ Configuration</h2>
 <table>
@@ -151,17 +619,17 @@
 <tbody><tr>
 <td><code>postsToAnalyze</code></td>
 <td><code>50</code></td>
-<td>posts To Analyze</td>
+<td>Posts to analyze</td>
 </tr>
 <tr>
 <td><code>scrollDelay</code></td>
 <td><code>1500</code></td>
-<td>scroll Delay</td>
+<td>Scroll delay</td>
 </tr>
 <tr>
 <td><code>maxScrolls</code></td>
 <td><code>30</code></td>
-<td>max Scrolls</td>
+<td>Max scrolls</td>
 </tr>
 </tbody></table>
 <hr>
@@ -208,7 +676,7 @@ xactions --help
 <pre><code class="language-bash"># Start MCP server
 npm run mcp
 </code></pre>
-<p>See the <a href="/docs/guides/mcp-setup">MCP Setup Guide</a> for integration with Claude Desktop, Cursor, and other AI tools.</p>
+<p>See the <a href="../mcp-setup.md">MCP Setup Guide</a> for integration with Claude Desktop, Cursor, and other AI tools.</p>
 <hr>
 <h2>📁 Source Files</h2>
 <table>
@@ -233,23 +701,23 @@ npm run mcp
 </tr>
 </thead>
 <tbody><tr>
-<td><a href="/docs/audience-demographics">Audience Demographics</a></td>
+<td><a href="audience-demographics.md">Audience Demographics</a></td>
 <td>Analyze your follower demographics including bio keywords, locations, account age, and interests</td>
 </tr>
 <tr>
-<td><a href="/docs/audience-overlap">Audience Overlap</a></td>
+<td><a href="audience-overlap.md">Audience Overlap</a></td>
 <td>Compare the follower lists of two accounts to find audience overlap</td>
 </tr>
 <tr>
-<td><a href="/docs/engagement-leaderboard">Engagement Leaderboard</a></td>
+<td><a href="engagement-leaderboard.md">Engagement Leaderboard</a></td>
 <td>Analyze who engages most with your tweets</td>
 </tr>
 <tr>
-<td><a href="/docs/follower-growth-tracker">Follower Growth Tracker</a></td>
+<td><a href="follower-growth-tracker.md">Follower Growth Tracker</a></td>
 <td>Track your follower count over time</td>
 </tr>
 <tr>
-<td><a href="/docs/sentiment-analyzer">Sentiment Analyzer</a></td>
+<td><a href="sentiment-analyzer.md">Sentiment Analyzer</a></td>
 <td>Analyze tweet sentiment (positive/negative/neutral) using lexicon-based scoring</td>
 </tr>
 </tbody></table>
@@ -326,6 +794,5 @@ npm run mcp
       <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
     </div>
   </footer>
-<script src="/js/sidebar.js"></script>
 </body>
 </html>

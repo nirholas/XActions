@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Communities — Tutorial — Free X/Twitter Tools Tool | XActions</title>
+  <meta name="description" content="Step-by-step guide to creating X Communities with name, description, rules, and privacy settings using XActions browser scripts.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, create, communities, tutorial, tools, create communities tutorial twitter, twitter create communities tutorial">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Create Communities — Tutorial — XActions">
+  <meta property="og:description" content="Step-by-step guide to creating X Communities with name, description, rules, and privacy settings using XActions browser scripts.">
+  <meta property="og:url" content="https://xactions.app/docs/step-by-step/create-communities-tutorial">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Create Communities — Tutorial — Free X/Twitter Tool">
+  <meta name="twitter:description" content="Step-by-step guide to creating X Communities with name, description, rules, and privacy settings using XActions browser scripts.">
+
+  <link rel="canonical" href="https://xactions.app/docs/step-by-step/create-communities-tutorial">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Create Communities — Tutorial — Free X/Twitter Tools Tool | XActions",
+    "description": "Step-by-step guide to creating X Communities with name, description, rules, and privacy settings using XActions browser scripts.",
+    "url": "https://xactions.app/docs/step-by-step/create-communities-tutorial",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/create-communities-tutorial",
+    "articleSection": "Tools",
+    "keywords": "xactions, twitter automation, x automation, free, create, communities, tutorial, tools, create communities tutorial twitter, twitter create communities tutorial"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Create Communities — Tutorial", "item": "https://xactions.app/docs/create-communities-tutorial" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use Create Communities — Tutorial",
+    "description": "Step-by-step guide to creating X Communities with name, description, rules, and privacy settings using XActions browser scripts.",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions Create Communities — Tutorial script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>⚡ Create Communities — Tutorial</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › Create Communities — Tutorial
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Tools</span>
+        <h1>Create Communities — Tutorial</h1>
+<blockquote>
+<p>Step-by-step guide to creating X Communities with name, description, rules, and privacy settings using XActions browser scripts.</p>
+</blockquote>
+<p><strong>Works on:</strong> Browser Console<br><strong>Difficulty:</strong> Beginner<br><strong>Time:</strong> 2-5 minutes<br><strong>Requirements:</strong> Logged into x.com in your browser</p>
+<hr>
+<h2>Prerequisites</h2>
+<ul>
+<li>Logged into x.com in your browser</li>
+<li>Browser DevTools console (F12 -&gt; Console tab)</li>
+<li>Navigate to <code>https://x.com/communities</code> before running</li>
+</ul>
+<hr>
+<h2>Quick Start</h2>
+<ol>
+<li>Open x.com and navigate to <strong>Communities</strong> (<code>https://x.com/communities</code>)</li>
+<li>Press <strong>F12</strong> to open DevTools, then click the <strong>Console</strong> tab</li>
+<li>Copy the script from <code>src/createCommunity.js</code></li>
+<li>Edit the <code>CONFIG</code> section with your community details</li>
+<li>Paste into the console and press Enter</li>
+</ol>
+<hr>
+<h2>Configuration</h2>
+<pre><code class="language-js">const CONFIG = {
+  name: &#39;My XActions Community&#39;,
+  description: &#39;A community for X automation enthusiasts. Built with XActions.&#39;,
+  rules: [
+    &#39;Be respectful to all members&#39;,
+    &#39;No spam or self-promotion without value&#39;,
+    &#39;Stay on topic&#39;,
+  ],
+  isPrivate: false,              // true = approval required to join
+
+  // Timing
+  navigationDelay: 3000,
+  actionDelay: 2000,
+  typeCharDelay: 50,
+
+  // Safety
+  dryRun: true,
+};
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>name</code></td>
+<td><code>string</code></td>
+<td><code>&#39;My XActions Community&#39;</code></td>
+<td>Community display name</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td><code>string</code></td>
+<td><code>&#39;A community for...&#39;</code></td>
+<td>Community description shown to visitors</td>
+</tr>
+<tr>
+<td><code>rules</code></td>
+<td><code>string[]</code></td>
+<td><code>[...]</code></td>
+<td>Array of community rules. Each string is one rule</td>
+</tr>
+<tr>
+<td><code>isPrivate</code></td>
+<td><code>boolean</code></td>
+<td><code>false</code></td>
+<td>If <code>true</code>, users must be approved to join</td>
+</tr>
+<tr>
+<td><code>navigationDelay</code></td>
+<td><code>number</code></td>
+<td><code>3000</code></td>
+<td>Milliseconds to wait for page navigation</td>
+</tr>
+<tr>
+<td><code>actionDelay</code></td>
+<td><code>number</code></td>
+<td><code>2000</code></td>
+<td>Milliseconds between UI actions</td>
+</tr>
+<tr>
+<td><code>typeCharDelay</code></td>
+<td><code>number</code></td>
+<td><code>50</code></td>
+<td>Milliseconds between keystrokes</td>
+</tr>
+<tr>
+<td><code>dryRun</code></td>
+<td><code>boolean</code></td>
+<td><code>true</code></td>
+<td>Preview mode -- no community is actually created</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Step-by-Step Guide</h2>
+<h3>Creating a Public Community</h3>
+<p><strong>Step 1 -- Configure your community</strong></p>
+<pre><code class="language-js">const CONFIG = {
+  name: &#39;Web3 Builders Hub&#39;,
+  description: &#39;A space for developers building decentralized applications. Share projects, get feedback, and collaborate.&#39;,
+  rules: [
+    &#39;Be constructive and supportive&#39;,
+    &#39;Share your work -- show, do not just tell&#39;,
+    &#39;No shilling tokens or NFTs without context&#39;,
+    &#39;English only for now&#39;,
+  ],
+  isPrivate: false,
+  dryRun: true,
+};
+</code></pre>
+<p><strong>Step 2 -- Preview with dry run</strong></p>
+<pre><code>CREATE COMMUNITY
+DRY RUN MODE -- set CONFIG.dryRun = false to actually create
+Name: &quot;Web3 Builders Hub&quot;
+Description: &quot;A space for developers building decentralized...&quot;
+Rules: 4
+Private: false
+Navigating to Communities...
+Opening community creation...
+Setting community name...
+Name set: &quot;Web3 Builders Hub&quot;
+Setting description...
+Description set
+Adding community rules...
+  Rule 1: &quot;Be constructive and supportive&quot;
+  Rule 2: &quot;Share your work -- show, do not just tell&quot;
+  Rule 3: &quot;No shilling tokens or NFTs without context&quot;
+  Rule 4: &quot;English only for now&quot;
+Creating community...
+Community created!
+</code></pre>
+<p><strong>Step 3 -- Create for real</strong></p>
+<p>Set <code>dryRun: false</code> and paste again.</p>
+<h3>Creating a Private (Approval-Required) Community</h3>
+<p>Set <code>isPrivate: true</code> to require approval for new members:</p>
+<pre><code class="language-js">const CONFIG = {
+  name: &#39;XActions Beta Testers&#39;,
+  description: &#39;Private group for testing new XActions features before release.&#39;,
+  rules: [
+    &#39;Report bugs with reproduction steps&#39;,
+    &#39;Do not share beta features publicly&#39;,
+    &#39;Be patient -- it is a beta!&#39;,
+  ],
+  isPrivate: true,
+  dryRun: false,
+};
+</code></pre>
+<p>When <code>isPrivate</code> is true, the script will toggle the privacy setting, requiring you to manually approve new members who request to join.</p>
+<hr>
+<h2>Tips &amp; Tricks</h2>
+<ul>
+<li><strong>Keep rules clear and concise.</strong> Each rule should be one sentence. Aim for 3-5 rules.</li>
+<li><strong>Write a compelling description.</strong> This is what people see before joining. Explain what the community is about and who it is for.</li>
+<li><strong>Start public, go private later.</strong> Public communities grow faster. You can always change to private after building an initial membership.</li>
+<li><strong>The script handles multi-step flows.</strong> Some community creation dialogs have multiple screens (name -&gt; description -&gt; rules -&gt; confirm). The script clicks &quot;Next&quot; between steps.</li>
+<li><strong>State is saved.</strong> Progress is stored in <code>sessionStorage</code> under <code>xactions_createCommunity</code>.</li>
+</ul>
+<hr>
+<h2>Troubleshooting</h2>
+<table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&quot;Could not find Create Community button&quot;</td>
+<td>Navigate to <code>x.com/communities</code> and look for the create option. It may be behind a menu</td>
+</tr>
+<tr>
+<td>&quot;Could not find name input&quot;</td>
+<td>The community creation UI may have changed. Try creating manually first to understand the current flow</td>
+</tr>
+<tr>
+<td>Rules not being added</td>
+<td>The rule input selectors may have changed. The script tries multiple fallback selectors</td>
+</tr>
+<tr>
+<td>Privacy toggle not found</td>
+<td>The privacy setting may be on a different screen. Check if there is a &quot;Next&quot; button to advance</td>
+</tr>
+<tr>
+<td>Community creation fails silently</td>
+<td>Check if there are any error banners on the page. X may have restrictions on community creation</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Related Scripts</h2>
+<ul>
+<li><code>src/joinCommunities.js</code> -- Find and join communities by keyword</li>
+<li><code>src/manageCommunity.js</code> -- Manage members, roles, rules, and posts in existing communities</li>
+</ul>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try Create Communities — Tutorial?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/step-by-step/add-media-tutorial">📝 Add Media Tutorial</a>
+        <a href="/docs/step-by-step/ads-campaigns-tutorial">📝 Ads Campaigns Tutorial</a>
+        <a href="/docs/step-by-step/affiliate-benefits-tutorial">📝 Affiliate Benefits Tutorial</a>
+        <a href="/docs/step-by-step/alt-text-tutorial">📝 Alt Text Tutorial</a>
+        <a href="/docs/step-by-step/auto-commenter-tutorial">📝 Auto Commenter Tutorial</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a> / <a href="/docs#step-by-step">Tutorials</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

@@ -73,13 +73,121 @@
   }
   </script>
 
-  <link rel="stylesheet" href="/css/common.css">
-  <link rel="stylesheet" href="/css/docs.css">
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
 </head>
 <body>
   <div class="layout">
     <!-- Sidebar -->
-    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
 
     <!-- Main Content -->
     <main class="main-content">
@@ -132,12 +240,280 @@
 <li>Copy and paste the script from <a href="https://github.com/nirholas/XActions/blob/main/src/audienceOverlap.js"><code>src/audienceOverlap.js</code></a></li>
 <li>Press Enter to run</li>
 </ol>
-<pre><code class="language-javascript">// Quick start — copy the full script from:
-// src/audienceOverlap.js
-//
-// Or install via npm and use the CLI:
-// npm install -g xactions
-// xactions --help
+<pre><code class="language-javascript">/**
+ * ============================================================
+ * 🔀 Audience Overlap Analyzer — Production Grade
+ * ============================================================
+ *
+ * @name        audienceOverlap.js
+ * @description Compare the follower lists of two X/Twitter
+ *              accounts to find shared followers, unique-to-each
+ *              audiences, and overlap percentage. Useful for
+ *              identifying collaboration opportunities, competitor
+ *              analysis, and audience expansion targets.
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.0.0
+ * @date        2026-02-24
+ * @repository  https://github.com/nirholas/XActions
+ *
+ * ============================================================
+ * 📋 USAGE:
+ *
+ * 1. Go to: x.com/ACCOUNT_A/followers
+ * 2. Paste script — it will scrape Account A&#39;s followers
+ * 3. Run: XActions.switchTo(&#39;ACCOUNT_B&#39;)
+ *    → navigates to Account B&#39;s followers and scrapes
+ * 4. Run: XActions.compare() → see overlap analysis
+ *
+ * Or use the quick method:
+ *   XActions.analyze(&#39;accountA&#39;, &#39;accountB&#39;)
+ * ============================================================
+ */
+(() =&gt; {
+  &#39;use strict&#39;;
+
+  const CONFIG = {
+    scrollRounds: 8,
+    scrollDelay: 2000,
+    maxFollowers: 300,   // Per account (browser limitation)
+    exportResults: true,
+  };
+
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+
+  const datasets = { a: null, b: null };
+
+  // ── Scrape visible followers ───────────────────────────────
+  const scrapeFollowers = async (label) =&gt; {
+    const followers = new Map();
+
+    for (let round = 0; round &lt; CONFIG.scrollRounds &amp;&amp; followers.size &lt; CONFIG.maxFollowers; round++) {
+      const cells = document.querySelectorAll(&#39;[data-testid=&quot;UserCell&quot;]&#39;);
+
+      for (const cell of cells) {
+        if (followers.size &gt;= CONFIG.maxFollowers) break;
+
+        const link = cell.querySelector(&#39;a[href^=&quot;/&quot;][role=&quot;link&quot;]&#39;) || cell.querySelector(&#39;a[href^=&quot;/&quot;]&#39;);
+        if (!link) continue;
+        const match = (link.getAttribute(&#39;href&#39;) || &#39;&#39;).match(/^\/([A-Za-z0-9_]+)/);
+        if (!match || [&#39;home&#39;, &#39;explore&#39;, &#39;notifications&#39;, &#39;messages&#39;, &#39;i&#39;].includes(match[1])) continue;
+
+        const username = match[1].toLowerCase();
+        if (followers.has(username)) continue;
+
+        const nameSpans = cell.querySelectorAll(&#39;a[href^=&quot;/&quot;] span&#39;);
+        const displayName = nameSpans.length &gt; 0 ? nameSpans[0].textContent.trim() : match[1];
+
+        const verified = !!cell.querySelector(&#39;[data-testid=&quot;icon-verified&quot;]&#39;) || !!cell.querySelector(&#39;svg[aria-label=&quot;Verified&quot;]&#39;);
+
+        // Bio snippet
+        const textEls = cell.querySelectorAll(&#39;[dir=&quot;auto&quot;]&#39;);
+        let bio = &#39;&#39;;
+        for (const el of textEls) {
+          const text = el.textContent.trim();
+          if (text.length &gt; 20 &amp;&amp; !text.startsWith(&#39;@&#39;)) { bio = text.slice(0, 150); break; }
+        }
+
+        followers.set(username, { username: match[1], displayName, verified, bio });
+      }
+
+      console.log(`   📜 ${label} — Round ${round + 1}: ${followers.size} followers`);
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(CONFIG.scrollDelay);
+    }
+
+    return followers;
+  };
+
+  // ── Compare two datasets ───────────────────────────────────
+  const compareDatasets = () =&gt; {
+    if (!datasets.a || !datasets.b) {
+      console.log(&#39;❌ Need both datasets. Use XActions.analyze(&quot;accountA&quot;, &quot;accountB&quot;) or scrape each individually.&#39;);
+      return;
+    }
+
+    const aSet = new Set(datasets.a.followers.keys());
+    const bSet = new Set(datasets.b.followers.keys());
+
+    const shared = [...aSet].filter(u =&gt; bSet.has(u));
+    const onlyA = [...aSet].filter(u =&gt; !bSet.has(u));
+    const onlyB = [...bSet].filter(u =&gt; !aSet.has(u));
+    const union = new Set([...aSet, ...bSet]);
+
+    const overlapPct = ((shared.length / union.size) * 100).toFixed(1);
+    const overlapOfA = ((shared.length / aSet.size) * 100).toFixed(1);
+    const overlapOfB = ((shared.length / bSet.size) * 100).toFixed(1);
+
+    const W = 60;
+    console.log(&#39;\n╔&#39; + &#39;═&#39;.repeat(W) + &#39;╗&#39;);
+    console.log(&#39;║  🔀 AUDIENCE OVERLAP ANALYSIS&#39; + &#39; &#39;.repeat(W - 31) + &#39;║&#39;);
+    console.log(&#39;╚&#39; + &#39;═&#39;.repeat(W) + &#39;╝&#39;);
+
+    console.log(&#39;\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━&#39;);
+    console.log(&#39;  📊 OVERVIEW&#39;);
+    console.log(&#39;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━&#39;);
+    console.log(`  Account A: @${datasets.a.account} (${aSet.size} followers scraped)`);
+    console.log(`  Account B: @${datasets.b.account} (${bSet.size} followers scraped)`);
+    console.log(`  Shared followers:    ${shared.length}`);
+    console.log(`  Only in A:           ${onlyA.length}`);
+    console.log(`  Only in B:           ${onlyB.length}`);
+    console.log(`  Total unique:        ${union.size}`);
+
+    // Venn diagram (ASCII)
+    console.log(&#39;\n  ┌─ VENN DIAGRAM ────────────────────────────────┐&#39;);
+    const aBarLen = Math.round((onlyA.length / union.size) * 30);
+    const sharedBarLen = Math.round((shared.length / union.size) * 30);
+    const bBarLen = Math.round((onlyB.length / union.size) * 30);
+    console.log(`  │ A only  ${&#39;░&#39;.repeat(aBarLen)}${&#39;█&#39;.repeat(sharedBarLen)}${&#39;▒&#39;.repeat(bBarLen)}  B only │`);
+    console.log(`  │ ${onlyA.length}${&#39; &#39;.repeat(Math.max(0, 7 - String(onlyA.length).length))}` +
+                `${&#39;░ A only&#39;.padEnd(aBarLen + 9)}` +
+                `${&#39;█ shared &#39;.padEnd(sharedBarLen + 9)}` +
+                `${&#39;▒ B only&#39;.padEnd(bBarLen + 9).slice(0, bBarLen + 9)}│`);
+    console.log(&#39;  └─────────────────────────────────────────────────┘&#39;);
+
+    // Overlap percentages
+    console.log(&#39;\n━━━ 📊 OVERLAP METRICS ━━━&#39;);
+    console.log(`  Jaccard similarity:       ${overlapPct}% (shared / union)`);
+    console.log(`  Overlap % of A&#39;s base:    ${overlapOfA}%`);
+    console.log(`  Overlap % of B&#39;s base:    ${overlapOfB}%`);
+
+    // ── Shared followers detail ─────────────────────────────
+    if (shared.length &gt; 0) {
+      console.log(`\n━━━ 👥 SHARED FOLLOWERS (${shared.length}) ━━━`);
+      const sharedDetails = shared.map(u =&gt; {
+        const aData = datasets.a.followers.get(u);
+        return { username: aData.username, displayName: aData.displayName, verified: aData.verified };
+      });
+      const verifiedShared = sharedDetails.filter(s =&gt; s.verified);
+      if (verifiedShared.length &gt; 0) {
+        console.log(`  ✅ Verified shared followers (${verifiedShared.length}):`);
+        for (const v of verifiedShared.slice(0, 10)) {
+          console.log(`     ✅ @${v.username} (${v.displayName})`);
+        }
+      }
+      console.log(`  All shared: ${sharedDetails.slice(0, 15).map(s =&gt; &#39;@&#39; + s.username).join(&#39;, &#39;)}${shared.length &gt; 15 ? &#39;...&#39; : &#39;&#39;}`);
+    }
+
+    // ── Unique to each ──────────────────────────────────────
+    console.log(`\n━━━ 🅰️ UNIQUE TO @${datasets.a.account} (${onlyA.length}) ━━━`);
+    console.log(`  ${onlyA.slice(0, 15).map(u =&gt; &#39;@&#39; + (datasets.a.followers.get(u)?.username || u)).join(&#39;, &#39;)}${onlyA.length &gt; 15 ? &#39;...&#39; : &#39;&#39;}`);
+
+    console.log(`\n━━━ 🅱️ UNIQUE TO @${datasets.b.account} (${onlyB.length}) ━━━`);
+    console.log(`  ${onlyB.slice(0, 15).map(u =&gt; &#39;@&#39; + (datasets.b.followers.get(u)?.username || u)).join(&#39;, &#39;)}${onlyB.length &gt; 15 ? &#39;...&#39; : &#39;&#39;}`);
+
+    // ── Insights ────────────────────────────────────────────
+    console.log(&#39;\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━&#39;);
+    console.log(&#39;  💡 INSIGHTS&#39;);
+    console.log(&#39;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━&#39;);
+
+    if (parseFloat(overlapPct) &gt; 50) {
+      console.log(&#39;  🤝 HIGH OVERLAP: These accounts share most of their audience.&#39;);
+      console.log(&#39;     → Great collaboration partners (co-threads, spaces).&#39;);
+      console.log(&#39;     → Content differentiation is key to avoid redundancy.&#39;);
+    } else if (parseFloat(overlapPct) &gt; 20) {
+      console.log(&#39;  📊 MODERATE OVERLAP: Decent shared audience.&#39;);
+      console.log(&#39;     → Cross-promotion would reach new audiences for both.&#39;);
+      console.log(&#39;     → Mutual engagement would be noticed by shared followers.&#39;);
+    } else {
+      console.log(&#39;  🔀 LOW OVERLAP: Very different audiences.&#39;);
+      console.log(&#39;     → Great opportunity for cross-pollination!&#39;);
+      console.log(&#39;     → Guest content/collabs would expose each to new audiences.&#39;);
+    }
+
+    if (onlyB.length &gt; onlyA.length * 2) {
+      console.log(`  🎯 @${datasets.b.account} has ${onlyB.length} followers you don&#39;t reach.`);
+      console.log(&#39;     → Consider engaging with their content to attract their audience.&#39;);
+    }
+
+    console.log(&#39;\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n&#39;);
+
+    // Export
+    if (CONFIG.exportResults) {
+      const data = {
+        accountA: { account: datasets.a.account, followerCount: aSet.size },
+        accountB: { account: datasets.b.account, followerCount: bSet.size },
+        overlap: {
+          shared: shared.length,
+          onlyA: onlyA.length,
+          onlyB: onlyB.length,
+          jaccardPct: parseFloat(overlapPct),
+          overlapOfA: parseFloat(overlapOfA),
+          overlapOfB: parseFloat(overlapOfB),
+        },
+        sharedFollowers: shared.map(u =&gt; datasets.a.followers.get(u)?.username || u),
+        uniqueToA: onlyA.slice(0, 100).map(u =&gt; datasets.a.followers.get(u)?.username || u),
+        uniqueToB: onlyB.slice(0, 100).map(u =&gt; datasets.b.followers.get(u)?.username || u),
+        analyzedAt: new Date().toISOString(),
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: &#39;application/json&#39; });
+      const a = document.createElement(&#39;a&#39;); a.href = URL.createObjectURL(blob);
+      a.download = `xactions-overlap-${datasets.a.account}-vs-${datasets.b.account}.json`;
+      document.body.appendChild(a); a.click(); a.remove();
+      console.log(&#39;📥 Overlap analysis exported.&#39;);
+    }
+  };
+
+  // ── Controls ───────────────────────────────────────────────
+  window.XActions = window.XActions || {};
+
+  window.XActions.analyze = async (accountA, accountB) =&gt; {
+    if (!accountA || !accountB) {
+      console.log(&#39;❌ Usage: XActions.analyze(&quot;accountA&quot;, &quot;accountB&quot;)&#39;);
+      return;
+    }
+
+    console.log(&#39;╔════════════════════════════════════════════════╗&#39;);
+    console.log(&#39;║  🔀 AUDIENCE OVERLAP ANALYZER                 ║&#39;);
+    console.log(&#39;╚════════════════════════════════════════════════╝&#39;);
+
+    // Scrape A
+    console.log(`\n📊 Step 1: Scraping @${accountA}&#39;s followers...\n`);
+    window.location.href = `https://x.com/${accountA}/followers`;
+    await sleep(4000);
+    datasets.a = { account: accountA, followers: await scrapeFollowers(&#39;A&#39;) };
+    console.log(`  ✅ @${accountA}: ${datasets.a.followers.size} followers scraped.\n`);
+
+    // Scrape B
+    console.log(`📊 Step 2: Scraping @${accountB}&#39;s followers...\n`);
+    window.location.href = `https://x.com/${accountB}/followers`;
+    await sleep(4000);
+    datasets.b = { account: accountB, followers: await scrapeFollowers(&#39;B&#39;) };
+    console.log(`  ✅ @${accountB}: ${datasets.b.followers.size} followers scraped.\n`);
+
+    // Compare
+    console.log(&#39;📊 Step 3: Comparing...\n&#39;);
+    compareDatasets();
+  };
+
+  window.XActions.scrapeHere = async (label) =&gt; {
+    if (label !== &#39;a&#39; &amp;&amp; label !== &#39;b&#39;) {
+      console.log(&#39;❌ Usage: XActions.scrapeHere(&quot;a&quot;) or XActions.scrapeHere(&quot;b&quot;)&#39;);
+      return;
+    }
+    const match = window.location.href.match(/x\.com\/([A-Za-z0-9_]+)\/followers/);
+    const account = match ? match[1] : &#39;unknown&#39;;
+    console.log(`📊 Scraping ${label.toUpperCase()} (@${account})...\n`);
+    datasets[label] = { account, followers: await scrapeFollowers(label.toUpperCase()) };
+    console.log(`  ✅ @${account}: ${datasets[label].followers.size} followers scraped.`);
+    if (datasets.a &amp;&amp; datasets.b) {
+      console.log(&#39;  Both datasets ready! Run: XActions.compare()&#39;);
+    }
+  };
+
+  window.XActions.compare = compareDatasets;
+
+  // ── Init ───────────────────────────────────────────────────
+  console.log(&#39;╔════════════════════════════════════════════════════╗&#39;);
+  console.log(&#39;║  🔀 AUDIENCE OVERLAP ANALYZER — Ready             ║&#39;);
+  console.log(&#39;║  by nichxbt — v1.0                                ║&#39;);
+  console.log(&#39;╚════════════════════════════════════════════════════╝&#39;);
+  console.log(&#39;\n📋 Quick method:&#39;);
+  console.log(&#39;  XActions.analyze(&quot;accountA&quot;, &quot;accountB&quot;)&#39;);
+  console.log(&#39;\n📋 Manual method:&#39;);
+  console.log(&#39;  1. Go to x.com/accountA/followers → XActions.scrapeHere(&quot;a&quot;)&#39;);
+  console.log(&#39;  2. Go to x.com/accountB/followers → XActions.scrapeHere(&quot;b&quot;)&#39;);
+  console.log(&#39;  3. XActions.compare()&#39;);
+})();
 </code></pre>
 <h2>⚙️ Configuration</h2>
 <table>
@@ -151,12 +527,12 @@
 <tbody><tr>
 <td><code>scrollRounds</code></td>
 <td><code>8</code></td>
-<td>scroll Rounds</td>
+<td>Scroll rounds</td>
 </tr>
 <tr>
 <td><code>scrollDelay</code></td>
 <td><code>2000</code></td>
-<td>scroll Delay</td>
+<td>Scroll delay</td>
 </tr>
 <tr>
 <td><code>maxFollowers</code></td>
@@ -166,7 +542,7 @@
 <tr>
 <td><code>exportResults</code></td>
 <td><code>true</code></td>
-<td>export Results</td>
+<td>Export results</td>
 </tr>
 </tbody></table>
 <hr>
@@ -213,7 +589,7 @@ xactions --help
 <pre><code class="language-bash"># Start MCP server
 npm run mcp
 </code></pre>
-<p>See the <a href="/docs/guides/mcp-setup">MCP Setup Guide</a> for integration with Claude Desktop, Cursor, and other AI tools.</p>
+<p>See the <a href="../mcp-setup.md">MCP Setup Guide</a> for integration with Claude Desktop, Cursor, and other AI tools.</p>
 <hr>
 <h2>📁 Source Files</h2>
 <table>
@@ -238,23 +614,23 @@ npm run mcp
 </tr>
 </thead>
 <tbody><tr>
-<td><a href="/docs/account-health-monitor">Account Health Monitor</a></td>
+<td><a href="account-health-monitor.md">Account Health Monitor</a></td>
 <td>Comprehensive health check for your X/Twitter account</td>
 </tr>
 <tr>
-<td><a href="/docs/audience-demographics">Audience Demographics</a></td>
+<td><a href="audience-demographics.md">Audience Demographics</a></td>
 <td>Analyze your follower demographics including bio keywords, locations, account age, and interests</td>
 </tr>
 <tr>
-<td><a href="/docs/engagement-leaderboard">Engagement Leaderboard</a></td>
+<td><a href="engagement-leaderboard.md">Engagement Leaderboard</a></td>
 <td>Analyze who engages most with your tweets</td>
 </tr>
 <tr>
-<td><a href="/docs/follower-growth-tracker">Follower Growth Tracker</a></td>
+<td><a href="follower-growth-tracker.md">Follower Growth Tracker</a></td>
 <td>Track your follower count over time</td>
 </tr>
 <tr>
-<td><a href="/docs/sentiment-analyzer">Sentiment Analyzer</a></td>
+<td><a href="sentiment-analyzer.md">Sentiment Analyzer</a></td>
 <td>Analyze tweet sentiment (positive/negative/neutral) using lexicon-based scoring</td>
 </tr>
 </tbody></table>
@@ -331,6 +707,5 @@ npm run mcp
       <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
     </div>
   </footer>
-<script src="/js/sidebar.js"></script>
 </body>
 </html>

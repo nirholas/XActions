@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Undo Post -- Tutorial — Free X/Twitter Tools Tool | XActions</title>
+  <meta name="description" content="Step-by-step guide to undoing a recently posted tweet using XActions browser scripts.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, undo, post, tutorial, tools, undo post tutorial twitter, twitter undo post tutorial">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Undo Post -- Tutorial — XActions">
+  <meta property="og:description" content="Step-by-step guide to undoing a recently posted tweet using XActions browser scripts.">
+  <meta property="og:url" content="https://xactions.app/docs/step-by-step/undo-post-tutorial">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Undo Post -- Tutorial — Free X/Twitter Tool">
+  <meta name="twitter:description" content="Step-by-step guide to undoing a recently posted tweet using XActions browser scripts.">
+
+  <link rel="canonical" href="https://xactions.app/docs/step-by-step/undo-post-tutorial">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Undo Post -- Tutorial — Free X/Twitter Tools Tool | XActions",
+    "description": "Step-by-step guide to undoing a recently posted tweet using XActions browser scripts.",
+    "url": "https://xactions.app/docs/step-by-step/undo-post-tutorial",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/undo-post-tutorial",
+    "articleSection": "Tools",
+    "keywords": "xactions, twitter automation, x automation, free, undo, post, tutorial, tools, undo post tutorial twitter, twitter undo post tutorial"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Undo Post -- Tutorial", "item": "https://xactions.app/docs/undo-post-tutorial" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use Undo Post -- Tutorial",
+    "description": "Step-by-step guide to undoing a recently posted tweet using XActions browser scripts.",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions Undo Post -- Tutorial script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>⚡ Undo Post -- Tutorial</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › Undo Post -- Tutorial
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Tools</span>
+        <h1>Undo Post -- Tutorial</h1>
+<blockquote>
+<p>Step-by-step guide to undoing a recently posted tweet using XActions browser scripts.</p>
+</blockquote>
+<h2>Prerequisites</h2>
+<ul>
+<li>Logged into x.com in your browser</li>
+<li>Browser DevTools console (F12 -&gt; Console tab)</li>
+<li><strong>X Premium subscription</strong> (undo is a Premium-only feature)</li>
+<li>Must run within 30 seconds of posting</li>
+</ul>
+<h2>Quick Start</h2>
+<ol>
+<li>Post a tweet on x.com</li>
+<li>Immediately open DevTools (F12) -- or have it open already</li>
+<li>Copy the script from <code>src/editPost.js</code></li>
+<li>Set <code>CONFIG.mode = &#39;undo&#39;</code></li>
+<li>Paste into Console and press Enter within 30 seconds of posting</li>
+</ol>
+<h2>How Undo Works</h2>
+<p>When you have X Premium, a brief &quot;Undo&quot; banner appears at the bottom of the screen after you post a tweet. This banner lasts approximately 30 seconds. Clicking &quot;Undo&quot; retracts the tweet before it becomes visible to your followers.</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Subscription</td>
+<td>X Premium required</td>
+</tr>
+<tr>
+<td>Time window</td>
+<td>~30 seconds after posting</td>
+</tr>
+<tr>
+<td>What happens</td>
+<td>The tweet is retracted/deleted before delivery</td>
+</tr>
+<tr>
+<td>Reversible</td>
+<td>No -- once undone, the tweet is gone</td>
+</tr>
+</tbody></table>
+<h2>Configuration</h2>
+<pre><code class="language-js">const CONFIG = {
+  mode: &#39;undo&#39;,
+
+  // Edit mode settings (not used in undo mode)
+  postUrl: &#39;&#39;,
+  newText: &#39;&#39;,
+
+  // Timing
+  minDelay: 1000,
+  maxDelay: 2000,
+  navigationDelay: 3000,
+};
+</code></pre>
+<p>The only setting that matters for undo mode is <code>mode: &#39;undo&#39;</code>. All other options are ignored.</p>
+<h2>Step-by-Step Guide</h2>
+<h3>Recommended Workflow</h3>
+<p>The best approach is to have the script ready <strong>before</strong> you post:</p>
+<ol>
+<li>Open DevTools (F12) on x.com</li>
+<li>Paste <code>src/editPost.js</code> into the console with <code>CONFIG.mode = &#39;undo&#39;</code></li>
+<li><strong>Do not press Enter yet</strong></li>
+<li>Post your tweet normally through the X interface</li>
+<li>Immediately switch to the DevTools console and press Enter</li>
+<li>The script will find and click the undo button</li>
+</ol>
+<h3>How It Works Internally</h3>
+<p>The undo function is straightforward:</p>
+<pre><code class="language-js">// From src/editPost.js -- undo mode:
+
+const undoPost = async () =&gt; {
+  console.log(&#39;Looking for undo button...&#39;);
+
+  const undoBtn = await waitForElement(&#39;[data-testid=&quot;undoTweet&quot;]&#39;, 5000);
+  if (!undoBtn) {
+    console.error(&#39;Undo button not found. The undo window may have expired (30s limit).&#39;);
+    return;
+  }
+
+  undoBtn.click();
+  console.log(&#39;Post undone successfully! The tweet has been retracted.&#39;);
+};
+</code></pre>
+<p>The script:</p>
+<ol>
+<li>Searches for the undo button (<code>[data-testid=&quot;undoTweet&quot;]</code>) for up to 5 seconds</li>
+<li>If found, clicks it immediately</li>
+<li>The tweet is retracted before delivery</li>
+</ol>
+<h3>Undo vs Delete</h3>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Undo</th>
+<th>Delete</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Time limit</td>
+<td>30 seconds</td>
+<td>Any time</td>
+</tr>
+<tr>
+<td>Visibility</td>
+<td>Tweet may never be seen</td>
+<td>Tweet was already visible</td>
+</tr>
+<tr>
+<td>Notifications</td>
+<td>No notifications sent</td>
+<td>Notifications already sent</td>
+</tr>
+<tr>
+<td>Subscription</td>
+<td>Premium required</td>
+<td>Free</td>
+</tr>
+<tr>
+<td>Engagement</td>
+<td>No engagement possible</td>
+<td>Existing engagement lost</td>
+</tr>
+</tbody></table>
+<p>Undo is preferable when you catch a mistake immediately because:</p>
+<ul>
+<li>The tweet may not have been delivered to followers yet</li>
+<li>No notifications were sent</li>
+<li>No engagement was recorded</li>
+<li>It is as if the tweet never existed</li>
+</ul>
+<h3>Pre-loading the Script</h3>
+<p>For a faster workflow, you can pre-load the undo function and call it when needed:</p>
+<pre><code class="language-js">// Paste this into the console before posting
+window.undoLastPost = async () =&gt; {
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+  const waitForElement = async (sel, timeout = 5000) =&gt; {
+    const start = Date.now();
+    while (Date.now() - start &lt; timeout) {
+      const el = document.querySelector(sel);
+      if (el) return el;
+      await sleep(200);
+    }
+    return null;
+  };
+
+  const btn = await waitForElement(&#39;[data-testid=&quot;undoTweet&quot;]&#39;);
+  if (btn) {
+    btn.click();
+    console.log(&#39;Post undone!&#39;);
+  } else {
+    console.log(&#39;Undo button not found -- window expired.&#39;);
+  }
+};
+
+// Then after posting, just type:
+// undoLastPost()
+</code></pre>
+<h2>Tips &amp; Tricks</h2>
+<ul>
+<li><strong>Have it ready</strong>: The 30-second window is very short. Have the script or function pre-loaded in your console.</li>
+<li><strong>Quick access</strong>: Pre-load <code>window.undoLastPost()</code> so you can call it with minimal typing.</li>
+<li><strong>Premium only</strong>: Without X Premium, the undo banner does not appear at all.</li>
+<li><strong>Mobile too</strong>: The undo feature also works on the X mobile app, though this script is for the web.</li>
+<li><strong>Not reversible</strong>: Once you undo a tweet, it is gone. You would need to compose and post it again.</li>
+<li><strong>Thread tweets</strong>: Undoing the last tweet in a thread only undoes that specific tweet, not the entire thread.</li>
+</ul>
+<h2>Troubleshooting</h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&quot;Undo button not found&quot;</td>
+<td>The 30-second window has expired. Use delete instead (<code>src/postComposer.js</code> <code>deletePost</code>).</td>
+</tr>
+<tr>
+<td>No undo banner appears</td>
+<td>You need X Premium. Free accounts do not have the undo feature.</td>
+</tr>
+<tr>
+<td>Script runs too slowly</td>
+<td>Pre-load the undo function before posting so it is ready immediately.</td>
+</tr>
+<tr>
+<td>Undo did not work</td>
+<td>The tweet may have already been delivered. Check your profile to confirm.</td>
+</tr>
+</tbody></table>
+<h2>Related Scripts</h2>
+<ul>
+<li><code>src/editPost.js</code> (edit mode) -- Edit posts within 1 hour</li>
+<li><code>src/postComposer.js</code> (<code>deletePost</code>) -- Delete posts at any time</li>
+<li><code>docs/examples/tutorials/edit-post-tutorial.md</code> -- Edit post guide</li>
+</ul>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try Undo Post -- Tutorial?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/step-by-step/add-media-tutorial">📝 Add Media Tutorial</a>
+        <a href="/docs/step-by-step/ads-campaigns-tutorial">📝 Ads Campaigns Tutorial</a>
+        <a href="/docs/step-by-step/affiliate-benefits-tutorial">📝 Affiliate Benefits Tutorial</a>
+        <a href="/docs/step-by-step/alt-text-tutorial">📝 Alt Text Tutorial</a>
+        <a href="/docs/step-by-step/auto-commenter-tutorial">📝 Auto Commenter Tutorial</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a> / <a href="/docs#step-by-step">Tutorials</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

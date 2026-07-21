@@ -73,13 +73,121 @@
   }
   </script>
 
-  <link rel="stylesheet" href="/css/common.css">
-  <link rel="stylesheet" href="/css/docs.css">
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
 </head>
 <body>
   <div class="layout">
     <!-- Sidebar -->
-    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
 
     <!-- Main Content -->
     <main class="main-content">
@@ -132,12 +240,334 @@
 <li>Copy and paste the script from <a href="https://github.com/nirholas/XActions/blob/main/src/quoteTweetAutomation.js"><code>src/quoteTweetAutomation.js</code></a></li>
 <li>Press Enter to run</li>
 </ol>
-<pre><code class="language-javascript">// Quick start — copy the full script from:
-// src/quoteTweetAutomation.js
-//
-// Or install via npm and use the CLI:
-// npm install -g xactions
-// xactions --help
+<pre><code class="language-javascript">/**
+ * ============================================================
+ * 🔁 Quote Tweet Automation — Production Grade
+ * ============================================================
+ *
+ * @name        quoteTweetAutomation.js
+ * @description Auto-retweet with quote using customizable
+ *              templates. Scrape tweets from a timeline/search
+ *              and quote-RT them with personalized commentary.
+ *              Supports keyword targeting, skip filters,
+ *              template rotation, and human-like delays.
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.0.0
+ * @date        2026-02-24
+ * @repository  https://github.com/nirholas/XActions
+ *
+ * ============================================================
+ * 📋 USAGE:
+ *
+ * 1. Go to a search result / user timeline / list
+ * 2. Open DevTools Console (F12)
+ * 3. Configure templates and filters below
+ * 4. Paste and run
+ *
+ * ⚠️ Use responsibly — excessive quote tweeting will get you
+ *     flagged. Keep maxQuotes low and delays high.
+ * ============================================================
+ */
+(() =&gt; {
+  &#39;use strict&#39;;
+
+  const CONFIG = {
+    maxQuotes: 5,            // Keep low to avoid bans
+    dryRun: true,            // Set false to actually post (BE CAREFUL)
+
+    // Templates — {author} and {text} get replaced
+    templates: [
+      &#39;💯 This is so underrated. Everyone needs to see this.&#39;,
+      &#39;📌 Saving this for later — great insight here.&#39;,
+      &#39;🔥 Couldn\&#39;t agree more. Well said.&#39;,
+    ],
+
+    // Only quote tweets containing these keywords (empty = all)
+    onlyKeywords: [],
+
+    // Skip tweets containing these keywords
+    skipKeywords: [&#39;ad&#39;, &#39;promoted&#39;, &#39;giveaway&#39;, &#39;dm me&#39;],
+
+    // Skip already quote-tweeted (by checking if retweet button is active)
+    skipRetweeted: true,
+
+    // Minimum engagement to quote (0 = any)
+    minEngagement: 0,
+
+    // Delays (ms) — keep high to appear human
+    delayBetween: [45000, 90000], // 45-90 seconds between quotes
+    typeDelay: [50, 150],         // Per-character typing speed
+
+    scrollRounds: 3,
+    scrollDelay: 2000,
+  };
+
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+  const gaussian = (a, b) =&gt; Math.floor(a + ((Math.random() + Math.random()) / 2) * (b - a));
+
+  const SEL = {
+    tweet: &#39;article[data-testid=&quot;tweet&quot;]&#39;,
+    tweetText: &#39;[data-testid=&quot;tweetText&quot;]&#39;,
+    retweetBtn: &#39;[data-testid=&quot;retweet&quot;]&#39;,
+    unretweetBtn: &#39;[data-testid=&quot;unretweet&quot;]&#39;,
+    quoteOption: [&#39;[data-testid=&quot;Dropdown-Item-Quote&quot;]&#39;, &#39;[role=&quot;menuitem&quot;]&#39;],
+    tweetBox: &#39;[data-testid=&quot;tweetTextarea_0&quot;]&#39;,
+    tweetButton: &#39;[data-testid=&quot;tweetButton&quot;]&#39;,
+  };
+
+  const $ = (sel, ctx = document) =&gt; {
+    if (Array.isArray(sel)) {
+      for (const s of sel) { const el = ctx.querySelector(s); if (el) return el; }
+      return null;
+    }
+    return ctx.querySelector(sel);
+  };
+
+  const parseNum = (text) =&gt; {
+    if (!text) return 0;
+    text = text.trim().replace(/,/g, &#39;&#39;);
+    if (text.endsWith(&#39;K&#39;)) return Math.round(parseFloat(text) * 1000);
+    if (text.endsWith(&#39;M&#39;)) return Math.round(parseFloat(text) * 1000000);
+    return parseInt(text) || 0;
+  };
+
+  let aborted = false;
+  let paused = false;
+  const results = [];
+
+  window.XActions = window.XActions || {};
+  window.XActions.pause = () =&gt; { paused = true; console.log(&#39;⏸️ Paused.&#39;); };
+  window.XActions.resume = () =&gt; { paused = false; console.log(&#39;▶️ Resumed.&#39;); };
+  window.XActions.abort = () =&gt; { aborted = true; console.log(&#39;🛑 Aborting...&#39;); };
+
+  const waitForUnpause = async () =&gt; {
+    while (paused &amp;&amp; !aborted) await sleep(500);
+  };
+
+  // ── Collect target tweets ──────────────────────────────────
+  const collectTargets = async () =&gt; {
+    const targets = [];
+    const seen = new Set();
+
+    for (let round = 0; round &lt; CONFIG.scrollRounds; round++) {
+      const articles = document.querySelectorAll(SEL.tweet);
+      for (const article of articles) {
+        // Get tweet text
+        const textEl = $(SEL.tweetText, article);
+        const text = textEl ? textEl.textContent.trim() : &#39;&#39;;
+        if (!text) continue;
+
+        const fingerprint = text.slice(0, 80);
+        if (seen.has(fingerprint)) continue;
+        seen.add(fingerprint);
+
+        // Author
+        const authorLink = article.querySelector(&#39;a[href^=&quot;/&quot;][role=&quot;link&quot;] span&#39;);
+        const author = authorLink ? authorLink.textContent.trim() : &#39;unknown&#39;;
+
+        // Engagement
+        const likeBtn = article.querySelector(&#39;[data-testid=&quot;like&quot;] span&#39;) || article.querySelector(&#39;[data-testid=&quot;unlike&quot;] span&#39;);
+        const rtBtn = article.querySelector(&#39;[data-testid=&quot;retweet&quot;] span&#39;);
+        const likes = likeBtn ? parseNum(likeBtn.textContent) : 0;
+        const rts = rtBtn ? parseNum(rtBtn.textContent) : 0;
+        const totalEng = likes + rts;
+
+        // Skip filters
+        const textLower = text.toLowerCase();
+        if (CONFIG.skipKeywords.some(kw =&gt; textLower.includes(kw.toLowerCase()))) continue;
+        if (CONFIG.onlyKeywords.length &gt; 0 &amp;&amp; !CONFIG.onlyKeywords.some(kw =&gt; textLower.includes(kw.toLowerCase()))) continue;
+        if (totalEng &lt; CONFIG.minEngagement) continue;
+
+        // Skip already retweeted
+        if (CONFIG.skipRetweeted &amp;&amp; $(SEL.unretweetBtn, article)) continue;
+
+        targets.push({ article, text, author, totalEng });
+      }
+
+      console.log(`   📜 Round ${round + 1}: ${targets.length} eligible tweets`);
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(CONFIG.scrollDelay);
+    }
+
+    return targets;
+  };
+
+  // ── Type text character by character ───────────────────────
+  const typeText = async (element, text) =&gt; {
+    element.focus();
+    for (const char of text) {
+      const inputEvent = new InputEvent(&#39;beforeinput&#39;, {
+        inputType: &#39;insertText&#39;,
+        data: char,
+        bubbles: true,
+        cancelable: true,
+      });
+      element.dispatchEvent(inputEvent);
+
+      // Also try direct textContent approach
+      document.execCommand(&#39;insertText&#39;, false, char);
+      await sleep(gaussian(CONFIG.typeDelay[0], CONFIG.typeDelay[1]));
+    }
+  };
+
+  // ── Quote tweet a single article ───────────────────────────
+  const quoteTweet = async (target, template) =&gt; {
+    const { article, text, author } = target;
+
+    // Scroll into view
+    article.scrollIntoView({ behavior: &#39;smooth&#39;, block: &#39;center&#39; });
+    await sleep(1000);
+
+    // Click retweet button to open menu
+    const rtBtn = $(SEL.retweetBtn, article);
+    if (!rtBtn) {
+      console.log(&#39;   ⚠️ Retweet button not found, skipping.&#39;);
+      return false;
+    }
+
+    rtBtn.click();
+    await sleep(800);
+
+    // Click &quot;Quote&quot; option
+    let quoteOpt = null;
+    for (const sel of SEL.quoteOption) {
+      const opts = document.querySelectorAll(sel);
+      for (const opt of opts) {
+        if ((opt.textContent || &#39;&#39;).toLowerCase().includes(&#39;quote&#39;)) {
+          quoteOpt = opt;
+          break;
+        }
+      }
+      if (quoteOpt) break;
+    }
+
+    if (!quoteOpt) {
+      console.log(&#39;   ⚠️ &quot;Quote&quot; option not found in menu. Closing...&#39;);
+      document.body.click(); // Close menu
+      await sleep(300);
+      return false;
+    }
+
+    quoteOpt.click();
+    await sleep(1500);
+
+    // Fill in the quote text
+    const tweetBox = $(SEL.tweetBox);
+    if (!tweetBox) {
+      console.log(&#39;   ⚠️ Tweet compose box not found.&#39;);
+      return false;
+    }
+
+    // Replace placeholders
+    let quoteText = template
+      .replace(&#39;{author}&#39;, author)
+      .replace(&#39;{text}&#39;, text.slice(0, 50));
+
+    console.log(`   📝 Typing: &quot;${quoteText.slice(0, 60)}...&quot;`);
+    await typeText(tweetBox, quoteText);
+    await sleep(800);
+
+    // Click tweet button
+    if (CONFIG.dryRun) {
+      console.log(&#39;   🏃 DRY RUN — would post now. Closing dialog...&#39;);
+      // Close the compose dialog
+      const closeBtn = document.querySelector(&#39;[data-testid=&quot;app-bar-close&quot;]&#39;) || document.querySelector(&#39;[aria-label=&quot;Close&quot;]&#39;);
+      if (closeBtn) closeBtn.click();
+      await sleep(500);
+      // Discard draft if prompted
+      const discardBtn = document.querySelector(&#39;[data-testid=&quot;confirmationSheetConfirm&quot;]&#39;);
+      if (discardBtn) { discardBtn.click(); await sleep(300); }
+      return true;
+    }
+
+    const tweetBtn = $(SEL.tweetButton);
+    if (!tweetBtn) {
+      console.log(&#39;   ⚠️ Tweet button not found.&#39;);
+      return false;
+    }
+
+    tweetBtn.click();
+    await sleep(2000);
+    return true;
+  };
+
+  // ── Main ───────────────────────────────────────────────────
+  const run = async () =&gt; {
+    const W = 60;
+    console.log(&#39;╔&#39; + &#39;═&#39;.repeat(W) + &#39;╗&#39;);
+    console.log(&#39;║  🔁 QUOTE TWEET AUTOMATION&#39; + &#39; &#39;.repeat(W - 28) + &#39;║&#39;);
+    console.log(&#39;║  by nichxbt — v1.0&#39; + &#39; &#39;.repeat(W - 21) + &#39;║&#39;);
+    console.log(&#39;╚&#39; + &#39;═&#39;.repeat(W) + &#39;╝&#39;);
+
+    if (CONFIG.dryRun) {
+      console.log(&#39;\n🏃 DRY RUN mode — no tweets will be posted.&#39;);
+      console.log(&#39;   Set CONFIG.dryRun = false to post for real.\n&#39;);
+    } else {
+      console.log(&#39;\n⚠️  LIVE MODE — tweets will actually be posted!&#39;);
+      console.log(&#39;   Use XActions.abort() to stop at any time.\n&#39;);
+    }
+
+    console.log(&#39;🔍 Collecting target tweets...\n&#39;);
+    const targets = await collectTargets();
+
+    if (targets.length === 0) {
+      console.error(&#39;❌ No eligible tweets found. Adjust filters or scroll more.&#39;);
+      return;
+    }
+
+    const toProcess = targets.slice(0, CONFIG.maxQuotes);
+    console.log(`\n📊 Found ${targets.length} eligible. Processing ${toProcess.length}.\n`);
+
+    let success = 0, fail = 0;
+
+    for (let i = 0; i &lt; toProcess.length; i++) {
+      if (aborted) break;
+      await waitForUnpause();
+
+      const target = toProcess[i];
+      const template = CONFIG.templates[i % CONFIG.templates.length];
+
+      console.log(`\n[${i + 1}/${toProcess.length}] 🔁 Quote-tweeting &quot;${target.text.slice(0, 50)}...&quot; (by ${target.author})`);
+
+      const ok = await quoteTweet(target, template);
+
+      if (ok) {
+        success++;
+        results.push({
+          author: target.author,
+          text: target.text.slice(0, 100),
+          template,
+          engagement: target.totalEng,
+          quotedAt: new Date().toISOString(),
+        });
+      } else {
+        fail++;
+      }
+
+      if (i &lt; toProcess.length - 1 &amp;&amp; !aborted) {
+        const delay = gaussian(CONFIG.delayBetween[0], CONFIG.delayBetween[1]);
+        console.log(`   ⏳ Waiting ${(delay / 1000).toFixed(0)}s before next...`);
+        await sleep(delay);
+      }
+    }
+
+    // ── Summary ──────────────────────────────────────────────
+    console.log(&#39;\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━&#39;);
+    console.log(`  ✅ Quoted: ${success} | ❌ Failed: ${fail}`);
+    if (CONFIG.dryRun) console.log(&#39;  🏃 (Dry run — nothing was posted)&#39;);
+    console.log(&#39;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n&#39;);
+
+    if (results.length &gt; 0) {
+      const blob = new Blob([JSON.stringify(results, null, 2)], { type: &#39;application/json&#39; });
+      const a = document.createElement(&#39;a&#39;); a.href = URL.createObjectURL(blob);
+      a.download = `xactions-quote-tweets-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a); a.click(); a.remove();
+      console.log(&#39;📥 Results exported.&#39;);
+    }
+  };
+
+  run();
+})();
 </code></pre>
 <h2>⚙️ Configuration</h2>
 <table>
@@ -203,7 +633,7 @@ xactions --help
 <pre><code class="language-bash"># Start MCP server
 npm run mcp
 </code></pre>
-<p>See the <a href="/docs/guides/mcp-setup">MCP Setup Guide</a> for integration with Claude Desktop, Cursor, and other AI tools.</p>
+<p>See the <a href="../mcp-setup.md">MCP Setup Guide</a> for integration with Claude Desktop, Cursor, and other AI tools.</p>
 <hr>
 <h2>📁 Source Files</h2>
 <table>
@@ -228,23 +658,23 @@ npm run mcp
 </tr>
 </thead>
 <tbody><tr>
-<td><a href="/docs/auto-plug-replies">Auto-Plug Replies</a></td>
+<td><a href="auto-plug-replies.md">Auto-Plug Replies</a></td>
 <td>Automatically reply to viral tweets with your own content plug or CTA</td>
 </tr>
 <tr>
-<td><a href="/docs/auto-reply">Auto-Reply</a></td>
+<td><a href="auto-reply.md">Auto-Reply</a></td>
 <td>Auto-reply to tweets matching your filters</td>
 </tr>
 <tr>
-<td><a href="/docs/engagement-booster">Engagement Booster</a></td>
+<td><a href="engagement-booster.md">Engagement Booster</a></td>
 <td>Systematically engage with target accounts by liking, bookmarking, and retweeting their content to build relationships</td>
 </tr>
 <tr>
-<td><a href="/docs/engagement-manager">Engagement Manager</a></td>
+<td><a href="engagement-manager.md">Engagement Manager</a></td>
 <td>All-in-one engagement toolkit: like, unlike, reply, bookmark, and manage interactions from a single interface</td>
 </tr>
 <tr>
-<td><a href="/docs/welcome-new-followers">Welcome New Followers</a></td>
+<td><a href="welcome-new-followers.md">Welcome New Followers</a></td>
 <td>Auto-send welcome DMs to new followers</td>
 </tr>
 </tbody></table>
@@ -321,6 +751,5 @@ npm run mcp
       <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
     </div>
   </footer>
-<script src="/js/sidebar.js"></script>
 </body>
 </html>

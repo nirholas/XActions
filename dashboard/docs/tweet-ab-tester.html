@@ -73,13 +73,121 @@
   }
   </script>
 
-  <link rel="stylesheet" href="/css/common.css">
-  <link rel="stylesheet" href="/css/docs.css">
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
 </head>
 <body>
   <div class="layout">
     <!-- Sidebar -->
-    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
 
     <!-- Main Content -->
     <main class="main-content">
@@ -132,12 +240,327 @@
 <li>Copy and paste the script from <a href="https://github.com/nirholas/XActions/blob/main/src/tweetABTester.js"><code>src/tweetABTester.js</code></a></li>
 <li>Press Enter to run</li>
 </ol>
-<pre><code class="language-javascript">// Quick start — copy the full script from:
-// src/tweetABTester.js
-//
-// Or install via npm and use the CLI:
-// npm install -g xactions
-// xactions --help
+<pre><code class="language-javascript">/**
+ * ============================================================
+ * 🧪 Tweet A/B Tester — Production Grade
+ * ============================================================
+ *
+ * @name        tweetABTester.js
+ * @description A/B test tweet performance. Post two variations
+ *              of a tweet, track their engagement over time,
+ *              and determine a statistical winner. Persists
+ *              test data in localStorage. Supports multiple
+ *              concurrent tests with unique IDs.
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.0.0
+ * @date        2026-02-24
+ * @repository  https://github.com/nirholas/XActions
+ *
+ * ============================================================
+ * 📋 USAGE:
+ *
+ * 1. Open x.com in DevTools Console
+ * 2. Paste this script
+ * 3. Use the interactive API:
+ *
+ *   XActions.createTest({
+ *     name: &#39;CTA test&#39;,
+ *     variantA: &#39;Check out our new tool! 🔥&#39;,
+ *     variantB: &#39;We just launched something amazing → link&#39;,
+ *   })
+ *
+ *   XActions.measure(&#39;CTA test&#39;)  // Measure after both are posted
+ *   XActions.results(&#39;CTA test&#39;)  // View results
+ *   XActions.listTests()          // List all tests
+ *   XActions.deleteTest(&#39;CTA test&#39;)
+ * ============================================================
+ */
+(() =&gt; {
+  &#39;use strict&#39;;
+
+  const STORAGE_KEY = &#39;xactions_ab_tests&#39;;
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+
+  const parseNum = (text) =&gt; {
+    if (!text) return 0;
+    text = text.trim().replace(/,/g, &#39;&#39;);
+    if (text.endsWith(&#39;K&#39;)) return Math.round(parseFloat(text) * 1000);
+    if (text.endsWith(&#39;M&#39;)) return Math.round(parseFloat(text) * 1000000);
+    return parseInt(text) || 0;
+  };
+
+  const loadTests = () =&gt; {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || &#39;{}&#39;); }
+    catch { return {}; }
+  };
+
+  const saveTests = (tests) =&gt; {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(tests));
+  };
+
+  window.XActions = window.XActions || {};
+
+  // ── Create A/B test ────────────────────────────────────────
+  window.XActions.createTest = (opts) =&gt; {
+    if (!opts || !opts.name || !opts.variantA || !opts.variantB) {
+      console.log(&#39;❌ Usage: XActions.createTest({ name: &quot;test&quot;, variantA: &quot;text A&quot;, variantB: &quot;text B&quot; })&#39;);
+      return;
+    }
+
+    const tests = loadTests();
+    if (tests[opts.name]) {
+      console.log(`⚠️ Test &quot;${opts.name}&quot; already exists. Use deleteTest() first to recreate.`);
+      return;
+    }
+
+    tests[opts.name] = {
+      name: opts.name,
+      variantA: { text: opts.variantA, tweetUrl: null, metrics: [], posted: false },
+      variantB: { text: opts.variantB, tweetUrl: null, metrics: [], posted: false },
+      createdAt: new Date().toISOString(),
+      winner: null,
+      status: &#39;created&#39;,
+    };
+    saveTests(tests);
+
+    const W = 58;
+    console.log(&#39;\n╔&#39; + &#39;═&#39;.repeat(W) + &#39;╗&#39;);
+    console.log(`║  🧪 A/B TEST: &quot;${opts.name}&quot;`.padEnd(W + 1) + &#39;║&#39;);
+    console.log(&#39;╚&#39; + &#39;═&#39;.repeat(W) + &#39;╝&#39;);
+    console.log(`\n  📝 Variant A: &quot;${opts.variantA.slice(0, 70)}...&quot;`);
+    console.log(`  📝 Variant B: &quot;${opts.variantB.slice(0, 70)}...&quot;`);
+    console.log(&#39;\n  📋 Next steps:&#39;);
+    console.log(&#39;  1. Post Variant A as a tweet&#39;);
+    console.log(&#39;  2. Post Variant B at the same time of day (next day ideally)&#39;);
+    console.log(`  3. Run: XActions.setUrl(&quot;${opts.name}&quot;, &quot;A&quot;, &quot;https://x.com/you/status/123&quot;)`);
+    console.log(`  4. Run: XActions.setUrl(&quot;${opts.name}&quot;, &quot;B&quot;, &quot;https://x.com/you/status/456&quot;)`);
+    console.log(`  5. Wait 24-48h, then: XActions.measure(&quot;${opts.name}&quot;)`);
+    console.log(`  6. View: XActions.results(&quot;${opts.name}&quot;)`);
+  };
+
+  // ── Set tweet URL for a variant ────────────────────────────
+  window.XActions.setUrl = (testName, variant, url) =&gt; {
+    const tests = loadTests();
+    if (!tests[testName]) { console.log(`❌ Test &quot;${testName}&quot; not found.`); return; }
+    if (variant !== &#39;A&#39; &amp;&amp; variant !== &#39;B&#39;) { console.log(&#39;❌ Variant must be &quot;A&quot; or &quot;B&quot;.&#39;); return; }
+
+    const key = variant === &#39;A&#39; ? &#39;variantA&#39; : &#39;variantB&#39;;
+    tests[testName][key].tweetUrl = url;
+    tests[testName][key].posted = true;
+    tests[testName].status = &#39;running&#39;;
+    saveTests(tests);
+
+    console.log(`✅ Variant ${variant} URL set for &quot;${testName}&quot;.`);
+
+    if (tests[testName].variantA.posted &amp;&amp; tests[testName].variantB.posted) {
+      console.log(`🎯 Both variants posted! Wait 24-48h then run: XActions.measure(&quot;${testName}&quot;)`);
+    }
+  };
+
+  // ── Measure engagement from tweet page ─────────────────────
+  const measureTweet = async (url) =&gt; {
+    const origUrl = window.location.href;
+
+    window.location.href = url;
+    await sleep(4000);
+
+    const article = document.querySelector(&#39;article[data-testid=&quot;tweet&quot;]&#39;);
+    if (!article) {
+      console.log(&#39;  ⚠️ Could not load tweet. Returning...&#39;);
+      window.location.href = origUrl;
+      await sleep(2000);
+      return null;
+    }
+
+    const likeBtn = article.querySelector(&#39;[data-testid=&quot;like&quot;] span&#39;) || article.querySelector(&#39;[data-testid=&quot;unlike&quot;] span&#39;);
+    const rtBtn = article.querySelector(&#39;[data-testid=&quot;retweet&quot;] span&#39;) || article.querySelector(&#39;[data-testid=&quot;unretweet&quot;] span&#39;);
+    const replyBtn = article.querySelector(&#39;[data-testid=&quot;reply&quot;] span&#39;);
+    const viewEl = article.querySelector(&#39;a[href*=&quot;/analytics&quot;] span&#39;);
+
+    const metrics = {
+      likes: likeBtn ? parseNum(likeBtn.textContent) : 0,
+      retweets: rtBtn ? parseNum(rtBtn.textContent) : 0,
+      replies: replyBtn ? parseNum(replyBtn.textContent) : 0,
+      views: viewEl ? parseNum(viewEl.textContent) : 0,
+      measuredAt: new Date().toISOString(),
+    };
+
+    metrics.totalEngagement = metrics.likes + metrics.retweets + metrics.replies;
+    metrics.engagementRate = metrics.views &gt; 0 ? (metrics.totalEngagement / metrics.views * 100) : 0;
+
+    window.location.href = origUrl;
+    await sleep(2000);
+    return metrics;
+  };
+
+  window.XActions.measure = async (testName) =&gt; {
+    const tests = loadTests();
+    if (!tests[testName]) { console.log(`❌ Test &quot;${testName}&quot; not found.`); return; }
+
+    const test = tests[testName];
+    if (!test.variantA.tweetUrl || !test.variantB.tweetUrl) {
+      console.log(&#39;❌ Both variants need URLs. Use XActions.setUrl() first.&#39;);
+      return;
+    }
+
+    console.log(`\n⏳ Measuring Variant A...`);
+    const metricsA = await measureTweet(test.variantA.tweetUrl);
+    if (metricsA) {
+      test.variantA.metrics.push(metricsA);
+      console.log(`  ✅ A: ${metricsA.likes} likes, ${metricsA.retweets} RTs, ${metricsA.replies} replies, ${metricsA.views} views`);
+    }
+
+    await sleep(2000);
+
+    console.log(`⏳ Measuring Variant B...`);
+    const metricsB = await measureTweet(test.variantB.tweetUrl);
+    if (metricsB) {
+      test.variantB.metrics.push(metricsB);
+      console.log(`  ✅ B: ${metricsB.likes} likes, ${metricsB.retweets} RTs, ${metricsB.replies} replies, ${metricsB.views} views`);
+    }
+
+    // Determine winner
+    if (metricsA &amp;&amp; metricsB) {
+      const scoreA = metricsA.engagementRate || (metricsA.totalEngagement / Math.max(metricsA.views, 1));
+      const scoreB = metricsB.engagementRate || (metricsB.totalEngagement / Math.max(metricsB.views, 1));
+
+      const diff = Math.abs(scoreA - scoreB);
+      const avg = (scoreA + scoreB) / 2;
+      const pctDiff = avg &gt; 0 ? (diff / avg * 100) : 0;
+
+      if (pctDiff &lt; 5) {
+        test.winner = &#39;inconclusive&#39;;
+        console.log(&#39;\n🤷 Result: INCONCLUSIVE (&lt; 5% difference). Measure again later.&#39;);
+      } else if (scoreA &gt; scoreB) {
+        test.winner = &#39;A&#39;;
+        console.log(`\n🏆 WINNER: Variant A (+${pctDiff.toFixed(1)}% better engagement rate)`);
+      } else {
+        test.winner = &#39;B&#39;;
+        console.log(`\n🏆 WINNER: Variant B (+${pctDiff.toFixed(1)}% better engagement rate)`);
+      }
+    }
+
+    saveTests(tests);
+    console.log(`\n💾 Measurement saved. Run XActions.results(&quot;${testName}&quot;) for details.`);
+  };
+
+  // ── View results ───────────────────────────────────────────
+  window.XActions.results = (testName) =&gt; {
+    const tests = loadTests();
+    if (!tests[testName]) { console.log(`❌ Test &quot;${testName}&quot; not found.`); return; }
+
+    const test = tests[testName];
+    const W = 58;
+    console.log(&#39;\n╔&#39; + &#39;═&#39;.repeat(W) + &#39;╗&#39;);
+    console.log(`║  🧪 A/B TEST RESULTS: &quot;${testName}&quot;`.padEnd(W + 1) + &#39;║&#39;);
+    console.log(&#39;╚&#39; + &#39;═&#39;.repeat(W) + &#39;╝&#39;);
+
+    console.log(`\n  Status: ${test.status} | Winner: ${test.winner || &#39;pending&#39;}`);
+    console.log(`  Created: ${test.createdAt}`);
+
+    for (const variant of [&#39;variantA&#39;, &#39;variantB&#39;]) {
+      const v = test[variant];
+      const label = variant === &#39;variantA&#39; ? &#39;A&#39; : &#39;B&#39;;
+      const isWinner = test.winner === label;
+
+      console.log(`\n  ┌─ Variant ${label} ${isWinner ? &#39;🏆 WINNER&#39; : &#39;&#39;} ${&#39;─&#39;.repeat(40)}`);
+      console.log(`  │ Text: &quot;${v.text.slice(0, 70)}${v.text.length &gt; 70 ? &#39;...&#39; : &#39;&#39;}&quot;`);
+      console.log(`  │ URL: ${v.tweetUrl || &#39;not set&#39;}`);
+
+      if (v.metrics.length &gt; 0) {
+        const latest = v.metrics[v.metrics.length - 1];
+        console.log(`  │ Latest: ❤️${latest.likes} 🔁${latest.retweets} 💬${latest.replies} 👁️${latest.views}`);
+        console.log(`  │ Engagement rate: ${latest.engagementRate.toFixed(2)}%`);
+        console.log(`  │ Measurements: ${v.metrics.length}`);
+
+        if (v.metrics.length &gt; 1) {
+          const first = v.metrics[0];
+          const growth = latest.totalEngagement - first.totalEngagement;
+          console.log(`  │ Growth since first measurement: +${growth} engagement`);
+        }
+      } else {
+        console.log(&#39;  │ No measurements yet.&#39;);
+      }
+      console.log(&#39;  └&#39; + &#39;─&#39;.repeat(W));
+    }
+
+    // Side-by-side comparison
+    if (test.variantA.metrics.length &gt; 0 &amp;&amp; test.variantB.metrics.length &gt; 0) {
+      const a = test.variantA.metrics[test.variantA.metrics.length - 1];
+      const b = test.variantB.metrics[test.variantB.metrics.length - 1];
+
+      console.log(&#39;\n  ┌─ HEAD-TO-HEAD ──────────────────────&#39;);
+      console.log(`  │ ${&#39;Metric&#39;.padEnd(18)} ${&#39;Variant A&#39;.padEnd(12)} ${&#39;Variant B&#39;.padEnd(12)} Winner`);
+      console.log(&#39;  │&#39; + &#39;─&#39;.repeat(55));
+
+      const compare = (label, valA, valB) =&gt; {
+        const w = valA &gt; valB ? &#39;A 🏆&#39; : valB &gt; valA ? &#39;B 🏆&#39; : &#39;Tie&#39;;
+        console.log(`  │ ${label.padEnd(18)} ${String(valA).padEnd(12)} ${String(valB).padEnd(12)} ${w}`);
+      };
+
+      compare(&#39;Likes&#39;, a.likes, b.likes);
+      compare(&#39;Retweets&#39;, a.retweets, b.retweets);
+      compare(&#39;Replies&#39;, a.replies, b.replies);
+      compare(&#39;Views&#39;, a.views, b.views);
+      compare(&#39;Eng. Rate %&#39;, a.engagementRate.toFixed(2), b.engagementRate.toFixed(2));
+      console.log(&#39;  └&#39; + &#39;─&#39;.repeat(55));
+    }
+  };
+
+  // ── List all tests ─────────────────────────────────────────
+  window.XActions.listTests = () =&gt; {
+    const tests = loadTests();
+    const names = Object.keys(tests);
+    if (names.length === 0) { console.log(&#39;📭 No tests. Use XActions.createTest() to start.&#39;); return; }
+
+    console.log(`\n📋 A/B TESTS (${names.length}):\n`);
+    for (const name of names) {
+      const t = tests[name];
+      const measurements = t.variantA.metrics.length + t.variantB.metrics.length;
+      const status = t.winner ? `Winner: ${t.winner}` : t.status;
+      console.log(`  🧪 &quot;${name}&quot; — ${status} (${measurements} measurements)`);
+    }
+  };
+
+  // ── Delete test ────────────────────────────────────────────
+  window.XActions.deleteTest = (testName) =&gt; {
+    const tests = loadTests();
+    if (!tests[testName]) { console.log(`❌ Test &quot;${testName}&quot; not found.`); return; }
+    delete tests[testName];
+    saveTests(tests);
+    console.log(`🗑️ Test &quot;${testName}&quot; deleted.`);
+  };
+
+  // ── Export all test data ───────────────────────────────────
+  window.XActions.exportTests = () =&gt; {
+    const tests = loadTests();
+    const blob = new Blob([JSON.stringify(tests, null, 2)], { type: &#39;application/json&#39; });
+    const a = document.createElement(&#39;a&#39;); a.href = URL.createObjectURL(blob);
+    a.download = `xactions-ab-tests-${new Date().toISOString().slice(0, 10)}.json`;
+    document.body.appendChild(a); a.click(); a.remove();
+    console.log(&#39;📥 All test data exported.&#39;);
+  };
+
+  // ── Init ───────────────────────────────────────────────────
+  const W = 60;
+  console.log(&#39;╔&#39; + &#39;═&#39;.repeat(W) + &#39;╗&#39;);
+  console.log(&#39;║  🧪 TWEET A/B TESTER&#39; + &#39; &#39;.repeat(W - 22) + &#39;║&#39;);
+  console.log(&#39;║  by nichxbt — v1.0&#39; + &#39; &#39;.repeat(W - 21) + &#39;║&#39;);
+  console.log(&#39;╚&#39; + &#39;═&#39;.repeat(W) + &#39;╝&#39;);
+  console.log(&#39;\n📋 Commands:&#39;);
+  console.log(&#39;  XActions.createTest({ name, variantA, variantB })&#39;);
+  console.log(&#39;  XActions.setUrl(testName, &quot;A&quot;|&quot;B&quot;, tweetUrl)&#39;);
+  console.log(&#39;  XActions.measure(testName)   // Navigate &amp; measure&#39;);
+  console.log(&#39;  XActions.results(testName)   // View head-to-head&#39;);
+  console.log(&#39;  XActions.listTests()&#39;);
+  console.log(&#39;  XActions.deleteTest(testName)&#39;);
+  console.log(&#39;  XActions.exportTests()&#39;);
+
+  const tests = loadTests();
+  const count = Object.keys(tests).length;
+  if (count &gt; 0) console.log(`\n📊 ${count} existing test(s) loaded from localStorage.`);
+
+})();
 </code></pre>
 <hr>
 <h2>📖 Step-by-Step Tutorial</h2>
@@ -183,7 +606,7 @@ xactions --help
 <pre><code class="language-bash"># Start MCP server
 npm run mcp
 </code></pre>
-<p>See the <a href="/docs/guides/mcp-setup">MCP Setup Guide</a> for integration with Claude Desktop, Cursor, and other AI tools.</p>
+<p>See the <a href="../mcp-setup.md">MCP Setup Guide</a> for integration with Claude Desktop, Cursor, and other AI tools.</p>
 <hr>
 <h2>📁 Source Files</h2>
 <table>
@@ -208,23 +631,23 @@ npm run mcp
 </tr>
 </thead>
 <tbody><tr>
-<td><a href="/docs/account-health-monitor">Account Health Monitor</a></td>
+<td><a href="account-health-monitor.md">Account Health Monitor</a></td>
 <td>Comprehensive health check for your X/Twitter account</td>
 </tr>
 <tr>
-<td><a href="/docs/audience-demographics">Audience Demographics</a></td>
+<td><a href="audience-demographics.md">Audience Demographics</a></td>
 <td>Analyze your follower demographics including bio keywords, locations, account age, and interests</td>
 </tr>
 <tr>
-<td><a href="/docs/audience-overlap">Audience Overlap</a></td>
+<td><a href="audience-overlap.md">Audience Overlap</a></td>
 <td>Compare the follower lists of two accounts to find audience overlap</td>
 </tr>
 <tr>
-<td><a href="/docs/engagement-leaderboard">Engagement Leaderboard</a></td>
+<td><a href="engagement-leaderboard.md">Engagement Leaderboard</a></td>
 <td>Analyze who engages most with your tweets</td>
 </tr>
 <tr>
-<td><a href="/docs/follower-growth-tracker">Follower Growth Tracker</a></td>
+<td><a href="follower-growth-tracker.md">Follower Growth Tracker</a></td>
 <td>Track your follower count over time</td>
 </tr>
 </tbody></table>
@@ -301,6 +724,5 @@ npm run mcp
       <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
     </div>
   </footer>
-<script src="/js/sidebar.js"></script>
 </body>
 </html>

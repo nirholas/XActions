@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View For You &amp; Following Timelines — Tutorial — Free X/Twitter Tools Tool | XActions</title>
+  <meta name="description" content="Step-by-step guide to switching between For You and Following timelines, auto-collecting posts, and exporting timeline data using XActions browser scripts.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, timeline, viewer, tutorial, view, following, timelines, tools, timeline viewer tutorial twitter, twitter timeline viewer tutorial">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="View For You &amp; Following Timelines — Tutorial — XActions">
+  <meta property="og:description" content="Step-by-step guide to switching between For You and Following timelines, auto-collecting posts, and exporting timeline data using XActions browser scripts.">
+  <meta property="og:url" content="https://xactions.app/docs/step-by-step/timeline-viewer-tutorial">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="View For You &amp; Following Timelines — Tutorial — Free X/Twitter Tool">
+  <meta name="twitter:description" content="Step-by-step guide to switching between For You and Following timelines, auto-collecting posts, and exporting timeline data using XActions browser scripts.">
+
+  <link rel="canonical" href="https://xactions.app/docs/step-by-step/timeline-viewer-tutorial">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "View For You & Following Timelines — Tutorial — Free X/Twitter Tools Tool | XActions",
+    "description": "Step-by-step guide to switching between For You and Following timelines, auto-collecting posts, and exporting timeline data using XActions browser scripts.",
+    "url": "https://xactions.app/docs/step-by-step/timeline-viewer-tutorial",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/timeline-viewer-tutorial",
+    "articleSection": "Tools",
+    "keywords": "xactions, twitter automation, x automation, free, timeline, viewer, tutorial, view, following, timelines, tools, timeline viewer tutorial twitter, twitter timeline viewer tutorial"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "View For You & Following Timelines — Tutorial", "item": "https://xactions.app/docs/timeline-viewer-tutorial" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use View For You &amp; Following Timelines — Tutorial",
+    "description": "Step-by-step guide to switching between For You and Following timelines, auto-collecting posts, and exporting timeline data using XActions browser scripts.",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions View For You &amp; Following Timelines — Tutorial script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>⚡ View For You &amp; Following Timelines — Tutorial</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › View For You &amp; Following Timelines — Tutorial
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Tools</span>
+        <h1>View For You &amp; Following Timelines — Tutorial</h1>
+<blockquote>
+<p>Step-by-step guide to switching between For You and Following timelines, auto-collecting posts, and exporting timeline data using XActions browser scripts.</p>
+</blockquote>
+<p><strong>Works on:</strong> Browser Console<br><strong>Difficulty:</strong> Beginner<br><strong>Time:</strong> 2-10 minutes (depends on <code>maxPosts</code>)<br><strong>Requirements:</strong> Logged into x.com in your browser</p>
+<hr>
+<h2>Prerequisites</h2>
+<ul>
+<li>Logged into x.com in your browser</li>
+<li>Browser DevTools console (F12 -&gt; Console tab)</li>
+<li>Navigate to <code>https://x.com/home</code> before running</li>
+</ul>
+<hr>
+<h2>Quick Start</h2>
+<ol>
+<li>Open x.com on your <strong>Home</strong> timeline (<code>https://x.com/home</code>)</li>
+<li>Press <strong>F12</strong> to open DevTools, then click the <strong>Console</strong> tab</li>
+<li>Copy the script from <code>src/timelineViewer.js</code></li>
+<li>Edit the <code>CONFIG</code> section as needed</li>
+<li>Paste into the console and press Enter</li>
+</ol>
+<hr>
+<h2>Configuration</h2>
+<pre><code class="language-js">const CONFIG = {
+  timeline: &#39;for-you&#39;,             // &#39;for-you&#39; or &#39;following&#39;
+  autoSwitch: true,                // Automatically switch to selected timeline
+  collectPosts: true,              // Scroll and collect posts
+  maxPosts: 100,                   // Max posts to collect
+  exportData: true,                // Auto-download JSON when done
+  scrollDelay: 2000,               // ms between scroll actions
+  delayBetweenActions: 1500,       // ms between UI actions
+  maxScrollRetries: 8,             // Empty scrolls before stopping
+};
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>timeline</code></td>
+<td><code>string</code></td>
+<td><code>&#39;for-you&#39;</code></td>
+<td>Which timeline to view: <code>&#39;for-you&#39;</code> or <code>&#39;following&#39;</code></td>
+</tr>
+<tr>
+<td><code>autoSwitch</code></td>
+<td><code>boolean</code></td>
+<td><code>true</code></td>
+<td>Automatically switch to the selected timeline tab</td>
+</tr>
+<tr>
+<td><code>collectPosts</code></td>
+<td><code>boolean</code></td>
+<td><code>true</code></td>
+<td>Scroll and collect posts from the timeline</td>
+</tr>
+<tr>
+<td><code>maxPosts</code></td>
+<td><code>number</code></td>
+<td><code>100</code></td>
+<td>Maximum number of posts to collect</td>
+</tr>
+<tr>
+<td><code>exportData</code></td>
+<td><code>boolean</code></td>
+<td><code>true</code></td>
+<td>Auto-download collected data as a JSON file</td>
+</tr>
+<tr>
+<td><code>scrollDelay</code></td>
+<td><code>number</code></td>
+<td><code>2000</code></td>
+<td>Milliseconds between scroll actions</td>
+</tr>
+<tr>
+<td><code>delayBetweenActions</code></td>
+<td><code>number</code></td>
+<td><code>1500</code></td>
+<td>Milliseconds between UI actions</td>
+</tr>
+<tr>
+<td><code>maxScrollRetries</code></td>
+<td><code>number</code></td>
+<td><code>8</code></td>
+<td>Number of empty scrolls before stopping collection</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Step-by-Step Guide</h2>
+<h3>Viewing the For You Timeline</h3>
+<p><strong>Step 1 -- Configure</strong></p>
+<pre><code class="language-js">const CONFIG = {
+  timeline: &#39;for-you&#39;,
+  autoSwitch: true,
+  collectPosts: true,
+  maxPosts: 50,
+  exportData: true,
+};
+</code></pre>
+<p><strong>Step 2 -- Run the script</strong></p>
+<p>The script will:</p>
+<ol>
+<li>Detect which timeline is currently active</li>
+<li>Switch to &quot;For You&quot; if not already selected</li>
+<li>Scroll and collect posts</li>
+<li>Display a summary with analytics</li>
+<li>Auto-download the data as JSON</li>
+</ol>
+<p><strong>Output:</strong></p>
+<pre><code>XActions -- Timeline Viewer
+
+Current timeline: following
+Target timeline: for-you
+
+Switching to &quot;for-you&quot; timeline...
+Clicked &quot;For You&quot; tab.
+
+Collecting posts from &quot;for-you&quot; timeline...
+   Target: 50 posts
+
+   Collected 12/50 posts (12 new)...
+   Collected 28/50 posts (16 new)...
+   Collected 44/50 posts (16 new)...
+   Collected 50/50 posts (6 new)...
+
+TIMELINE SUMMARY (50 posts)
+
+Top 5 by views:
+   1. @elonmusk: &quot;Just deployed the new feature...&quot; (2,450,000 views)
+   2. @nichxbt: &quot;XActions v2.0 is here...&quot; (125,000 views)
+   ...
+
+Most frequent accounts in timeline:
+   1. @techcrunch (4 posts)
+   2. @nichxbt (3 posts)
+   ...
+
+Content breakdown:
+   Text only:  22
+   With image: 18
+   With video: 7
+   Reposts:    3
+
+Aggregate metrics:
+   Total views:     4,250,000
+   Total likes:     12,500
+   Avg views/post:  85,000
+   Liked by you:    8
+
+Timeline data saved to sessionStorage.
+Timeline data exported as JSON file.
+Timeline Viewer script complete.
+</code></pre>
+<h3>Viewing the Following Timeline</h3>
+<p>Switch to see only posts from accounts you follow:</p>
+<pre><code class="language-js">const CONFIG = {
+  timeline: &#39;following&#39;,
+  autoSwitch: true,
+  collectPosts: true,
+  maxPosts: 100,
+  exportData: true,
+};
+</code></pre>
+<h3>Collecting Without Switching</h3>
+<p>If you are already on the timeline you want and do not want to switch:</p>
+<pre><code class="language-js">const CONFIG = {
+  timeline: &#39;for-you&#39;,
+  autoSwitch: false,      // Do not switch -- collect from current tab
+  collectPosts: true,
+  maxPosts: 200,
+  exportData: true,
+};
+</code></pre>
+<h3>Just Switching (No Collection)</h3>
+<p>If you only want to switch the tab without collecting posts:</p>
+<pre><code class="language-js">const CONFIG = {
+  timeline: &#39;following&#39;,
+  autoSwitch: true,
+  collectPosts: false,    // Do not scroll or collect
+  exportData: false,
+};
+</code></pre>
+<h3>Exported Data Format</h3>
+<p>The JSON export contains:</p>
+<pre><code class="language-json">{
+  &quot;exportedAt&quot;: &quot;2026-03-30T14:00:00.000Z&quot;,
+  &quot;timeline&quot;: &quot;for-you&quot;,
+  &quot;postCount&quot;: 50,
+  &quot;posts&quot;: [
+    {
+      &quot;username&quot;: &quot;nichxbt&quot;,
+      &quot;displayName&quot;: &quot;nich&quot;,
+      &quot;text&quot;: &quot;XActions v2.0 is here...&quot;,
+      &quot;views&quot;: 125000,
+      &quot;likes&quot;: 450,
+      &quot;retweets&quot;: 89,
+      &quot;replies&quot;: 23,
+      &quot;timestamp&quot;: &quot;2026-03-30T12:00:00.000Z&quot;,
+      &quot;postUrl&quot;: &quot;https://x.com/nichxbt/status/123456789&quot;,
+      &quot;hasImage&quot;: true,
+      &quot;hasVideo&quot;: false,
+      &quot;isRepost&quot;: false,
+      &quot;isLiked&quot;: true
+    }
+  ]
+}
+</code></pre>
+<p>Each post includes:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>username</code></td>
+<td><code>string</code></td>
+<td>Author&#39;s handle</td>
+</tr>
+<tr>
+<td><code>displayName</code></td>
+<td><code>string</code></td>
+<td>Author&#39;s display name</td>
+</tr>
+<tr>
+<td><code>text</code></td>
+<td><code>string</code></td>
+<td>Tweet text (truncated to 280 chars)</td>
+</tr>
+<tr>
+<td><code>views</code></td>
+<td><code>number</code></td>
+<td>View count</td>
+</tr>
+<tr>
+<td><code>likes</code></td>
+<td><code>number</code></td>
+<td>Like count</td>
+</tr>
+<tr>
+<td><code>retweets</code></td>
+<td><code>number</code></td>
+<td>Repost count</td>
+</tr>
+<tr>
+<td><code>replies</code></td>
+<td><code>number</code></td>
+<td>Reply count</td>
+</tr>
+<tr>
+<td><code>timestamp</code></td>
+<td><code>string</code></td>
+<td>ISO timestamp</td>
+</tr>
+<tr>
+<td><code>postUrl</code></td>
+<td><code>string</code></td>
+<td>Direct link to the post</td>
+</tr>
+<tr>
+<td><code>hasImage</code></td>
+<td><code>boolean</code></td>
+<td>Whether the post contains an image</td>
+</tr>
+<tr>
+<td><code>hasVideo</code></td>
+<td><code>boolean</code></td>
+<td>Whether the post contains a video</td>
+</tr>
+<tr>
+<td><code>isRepost</code></td>
+<td><code>boolean</code></td>
+<td>Whether this is a repost</td>
+</tr>
+<tr>
+<td><code>isLiked</code></td>
+<td><code>boolean</code></td>
+<td>Whether you have liked this post</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Tips &amp; Tricks</h2>
+<ul>
+<li><strong>For You vs Following.</strong> &quot;For You&quot; shows algorithmic recommendations. &quot;Following&quot; shows chronological posts from accounts you follow.</li>
+<li><strong>Increase <code>maxPosts</code> for larger samples.</strong> For meaningful analytics, collect 200+ posts.</li>
+<li><strong>Data is also saved to <code>sessionStorage</code>.</strong> Access it programmatically with <code>JSON.parse(sessionStorage.getItem(&#39;xactions_timeline&#39;))</code>.</li>
+<li><strong>The JSON file downloads automatically.</strong> File name format: <code>xactions_timeline_{timeline}_{date}.json</code>.</li>
+<li><strong><code>maxScrollRetries</code> prevents infinite scrolling.</strong> After 8 scrolls with no new posts, the script stops. Increase this if you have a fast connection.</li>
+<li><strong>Metric parsing handles abbreviations.</strong> &quot;125K&quot; becomes <code>125000</code>, &quot;1.2M&quot; becomes <code>1200000</code>.</li>
+</ul>
+<hr>
+<h2>Troubleshooting</h2>
+<table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&quot;Not on the home timeline&quot;</td>
+<td>Navigate to <code>x.com/home</code> first. The script will auto-redirect if needed</td>
+</tr>
+<tr>
+<td>&quot;Could not find timeline tab&quot;</td>
+<td>X may have changed the tab layout. The script lists available tabs in the console</td>
+</tr>
+<tr>
+<td>Collecting 0 posts</td>
+<td>The timeline may not have loaded. Wait a few seconds and try again</td>
+</tr>
+<tr>
+<td>Duplicate posts in export</td>
+<td>Posts are deduplicated by URL. Duplicates should not occur unless the URL extraction fails</td>
+</tr>
+<tr>
+<td>JSON file not downloading</td>
+<td>Check your browser&#39;s download permissions and popup blocker settings</td>
+</tr>
+<tr>
+<td>Low post count despite high <code>maxPosts</code></td>
+<td>You may have reached the end of loaded content, or <code>maxScrollRetries</code> was reached. Increase the retry count</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Related Scripts</h2>
+<ul>
+<li><code>src/discoveryExplore.js</code> -- Browse explore feed and trends</li>
+<li><code>src/saveSearch.js</code> -- Save and manage search queries</li>
+</ul>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try View For You &amp; Following Timelines — Tutorial?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/step-by-step/add-media-tutorial">📝 Add Media Tutorial</a>
+        <a href="/docs/step-by-step/ads-campaigns-tutorial">📝 Ads Campaigns Tutorial</a>
+        <a href="/docs/step-by-step/affiliate-benefits-tutorial">📝 Affiliate Benefits Tutorial</a>
+        <a href="/docs/step-by-step/alt-text-tutorial">📝 Alt Text Tutorial</a>
+        <a href="/docs/step-by-step/auto-commenter-tutorial">📝 Auto Commenter Tutorial</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a> / <a href="/docs#step-by-step">Tutorials</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

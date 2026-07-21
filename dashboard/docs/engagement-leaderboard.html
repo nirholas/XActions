@@ -73,13 +73,121 @@
   }
   </script>
 
-  <link rel="stylesheet" href="/css/common.css">
-  <link rel="stylesheet" href="/css/docs.css">
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
 </head>
 <body>
   <div class="layout">
     <!-- Sidebar -->
-    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
 
     <!-- Main Content -->
     <main class="main-content">
@@ -132,12 +240,343 @@
 <li>Copy and paste the script from <a href="https://github.com/nirholas/XActions/blob/main/src/engagementLeaderboard.js"><code>src/engagementLeaderboard.js</code></a></li>
 <li>Press Enter to run</li>
 </ol>
-<pre><code class="language-javascript">// Quick start — copy the full script from:
-// src/engagementLeaderboard.js
-//
-// Or install via npm and use the CLI:
-// npm install -g xactions
-// xactions --help
+<pre><code class="language-javascript">/**
+ * ============================================================
+ * 🏆 Engagement Leaderboard — Production Grade
+ * ============================================================
+ *
+ * @name        engagementLeaderboard.js
+ * @description Analyze who engages with your tweets the most.
+ *              Scrapes your recent tweets to build a leaderboard
+ *              of top repliers, likers, and retweeters. Exports
+ *              a VIP list for relationship building. Identifies
+ *              superfans, dormant followers, and engagement tiers.
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.0.0
+ * @date        2026-02-24
+ * @repository  https://github.com/nirholas/XActions
+ *
+ * ============================================================
+ * 📋 USAGE:
+ *
+ * 1. Go to your profile: x.com/YOUR_USERNAME
+ * 2. Open DevTools Console (F12)
+ * 3. Paste and run — auto-scrolls your timeline
+ * 4. Outputs leaderboard + exports VIP list
+ * ============================================================
+ */
+(() =&gt; {
+  &#39;use strict&#39;;
+
+  const CONFIG = {
+    scrollRounds: 12,
+    scrollDelay: 2000,
+    topN: 20,              // Show top N users per category
+    vipThreshold: 3,       // Min interactions to be considered VIP
+    exportResults: true,
+  };
+
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+
+  const parseNum = (text) =&gt; {
+    if (!text) return 0;
+    text = text.trim().replace(/,/g, &#39;&#39;);
+    if (text.endsWith(&#39;K&#39;)) return Math.round(parseFloat(text) * 1000);
+    if (text.endsWith(&#39;M&#39;)) return Math.round(parseFloat(text) * 1000000);
+    return parseInt(text) || 0;
+  };
+
+  // ── Collect interactions ───────────────────────────────────
+  const collectInteractions = async () =&gt; {
+    const tweetData = [];
+    const seen = new Set();
+
+    for (let round = 0; round &lt; CONFIG.scrollRounds; round++) {
+      const articles = document.querySelectorAll(&#39;article[data-testid=&quot;tweet&quot;]&#39;);
+
+      for (const article of articles) {
+        const timeEl = article.querySelector(&#39;time&#39;);
+        if (!timeEl) continue;
+        const dt = timeEl.getAttribute(&#39;datetime&#39;);
+        if (!dt) continue;
+
+        const fp = dt + (article.textContent || &#39;&#39;).slice(0, 40);
+        if (seen.has(fp)) continue;
+        seen.add(fp);
+
+        // Get metrics
+        const likeBtn = article.querySelector(&#39;[data-testid=&quot;like&quot;] span&#39;) || article.querySelector(&#39;[data-testid=&quot;unlike&quot;] span&#39;);
+        const rtBtn = article.querySelector(&#39;[data-testid=&quot;retweet&quot;] span&#39;) || article.querySelector(&#39;[data-testid=&quot;unretweet&quot;] span&#39;);
+        const replyBtn = article.querySelector(&#39;[data-testid=&quot;reply&quot;] span&#39;);
+
+        const likes = likeBtn ? parseNum(likeBtn.textContent) : 0;
+        const rts = rtBtn ? parseNum(rtBtn.textContent) : 0;
+        const replies = replyBtn ? parseNum(replyBtn.textContent) : 0;
+
+        // Get tweet link for drilling into replies
+        const tweetLink = article.querySelector(&#39;a[href*=&quot;/status/&quot;] time&#39;)?.closest(&#39;a&#39;);
+        const href = tweetLink ? tweetLink.getAttribute(&#39;href&#39;) : null;
+
+        const textEl = article.querySelector(&#39;[data-testid=&quot;tweetText&quot;]&#39;);
+        const text = textEl ? textEl.textContent.trim().slice(0, 100) : &#39;&#39;;
+
+        tweetData.push({ datetime: dt, likes, rts, replies, href, text });
+      }
+
+      console.log(`   📜 Round ${round + 1}: ${tweetData.length} tweets collected`);
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(CONFIG.scrollDelay);
+    }
+
+    return tweetData;
+  };
+
+  // ── Drill into tweet replies to get actual repliers ────────
+  const collectRepliers = async (tweetData) =&gt; {
+    const replierMap = {};
+    const processed = [];
+
+    // Only drill into tweets that have replies and links
+    const withReplies = tweetData.filter(t =&gt; t.replies &gt; 0 &amp;&amp; t.href).slice(0, 15);
+    console.log(`\n🔍 Drilling into ${withReplies.length} tweet threads for replier data...\n`);
+
+    for (let i = 0; i &lt; withReplies.length; i++) {
+      const tweet = withReplies[i];
+      console.log(`   [${i + 1}/${withReplies.length}] Checking replies for: &quot;${tweet.text.slice(0, 40)}...&quot;`);
+
+      // Navigate to tweet
+      const origUrl = window.location.href;
+      window.location.href = &#39;https://x.com&#39; + tweet.href;
+      await sleep(3000);
+
+      // Collect visible repliers
+      const replyArticles = document.querySelectorAll(&#39;article[data-testid=&quot;tweet&quot;]&#39;);
+      let count = 0;
+
+      for (const article of replyArticles) {
+        // Skip the original tweet (first article is usually the main tweet)
+        if (count === 0) { count++; continue; }
+
+        const userLink = article.querySelector(&#39;a[href^=&quot;/&quot;][role=&quot;link&quot;]&#39;);
+        if (!userLink) continue;
+        const match = (userLink.getAttribute(&#39;href&#39;) || &#39;&#39;).match(/^\/([A-Za-z0-9_]+)/);
+        if (!match || [&#39;home&#39;, &#39;explore&#39;, &#39;notifications&#39;, &#39;messages&#39;, &#39;i&#39;].includes(match[1])) continue;
+
+        const username = match[1].toLowerCase();
+
+        // Display name
+        const nameSpan = article.querySelector(&#39;a[href^=&quot;/&quot;] span&#39;);
+        const displayName = nameSpan ? nameSpan.textContent.trim() : match[1];
+
+        if (!replierMap[username]) {
+          replierMap[username] = { username: match[1], displayName, replies: 0, firstSeen: tweet.datetime };
+        }
+        replierMap[username].replies++;
+        count++;
+      }
+
+      processed.push({ ...tweet, repliersFound: count - 1 });
+
+      // Go back
+      window.history.back();
+      await sleep(2000);
+    }
+
+    return { replierMap, processed };
+  };
+
+  // ── Build leaderboard from visible engagement cues ─────────
+  const buildBasicLeaderboard = async () =&gt; {
+    // Scrape visible &quot;liked by&quot; and replier data from the current page
+    // For a more basic approach, we scan reply sections visible on the timeline
+    const engagers = {};
+    const articles = document.querySelectorAll(&#39;article[data-testid=&quot;tweet&quot;]&#39;);
+
+    for (const article of articles) {
+      // Check all user mentions/links in the article for reply-chain users
+      const links = article.querySelectorAll(&#39;a[href^=&quot;/&quot;][role=&quot;link&quot;]&#39;);
+      for (const link of links) {
+        const match = (link.getAttribute(&#39;href&#39;) || &#39;&#39;).match(/^\/([A-Za-z0-9_]+)$/);
+        if (!match || [&#39;home&#39;, &#39;explore&#39;, &#39;notifications&#39;, &#39;messages&#39;, &#39;i&#39;, &#39;compose&#39;].includes(match[1])) continue;
+
+        const username = match[1].toLowerCase();
+        const nameSpan = link.querySelector(&#39;span&#39;);
+        const displayName = nameSpan ? nameSpan.textContent.trim() : match[1];
+
+        if (!engagers[username]) {
+          engagers[username] = { username: match[1], displayName, mentions: 0 };
+        }
+        engagers[username].mentions++;
+      }
+    }
+
+    return engagers;
+  };
+
+  // ── Main ───────────────────────────────────────────────────
+  const run = async () =&gt; {
+    const W = 60;
+    console.log(&#39;╔&#39; + &#39;═&#39;.repeat(W) + &#39;╗&#39;);
+    console.log(&#39;║  🏆 ENGAGEMENT LEADERBOARD&#39; + &#39; &#39;.repeat(W - 28) + &#39;║&#39;);
+    console.log(&#39;║  by nichxbt — v1.0&#39; + &#39; &#39;.repeat(W - 21) + &#39;║&#39;);
+    console.log(&#39;╚&#39; + &#39;═&#39;.repeat(W) + &#39;╝&#39;);
+
+    console.log(&#39;\n📊 Phase 1: Collecting your tweet data...\n&#39;);
+    const tweetData = await collectInteractions();
+
+    if (tweetData.length &lt; 3) {
+      console.error(&#39;❌ Need at least 3 tweets. Make sure you\&#39;re on your profile page.&#39;);
+      return;
+    }
+
+    // Overall stats
+    const totalLikes = tweetData.reduce((s, t) =&gt; s + t.likes, 0);
+    const totalRts = tweetData.reduce((s, t) =&gt; s + t.rts, 0);
+    const totalReplies = tweetData.reduce((s, t) =&gt; s + t.replies, 0);
+    const totalEngagement = totalLikes + totalRts + totalReplies;
+    const avgEngagement = (totalEngagement / tweetData.length).toFixed(1);
+
+    console.log(&#39;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━&#39;);
+    console.log(&#39;  📊 ENGAGEMENT OVERVIEW&#39;);
+    console.log(&#39;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━&#39;);
+    console.log(`  Tweets analyzed: ${tweetData.length}`);
+    console.log(`  Total likes:     ${totalLikes.toLocaleString()}`);
+    console.log(`  Total retweets:  ${totalRts.toLocaleString()}`);
+    console.log(`  Total replies:   ${totalReplies.toLocaleString()}`);
+    console.log(`  Avg. engagement: ${avgEngagement} per tweet`);
+
+    // ── Phase 2: Drill into replies ─────────────────────────
+    console.log(&#39;\n📊 Phase 2: Analyzing repliers...\n&#39;);
+    const { replierMap, processed } = await collectRepliers(tweetData);
+    const repliers = Object.values(replierMap).sort((a, b) =&gt; b.replies - a.replies);
+
+    if (repliers.length &gt; 0) {
+      console.log(&#39;\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━&#39;);
+      console.log(&#39;  💬 TOP REPLIERS&#39;);
+      console.log(&#39;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━&#39;);
+
+      for (let i = 0; i &lt; Math.min(CONFIG.topN, repliers.length); i++) {
+        const r = repliers[i];
+        const medal = i === 0 ? &#39;🥇&#39; : i === 1 ? &#39;🥈&#39; : i === 2 ? &#39;🥉&#39; : &#39;  &#39;;
+        const bar = &#39;█&#39;.repeat(Math.min(30, r.replies));
+        console.log(`  ${medal} ${String(i + 1).padStart(2)}. @${r.username.padEnd(16)} ${String(r.replies).padStart(3)} replies ${bar}`);
+      }
+    }
+
+    // ── Engagement Tier Classification ──────────────────────
+    console.log(&#39;\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━&#39;);
+    console.log(&#39;  🎖️ ENGAGEMENT TIERS&#39;);
+    console.log(&#39;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━&#39;);
+
+    const superfans = repliers.filter(r =&gt; r.replies &gt;= 5);
+    const regulars = repliers.filter(r =&gt; r.replies &gt;= 3 &amp;&amp; r.replies &lt; 5);
+    const casual = repliers.filter(r =&gt; r.replies &gt;= 1 &amp;&amp; r.replies &lt; 3);
+
+    console.log(`\n  ⭐ Superfans (5+ replies):    ${superfans.length}`);
+    for (const s of superfans.slice(0, 10)) {
+      console.log(`     @${s.username} — ${s.replies} replies`);
+    }
+
+    console.log(`\n  🔥 Regulars (3-4 replies):    ${regulars.length}`);
+    for (const r of regulars.slice(0, 10)) {
+      console.log(`     @${r.username} — ${r.replies} replies`);
+    }
+
+    console.log(`\n  👋 Casual (1-2 replies):      ${casual.length}`);
+    console.log(`     (${casual.slice(0, 5).map(c =&gt; &#39;@&#39; + c.username).join(&#39;, &#39;)}${casual.length &gt; 5 ? &#39;...&#39; : &#39;&#39;})`);
+
+    // ── Best performing tweets ──────────────────────────────
+    console.log(&#39;\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━&#39;);
+    console.log(&#39;  🔥 TOP PERFORMING TWEETS&#39;);
+    console.log(&#39;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━&#39;);
+
+    const byEngagement = [...tweetData].sort((a, b) =&gt; (b.likes + b.rts + b.replies) - (a.likes + a.rts + a.replies));
+    for (let i = 0; i &lt; Math.min(5, byEngagement.length); i++) {
+      const t = byEngagement[i];
+      const total = t.likes + t.rts + t.replies;
+      console.log(`\n  #${i + 1}  ${total} engagement (❤️${t.likes} 🔁${t.rts} 💬${t.replies})`);
+      console.log(`      &quot;${t.text.slice(0, 70)}${t.text.length &gt; 70 ? &#39;...&#39; : &#39;&#39;}&quot;`);
+    }
+
+    // ── Worst performing tweets ─────────────────────────────
+    const byWorst = [...tweetData].sort((a, b) =&gt; (a.likes + a.rts + a.replies) - (b.likes + b.rts + b.replies));
+    console.log(&#39;\n━━━ 📉 LOWEST ENGAGEMENT TWEETS ━━━&#39;);
+    for (let i = 0; i &lt; Math.min(3, byWorst.length); i++) {
+      const t = byWorst[i];
+      const total = t.likes + t.rts + t.replies;
+      console.log(`  #${i + 1}  ${total} engagement — &quot;${t.text.slice(0, 60)}...&quot;`);
+    }
+
+    // ── Reply rate analysis ─────────────────────────────────
+    console.log(&#39;\n━━━ 💬 REPLY ENGAGEMENT ANALYSIS ━━━&#39;);
+    const tweetsWithReplies = tweetData.filter(t =&gt; t.replies &gt; 0);
+    const replyRate = ((tweetsWithReplies.length / tweetData.length) * 100).toFixed(1);
+    console.log(`  ${replyRate}% of your tweets get at least 1 reply`);
+
+    if (tweetsWithReplies.length &gt; 0) {
+      const avgReplies = (tweetsWithReplies.reduce((s, t) =&gt; s + t.replies, 0) / tweetsWithReplies.length).toFixed(1);
+      console.log(`  Average ${avgReplies} replies on tweets that get replies`);
+    }
+
+    // ── Like-to-retweet ratio ───────────────────────────────
+    if (totalRts &gt; 0) {
+      const ltRatio = (totalLikes / totalRts).toFixed(1);
+      console.log(`\n  ❤️/🔁 Like-to-Retweet ratio: ${ltRatio}:1`);
+      if (ltRatio &gt; 10) {
+        console.log(&#39;  💡 High like/RT ratio — your content is liked but not shared. Try more hot takes or threads.&#39;);
+      } else if (ltRatio &lt; 2) {
+        console.log(&#39;  💡 Great shareability! People retweet what you post.&#39;);
+      }
+    }
+
+    // ── VIP List ────────────────────────────────────────────
+    console.log(&#39;\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━&#39;);
+    console.log(&#39;  ⭐ VIP LIST (engage back with these people!)&#39;);
+    console.log(&#39;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━&#39;);
+
+    const vips = repliers.filter(r =&gt; r.replies &gt;= CONFIG.vipThreshold);
+    if (vips.length === 0) {
+      console.log(&#39;  No VIPs yet. Increase scrollRounds or lower vipThreshold.&#39;);
+    } else {
+      for (const v of vips) {
+        console.log(`  ⭐ @${v.username} (${v.displayName}) — ${v.replies} replies`);
+      }
+      console.log(`\n  💡 ${vips.length} VIPs found. Engage with their content to strengthen relationships!`);
+    }
+
+    console.log(&#39;\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n&#39;);
+
+    // ── Export ───────────────────────────────────────────────
+    if (CONFIG.exportResults) {
+      const data = {
+        overview: {
+          tweets: tweetData.length,
+          totalLikes, totalRts, totalReplies, totalEngagement,
+          avgEngagement: parseFloat(avgEngagement),
+        },
+        topRepliers: repliers.slice(0, 50).map(r =&gt; ({ ...r })),
+        tiers: {
+          superfans: superfans.map(s =&gt; s.username),
+          regulars: regulars.map(r =&gt; r.username),
+          casualCount: casual.length,
+        },
+        vipList: vips.map(v =&gt; ({ username: v.username, displayName: v.displayName, replies: v.replies })),
+        topTweets: byEngagement.slice(0, 10).map(t =&gt; ({
+          text: t.text, likes: t.likes, rts: t.rts, replies: t.replies,
+          total: t.likes + t.rts + t.replies, datetime: t.datetime,
+        })),
+        analyzedAt: new Date().toISOString(),
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: &#39;application/json&#39; });
+      const a = document.createElement(&#39;a&#39;); a.href = URL.createObjectURL(blob);
+      a.download = `xactions-leaderboard-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a); a.click(); a.remove();
+      console.log(&#39;📥 Leaderboard + VIP list exported as JSON.&#39;);
+    }
+  };
+
+  run();
+})();
 </code></pre>
 <h2>⚙️ Configuration</h2>
 <table>
@@ -151,12 +590,12 @@
 <tbody><tr>
 <td><code>scrollRounds</code></td>
 <td><code>12</code></td>
-<td>scroll Rounds</td>
+<td>Scroll rounds</td>
 </tr>
 <tr>
 <td><code>scrollDelay</code></td>
 <td><code>2000</code></td>
-<td>scroll Delay</td>
+<td>Scroll delay</td>
 </tr>
 <tr>
 <td><code>topN</code></td>
@@ -171,7 +610,7 @@
 <tr>
 <td><code>exportResults</code></td>
 <td><code>true</code></td>
-<td>export Results</td>
+<td>Export results</td>
 </tr>
 </tbody></table>
 <hr>
@@ -218,7 +657,7 @@ xactions --help
 <pre><code class="language-bash"># Start MCP server
 npm run mcp
 </code></pre>
-<p>See the <a href="/docs/guides/mcp-setup">MCP Setup Guide</a> for integration with Claude Desktop, Cursor, and other AI tools.</p>
+<p>See the <a href="../mcp-setup.md">MCP Setup Guide</a> for integration with Claude Desktop, Cursor, and other AI tools.</p>
 <hr>
 <h2>📁 Source Files</h2>
 <table>
@@ -243,23 +682,23 @@ npm run mcp
 </tr>
 </thead>
 <tbody><tr>
-<td><a href="/docs/account-health-monitor">Account Health Monitor</a></td>
+<td><a href="account-health-monitor.md">Account Health Monitor</a></td>
 <td>Comprehensive health check for your X/Twitter account</td>
 </tr>
 <tr>
-<td><a href="/docs/audience-demographics">Audience Demographics</a></td>
+<td><a href="audience-demographics.md">Audience Demographics</a></td>
 <td>Analyze your follower demographics including bio keywords, locations, account age, and interests</td>
 </tr>
 <tr>
-<td><a href="/docs/audience-overlap">Audience Overlap</a></td>
+<td><a href="audience-overlap.md">Audience Overlap</a></td>
 <td>Compare the follower lists of two accounts to find audience overlap</td>
 </tr>
 <tr>
-<td><a href="/docs/follower-growth-tracker">Follower Growth Tracker</a></td>
+<td><a href="follower-growth-tracker.md">Follower Growth Tracker</a></td>
 <td>Track your follower count over time</td>
 </tr>
 <tr>
-<td><a href="/docs/sentiment-analyzer">Sentiment Analyzer</a></td>
+<td><a href="sentiment-analyzer.md">Sentiment Analyzer</a></td>
 <td>Analyze tweet sentiment (positive/negative/neutral) using lexicon-based scoring</td>
 </tr>
 </tbody></table>
@@ -336,6 +775,5 @@ npm run mcp
       <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
     </div>
   </footer>
-<script src="/js/sidebar.js"></script>
 </body>
 </html>

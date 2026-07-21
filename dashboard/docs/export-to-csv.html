@@ -73,13 +73,121 @@
   }
   </script>
 
-  <link rel="stylesheet" href="/css/common.css">
-  <link rel="stylesheet" href="/css/docs.css">
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
 </head>
 <body>
   <div class="layout">
     <!-- Sidebar -->
-    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
 
     <!-- Main Content -->
     <main class="main-content">
@@ -132,12 +240,215 @@
 <li>Copy and paste the script from <a href="https://github.com/nirholas/XActions/blob/main/scripts/exportToCSV.js"><code>scripts/exportToCSV.js</code></a></li>
 <li>Press Enter to run</li>
 </ol>
-<pre><code class="language-javascript">// Quick start — copy the full script from:
-// scripts/exportToCSV.js
-//
-// Or install via npm and use the CLI:
-// npm install -g xactions
-// xactions --help
+<pre><code class="language-javascript">/**
+ * Export to CSV Utility
+ * Convert any scraped data to CSV format
+ * 
+ * HOW TO USE:
+ * 1. First, run any scraper script (scrapeFollowers, scrapeLikes, etc.)
+ * 2. Then paste this script
+ * 3. Call: exportToCSV(window.scrapedFollowers, &#39;followers.csv&#39;)
+ * 
+ * EXAMPLES:
+ *   exportToCSV(window.scrapedFollowers, &#39;followers.csv&#39;)
+ *   exportToCSV(window.scrapedLikes, &#39;my_likes.csv&#39;)
+ *   exportToCSV(window.viralTweets, &#39;viral.csv&#39;)
+ *   exportToCSV(window.scrapedSearch.tweets, &#39;search_results.csv&#39;)
+ * 
+ * by nichxbt - https://github.com/nirholas/XActions
+ */
+
+(() =&gt; {
+  /**
+   * Convert an array of objects to CSV and download
+   * @param {Array} data - Array of objects to convert
+   * @param {string} filename - Name for the downloaded file
+   * @param {Array} columns - Optional: specific columns to include (default: all)
+   */
+  const exportToCSV = (data, filename = &#39;export.csv&#39;, columns = null) =&gt; {
+    if (!data) {
+      console.error(&#39;❌ No data provided!&#39;);
+      console.log(&#39;Usage: exportToCSV(yourData, &quot;filename.csv&quot;)&#39;);
+      return;
+    }
+
+    // Handle both arrays and objects with nested arrays
+    let dataArray = data;
+    if (!Array.isArray(data)) {
+      // Look for common nested array properties
+      if (data.tweets) dataArray = data.tweets;
+      else if (data.followers) dataArray = data.followers;
+      else if (data.following) dataArray = data.following;
+      else if (data.members) dataArray = data.members;
+      else if (data.bookmarks) dataArray = data.bookmarks;
+      else if (data.messages) dataArray = data.messages;
+      else if (data.notifications) dataArray = data.notifications;
+      else if (data.likers) dataArray = data.likers;
+      else if (data.replies) dataArray = data.replies;
+      else if (data.quotes) dataArray = data.quotes;
+      else if (data.media) dataArray = data.media;
+      else if (data.links) dataArray = data.links;
+      else {
+        console.error(&#39;❌ Could not find array data. Pass the array directly.&#39;);
+        return;
+      }
+    }
+
+    if (!dataArray.length) {
+      console.error(&#39;❌ Data array is empty!&#39;);
+      return;
+    }
+
+    console.log(`📊 Converting ${dataArray.length} items to CSV...`);
+
+    // Get all unique keys from all objects (some objects might have different keys)
+    const allKeys = new Set();
+    dataArray.forEach(item =&gt; {
+      if (item &amp;&amp; typeof item === &#39;object&#39;) {
+        Object.keys(item).forEach(key =&gt; allKeys.add(key));
+      }
+    });
+
+    // Filter to specified columns if provided
+    let headers = columns || Array.from(allKeys);
+    
+    // Exclude complex nested objects/arrays from default export
+    headers = headers.filter(key =&gt; {
+      const sample = dataArray.find(item =&gt; item &amp;&amp; item[key] !== undefined);
+      if (sample) {
+        const val = sample[key];
+        // Keep arrays as comma-separated, exclude deep objects
+        if (Array.isArray(val)) return true;
+        if (typeof val === &#39;object&#39; &amp;&amp; val !== null) return false;
+      }
+      return true;
+    });
+
+    // Escape CSV values
+    const escapeCSV = (value) =&gt; {
+      if (value === null || value === undefined) return &#39;&#39;;
+      
+      // Handle arrays
+      if (Array.isArray(value)) {
+        value = value.join(&#39;; &#39;);
+      }
+      
+      // Convert to string
+      const str = String(value);
+      
+      // Escape quotes and wrap in quotes if needed
+      if (str.includes(&#39;,&#39;) || str.includes(&#39;&quot;&#39;) || str.includes(&#39;\n&#39;) || str.includes(&#39;\r&#39;)) {
+        return `&quot;${str.replace(/&quot;/g, &#39;&quot;&quot;&#39;)}&quot;`;
+      }
+      return str;
+    };
+
+    // Build CSV
+    const rows = [headers.join(&#39;,&#39;)];
+    
+    dataArray.forEach(item =&gt; {
+      if (!item || typeof item !== &#39;object&#39;) return;
+      
+      const row = headers.map(key =&gt; escapeCSV(item[key]));
+      rows.push(row.join(&#39;,&#39;));
+    });
+
+    const csv = rows.join(&#39;\n&#39;);
+
+    // Download
+    const blob = new Blob([csv], { type: &#39;text/csv;charset=utf-8;&#39; });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement(&#39;a&#39;);
+    a.href = url;
+    a.download = filename.endsWith(&#39;.csv&#39;) ? filename : `${filename}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    console.log(`✅ Downloaded ${filename} with ${dataArray.length} rows and ${headers.length} columns`);
+    console.log(`📋 Columns: ${headers.join(&#39;, &#39;)}`);
+    
+    return csv;
+  };
+
+  /**
+   * Convert data to JSON and download
+   * @param {any} data - Data to export
+   * @param {string} filename - Name for the downloaded file
+   */
+  const exportToJSON = (data, filename = &#39;export.json&#39;) =&gt; {
+    if (!data) {
+      console.error(&#39;❌ No data provided!&#39;);
+      return;
+    }
+
+    const json = JSON.stringify(data, null, 2);
+    const blob = new Blob([json], { type: &#39;application/json&#39; });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement(&#39;a&#39;);
+    a.href = url;
+    a.download = filename.endsWith(&#39;.json&#39;) ? filename : `${filename}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    console.log(`✅ Downloaded ${filename}`);
+    return json;
+  };
+
+  /**
+   * Convert data to plain text list and download
+   * @param {Array} data - Array of objects
+   * @param {string} field - Field to extract (e.g., &#39;handle&#39;, &#39;url&#39;)
+   * @param {string} filename - Name for the downloaded file
+   */
+  const exportToTXT = (data, field, filename = &#39;export.txt&#39;) =&gt; {
+    if (!data || !field) {
+      console.error(&#39;❌ Usage: exportToTXT(data, &quot;fieldName&quot;, &quot;filename.txt&quot;)&#39;);
+      return;
+    }
+
+    let dataArray = Array.isArray(data) ? data : 
+                    data.tweets || data.followers || data.members || [];
+
+    const lines = dataArray
+      .map(item =&gt; item[field])
+      .filter(val =&gt; val !== undefined &amp;&amp; val !== null)
+      .join(&#39;\n&#39;);
+
+    const blob = new Blob([lines], { type: &#39;text/plain&#39; });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement(&#39;a&#39;);
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    console.log(`✅ Downloaded ${filename} with ${lines.split(&#39;\n&#39;).length} lines`);
+    return lines;
+  };
+
+  // Expose globally
+  window.exportToCSV = exportToCSV;
+  window.exportToJSON = exportToJSON;
+  window.exportToTXT = exportToTXT;
+
+  console.log(&#39;📤 Export utilities loaded!&#39;);
+  console.log(&#39;&#39;);
+  console.log(&#39;Available functions:&#39;);
+  console.log(&#39;  exportToCSV(data, &quot;filename.csv&quot;)  - Export to CSV&#39;);
+  console.log(&#39;  exportToJSON(data, &quot;filename.json&quot;) - Export to JSON&#39;);
+  console.log(&#39;  exportToTXT(data, &quot;field&quot;, &quot;filename.txt&quot;) - Export single field&#39;);
+  console.log(&#39;&#39;);
+  console.log(&#39;Examples:&#39;);
+  console.log(&#39;  exportToCSV(window.scrapedFollowers, &quot;my_followers.csv&quot;)&#39;);
+  console.log(&#39;  exportToCSV(window.viralTweets, &quot;viral_tweets.csv&quot;)&#39;);
+  console.log(&#39;  exportToTXT(window.scrapedFollowing, &quot;handle&quot;, &quot;handles.txt&quot;)&#39;);
+})();
 </code></pre>
 <hr>
 <h2>📖 Step-by-Step Tutorial</h2>
@@ -183,7 +494,7 @@ xactions --help
 <pre><code class="language-bash"># Start MCP server
 npm run mcp
 </code></pre>
-<p>See the <a href="/docs/guides/mcp-setup">MCP Setup Guide</a> for integration with Claude Desktop, Cursor, and other AI tools.</p>
+<p>See the <a href="../mcp-setup.md">MCP Setup Guide</a> for integration with Claude Desktop, Cursor, and other AI tools.</p>
 <hr>
 <h2>📁 Source Files</h2>
 <table>
@@ -208,7 +519,7 @@ npm run mcp
 </tr>
 </thead>
 <tbody><tr>
-<td>See <a href="/docs/tutorials/readme">all scripts</a></td>
+<td>See <a href="README.md">all scripts</a></td>
 <td>Browse the complete script catalog</td>
 </tr>
 </tbody></table>
@@ -285,6 +596,5 @@ npm run mcp
       <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
     </div>
   </footer>
-<script src="/js/sidebar.js"></script>
 </body>
 </html>

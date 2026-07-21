@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Schedule Posts -- Tutorial — Free X/Twitter Tools Tool | XActions</title>
+  <meta name="description" content="Step-by-step guide to scheduling tweets for future publication using XActions browser scripts and Node.js/Puppeteer.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, schedule, posts, tutorial, tools, schedule posts tutorial twitter, twitter schedule posts tutorial">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Schedule Posts -- Tutorial — XActions">
+  <meta property="og:description" content="Step-by-step guide to scheduling tweets for future publication using XActions browser scripts and Node.js/Puppeteer.">
+  <meta property="og:url" content="https://xactions.app/docs/step-by-step/schedule-posts-tutorial">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Schedule Posts -- Tutorial — Free X/Twitter Tool">
+  <meta name="twitter:description" content="Step-by-step guide to scheduling tweets for future publication using XActions browser scripts and Node.js/Puppeteer.">
+
+  <link rel="canonical" href="https://xactions.app/docs/step-by-step/schedule-posts-tutorial">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Schedule Posts -- Tutorial — Free X/Twitter Tools Tool | XActions",
+    "description": "Step-by-step guide to scheduling tweets for future publication using XActions browser scripts and Node.js/Puppeteer.",
+    "url": "https://xactions.app/docs/step-by-step/schedule-posts-tutorial",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/schedule-posts-tutorial",
+    "articleSection": "Tools",
+    "keywords": "xactions, twitter automation, x automation, free, schedule, posts, tutorial, tools, schedule posts tutorial twitter, twitter schedule posts tutorial"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Schedule Posts -- Tutorial", "item": "https://xactions.app/docs/schedule-posts-tutorial" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use Schedule Posts -- Tutorial",
+    "description": "Step-by-step guide to scheduling tweets for future publication using XActions browser scripts and Node.js/Puppeteer.",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions Schedule Posts -- Tutorial script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>⚡ Schedule Posts -- Tutorial</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › Schedule Posts -- Tutorial
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Tools</span>
+        <h1>Schedule Posts -- Tutorial</h1>
+<blockquote>
+<p>Step-by-step guide to scheduling tweets for future publication using XActions browser scripts and Node.js/Puppeteer.</p>
+</blockquote>
+<h2>Prerequisites</h2>
+<ul>
+<li>Logged into x.com in your browser</li>
+<li>Browser DevTools console (F12 -&gt; Console tab)</li>
+<li><strong>X Premium subscription</strong> (scheduling is a Premium feature)</li>
+<li>For Node.js usage: <code>npm install xactions</code> and a valid session cookie</li>
+</ul>
+<h2>Quick Start</h2>
+<ol>
+<li>Navigate to x.com</li>
+<li>Open DevTools (F12)</li>
+<li>Copy the script from <code>src/schedulePosts.js</code></li>
+<li>Edit the CONFIG section with your posts and times</li>
+<li>Paste into Console and press Enter</li>
+</ol>
+<h2>Two Script Options</h2>
+<table>
+<thead>
+<tr>
+<th>Script</th>
+<th>Runtime</th>
+<th>Best For</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>src/schedulePosts.js</code></td>
+<td>Browser console</td>
+<td>Scheduling multiple posts from DevTools</td>
+</tr>
+<tr>
+<td><code>src/postComposer.js</code> (<code>schedulePost</code>)</td>
+<td>Node.js / Puppeteer</td>
+<td>Programmatic scheduling from scripts</td>
+</tr>
+</tbody></table>
+<h2>Configuration</h2>
+<h3><code>src/schedulePosts.js</code> (Browser Console)</h3>
+<pre><code class="language-js">const CONFIG = {
+  posts: [
+    { text: &#39;Good morning! Rise and grind.&#39;, scheduledFor: &#39;2026-04-01T09:00:00&#39; },
+    { text: &#39;Afternoon productivity tip: take breaks.&#39;, scheduledFor: &#39;2026-04-01T14:00:00&#39; },
+    { text: &#39;Wrapping up the day. What did you ship?&#39;, scheduledFor: &#39;2026-04-01T18:00:00&#39; },
+  ],
+  useNativeScheduler: true,
+  retryOnFailure: true,
+};
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>posts</code></td>
+<td><code>Array&lt;{text, scheduledFor}&gt;</code></td>
+<td><code>[]</code></td>
+<td>Array of posts with text and ISO datetime</td>
+</tr>
+<tr>
+<td><code>useNativeScheduler</code></td>
+<td><code>boolean</code></td>
+<td><code>true</code></td>
+<td>Use X&#39;s built-in scheduling UI</td>
+</tr>
+<tr>
+<td><code>retryOnFailure</code></td>
+<td><code>boolean</code></td>
+<td><code>true</code></td>
+<td>Retry failed scheduling attempts</td>
+</tr>
+</tbody></table>
+<p>Each post object:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>text</code></td>
+<td><code>string</code></td>
+<td>Tweet content</td>
+</tr>
+<tr>
+<td><code>scheduledFor</code></td>
+<td><code>string</code></td>
+<td>ISO 8601 datetime (e.g., <code>&#39;2026-04-01T10:00:00&#39;</code>)</td>
+</tr>
+</tbody></table>
+<h3><code>src/postComposer.js</code> -- <code>schedulePost</code> (Node.js / Puppeteer)</h3>
+<pre><code class="language-js">import { schedulePost } from &#39;./src/postComposer.js&#39;;
+
+const result = await schedulePost(page, &#39;Scheduled tweet content!&#39;, &#39;2026-04-01T10:00:00&#39;);
+
+console.log(result);
+// { success: true, text: &#39;Scheduled tweet...&#39;, scheduledFor: &#39;2026-04-01T10:00:00.000Z&#39;, timestamp: &#39;...&#39; }
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>page</code></td>
+<td><code>Page</code></td>
+<td>Puppeteer page instance</td>
+</tr>
+<tr>
+<td><code>text</code></td>
+<td><code>string</code></td>
+<td>Tweet text</td>
+</tr>
+<tr>
+<td><code>scheduledTime</code></td>
+<td><code>Date|string</code></td>
+<td>When to publish (Date object or ISO string)</td>
+</tr>
+</tbody></table>
+<h2>Step-by-Step Guide</h2>
+<h3>Scheduling Posts (Browser Console)</h3>
+<ol>
+<li>Open x.com and press F12 for DevTools</li>
+<li>Copy <code>src/schedulePosts.js</code></li>
+<li>Edit the <code>CONFIG.posts</code> array:<pre><code class="language-js">posts: [
+  { text: &#39;Morning tweet!&#39;, scheduledFor: &#39;2026-04-01T09:00:00&#39; },
+  { text: &#39;Afternoon tweet!&#39;, scheduledFor: &#39;2026-04-01T14:00:00&#39; },
+],
+</code></pre>
+</li>
+<li>Paste and run</li>
+</ol>
+<p>The script processes each post sequentially:</p>
+<ol>
+<li>Sorts posts by scheduled time</li>
+<li>Opens the compose dialog via <code>[data-testid=&quot;SideNav_NewTweet_Button&quot;]</code></li>
+<li>Types the tweet text into <code>[data-testid=&quot;tweetTextarea_0&quot;]</code></li>
+<li>Clicks the schedule icon <code>[data-testid=&quot;scheduleOption&quot;]</code></li>
+<li>Sets the date in <code>[data-testid=&quot;scheduledDateField&quot;]</code></li>
+<li>Sets the time in <code>[data-testid=&quot;scheduledTimeField&quot;]</code></li>
+<li>Confirms via <code>[data-testid=&quot;scheduledConfirmationPrimaryAction&quot;]</code></li>
+<li>Reports success or failure for each post</li>
+</ol>
+<h3>Scheduling a Single Post (Node.js / Puppeteer)</h3>
+<pre><code class="language-js">import { schedulePost } from &#39;./src/postComposer.js&#39;;
+
+// Schedule for a specific date and time
+await schedulePost(page, &#39;This will post at 10 AM tomorrow!&#39;, &#39;2026-04-01T10:00:00&#39;);
+
+// Schedule using a Date object
+const tomorrow = new Date();
+tomorrow.setDate(tomorrow.getDate() + 1);
+tomorrow.setHours(10, 0, 0, 0);
+await schedulePost(page, &#39;Automated morning post&#39;, tomorrow);
+</code></pre>
+<h3>How Scheduling Works Internally</h3>
+<p>The Puppeteer <code>schedulePost</code> function:</p>
+<ol>
+<li>Navigates to <code>https://x.com/compose/tweet</code></li>
+<li>Types the tweet text</li>
+<li>Clicks the schedule button (<code>[data-testid=&quot;scheduleOption&quot;]</code>)</li>
+<li>Parses the scheduled time into date and time strings:<pre><code class="language-js">const date = new Date(scheduledTime);
+const dateStr = date.toISOString().split(&#39;T&#39;)[0];     // &#39;2026-04-01&#39;
+const timeStr = date.toTimeString().split(&#39; &#39;)[0].substring(0, 5); // &#39;10:00&#39;
+</code></pre>
+</li>
+<li>Fills in the date and time inputs</li>
+<li>Clicks the schedule confirm button</li>
+</ol>
+<h3>Managing Scheduled Posts</h3>
+<p>X provides a native scheduled posts manager at <code>https://x.com/compose/tweet/unsent</code>. You can:</p>
+<ul>
+<li>View all scheduled posts</li>
+<li>Edit scheduled posts</li>
+<li>Delete/cancel scheduled posts</li>
+<li>Reschedule posts to a different time</li>
+</ul>
+<h3>Scheduling a Content Calendar</h3>
+<p>For a full week of content:</p>
+<pre><code class="language-js">const CONFIG = {
+  posts: [
+    // Monday
+    { text: &#39;Monday motivation: Ship something today.&#39;, scheduledFor: &#39;2026-04-06T09:00:00&#39; },
+    { text: &#39;Hot take: Tests are documentation.&#39;, scheduledFor: &#39;2026-04-06T14:00:00&#39; },
+
+    // Tuesday
+    { text: &#39;Tuesday tip: Automate the boring stuff.&#39;, scheduledFor: &#39;2026-04-07T09:00:00&#39; },
+    { text: &#39;What are you building this week?&#39;, scheduledFor: &#39;2026-04-07T17:00:00&#39; },
+
+    // Wednesday
+    { text: &#39;Midweek check-in: How is your week going?&#39;, scheduledFor: &#39;2026-04-08T12:00:00&#39; },
+
+    // Thursday
+    { text: &#39;Throwback to when I thought APIs were the only way.&#39;, scheduledFor: &#39;2026-04-09T10:00:00&#39; },
+
+    // Friday
+    { text: &#39;Friday wins: What shipped this week?&#39;, scheduledFor: &#39;2026-04-10T16:00:00&#39; },
+  ],
+};
+</code></pre>
+<h2>Date and Time Format</h2>
+<p>Posts use ISO 8601 format: <code>YYYY-MM-DDTHH:MM:SS</code></p>
+<table>
+<thead>
+<tr>
+<th>Example</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>&#39;2026-04-01T09:00:00&#39;</code></td>
+<td>April 1, 2026 at 9:00 AM (local time)</td>
+</tr>
+<tr>
+<td><code>&#39;2026-04-01T14:30:00&#39;</code></td>
+<td>April 1, 2026 at 2:30 PM (local time)</td>
+</tr>
+<tr>
+<td><code>&#39;2026-12-25T00:00:00&#39;</code></td>
+<td>December 25, 2026 at midnight</td>
+</tr>
+</tbody></table>
+<p>Note: Times are in your local timezone unless you specify a UTC offset.</p>
+<h2>Tips &amp; Tricks</h2>
+<ul>
+<li><strong>Best posting times</strong>: Engagement is typically highest at 9 AM, 12 PM, and 5 PM in your audience&#39;s timezone.</li>
+<li><strong>Batch scheduling</strong>: Prepare a week&#39;s content on Sunday and schedule it all at once.</li>
+<li><strong>Content variety</strong>: Mix different content types (questions, tips, threads, polls) across your schedule.</li>
+<li><strong>Time zones</strong>: X uses your account&#39;s timezone setting. Make sure it matches your target audience.</li>
+<li><strong>Buffer time</strong>: Leave 2-second gaps between scheduling operations to avoid hitting rate limits.</li>
+<li><strong>Verify scheduled posts</strong>: After scheduling, visit <code>https://x.com/compose/tweet/unsent</code> to confirm all posts are queued.</li>
+<li><strong>Premium required</strong>: Scheduling is only available with X Premium. The script detects this and reports an error if unavailable.</li>
+<li><strong>No media scheduling</strong>: The browser console script handles text-only scheduling. For media, use the Puppeteer approach.</li>
+</ul>
+<h2>Troubleshooting</h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&quot;Native scheduler not available&quot;</td>
+<td>Scheduling requires X Premium. Upgrade your subscription.</td>
+</tr>
+<tr>
+<td>Schedule button not found</td>
+<td>The selector <code>[data-testid=&quot;scheduleOption&quot;]</code> may have changed. Check <code>docs/agents/selectors.md</code>.</td>
+</tr>
+<tr>
+<td>Date/time not setting correctly</td>
+<td>X&#39;s date picker can be tricky. The Puppeteer approach sets values directly on the input fields.</td>
+</tr>
+<tr>
+<td>Posts not posting at scheduled time</td>
+<td>Verify your timezone settings in X. Times are relative to your account timezone.</td>
+</tr>
+<tr>
+<td>&quot;Schedule requires Premium&quot; error</td>
+<td>The Puppeteer <code>schedulePost</code> function returns <code>{ success: false, error: &#39;Schedule requires Premium&#39; }</code>.</td>
+</tr>
+<tr>
+<td>Multiple posts failing</td>
+<td>X may rate-limit rapid scheduling. Increase the delay between scheduling operations.</td>
+</tr>
+</tbody></table>
+<h2>Related Scripts</h2>
+<ul>
+<li><code>src/postComposer.js</code> -- Post tweets immediately (text, media, polls)</li>
+<li><code>src/postThread.js</code> -- Create threads (schedule the first tweet, then manually thread the rest)</li>
+<li><code>src/threadComposer.js</code> -- Advanced thread composition with drafts</li>
+<li><code>docs/examples/tutorials/post-content-tutorial.md</code> -- General posting guide</li>
+</ul>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try Schedule Posts -- Tutorial?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/step-by-step/add-media-tutorial">📝 Add Media Tutorial</a>
+        <a href="/docs/step-by-step/ads-campaigns-tutorial">📝 Ads Campaigns Tutorial</a>
+        <a href="/docs/step-by-step/affiliate-benefits-tutorial">📝 Affiliate Benefits Tutorial</a>
+        <a href="/docs/step-by-step/alt-text-tutorial">📝 Alt Text Tutorial</a>
+        <a href="/docs/step-by-step/auto-commenter-tutorial">📝 Auto Commenter Tutorial</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a> / <a href="/docs#step-by-step">Tutorials</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

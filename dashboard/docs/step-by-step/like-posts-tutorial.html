@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Like Posts -- Tutorial — Free X/Twitter Tools Tool | XActions</title>
+  <meta name="description" content="Step-by-step guide to liking posts on X using XActions browser scripts.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, like, posts, tutorial, tools, like posts tutorial twitter, twitter like posts tutorial">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Like Posts -- Tutorial — XActions">
+  <meta property="og:description" content="Step-by-step guide to liking posts on X using XActions browser scripts.">
+  <meta property="og:url" content="https://xactions.app/docs/step-by-step/like-posts-tutorial">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Like Posts -- Tutorial — Free X/Twitter Tool">
+  <meta name="twitter:description" content="Step-by-step guide to liking posts on X using XActions browser scripts.">
+
+  <link rel="canonical" href="https://xactions.app/docs/step-by-step/like-posts-tutorial">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Like Posts -- Tutorial — Free X/Twitter Tools Tool | XActions",
+    "description": "Step-by-step guide to liking posts on X using XActions browser scripts.",
+    "url": "https://xactions.app/docs/step-by-step/like-posts-tutorial",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/like-posts-tutorial",
+    "articleSection": "Tools",
+    "keywords": "xactions, twitter automation, x automation, free, like, posts, tutorial, tools, like posts tutorial twitter, twitter like posts tutorial"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Like Posts -- Tutorial", "item": "https://xactions.app/docs/like-posts-tutorial" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use Like Posts -- Tutorial",
+    "description": "Step-by-step guide to liking posts on X using XActions browser scripts.",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions Like Posts -- Tutorial script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>⚡ Like Posts -- Tutorial</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › Like Posts -- Tutorial
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Tools</span>
+        <h1>Like Posts -- Tutorial</h1>
+<blockquote>
+<p>Step-by-step guide to liking posts on X using XActions browser scripts.</p>
+</blockquote>
+<h2>Prerequisites</h2>
+<ul>
+<li>Logged into x.com in your browser</li>
+<li>Browser DevTools console (F12 -&gt; Console tab)</li>
+</ul>
+<h2>Quick Start</h2>
+<ol>
+<li>Navigate to <code>https://x.com/home</code>, a search page, or any profile</li>
+<li>Open DevTools (F12) and go to the Console tab</li>
+<li>Copy the contents of <code>src/likePost.js</code></li>
+<li>Edit the <code>CONFIG</code> section (mode, keywords, URLs)</li>
+<li>Paste into the console and press Enter</li>
+</ol>
+<h2>Scripts Overview</h2>
+<table>
+<thead>
+<tr>
+<th>Script</th>
+<th>Requires core.js</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>src/likePost.js</code></td>
+<td>No</td>
+<td>Like by URL or keyword -- standalone</td>
+</tr>
+<tr>
+<td><code>src/automation/autoLiker.js</code></td>
+<td>Yes</td>
+<td>Continuous auto-liker with rate limiting</td>
+</tr>
+</tbody></table>
+<h2>Configuration</h2>
+<h3>src/likePost.js</h3>
+<h4>Mode Selection</h4>
+<pre><code class="language-js">const CONFIG = {
+  mode: &#39;keywords&#39;,  // &#39;urls&#39; or &#39;keywords&#39;
+};
+</code></pre>
+<ul>
+<li><strong><code>urls</code> mode</strong>: Likes specific posts by navigating to each URL.</li>
+<li><strong><code>keywords</code> mode</strong>: Scrolls the current page and likes posts matching keywords.</li>
+</ul>
+<h4>URL Mode Settings</h4>
+<pre><code class="language-js">postUrls: [
+  &#39;https://x.com/nichxbt/status/123456789&#39;,
+  &#39;https://x.com/openai/status/987654321&#39;,
+],
+</code></pre>
+<h4>Keyword Mode Settings</h4>
+<pre><code class="language-js">keywords: [&#39;AI agents&#39;, &#39;open source&#39;],
+matchAll: false,  // false = any keyword matches; true = ALL must match
+</code></pre>
+<h4>Limits and Filters</h4>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>maxLikes</code></td>
+<td><code>20</code></td>
+<td>Max posts to like per run</td>
+</tr>
+<tr>
+<td><code>maxScrollAttempts</code></td>
+<td><code>15</code></td>
+<td>Max scrolls to find more posts</td>
+</tr>
+<tr>
+<td><code>skipAlreadyLiked</code></td>
+<td><code>true</code></td>
+<td>Skip posts you already liked</td>
+</tr>
+<tr>
+<td><code>minLikes</code></td>
+<td><code>0</code></td>
+<td>Only like posts with at least N existing likes</td>
+</tr>
+<tr>
+<td><code>skipReplies</code></td>
+<td><code>false</code></td>
+<td>Skip reply tweets</td>
+</tr>
+<tr>
+<td><code>trackLiked</code></td>
+<td><code>true</code></td>
+<td>Save liked posts to sessionStorage</td>
+</tr>
+</tbody></table>
+<h4>Timing</h4>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>minDelay</code></td>
+<td><code>1500</code></td>
+<td>Minimum ms between likes</td>
+</tr>
+<tr>
+<td><code>maxDelay</code></td>
+<td><code>3000</code></td>
+<td>Maximum ms between likes</td>
+</tr>
+<tr>
+<td><code>scrollDelay</code></td>
+<td><code>2000</code></td>
+<td>Delay after scrolling</td>
+</tr>
+<tr>
+<td><code>navigationDelay</code></td>
+<td><code>3000</code></td>
+<td>Wait for page load (URL mode)</td>
+</tr>
+</tbody></table>
+<h3>src/automation/autoLiker.js</h3>
+<p>This script requires pasting <code>src/automation/core.js</code> first.</p>
+<pre><code class="language-js">const OPTIONS = {
+  LIKE_ALL: false,
+  KEYWORDS: [&#39;web3&#39;, &#39;crypto&#39;, &#39;AI&#39;],
+  FROM_USERS: [],
+  MAX_LIKES: 20,
+  MAX_SCROLL_DEPTH: 50,
+  ALSO_RETWEET: false,
+  MIN_DELAY: 2000,
+  MAX_DELAY: 5000,
+  SKIP_REPLIES: true,
+  SKIP_ADS: true,
+  MIN_LIKES_ON_POST: 0,
+};
+</code></pre>
+<h2>Step-by-Step Guide</h2>
+<h3>Like Specific Posts by URL</h3>
+<p><strong>Step 1:</strong> Set mode to <code>urls</code> and add your post URLs:</p>
+<pre><code class="language-js">const CONFIG = {
+  mode: &#39;urls&#39;,
+  postUrls: [
+    &#39;https://x.com/nichxbt/status/123456789&#39;,
+    &#39;https://x.com/openai/status/987654321&#39;,
+  ],
+  maxLikes: 20,
+};
+</code></pre>
+<p><strong>Step 2:</strong> Paste the script. It will navigate to each URL and click the like button.</p>
+<p><strong>Step 3:</strong> Watch the console output:</p>
+<pre><code>Navigating to: https://x.com/nichxbt/status/123456789
+Liked! (1/20)
+Navigating to: https://x.com/openai/status/987654321
+Liked! (2/20)
+</code></pre>
+<h3>Like Posts by Keyword on Timeline</h3>
+<p><strong>Step 1:</strong> Navigate to your home timeline or a search page (e.g., <code>x.com/search?q=AI+agents</code>).</p>
+<p><strong>Step 2:</strong> Set mode to <code>keywords</code>:</p>
+<pre><code class="language-js">const CONFIG = {
+  mode: &#39;keywords&#39;,
+  keywords: [&#39;AI agents&#39;, &#39;machine learning&#39;],
+  matchAll: false,
+  maxLikes: 15,
+};
+</code></pre>
+<p><strong>Step 3:</strong> Paste the script. It scrolls the page and likes matching posts:</p>
+<pre><code>Liked (1/15): &quot;Just launched our new AI agent framework...&quot;
+Liked (2/15): &quot;Machine learning is transforming healthcare...&quot;
+</code></pre>
+<h3>Continuous Auto-Liking with core.js</h3>
+<p><strong>Step 1:</strong> Navigate to your home feed or a profile page.</p>
+<p><strong>Step 2:</strong> Paste the contents of <code>src/automation/core.js</code> into the console first.</p>
+<p><strong>Step 3:</strong> Then paste <code>src/automation/autoLiker.js</code>:</p>
+<pre><code class="language-js">const OPTIONS = {
+  KEYWORDS: [&#39;startup&#39;, &#39;founder&#39;, &#39;building&#39;],
+  MAX_LIKES: 20,
+  SKIP_REPLIES: true,
+  SKIP_ADS: true,
+};
+</code></pre>
+<p><strong>Step 4:</strong> To stop the auto-liker at any time:</p>
+<pre><code class="language-js">window.stopAutoLiker();
+</code></pre>
+<h2>Tips &amp; Tricks</h2>
+<ul>
+<li><strong>Use <code>keywords</code> mode on search pages</strong> for the most targeted results. Navigate to <code>x.com/search?q=your+topic</code> first.</li>
+<li><strong>Set <code>minLikes: 5</code></strong> to avoid liking low-quality posts with no engagement.</li>
+<li><strong>Enable <code>skipReplies: true</code></strong> to focus on original tweets only.</li>
+<li><strong>Liked history</strong> is stored in sessionStorage under <code>xactions_liked</code>. This is cleared when you close the tab.</li>
+<li><strong>The auto-liker</strong> (with core.js) has built-in rate limiting that tracks likes per day. It stops automatically before hitting X&#39;s daily limit.</li>
+<li><strong><code>ALSO_RETWEET: true</code></strong> in the auto-liker will repost tweets as well as liking them.</li>
+</ul>
+<h2>Troubleshooting</h2>
+<table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&quot;No matching tweets found&quot;</td>
+<td>Broaden keywords or increase <code>maxScrollAttempts</code></td>
+</tr>
+<tr>
+<td>Likes not registering</td>
+<td>X may be rate-limiting. Increase <code>minDelay</code> to 3000+</td>
+</tr>
+<tr>
+<td>&quot;Core module not loaded&quot;</td>
+<td>Paste <code>src/automation/core.js</code> before <code>autoLiker.js</code></td>
+</tr>
+<tr>
+<td>Script stops early</td>
+<td>Increase <code>maxScrollAttempts</code> and <code>maxLikes</code></td>
+</tr>
+<tr>
+<td>Already-liked posts not skipped</td>
+<td>Ensure <code>skipAlreadyLiked: true</code></td>
+</tr>
+</tbody></table>
+<h2>Related Scripts</h2>
+<ul>
+<li><code>src/autoReply.js</code> -- Auto-reply to matching tweets</li>
+<li><code>src/repostPost.js</code> -- Repost posts by URL or keyword</li>
+<li><code>src/automation/autoLiker.js</code> -- Continuous auto-liker (requires core.js)</li>
+<li><code>src/quoteTweetAutomation.js</code> -- Quote tweet with commentary</li>
+</ul>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try Like Posts -- Tutorial?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/step-by-step/add-media-tutorial">📝 Add Media Tutorial</a>
+        <a href="/docs/step-by-step/ads-campaigns-tutorial">📝 Ads Campaigns Tutorial</a>
+        <a href="/docs/step-by-step/affiliate-benefits-tutorial">📝 Affiliate Benefits Tutorial</a>
+        <a href="/docs/step-by-step/alt-text-tutorial">📝 Alt Text Tutorial</a>
+        <a href="/docs/step-by-step/auto-commenter-tutorial">📝 Auto Commenter Tutorial</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a> / <a href="/docs#step-by-step">Tutorials</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

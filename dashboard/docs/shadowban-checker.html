@@ -73,13 +73,121 @@
   }
   </script>
 
-  <link rel="stylesheet" href="/css/common.css">
-  <link rel="stylesheet" href="/css/docs.css">
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
 </head>
 <body>
   <div class="layout">
     <!-- Sidebar -->
-    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
 
     <!-- Main Content -->
     <main class="main-content">
@@ -132,12 +240,300 @@
 <li>Copy and paste the script from <a href="https://github.com/nirholas/XActions/blob/main/src/shadowbanChecker.js"><code>src/shadowbanChecker.js</code></a></li>
 <li>Press Enter to run</li>
 </ol>
-<pre><code class="language-javascript">// Quick start — copy the full script from:
-// src/shadowbanChecker.js
-//
-// Or install via npm and use the CLI:
-// npm install -g xactions
-// xactions --help
+<pre><code class="language-javascript">/**
+ * ============================================================
+ * 🕵️ Shadowban Checker — Production Grade
+ * ============================================================
+ *
+ * @name        shadowbanChecker.js
+ * @description Check if your X/Twitter account is shadowbanned.
+ *              Tests: search ban, ghost ban, reply deboosting,
+ *              suggestion ban, and media visibility.
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.0.0
+ * @date        2026-02-24
+ * @repository  https://github.com/nirholas/XActions
+ *
+ * ============================================================
+ * 📋 USAGE:
+ *
+ * 1. Go to: https://x.com (any page, logged in)
+ * 2. Open DevTools Console (F12)
+ * 3. Paste this script and press Enter
+ * 4. Enter the username to check when prompted (or edit CONFIG)
+ *
+ * WHAT IT CHECKS:
+ * ┌─────────────────────────────────────────────────────────┐
+ * │ Test                │ What it means                     │
+ * ├─────────────────────┼───────────────────────────────────┤
+ * │ Search Suggestion   │ Profile appears in search bar     │
+ * │ Search Ban          │ Tweets appear in search results   │
+ * │ Ghost Ban           │ Replies visible to other users    │
+ * │ Reply Deboosting    │ Replies hidden behind &quot;Show more&quot; │
+ * │ Media Ban           │ Media shows in search results     │
+ * └─────────────────────────────────────────────────────────┘
+ * ============================================================
+ */
+(() =&gt; {
+  &#39;use strict&#39;;
+
+  const CONFIG = {
+    username: &#39;&#39;,                    // Leave empty = check your own account
+    verboseLogging: true,            // Show detailed test steps
+    testDelay: 3000,                 // Delay between tests (ms)
+  };
+
+  // ══════════════════════════════════════════════════════════
+  // 🔧 Utilities
+  // ══════════════════════════════════════════════════════════
+
+  const sleep = ms =&gt; new Promise(r =&gt; setTimeout(r, ms + ms * 0.1 * (Math.random() - 0.5)));
+
+  const fetchPage = async (url) =&gt; {
+    try {
+      const resp = await fetch(url, {
+        credentials: &#39;include&#39;,
+        headers: { &#39;Accept&#39;: &#39;text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8&#39; },
+      });
+      if (!resp.ok) return { status: resp.status, text: &#39;&#39; };
+      const text = await resp.text();
+      return { status: resp.status, text };
+    } catch (e) {
+      return { status: 0, text: &#39;&#39;, error: e.message };
+    }
+  };
+
+  // ══════════════════════════════════════════════════════════
+  // 🚀 Main
+  // ══════════════════════════════════════════════════════════
+
+  (async () =&gt; {
+    const W = 60;
+    console.log(&#39;╔&#39; + &#39;═&#39;.repeat(W) + &#39;╗&#39;);
+    console.log(&#39;║  🕵️ SHADOWBAN CHECKER&#39; + &#39; &#39;.repeat(W - 23) + &#39;║&#39;);
+    console.log(&#39;║  by nichxbt — v1.0&#39; + &#39; &#39;.repeat(W - 21) + &#39;║&#39;);
+    console.log(&#39;╚&#39; + &#39;═&#39;.repeat(W) + &#39;╝&#39;);
+
+    // Determine username
+    let username = CONFIG.username;
+    if (!username) {
+      // Try to detect from page
+      const metaEl = document.querySelector(&#39;meta[property=&quot;al:android:url&quot;]&#39;);
+      const metaContent = metaEl?.getAttribute(&#39;content&#39;) || &#39;&#39;;
+      const metaMatch = metaContent.match(/screen_name=([^&amp;]+)/);
+      if (metaMatch) {
+        username = metaMatch[1];
+      } else {
+        // Try from header
+        const navLink = document.querySelector(&#39;a[data-testid=&quot;AppTabBar_Profile_Link&quot;]&#39;);
+        const href = navLink?.getAttribute(&#39;href&#39;) || &#39;&#39;;
+        const hrefMatch = href.match(/^\/([A-Za-z0-9_]+)/);
+        if (hrefMatch) username = hrefMatch[1];
+      }
+    }
+
+    if (!username) {
+      console.error(&#39;❌ Could not detect username. Set CONFIG.username manually.&#39;);
+      return;
+    }
+
+    console.log(`\n🔍 Checking @${username} for shadowban indicators...\n`);
+
+    const results = {
+      username,
+      timestamp: new Date().toISOString(),
+      tests: {},
+      overallStatus: &#39;UNKNOWN&#39;,
+    };
+
+    const log = (msg) =&gt; CONFIG.verboseLogging &amp;&amp; console.log(`   ${msg}`);
+
+    // ── Test 1: Account Exists ──────────────────────────────
+
+    console.log(&#39;━&#39;.repeat(50));
+    console.log(&#39;  📋 Test 1: Account Existence&#39;);
+    console.log(&#39;━&#39;.repeat(50));
+
+    const profileResp = await fetchPage(`https://x.com/${username}`);
+    if (profileResp.status === 404 || profileResp.text.includes(&#39;This account doesn&#39;)) {
+      console.error(`❌ Account @${username} does not exist or is suspended.`);
+      results.tests.exists = { status: &#39;FAIL&#39;, detail: &#39;Account not found&#39; };
+      results.overallStatus = &#39;SUSPENDED&#39;;
+      console.log(&#39;\n📊 Result: Account appears SUSPENDED or DELETED.\n&#39;);
+      return;
+    }
+
+    if (profileResp.text.includes(&#39;Account suspended&#39;) || profileResp.text.includes(&#39;suspended&#39;)) {
+      console.error(`❌ Account @${username} is SUSPENDED.`);
+      results.tests.exists = { status: &#39;FAIL&#39;, detail: &#39;Suspended&#39; };
+      results.overallStatus = &#39;SUSPENDED&#39;;
+      return;
+    }
+
+    results.tests.exists = { status: &#39;PASS&#39;, detail: &#39;Account exists and is active&#39; };
+    console.log(&#39;  ✅ Account exists and is active&#39;);
+    await sleep(CONFIG.testDelay);
+
+    // ── Test 2: Search Suggestion Ban ───────────────────────
+
+    console.log(&#39;\n━&#39;.repeat(50));
+    console.log(&#39;  📋 Test 2: Search Suggestion Ban&#39;);
+    console.log(&#39;━&#39;.repeat(50));
+    log(&#39;Checking if @&#39; + username + &#39; appears in typeahead search...&#39;);
+
+    try {
+      // Use X&#39;s internal typeahead API
+      const typeaheadResp = await fetch(
+        `https://x.com/i/api/1.1/search/typeahead.json?q=${username}&amp;src=search_box&amp;result_type=users`,
+        { credentials: &#39;include&#39;, headers: { &#39;x-twitter-active-user&#39;: &#39;yes&#39; } }
+      );
+
+      if (typeaheadResp.ok) {
+        const data = await typeaheadResp.json();
+        const found = data.users?.some(u =&gt;
+          u.screen_name?.toLowerCase() === username.toLowerCase()
+        );
+        if (found) {
+          results.tests.searchSuggestion = { status: &#39;PASS&#39;, detail: &#39;Appears in search suggestions&#39; };
+          console.log(&#39;  ✅ Appears in search suggestions — no suggestion ban&#39;);
+        } else {
+          results.tests.searchSuggestion = { status: &#39;FAIL&#39;, detail: &#39;NOT in search suggestions&#39; };
+          console.log(&#39;  ⚠️ NOT appearing in search suggestions — possible suggestion ban&#39;);
+        }
+      } else {
+        results.tests.searchSuggestion = { status: &#39;UNKNOWN&#39;, detail: `API returned ${typeaheadResp.status}` };
+        console.log(&#39;  ❓ Could not check (API returned &#39; + typeaheadResp.status + &#39;)&#39;);
+      }
+    } catch (e) {
+      results.tests.searchSuggestion = { status: &#39;UNKNOWN&#39;, detail: e.message };
+      console.log(&#39;  ❓ Could not check: &#39; + e.message);
+    }
+
+    await sleep(CONFIG.testDelay);
+
+    // ── Test 3: Search Ban ──────────────────────────────────
+
+    console.log(&#39;\n━&#39;.repeat(50));
+    console.log(&#39;  📋 Test 3: Search Ban&#39;);
+    console.log(&#39;━&#39;.repeat(50));
+    log(&#39;Searching for tweets from @&#39; + username + &#39;...&#39;);
+
+    try {
+      const searchResp = await fetchPage(`https://x.com/search?q=from%3A${username}&amp;f=live`);
+      if (searchResp.text.includes(username)) {
+        results.tests.searchBan = { status: &#39;PASS&#39;, detail: &#39;Tweets appear in search&#39; };
+        console.log(&#39;  ✅ Tweets appear in search results — no search ban&#39;);
+      } else {
+        results.tests.searchBan = { status: &#39;WARN&#39;, detail: &#39;Tweets may not appear in search&#39; };
+        console.log(&#39;  ⚠️ Tweets may not appear in search — possible search ban&#39;);
+      }
+    } catch (e) {
+      results.tests.searchBan = { status: &#39;UNKNOWN&#39;, detail: e.message };
+      console.log(&#39;  ❓ Could not check: &#39; + e.message);
+    }
+
+    await sleep(CONFIG.testDelay);
+
+    // ── Test 4: Ghost Ban (Reply Visibility) ────────────────
+
+    console.log(&#39;\n━&#39;.repeat(50));
+    console.log(&#39;  📋 Test 4: Ghost Ban (Reply Visibility)&#39;);
+    console.log(&#39;━&#39;.repeat(50));
+    log(&#39;Checking reply thread visibility...&#39;);
+
+    try {
+      // Search for replies from the user
+      const replyResp = await fetchPage(`https://x.com/search?q=from%3A${username}%20filter%3Areplies&amp;f=live`);
+      if (replyResp.text.includes(username)) {
+        results.tests.ghostBan = { status: &#39;PASS&#39;, detail: &#39;Replies appear visible&#39; };
+        console.log(&#39;  ✅ Replies appear in search — no ghost ban detected&#39;);
+      } else {
+        results.tests.ghostBan = { status: &#39;WARN&#39;, detail: &#39;Replies may be hidden&#39; };
+        console.log(&#39;  ⚠️ Replies may be hidden — possible ghost ban&#39;);
+      }
+    } catch (e) {
+      results.tests.ghostBan = { status: &#39;UNKNOWN&#39;, detail: e.message };
+      console.log(&#39;  ❓ Could not check: &#39; + e.message);
+    }
+
+    await sleep(CONFIG.testDelay);
+
+    // ── Test 5: Media Search Ban ────────────────────────────
+
+    console.log(&#39;\n━&#39;.repeat(50));
+    console.log(&#39;  📋 Test 5: Media Visibility&#39;);
+    console.log(&#39;━&#39;.repeat(50));
+    log(&#39;Checking if media tweets appear in search...&#39;);
+
+    try {
+      const mediaResp = await fetchPage(`https://x.com/search?q=from%3A${username}%20filter%3Amedia&amp;f=live`);
+      if (mediaResp.text.includes(username)) {
+        results.tests.mediaBan = { status: &#39;PASS&#39;, detail: &#39;Media visible in search&#39; };
+        console.log(&#39;  ✅ Media appears in search — no media ban&#39;);
+      } else {
+        results.tests.mediaBan = { status: &#39;WARN&#39;, detail: &#39;Media may not appear in search&#39; };
+        console.log(&#39;  ⚠️ Media may not appear in search — possible media ban&#39;);
+      }
+    } catch (e) {
+      results.tests.mediaBan = { status: &#39;UNKNOWN&#39;, detail: e.message };
+      console.log(&#39;  ❓ Could not check: &#39; + e.message);
+    }
+
+    // ── Overall Assessment ──────────────────────────────────
+
+    const testValues = Object.values(results.tests);
+    const fails = testValues.filter(t =&gt; t.status === &#39;FAIL&#39;).length;
+    const warns = testValues.filter(t =&gt; t.status === &#39;WARN&#39;).length;
+    const passes = testValues.filter(t =&gt; t.status === &#39;PASS&#39;).length;
+
+    if (fails &gt; 0) results.overallStatus = &#39;LIKELY SHADOWBANNED&#39;;
+    else if (warns &gt;= 2) results.overallStatus = &#39;POSSIBLY SHADOWBANNED&#39;;
+    else if (warns === 1) results.overallStatus = &#39;MINOR ISSUES&#39;;
+    else results.overallStatus = &#39;CLEAN&#39;;
+
+    // ── Final Report ────────────────────────────────────────
+
+    console.log(&#39;\n\n╔&#39; + &#39;═&#39;.repeat(W) + &#39;╗&#39;);
+    console.log(&#39;║  📊 SHADOWBAN CHECK RESULTS&#39; + &#39; &#39;.repeat(W - 29) + &#39;║&#39;);
+    console.log(&#39;╠&#39; + &#39;═&#39;.repeat(W) + &#39;╣&#39;);
+
+    for (const [test, result] of Object.entries(results.tests)) {
+      const icon = result.status === &#39;PASS&#39; ? &#39;✅&#39; : result.status === &#39;FAIL&#39; ? &#39;❌&#39; : result.status === &#39;WARN&#39; ? &#39;⚠️&#39; : &#39;❓&#39;;
+      const line = `${icon} ${test}: ${result.detail}`;
+      console.log(&#39;║  &#39; + line.padEnd(W - 2) + &#39;║&#39;);
+    }
+
+    console.log(&#39;╠&#39; + &#39;═&#39;.repeat(W) + &#39;╣&#39;);
+    const statusIcon = results.overallStatus === &#39;CLEAN&#39; ? &#39;✅&#39; :
+                       results.overallStatus.includes(&#39;LIKELY&#39;) ? &#39;❌&#39; : &#39;⚠️&#39;;
+    const statusLine = `${statusIcon} Overall: ${results.overallStatus}`;
+    console.log(&#39;║  &#39; + statusLine.padEnd(W - 2) + &#39;║&#39;);
+    console.log(&#39;╚&#39; + &#39;═&#39;.repeat(W) + &#39;╝&#39;);
+
+    // Tips
+    if (results.overallStatus !== &#39;CLEAN&#39;) {
+      console.log(&#39;\n💡 Tips to resolve shadowban:&#39;);
+      console.log(&#39;   1. Stop all automated activity for 48-72 hours&#39;);
+      console.log(&#39;   2. Remove any rule-violating content&#39;);
+      console.log(&#39;   3. Verify your email and phone number&#39;);
+      console.log(&#39;   4. Don\&#39;t use third-party apps aggressively&#39;);
+      console.log(&#39;   5. Engage naturally — like, reply, browse&#39;);
+      console.log(&#39;   6. Wait — most shadowbans resolve in 24-48 hours&#39;);
+    }
+
+    // Save results
+    try {
+      localStorage.setItem(
+        `xactions_shadowban_${username}`,
+        JSON.stringify(results)
+      );
+      console.log(`\n💾 Results saved. Compare over time with:`);
+      console.log(`   JSON.parse(localStorage.getItem(&quot;xactions_shadowban_${username}&quot;))`);
+    } catch {}
+
+    console.log(&#39;&#39;);
+  })();
+})();
 </code></pre>
 <h2>⚙️ Configuration</h2>
 <table>
@@ -208,7 +604,7 @@ xactions --help
 <pre><code class="language-bash"># Start MCP server
 npm run mcp
 </code></pre>
-<p>See the <a href="/docs/guides/mcp-setup">MCP Setup Guide</a> for integration with Claude Desktop, Cursor, and other AI tools.</p>
+<p>See the <a href="../mcp-setup.md">MCP Setup Guide</a> for integration with Claude Desktop, Cursor, and other AI tools.</p>
 <hr>
 <h2>📁 Source Files</h2>
 <table>
@@ -233,23 +629,23 @@ npm run mcp
 </tr>
 </thead>
 <tbody><tr>
-<td><a href="/docs/account-health-monitor">Account Health Monitor</a></td>
+<td><a href="account-health-monitor.md">Account Health Monitor</a></td>
 <td>Comprehensive health check for your X/Twitter account</td>
 </tr>
 <tr>
-<td><a href="/docs/audience-demographics">Audience Demographics</a></td>
+<td><a href="audience-demographics.md">Audience Demographics</a></td>
 <td>Analyze your follower demographics including bio keywords, locations, account age, and interests</td>
 </tr>
 <tr>
-<td><a href="/docs/audience-overlap">Audience Overlap</a></td>
+<td><a href="audience-overlap.md">Audience Overlap</a></td>
 <td>Compare the follower lists of two accounts to find audience overlap</td>
 </tr>
 <tr>
-<td><a href="/docs/engagement-leaderboard">Engagement Leaderboard</a></td>
+<td><a href="engagement-leaderboard.md">Engagement Leaderboard</a></td>
 <td>Analyze who engages most with your tweets</td>
 </tr>
 <tr>
-<td><a href="/docs/follower-growth-tracker">Follower Growth Tracker</a></td>
+<td><a href="follower-growth-tracker.md">Follower Growth Tracker</a></td>
 <td>Track your follower count over time</td>
 </tr>
 </tbody></table>
@@ -326,6 +722,5 @@ npm run mcp
       <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
     </div>
   </footer>
-<script src="/js/sidebar.js"></script>
 </body>
 </html>

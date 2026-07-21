@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View Trends &amp; Explore — Tutorial — Free X/Twitter Tools Tool | XActions</title>
+  <meta name="description" content="Step-by-step guide to viewing trending topics, browsing the Explore tab, and scraping trend data on X/Twitter using XActions scripts.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, view, trends, tutorial, explore, tools, view trends tutorial twitter, twitter view trends tutorial">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="View Trends &amp; Explore — Tutorial — XActions">
+  <meta property="og:description" content="Step-by-step guide to viewing trending topics, browsing the Explore tab, and scraping trend data on X/Twitter using XActions scripts.">
+  <meta property="og:url" content="https://xactions.app/docs/step-by-step/view-trends-tutorial">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="View Trends &amp; Explore — Tutorial — Free X/Twitter Tool">
+  <meta name="twitter:description" content="Step-by-step guide to viewing trending topics, browsing the Explore tab, and scraping trend data on X/Twitter using XActions scripts.">
+
+  <link rel="canonical" href="https://xactions.app/docs/step-by-step/view-trends-tutorial">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "View Trends & Explore — Tutorial — Free X/Twitter Tools Tool | XActions",
+    "description": "Step-by-step guide to viewing trending topics, browsing the Explore tab, and scraping trend data on X/Twitter using XActions scripts.",
+    "url": "https://xactions.app/docs/step-by-step/view-trends-tutorial",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/view-trends-tutorial",
+    "articleSection": "Tools",
+    "keywords": "xactions, twitter automation, x automation, free, view, trends, tutorial, explore, tools, view trends tutorial twitter, twitter view trends tutorial"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "View Trends & Explore — Tutorial", "item": "https://xactions.app/docs/view-trends-tutorial" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use View Trends &amp; Explore — Tutorial",
+    "description": "Step-by-step guide to viewing trending topics, browsing the Explore tab, and scraping trend data on X/Twitter using XActions scripts.",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions View Trends &amp; Explore — Tutorial script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>⚡ View Trends &amp; Explore — Tutorial</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › View Trends &amp; Explore — Tutorial
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Tools</span>
+        <h1>View Trends &amp; Explore — Tutorial</h1>
+<blockquote>
+<p>Step-by-step guide to viewing trending topics, browsing the Explore tab, and scraping trend data on X/Twitter using XActions scripts.</p>
+</blockquote>
+<p><strong>Works on:</strong> Node.js (Puppeteer)<br><strong>Difficulty:</strong> Beginner<br><strong>Time:</strong> 2-5 minutes<br><strong>Requirements:</strong> Node.js environment with Puppeteer, or logged into x.com</p>
+<hr>
+<h2>Prerequisites</h2>
+<ul>
+<li>Node.js &gt;= 18 installed with XActions dependencies (<code>npm install</code>)</li>
+<li>A Puppeteer page authenticated with your X session cookie</li>
+<li>Or: logged into x.com in your browser for manual exploration</li>
+</ul>
+<hr>
+<h2>Quick Start</h2>
+<ol>
+<li>Set up a Puppeteer page with your X session cookie (see <code>XACTIONS_SESSION_COOKIE</code> in <code>.env</code>)</li>
+<li>Import functions from <code>src/discoveryExplore.js</code></li>
+<li>Call <code>getTrends()</code> or <code>getExploreFeed()</code> with your page instance</li>
+<li>Process the returned data</li>
+<li>Export or display results</li>
+</ol>
+<hr>
+<h2>Configuration</h2>
+<p>The <code>discoveryExplore.js</code> module provides several functions with configurable options:</p>
+<h3>getTrends</h3>
+<pre><code class="language-js">import { getTrends } from &#39;./src/discoveryExplore.js&#39;;
+
+const result = await getTrends(page, {
+  location: &#39;global&#39;,   // Location context (for display purposes)
+});
+</code></pre>
+<h3>getExploreFeed</h3>
+<pre><code class="language-js">import { getExploreFeed } from &#39;./src/discoveryExplore.js&#39;;
+
+const result = await getExploreFeed(page, {
+  limit: 30,             // Max items to collect
+  tab: &#39;trending&#39;,       // &#39;foryou&#39;, &#39;trending&#39;, &#39;news&#39;, &#39;sports&#39;, &#39;entertainment&#39;
+});
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Tab</th>
+<th>URL</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>foryou</code></td>
+<td><code>/explore</code></td>
+<td>Personalized explore feed</td>
+</tr>
+<tr>
+<td><code>trending</code></td>
+<td><code>/explore/tabs/trending</code></td>
+<td>Currently trending topics</td>
+</tr>
+<tr>
+<td><code>news</code></td>
+<td><code>/explore/tabs/news</code></td>
+<td>News-related trends and stories</td>
+</tr>
+<tr>
+<td><code>sports</code></td>
+<td><code>/explore/tabs/sports</code></td>
+<td>Sports trends and scores</td>
+</tr>
+<tr>
+<td><code>entertainment</code></td>
+<td><code>/explore/tabs/entertainment</code></td>
+<td>Entertainment and pop culture</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Step-by-Step Guide</h2>
+<h3>Getting Trending Topics</h3>
+<p><strong>Step 1 -- Import and call</strong></p>
+<pre><code class="language-js">import { getTrends } from &#39;./src/discoveryExplore.js&#39;;
+
+const { location, trends, scrapedAt } = await getTrends(page);
+</code></pre>
+<p><strong>Step 2 -- Process results</strong></p>
+<pre><code class="language-js">console.log(`Trends scraped at ${scrapedAt}`);
+console.log(`Location: ${location}`);
+
+trends.forEach(trend =&gt; {
+  console.log(`#${trend.rank} ${trend.name} (${trend.category}) - ${trend.tweetCount}`);
+});
+</code></pre>
+<p><strong>Example output:</strong></p>
+<pre><code>Trends scraped at 2026-03-30T14:00:00.000Z
+Location: global
+#1 #AI (Technology) - 125K posts
+#2 Bitcoin (Crypto) - 98K posts
+#3 #OpenAI (Technology) - 67K posts
+#4 March Madness (Sports) - 45K posts
+#5 Taylor Swift (Entertainment) - 38K posts
+</code></pre>
+<p><strong>Step 3 -- Export to JSON</strong></p>
+<pre><code class="language-js">import fs from &#39;fs&#39;;
+
+const trendData = await getTrends(page);
+fs.writeFileSync(
+  `trends-${new Date().toISOString().slice(0, 10)}.json`,
+  JSON.stringify(trendData, null, 2)
+);
+</code></pre>
+<h3>Browsing the Explore Feed</h3>
+<p><strong>Step 1 -- Get the For You explore feed</strong></p>
+<pre><code class="language-js">import { getExploreFeed } from &#39;./src/discoveryExplore.js&#39;;
+
+const { tab, items, scrapedAt } = await getExploreFeed(page, {
+  limit: 50,
+  tab: &#39;foryou&#39;,
+});
+
+console.log(`${items.length} items from ${tab} feed`);
+items.forEach(item =&gt; {
+  console.log(`@${item.author}: ${item.text.substring(0, 80)}...`);
+});
+</code></pre>
+<p><strong>Step 2 -- Browse different tabs</strong></p>
+<pre><code class="language-js">// Get trending content
+const trending = await getExploreFeed(page, { tab: &#39;trending&#39;, limit: 20 });
+
+// Get news
+const news = await getExploreFeed(page, { tab: &#39;news&#39;, limit: 20 });
+
+// Get sports
+const sports = await getExploreFeed(page, { tab: &#39;sports&#39;, limit: 20 });
+
+// Get entertainment
+const entertainment = await getExploreFeed(page, { tab: &#39;entertainment&#39;, limit: 20 });
+</code></pre>
+<h3>Tracking Trends Over Time</h3>
+<p>Combine <code>getTrends</code> with a scheduled job to track how trends change:</p>
+<pre><code class="language-js">import { getTrends } from &#39;./src/discoveryExplore.js&#39;;
+import fs from &#39;fs&#39;;
+
+const snapshot = async () =&gt; {
+  const data = await getTrends(page);
+  const filename = `trends-${new Date().toISOString().replace(/:/g, &#39;-&#39;)}.json`;
+  fs.writeFileSync(filename, JSON.stringify(data, null, 2));
+  console.log(`Saved ${data.trends.length} trends to ${filename}`);
+};
+
+// Run every hour (if using with a scheduler)
+await snapshot();
+</code></pre>
+<h3>Combining with Search</h3>
+<p>Use trends to power targeted searches:</p>
+<pre><code class="language-js">import { getTrends, searchTweets } from &#39;./src/discoveryExplore.js&#39;;
+
+// Get current trends
+const { trends } = await getTrends(page);
+
+// Search for tweets about the top trend
+const topTrend = trends[0];
+console.log(`Searching for top trend: ${topTrend.name}`);
+
+const tweets = await searchTweets(page, topTrend.name, {
+  limit: 20,
+  tab: &#39;latest&#39;,
+});
+
+console.log(`Found ${tweets.length} recent tweets about &quot;${topTrend.name}&quot;`);
+</code></pre>
+<hr>
+<h2>Tips &amp; Tricks</h2>
+<ul>
+<li><strong>Trends update frequently.</strong> Scrape multiple times per day for comprehensive tracking.</li>
+<li><strong>The &quot;For You&quot; tab is personalized.</strong> Results vary based on your account&#39;s interests and activity.</li>
+<li><strong>Tweet counts are approximate.</strong> X rounds tweet counts (e.g., &quot;125K posts&quot;).</li>
+<li><strong>Combine tabs for a full picture.</strong> Scrape all five explore tabs to get a comprehensive view of what is happening on X.</li>
+<li><strong>Export regularly.</strong> Save trend snapshots to build a historical dataset for analysis.</li>
+</ul>
+<hr>
+<h2>Troubleshooting</h2>
+<table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>No trends returned</td>
+<td>The explore page may not have loaded fully. Increase the sleep time after navigation</td>
+</tr>
+<tr>
+<td>Empty explore feed</td>
+<td>Your session cookie may have expired. Re-authenticate with a fresh cookie</td>
+</tr>
+<tr>
+<td>Duplicate trends in output</td>
+<td>The scraper deduplicates by default, but if you see duplicates, the selector may be matching container elements</td>
+</tr>
+<tr>
+<td>Tab URL not working</td>
+<td>X may have changed their URL structure. Try navigating manually and checking the current URLs</td>
+</tr>
+<tr>
+<td>&quot;page.goto is not a function&quot;</td>
+<td>Make sure you are passing a Puppeteer page instance, not a URL string</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Related Scripts</h2>
+<ul>
+<li><code>src/discoveryExplore.js</code> -- Full Node.js module for search, trends, and explore</li>
+<li><code>src/saveSearch.js</code> -- Save and manage searches (browser script)</li>
+<li><code>src/topicManager.js</code> -- Follow topics related to trending subjects</li>
+<li><code>src/timelineViewer.js</code> -- View and export your For You/Following timelines</li>
+</ul>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try View Trends &amp; Explore — Tutorial?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/step-by-step/add-media-tutorial">📝 Add Media Tutorial</a>
+        <a href="/docs/step-by-step/ads-campaigns-tutorial">📝 Ads Campaigns Tutorial</a>
+        <a href="/docs/step-by-step/affiliate-benefits-tutorial">📝 Affiliate Benefits Tutorial</a>
+        <a href="/docs/step-by-step/alt-text-tutorial">📝 Alt Text Tutorial</a>
+        <a href="/docs/step-by-step/auto-commenter-tutorial">📝 Auto Commenter Tutorial</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a> / <a href="/docs#step-by-step">Tutorials</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

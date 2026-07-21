@@ -73,13 +73,121 @@
   }
   </script>
 
-  <link rel="stylesheet" href="/css/common.css">
-  <link rel="stylesheet" href="/css/docs.css">
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
 </head>
 <body>
   <div class="layout">
     <!-- Sidebar -->
-    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
 
     <!-- Main Content -->
     <main class="main-content">
@@ -132,12 +240,346 @@
 <li>Copy and paste the script from <a href="https://github.com/nirholas/XActions/blob/main/src/tweetScheduleOptimizer.js"><code>src/tweetScheduleOptimizer.js</code></a></li>
 <li>Press Enter to run</li>
 </ol>
-<pre><code class="language-javascript">// Quick start — copy the full script from:
-// src/tweetScheduleOptimizer.js
-//
-// Or install via npm and use the CLI:
-// npm install -g xactions
-// xactions --help
+<pre><code class="language-javascript">/**
+ * ============================================================
+ * ⏱️ Tweet Schedule Optimizer — Production Grade
+ * ============================================================
+ *
+ * @name        tweetScheduleOptimizer.js
+ * @description Analyzes your historical tweet performance by
+ *              time of day and day of week, then generates a
+ *              personalized optimal posting schedule. Uses
+ *              weighted scoring across engagement rate, reply
+ *              ratio, and retweet ratio to surface the best
+ *              time slots for maximum reach.
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.0.0
+ * @date        2026-02-24
+ * @repository  https://github.com/nirholas/XActions
+ *
+ * ============================================================
+ * 📋 USAGE:
+ *
+ * 1. Go to your profile (x.com/YOUR_USERNAME)
+ * 2. Open DevTools Console (F12)
+ * 3. Paste and run — auto-scrolls and collects data
+ * 4. Outputs your personalized optimal schedule
+ * ============================================================
+ */
+(() =&gt; {
+  &#39;use strict&#39;;
+
+  const CONFIG = {
+    scrollRounds: 12,        // More rounds = more data = better accuracy
+    scrollDelay: 1800,
+    minTweetsForSlot: 2,     // Minimum tweets in a slot to be considered
+    topSlots: 7,             // Show top N time slots
+    weights: {
+      engagement: 0.5,       // Weight for total engagement score
+      replies: 0.25,         // Weight for reply-to-engagement ratio (conversation quality)
+      retweets: 0.25,        // Weight for retweet ratio (shareability)
+    },
+    exportResults: true,
+  };
+
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+  const DAYS = [&#39;Sunday&#39;, &#39;Monday&#39;, &#39;Tuesday&#39;, &#39;Wednesday&#39;, &#39;Thursday&#39;, &#39;Friday&#39;, &#39;Saturday&#39;];
+  const DAY_SHORT = [&#39;Sun&#39;, &#39;Mon&#39;, &#39;Tue&#39;, &#39;Wed&#39;, &#39;Thu&#39;, &#39;Fri&#39;, &#39;Sat&#39;];
+
+  // ── Parse engagement metrics from a tweet article ──────────
+  const parseMetrics = (article) =&gt; {
+    const metrics = { likes: 0, retweets: 0, replies: 0, views: 0 };
+
+    // Like count
+    const likeBtn = article.querySelector(&#39;[data-testid=&quot;like&quot;] span&#39;) || article.querySelector(&#39;[data-testid=&quot;unlike&quot;] span&#39;);
+    if (likeBtn) metrics.likes = parseNum(likeBtn.textContent);
+
+    // Retweet count
+    const rtBtn = article.querySelector(&#39;[data-testid=&quot;retweet&quot;] span&#39;);
+    if (rtBtn) metrics.retweets = parseNum(rtBtn.textContent);
+
+    // Reply count
+    const replyBtn = article.querySelector(&#39;[data-testid=&quot;reply&quot;] span&#39;);
+    if (replyBtn) metrics.replies = parseNum(replyBtn.textContent);
+
+    // Views (analytics link)
+    const viewEl = article.querySelector(&#39;a[href*=&quot;/analytics&quot;] span&#39;);
+    if (viewEl) metrics.views = parseNum(viewEl.textContent);
+
+    return metrics;
+  };
+
+  const parseNum = (text) =&gt; {
+    if (!text) return 0;
+    text = text.trim().replace(/,/g, &#39;&#39;);
+    if (text.endsWith(&#39;K&#39;)) return Math.round(parseFloat(text) * 1000);
+    if (text.endsWith(&#39;M&#39;)) return Math.round(parseFloat(text) * 1000000);
+    return parseInt(text) || 0;
+  };
+
+  // ── Collect tweet data ─────────────────────────────────────
+  const collectTweets = async () =&gt; {
+    const tweets = [];
+    const seen = new Set();
+
+    for (let round = 0; round &lt; CONFIG.scrollRounds; round++) {
+      const articles = document.querySelectorAll(&#39;article[data-testid=&quot;tweet&quot;]&#39;);
+
+      for (const article of articles) {
+        const timeEl = article.querySelector(&#39;time&#39;);
+        if (!timeEl) continue;
+
+        const datetime = timeEl.getAttribute(&#39;datetime&#39;);
+        if (!datetime) continue;
+
+        const ts = new Date(datetime).getTime();
+        if (isNaN(ts)) continue;
+
+        const fingerprint = `${datetime}-${(article.textContent || &#39;&#39;).slice(0, 30)}`;
+        if (seen.has(fingerprint)) continue;
+        seen.add(fingerprint);
+
+        const date = new Date(ts);
+        const metrics = parseMetrics(article);
+        const totalEng = metrics.likes + metrics.retweets + metrics.replies;
+
+        // Detect media type
+        const hasImage = !!article.querySelector(&#39;[data-testid=&quot;tweetPhoto&quot;]&#39;);
+        const hasVideo = !!article.querySelector(&#39;video&#39;);
+        const hasLink = !!article.querySelector(&#39;[data-testid=&quot;card.wrapper&quot;]&#39;);
+        const mediaType = hasVideo ? &#39;video&#39; : hasImage ? &#39;image&#39; : hasLink ? &#39;link&#39; : &#39;text&#39;;
+
+        // Tweet text
+        const textEl = article.querySelector(&#39;[data-testid=&quot;tweetText&quot;]&#39;);
+        const text = textEl ? textEl.textContent.trim().slice(0, 120) : &#39;&#39;;
+        const isThread = text.includes(&#39;🧵&#39;) || !!article.querySelector(&#39;a[href*=&quot;/status/&quot;][dir=&quot;auto&quot;]&#39;);
+
+        tweets.push({
+          timestamp: ts,
+          dayOfWeek: date.getDay(),
+          hour: date.getHours(),
+          day: DAY_SHORT[date.getDay()],
+          ...metrics,
+          totalEng,
+          engRate: metrics.views &gt; 0 ? totalEng / metrics.views : 0,
+          mediaType,
+          isThread,
+          text,
+        });
+      }
+
+      console.log(`   📜 Round ${round + 1}: ${tweets.length} tweets`);
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(CONFIG.scrollDelay);
+    }
+
+    return tweets;
+  };
+
+  // ── Score time slots ───────────────────────────────────────
+  const scoreSlots = (tweets) =&gt; {
+    const slotMap = {};
+
+    for (const t of tweets) {
+      const key = `${t.dayOfWeek}-${t.hour}`;
+      if (!slotMap[key]) {
+        slotMap[key] = { dayOfWeek: t.dayOfWeek, hour: t.hour, tweets: [] };
+      }
+      slotMap[key].tweets.push(t);
+    }
+
+    // Calculate slot scores
+    const slots = Object.values(slotMap).filter(s =&gt; s.tweets.length &gt;= CONFIG.minTweetsForSlot);
+
+    if (slots.length === 0) return [];
+
+    // Normalize each dimension
+    const maxEng = Math.max(...slots.map(s =&gt; s.tweets.reduce((a, t) =&gt; a + t.totalEng, 0) / s.tweets.length), 1);
+    const maxReplies = Math.max(...slots.map(s =&gt; s.tweets.reduce((a, t) =&gt; a + t.replies, 0) / s.tweets.length), 1);
+    const maxRts = Math.max(...slots.map(s =&gt; s.tweets.reduce((a, t) =&gt; a + t.retweets, 0) / s.tweets.length), 1);
+
+    for (const slot of slots) {
+      const n = slot.tweets.length;
+      const avgEng = slot.tweets.reduce((a, t) =&gt; a + t.totalEng, 0) / n;
+      const avgReplies = slot.tweets.reduce((a, t) =&gt; a + t.replies, 0) / n;
+      const avgRts = slot.tweets.reduce((a, t) =&gt; a + t.retweets, 0) / n;
+      const avgViews = slot.tweets.reduce((a, t) =&gt; a + t.views, 0) / n;
+
+      const engNorm = avgEng / maxEng;
+      const replyNorm = avgReplies / maxReplies;
+      const rtNorm = avgRts / maxRts;
+
+      slot.score = (
+        CONFIG.weights.engagement * engNorm +
+        CONFIG.weights.replies * replyNorm +
+        CONFIG.weights.retweets * rtNorm
+      );
+
+      // Confidence bonus: more data = more reliable
+      const confidenceMultiplier = Math.min(1, 0.5 + (n / 10) * 0.5);
+      slot.adjustedScore = slot.score * confidenceMultiplier;
+
+      slot.avgEng = avgEng;
+      slot.avgReplies = avgReplies;
+      slot.avgRts = avgRts;
+      slot.avgViews = avgViews;
+      slot.count = n;
+    }
+
+    return slots.sort((a, b) =&gt; b.adjustedScore - a.adjustedScore);
+  };
+
+  // ── Main ───────────────────────────────────────────────────
+  const run = async () =&gt; {
+    const W = 60;
+    console.log(&#39;╔&#39; + &#39;═&#39;.repeat(W) + &#39;╗&#39;);
+    console.log(&#39;║  ⏱️  TWEET SCHEDULE OPTIMIZER&#39; + &#39; &#39;.repeat(W - 31) + &#39;║&#39;);
+    console.log(&#39;║  by nichxbt — v1.0&#39; + &#39; &#39;.repeat(W - 21) + &#39;║&#39;);
+    console.log(&#39;╚&#39; + &#39;═&#39;.repeat(W) + &#39;╝&#39;);
+
+    console.log(&#39;\n📊 Collecting your tweet data...\n&#39;);
+    const tweets = await collectTweets();
+
+    if (tweets.length &lt; 10) {
+      console.error(`❌ Only ${tweets.length} tweets found. Need at least 10. Try more scrollRounds or ensure you&#39;re on your profile.`);
+      return;
+    }
+
+    console.log(`\n✅ Analyzing ${tweets.length} tweets...\n`);
+
+    const slots = scoreSlots(tweets);
+
+    if (slots.length === 0) {
+      console.error(&#39;❌ Not enough data in any time slot. Increase scrollRounds or minTweetsForSlot.&#39;);
+      return;
+    }
+
+    // ── Top Time Slots ──────────────────────────────────────
+    console.log(&#39;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━&#39;);
+    console.log(&#39;  🏆 YOUR OPTIMAL POSTING SCHEDULE&#39;);
+    console.log(&#39;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━&#39;);
+
+    const topN = slots.slice(0, CONFIG.topSlots);
+    for (let i = 0; i &lt; topN.length; i++) {
+      const s = topN[i];
+      const medal = i === 0 ? &#39;🥇&#39; : i === 1 ? &#39;🥈&#39; : i === 2 ? &#39;🥉&#39; : &#39;  &#39;;
+      const timeStr = `${DAYS[s.dayOfWeek]} ${String(s.hour).padStart(2, &#39;0&#39;)}:00`;
+      const scoreBar = &#39;█&#39;.repeat(Math.round(s.adjustedScore * 20));
+
+      console.log(`\n  ${medal} #${i + 1}  ${timeStr}`);
+      console.log(`     Score: ${(s.adjustedScore * 100).toFixed(0)}/100 ${scoreBar}`);
+      console.log(`     Avg engagement: ${s.avgEng.toFixed(0)} (${s.count} tweets)`);
+      console.log(`     Avg replies: ${s.avgReplies.toFixed(0)} | Avg RTs: ${s.avgRts.toFixed(0)} | Avg views: ${s.avgViews.toFixed(0)}`);
+    }
+
+    // ── Worst times ─────────────────────────────────────────
+    console.log(&#39;\n━━━ ❌ WORST TIMES (avoid these) ━━━&#39;);
+    const worstN = slots.slice(-3).reverse();
+    for (const s of worstN) {
+      console.log(`  ${DAYS[s.dayOfWeek]} ${String(s.hour).padStart(2, &#39;0&#39;)}:00 — score ${(s.adjustedScore * 100).toFixed(0)}/100 (avg eng: ${s.avgEng.toFixed(0)})`);
+    }
+
+    // ── Day-of-week ranking ─────────────────────────────────
+    console.log(&#39;\n━━━ 📅 DAY RANKING ━━━&#39;);
+    const dayScores = {};
+    for (const t of tweets) {
+      if (!dayScores[t.dayOfWeek]) dayScores[t.dayOfWeek] = { total: 0, count: 0 };
+      dayScores[t.dayOfWeek].total += t.totalEng;
+      dayScores[t.dayOfWeek].count++;
+    }
+
+    const dayRanking = Object.entries(dayScores)
+      .map(([d, v]) =&gt; ({ day: DAYS[d], avg: v.total / v.count, count: v.count }))
+      .sort((a, b) =&gt; b.avg - a.avg);
+
+    for (const d of dayRanking) {
+      const bar = &#39;█&#39;.repeat(Math.round(d.avg / Math.max(...dayRanking.map(x =&gt; x.avg), 1) * 20));
+      console.log(`  ${d.day.padEnd(10)} avg ${String(d.avg.toFixed(0)).padStart(5)} eng (${d.count} tweets) ${bar}`);
+    }
+
+    // ── Media type analysis ─────────────────────────────────
+    console.log(&#39;\n━━━ 🖼️ CONTENT FORMAT PERFORMANCE ━━━&#39;);
+    const mediaGroups = {};
+    for (const t of tweets) {
+      if (!mediaGroups[t.mediaType]) mediaGroups[t.mediaType] = [];
+      mediaGroups[t.mediaType].push(t);
+    }
+
+    const mediaRanking = Object.entries(mediaGroups)
+      .map(([type, arr]) =&gt; ({
+        type,
+        count: arr.length,
+        avgEng: arr.reduce((s, t) =&gt; s + t.totalEng, 0) / arr.length,
+      }))
+      .sort((a, b) =&gt; b.avgEng - a.avgEng);
+
+    for (const m of mediaRanking) {
+      console.log(`  ${m.type.padEnd(8)} avg ${m.avgEng.toFixed(0)} engagement (${m.count} tweets)`);
+    }
+
+    // Thread performance
+    const threads = tweets.filter(t =&gt; t.isThread);
+    const nonThreads = tweets.filter(t =&gt; !t.isThread);
+    if (threads.length &gt; 0 &amp;&amp; nonThreads.length &gt; 0) {
+      const threadAvg = threads.reduce((s, t) =&gt; s + t.totalEng, 0) / threads.length;
+      const nonThreadAvg = nonThreads.reduce((s, t) =&gt; s + t.totalEng, 0) / nonThreads.length;
+      console.log(`\n  🧵 Threads: avg ${threadAvg.toFixed(0)} eng (${threads.length} threads)`);
+      console.log(`  📝 Singles: avg ${nonThreadAvg.toFixed(0)} eng (${nonThreads.length} tweets)`);
+      if (threadAvg &gt; nonThreadAvg * 1.2) {
+        console.log(&#39;  💡 Threads significantly outperform singles — post more threads!&#39;);
+      }
+    }
+
+    // ── Weekly schedule ─────────────────────────────────────
+    console.log(&#39;\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━&#39;);
+    console.log(&#39;  📋 SUGGESTED WEEKLY SCHEDULE&#39;);
+    console.log(&#39;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━&#39;);
+
+    // Pick best slot per day
+    const bestPerDay = {};
+    for (const s of slots) {
+      const d = s.dayOfWeek;
+      if (!bestPerDay[d] || s.adjustedScore &gt; bestPerDay[d].adjustedScore) {
+        bestPerDay[d] = s;
+      }
+    }
+
+    for (let d = 0; d &lt; 7; d++) {
+      const s = bestPerDay[d];
+      if (s) {
+        console.log(`  ${DAY_SHORT[d]}  →  ${String(s.hour).padStart(2, &#39;0&#39;)}:00  (score: ${(s.adjustedScore * 100).toFixed(0)})`);
+      } else {
+        console.log(`  ${DAY_SHORT[d]}  →  No data — try posting at varied times`);
+      }
+    }
+
+    console.log(&#39;\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n&#39;);
+
+    if (CONFIG.exportResults) {
+      const data = {
+        optimalSlots: topN.map(s =&gt; ({
+          day: DAYS[s.dayOfWeek], hour: s.hour,
+          score: Math.round(s.adjustedScore * 100),
+          avgEng: Math.round(s.avgEng), tweets: s.count,
+        })),
+        dayRanking: dayRanking.map(d =&gt; ({ day: d.day, avgEng: Math.round(d.avg), tweets: d.count })),
+        mediaPerformance: mediaRanking,
+        weeklySchedule: Object.entries(bestPerDay).map(([d, s]) =&gt; ({
+          day: DAYS[d], hour: s.hour, score: Math.round(s.adjustedScore * 100),
+        })),
+        totalTweetsAnalyzed: tweets.length,
+        analyzedAt: new Date().toISOString(),
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: &#39;application/json&#39; });
+      const a = document.createElement(&#39;a&#39;); a.href = URL.createObjectURL(blob);
+      a.download = `xactions-schedule-optimizer-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a); a.click(); a.remove();
+      console.log(&#39;📥 Schedule optimization exported.&#39;);
+    }
+  };
+
+  run();
+})();
 </code></pre>
 <h2>⚙️ Configuration</h2>
 <table>
@@ -156,7 +598,7 @@
 <tr>
 <td><code>scrollDelay</code></td>
 <td><code>1800</code></td>
-<td>scroll Delay</td>
+<td>Scroll delay</td>
 </tr>
 <tr>
 <td><code>minTweetsForSlot</code></td>
@@ -171,7 +613,7 @@
 <tr>
 <td><code>weights</code></td>
 <td><code>{</code></td>
-<td>weights</td>
+<td>Weights</td>
 </tr>
 <tr>
 <td><code>engagement</code></td>
@@ -233,7 +675,7 @@ xactions --help
 <pre><code class="language-bash"># Start MCP server
 npm run mcp
 </code></pre>
-<p>See the <a href="/docs/guides/mcp-setup">MCP Setup Guide</a> for integration with Claude Desktop, Cursor, and other AI tools.</p>
+<p>See the <a href="../mcp-setup.md">MCP Setup Guide</a> for integration with Claude Desktop, Cursor, and other AI tools.</p>
 <hr>
 <h2>📁 Source Files</h2>
 <table>
@@ -258,23 +700,23 @@ npm run mcp
 </tr>
 </thead>
 <tbody><tr>
-<td><a href="/docs/account-health-monitor">Account Health Monitor</a></td>
+<td><a href="account-health-monitor.md">Account Health Monitor</a></td>
 <td>Comprehensive health check for your X/Twitter account</td>
 </tr>
 <tr>
-<td><a href="/docs/audience-demographics">Audience Demographics</a></td>
+<td><a href="audience-demographics.md">Audience Demographics</a></td>
 <td>Analyze your follower demographics including bio keywords, locations, account age, and interests</td>
 </tr>
 <tr>
-<td><a href="/docs/audience-overlap">Audience Overlap</a></td>
+<td><a href="audience-overlap.md">Audience Overlap</a></td>
 <td>Compare the follower lists of two accounts to find audience overlap</td>
 </tr>
 <tr>
-<td><a href="/docs/engagement-leaderboard">Engagement Leaderboard</a></td>
+<td><a href="engagement-leaderboard.md">Engagement Leaderboard</a></td>
 <td>Analyze who engages most with your tweets</td>
 </tr>
 <tr>
-<td><a href="/docs/follower-growth-tracker">Follower Growth Tracker</a></td>
+<td><a href="follower-growth-tracker.md">Follower Growth Tracker</a></td>
 <td>Track your follower count over time</td>
 </tr>
 </tbody></table>
@@ -351,6 +793,5 @@ npm run mcp
       <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
     </div>
   </footer>
-<script src="/js/sidebar.js"></script>
 </body>
 </html>

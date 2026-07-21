@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Share &amp; Embed Posts -- Tutorial — Free X/Twitter Tools Tool | XActions</title>
+  <meta name="description" content="Step-by-step guide to copying post links and getting embed codes on X using XActions browser scripts.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, share, embed, posts, tutorial, tools, share embed posts tutorial twitter, twitter share embed posts tutorial">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Share &amp; Embed Posts -- Tutorial — XActions">
+  <meta property="og:description" content="Step-by-step guide to copying post links and getting embed codes on X using XActions browser scripts.">
+  <meta property="og:url" content="https://xactions.app/docs/step-by-step/share-embed-posts-tutorial">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Share &amp; Embed Posts -- Tutorial — Free X/Twitter Tool">
+  <meta name="twitter:description" content="Step-by-step guide to copying post links and getting embed codes on X using XActions browser scripts.">
+
+  <link rel="canonical" href="https://xactions.app/docs/step-by-step/share-embed-posts-tutorial">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Share & Embed Posts -- Tutorial — Free X/Twitter Tools Tool | XActions",
+    "description": "Step-by-step guide to copying post links and getting embed codes on X using XActions browser scripts.",
+    "url": "https://xactions.app/docs/step-by-step/share-embed-posts-tutorial",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/share-embed-posts-tutorial",
+    "articleSection": "Tools",
+    "keywords": "xactions, twitter automation, x automation, free, share, embed, posts, tutorial, tools, share embed posts tutorial twitter, twitter share embed posts tutorial"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Share & Embed Posts -- Tutorial", "item": "https://xactions.app/docs/share-embed-posts-tutorial" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use Share &amp; Embed Posts -- Tutorial",
+    "description": "Step-by-step guide to copying post links and getting embed codes on X using XActions browser scripts.",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions Share &amp; Embed Posts -- Tutorial script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>⚡ Share &amp; Embed Posts -- Tutorial</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › Share &amp; Embed Posts -- Tutorial
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Tools</span>
+        <h1>Share &amp; Embed Posts -- Tutorial</h1>
+<blockquote>
+<p>Step-by-step guide to copying post links and getting embed codes on X using XActions browser scripts.</p>
+</blockquote>
+<h2>Prerequisites</h2>
+<ul>
+<li>Logged into x.com in your browser</li>
+<li>Browser DevTools console (F12 -&gt; Console tab)</li>
+</ul>
+<h2>Quick Start</h2>
+<ol>
+<li>Navigate to any timeline, profile, or search page on x.com</li>
+<li>Open DevTools (F12) and go to the Console tab</li>
+<li>Copy the contents of <code>src/shareEmbed.js</code></li>
+<li>Edit the <code>CONFIG</code> section (mode, URLs)</li>
+<li>Paste into the console and press Enter</li>
+</ol>
+<h2>Configuration</h2>
+<h3>Mode Selection</h3>
+<pre><code class="language-js">const CONFIG = {
+  mode: &#39;bulkCopy&#39;,  // &#39;copyLinks&#39;, &#39;embedSingle&#39;, or &#39;bulkCopy&#39;
+};
+</code></pre>
+<ul>
+<li><strong><code>copyLinks</code></strong>: Copy links for specific posts from a URL list</li>
+<li><strong><code>embedSingle</code></strong>: Get the embed code for a single post</li>
+<li><strong><code>bulkCopy</code></strong>: Scroll the timeline and collect all visible post links</li>
+</ul>
+<h3>Mode-Specific Settings</h3>
+<h4>copyLinks Mode</h4>
+<pre><code class="language-js">postUrls: [
+  &#39;https://x.com/nichxbt/status/123456789&#39;,
+  &#39;https://x.com/openai/status/987654321&#39;,
+],
+</code></pre>
+<h4>embedSingle Mode</h4>
+<pre><code class="language-js">embedUrl: &#39;https://x.com/nichxbt/status/123456789&#39;,
+</code></pre>
+<h4>bulkCopy Mode</h4>
+<pre><code class="language-js">maxPosts: 50,
+maxScrollAttempts: 20,
+</code></pre>
+<h3>Full CONFIG Reference</h3>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>mode</code></td>
+<td><code>&#39;bulkCopy&#39;</code></td>
+<td>Operation mode</td>
+</tr>
+<tr>
+<td><code>postUrls</code></td>
+<td><code>[]</code></td>
+<td>URLs for copyLinks mode</td>
+</tr>
+<tr>
+<td><code>embedUrl</code></td>
+<td><code>&#39;&#39;</code></td>
+<td>URL for embedSingle mode</td>
+</tr>
+<tr>
+<td><code>maxPosts</code></td>
+<td><code>50</code></td>
+<td>Max posts to collect in bulkCopy mode</td>
+</tr>
+<tr>
+<td><code>maxScrollAttempts</code></td>
+<td><code>20</code></td>
+<td>Max scrolls before stopping</td>
+</tr>
+<tr>
+<td><code>scrollDelay</code></td>
+<td><code>2000</code></td>
+<td>Delay between scrolls</td>
+</tr>
+</tbody></table>
+<h2>Step-by-Step Guide</h2>
+<h3>Copy Links for Specific Posts</h3>
+<p><strong>Step 1:</strong> Set mode and add your URLs:</p>
+<pre><code class="language-js">const CONFIG = {
+  mode: &#39;copyLinks&#39;,
+  postUrls: [
+    &#39;https://x.com/nichxbt/status/123456789&#39;,
+    &#39;https://x.com/openai/status/987654321&#39;,
+  ],
+};
+</code></pre>
+<p><strong>Step 2:</strong> Paste the script. All URLs are copied to your clipboard:</p>
+<pre><code>3 links copied to clipboard!
+</code></pre>
+<p>If clipboard access is denied, the links are printed in the console.</p>
+<h3>Get Embed Code for a Post</h3>
+<p><strong>Step 1:</strong> Set mode to <code>embedSingle</code> with the post URL:</p>
+<pre><code class="language-js">const CONFIG = {
+  mode: &#39;embedSingle&#39;,
+  embedUrl: &#39;https://x.com/nichxbt/status/123456789&#39;,
+};
+</code></pre>
+<p><strong>Step 2:</strong> Paste the script. It opens the share menu and clicks &quot;Embed post&quot;:</p>
+<pre><code>Embed dialog opened!
+Direct embed URL: https://publish.twitter.com/?url=...
+</code></pre>
+<p><strong>Step 3:</strong> Copy the embed HTML from the dialog, or visit the <code>publish.twitter.com</code> URL for the full embed code.</p>
+<p>The embed HTML looks like:</p>
+<pre><code class="language-html">&lt;blockquote class=&quot;twitter-tweet&quot;&gt;
+  &lt;p lang=&quot;en&quot; dir=&quot;ltr&quot;&gt;Your tweet text here&lt;/p&gt;
+  &amp;mdash; Author (@username) &lt;a href=&quot;https://x.com/username/status/123&quot;&gt;March 30, 2026&lt;/a&gt;
+&lt;/blockquote&gt;
+&lt;script async src=&quot;https://platform.twitter.com/widgets.js&quot; charset=&quot;utf-8&quot;&gt;&lt;/script&gt;
+</code></pre>
+<h3>Bulk Copy Links from Timeline</h3>
+<p><strong>Step 1:</strong> Navigate to any page with a feed of posts (home timeline, profile, search results, list).</p>
+<p><strong>Step 2:</strong> Set mode to <code>bulkCopy</code>:</p>
+<pre><code class="language-js">const CONFIG = {
+  mode: &#39;bulkCopy&#39;,
+  maxPosts: 100,
+  maxScrollAttempts: 30,
+};
+</code></pre>
+<p><strong>Step 3:</strong> Paste the script. It scrolls the page and collects all post URLs:</p>
+<pre><code>Collected 25 links so far...
+Collected 50 links so far...
+Collected 78 links so far...
+
+78 links copied to clipboard!
+Saved to sessionStorage (key: &quot;xactions_bulk_links&quot;)
+
+Collected Links:
+  1. https://x.com/user1/status/111
+  2. https://x.com/user2/status/222
+  ...
+</code></pre>
+<p><strong>Step 4:</strong> Links are also saved to sessionStorage. Retrieve them later:</p>
+<pre><code class="language-js">JSON.parse(sessionStorage.getItem(&#39;xactions_bulk_links&#39;));
+</code></pre>
+<h2>Tips &amp; Tricks</h2>
+<ul>
+<li><strong>Bulk copy from search results</strong> is great for content curation. Search for a topic, then bulk-copy all the post links.</li>
+<li><strong>The embed URL fallback</strong> (<code>publish.twitter.com</code>) always works even if the in-page embed dialog fails.</li>
+<li><strong>Links are saved to sessionStorage</strong> under <code>xactions_bulk_links</code>, so you can access them programmatically.</li>
+<li><strong>Clipboard access</strong> requires the page to have focus. If copying fails, the links are still printed in the console.</li>
+<li><strong>Use bulk copy on a profile page</strong> to quickly get all recent post URLs from a specific user.</li>
+</ul>
+<h2>Troubleshooting</h2>
+<table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&quot;Clipboard access denied&quot;</td>
+<td>Links are still printed in the console. Copy from there.</td>
+</tr>
+<tr>
+<td>&quot;Share button not found&quot;</td>
+<td>X may have changed the share button selector.</td>
+</tr>
+<tr>
+<td>&quot;Embed option not found&quot;</td>
+<td>Some posts may not support embedding. Use the <code>publish.twitter.com</code> URL.</td>
+</tr>
+<tr>
+<td>Bulk copy stops early</td>
+<td>Increase <code>maxScrollAttempts</code></td>
+</tr>
+<tr>
+<td>Missing some posts</td>
+<td>Increase <code>scrollDelay</code> to give the page more time to load</td>
+</tr>
+</tbody></table>
+<h2>Related Scripts</h2>
+<ul>
+<li><code>src/bookmarkManager.js</code> -- Bookmark management</li>
+<li><code>src/postInteractions.js</code> -- View likes, reposts, quotes on a post</li>
+<li><code>src/pinTweetManager.js</code> -- Pin/unpin posts on your profile</li>
+</ul>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try Share &amp; Embed Posts -- Tutorial?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/step-by-step/add-media-tutorial">📝 Add Media Tutorial</a>
+        <a href="/docs/step-by-step/ads-campaigns-tutorial">📝 Ads Campaigns Tutorial</a>
+        <a href="/docs/step-by-step/affiliate-benefits-tutorial">📝 Affiliate Benefits Tutorial</a>
+        <a href="/docs/step-by-step/alt-text-tutorial">📝 Alt Text Tutorial</a>
+        <a href="/docs/step-by-step/auto-commenter-tutorial">📝 Auto Commenter Tutorial</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a> / <a href="/docs#step-by-step">Tutorials</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

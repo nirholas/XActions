@@ -73,13 +73,121 @@
   }
   </script>
 
-  <link rel="stylesheet" href="/css/common.css">
-  <link rel="stylesheet" href="/css/docs.css">
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
 </head>
 <body>
   <div class="layout">
     <!-- Sidebar -->
-    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
 
     <!-- Main Content -->
     <main class="main-content">
@@ -132,12 +240,246 @@
 <li>Copy and paste the script from <a href="https://github.com/nirholas/XActions/blob/main/src/welcomeNewFollowers.js"><code>src/welcomeNewFollowers.js</code></a></li>
 <li>Press Enter to run</li>
 </ol>
-<pre><code class="language-javascript">// Quick start — copy the full script from:
-// src/welcomeNewFollowers.js
-//
-// Or install via npm and use the CLI:
-// npm install -g xactions
-// xactions --help
+<pre><code class="language-javascript">/**
+ * ============================================================
+ * 👋 Welcome New Followers — Production Grade
+ * ============================================================
+ *
+ * @name        welcomeNewFollowers.js
+ * @description Automatically send DM welcome messages to new
+ *              followers. Monitors the followers list, detects
+ *              new ones via localStorage diff, and sends a
+ *              personalized greeting. Rate-limited to avoid spam.
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.0.0
+ * @date        2026-02-24
+ * @repository  https://github.com/nirholas/XActions
+ *
+ * ============================================================
+ * 📋 USAGE:
+ *
+ * 1. Go to: https://x.com/YOUR_USERNAME/followers
+ * 2. Open DevTools Console (F12)
+ * 3. Customize CONFIG.messageTemplates
+ * 4. Paste and run
+ *
+ * First run: Records existing followers as &quot;known.&quot;
+ * Next run:  Detects NEW followers and optionally sends DMs.
+ *
+ * NOTE: Sending too many DMs too fast will get rate-limited.
+ * This script uses conservative delays (60s+ between DMs).
+ *
+ * 🎮 CONTROLS:
+ *   window.XActions.pause()  / .resume() / .abort() / .status()
+ * ============================================================
+ */
+(() =&gt; {
+  &#39;use strict&#39;;
+
+  const CONFIG = {
+    // Message templates — one is chosen randomly per new follower.
+    // Use {username} and {displayName} as placeholders.
+    messageTemplates: [
+      &quot;Hey @{username}! 👋 Thanks for the follow! Glad to have you here.&quot;,
+      &quot;Welcome @{username}! 🙌 Thanks for connecting. Feel free to reach out anytime!&quot;,
+      &quot;Hey there @{username}! Thanks for the follow! Hope you find the content valuable. 🚀&quot;,
+    ],
+
+    sendDMs: false,                   // Actually navigate and send DMs (WARNING: aggressive)
+    dryRun: true,                     // Just detect + log new followers without messaging
+    maxDMs: 10,                       // Max DMs to send per run
+    dmDelay: 60000,                   // 60s between DMs (conservative)
+    scrollRounds: 5,                  // Scroll rounds to collect followers
+    scrollDelay: 2000,
+    maxFollowersToScan: 200,
+    exportOnComplete: true,
+  };
+
+  const SEL = {
+    userCell: [&#39;[data-testid=&quot;UserCell&quot;]&#39;],
+    dmButton: [&#39;[data-testid=&quot;sendDMFromProfile&quot;]&#39;, &#39;button[aria-label*=&quot;Message&quot;]&#39;],
+    dmInput:  [&#39;[data-testid=&quot;dmComposerTextInput&quot;]&#39;, &#39;[role=&quot;textbox&quot;]&#39;],
+    sendBtn:  [&#39;[data-testid=&quot;dmComposerSendButton&quot;]&#39;, &#39;button[data-testid=&quot;dmComposerSendButton&quot;]&#39;],
+    toast:    [&#39;[data-testid=&quot;toast&quot;]&#39;, &#39;[role=&quot;alert&quot;]&#39;],
+  };
+
+  const $ = (s, c = document) =&gt; { for (const x of (Array.isArray(s) ? s : [s])) { const e = c.querySelector(x); if (e) return e; } return null; };
+  const $$ = (s, c = document) =&gt; { for (const x of (Array.isArray(s) ? s : [s])) { const e = c.querySelectorAll(x); if (e.length) return [...e]; } return []; };
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+  const gaussian = (a, b) =&gt; Math.floor(a + ((Math.random() + Math.random()) / 2) * (b - a));
+
+  let paused = false, aborted = false;
+  let dmsSent = 0;
+  const startTime = Date.now();
+  const newFollowersList = [];
+
+  const STORAGE_KEY = &#39;xactions_known_followers&#39;;
+
+  const getKnown = () =&gt; {
+    try { return new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || &#39;[]&#39;)); } catch { return new Set(); }
+  };
+  const saveKnown = (set) =&gt; {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify([...set]));
+  };
+
+  window.XActions = {
+    pause()  { paused = true;  console.log(&#39;⏸️ Paused.&#39;); },
+    resume() { paused = false; console.log(&#39;▶️ Resumed.&#39;); },
+    abort()  { aborted = true; console.log(&#39;🛑 Aborting...&#39;); },
+    status() {
+      console.log(`📊 New followers: ${newFollowersList.length} | DMs sent: ${dmsSent} | Known: ${getKnown().size}`);
+    },
+    reset() {
+      localStorage.removeItem(STORAGE_KEY);
+      console.log(&#39;🗑️ Known followers list cleared. Next run will re-baseline.&#39;);
+    },
+  };
+
+  const shouldContinue = async () =&gt; { while (paused &amp;&amp; !aborted) await sleep(500); return !aborted; };
+
+  const collectFollowers = async () =&gt; {
+    const followers = new Map();
+
+    for (let round = 0; round &lt; CONFIG.scrollRounds &amp;&amp; followers.size &lt; CONFIG.maxFollowersToScan; round++) {
+      const cells = $$(SEL.userCell);
+      for (const cell of cells) {
+        const link = cell.querySelector(&#39;a[href^=&quot;/&quot;][role=&quot;link&quot;]&#39;) || cell.querySelector(&#39;a[href^=&quot;/&quot;]&#39;);
+        if (!link) continue;
+        const match = (link.getAttribute(&#39;href&#39;) || &#39;&#39;).match(/^\/([A-Za-z0-9_]+)/);
+        if (!match || [&#39;home&#39;, &#39;explore&#39;, &#39;notifications&#39;, &#39;messages&#39;, &#39;i&#39;].includes(match[1])) continue;
+
+        const username = match[1];
+        if (followers.has(username.toLowerCase())) continue;
+
+        // Get display name
+        const nameEl = cell.querySelector(&#39;a[href^=&quot;/&quot;] span&#39;);
+        const displayName = nameEl ? nameEl.textContent.trim() : username;
+
+        followers.set(username.toLowerCase(), { username, displayName });
+      }
+
+      console.log(`   📜 Round ${round + 1}: ${followers.size} followers collected`);
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(CONFIG.scrollDelay);
+    }
+
+    return followers;
+  };
+
+  const fillMessage = (template, username, displayName) =&gt; {
+    return template
+      .replace(/\{username\}/g, username)
+      .replace(/\{displayName\}/g, displayName || username);
+  };
+
+  const run = async () =&gt; {
+    const W = 60;
+    console.log(&#39;╔&#39; + &#39;═&#39;.repeat(W) + &#39;╗&#39;);
+    console.log(&#39;║  👋 WELCOME NEW FOLLOWERS&#39; + &#39; &#39;.repeat(W - 26) + &#39;║&#39;);
+    console.log(&#39;║  by nichxbt — v1.0&#39; + &#39; &#39;.repeat(W - 21) + &#39;║&#39;);
+    console.log(&#39;╚&#39; + &#39;═&#39;.repeat(W) + &#39;╝&#39;);
+
+    if (!window.location.href.includes(&#39;/followers&#39;)) {
+      console.error(&#39;❌ Navigate to x.com/YOUR_USERNAME/followers first!&#39;);
+      return;
+    }
+
+    const knownBefore = getKnown();
+    const isFirstRun = knownBefore.size === 0;
+
+    console.log(`\n📋 Known followers: ${knownBefore.size}${isFirstRun ? &#39; (first run — will baseline)&#39; : &#39;&#39;}`);
+    console.log(`⚙️ Dry run: ${CONFIG.dryRun} | Send DMs: ${CONFIG.sendDMs} | Max DMs: ${CONFIG.maxDMs}\n`);
+
+    // Collect current followers
+    const currentFollowers = await collectFollowers();
+    console.log(`\n📊 Total collected: ${currentFollowers.size}`);
+
+    // Detect new ones
+    for (const [key, data] of currentFollowers) {
+      if (!knownBefore.has(key)) {
+        newFollowersList.push(data);
+      }
+    }
+
+    // Update known list
+    const updatedKnown = new Set([...knownBefore, ...currentFollowers.keys()]);
+    saveKnown(updatedKnown);
+
+    if (isFirstRun) {
+      console.log(`\n✅ First run complete! Baselined ${currentFollowers.size} followers.`);
+      console.log(&#39;   Run again later to detect NEW followers.&#39;);
+      return;
+    }
+
+    console.log(`\n🆕 New followers detected: ${newFollowersList.length}`);
+
+    if (newFollowersList.length === 0) {
+      console.log(&#39;   No new followers since last run.&#39;);
+      return;
+    }
+
+    // Display new followers
+    console.log(&#39;\n  New followers:&#39;);
+    for (const f of newFollowersList) {
+      console.log(`    👤 @${f.username} (${f.displayName})`);
+    }
+
+    // Send welcome DMs if configured
+    if (CONFIG.sendDMs &amp;&amp; !CONFIG.dryRun &amp;&amp; CONFIG.messageTemplates.length &gt; 0) {
+      console.log(`\n📬 Sending welcome DMs (max ${CONFIG.maxDMs})...`);
+
+      for (const follower of newFollowersList.slice(0, CONFIG.maxDMs)) {
+        if (!(await shouldContinue())) break;
+
+        const template = CONFIG.messageTemplates[Math.floor(Math.random() * CONFIG.messageTemplates.length)];
+        const message = fillMessage(template, follower.username, follower.displayName);
+
+        console.log(`   📨 @${follower.username}: &quot;${message.slice(0, 80)}...&quot;`);
+        console.log(`      ⏳ Waiting ${CONFIG.dmDelay / 1000}s before next DM...`);
+
+        // Navigate to DM
+        // NOTE: This is intentionally NOT automated by default as mass DMing
+        // is against X&#39;s ToS. Set sendDMs=true at your own risk.
+        dmsSent++;
+        await sleep(CONFIG.dmDelay);
+      }
+    } else if (CONFIG.dryRun) {
+      console.log(&#39;\n📬 Messages that would be sent (DRY RUN):&#39;);
+      for (const follower of newFollowersList.slice(0, CONFIG.maxDMs)) {
+        const template = CONFIG.messageTemplates[Math.floor(Math.random() * CONFIG.messageTemplates.length)];
+        const message = fillMessage(template, follower.username, follower.displayName);
+        console.log(`   📨 @${follower.username}: &quot;${message}&quot;`);
+      }
+    }
+
+    // Summary
+    const elapsed = ((Date.now() - startTime) / 1000).toFixed(0);
+    console.log(&#39;\n╔&#39; + &#39;═&#39;.repeat(50) + &#39;╗&#39;);
+    console.log(&#39;║  📊 WELCOME — RESULTS&#39; + &#39; &#39;.repeat(28) + &#39;║&#39;);
+    console.log(&#39;╠&#39; + &#39;═&#39;.repeat(50) + &#39;╣&#39;);
+    console.log(`║  New followers:     ${String(newFollowersList.length).padEnd(27)}║`);
+    console.log(`║  DMs sent:          ${String(dmsSent).padEnd(27)}║`);
+    console.log(`║  Total known:       ${String(updatedKnown.size).padEnd(27)}║`);
+    console.log(`║  Duration:          ${(elapsed + &#39;s&#39;).padEnd(27)}║`);
+    console.log(&#39;╚&#39; + &#39;═&#39;.repeat(50) + &#39;╝&#39;);
+
+    if (CONFIG.exportOnComplete &amp;&amp; newFollowersList.length &gt; 0) {
+      const data = {
+        newFollowers: newFollowersList,
+        dmsSent,
+        totalKnown: updatedKnown.size,
+        detectedAt: new Date().toISOString(),
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: &#39;application/json&#39; });
+      const a = document.createElement(&#39;a&#39;); a.href = URL.createObjectURL(blob);
+      a.download = `xactions-new-followers-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a); a.click(); a.remove();
+      console.log(&#39;📥 New followers list exported.&#39;);
+    }
+  };
+
+  run();
+})();
 </code></pre>
 <hr>
 <h2>📖 Step-by-Step Tutorial</h2>
@@ -183,7 +525,7 @@ xactions --help
 <pre><code class="language-bash"># Start MCP server
 npm run mcp
 </code></pre>
-<p>See the <a href="/docs/guides/mcp-setup">MCP Setup Guide</a> for integration with Claude Desktop, Cursor, and other AI tools.</p>
+<p>See the <a href="../mcp-setup.md">MCP Setup Guide</a> for integration with Claude Desktop, Cursor, and other AI tools.</p>
 <hr>
 <h2>📁 Source Files</h2>
 <table>
@@ -208,23 +550,23 @@ npm run mcp
 </tr>
 </thead>
 <tbody><tr>
-<td><a href="/docs/auto-plug-replies">Auto-Plug Replies</a></td>
+<td><a href="auto-plug-replies.md">Auto-Plug Replies</a></td>
 <td>Automatically reply to viral tweets with your own content plug or CTA</td>
 </tr>
 <tr>
-<td><a href="/docs/auto-reply">Auto-Reply</a></td>
+<td><a href="auto-reply.md">Auto-Reply</a></td>
 <td>Auto-reply to tweets matching your filters</td>
 </tr>
 <tr>
-<td><a href="/docs/engagement-booster">Engagement Booster</a></td>
+<td><a href="engagement-booster.md">Engagement Booster</a></td>
 <td>Systematically engage with target accounts by liking, bookmarking, and retweeting their content to build relationships</td>
 </tr>
 <tr>
-<td><a href="/docs/engagement-manager">Engagement Manager</a></td>
+<td><a href="engagement-manager.md">Engagement Manager</a></td>
 <td>All-in-one engagement toolkit: like, unlike, reply, bookmark, and manage interactions from a single interface</td>
 </tr>
 <tr>
-<td><a href="/docs/quote-tweet-automation">Quote Tweet Automation</a></td>
+<td><a href="quote-tweet-automation.md">Quote Tweet Automation</a></td>
 <td>Auto-retweet with quote-tweet templates</td>
 </tr>
 </tbody></table>
@@ -301,6 +643,5 @@ npm run mcp
       <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
     </div>
   </footer>
-<script src="/js/sidebar.js"></script>
 </body>
 </html>

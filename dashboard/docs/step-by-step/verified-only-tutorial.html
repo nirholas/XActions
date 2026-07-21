@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reply to Verified-Only &amp; Prioritized Replies — Tutorial — Free X/Twitter Tools Tool | XActions</title>
+  <meta name="description" content="Step-by-step guide to restricting replies to verified users only and understanding prioritized reply benefits on X/Twitter.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, verified, only, tutorial, reply, verified-only, prioritized, replies, tools, verified only tutorial twitter, twitter verified only tutorial">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Reply to Verified-Only &amp; Prioritized Replies — Tutorial — XActions">
+  <meta property="og:description" content="Step-by-step guide to restricting replies to verified users only and understanding prioritized reply benefits on X/Twitter.">
+  <meta property="og:url" content="https://xactions.app/docs/step-by-step/verified-only-tutorial">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Reply to Verified-Only &amp; Prioritized Replies — Tutorial — Free X/Twitter Tool">
+  <meta name="twitter:description" content="Step-by-step guide to restricting replies to verified users only and understanding prioritized reply benefits on X/Twitter.">
+
+  <link rel="canonical" href="https://xactions.app/docs/step-by-step/verified-only-tutorial">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Reply to Verified-Only & Prioritized Replies — Tutorial — Free X/Twitter Tools Tool | XActions",
+    "description": "Step-by-step guide to restricting replies to verified users only and understanding prioritized reply benefits on X/Twitter.",
+    "url": "https://xactions.app/docs/step-by-step/verified-only-tutorial",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/verified-only-tutorial",
+    "articleSection": "Tools",
+    "keywords": "xactions, twitter automation, x automation, free, verified, only, tutorial, reply, verified-only, prioritized, replies, tools, verified only tutorial twitter, twitter verified only tutorial"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Reply to Verified-Only & Prioritized Replies — Tutorial", "item": "https://xactions.app/docs/verified-only-tutorial" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use Reply to Verified-Only &amp; Prioritized Replies — Tutorial",
+    "description": "Step-by-step guide to restricting replies to verified users only and understanding prioritized reply benefits on X/Twitter.",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions Reply to Verified-Only &amp; Prioritized Replies — Tutorial script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>⚡ Reply to Verified-Only &amp; Prioritized Replies — Tutorial</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › Reply to Verified-Only &amp; Prioritized Replies — Tutorial
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Tools</span>
+        <h1>Reply to Verified-Only &amp; Prioritized Replies — Tutorial</h1>
+<blockquote>
+<p>Step-by-step guide to restricting replies to verified users only and understanding prioritized reply benefits on X/Twitter.</p>
+</blockquote>
+<p><strong>Works on:</strong> Browser Console<br><strong>Difficulty:</strong> Beginner<br><strong>Time:</strong> 1-2 minutes<br><strong>Requirements:</strong> Logged into x.com, X Premium subscription (for setting restrictions)</p>
+<hr>
+<h2>Prerequisites</h2>
+<ul>
+<li>Logged into x.com in your browser</li>
+<li>Browser DevTools console (F12 or Cmd+Option+J on Mac)</li>
+<li>X Premium subscription (required to set reply restrictions)</li>
+</ul>
+<hr>
+<h2>Quick Start</h2>
+<ol>
+<li>Open the compose dialog on x.com (click the post button or press <code>N</code>)</li>
+<li>Open DevTools Console (F12, then click the <strong>Console</strong> tab)</li>
+<li>Paste the script to set reply restrictions</li>
+<li>The script will click the reply restriction menu and select your preference</li>
+<li>Compose and send your post -- the restriction applies to that post</li>
+</ol>
+<hr>
+<h2>Configuration</h2>
+<pre><code class="language-javascript">const CONFIG = {
+  mode: &#39;set&#39;,                    // &#39;set&#39; = set restriction, &#39;check&#39; = check status only
+  restriction: &#39;verified&#39;,        // &#39;everyone&#39;, &#39;verified&#39;, &#39;following&#39;, &#39;mentioned&#39;
+  autoCompose: false,             // Open compose dialog if not already open
+  delayBetweenActions: 1500,      // ms between UI interactions
+};
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>mode</code></td>
+<td>string</td>
+<td><code>&#39;set&#39;</code></td>
+<td><code>&#39;set&#39;</code> to change restrictions, <code>&#39;check&#39;</code> to check status only</td>
+</tr>
+<tr>
+<td><code>restriction</code></td>
+<td>string</td>
+<td><code>&#39;verified&#39;</code></td>
+<td>Who can reply: <code>everyone</code>, <code>verified</code>, <code>following</code>, <code>mentioned</code></td>
+</tr>
+<tr>
+<td><code>autoCompose</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Auto-open compose dialog if not open</td>
+</tr>
+<tr>
+<td><code>delayBetweenActions</code></td>
+<td>number</td>
+<td><code>1500</code></td>
+<td>Delay between UI actions in ms</td>
+</tr>
+</tbody></table>
+<h3>Reply Restriction Options</h3>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Who Can Reply</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>everyone</code></td>
+<td>All users</td>
+<td>Default, maximum reach</td>
+</tr>
+<tr>
+<td><code>verified</code></td>
+<td>Only verified accounts</td>
+<td>Reduce spam, quality replies</td>
+</tr>
+<tr>
+<td><code>following</code></td>
+<td>Only accounts you follow</td>
+<td>Inner circle only</td>
+</tr>
+<tr>
+<td><code>mentioned</code></td>
+<td>Only people mentioned in the post</td>
+<td>Private conversation</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Step-by-Step Guide</h2>
+<h3>Step 1: Check Your Verification Status</h3>
+<p>Before setting reply restrictions, verify that you have Premium:</p>
+<pre><code class="language-javascript">(() =&gt; {
+  console.log(&#39;🔒 VERIFIED-ONLY REPLIES - XActions by nichxbt\n&#39;);
+
+  const verifiedIcons = document.querySelectorAll(&#39;[data-testid=&quot;icon-verified&quot;]&#39;);
+  const profileLink = document.querySelector(&#39;a[data-testid=&quot;AppTabBar_Profile_Link&quot;]&#39;);
+
+  if (verifiedIcons.length &gt; 0) {
+    console.log(&#39;✅ Verified badge detected — you can use reply restrictions.&#39;);
+  } else {
+    console.log(&#39;⚠️ No verified badge detected.&#39;);
+    console.log(&#39;💡 Reply restrictions require X Premium. Subscribe at: x.com/i/premium_sign_up&#39;);
+  }
+
+  if (profileLink) {
+    console.log(`👤 Your profile: https://x.com${profileLink.getAttribute(&#39;href&#39;)}`);
+  }
+})();
+</code></pre>
+<h3>Step 2: Set Reply Restriction on a New Post</h3>
+<p>Open the compose dialog first (click the post button), then run:</p>
+<pre><code class="language-javascript">(async () =&gt; {
+  const CONFIG = {
+    restriction: &#39;verified&#39;,  // Change to: &#39;everyone&#39;, &#39;following&#39;, or &#39;mentioned&#39;
+  };
+
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+
+  console.log(&#39;🔒 SETTING REPLY RESTRICTION - XActions by nichxbt&#39;);
+
+  const RESTRICTION_LABELS = {
+    everyone: &#39;Everyone&#39;,
+    verified: &#39;Verified accounts&#39;,
+    following: &#39;Accounts you follow&#39;,
+    mentioned: &#39;Only people you mention&#39;,
+  };
+
+  console.log(`🔒 Target restriction: &quot;${RESTRICTION_LABELS[CONFIG.restriction]}&quot;`);
+
+  // Check that compose dialog is open
+  const textarea = document.querySelector(&#39;[data-testid=&quot;tweetTextarea_0&quot;]&#39;);
+  if (!textarea) {
+    console.log(&#39;⚠️ Compose dialog not open. Opening...&#39;);
+    const composeBtn = document.querySelector(&#39;a[href=&quot;/compose/post&quot;]&#39;)
+      || document.querySelector(&#39;a[aria-label=&quot;Post&quot;]&#39;);
+
+    if (composeBtn) {
+      composeBtn.click();
+      await sleep(1500);
+    } else {
+      console.error(&#39;❌ Could not open compose dialog. Click the post button manually first.&#39;);
+      return;
+    }
+  }
+
+  await sleep(1000);
+
+  // Find and click the reply restriction button
+  const replyRestrictionBtn = document.querySelector(&#39;[data-testid=&quot;replyRestriction&quot;]&#39;)
+    || document.querySelector(&#39;[aria-label=&quot;Reply restrictions&quot;]&#39;)
+    || document.querySelector(&#39;button[aria-haspopup=&quot;menu&quot;]&#39;);
+
+  if (!replyRestrictionBtn) {
+    console.error(&#39;❌ Reply restriction button not found.&#39;);
+    console.log(&#39;💡 Make sure the compose dialog is open and you have Premium.&#39;);
+    return;
+  }
+
+  replyRestrictionBtn.click();
+  console.log(&#39;✅ Opened reply restriction menu.&#39;);
+  await sleep(1500);
+
+  // Select the desired option
+  const menuItems = document.querySelectorAll(&#39;[role=&quot;menuitem&quot;], [role=&quot;option&quot;]&#39;);
+  let found = false;
+
+  for (const item of menuItems) {
+    const text = item.textContent.toLowerCase();
+    if (text.includes(CONFIG.restriction.toLowerCase()) ||
+        text.includes(RESTRICTION_LABELS[CONFIG.restriction].toLowerCase())) {
+      item.click();
+      found = true;
+      console.log(`✅ Selected: &quot;${RESTRICTION_LABELS[CONFIG.restriction]}&quot;`);
+      break;
+    }
+  }
+
+  if (!found) {
+    console.log(&#39;⚠️ Could not find the desired restriction option.&#39;);
+    console.log(&#39;📋 Available options:&#39;);
+    menuItems.forEach((item, i) =&gt; {
+      console.log(`   ${i + 1}. ${item.textContent.trim()}`);
+    });
+  }
+
+  console.log(&#39;\n✅ Reply restriction set! Compose your post and send it.&#39;);
+  console.log(&#39;💡 This setting applies per-post. Set it before posting each time.&#39;);
+})();
+</code></pre>
+<h3>Expected Console Output</h3>
+<pre><code>🔒 SETTING REPLY RESTRICTION - XActions by nichxbt
+🔒 Target restriction: &quot;Verified accounts&quot;
+✅ Opened reply restriction menu.
+✅ Selected: &quot;Verified accounts&quot;
+
+✅ Reply restriction set! Compose your post and send it.
+💡 This setting applies per-post. Set it before posting each time.
+</code></pre>
+<h3>Step 3: Check Current Restriction on a Post</h3>
+<pre><code class="language-javascript">(() =&gt; {
+  const restrictionEl = document.querySelector(&#39;[data-testid=&quot;replyRestriction&quot;]&#39;);
+  if (restrictionEl) {
+    const text = restrictionEl.textContent.trim() || restrictionEl.getAttribute(&#39;aria-label&#39;) || &#39;Unknown&#39;;
+    console.log(`📋 Current reply restriction: ${text}`);
+  } else {
+    console.log(&#39;ℹ️ No active reply restriction element found.&#39;);
+    console.log(&#39;💡 Open the compose dialog to see restriction options.&#39;);
+  }
+})();
+</code></pre>
+<h3>Understanding Prioritized Replies</h3>
+<p>Prioritized replies are a benefit of X Premium. When you reply to popular tweets, your reply is more likely to appear near the top of the conversation.</p>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Reply Boost Level</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Free</td>
+<td>None</td>
+</tr>
+<tr>
+<td>Basic ($3/mo)</td>
+<td>Small</td>
+</tr>
+<tr>
+<td>Premium ($8/mo)</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>Premium+ ($16/mo)</td>
+<td>Largest</td>
+</tr>
+</tbody></table>
+<p>The boost is automatic -- there is no setting to toggle. Simply having Premium gives your replies higher visibility.</p>
+<hr>
+<h2>Tips &amp; Tricks</h2>
+<ol>
+<li><p><strong>Per-post setting</strong> -- Reply restrictions are set per post, not globally. You need to configure them before each post.</p>
+</li>
+<li><p><strong>Combine with verified-only for announcements</strong> -- When making important announcements, set replies to verified-only to filter out spam and get quality responses.</p>
+</li>
+<li><p><strong>&quot;Mentioned&quot; for private threads</strong> -- Use the <code>mentioned</code> restriction to create semi-private conversations visible to everyone but only replyable by tagged users.</p>
+</li>
+<li><p><strong>Restriction persists in compose</strong> -- Once you set a restriction in the compose dialog, it may carry over to your next post in the same session. Double-check before posting.</p>
+</li>
+<li><p><strong>Existing replies unaffected</strong> -- Changing reply restrictions on a draft does not affect already-posted content. The restriction only applies to the post when it is published.</p>
+</li>
+</ol>
+<hr>
+<h2>Troubleshooting</h2>
+<table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Reply restriction button not found</td>
+<td>Ensure the compose dialog is open. The button appears in the toolbar at the bottom of the compose area.</td>
+</tr>
+<tr>
+<td>&quot;Premium required&quot; message</td>
+<td>Reply restrictions require X Premium subscription. Subscribe at <code>x.com/i/premium_sign_up</code>.</td>
+</tr>
+<tr>
+<td>Menu options not matching</td>
+<td>X may use different label text. Check the available options printed in the console.</td>
+</tr>
+<tr>
+<td>Restriction not applying</td>
+<td>Make sure you set the restriction before clicking &quot;Post.&quot; The restriction is applied at post time.</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Related Scripts</h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Script</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Subscribe to Premium</td>
+<td><code>src/subscribePremium.js</code></td>
+<td>Get Premium for reply restrictions</td>
+</tr>
+<tr>
+<td>Blue Checkmark</td>
+<td><code>src/premiumManager.js</code></td>
+<td>Check verification status</td>
+</tr>
+<tr>
+<td>Auto Commenter</td>
+<td><code>src/autoCommenter.js</code></td>
+<td>Automate replies to tweets</td>
+</tr>
+<tr>
+<td>View Analytics</td>
+<td><code>src/viewAnalytics.js</code></td>
+<td>See engagement on your posts</td>
+</tr>
+</tbody></table>
+<hr>
+<footer>
+Built with XActions by <a href="https://x.com/nichxbt">@nichxbt</a> · <a href="https://xactions.app">xactions.app</a> · <a href="https://github.com/nichxbt/xactions">GitHub</a>
+</footer>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try Reply to Verified-Only &amp; Prioritized Replies — Tutorial?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/step-by-step/add-media-tutorial">📝 Add Media Tutorial</a>
+        <a href="/docs/step-by-step/ads-campaigns-tutorial">📝 Ads Campaigns Tutorial</a>
+        <a href="/docs/step-by-step/affiliate-benefits-tutorial">📝 Affiliate Benefits Tutorial</a>
+        <a href="/docs/step-by-step/alt-text-tutorial">📝 Alt Text Tutorial</a>
+        <a href="/docs/step-by-step/auto-commenter-tutorial">📝 Auto Commenter Tutorial</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a> / <a href="/docs#step-by-step">Tutorials</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

@@ -73,13 +73,121 @@
   }
   </script>
 
-  <link rel="stylesheet" href="/css/common.css">
-  <link rel="stylesheet" href="/css/docs.css">
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
 </head>
 <body>
   <div class="layout">
     <!-- Sidebar -->
-    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
 
     <!-- Main Content -->
     <main class="main-content">
@@ -132,12 +240,341 @@
 <li>Copy and paste the script from <a href="https://github.com/nirholas/XActions/blob/main/src/keywordMonitor.js"><code>src/keywordMonitor.js</code></a></li>
 <li>Press Enter to run</li>
 </ol>
-<pre><code class="language-javascript">// Quick start — copy the full script from:
-// src/keywordMonitor.js
-//
-// Or install via npm and use the CLI:
-// npm install -g xactions
-// xactions --help
+<pre><code class="language-javascript">/**
+ * ============================================================
+ * 🔍 Keyword Monitor &amp; Alerts — Production Grade
+ * ============================================================
+ *
+ * @name        keywordMonitor.js
+ * @description Monitor any X/Twitter search for keyword mentions
+ *              in real-time. Scrapes search results, detects new
+ *              tweets matching your keywords, tracks mention
+ *              frequency, identifies top mentioners, and persists
+ *              history in localStorage. Supports auto-refresh
+ *              intervals and engagement threshold filters.
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.0.0
+ * @date        2026-02-24
+ * @repository  https://github.com/nirholas/XActions
+ *
+ * ============================================================
+ * 📋 USAGE:
+ *
+ * MODE A — Run on existing search page:
+ *   1. Go to x.com/search?q=your+keyword
+ *   2. Paste and run
+ *
+ * MODE B — Use the API:
+ *   XActions.monitor([&#39;keyword1&#39;, &#39;keyword2&#39;])
+ *   XActions.autoRefresh(120000)  // Refresh every 2 min
+ *   XActions.stop()
+ *   XActions.stats()
+ *   XActions.history()
+ * ============================================================
+ */
+(() =&gt; {
+  &#39;use strict&#39;;
+
+  const CONFIG = {
+    keywords: [],              // Will be auto-detected from search URL
+    scrollRounds: 4,
+    scrollDelay: 1500,
+    minLikes: 0,               // Min likes to include in results
+    exportResults: true,
+    maxHistory: 500,           // Max mentions to keep in history
+  };
+
+  const STORAGE_KEY = &#39;xactions_keyword_monitor&#39;;
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+
+  const parseNum = (text) =&gt; {
+    if (!text) return 0;
+    text = text.trim().replace(/,/g, &#39;&#39;);
+    if (text.endsWith(&#39;K&#39;)) return Math.round(parseFloat(text) * 1000);
+    if (text.endsWith(&#39;M&#39;)) return Math.round(parseFloat(text) * 1000000);
+    return parseInt(text) || 0;
+  };
+
+  const loadData = () =&gt; {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || &#39;{&quot;mentions&quot;:[],&quot;stats&quot;:{}}&#39;); }
+    catch { return { mentions: [], stats: {} }; }
+  };
+
+  const saveData = (data) =&gt; {
+    // Trim history
+    while (data.mentions.length &gt; CONFIG.maxHistory) data.mentions.shift();
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  };
+
+  let autoRefreshTimer = null;
+
+  // ── Detect keywords from URL ───────────────────────────────
+  const detectKeywords = () =&gt; {
+    const url = new URL(window.location.href);
+    const q = url.searchParams.get(&#39;q&#39;);
+    if (q) return [q];
+    return CONFIG.keywords;
+  };
+
+  // ── Scrape search results ──────────────────────────────────
+  const scrapeMentions = async () =&gt; {
+    const mentions = [];
+    const seen = new Set();
+
+    for (let round = 0; round &lt; CONFIG.scrollRounds; round++) {
+      const articles = document.querySelectorAll(&#39;article[data-testid=&quot;tweet&quot;]&#39;);
+
+      for (const article of articles) {
+        const textEl = article.querySelector(&#39;[data-testid=&quot;tweetText&quot;]&#39;);
+        const text = textEl ? textEl.textContent.trim() : &#39;&#39;;
+        if (!text) continue;
+
+        const fp = text.slice(0, 80);
+        if (seen.has(fp)) continue;
+        seen.add(fp);
+
+        // Time
+        const timeEl = article.querySelector(&#39;time&#39;);
+        const datetime = timeEl ? timeEl.getAttribute(&#39;datetime&#39;) : null;
+
+        // Author
+        const authorLink = article.querySelector(&#39;a[href^=&quot;/&quot;][role=&quot;link&quot;]&#39;);
+        const authorMatch = authorLink ? (authorLink.getAttribute(&#39;href&#39;) || &#39;&#39;).match(/^\/([A-Za-z0-9_]+)/) : null;
+        const author = authorMatch ? authorMatch[1] : &#39;unknown&#39;;
+
+        // Metrics
+        const likeBtn = article.querySelector(&#39;[data-testid=&quot;like&quot;] span&#39;) || article.querySelector(&#39;[data-testid=&quot;unlike&quot;] span&#39;);
+        const rtBtn = article.querySelector(&#39;[data-testid=&quot;retweet&quot;] span&#39;);
+        const replyBtn = article.querySelector(&#39;[data-testid=&quot;reply&quot;] span&#39;);
+        const likes = likeBtn ? parseNum(likeBtn.textContent) : 0;
+        const rts = rtBtn ? parseNum(rtBtn.textContent) : 0;
+        const replies = replyBtn ? parseNum(replyBtn.textContent) : 0;
+
+        if (likes &lt; CONFIG.minLikes) continue;
+
+        // Verified
+        const verified = !!article.querySelector(&#39;[data-testid=&quot;icon-verified&quot;]&#39;) || !!article.querySelector(&#39;svg[aria-label=&quot;Verified&quot;]&#39;);
+
+        // Media
+        const hasMedia = !!(article.querySelector(&#39;[data-testid=&quot;tweetPhoto&quot;]&#39;) || article.querySelector(&#39;video&#39;));
+
+        mentions.push({
+          author,
+          text: text.slice(0, 200),
+          datetime,
+          likes, rts, replies,
+          totalEng: likes + rts + replies,
+          verified,
+          hasMedia,
+          scrapedAt: new Date().toISOString(),
+        });
+      }
+
+      console.log(`   📜 Round ${round + 1}: ${mentions.length} mentions`);
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(CONFIG.scrollDelay);
+    }
+
+    return mentions;
+  };
+
+  // ── Main scan ──────────────────────────────────────────────
+  const scan = async () =&gt; {
+    const keywords = detectKeywords();
+
+    const W = 60;
+    console.log(&#39;╔&#39; + &#39;═&#39;.repeat(W) + &#39;╗&#39;);
+    console.log(&#39;║  🔍 KEYWORD MONITOR&#39; + &#39; &#39;.repeat(W - 21) + &#39;║&#39;);
+    console.log(&#39;║  by nichxbt — v1.0&#39; + &#39; &#39;.repeat(W - 21) + &#39;║&#39;);
+    console.log(&#39;╚&#39; + &#39;═&#39;.repeat(W) + &#39;╝&#39;);
+
+    if (keywords.length === 0) {
+      console.log(&#39;\n❌ No keywords detected. Either:&#39;);
+      console.log(&#39;   1. Navigate to x.com/search?q=keyword&#39;);
+      console.log(&#39;   2. Or use: XActions.monitor([&quot;keyword1&quot;, &quot;keyword2&quot;])&#39;);
+      return;
+    }
+
+    console.log(`\n🔍 Monitoring: ${keywords.join(&#39;, &#39;)}`);
+    console.log(&#39;📊 Scraping mentions...\n&#39;);
+
+    const mentions = await scrapeMentions();
+
+    if (mentions.length === 0) {
+      console.log(&#39;❌ No mentions found. Try different keywords or scroll more.&#39;);
+      return;
+    }
+
+    // Load existing data and find new mentions
+    const data = loadData();
+    const existingFps = new Set(data.mentions.map(m =&gt; m.text.slice(0, 80)));
+    const newMentions = mentions.filter(m =&gt; !existingFps.has(m.text.slice(0, 80)));
+
+    // Add new mentions to history
+    data.mentions.push(...newMentions);
+
+    // ── Display results ─────────────────────────────────────
+    console.log(&#39;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━&#39;);
+    console.log(`  📊 SCAN RESULTS (${mentions.length} total, ${newMentions.length} new)`);
+    console.log(&#39;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━&#39;);
+
+    // Top mentions by engagement
+    const sorted = [...mentions].sort((a, b) =&gt; b.totalEng - a.totalEng);
+    console.log(&#39;\n━━━ 🔥 TOP MENTIONS (by engagement) ━━━&#39;);
+    for (const m of sorted.slice(0, 10)) {
+      const badge = m.verified ? &#39;✅&#39; : &#39;  &#39;;
+      console.log(`  ${badge} @${m.author.padEnd(16)} ${String(m.totalEng).padStart(5)} eng — &quot;${m.text.slice(0, 50)}...&quot;`);
+    }
+
+    // New mentions alert
+    if (newMentions.length &gt; 0) {
+      console.log(`\n━━━ 🆕 NEW MENTIONS (${newMentions.length}) ━━━`);
+      for (const m of newMentions.slice(0, 8)) {
+        console.log(`  🔔 @${m.author}: &quot;${m.text.slice(0, 60)}...&quot; (${m.totalEng} eng)`);
+      }
+    }
+
+    // ── Top mentioners ──────────────────────────────────────
+    console.log(&#39;\n━━━ 👥 TOP MENTIONERS ━━━&#39;);
+    const authorCounts = {};
+    for (const m of mentions) {
+      authorCounts[m.author] = (authorCounts[m.author] || 0) + 1;
+    }
+    const topAuthors = Object.entries(authorCounts).sort((a, b) =&gt; b[1] - a[1]).slice(0, 10);
+    for (const [author, count] of topAuthors) {
+      const bar = &#39;█&#39;.repeat(Math.round(count / Math.max(...Object.values(authorCounts)) * 20));
+      console.log(`  @${author.padEnd(16)} ${String(count).padStart(3)} mentions ${bar}`);
+    }
+
+    // ── Sentiment quick scan ────────────────────────────────
+    console.log(&#39;\n━━━ 📊 MENTION SENTIMENT (quick scan) ━━━&#39;);
+    const positive = [&#39;love&#39;, &#39;great&#39;, &#39;amazing&#39;, &#39;awesome&#39;, &#39;best&#39;, &#39;excellent&#39;, &#39;perfect&#39;, &#39;incredible&#39;, &#39;thank&#39;, &#39;fire&#39;, &#39;🔥&#39;, &#39;💯&#39;, &#39;❤️&#39;, &#39;🙌&#39;];
+    const negative = [&#39;hate&#39;, &#39;terrible&#39;, &#39;awful&#39;, &#39;worst&#39;, &#39;bad&#39;, &#39;sucks&#39;, &#39;broken&#39;, &#39;scam&#39;, &#39;fake&#39;, &#39;trash&#39;, &#39;👎&#39;, &#39;🗑️&#39;];
+
+    let posCount = 0, negCount = 0;
+    for (const m of mentions) {
+      const lower = m.text.toLowerCase();
+      if (positive.some(w =&gt; lower.includes(w))) posCount++;
+      if (negative.some(w =&gt; lower.includes(w))) negCount++;
+    }
+    const neutral = mentions.length - posCount - negCount;
+
+    console.log(`  ✅ Positive: ${posCount} (${((posCount / mentions.length) * 100).toFixed(0)}%)`);
+    console.log(`  ❌ Negative: ${negCount} (${((negCount / mentions.length) * 100).toFixed(0)}%)`);
+    console.log(`  ⚖️ Neutral:  ${neutral} (${((neutral / mentions.length) * 100).toFixed(0)}%)`);
+
+    // ── Verified mentions ───────────────────────────────────
+    const verifiedMentions = mentions.filter(m =&gt; m.verified);
+    if (verifiedMentions.length &gt; 0) {
+      console.log(`\n━━━ ✅ VERIFIED ACCOUNT MENTIONS (${verifiedMentions.length}) ━━━`);
+      for (const m of verifiedMentions.slice(0, 5)) {
+        console.log(`  ✅ @${m.author}: &quot;${m.text.slice(0, 60)}...&quot; (${m.totalEng} eng)`);
+      }
+    }
+
+    // ── Media mentions ──────────────────────────────────────
+    const mediaMentions = mentions.filter(m =&gt; m.hasMedia);
+    console.log(`\n  📸 ${mediaMentions.length}/${mentions.length} mentions include media.`);
+
+    // ── Update stats ────────────────────────────────────────
+    const kw = keywords.join(&#39;,&#39;);
+    if (!data.stats[kw]) data.stats[kw] = { scans: 0, totalMentions: 0, firstScan: new Date().toISOString() };
+    data.stats[kw].scans++;
+    data.stats[kw].totalMentions += newMentions.length;
+    data.stats[kw].lastScan = new Date().toISOString();
+
+    saveData(data);
+
+    console.log(&#39;\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n&#39;);
+
+    if (CONFIG.exportResults) {
+      const exportData = {
+        keywords, mentions, newMentions: newMentions.length,
+        topAuthors: topAuthors.slice(0, 20),
+        sentiment: { positive: posCount, negative: negCount, neutral },
+        scanTime: new Date().toISOString(),
+      };
+      const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: &#39;application/json&#39; });
+      const a = document.createElement(&#39;a&#39;); a.href = URL.createObjectURL(blob);
+      a.download = `xactions-keyword-monitor-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a); a.click(); a.remove();
+      console.log(&#39;📥 Keyword data exported.&#39;);
+    }
+  };
+
+  // ── Controls ───────────────────────────────────────────────
+  window.XActions = window.XActions || {};
+
+  window.XActions.monitor = (keywords) =&gt; {
+    if (!Array.isArray(keywords) || keywords.length === 0) {
+      console.log(&#39;❌ Usage: XActions.monitor([&quot;keyword1&quot;, &quot;keyword2&quot;])&#39;);
+      return;
+    }
+    CONFIG.keywords = keywords;
+    // Navigate to search
+    const q = encodeURIComponent(keywords.join(&#39; OR &#39;));
+    window.location.href = `https://x.com/search?q=${q}&amp;src=typed_query&amp;f=live`;
+    console.log(`🔍 Navigating to search for: ${keywords.join(&#39;, &#39;)}`);
+    console.log(&#39;⏳ Wait for page to load, then the scan will run automatically.&#39;);
+    setTimeout(scan, 5000);
+  };
+
+  window.XActions.autoRefresh = (intervalMs = 120000) =&gt; {
+    if (autoRefreshTimer) clearInterval(autoRefreshTimer);
+    console.log(`🔄 Auto-refreshing every ${(intervalMs / 60000).toFixed(1)} minutes.`);
+    autoRefreshTimer = setInterval(() =&gt; {
+      console.log(&#39;\n🔄 Auto-refresh...&#39;);
+      window.scrollTo(0, 0);
+      setTimeout(scan, 2000);
+    }, intervalMs);
+  };
+
+  window.XActions.stop = () =&gt; {
+    if (autoRefreshTimer) { clearInterval(autoRefreshTimer); autoRefreshTimer = null; }
+    console.log(&#39;⏹️ Auto-refresh stopped.&#39;);
+  };
+
+  window.XActions.stats = () =&gt; {
+    const data = loadData();
+    const kws = Object.keys(data.stats);
+    if (kws.length === 0) { console.log(&#39;📭 No stats yet.&#39;); return; }
+    console.log(`\n📊 KEYWORD STATS (${kws.length} tracked keywords):\n`);
+    for (const kw of kws) {
+      const s = data.stats[kw];
+      console.log(`  &quot;${kw}&quot; — ${s.scans} scans, ${s.totalMentions} total new mentions`);
+      console.log(`    First: ${s.firstScan} | Last: ${s.lastScan}`);
+    }
+  };
+
+  window.XActions.history = () =&gt; {
+    const data = loadData();
+    if (data.mentions.length === 0) { console.log(&#39;📭 No mention history.&#39;); return; }
+    console.log(`\n📋 MENTION HISTORY (${data.mentions.length} stored):\n`);
+    for (const m of data.mentions.slice(-15)) {
+      console.log(`  @${m.author} (${m.totalEng} eng): &quot;${m.text.slice(0, 60)}...&quot;`);
+    }
+  };
+
+  window.XActions.reset = () =&gt; {
+    localStorage.removeItem(STORAGE_KEY);
+    console.log(&#39;🗑️ Keyword history cleared.&#39;);
+  };
+
+  // Auto-run if on search page
+  if (window.location.href.includes(&#39;/search&#39;)) {
+    scan();
+  } else {
+    console.log(&#39;╔════════════════════════════════════════════════════╗&#39;);
+    console.log(&#39;║  🔍 KEYWORD MONITOR — Ready                      ║&#39;);
+    console.log(&#39;╚════════════════════════════════════════════════════╝&#39;);
+    console.log(&#39;\n📋 Commands:&#39;);
+    console.log(&#39;  XActions.monitor([&quot;keyword1&quot;, &quot;keyword2&quot;])&#39;);
+    console.log(&#39;  XActions.autoRefresh(120000)&#39;);
+    console.log(&#39;  XActions.stats()&#39;);
+    console.log(&#39;  XActions.history()&#39;);
+    console.log(&#39;  XActions.stop()&#39;);
+  }
+})();
 </code></pre>
 <h2>⚙️ Configuration</h2>
 <table>
@@ -156,12 +593,12 @@
 <tr>
 <td><code>scrollRounds</code></td>
 <td><code>4</code></td>
-<td>scroll Rounds</td>
+<td>Scroll rounds</td>
 </tr>
 <tr>
 <td><code>scrollDelay</code></td>
 <td><code>1500</code></td>
-<td>scroll Delay</td>
+<td>Scroll delay</td>
 </tr>
 <tr>
 <td><code>minLikes</code></td>
@@ -171,7 +608,7 @@
 <tr>
 <td><code>exportResults</code></td>
 <td><code>true</code></td>
-<td>export Results</td>
+<td>Export results</td>
 </tr>
 <tr>
 <td><code>maxHistory</code></td>
@@ -223,7 +660,7 @@ xactions --help
 <pre><code class="language-bash"># Start MCP server
 npm run mcp
 </code></pre>
-<p>See the <a href="/docs/guides/mcp-setup">MCP Setup Guide</a> for integration with Claude Desktop, Cursor, and other AI tools.</p>
+<p>See the <a href="../mcp-setup.md">MCP Setup Guide</a> for integration with Claude Desktop, Cursor, and other AI tools.</p>
 <hr>
 <h2>📁 Source Files</h2>
 <table>
@@ -248,11 +685,11 @@ npm run mcp
 </tr>
 </thead>
 <tbody><tr>
-<td><a href="/docs/continuous-monitor">Continuous Monitor</a></td>
+<td><a href="continuous-monitor.md">Continuous Monitor</a></td>
 <td>Auto-refresh monitoring for follower/following changes</td>
 </tr>
 <tr>
-<td><a href="/docs/trending-topic-monitor">Trending Topic Monitor</a></td>
+<td><a href="trending-topic-monitor.md">Trending Topic Monitor</a></td>
 <td>Monitor trending topics in real-time</td>
 </tr>
 </tbody></table>
@@ -329,6 +766,5 @@ npm run mcp
       <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
     </div>
   </footer>
-<script src="/js/sidebar.js"></script>
 </body>
 </html>

@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload Video Captions -- Tutorial — Free X/Twitter Tools Tool | XActions</title>
+  <meta name="description" content="Step-by-step guide to adding captions and subtitles to video tweets using XActions browser scripts.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, video, captions, tutorial, upload, tools, video captions tutorial twitter, twitter video captions tutorial">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Upload Video Captions -- Tutorial — XActions">
+  <meta property="og:description" content="Step-by-step guide to adding captions and subtitles to video tweets using XActions browser scripts.">
+  <meta property="og:url" content="https://xactions.app/docs/step-by-step/video-captions-tutorial">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Upload Video Captions -- Tutorial — Free X/Twitter Tool">
+  <meta name="twitter:description" content="Step-by-step guide to adding captions and subtitles to video tweets using XActions browser scripts.">
+
+  <link rel="canonical" href="https://xactions.app/docs/step-by-step/video-captions-tutorial">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Upload Video Captions -- Tutorial — Free X/Twitter Tools Tool | XActions",
+    "description": "Step-by-step guide to adding captions and subtitles to video tweets using XActions browser scripts.",
+    "url": "https://xactions.app/docs/step-by-step/video-captions-tutorial",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/video-captions-tutorial",
+    "articleSection": "Tools",
+    "keywords": "xactions, twitter automation, x automation, free, video, captions, tutorial, upload, tools, video captions tutorial twitter, twitter video captions tutorial"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Upload Video Captions -- Tutorial", "item": "https://xactions.app/docs/video-captions-tutorial" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use Upload Video Captions -- Tutorial",
+    "description": "Step-by-step guide to adding captions and subtitles to video tweets using XActions browser scripts.",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions Upload Video Captions -- Tutorial script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>⚡ Upload Video Captions -- Tutorial</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › Upload Video Captions -- Tutorial
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Tools</span>
+        <h1>Upload Video Captions -- Tutorial</h1>
+<blockquote>
+<p>Step-by-step guide to adding captions and subtitles to video tweets using XActions browser scripts.</p>
+</blockquote>
+<h2>Prerequisites</h2>
+<ul>
+<li>Logged into x.com in your browser</li>
+<li>Browser DevTools console (F12 -&gt; Console tab)</li>
+<li>A video already uploaded in the tweet compose dialog</li>
+<li>Caption content in SRT or VTT format</li>
+</ul>
+<h2>Quick Start</h2>
+<ol>
+<li>Navigate to x.com</li>
+<li>Open the tweet composer and upload a video</li>
+<li>Wait for the video to finish processing</li>
+<li>Open DevTools (F12)</li>
+<li>Copy the script from <code>src/videoCaptions.js</code></li>
+<li>Edit the CONFIG section with your caption content</li>
+<li>Paste into Console and press Enter</li>
+</ol>
+<h2>Configuration</h2>
+<pre><code class="language-js">const CONFIG = {
+  // Raw caption text in SRT or VTT format
+  captionText: &#39;&#39;,
+
+  // Caption language
+  language: &#39;en&#39;,
+  languageLabel: &#39;English&#39;,
+
+  // Optional tweet text to include
+  tweetText: &#39;&#39;,
+
+  // Timing
+  minDelay: 1000,
+  maxDelay: 2000,
+  uploadWaitTime: 5000,
+};
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>captionText</code></td>
+<td><code>string</code></td>
+<td><code>&#39;&#39;</code></td>
+<td>Raw caption text in SRT or VTT format</td>
+</tr>
+<tr>
+<td><code>language</code></td>
+<td><code>string</code></td>
+<td><code>&#39;en&#39;</code></td>
+<td>Language code (e.g., <code>&#39;en&#39;</code>, <code>&#39;es&#39;</code>, <code>&#39;fr&#39;</code>, <code>&#39;ja&#39;</code>)</td>
+</tr>
+<tr>
+<td><code>languageLabel</code></td>
+<td><code>string</code></td>
+<td><code>&#39;English&#39;</code></td>
+<td>Display name for the language</td>
+</tr>
+<tr>
+<td><code>tweetText</code></td>
+<td><code>string</code></td>
+<td><code>&#39;&#39;</code></td>
+<td>Text to include with the video tweet</td>
+</tr>
+<tr>
+<td><code>uploadWaitTime</code></td>
+<td><code>number</code></td>
+<td><code>5000</code></td>
+<td>Milliseconds to wait for video processing</td>
+</tr>
+</tbody></table>
+<h2>Caption Formats</h2>
+<h3>SRT Format</h3>
+<p>SRT (SubRip) is the most common caption format. Each entry has an index, time range, and text:</p>
+<pre><code>1
+00:00:00,000 --&gt; 00:00:05,000
+Welcome to this tutorial on XActions.
+
+2
+00:00:05,000 --&gt; 00:00:10,000
+Today we will learn about browser automation.
+
+3
+00:00:10,000 --&gt; 00:00:15,000
+Let&#39;s get started!
+</code></pre>
+<p>Rules:</p>
+<ul>
+<li>Each caption block starts with a sequence number</li>
+<li>Timestamps use <code>HH:MM:SS,mmm</code> format (comma for milliseconds)</li>
+<li>A blank line separates each block</li>
+<li>Blocks are numbered sequentially starting from 1</li>
+</ul>
+<h3>VTT Format</h3>
+<p>WebVTT is the web-native caption format. It starts with a <code>WEBVTT</code> header:</p>
+<pre><code>WEBVTT
+
+00:00:00.000 --&gt; 00:00:05.000
+Welcome to this tutorial on XActions.
+
+00:00:05.000 --&gt; 00:00:10.000
+Today we will learn about browser automation.
+
+00:00:10.000 --&gt; 00:00:15.000
+Let&#39;s get started!
+</code></pre>
+<p>Rules:</p>
+<ul>
+<li>Must start with <code>WEBVTT</code> on the first line</li>
+<li>Timestamps use <code>HH:MM:SS.mmm</code> format (period for milliseconds)</li>
+<li>Sequence numbers are optional</li>
+<li>Supports styling tags like <code>&lt;b&gt;bold&lt;/b&gt;</code> and <code>&lt;i&gt;italic&lt;/i&gt;</code></li>
+</ul>
+<h2>Step-by-Step Guide</h2>
+<h3>1. Prepare Your Caption Content</h3>
+<p>Write your captions in SRT or VTT format. Set them in the CONFIG:</p>
+<pre><code class="language-js">const CONFIG = {
+  captionText: `1
+00:00:00,000 --&gt; 00:00:03,000
+This is the first caption.
+
+2
+00:00:03,000 --&gt; 00:00:06,000
+And here is the second one.
+
+3
+00:00:06,000 --&gt; 00:00:10,000
+The video wraps up here.`,
+
+  language: &#39;en&#39;,
+  languageLabel: &#39;English&#39;,
+  tweetText: &#39;Check out this video with captions!&#39;,
+};
+</code></pre>
+<h3>2. Upload Your Video</h3>
+<p>Before running the caption script:</p>
+<ol>
+<li>Click the compose button on x.com</li>
+<li>Click the media icon and select your video file</li>
+<li>Wait for the video to finish processing (the progress bar completes)</li>
+</ol>
+<h3>3. Run the Caption Script</h3>
+<p>Paste <code>src/videoCaptions.js</code> into the DevTools console. The script will:</p>
+<ol>
+<li>Verify the compose dialog is open (<code>[data-testid=&quot;tweetTextarea_0&quot;]</code>)</li>
+<li>Check that media attachments exist (<code>[data-testid=&quot;attachments&quot;]</code>)</li>
+<li>Look for the &quot;Add captions&quot; button (<code>[data-testid=&quot;addCaptions&quot;]</code>)</li>
+<li>Detect the caption format (SRT vs VTT) from the content</li>
+<li>Create a caption file blob with the correct MIME type</li>
+<li>Upload via the caption file input (<code>[data-testid=&quot;captionFileInput&quot;]</code>)</li>
+<li>Optionally add tweet text to the compose box</li>
+</ol>
+<h3>4. Review and Post</h3>
+<p>After the script runs:</p>
+<ul>
+<li>Verify the caption indicator appears on the video preview</li>
+<li>Review the tweet text</li>
+<li>Click &quot;Post&quot; to publish</li>
+</ul>
+<h2>How Caption Upload Works Internally</h2>
+<p>The script creates an in-memory file using the Blob API:</p>
+<pre><code class="language-js">// The script detects the format
+const format = captionContent.trim().startsWith(&#39;WEBVTT&#39;) ? &#39;vtt&#39; : &#39;srt&#39;;
+
+// Creates a File object
+const mimeType = format === &#39;vtt&#39; ? &#39;text/vtt&#39; : &#39;application/x-subrip&#39;;
+const blob = new Blob([captionContent], { type: mimeType });
+const file = new File([blob], `captions_en.srt`, { type: mimeType });
+
+// Uploads via DataTransfer API
+const dataTransfer = new DataTransfer();
+dataTransfer.items.add(file);
+captionInput.files = dataTransfer.files;
+captionInput.dispatchEvent(new Event(&#39;change&#39;, { bubbles: true }));
+</code></pre>
+<p>If the primary caption input is not found, the script falls back to searching all file inputs for one that accepts <code>.srt</code> or <code>.vtt</code> files.</p>
+<h2>Multiple Languages</h2>
+<p>To add captions in multiple languages, run the script multiple times with different language settings:</p>
+<pre><code class="language-js">// First run: English
+CONFIG.captionText = &#39;...English captions...&#39;;
+CONFIG.language = &#39;en&#39;;
+CONFIG.languageLabel = &#39;English&#39;;
+
+// Second run: Spanish
+CONFIG.captionText = &#39;...Spanish captions...&#39;;
+CONFIG.language = &#39;es&#39;;
+CONFIG.languageLabel = &#39;Spanish&#39;;
+</code></pre>
+<h2>Tips &amp; Tricks</h2>
+<ul>
+<li><strong>Upload video first</strong>: The script checks for media attachments before attempting caption upload. Always upload the video and wait for processing first.</li>
+<li><strong>SRT is safest</strong>: While both formats are supported, SRT has wider compatibility.</li>
+<li><strong>Timing accuracy</strong>: Align caption timestamps closely with speech for the best viewer experience.</li>
+<li><strong>Keep captions short</strong>: Aim for 1-2 lines per caption block and no more than 42 characters per line for readability.</li>
+<li><strong>Sample captions</strong>: If <code>captionText</code> is empty, the script generates sample SRT content as a placeholder.</li>
+<li><strong>Caption tools</strong>: Use tools like Subtitle Edit or Aegisub to create professional caption files.</li>
+</ul>
+<h2>Troubleshooting</h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&quot;Compose dialog not found&quot;</td>
+<td>Open the tweet composer before running the script. Click the Post button or navigate to x.com/compose/tweet.</td>
+</tr>
+<tr>
+<td>&quot;No media attachments detected&quot;</td>
+<td>Upload a video first and wait for it to finish processing before running the caption script.</td>
+</tr>
+<tr>
+<td>&quot;Add captions button not found&quot;</td>
+<td>The caption option may not be available for all video types. Try clicking on the video thumbnail to access settings.</td>
+</tr>
+<tr>
+<td>&quot;Could not find caption file input&quot;</td>
+<td>The caption upload UI may have changed. Try uploading captions manually through the X interface.</td>
+</tr>
+<tr>
+<td>Captions not showing on playback</td>
+<td>Verify your timestamp format is correct. SRT uses commas (<code>00:00:00,000</code>), VTT uses periods (<code>00:00:00.000</code>).</td>
+</tr>
+</tbody></table>
+<h2>Related Scripts</h2>
+<ul>
+<li><code>src/postComposer.js</code> -- Post tweets with video media</li>
+<li><code>src/postThread.js</code> -- Post threads with video content</li>
+<li><code>docs/examples/tutorials/add-media-tutorial.md</code> -- General media upload guide</li>
+<li><code>docs/examples/tutorials/alt-text-tutorial.md</code> -- Adding image descriptions</li>
+</ul>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try Upload Video Captions -- Tutorial?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/step-by-step/add-media-tutorial">📝 Add Media Tutorial</a>
+        <a href="/docs/step-by-step/ads-campaigns-tutorial">📝 Ads Campaigns Tutorial</a>
+        <a href="/docs/step-by-step/affiliate-benefits-tutorial">📝 Affiliate Benefits Tutorial</a>
+        <a href="/docs/step-by-step/alt-text-tutorial">📝 Alt Text Tutorial</a>
+        <a href="/docs/step-by-step/auto-commenter-tutorial">📝 Auto Commenter Tutorial</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a> / <a href="/docs#step-by-step">Tutorials</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

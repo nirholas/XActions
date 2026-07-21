@@ -73,13 +73,121 @@
   }
   </script>
 
-  <link rel="stylesheet" href="/css/common.css">
-  <link rel="stylesheet" href="/css/docs.css">
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
 </head>
 <body>
   <div class="layout">
     <!-- Sidebar -->
-    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
 
     <!-- Main Content -->
     <main class="main-content">
@@ -132,12 +240,109 @@
 <li>Copy and paste the script from <a href="https://github.com/nirholas/XActions/blob/main/scripts/dmExporter.js"><code>scripts/dmExporter.js</code></a></li>
 <li>Press Enter to run</li>
 </ol>
-<pre><code class="language-javascript">// Quick start — copy the full script from:
-// scripts/dmExporter.js
-//
-// Or install via npm and use the CLI:
-// npm install -g xactions
-// xactions --help
+<pre><code class="language-javascript">// scripts/dmExporter.js
+// Browser console script to export X/Twitter DM conversations
+// Paste in DevTools console on x.com/messages
+// by nichxbt
+
+(() =&gt; {
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+
+  const CONFIG = {
+    maxConversations: 20,   // Max conversations to list
+    exportMessages: false,  // Set true to export messages from first conversation
+    maxMessages: 100,       // Max messages per conversation
+  };
+
+  const run = async () =&gt; {
+    console.log(&#39;✉️ XActions DM Exporter&#39;);
+    console.log(&#39;======================&#39;);
+
+    // Scrape conversation list
+    const conversations = [];
+    document.querySelectorAll(&#39;[data-testid=&quot;conversation&quot;]&#39;).forEach((conv, i) =&gt; {
+      if (i &gt;= CONFIG.maxConversations) return;
+      
+      const name = conv.querySelector(&#39;[dir=&quot;ltr&quot;]&#39;)?.textContent || &#39;&#39;;
+      const lastMsg = conv.querySelector(&#39;[data-testid=&quot;lastMessage&quot;]&#39;)?.textContent || 
+                      conv.querySelectorAll(&#39;span&#39;)[conv.querySelectorAll(&#39;span&#39;).length - 1]?.textContent || &#39;&#39;;
+      const time = conv.querySelector(&#39;time&#39;)?.getAttribute(&#39;datetime&#39;) || &#39;&#39;;
+      const unread = !!conv.querySelector(&#39;[data-testid=&quot;unread&quot;]&#39;);
+
+      conversations.push({
+        index: i + 1,
+        name: name.trim(),
+        lastMessage: lastMsg.trim().substring(0, 100),
+        time,
+        unread,
+      });
+    });
+
+    console.log(`\n📬 Found ${conversations.length} conversations:`);
+    conversations.forEach(c =&gt; {
+      const badge = c.unread ? &#39;🔴&#39; : &#39;⚪&#39;;
+      console.log(`  ${badge} ${c.index}. ${c.name} — ${c.lastMessage.substring(0, 40)}...`);
+    });
+
+    // Export messages from current conversation if enabled
+    let messages = [];
+    if (CONFIG.exportMessages) {
+      console.log(&#39;\n📜 Exporting messages from current conversation...&#39;);
+
+      // Click the first conversation if not already in one
+      const firstConv = document.querySelector(&#39;[data-testid=&quot;conversation&quot;]&#39;);
+      if (firstConv) {
+        firstConv.click();
+        await sleep(2000);
+      }
+
+      let scrollAttempts = 0;
+      while (messages.length &lt; CONFIG.maxMessages &amp;&amp; scrollAttempts &lt; 30) {
+        document.querySelectorAll(&#39;[data-testid=&quot;messageEntry&quot;], [data-testid=&quot;tweetText&quot;]&#39;).forEach(msg =&gt; {
+          const text = msg.textContent?.trim() || &#39;&#39;;
+          const time = msg.closest(&#39;[data-testid]&#39;)?.querySelector(&#39;time&#39;)?.getAttribute(&#39;datetime&#39;) || &#39;&#39;;
+          const id = text.substring(0, 50) + time;
+
+          if (text &amp;&amp; !messages.find(m =&gt; m.id === id)) {
+            messages.push({ id, text, time });
+          }
+        });
+
+        // Scroll up for older messages
+        const container = document.querySelector(&#39;[data-testid=&quot;DmScrollerContainer&quot;]&#39;) ||
+                          document.querySelector(&#39;[data-testid=&quot;DMConversation&quot;]&#39;) ||
+                          document.querySelector(&#39;[role=&quot;main&quot;]&#39;);
+        if (container) {
+          container.scrollTop = Math.max(0, container.scrollTop - 500);
+        }
+        await sleep(1500);
+        scrollAttempts++;
+      }
+
+      // Clean IDs from output
+      messages = messages.map(({ id, ...rest }) =&gt; rest);
+      console.log(`  Found ${messages.length} messages`);
+    }
+
+    const result = {
+      conversations,
+      messages: CONFIG.exportMessages ? messages : &#39;Set CONFIG.exportMessages = true to export&#39;,
+      scrapedAt: new Date().toISOString(),
+    };
+
+    console.log(&#39;\n📦 Full JSON:&#39;);
+    console.log(JSON.stringify(result, null, 2));
+
+    try {
+      await navigator.clipboard.writeText(JSON.stringify(result, null, 2));
+      console.log(&#39;\n✅ Copied to clipboard!&#39;);
+    } catch (e) {
+      console.log(&#39;\n⚠️ Could not copy to clipboard.&#39;);
+    }
+  };
+
+  run();
+})();
 </code></pre>
 <h2>⚙️ Configuration</h2>
 <table>
@@ -208,7 +413,7 @@ xactions --help
 <pre><code class="language-bash"># Start MCP server
 npm run mcp
 </code></pre>
-<p>See the <a href="/docs/guides/mcp-setup">MCP Setup Guide</a> for integration with Claude Desktop, Cursor, and other AI tools.</p>
+<p>See the <a href="../mcp-setup.md">MCP Setup Guide</a> for integration with Claude Desktop, Cursor, and other AI tools.</p>
 <hr>
 <h2>📁 Source Files</h2>
 <table>
@@ -233,7 +438,7 @@ npm run mcp
 </tr>
 </thead>
 <tbody><tr>
-<td><a href="/docs/dm-manager">DM Manager</a></td>
+<td><a href="dm-manager.md">DM Manager</a></td>
 <td>Full DM management: send messages, export conversations, manage message requests, and bulk operations</td>
 </tr>
 </tbody></table>
@@ -310,6 +515,5 @@ npm run mcp
       <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
     </div>
   </footer>
-<script src="/js/sidebar.js"></script>
 </body>
 </html>

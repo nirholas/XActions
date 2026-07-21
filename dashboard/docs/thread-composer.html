@@ -73,13 +73,121 @@
   }
   </script>
 
-  <link rel="stylesheet" href="/css/common.css">
-  <link rel="stylesheet" href="/css/docs.css">
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
 </head>
 <body>
   <div class="layout">
     <!-- Sidebar -->
-    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
 
     <!-- Main Content -->
     <main class="main-content">
@@ -132,12 +240,321 @@
 <li>Copy and paste the script from <a href="https://github.com/nirholas/XActions/blob/main/src/threadComposer.js"><code>src/threadComposer.js</code></a></li>
 <li>Press Enter to run</li>
 </ol>
-<pre><code class="language-javascript">// Quick start — copy the full script from:
-// src/threadComposer.js
-//
-// Or install via npm and use the CLI:
-// npm install -g xactions
-// xactions --help
+<pre><code class="language-javascript">/**
+ * ============================================================
+ * 🧵 Thread Composer &amp; Publisher — Production Grade
+ * ============================================================
+ *
+ * @name        threadComposer.js
+ * @description Compose and publish Twitter/X threads from the
+ *              browser console. Manages multi-tweet threads with
+ *              character counting, auto-numbering, preview mode,
+ *              draft persistence (localStorage), and sequential
+ *              posting with human-like delays.
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.0.0
+ * @date        2026-02-24
+ * @repository  https://github.com/nirholas/XActions
+ *
+ * ============================================================
+ * 📋 USAGE:
+ *
+ * 1. Open x.com in browser
+ * 2. Paste in DevTools Console
+ * 3. Use window.XActions commands:
+ *
+ *   XActions.thread([
+ *     &quot;First tweet of my thread 🧵&quot;,
+ *     &quot;Second tweet with more context...&quot;,
+ *     &quot;Third tweet — the conclusion!&quot;,
+ *   ])
+ *
+ *   XActions.preview()        // See the thread with char counts
+ *   XActions.publish()        // Post the thread (dryRun by default)
+ *   XActions.saveDraft(&#39;name&#39;) // Save to localStorage
+ *   XActions.loadDraft(&#39;name&#39;) // Load from localStorage
+ *   XActions.listDrafts()      // See all saved drafts
+ *   XActions.deleteDraft(&#39;name&#39;)
+ * ============================================================
+ */
+(() =&gt; {
+  &#39;use strict&#39;;
+
+  const CONFIG = {
+    dryRun: true,             // Set false to actually post
+    autoNumber: false,         // Add &quot;1/N&quot; numbering
+    addThreadEmoji: true,      // Add 🧵 to first tweet if missing
+    delayBetween: [3000, 6000], // Delay between posting each tweet
+    maxChars: 280,
+  };
+
+  const STORAGE_PREFIX = &#39;xactions_thread_draft_&#39;;
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+  const gaussian = (a, b) =&gt; Math.floor(a + ((Math.random() + Math.random()) / 2) * (b - a));
+
+  const SEL = {
+    tweetBox: &#39;[data-testid=&quot;tweetTextarea_0&quot;]&#39;,
+    tweetButton: &#39;[data-testid=&quot;tweetButton&quot;]&#39;,
+    addTweet: &#39;[data-testid=&quot;addButton&quot;]&#39;,     // The &quot;+&quot; button to add another tweet in thread
+    closeCompose: &#39;[data-testid=&quot;app-bar-close&quot;]&#39;,
+  };
+
+  const $ = (sel, ctx = document) =&gt; ctx.querySelector(sel);
+
+  let currentThread = [];
+  let aborted = false;
+
+  // ── Thread management ──────────────────────────────────────
+  window.XActions = window.XActions || {};
+
+  window.XActions.thread = (tweets) =&gt; {
+    if (!Array.isArray(tweets) || tweets.length === 0) {
+      console.log(&#39;❌ Usage: XActions.thread([&quot;tweet1&quot;, &quot;tweet2&quot;, ...])&#39;);
+      return;
+    }
+
+    currentThread = tweets.map((t, i) =&gt; {
+      let text = t.trim();
+
+      // Auto-numbering
+      if (CONFIG.autoNumber) {
+        const num = `${i + 1}/${tweets.length}`;
+        if (!text.startsWith(num)) {
+          text = `${num}\n\n${text}`;
+        }
+      }
+
+      // Thread emoji on first tweet
+      if (i === 0 &amp;&amp; CONFIG.addThreadEmoji &amp;&amp; !text.includes(&#39;🧵&#39;)) {
+        text = text + &#39; 🧵&#39;;
+      }
+
+      return text;
+    });
+
+    console.log(`✅ Thread loaded: ${currentThread.length} tweets.`);
+    window.XActions.preview();
+  };
+
+  window.XActions.preview = () =&gt; {
+    if (currentThread.length === 0) {
+      console.log(&#39;📭 No thread loaded. Use XActions.thread([...])&#39;);
+      return;
+    }
+
+    const W = 58;
+    console.log(&#39;\n╔&#39; + &#39;═&#39;.repeat(W) + &#39;╗&#39;);
+    console.log(&#39;║  🧵 THREAD PREVIEW&#39; + &#39; &#39;.repeat(W - 20) + &#39;║&#39;);
+    console.log(&#39;╚&#39; + &#39;═&#39;.repeat(W) + &#39;╝&#39;);
+
+    for (let i = 0; i &lt; currentThread.length; i++) {
+      const text = currentThread[i];
+      const charCount = text.length;
+      const status = charCount &gt; CONFIG.maxChars ? &#39;🔴 OVER&#39; : charCount &gt; CONFIG.maxChars - 20 ? &#39;🟡 CLOSE&#39; : &#39;🟢 OK&#39;;
+
+      console.log(`\n┌─ Tweet ${i + 1}/${currentThread.length} ─ ${charCount}/${CONFIG.maxChars} chars [${status}] ${&#39;─&#39;.repeat(Math.max(0, 30 - String(charCount).length))}`);
+
+      // Word wrap display
+      const lines = text.split(&#39;\n&#39;);
+      for (const line of lines) {
+        console.log(`│ ${line}`);
+      }
+      console.log(&#39;└&#39; + &#39;─&#39;.repeat(W));
+    }
+
+    const overLimit = currentThread.filter(t =&gt; t.length &gt; CONFIG.maxChars);
+    if (overLimit.length &gt; 0) {
+      console.log(`\n⚠️ ${overLimit.length} tweet(s) exceed ${CONFIG.maxChars} characters!`);
+    }
+
+    const totalChars = currentThread.reduce((s, t) =&gt; s + t.length, 0);
+    console.log(`\n📊 ${currentThread.length} tweets | ${totalChars} total chars | ~${Math.ceil(totalChars / 200)} min read`);
+  };
+
+  window.XActions.publish = async () =&gt; {
+    if (currentThread.length === 0) {
+      console.log(&#39;❌ No thread loaded. Use XActions.thread([...]) first.&#39;);
+      return;
+    }
+
+    const overLimit = currentThread.filter(t =&gt; t.length &gt; CONFIG.maxChars);
+    if (overLimit.length &gt; 0) {
+      console.log(`❌ ${overLimit.length} tweet(s) exceed character limit. Fix them first.`);
+      return;
+    }
+
+    if (CONFIG.dryRun) {
+      console.log(&#39;\n🏃 DRY RUN — simulating thread publish...\n&#39;);
+      for (let i = 0; i &lt; currentThread.length; i++) {
+        console.log(`  [${i + 1}/${currentThread.length}] Would post: &quot;${currentThread[i].slice(0, 60)}...&quot;`);
+        await sleep(500);
+      }
+      console.log(&#39;\n✅ Dry run complete. Set CONFIG.dryRun = false to actually post.&#39;);
+      return;
+    }
+
+    aborted = false;
+    console.log(`\n🚀 Publishing thread (${currentThread.length} tweets)...\n`);
+
+    // Open compose
+    const composeBtn = document.querySelector(&#39;[data-testid=&quot;SideNav_NewTweet_Button&quot;]&#39;) ||
+                       document.querySelector(&#39;a[href=&quot;/compose/tweet&quot;]&#39;);
+    if (composeBtn) {
+      composeBtn.click();
+      await sleep(2000);
+    }
+
+    for (let i = 0; i &lt; currentThread.length; i++) {
+      if (aborted) {
+        console.log(&#39;🛑 Aborted by user.&#39;);
+        break;
+      }
+
+      const text = currentThread[i];
+      console.log(`  [${i + 1}/${currentThread.length}] Posting: &quot;${text.slice(0, 50)}...&quot;`);
+
+      // Find the tweet box (for thread, the latest/last one)
+      const tweetBoxes = document.querySelectorAll(&#39;[data-testid=&quot;tweetTextarea_0&quot;]&#39;);
+      const tweetBox = tweetBoxes[tweetBoxes.length - 1];
+      if (!tweetBox) {
+        console.error(`  ❌ Tweet box not found at tweet ${i + 1}. Aborting.`);
+        break;
+      }
+
+      // Type the text
+      tweetBox.focus();
+      await sleep(300);
+      document.execCommand(&#39;insertText&#39;, false, text);
+      await sleep(800);
+
+      if (i &lt; currentThread.length - 1) {
+        // Add another tweet to thread (click &quot;+&quot; button)
+        const addBtn = $(SEL.addTweet);
+        if (addBtn) {
+          addBtn.click();
+          await sleep(1500);
+        } else {
+          console.error(&#39;  ❌ &quot;Add tweet&quot; button not found. Cannot continue thread.&#39;);
+          break;
+        }
+      }
+    }
+
+    if (!aborted) {
+      // Post the thread
+      console.log(&#39;\n  📤 Sending thread...&#39;);
+      const tweetBtn = $(SEL.tweetButton);
+      if (!tweetBtn) {
+        // Try alternate: &quot;Post all&quot; button
+        const postAll = document.querySelector(&#39;[data-testid=&quot;tweetButtonInline&quot;]&#39;) ||
+                        document.querySelector(&#39;div[data-testid=&quot;tweetButton&quot;]&#39;);
+        if (postAll) postAll.click();
+        else console.error(&#39;  ❌ Post button not found.&#39;);
+      } else {
+        tweetBtn.click();
+      }
+
+      await sleep(3000);
+      console.log(&#39;✅ Thread published successfully! 🧵&#39;);
+    }
+  };
+
+  window.XActions.abort = () =&gt; { aborted = true; console.log(&#39;🛑 Aborting...&#39;); };
+
+  // ── Draft Management ───────────────────────────────────────
+  window.XActions.saveDraft = (name) =&gt; {
+    if (!name) { console.log(&#39;❌ Usage: XActions.saveDraft(&quot;myThread&quot;)&#39;); return; }
+    if (currentThread.length === 0) { console.log(&#39;❌ No thread loaded.&#39;); return; }
+
+    const draft = {
+      tweets: currentThread,
+      savedAt: new Date().toISOString(),
+      name,
+    };
+    localStorage.setItem(STORAGE_PREFIX + name, JSON.stringify(draft));
+    console.log(`💾 Draft &quot;${name}&quot; saved (${currentThread.length} tweets).`);
+  };
+
+  window.XActions.loadDraft = (name) =&gt; {
+    if (!name) { console.log(&#39;❌ Usage: XActions.loadDraft(&quot;myThread&quot;)&#39;); return; }
+
+    const raw = localStorage.getItem(STORAGE_PREFIX + name);
+    if (!raw) { console.log(`❌ Draft &quot;${name}&quot; not found.`); return; }
+
+    try {
+      const draft = JSON.parse(raw);
+      currentThread = draft.tweets;
+      console.log(`📂 Loaded draft &quot;${name}&quot; (${currentThread.length} tweets, saved ${draft.savedAt}).`);
+      window.XActions.preview();
+    } catch {
+      console.log(&#39;❌ Failed to parse draft.&#39;);
+    }
+  };
+
+  window.XActions.listDrafts = () =&gt; {
+    const keys = [];
+    for (let i = 0; i &lt; localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key.startsWith(STORAGE_PREFIX)) {
+        const name = key.slice(STORAGE_PREFIX.length);
+        try {
+          const draft = JSON.parse(localStorage.getItem(key));
+          keys.push({ name, tweets: draft.tweets.length, savedAt: draft.savedAt });
+        } catch { /* skip corrupt */ }
+      }
+    }
+
+    if (keys.length === 0) {
+      console.log(&#39;📭 No saved drafts.&#39;);
+      return;
+    }
+
+    console.log(`\n📋 SAVED DRAFTS (${keys.length}):\n`);
+    for (const d of keys) {
+      console.log(`  📝 &quot;${d.name}&quot; — ${d.tweets} tweets (saved ${d.savedAt})`);
+    }
+  };
+
+  window.XActions.deleteDraft = (name) =&gt; {
+    if (!name) { console.log(&#39;❌ Usage: XActions.deleteDraft(&quot;myThread&quot;)&#39;); return; }
+    if (!localStorage.getItem(STORAGE_PREFIX + name)) {
+      console.log(`❌ Draft &quot;${name}&quot; not found.`);
+      return;
+    }
+    localStorage.removeItem(STORAGE_PREFIX + name);
+    console.log(`🗑️ Draft &quot;${name}&quot; deleted.`);
+  };
+
+  window.XActions.exportThread = () =&gt; {
+    if (currentThread.length === 0) {
+      console.log(&#39;❌ No thread loaded.&#39;);
+      return;
+    }
+    const blob = new Blob([JSON.stringify({ tweets: currentThread, exportedAt: new Date().toISOString() }, null, 2)], { type: &#39;application/json&#39; });
+    const a = document.createElement(&#39;a&#39;); a.href = URL.createObjectURL(blob);
+    a.download = `xactions-thread-${new Date().toISOString().slice(0, 10)}.json`;
+    document.body.appendChild(a); a.click(); a.remove();
+    console.log(&#39;📥 Thread exported.&#39;);
+  };
+
+  // ── Initialization ─────────────────────────────────────────
+  const W = 60;
+  console.log(&#39;╔&#39; + &#39;═&#39;.repeat(W) + &#39;╗&#39;);
+  console.log(&#39;║  🧵 THREAD COMPOSER &amp; PUBLISHER&#39; + &#39; &#39;.repeat(W - 33) + &#39;║&#39;);
+  console.log(&#39;║  by nichxbt — v1.0&#39; + &#39; &#39;.repeat(W - 21) + &#39;║&#39;);
+  console.log(&#39;╚&#39; + &#39;═&#39;.repeat(W) + &#39;╝&#39;);
+  console.log(&#39;\n📋 Commands:&#39;);
+  console.log(&#39;  XActions.thread([&quot;tweet1&quot;, &quot;tweet2&quot;, ...])&#39;);
+  console.log(&#39;  XActions.preview()&#39;);
+  console.log(&#39;  XActions.publish()&#39;);
+  console.log(&#39;  XActions.saveDraft(&quot;name&quot;)&#39;);
+  console.log(&#39;  XActions.loadDraft(&quot;name&quot;)&#39;);
+  console.log(&#39;  XActions.listDrafts()&#39;);
+  console.log(&#39;  XActions.deleteDraft(&quot;name&quot;)&#39;);
+  console.log(&#39;  XActions.exportThread()&#39;);
+  console.log(&#39;\n💡 Tip: Start with XActions.thread([...]) then XActions.preview()&#39;);
+
+})();
 </code></pre>
 <h2>⚙️ Configuration</h2>
 <table>
@@ -171,7 +588,7 @@
 <tr>
 <td><code>maxChars</code></td>
 <td><code>280</code></td>
-<td>max Chars</td>
+<td>Max chars</td>
 </tr>
 </tbody></table>
 <hr>
@@ -218,7 +635,7 @@ xactions --help
 <pre><code class="language-bash"># Start MCP server
 npm run mcp
 </code></pre>
-<p>See the <a href="/docs/guides/mcp-setup">MCP Setup Guide</a> for integration with Claude Desktop, Cursor, and other AI tools.</p>
+<p>See the <a href="../mcp-setup.md">MCP Setup Guide</a> for integration with Claude Desktop, Cursor, and other AI tools.</p>
 <hr>
 <h2>📁 Source Files</h2>
 <table>
@@ -243,23 +660,23 @@ npm run mcp
 </tr>
 </thead>
 <tbody><tr>
-<td><a href="/docs/article-publisher">Article Publisher</a></td>
+<td><a href="article-publisher.md">Article Publisher</a></td>
 <td>Publish long-form articles on X/Twitter (requires Premium+ subscription)</td>
 </tr>
 <tr>
-<td><a href="/docs/content-calendar">Content Calendar</a></td>
+<td><a href="content-calendar.md">Content Calendar</a></td>
 <td>Plan and visualize your posting schedule</td>
 </tr>
 <tr>
-<td><a href="/docs/content-repurposer">Content Repurposer</a></td>
+<td><a href="content-repurposer.md">Content Repurposer</a></td>
 <td>Transform your existing content: turn single tweets into threads, threads into singles, add hooks, rewrite for different audiences</td>
 </tr>
 <tr>
-<td><a href="/docs/pin-tweet-manager">Pin Tweet Manager</a></td>
+<td><a href="pin-tweet-manager.md">Pin Tweet Manager</a></td>
 <td>Pin and unpin tweets programmatically</td>
 </tr>
 <tr>
-<td><a href="/docs/poll-creator">Poll Creator</a></td>
+<td><a href="poll-creator.md">Poll Creator</a></td>
 <td>Create and manage poll tweets</td>
 </tr>
 </tbody></table>
@@ -336,6 +753,5 @@ npm run mcp
       <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
     </div>
   </footer>
-<script src="/js/sidebar.js"></script>
 </body>
 </html>

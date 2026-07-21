@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Creator Revenue Sharing &amp; Subscriptions — Tutorial — Free X/Twitter Tools Tool | XActions</title>
+  <meta name="description" content="Step-by-step guide to setting up creator subscriptions, configuring tiers, managing subscribers, and enrolling in ad revenue sharing on X/Twitter.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, creator, revenue, tutorial, sharing, subscriptions, tools, creator revenue tutorial twitter, twitter creator revenue tutorial">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Creator Revenue Sharing &amp; Subscriptions — Tutorial — XActions">
+  <meta property="og:description" content="Step-by-step guide to setting up creator subscriptions, configuring tiers, managing subscribers, and enrolling in ad revenue sharing on X/Twitter.">
+  <meta property="og:url" content="https://xactions.app/docs/step-by-step/creator-revenue-tutorial">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Creator Revenue Sharing &amp; Subscriptions — Tutorial — Free X/Twitter Tool">
+  <meta name="twitter:description" content="Step-by-step guide to setting up creator subscriptions, configuring tiers, managing subscribers, and enrolling in ad revenue sharing on X/Twitter.">
+
+  <link rel="canonical" href="https://xactions.app/docs/step-by-step/creator-revenue-tutorial">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Creator Revenue Sharing & Subscriptions — Tutorial — Free X/Twitter Tools Tool | XActions",
+    "description": "Step-by-step guide to setting up creator subscriptions, configuring tiers, managing subscribers, and enrolling in ad revenue sharing on X/Twitter.",
+    "url": "https://xactions.app/docs/step-by-step/creator-revenue-tutorial",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/creator-revenue-tutorial",
+    "articleSection": "Tools",
+    "keywords": "xactions, twitter automation, x automation, free, creator, revenue, tutorial, sharing, subscriptions, tools, creator revenue tutorial twitter, twitter creator revenue tutorial"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Creator Revenue Sharing & Subscriptions — Tutorial", "item": "https://xactions.app/docs/creator-revenue-tutorial" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use Creator Revenue Sharing &amp; Subscriptions — Tutorial",
+    "description": "Step-by-step guide to setting up creator subscriptions, configuring tiers, managing subscribers, and enrolling in ad revenue sharing on X/Twitter.",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions Creator Revenue Sharing &amp; Subscriptions — Tutorial script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>⚡ Creator Revenue Sharing &amp; Subscriptions — Tutorial</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › Creator Revenue Sharing &amp; Subscriptions — Tutorial
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Tools</span>
+        <h1>Creator Revenue Sharing &amp; Subscriptions — Tutorial</h1>
+<blockquote>
+<p>Step-by-step guide to setting up creator subscriptions, configuring tiers, managing subscribers, and enrolling in ad revenue sharing on X/Twitter.</p>
+</blockquote>
+<p><strong>Works on:</strong> Browser Console | Node.js (Puppeteer)<br><strong>Difficulty:</strong> Intermediate<br><strong>Time:</strong> 10-20 minutes<br><strong>Requirements:</strong> Logged into x.com, X Premium, 500+ followers</p>
+<hr>
+<h2>Prerequisites</h2>
+<ul>
+<li>Logged into x.com in your browser</li>
+<li>Browser DevTools console (F12 or Cmd+Option+J on Mac)</li>
+<li>X Premium subscription (Premium or Premium+)</li>
+<li>At least 500 followers</li>
+<li>Active account for 30+ days</li>
+<li>No recent X Rules violations</li>
+</ul>
+<hr>
+<h2>Quick Start</h2>
+<ol>
+<li>Go to any page on x.com</li>
+<li>Open DevTools Console (F12, then click the <strong>Console</strong> tab)</li>
+<li>Paste the script to check eligibility and view tier info</li>
+<li>Navigate to monetization settings</li>
+<li>Follow the on-screen prompts to enroll</li>
+</ol>
+<hr>
+<h2>Configuration</h2>
+<pre><code class="language-javascript">const CONFIG = {
+  autoNavigate: true,           // Navigate to monetization settings
+  checkEligibility: true,       // Check revenue sharing requirements
+  showTierInfo: true,           // Display subscription tier details
+  scanSubscribers: false,       // Scan subscriber list
+  maxSubscribersToScan: 100,    // Max subscribers to scan
+  delayBetweenActions: 2000,    // ms between UI actions
+};
+</code></pre>
+<hr>
+<h2>Step-by-Step Guide</h2>
+<h3>Step 1: Check Eligibility</h3>
+<pre><code class="language-javascript">(() =&gt; {
+  console.log(&#39;💰 CREATOR REVENUE - XActions by nichxbt\n&#39;);
+
+  // Check Premium status
+  const isVerified = !!document.querySelector(&#39;[data-testid=&quot;icon-verified&quot;]&#39;);
+  console.log(isVerified
+    ? &#39;✅ Verified badge detected — Premium requirement likely met.&#39;
+    : &#39;⚠️ No verified badge — you need X Premium for monetization.&#39;);
+
+  // Display requirements
+  console.log(&#39;\n📋 Creator Subscriptions Requirements:&#39;);
+  console.log(&#39;─&#39;.repeat(45));
+  [
+    &#39;X Premium subscription (Premium or Premium+)&#39;,
+    &#39;At least 500 followers&#39;,
+    &#39;Active account for 30+ days&#39;,
+    &#39;No recent X Rules violations&#39;,
+    &#39;Completed Stripe onboarding for payouts&#39;,
+  ].forEach(r =&gt; console.log(`   ☐ ${r}`));
+
+  console.log(&#39;\n📋 Revenue Sharing (Ads) Requirements:&#39;);
+  console.log(&#39;─&#39;.repeat(45));
+  [
+    &#39;X Premium subscription&#39;,
+    &#39;At least 500 followers&#39;,
+    &#39;At least 5 million organic impressions in the last 3 months&#39;,
+    &#39;Active account for 3+ months&#39;,
+    &#39;Completed Stripe onboarding&#39;,
+    &#39;Content complies with Creator Monetization Standards&#39;,
+  ].forEach(r =&gt; console.log(`   ☐ ${r}`));
+})();
+</code></pre>
+<h3>Step 2: View Subscription Tier Options</h3>
+<pre><code class="language-javascript">(() =&gt; {
+  console.log(&#39;\n══════════════════════════════════════════════════&#39;);
+  console.log(&#39;💰 CREATOR SUBSCRIPTION TIERS&#39;);
+  console.log(&#39;══════════════════════════════════════════════════\n&#39;);
+
+  const tiers = {
+    &#39;Basic Tier (suggested: $2.99/mo)&#39;: [
+      &#39;Subscriber badge on profile&#39;,
+      &#39;Subscriber-only posts&#39;,
+      &#39;Priority replies&#39;,
+    ],
+    &#39;Standard Tier (suggested: $4.99/mo)&#39;: [
+      &#39;Everything in Basic&#39;,
+      &#39;Early access to content&#39;,
+      &#39;Subscriber-only Spaces&#39;,
+      &#39;Exclusive media content&#39;,
+    ],
+    &#39;Premium Tier (suggested: $9.99/mo)&#39;: [
+      &#39;Everything in Standard&#39;,
+      &#39;Direct message access&#39;,
+      &#39;Behind-the-scenes content&#39;,
+      &#39;Special recognition in community&#39;,
+    ],
+  };
+
+  for (const [tier, benefits] of Object.entries(tiers)) {
+    console.log(`\n🏷️  ${tier}`);
+    console.log(&#39;─&#39;.repeat(40));
+    benefits.forEach(b =&gt; console.log(`   ✓ ${b}`));
+  }
+
+  console.log(&#39;\n💡 Tips:&#39;);
+  console.log(&#39;   • You set your own price (minimum $2.99/mo)&#39;);
+  console.log(&#39;   • X takes a commission on subscriptions&#39;);
+  console.log(&#39;   • Offer exclusive content to increase retention&#39;);
+  console.log(&#39;   • Promote your subscription link in your bio&#39;);
+  console.log(&#39;══════════════════════════════════════════════════\n&#39;);
+})();
+</code></pre>
+<h3>Step 3: Navigate to Monetization Settings</h3>
+<pre><code class="language-javascript">(async () =&gt; {
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+
+  console.log(&#39;🚀 Navigating to monetization settings...&#39;);
+
+  const monetizationLink = document.querySelector(&#39;a[href=&quot;/settings/monetization&quot;]&#39;);
+
+  if (monetizationLink) {
+    monetizationLink.click();
+    console.log(&#39;✅ Clicked monetization settings link.&#39;);
+  } else {
+    console.log(&#39;⚠️ Monetization link not found. Navigating directly...&#39;);
+    window.location.href = &#39;https://x.com/settings/monetization&#39;;
+  }
+
+  await sleep(4000);
+
+  // Check for available tabs
+  const primaryColumn = document.querySelector(&#39;[data-testid=&quot;primaryColumn&quot;]&#39;);
+  if (primaryColumn) {
+    const tabs = primaryColumn.querySelectorAll(&#39;[role=&quot;tab&quot;], button[role=&quot;tab&quot;]&#39;);
+    if (tabs.length &gt; 0) {
+      console.log(&#39;\n📋 Available tabs:&#39;);
+      tabs.forEach((tab, i) =&gt; {
+        console.log(`   ${i + 1}. ${tab.textContent.trim()}`);
+      });
+    }
+
+    const links = primaryColumn.querySelectorAll(&#39;a[href*=&quot;monetization&quot;], a[href*=&quot;subscription&quot;]&#39;);
+    links.forEach(link =&gt; {
+      console.log(`   🔗 ${link.textContent.trim()}: ${link.href}`);
+    });
+  }
+
+  console.log(&#39;\n💡 Follow the on-screen prompts to set up monetization.&#39;);
+  console.log(&#39;💡 Manage subscriptions: x.com/settings/monetization&#39;);
+  console.log(&#39;💡 View analytics: x.com/i/account_analytics&#39;);
+})();
+</code></pre>
+<h3>Step 4: Scan Subscribers (Node.js)</h3>
+<p><strong>Script:</strong> <code>src/creatorStudio.js</code></p>
+<pre><code class="language-javascript">import { getSubscribers, getRevenue, getAccountAnalytics } from &#39;./src/creatorStudio.js&#39;;
+import puppeteer from &#39;puppeteer-extra&#39;;
+import StealthPlugin from &#39;puppeteer-extra-plugin-stealth&#39;;
+
+puppeteer.use(StealthPlugin());
+
+const browser = await puppeteer.launch({ headless: false });
+const page = await browser.newPage();
+
+await page.setCookie({
+  name: &#39;auth_token&#39;,
+  value: &#39;YOUR_AUTH_TOKEN&#39;,
+  domain: &#39;.x.com&#39;,
+});
+
+// Get subscriber list
+const subs = await getSubscribers(page, { limit: 50 });
+console.log(`Subscribers: ${subs.count}`);
+subs.subscribers.forEach(s =&gt; {
+  console.log(`  @${s.username} (${s.name}) - since ${s.subscribedSince}`);
+});
+
+// Get revenue data
+const revenue = await getRevenue(page);
+console.log(&#39;Revenue:&#39;, revenue);
+
+// Get account analytics
+const analytics = await getAccountAnalytics(page);
+console.log(&#39;Analytics:&#39;, analytics);
+
+await browser.close();
+</code></pre>
+<h3>Step 5: Check Revenue Sharing Eligibility (Node.js)</h3>
+<pre><code class="language-javascript">import { checkRevenueEligibility } from &#39;./src/premiumManager.js&#39;;
+
+// ... browser setup ...
+
+const eligibility = await checkRevenueEligibility(page, &#39;nichxbt&#39;);
+console.log(eligibility);
+// {
+//   username: &#39;nichxbt&#39;,
+//   followers: &#39;12.5K&#39;,
+//   meetsFollowerMin: true,
+//   requirements: {
+//     minFollowers: &#39;500+&#39;,
+//     minImpressions: &#39;5M+ in last 3 months&#39;,
+//     premiumRequired: true,
+//     note: &#39;Must have Premium ($8/mo) or higher&#39;,
+//   },
+//   note: &#39;Impression data requires account owner access to verify&#39;,
+// }
+</code></pre>
+<h3>Expected Console Output</h3>
+<pre><code>💰 CREATOR REVENUE - XActions by nichxbt
+
+✅ Verified badge detected — Premium requirement likely met.
+
+📋 Creator Subscriptions Requirements:
+─────────────────────────────────────────────
+   ☐ X Premium subscription (Premium or Premium+)
+   ☐ At least 500 followers
+   ☐ Active account for 30+ days
+   ☐ No recent X Rules violations
+   ☐ Completed Stripe onboarding for payouts
+
+📋 Revenue Sharing (Ads) Requirements:
+─────────────────────────────────────────────
+   ☐ X Premium subscription
+   ☐ At least 500 followers
+   ☐ At least 5 million organic impressions in the last 3 months
+   ☐ Active account for 3+ months
+   ☐ Completed Stripe onboarding
+   ☐ Content complies with Creator Monetization Standards
+
+══════════════════════════════════════════════════
+💰 CREATOR SUBSCRIPTION TIERS
+══════════════════════════════════════════════════
+
+🏷️  Basic Tier (suggested: $2.99/mo)
+────────────────────────────────────────
+   ✓ Subscriber badge on profile
+   ✓ Subscriber-only posts
+   ✓ Priority replies
+
+🏷️  Standard Tier (suggested: $4.99/mo)
+────────────────────────────────────────
+   ✓ Everything in Basic
+   ✓ Early access to content
+   ✓ Subscriber-only Spaces
+   ✓ Exclusive media content
+
+🏷️  Premium Tier (suggested: $9.99/mo)
+────────────────────────────────────────
+   ✓ Everything in Standard
+   ✓ Direct message access
+   ✓ Behind-the-scenes content
+   ✓ Special recognition in community
+
+🚀 Navigating to monetization settings...
+✅ Clicked monetization settings link.
+</code></pre>
+<hr>
+<h2>Tips &amp; Tricks</h2>
+<ol>
+<li><p><strong>Stripe onboarding</strong> -- Both creator subscriptions and ad revenue sharing require Stripe for payouts. Complete Stripe onboarding early in the process.</p>
+</li>
+<li><p><strong>5M impressions threshold</strong> -- The 5 million impressions requirement for ad revenue is calculated over a rolling 3-month period. Focus on consistent posting to maintain eligibility.</p>
+</li>
+<li><p><strong>Subscriber-only content</strong> -- Create a mix of free and subscriber-only content. Use free posts to showcase value and drive subscription signups.</p>
+</li>
+<li><p><strong>Promote in bio</strong> -- Add your subscription link to your bio. It is the most visible place for potential subscribers.</p>
+</li>
+<li><p><strong>Revenue timing</strong> -- Payouts are processed monthly. There may be a delay of 30-60 days from earning to receiving payment.</p>
+</li>
+</ol>
+<hr>
+<h2>Troubleshooting</h2>
+<table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Monetization settings not visible</td>
+<td>Ensure you have X Premium. Navigate directly to <code>x.com/settings/monetization</code>.</td>
+</tr>
+<tr>
+<td>Not eligible for revenue sharing</td>
+<td>Check that you have 500+ followers and 5M+ impressions in the last 3 months.</td>
+</tr>
+<tr>
+<td>Stripe onboarding failing</td>
+<td>Ensure your personal information matches your bank account details.</td>
+</tr>
+<tr>
+<td>No subscribers showing</td>
+<td>If you just enabled subscriptions, it takes time for people to subscribe. Promote your subscription link.</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Related Scripts</h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Script</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>View Analytics</td>
+<td><code>src/viewAnalytics.js</code></td>
+<td>Check impressions and engagement</td>
+</tr>
+<tr>
+<td>Premium Manager</td>
+<td><code>src/premiumManager.js</code></td>
+<td>Check tier features and eligibility</td>
+</tr>
+<tr>
+<td>Creator Studio</td>
+<td><code>src/creatorStudio.js</code></td>
+<td>Combined analytics and revenue dashboard</td>
+</tr>
+<tr>
+<td>Subscribe to Premium</td>
+<td><code>src/subscribePremium.js</code></td>
+<td>Get Premium for monetization access</td>
+</tr>
+</tbody></table>
+<hr>
+<footer>
+Built with XActions by <a href="https://x.com/nichxbt">@nichxbt</a> · <a href="https://xactions.app">xactions.app</a> · <a href="https://github.com/nichxbt/xactions">GitHub</a>
+</footer>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try Creator Revenue Sharing &amp; Subscriptions — Tutorial?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/step-by-step/add-media-tutorial">📝 Add Media Tutorial</a>
+        <a href="/docs/step-by-step/ads-campaigns-tutorial">📝 Ads Campaigns Tutorial</a>
+        <a href="/docs/step-by-step/affiliate-benefits-tutorial">📝 Affiliate Benefits Tutorial</a>
+        <a href="/docs/step-by-step/alt-text-tutorial">📝 Alt Text Tutorial</a>
+        <a href="/docs/step-by-step/auto-commenter-tutorial">📝 Auto Commenter Tutorial</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a> / <a href="/docs#step-by-step">Tutorials</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

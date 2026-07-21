@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Image Descriptions (ALT Text) -- Tutorial — Free X/Twitter Tools Tool | XActions</title>
+  <meta name="description" content="Step-by-step guide to adding accessibility descriptions (alt text) to images in X/Twitter posts using XActions.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, alt, text, tutorial, image, descriptions, (alt, text), tools, alt text tutorial twitter, twitter alt text tutorial">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Add Image Descriptions (ALT Text) -- Tutorial — XActions">
+  <meta property="og:description" content="Step-by-step guide to adding accessibility descriptions (alt text) to images in X/Twitter posts using XActions.">
+  <meta property="og:url" content="https://xactions.app/docs/step-by-step/alt-text-tutorial">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Add Image Descriptions (ALT Text) -- Tutorial — Free X/Twitter Tool">
+  <meta name="twitter:description" content="Step-by-step guide to adding accessibility descriptions (alt text) to images in X/Twitter posts using XActions.">
+
+  <link rel="canonical" href="https://xactions.app/docs/step-by-step/alt-text-tutorial">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Add Image Descriptions (ALT Text) -- Tutorial — Free X/Twitter Tools Tool | XActions",
+    "description": "Step-by-step guide to adding accessibility descriptions (alt text) to images in X/Twitter posts using XActions.",
+    "url": "https://xactions.app/docs/step-by-step/alt-text-tutorial",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/alt-text-tutorial",
+    "articleSection": "Tools",
+    "keywords": "xactions, twitter automation, x automation, free, alt, text, tutorial, image, descriptions, (alt, text), tools, alt text tutorial twitter, twitter alt text tutorial"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Add Image Descriptions (ALT Text) -- Tutorial", "item": "https://xactions.app/docs/alt-text-tutorial" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use Add Image Descriptions (ALT Text) -- Tutorial",
+    "description": "Step-by-step guide to adding accessibility descriptions (alt text) to images in X/Twitter posts using XActions.",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions Add Image Descriptions (ALT Text) -- Tutorial script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>⚡ Add Image Descriptions (ALT Text) -- Tutorial</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › Add Image Descriptions (ALT Text) -- Tutorial
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Tools</span>
+        <h1>Add Image Descriptions (ALT Text) -- Tutorial</h1>
+<blockquote>
+<p>Step-by-step guide to adding accessibility descriptions (alt text) to images in X/Twitter posts using XActions.</p>
+</blockquote>
+<h2>Prerequisites</h2>
+<ul>
+<li>Logged into x.com in your browser</li>
+<li>Browser DevTools console (F12 -&gt; Console tab)</li>
+<li>For Node.js usage: <code>npm install xactions</code> and a valid session cookie</li>
+</ul>
+<h2>Quick Start</h2>
+<ol>
+<li>Navigate to x.com</li>
+<li>Open DevTools (F12)</li>
+<li>Use <code>src/postComposer.js</code> with the <code>altText</code> option</li>
+<li>Alt text is added automatically after media upload</li>
+</ol>
+<h2>Why Alt Text Matters</h2>
+<ul>
+<li><strong>Accessibility</strong>: Screen readers use alt text to describe images to visually impaired users</li>
+<li><strong>Search</strong>: Alt text helps X index your content for search results</li>
+<li><strong>Engagement</strong>: Posts with alt text reach a wider audience</li>
+<li><strong>Best practice</strong>: Many communities and organizations require alt text on all images</li>
+</ul>
+<h2>Configuration</h2>
+<h3>Node.js / Puppeteer (<code>src/postComposer.js</code>)</h3>
+<pre><code class="language-js">import { postTweet } from &#39;./src/postComposer.js&#39;;
+
+await postTweet(page, &#39;Beautiful architecture in Barcelona!&#39;, {
+  media: &#39;/path/to/gaudi-building.jpg&#39;,
+  altText: &#39;The facade of Casa Batllo by Antoni Gaudi, featuring colorful mosaic tiles and organic bone-like balcony railings&#39;,
+});
+</code></pre>
+<p>The <code>altText</code> option is passed alongside <code>media</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>media</code></td>
+<td><code>string</code></td>
+<td><code>null</code></td>
+<td>Path to the image file</td>
+</tr>
+<tr>
+<td><code>altText</code></td>
+<td><code>string</code></td>
+<td><code>null</code></td>
+<td>Descriptive text for the image (max 1000 chars)</td>
+</tr>
+</tbody></table>
+<h3>Browser Console (Manual)</h3>
+<p>After uploading an image in the compose dialog:</p>
+<pre><code class="language-js">// Wait for the image to upload, then find and click the ALT text input
+const altInput = document.querySelector(&#39;[data-testid=&quot;altTextInput&quot;]&#39;);
+if (altInput) {
+  altInput.click();
+  // Type your description
+  document.execCommand(&#39;insertText&#39;, false, &#39;Description of the image&#39;);
+}
+</code></pre>
+<h2>Step-by-Step Guide</h2>
+<h3>How Alt Text Works in postComposer.js</h3>
+<p>When you pass <code>altText</code> to <code>postTweet</code>, here is what happens:</p>
+<ol>
+<li>The script uploads the media file via <code>[data-testid=&quot;fileInput&quot;]</code></li>
+<li>It waits 2 seconds for X to process the upload</li>
+<li>It clicks the alt text input (<code>[data-testid=&quot;altTextInput&quot;]</code>)</li>
+<li>It types the description text</li>
+<li>The alt text is saved with the image</li>
+</ol>
+<pre><code class="language-js">// From src/postComposer.js -- the relevant section:
+if (media) {
+  const fileInput = await page.$(SELECTORS.mediaInput);
+  if (fileInput) {
+    await fileInput.uploadFile(media);
+    await sleep(2000);
+
+    // Add alt text if provided
+    if (altText) {
+      try {
+        await page.click(SELECTORS.altTextInput);
+        await page.keyboard.type(altText);
+        await sleep(500);
+      } catch (e) {
+        console.log(&#39;Warning: Alt text input not found&#39;);
+      }
+    }
+  }
+}
+</code></pre>
+<h3>Adding Alt Text Manually (Browser Console)</h3>
+<p>If you are composing a tweet manually and want to add alt text:</p>
+<ol>
+<li>Open the compose dialog and upload an image</li>
+<li>Look for the &quot;ALT&quot; badge or &quot;Add description&quot; button on the image thumbnail</li>
+<li>Click it to open the alt text editor</li>
+<li>Type your description (up to 1000 characters)</li>
+<li>Save and post</li>
+</ol>
+<p>To do this via the console:</p>
+<pre><code class="language-js">// Step 1: Find the ALT button on the uploaded image
+const altButton = document.querySelector(&#39;[data-testid=&quot;altTextInput&quot;]&#39;)
+  || document.querySelector(&#39;[aria-label=&quot;Add description&quot;]&#39;)
+  || document.querySelector(&#39;button[data-testid=&quot;altText&quot;]&#39;);
+
+if (altButton) {
+  altButton.click();
+
+  // Step 2: Wait and type
+  setTimeout(() =&gt; {
+    const input = document.querySelector(&#39;[data-testid=&quot;altTextInput&quot;]&#39;)
+      || document.activeElement;
+    if (input) {
+      input.focus();
+      document.execCommand(&#39;insertText&#39;, false, &#39;Your image description here&#39;);
+    }
+  }, 500);
+}
+</code></pre>
+<h2>Writing Good Alt Text</h2>
+<h3>Do</h3>
+<ul>
+<li><strong>Be specific</strong>: &quot;A golden retriever puppy sitting on a red couch&quot; is better than &quot;A dog&quot;</li>
+<li><strong>Describe the content</strong>: What is in the image? What is happening?</li>
+<li><strong>Include relevant text</strong>: If the image contains text (screenshots, charts), include that text</li>
+<li><strong>Mention context</strong>: Colors, positions, actions, and emotions when relevant</li>
+<li><strong>Keep it concise</strong>: 1-2 sentences for simple images, more for complex ones</li>
+</ul>
+<h3>Do Not</h3>
+<ul>
+<li>Start with &quot;Image of&quot; or &quot;Picture of&quot; -- screen readers already announce it as an image</li>
+<li>Include irrelevant details that do not add meaning</li>
+<li>Use alt text for hashtags or promotional content</li>
+<li>Leave it blank when the image conveys information</li>
+</ul>
+<h3>Examples</h3>
+<table>
+<thead>
+<tr>
+<th>Image</th>
+<th>Bad Alt Text</th>
+<th>Good Alt Text</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Product screenshot</td>
+<td>&quot;Screenshot&quot;</td>
+<td>&quot;Dashboard showing 45% increase in monthly active users with a line chart trending upward from January to March&quot;</td>
+</tr>
+<tr>
+<td>Infographic</td>
+<td>&quot;Infographic&quot;</td>
+<td>&quot;Comparison table: React has 225k GitHub stars, Vue has 208k, Angular has 96k, Svelte has 79k&quot;</td>
+</tr>
+<tr>
+<td>Meme</td>
+<td>&quot;Funny meme&quot;</td>
+<td>&quot;Drake meme: top panel shows Drake rejecting &#39;writing tests after the code&#39;, bottom panel shows Drake approving &#39;writing tests before the code&#39;&quot;</td>
+</tr>
+<tr>
+<td>Chart</td>
+<td>&quot;Chart&quot;</td>
+<td>&quot;Bar chart showing JavaScript at 65%, Python at 48%, and Rust at 12% developer usage in 2026&quot;</td>
+</tr>
+</tbody></table>
+<h2>Alt Text Limits</h2>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Max characters</td>
+<td>1,000</td>
+</tr>
+<tr>
+<td>Min characters</td>
+<td>None (but should be meaningful)</td>
+</tr>
+<tr>
+<td>Supported on</td>
+<td>Photos, GIFs</td>
+</tr>
+<tr>
+<td>Not supported on</td>
+<td>Videos (use captions instead), links</td>
+</tr>
+</tbody></table>
+<h2>Tips &amp; Tricks</h2>
+<ul>
+<li><strong>Always add alt text</strong>: It takes seconds and makes your content accessible to millions of users</li>
+<li><strong>Describe charts and data</strong>: Screen readers cannot interpret visual data -- describe the key takeaways</li>
+<li><strong>For screenshots</strong>: Include the important text content visible in the screenshot</li>
+<li><strong>For memes</strong>: Describe the meme format and the text on it</li>
+<li><strong>Multiple images</strong>: Add alt text to each image individually</li>
+<li><strong>Use the fallback</strong>: If <code>[data-testid=&quot;altTextInput&quot;]</code> is not found, the alt text step is skipped gracefully with a warning</li>
+</ul>
+<h2>Troubleshooting</h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Alt text input not found</td>
+<td>The alt text button appears on the image thumbnail after upload. You may need to click the image first.</td>
+</tr>
+<tr>
+<td>Alt text not saving</td>
+<td>Make sure you click outside the input or press Tab after typing to confirm the text.</td>
+</tr>
+<tr>
+<td>Character limit exceeded</td>
+<td>Alt text is limited to 1,000 characters. Shorten your description.</td>
+</tr>
+<tr>
+<td>Alt text on GIFs</td>
+<td>GIFs from X&#39;s built-in GIF picker have pre-set alt text. Custom GIFs need manual alt text.</td>
+</tr>
+<tr>
+<td>Multiple images</td>
+<td>Each image has its own alt text. Click on each thumbnail individually.</td>
+</tr>
+</tbody></table>
+<h2>Related Scripts</h2>
+<ul>
+<li><code>src/postComposer.js</code> -- Post with media and alt text</li>
+<li><code>src/videoCaptions.js</code> -- Add captions to videos (the video equivalent of alt text)</li>
+<li><code>docs/examples/tutorials/add-media-tutorial.md</code> -- General media upload guide</li>
+<li><code>docs/examples/tutorials/post-content-tutorial.md</code> -- Complete posting guide</li>
+</ul>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try Add Image Descriptions (ALT Text) -- Tutorial?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/step-by-step/add-media-tutorial">📝 Add Media Tutorial</a>
+        <a href="/docs/step-by-step/ads-campaigns-tutorial">📝 Ads Campaigns Tutorial</a>
+        <a href="/docs/step-by-step/affiliate-benefits-tutorial">📝 Affiliate Benefits Tutorial</a>
+        <a href="/docs/step-by-step/auto-commenter-tutorial">📝 Auto Commenter Tutorial</a>
+        <a href="/docs/step-by-step/auto-liker-tutorial">📝 Auto Liker Tutorial</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a> / <a href="/docs#step-by-step">Tutorials</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

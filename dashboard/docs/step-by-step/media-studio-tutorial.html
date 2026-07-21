@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Access Media Studio — Tutorial — Free X/Twitter Tools Tool | XActions</title>
+  <meta name="description" content="Step-by-step guide to accessing Media Studio, managing your media library, uploading content, and viewing analytics.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, media, studio, tutorial, access, tools, media studio tutorial twitter, twitter media studio tutorial">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Access Media Studio — Tutorial — XActions">
+  <meta property="og:description" content="Step-by-step guide to accessing Media Studio, managing your media library, uploading content, and viewing analytics.">
+  <meta property="og:url" content="https://xactions.app/docs/step-by-step/media-studio-tutorial">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Access Media Studio — Tutorial — Free X/Twitter Tool">
+  <meta name="twitter:description" content="Step-by-step guide to accessing Media Studio, managing your media library, uploading content, and viewing analytics.">
+
+  <link rel="canonical" href="https://xactions.app/docs/step-by-step/media-studio-tutorial">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Access Media Studio — Tutorial — Free X/Twitter Tools Tool | XActions",
+    "description": "Step-by-step guide to accessing Media Studio, managing your media library, uploading content, and viewing analytics.",
+    "url": "https://xactions.app/docs/step-by-step/media-studio-tutorial",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/media-studio-tutorial",
+    "articleSection": "Tools",
+    "keywords": "xactions, twitter automation, x automation, free, media, studio, tutorial, access, tools, media studio tutorial twitter, twitter media studio tutorial"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Access Media Studio — Tutorial", "item": "https://xactions.app/docs/media-studio-tutorial" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use Access Media Studio — Tutorial",
+    "description": "Step-by-step guide to accessing Media Studio, managing your media library, uploading content, and viewing analytics.",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions Access Media Studio — Tutorial script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>⚡ Access Media Studio — Tutorial</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › Access Media Studio — Tutorial
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Tools</span>
+        <h1>Access Media Studio — Tutorial</h1>
+<blockquote>
+<p>Step-by-step guide to accessing Media Studio, managing your media library, uploading content, and viewing analytics.</p>
+</blockquote>
+<p><strong>Works on:</strong> Browser Console<br><strong>Difficulty:</strong> Beginner<br><strong>Time:</strong> 5-10 minutes<br><strong>Requirements:</strong> Logged into x.com, X Premium (Premium or Premium+ tier)</p>
+<hr>
+<h2>Prerequisites</h2>
+<ul>
+<li>Logged into x.com in your browser</li>
+<li>Browser DevTools console (F12 or Cmd+Option+J on Mac)</li>
+<li>X Premium subscription (Premium or Premium+ tier for full access)</li>
+</ul>
+<hr>
+<h2>Quick Start</h2>
+<ol>
+<li>Go to any page on x.com</li>
+<li>Open DevTools Console (F12, then click the <strong>Console</strong> tab)</li>
+<li>Paste the script to navigate to Media Studio</li>
+<li>The script opens <code>studio.x.com</code> in a new tab</li>
+<li>Re-run the script on <code>studio.x.com</code> to scan your library</li>
+</ol>
+<hr>
+<h2>Configuration</h2>
+<pre><code class="language-javascript">const CONFIG = {
+  autoNavigate: true,        // Navigate to Media Studio automatically
+  scanLibrary: true,         // Scan and list media in library
+  showAnalytics: true,       // Show media analytics summary
+  maxMediaToScan: 50,        // Max media items to scan
+  scrollDelay: 2000,         // ms between scroll actions
+  delayBetweenActions: 1500, // ms between UI actions
+};
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>autoNavigate</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Auto-open Media Studio</td>
+</tr>
+<tr>
+<td><code>scanLibrary</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Scan and list uploaded media</td>
+</tr>
+<tr>
+<td><code>showAnalytics</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Show analytics summary</td>
+</tr>
+<tr>
+<td><code>maxMediaToScan</code></td>
+<td>number</td>
+<td><code>50</code></td>
+<td>Maximum media items to collect</td>
+</tr>
+<tr>
+<td><code>scrollDelay</code></td>
+<td>number</td>
+<td><code>2000</code></td>
+<td>Delay between scroll actions</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Step-by-Step Guide</h2>
+<h3>Step 1: Navigate to Media Studio</h3>
+<pre><code class="language-javascript">(async () =&gt; {
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+
+  console.log(&#39;🎬 MEDIA STUDIO - XActions by nichxbt\n&#39;);
+
+  // Show upload instructions
+  console.log(&#39;══════════════════════════════════════════════════&#39;);
+  console.log(&#39;📤 MEDIA STUDIO INFO&#39;);
+  console.log(&#39;══════════════════════════════════════════════════&#39;);
+  console.log(&#39;&#39;);
+  console.log(&#39;   📏 Supported formats:&#39;);
+  console.log(&#39;      Images: JPG, PNG, GIF (up to 5MB)&#39;);
+  console.log(&#39;      Videos: MP4, MOV (up to 2h with Premium)&#39;);
+  console.log(&#39;      GIFs:   Up to 15MB&#39;);
+  console.log(&#39;&#39;);
+  console.log(&#39;   💡 Features:&#39;);
+  console.log(&#39;      • Media library management&#39;);
+  console.log(&#39;      • Upload and organize content&#39;);
+  console.log(&#39;      • Title, description, and tag editing&#39;);
+  console.log(&#39;      • Scheduling and visibility controls&#39;);
+  console.log(&#39;      • Analytics per media item&#39;);
+  console.log(&#39;══════════════════════════════════════════════════\n&#39;);
+
+  // Check if already on studio
+  const isStudio = window.location.hostname.includes(&#39;studio.x.com&#39;);
+
+  if (isStudio) {
+    console.log(&#39;✅ You are on Media Studio.&#39;);
+    console.log(&#39;💡 Run the library scan script below to list your media.&#39;);
+  } else {
+    console.log(&#39;🚀 Opening Media Studio in a new tab...&#39;);
+    console.log(&#39;💡 Media Studio requires Premium (Premium or Premium+ tier).&#39;);
+    window.open(&#39;https://studio.x.com&#39;, &#39;_blank&#39;);
+    console.log(&#39;✅ Opened studio.x.com&#39;);
+    console.log(&#39;💡 Run this script again on studio.x.com to scan your library.&#39;);
+  }
+})();
+</code></pre>
+<h3>Step 2: Scan Your Media Library (Run on studio.x.com)</h3>
+<p>After navigating to <code>studio.x.com</code>, paste this script:</p>
+<pre><code class="language-javascript">(async () =&gt; {
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+  const maxMedia = 50;
+
+  console.log(&#39;📚 SCAN MEDIA LIBRARY - XActions by nichxbt\n&#39;);
+
+  const mediaItems = [];
+  let previousCount = 0;
+  let retries = 0;
+
+  while (retries &lt; 5 &amp;&amp; mediaItems.length &lt; maxMedia) {
+    const items = document.querySelectorAll(
+      &#39;[data-testid=&quot;mediaItem&quot;], [data-testid=&quot;mediaCard&quot;], [role=&quot;gridcell&quot;], .media-item, tr[data-media-id]&#39;
+    );
+
+    items.forEach(item =&gt; {
+      const title = item.getAttribute(&#39;aria-label&#39;)
+        || item.querySelector(&#39;span, p&#39;)?.textContent?.trim()
+        || &#39;Untitled&#39;;
+      const img = item.querySelector(&#39;img&#39;);
+      const video = item.querySelector(&#39;video&#39;);
+      const type = video ? &#39;video&#39; : img ? &#39;image&#39; : &#39;unknown&#39;;
+      const src = img?.src || video?.src || &#39;&#39;;
+      const id = item.getAttribute(&#39;data-media-id&#39;) || src || title;
+
+      if (!mediaItems.find(m =&gt; m.id === id)) {
+        mediaItems.push({
+          id,
+          title: title.substring(0, 60),
+          type,
+          src: src.substring(0, 100),
+        });
+      }
+    });
+
+    if (mediaItems.length === previousCount) {
+      retries++;
+    } else {
+      retries = 0;
+      previousCount = mediaItems.length;
+    }
+
+    console.log(`   🔄 Found ${mediaItems.length} media items...`);
+    window.scrollTo(0, document.body.scrollHeight);
+    await sleep(2000);
+  }
+
+  if (mediaItems.length &gt; 0) {
+    const images = mediaItems.filter(m =&gt; m.type === &#39;image&#39;);
+    const videos = mediaItems.filter(m =&gt; m.type === &#39;video&#39;);
+
+    console.log(`\n📋 Media Library (${mediaItems.length} items):`);
+    console.log(&#39;─&#39;.repeat(50));
+    console.log(`   🖼️  Images: ${images.length}`);
+    console.log(`   🎥 Videos: ${videos.length}`);
+
+    console.log(&#39;\n📝 Recent items:&#39;);
+    mediaItems.slice(0, 10).forEach((item, i) =&gt; {
+      const icon = item.type === &#39;video&#39; ? &#39;🎥&#39; : &#39;🖼️&#39;;
+      console.log(`   ${i + 1}. ${icon} ${item.title}`);
+    });
+
+    // Save to sessionStorage
+    sessionStorage.setItem(&#39;xactions_media_studio&#39;, JSON.stringify({
+      scannedAt: new Date().toISOString(),
+      count: mediaItems.length,
+      items: mediaItems,
+    }));
+    console.log(&#39;\n💾 Media list saved to sessionStorage.&#39;);
+  } else {
+    console.log(&#39;ℹ️ No media items found. Library may be empty or the page layout differs.&#39;);
+  }
+})();
+</code></pre>
+<h3>Step 3: View Media Analytics (Run on studio.x.com)</h3>
+<pre><code class="language-javascript">(async () =&gt; {
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+
+  console.log(&#39;📊 MEDIA ANALYTICS - XActions by nichxbt\n&#39;);
+
+  // Try to find and click analytics tab
+  const analyticsTab = document.querySelector(&#39;[data-testid=&quot;analyticsTab&quot;]&#39;)
+    || document.querySelector(&#39;a[href*=&quot;analytics&quot;]&#39;)
+    || document.querySelector(&#39;button[aria-label*=&quot;Analytics&quot;]&#39;);
+
+  if (analyticsTab) {
+    analyticsTab.click();
+    await sleep(1500);
+    console.log(&#39;✅ Opened analytics tab.&#39;);
+
+    const statsElements = document.querySelectorAll(&#39;[data-testid*=&quot;stat&quot;], .analytics-metric, .stat-value&#39;);
+    if (statsElements.length &gt; 0) {
+      console.log(&#39;\n📊 Media Analytics:&#39;);
+      console.log(&#39;─&#39;.repeat(40));
+      statsElements.forEach(el =&gt; {
+        const label = el.getAttribute(&#39;aria-label&#39;) || el.previousElementSibling?.textContent || &#39;&#39;;
+        const value = el.textContent.trim();
+        if (value) console.log(`   ${label}: ${value}`);
+      });
+    } else {
+      console.log(&#39;ℹ️ Analytics data not found in expected format.&#39;);
+    }
+  } else {
+    console.log(&#39;ℹ️ Analytics tab not found.&#39;);
+    console.log(&#39;💡 Check analytics directly at: studio.x.com/analytics&#39;);
+  }
+})();
+</code></pre>
+<h3>Expected Console Output (Library Scan)</h3>
+<pre><code>📚 SCAN MEDIA LIBRARY - XActions by nichxbt
+
+   🔄 Found 12 media items...
+   🔄 Found 24 media items...
+   🔄 Found 35 media items...
+   🔄 Found 35 media items...
+
+📋 Media Library (35 items):
+──────────────────────────────────────────────────
+   🖼️  Images: 22
+   🎥 Videos: 13
+
+📝 Recent items:
+   1. 🖼️ Product screenshot 2026-03-28
+   2. 🎥 Tutorial walkthrough v2
+   3. 🖼️ Infographic - engagement tips
+   4. 🖼️ Banner design final
+   5. 🎥 Feature demo - auto unfollow
+   6. 🖼️ Logo variations
+   7. 🎥 Announcement video
+   8. 🖼️ Meme template
+   9. 🖼️ Chart - follower growth
+   10. 🎥 Behind the scenes
+
+💾 Media list saved to sessionStorage.
+</code></pre>
+<hr>
+<h2>Tips &amp; Tricks</h2>
+<ol>
+<li><p><strong>Separate domain</strong> -- Media Studio runs on <code>studio.x.com</code>, not <code>x.com</code>. Scripts need to be run on the correct domain.</p>
+</li>
+<li><p><strong>Premium required</strong> -- Full Media Studio access requires Premium ($8/mo) or Premium+ ($16/mo). Basic tier has limited access.</p>
+</li>
+<li><p><strong>Video length by tier</strong> -- Free accounts can upload 140s videos. Premium allows up to 60 minutes. Premium+ allows up to 3 hours.</p>
+</li>
+<li><p><strong>Organize with tags</strong> -- Use the Media Studio interface to add tags and descriptions to your media for easier searching later.</p>
+</li>
+<li><p><strong>Scheduling</strong> -- Media Studio supports scheduling media posts. Upload content and set a publish time directly from the studio interface.</p>
+</li>
+</ol>
+<hr>
+<h2>Troubleshooting</h2>
+<table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&quot;Media Studio requires Premium&quot;</td>
+<td>Subscribe to Premium ($8/mo) or Premium+ ($16/mo) for full access.</td>
+</tr>
+<tr>
+<td>No media items found</td>
+<td>Your library may be empty. Upload media through Media Studio or by posting on X.</td>
+</tr>
+<tr>
+<td>Script not working on studio.x.com</td>
+<td>The page layout may differ. Run the script after the page fully loads.</td>
+</tr>
+<tr>
+<td>Analytics tab not found</td>
+<td>Navigate to <code>studio.x.com/analytics</code> directly.</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Related Scripts</h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Script</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>View Analytics</td>
+<td><code>src/viewAnalytics.js</code></td>
+<td>View post and account analytics</td>
+</tr>
+<tr>
+<td>Creator Revenue</td>
+<td><code>src/creatorSubscriptions.js</code></td>
+<td>Monetization and revenue settings</td>
+</tr>
+<tr>
+<td>X Pro</td>
+<td><code>src/xPro.js</code></td>
+<td>Multi-column TweetDeck interface</td>
+</tr>
+<tr>
+<td>Video Downloader</td>
+<td><code>scripts/videoDownloader.js</code></td>
+<td>Download videos from X</td>
+</tr>
+</tbody></table>
+<hr>
+<footer>
+Built with XActions by <a href="https://x.com/nichxbt">@nichxbt</a> · <a href="https://xactions.app">xactions.app</a> · <a href="https://github.com/nichxbt/xactions">GitHub</a>
+</footer>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try Access Media Studio — Tutorial?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/step-by-step/add-media-tutorial">📝 Add Media Tutorial</a>
+        <a href="/docs/step-by-step/ads-campaigns-tutorial">📝 Ads Campaigns Tutorial</a>
+        <a href="/docs/step-by-step/affiliate-benefits-tutorial">📝 Affiliate Benefits Tutorial</a>
+        <a href="/docs/step-by-step/alt-text-tutorial">📝 Alt Text Tutorial</a>
+        <a href="/docs/step-by-step/auto-commenter-tutorial">📝 Auto Commenter Tutorial</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a> / <a href="/docs#step-by-step">Tutorials</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

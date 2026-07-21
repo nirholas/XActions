@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unfollow Accounts -- Tutorial — Free X/Twitter Tools Tool | XActions</title>
+  <meta name="description" content="Step-by-step guide to unfollowing accounts on X using XActions browser scripts.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, unfollow, accounts, tutorial, tools, unfollow accounts tutorial twitter, twitter unfollow accounts tutorial">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Unfollow Accounts -- Tutorial — XActions">
+  <meta property="og:description" content="Step-by-step guide to unfollowing accounts on X using XActions browser scripts.">
+  <meta property="og:url" content="https://xactions.app/docs/step-by-step/unfollow-accounts-tutorial">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Unfollow Accounts -- Tutorial — Free X/Twitter Tool">
+  <meta name="twitter:description" content="Step-by-step guide to unfollowing accounts on X using XActions browser scripts.">
+
+  <link rel="canonical" href="https://xactions.app/docs/step-by-step/unfollow-accounts-tutorial">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Unfollow Accounts -- Tutorial — Free X/Twitter Tools Tool | XActions",
+    "description": "Step-by-step guide to unfollowing accounts on X using XActions browser scripts.",
+    "url": "https://xactions.app/docs/step-by-step/unfollow-accounts-tutorial",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/unfollow-accounts-tutorial",
+    "articleSection": "Tools",
+    "keywords": "xactions, twitter automation, x automation, free, unfollow, accounts, tutorial, tools, unfollow accounts tutorial twitter, twitter unfollow accounts tutorial"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Unfollow Accounts -- Tutorial", "item": "https://xactions.app/docs/unfollow-accounts-tutorial" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use Unfollow Accounts -- Tutorial",
+    "description": "Step-by-step guide to unfollowing accounts on X using XActions browser scripts.",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions Unfollow Accounts -- Tutorial script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>⚡ Unfollow Accounts -- Tutorial</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › Unfollow Accounts -- Tutorial
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Tools</span>
+        <h1>Unfollow Accounts -- Tutorial</h1>
+<blockquote>
+<p>Step-by-step guide to unfollowing accounts on X using XActions browser scripts.</p>
+</blockquote>
+<h2>Prerequisites</h2>
+<ul>
+<li>Logged into x.com in your browser</li>
+<li>Browser DevTools console (F12 -&gt; Console tab)</li>
+</ul>
+<h2>Quick Start</h2>
+<ol>
+<li>Navigate to <code>https://x.com/YOUR_USERNAME/following</code></li>
+<li>Open DevTools (F12) and go to the Console tab</li>
+<li>Copy the contents of the script you need (see table below)</li>
+<li>Edit the <code>CONFIG</code> section</li>
+<li>Paste into the console and press Enter</li>
+</ol>
+<h2>Scripts Overview</h2>
+<table>
+<thead>
+<tr>
+<th>Script</th>
+<th>Requires core.js</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>src/unfollowEveryone.js</code></td>
+<td>No</td>
+<td>Unfollow every account you follow</td>
+</tr>
+<tr>
+<td><code>src/unfollowback.js</code></td>
+<td>No</td>
+<td>Unfollow only non-followers</td>
+</tr>
+<tr>
+<td><code>src/automation/smartUnfollow.js</code></td>
+<td>Yes</td>
+<td>Time-based unfollow (integrates with keywordFollow)</td>
+</tr>
+</tbody></table>
+<h2>Configuration</h2>
+<h3>src/unfollowEveryone.js</h3>
+<pre><code class="language-js">const CONFIG = {
+  maxUnfollows: Infinity,
+  minDelay: 1200,
+  maxDelay: 3000,
+  scrollDelay: 2000,
+  whitelist: [
+    // &#39;nichxbt&#39;,
+    // &#39;elonmusk&#39;,
+  ],
+  dryRun: false,
+  maxRetries: 8,
+  maxConsecutiveErrors: 5,
+  rateLimitPauseMs: 60000,
+  trackUnfollowed: true,
+  exportOnComplete: true,
+};
+</code></pre>
+<h3>src/unfollowback.js</h3>
+<pre><code class="language-js">const CONFIG = {
+  maxUnfollows: Infinity,
+  whitelist: [],
+  dryRun: true,              // SET FALSE TO EXECUTE
+  minDelay: 1500,
+  maxDelay: 3500,
+  scrollDelay: 2000,
+  maxConsecutiveErrors: 8,
+  maxEmptyScrolls: 6,
+  rateLimitCooldown: 60000,
+  exportOnComplete: true,
+};
+</code></pre>
+<h3>src/automation/smartUnfollow.js (requires core.js)</h3>
+<pre><code class="language-js">const OPTIONS = {
+  DAYS_TO_WAIT: 3,            // Unfollow if not followed back in 3 days
+  MAX_UNFOLLOWS: 50,
+  WHITELIST: [],
+  DRY_RUN: false,
+  ONLY_TRACKED: true,         // Only unfollow users tracked by keywordFollow
+  DELAY_BETWEEN_UNFOLLOWS: 2000,
+};
+</code></pre>
+<h2>Step-by-Step Guide</h2>
+<h3>Unfollow Everyone</h3>
+<p><strong>Step 1:</strong> Navigate to <code>https://x.com/YOUR_USERNAME/following</code>.</p>
+<p><strong>Step 2:</strong> Set your whitelist (accounts to never unfollow):</p>
+<pre><code class="language-js">const CONFIG = {
+  whitelist: [&#39;nichxbt&#39;, &#39;openai&#39;, &#39;bestfriend&#39;],
+  dryRun: false,
+  maxUnfollows: 100,  // Start with a small batch
+};
+</code></pre>
+<p><strong>Step 3:</strong> Paste <code>src/unfollowEveryone.js</code>. It scrolls through your following list and unfollows each account:</p>
+<pre><code>UNFOLLOW EVERYONE
+LIVE
+
+Max: 100 | Delay: 1200-3000ms | Whitelist: 3
+
+#1 Unfollowed @randomuser1
+#2 Unfollowed @randomuser2
+#3 Unfollowed @randomuser3
+...
+#25 (25 done | 3 skipped | 0 err | 62s | 24.2/min)
+</code></pre>
+<p><strong>Step 4:</strong> Use controls while running:</p>
+<pre><code class="language-js">XActionsUtils.pause();   // Pause
+XActionsUtils.resume();  // Resume
+XActionsUtils.abort();   // Stop
+</code></pre>
+<p><strong>Step 5:</strong> A JSON log is auto-downloaded and saved to localStorage.</p>
+<h3>Unfollow Non-Followers Only</h3>
+<p><strong>Step 1:</strong> Navigate to <code>https://x.com/YOUR_USERNAME/following</code>.</p>
+<p><strong>Step 2:</strong> Start with a dry run:</p>
+<pre><code class="language-js">const CONFIG = {
+  whitelist: [&#39;nichxbt&#39;, &#39;important_friend&#39;],
+  dryRun: true,
+  maxUnfollows: 50,
+};
+</code></pre>
+<p><strong>Step 3:</strong> Paste <code>src/unfollowback.js</code>. The script checks each user for the &quot;Follows you&quot; badge:</p>
+<pre><code>UNFOLLOW NON-FOLLOWERS
+DRY RUN -- no accounts will be unfollowed.
+
+  Would unfollow: @nonfollower1
+  Would unfollow: @nonfollower2
+  Whitelisted: @important_friend
+
+RESULTS
+  Scanned: 200
+  Unfollowed: 45
+  Follows back: 152
+  Whitelisted: 1
+</code></pre>
+<p><strong>Step 4:</strong> Set <code>dryRun: false</code> and re-paste to execute:</p>
+<pre><code class="language-js">dryRun: false,
+</code></pre>
+<p><strong>Step 5:</strong> Use controls while running:</p>
+<pre><code class="language-js">XActions.pause();    // Pause
+XActions.resume();   // Resume
+XActions.abort();    // Stop
+XActions.status();   // Show progress
+</code></pre>
+<h3>Smart Unfollow (Time-Based)</h3>
+<p>This works with <code>keywordFollow.js</code> to unfollow users who did not follow back within a grace period.</p>
+<p><strong>Step 1:</strong> First, you need follower data. Navigate to <code>x.com/YOUR_USERNAME/followers</code> and paste the smart unfollow script. It scrapes and saves your followers list.</p>
+<p><strong>Step 2:</strong> Then navigate to <code>x.com/YOUR_USERNAME/following</code> and paste it again. It compares against tracked users from <code>keywordFollow.js</code>:</p>
+<pre><code class="language-js">const OPTIONS = {
+  DAYS_TO_WAIT: 3,
+  MAX_UNFOLLOWS: 30,
+  DRY_RUN: false,
+  ONLY_TRACKED: true,
+};
+</code></pre>
+<p><strong>Step 3:</strong> The script finds users you followed (via keywordFollow) who did not follow back within 3 days:</p>
+<pre><code>Starting Smart Unfollow...
+Wait period: 3 days
+Tracking 45 previously followed users
+
+Loaded 1200 followers from previous scrape
+Found 12 non-followers past the 3-day threshold
+
+Unfollowing @user1 (didn&#39;t follow back in 3 days)
+Unfollowing @user2 (didn&#39;t follow back in 3 days)
+
+Done! Unfollowed 12 users.
+</code></pre>
+<p><strong>Step 4:</strong> Stop at any time:</p>
+<pre><code class="language-js">window.stopSmartUnfollow();
+</code></pre>
+<h2>Tips &amp; Tricks</h2>
+<ul>
+<li><strong>Always use <code>dryRun: true</code> first</strong> with <code>unfollowback.js</code> to preview who will be unfollowed.</li>
+<li><strong>The whitelist is critical.</strong> Add close friends, important contacts, and accounts you want to keep following regardless.</li>
+<li><strong><code>unfollowback.js</code> detects the &quot;Follows you&quot; badge</strong> on each user cell. This is the most reliable indicator.</li>
+<li><strong>Rate limits are strict for unfollows.</strong> Keep delays at 1.5-3 seconds. The scripts auto-pause on rate limits.</li>
+<li><strong>Progress is saved to localStorage.</strong> If you stop and restart, previously processed users are skipped.</li>
+<li><strong>Reload and re-run</strong> if some users were missed. The following list loads lazily.</li>
+<li><strong>Smart unfollow is a two-step process</strong>: scrape followers first (on /followers page), then unfollow (on /following page).</li>
+<li><strong>Export is automatic.</strong> A JSON file downloads with all unfollowed accounts and statistics.</li>
+</ul>
+<h2>Troubleshooting</h2>
+<table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&quot;Wrong page! Go to /following&quot;</td>
+<td>Navigate to <code>x.com/YOUR_USERNAME/following</code></td>
+</tr>
+<tr>
+<td>&quot;Core module not loaded!&quot;</td>
+<td>Paste <code>core.js</code> before <code>smartUnfollow.js</code></td>
+</tr>
+<tr>
+<td>&quot;No tracked users found&quot;</td>
+<td>Run <code>keywordFollow.js</code> first, or set <code>ONLY_TRACKED: false</code></td>
+</tr>
+<tr>
+<td>&quot;No followers data&quot;</td>
+<td>Run smartUnfollow on <code>/followers</code> page first to scrape</td>
+</tr>
+<tr>
+<td>Script stops after a few unfollows</td>
+<td>Rate-limited. Wait 60 seconds or increase delays.</td>
+</tr>
+<tr>
+<td>&quot;Consecutive errors -- aborting&quot;</td>
+<td>X may have changed the unfollow confirmation UI</td>
+</tr>
+<tr>
+<td>Whitelisted user still unfollowed</td>
+<td>Check whitelist spelling (case-insensitive, no @ prefix)</td>
+</tr>
+</tbody></table>
+<h2>Related Scripts</h2>
+<ul>
+<li><code>src/followAccount.js</code> -- Follow specific accounts</li>
+<li><code>src/automation/keywordFollow.js</code> -- Keyword-based follow</li>
+<li><code>src/automation/followTargetUsers.js</code> -- Follow followers of target accounts</li>
+<li><code>src/detectUnfollowers.js</code> -- Detect who unfollowed you</li>
+</ul>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try Unfollow Accounts -- Tutorial?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/step-by-step/add-media-tutorial">📝 Add Media Tutorial</a>
+        <a href="/docs/step-by-step/ads-campaigns-tutorial">📝 Ads Campaigns Tutorial</a>
+        <a href="/docs/step-by-step/affiliate-benefits-tutorial">📝 Affiliate Benefits Tutorial</a>
+        <a href="/docs/step-by-step/alt-text-tutorial">📝 Alt Text Tutorial</a>
+        <a href="/docs/step-by-step/auto-commenter-tutorial">📝 Auto Commenter Tutorial</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a> / <a href="/docs#step-by-step">Tutorials</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

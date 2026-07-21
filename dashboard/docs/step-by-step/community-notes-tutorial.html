@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Community Notes — Tutorial — Free X/Twitter Tools Tool | XActions</title>
+  <meta name="description" content="Step-by-step guide to viewing, writing, and rating Community Notes on X/Twitter posts using XActions.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, community, notes, tutorial, tools, community notes tutorial twitter, twitter community notes tutorial">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Community Notes — Tutorial — XActions">
+  <meta property="og:description" content="Step-by-step guide to viewing, writing, and rating Community Notes on X/Twitter posts using XActions.">
+  <meta property="og:url" content="https://xactions.app/docs/step-by-step/community-notes-tutorial">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Community Notes — Tutorial — Free X/Twitter Tool">
+  <meta name="twitter:description" content="Step-by-step guide to viewing, writing, and rating Community Notes on X/Twitter posts using XActions.">
+
+  <link rel="canonical" href="https://xactions.app/docs/step-by-step/community-notes-tutorial">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Community Notes — Tutorial — Free X/Twitter Tools Tool | XActions",
+    "description": "Step-by-step guide to viewing, writing, and rating Community Notes on X/Twitter posts using XActions.",
+    "url": "https://xactions.app/docs/step-by-step/community-notes-tutorial",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/community-notes-tutorial",
+    "articleSection": "Tools",
+    "keywords": "xactions, twitter automation, x automation, free, community, notes, tutorial, tools, community notes tutorial twitter, twitter community notes tutorial"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Community Notes — Tutorial", "item": "https://xactions.app/docs/community-notes-tutorial" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use Community Notes — Tutorial",
+    "description": "Step-by-step guide to viewing, writing, and rating Community Notes on X/Twitter posts using XActions.",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions Community Notes — Tutorial script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>⚡ Community Notes — Tutorial</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › Community Notes — Tutorial
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Tools</span>
+        <h1>Community Notes — Tutorial</h1>
+<blockquote>
+<p>Step-by-step guide to viewing, writing, and rating Community Notes on X/Twitter posts using XActions.</p>
+</blockquote>
+<p><strong>Works on:</strong> Browser Console<br><strong>Difficulty:</strong> Intermediate<br><strong>Time:</strong> 5-15 minutes<br><strong>Requirements:</strong> Logged into x.com, enrolled in Community Notes (for writing/rating)</p>
+<hr>
+<h2>Prerequisites</h2>
+<ul>
+<li>Logged into x.com in your browser</li>
+<li>Browser DevTools console (F12 or Cmd+Option+J on Mac)</li>
+<li>For writing/rating notes: enrolled in Community Notes at <code>x.com/i/communitynotes</code></li>
+<li>For viewing notes: no special requirements</li>
+</ul>
+<hr>
+<h2>Quick Start</h2>
+<ol>
+<li>Go to your timeline on x.com (or a specific tweet)</li>
+<li>Open DevTools Console (F12, then click the <strong>Console</strong> tab)</li>
+<li>Edit the <code>CONFIG</code> object to select your action (<code>view</code>, <code>write</code>, <code>rate</code>, or <code>browse</code>)</li>
+<li>Set <code>dryRun: false</code> when ready to act</li>
+<li>Paste the script and press <strong>Enter</strong></li>
+</ol>
+<hr>
+<h2>Configuration</h2>
+<pre><code class="language-javascript">const CONFIG = {
+  action: &#39;view&#39;,
+  //   &#39;view&#39;   — view Community Notes on visible tweets
+  //   &#39;write&#39;  — write a note on a specific tweet (requires tweetUrl)
+  //   &#39;rate&#39;   — rate existing notes as helpful/not helpful
+  //   &#39;browse&#39; — browse tweets with Community Notes on your timeline
+
+  // Write parameters
+  tweetUrl: &#39;&#39;,                      // URL of tweet to add a note to
+  noteText: &#39;&#39;,                      // The note content to write
+  noteClassification: &#39;misleading&#39;,  // &#39;misleading&#39;, &#39;not_misleading&#39;, &#39;might_be_misleading&#39;
+
+  // Rate parameters
+  rateAsHelpful: true,               // true = helpful, false = not helpful
+
+  // Browse settings
+  maxTweets: 30,
+  maxScrollAttempts: 20,
+
+  // Timing
+  scrollDelay: 2000,
+  actionDelay: 2000,
+  navigationDelay: 3000,
+  typeCharDelay: 30,
+
+  // Safety
+  dryRun: true,
+};
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>action</code></td>
+<td>string</td>
+<td><code>&#39;view&#39;</code></td>
+<td>What to do: <code>view</code>, <code>write</code>, <code>rate</code>, or <code>browse</code></td>
+</tr>
+<tr>
+<td><code>tweetUrl</code></td>
+<td>string</td>
+<td><code>&#39;&#39;</code></td>
+<td>Tweet URL for writing a note</td>
+</tr>
+<tr>
+<td><code>noteText</code></td>
+<td>string</td>
+<td><code>&#39;&#39;</code></td>
+<td>Content of the note to write</td>
+</tr>
+<tr>
+<td><code>noteClassification</code></td>
+<td>string</td>
+<td><code>&#39;misleading&#39;</code></td>
+<td>Classification: <code>misleading</code>, <code>not_misleading</code>, <code>might_be_misleading</code></td>
+</tr>
+<tr>
+<td><code>rateAsHelpful</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Rate notes as helpful (true) or not helpful (false)</td>
+</tr>
+<tr>
+<td><code>maxTweets</code></td>
+<td>number</td>
+<td><code>30</code></td>
+<td>Max tweets to scan</td>
+</tr>
+<tr>
+<td><code>dryRun</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Preview mode -- set <code>false</code> to actually act</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Step-by-Step Guide</h2>
+<h3>Action 1: View Community Notes on Your Timeline</h3>
+<p>Scan your timeline for tweets that have Community Notes attached:</p>
+<pre><code class="language-javascript">(async () =&gt; {
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+
+  console.log(&#39;📝 VIEW COMMUNITY NOTES - XActions by nichxbt&#39;);
+
+  const SEL = {
+    communityNote: &#39;[data-testid=&quot;communityNote&quot;]&#39;,
+    tweet: &#39;article[data-testid=&quot;tweet&quot;]&#39;,
+    tweetText: &#39;[data-testid=&quot;tweetText&quot;]&#39;,
+    userName: &#39;[data-testid=&quot;User-Name&quot;]&#39;,
+  };
+
+  const processedTweets = new Set();
+  let notesFound = 0;
+  let tweetsScanned = 0;
+  const maxScrollAttempts = 20;
+
+  for (let scroll = 0; scroll &lt; maxScrollAttempts; scroll++) {
+    const tweets = document.querySelectorAll(SEL.tweet);
+
+    for (const tweet of tweets) {
+      const link = tweet.querySelector(&#39;a[href*=&quot;/status/&quot;]&#39;)?.href || &#39;&#39;;
+      if (!link || processedTweets.has(link)) continue;
+      processedTweets.add(link);
+      tweetsScanned++;
+
+      const note = tweet.querySelector(SEL.communityNote);
+      if (note) {
+        const noteText = note.textContent?.trim() || &#39;&#39;;
+        const author = tweet.querySelector(SEL.userName + &#39; a&#39;)?.textContent || &#39;&#39;;
+        const tweetText = tweet.querySelector(SEL.tweetText)?.textContent || &#39;&#39;;
+
+        notesFound++;
+        console.log(`📝 Note #${notesFound} found on tweet by ${author}:`);
+        console.log(`   Tweet: &quot;${tweetText.slice(0, 80)}...&quot;`);
+        console.log(`   Note: &quot;${noteText.slice(0, 150)}...&quot;`);
+        console.log(`   Link: ${link}`);
+        console.log(&#39;&#39;);
+      }
+    }
+
+    window.scrollBy(0, 600);
+    await sleep(2000);
+  }
+
+  console.log(`✅ Scanned ${tweetsScanned} tweets, found ${notesFound} Community Notes`);
+})();
+</code></pre>
+<h3>Expected Output (View)</h3>
+<pre><code>📝 VIEW COMMUNITY NOTES - XActions by nichxbt
+📝 Note #1 found on tweet by @example_user:
+   Tweet: &quot;Breaking: Major event happened today that changes everything about...&quot;
+   Note: &quot;This claim is missing important context. According to official sources...&quot;
+   Link: https://x.com/example_user/status/1234567890
+
+📝 Note #2 found on tweet by @news_account:
+   Tweet: &quot;CONFIRMED: New policy announced that will affect all users...&quot;
+   Note: &quot;While a policy was announced, the claim about affecting all users is...&quot;
+   Link: https://x.com/news_account/status/0987654321
+
+✅ Scanned 45 tweets, found 2 Community Notes
+</code></pre>
+<h3>Action 2: Write a Community Note</h3>
+<p>To write a note on a specific tweet (requires Community Notes enrollment):</p>
+<pre><code class="language-javascript">(async () =&gt; {
+  const CONFIG = {
+    tweetUrl: &#39;https://x.com/example/status/1234567890&#39;,
+    noteText: &#39;This claim lacks important context. According to the official source (link), the actual data shows a different conclusion.&#39;,
+    noteClassification: &#39;misleading&#39;,
+    dryRun: true,  // Set to false when ready
+  };
+
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+
+  console.log(&#39;✍️ WRITE COMMUNITY NOTE - XActions by nichxbt&#39;);
+
+  if (!CONFIG.tweetUrl) {
+    console.error(&#39;❌ Set CONFIG.tweetUrl to the tweet you want to annotate&#39;);
+    return;
+  }
+  if (!CONFIG.noteText) {
+    console.error(&#39;❌ Set CONFIG.noteText with your note content&#39;);
+    return;
+  }
+
+  if (CONFIG.dryRun) {
+    console.log(&#39;⚠️ DRY RUN — preview only&#39;);
+    console.log(`📋 Tweet: ${CONFIG.tweetUrl}`);
+    console.log(`📋 Classification: ${CONFIG.noteClassification}`);
+    console.log(`📋 Note: &quot;${CONFIG.noteText}&quot;`);
+    console.log(&#39;💡 Set dryRun: false to actually submit&#39;);
+    return;
+  }
+
+  // Navigate to the tweet
+  if (window.location.href !== CONFIG.tweetUrl) {
+    window.location.href = CONFIG.tweetUrl;
+    console.log(&#39;🔄 Navigating to tweet... Re-run after page loads.&#39;);
+    return;
+  }
+
+  await sleep(3000);
+
+  // Find the tweet and open the more menu
+  const tweet = document.querySelector(&#39;article[data-testid=&quot;tweet&quot;]&#39;);
+  if (!tweet) {
+    console.error(&#39;❌ Could not find the tweet&#39;);
+    return;
+  }
+
+  const caretBtn = tweet.querySelector(&#39;[data-testid=&quot;caret&quot;]&#39;);
+  if (caretBtn) {
+    caretBtn.click();
+    await sleep(2000);
+
+    const menuItems = [...document.querySelectorAll(&#39;[role=&quot;menuitem&quot;]&#39;)];
+    const writeBtn = menuItems.find(item =&gt;
+      item.textContent.toLowerCase().includes(&#39;note&#39;) ||
+      item.textContent.toLowerCase().includes(&#39;community note&#39;)
+    );
+
+    if (writeBtn) {
+      writeBtn.click();
+      await sleep(3000);
+      console.log(&#39;✅ Opened note writing form&#39;);
+      console.log(&#39;💡 Complete the form manually with your note text&#39;);
+    } else {
+      console.log(&#39;❌ &quot;Write a note&quot; option not found in menu&#39;);
+      console.log(&#39;💡 Ensure you are enrolled at x.com/i/communitynotes&#39;);
+    }
+  }
+})();
+</code></pre>
+<h3>Action 3: Rate Existing Notes</h3>
+<p>Scroll through your timeline and rate Community Notes as helpful or not helpful:</p>
+<pre><code class="language-javascript">(async () =&gt; {
+  const CONFIG = {
+    rateAsHelpful: true,
+    maxScrollAttempts: 15,
+    dryRun: true,
+  };
+
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+
+  console.log(`📝 RATE COMMUNITY NOTES - XActions by nichxbt`);
+  console.log(`Rating as: ${CONFIG.rateAsHelpful ? &#39;Helpful&#39; : &#39;Not Helpful&#39;}`);
+
+  if (CONFIG.dryRun) {
+    console.log(&#39;⚠️ DRY RUN — will scan but not rate&#39;);
+  }
+
+  const processedTweets = new Set();
+  let notesRated = 0;
+
+  for (let scroll = 0; scroll &lt; CONFIG.maxScrollAttempts; scroll++) {
+    const tweets = document.querySelectorAll(&#39;article[data-testid=&quot;tweet&quot;]&#39;);
+
+    for (const tweet of tweets) {
+      const link = tweet.querySelector(&#39;a[href*=&quot;/status/&quot;]&#39;)?.href || &#39;&#39;;
+      if (!link || processedTweets.has(link)) continue;
+      processedTweets.add(link);
+
+      const note = tweet.querySelector(&#39;[data-testid=&quot;communityNote&quot;]&#39;);
+      if (!note) continue;
+
+      const rateBtn = note.querySelector(&#39;[data-testid=&quot;rateNote&quot;]&#39;)
+        || note.querySelector(&#39;[aria-label*=&quot;ate&quot;], [aria-label*=&quot;elpful&quot;]&#39;);
+
+      if (rateBtn) {
+        const author = tweet.querySelector(&#39;[data-testid=&quot;User-Name&quot;] a&#39;)?.textContent || &#39;&#39;;
+        console.log(`📝 Found note on tweet by ${author}`);
+
+        if (!CONFIG.dryRun) {
+          rateBtn.click();
+          await sleep(2000);
+
+          const options = [...document.querySelectorAll(&#39;[role=&quot;radio&quot;], [role=&quot;option&quot;], button&#39;)];
+          const targetText = CONFIG.rateAsHelpful ? &#39;helpful&#39; : &#39;not helpful&#39;;
+          const targetOption = options.find(opt =&gt;
+            opt.textContent?.toLowerCase()?.includes(targetText)
+          );
+
+          if (targetOption) {
+            targetOption.click();
+            await sleep(2000);
+
+            const submitBtn = document.querySelector(&#39;[data-testid=&quot;submitRating&quot;], button[type=&quot;submit&quot;]&#39;);
+            if (submitBtn) submitBtn.click();
+          }
+        }
+
+        notesRated++;
+        console.log(`   ✅ ${CONFIG.dryRun ? &#39;Would rate&#39; : &#39;Rated&#39;} as ${CONFIG.rateAsHelpful ? &#39;helpful&#39; : &#39;not helpful&#39;} (${notesRated})`);
+      }
+    }
+
+    window.scrollBy(0, 600);
+    await sleep(2000);
+  }
+
+  console.log(`\n✅ ${CONFIG.dryRun ? &#39;Found&#39; : &#39;Rated&#39;} ${notesRated} Community Notes`);
+})();
+</code></pre>
+<h3>Action 4: Browse and Export Noted Tweets</h3>
+<p>Browse your timeline and export all noted tweets as JSON:</p>
+<pre><code class="language-javascript">(async () =&gt; {
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+
+  console.log(&#39;🔍 BROWSE COMMUNITY NOTES - XActions by nichxbt&#39;);
+  console.log(&#39;💡 Tip: Visit x.com/i/communitynotes for the full dashboard&#39;);
+
+  const notedTweets = [];
+  const processedTweets = new Set();
+
+  for (let scroll = 0; scroll &lt; 20; scroll++) {
+    const tweets = document.querySelectorAll(&#39;article[data-testid=&quot;tweet&quot;]&#39;);
+
+    for (const tweet of tweets) {
+      const link = tweet.querySelector(&#39;a[href*=&quot;/status/&quot;]&#39;)?.href || &#39;&#39;;
+      if (!link || processedTweets.has(link)) continue;
+      processedTweets.add(link);
+
+      const note = tweet.querySelector(&#39;[data-testid=&quot;communityNote&quot;]&#39;);
+      if (note) {
+        notedTweets.push({
+          tweetLink: link,
+          author: tweet.querySelector(&#39;[data-testid=&quot;User-Name&quot;] a&#39;)?.textContent || &#39;&#39;,
+          tweetText: tweet.querySelector(&#39;[data-testid=&quot;tweetText&quot;]&#39;)?.textContent?.slice(0, 200) || &#39;&#39;,
+          noteText: note.textContent?.trim()?.slice(0, 300) || &#39;&#39;,
+        });
+      }
+    }
+
+    window.scrollBy(0, 600);
+    await sleep(2000);
+  }
+
+  console.log(`\n📋 Found ${notedTweets.length} noted tweets`);
+
+  if (notedTweets.length &gt; 0) {
+    console.log(JSON.stringify(notedTweets, null, 2));
+
+    // Auto-download
+    const blob = new Blob([JSON.stringify(notedTweets, null, 2)], { type: &#39;application/json&#39; });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement(&#39;a&#39;);
+    a.href = url;
+    a.download = `community-notes-${new Date().toISOString().split(&#39;T&#39;)[0]}.json`;
+    a.click();
+    console.log(&#39;📥 Exported to JSON&#39;);
+  }
+})();
+</code></pre>
+<hr>
+<h2>Tips &amp; Tricks</h2>
+<ol>
+<li><p><strong>Enrollment required for writing</strong> -- You must enroll at <code>x.com/i/communitynotes</code> before you can write or rate notes. Viewing notes does not require enrollment.</p>
+</li>
+<li><p><strong>Note quality matters</strong> -- Community Notes uses a consensus-based ranking system. Notes rated helpful by people across different perspectives are more likely to be shown.</p>
+</li>
+<li><p><strong>Include sources</strong> -- When writing a note, always include links to authoritative sources. Notes with citations are rated more favorably.</p>
+</li>
+<li><p><strong>Abort at any time</strong> -- If the full script from <code>src/communityNotes.js</code> is running, type <code>XActions.abort()</code> in the console to stop it.</p>
+</li>
+<li><p><strong>Check status</strong> -- While the script is running, type <code>XActions.status()</code> to see progress.</p>
+</li>
+</ol>
+<hr>
+<h2>Troubleshooting</h2>
+<table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&quot;Write a note&quot; not in menu</td>
+<td>You need to be enrolled in Community Notes. Visit <code>x.com/i/communitynotes</code> to sign up.</td>
+</tr>
+<tr>
+<td>No notes found on timeline</td>
+<td>Community Notes are not on every tweet. Try scrolling through more content or visit trending topics.</td>
+</tr>
+<tr>
+<td>Rate button not found</td>
+<td>The rate option may appear differently. Try clicking on the note itself to expand rating options.</td>
+</tr>
+<tr>
+<td>Script stops early</td>
+<td>X rate-limits scrolling. Wait a few seconds and re-run.</td>
+</tr>
+<tr>
+<td>Page reload interrupts script</td>
+<td>The <code>write</code> action may require a page reload. Re-run the script after the page loads.</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Related Scripts</h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Script</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Tweet Scraping</td>
+<td><code>src/scrapers/twitter/index.js</code></td>
+<td>Scrape tweet content and metadata</td>
+</tr>
+<tr>
+<td>Auto Commenter</td>
+<td><code>src/autoCommenter.js</code></td>
+<td>Automate replies to tweets</td>
+</tr>
+<tr>
+<td>View Analytics</td>
+<td><code>src/viewAnalytics.js</code></td>
+<td>View engagement metrics on your posts</td>
+</tr>
+</tbody></table>
+<hr>
+<footer>
+Built with XActions by <a href="https://x.com/nichxbt">@nichxbt</a> · <a href="https://xactions.app">xactions.app</a> · <a href="https://github.com/nichxbt/xactions">GitHub</a>
+</footer>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try Community Notes — Tutorial?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/step-by-step/add-media-tutorial">📝 Add Media Tutorial</a>
+        <a href="/docs/step-by-step/ads-campaigns-tutorial">📝 Ads Campaigns Tutorial</a>
+        <a href="/docs/step-by-step/affiliate-benefits-tutorial">📝 Affiliate Benefits Tutorial</a>
+        <a href="/docs/step-by-step/alt-text-tutorial">📝 Alt Text Tutorial</a>
+        <a href="/docs/step-by-step/auto-commenter-tutorial">📝 Auto Commenter Tutorial</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a> / <a href="/docs#step-by-step">Tutorials</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

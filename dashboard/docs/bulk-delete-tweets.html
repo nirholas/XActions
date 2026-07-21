@@ -73,13 +73,121 @@
   }
   </script>
 
-  <link rel="stylesheet" href="/css/common.css">
-  <link rel="stylesheet" href="/css/docs.css">
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
 </head>
 <body>
   <div class="layout">
     <!-- Sidebar -->
-    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
 
     <!-- Main Content -->
     <main class="main-content">
@@ -132,12 +240,398 @@
 <li>Copy and paste the script from <a href="https://github.com/nirholas/XActions/blob/main/src/bulkDeleteTweets.js"><code>src/bulkDeleteTweets.js</code></a></li>
 <li>Press Enter to run</li>
 </ol>
-<pre><code class="language-javascript">// Quick start — copy the full script from:
-// src/bulkDeleteTweets.js
-//
-// Or install via npm and use the CLI:
-// npm install -g xactions
-// xactions --help
+<pre><code class="language-javascript">/**
+ * ============================================================
+ * 🗑️ Bulk Delete Tweets — Production Grade
+ * ============================================================
+ *
+ * @name        bulkDeleteTweets.js
+ * @description Delete your tweets by age, keyword, or engagement threshold.
+ *              The #1 most-requested Twitter automation feature.
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.0.0
+ * @date        2026-02-24
+ * @repository  https://github.com/nirholas/XActions
+ *
+ * ============================================================
+ * 📋 USAGE:
+ *
+ * 1. Go to: https://x.com/YOUR_USERNAME
+ * 2. Open DevTools Console (F12)
+ * 3. Configure the filters below
+ * 4. Set dryRun = false when you&#39;re sure
+ * 5. Paste this script and press Enter
+ *
+ * ⚠️ DELETION IS PERMANENT. There is no undo. Export first!
+ *    Use src/backupAccount.js to save your tweets before deleting.
+ *
+ * CONTROLS:
+ *   XActionsUtils.pause()   — pause
+ *   XActionsUtils.resume()  — resume
+ *   XActionsUtils.abort()   — stop
+ * ============================================================
+ */
+(() =&gt; {
+  &#39;use strict&#39;;
+
+  const CONFIG = {
+    // ── Filters (ALL conditions must match for deletion) ────
+    filters: {
+      olderThanDays: null,          // Delete tweets older than N days (null = ignore)
+      beforeDate: null,             // Delete tweets before this date: &#39;YYYY-MM-DD&#39; (null = ignore)
+      afterDate: null,              // Delete tweets after this date: &#39;YYYY-MM-DD&#39; (null = ignore)
+      maxLikes: null,               // Only delete if likes &lt;= this (null = ignore)
+      maxRetweets: null,            // Only delete if retweets &lt;= this (null = ignore)
+      containsKeywords: [],         // Delete if text contains ANY of these (empty = ignore)
+      excludeKeywords: [],          // NEVER delete if text contains ANY of these
+      excludePinned: true,          // Skip pinned tweet
+      excludeThreads: false,        // Skip tweets that are part of a thread
+      onlyRetweets: false,          // Only delete retweets (not original tweets)
+      onlyReplies: false,           // Only delete replies
+    },
+
+    // ── Limits ──────────────────────────────────────────────
+    maxDeletes: Infinity,           // Stop after this many deletions
+    scrollCycles: 100,              // Maximum scroll attempts
+
+    // ── Timing ──────────────────────────────────────────────
+    minDelay: 1500,
+    maxDelay: 3500,
+    scrollDelay: 2000,
+    menuDelay: 800,
+
+    // ── Safety ──────────────────────────────────────────────
+    dryRun: true,                   // START WITH TRUE! Preview before deleting.
+    confirmEvery: 50,               // Pause for user confirmation every N deletes (0 = never)
+
+    // ── Recovery ────────────────────────────────────────────
+    maxConsecutiveErrors: 5,
+    rateLimitPauseMs: 90000,        // 90s when rate-limited
+
+    // ── Export ──────────────────────────────────────────────
+    exportDeleted: true,            // Save deleted tweet data before removal
+    exportOnComplete: true,
+  };
+
+  // ══════════════════════════════════════════════════════════
+  // 🔧 Embedded Utilities
+  // ══════════════════════════════════════════════════════════
+
+  const U = window.XActionsUtils || (() =&gt; {
+    const sleep = ms =&gt; new Promise(r =&gt; setTimeout(r, ms + ms * 0.15 * (Math.random() - 0.5)));
+    const rand = (lo, hi) =&gt; sleep(lo + Math.random() * (hi - lo));
+
+    const SELS = {
+      tweet:      [&#39;article[data-testid=&quot;tweet&quot;]&#39;, &#39;article[role=&quot;article&quot;]&#39;],
+      tweetText:  [&#39;[data-testid=&quot;tweetText&quot;]&#39;],
+      caret:      [&#39;[data-testid=&quot;caret&quot;]&#39;, &#39;button[aria-label=&quot;More&quot;]&#39;],
+      like:       [&#39;[data-testid=&quot;like&quot;]&#39;, &#39;[data-testid=&quot;unlike&quot;]&#39;],
+      retweet:    [&#39;[data-testid=&quot;retweet&quot;]&#39;, &#39;[data-testid=&quot;unretweet&quot;]&#39;],
+      reply:      [&#39;[data-testid=&quot;reply&quot;]&#39;],
+      confirmBtn: [&#39;[data-testid=&quot;confirmationSheetConfirm&quot;]&#39;],
+    };
+
+    const $ = (k, r = document) =&gt; {
+      for (const s of (SELS[k] || [k])) { try { const e = r.querySelector(s); if (e) return e; } catch {} } return null;
+    };
+    const $$ = (k, r = document) =&gt; {
+      const set = new Set(); for (const s of (SELS[k] || [k])) { try { r.querySelectorAll(s).forEach(e =&gt; set.add(e)); } catch {} } return [...set];
+    };
+
+    let _p = false, _a = false;
+    return {
+      sleep, randomDelay: rand, $, $$,
+      pause() { _p = true; console.log(&#39;⏸️  PAUSED&#39;); },
+      resume() { _p = false; console.log(&#39;▶️  RESUMED&#39;); },
+      abort() { _a = true; _p = false; console.log(&#39;🛑 ABORTED&#39;); },
+      async shouldContinue() { if (_a) return false; while (_p) { await sleep(500); if (_a) return false; } return true; },
+      isRateLimited() {
+        for (const sel of [&#39;[data-testid=&quot;toast&quot;]&#39;, &#39;[role=&quot;alert&quot;]&#39;]) {
+          const el = document.querySelector(sel);
+          if (el &amp;&amp; /rate.limit|try.again|too.many|slow.down|something.went/i.test(el.textContent)) return true;
+        }
+        return false;
+      },
+      parseCount(str) {
+        if (!str || typeof str === &#39;number&#39;) return typeof str === &#39;number&#39; ? str : 0;
+        str = str.replace(/,/g, &#39;&#39;).trim();
+        const m = str.match(/([\d.]+)\s*([KMBkmb])?/);
+        if (!m) return 0;
+        let n = parseFloat(m[1]);
+        if (m[2]) n *= { k: 1e3, m: 1e6, b: 1e9 }[m[2].toLowerCase()] || 1;
+        return Math.round(n);
+      },
+      download(data, fn) {
+        const a = document.createElement(&#39;a&#39;);
+        a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: &#39;application/json&#39; }));
+        a.download = fn; document.body.appendChild(a); a.click(); a.remove();
+        console.log(`📥 Downloaded: ${fn}`);
+      },
+      saveState(k, d) { try { localStorage.setItem(&#39;xactions_&#39; + k, JSON.stringify(d)); } catch {} },
+      loadState(k, d) { try { return JSON.parse(localStorage.getItem(&#39;xactions_&#39; + k)) ?? d; } catch { return d; } },
+    };
+  })();
+
+  // ══════════════════════════════════════════════════════════
+  // 🚀 Main
+  // ══════════════════════════════════════════════════════════
+
+  (async () =&gt; {
+    const W = 60;
+    console.log(&#39;╔&#39; + &#39;═&#39;.repeat(W) + &#39;╗&#39;);
+    console.log(&#39;║  🗑️  BULK DELETE TWEETS&#39; + &#39; &#39;.repeat(W - 24) + &#39;║&#39;);
+    console.log(&#39;║  &#39; + (CONFIG.dryRun ? &#39;🔍 DRY RUN — preview only&#39; : &#39;⚠️  LIVE MODE — tweets WILL be deleted!&#39;).padEnd(W - 2) + &#39;║&#39;);
+    console.log(&#39;║  by nichxbt — v1.0&#39; + &#39; &#39;.repeat(W - 21) + &#39;║&#39;);
+    console.log(&#39;╚&#39; + &#39;═&#39;.repeat(W) + &#39;╝&#39;);
+
+    // Detect profile
+    const pathMatch = window.location.pathname.match(/^\/([A-Za-z0-9_]+)/);
+    if (!pathMatch || [&#39;home&#39;, &#39;explore&#39;, &#39;notifications&#39;, &#39;messages&#39;, &#39;i&#39;, &#39;search&#39;, &#39;settings&#39;].includes(pathMatch[1])) {
+      console.error(&#39;❌ Navigate to your profile page first! (x.com/YOUR_USERNAME)&#39;);
+      return;
+    }
+    const profileUser = pathMatch[1];
+    console.log(`\n👤 Profile: @${profileUser}`);
+
+    // Log active filters
+    const f = CONFIG.filters;
+    console.log(&#39;\n📋 Active Filters:&#39;);
+    if (f.olderThanDays) console.log(`   • Older than ${f.olderThanDays} days`);
+    if (f.beforeDate) console.log(`   • Before ${f.beforeDate}`);
+    if (f.afterDate) console.log(`   • After ${f.afterDate}`);
+    if (f.maxLikes !== null) console.log(`   • Max likes: ${f.maxLikes}`);
+    if (f.maxRetweets !== null) console.log(`   • Max retweets: ${f.maxRetweets}`);
+    if (f.containsKeywords.length) console.log(`   • Contains: ${f.containsKeywords.join(&#39;, &#39;)}`);
+    if (f.excludeKeywords.length) console.log(`   • Excludes: ${f.excludeKeywords.join(&#39;, &#39;)}`);
+    if (f.excludePinned) console.log(&#39;   • Skipping pinned tweet&#39;);
+    if (f.onlyRetweets) console.log(&#39;   • Retweets only&#39;);
+    if (f.onlyReplies) console.log(&#39;   • Replies only&#39;);
+    if (!f.olderThanDays &amp;&amp; !f.beforeDate &amp;&amp; !f.afterDate &amp;&amp; f.maxLikes === null &amp;&amp;
+        f.maxRetweets === null &amp;&amp; !f.containsKeywords.length &amp;&amp; !f.onlyRetweets &amp;&amp; !f.onlyReplies) {
+      console.log(&#39;   ⚠️  NO FILTERS SET — ALL tweets will be deleted!&#39;);
+    }
+    console.log(&#39;&#39;);
+
+    // Helpers
+    const cutoffDate = f.olderThanDays ? new Date(Date.now() - f.olderThanDays * 86400000) : null;
+    const beforeDate = f.beforeDate ? new Date(f.beforeDate) : null;
+    const afterDate = f.afterDate ? new Date(f.afterDate) : null;
+
+    const shouldDelete = (tweetData) =&gt; {
+      const { text, likes, retweets, timestamp, isRetweet, isReply, isPinned } = tweetData;
+
+      if (f.excludePinned &amp;&amp; isPinned) return false;
+      if (f.onlyRetweets &amp;&amp; !isRetweet) return false;
+      if (f.onlyReplies &amp;&amp; !isReply) return false;
+
+      if (timestamp) {
+        const d = new Date(timestamp);
+        if (cutoffDate &amp;&amp; d &gt; cutoffDate) return false;
+        if (beforeDate &amp;&amp; d &gt; beforeDate) return false;
+        if (afterDate &amp;&amp; d &lt; afterDate) return false;
+      }
+
+      if (f.maxLikes !== null &amp;&amp; likes &gt; f.maxLikes) return false;
+      if (f.maxRetweets !== null &amp;&amp; retweets &gt; f.maxRetweets) return false;
+
+      const lowerText = text.toLowerCase();
+      if (f.containsKeywords.length &gt; 0) {
+        if (!f.containsKeywords.some(kw =&gt; lowerText.includes(kw.toLowerCase()))) return false;
+      }
+      if (f.excludeKeywords.length &gt; 0) {
+        if (f.excludeKeywords.some(kw =&gt; lowerText.includes(kw.toLowerCase()))) return false;
+      }
+
+      return true;
+    };
+
+    const extractTweetData = (article) =&gt; {
+      const text = U.$(&#39;tweetText&#39;, article)?.textContent || &#39;&#39;;
+      const timeEl = article.querySelector(&#39;time&#39;);
+      const timestamp = timeEl?.getAttribute(&#39;datetime&#39;) || &#39;&#39;;
+      const tweetLink = article.querySelector(&#39;a[href*=&quot;/status/&quot;]&#39;);
+      const tweetUrl = tweetLink?.getAttribute(&#39;href&#39;) || &#39;&#39;;
+      const tweetId = tweetUrl.split(&#39;/status/&#39;)[1]?.split(/[?/]/)[0] || &#39;&#39;;
+
+      const likeBtn = U.$(&#39;like&#39;, article);
+      const rtBtn = U.$(&#39;retweet&#39;, article);
+      const likes = U.parseCount(likeBtn?.getAttribute(&#39;aria-label&#39;)?.match(/([\d,.]+[KMBkmb]?)/)?.[1] || &#39;0&#39;);
+      const retweets = U.parseCount(rtBtn?.getAttribute(&#39;aria-label&#39;)?.match(/([\d,.]+[KMBkmb]?)/)?.[1] || &#39;0&#39;);
+
+      const isRetweet = !!article.querySelector(&#39;[data-testid=&quot;socialContext&quot;]&#39;)?.textContent?.match(/reposted/i);
+      const isReply = !!article.querySelector(&#39;[data-testid=&quot;socialContext&quot;]&#39;)?.textContent?.match(/replying/i) ||
+                      text.startsWith(&#39;@&#39;);
+      const isPinned = !!article.querySelector(&#39;[data-testid=&quot;socialContext&quot;]&#39;)?.textContent?.match(/pinned/i);
+
+      return { text, timestamp, tweetId, tweetUrl, likes, retweets, isRetweet, isReply, isPinned };
+    };
+
+    // State
+    const deletedLog = [];
+    const processed = new Set();
+    let deleted = 0, skippedCount = 0, errors = 0, consErr = 0;
+    const t0 = Date.now();
+
+    for (let scroll = 0; scroll &lt; CONFIG.scrollCycles; scroll++) {
+      if (deleted &gt;= CONFIG.maxDeletes) break;
+      if (!(await U.shouldContinue())) break;
+
+      if (U.isRateLimited()) {
+        console.warn(`⏳ Rate-limited — waiting ${CONFIG.rateLimitPauseMs / 1000}s...`);
+        await U.sleep(CONFIG.rateLimitPauseMs);
+        continue;
+      }
+
+      const articles = U.$$(&#39;tweet&#39;);
+      let actedThisScroll = false;
+
+      for (const article of articles) {
+        if (deleted &gt;= CONFIG.maxDeletes) break;
+        if (!(await U.shouldContinue())) break;
+
+        const data = extractTweetData(article);
+        if (!data.tweetId || processed.has(data.tweetId)) continue;
+        processed.add(data.tweetId);
+
+        // Check if it belongs to profile owner
+        const authorLink = article.querySelector(`a[href=&quot;/${profileUser}&quot;]`);
+        if (!authorLink &amp;&amp; !data.isRetweet) continue;
+
+        if (!shouldDelete(data)) {
+          skippedCount++;
+          continue;
+        }
+
+        if (CONFIG.dryRun) {
+          const preview = data.text.slice(0, 60).replace(/\n/g, &#39; &#39;);
+          console.log(`🔍 [DRY] Would delete: &quot;${preview}...&quot; (❤️${data.likes} 🔄${data.retweets})`);
+          deletedLog.push(data);
+          deleted++;
+          actedThisScroll = true;
+          continue;
+        }
+
+        try {
+          // Find and click the &quot;more&quot; menu (caret)
+          const caret = U.$(&#39;caret&#39;, article);
+          if (!caret) { skippedCount++; continue; }
+
+          caret.scrollIntoView({ block: &#39;center&#39;, behavior: &#39;smooth&#39; });
+          await U.sleep(300);
+          caret.click();
+          await U.sleep(CONFIG.menuDelay);
+
+          // Find &quot;Delete&quot; in the dropdown menu
+          const menuItems = document.querySelectorAll(&#39;[role=&quot;menuitem&quot;]&#39;);
+          let deleteBtn = null;
+          for (const item of menuItems) {
+            if (/delete/i.test(item.textContent)) {
+              deleteBtn = item;
+              break;
+            }
+          }
+
+          if (!deleteBtn) {
+            // Might be a retweet — look for &quot;Undo repost&quot;
+            for (const item of menuItems) {
+              if (/undo repost|undo retweet/i.test(item.textContent)) {
+                deleteBtn = item;
+                break;
+              }
+            }
+          }
+
+          if (!deleteBtn) {
+            // Close menu and skip
+            document.body.click();
+            await U.sleep(300);
+            skippedCount++;
+            continue;
+          }
+
+          deleteBtn.click();
+          await U.sleep(CONFIG.menuDelay);
+
+          // Confirm deletion
+          const confirmBtn = U.$(&#39;confirmBtn&#39;);
+          if (confirmBtn) {
+            confirmBtn.click();
+            deleted++;
+            consErr = 0;
+            actedThisScroll = true;
+
+            const preview = data.text.slice(0, 50).replace(/\n/g, &#39; &#39;);
+            if (deleted &lt;= 5 || deleted % 10 === 0) {
+              console.log(`🗑️ #${deleted}: Deleted &quot;${preview}...&quot; (❤️${data.likes})`);
+            }
+
+            if (CONFIG.exportDeleted) {
+              deletedLog.push(data);
+            }
+
+            // Periodic confirmation
+            if (CONFIG.confirmEvery &gt; 0 &amp;&amp; deleted % CONFIG.confirmEvery === 0 &amp;&amp; deleted &gt; 0) {
+              console.log(`\n⏸️  Paused at ${deleted} deletions. Call XActionsUtils.resume() to continue.\n`);
+              if (window.XActionsUtils) window.XActionsUtils.pause();
+              else { /* wait 10s then continue */ await U.sleep(10000); }
+            }
+
+            await U.randomDelay(CONFIG.minDelay, CONFIG.maxDelay);
+          } else {
+            console.warn(&#39;⚠️ No confirm dialog&#39;);
+            errors++; consErr++;
+            await U.sleep(1500);
+          }
+        } catch (e) {
+          console.warn(`⚠️ Error: ${e.message}`);
+          errors++; consErr++;
+          document.body.click(); // close any open menus
+          await U.sleep(2000);
+        }
+
+        if (consErr &gt;= CONFIG.maxConsecutiveErrors) {
+          console.error(`❌ ${consErr} consecutive errors — stopping.`);
+          break;
+        }
+      }
+
+      if (consErr &gt;= CONFIG.maxConsecutiveErrors) break;
+
+      window.scrollTo({ top: document.body.scrollHeight, behavior: &#39;smooth&#39; });
+      await U.sleep(CONFIG.scrollDelay);
+
+      // Progress update every 5 scrolls
+      if (scroll &gt; 0 &amp;&amp; scroll % 5 === 0) {
+        const s = ((Date.now() - t0) / 1000).toFixed(0);
+        console.log(`📊 Scroll ${scroll}: ${deleted} deleted | ${skippedCount} skipped | ${s}s elapsed`);
+      }
+    }
+
+    // ── Results ──────────────────────────────────────────────
+
+    const elapsed = ((Date.now() - t0) / 1000).toFixed(1);
+    console.log(&#39;\n╔&#39; + &#39;═&#39;.repeat(W) + &#39;╗&#39;);
+    console.log(&#39;║  ✅ BULK DELETE COMPLETE&#39; + &#39; &#39;.repeat(W - 25) + &#39;║&#39;);
+    console.log(&#39;╚&#39; + &#39;═&#39;.repeat(W) + &#39;╝&#39;);
+    console.log(`  🗑️  Deleted:    ${deleted}`);
+    console.log(`  ⏭️  Skipped:    ${skippedCount}`);
+    console.log(`  ⚠️  Errors:     ${errors}`);
+    console.log(`  📝 Processed:  ${processed.size}`);
+    console.log(`  ⏱️  Time:       ${elapsed}s`);
+    console.log(`  🔍 Dry run:    ${CONFIG.dryRun}`);
+
+    if (CONFIG.exportOnComplete &amp;&amp; deletedLog.length &gt; 0) {
+      U.download(
+        { deleted: deletedLog, stats: { count: deleted, skipped: skippedCount, errors, elapsed: elapsed + &#39;s&#39; } },
+        `xactions-deleted-tweets-${new Date().toISOString().slice(0, 10)}.json`
+      );
+    }
+
+    if (CONFIG.dryRun &amp;&amp; deleted &gt; 0) {
+      console.log(`\n  ⚡ Set dryRun = false and re-run to actually delete ${deleted} tweets.\n`);
+    }
+  })();
+})();
 </code></pre>
 <h2>⚙️ Configuration</h2>
 <table>
@@ -151,7 +645,7 @@
 <tbody><tr>
 <td><code>filters</code></td>
 <td><code>{</code></td>
-<td>filters</td>
+<td>Filters</td>
 </tr>
 <tr>
 <td><code>olderThanDays</code></td>
@@ -253,7 +747,7 @@ xactions --help
 <pre><code class="language-bash"># Start MCP server
 npm run mcp
 </code></pre>
-<p>See the <a href="/docs/guides/mcp-setup">MCP Setup Guide</a> for integration with Claude Desktop, Cursor, and other AI tools.</p>
+<p>See the <a href="../mcp-setup.md">MCP Setup Guide</a> for integration with Claude Desktop, Cursor, and other AI tools.</p>
 <hr>
 <h2>📁 Source Files</h2>
 <table>
@@ -278,7 +772,7 @@ npm run mcp
 </tr>
 </thead>
 <tbody><tr>
-<td>See <a href="/docs/tutorials/readme">all scripts</a></td>
+<td>See <a href="README.md">all scripts</a></td>
 <td>Browse the complete script catalog</td>
 </tr>
 </tbody></table>
@@ -355,6 +849,5 @@ npm run mcp
       <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
     </div>
   </footer>
-<script src="/js/sidebar.js"></script>
 </body>
 </html>

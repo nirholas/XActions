@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Send Direct Messages — Tutorial — Free X/Twitter Tools Tool | XActions</title>
+  <meta name="description" content="Step-by-step guide to sending single and bulk direct messages on X/Twitter using XActions browser scripts and the Node.js library.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, send, direct, messages, tutorial, tools, send direct messages tutorial twitter, twitter send direct messages tutorial">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Send Direct Messages — Tutorial — XActions">
+  <meta property="og:description" content="Step-by-step guide to sending single and bulk direct messages on X/Twitter using XActions browser scripts and the Node.js library.">
+  <meta property="og:url" content="https://xactions.app/docs/step-by-step/send-direct-messages-tutorial">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Send Direct Messages — Tutorial — Free X/Twitter Tool">
+  <meta name="twitter:description" content="Step-by-step guide to sending single and bulk direct messages on X/Twitter using XActions browser scripts and the Node.js library.">
+
+  <link rel="canonical" href="https://xactions.app/docs/step-by-step/send-direct-messages-tutorial">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Send Direct Messages — Tutorial — Free X/Twitter Tools Tool | XActions",
+    "description": "Step-by-step guide to sending single and bulk direct messages on X/Twitter using XActions browser scripts and the Node.js library.",
+    "url": "https://xactions.app/docs/step-by-step/send-direct-messages-tutorial",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/send-direct-messages-tutorial",
+    "articleSection": "Tools",
+    "keywords": "xactions, twitter automation, x automation, free, send, direct, messages, tutorial, tools, send direct messages tutorial twitter, twitter send direct messages tutorial"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Send Direct Messages — Tutorial", "item": "https://xactions.app/docs/send-direct-messages-tutorial" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use Send Direct Messages — Tutorial",
+    "description": "Step-by-step guide to sending single and bulk direct messages on X/Twitter using XActions browser scripts and the Node.js library.",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions Send Direct Messages — Tutorial script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>⚡ Send Direct Messages — Tutorial</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › Send Direct Messages — Tutorial
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Tools</span>
+        <h1>Send Direct Messages — Tutorial</h1>
+<blockquote>
+<p>Step-by-step guide to sending single and bulk direct messages on X/Twitter using XActions browser scripts and the Node.js library.</p>
+</blockquote>
+<p><strong>Works on:</strong> Browser Console | Node.js (Puppeteer)<br><strong>Difficulty:</strong> Beginner<br><strong>Time:</strong> 2-15 minutes<br><strong>Requirements:</strong> Logged into x.com in your browser</p>
+<hr>
+<h2>Prerequisites</h2>
+<ul>
+<li>Logged into x.com in your browser</li>
+<li>Browser DevTools console (F12 -&gt; Console tab)</li>
+<li>Navigate to <code>https://x.com/messages</code> before running</li>
+</ul>
+<hr>
+<h2>Quick Start</h2>
+<ol>
+<li>Open x.com and navigate to <strong>Messages</strong> (<code>https://x.com/messages</code>)</li>
+<li>Press <strong>F12</strong> to open DevTools, then click the <strong>Console</strong> tab</li>
+<li>Copy the script from <code>src/sendDirectMessage.js</code></li>
+<li>Edit the <code>CONFIG</code> section with your target users and message</li>
+<li>Paste into the console and press Enter</li>
+</ol>
+<hr>
+<h2>Configuration</h2>
+<h3>Browser Script (<code>src/sendDirectMessage.js</code>)</h3>
+<pre><code class="language-js">const CONFIG = {
+  targetUsers: [
+    &#39;username1&#39;,
+    &#39;username2&#39;,
+    &#39;username3&#39;,
+  ],
+  // Use {username} as placeholder for recipient&#39;s name
+  messageTemplate: `Hey {username}! Just wanted to connect.`,
+  limits: {
+    messagesPerSession: 10,       // Max DMs per run
+    delayBetweenMessages: 30000,  // 30 seconds between messages
+  },
+  skipIfAlreadyMessaged: true,    // Skip users you already messaged
+  dryRun: true,                   // Set to false to actually send
+};
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>targetUsers</code></td>
+<td><code>string[]</code></td>
+<td><code>[]</code></td>
+<td>Usernames (without @) to message</td>
+</tr>
+<tr>
+<td><code>messageTemplate</code></td>
+<td><code>string</code></td>
+<td><code>&#39;Hey {username}! ...&#39;</code></td>
+<td>Message text. <code>{username}</code> is replaced with the recipient&#39;s username</td>
+</tr>
+<tr>
+<td><code>limits.messagesPerSession</code></td>
+<td><code>number</code></td>
+<td><code>10</code></td>
+<td>Maximum DMs sent in one run</td>
+</tr>
+<tr>
+<td><code>limits.delayBetweenMessages</code></td>
+<td><code>number</code></td>
+<td><code>30000</code></td>
+<td>Milliseconds between each DM</td>
+</tr>
+<tr>
+<td><code>skipIfAlreadyMessaged</code></td>
+<td><code>boolean</code></td>
+<td><code>true</code></td>
+<td>Skip users already in your DM history</td>
+</tr>
+<tr>
+<td><code>dryRun</code></td>
+<td><code>boolean</code></td>
+<td><code>true</code></td>
+<td>Preview mode -- no messages are actually sent</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Step-by-Step Guide</h2>
+<h3>Method 1: Browser Script (Single or Bulk DMs)</h3>
+<p><strong>Step 1 -- Navigate to Messages</strong></p>
+<p>Go to <code>https://x.com/messages</code> in your browser.</p>
+<p><strong>Step 2 -- Open DevTools</strong></p>
+<p>Press F12 (or Cmd+Option+J on Mac) to open the browser console.</p>
+<p><strong>Step 3 -- Configure your recipients</strong></p>
+<p>Edit the CONFIG in <code>src/sendDirectMessage.js</code>:</p>
+<pre><code class="language-js">const CONFIG = {
+  targetUsers: [
+    &#39;elonmusk&#39;,
+    &#39;nichxbt&#39;,
+  ],
+  messageTemplate: `Hey {username}! I saw your recent post and wanted to reach out.`,
+  limits: {
+    messagesPerSession: 5,
+    delayBetweenMessages: 45000,  // 45 seconds for safety
+  },
+  skipIfAlreadyMessaged: true,
+  dryRun: true,  // Start with true to preview
+};
+</code></pre>
+<p><strong>Step 4 -- Dry run first</strong></p>
+<p>Paste the script and run. You will see output like:</p>
+<pre><code>[DRY RUN] Would send to @elonmusk: &quot;Hey elonmusk! I saw your recent post...&quot;
+[DRY RUN] Would send to @nichxbt: &quot;Hey nichxbt! I saw your recent post...&quot;
+</code></pre>
+<p><strong>Step 5 -- Send for real</strong></p>
+<p>Change <code>dryRun: false</code> and paste again. The script will:</p>
+<ol>
+<li>Click the &quot;New Message&quot; button</li>
+<li>Search for each user</li>
+<li>Select them from results</li>
+<li>Type and send your personalized message</li>
+<li>Navigate back and repeat for the next user</li>
+</ol>
+<h3>Method 2: Node.js Library (<code>src/dmManager.js</code>)</h3>
+<p>The <code>dmManager.js</code> module provides Puppeteer-based functions for more advanced DM workflows.</p>
+<p><strong>Send a single DM:</strong></p>
+<pre><code class="language-js">import { sendDM } from &#39;./src/dmManager.js&#39;;
+
+// Assumes you have a Puppeteer page already authenticated
+const result = await sendDM(page, &#39;nichxbt&#39;, &#39;Hello from XActions!&#39;);
+console.log(result);
+// { success: true, recipient: &#39;nichxbt&#39;, message: &#39;Hello from XActions!&#39;, timestamp: &#39;...&#39; }
+</code></pre>
+<p><strong>List conversations:</strong></p>
+<pre><code class="language-js">import { getConversations } from &#39;./src/dmManager.js&#39;;
+
+const { conversations } = await getConversations(page, { limit: 20 });
+conversations.forEach(c =&gt; {
+  console.log(`${c.name}: ${c.lastMessage} (${c.unread ? &#39;UNREAD&#39; : &#39;read&#39;})`);
+});
+</code></pre>
+<p><strong>Export a conversation:</strong></p>
+<pre><code class="language-js">import { exportConversation } from &#39;./src/dmManager.js&#39;;
+
+const data = await exportConversation(page, &#39;https://x.com/messages/12345&#39;, { limit: 100 });
+console.log(`Exported ${data.count} messages`);
+</code></pre>
+<p><strong>View message requests:</strong></p>
+<pre><code class="language-js">import { getMessageRequests } from &#39;./src/dmManager.js&#39;;
+
+const { requests } = await getMessageRequests(page);
+requests.forEach(r =&gt; {
+  console.log(`Request from ${r.name}: &quot;${r.preview}&quot;`);
+});
+</code></pre>
+<p><strong>Update DM privacy settings:</strong></p>
+<pre><code class="language-js">import { updateDMSettings } from &#39;./src/dmManager.js&#39;;
+
+await updateDMSettings(page, { allowDMsFrom: &#39;everyone&#39; });
+</code></pre>
+<hr>
+<h2>Tips &amp; Tricks</h2>
+<ul>
+<li><strong>Always dry run first.</strong> Set <code>dryRun: true</code> and check the console output before sending real messages.</li>
+<li><strong>Use personalization.</strong> The <code>{username}</code> placeholder makes messages feel less spammy.</li>
+<li><strong>Increase delays for safety.</strong> X rate-limits DMs aggressively. Use at least 30 seconds between messages. For larger batches, 45-60 seconds is safer.</li>
+<li><strong>DM history is tracked.</strong> The browser script uses <code>localStorage</code> key <code>xactions_dm_sent</code> to track who you have already messaged, so re-running the script will skip previously messaged users.</li>
+<li><strong>Clear DM history tracking.</strong> Run <code>localStorage.removeItem(&#39;xactions_dm_sent&#39;)</code> in the console to reset the sent history.</li>
+<li><strong>Keep batches small.</strong> Limit to 10-20 DMs per session to avoid account restrictions.</li>
+</ul>
+<hr>
+<h2>Troubleshooting</h2>
+<table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&quot;Search input not found&quot;</td>
+<td>Make sure you are on <code>x.com/messages</code> before running the script</td>
+</tr>
+<tr>
+<td>User not found in search</td>
+<td>Double-check the username spelling. The user may have DMs disabled or may have blocked you</td>
+</tr>
+<tr>
+<td>Script stops mid-run</td>
+<td>X may have rate-limited you. Wait 15-30 minutes and try again with fewer users</td>
+</tr>
+<tr>
+<td>&quot;Navigate to x.com/messages first!&quot;</td>
+<td>The script checks your URL. Navigate to the messages page and try again</td>
+</tr>
+<tr>
+<td>Messages not actually sending</td>
+<td>Make sure <code>dryRun</code> is set to <code>false</code></td>
+</tr>
+<tr>
+<td>Previously messaged users still showing</td>
+<td>The script checks <code>localStorage</code>. If you cleared browser data, the history is lost</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Related Scripts</h2>
+<ul>
+<li><code>src/groupDM.js</code> -- Create group DM conversations</li>
+<li><code>src/dmCalls.js</code> -- Start audio/video calls in DMs</li>
+<li><code>src/encryptedDM.js</code> -- Send encrypted DMs</li>
+<li><code>src/dmManager.js</code> -- Node.js DM management library (Puppeteer)</li>
+</ul>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try Send Direct Messages — Tutorial?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/step-by-step/add-media-tutorial">📝 Add Media Tutorial</a>
+        <a href="/docs/step-by-step/ads-campaigns-tutorial">📝 Ads Campaigns Tutorial</a>
+        <a href="/docs/step-by-step/affiliate-benefits-tutorial">📝 Affiliate Benefits Tutorial</a>
+        <a href="/docs/step-by-step/alt-text-tutorial">📝 Alt Text Tutorial</a>
+        <a href="/docs/step-by-step/auto-commenter-tutorial">📝 Auto Commenter Tutorial</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a> / <a href="/docs#step-by-step">Tutorials</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>

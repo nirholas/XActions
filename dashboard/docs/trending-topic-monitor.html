@@ -73,13 +73,121 @@
   }
   </script>
 
-  <link rel="stylesheet" href="/css/common.css">
-  <link rel="stylesheet" href="/css/docs.css">
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
 </head>
 <body>
   <div class="layout">
     <!-- Sidebar -->
-    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
 
     <!-- Main Content -->
     <main class="main-content">
@@ -132,12 +240,348 @@
 <li>Copy and paste the script from <a href="https://github.com/nirholas/XActions/blob/main/src/trendingTopicMonitor.js"><code>src/trendingTopicMonitor.js</code></a></li>
 <li>Press Enter to run</li>
 </ol>
-<pre><code class="language-javascript">// Quick start — copy the full script from:
-// src/trendingTopicMonitor.js
-//
-// Or install via npm and use the CLI:
-// npm install -g xactions
-// xactions --help
+<pre><code class="language-javascript">/**
+ * ============================================================
+ * 📡 Trending Topic Monitor — Production Grade
+ * ============================================================
+ *
+ * @name        trendingTopicMonitor.js
+ * @description Scrape and monitor X/Twitter trending topics in
+ *              real-time. Tracks trend velocity (rising/falling),
+ *              categorizes by niche, detects opportunities,
+ *              persists history in localStorage for comparison,
+ *              and alerts on trends matching your keywords.
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.0.0
+ * @date        2026-02-24
+ * @repository  https://github.com/nirholas/XActions
+ *
+ * ============================================================
+ * 📋 USAGE:
+ *
+ * 1. Go to: https://x.com/explore/tabs/trending
+ *    (or x.com/explore → &quot;Trending&quot; tab)
+ * 2. Open DevTools Console (F12)
+ * 3. Paste and run
+ *
+ * Controls:
+ *   XActions.watch([&#39;AI&#39;, &#39;crypto&#39;, &#39;startup&#39;])  — set alert keywords
+ *   XActions.history()                            — view trend history
+ *   XActions.compare()                            — compare vs last snapshot
+ *   XActions.autoRefresh(300000)                  — auto-refresh every 5min
+ *   XActions.stop()                               — stop auto-refresh
+ * ============================================================
+ */
+(() =&gt; {
+  &#39;use strict&#39;;
+
+  const CONFIG = {
+    scrollRounds: 4,
+    scrollDelay: 1500,
+    watchKeywords: [],      // Alert when trends match these
+    exportResults: true,
+    maxHistory: 50,         // Keep last N snapshots
+  };
+
+  const STORAGE_KEY = &#39;xactions_trend_history&#39;;
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+
+  // ── Niche classification ───────────────────────────────────
+  const NICHE_KEYWORDS = {
+    &#39;Tech&#39;:       [&#39;ai&#39;, &#39;artificial intelligence&#39;, &#39;chatgpt&#39;, &#39;openai&#39;, &#39;google&#39;, &#39;apple&#39;, &#39;microsoft&#39;, &#39;meta&#39;, &#39;tesla&#39;, &#39;nvidia&#39;, &#39;coding&#39;, &#39;developer&#39;, &#39;software&#39;, &#39;app&#39;, &#39;web3&#39;, &#39;blockchain&#39;, &#39;crypto&#39;, &#39;bitcoin&#39;, &#39;ethereum&#39;, &#39;saas&#39;],
+    &#39;Politics&#39;:   [&#39;trump&#39;, &#39;biden&#39;, &#39;congress&#39;, &#39;senate&#39;, &#39;election&#39;, &#39;vote&#39;, &#39;democrat&#39;, &#39;republican&#39;, &#39;president&#39;, &#39;breaking&#39;, &#39;government&#39;, &#39;policy&#39;, &#39;law&#39;],
+    &#39;Sports&#39;:     [&#39;nfl&#39;, &#39;nba&#39;, &#39;mlb&#39;, &#39;soccer&#39;, &#39;football&#39;, &#39;basketball&#39;, &#39;baseball&#39;, &#39;game&#39;, &#39;championship&#39;, &#39;playoffs&#39;, &#39;fifa&#39;, &#39;ufc&#39;, &#39;boxing&#39;, &#39;f1&#39;, &#39;premier league&#39;],
+    &#39;Entertainment&#39;: [&#39;movie&#39;, &#39;film&#39;, &#39;music&#39;, &#39;album&#39;, &#39;concert&#39;, &#39;series&#39;, &#39;netflix&#39;, &#39;disney&#39;, &#39;grammy&#39;, &#39;oscar&#39;, &#39;emmy&#39;, &#39;celebrity&#39;, &#39;singer&#39;, &#39;rapper&#39;, &#39;actor&#39;],
+    &#39;Business&#39;:   [&#39;market&#39;, &#39;stock&#39;, &#39;earnings&#39;, &#39;ipo&#39;, &#39;startup&#39;, &#39;funding&#39;, &#39;recession&#39;, &#39;inflation&#39;, &#39;fed&#39;, &#39;wall street&#39;, &#39;investor&#39;, &#39;economy&#39;],
+    &#39;Gaming&#39;:     [&#39;game&#39;, &#39;gaming&#39;, &#39;playstation&#39;, &#39;xbox&#39;, &#39;nintendo&#39;, &#39;steam&#39;, &#39;esports&#39;, &#39;twitch&#39;, &#39;streamer&#39;, &#39;dlc&#39;],
+    &#39;Science&#39;:    [&#39;nasa&#39;, &#39;space&#39;, &#39;climate&#39;, &#39;research&#39;, &#39;study&#39;, &#39;vaccine&#39;, &#39;health&#39;, &#39;medical&#39;, &#39;discovery&#39;, &#39;quantum&#39;],
+    &#39;Culture&#39;:    [&#39;meme&#39;, &#39;viral&#39;, &#39;trend&#39;, &#39;tiktok&#39;, &#39;instagram&#39;, &#39;influencer&#39;, &#39;cancel&#39;, &#39;discourse&#39;, &#39;ratio&#39;],
+  };
+
+  const classifyNiche = (text) =&gt; {
+    if (!text) return &#39;Other&#39;;
+    const lower = text.toLowerCase();
+    for (const [niche, keywords] of Object.entries(NICHE_KEYWORDS)) {
+      if (keywords.some(kw =&gt; lower.includes(kw))) return niche;
+    }
+    return &#39;Other&#39;;
+  };
+
+  // ── Scrape trending topics ─────────────────────────────────
+  const scrapeTrends = async () =&gt; {
+    const trends = [];
+    const seen = new Set();
+
+    for (let round = 0; round &lt; CONFIG.scrollRounds; round++) {
+      // Trending items are in div cells
+      const cells = document.querySelectorAll(&#39;[data-testid=&quot;trend&quot;]&#39;);
+
+      for (const cell of cells) {
+        const textEls = cell.querySelectorAll(&#39;span&#39;);
+        let topic = &#39;&#39;;
+        let category = &#39;&#39;;
+        let tweetCount = &#39;&#39;;
+
+        for (const el of textEls) {
+          const text = el.textContent.trim();
+          // Category line (e.g., &quot;Technology · Trending&quot;)
+          if (text.includes(&#39;·&#39;) &amp;&amp; text.includes(&#39;Trending&#39;)) {
+            category = text.split(&#39;·&#39;)[0].trim();
+          }
+          // Tweet count (e.g., &quot;125K posts&quot;)
+          if (/[\d,.]+[KM]?\s*(posts|tweets)/i.test(text)) {
+            tweetCount = text;
+          }
+          // Topic: usually the boldest / largest text, starts with # or is prominently displayed
+          if (text.startsWith(&#39;#&#39;) || (text.length &gt; 2 &amp;&amp; text.length &lt; 80 &amp;&amp; !text.includes(&#39;·&#39;) &amp;&amp; !text.includes(&#39;Trending&#39;) &amp;&amp; !/posts|tweets/i.test(text) &amp;&amp; !/^\d+$/.test(text))) {
+            if (text.length &gt; topic.length) topic = text;
+          }
+        }
+
+        if (!topic || seen.has(topic.toLowerCase())) continue;
+        seen.add(topic.toLowerCase());
+
+        // Parse tweet count
+        let postCount = 0;
+        const countMatch = tweetCount.match(/([\d,.]+)\s*([KM])?/i);
+        if (countMatch) {
+          postCount = parseFloat(countMatch[1].replace(/,/g, &#39;&#39;));
+          if (countMatch[2] === &#39;K&#39;) postCount *= 1000;
+          if (countMatch[2] === &#39;M&#39;) postCount *= 1000000;
+        }
+
+        const niche = classifyNiche(topic);
+
+        trends.push({
+          rank: trends.length + 1,
+          topic,
+          category: category || niche,
+          niche,
+          postCount,
+          postCountRaw: tweetCount,
+          scrapedAt: new Date().toISOString(),
+        });
+      }
+
+      console.log(`   📜 Round ${round + 1}: ${trends.length} trends found`);
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(CONFIG.scrollDelay);
+    }
+
+    return trends;
+  };
+
+  // ── localStorage history ───────────────────────────────────
+  const loadHistory = () =&gt; {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || &#39;[]&#39;); }
+    catch { return []; }
+  };
+
+  const saveSnapshot = (trends) =&gt; {
+    const history = loadHistory();
+    history.push({
+      timestamp: new Date().toISOString(),
+      trends: trends.map(t =&gt; ({ topic: t.topic, rank: t.rank, postCount: t.postCount, niche: t.niche })),
+    });
+    // Keep only last N
+    while (history.length &gt; CONFIG.maxHistory) history.shift();
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+  };
+
+  // ── Compare with last snapshot ─────────────────────────────
+  const compareWithLast = (currentTrends) =&gt; {
+    const history = loadHistory();
+    if (history.length &lt; 2) {
+      console.log(&#39;  📊 Not enough history to compare. Run again later.&#39;);
+      return;
+    }
+
+    const prev = history[history.length - 2];
+    const prevTopics = new Map(prev.trends.map(t =&gt; [t.topic.toLowerCase(), t]));
+
+    console.log(&#39;\n━━━ 📈 TREND CHANGES (vs. last snapshot) ━━━&#39;);
+    console.log(`  Last snapshot: ${new Date(prev.timestamp).toLocaleString()}\n`);
+
+    const newTrends = [];
+    const rising = [];
+    const falling = [];
+
+    for (const t of currentTrends) {
+      const prevEntry = prevTopics.get(t.topic.toLowerCase());
+      if (!prevEntry) {
+        newTrends.push(t);
+      } else if (t.rank &lt; prevEntry.rank) {
+        rising.push({ ...t, prevRank: prevEntry.rank, change: prevEntry.rank - t.rank });
+      } else if (t.rank &gt; prevEntry.rank) {
+        falling.push({ ...t, prevRank: prevEntry.rank, change: t.rank - prevEntry.rank });
+      }
+    }
+
+    if (newTrends.length &gt; 0) {
+      console.log(`  🆕 NEW TRENDS (${newTrends.length}):`);
+      for (const t of newTrends.slice(0, 10)) {
+        console.log(`     #${t.rank} ${t.topic} [${t.niche}]`);
+      }
+    }
+
+    if (rising.length &gt; 0) {
+      console.log(`\n  📈 RISING (${rising.length}):`);
+      for (const t of rising.sort((a, b) =&gt; b.change - a.change).slice(0, 5)) {
+        console.log(`     ↑${t.change} ${t.topic} (#${t.prevRank} → #${t.rank})`);
+      }
+    }
+
+    if (falling.length &gt; 0) {
+      console.log(`\n  📉 FALLING (${falling.length}):`);
+      for (const t of falling.sort((a, b) =&gt; b.change - a.change).slice(0, 5)) {
+        console.log(`     ↓${t.change} ${t.topic} (#${t.prevRank} → #${t.rank})`);
+      }
+    }
+
+    // Dropped off entirely
+    const currentTopicSet = new Set(currentTrends.map(t =&gt; t.topic.toLowerCase()));
+    const dropped = prev.trends.filter(t =&gt; !currentTopicSet.has(t.topic.toLowerCase()));
+    if (dropped.length &gt; 0) {
+      console.log(`\n  ❌ DROPPED OFF (${dropped.length}):`);
+      for (const t of dropped.slice(0, 5)) {
+        console.log(`     ${t.topic} (was #${t.rank})`);
+      }
+    }
+  };
+
+  // ── Controls ───────────────────────────────────────────────
+  let autoRefreshTimer = null;
+
+  window.XActions = window.XActions || {};
+
+  window.XActions.watch = (keywords) =&gt; {
+    if (!Array.isArray(keywords)) {
+      console.log(&#39;❌ Usage: XActions.watch([&quot;keyword1&quot;, &quot;keyword2&quot;])&#39;);
+      return;
+    }
+    CONFIG.watchKeywords = keywords;
+    console.log(`👁️ Watching for: ${keywords.join(&#39;, &#39;)}`);
+  };
+
+  window.XActions.history = () =&gt; {
+    const history = loadHistory();
+    if (history.length === 0) { console.log(&#39;📭 No history yet.&#39;); return; }
+    console.log(`\n📊 TREND HISTORY (${history.length} snapshots):\n`);
+    for (const snap of history.slice(-10)) {
+      console.log(`  ${new Date(snap.timestamp).toLocaleString()} — ${snap.trends.length} trends`);
+      console.log(`    Top: ${snap.trends.slice(0, 3).map(t =&gt; t.topic).join(&#39;, &#39;)}`);
+    }
+  };
+
+  window.XActions.compare = () =&gt; {
+    const history = loadHistory();
+    if (history.length &lt; 2) { console.log(&#39;📊 Need at least 2 snapshots.&#39;); return; }
+    const latest = history[history.length - 1];
+    compareWithLast(latest.trends);
+  };
+
+  window.XActions.autoRefresh = (intervalMs = 300000) =&gt; {
+    if (autoRefreshTimer) clearInterval(autoRefreshTimer);
+    console.log(`🔄 Auto-refreshing every ${(intervalMs / 60000).toFixed(1)} minutes.`);
+    autoRefreshTimer = setInterval(() =&gt; {
+      console.log(&#39;\n🔄 Auto-refresh triggered...&#39;);
+      run();
+    }, intervalMs);
+  };
+
+  window.XActions.stop = () =&gt; {
+    if (autoRefreshTimer) { clearInterval(autoRefreshTimer); autoRefreshTimer = null; }
+    console.log(&#39;⏹️ Auto-refresh stopped.&#39;);
+  };
+
+  // ── Main ───────────────────────────────────────────────────
+  const run = async () =&gt; {
+    const W = 60;
+    console.log(&#39;╔&#39; + &#39;═&#39;.repeat(W) + &#39;╗&#39;);
+    console.log(&#39;║  📡 TRENDING TOPIC MONITOR&#39; + &#39; &#39;.repeat(W - 28) + &#39;║&#39;);
+    console.log(&#39;║  by nichxbt — v1.0&#39; + &#39; &#39;.repeat(W - 21) + &#39;║&#39;);
+    console.log(&#39;╚&#39; + &#39;═&#39;.repeat(W) + &#39;╝&#39;);
+
+    console.log(&#39;\n📊 Scraping trending topics...\n&#39;);
+    const trends = await scrapeTrends();
+
+    if (trends.length === 0) {
+      console.error(&#39;❌ No trends found. Navigate to x.com/explore/tabs/trending first.&#39;);
+      return;
+    }
+
+    // ── Display trends ──────────────────────────────────────
+    console.log(&#39;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━&#39;);
+    console.log(`  📡 TRENDING NOW (${trends.length} topics)`);
+    console.log(&#39;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━&#39;);
+
+    for (const t of trends) {
+      const countStr = t.postCountRaw ? ` (${t.postCountRaw})` : &#39;&#39;;
+      const nicheTag = `[${t.niche}]`.padEnd(16);
+      console.log(`  ${String(t.rank).padStart(2)}. ${nicheTag} ${t.topic}${countStr}`);
+    }
+
+    // ── Niche distribution ──────────────────────────────────
+    console.log(&#39;\n━━━ 📊 NICHE DISTRIBUTION ━━━&#39;);
+    const nicheCounts = {};
+    for (const t of trends) nicheCounts[t.niche] = (nicheCounts[t.niche] || 0) + 1;
+    const sorted = Object.entries(nicheCounts).sort((a, b) =&gt; b[1] - a[1]);
+    for (const [niche, count] of sorted) {
+      const bar = &#39;█&#39;.repeat(Math.round(count / trends.length * 30));
+      console.log(`  ${niche.padEnd(16)} ${String(count).padStart(2)} (${((count / trends.length) * 100).toFixed(0)}%) ${bar}`);
+    }
+
+    // ── Keyword alerts ──────────────────────────────────────
+    if (CONFIG.watchKeywords.length &gt; 0) {
+      console.log(&#39;\n━━━ 🔔 KEYWORD ALERTS ━━━&#39;);
+      let found = 0;
+      for (const t of trends) {
+        for (const kw of CONFIG.watchKeywords) {
+          if (t.topic.toLowerCase().includes(kw.toLowerCase())) {
+            console.log(`  🚨 MATCH: &quot;${t.topic}&quot; matches keyword &quot;${kw}&quot; (rank #${t.rank})`);
+            found++;
+          }
+        }
+      }
+      if (found === 0) console.log(&#39;  No matches for your watched keywords.&#39;);
+    }
+
+    // ── Content opportunities ───────────────────────────────
+    console.log(&#39;\n━━━ 💡 CONTENT OPPORTUNITIES ━━━&#39;);
+    const highVolume = trends.filter(t =&gt; t.postCount &gt; 10000).slice(0, 5);
+    if (highVolume.length &gt; 0) {
+      console.log(&#39;  High-volume trends to potentially ride:&#39;);
+      for (const t of highVolume) {
+        console.log(`    → ${t.topic} (${t.postCountRaw}) [${t.niche}]`);
+      }
+    }
+
+    // ── Save &amp; Compare ──────────────────────────────────────
+    saveSnapshot(trends);
+    compareWithLast(trends);
+
+    console.log(&#39;\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━&#39;);
+    console.log(&#39;  📋 CONTROLS&#39;);
+    console.log(&#39;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━&#39;);
+    console.log(&#39;  XActions.watch([&quot;keyword1&quot;, ...])  — set alert keywords&#39;);
+    console.log(&#39;  XActions.history()                  — view past snapshots&#39;);
+    console.log(&#39;  XActions.compare()                  — compare last 2 snapshots&#39;);
+    console.log(&#39;  XActions.autoRefresh(300000)        — refresh every 5min&#39;);
+    console.log(&#39;  XActions.stop()                     — stop auto-refresh&#39;);
+    console.log(&#39;&#39;);
+
+    // Export
+    if (CONFIG.exportResults) {
+      const blob = new Blob([JSON.stringify({ trends, analyzedAt: new Date().toISOString() }, null, 2)], { type: &#39;application/json&#39; });
+      const a = document.createElement(&#39;a&#39;); a.href = URL.createObjectURL(blob);
+      a.download = `xactions-trends-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a); a.click(); a.remove();
+      console.log(&#39;📥 Trends exported.&#39;);
+    }
+  };
+
+  run();
+})();
 </code></pre>
 <h2>⚙️ Configuration</h2>
 <table>
@@ -151,12 +595,12 @@
 <tbody><tr>
 <td><code>scrollRounds</code></td>
 <td><code>4</code></td>
-<td>scroll Rounds</td>
+<td>Scroll rounds</td>
 </tr>
 <tr>
 <td><code>scrollDelay</code></td>
 <td><code>1500</code></td>
-<td>scroll Delay</td>
+<td>Scroll delay</td>
 </tr>
 <tr>
 <td><code>watchKeywords</code></td>
@@ -166,7 +610,7 @@
 <tr>
 <td><code>exportResults</code></td>
 <td><code>true</code></td>
-<td>export Results</td>
+<td>Export results</td>
 </tr>
 <tr>
 <td><code>maxHistory</code></td>
@@ -218,7 +662,7 @@ xactions --help
 <pre><code class="language-bash"># Start MCP server
 npm run mcp
 </code></pre>
-<p>See the <a href="/docs/guides/mcp-setup">MCP Setup Guide</a> for integration with Claude Desktop, Cursor, and other AI tools.</p>
+<p>See the <a href="../mcp-setup.md">MCP Setup Guide</a> for integration with Claude Desktop, Cursor, and other AI tools.</p>
 <hr>
 <h2>📁 Source Files</h2>
 <table>
@@ -243,11 +687,11 @@ npm run mcp
 </tr>
 </thead>
 <tbody><tr>
-<td><a href="/docs/continuous-monitor">Continuous Monitor</a></td>
+<td><a href="continuous-monitor.md">Continuous Monitor</a></td>
 <td>Auto-refresh monitoring for follower/following changes</td>
 </tr>
 <tr>
-<td><a href="/docs/keyword-monitor">Keyword Monitor</a></td>
+<td><a href="keyword-monitor.md">Keyword Monitor</a></td>
 <td>Monitor search results and timelines for specific keyword mentions</td>
 </tr>
 </tbody></table>
@@ -324,6 +768,5 @@ npm run mcp
       <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
     </div>
   </footer>
-<script src="/js/sidebar.js"></script>
 </body>
 </html>

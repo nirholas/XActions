@@ -73,13 +73,121 @@
   }
   </script>
 
-  <link rel="stylesheet" href="/css/common.css">
-  <link rel="stylesheet" href="/css/docs.css">
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
 </head>
 <body>
   <div class="layout">
     <!-- Sidebar -->
-    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
 
     <!-- Main Content -->
     <main class="main-content">
@@ -132,12 +240,1347 @@
 <li>Copy and paste the script from <a href="https://github.com/nirholas/XActions/blob/main/src/engagementBooster.js"><code>src/engagementBooster.js</code></a></li>
 <li>Press Enter to run</li>
 </ol>
-<pre><code class="language-javascript">// Quick start — copy the full script from:
-// src/engagementBooster.js
-//
-// Or install via npm and use the CLI:
-// npm install -g xactions
-// xactions --help
+<pre><code class="language-javascript">/**
+ * ============================================================
+ * 🚀 Engagement Booster v2 — Production Grade
+ * ============================================================
+ *
+ * @name        engagementBooster.js
+ * @description Systematically engage with tweets from target
+ *              accounts to boost mutual engagement. Features a
+ *              floating control panel, smart engagement scoring,
+ *              retweet &amp; bookmark support, drip scheduling, undo
+ *              rollback, persistent session history, and speed
+ *              presets. Works standalone or with core.js.
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     2.0.0
+ * @date        2026-02-24
+ * @repository  https://github.com/nirholas/XActions
+ *
+ * ============================================================
+ * 📋 USAGE:
+ *
+ * 1. Go to any timeline, search, or user profile on x.com
+ * 2. Open DevTools Console (F12)
+ * 3. Paste and run — a floating panel will appear
+ * 4. Configure via the panel (or edit CONFIG below)
+ * 5. Click ▶ Start
+ *
+ * Controls: ⏸ Pause · ▶ Resume · 🛑 Stop · ↩ Undo All
+ *
+ * ⚠️ Keep rates low. Twitter WILL flag excessive activity.
+ * ============================================================
+ */
+(() =&gt; {
+  &#39;use strict&#39;;
+
+  // Prevent double-inject
+  if (document.getElementById(&#39;xeb-panel&#39;)) {
+    console.log(&#39;⚡ Engagement Booster already running&#39;);
+    return;
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // CONFIGURATION
+  // ═══════════════════════════════════════════════════════════
+
+  const CONFIG = {
+    maxInteractions: 15,
+    dryRun: true,
+
+    actions: {
+      like: true,
+      reply: false,
+      retweet: false,
+      bookmark: false,
+      follow: false,
+    },
+
+    // Topic-aware reply templates: templates with `topics` match tweets containing those words
+    replyTemplates: [
+      { text: &#39;🔥 Great point!&#39;, topics: [] },
+      { text: &#39;💯 Couldn\&#39;t agree more.&#39;, topics: [] },
+      { text: &#39;📌 Bookmarking this.&#39;, topics: [] },
+      { text: &#39;Really useful, thanks for sharing! 🙌&#39;, topics: [] },
+      { text: &#39;Solid alpha 🧠&#39;, topics: [&#39;alpha&#39;, &#39;insight&#39;, &#39;thread&#39;, &#39;deep dive&#39;] },
+      { text: &#39;This is the kind of content I come here for 👏&#39;, topics: [&#39;guide&#39;, &#39;tutorial&#39;, &#39;explained&#39;, &#39;breakdown&#39;] },
+      { text: &#39;Great data — appreciate the transparency 📊&#39;, topics: [&#39;data&#39;, &#39;stats&#39;, &#39;numbers&#39;, &#39;chart&#39;, &#39;graph&#39;] },
+    ],
+
+    targetUsers: [],
+    blockUsers: [],           // Never interact with these accounts
+    onlyKeywords: [],
+    skipKeywords: [&#39;promoted&#39;, &#39;ad&#39;, &#39;giveaway&#39;, &#39;nsfw&#39;],
+    skipLiked: true,
+    minLikes: 0,
+    maxLikes: 0,              // 0 = no max — helps target smaller accounts
+
+    // Author quality filters
+    onlyVerified: false,
+    minFollowers: 0,
+    maxFollowers: 0,          // 0 = no max — caps at big accounts
+    bioKeywords: [],          // Author bio must contain one of these
+
+    // Speed presets: &#39;stealth&#39; | &#39;safe&#39; | &#39;moderate&#39; | &#39;fast&#39;
+    speedPreset: &#39;safe&#39;,
+
+    // Drip mode: spread interactions over time
+    drip: {
+      enabled: false,
+      intervalMinutes: 30,    // Engage every N minutes
+      batchSize: 3,           // Tweets per batch
+    },
+
+    scrollRounds: 5,
+    scrollDelay: 2000,
+
+    // Smart engagement scoring
+    scoring: {
+      enabled: true,
+      preferSmallAccounts: true,   // Smaller accounts notice you more
+      preferHighEngagement: false,  // Tweets with lots of engagement (viral)
+      preferRecent: true,           // Most recent tweets first
+    },
+  };
+
+  // ═══════════════════════════════════════════════════════════
+  // SPEED PRESETS
+  // ═══════════════════════════════════════════════════════════
+
+  const SPEED_PRESETS = {
+    stealth: { delay: [45000, 90000], label: &#39;🐢 Stealth&#39;, desc: &#39;45-90s — very safe&#39; },
+    safe:    { delay: [20000, 45000], label: &#39;🛡️ Safe&#39;,    desc: &#39;20-45s — recommended&#39; },
+    moderate:{ delay: [8000,  20000], label: &#39;⚡ Moderate&#39;, desc: &#39;8-20s — faster&#39; },
+    fast:    { delay: [3000,  8000],  label: &#39;🔥 Fast&#39;,    desc: &#39;3-8s — risky&#39; },
+  };
+
+  // ═══════════════════════════════════════════════════════════
+  // UTILITIES
+  // ═══════════════════════════════════════════════════════════
+
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+  const gaussian = (a, b) =&gt; Math.floor(a + ((Math.random() + Math.random()) / 2) * (b - a));
+  const fmtNum = (n) =&gt; n &gt;= 1000000 ? (n / 1000000).toFixed(1) + &#39;M&#39; : n &gt;= 1000 ? (n / 1000).toFixed(1) + &#39;K&#39; : String(n);
+
+  const SEL = {
+    tweet: &#39;article[data-testid=&quot;tweet&quot;]&#39;,
+    tweetText: &#39;[data-testid=&quot;tweetText&quot;]&#39;,
+    likeBtn: &#39;[data-testid=&quot;like&quot;]&#39;,
+    unlikeBtn: &#39;[data-testid=&quot;unlike&quot;]&#39;,
+    retweetBtn: &#39;[data-testid=&quot;retweet&quot;]&#39;,
+    unretweetBtn: &#39;[data-testid=&quot;unretweet&quot;]&#39;,
+    replyBtn: &#39;[data-testid=&quot;reply&quot;]&#39;,
+    tweetBox: &#39;[data-testid=&quot;tweetTextarea_0&quot;]&#39;,
+    tweetButton: &#39;[data-testid=&quot;tweetButton&quot;]&#39;,
+    bookmarkBtn: &#39;[data-testid=&quot;bookmark&quot;]&#39;,
+    removeBookmarkBtn: &#39;[data-testid=&quot;removeBookmark&quot;]&#39;,
+    confirmBtn: &#39;[data-testid=&quot;confirmationSheetConfirm&quot;]&#39;,
+    toast: &#39;[data-testid=&quot;toast&quot;]&#39;,
+    userDescription: &#39;[data-testid=&quot;UserDescription&quot;]&#39;,
+  };
+
+  const $ = (sel, ctx = document) =&gt; ctx.querySelector(sel);
+  const $$ = (sel, ctx = document) =&gt; [...ctx.querySelectorAll(sel)];
+
+  const parseNum = (text) =&gt; {
+    if (!text) return 0;
+    text = text.trim().replace(/,/g, &#39;&#39;);
+    if (text.endsWith(&#39;K&#39;)) return Math.round(parseFloat(text) * 1000);
+    if (text.endsWith(&#39;M&#39;)) return Math.round(parseFloat(text) * 1000000);
+    return parseInt(text) || 0;
+  };
+
+  const isRateLimited = () =&gt; {
+    for (const el of document.querySelectorAll(`${SEL.toast}, [role=&quot;alert&quot;]`)) {
+      const text = (el.textContent || &#39;&#39;).toLowerCase();
+      if (/rate limit|try again|too many|slow down/.test(text)) return true;
+    }
+    return false;
+  };
+
+  // ═══════════════════════════════════════════════════════════
+  // PERSISTENT SESSION HISTORY (localStorage)
+  // ═══════════════════════════════════════════════════════════
+
+  const STORAGE_KEY = &#39;xactions_engagement_history&#39;;
+
+  const loadHistory = () =&gt; {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || &#39;[]&#39;); }
+    catch { return []; }
+  };
+
+  const saveHistory = (session) =&gt; {
+    const history = loadHistory();
+    history.push(session);
+    // Keep last 50 sessions
+    if (history.length &gt; 50) history.splice(0, history.length - 50);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+  };
+
+  const getHistoryStats = () =&gt; {
+    const history = loadHistory();
+    let totalLikes = 0, totalReplies = 0, totalRetweets = 0, totalBookmarks = 0, uniqueAuthors = new Set();
+    for (const s of history) {
+      totalLikes += s.liked || 0;
+      totalReplies += s.replied || 0;
+      totalRetweets += s.retweeted || 0;
+      totalBookmarks += s.bookmarked || 0;
+      (s.authors || []).forEach(a =&gt; uniqueAuthors.add(a));
+    }
+    return { sessions: history.length, totalLikes, totalReplies, totalRetweets, totalBookmarks, uniqueAuthors: uniqueAuthors.size };
+  };
+
+  // ═══════════════════════════════════════════════════════════
+  // STATE
+  // ═══════════════════════════════════════════════════════════
+
+  const STATE = {
+    status: &#39;idle&#39;,  // idle | scanning | running | paused | done | error
+    aborted: false,
+    paused: false,
+    liked: 0,
+    replied: 0,
+    retweeted: 0,
+    bookmarked: 0,
+    failed: 0,
+    processed: 0,
+    total: 0,
+    startTime: null,
+    undoStack: [],   // { type, article, author } for rollback
+    results: [],
+    eligible: [],
+    dripTimer: null,
+    logs: [],
+  };
+
+  const addLog = (msg, type = &#39;info&#39;) =&gt; {
+    STATE.logs.push({ msg, type, time: new Date() });
+    if (STATE.logs.length &gt; 200) STATE.logs.shift();
+    console.log(msg);
+    updatePanel();
+  };
+
+  const waitForUnpause = async () =&gt; {
+    while (STATE.paused &amp;&amp; !STATE.aborted) await sleep(500);
+  };
+
+  // ═══════════════════════════════════════════════════════════
+  // FLOATING UI PANEL
+  // ═══════════════════════════════════════════════════════════
+
+  const createPanel = () =&gt; {
+    const panel = document.createElement(&#39;div&#39;);
+    panel.id = &#39;xeb-panel&#39;;
+    panel.innerHTML = `
+      &lt;style&gt;
+        #xeb-panel {
+          position: fixed; top: 60px; right: 16px; z-index: 999999;
+          width: 320px; background: #16181c; border: 1px solid #2f3336;
+          border-radius: 16px; font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, sans-serif;
+          color: #e7e9ea; box-shadow: 0 8px 32px rgba(0,0,0,0.6); user-select: none;
+          transition: opacity 0.2s;
+        }
+        #xeb-panel * { box-sizing: border-box; }
+        #xeb-panel.xeb-minimized .xeb-body { display: none; }
+        .xeb-header {
+          display: flex; align-items: center; justify-content: space-between;
+          padding: 12px 16px; border-bottom: 1px solid #2f3336; cursor: grab;
+        }
+        .xeb-header:active { cursor: grabbing; }
+        .xeb-title { font-weight: 700; font-size: 14px; }
+        .xeb-badge {
+          font-size: 10px; padding: 2px 8px; border-radius: 999px;
+          font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .xeb-badge.idle { background: #2f3336; color: #71767b; }
+        .xeb-badge.scanning { background: #1d4ed8; color: #93c5fd; }
+        .xeb-badge.running { background: #15803d; color: #86efac; }
+        .xeb-badge.paused { background: #a16207; color: #fde68a; }
+        .xeb-badge.done { background: #1d9bf0; color: #fff; }
+        .xeb-badge.error { background: #dc2626; color: #fca5a5; }
+        .xeb-header-btns { display: flex; gap: 4px; }
+        .xeb-header-btns button {
+          background: none; border: none; color: #71767b; cursor: pointer;
+          font-size: 16px; padding: 2px 6px; border-radius: 4px;
+        }
+        .xeb-header-btns button:hover { background: #2f3336; color: #e7e9ea; }
+        .xeb-body { max-height: 480px; overflow-y: auto; }
+        .xeb-body::-webkit-scrollbar { width: 4px; }
+        .xeb-body::-webkit-scrollbar-thumb { background: #2f3336; border-radius: 4px; }
+        .xeb-tabs {
+          display: flex; border-bottom: 1px solid #2f3336;
+        }
+        .xeb-tab {
+          flex: 1; padding: 8px 0; text-align: center; font-size: 12px;
+          font-weight: 600; color: #71767b; cursor: pointer; border: none;
+          background: none; border-bottom: 2px solid transparent; transition: all 0.15s;
+        }
+        .xeb-tab:hover { color: #e7e9ea; }
+        .xeb-tab.active { color: #1d9bf0; border-bottom-color: #1d9bf0; }
+        .xeb-pane { display: none; padding: 12px 16px; }
+        .xeb-pane.active { display: block; }
+
+        /* Config pane */
+        .xeb-field { margin-bottom: 10px; }
+        .xeb-field label { display: block; font-size: 11px; color: #71767b; margin-bottom: 4px; font-weight: 600; }
+        .xeb-field input[type=&quot;text&quot;], .xeb-field input[type=&quot;number&quot;], .xeb-field select {
+          width: 100%; padding: 6px 10px; background: #000; border: 1px solid #2f3336;
+          border-radius: 8px; color: #e7e9ea; font-size: 13px; outline: none;
+        }
+        .xeb-field input:focus, .xeb-field select:focus { border-color: #1d9bf0; }
+        .xeb-row { display: flex; gap: 8px; }
+        .xeb-row .xeb-field { flex: 1; }
+        .xeb-toggle-row {
+          display: flex; align-items: center; justify-content: space-between;
+          padding: 4px 0;
+        }
+        .xeb-toggle-row span { font-size: 13px; }
+        .xeb-toggle {
+          position: relative; width: 36px; height: 20px; cursor: pointer;
+        }
+        .xeb-toggle input { opacity: 0; width: 0; height: 0; }
+        .xeb-toggle .xeb-slider {
+          position: absolute; inset: 0; background: #2f3336; border-radius: 10px; transition: 0.2s;
+        }
+        .xeb-toggle .xeb-slider::before {
+          content: &#39;&#39;; position: absolute; left: 2px; top: 2px;
+          width: 16px; height: 16px; background: #71767b; border-radius: 50%; transition: 0.2s;
+        }
+        .xeb-toggle input:checked + .xeb-slider { background: #1d9bf0; }
+        .xeb-toggle input:checked + .xeb-slider::before { transform: translateX(16px); background: #fff; }
+
+        /* Progress pane */
+        .xeb-progress-bar {
+          width: 100%; height: 6px; background: #2f3336; border-radius: 3px; overflow: hidden; margin: 8px 0;
+        }
+        .xeb-progress-fill { height: 100%; background: #1d9bf0; border-radius: 3px; transition: width 0.3s; }
+        .xeb-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 8px 0; }
+        .xeb-stat {
+          background: #000; border-radius: 10px; padding: 8px 12px; text-align: center;
+        }
+        .xeb-stat-val { font-size: 20px; font-weight: 700; color: #e7e9ea; }
+        .xeb-stat-label { font-size: 10px; color: #71767b; text-transform: uppercase; letter-spacing: 0.5px; }
+        .xeb-current {
+          font-size: 12px; color: #71767b; padding: 4px 0; overflow: hidden;
+          text-overflow: ellipsis; white-space: nowrap;
+        }
+        .xeb-log {
+          max-height: 120px; overflow-y: auto; font-size: 11px; padding: 8px;
+          background: #000; border-radius: 8px; margin-top: 8px;
+        }
+        .xeb-log::-webkit-scrollbar { width: 3px; }
+        .xeb-log::-webkit-scrollbar-thumb { background: #2f3336; border-radius: 3px; }
+        .xeb-log-entry { padding: 2px 0; color: #71767b; }
+        .xeb-log-entry.success { color: #22c55e; }
+        .xeb-log-entry.warn { color: #eab308; }
+        .xeb-log-entry.error { color: #ef4444; }
+
+        /* History pane */
+        .xeb-history-stat { display: flex; justify-content: space-between; padding: 4px 0; font-size: 13px; }
+        .xeb-history-stat span:first-child { color: #71767b; }
+        .xeb-history-stat span:last-child { font-weight: 600; }
+        .xeb-empty { color: #71767b; font-size: 12px; text-align: center; padding: 16px 0; }
+
+        /* Buttons */
+        .xeb-actions { display: flex; gap: 8px; padding: 12px 16px; border-top: 1px solid #2f3336; }
+        .xeb-btn {
+          flex: 1; padding: 8px 0; border: none; border-radius: 999px; font-size: 13px;
+          font-weight: 700; cursor: pointer; transition: all 0.15s; text-align: center;
+        }
+        .xeb-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .xeb-btn-primary { background: #1d9bf0; color: #fff; }
+        .xeb-btn-primary:hover:not(:disabled) { background: #1a8cd8; }
+        .xeb-btn-warn { background: #2f3336; color: #fde68a; }
+        .xeb-btn-warn:hover:not(:disabled) { background: #3a3d42; }
+        .xeb-btn-danger { background: #2f3336; color: #ef4444; }
+        .xeb-btn-danger:hover:not(:disabled) { background: #3a3d42; }
+        .xeb-btn-ghost { background: none; color: #71767b; border: 1px solid #2f3336; }
+        .xeb-btn-ghost:hover:not(:disabled) { background: #2f3336; color: #e7e9ea; }
+      &lt;/style&gt;
+
+      &lt;div class=&quot;xeb-header&quot; id=&quot;xeb-drag&quot;&gt;
+        &lt;span class=&quot;xeb-title&quot;&gt;🚀 Engagement Booster&lt;/span&gt;
+        &lt;div style=&quot;display:flex;align-items:center;gap:8px;&quot;&gt;
+          &lt;span class=&quot;xeb-badge idle&quot; id=&quot;xeb-status&quot;&gt;IDLE&lt;/span&gt;
+          &lt;div class=&quot;xeb-header-btns&quot;&gt;
+            &lt;button id=&quot;xeb-minimize&quot; title=&quot;Minimize&quot;&gt;─&lt;/button&gt;
+            &lt;button id=&quot;xeb-close&quot; title=&quot;Close&quot;&gt;✕&lt;/button&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div class=&quot;xeb-body&quot;&gt;
+        &lt;div class=&quot;xeb-tabs&quot;&gt;
+          &lt;button class=&quot;xeb-tab active&quot; data-tab=&quot;config&quot;&gt;⚙️ Config&lt;/button&gt;
+          &lt;button class=&quot;xeb-tab&quot; data-tab=&quot;progress&quot;&gt;📊 Progress&lt;/button&gt;
+          &lt;button class=&quot;xeb-tab&quot; data-tab=&quot;history&quot;&gt;📜 History&lt;/button&gt;
+        &lt;/div&gt;
+
+        &lt;!-- CONFIG TAB --&gt;
+        &lt;div class=&quot;xeb-pane active&quot; data-pane=&quot;config&quot;&gt;
+          &lt;div class=&quot;xeb-field&quot;&gt;
+            &lt;label&gt;TARGET USERS (comma-separated, blank = any)&lt;/label&gt;
+            &lt;input type=&quot;text&quot; id=&quot;xeb-targetUsers&quot; placeholder=&quot;@user1, @user2&quot; /&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;xeb-field&quot;&gt;
+            &lt;label&gt;KEYWORDS (comma-separated, blank = any)&lt;/label&gt;
+            &lt;input type=&quot;text&quot; id=&quot;xeb-keywords&quot; placeholder=&quot;web3, AI, crypto&quot; /&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;xeb-row&quot;&gt;
+            &lt;div class=&quot;xeb-field&quot;&gt;
+              &lt;label&gt;MAX INTERACTIONS&lt;/label&gt;
+              &lt;input type=&quot;number&quot; id=&quot;xeb-maxInteractions&quot; value=&quot;15&quot; min=&quot;1&quot; max=&quot;200&quot; /&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;xeb-field&quot;&gt;
+              &lt;label&gt;SPEED&lt;/label&gt;
+              &lt;select id=&quot;xeb-speed&quot;&gt;
+                &lt;option value=&quot;stealth&quot;&gt;🐢 Stealth (45-90s)&lt;/option&gt;
+                &lt;option value=&quot;safe&quot; selected&gt;🛡️ Safe (20-45s)&lt;/option&gt;
+                &lt;option value=&quot;moderate&quot;&gt;⚡ Moderate (8-20s)&lt;/option&gt;
+                &lt;option value=&quot;fast&quot;&gt;🔥 Fast (3-8s)&lt;/option&gt;
+              &lt;/select&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;xeb-row&quot;&gt;
+            &lt;div class=&quot;xeb-field&quot;&gt;
+              &lt;label&gt;MIN LIKES&lt;/label&gt;
+              &lt;input type=&quot;number&quot; id=&quot;xeb-minLikes&quot; value=&quot;0&quot; min=&quot;0&quot; /&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;xeb-field&quot;&gt;
+              &lt;label&gt;MAX LIKES (0 = no cap)&lt;/label&gt;
+              &lt;input type=&quot;number&quot; id=&quot;xeb-maxLikes&quot; value=&quot;0&quot; min=&quot;0&quot; /&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;div style=&quot;border-top:1px solid #2f3336; margin:8px 0; padding-top:8px;&quot;&gt;
+            &lt;label style=&quot;font-size:11px;color:#71767b;font-weight:600;margin-bottom:6px;display:block;&quot;&gt;ACTIONS&lt;/label&gt;
+            &lt;div class=&quot;xeb-toggle-row&quot;&gt;&lt;span&gt;❤️ Like&lt;/span&gt;&lt;label class=&quot;xeb-toggle&quot;&gt;&lt;input type=&quot;checkbox&quot; id=&quot;xeb-actLike&quot; checked /&gt;&lt;span class=&quot;xeb-slider&quot;&gt;&lt;/span&gt;&lt;/label&gt;&lt;/div&gt;
+            &lt;div class=&quot;xeb-toggle-row&quot;&gt;&lt;span&gt;🔁 Retweet&lt;/span&gt;&lt;label class=&quot;xeb-toggle&quot;&gt;&lt;input type=&quot;checkbox&quot; id=&quot;xeb-actRetweet&quot; /&gt;&lt;span class=&quot;xeb-slider&quot;&gt;&lt;/span&gt;&lt;/label&gt;&lt;/div&gt;
+            &lt;div class=&quot;xeb-toggle-row&quot;&gt;&lt;span&gt;🔖 Bookmark&lt;/span&gt;&lt;label class=&quot;xeb-toggle&quot;&gt;&lt;input type=&quot;checkbox&quot; id=&quot;xeb-actBookmark&quot; /&gt;&lt;span class=&quot;xeb-slider&quot;&gt;&lt;/span&gt;&lt;/label&gt;&lt;/div&gt;
+            &lt;div class=&quot;xeb-toggle-row&quot;&gt;&lt;span&gt;💬 Reply&lt;/span&gt;&lt;label class=&quot;xeb-toggle&quot;&gt;&lt;input type=&quot;checkbox&quot; id=&quot;xeb-actReply&quot; /&gt;&lt;span class=&quot;xeb-slider&quot;&gt;&lt;/span&gt;&lt;/label&gt;&lt;/div&gt;
+            &lt;div class=&quot;xeb-toggle-row&quot;&gt;&lt;span&gt;👤 Follow&lt;/span&gt;&lt;label class=&quot;xeb-toggle&quot;&gt;&lt;input type=&quot;checkbox&quot; id=&quot;xeb-actFollow&quot; /&gt;&lt;span class=&quot;xeb-slider&quot;&gt;&lt;/span&gt;&lt;/label&gt;&lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;div style=&quot;border-top:1px solid #2f3336; margin:8px 0; padding-top:8px;&quot;&gt;
+            &lt;div class=&quot;xeb-field&quot;&gt;
+              &lt;label&gt;BLOCK USERS (never engage, comma-separated)&lt;/label&gt;
+              &lt;input type=&quot;text&quot; id=&quot;xeb-blockUsers&quot; placeholder=&quot;@spammer1, @bot2&quot; /&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;xeb-field&quot;&gt;
+              &lt;label&gt;SKIP KEYWORDS (comma-separated)&lt;/label&gt;
+              &lt;input type=&quot;text&quot; id=&quot;xeb-skipKeywords&quot; value=&quot;promoted, ad, giveaway, nsfw&quot; /&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;div style=&quot;border-top:1px solid #2f3336; margin:8px 0; padding-top:8px;&quot;&gt;
+            &lt;label style=&quot;font-size:11px;color:#71767b;font-weight:600;margin-bottom:6px;display:block;&quot;&gt;SMART FEATURES&lt;/label&gt;
+            &lt;div class=&quot;xeb-toggle-row&quot;&gt;&lt;span&gt;🎯 Smart scoring&lt;/span&gt;&lt;label class=&quot;xeb-toggle&quot;&gt;&lt;input type=&quot;checkbox&quot; id=&quot;xeb-scoring&quot; checked /&gt;&lt;span class=&quot;xeb-slider&quot;&gt;&lt;/span&gt;&lt;/label&gt;&lt;/div&gt;
+            &lt;div class=&quot;xeb-toggle-row&quot;&gt;&lt;span&gt;🏃 Dry run&lt;/span&gt;&lt;label class=&quot;xeb-toggle&quot;&gt;&lt;input type=&quot;checkbox&quot; id=&quot;xeb-dryRun&quot; checked /&gt;&lt;span class=&quot;xeb-slider&quot;&gt;&lt;/span&gt;&lt;/label&gt;&lt;/div&gt;
+            &lt;div class=&quot;xeb-toggle-row&quot;&gt;&lt;span&gt;⏰ Drip mode&lt;/span&gt;&lt;label class=&quot;xeb-toggle&quot;&gt;&lt;input type=&quot;checkbox&quot; id=&quot;xeb-drip&quot; /&gt;&lt;span class=&quot;xeb-slider&quot;&gt;&lt;/span&gt;&lt;/label&gt;&lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;div id=&quot;xeb-dripConfig&quot; style=&quot;display:none; padding-top:4px;&quot;&gt;
+            &lt;div class=&quot;xeb-row&quot;&gt;
+              &lt;div class=&quot;xeb-field&quot;&gt;
+                &lt;label&gt;INTERVAL (min)&lt;/label&gt;
+                &lt;input type=&quot;number&quot; id=&quot;xeb-dripInterval&quot; value=&quot;30&quot; min=&quot;5&quot; /&gt;
+              &lt;/div&gt;
+              &lt;div class=&quot;xeb-field&quot;&gt;
+                &lt;label&gt;BATCH SIZE&lt;/label&gt;
+                &lt;input type=&quot;number&quot; id=&quot;xeb-dripBatch&quot; value=&quot;3&quot; min=&quot;1&quot; max=&quot;10&quot; /&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- PROGRESS TAB --&gt;
+        &lt;div class=&quot;xeb-pane&quot; data-pane=&quot;progress&quot;&gt;
+          &lt;div class=&quot;xeb-current&quot; id=&quot;xeb-currentAction&quot;&gt;Waiting to start...&lt;/div&gt;
+          &lt;div class=&quot;xeb-progress-bar&quot;&gt;&lt;div class=&quot;xeb-progress-fill&quot; id=&quot;xeb-progressFill&quot; style=&quot;width:0%&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+          &lt;div style=&quot;display:flex;justify-content:space-between;font-size:11px;color:#71767b;&quot;&gt;
+            &lt;span id=&quot;xeb-progressText&quot;&gt;0 / 0&lt;/span&gt;
+            &lt;span id=&quot;xeb-eta&quot; style=&quot;color:#1d9bf0;&quot;&gt;&lt;/span&gt;
+            &lt;span id=&quot;xeb-elapsed&quot;&gt;0:00&lt;/span&gt;
+          &lt;/div&gt;
+
+          &lt;div class=&quot;xeb-stats&quot;&gt;
+            &lt;div class=&quot;xeb-stat&quot;&gt;&lt;div class=&quot;xeb-stat-val&quot; id=&quot;xeb-sLiked&quot;&gt;0&lt;/div&gt;&lt;div class=&quot;xeb-stat-label&quot;&gt;Liked&lt;/div&gt;&lt;/div&gt;
+            &lt;div class=&quot;xeb-stat&quot;&gt;&lt;div class=&quot;xeb-stat-val&quot; id=&quot;xeb-sRetweeted&quot;&gt;0&lt;/div&gt;&lt;div class=&quot;xeb-stat-label&quot;&gt;Retweeted&lt;/div&gt;&lt;/div&gt;
+            &lt;div class=&quot;xeb-stat&quot;&gt;&lt;div class=&quot;xeb-stat-val&quot; id=&quot;xeb-sBookmarked&quot;&gt;0&lt;/div&gt;&lt;div class=&quot;xeb-stat-label&quot;&gt;Bookmarked&lt;/div&gt;&lt;/div&gt;
+            &lt;div class=&quot;xeb-stat&quot;&gt;&lt;div class=&quot;xeb-stat-val&quot; id=&quot;xeb-sReplied&quot;&gt;0&lt;/div&gt;&lt;div class=&quot;xeb-stat-label&quot;&gt;Replied&lt;/div&gt;&lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;div class=&quot;xeb-log&quot; id=&quot;xeb-log&quot;&gt;&lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- HISTORY TAB --&gt;
+        &lt;div class=&quot;xeb-pane&quot; data-pane=&quot;history&quot;&gt;
+          &lt;div id=&quot;xeb-historyContent&quot;&gt;&lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div class=&quot;xeb-actions&quot; id=&quot;xeb-actionBar&quot;&gt;
+        &lt;button class=&quot;xeb-btn xeb-btn-primary&quot; id=&quot;xeb-startBtn&quot;&gt;▶ Start&lt;/button&gt;
+        &lt;button class=&quot;xeb-btn xeb-btn-warn&quot; id=&quot;xeb-pauseBtn&quot; disabled&gt;⏸ Pause&lt;/button&gt;
+        &lt;button class=&quot;xeb-btn xeb-btn-danger&quot; id=&quot;xeb-stopBtn&quot; disabled&gt;🛑 Stop&lt;/button&gt;
+      &lt;/div&gt;
+    `;
+
+    document.body.appendChild(panel);
+    return panel;
+  };
+
+  // ═══════════════════════════════════════════════════════════
+  // PANEL LOGIC
+  // ═══════════════════════════════════════════════════════════
+
+  const panel = createPanel();
+
+  // Drag support
+  let dragOffset = { x: 0, y: 0 };
+  const dragHandle = document.getElementById(&#39;xeb-drag&#39;);
+  dragHandle.addEventListener(&#39;mousedown&#39;, (e) =&gt; {
+    if (e.target.tagName === &#39;BUTTON&#39;) return;
+    const rect = panel.getBoundingClientRect();
+    dragOffset = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    const onMove = (ev) =&gt; {
+      panel.style.left = (ev.clientX - dragOffset.x) + &#39;px&#39;;
+      panel.style.top = (ev.clientY - dragOffset.y) + &#39;px&#39;;
+      panel.style.right = &#39;auto&#39;;
+    };
+    const onUp = () =&gt; { document.removeEventListener(&#39;mousemove&#39;, onMove); document.removeEventListener(&#39;mouseup&#39;, onUp); };
+    document.addEventListener(&#39;mousemove&#39;, onMove);
+    document.addEventListener(&#39;mouseup&#39;, onUp);
+  });
+
+  // Minimize / Close
+  document.getElementById(&#39;xeb-minimize&#39;).addEventListener(&#39;click&#39;, () =&gt; panel.classList.toggle(&#39;xeb-minimized&#39;));
+  document.getElementById(&#39;xeb-close&#39;).addEventListener(&#39;click&#39;, () =&gt; {
+    if (STATE.status === &#39;running&#39;) {
+      if (!confirm(&#39;Engagement Booster is running. Stop and close?&#39;)) return;
+      STATE.aborted = true;
+    }
+    clearInterval(STATE.dripTimer);
+    panel.remove();
+  });
+
+  // Tabs
+  for (const tab of panel.querySelectorAll(&#39;.xeb-tab&#39;)) {
+    tab.addEventListener(&#39;click&#39;, () =&gt; {
+      panel.querySelectorAll(&#39;.xeb-tab&#39;).forEach(t =&gt; t.classList.remove(&#39;active&#39;));
+      panel.querySelectorAll(&#39;.xeb-pane&#39;).forEach(p =&gt; p.classList.remove(&#39;active&#39;));
+      tab.classList.add(&#39;active&#39;);
+      panel.querySelector(`[data-pane=&quot;${tab.dataset.tab}&quot;]`).classList.add(&#39;active&#39;);
+      if (tab.dataset.tab === &#39;history&#39;) renderHistory();
+    });
+  }
+
+  // Drip toggle
+  document.getElementById(&#39;xeb-drip&#39;).addEventListener(&#39;change&#39;, (e) =&gt; {
+    document.getElementById(&#39;xeb-dripConfig&#39;).style.display = e.target.checked ? &#39;block&#39; : &#39;none&#39;;
+  });
+
+  // ═══════════════════════════════════════════════════════════
+  // UPDATE PANEL
+  // ═══════════════════════════════════════════════════════════
+
+  let updateTimer = null;
+
+  const updatePanel = () =&gt; {
+    const badge = document.getElementById(&#39;xeb-status&#39;);
+    if (!badge) return;
+    badge.textContent = STATE.status.toUpperCase();
+    badge.className = `xeb-badge ${STATE.status}`;
+
+    const pct = STATE.total &gt; 0 ? Math.round((STATE.processed / STATE.total) * 100) : 0;
+    const fill = document.getElementById(&#39;xeb-progressFill&#39;);
+    if (fill) fill.style.width = pct + &#39;%&#39;;
+
+    const txt = document.getElementById(&#39;xeb-progressText&#39;);
+    if (txt) txt.textContent = `${STATE.processed} / ${STATE.total}`;
+
+    const el = document.getElementById(&#39;xeb-elapsed&#39;);
+    if (el &amp;&amp; STATE.startTime) {
+      const sec = Math.floor((Date.now() - STATE.startTime) / 1000);
+      el.textContent = `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, &#39;0&#39;)}`;
+    }
+
+    // ETA
+    const etaEl = document.getElementById(&#39;xeb-eta&#39;);
+    if (etaEl &amp;&amp; STATE.processed &gt; 0 &amp;&amp; STATE.total &gt; STATE.processed &amp;&amp; STATE.startTime) {
+      const elapsed = Date.now() - STATE.startTime;
+      const perItem = elapsed / STATE.processed;
+      const remaining = (STATE.total - STATE.processed) * perItem;
+      const mins = Math.ceil(remaining / 60000);
+      etaEl.textContent = mins &gt; 0 ? `~${mins}m left` : &#39;&lt;1m left&#39;;
+    } else if (etaEl) {
+      etaEl.textContent = STATE.processed &gt;= STATE.total &amp;&amp; STATE.total &gt; 0 ? &#39;Done&#39; : &#39;&#39;;
+    }
+
+    const ids = { &#39;xeb-sLiked&#39;: STATE.liked, &#39;xeb-sRetweeted&#39;: STATE.retweeted, &#39;xeb-sBookmarked&#39;: STATE.bookmarked, &#39;xeb-sReplied&#39;: STATE.replied };
+    for (const [id, val] of Object.entries(ids)) {
+      const e = document.getElementById(id);
+      if (e) e.textContent = val;
+    }
+
+    // Live log
+    const logEl = document.getElementById(&#39;xeb-log&#39;);
+    if (logEl) {
+      const recent = STATE.logs.slice(-30);
+      logEl.innerHTML = recent.map(l =&gt; {
+        const t = l.time.toLocaleTimeString(&#39;en&#39;, { hour12: false, hour: &#39;2-digit&#39;, minute: &#39;2-digit&#39;, second: &#39;2-digit&#39; });
+        return `&lt;div class=&quot;xeb-log-entry ${l.type}&quot;&gt;${t} ${l.msg}&lt;/div&gt;`;
+      }).join(&#39;&#39;);
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+  };
+
+  const startUpdateTimer = () =&gt; {
+    updateTimer = setInterval(updatePanel, 1000);
+  };
+
+  const stopUpdateTimer = () =&gt; {
+    clearInterval(updateTimer);
+    updatePanel();
+  };
+
+  // ═══════════════════════════════════════════════════════════
+  // HISTORY
+  // ═══════════════════════════════════════════════════════════
+
+  const renderHistory = () =&gt; {
+    const container = document.getElementById(&#39;xeb-historyContent&#39;);
+    if (!container) return;
+    const stats = getHistoryStats();
+    if (stats.sessions === 0) {
+      container.innerHTML = &#39;&lt;div class=&quot;xeb-empty&quot;&gt;No sessions yet. Start boosting!&lt;/div&gt;&#39;;
+      return;
+    }
+    container.innerHTML = `
+      &lt;div class=&quot;xeb-history-stat&quot;&gt;&lt;span&gt;Sessions&lt;/span&gt;&lt;span&gt;${stats.sessions}&lt;/span&gt;&lt;/div&gt;
+      &lt;div class=&quot;xeb-history-stat&quot;&gt;&lt;span&gt;❤️ Total liked&lt;/span&gt;&lt;span&gt;${fmtNum(stats.totalLikes)}&lt;/span&gt;&lt;/div&gt;
+      &lt;div class=&quot;xeb-history-stat&quot;&gt;&lt;span&gt;🔁 Total retweeted&lt;/span&gt;&lt;span&gt;${fmtNum(stats.totalRetweets)}&lt;/span&gt;&lt;/div&gt;
+      &lt;div class=&quot;xeb-history-stat&quot;&gt;&lt;span&gt;🔖 Total bookmarked&lt;/span&gt;&lt;span&gt;${fmtNum(stats.totalBookmarks)}&lt;/span&gt;&lt;/div&gt;
+      &lt;div class=&quot;xeb-history-stat&quot;&gt;&lt;span&gt;💬 Total replied&lt;/span&gt;&lt;span&gt;${fmtNum(stats.totalReplies)}&lt;/span&gt;&lt;/div&gt;
+      &lt;div class=&quot;xeb-history-stat&quot;&gt;&lt;span&gt;👥 Unique accounts&lt;/span&gt;&lt;span&gt;${fmtNum(stats.uniqueAuthors)}&lt;/span&gt;&lt;/div&gt;
+      &lt;div style=&quot;margin-top:12px;&quot;&gt;
+        &lt;button class=&quot;xeb-btn xeb-btn-ghost&quot; style=&quot;width:100%;padding:6px;&quot; id=&quot;xeb-exportHistory&quot;&gt;📥 Export all history (JSON)&lt;/button&gt;
+      &lt;/div&gt;
+      &lt;div style=&quot;margin-top:6px;&quot;&gt;
+        &lt;button class=&quot;xeb-btn xeb-btn-ghost&quot; style=&quot;width:100%;padding:6px;color:#ef4444;&quot; id=&quot;xeb-clearHistory&quot;&gt;🗑️ Clear history&lt;/button&gt;
+      &lt;/div&gt;
+    `;
+    document.getElementById(&#39;xeb-exportHistory&#39;)?.addEventListener(&#39;click&#39;, () =&gt; {
+      const blob = new Blob([JSON.stringify(loadHistory(), null, 2)], { type: &#39;application/json&#39; });
+      const a = document.createElement(&#39;a&#39;); a.href = URL.createObjectURL(blob);
+      a.download = `xactions-engagement-history-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a); a.click(); a.remove();
+    });
+    document.getElementById(&#39;xeb-clearHistory&#39;)?.addEventListener(&#39;click&#39;, () =&gt; {
+      if (confirm(&#39;Clear all engagement history?&#39;)) {
+        localStorage.removeItem(STORAGE_KEY);
+        renderHistory();
+      }
+    });
+  };
+
+  // ═══════════════════════════════════════════════════════════
+  // READ CONFIG FROM PANEL
+  // ═══════════════════════════════════════════════════════════
+
+  const readConfigFromPanel = () =&gt; {
+    const val = (id) =&gt; document.getElementById(id)?.value?.trim() || &#39;&#39;;
+    const num = (id) =&gt; parseInt(document.getElementById(id)?.value) || 0;
+    const chk = (id) =&gt; document.getElementById(id)?.checked || false;
+
+    CONFIG.targetUsers = val(&#39;xeb-targetUsers&#39;).split(&#39;,&#39;).map(u =&gt; u.trim().replace(/^@/, &#39;&#39;)).filter(Boolean);
+    CONFIG.onlyKeywords = val(&#39;xeb-keywords&#39;).split(&#39;,&#39;).map(k =&gt; k.trim()).filter(Boolean);
+    CONFIG.maxInteractions = num(&#39;xeb-maxInteractions&#39;) || 15;
+    CONFIG.speedPreset = val(&#39;xeb-speed&#39;) || &#39;safe&#39;;
+    CONFIG.minLikes = num(&#39;xeb-minLikes&#39;);
+    CONFIG.maxLikes = num(&#39;xeb-maxLikes&#39;);
+
+    CONFIG.actions.like = chk(&#39;xeb-actLike&#39;);
+    CONFIG.actions.retweet = chk(&#39;xeb-actRetweet&#39;);
+    CONFIG.actions.bookmark = chk(&#39;xeb-actBookmark&#39;);
+    CONFIG.actions.reply = chk(&#39;xeb-actReply&#39;);
+    CONFIG.actions.follow = chk(&#39;xeb-actFollow&#39;);
+    CONFIG.blockUsers = val(&#39;xeb-blockUsers&#39;).split(&#39;,&#39;).map(u =&gt; u.trim().replace(/^@/, &#39;&#39;)).filter(Boolean);
+    CONFIG.skipKeywords = val(&#39;xeb-skipKeywords&#39;).split(&#39;,&#39;).map(k =&gt; k.trim()).filter(Boolean);
+
+    CONFIG.scoring.enabled = chk(&#39;xeb-scoring&#39;);
+    CONFIG.dryRun = chk(&#39;xeb-dryRun&#39;);
+    CONFIG.drip.enabled = chk(&#39;xeb-drip&#39;);
+    CONFIG.drip.intervalMinutes = num(&#39;xeb-dripInterval&#39;) || 30;
+    CONFIG.drip.batchSize = num(&#39;xeb-dripBatch&#39;) || 3;
+  };
+
+  // ═══════════════════════════════════════════════════════════
+  // SMART ENGAGEMENT SCORING
+  // ═══════════════════════════════════════════════════════════
+
+  const scoreTweet = (tweet) =&gt; {
+    if (!CONFIG.scoring.enabled) return 0;
+    let score = 0;
+
+    // Prefer smaller accounts (higher chance of follow-back / notice)
+    if (CONFIG.scoring.preferSmallAccounts) {
+      if (tweet.likes &lt; 5) score += 30;
+      else if (tweet.likes &lt; 20) score += 20;
+      else if (tweet.likes &lt; 100) score += 10;
+      else score += 2;
+    }
+
+    // Prefer high engagement (viral content)
+    if (CONFIG.scoring.preferHighEngagement) {
+      if (tweet.likes &gt; 100) score += 25;
+      else if (tweet.likes &gt; 50) score += 15;
+      else score += 5;
+    }
+
+    // Prefer recent tweets (higher in DOM = more recent)
+    if (CONFIG.scoring.preferRecent) {
+      score += Math.max(0, 20 - (tweet.domIndex * 2));
+    }
+
+    // Bonus: tweet has meaningful text (not just links/media)
+    if (tweet.text.length &gt; 50) score += 10;
+    if (tweet.text.length &gt; 140) score += 5;
+
+    // Penalty: very short / empty
+    if (tweet.text.length &lt; 20) score -= 10;
+
+    return score;
+  };
+
+  // ═══════════════════════════════════════════════════════════
+  // COLLECT ELIGIBLE TWEETS
+  // ═══════════════════════════════════════════════════════════
+
+  const collectEligible = async () =&gt; {
+    STATE.status = &#39;scanning&#39;;
+    updatePanel();
+    addLog(&#39;🔍 Scanning for eligible tweets...&#39;, &#39;info&#39;);
+
+    const eligible = [];
+    const seen = new Set();
+
+    for (let round = 0; round &lt; CONFIG.scrollRounds; round++) {
+      if (STATE.aborted) break;
+      const articles = $$(SEL.tweet);
+      let domIndex = 0;
+
+      for (const article of articles) {
+        const textEl = $(SEL.tweetText, article);
+        const text = textEl ? textEl.textContent.trim() : &#39;&#39;;
+        const fingerprint = text.slice(0, 80);
+        if (seen.has(fingerprint)) continue;
+        seen.add(fingerprint);
+
+        // Author extraction
+        const authorLink = article.querySelector(&#39;a[href^=&quot;/&quot;][role=&quot;link&quot;]&#39;);
+        const authorMatch = authorLink ? (authorLink.getAttribute(&#39;href&#39;) || &#39;&#39;).match(/^\/([A-Za-z0-9_]+)/) : null;
+        const author = authorMatch ? authorMatch[1] : null;
+        if (!author || [&#39;home&#39;, &#39;explore&#39;, &#39;notifications&#39;, &#39;messages&#39;, &#39;i&#39;].includes(author)) continue;
+
+        // Filter: blocklist
+        if (CONFIG.blockUsers.length &gt; 0 &amp;&amp; CONFIG.blockUsers.some(u =&gt; u.toLowerCase() === author.toLowerCase())) continue;
+
+        // Filter: target users
+        if (CONFIG.targetUsers.length &gt; 0 &amp;&amp; !CONFIG.targetUsers.some(u =&gt; u.toLowerCase() === author.toLowerCase())) continue;
+
+        // Filter: keywords
+        const textLower = text.toLowerCase();
+        if (CONFIG.skipKeywords.some(kw =&gt; textLower.includes(kw.toLowerCase()))) continue;
+        if (CONFIG.onlyKeywords.length &gt; 0 &amp;&amp; !CONFIG.onlyKeywords.some(kw =&gt; textLower.includes(kw.toLowerCase()))) continue;
+
+        // Filter: skip already liked
+        if (CONFIG.skipLiked &amp;&amp; $(SEL.unlikeBtn, article)) continue;
+
+        // Filter: engagement range
+        const likeEl = article.querySelector(&#39;[data-testid=&quot;like&quot;] span&#39;);
+        const likes = likeEl ? parseNum(likeEl.textContent) : 0;
+        if (likes &lt; CONFIG.minLikes) continue;
+        if (CONFIG.maxLikes &gt; 0 &amp;&amp; likes &gt; CONFIG.maxLikes) continue;
+
+        // Filter: verified
+        if (CONFIG.onlyVerified) {
+          const verified = article.querySelector(&#39;[data-testid=&quot;icon-verified&quot;]&#39;);
+          if (!verified) continue;
+        }
+
+        eligible.push({ article, text, author, likes, domIndex: domIndex++ });
+      }
+
+      addLog(`📜 Round ${round + 1}/${CONFIG.scrollRounds}: ${eligible.length} eligible`);
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(CONFIG.scrollDelay);
+    }
+
+    // Apply smart scoring and sort
+    if (CONFIG.scoring.enabled) {
+      for (const t of eligible) t.score = scoreTweet(t);
+      eligible.sort((a, b) =&gt; b.score - a.score);
+      addLog(`🎯 Smart scoring applied — top tweet score: ${eligible[0]?.score || 0}`);
+    }
+
+    return eligible;
+  };
+
+  // ═══════════════════════════════════════════════════════════
+  // ACTIONS
+  // ═══════════════════════════════════════════════════════════
+
+  const likeTweet = async (article) =&gt; {
+    const btn = $(SEL.likeBtn, article);
+    if (!btn) return false;
+    if (CONFIG.dryRun) { addLog(&#39;  ❤️ [DRY] Would like&#39;); return true; }
+    btn.click();
+    await sleep(500);
+    return !!$(SEL.unlikeBtn, article);
+  };
+
+  const unlikeTweet = async (article) =&gt; {
+    const btn = $(SEL.unlikeBtn, article);
+    if (!btn) return false;
+    btn.click();
+    await sleep(500);
+    return !!$(SEL.likeBtn, article);
+  };
+
+  const retweetTweet = async (article) =&gt; {
+    const btn = $(SEL.retweetBtn, article);
+    if (!btn) return false;
+    if (CONFIG.dryRun) { addLog(&#39;  🔁 [DRY] Would retweet&#39;); return true; }
+    btn.click();
+    await sleep(800);
+    // Confirm retweet in the popup menu
+    const confirm = document.querySelector(&#39;[data-testid=&quot;retweetConfirm&quot;]&#39;);
+    if (confirm) { confirm.click(); await sleep(500); }
+    return !!$(SEL.unretweetBtn, article);
+  };
+
+  const unretweetTweet = async (article) =&gt; {
+    const btn = $(SEL.unretweetBtn, article);
+    if (!btn) return false;
+    btn.click();
+    await sleep(800);
+    const confirm = document.querySelector(&#39;[data-testid=&quot;unretweetConfirm&quot;]&#39;);
+    if (confirm) { confirm.click(); await sleep(500); }
+    return !!$(SEL.retweetBtn, article);
+  };
+
+  const bookmarkTweet = async (article) =&gt; {
+    const btn = $(SEL.bookmarkBtn, article);
+    if (!btn) return false;
+    if (CONFIG.dryRun) { addLog(&#39;  🔖 [DRY] Would bookmark&#39;); return true; }
+    btn.click();
+    await sleep(500);
+    return true;  // Bookmarks don&#39;t visually toggle the same way
+  };
+
+  // Smart template picker — matches reply to tweet topic
+  const pickReplyTemplate = (tweetText) =&gt; {
+    const lower = tweetText.toLowerCase();
+    const templates = CONFIG.replyTemplates;
+    // Try topic-matched templates first
+    const topicMatches = templates.filter(t =&gt;
+      t.topics &amp;&amp; t.topics.length &gt; 0 &amp;&amp; t.topics.some(kw =&gt; lower.includes(kw))
+    );
+    if (topicMatches.length &gt; 0) {
+      return topicMatches[Math.floor(Math.random() * topicMatches.length)].text;
+    }
+    // Fall back to generic (no topics) templates
+    const generic = templates.filter(t =&gt; !t.topics || t.topics.length === 0);
+    const pool = generic.length &gt; 0 ? generic : templates;
+    return pool[Math.floor(Math.random() * pool.length)].text || pool[0];
+  };
+
+  // Follow a user (best-effort: via caret menu on tweet)
+  const followUserFromTweet = async (article, author) =&gt; {
+    if (CONFIG.dryRun) { addLog(`  👤 [DRY] Would follow @${author}`); return true; }
+    try {
+      // Look for a follow button in the tweet&#39;s caret menu
+      const caret = article.querySelector(&#39;[data-testid=&quot;caret&quot;]&#39;);
+      if (caret) {
+        caret.click();
+        await sleep(600);
+        const menuItems = $$(&#39;[role=&quot;menuitem&quot;]&#39;);
+        const followItem = menuItems.find(el =&gt; /follow @/i.test(el.textContent));
+        if (followItem &amp;&amp; !/unfollow/i.test(followItem.textContent)) {
+          followItem.click();
+          await sleep(500);
+          return true;
+        }
+        // Close menu if no follow option
+        document.dispatchEvent(new KeyboardEvent(&#39;keydown&#39;, { key: &#39;Escape&#39; }));
+        await sleep(300);
+      }
+      return false;
+    } catch { return false; }
+  };
+
+  // Tweet visual highlight
+  let highlightedArticle = null;
+  const highlightTweet = (article) =&gt; {
+    unhighlightTweet();
+    highlightedArticle = article;
+    article.style.outline = &#39;2px solid #1d9bf0&#39;;
+    article.style.outlineOffset = &#39;-2px&#39;;
+    article.style.borderRadius = &#39;16px&#39;;
+    article.style.boxShadow = &#39;0 0 20px rgba(29,155,240,0.25)&#39;;
+    article.style.transition = &#39;outline 0.3s, box-shadow 0.3s&#39;;
+  };
+  const unhighlightTweet = () =&gt; {
+    if (!highlightedArticle) return;
+    highlightedArticle.style.outline = &#39;&#39;;
+    highlightedArticle.style.outlineOffset = &#39;&#39;;
+    highlightedArticle.style.boxShadow = &#39;&#39;;
+    highlightedArticle = null;
+  };
+
+  const replyToTweet = async (article, tweetText, author) =&gt; {
+    const replyBtn = $(SEL.replyBtn, article);
+    if (!replyBtn) return false;
+    const replyText = pickReplyTemplate(tweetText).replace(&#39;{author}&#39;, `@${author}`);
+    if (CONFIG.dryRun) { addLog(`  💬 [DRY] Would reply: &quot;${replyText}&quot;`); return true; }
+    replyBtn.click();
+    await sleep(1500);
+    const tweetBox = $(SEL.tweetBox);
+    if (!tweetBox) { addLog(&#39;  ⚠️ Reply box not found&#39;, &#39;warn&#39;); return false; }
+    tweetBox.focus();
+    document.execCommand(&#39;insertText&#39;, false, replyText);
+    await sleep(800);
+    const sendBtn = $(SEL.tweetButton);
+    if (!sendBtn) { addLog(&#39;  ⚠️ Send button not found&#39;, &#39;warn&#39;); return false; }
+    sendBtn.click();
+    await sleep(2000);
+    return true;
+  };
+
+  // ═══════════════════════════════════════════════════════════
+  // UNDO / ROLLBACK
+  // ═══════════════════════════════════════════════════════════
+
+  const undoAll = async () =&gt; {
+    if (STATE.undoStack.length === 0) {
+      addLog(&#39;Nothing to undo.&#39;, &#39;warn&#39;);
+      return;
+    }
+    const count = STATE.undoStack.length;
+    addLog(`↩ Undoing ${count} actions...`, &#39;warn&#39;);
+    let undone = 0;
+
+    for (const action of [...STATE.undoStack].reverse()) {
+      try {
+        // Scroll the article into view if it&#39;s still in the DOM
+        if (!document.body.contains(action.article)) {
+          addLog(`  ⚠️ @${action.author} tweet no longer in DOM, skipping`, &#39;warn&#39;);
+          continue;
+        }
+        action.article.scrollIntoView({ behavior: &#39;smooth&#39;, block: &#39;center&#39; });
+        await sleep(600);
+
+        if (action.type === &#39;like&#39;) {
+          const ok = await unlikeTweet(action.article);
+          if (ok) undone++;
+        } else if (action.type === &#39;retweet&#39;) {
+          const ok = await unretweetTweet(action.article);
+          if (ok) undone++;
+        }
+        // Bookmarks and replies can&#39;t be easily undone
+        await sleep(gaussian(1000, 2500));
+      } catch { /* swallow */ }
+    }
+
+    STATE.undoStack.length = 0;
+    addLog(`✅ Undone ${undone}/${count} actions`, &#39;success&#39;);
+    updatePanel();
+  };
+
+  // ═══════════════════════════════════════════════════════════
+  // PROCESS ONE TWEET
+  // ═══════════════════════════════════════════════════════════
+
+  const processTweet = async (target, index, total) =&gt; {
+    const preview = target.text.slice(0, 40) + (target.text.length &gt; 40 ? &#39;…&#39; : &#39;&#39;);
+    const el = document.getElementById(&#39;xeb-currentAction&#39;);
+    if (el) el.textContent = `@${target.author}: &quot;${preview}&quot;`;
+
+    addLog(`[${index + 1}/${total}] @${target.author} (${target.likes}❤️${target.score !== undefined ? ` score:${target.score}` : &#39;&#39;})`);
+    highlightTweet(target.article);
+
+    target.article.scrollIntoView({ behavior: &#39;smooth&#39;, block: &#39;center&#39; });
+    await sleep(800);
+
+    const result = { author: target.author, text: target.text.slice(0, 120), actions: [], score: target.score };
+
+    // Like
+    if (CONFIG.actions.like) {
+      const ok = await likeTweet(target.article);
+      if (ok) {
+        STATE.liked++;
+        result.actions.push(&#39;liked&#39;);
+        if (!CONFIG.dryRun) STATE.undoStack.push({ type: &#39;like&#39;, article: target.article, author: target.author });
+      } else STATE.failed++;
+      await sleep(gaussian(400, 1000));
+    }
+
+    // Retweet
+    if (CONFIG.actions.retweet) {
+      const ok = await retweetTweet(target.article);
+      if (ok) {
+        STATE.retweeted++;
+        result.actions.push(&#39;retweeted&#39;);
+        if (!CONFIG.dryRun) STATE.undoStack.push({ type: &#39;retweet&#39;, article: target.article, author: target.author });
+      } else STATE.failed++;
+      await sleep(gaussian(400, 1000));
+    }
+
+    // Bookmark
+    if (CONFIG.actions.bookmark) {
+      const ok = await bookmarkTweet(target.article);
+      if (ok) {
+        STATE.bookmarked++;
+        result.actions.push(&#39;bookmarked&#39;);
+        if (!CONFIG.dryRun) STATE.undoStack.push({ type: &#39;bookmark&#39;, article: target.article, author: target.author });
+      } else STATE.failed++;
+      await sleep(gaussian(300, 700));
+    }
+
+    // Reply (smart template picker)
+    if (CONFIG.actions.reply) {
+      const ok = await replyToTweet(target.article, target.text, target.author);
+      if (ok) {
+        STATE.replied++;
+        result.actions.push(&#39;replied&#39;);
+      } else STATE.failed++;
+    }
+
+    // Follow
+    if (CONFIG.actions.follow) {
+      const ok = await followUserFromTweet(target.article, target.author);
+      if (ok) {
+        STATE.followed = (STATE.followed || 0) + 1;
+        result.actions.push(&#39;followed&#39;);
+      }
+      // Don&#39;t count follow failure as &quot;failed&quot; — option often unavailable
+      await sleep(gaussian(300, 600));
+    }
+
+    result.timestamp = new Date().toISOString();
+    STATE.results.push(result);
+    STATE.processed++;
+    unhighlightTweet();
+    updatePanel();
+    return result;
+  };
+
+  // ═══════════════════════════════════════════════════════════
+  // MAIN RUN LOOP
+  // ═══════════════════════════════════════════════════════════
+
+  const run = async () =&gt; {
+    readConfigFromPanel();
+
+    // Reset state
+    Object.assign(STATE, {
+      status: &#39;scanning&#39;, aborted: false, paused: false,
+      liked: 0, replied: 0, retweeted: 0, bookmarked: 0, failed: 0,
+      processed: 0, total: 0, startTime: Date.now(), undoStack: [], results: [], logs: [],
+    });
+    startUpdateTimer();
+
+    const preset = SPEED_PRESETS[CONFIG.speedPreset] || SPEED_PRESETS.safe;
+    addLog(`🚀 Engagement Booster v2 — by nichxbt`);
+    addLog(`⚡ Speed: ${preset.label} (${preset.desc})`);
+    if (CONFIG.dryRun) addLog(&#39;🏃 Dry run — no real interactions&#39;, &#39;warn&#39;);
+
+    const eligible = await collectEligible();
+
+    if (eligible.length === 0) {
+      addLog(&#39;❌ No eligible tweets found. Adjust filters.&#39;, &#39;error&#39;);
+      STATE.status = &#39;error&#39;;
+      stopUpdateTimer();
+      setButtonStates(&#39;idle&#39;);
+      return;
+    }
+
+    const toProcess = eligible.slice(0, CONFIG.maxInteractions);
+    STATE.total = toProcess.length;
+    STATE.status = &#39;running&#39;;
+    addLog(`📊 Found ${eligible.length} eligible → processing ${toProcess.length}`);
+    updatePanel();
+
+    // ── DRIP MODE ──
+    if (CONFIG.drip.enabled) {
+      addLog(`⏰ Drip mode: ${CONFIG.drip.batchSize} every ${CONFIG.drip.intervalMinutes}min`);
+      let batchStart = 0;
+
+      const runBatch = async () =&gt; {
+        if (STATE.aborted || batchStart &gt;= toProcess.length) {
+          clearInterval(STATE.dripTimer);
+          finalize(toProcess);
+          return;
+        }
+        const batch = toProcess.slice(batchStart, batchStart + CONFIG.drip.batchSize);
+        addLog(`⏰ Drip batch: ${batchStart + 1}–${batchStart + batch.length}`);
+        for (let i = 0; i &lt; batch.length; i++) {
+          if (STATE.aborted) break;
+          await waitForUnpause();
+          if (isRateLimited()) { addLog(&#39;🚨 Rate limited! Pausing batch.&#39;, &#39;error&#39;); break; }
+          await processTweet(batch[i], batchStart + i, toProcess.length);
+          if (i &lt; batch.length - 1) {
+            const delay = gaussian(preset.delay[0], preset.delay[1]);
+            addLog(`⏳ ${(delay / 1000).toFixed(0)}s...`);
+            await sleep(delay);
+          }
+        }
+        batchStart += CONFIG.drip.batchSize;
+        updatePanel();
+      };
+
+      await runBatch();
+      STATE.dripTimer = setInterval(runBatch, CONFIG.drip.intervalMinutes * 60 * 1000);
+      return; // finalize is called inside runBatch when done
+    }
+
+    // ── NORMAL MODE ──
+    for (let i = 0; i &lt; toProcess.length; i++) {
+      if (STATE.aborted) break;
+      await waitForUnpause();
+
+      if (isRateLimited()) {
+        STATE.rateLimitStreak = (STATE.rateLimitStreak || 0) + 1;
+        const backoff = Math.min(120000 * Math.pow(1.5, STATE.rateLimitStreak - 1), 600000);
+        const sec = Math.round(backoff / 1000);
+        addLog(`🚨 Rate limited! Backoff ${sec}s (streak #${STATE.rateLimitStreak})`, &#39;error&#39;);
+        showToast(`🚨 Rate limited — cooling ${sec}s`, &#39;error&#39;);
+        await sleep(backoff);
+        if (isRateLimited()) { addLog(&#39;🛑 Still limited. Stopping.&#39;, &#39;error&#39;); break; }
+      } else {
+        STATE.rateLimitStreak = 0;
+      }
+
+      await processTweet(toProcess[i], i, toProcess.length);
+
+      if (i &lt; toProcess.length - 1 &amp;&amp; !STATE.aborted) {
+        const delay = gaussian(preset.delay[0], preset.delay[1]);
+        addLog(`⏳ ${(delay / 1000).toFixed(0)}s...`);
+        await sleep(delay);
+      }
+    }
+
+    finalize(toProcess);
+  };
+
+  // ═══════════════════════════════════════════════════════════
+  // FINALIZE
+  // ═══════════════════════════════════════════════════════════
+
+  const finalize = (toProcess) =&gt; {
+    STATE.status = &#39;done&#39;;
+    stopUpdateTimer();
+    setButtonStates(&#39;done&#39;);
+
+    const uniqueAuthors = [...new Set(STATE.results.map(r =&gt; r.author))];
+    addLog(&#39;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━&#39;);
+    addLog(`✅ Done! ${STATE.processed} tweets processed`);
+    addLog(`❤️ ${STATE.liked} liked · 🔁 ${STATE.retweeted} RT · 🔖 ${STATE.bookmarked} saved · 💬 ${STATE.replied} replied`);
+    addLog(`👥 ${uniqueAuthors.length} unique accounts`);
+    if (STATE.failed &gt; 0) addLog(`❌ ${STATE.failed} failed`, &#39;warn&#39;);
+    if (CONFIG.dryRun) addLog(&#39;🏃 Dry run — nothing was posted&#39;, &#39;warn&#39;);
+    if (STATE.undoStack.length &gt; 0) addLog(`↩ ${STATE.undoStack.length} actions can be undone`);
+
+    // Save to history
+    saveHistory({
+      date: new Date().toISOString(),
+      dryRun: CONFIG.dryRun,
+      liked: STATE.liked,
+      replied: STATE.replied,
+      retweeted: STATE.retweeted,
+      bookmarked: STATE.bookmarked,
+      failed: STATE.failed,
+      total: STATE.processed,
+      authors: uniqueAuthors,
+      speed: CONFIG.speedPreset,
+    });
+
+    // Auto-export results (JSON + CSV)
+    if (STATE.results.length &gt; 0 &amp;&amp; !CONFIG.dryRun) {
+      const dateStr = new Date().toISOString().slice(0, 10);
+      // JSON
+      const jsonBlob = new Blob([JSON.stringify(STATE.results, null, 2)], { type: &#39;application/json&#39; });
+      downloadBlob(jsonBlob, `xactions-engagement-${dateStr}.json`);
+      // CSV
+      const headers = [&#39;timestamp&#39;, &#39;author&#39;, &#39;text&#39;, &#39;score&#39;, &#39;actions&#39;];
+      const rows = STATE.results.map(r =&gt;
+        [r.timestamp, r.author, `&quot;${(r.text || &#39;&#39;).replace(/&quot;/g, &#39;&quot;&quot;&#39;)}&quot;`, r.score || &#39;&#39;, r.actions.join(&#39;+&#39;)]
+      );
+      const csv = [headers.join(&#39;,&#39;), ...rows.map(r =&gt; r.join(&#39;,&#39;))].join(&#39;\n&#39;);
+      const csvBlob = new Blob([csv], { type: &#39;text/csv&#39; });
+      downloadBlob(csvBlob, `xactions-engagement-${dateStr}.csv`);
+      addLog(&#39;📥 Results exported (JSON + CSV)&#39;);
+    }
+
+    // Completion sound
+    playCompletionSound();
+    showToast(`✅ Done! ${STATE.processed} tweets processed`, &#39;success&#39;);
+  };
+
+  const downloadBlob = (blob, filename) =&gt; {
+    const a = document.createElement(&#39;a&#39;);
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    document.body.appendChild(a); a.click(); a.remove();
+  };
+
+  // Completion sound — plays a pleasant C major chord
+  const playCompletionSound = () =&gt; {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      [523.25, 659.25, 783.99].forEach((freq, i) =&gt; {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = &#39;sine&#39;;
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.08, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
+        osc.connect(gain).connect(ctx.destination);
+        osc.start(ctx.currentTime + i * 0.12);
+        osc.stop(ctx.currentTime + 0.7);
+      });
+    } catch { /* AudioContext unavailable */ }
+  };
+
+  // Toast overlay notifications
+  let toastContainer = null;
+  const initToasts = () =&gt; {
+    if (toastContainer) return;
+    toastContainer = document.createElement(&#39;div&#39;);
+    Object.assign(toastContainer.style, {
+      position: &#39;fixed&#39;, bottom: &#39;80px&#39;, left: &#39;50%&#39;, transform: &#39;translateX(-50%)&#39;,
+      zIndex: &#39;2147483646&#39;, display: &#39;flex&#39;, flexDirection: &#39;column-reverse&#39;,
+      gap: &#39;8px&#39;, pointerEvents: &#39;none&#39;,
+    });
+    document.body.appendChild(toastContainer);
+  };
+  const TOAST_COLORS = { success: &#39;#00ba7c&#39;, warning: &#39;#ffad1f&#39;, error: &#39;#f4212e&#39;, info: &#39;#1d9bf0&#39; };
+  const showToast = (msg, type = &#39;info&#39;) =&gt; {
+    if (!toastContainer) initToasts();
+    const el = document.createElement(&#39;div&#39;);
+    Object.assign(el.style, {
+      background: TOAST_COLORS[type] || &#39;#1d9bf0&#39;, color: &#39;#fff&#39;,
+      padding: &#39;10px 18px&#39;, borderRadius: &#39;12px&#39;, fontSize: &#39;13px&#39;, fontWeight: &#39;600&#39;,
+      fontFamily: &#39;-apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, sans-serif&#39;,
+      boxShadow: &#39;0 4px 16px rgba(0,0,0,0.4)&#39;, opacity: &#39;0&#39;, transform: &#39;translateY(12px)&#39;,
+      transition: &#39;all 0.3s ease&#39;, pointerEvents: &#39;auto&#39;, maxWidth: &#39;320px&#39;, textAlign: &#39;center&#39;,
+    });
+    el.textContent = msg;
+    toastContainer.appendChild(el);
+    requestAnimationFrame(() =&gt; { el.style.opacity = &#39;1&#39;; el.style.transform = &#39;translateY(0)&#39;; });
+    setTimeout(() =&gt; {
+      el.style.opacity = &#39;0&#39;; el.style.transform = &#39;translateY(12px)&#39;;
+      setTimeout(() =&gt; el.remove(), 300);
+    }, 3500);
+  };
+
+  // ═══════════════════════════════════════════════════════════
+  // BUTTON HANDLERS
+  // ═══════════════════════════════════════════════════════════
+
+  const setButtonStates = (mode) =&gt; {
+    const start = document.getElementById(&#39;xeb-startBtn&#39;);
+    const pause = document.getElementById(&#39;xeb-pauseBtn&#39;);
+    const stop = document.getElementById(&#39;xeb-stopBtn&#39;);
+
+    if (mode === &#39;running&#39;) {
+      start.disabled = true;
+      pause.disabled = false;
+      stop.disabled = false;
+    } else if (mode === &#39;paused&#39;) {
+      start.disabled = true;
+      pause.textContent = &#39;▶ Resume&#39;;
+      pause.disabled = false;
+      stop.disabled = false;
+    } else if (mode === &#39;done&#39; || mode === &#39;idle&#39;) {
+      start.disabled = false;
+      start.textContent = mode === &#39;done&#39; ? &#39;🔄 Restart&#39; : &#39;▶ Start&#39;;
+      pause.disabled = true;
+      pause.textContent = &#39;⏸ Pause&#39;;
+      stop.disabled = true;
+
+      // Show undo button if there are actions to undo
+      if (STATE.undoStack.length &gt; 0) {
+        const actionBar = document.getElementById(&#39;xeb-actionBar&#39;);
+        if (actionBar &amp;&amp; !document.getElementById(&#39;xeb-undoBtn&#39;)) {
+          const undoBtn = document.createElement(&#39;button&#39;);
+          undoBtn.id = &#39;xeb-undoBtn&#39;;
+          undoBtn.className = &#39;xeb-btn xeb-btn-warn&#39;;
+          undoBtn.textContent = `↩ Undo (${STATE.undoStack.length})`;
+          undoBtn.addEventListener(&#39;click&#39;, async () =&gt; {
+            undoBtn.disabled = true;
+            undoBtn.textContent = &#39;↩ Undoing...&#39;;
+            await undoAll();
+            undoBtn.remove();
+          });
+          actionBar.appendChild(undoBtn);
+        }
+      }
+    }
+  };
+
+  document.getElementById(&#39;xeb-startBtn&#39;).addEventListener(&#39;click&#39;, () =&gt; {
+    setButtonStates(&#39;running&#39;);
+    // Switch to progress tab
+    panel.querySelectorAll(&#39;.xeb-tab&#39;).forEach(t =&gt; t.classList.remove(&#39;active&#39;));
+    panel.querySelectorAll(&#39;.xeb-pane&#39;).forEach(p =&gt; p.classList.remove(&#39;active&#39;));
+    panel.querySelector(&#39;[data-tab=&quot;progress&quot;]&#39;).classList.add(&#39;active&#39;);
+    panel.querySelector(&#39;[data-pane=&quot;progress&quot;]&#39;).classList.add(&#39;active&#39;);
+    run();
+  });
+
+  document.getElementById(&#39;xeb-pauseBtn&#39;).addEventListener(&#39;click&#39;, () =&gt; {
+    if (STATE.paused) {
+      STATE.paused = false;
+      STATE.status = &#39;running&#39;;
+      setButtonStates(&#39;running&#39;);
+      addLog(&#39;▶ Resumed&#39;, &#39;success&#39;);
+    } else {
+      STATE.paused = true;
+      STATE.status = &#39;paused&#39;;
+      setButtonStates(&#39;paused&#39;);
+      addLog(&#39;⏸ Paused&#39;, &#39;warn&#39;);
+    }
+  });
+
+  document.getElementById(&#39;xeb-stopBtn&#39;).addEventListener(&#39;click&#39;, () =&gt; {
+    STATE.aborted = true;
+    addLog(&#39;🛑 Stopping...&#39;, &#39;error&#39;);
+  });
+
+  // Expose API for console access
+  window.XActions = window.XActions || {};
+  window.XActions.engagementBooster = {
+    pause: () =&gt; { STATE.paused = true; STATE.status = &#39;paused&#39;; addLog(&#39;⏸ Paused&#39;); },
+    resume: () =&gt; { STATE.paused = false; STATE.status = &#39;running&#39;; addLog(&#39;▶ Resumed&#39;); },
+    abort: () =&gt; { STATE.aborted = true; addLog(&#39;🛑 Aborting...&#39;); },
+    undo: undoAll,
+    history: getHistoryStats,
+    state: STATE,
+    config: CONFIG,
+  };
+
+  addLog(&#39;🚀 Engagement Booster v2 ready&#39;);
+  addLog(&#39;Configure settings and click ▶ Start&#39;);
+  console.log(&#39;╔══════════════════════════════════════════╗&#39;);
+  console.log(&#39;║  🚀 ENGAGEMENT BOOSTER v2                ║&#39;);
+  console.log(&#39;║  by nichxbt — floating panel active      ║&#39;);
+  console.log(&#39;║  Console: XActions.engagementBooster.*    ║&#39;);
+  console.log(&#39;╚══════════════════════════════════════════╝&#39;);
+
+})();
+
 </code></pre>
 <h2>⚙️ Configuration</h2>
 <table>
@@ -151,42 +1594,42 @@
 <tbody><tr>
 <td><code>maxInteractions</code></td>
 <td><code>15</code></td>
-<td>max Interactions</td>
+<td>Max interactions</td>
 </tr>
 <tr>
 <td><code>dryRun</code></td>
 <td><code>true</code></td>
-<td>dry Run</td>
+<td>Dry run</td>
 </tr>
 <tr>
 <td><code>actions</code></td>
 <td><code>{</code></td>
-<td>actions</td>
+<td>Actions</td>
 </tr>
 <tr>
 <td><code>like</code></td>
 <td><code>true</code></td>
-<td>like</td>
+<td>Like</td>
 </tr>
 <tr>
 <td><code>reply</code></td>
 <td><code>false</code></td>
-<td>reply</td>
+<td>Reply</td>
 </tr>
 <tr>
 <td><code>retweet</code></td>
 <td><code>false</code></td>
-<td>retweet</td>
+<td>Retweet</td>
 </tr>
 <tr>
 <td><code>bookmark</code></td>
 <td><code>false</code></td>
-<td>bookmark</td>
+<td>Bookmark</td>
 </tr>
 <tr>
 <td><code>follow</code></td>
 <td><code>false</code></td>
-<td>follow</td>
+<td>Follow</td>
 </tr>
 </tbody></table>
 <hr>
@@ -233,7 +1676,7 @@ xactions --help
 <pre><code class="language-bash"># Start MCP server
 npm run mcp
 </code></pre>
-<p>See the <a href="/docs/guides/mcp-setup">MCP Setup Guide</a> for integration with Claude Desktop, Cursor, and other AI tools.</p>
+<p>See the <a href="../mcp-setup.md">MCP Setup Guide</a> for integration with Claude Desktop, Cursor, and other AI tools.</p>
 <hr>
 <h2>📁 Source Files</h2>
 <table>
@@ -258,23 +1701,23 @@ npm run mcp
 </tr>
 </thead>
 <tbody><tr>
-<td><a href="/docs/auto-plug-replies">Auto-Plug Replies</a></td>
+<td><a href="auto-plug-replies.md">Auto-Plug Replies</a></td>
 <td>Automatically reply to viral tweets with your own content plug or CTA</td>
 </tr>
 <tr>
-<td><a href="/docs/auto-reply">Auto-Reply</a></td>
+<td><a href="auto-reply.md">Auto-Reply</a></td>
 <td>Auto-reply to tweets matching your filters</td>
 </tr>
 <tr>
-<td><a href="/docs/engagement-manager">Engagement Manager</a></td>
+<td><a href="engagement-manager.md">Engagement Manager</a></td>
 <td>All-in-one engagement toolkit: like, unlike, reply, bookmark, and manage interactions from a single interface</td>
 </tr>
 <tr>
-<td><a href="/docs/quote-tweet-automation">Quote Tweet Automation</a></td>
+<td><a href="quote-tweet-automation.md">Quote Tweet Automation</a></td>
 <td>Auto-retweet with quote-tweet templates</td>
 </tr>
 <tr>
-<td><a href="/docs/welcome-new-followers">Welcome New Followers</a></td>
+<td><a href="welcome-new-followers.md">Welcome New Followers</a></td>
 <td>Auto-send welcome DMs to new followers</td>
 </tr>
 </tbody></table>
@@ -351,6 +1794,5 @@ npm run mcp
       <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
     </div>
   </footer>
-<script src="/js/sidebar.js"></script>
 </body>
 </html>

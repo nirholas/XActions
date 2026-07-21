@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quote Posts -- Tutorial — Free X/Twitter Tools Tool | XActions</title>
+  <meta name="description" content="Step-by-step guide to quote tweeting on X using XActions browser scripts.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, free, quote, posts, tutorial, tools, quote posts tutorial twitter, twitter quote posts tutorial">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Quote Posts -- Tutorial — XActions">
+  <meta property="og:description" content="Step-by-step guide to quote tweeting on X using XActions browser scripts.">
+  <meta property="og:url" content="https://xactions.app/docs/step-by-step/quote-posts-tutorial">
+  <meta property="og:site_name" content="XActions">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Quote Posts -- Tutorial — Free X/Twitter Tool">
+  <meta name="twitter:description" content="Step-by-step guide to quote tweeting on X using XActions browser scripts.">
+
+  <link rel="canonical" href="https://xactions.app/docs/step-by-step/quote-posts-tutorial">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <!-- Structured Data - TechArticle -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Quote Posts -- Tutorial — Free X/Twitter Tools Tool | XActions",
+    "description": "Step-by-step guide to quote tweeting on X using XActions browser scripts.",
+    "url": "https://xactions.app/docs/step-by-step/quote-posts-tutorial",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-02-24",
+    "dateModified": "2026-02-24",
+    "mainEntityOfPage": "https://xactions.app/docs/quote-posts-tutorial",
+    "articleSection": "Tools",
+    "keywords": "xactions, twitter automation, x automation, free, quote, posts, tutorial, tools, quote posts tutorial twitter, twitter quote posts tutorial"
+  }
+  </script>
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://xactions.app/docs" },
+      { "@type": "ListItem", "position": 3, "name": "Quote Posts -- Tutorial", "item": "https://xactions.app/docs/quote-posts-tutorial" }
+    ]
+  }
+  </script>
+  <!-- Structured Data - HowTo (for automation guides) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use Quote Posts -- Tutorial",
+    "description": "Step-by-step guide to quote tweeting on X using XActions browser scripts.",
+    "step": [
+      { "@type": "HowToStep", "name": "Open x.com", "text": "Navigate to x.com in your browser and log in to your account." },
+      { "@type": "HowToStep", "name": "Open DevTools Console", "text": "Press F12 or Ctrl+Shift+J to open the browser developer console." },
+      { "@type": "HowToStep", "name": "Paste the script", "text": "Copy the XActions Quote Posts -- Tutorial script and paste it into the console." },
+      { "@type": "HowToStep", "name": "Run and monitor", "text": "Press Enter to run. The script shows real-time progress with emoji logs." }
+    ],
+    "tool": { "@type": "HowToTool", "name": "XActions" },
+    "totalTime": "PT2M"
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #16181c;
+      --bg-tertiary: #202327;
+      --accent: #1d9bf0;
+      --accent-hover: #1a8cd8;
+      --accent-light: rgba(29, 155, 240, 0.1);
+      --text-primary: #e7e9ea;
+      --text-secondary: #71767b;
+      --border: #2f3336;
+      --success: #00ba7c;
+      --warning: #ffad1f;
+      --error: #f4212e;
+      --purple: #a855f7;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Layout */
+    .layout { display: flex; max-width: 1300px; margin: 0 auto; min-height: 100vh; }
+    .sidebar { width: 275px; padding: 0 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+    .logo { padding: 12px; }
+    .logo a { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-primary); font-size: 1.5rem; font-weight: 800; padding: 12px; border-radius: 9999px; transition: background .2s; }
+    .logo a:hover { background: var(--accent-light); }
+    nav { flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 9999px; font-size: 1.25rem; color: var(--text-primary); text-decoration: none; transition: background .2s; margin-bottom: 4px; }
+    .nav-item:hover { background: var(--bg-tertiary); }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { font-size: 1.5rem; width: 28px; text-align: center; }
+    .action-btn { width: 90%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; cursor: pointer; transition: background .2s; margin: 16px 0; text-decoration: none; display: block; text-align: center; }
+    .action-btn:hover { background: var(--accent-hover); }
+    /* Main */
+    .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
+    .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
+    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    /* Article */
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article h4 { font-size: 1rem; font-weight: 600; margin: 16px 0 8px; }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article ul, .article ol { margin-left: 24px; margin-bottom: 16px; }
+    .article li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 6px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .article hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .article img { max-width: 100%; border-radius: 12px; }
+    /* Category badge */
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    /* CTA */
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    /* Sidebar Right */
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--border); padding: 32px 24px; }
+    .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+    .footer-section h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 8px; }
+    .footer-section p, .footer-section a { color: var(--text-secondary); font-size: 0.8125rem; text-decoration: none; display: block; padding: 3px 0; }
+    .footer-section a:hover { color: var(--accent); }
+    .footer-bottom { max-width: 1200px; margin: 16px auto 0; padding-top: 16px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.75rem; }
+    /* Responsive */
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar { display: none; }
+      .main-content { max-width: 100%; border-right: none; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+      .article pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo"><a href="/">⚡ XActions</a></div>
+      <nav>
+        <a href="/features" class="nav-item"><span class="nav-icon">⚡</span><span>All Scripts</span></a>
+        <a href="/tutorials" class="nav-item"><span class="nav-icon">📚</span><span>Tutorials</span></a>
+        <a href="/docs" class="nav-item active"><span class="nav-icon">📖</span><span>Documentation</span></a>
+        <a href="/ai" class="nav-item"><span class="nav-icon">🤖</span><span>AI/MCP</span></a>
+        <a href="/pricing" class="nav-item"><span class="nav-icon">💰</span><span>Pricing</span></a>
+        <a href="/about" class="nav-item"><span class="nav-icon">ℹ️</span><span>About</span></a>
+        <a href="https://github.com/nirholas/XActions" class="nav-item" target="_blank" rel="noopener"><span class="nav-icon">⭐</span><span>GitHub</span></a>
+      </nav>
+      <a href="/dashboard" class="action-btn">Open Dashboard</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <h1>⚡ Quote Posts -- Tutorial</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/docs">Docs</a> › Quote Posts -- Tutorial
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Tools</span>
+        <h1>Quote Posts -- Tutorial</h1>
+<blockquote>
+<p>Step-by-step guide to quote tweeting on X using XActions browser scripts.</p>
+</blockquote>
+<h2>Prerequisites</h2>
+<ul>
+<li>Logged into x.com in your browser</li>
+<li>Browser DevTools console (F12 -&gt; Console tab)</li>
+</ul>
+<h2>Quick Start</h2>
+<ol>
+<li>Navigate to a search result, user timeline, or list on x.com</li>
+<li>Open DevTools (F12) and go to the Console tab</li>
+<li>Copy the contents of <code>src/quoteTweetAutomation.js</code></li>
+<li>Edit the <code>CONFIG</code> section (templates, keywords, dryRun)</li>
+<li>Paste into the console and press Enter</li>
+</ol>
+<h2>Configuration</h2>
+<h3>Templates</h3>
+<p>Templates define the commentary added to each quote tweet. The script rotates through them:</p>
+<pre><code class="language-js">templates: [
+  &#39;This is so underrated. Everyone needs to see this.&#39;,
+  &#39;Saving this for later -- great insight here.&#39;,
+  &#39;Couldn\&#39;t agree more. Well said.&#39;,
+],
+</code></pre>
+<p>You can use <code>{author}</code> and <code>{text}</code> placeholders:</p>
+<pre><code class="language-js">templates: [
+  &#39;Great take by {author}!&#39;,
+  &#39;This is key: &quot;{text}&quot; -- worth reading.&#39;,
+],
+</code></pre>
+<h3>Keyword Filters</h3>
+<pre><code class="language-js">onlyKeywords: [&#39;AI&#39;, &#39;machine learning&#39;],  // Only quote tweets with these words
+skipKeywords: [&#39;ad&#39;, &#39;promoted&#39;, &#39;giveaway&#39;, &#39;dm me&#39;],  // Never quote these
+</code></pre>
+<h3>Full CONFIG Options</h3>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>maxQuotes</code></td>
+<td><code>5</code></td>
+<td>Max quote tweets per session (keep low)</td>
+</tr>
+<tr>
+<td><code>dryRun</code></td>
+<td><code>true</code></td>
+<td>Preview mode -- no tweets are posted</td>
+</tr>
+<tr>
+<td><code>templates</code></td>
+<td>3 defaults</td>
+<td>Array of commentary strings</td>
+</tr>
+<tr>
+<td><code>onlyKeywords</code></td>
+<td><code>[]</code></td>
+<td>Only quote tweets containing these (empty = all)</td>
+</tr>
+<tr>
+<td><code>skipKeywords</code></td>
+<td>spam terms</td>
+<td>Skip tweets containing these</td>
+</tr>
+<tr>
+<td><code>skipRetweeted</code></td>
+<td><code>true</code></td>
+<td>Skip already-retweeted posts</td>
+</tr>
+<tr>
+<td><code>minEngagement</code></td>
+<td><code>0</code></td>
+<td>Minimum likes + retweets to qualify</td>
+</tr>
+<tr>
+<td><code>delayBetween</code></td>
+<td><code>[45000, 90000]</code></td>
+<td>45-90 second delay between quotes</td>
+</tr>
+<tr>
+<td><code>typeDelay</code></td>
+<td><code>[50, 150]</code></td>
+<td>Per-character typing speed (ms)</td>
+</tr>
+<tr>
+<td><code>scrollRounds</code></td>
+<td><code>3</code></td>
+<td>How many scroll rounds to collect targets</td>
+</tr>
+</tbody></table>
+<h2>Step-by-Step Guide</h2>
+<h3>Step 1: Dry Run First</h3>
+<p>Always start with <code>dryRun: true</code> (the default):</p>
+<pre><code class="language-js">const CONFIG = {
+  maxQuotes: 3,
+  dryRun: true,
+  templates: [
+    &#39;This deserves more attention.&#39;,
+    &#39;Solid insight. Worth a read.&#39;,
+  ],
+  onlyKeywords: [&#39;AI agents&#39;],
+};
+</code></pre>
+<p>Paste the script. The console shows what it would do:</p>
+<pre><code>Collecting target tweets...
+  Round 1: 4 eligible tweets
+  Round 2: 7 eligible tweets
+
+Found 7 eligible. Processing 3.
+
+[1/3] Quote-tweeting &quot;Just launched our new AI agent...&quot; (by @someuser)
+  Typing: &quot;This deserves more attention.&quot;
+  DRY RUN -- would post now. Closing dialog...
+</code></pre>
+<h3>Step 2: Go Live</h3>
+<p>Change <code>dryRun</code> to <code>false</code>:</p>
+<pre><code class="language-js">dryRun: false,
+</code></pre>
+<p>The script will open the quote dialog, type your template text character by character (human-like), and click the post button.</p>
+<h3>Step 3: Control the Script</h3>
+<p>While running:</p>
+<pre><code class="language-js">XActions.pause();   // Pause after current action
+XActions.resume();  // Continue
+XActions.abort();   // Stop permanently
+</code></pre>
+<h3>Step 4: Review Results</h3>
+<p>A JSON file is auto-downloaded with your quote tweet log:</p>
+<pre><code class="language-json">[
+  {
+    &quot;author&quot;: &quot;someuser&quot;,
+    &quot;text&quot;: &quot;Just launched our new AI agent framework...&quot;,
+    &quot;template&quot;: &quot;This deserves more attention.&quot;,
+    &quot;engagement&quot;: 42,
+    &quot;quotedAt&quot;: &quot;2026-03-30T10:15:00.000Z&quot;
+  }
+]
+</code></pre>
+<h3>Using Templates with Placeholders</h3>
+<pre><code class="language-js">templates: [
+  &#39;{author} nailed it with this take.&#39;,
+  &#39;Key insight: &quot;{text}&quot; -- read the rest.&#39;,
+  &#39;This is exactly what I was thinking. Great thread.&#39;,
+],
+</code></pre>
+<p><code>{author}</code> is replaced with the tweet author&#39;s display name. <code>{text}</code> is replaced with the first 50 characters of the tweet text.</p>
+<h3>Targeting High-Engagement Posts</h3>
+<p>To only quote posts that already have traction:</p>
+<pre><code class="language-js">minEngagement: 50,  // Minimum combined likes + retweets
+</code></pre>
+<h2>Tips &amp; Tricks</h2>
+<ul>
+<li><strong>Keep <code>maxQuotes</code> low</strong> (3-5). Excessive quote tweeting triggers spam detection.</li>
+<li><strong>Use long delays</strong> (the default 45-90 seconds is recommended).</li>
+<li><strong>Write unique templates</strong> that sound natural. Generic comments get flagged.</li>
+<li><strong>Navigate to a niche search page</strong> before running (e.g., <code>x.com/search?q=AI+startups</code>) for better targeting.</li>
+<li><strong>The script types character by character</strong> at a randomized speed to mimic human behavior.</li>
+<li><strong>Templates rotate</strong> -- each quote uses the next template in the array.</li>
+</ul>
+<h2>Troubleshooting</h2>
+<table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&quot;No eligible tweets found&quot;</td>
+<td>Broaden <code>onlyKeywords</code> or increase <code>scrollRounds</code></td>
+</tr>
+<tr>
+<td>&quot;Quote option not found in menu&quot;</td>
+<td>X may have changed the repost dropdown UI</td>
+</tr>
+<tr>
+<td>&quot;Tweet compose box not found&quot;</td>
+<td>The quote dialog may not have opened properly</td>
+</tr>
+<tr>
+<td>Script is too slow</td>
+<td>The delays are intentionally long. Do not reduce below 30s.</td>
+</tr>
+<tr>
+<td>Tweets look spammy</td>
+<td>Add more varied templates. Avoid repetitive phrasing.</td>
+</tr>
+</tbody></table>
+<h2>Related Scripts</h2>
+<ul>
+<li><code>src/repostPost.js</code> -- Simple repost (no commentary)</li>
+<li><code>src/autoReply.js</code> -- Auto-reply to matching tweets</li>
+<li><code>src/likePost.js</code> -- Like posts by URL or keyword</li>
+</ul>
+
+
+        <div class="cta-box">
+          <h3>⚡ Ready to try Quote Posts -- Tutorial?</h3>
+          <p>XActions is 100% free and open-source. No API keys, no fees, no signup.</p>
+          <a href="/features">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Sidebar Right -->
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📖 Related Docs</h3>
+                <a href="/docs/step-by-step/add-media-tutorial">📝 Add Media Tutorial</a>
+        <a href="/docs/step-by-step/ads-campaigns-tutorial">📝 Ads Campaigns Tutorial</a>
+        <a href="/docs/step-by-step/affiliate-benefits-tutorial">📝 Affiliate Benefits Tutorial</a>
+        <a href="/docs/step-by-step/alt-text-tutorial">📝 Alt Text Tutorial</a>
+        <a href="/docs/step-by-step/auto-commenter-tutorial">📝 Auto Commenter Tutorial</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/features">All 43+ Features</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/ai">AI Integration</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation Hub</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub Repository</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>XActions</h4>
+        <p>100% Free & Open Source X/Twitter Automation</p>
+        <p>Created by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></p>
+      </div>
+      <div class="footer-section">
+        <h4>Product</h4>
+        <a href="/features">Features</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/run">Run Scripts</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/automations">Automations</a>
+        <a href="/analytics">Analytics</a>
+      </div>
+      <div class="footer-section">
+        <h4>AI & Developers</h4>
+        <a href="/ai">AI Integration</a>
+        <a href="/ai-api">AI API (x402)</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="/docs">Documentation</a> / <a href="/docs#step-by-step">Tutorials</a>
+        <a href="/tutorials">Tutorials</a>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+        <a href="/about">About</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+    </div>
+  </footer>
+</body>
+</html>
