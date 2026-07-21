@@ -1,0 +1,1501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XActions Scraper Toolbox — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Interactive on-page control panel for scraping X/Twitter">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, scraper, toolbox, other tools">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="XActions Scraper Toolbox — XActions">
+  <meta property="og:description" content="Interactive on-page control panel for scraping X/Twitter">
+  <meta property="og:url" content="https://xactions.app/scripts/scraper-toolbox">
+  <meta property="og:site_name" content="XActions">
+  <meta property="og:image" content="https://xactions.app/og-image.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="XActions Scraper Toolbox — XActions">
+  <meta name="twitter:description" content="Interactive on-page control panel for scraping X/Twitter">
+
+  <link rel="canonical" href="https://xactions.app/scripts/scraper-toolbox">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "XActions Scraper Toolbox — Free X/Twitter Script | XActions",
+    "description": "Interactive on-page control panel for scraping X/Twitter",
+    "url": "https://xactions.app/scripts/scraper-toolbox",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-03-30",
+    "dateModified": "2026-03-30",
+    "articleSection": "Other Tools",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, scraper, toolbox, other tools"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
+      { "@type": "ListItem", "position": 3, "name": "Other Tools", "item": "https://xactions.app/scripts#other-tools" },
+      { "@type": "ListItem", "position": 4, "name": "XActions Scraper Toolbox", "item": "https://xactions.app/scripts/scraper-toolbox" }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="/css/common.css">
+  <style>
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .meta-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; font-size: 0.8125rem; color: var(--text-secondary); }
+    .meta-row span { display: flex; align-items: center; gap: 4px; }
+    .usage-steps { margin-left: 24px; margin-bottom: 16px; }
+    .usage-steps li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 8px; padding-left: 4px; }
+    .warning-box { background: rgba(244, 33, 46, 0.1); border: 1px solid var(--error); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .warning-box p { color: var(--error); margin: 0; font-size: 0.875rem; }
+    .controls-box { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .controls-box h3 { margin: 0 0 8px; font-size: 1rem; }
+    .code-block { position: relative; }
+    .copy-btn { position: absolute; top: 8px; right: 8px; background: var(--bg-tertiary); color: var(--text-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: 0.75rem; z-index: 10; transition: all .2s; }
+    .copy-btn:hover { background: var(--accent); color: #fff; }
+    .full-code { margin-top: 32px; }
+    .full-code pre { max-height: 600px; overflow-y: auto; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .source-badge { display: inline-block; background: var(--bg-tertiary); color: var(--text-secondary); padding: 2px 8px; border-radius: 6px; font-size: 0.6875rem; margin-left: 8px; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .article pre { font-size: 0.75rem; }
+      .meta-row { flex-direction: column; gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
+  <div class="layout">
+    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <script src="/js/sidebar.js"></script>
+
+    <main class="main-content" id="main-content">
+      <header class="main-header">
+        <h1>⚡ XActions Scraper Toolbox</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#other-tools">Other Tools</a> › XActions Scraper Toolbox
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Other Tools</span>
+        <span class="source-badge">scripts/twitter</span>
+
+        <div class="meta-row">
+          <span>v1.0.0</span>
+          <span>Updated: 2026-07-19</span>
+          <span>1310 lines</span>
+          <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
+        </div>
+
+        <p>Interactive on-page control panel for scraping X/Twitter</p>
+
+        
+
+        <h2>How to Use</h2>
+        <ol class="usage-steps">
+        <li>Navigate to <a href="https://x.com" rel="noopener">x.com</a> and log in</li>
+        <li>Open DevTools Console (F12 or Cmd+Option+I)</li>
+        
+        <li>Paste the script below and press Enter</li>
+      </ol>
+        
+
+        
+        
+        
+
+        <section class="full-code">
+          <h2>Full Script</h2>
+          <p>Copy and paste this entire script into your browser DevTools console on <a href="https://x.com" rel="noopener">x.com</a>.</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
+            <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). All rights reserved.
+/**
+ * ============================================================
+ * 🧰 XActions Scraper Toolbox
+ * ============================================================
+ *
+ * @name        scraper-toolbox.js
+ * @description Interactive on-page control panel for scraping X/Twitter
+ *              timelines. Start/pause/stop, live filters, user exclusions,
+ *              keyword rules, and one-click exports (JSON/CSV/MD/TXT/HTML,
+ *              clipboard). Captures data from X's own GraphQL responses,
+ *              so engagement numbers are exact and long posts are complete.
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.0.0
+ * @date        2026-07-19
+ * @repository  https://github.com/nirholas/XActions
+ *
+ * ============================================================
+ * 📋 USAGE
+ * ============================================================
+ *
+ * 1. Open x.com and go to any timeline you want to scrape:
+ *    a profile, search results, a list, Likes, Bookmarks, or Home.
+ *
+ * 2. Open DevTools (F12 or Cmd+Option+I) and click &quot;Console&quot;.
+ *
+ * 3. Paste this ENTIRE script and press Enter.
+ *
+ * 4. A floating toolbox panel appears (top right). Set your filters,
+ *    then press ▶ Start. Pause, resume, or stop any time.
+ *
+ * 5. Export from the panel whenever you like. Filters are applied at
+ *    export time, so you can scrape once and re-export with different
+ *    filters without scraping again.
+ *
+ * HOW IT CAPTURES DATA
+ * The toolbox listens to the GraphQL responses the X web app itself
+ * receives (UserTweets, SearchTimeline, HomeTimeline, ...) while it
+ * auto-scrolls. That means:
+ *   - exact like/repost/reply/view/bookmark counts (not &quot;1.2K&quot;)
+ *   - full text of long posts (no &quot;Show more&quot; truncation)
+ *   - media URLs, language, quote/reply/repost structure
+ * Anything already on screen before you pasted the script is picked up
+ * by a DOM sweep as a fallback (marked source:&quot;dom&quot;, approximate counts).
+ *
+ * Console API (after pasting): window.XActionsToolbox
+ *   .tweets()      all captured tweets
+ *   .matched()     tweets passing current filters
+ *   .export('json'|'csv'|'markdown'|'text'|'html')
+ *   .copy('json'|'text')
+ *   .start() .pause() .stop() .clear() .destroy()
+ */
+
+(function xactionsScraperToolbox() {
+  'use strict';
+
+  // Re-pasting the script replaces any live instance cleanly
+  if (window.XActionsToolbox &amp;&amp; typeof window.XActionsToolbox.destroy === 'function') {
+    try { window.XActionsToolbox.destroy(); } catch (e) { /* ignore */ }
+  }
+
+  const VERSION = '1.0.0';
+  const LS_KEY = 'xactions_toolbox_config_v1';
+  const TAG = '[XActions Toolbox]';
+
+  // ==========================================
+  // CONFIG (edited live from the panel; persisted in localStorage)
+  // ==========================================
+
+  const DEFAULT_CONFIG = {
+    targetCount: 300,        // stop after this many MATCHING tweets (0 = no limit)
+    scrollDelay: 1800,       // ms between scrolls
+    maxScrolls: 400,         // hard cap on scroll attempts
+    stallLimit: 8,           // stop after N scrolls with nothing new
+    autoDownloadJson: false, // download JSON automatically when a run finishes
+    filters: {
+      includeKeywords: [],   // keep only tweets containing at least one (empty = all)
+      excludeKeywords: [],   // drop tweets containing any
+      onlyUsers: [],         // keep only tweets authored by these handles (empty = all)
+      excludeUsers: [],      // drop tweets authored by (or reposted from) these handles
+      minLikes: 0,
+      minRetweets: 0,
+      minViews: 0,
+      daysBack: 0,           // 0 = no date limit
+      excludeRetweets: false,
+      excludeReplies: false,
+      excludeQuotes: false,
+      excludePinned: false,
+      mediaFilter: 'all',    // 'all' | 'with-media' | 'without-media'
+      lang: ''               // BCP-47 code from the tweet payload, e.g. 'en' (empty = all)
+    },
+    ui: { top: 80, left: null } // panel position (left null = stick to right edge)
+  };
+
+  function loadConfig() {
+    try {
+      const raw = localStorage.getItem(LS_KEY);
+      if (!raw) return structuredClone(DEFAULT_CONFIG);
+      const saved = JSON.parse(raw);
+      return {
+        ...structuredClone(DEFAULT_CONFIG),
+        ...saved,
+        filters: { ...structuredClone(DEFAULT_CONFIG.filters), ...(saved.filters || {}) },
+        ui: { ...structuredClone(DEFAULT_CONFIG.ui), ...(saved.ui || {}) }
+      };
+    } catch (e) {
+      return structuredClone(DEFAULT_CONFIG);
+    }
+  }
+
+  function saveConfig() {
+    try { localStorage.setItem(LS_KEY, JSON.stringify(config)); } catch (e) { /* storage full/blocked */ }
+  }
+
+  const config = loadConfig();
+
+  // ==========================================
+  // STATE
+  // ==========================================
+
+  const state = {
+    status: 'idle',        // idle | running | paused | done
+    startedAt: null,
+    elapsedBefore: 0,      // accumulated ms across pause cycles
+    scrolls: 0,
+    stalls: 0,
+    lastChangeCount: 0,
+    destroyed: false
+  };
+
+  /** id -&gt; normalized tweet record. Map preserves capture order. */
+  const store = new Map();
+
+  // ==========================================
+  // SMALL UTILITIES
+  // ==========================================
+
+  const sleep = (ms) =&gt; new Promise((r) =&gt; setTimeout(r, ms));
+
+  function csvList(str) {
+    return String(str || '')
+      .split(',')
+      .map((s) =&gt; s.trim().replace(/^@/, ''))
+      .filter(Boolean);
+  }
+
+  function escapeHtml(s) {
+    return String(s ?? '')
+      .replace(/&amp;/g, '&amp;amp;').replace(/&lt;/g, '&amp;lt;').replace(/&gt;/g, '&amp;gt;')
+      .replace(/&quot;/g, '&amp;quot;').replace(/'/g, '&amp;#39;');
+  }
+
+  function csvCell(v) {
+    const s = String(v ?? '');
+    return /[&quot;,\n\r]/.test(s) ? `&quot;${s.replace(/&quot;/g, '&quot;&quot;')}&quot;` : s;
+  }
+
+  function parseApprox(str) {
+    if (!str) return 0;
+    const s = String(str).trim().toUpperCase().replace(/,/g, '');
+    const n = parseFloat(s);
+    if (Number.isNaN(n)) return 0;
+    if (s.includes('K')) return Math.round(n * 1e3);
+    if (s.includes('M')) return Math.round(n * 1e6);
+    if (s.includes('B')) return Math.round(n * 1e9);
+    return Math.round(n);
+  }
+
+  function fmtInt(n) { return Number(n || 0).toLocaleString(); }
+
+  function fmtElapsed(ms) {
+    const s = Math.floor(ms / 1000);
+    const m = Math.floor(s / 60);
+    return m &gt; 0 ? `${m}m ${s % 60}s` : `${s}s`;
+  }
+
+  async function copyText(text) {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch (e) {
+      // Clipboard API needs page focus; fall back to a hidden textarea
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.cssText = 'position:fixed;opacity:0;pointer-events:none';
+        document.body.appendChild(ta);
+        ta.select();
+        const ok = document.execCommand('copy');
+        ta.remove();
+        return ok;
+      } catch (e2) {
+        return false;
+      }
+    }
+  }
+
+  function downloadFile(content, filename, mime) {
+    const blob = new Blob([content], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  function pageLabel() {
+    const path = location.pathname.replace(/^\/+|\/+$/g, '');
+    if (!path || path === 'home') return 'home';
+    if (path.startsWith('search')) return 'search';
+    if (path.startsWith('i/bookmarks')) return 'bookmarks';
+    return path.split('/')[0];
+  }
+
+  // ==========================================
+  // GRAPHQL INTERCEPTION
+  // ==========================================
+  // The X web app fetches timelines from /i/api/graphql/&lt;hash&gt;/&lt;Operation&gt;.
+  // We wrap fetch (and XHR as a safety net), clone matching responses, and
+  // walk the JSON for Tweet objects. No extra requests are ever made; we
+  // only read what the page already downloaded.
+
+  const GQL_URL = /\/i\/api\/graphql\//;
+  const origFetch = window.fetch;
+  const origXhrOpen = XMLHttpRequest.prototype.open;
+  const origXhrSend = XMLHttpRequest.prototype.send;
+
+  function installInterceptor() {
+    window.fetch = async function patchedFetch(...args) {
+      const res = await origFetch.apply(this, args);
+      try {
+        const url = typeof args[0] === 'string' ? args[0] : (args[0] &amp;&amp; args[0].url) || '';
+        if (GQL_URL.test(url)) {
+          res.clone().json().then(ingestGraphql).catch(() =&gt; { /* not JSON */ });
+        }
+      } catch (e) { /* never break the page's own fetch */ }
+      return res;
+    };
+
+    XMLHttpRequest.prototype.open = function patchedOpen(method, url, ...rest) {
+      this.__xatUrl = url;
+      return origXhrOpen.call(this, method, url, ...rest);
+    };
+    XMLHttpRequest.prototype.send = function patchedSend(...args) {
+      if (this.__xatUrl &amp;&amp; GQL_URL.test(String(this.__xatUrl))) {
+        this.addEventListener('load', () =&gt; {
+          try { ingestGraphql(JSON.parse(this.responseText)); } catch (e) { /* not JSON */ }
+        });
+      }
+      return origXhrSend.apply(this, args);
+    };
+  }
+
+  function removeInterceptor() {
+    window.fetch = origFetch;
+    XMLHttpRequest.prototype.open = origXhrOpen;
+    XMLHttpRequest.prototype.send = origXhrSend;
+  }
+
+  /**
+   * Recursively collect Tweet result objects from a GraphQL payload.
+   * Subtrees under a promoted entry (ads) are skipped entirely.
+   * Recursion stops at each Tweet node; nested quoted/reposted tweets are
+   * handled inside normalizeGraphqlTweet so they are not double-counted
+   * as standalone timeline items.
+   */
+  function collectTweetNodes(node, out) {
+    if (!node || typeof node !== 'object') return;
+    if (Array.isArray(node)) { for (const item of node) collectTweetNodes(item, out); return; }
+    if (typeof node.entryId === 'string' &amp;&amp; node.entryId.includes('promoted')) return;
+    const candidate = node.__typename === 'TweetWithVisibilityResults' ? node.tweet : node;
+    if (candidate &amp;&amp; candidate.rest_id &amp;&amp; candidate.legacy &amp;&amp; typeof candidate.legacy.full_text === 'string') {
+      out.push(candidate);
+      return;
+    }
+    for (const key of Object.keys(node)) collectTweetNodes(node[key], out);
+  }
+
+  function userFromResult(userResult) {
+    const u = (userResult &amp;&amp; (userResult.result || userResult)) || null;
+    if (!u) return { handle: '', name: '', verified: false, followers: null };
+    const legacy = u.legacy || {};
+    const core = u.core || {};
+    return {
+      handle: legacy.screen_name || core.screen_name || '',
+      name: legacy.name || core.name || '',
+      verified: !!u.is_blue_verified,
+      followers: typeof legacy.followers_count === 'number' ? legacy.followers_count : null
+    };
+  }
+
+  function normalizeGraphqlTweet(raw, opts = {}) {
+    const legacy = raw.legacy || {};
+    const author = userFromResult(raw.core &amp;&amp; raw.core.user_results);
+
+    // Long posts store the untruncated body in note_tweet
+    const noteText = raw.note_tweet &amp;&amp; raw.note_tweet.note_tweet_results &amp;&amp;
+      raw.note_tweet.note_tweet_results.result &amp;&amp; raw.note_tweet.note_tweet_results.result.text;
+    const text = noteText || legacy.full_text || '';
+
+    const mediaEntities = (legacy.extended_entities &amp;&amp; legacy.extended_entities.media) ||
+      (legacy.entities &amp;&amp; legacy.entities.media) || [];
+    const media = mediaEntities.map((m) =&gt; {
+      const entry = { type: m.type, url: m.media_url_https || m.url || '' };
+      if (m.video_info &amp;&amp; Array.isArray(m.video_info.variants)) {
+        const best = m.video_info.variants
+          .filter((v) =&gt; v.content_type === 'video/mp4')
+          .sort((a, b) =&gt; (b.bitrate || 0) - (a.bitrate || 0))[0];
+        if (best) entry.videoUrl = best.url;
+      }
+      return entry;
+    });
+
+    const rtRaw = legacy.retweeted_status_result &amp;&amp; legacy.retweeted_status_result.result;
+    const rtNode = rtRaw &amp;&amp; (rtRaw.__typename === 'TweetWithVisibilityResults' ? rtRaw.tweet : rtRaw);
+    const retweetOf = rtNode ? normalizeGraphqlTweet(rtNode, { nested: true }) : null;
+
+    const qRaw = raw.quoted_status_result &amp;&amp; raw.quoted_status_result.result;
+    const qNode = qRaw &amp;&amp; (qRaw.__typename === 'TweetWithVisibilityResults' ? qRaw.tweet : qRaw);
+    const quoted = (!opts.nested &amp;&amp; qNode &amp;&amp; qNode.legacy)
+      ? normalizeGraphqlTweet(qNode, { nested: true })
+      : null;
+
+    const record = {
+      id: raw.rest_id,
+      url: author.handle ? `https://x.com/${author.handle}/status/${raw.rest_id}` : `https://x.com/i/status/${raw.rest_id}`,
+      author,
+      text,
+      lang: legacy.lang || '',
+      createdAt: legacy.created_at ? new Date(legacy.created_at).toISOString() : null,
+      metrics: {
+        likes: legacy.favorite_count || 0,
+        retweets: legacy.retweet_count || 0,
+        replies: legacy.reply_count || 0,
+        quotes: legacy.quote_count || 0,
+        bookmarks: legacy.bookmark_count || 0,
+        views: raw.views &amp;&amp; raw.views.count ? parseInt(raw.views.count, 10) : 0
+      },
+      media,
+      type: {
+        isRetweet: !!retweetOf,
+        isReply: !!legacy.in_reply_to_status_id_str,
+        isQuote: !!legacy.is_quote_status &amp;&amp; !retweetOf,
+        isPinned: false // set from the DOM sweep when visible
+      },
+      entities: {
+        hashtags: ((legacy.entities &amp;&amp; legacy.entities.hashtags) || []).map((h) =&gt; '#' + h.text),
+        mentions: ((legacy.entities &amp;&amp; legacy.entities.user_mentions) || []).map((m) =&gt; '@' + m.screen_name),
+        urls: ((legacy.entities &amp;&amp; legacy.entities.urls) || []).map((u) =&gt; u.expanded_url || u.url).filter(Boolean)
+      },
+      sensitive: !!legacy.possibly_sensitive,
+      source: 'graphql',
+      approx: false,
+      scrapedAt: new Date().toISOString()
+    };
+    if (retweetOf) record.retweetOf = { id: retweetOf.id, author: retweetOf.author, url: retweetOf.url, text: retweetOf.text };
+    if (quoted) record.quoted = { id: quoted.id, author: quoted.author, url: quoted.url, text: quoted.text };
+    return record;
+  }
+
+  function ingestGraphql(payload) {
+    if (state.destroyed) return;
+    const nodes = [];
+    try { collectTweetNodes(payload, nodes); } catch (e) { return; }
+    let added = 0;
+    for (const node of nodes) {
+      try {
+        const rec = normalizeGraphqlTweet(node);
+        if (!rec.id || (!rec.text &amp;&amp; rec.media.length === 0)) continue;
+        const existing = store.get(rec.id);
+        if (!existing || existing.source === 'dom') {
+          if (existing &amp;&amp; existing.type.isPinned) rec.type.isPinned = true;
+          store.set(rec.id, rec);
+          added++;
+        }
+      } catch (e) { /* one malformed node never aborts the batch */ }
+    }
+    if (added &gt; 0) {
+      updateStats();
+      previewLatest();
+    }
+  }
+
+  // ==========================================
+  // DOM SWEEP (fallback for tweets rendered before injection)
+  // ==========================================
+
+  function domSweep() {
+    const articles = document.querySelectorAll('article[data-testid=&quot;tweet&quot;]');
+    let added = 0;
+    articles.forEach((tweet) =&gt; {
+      try {
+        const timeEl = tweet.querySelector('time');
+        if (!timeEl) return;
+        const link = timeEl.closest('a[href*=&quot;/status/&quot;]');
+        if (!link) return;
+        const match = link.href.match(/\/([^/]+)\/status\/(\d+)/);
+        if (!match) return;
+        const [, handle, id] = match;
+
+        const socialContext = tweet.querySelector('[data-testid=&quot;socialContext&quot;]');
+        const isRetweet = !!socialContext &amp;&amp; socialContext.closest('a') !== null;
+        const isPinned = !!socialContext &amp;&amp; !isRetweet;
+
+        const existing = store.get(id);
+        if (existing) {
+          // GraphQL records can't see pinned status; the DOM can
+          if (isPinned &amp;&amp; !existing.type.isPinned) { existing.type.isPinned = true; }
+          return;
+        }
+
+        const textEl = tweet.querySelector('[data-testid=&quot;tweetText&quot;]');
+        const text = textEl ? textEl.innerText : '';
+        const metric = (testId) =&gt; {
+          const el = tweet.querySelector(`[data-testid=&quot;${testId}&quot;]`);
+          const span = el &amp;&amp; el.querySelector('span span');
+          return parseApprox(span ? span.innerText : '0');
+        };
+        const viewsEl = tweet.querySelector('a[href*=&quot;/analytics&quot;]');
+        const nameEl = tweet.querySelector('[data-testid=&quot;User-Name&quot;]');
+
+        store.set(id, {
+          id,
+          url: `https://x.com/${handle}/status/${id}`,
+          author: {
+            handle,
+            name: nameEl ? nameEl.innerText.split('\n')[0] : handle,
+            verified: !!tweet.querySelector('[data-testid=&quot;icon-verified&quot;]'),
+            followers: null
+          },
+          text,
+          lang: '',
+          createdAt: timeEl.getAttribute('datetime'),
+          metrics: {
+            likes: metric('like') || metric('unlike'),
+            retweets: metric('retweet') || metric('unretweet'),
+            replies: metric('reply'),
+            quotes: 0,
+            bookmarks: 0,
+            views: parseApprox(viewsEl ? viewsEl.innerText : '0')
+          },
+          media: [],
+          type: {
+            isRetweet,
+            isReply: false,
+            isQuote: !!tweet.querySelector('div[role=&quot;link&quot;] time'),
+            isPinned
+          },
+          entities: {
+            hashtags: (text.match(/#[\w]+/g) || []),
+            mentions: (text.match(/@[\w]+/g) || []),
+            urls: (text.match(/https?:\/\/[^\s]+/g) || [])
+          },
+          sensitive: false,
+          source: 'dom',
+          approx: true,
+          scrapedAt: new Date().toISOString()
+        });
+        added++;
+      } catch (e) { /* skip malformed article */ }
+    });
+    if (added &gt; 0) { updateStats(); previewLatest(); }
+    return added;
+  }
+
+  // ==========================================
+  // FILTERS
+  // ==========================================
+
+  function matchesFilters(t) {
+    const f = config.filters;
+    const text = (t.text || '').toLowerCase();
+    const handle = (t.author.handle || '').toLowerCase();
+
+    if (f.onlyUsers.length &amp;&amp; !f.onlyUsers.some((u) =&gt; u.toLowerCase() === handle)) return false;
+    if (f.excludeUsers.length) {
+      const rtHandle = t.retweetOf ? (t.retweetOf.author.handle || '').toLowerCase() : '';
+      if (f.excludeUsers.some((u) =&gt; {
+        const lower = u.toLowerCase();
+        return lower === handle || (rtHandle &amp;&amp; lower === rtHandle);
+      })) return false;
+    }
+    if (f.includeKeywords.length &amp;&amp; !f.includeKeywords.some((k) =&gt; text.includes(k.toLowerCase()))) return false;
+    if (f.excludeKeywords.length &amp;&amp; f.excludeKeywords.some((k) =&gt; text.includes(k.toLowerCase()))) return false;
+
+    if (f.daysBack &gt; 0 &amp;&amp; t.createdAt) {
+      const cutoff = Date.now() - f.daysBack * 86400000;
+      if (new Date(t.createdAt).getTime() &lt; cutoff) return false;
+    }
+    if (t.metrics.likes &lt; f.minLikes) return false;
+    if (t.metrics.retweets &lt; f.minRetweets) return false;
+    if (f.minViews &gt; 0 &amp;&amp; t.metrics.views &lt; f.minViews) return false;
+
+    if (f.excludeRetweets &amp;&amp; t.type.isRetweet) return false;
+    if (f.excludeReplies &amp;&amp; t.type.isReply) return false;
+    if (f.excludeQuotes &amp;&amp; t.type.isQuote) return false;
+    if (f.excludePinned &amp;&amp; t.type.isPinned) return false;
+
+    if (f.mediaFilter === 'with-media' &amp;&amp; t.media.length === 0) return false;
+    if (f.mediaFilter === 'without-media' &amp;&amp; t.media.length &gt; 0) return false;
+
+    if (f.lang &amp;&amp; t.lang &amp;&amp; t.lang !== f.lang) return false;
+
+    return true;
+  }
+
+  function allTweets() { return Array.from(store.values()); }
+
+  function matchedTweets() {
+    return allTweets()
+      .filter(matchesFilters)
+      .sort((a, b) =&gt; {
+        const ta = a.createdAt ? Date.parse(a.createdAt) : 0;
+        const tb = b.createdAt ? Date.parse(b.createdAt) : 0;
+        return tb - ta;
+      });
+  }
+
+  // ==========================================
+  // EXPORTS
+  // ==========================================
+
+  function buildStats(tweets) {
+    const stats = {
+      total: tweets.length,
+      totalLikes: 0, totalRetweets: 0, totalReplies: 0, totalViews: 0,
+      avgLikes: 0, avgRetweets: 0,
+      withMedia: 0, retweets: 0, replies: 0, quotes: 0,
+      topHashtags: {}, topMentions: {}
+    };
+    for (const t of tweets) {
+      stats.totalLikes += t.metrics.likes;
+      stats.totalRetweets += t.metrics.retweets;
+      stats.totalReplies += t.metrics.replies;
+      stats.totalViews += t.metrics.views;
+      if (t.media.length) stats.withMedia++;
+      if (t.type.isRetweet) stats.retweets++;
+      if (t.type.isReply) stats.replies++;
+      if (t.type.isQuote) stats.quotes++;
+      for (const h of t.entities.hashtags) stats.topHashtags[h.toLowerCase()] = (stats.topHashtags[h.toLowerCase()] || 0) + 1;
+      for (const m of t.entities.mentions) stats.topMentions[m.toLowerCase()] = (stats.topMentions[m.toLowerCase()] || 0) + 1;
+    }
+    if (tweets.length) {
+      stats.avgLikes = Math.round(stats.totalLikes / tweets.length);
+      stats.avgRetweets = Math.round(stats.totalRetweets / tweets.length);
+    }
+    return stats;
+  }
+
+  function exportBundle() {
+    const tweets = matchedTweets();
+    return {
+      source: pageLabel(),
+      pageUrl: location.href,
+      scrapedAt: new Date().toISOString(),
+      toolboxVersion: VERSION,
+      filters: config.filters,
+      totalCaptured: store.size,
+      totalMatched: tweets.length,
+      statistics: buildStats(tweets),
+      tweets
+    };
+  }
+
+  function toJSON() { return JSON.stringify(exportBundle(), null, 2); }
+
+  function toCSV() {
+    const headers = ['id', 'date', 'author', 'text', 'likes', 'retweets', 'replies', 'quotes', 'bookmarks', 'views',
+      'lang', 'isRetweet', 'isReply', 'isQuote', 'isPinned', 'mediaCount', 'mediaUrls', 'hashtags', 'url', 'source'];
+    const rows = matchedTweets().map((t) =&gt; [
+      t.id,
+      t.createdAt || '',
+      '@' + t.author.handle,
+      csvCell(t.text),
+      t.metrics.likes, t.metrics.retweets, t.metrics.replies, t.metrics.quotes, t.metrics.bookmarks, t.metrics.views,
+      t.lang,
+      t.type.isRetweet, t.type.isReply, t.type.isQuote, t.type.isPinned,
+      t.media.length,
+      csvCell(t.media.map((m) =&gt; m.videoUrl || m.url).join(' ')),
+      csvCell(t.entities.hashtags.join(' ')),
+      t.url,
+      t.source
+    ].join(','));
+    return [headers.join(','), ...rows].join('\n');
+  }
+
+  function toMarkdown() {
+    const bundle = exportBundle();
+    const s = bundle.statistics;
+    let md = `# X posts export (${bundle.source})\n\n`;
+    md += `&gt; Scraped ${bundle.scrapedAt} from ${bundle.pageUrl}\n`;
+    md += `&gt; ${bundle.totalMatched} matching posts (of ${bundle.totalCaptured} captured)\n\n`;
+    md += `## Statistics\n\n| Metric | Value |\n|--------|-------|\n`;
+    md += `| Total likes | ${fmtInt(s.totalLikes)} |\n| Total reposts | ${fmtInt(s.totalRetweets)} |\n`;
+    md += `| Total views | ${fmtInt(s.totalViews)} |\n| Avg likes | ${fmtInt(s.avgLikes)} |\n| With media | ${s.withMedia} |\n\n`;
+    md += `## Posts\n\n`;
+    for (const [i, t] of bundle.tweets.entries()) {
+      md += `### ${i + 1}. @${t.author.handle} (${t.createdAt ? t.createdAt.slice(0, 10) : 'unknown date'})\n\n`;
+      md += `${t.text}\n\n`;
+      md += `Likes ${fmtInt(t.metrics.likes)} | Reposts ${fmtInt(t.metrics.retweets)} | Replies ${fmtInt(t.metrics.replies)} | Views ${fmtInt(t.metrics.views)}\n\n`;
+      md += `[View post](${t.url})\n\n---\n\n`;
+    }
+    return md;
+  }
+
+  function toPlainText() {
+    const tweets = matchedTweets();
+    const sep = '='.repeat(60);
+    let txt = `X POSTS EXPORT (${pageLabel()})\n${sep}\n`;
+    txt += `Scraped: ${new Date().toISOString()}\nMatching posts: ${tweets.length} (of ${store.size} captured)\n\n`;
+    tweets.forEach((t, i) =&gt; {
+      txt += `[${i + 1}] @${t.author.handle}${t.createdAt ? ' | ' + t.createdAt : ''}\n`;
+      txt += `${'-'.repeat(60)}\n${t.text}\n\n`;
+      txt += `Likes: ${fmtInt(t.metrics.likes)} | Reposts: ${fmtInt(t.metrics.retweets)} | Replies: ${fmtInt(t.metrics.replies)} | Views: ${fmtInt(t.metrics.views)}\n`;
+      txt += `URL: ${t.url}\n${sep}\n\n`;
+    });
+    return txt;
+  }
+
+  function toHTML() {
+    const bundle = exportBundle();
+    const s = bundle.statistics;
+    let html = `&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;utf-8&quot;&gt;
+  &lt;title&gt;X posts export (${escapeHtml(bundle.source)})&lt;/title&gt;
+  &lt;style&gt;
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; color: #0f1419; }
+    h1 { color: #1d9bf0; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #ddd; vertical-align: top; }
+    th { background: #1d9bf0; color: white; position: sticky; top: 0; }
+    tr:hover { background: #f5f8fa; }
+    .stats { background: #f5f8fa; padding: 16px 20px; border-radius: 10px; }
+    .tweet-text { max-width: 480px; white-space: pre-wrap; }
+    a { color: #1d9bf0; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;X posts export&lt;/h1&gt;
+  &lt;p&gt;Source: ${escapeHtml(bundle.pageUrl)}&lt;br&gt;Scraped: ${bundle.scrapedAt}&lt;/p&gt;
+  &lt;div class=&quot;stats&quot;&gt;
+    &lt;strong&gt;Statistics:&lt;/strong&gt;
+    ${bundle.totalMatched} posts |
+    Likes: ${fmtInt(s.totalLikes)} |
+    Reposts: ${fmtInt(s.totalRetweets)} |
+    Views: ${fmtInt(s.totalViews)} |
+    Avg likes: ${fmtInt(s.avgLikes)}
+  &lt;/div&gt;
+  &lt;table&gt;
+    &lt;thead&gt;&lt;tr&gt;&lt;th&gt;#&lt;/th&gt;&lt;th&gt;Date&lt;/th&gt;&lt;th&gt;Author&lt;/th&gt;&lt;th&gt;Post&lt;/th&gt;&lt;th&gt;Likes&lt;/th&gt;&lt;th&gt;Reposts&lt;/th&gt;&lt;th&gt;Replies&lt;/th&gt;&lt;th&gt;Views&lt;/th&gt;&lt;th&gt;Link&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
+    &lt;tbody&gt;`;
+    bundle.tweets.forEach((t, i) =&gt; {
+      html += `
+      &lt;tr&gt;
+        &lt;td&gt;${i + 1}&lt;/td&gt;
+        &lt;td&gt;${t.createdAt ? t.createdAt.slice(0, 10) : ''}&lt;/td&gt;
+        &lt;td&gt;@${escapeHtml(t.author.handle)}&lt;/td&gt;
+        &lt;td class=&quot;tweet-text&quot;&gt;${escapeHtml(t.text)}&lt;/td&gt;
+        &lt;td class=&quot;num&quot;&gt;${fmtInt(t.metrics.likes)}&lt;/td&gt;
+        &lt;td class=&quot;num&quot;&gt;${fmtInt(t.metrics.retweets)}&lt;/td&gt;
+        &lt;td class=&quot;num&quot;&gt;${fmtInt(t.metrics.replies)}&lt;/td&gt;
+        &lt;td class=&quot;num&quot;&gt;${fmtInt(t.metrics.views)}&lt;/td&gt;
+        &lt;td&gt;&lt;a href=&quot;${escapeHtml(t.url)}&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;View&lt;/a&gt;&lt;/td&gt;
+      &lt;/tr&gt;`;
+    });
+    html += `
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+  &lt;p style=&quot;margin-top: 40px; color: #888; font-size: 12px;&quot;&gt;
+    Generated by &lt;a href=&quot;https://github.com/nirholas/XActions&quot;&gt;XActions Scraper Toolbox&lt;/a&gt; v${VERSION} by @nichxbt
+  &lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;`;
+    return html;
+  }
+
+  const EXPORTERS = {
+    json: { build: toJSON, ext: 'json', mime: 'application/json' },
+    csv: { build: toCSV, ext: 'csv', mime: 'text/csv' },
+    markdown: { build: toMarkdown, ext: 'md', mime: 'text/markdown' },
+    text: { build: toPlainText, ext: 'txt', mime: 'text/plain' },
+    html: { build: toHTML, ext: 'html', mime: 'text/html' }
+  };
+
+  function exportAs(format) {
+    const exporter = EXPORTERS[format];
+    if (!exporter) { log(`Unknown export format: ${format}`); return; }
+    const count = matchedTweets().length;
+    if (count === 0) { log('Nothing to export yet (0 matching posts).'); return; }
+    const name = `${pageLabel()}_posts_${new Date().toISOString().slice(0, 10)}.${exporter.ext}`;
+    downloadFile(exporter.build(), name, exporter.mime);
+    log(`Exported ${count} posts as ${name}`);
+  }
+
+  async function copyAs(kind) {
+    const count = matchedTweets().length;
+    if (count === 0) { log('Nothing to copy yet (0 matching posts).'); return; }
+    const content = kind === 'text' ? toPlainText() : toJSON();
+    const ok = await copyText(content);
+    log(ok ? `Copied ${count} posts to clipboard (${kind === 'text' ? 'plain text' : 'JSON'}).`
+           : 'Clipboard copy failed. Click the page once, then retry.');
+  }
+
+  // ==========================================
+  // PANEL UI
+  // ==========================================
+
+  const PANEL_ID = 'xactions-toolbox';
+  let panel, els = {};
+
+  const PANEL_HTML = `
+  &lt;style&gt;
+    #${PANEL_ID} {
+      position: fixed;
+      width: 340px;
+      max-height: 92vh;
+      background: #15202b;
+      color: #e7e9ea;
+      border: 1px solid #38444d;
+      border-radius: 16px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 13px;
+      z-index: 2147483647;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+      display: flex;
+      flex-direction: column;
+      user-select: none;
+    }
+    #${PANEL_ID} * { box-sizing: border-box; }
+    #${PANEL_ID} .xat-header {
+      background: #1d9bf0; color: #fff;
+      padding: 10px 14px; cursor: move;
+      display: flex; align-items: center; justify-content: space-between;
+      font-weight: 700; font-size: 14px;
+      border-radius: 15px 15px 0 0;
+      flex: 0 0 auto;
+    }
+    #${PANEL_ID} .xat-header .xat-hbtns { display: flex; gap: 4px; }
+    #${PANEL_ID} .xat-header button {
+      background: rgba(255,255,255,0.15); border: none; color: #fff;
+      width: 24px; height: 24px; border-radius: 6px; cursor: pointer;
+      font-size: 13px; line-height: 1; transition: background 0.15s;
+    }
+    #${PANEL_ID} .xat-header button:hover { background: rgba(255,255,255,0.3); }
+    #${PANEL_ID} .xat-body { padding: 12px 14px; overflow-y: auto; flex: 1 1 auto; }
+    #${PANEL_ID} .xat-body::-webkit-scrollbar { width: 8px; }
+    #${PANEL_ID} .xat-body::-webkit-scrollbar-thumb { background: #38444d; border-radius: 4px; }
+
+    #${PANEL_ID} .xat-statusrow { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    #${PANEL_ID} .xat-chip {
+      padding: 2px 10px; border-radius: 999px; font-weight: 700; font-size: 11px;
+      background: #38444d; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    #${PANEL_ID} .xat-chip.running { background: #00ba7c; color: #04120c; }
+    #${PANEL_ID} .xat-chip.paused { background: #ffd400; color: #1a1400; }
+    #${PANEL_ID} .xat-chip.done { background: #1d9bf0; color: #041018; }
+    #${PANEL_ID} .xat-elapsed { color: #8899a6; font-variant-numeric: tabular-nums; margin-left: auto; }
+
+    #${PANEL_ID} .xat-counts {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 8px 0;
+    }
+    #${PANEL_ID} .xat-count {
+      background: #192734; border-radius: 10px; padding: 8px 6px; text-align: center;
+    }
+    #${PANEL_ID} .xat-count b { display: block; font-size: 17px; font-variant-numeric: tabular-nums; }
+    #${PANEL_ID} .xat-count span { color: #8899a6; font-size: 10px; text-transform: uppercase; letter-spacing: 0.4px; }
+
+    #${PANEL_ID} .xat-progress { height: 6px; background: #38444d; border-radius: 3px; overflow: hidden; margin: 4px 0 10px; }
+    #${PANEL_ID} .xat-progress-bar { height: 100%; width: 0%; background: #1d9bf0; border-radius: 3px; transition: width 0.3s ease; }
+
+    #${PANEL_ID} .xat-controls { display: grid; grid-template-columns: 1fr 1fr 1fr 44px; gap: 6px; margin-bottom: 10px; }
+    #${PANEL_ID} .xat-btn {
+      border: none; border-radius: 10px; padding: 9px 0; font-weight: 700; font-size: 13px;
+      cursor: pointer; color: #fff; background: #38444d; transition: filter 0.15s, transform 0.05s;
+    }
+    #${PANEL_ID} .xat-btn:hover:not(:disabled) { filter: brightness(1.2); }
+    #${PANEL_ID} .xat-btn:active:not(:disabled) { transform: scale(0.97); }
+    #${PANEL_ID} .xat-btn:disabled { opacity: 0.4; cursor: default; }
+    #${PANEL_ID} .xat-btn.xat-start { background: #00ba7c; color: #04120c; }
+    #${PANEL_ID} .xat-btn.xat-pause { background: #ffd400; color: #1a1400; }
+    #${PANEL_ID} .xat-btn.xat-stop { background: #f4212e; }
+
+    #${PANEL_ID} details { margin-bottom: 8px; border: 1px solid #38444d; border-radius: 10px; }
+    #${PANEL_ID} summary {
+      cursor: pointer; padding: 8px 10px; font-weight: 700; color: #e7e9ea; list-style: none;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    #${PANEL_ID} summary::after { content: '▾'; color: #8899a6; }
+    #${PANEL_ID} details[open] summary::after { content: '▴'; }
+    #${PANEL_ID} .xat-fields { padding: 2px 10px 10px; display: grid; gap: 7px; }
+    #${PANEL_ID} .xat-field { display: grid; gap: 3px; }
+    #${PANEL_ID} .xat-field label { color: #8899a6; font-size: 11px; }
+    #${PANEL_ID} .xat-field input[type=&quot;text&quot;], #${PANEL_ID} .xat-field input[type=&quot;number&quot;], #${PANEL_ID} .xat-field select {
+      background: #192734; color: #e7e9ea; border: 1px solid #38444d; border-radius: 8px;
+      padding: 6px 8px; font-size: 12px; width: 100%; outline: none;
+    }
+    #${PANEL_ID} .xat-field input:focus, #${PANEL_ID} .xat-field select:focus { border-color: #1d9bf0; }
+    #${PANEL_ID} .xat-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+    #${PANEL_ID} .xat-checks { display: grid; grid-template-columns: 1fr 1fr; gap: 5px 8px; }
+    #${PANEL_ID} .xat-checks label {
+      display: flex; align-items: center; gap: 6px; color: #e7e9ea; font-size: 12px; cursor: pointer;
+    }
+    #${PANEL_ID} .xat-checks input { accent-color: #1d9bf0; }
+
+    #${PANEL_ID} .xat-exports { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin-bottom: 6px; }
+    #${PANEL_ID} .xat-exports .xat-btn { padding: 7px 0; font-size: 11px; background: #192734; border: 1px solid #38444d; }
+    #${PANEL_ID} .xat-copyrow { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 8px; }
+    #${PANEL_ID} .xat-copyrow .xat-btn { background: #192734; border: 1px solid #38444d; font-size: 12px; }
+
+    #${PANEL_ID} .xat-preview {
+      background: #192734; border-radius: 10px; padding: 8px 10px; margin-bottom: 8px;
+      color: #8899a6; font-size: 11.5px; max-height: 62px; overflow: hidden;
+    }
+    #${PANEL_ID} .xat-preview b { color: #e7e9ea; }
+    #${PANEL_ID} .xat-log {
+      background: #0d1319; border-radius: 10px; padding: 8px 10px;
+      font-size: 11px; color: #8899a6; max-height: 76px; overflow-y: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    #${PANEL_ID} .xat-footer {
+      padding: 6px 14px 10px; color: #536471; font-size: 10.5px; text-align: center; flex: 0 0 auto;
+    }
+    #${PANEL_ID} .xat-footer a { color: #1d9bf0; text-decoration: none; }
+    #${PANEL_ID}.xat-min .xat-body, #${PANEL_ID}.xat-min .xat-footer { display: none; }
+  &lt;/style&gt;
+  &lt;div class=&quot;xat-header&quot; id=&quot;xat-drag&quot;&gt;
+    &lt;span&gt;🧰 Scraper Toolbox&lt;/span&gt;
+    &lt;span class=&quot;xat-hbtns&quot;&gt;
+      &lt;button id=&quot;xat-minimize&quot; title=&quot;Minimize&quot; aria-label=&quot;Minimize panel&quot;&gt;▁&lt;/button&gt;
+      &lt;button id=&quot;xat-close&quot; title=&quot;Close and restore page (data is kept until reload)&quot; aria-label=&quot;Close panel&quot;&gt;✕&lt;/button&gt;
+    &lt;/span&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;xat-body&quot;&gt;
+    &lt;div class=&quot;xat-statusrow&quot;&gt;
+      &lt;span class=&quot;xat-chip&quot; id=&quot;xat-status&quot;&gt;idle&lt;/span&gt;
+      &lt;span id=&quot;xat-page&quot; style=&quot;color:#8899a6&quot;&gt;&lt;/span&gt;
+      &lt;span class=&quot;xat-elapsed&quot; id=&quot;xat-elapsed&quot;&gt;0s&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;xat-counts&quot;&gt;
+      &lt;div class=&quot;xat-count&quot;&gt;&lt;b id=&quot;xat-captured&quot;&gt;0&lt;/b&gt;&lt;span&gt;captured&lt;/span&gt;&lt;/div&gt;
+      &lt;div class=&quot;xat-count&quot;&gt;&lt;b id=&quot;xat-matched&quot;&gt;0&lt;/b&gt;&lt;span&gt;matching&lt;/span&gt;&lt;/div&gt;
+      &lt;div class=&quot;xat-count&quot;&gt;&lt;b id=&quot;xat-scrolls&quot;&gt;0&lt;/b&gt;&lt;span&gt;scrolls&lt;/span&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;xat-progress&quot;&gt;&lt;div class=&quot;xat-progress-bar&quot; id=&quot;xat-bar&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+    &lt;div class=&quot;xat-controls&quot;&gt;
+      &lt;button class=&quot;xat-btn xat-start&quot; id=&quot;xat-start&quot;&gt;▶ Start&lt;/button&gt;
+      &lt;button class=&quot;xat-btn xat-pause&quot; id=&quot;xat-pausebtn&quot; disabled&gt;⏸ Pause&lt;/button&gt;
+      &lt;button class=&quot;xat-btn xat-stop&quot; id=&quot;xat-stopbtn&quot; disabled&gt;⏹ Stop&lt;/button&gt;
+      &lt;button class=&quot;xat-btn&quot; id=&quot;xat-clear&quot; title=&quot;Clear all captured data&quot;&gt;🗑&lt;/button&gt;
+    &lt;/div&gt;
+
+    &lt;details open&gt;
+      &lt;summary&gt;Scraping&lt;/summary&gt;
+      &lt;div class=&quot;xat-fields&quot;&gt;
+        &lt;div class=&quot;xat-2col&quot;&gt;
+          &lt;div class=&quot;xat-field&quot;&gt;
+            &lt;label for=&quot;xat-target&quot;&gt;Target posts (0 = no limit)&lt;/label&gt;
+            &lt;input type=&quot;number&quot; id=&quot;xat-target&quot; min=&quot;0&quot; step=&quot;10&quot;&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;xat-field&quot;&gt;
+            &lt;label for=&quot;xat-delay&quot;&gt;Scroll delay (ms)&lt;/label&gt;
+            &lt;input type=&quot;number&quot; id=&quot;xat-delay&quot; min=&quot;400&quot; step=&quot;100&quot;&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;xat-2col&quot;&gt;
+          &lt;div class=&quot;xat-field&quot;&gt;
+            &lt;label for=&quot;xat-maxscrolls&quot;&gt;Max scrolls&lt;/label&gt;
+            &lt;input type=&quot;number&quot; id=&quot;xat-maxscrolls&quot; min=&quot;1&quot; step=&quot;10&quot;&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;xat-field&quot;&gt;
+            &lt;label for=&quot;xat-stall&quot;&gt;Stop after N empty scrolls&lt;/label&gt;
+            &lt;input type=&quot;number&quot; id=&quot;xat-stall&quot; min=&quot;2&quot; step=&quot;1&quot;&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;xat-checks&quot;&gt;
+          &lt;label&gt;&lt;input type=&quot;checkbox&quot; id=&quot;xat-autojson&quot;&gt; Auto-download JSON when done&lt;/label&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/details&gt;
+
+    &lt;details&gt;
+      &lt;summary&gt;Filters&lt;/summary&gt;
+      &lt;div class=&quot;xat-fields&quot;&gt;
+        &lt;div class=&quot;xat-field&quot;&gt;
+          &lt;label for=&quot;xat-inc&quot;&gt;Must contain keywords (comma separated)&lt;/label&gt;
+          &lt;input type=&quot;text&quot; id=&quot;xat-inc&quot; placeholder=&quot;e.g. ai, launch, update&quot;&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;xat-field&quot;&gt;
+          &lt;label for=&quot;xat-exc&quot;&gt;Exclude keywords&lt;/label&gt;
+          &lt;input type=&quot;text&quot; id=&quot;xat-exc&quot; placeholder=&quot;e.g. giveaway, promo&quot;&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;xat-field&quot;&gt;
+          &lt;label for=&quot;xat-onlyusers&quot;&gt;Only these users (@handles)&lt;/label&gt;
+          &lt;input type=&quot;text&quot; id=&quot;xat-onlyusers&quot; placeholder=&quot;empty = everyone on this timeline&quot;&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;xat-field&quot;&gt;
+          &lt;label for=&quot;xat-skipusers&quot;&gt;Skip these users (@handles)&lt;/label&gt;
+          &lt;input type=&quot;text&quot; id=&quot;xat-skipusers&quot; placeholder=&quot;e.g. @spamacct, @bot123&quot;&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;xat-2col&quot;&gt;
+          &lt;div class=&quot;xat-field&quot;&gt;
+            &lt;label for=&quot;xat-minlikes&quot;&gt;Min likes&lt;/label&gt;
+            &lt;input type=&quot;number&quot; id=&quot;xat-minlikes&quot; min=&quot;0&quot;&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;xat-field&quot;&gt;
+            &lt;label for=&quot;xat-minrts&quot;&gt;Min reposts&lt;/label&gt;
+            &lt;input type=&quot;number&quot; id=&quot;xat-minrts&quot; min=&quot;0&quot;&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;xat-2col&quot;&gt;
+          &lt;div class=&quot;xat-field&quot;&gt;
+            &lt;label for=&quot;xat-minviews&quot;&gt;Min views&lt;/label&gt;
+            &lt;input type=&quot;number&quot; id=&quot;xat-minviews&quot; min=&quot;0&quot;&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;xat-field&quot;&gt;
+            &lt;label for=&quot;xat-days&quot;&gt;Last N days (0 = all)&lt;/label&gt;
+            &lt;input type=&quot;number&quot; id=&quot;xat-days&quot; min=&quot;0&quot;&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;xat-2col&quot;&gt;
+          &lt;div class=&quot;xat-field&quot;&gt;
+            &lt;label for=&quot;xat-media&quot;&gt;Media&lt;/label&gt;
+            &lt;select id=&quot;xat-media&quot;&gt;
+              &lt;option value=&quot;all&quot;&gt;All posts&lt;/option&gt;
+              &lt;option value=&quot;with-media&quot;&gt;With media only&lt;/option&gt;
+              &lt;option value=&quot;without-media&quot;&gt;Text only&lt;/option&gt;
+            &lt;/select&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;xat-field&quot;&gt;
+            &lt;label for=&quot;xat-lang&quot;&gt;Language code (e.g. en)&lt;/label&gt;
+            &lt;input type=&quot;text&quot; id=&quot;xat-lang&quot; placeholder=&quot;empty = all&quot;&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;xat-checks&quot;&gt;
+          &lt;label&gt;&lt;input type=&quot;checkbox&quot; id=&quot;xat-nort&quot;&gt; No reposts&lt;/label&gt;
+          &lt;label&gt;&lt;input type=&quot;checkbox&quot; id=&quot;xat-noreply&quot;&gt; No replies&lt;/label&gt;
+          &lt;label&gt;&lt;input type=&quot;checkbox&quot; id=&quot;xat-noquote&quot;&gt; No quotes&lt;/label&gt;
+          &lt;label&gt;&lt;input type=&quot;checkbox&quot; id=&quot;xat-nopin&quot;&gt; No pinned&lt;/label&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/details&gt;
+
+    &lt;details open&gt;
+      &lt;summary&gt;Export&lt;/summary&gt;
+      &lt;div class=&quot;xat-fields&quot;&gt;
+        &lt;div class=&quot;xat-exports&quot;&gt;
+          &lt;button class=&quot;xat-btn&quot; data-export=&quot;json&quot;&gt;JSON&lt;/button&gt;
+          &lt;button class=&quot;xat-btn&quot; data-export=&quot;csv&quot;&gt;CSV&lt;/button&gt;
+          &lt;button class=&quot;xat-btn&quot; data-export=&quot;markdown&quot;&gt;MD&lt;/button&gt;
+          &lt;button class=&quot;xat-btn&quot; data-export=&quot;text&quot;&gt;TXT&lt;/button&gt;
+          &lt;button class=&quot;xat-btn&quot; data-export=&quot;html&quot;&gt;HTML&lt;/button&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;xat-copyrow&quot;&gt;
+          &lt;button class=&quot;xat-btn&quot; id=&quot;xat-copyjson&quot;&gt;📋 Copy JSON&lt;/button&gt;
+          &lt;button class=&quot;xat-btn&quot; id=&quot;xat-copytext&quot;&gt;📋 Copy clear text&lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/details&gt;
+
+    &lt;div class=&quot;xat-preview&quot; id=&quot;xat-preview&quot;&gt;No posts captured yet. Press ▶ Start, or just scroll the page yourself.&lt;/div&gt;
+    &lt;div class=&quot;xat-log&quot; id=&quot;xat-log&quot;&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;xat-footer&quot;&gt;
+    &lt;a href=&quot;https://github.com/nirholas/XActions&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;XActions&lt;/a&gt; Scraper Toolbox v${VERSION}
+  &lt;/div&gt;`;
+
+  function buildPanel() {
+    const existing = document.getElementById(PANEL_ID);
+    if (existing) existing.remove();
+
+    panel = document.createElement('div');
+    panel.id = PANEL_ID;
+    panel.innerHTML = PANEL_HTML;
+    document.body.appendChild(panel);
+
+    if (config.ui.left !== null) {
+      panel.style.left = config.ui.left + 'px';
+      panel.style.top = config.ui.top + 'px';
+    } else {
+      panel.style.right = '20px';
+      panel.style.top = config.ui.top + 'px';
+    }
+
+    const $ = (id) =&gt; panel.querySelector('#' + id);
+    els = {
+      status: $('xat-status'), page: $('xat-page'), elapsed: $('xat-elapsed'),
+      captured: $('xat-captured'), matched: $('xat-matched'), scrolls: $('xat-scrolls'),
+      bar: $('xat-bar'),
+      start: $('xat-start'), pause: $('xat-pausebtn'), stop: $('xat-stopbtn'), clear: $('xat-clear'),
+      target: $('xat-target'), delay: $('xat-delay'), maxscrolls: $('xat-maxscrolls'), stall: $('xat-stall'),
+      autojson: $('xat-autojson'),
+      inc: $('xat-inc'), exc: $('xat-exc'), onlyusers: $('xat-onlyusers'), skipusers: $('xat-skipusers'),
+      minlikes: $('xat-minlikes'), minrts: $('xat-minrts'), minviews: $('xat-minviews'), days: $('xat-days'),
+      media: $('xat-media'), lang: $('xat-lang'),
+      nort: $('xat-nort'), noreply: $('xat-noreply'), noquote: $('xat-noquote'), nopin: $('xat-nopin'),
+      preview: $('xat-preview'), log: $('xat-log')
+    };
+
+    els.page.textContent = '/' + pageLabel();
+    applyConfigToUI();
+
+    // Controls
+    els.start.addEventListener('click', start);
+    els.pause.addEventListener('click', togglePause);
+    els.stop.addEventListener('click', stop);
+    els.clear.addEventListener('click', clearData);
+    $('xat-minimize').addEventListener('click', () =&gt; panel.classList.toggle('xat-min'));
+    $('xat-close').addEventListener('click', destroy);
+    $('xat-copyjson').addEventListener('click', () =&gt; copyAs('json'));
+    $('xat-copytext').addEventListener('click', () =&gt; copyAs('text'));
+    panel.querySelectorAll('[data-export]').forEach((btn) =&gt;
+      btn.addEventListener('click', () =&gt; exportAs(btn.dataset.export)));
+
+    // Any input change re-reads config, persists it, and refreshes counters
+    panel.querySelectorAll('input, select').forEach((el) =&gt;
+      el.addEventListener('change', () =&gt; { readConfigFromUI(); saveConfig(); updateStats(); }));
+
+    // Drag
+    const header = $('xat-drag');
+    let drag = null;
+    header.addEventListener('mousedown', (e) =&gt; {
+      if (e.target.tagName === 'BUTTON') return;
+      const rect = panel.getBoundingClientRect();
+      drag = { dx: e.clientX - rect.left, dy: e.clientY - rect.top };
+      e.preventDefault();
+    });
+    document.addEventListener('mousemove', onDragMove);
+    document.addEventListener('mouseup', onDragEnd);
+    function onDragMove(e) {
+      if (!drag) return;
+      const left = Math.max(0, Math.min(window.innerWidth - 60, e.clientX - drag.dx));
+      const top = Math.max(0, Math.min(window.innerHeight - 40, e.clientY - drag.dy));
+      panel.style.left = left + 'px';
+      panel.style.top = top + 'px';
+      panel.style.right = 'auto';
+    }
+    function onDragEnd() {
+      if (!drag) return;
+      drag = null;
+      const rect = panel.getBoundingClientRect();
+      config.ui.left = Math.round(rect.left);
+      config.ui.top = Math.round(rect.top);
+      saveConfig();
+    }
+    panel.__dragCleanup = () =&gt; {
+      document.removeEventListener('mousemove', onDragMove);
+      document.removeEventListener('mouseup', onDragEnd);
+    };
+  }
+
+  function applyConfigToUI() {
+    const f = config.filters;
+    els.target.value = config.targetCount;
+    els.delay.value = config.scrollDelay;
+    els.maxscrolls.value = config.maxScrolls;
+    els.stall.value = config.stallLimit;
+    els.autojson.checked = config.autoDownloadJson;
+    els.inc.value = f.includeKeywords.join(', ');
+    els.exc.value = f.excludeKeywords.join(', ');
+    els.onlyusers.value = f.onlyUsers.map((u) =&gt; '@' + u).join(', ');
+    els.skipusers.value = f.excludeUsers.map((u) =&gt; '@' + u).join(', ');
+    els.minlikes.value = f.minLikes;
+    els.minrts.value = f.minRetweets;
+    els.minviews.value = f.minViews;
+    els.days.value = f.daysBack;
+    els.media.value = f.mediaFilter;
+    els.lang.value = f.lang;
+    els.nort.checked = f.excludeRetweets;
+    els.noreply.checked = f.excludeReplies;
+    els.noquote.checked = f.excludeQuotes;
+    els.nopin.checked = f.excludePinned;
+  }
+
+  function readConfigFromUI() {
+    const num = (el, min, fallback) =&gt; {
+      const v = parseInt(el.value, 10);
+      return Number.isFinite(v) &amp;&amp; v &gt;= min ? v : fallback;
+    };
+    config.targetCount = num(els.target, 0, DEFAULT_CONFIG.targetCount);
+    config.scrollDelay = num(els.delay, 400, DEFAULT_CONFIG.scrollDelay);
+    config.maxScrolls = num(els.maxscrolls, 1, DEFAULT_CONFIG.maxScrolls);
+    config.stallLimit = num(els.stall, 2, DEFAULT_CONFIG.stallLimit);
+    config.autoDownloadJson = els.autojson.checked;
+    const f = config.filters;
+    f.includeKeywords = csvList(els.inc.value);
+    f.excludeKeywords = csvList(els.exc.value);
+    f.onlyUsers = csvList(els.onlyusers.value);
+    f.excludeUsers = csvList(els.skipusers.value);
+    f.minLikes = num(els.minlikes, 0, 0);
+    f.minRetweets = num(els.minrts, 0, 0);
+    f.minViews = num(els.minviews, 0, 0);
+    f.daysBack = num(els.days, 0, 0);
+    f.mediaFilter = els.media.value;
+    f.lang = els.lang.value.trim().toLowerCase();
+    f.excludeRetweets = els.nort.checked;
+    f.excludeReplies = els.noreply.checked;
+    f.excludeQuotes = els.noquote.checked;
+    f.excludePinned = els.nopin.checked;
+  }
+
+  // ==========================================
+  // UI UPDATES
+  // ==========================================
+
+  function setStatus(status) {
+    state.status = status;
+    if (!els.status) return;
+    els.status.textContent = status;
+    els.status.className = 'xat-chip ' + status;
+    const running = status === 'running';
+    const paused = status === 'paused';
+    els.start.disabled = running || paused;
+    els.pause.disabled = !running &amp;&amp; !paused;
+    els.pause.textContent = paused ? '▶ Resume' : '⏸ Pause';
+    els.stop.disabled = !running &amp;&amp; !paused;
+  }
+
+  function updateStats() {
+    if (!els.captured) return;
+    const matched = matchedTweets().length;
+    els.captured.textContent = fmtInt(store.size);
+    els.matched.textContent = fmtInt(matched);
+    els.scrolls.textContent = fmtInt(state.scrolls);
+    const target = config.targetCount;
+    els.bar.style.width = target &gt; 0 ? Math.min(100, (matched / target) * 100) + '%' : (store.size &gt; 0 ? '100%' : '0%');
+  }
+
+  function previewLatest() {
+    if (!els.preview) return;
+    let t = null;
+    for (const v of store.values()) t = v; // last inserted record
+    if (!t) return;
+    const snippet = (t.text || '(media only)').replace(/\s+/g, ' ').slice(0, 120);
+    els.preview.innerHTML = `&lt;b&gt;@${escapeHtml(t.author.handle)}&lt;/b&gt; · ${escapeHtml(snippet)}`;
+  }
+
+  function log(msg) {
+    console.log(`${TAG} ${msg}`);
+    if (!els.log) return;
+    const line = document.createElement('div');
+    line.textContent = `${new Date().toTimeString().slice(0, 8)} ${msg}`;
+    els.log.prepend(line);
+    while (els.log.children.length &gt; 40) els.log.lastChild.remove();
+  }
+
+  // ==========================================
+  // SCROLL ENGINE
+  // ==========================================
+
+  let runToken = 0; // invalidates a running loop after stop/clear/destroy
+
+  async function start() {
+    if (state.status === 'running' || state.status === 'paused') return;
+    readConfigFromUI();
+    saveConfig();
+    state.scrolls = 0;
+    state.stalls = 0;
+    state.startedAt = Date.now();
+    state.elapsedBefore = 0;
+    state.lastChangeCount = store.size;
+    setStatus('running');
+    log(`Run started on /${pageLabel()} (target: ${config.targetCount || 'unlimited'}).`);
+    const token = ++runToken;
+
+    domSweep(); // catch what's already rendered
+
+    while (token === runToken &amp;&amp; !state.destroyed) {
+      if (state.status === 'paused') { await sleep(250); continue; }
+      if (state.status !== 'running') break;
+
+      const matched = matchedTweets().length;
+      if (config.targetCount &gt; 0 &amp;&amp; matched &gt;= config.targetCount) {
+        finishRun(`Target reached: ${matched} matching posts.`);
+        break;
+      }
+      if (state.scrolls &gt;= config.maxScrolls) {
+        finishRun(`Max scrolls (${config.maxScrolls}) reached with ${matched} matching posts.`);
+        break;
+      }
+
+      // Scroll with light jitter so loading keeps up
+      const el = document.scrollingElement || document.documentElement;
+      el.scrollTop = el.scrollHeight;
+      state.scrolls++;
+      await sleep(config.scrollDelay + Math.floor(Math.random() * 400));
+      if (token !== runToken || state.destroyed) break;
+
+      domSweep();
+
+      if (store.size === state.lastChangeCount) {
+        state.stalls++;
+        if (state.stalls &gt;= config.stallLimit) {
+          finishRun(`End of timeline: nothing new after ${config.stallLimit} scrolls (${matchedTweets().length} matching posts).`);
+          break;
+        }
+      } else {
+        state.stalls = 0;
+        state.lastChangeCount = store.size;
+      }
+      updateStats();
+    }
+  }
+
+  function togglePause() {
+    if (state.status === 'running') {
+      state.elapsedBefore += Date.now() - state.startedAt;
+      setStatus('paused');
+      log('Paused. Capture stays live; scrolling is halted.');
+    } else if (state.status === 'paused') {
+      state.startedAt = Date.now();
+      setStatus('running');
+      log('Resumed.');
+    }
+  }
+
+  function stop() {
+    if (state.status !== 'running' &amp;&amp; state.status !== 'paused') return;
+    runToken++;
+    finishRun(`Stopped manually with ${matchedTweets().length} matching posts.`);
+  }
+
+  function finishRun(message) {
+    if (state.status === 'paused') state.startedAt = Date.now();
+    state.elapsedBefore += Date.now() - state.startedAt;
+    setStatus('done');
+    updateStats();
+    log(message);
+    log('Adjust filters freely, then export: results always reflect current filters.');
+    if (config.autoDownloadJson &amp;&amp; matchedTweets().length &gt; 0) exportAs('json');
+  }
+
+  function clearData() {
+    runToken++;
+    store.clear();
+    state.scrolls = 0;
+    state.stalls = 0;
+    state.elapsedBefore = 0;
+    state.startedAt = null;
+    setStatus('idle');
+    updateStats();
+    if (els.preview) els.preview.textContent = 'Cleared. Press ▶ Start to scrape again.';
+    log('All captured data cleared.');
+  }
+
+  // ==========================================
+  // TICKER
+  // ==========================================
+
+  const ticker = setInterval(() =&gt; {
+    if (state.destroyed || !els.elapsed) return;
+    let ms = state.elapsedBefore;
+    if (state.status === 'running' &amp;&amp; state.startedAt) ms += Date.now() - state.startedAt;
+    els.elapsed.textContent = fmtElapsed(ms);
+  }, 500);
+
+  // ==========================================
+  // LIFECYCLE
+  // ==========================================
+
+  function destroy() {
+    state.destroyed = true;
+    runToken++;
+    clearInterval(ticker);
+    removeInterceptor();
+    if (panel) {
+      if (panel.__dragCleanup) panel.__dragCleanup();
+      panel.remove();
+      panel = null;
+    }
+    delete window.XActionsToolbox;
+    console.log(`${TAG} Closed. fetch/XHR restored. Paste the script again to reopen.`);
+  }
+
+  // ==========================================
+  // BOOT
+  // ==========================================
+
+  if (!/(^|\.)x\.com$|(^|\.)twitter\.com$/.test(location.hostname)) {
+    console.warn(`${TAG} This script must run on x.com. Open a profile or timeline there and paste again.`);
+    return;
+  }
+
+  installInterceptor();
+  buildPanel();
+  setStatus('idle');
+  updateStats();
+  log(`Toolbox v${VERSION} ready on /${pageLabel()}. Capture is live even before you press Start.`);
+
+  window.XActionsToolbox = {
+    version: VERSION,
+    tweets: allTweets,
+    matched: matchedTweets,
+    export: exportAs,
+    copy: copyAs,
+    start,
+    pause: togglePause,
+    stop,
+    clear: clearData,
+    destroy,
+    config
+  };
+})();
+</code></pre>
+          </div>
+        </section>
+
+        <div class="cta-box">
+          <h3>⚡ More XActions Scripts</h3>
+          <p>Browse 300+ free browser scripts for X/Twitter automation. No API keys, no fees.</p>
+          <a href="/scripts">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>⚡ Other Tools</h3>
+        <a href="/scripts/account-misc">⚡ Account Misc</a>
+<a href="/scripts/ad-campaign-manager">⚡ Ad Campaign Manager</a>
+<a href="/scripts/advanced-creator">⚡ Advanced Creator</a>
+<a href="/scripts/advanced-dm">⚡ Advanced DM</a>
+<a href="/scripts/advanced-grok">⚡ Advanced Grok</a>
+<a href="/scripts/advanced-notifications">⚡ Advanced Notifications</a>
+<a href="/scripts/advanced-premium">⚡ Advanced Premium</a>
+<a href="/scripts/advanced-settings">⚡ Advanced Settings</a>
+<a href="/scripts/audit-console-errors">⚡ Audit Console Errors</a>
+<a href="/scripts/community-manager">⚡ Community Manager</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/scripts">All Scripts</a>
+        <a href="/features">Features</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+</body>
+</html>

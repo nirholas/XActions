@@ -125,7 +125,7 @@
         <div class="meta-row">
           
           
-          <span>1311 lines</span>
+          <span>1321 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
@@ -263,7 +263,8 @@
           <p>Copy and paste this entire script into your browser DevTools console on <a href="https://x.com" rel="noopener">x.com</a>.</p>
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
-            <pre><code>/**
+            <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Business Source License 1.1.
+/**
  * ============================================================
  * 🐦 X/Twitter Profile + Replies Scraper
  * ============================================================
@@ -477,6 +478,7 @@ const CONFIG = {
     str = str.trim().toUpperCase();
     if (str.includes('K')) return Math.round(parseFloat(str) * 1_000);
     if (str.includes('M')) return Math.round(parseFloat(str) * 1_000_000);
+    if (str.includes('B')) return Math.round(parseFloat(str) * 1_000_000_000);
     return parseInt(str.replace(/,/g, ''), 10) || 0;
   }
 
@@ -512,7 +514,14 @@ const CONFIG = {
    */
   function extractTweetFromElement(article) {
     try {
-      const linkEl = article.querySelector('a[href*=&quot;/status/&quot;]');
+      // The timestamp's enclosing anchor is the tweet's own permalink.
+      // The first /status/ link in the article can belong to a quoted tweet.
+      const timeEl = article.querySelector('time');
+      const timestamp = timeEl ? timeEl.getAttribute('datetime') : null;
+      const displayTime = timeEl ? timeEl.innerText : '';
+
+      const permalinkEl = timeEl ? timeEl.closest('a[href*=&quot;/status/&quot;]') : null;
+      const linkEl = permalinkEl || article.querySelector('a[href*=&quot;/status/&quot;]');
       if (!linkEl) return null;
       const url = linkEl.href;
       const id = url.split('/status/')[1]?.split(/[?/]/)[0];
@@ -520,10 +529,6 @@ const CONFIG = {
 
       const textEl = article.querySelector('[data-testid=&quot;tweetText&quot;]');
       const text = textEl ? textEl.innerText : '';
-
-      const timeEl = article.querySelector('time');
-      const timestamp = timeEl ? timeEl.getAttribute('datetime') : null;
-      const displayTime = timeEl ? timeEl.innerText : '';
 
       const metric = (testId) =&gt; {
         const el = article.querySelector(`[data-testid=&quot;${testId}&quot;]`);
@@ -539,14 +544,19 @@ const CONFIG = {
       const views = viewsEl ? viewsEl.innerText : '0';
 
       const hasImage = !!article.querySelector('[data-testid=&quot;tweetPhoto&quot;]');
-      const hasVideo = !!article.querySelector('[data-testid=&quot;videoPlayer&quot;]');
+      const hasVideo = !!article.querySelector('[data-testid=&quot;videoPlayer&quot;], [data-testid=&quot;videoComponent&quot;]');
       const hasCard = !!article.querySelector('[data-testid=&quot;card.wrapper&quot;]');
 
-      const socialCtx = article.querySelector('[data-testid=&quot;socialContext&quot;]')?.innerText || '';
-      const isRetweet = socialCtx.includes('reposted');
-      const isReply = !!article.querySelector('[data-testid=&quot;tweetText&quot;]')
-        ?.closest('article')
-        ?.querySelector('div[id] &gt; div &gt; div &gt; div &gt; div &gt; a[href*=&quot;/status/&quot;]');
+      // Retweets render socialContext inside an &lt;a&gt; linking to the reposter;
+      // pinned posts render it as a plain element. The structural check works
+      // on any UI language and stops pinned posts counting as retweets.
+      const socialCtxEl = article.querySelector('[data-testid=&quot;socialContext&quot;]');
+      const isRetweet = !!socialCtxEl &amp;&amp; socialCtxEl.closest('a') !== null;
+
+      // Reply detection: structural marker first, English UI text as fallback.
+      const isReply = article.querySelector('[data-testid=&quot;in-reply-to&quot;]') !== null ||
+        Array.from(article.querySelectorAll('div[dir]')).some(el =&gt;
+          el.innerText.startsWith('Replying to'));
 
       // Get the author handle from the tweet
       const authorEl = article.querySelector('div[data-testid=&quot;User-Name&quot;] a[href^=&quot;/&quot;]');
@@ -566,7 +576,7 @@ const CONFIG = {
         displayTime,
         metrics: { replies, retweets, likes, views },
         media: { hasImage, hasVideo, hasCard },
-        type: { isRetweet, isReply: socialCtx.includes('Replying to') },
+        type: { isRetweet, isReply },
         extracted: {
           hashtags: extractHashtags(text),
           mentions: extractMentions(text),
@@ -964,7 +974,7 @@ const CONFIG = {
       p.id,
       p.url,
       p.author?.handle || '',
-      p.displayTime,
+      '&quot;' + (p.displayTime || '').replace(/&quot;/g, '&quot;&quot;') + '&quot;',
       '&quot;' + (p.text || '').replace(/&quot;/g, '&quot;&quot;').replace(/\n/g, ' ') + '&quot;',
       parseEngagement(p.metrics.likes),
       parseEngagement(p.metrics.retweets),
@@ -987,7 +997,7 @@ const CONFIG = {
           r.url,
           '&quot;' + (r.author?.name || '').replace(/&quot;/g, '&quot;&quot;') + '&quot;',
           r.author?.handle || '',
-          r.displayTime,
+          '&quot;' + (r.displayTime || '').replace(/&quot;/g, '&quot;&quot;') + '&quot;',
           '&quot;' + (r.text || '').replace(/&quot;/g, '&quot;&quot;').replace(/\n/g, ' ') + '&quot;',
           parseEngagement(r.metrics?.likes),
           parseEngagement(r.metrics?.retweets),

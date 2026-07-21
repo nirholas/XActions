@@ -125,7 +125,7 @@
         <div class="meta-row">
           <span>v1.0.0</span>
           <span>Updated: 2026-01-26</span>
-          <span>394 lines</span>
+          <span>448 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
@@ -149,7 +149,8 @@
           <p>Copy and paste this entire script into your browser DevTools console on <a href="https://x.com" rel="noopener">x.com</a>.</p>
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
-            <pre><code>/**
+            <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Business Source License 1.1.
+/**
  * ============================================================
  * ⚙️ Filter Manager
  * ============================================================
@@ -280,13 +281,24 @@
   };
   
   // Storage helpers
+  // Deep-clone so callers never mutate the shared defaults through the
+  // nested category objects a shallow spread would alias.
   const getFilters = () =&gt; {
+    const base = structuredClone(defaultFilters);
     try {
       const data = localStorage.getItem(STORAGE_KEY);
-      return data ? { ...defaultFilters, ...JSON.parse(data) } : { ...defaultFilters };
+      if (data) Object.assign(base, JSON.parse(data));
     } catch {
-      return { ...defaultFilters };
+      // Ignore corrupt stored config and fall back to defaults
     }
+    // JSON cannot represent Infinity: stored max values round-trip as null,
+    // which would make every max comparison fail. Restore them.
+    Object.values(base).forEach(settings =&gt; {
+      if (settings &amp;&amp; typeof settings === 'object' &amp;&amp; 'max' in settings &amp;&amp; settings.max == null) {
+        settings.max = Infinity;
+      }
+    });
+    return base;
   };
   
   const saveFilters = (filters) =&gt; {
@@ -449,7 +461,49 @@
           failures.push('not verified');
         }
       }
-      
+
+      // Follower/following ratio (declared in defaultFilters but never checked)
+      if (filters.ratio.enabled &amp;&amp; userData.following &gt; 0) {
+        const ratio = userData.followers / userData.following;
+        if (ratio &lt; filters.ratio.min) failures.push(`ratio &lt; ${filters.ratio.min}`);
+        if (ratio &gt; filters.ratio.max) failures.push(`ratio &gt; ${filters.ratio.max}`);
+      }
+
+      // Account age (declared in defaultFilters but never checked)
+      if (filters.accountAge.enabled &amp;&amp; typeof userData.accountAgeDays === 'number') {
+        if (userData.accountAgeDays &lt; filters.accountAge.min) {
+          failures.push(`account younger than ${filters.accountAge.min} days`);
+        }
+      }
+
+      // Language (declared in defaultFilters but never checked)
+      if (filters.language.enabled &amp;&amp; filters.language.allowed.length &gt; 0 &amp;&amp; userData.lang) {
+        if (!filters.language.allowed.includes(userData.lang)) {
+          failures.push(`language &quot;${userData.lang}&quot; not allowed`);
+        }
+      }
+
+      // Activity / last tweet recency (declared in defaultFilters but never checked)
+      if (filters.activity.enabled &amp;&amp; typeof userData.lastTweetDaysAgo === 'number') {
+        if (userData.lastTweetDaysAgo &gt; filters.activity.lastTweetDays) {
+          failures.push(`inactive for ${userData.lastTweetDaysAgo} days`);
+        }
+      }
+
+      // Spam heuristics (declared in defaultFilters, enabled by default, but never checked)
+      if (filters.spam.enabled) {
+        if (filters.spam.skipNoTweets &amp;&amp; userData.tweets === 0) {
+          failures.push('no tweets (spam heuristic)');
+        }
+        if (filters.spam.skipSuspicious &amp;&amp; userData.following &gt; 0) {
+          const followRatio = userData.following / (userData.followers || 1);
+          if (followRatio &gt; 50) failures.push('suspicious following/followers ratio (spam heuristic)');
+        }
+        if (filters.spam.skipBotPatterns &amp;&amp; userData.username &amp;&amp; /\d{6,}$/.test(userData.username)) {
+          failures.push('username matches bot pattern (spam heuristic)');
+        }
+      }
+
       return {
         passes: failures.length === 0,
         failures

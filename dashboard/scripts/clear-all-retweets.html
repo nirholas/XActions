@@ -125,7 +125,7 @@
         <div class="meta-row">
           <span>v1.0.0</span>
           <span>Updated: 2026-01-26</span>
-          <span>179 lines</span>
+          <span>184 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
@@ -142,35 +142,15 @@
 
         
         
-        <section class="config-code">
-        <h2>Default Configuration</h2>
-        <div class="code-block">
-          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
-          <pre><code>const CONFIG = {
-  // Maximum retweets to undo (0 = unlimited)
-  maxUndo: 0,
-  
-  // Delay between unretweets (ms)
-  unretweetDelay: 2000,
-  
-  // Delay after scrolling (ms)
-  scrollDelay: 2500,
-  
-  // Max retries when no retweets found
-  maxRetries: 5,
-  
-  // Show confirmation prompt
-  confirmStart: true
-};</code></pre>
-        </div>
-      </section>
+        
 
         <section class="full-code">
           <h2>Full Script</h2>
           <p>Copy and paste this entire script into your browser DevTools console on <a href="https://x.com" rel="noopener">x.com</a>.</p>
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
-            <pre><code>/**
+            <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Business Source License 1.1.
+/**
  * ============================================================
  * 🔄 Clear All Retweets
  * ============================================================
@@ -198,7 +178,9 @@
  * ============================================================
  */
 
-const CONFIG = {
+// `var` (not `const`): a repeated top-level `const` paste in the same
+// DevTools tab throws &quot;already been declared&quot; instead of re-running.
+var CONFIG = {
   // Maximum retweets to undo (0 = unlimited)
   maxUndo: 0,
   
@@ -229,7 +211,7 @@ const CONFIG = {
   const $unretweetBtn = '[data-testid=&quot;unretweet&quot;]';
   const $unretweetConfirm = '[data-testid=&quot;unretweetConfirm&quot;]';
   const $tweet = '[data-testid=&quot;tweet&quot;]';
-  const $retweetIndicator = 'span[data-testid=&quot;socialContext&quot;]';
+  const $retweetIndicator = '[data-testid=&quot;socialContext&quot;]';
   
   console.log('╔════════════════════════════════════════════════════════════╗');
   console.log('║  🔄 CLEAR ALL RETWEETS                                     ║');
@@ -312,9 +294,11 @@ const CONFIG = {
       
       for (const tweet of tweets) {
         if (isRetweet(tweet)) {
-          foundRetweet = true;
-          
+          // Only count a pass as progress when an undo succeeds; otherwise a
+          // tweet that looks like a retweet but cannot be undone would spin
+          // this loop forever with no scroll, retry, or delay
           if (await undoRetweet(tweet)) {
+            foundRetweet = true;
             totalUndone++;
             retries = 0;
             console.log(`🔄 Undid retweet ${totalUndone}${CONFIG.maxUndo &gt; 0 ? '/' + CONFIG.maxUndo : ''}`);

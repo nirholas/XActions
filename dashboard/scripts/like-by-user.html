@@ -125,7 +125,7 @@
         <div class="meta-row">
           <span>v1.0.0</span>
           <span>Updated: 2026-01-26</span>
-          <span>328 lines</span>
+          <span>354 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
@@ -186,7 +186,8 @@
           <p>Copy and paste this entire script into your browser DevTools console on <a href="https://x.com" rel="noopener">x.com</a>.</p>
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
-            <pre><code>/**
+            <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Business Source License 1.1.
+/**
  * ============================================
  * 👤 Like By User - XActions
  * ============================================
@@ -255,8 +256,7 @@
     unlikeButton: '[data-testid=&quot;unlike&quot;]',
     tweetText: '[data-testid=&quot;tweetText&quot;]',
     retweetIndicator: '[data-testid=&quot;socialContext&quot;]',
-    tweetMedia: '[data-testid=&quot;tweetPhoto&quot;], [data-testid=&quot;videoPlayer&quot;]',
-    quoteTweet: '[data-testid=&quot;tweet&quot;] [data-testid=&quot;tweet&quot;]',
+    tweetMedia: '[data-testid=&quot;tweetPhoto&quot;], [data-testid=&quot;videoPlayer&quot;], [data-testid=&quot;videoComponent&quot;]',
     userAvatar: '[data-testid=&quot;Tweet-User-Avatar&quot;]',
     likeCount: '[data-testid=&quot;like&quot;] span, [data-testid=&quot;unlike&quot;] span',
     retweetCount: '[data-testid=&quot;retweet&quot;] span'
@@ -293,6 +293,9 @@
     if (cleaned.endsWith('M')) {
       return parseFloat(cleaned) * 1000000;
     }
+    if (cleaned.endsWith('B')) {
+      return parseFloat(cleaned) * 1000000000;
+    }
     return parseInt(cleaned) || 0;
   };
 
@@ -312,6 +315,14 @@
   };
 
   const processedTweets = new Set();
+
+  // Stop switch: run window.stopLikeByUser() from the console to abort
+  // the loop after the tweet currently being processed.
+  let stopped = false;
+  window.stopLikeByUser = () =&gt; {
+    stopped = true;
+    log.warning('Stop requested. Finishing the current tweet, then exiting.');
+  };
 
   console.log(`
 ╔══════════════════════════════════════════════════════════╗
@@ -337,23 +348,29 @@
   log.info(`Max likes: ${CONFIG.maxLikes}`);
   log.info(`Skip replies: ${CONFIG.skipReplies}`);
   log.info(`Skip retweets: ${CONFIG.skipRetweets}`);
+  log.info(`To stop early: window.stopLikeByUser()`);
 
   const isReply = (tweet) =&gt; {
-    const tweetContent = tweet.textContent || '';
-    return tweetContent.includes('Replying to');
+    // Structural marker first (locale-independent), then the English UI text
+    if (tweet.querySelector('[data-testid=&quot;in-reply-to&quot;]') !== null) return true;
+    return Array.from(tweet.querySelectorAll('div[dir]')).some(el =&gt;
+      el.innerText.startsWith('Replying to'));
   };
 
   const isRetweet = (tweet) =&gt; {
+    // Reposts render socialContext inside an &lt;a&gt; linking to the reposter;
+    // pinned posts render it as a plain element. The structural check works
+    // on every UI language, unlike matching &quot;reposted&quot;/&quot;Retweeted&quot; text.
     const socialContext = tweet.querySelector(SELECTORS.retweetIndicator);
-    if (socialContext) {
-      const text = socialContext.textContent || '';
-      return text.includes('reposted') || text.includes('Retweeted');
-    }
-    return false;
+    return !!socialContext &amp;&amp; socialContext.closest('a') !== null;
   };
 
   const isQuoteTweet = (tweet) =&gt; {
-    return tweet.querySelector(SELECTORS.quoteTweet) !== null;
+    // A quote tweet embeds the quoted post as a card inside a
+    // div[role=&quot;link&quot;] that itself contains a &lt;time&gt; element. The card does
+    // NOT carry a nested data-testid=&quot;tweet&quot;, so matching on that (as this
+    // used to) never found anything and skipQuoteTweets silently did nothing.
+    return tweet.querySelector('div[role=&quot;link&quot;] time') !== null;
   };
 
   const hasMedia = (tweet) =&gt; {
@@ -370,28 +387,37 @@
   };
 
   const getTweetIdentifier = (tweet) =&gt; {
+    // Prefer the permalink around the timestamp: the first /status/ link in
+    // the article can belong to a quoted tweet and give the wrong ID
+    const timeAnchor = tweet.querySelector('time')?.closest('a[href*=&quot;/status/&quot;]');
+    if (timeAnchor) {
+      const match = timeAnchor.href.match(/\/status\/(\d+)/);
+      if (match) return match[1];
+    }
     const links = tweet.querySelectorAll('a[href*=&quot;/status/&quot;]');
     for (const link of links) {
       const match = link.href.match(/\/status\/(\d+)/);
       if (match) return match[1];
     }
+    // Text fallback. Do NOT append Date.now(): a changing ID makes the same
+    // tweet look new on every pass, defeating deduplication entirely.
     const text = tweet.querySelector(SELECTORS.tweetText)?.textContent || '';
-    return text.substring(0, 100) + Date.now();
+    return text.substring(0, 100);
   };
 
   let scrollAttempts = 0;
   let noNewTweetsCount = 0;
   let consecutiveAlreadyLiked = 0;
 
-  while (stats.liked &lt; CONFIG.maxLikes &amp;&amp; 
+  while (!stopped &amp;&amp; stats.liked &lt; CONFIG.maxLikes &amp;&amp;
          scrollAttempts &lt; CONFIG.maxScrollAttempts &amp;&amp;
          consecutiveAlreadyLiked &lt; CONFIG.stopAfterAlreadyLiked) {
-    
+
     const tweets = document.querySelectorAll(SELECTORS.tweet);
     let foundNewTweet = false;
 
     for (const tweet of tweets) {
-      if (stats.liked &gt;= CONFIG.maxLikes) break;
+      if (stopped || stats.liked &gt;= CONFIG.maxLikes) break;
       if (consecutiveAlreadyLiked &gt;= CONFIG.stopAfterAlreadyLiked) break;
 
       const tweetId = getTweetIdentifier(tweet);

@@ -125,7 +125,7 @@
         <div class="meta-row">
           <span>v1.0.0</span>
           <span>Updated: 2026-01-26</span>
-          <span>147 lines</span>
+          <span>168 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
@@ -142,32 +142,15 @@
 
         
         
-        <section class="config-code">
-        <h2>Default Configuration</h2>
-        <div class="code-block">
-          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
-          <pre><code>const CONFIG = {
-  // Your new bio text (max 160 characters)
-  newBio: `🚀 Building cool stuff with code
-🐦 Automating X with @XActions
-💡 Open source enthusiast
-🔗 github.com/nirholas/XActions`,
-  
-  // Delay for UI interactions (ms)
-  actionDelay: 1000,
-  
-  // Auto-save after updating
-  autoSave: true
-};</code></pre>
-        </div>
-      </section>
+        
 
         <section class="full-code">
           <h2>Full Script</h2>
           <p>Copy and paste this entire script into your browser DevTools console on <a href="https://x.com" rel="noopener">x.com</a>.</p>
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
-            <pre><code>/**
+            <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Business Source License 1.1.
+/**
  * ============================================================
  * ✏️ Update Profile Bio
  * ============================================================
@@ -193,7 +176,9 @@
  * ============================================================
  */
 
-const CONFIG = {
+// `var` (not `const`): a repeated top-level `const` paste in the same
+// DevTools tab throws &quot;already been declared&quot; instead of re-running.
+var CONFIG = {
   // Your new bio text (max 160 characters)
   newBio: `🚀 Building cool stuff with code
 🐦 Automating X with @XActions
@@ -215,6 +200,14 @@ const CONFIG = {
 
 (async function updateBio() {
   const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+  // Set an input's value through the native setter so React's value tracker
+  // registers the change (direct .value assignment gets ignored by React and
+  // the old bio would be saved).
+  const setNativeValue = (el, value) =&gt; {
+    const desc = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(el), 'value');
+    if (desc &amp;&amp; desc.set) desc.set.call(el, value);
+    else el.value = value;
+  };
   
   // DOM Selectors
   const $bioTextarea = 'textarea[name=&quot;description&quot;]';
@@ -256,7 +249,17 @@ const CONFIG = {
       bioField = document.querySelector($bioTextarea) || document.querySelector($bioInput);
     }
   }
-  
+
+  // The settings page (or the modal we just opened) may still be mounting
+  // its form on first paint. Poll briefly before giving up instead of
+  // failing immediately on a field that would appear a moment later.
+  let waitAttempts = 0;
+  while (!bioField &amp;&amp; waitAttempts &lt; 3) {
+    await sleep(CONFIG.actionDelay);
+    bioField = document.querySelector($bioTextarea) || document.querySelector($bioInput);
+    waitAttempts++;
+  }
+
   if (!bioField) {
     console.error('❌ ERROR: Bio field not found!');
     console.log('');
@@ -279,13 +282,13 @@ const CONFIG = {
   await sleep(100);
   
   // Clear current content
-  bioField.value = '';
+  setNativeValue(bioField, '');
   bioField.textContent = '';
   bioField.dispatchEvent(new Event('input', { bubbles: true }));
   await sleep(300);
-  
+
   // Type new bio
-  bioField.value = CONFIG.newBio;
+  setNativeValue(bioField, CONFIG.newBio);
   bioField.textContent = CONFIG.newBio;
   bioField.dispatchEvent(new Event('input', { bubbles: true }));
   bioField.dispatchEvent(new Event('change', { bubbles: true }));

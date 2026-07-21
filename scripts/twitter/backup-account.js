@@ -38,7 +38,9 @@
  * ============================================================
  */
 
-const CONFIG = {
+// `var` (not `const`): a repeated top-level `const` paste in the same
+// DevTools tab throws "already been declared" instead of re-running.
+var CONFIG = {
   // How many items to collect per category
   maxTweets: 100,
   maxLikes: 100,

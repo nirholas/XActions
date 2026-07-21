@@ -125,7 +125,7 @@
         <div class="meta-row">
           <span>v1.0.0</span>
           <span>Updated: 2026-01-26</span>
-          <span>278 lines</span>
+          <span>283 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
@@ -142,29 +142,15 @@
 
         
         
-        <section class="config-code">
-        <h2>Default Configuration</h2>
-        <div class="code-block">
-          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
-          <pre><code>const CONFIG = {
-  // Storage key prefix
-  storageKey: 'xactions_growth_tracker',
-  
-  // Maximum history entries to keep
-  maxHistory: 365,
-  
-  // Show chart in console
-  showChart: true
-};</code></pre>
-        </div>
-      </section>
+        
 
         <section class="full-code">
           <h2>Full Script</h2>
           <p>Copy and paste this entire script into your browser DevTools console on <a href="https://x.com" rel="noopener">x.com</a>.</p>
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
-            <pre><code>/**
+            <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Business Source License 1.1.
+/**
  * ============================================================
  * 📈 Followers Growth Tracker
  * ============================================================
@@ -189,7 +175,10 @@
  * ============================================================
  */
 
-const CONFIG = {
+// `var` (not `const`): this script's whole point is &quot;run it periodically&quot; in
+// the same tab, and DevTools throws &quot;already been declared&quot; on a repeated
+// top-level `const` paste - which would silently break that workflow.
+var CONFIG = {
   // Storage key prefix
   storageKey: 'xactions_growth_tracker',
   
@@ -423,12 +412,13 @@ const CONFIG = {
       }
       
       chart.push('       └' + '─'.repeat(recent.length));
-      chart.push('        ' + recent.map((h, i) =&gt; i % 3 === 0 ? formatDate(h.date).slice(0, 3) : '   ').join('').slice(0, recent.length));
+      // One column per entry: a 3-char label every 3rd entry lines up with its column
+      chart.push('        ' + recent.map((h, i) =&gt; i % 3 === 0 ? formatDate(h.date).slice(0, 3).padEnd(3) : '').join('').slice(0, recent.length + 2));
       
       chart.forEach(line =&gt; console.log(line));
     }
 
-    console.log('\n─'.repeat(50));
+    console.log('\n' + '─'.repeat(50));
   } else {
     console.log('\n📸 First snapshot saved!');
     console.log('   Run this script again later to see growth metrics.');

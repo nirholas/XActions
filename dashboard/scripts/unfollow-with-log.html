@@ -125,7 +125,7 @@
         <div class="meta-row">
           <span>v1.0.0</span>
           <span>Updated: 2026-01-26</span>
-          <span>244 lines</span>
+          <span>279 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
@@ -143,41 +143,15 @@
 
         
         
-        <section class="config-code">
-        <h2>Default Configuration</h2>
-        <div class="code-block">
-          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
-          <pre><code>const CONFIG = {
-  // Maximum retry attempts
-  maxRetries: 5,
-  
-  // Delay between unfollows (milliseconds)
-  unfollowDelay: 1500,
-  
-  // Delay after clicking confirm
-  confirmDelay: 1000,
-  
-  // Delay for scrolling
-  scrollDelay: 2000,
-  
-  // Stop after this many unfollows (0 = unlimited)
-  maxUnfollows: 0,
-  
-  // Auto-download log file when complete
-  autoDownload: true,
-  
-  // Include timestamp in log
-  includeTimestamp: true
-};</code></pre>
-        </div>
-      </section>
+        
 
         <section class="full-code">
           <h2>Full Script</h2>
           <p>Copy and paste this entire script into your browser DevTools console on <a href="https://x.com" rel="noopener">x.com</a>.</p>
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
-            <pre><code>/**
+            <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Business Source License 1.1.
+/**
  * ============================================================
  * 📝 Unfollow Non-Followers With Log
  * ============================================================
@@ -203,7 +177,9 @@
  * ============================================================
  */
 
-const CONFIG = {
+// `var` (not `const`): a repeated top-level `const` paste in the same
+// DevTools tab throws &quot;already been declared&quot; instead of re-running.
+var CONFIG = {
   // Maximum retry attempts
   maxRetries: 5,
   
@@ -265,12 +241,19 @@ const CONFIG = {
   }
   
   console.log('🚀 Starting...');
+  console.log('💡 To stop early: window.stopUnfollow()');
   console.log('');
-  
+
   const unfollowedList = [];
   const keptList = [];
   let retries = 0;
+  let stopped = false;
   const startTime = new Date();
+  const seenUsers = new Set();
+  window.stopUnfollow = () =&gt; {
+    stopped = true;
+    console.log('🛑 Stopping after the current unfollow...');
+  };
   
   /**
    * Extract username from user cell
@@ -294,24 +277,27 @@ const CONFIG = {
     return nameSpan ? nameSpan.textContent : 'Unknown';
   }
   
-  while (retries &lt; CONFIG.maxRetries) {
+  while (retries &lt; CONFIG.maxRetries &amp;&amp; !stopped) {
     window.scrollTo(0, document.body.scrollHeight);
     await sleep(CONFIG.scrollDelay);
-    
+
     const buttons = document.querySelectorAll($unfollowBtn);
-    
+
     if (buttons.length === 0) {
       retries++;
       console.log(`⏳ No buttons found. Retry ${retries}/${CONFIG.maxRetries}...`);
       await sleep(CONFIG.scrollDelay);
       continue;
     }
-    
-    retries = 0;
-    
+
+    let progressThisPass = 0;
+
     for (const btn of buttons) {
+      if (stopped) break;
+
       if (CONFIG.maxUnfollows &gt; 0 &amp;&amp; unfollowedList.length &gt;= CONFIG.maxUnfollows) {
         console.log(`\n✅ Reached limit of ${CONFIG.maxUnfollows} unfollows!`);
+        delete window.stopUnfollow;
         await downloadLog();
         return;
       }
@@ -320,11 +306,21 @@ const CONFIG = {
         const userCell = btn.closest($userCell);
         const username = getUsername(userCell);
         const displayName = getDisplayName(userCell);
-        
+
+        // Track accounts by handle so re-rendered cells aren't logged twice
+        // and a tail of mutual followers can't keep this loop alive forever
+        const isNewUser = username &amp;&amp; !seenUsers.has(username);
+        if (isNewUser) {
+          seenUsers.add(username);
+          progressThisPass++;
+        }
+
         // Check if follows you
         if (userCell?.querySelector($followsYou)) {
-          keptList.push({ username, displayName });
-          console.log(`💚 Keeping: @${username} (${displayName})`);
+          if (isNewUser || !username) {
+            keptList.push({ username, displayName });
+            console.log(`💚 Keeping: @${username} (${displayName})`);
+          }
           continue;
         }
         
@@ -344,29 +340,41 @@ const CONFIG = {
           });
           
           console.log(`🚫 Unfollowed #${unfollowedList.length}: @${username} (${displayName})`);
+          progressThisPass++;
           await sleep(CONFIG.confirmDelay);
         }
-        
+
         await sleep(CONFIG.unfollowDelay);
-        
+
       } catch (e) {
         console.warn('⚠️ Error:', e.message);
       }
     }
+
+    // Only reset retries on real progress (new accounts seen or unfollows
+    // done); visible mutual cells alone must not keep the loop spinning
+    if (progressThisPass &gt; 0) {
+      retries = 0;
+    } else {
+      retries++;
+      console.log(`⏳ No new accounts this pass. Retry ${retries}/${CONFIG.maxRetries}...`);
+    }
   }
-  
+
+  delete window.stopUnfollow;
+
   await downloadLog();
-  
+
   /**
    * Download the log file
    */
   async function downloadLog() {
     const endTime = new Date();
     const duration = Math.round((endTime - startTime) / 1000 / 60);
-    
+
     console.log('');
     console.log('╔════════════════════════════════════════════════════════════╗');
-    console.log('║  ✅ COMPLETE!                                              ║');
+    console.log(stopped ? '║  🛑 STOPPED BY USER                                        ║' : '║  ✅ COMPLETE!                                              ║');
     console.log('╚════════════════════════════════════════════════════════════╝');
     console.log(`🚫 Unfollowed: ${unfollowedList.length}`);
     console.log(`💚 Kept (mutual): ${keptList.length}`);

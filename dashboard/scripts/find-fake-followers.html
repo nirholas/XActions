@@ -125,7 +125,7 @@
         <div class="meta-row">
           <span>v1.0.0</span>
           <span>Updated: 2026-01-26</span>
-          <span>359 lines</span>
+          <span>370 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
@@ -141,90 +141,16 @@
         
 
         
-        <section class="config-section">
-        <h2>Configuration Options</h2>
-        <table>
-          <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
-          <tbody>
-            <tr><td><code>highFollowingRatio</code></td><td><code>25</code></td><td>Following 50x more than followers</td></tr>
-<tr><td><code>veryHighFollowingRatio</code></td><td><code>40</code></td><td>Following 100x more than followers</td></tr>
-<tr><td><code>defaultAvatar</code></td><td><code>20</code></td><td>Default profile picture</td></tr>
-<tr><td><code>noBio</code></td><td><code>15</code></td><td>Empty bio</td></tr>
-<tr><td><code>suspiciousBio</code></td><td><code>25</code></td><td>Suspicious keywords in bio</td></tr>
-<tr><td><code>randomUsername</code></td><td><code>15</code></td><td>Username pattern like abc12345678</td></tr>
-<tr><td><code>massFollowing</code></td><td><code>15</code></td><td>Following &gt; 3000</td></tr>
-<tr><td><code>extremeFollowing</code></td><td><code>25</code></td><td>Following &gt; 5000</td></tr>
-<tr><td><code>noFollowers</code></td><td><code>20</code></td><td>0 followers</td></tr>
-<tr><td><code>veryFewFollowers</code></td><td><code>10</code></td><td>&lt; 10 followers</td></tr>
-<tr><td><code>highRatio</code></td><td><code>50</code></td><td>Following/Followers ratio</td></tr>
-          </tbody>
-        </table>
-      </section>
-        <section class="config-code">
-        <h2>Default Configuration</h2>
-        <div class="code-block">
-          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
-          <pre><code>const CONFIG = {
-  // Scroll settings
-  scrollDelay: 1500,
-  maxScrolls: 50,
-  maxRetries: 3,
-  
-  // Scoring weights (higher = more suspicious)
-  scoring: {
-    // Following/Followers ratio
-    highFollowingRatio: 25,        // Following 50x more than followers
-    veryHighFollowingRatio: 40,    // Following 100x more than followers
-    
-    // Account characteristics
-    defaultAvatar: 20,             // Default profile picture
-    noBio: 15,                     // Empty bio
-    suspiciousBio: 25,             // Suspicious keywords in bio
-    randomUsername: 15,            // Username pattern like abc12345678
-    
-    // Following count
-    massFollowing: 15,             // Following &gt; 3000
-    extremeFollowing: 25,          // Following &gt; 5000
-    
-    // Follower count
-    noFollowers: 20,               // 0 followers
-    veryFewFollowers: 10           // &lt; 10 followers
-  },
-  
-  // Thresholds
-  thresholds: {
-    highRatio: 50,                 // Following/Followers ratio
-    veryHighRatio: 100,
-    massFollowing: 3000,
-    extremeFollowing: 5000
-  },
-  
-  // Suspicious bio keywords (from x-bot-sweeper)
-  suspiciousKeywords: [
-    'crypto', 'nft', 'bitcoin', 'btc', 'eth', 'forex', 'trading signals',
-    'giveaway', 'airdrop', 'free money', 'passive income',
-    'onlyfans', 'fansly', 'dm for', 'link in bio', 'check bio',
-    'follow back', 'f4f', 'follow4follow', 'followback',
-    '18+', 'adult', 'nsfw', 'sexy', 'hot girl',
-    'make money', 'work from home', 'get rich', 'financial freedom',
-    'investment opportunity', 'guaranteed returns'
-  ],
-  
-  // Minimum score to flag as fake
-  minFakeScore: 40,
-  
-  // Likely fake threshold
-  likelyFakeScore: 60
-};</code></pre>
-        </div>
-      </section>
+        
+        
 
         <section class="full-code">
           <h2>Full Script</h2>
           <p>Copy and paste this entire script into your browser DevTools console on <a href="https://x.com" rel="noopener">x.com</a>.</p>
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
-            <pre><code>/**
+            <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Business Source License 1.1.
+/**
  * ============================================================
  * 🕵️ Find Fake Followers
  * ============================================================
@@ -249,7 +175,9 @@
  * ============================================================
  */
 
-const CONFIG = {
+// `var` (not `const`): a repeated top-level `const` paste in the same
+// DevTools tab throws &quot;already been declared&quot; instead of re-running.
+var CONFIG = {
   // Scroll settings
   scrollDelay: 1500,
   maxScrolls: 50,
@@ -396,13 +324,16 @@ const CONFIG = {
       result.flags.push(`High following (${result.following.toLocaleString()})`);
     }
 
-    // Check follower count
-    if (result.followers === 0) {
-      result.score += CONFIG.scoring.noFollowers;
-      result.flags.push('Zero followers');
-    } else if (result.followers &lt; 10) {
-      result.score += CONFIG.scoring.veryFewFollowers;
-      result.flags.push(`Very few followers (${result.followers})`);
+    // Check follower count (only when the count was actually present in the
+    // cell; a failed parse defaults to 0 and must not read as &quot;zero followers&quot;)
+    if (followersMatch) {
+      if (result.followers === 0) {
+        result.score += CONFIG.scoring.noFollowers;
+        result.flags.push('Zero followers');
+      } else if (result.followers &lt; 10) {
+        result.score += CONFIG.scoring.veryFewFollowers;
+        result.flags.push(`Very few followers (${result.followers})`);
+      }
     }
 
     // Check for default avatar
@@ -467,6 +398,11 @@ const CONFIG = {
     window.scrollTo(0, document.body.scrollHeight);
     await sleep(CONFIG.scrollDelay);
     scrollCount++;
+  }
+
+  if (allFollowers.length === 0) {
+    console.error('❌ No followers found. Make sure the follower list has loaded.');
+    return;
   }
 
   // Categorize

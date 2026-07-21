@@ -125,7 +125,7 @@
         <div class="meta-row">
           <span>v1.0.0</span>
           <span>Updated: 2026-01-26</span>
-          <span>315 lines</span>
+          <span>375 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
@@ -141,68 +141,16 @@
         
 
         
-        <section class="config-section">
-        <h2>Configuration Options</h2>
-        <table>
-          <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
-          <tbody>
-            <tr><td><code>minLikes</code></td><td><code>5</code></td><td>Minimum likes on tweet</td></tr>
-<tr><td><code>minRetweets</code></td><td><code>0</code></td><td>Minimum retweets</td></tr>
-<tr><td><code>skipReplies</code></td><td><code>true</code></td><td>Skip reply tweets</td></tr>
-<tr><td><code>skipRetweets</code></td><td><code>true</code></td><td>Skip retweets</td></tr>
-<tr><td><code>requireMedia</code></td><td><code>false</code></td><td>Only posts with images/video</td></tr>
-          </tbody>
-        </table>
-      </section>
-        <section class="config-code">
-        <h2>Default Configuration</h2>
-        <div class="code-block">
-          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
-          <pre><code>const CONFIG = {
-  // Hashtags to target (without #)
-  hashtags: [
-    'crypto',
-    'web3',
-    'bitcoin',
-  ],
-  
-  // Actions to perform
-  actions: {
-    like: true,
-    retweet: false,
-    follow: true,
-  },
-  
-  // Limits per session
-  limits: {
-    likes: 20,
-    retweets: 5,
-    follows: 10,
-    tweetsPerHashtag: 10,
-  },
-  
-  // Filters
-  filters: {
-    minLikes: 5,           // Minimum likes on tweet
-    minRetweets: 0,        // Minimum retweets
-    skipReplies: true,     // Skip reply tweets
-    skipRetweets: true,    // Skip retweets
-    requireMedia: false,   // Only posts with images/video
-  },
-  
-  // Timing
-  delayBetweenActions: 2000,
-  scrollDelay: 2000,
-};</code></pre>
-        </div>
-      </section>
+        
+        
 
         <section class="full-code">
           <h2>Full Script</h2>
           <p>Copy and paste this entire script into your browser DevTools console on <a href="https://x.com" rel="noopener">x.com</a>.</p>
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
-            <pre><code>/**
+            <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Business Source License 1.1.
+/**
  * ============================================================
  * #️⃣ Interact By Hashtag
  * ============================================================
@@ -238,7 +186,9 @@
  * ============================================================
  */
 
-const CONFIG = {
+// `var` (not `const`): a repeated top-level `const` paste in the same
+// DevTools tab throws &quot;already been declared&quot; instead of re-running.
+var CONFIG = {
   // Hashtags to target (without #)
   hashtags: [
     'crypto',
@@ -311,36 +261,62 @@ const CONFIG = {
     processedTweets: new Set(),
   };
   
+  // Parse counts like &quot;1,234&quot; / &quot;5.2K&quot; from button aria-labels
+  const parseCount = (str) =&gt; {
+    if (!str) return 0;
+    const match = str.replace(/,/g, '').match(/([\d.]+)([KMB])?/i);
+    if (!match) return 0;
+    let num = parseFloat(match[1]);
+    const multipliers = { 'K': 1000, 'M': 1000000, 'B': 1000000000 };
+    if (match[2]) num *= multipliers[match[2].toUpperCase()];
+    return Math.round(num) || 0;
+  };
+
   // Helper to check if tweet passes filters
   const passesFilters = (tweet) =&gt; {
     // Check if already liked
     if (tweet.querySelector(SELECTORS.unlikeButton)) return false;
-    
-    // Check for replies
+
+    // Check for replies (structural marker first; text only works on English UIs)
     if (CONFIG.filters.skipReplies) {
-      const isReply = tweet.textContent.includes('Replying to');
+      const isReply = tweet.querySelector('[data-testid=&quot;in-reply-to&quot;]') !== null ||
+        Array.from(tweet.querySelectorAll('div[dir]')).some(el =&gt;
+          el.innerText.startsWith('Replying to'));
       if (isReply) return false;
     }
-    
-    // Check for retweets
+
+    // Check for retweets: socialContext inside an &lt;a&gt; = repost (locale-independent);
+    // a plain socialContext is a pinned post
     if (CONFIG.filters.skipRetweets) {
       const socialContext = tweet.querySelector('[data-testid=&quot;socialContext&quot;]');
-      if (socialContext?.textContent?.toLowerCase().includes('repost')) return false;
+      if (socialContext &amp;&amp; socialContext.closest('a')) return false;
     }
-    
+
     // Check for media
     if (CONFIG.filters.requireMedia) {
-      const hasMedia = tweet.querySelector('[data-testid=&quot;tweetPhoto&quot;]') || 
-                       tweet.querySelector('[data-testid=&quot;videoPlayer&quot;]');
+      const hasMedia = tweet.querySelector('[data-testid=&quot;tweetPhoto&quot;]') ||
+                       tweet.querySelector('[data-testid=&quot;videoPlayer&quot;], [data-testid=&quot;videoComponent&quot;]');
       if (!hasMedia) return false;
     }
-    
+
+    // Check engagement minimums
+    if (CONFIG.filters.minLikes &gt; 0) {
+      const likeEl = tweet.querySelector(`${SELECTORS.likeButton}, ${SELECTORS.unlikeButton}`);
+      if (parseCount(likeEl?.getAttribute('aria-label')) &lt; CONFIG.filters.minLikes) return false;
+    }
+    if (CONFIG.filters.minRetweets &gt; 0) {
+      const rtEl = tweet.querySelector(`${SELECTORS.retweetButton}, [data-testid=&quot;unretweet&quot;]`);
+      if (parseCount(rtEl?.getAttribute('aria-label')) &lt; CONFIG.filters.minRetweets) return false;
+    }
+
     return true;
   };
-  
-  // Get tweet ID
+
+  // Get tweet ID: the anchor around the timestamp is the tweet's own permalink;
+  // the first /status/ link can belong to a quoted tweet
   const getTweetId = (tweet) =&gt; {
-    const link = tweet.querySelector('a[href*=&quot;/status/&quot;]');
+    const timeEl = tweet.querySelector('time');
+    const link = (timeEl &amp;&amp; timeEl.closest('a[href*=&quot;/status/&quot;]')) || tweet.querySelector('a[href*=&quot;/status/&quot;]');
     return link?.href?.match(/status\/(\d+)/)?.[1];
   };
   
@@ -359,9 +335,24 @@ const CONFIG = {
       }
       
       console.log(`🔍 Searching for #${tag}...`);
-      
-      // Navigate to search
-      window.location.href = `https://x.com/search?q=%23${tag}&amp;src=typed_query&amp;f=live`;
+
+      // Type into X's own search box and submit through it (a real in-app
+      // search) instead of assigning location.href. Setting location.href
+      // forces a hard page reload, which wipes this injected script (window.XActions
+      // included) - so the &quot;run search(), then run interact()&quot; flow documented
+      // above would break as soon as search() ran.
+      const input = document.querySelector(SELECTORS.searchInput);
+      if (input) {
+        const setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+        setter.call(input, `#${tag}`);
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        await sleep(300);
+        input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', code: 'Enter', keyCode: 13, which: 13, bubbles: true }));
+        console.log('✅ Search submitted. Once results load, run XActions.Hashtag.interact().');
+      } else {
+        console.warn('⚠️ Search box not found on this page. Falling back to a full navigation - this reloads the page and clears the script, so paste it again once results load.');
+        window.location.href = `https://x.com/search?q=%23${tag}&amp;src=typed_query&amp;f=live`;
+      }
     },
     
     // Interact with current search results
@@ -370,7 +361,10 @@ const CONFIG = {
       state.isRunning = true;
       
       let processed = 0;
-      
+      let stalledScrolls = 0;
+      let lastProcessedCount = state.processedTweets.size;
+      let warnedAboutVolume = false;
+
       while (state.isRunning &amp;&amp; state.stats.likes &lt; CONFIG.limits.likes) {
         const tweets = document.querySelectorAll(SELECTORS.tweet);
         
@@ -428,8 +422,21 @@ const CONFIG = {
         // Scroll for more
         window.scrollBy(0, window.innerHeight);
         await sleep(CONFIG.scrollDelay);
-        
-        if (processed &gt; 50) {
+
+        // End-of-results detection so the loop cannot scroll forever
+        if (state.processedTweets.size === lastProcessedCount) {
+          stalledScrolls++;
+          if (stalledScrolls &gt;= 10) {
+            console.log('⚠️ No new tweets after 10 scrolls. Stopping.');
+            break;
+          }
+        } else {
+          stalledScrolls = 0;
+          lastProcessedCount = state.processedTweets.size;
+        }
+
+        if (processed &gt; 50 &amp;&amp; !warnedAboutVolume) {
+          warnedAboutVolume = true;
           console.log('⚠️ Processed many tweets. Consider stopping to avoid rate limits.');
         }
       }

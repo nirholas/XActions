@@ -30,7 +30,9 @@
  * ============================================================
  */
 
-const CONFIG = {
+// `var` (not `const`): a repeated top-level `const` paste in the same
+// DevTools tab throws "already been declared" instead of re-running.
+var CONFIG = {
   // ---- TIMING ----
   
   // Days to wait before unfollowing non-followers

@@ -125,7 +125,7 @@
         <div class="meta-row">
           <span>v1.0.0</span>
           <span>Updated: 2026-01-26</span>
-          <span>258 lines</span>
+          <span>286 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
@@ -141,51 +141,16 @@
         
 
         
-        <section class="config-section">
-        <h2>Configuration Options</h2>
-        <table>
-          <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
-          <tbody>
-            <tr><td><code>skipVerified</code></td><td><code>false</code></td><td>Skip verified accounts</td></tr>
-<tr><td><code>skipNoPhoto</code></td><td><code>false</code></td><td>Skip accounts with default photo</td></tr>
-          </tbody>
-        </table>
-      </section>
-        <section class="config-code">
-        <h2>Default Configuration</h2>
-        <div class="code-block">
-          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
-          <pre><code>const CONFIG = {
-  // Actions
-  actions: {
-    follow: true,
-  },
-  
-  // Limits
-  limits: {
-    follows: 20,
-  },
-  
-  // Filters
-  filters: {
-    skipPrivate: true,
-    skipVerified: false,  // Skip verified accounts
-    skipNoPhoto: false,   // Skip accounts with default photo
-  },
-  
-  // Timing
-  delayBetweenActions: 2000,
-  scrollDelay: 2000,
-};</code></pre>
-        </div>
-      </section>
+        
+        
 
         <section class="full-code">
           <h2>Full Script</h2>
           <p>Copy and paste this entire script into your browser DevTools console on <a href="https://x.com" rel="noopener">x.com</a>.</p>
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
-            <pre><code>/**
+            <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Business Source License 1.1.
+/**
  * ============================================================
  * ❤️ Interact With Likers
  * ============================================================
@@ -221,7 +186,9 @@
  * ============================================================
  */
 
-const CONFIG = {
+// `var` (not `const`): a repeated top-level `const` paste in the same
+// DevTools tab throws &quot;already been declared&quot; instead of re-running.
+var CONFIG = {
   // Actions
   actions: {
     follow: true,
@@ -261,6 +228,8 @@ const CONFIG = {
     unfollowButton: '[data-testid$=&quot;-unfollow&quot;]',
     verifiedBadge: '[data-testid=&quot;icon-verified&quot;]',
     userName: '[data-testid=&quot;User-Name&quot;]',
+    protectedIcon: '[data-testid=&quot;icon-lock&quot;]',
+    defaultAvatar: 'img[src*=&quot;default_profile&quot;]',
   };
   
   console.log('╔════════════════════════════════════════════════════════════╗');
@@ -292,12 +261,22 @@ const CONFIG = {
   const passesFilters = (userCell) =&gt; {
     // Skip if already following
     if (userCell.querySelector(SELECTORS.unfollowButton)) return false;
-    
+
     // Skip verified if configured
     if (CONFIG.filters.skipVerified &amp;&amp; userCell.querySelector(SELECTORS.verifiedBadge)) {
       return false;
     }
-    
+
+    // Skip protected/private accounts if configured (was declared but never checked)
+    if (CONFIG.filters.skipPrivate &amp;&amp; userCell.querySelector(SELECTORS.protectedIcon)) {
+      return false;
+    }
+
+    // Skip accounts still on the default avatar if configured (was declared but never checked)
+    if (CONFIG.filters.skipNoPhoto &amp;&amp; userCell.querySelector(SELECTORS.defaultAvatar)) {
+      return false;
+    }
+
     return true;
   };
   
@@ -318,7 +297,9 @@ const CONFIG = {
       console.log('🚀 Starting to follow likers...');
       state.isRunning = true;
       state.stats = { followed: 0, skipped: 0 };
-      
+
+      let emptyScrolls = 0;
+
       while (state.isRunning &amp;&amp; state.stats.followed &lt; CONFIG.limits.follows) {
         const userCells = document.querySelectorAll(SELECTORS.userCell);
         
@@ -363,6 +344,17 @@ const CONFIG = {
         if (allProcessed &amp;&amp; newCells.length &gt; 0) {
           console.log('📄 Reached end of likers list.');
           break;
+        }
+
+        // Nothing rendered at all: stop after a few tries instead of looping forever
+        if (newCells.length === 0) {
+          emptyScrolls++;
+          if (emptyScrolls &gt;= 5) {
+            console.log('⚠️ No likers found after 5 scrolls. Stopping.');
+            break;
+          }
+        } else {
+          emptyScrolls = 0;
         }
       }
       

@@ -125,7 +125,7 @@
         <div class="meta-row">
           <span>v1.0.0</span>
           <span>Updated: 2026-01-26</span>
-          <span>190 lines</span>
+          <span>227 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
@@ -143,43 +143,15 @@
 
         
         
-        <section class="config-code">
-        <h2>Default Configuration</h2>
-        <div class="code-block">
-          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
-          <pre><code>const CONFIG = {
-  // Maximum retry attempts when no buttons found
-  maxRetries: 5,
-  
-  // Delay between unfollows (milliseconds)
-  // 💡 Increase to 3000-5000 if getting rate limited
-  unfollowDelay: 1500,
-  
-  // Delay after clicking confirm button
-  confirmDelay: 1000,
-  
-  // Delay for scrolling to load more
-  scrollDelay: 2000,
-  
-  // Stop after unfollowing this many (0 = unlimited)
-  // 💡 Set to 50-100 for testing first
-  maxUnfollows: 0,
-  
-  // Show confirmation prompt before starting
-  confirmStart: true,
-  
-  // Log kept users (mutual followers)
-  logKept: true
-};</code></pre>
-        </div>
-      </section>
+        
 
         <section class="full-code">
           <h2>Full Script</h2>
           <p>Copy and paste this entire script into your browser DevTools console on <a href="https://x.com" rel="noopener">x.com</a>.</p>
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
-            <pre><code>/**
+            <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Business Source License 1.1.
+/**
  * ============================================================
  * 🔄 Unfollow Non-Followers
  * ============================================================
@@ -208,7 +180,9 @@
  * ============================================================
  */
 
-const CONFIG = {
+// `var` (not `const`): a repeated top-level `const` paste in the same
+// DevTools tab throws &quot;already been declared&quot; instead of re-running.
+var CONFIG = {
   // Maximum retry attempts when no buttons found
   maxRetries: 5,
   
@@ -277,13 +251,20 @@ const CONFIG = {
   
   console.log('🚀 Starting to unfollow non-followers...');
   console.log('💡 Accounts with &quot;Follows you&quot; badge will be kept.');
+  console.log('💡 To stop early: window.stopUnfollow()');
   console.log('');
-  
+
   let totalUnfollowed = 0;
   let totalKept = 0;
   let retries = 0;
-  
-  while (retries &lt; CONFIG.maxRetries) {
+  let stopped = false;
+  const seenUsers = new Set();
+  window.stopUnfollow = () =&gt; {
+    stopped = true;
+    console.log('🛑 Stopping after the current unfollow...');
+  };
+
+  while (retries &lt; CONFIG.maxRetries &amp;&amp; !stopped) {
     // Scroll to bottom to load more users
     window.scrollTo(0, document.body.scrollHeight);
     await sleep(CONFIG.scrollDelay);
@@ -298,12 +279,15 @@ const CONFIG = {
       continue;
     }
     
-    retries = 0;
-    
+    let progressThisPass = 0;
+
     for (const btn of buttons) {
+      if (stopped) break;
+
       // Check max unfollows limit
       if (CONFIG.maxUnfollows &gt; 0 &amp;&amp; totalUnfollowed &gt;= CONFIG.maxUnfollows) {
         console.log(`\n✅ Reached limit of ${CONFIG.maxUnfollows} unfollows!`);
+        delete window.stopUnfollow;
         logSummary();
         return;
       }
@@ -311,18 +295,30 @@ const CONFIG = {
       try {
         // Find the parent UserCell to check for &quot;Follows you&quot; badge
         const userCell = btn.closest($userCell);
-        
+
+        // Track accounts by handle so re-rendered cells aren't recounted and
+        // so a tail of mutual followers can't keep this loop alive forever
+        const userLink = userCell?.querySelector('a[href^=&quot;/&quot;]');
+        const username = userLink ? userLink.getAttribute('href').replace('/', '').split('/')[0] : null;
+        const isNewUser = username &amp;&amp; !seenUsers.has(username);
+        if (isNewUser) {
+          seenUsers.add(username);
+          progressThisPass++;
+        }
+
         if (userCell) {
           // Check if this user follows you back
           const followsYou = userCell.querySelector($followsYou);
-          
+
           if (followsYou) {
-            // This user follows you - KEEP them
-            totalKept++;
-            if (CONFIG.logKept) {
-              const nameEl = userCell.querySelector('[dir=&quot;ltr&quot;] span');
-              const name = nameEl ? nameEl.textContent : 'Unknown';
-              console.log(`💚 Keeping: ${name} (follows you)`);
+            // This user follows you - KEEP them (count each account once)
+            if (isNewUser || !username) {
+              totalKept++;
+              if (CONFIG.logKept) {
+                const nameEl = userCell.querySelector('[dir=&quot;ltr&quot;] span');
+                const name = nameEl ? nameEl.textContent : 'Unknown';
+                console.log(`💚 Keeping: ${name} (follows you)`);
+              }
             }
             continue;
           }
@@ -337,27 +333,39 @@ const CONFIG = {
         if (confirmBtn) {
           confirmBtn.click();
           totalUnfollowed++;
-          
+          progressThisPass++;
+
           // Try to get username
           const nameEl = userCell?.querySelector('[dir=&quot;ltr&quot;] span');
           const name = nameEl ? nameEl.textContent : `User #${totalUnfollowed}`;
           console.log(`🚫 Unfollowed: ${name}`);
-          
+
           await sleep(CONFIG.confirmDelay);
         }
-        
+
         await sleep(CONFIG.unfollowDelay);
-        
+
       } catch (e) {
         console.warn('⚠️ Error:', e.message);
       }
     }
+
+    // Only reset retries on real progress (new accounts seen or unfollows
+    // done); visible mutual cells alone must not keep the loop spinning
+    if (progressThisPass &gt; 0) {
+      retries = 0;
+    } else {
+      retries++;
+      console.log(`⏳ No new accounts this pass. Retry ${retries}/${CONFIG.maxRetries}...`);
+    }
   }
-  
+
+  delete window.stopUnfollow;
+
   function logSummary() {
     console.log('');
     console.log('╔════════════════════════════════════════════════════════════╗');
-    console.log('║  ✅ COMPLETE!                                              ║');
+    console.log(stopped ? '║  🛑 STOPPED BY USER                                        ║' : '║  ✅ COMPLETE!                                              ║');
     console.log('╚════════════════════════════════════════════════════════════╝');
     console.log(`🚫 Unfollowed (non-followers): ${totalUnfollowed}`);
     console.log(`💚 Kept (mutual followers): ${totalKept}`);

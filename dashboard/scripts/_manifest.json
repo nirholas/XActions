@@ -1720,6 +1720,14 @@
     "sourceDir": "src"
   },
   {
+    "slug": "xactions-command-center",
+    "title": "XActions Command Center",
+    "description": "One console script that opens a searchable menu of every XActions tool (scrape, analyze, grow, engage, clean up, and moderate) with per-tool options and one-click run.",
+    "category": "Command Center",
+    "icon": "⚡",
+    "sourceDir": "scripts/twitter"
+  },
+  {
     "slug": "evergreen-recycler",
     "title": "XActions Evergreen Content Recycler",
     "description": "",
@@ -1742,5 +1750,13 @@
     "category": "Automation",
     "icon": "📡",
     "sourceDir": "src/automation"
+  },
+  {
+    "slug": "scraper-toolbox",
+    "title": "XActions Scraper Toolbox",
+    "description": "Interactive on-page control panel for scraping X/Twitter",
+    "category": "Other Tools",
+    "icon": "⚡",
+    "sourceDir": "scripts/twitter"
   }
 ]

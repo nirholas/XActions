@@ -125,7 +125,7 @@
         <div class="meta-row">
           <span>v1.0.0</span>
           <span>Updated: 2026-01-26</span>
-          <span>162 lines</span>
+          <span>165 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
@@ -142,26 +142,15 @@
 
         
         
-        <section class="config-code">
-        <h2>Default Configuration</h2>
-        <div class="code-block">
-          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
-          <pre><code>const CONFIG = {
-  // Delay for UI interactions (ms)
-  actionDelay: 1500,
-  
-  // Auto-open the file picker
-  autoOpenPicker: true
-};</code></pre>
-        </div>
-      </section>
+        
 
         <section class="full-code">
           <h2>Full Script</h2>
           <p>Copy and paste this entire script into your browser DevTools console on <a href="https://x.com" rel="noopener">x.com</a>.</p>
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
-            <pre><code>/**
+            <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Business Source License 1.1.
+/**
  * ============================================================
  * 🖼️ Update Profile Picture
  * ============================================================
@@ -190,7 +179,9 @@
  * ============================================================
  */
 
-const CONFIG = {
+// `var` (not `const`): a repeated top-level `const` paste in the same
+// DevTools tab throws &quot;already been declared&quot; instead of re-running.
+var CONFIG = {
   // Delay for UI interactions (ms)
   actionDelay: 1500,
   
@@ -210,7 +201,7 @@ const CONFIG = {
   // DOM Selectors
   const $editProfileBtn = '[data-testid=&quot;editProfileButton&quot;]';
   const $avatarImageInput = 'input[data-testid=&quot;fileInput&quot;][accept*=&quot;image&quot;]';
-  const $addAvatarBtn = '[data-testid=&quot;addAvatarButton&quot;]';
+  const $addAvatarBtn = '[data-testid=&quot;addAvatarButton&quot;], [data-testid=&quot;editProfileAvatar&quot;]';
   const $avatarContainer = '[data-testid=&quot;UserAvatar-Container&quot;]';
   const $saveButton = '[data-testid=&quot;Profile_Save_Button&quot;]';
   

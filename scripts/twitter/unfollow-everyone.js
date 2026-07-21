@@ -28,7 +28,9 @@
  * ============================================================
  */
 
-const CONFIG = {
+// `var` (not `const`): a repeated top-level `const` paste in the same
+// DevTools tab throws "already been declared" instead of re-running.
+var CONFIG = {
   // Maximum retry attempts when no buttons found
   // 💡 Increase if you have many accounts (takes longer to scroll)
   maxRetries: 5,

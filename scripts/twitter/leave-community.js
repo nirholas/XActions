@@ -26,7 +26,9 @@
  * ============================================================
  */
 
-const CONFIG = {
+// `var` (not `const`): a repeated top-level `const` paste in the same
+// DevTools tab throws "already been declared" instead of re-running.
+var CONFIG = {
   // Community ID to leave (get from URL: x.com/i/communities/1234567890)
   // Set to null to leave the community you're currently viewing
   communityId: null,

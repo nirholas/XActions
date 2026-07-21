@@ -19,6 +19,8 @@ const SITE_URL = 'https://xactions.app';
 
 // ─── Category Mappings ─────────────────────────────────────────────
 const CATEGORIES = {
+  // Featured: the one-script launcher for everything below.
+  'xactions-command-center': { cat: 'Command Center', icon: '⚡', priority: 1.0 },
   // Unfollow
   'unfollow-everyone': { cat: 'Unfollow Tools', icon: '👋', priority: 0.8 },
   'unfollowback': { cat: 'Unfollow Tools', icon: '🧹', priority: 0.8 },
@@ -252,6 +254,12 @@ const SKIP_FILES = new Set([
   'index.js', 'build-docs-pages.js', 'build-all-docs.js', 'build-script-pages.js',
   'generate-license.js', 'generate-missing-docs.js', 'test-x402-payment.js',
   'verify-x402.js', 'script-template.js',
+  // Command Center build inputs: the shell is a source template, not a
+  // runnable script, and build-toolkit.mjs is a Node build tool.
+  '_command-center-shell.js', 'build-toolkit.mjs',
+  // Node build/utility scripts (not browser console scripts).
+  'build-sitemap.js', 'fix-doc-links.js', 'gen3.js', 'version.js',
+  'generate-seo-articles.js', 'generate-seo-articles-2.js', 'submit-to-glama.js',
 ]);
 
 const SKIP_DIRS_IN_SRC = new Set([
@@ -343,11 +351,14 @@ function parseScriptFile(filePath) {
 
   // Extract description from header comment if not found via @tag
   if (!result.description) {
-    // Try first meaningful line comment
+    // Try first meaningful line comment. Skip the copyright/license banner that
+    // `add-license-notices` prepends to every script — it is not a description.
     const descLine = lineComments.find(l =>
       l.length > 15 && !l.startsWith('==') && !l.startsWith('http') &&
       !l.startsWith('REQUIRES') && !l.startsWith('HOW TO') &&
-      !l.match(/^\d+\./) && !l.startsWith('Last Updated')
+      !l.match(/^\d+\./) && !l.startsWith('Last Updated') &&
+      !/^(copyright|spdx|licen[sc]e|all rights reserved)\b/i.test(l) &&
+      !/\ball rights reserved\b|\blicense\b/i.test(l)
     );
     if (descLine) result.description = descLine;
   }
@@ -649,6 +660,7 @@ function generateIndexPage(allPages) {
 
   // Sort categories
   const catOrder = [
+    'Command Center',
     'Unfollow Tools', 'Follower Monitoring', 'Engagement', 'Growth',
     'Scrapers', 'Content Tools', 'Posting', 'Messaging', 'Analytics',
     'Safety & Privacy', 'Account Management', 'Lists & Communities',

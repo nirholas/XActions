@@ -24,7 +24,9 @@
  * ============================================================
  */
 
-const CONFIG = {
+// `var` (not `const`): a repeated top-level `const` paste in the same
+// DevTools tab throws "already been declared" instead of re-running.
+var CONFIG = {
   // Maximum following/followers ratio allowed
   // e.g., 50 means following 5000, followers 100 = ratio 50:1 = blocked
   maxRatio: 50,

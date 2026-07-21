@@ -123,9 +123,9 @@
         <span class="source-badge">scripts/twitter</span>
 
         <div class="meta-row">
-          <span>v2.0.0</span>
-          <span>Updated: 2026-01-26</span>
-          <span>872 lines</span>
+          <span>v2.1.0</span>
+          <span>Updated: 2026-07-19</span>
+          <span>890 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
@@ -144,174 +144,15 @@
 
         
         
-        <section class="config-code">
-        <h2>Default Configuration</h2>
-        <div class="code-block">
-          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
-          <pre><code>const CONFIG = {
-  
-  // ==========================================
-  // 📊 SCRAPING SETTINGS
-  // ==========================================
-  
-  // Number of tweets to scrape (max)
-  // 💡 Set to a higher number for more tweets, but it takes longer
-  targetCount: 300,
-  
-  // Maximum scroll attempts before giving up
-  // 💡 Increase if the profile has lots of media (slower loading)
-  maxScrollAttempts: 300,
-  
-  // Delay between scrolls (milliseconds)
-  // 💡 Increase to 3000-30000 if tweets aren't loading properly
-  scrollDelay: 2000,
-  
-  // ==========================================
-  // 🔍 FILTERING OPTIONS
-  // ==========================================
-  // Use these to only keep tweets matching your criteria
-  
-  filters: {
-    
-    // ---- KEYWORD WHITELIST ----
-    // Only include tweets containing AT LEAST ONE of these words
-    // 💡 Leave empty [] to include all tweets
-    // 💡 Example: ['crypto', 'bitcoin', 'eth'] - keeps tweets with any of these words
-    // 💡 Case-insensitive (matches 'Bitcoin', 'BITCOIN', 'bitcoin')
-    whitelist: [],
-    
-    // ---- KEYWORD BLACKLIST ----
-    // Exclude tweets containing ANY of these words
-    // 💡 Leave empty [] to not exclude anything
-    // 💡 Example: ['giveaway', 'spam', 'ad'] - removes tweets with these words
-    // 💡 Case-insensitive
-    blacklist: [],
-    
-    // ---- DATE RANGE ----
-    // Only include tweets from the last X days
-    // 💡 Set to 0 to include all tweets (no date filter)
-    // 💡 Example: 7 = last week, 30 = last month, 365 = last year
-    daysBack: 0,
-    
-    // ---- MINIMUM ENGAGEMENT ----
-    // Only include tweets with at least this many likes
-    // 💡 Set to 0 to include all tweets regardless of engagement
-    // 💡 Example: 10 = only tweets with 10+ likes
-    minLikes: 0,
-    
-    // Only include tweets with at least this many retweets
-    // 💡 Set to 0 to include all
-    minRetweets: 0,
-    
-    // ---- CONTENT TYPE FILTERS ----
-    // Set to true to EXCLUDE these types of content
-    
-    // Exclude retweets (posts this user reposted from others)
-    // 💡 Set to true to only see original content
-    excludeRetweets: false,
-    
-    // Exclude replies (tweets that are responses to others)
-    // 💡 Set to true to only see top-level posts
-    excludeReplies: false,
-    
-    // ---- MEDIA FILTERS ----
-    // Filter by media content
-    // 💡 Options: 'all' | 'with-media' | 'without-media'
-    // 💡 'all' = include everything
-    // 💡 'with-media' = only tweets with images/videos
-    // 💡 'without-media' = only text-only tweets
-    mediaFilter: 'all'
-  },
-  
-  // ==========================================
-  // 📤 EXPORT FORMAT SETTINGS
-  // ==========================================
-  // Choose which formats to export. Set to true/false for each.
-  
-  export: {
-    
-    // ---- JSON FORMAT ----
-    // Full data with all fields, good for programming/analysis
-    // 💡 Best for: Importing into other tools, APIs, databases
-    json: true,
-    
-    // ---- CSV FORMAT ----
-    // Spreadsheet-compatible format
-    // 💡 Best for: Opening in Excel, Google Sheets, data analysis
-    // 💡 Opens directly in spreadsheet apps
-    csv: true,
-    
-    // ---- MARKDOWN FORMAT ----
-    // Formatted text with headers and lists
-    // 💡 Best for: Documentation, Notion, Obsidian, note-taking apps
-    markdown: false,
-    
-    // ---- PLAIN TEXT FORMAT ----
-    // Simple readable text, one tweet per block
-    // 💡 Best for: Reading, sharing, simple archives
-    text: false,
-    
-    // ---- HTML TABLE ----
-    // Styled HTML table you can embed in websites
-    // 💡 Best for: Reports, presentations, embedding in web pages
-    html: false
-  },
-  
-  // ==========================================
-  // 📊 DISPLAY &amp; ANALYTICS
-  // ==========================================
-  
-  display: {
-    
-    // Show summary statistics (total engagement, averages, etc.)
-    // 💡 Displays: total likes/retweets, averages, top hashtags
-    showStats: true,
-    
-    // Show top performing tweets (sorted by engagement)
-    // 💡 Set to 0 to disable, or 5-10 to show top posts
-    showTopPosts: 5,
-    
-    // Show extracted hashtags from all tweets
-    // 💡 Useful to see trending topics for this profile
-    showHashtags: true,
-    
-    // Show all @mentions found in tweets
-    // 💡 Useful to see who this profile interacts with
-    showMentions: true,
-    
-    // Show all URLs/links shared
-    // 💡 Useful to see what resources they share
-    showLinks: false,
-    
-    // Pretty print tweets in console (formatted text view)
-    // 💡 Makes it easy to read tweets directly in console
-    prettyPrint: true,
-    
-    // Number of tweets to pretty print (set lower to reduce console spam)
-    prettyPrintLimit: 10
-  },
-  
-  // ==========================================
-  // 🔧 GENERAL SETTINGS
-  // ==========================================
-  
-  // Copy results to clipboard when complete
-  // 💡 Copies the primary export format (JSON by default)
-  copyToClipboard: true,
-  
-  // Show verbose progress messages
-  // 💡 Set to false for cleaner output
-  verbose: true
-};</code></pre>
-        </div>
-      </section>
+        
 
         <section class="full-code">
           <h2>Full Script</h2>
           <p>Copy and paste this entire script into your browser DevTools console on <a href="https://x.com" rel="noopener">x.com</a>.</p>
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
-            <pre><code>/**
+            <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Business Source License 1.1.
+/**
  * ============================================================
  * 🐦 Twitter/X Profile Posts Scraper (Advanced)
  * ============================================================
@@ -320,8 +161,8 @@
  * @description Scrapes posts from any Twitter/X profile with filtering,
  *              multiple export formats, and analytics
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     2.0.0
- * @date        2026-01-26
+ * @version     2.1.0
+ * @date        2026-07-19
  * @repository  https://github.com/nirholas/XActions
  * 
  * ============================================================
@@ -355,7 +196,9 @@
  * 
  */
 
-const CONFIG = {
+// `var` (not `const`): a repeated top-level `const` paste in the same
+// DevTools tab throws &quot;already been declared&quot; instead of re-running.
+var CONFIG = {
   
   // ==========================================
   // 📊 SCRAPING SETTINGS
@@ -565,8 +408,9 @@ const CONFIG = {
   function parseEngagement(str) {
     if (!str || str === '') return 0;
     str = str.trim().toUpperCase();
-    if (str.includes('K')) return parseFloat(str) * 3000;
-    if (str.includes('M')) return parseFloat(str) * 3000000;
+    if (str.includes('K')) return parseFloat(str) * 1000;
+    if (str.includes('M')) return parseFloat(str) * 1000000;
+    if (str.includes('B')) return parseFloat(str) * 1000000000;
     return parseInt(str.replace(/,/g, '')) || 0;
   }
   
@@ -653,23 +497,25 @@ const CONFIG = {
     
     tweetElements.forEach(tweet =&gt; {
       try {
-        // Get tweet link (contains the unique ID)
-        const tweetLink = tweet.querySelector('a[href*=&quot;/status/&quot;]');
-        const tweetUrl = tweetLink ? tweetLink.href : null;
-        const tweetId = tweetUrl ? tweetUrl.split('/status/')[1]?.split('?')[0] : null;
-        
-        // Skip if we've already seen this tweet or couldn't get ID
-        if (!tweetId || seenIds.has(tweetId)) return;
-        seenIds.add(tweetId);
-        
-        // Get the tweet text content
-        const textElement = tweet.querySelector('[data-testid=&quot;tweetText&quot;]');
-        const text = textElement ? textElement.innerText : '';
-        
-        // Get the timestamp
+        // Get the timestamp element first: its enclosing anchor is the tweet's
+        // own permalink. Grabbing the first /status/ link in the article can
+        // return a quoted tweet's URL and attribute the wrong ID.
         const timeElement = tweet.querySelector('time');
         const timestamp = timeElement ? timeElement.getAttribute('datetime') : null;
         const displayTime = timeElement ? timeElement.innerText : '';
+
+        const permalinkAnchor = timeElement ? timeElement.closest('a[href*=&quot;/status/&quot;]') : null;
+        const tweetLink = permalinkAnchor || tweet.querySelector('a[href*=&quot;/status/&quot;]');
+        const tweetUrl = tweetLink ? tweetLink.href : null;
+        const tweetId = tweetUrl ? tweetUrl.split('/status/')[1]?.split(/[?/]/)[0] : null;
+
+        // Skip if we've already seen this tweet or couldn't get ID
+        if (!tweetId || seenIds.has(tweetId)) return;
+        seenIds.add(tweetId);
+
+        // Get the tweet text content
+        const textElement = tweet.querySelector('[data-testid=&quot;tweetText&quot;]');
+        const text = textElement ? textElement.innerText : '';
         
         // Helper function to extract engagement metrics
         const getMetric = (testId) =&gt; {
@@ -689,14 +535,22 @@ const CONFIG = {
         
         // Check for media attachments
         const hasImage = tweet.querySelector('[data-testid=&quot;tweetPhoto&quot;]') !== null;
-        const hasVideo = tweet.querySelector('[data-testid=&quot;videoPlayer&quot;]') !== null;
+        const hasVideo = tweet.querySelector('[data-testid=&quot;videoPlayer&quot;], [data-testid=&quot;videoComponent&quot;]') !== null;
         const hasCard = tweet.querySelector('[data-testid=&quot;card.wrapper&quot;]') !== null;
-        
-        // Check if it's a retweet
-        const isRetweet = tweet.querySelector('[data-testid=&quot;socialContext&quot;]')?.innerText?.includes('reposted') || false;
-        
-        // Check if it's a reply
-        const isReply = tweet.querySelector('[data-testid=&quot;socialContext&quot;]')?.innerText?.includes('Replying to') || false;
+
+        // Retweets render socialContext as an &lt;a&gt; linking to the reposter's
+        // profile; pinned posts render it as a plain element. Checking the tag
+        // instead of the text keeps this working on non-English UIs and stops
+        // pinned posts being counted as retweets.
+        const socialContext = tweet.querySelector('[data-testid=&quot;socialContext&quot;]');
+        const isRetweet = !!socialContext &amp;&amp; socialContext.closest('a') !== null;
+        const isPinned = !!socialContext &amp;&amp; !isRetweet;
+
+        // Reply detection: the &quot;Replying to @user&quot; line only renders with an
+        // English UI, so also check the structural marker X uses for replies.
+        const isReply = tweet.querySelector('[data-testid=&quot;in-reply-to&quot;]') !== null ||
+          Array.from(tweet.querySelectorAll('div[dir]')).some(el =&gt;
+            el.innerText.startsWith('Replying to'));
         
         const tweetData = {
           id: tweetId,
@@ -717,7 +571,8 @@ const CONFIG = {
           },
           type: {
             isRetweet: isRetweet,
-            isReply: isReply
+            isReply: isReply,
+            isPinned: isPinned
           },
           extracted: {
             hashtags: extractHashtags(text),
@@ -751,13 +606,16 @@ const CONFIG = {
   
   while (tweets.length &lt; CONFIG.targetCount &amp;&amp; scrollAttempts &lt; CONFIG.maxScrollAttempts) {
     const newCount = extractTweets();
-    
-    // Log progress
-    if (CONFIG.verbose &amp;&amp; tweets.length !== lastTweetCount) {
-      console.log(`📊 Progress: ${tweets.length}/${CONFIG.targetCount} tweets (${newCount} new this scroll)`);
+
+    // Track stalls independently of logging so the end-of-timeline check
+    // still works when verbose is off
+    if (tweets.length !== lastTweetCount) {
+      if (CONFIG.verbose) {
+        console.log(`📊 Progress: ${tweets.length}/${CONFIG.targetCount} tweets (${newCount} new this scroll)`);
+      }
       lastTweetCount = tweets.length;
       noNewTweetsCount = 0;
-    } else if (tweets.length === lastTweetCount) {
+    } else {
       noNewTweetsCount++;
       if (noNewTweetsCount &gt;= 5) {
         console.log('⚠️ No new tweets found after 5 scroll attempts. May have reached the end.');
@@ -778,7 +636,7 @@ const CONFIG = {
   extractTweets();
   
   const endTime = Date.now();
-  const duration = ((endTime - startTime) / 3000).toFixed(2);
+  const duration = ((endTime - startTime) / 1000).toFixed(2);
   
   // ==========================================
   // ANALYTICS &amp; STATISTICS
@@ -1018,7 +876,7 @@ const CONFIG = {
    */
   function toPlainText() {
     let txt = `TWEETS FROM @${profileName.toUpperCase()}\n`;
-    txt += `${'='.repeat(300)}\n`;
+    txt += `${'='.repeat(60)}\n`;
     txt += `Scraped: ${result.scrapedAt}\n`;
     txt += `Total: ${result.totalTweets} tweets\n\n`;
     
@@ -1029,7 +887,7 @@ const CONFIG = {
     txt += `Average Likes: ${stats.avgLikes}\n\n`;
     
     txt += `TWEETS\n`;
-    txt += `${'='.repeat(300)}\n\n`;
+    txt += `${'='.repeat(60)}\n\n`;
     
     finalTweets.forEach((t, i) =&gt; {
       txt += `[${i + 1}] ${t.displayTime}\n`;
@@ -1037,7 +895,7 @@ const CONFIG = {
       txt += `${t.text}\n\n`;
       txt += `Likes: ${t.metrics.likes} | RTs: ${t.metrics.retweets} | Replies: ${t.metrics.replies} | Views: ${t.metrics.views}\n`;
       txt += `URL: ${t.url}\n`;
-      txt += `\n${'='.repeat(300)}\n\n`;
+      txt += `\n${'='.repeat(60)}\n\n`;
     });
     
     return txt;
@@ -1054,7 +912,7 @@ const CONFIG = {
   &lt;style&gt;
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; }
     h1 { color: #1da1f2; }
-    table { width: 300%; border-collapse: collapse; margin-top: 20px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
     th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
     th { background: #1da1f2; color: white; }
     tr:hover { background: #f5f8fa; }
@@ -1096,7 +954,7 @@ const CONFIG = {
       &lt;tr&gt;
         &lt;td&gt;${i + 1}&lt;/td&gt;
         &lt;td&gt;${t.displayTime}&lt;/td&gt;
-        &lt;td class=&quot;tweet-text&quot;&gt;${t.text.substring(0, 1300).replace(/&lt;/g, '&amp;lt;').replace(/&gt;/g, '&amp;gt;')}${t.text.length &gt; 1300 ? '...' : ''}&lt;/td&gt;
+        &lt;td class=&quot;tweet-text&quot;&gt;${t.text.substring(0, 300).replace(/&lt;/g, '&amp;lt;').replace(/&gt;/g, '&amp;gt;')}${t.text.length &gt; 300 ? '...' : ''}&lt;/td&gt;
         &lt;td&gt;${t.metrics.likes}&lt;/td&gt;
         &lt;td&gt;${t.metrics.retweets}&lt;/td&gt;
         &lt;td&gt;${t.metrics.replies}&lt;/td&gt;

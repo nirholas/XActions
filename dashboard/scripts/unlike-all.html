@@ -125,7 +125,7 @@
         <div class="meta-row">
           <span>v1.0.0</span>
           <span>Updated: 2026-01-26</span>
-          <span>203 lines</span>
+          <span>212 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
@@ -179,7 +179,8 @@
           <p>Copy and paste this entire script into your browser DevTools console on <a href="https://x.com" rel="noopener">x.com</a>.</p>
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
-            <pre><code>/**
+            <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Business Source License 1.1.
+/**
  * ============================================================================
  * 💔 Unlike All Tweets - XActions
  * ============================================================================
@@ -286,6 +287,7 @@
   }
 
   console.log('🚀 Starting unlike process...');
+  console.log('💡 To stop early: window.stopUnlike()');
   console.log('');
 
   // Stats tracking
@@ -297,9 +299,14 @@
 
   let scrollAttempts = 0;
   let lastButtonCount = 0;
+  let stopped = false;
+  window.stopUnlike = () =&gt; {
+    stopped = true;
+    console.log('🛑 Stopping after the current unlike...');
+  };
 
   // Main loop
-  while (stats.unliked &lt; CONFIG.maxUnlikes) {
+  while (stats.unliked &lt; CONFIG.maxUnlikes &amp;&amp; !stopped) {
     const unlikeButtons = getUnlikeButtons();
     
     if (unlikeButtons.length === 0) {
@@ -357,6 +364,8 @@
       break;
     }
   }
+
+  delete window.stopUnlike;
 
   // ═══════════════════════════════════════════════════════════════════════════
   // 📊 COMPLETION SUMMARY

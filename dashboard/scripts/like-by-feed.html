@@ -125,7 +125,7 @@
         <div class="meta-row">
           <span>v1.0.0</span>
           <span>Updated: 2026-01-26</span>
-          <span>277 lines</span>
+          <span>300 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
@@ -182,7 +182,8 @@
           <p>Copy and paste this entire script into your browser DevTools console on <a href="https://x.com" rel="noopener">x.com</a>.</p>
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
-            <pre><code>/**
+            <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Business Source License 1.1.
+/**
  * ============================================
  * 🏠 Like By Feed - XActions
  * ============================================
@@ -249,7 +250,7 @@
     retweetIndicator: '[data-testid=&quot;socialContext&quot;]',
     replyIndicator: 'div[data-testid=&quot;Tweet-User-Avatar&quot;] + div a[href*=&quot;/status/&quot;]',
     promotedLabel: '[data-testid=&quot;placementTracking&quot;]',
-    tweetMedia: '[data-testid=&quot;tweetPhoto&quot;], [data-testid=&quot;videoPlayer&quot;]'
+    tweetMedia: '[data-testid=&quot;tweetPhoto&quot;], [data-testid=&quot;videoPlayer&quot;], [data-testid=&quot;videoComponent&quot;]'
   };
 
   // ============================================
@@ -289,6 +290,14 @@
 
   const processedTweets = new Set();
 
+  // Stop switch: run window.stopLikeByFeed() from the console to abort
+  // the loop after the tweet currently being processed.
+  let stopped = false;
+  window.stopLikeByFeed = () =&gt; {
+    stopped = true;
+    log.warning('Stop requested. Finishing the current tweet, then exiting.');
+  };
+
   console.log(`
 ╔══════════════════════════════════════════════════════════╗
 ║  🏠 LIKE BY FEED - XActions                              ║
@@ -309,25 +318,33 @@
   log.info(`Skip replies: ${CONFIG.skipReplies}`);
   log.info(`Skip ads: ${CONFIG.skipAds}`);
   log.info(`Skip retweets: ${CONFIG.skipRetweets}`);
+  log.info(`To stop early: window.stopLikeByFeed()`);
 
   let scrollAttempts = 0;
   let noNewTweetsCount = 0;
 
   const isReply = (tweet) =&gt; {
-    // Check if tweet shows &quot;Replying to&quot; text
-    const tweetContent = tweet.textContent || '';
-    return tweetContent.includes('Replying to');
+    // Structural marker first (locale-independent), then the English UI text
+    if (tweet.querySelector('[data-testid=&quot;in-reply-to&quot;]') !== null) return true;
+    return Array.from(tweet.querySelectorAll('div[dir]')).some(el =&gt;
+      el.innerText.startsWith('Replying to'));
   };
 
   const isAd = (tweet) =&gt; {
-    // Check for promoted/ad indicators
-    return tweet.querySelector(SELECTORS.promotedLabel) !== null ||
-           tweet.textContent?.includes('Promoted') ||
-           tweet.textContent?.includes('Ad');
+    // Check for promoted/ad indicators. Only match exact &quot;Ad&quot;/&quot;Promoted&quot; label
+    // spans; a substring check on the whole tweet also hits words like &quot;Advice&quot;.
+    if (tweet.querySelector(SELECTORS.promotedLabel) !== null) return true;
+    return Array.from(tweet.querySelectorAll('span')).some(el =&gt; {
+      const t = el.textContent.trim();
+      return t === 'Ad' || t === 'Promoted';
+    });
   };
 
   const isRetweet = (tweet) =&gt; {
-    return tweet.querySelector(SELECTORS.retweetIndicator) !== null;
+    // Reposts render socialContext inside an &lt;a&gt;; pinned posts render it as a
+    // plain element. Checking the tag keeps pinned posts from matching.
+    const socialContext = tweet.querySelector(SELECTORS.retweetIndicator);
+    return !!socialContext &amp;&amp; socialContext.closest('a') !== null;
   };
 
   const hasMedia = (tweet) =&gt; {
@@ -335,7 +352,13 @@
   };
 
   const getTweetIdentifier = (tweet) =&gt; {
-    // Try to get a unique identifier for the tweet
+    // Prefer the permalink around the timestamp: the first /status/ link in
+    // the article can belong to a quoted tweet and give the wrong ID
+    const timeAnchor = tweet.querySelector('time')?.closest('a[href*=&quot;/status/&quot;]');
+    if (timeAnchor) {
+      const match = timeAnchor.href.match(/\/status\/(\d+)/);
+      if (match) return match[1];
+    }
     const links = tweet.querySelectorAll('a[href*=&quot;/status/&quot;]');
     for (const link of links) {
       const match = link.href.match(/\/status\/(\d+)/);
@@ -346,12 +369,12 @@
     return text.substring(0, 100);
   };
 
-  while (stats.liked &lt; CONFIG.maxLikes &amp;&amp; scrollAttempts &lt; CONFIG.maxScrollAttempts) {
+  while (!stopped &amp;&amp; stats.liked &lt; CONFIG.maxLikes &amp;&amp; scrollAttempts &lt; CONFIG.maxScrollAttempts) {
     const tweets = document.querySelectorAll(SELECTORS.tweet);
     let foundNewTweet = false;
 
     for (const tweet of tweets) {
-      if (stats.liked &gt;= CONFIG.maxLikes) break;
+      if (stopped || stats.liked &gt;= CONFIG.maxLikes) break;
 
       const tweetId = getTweetIdentifier(tweet);
       

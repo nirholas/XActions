@@ -125,7 +125,7 @@
         <div class="meta-row">
           <span>v1.0.0</span>
           <span>Updated: 2026-01-26</span>
-          <span>267 lines</span>
+          <span>303 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
@@ -142,52 +142,15 @@
 
         
         
-        <section class="config-code">
-        <h2>Default Configuration</h2>
-        <div class="code-block">
-          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
-          <pre><code>const CONFIG = {
-  // Target locations
-  locations: [
-    { name: 'New York', query: 'near:&quot;New York&quot;' },
-    { name: 'San Francisco', query: 'near:&quot;San Francisco&quot;' },
-    // { name: 'London', query: 'near:&quot;London&quot;' },
-  ],
-  
-  // Keywords to combine with location
-  keywords: [
-    // 'coffee',
-    // 'startup',
-    // 'tech',
-  ],
-  
-  // Actions
-  actions: {
-    like: true,
-    follow: true,
-    retweet: false,
-  },
-  
-  // Limits
-  limits: {
-    likes: 15,
-    follows: 10,
-    retweets: 3,
-  },
-  
-  // Timing
-  delayBetweenActions: 2000,
-  scrollDelay: 2000,
-};</code></pre>
-        </div>
-      </section>
+        
 
         <section class="full-code">
           <h2>Full Script</h2>
           <p>Copy and paste this entire script into your browser DevTools console on <a href="https://x.com" rel="noopener">x.com</a>.</p>
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
-            <pre><code>/**
+            <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Business Source License 1.1.
+/**
  * ============================================================
  * 📍 Interact By Place/Location
  * ============================================================
@@ -223,7 +186,9 @@
  * ============================================================
  */
 
-const CONFIG = {
+// `var` (not `const`): a repeated top-level `const` paste in the same
+// DevTools tab throws &quot;already been declared&quot; instead of re-running.
+var CONFIG = {
   // Target locations
   locations: [
     { name: 'New York', query: 'near:&quot;New York&quot;' },
@@ -299,7 +264,7 @@ const CONFIG = {
     state,
     
     // Search by location
-    search: (locationName, keyword = '') =&gt; {
+    search: async (locationName, keyword = '') =&gt; {
       let location = CONFIG.locations.find(l =&gt; 
         l.name.toLowerCase() === locationName?.toLowerCase()
       );
@@ -324,26 +289,47 @@ const CONFIG = {
       }
       
       console.log(`📍 Searching: ${searchQuery}`);
-      
-      const encodedQuery = encodeURIComponent(searchQuery);
-      window.location.href = `https://x.com/search?q=${encodedQuery}&amp;src=typed_query&amp;f=live`;
+
+      // Type into X's own search box and submit through it (a real in-app
+      // search) instead of assigning location.href. Setting location.href
+      // forces a hard page reload, which wipes this injected script (window.XActions
+      // included) before interact() could ever be called on the results.
+      const input = document.querySelector(SELECTORS.searchInput);
+      if (input) {
+        const setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+        setter.call(input, searchQuery);
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        await sleep(300);
+        input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', code: 'Enter', keyCode: 13, which: 13, bubbles: true }));
+        console.log('✅ Search submitted. Once results load, run XActions.Place.interact().');
+      } else {
+        console.warn('⚠️ Search box not found on this page. Falling back to a full navigation - this reloads the page and clears the script, so paste it again once results load.');
+        const encodedQuery = encodeURIComponent(searchQuery);
+        window.location.href = `https://x.com/search?q=${encodedQuery}&amp;src=typed_query&amp;f=live`;
+      }
     },
     
     // Interact with search results
     interact: async () =&gt; {
       console.log('🚀 Starting location-based interaction...');
       state.isRunning = true;
-      
+
+      let stalledScrolls = 0;
+      let lastProcessedCount = state.processedTweets.size;
+
       while (state.isRunning &amp;&amp; state.stats.likes &lt; CONFIG.limits.likes) {
         const tweets = document.querySelectorAll(SELECTORS.tweet);
-        
+
         for (const tweet of tweets) {
           if (!state.isRunning) break;
           if (state.stats.likes &gt;= CONFIG.limits.likes) break;
-          
-          const tweetLink = tweet.querySelector('a[href*=&quot;/status/&quot;]');
+
+          // The anchor around the timestamp is the tweet's own permalink; the
+          // first /status/ link can belong to a quoted tweet
+          const timeEl = tweet.querySelector('time');
+          const tweetLink = (timeEl &amp;&amp; timeEl.closest('a[href*=&quot;/status/&quot;]')) || tweet.querySelector('a[href*=&quot;/status/&quot;]');
           const tweetId = tweetLink?.href?.match(/status\/(\d+)/)?.[1];
-          
+
           if (!tweetId || state.processedTweets.has(tweetId)) continue;
           state.processedTweets.add(tweetId);
           
@@ -390,8 +376,20 @@ const CONFIG = {
         
         window.scrollBy(0, window.innerHeight);
         await sleep(CONFIG.scrollDelay);
+
+        // End-of-results detection so the loop cannot scroll forever
+        if (state.processedTweets.size === lastProcessedCount) {
+          stalledScrolls++;
+          if (stalledScrolls &gt;= 10) {
+            console.log('⚠️ No new tweets after 10 scrolls. Stopping.');
+            break;
+          }
+        } else {
+          stalledScrolls = 0;
+          lastProcessedCount = state.processedTweets.size;
+        }
       }
-      
+
       console.log('');
       console.log('╔════════════════════════════════════════════════════════════╗');
       console.log('║  🎉 LOCATION INTERACTION COMPLETE!                         ║');
