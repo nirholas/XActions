@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Delete Tweets - XActions — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="DESTRUCTIVE: bulk-delete your own posts by age, keywords, or performance. Defaults to a safe dry run.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, delete, tweets, content tools">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Delete Tweets - XActions — XActions">
+  <meta property="og:description" content="DESTRUCTIVE: bulk-delete your own posts by age, keywords, or performance. Defaults to a safe dry run.">
+  <meta property="og:url" content="https://xactions.app/scripts/delete-tweets">
+  <meta property="og:site_name" content="XActions">
+  <meta property="og:image" content="https://xactions.app/og-image.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Delete Tweets - XActions — XActions">
+  <meta name="twitter:description" content="DESTRUCTIVE: bulk-delete your own posts by age, keywords, or performance. Defaults to a safe dry run.">
+
+  <link rel="canonical" href="https://xactions.app/scripts/delete-tweets">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Delete Tweets - XActions — Free X/Twitter Script | XActions",
+    "description": "DESTRUCTIVE: bulk-delete your own posts by age, keywords, or performance. Defaults to a safe dry run.",
+    "url": "https://xactions.app/scripts/delete-tweets",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-03-30",
+    "dateModified": "2026-03-30",
+    "articleSection": "Content Tools",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, delete, tweets, content tools"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
+      { "@type": "ListItem", "position": 3, "name": "Content Tools", "item": "https://xactions.app/scripts#content-tools" },
+      { "@type": "ListItem", "position": 4, "name": "Delete Tweets - XActions", "item": "https://xactions.app/scripts/delete-tweets" }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="/css/common.css">
+  <style>
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .meta-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; font-size: 0.8125rem; color: var(--text-secondary); }
+    .meta-row span { display: flex; align-items: center; gap: 4px; }
+    .usage-steps { margin-left: 24px; margin-bottom: 16px; }
+    .usage-steps li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 8px; padding-left: 4px; }
+    .warning-box { background: rgba(244, 33, 46, 0.1); border: 1px solid var(--error); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .warning-box p { color: var(--error); margin: 0; font-size: 0.875rem; }
+    .controls-box { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .controls-box h3 { margin: 0 0 8px; font-size: 1rem; }
+    .code-block { position: relative; }
+    .copy-btn { position: absolute; top: 8px; right: 8px; background: var(--bg-tertiary); color: var(--text-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: 0.75rem; z-index: 10; transition: all .2s; }
+    .copy-btn:hover { background: var(--accent); color: #fff; }
+    .full-code { margin-top: 32px; }
+    .full-code pre { max-height: 600px; overflow-y: auto; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .source-badge { display: inline-block; background: var(--bg-tertiary); color: var(--text-secondary); padding: 2px 8px; border-radius: 6px; font-size: 0.6875rem; margin-left: 8px; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .article pre { font-size: 0.75rem; }
+      .meta-row { flex-direction: column; gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
+  <div class="layout">
+    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <script src="/js/sidebar.js"></script>
+
+    <main class="main-content" id="main-content">
+      <header class="main-header">
+        <h1>🗑️ Delete Tweets - XActions</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#content-tools">Content Tools</a> › Delete Tweets - XActions
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Content Tools</span>
+        <span class="source-badge">scripts/twitter</span>
+
+        <div class="meta-row">
+          <span>v1.0.0</span>
+          <span>Updated: 2026-07-20</span>
+          <span>378 lines</span>
+          <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
+        </div>
+
+        <p>DESTRUCTIVE: bulk-delete your own posts by age, keywords, or performance. Defaults to a safe dry run.</p>
+
+        
+
+        <h2>How to Use</h2>
+        <ol class="usage-steps"><li>Go to YOUR OWN profile page (x.com/YOUR_USERNAME)</li>
+<li>Open the browser console (F12 or Cmd+Option+I -&gt; Console)</li>
+<li>(Optional) edit the CONFIG options at the top of the script</li>
+<li>Paste this entire script and press Enter. It starts in DRY RUN and</li></ol>
+        
+
+        
+        
+        <section class="config-code">
+        <h2>Default Configuration</h2>
+        <div class="code-block">
+          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
+          <pre><code>const CONFIG = {
+    // 🔒 SAFETY: true = preview only (logs what WOULD be deleted, deletes nothing).
+    // You MUST set this to false yourself to actually delete. Keep it true first.
+    dryRun: true,
+
+    // Only delete posts older than this many days. 0 = any age.
+    olderThanDays: 0,
+
+    // Only delete posts whose text contains AT LEAST ONE of these
+    // (case-insensitive). Empty array = ignore keywords (matches all).
+    containingKeywords: [],
+
+    // Protect high performers: skip any post with at least this many likes.
+    // Set to a high number to keep your best posts. 0 = delete regardless.
+    minLikesToKeep: 0,
+
+    // Maximum number of posts to delete this run
+    maxDeletes: 25,
+
+    // Minimum delay between deletions (ms)
+    minDelay: 1500,
+
+    // Maximum delay between deletions (ms)
+    maxDelay: 4000,
+
+    // Maximum scroll attempts to load more posts
+    maxScrollAttempts: 60,
+
+    // Stop if no new posts appear after this many consecutive scrolls
+    noNewPostsThreshold: 5
+  };</code></pre>
+        </div>
+      </section>
+
+        <section class="full-code">
+          <h2>Full Script</h2>
+          <p>Copy and paste this entire script into your browser DevTools console on <a href="https://x.com" rel="noopener">x.com</a>.</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
+            <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * ============================================
+ * 🗑️ Delete Tweets - XActions
+ * ============================================
+ *
+ * @name         delete-tweets
+ * @description  DESTRUCTIVE: bulk-delete your own posts by age, keywords, or performance. Defaults to a safe dry run.
+ * @author       nichxbt
+ * @version      1.0.0
+ * @date         2026-07-20
+ * @website      https://xactions.app
+ *
+ * Usage:
+ *   1. Go to YOUR OWN profile page (x.com/YOUR_USERNAME)
+ *   2. Open the browser console (F12 or Cmd+Option+I -&gt; Console)
+ *   3. (Optional) edit the CONFIG options at the top of the script
+ *   4. Paste this entire script and press Enter. It starts in DRY RUN and
+ *      only LOGS what it would delete. Nothing is removed until you set
+ *      CONFIG.dryRun = false and run it again.
+ *
+ * Example:
+ *   olderThanDays: 365, minLikesToKeep: 25, maxDeletes: 50, dryRun: true.
+ *   First run: lists up to 50 of your posts older than a year that have fewer
+ *   than 25 likes, deleting nothing. Review the list, then set dryRun: false
+ *   and re-run to permanently delete them. Deleted posts cannot be recovered.
+ *   Run window.stopDeleteTweets() to halt after the current post.
+ *
+ * ============================================
+ */
+
+(async function deleteTweets() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // 🔒 SAFETY: true = preview only (logs what WOULD be deleted, deletes nothing).
+    // You MUST set this to false yourself to actually delete. Keep it true first.
+    dryRun: true,
+
+    // Only delete posts older than this many days. 0 = any age.
+    olderThanDays: 0,
+
+    // Only delete posts whose text contains AT LEAST ONE of these
+    // (case-insensitive). Empty array = ignore keywords (matches all).
+    containingKeywords: [],
+
+    // Protect high performers: skip any post with at least this many likes.
+    // Set to a high number to keep your best posts. 0 = delete regardless.
+    minLikesToKeep: 0,
+
+    // Maximum number of posts to delete this run
+    maxDeletes: 25,
+
+    // Minimum delay between deletions (ms)
+    minDelay: 1500,
+
+    // Maximum delay between deletions (ms)
+    maxDelay: 4000,
+
+    // Maximum scroll attempts to load more posts
+    maxScrollAttempts: 60,
+
+    // Stop if no new posts appear after this many consecutive scrolls
+    noNewPostsThreshold: 5
+  };
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    tweet: 'article[data-testid=&quot;tweet&quot;]',
+    tweetText: '[data-testid=&quot;tweetText&quot;]',
+    caret: '[data-testid=&quot;caret&quot;]',
+    likeButton: '[data-testid=&quot;like&quot;], [data-testid=&quot;unlike&quot;]',
+    socialContext: '[data-testid=&quot;socialContext&quot;]',
+    confirm: '[data-testid=&quot;confirmationSheetConfirm&quot;]',
+    menuItem: '[role=&quot;menuitem&quot;]'
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+
+  const randomDelay = () =&gt; {
+    const delay = Math.floor(Math.random() * (CONFIG.maxDelay - CONFIG.minDelay + 1)) + CONFIG.minDelay;
+    return sleep(delay);
+  };
+
+  const scrollDown = () =&gt; window.scrollTo(0, document.body.scrollHeight);
+
+  const log = {
+    info: (msg) =&gt; console.log(`ℹ️ ${msg}`),
+    success: (msg) =&gt; console.log(`✅ ${msg}`),
+    warning: (msg) =&gt; console.log(`⚠️ ${msg}`),
+    error: (msg) =&gt; console.log(`❌ ${msg}`),
+    progress: (current, total) =&gt; console.log(`📊 Progress: ${current}/${total} processed`)
+  };
+
+  const parseCount = (str) =&gt; {
+    if (!str) return 0;
+    const m = str.replace(/,/g, '').match(/([\d.]+)\s*([KMB])?/i);
+    if (!m) return 0;
+    let n = parseFloat(m[1]);
+    if (m[2]) n *= { K: 1e3, M: 1e6, B: 1e9 }[m[2].toUpperCase()] || 1;
+    return Math.round(n);
+  };
+
+  const download = (data, filename) =&gt; {
+    try {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      log.info(`Saved a log of this run: ${filename}`);
+    } catch (e) {
+      log.warning(`Could not save the run log: ${e.message}`);
+    }
+  };
+
+  const getTweetId = (tweet) =&gt; {
+    const timeAnchor = tweet.querySelector('time')?.closest('a[href*=&quot;/status/&quot;]');
+    if (timeAnchor) {
+      const match = timeAnchor.href.match(/\/status\/(\d+)/);
+      if (match) return match[1];
+    }
+    const link = tweet.querySelector('a[href*=&quot;/status/&quot;]');
+    const m = link?.getAttribute('href')?.match(/\/status\/(\d+)/);
+    return m ? m[1] : null;
+  };
+
+  const getLikes = (tweet) =&gt; {
+    const el = tweet.querySelector(SELECTORS.likeButton);
+    return parseCount(el?.getAttribute('aria-label') || '0');
+  };
+
+  const getTimestamp = (tweet) =&gt; tweet.querySelector('time')?.getAttribute('datetime') || '';
+
+  const isPinned = (tweet) =&gt; /pinned/i.test(tweet.querySelector(SELECTORS.socialContext)?.textContent || '');
+  const isRepost = (tweet) =&gt; /reposted/i.test(tweet.querySelector(SELECTORS.socialContext)?.textContent || '');
+
+  // ============================================
+  // 🎯 MAIN LOGIC
+  // ============================================
+  const stats = {
+    deleted: 0,
+    wouldDelete: 0,
+    skippedTooNew: 0,
+    skippedNoKeyword: 0,
+    skippedHighPerformer: 0,
+    skippedNotYours: 0,
+    skippedPinned: 0,
+    errors: 0
+  };
+
+  const processed = new Set();
+  const deleteLog = [];
+
+  // Stop switch: run window.stopDeleteTweets() to abort after the current post.
+  let stopped = false;
+  window.stopDeleteTweets = () =&gt; {
+    stopped = true;
+    log.warning('Stop requested. Finishing the current post, then exiting.');
+  };
+
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  🗑️  DELETE TWEETS - XActions                            ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  // Page guard: must be on the user's own profile (a /&lt;handle&gt; path, not a
+  // reserved section). Warn, do not redirect.
+  const pathMatch = window.location.pathname.match(/^\/([A-Za-z0-9_]{1,15})\/?$/);
+  const reserved = ['home', 'explore', 'notifications', 'messages', 'i', 'search', 'settings', 'compose', 'hashtag'];
+  if (!pathMatch || reserved.includes(pathMatch[1].toLowerCase())) {
+    log.warning('Go to YOUR OWN profile page first (x.com/YOUR_USERNAME), then run this again.');
+    return;
+  }
+  const profileUser = pathMatch[1];
+  log.info(`Profile: @${profileUser}`);
+
+  // Loud destructive warning.
+  if (CONFIG.dryRun) {
+    console.log('%c🔍 DRY RUN - preview only. NOTHING will be deleted.', 'color:#1d9bf0;font-weight:bold;font-size:14px');
+    console.log('%c   To actually delete, set CONFIG.dryRun = false and run again.', 'color:#1d9bf0');
+  } else {
+    console.log('%c⚠️⚠️⚠️ LIVE MODE - posts WILL be PERMANENTLY DELETED. This CANNOT be undone. ⚠️⚠️⚠️', 'color:#f4212e;font-weight:bold;font-size:15px');
+  }
+
+  const cutoff = CONFIG.olderThanDays &gt; 0 ? new Date(Date.now() - CONFIG.olderThanDays * 86400000) : null;
+  log.info(`Max deletes: ${CONFIG.maxDeletes} | Older than: ${CONFIG.olderThanDays || 'any'} days | Keep &gt;= ${CONFIG.minLikesToKeep} likes`);
+  log.info(`Keywords: ${CONFIG.containingKeywords.length ? CONFIG.containingKeywords.join(', ') : 'none (matches all)'}`);
+  log.info('To stop early: window.stopDeleteTweets()');
+
+  if (document.querySelector(SELECTORS.tweet) === null) {
+    log.warning('No posts visible yet. Wait for your profile to load, then re-run.');
+    return;
+  }
+
+  let scrollAttempts = 0;
+  let noNewPostsCount = 0;
+
+  while (!stopped &amp;&amp; stats.deleted &lt; CONFIG.maxDeletes &amp;&amp; stats.wouldDelete &lt; CONFIG.maxDeletes &amp;&amp; scrollAttempts &lt; CONFIG.maxScrollAttempts) {
+    const tweets = document.querySelectorAll(SELECTORS.tweet);
+    let foundNewPost = false;
+
+    for (const tweet of tweets) {
+      if (stopped) break;
+      if (CONFIG.dryRun ? stats.wouldDelete &gt;= CONFIG.maxDeletes : stats.deleted &gt;= CONFIG.maxDeletes) break;
+
+      const tweetId = getTweetId(tweet);
+      if (!tweetId || processed.has(tweetId)) continue;
+      processed.add(tweetId);
+      foundNewPost = true;
+
+      try {
+        if (isPinned(tweet)) {
+          stats.skippedPinned++;
+          continue;
+        }
+
+        // Ownership: a repost by you counts; otherwise the author link must be you.
+        const repost = isRepost(tweet);
+        const ownAuthorLink = tweet.querySelector(`a[href=&quot;/${profileUser}&quot; i]`);
+        if (!repost &amp;&amp; !ownAuthorLink) {
+          stats.skippedNotYours++;
+          continue;
+        }
+
+        const text = tweet.querySelector(SELECTORS.tweetText)?.textContent || '';
+        const timestamp = getTimestamp(tweet);
+        const likes = getLikes(tweet);
+
+        // Filter: age
+        if (cutoff &amp;&amp; timestamp &amp;&amp; new Date(timestamp) &gt; cutoff) {
+          stats.skippedTooNew++;
+          continue;
+        }
+
+        // Filter: keywords
+        if (CONFIG.containingKeywords.length &gt; 0) {
+          const lower = text.toLowerCase();
+          if (!CONFIG.containingKeywords.some(kw =&gt; lower.includes(kw.toLowerCase()))) {
+            stats.skippedNoKeyword++;
+            continue;
+          }
+        }
+
+        // Filter: protect high performers
+        if (CONFIG.minLikesToKeep &gt; 0 &amp;&amp; likes &gt;= CONFIG.minLikesToKeep) {
+          stats.skippedHighPerformer++;
+          continue;
+        }
+
+        const preview = text.slice(0, 60).replace(/\n/g, ' ') || (repost ? '(repost)' : '(no text)');
+
+        if (CONFIG.dryRun) {
+          stats.wouldDelete++;
+          deleteLog.push({ tweetId, text: text.slice(0, 200), likes, timestamp, repost, dryRun: true });
+          console.log(`🔍 [DRY] Would delete #${stats.wouldDelete}: &quot;${preview}...&quot; (❤️ ${likes})`);
+          continue;
+        }
+
+        // LIVE deletion via the post's overflow (caret) menu.
+        const caret = tweet.querySelector(SELECTORS.caret);
+        if (!caret) continue;
+
+        caret.scrollIntoView({ block: 'center' });
+        await sleep(300);
+        caret.click();
+        await sleep(800);
+
+        const menuItems = document.querySelectorAll(SELECTORS.menuItem);
+        let actionBtn = null;
+        for (const item of menuItems) {
+          if (/delete/i.test(item.textContent) || /undo repost/i.test(item.textContent)) {
+            actionBtn = item;
+            break;
+          }
+        }
+
+        if (!actionBtn) {
+          document.body.click();
+          await sleep(300);
+          continue;
+        }
+
+        const wasRepost = /undo repost/i.test(actionBtn.textContent);
+        actionBtn.click();
+        await sleep(800);
+
+        // Deleting an original post asks for confirmation; undo-repost is instant.
+        if (!wasRepost) {
+          const confirm = document.querySelector(SELECTORS.confirm);
+          if (!confirm) {
+            document.body.click();
+            await sleep(400);
+            continue;
+          }
+          confirm.click();
+        }
+
+        stats.deleted++;
+        deleteLog.push({ tweetId, text: text.slice(0, 200), likes, timestamp, repost: wasRepost });
+        log.success(`Deleted #${stats.deleted}: &quot;${preview}...&quot; (❤️ ${likes})`);
+        log.progress(stats.deleted, CONFIG.maxDeletes);
+        await randomDelay();
+      } catch (error) {
+        log.error(`Error processing post: ${error.message}`);
+        stats.errors++;
+        document.body.click();
+        await sleep(800);
+      }
+    }
+
+    if (!foundNewPost) {
+      noNewPostsCount++;
+      if (noNewPostsCount &gt;= CONFIG.noNewPostsThreshold) {
+        log.warning('No new posts found after multiple scrolls. Stopping.');
+        break;
+      }
+    } else {
+      noNewPostsCount = 0;
+    }
+
+    scrollDown();
+    scrollAttempts++;
+    log.info(`Scrolling for more posts... (attempt ${scrollAttempts}/${CONFIG.maxScrollAttempts})`);
+    await sleep(2000);
+  }
+
+  // ============================================
+  // 📊 SUMMARY
+  // ============================================
+  const totalSkipped = stats.skippedTooNew + stats.skippedNoKeyword + stats.skippedHighPerformer + stats.skippedNotYours + stats.skippedPinned;
+
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 DELETE TWEETS - COMPLETE                             ║
+╠══════════════════════════════════════════════════════════╣
+║  🗑️  Deleted:             ${String(stats.deleted).padEnd(29)}║
+║  🔍 Would Delete (dry):   ${String(stats.wouldDelete).padEnd(29)}║
+║  ⏭️  Total Skipped:       ${String(totalSkipped).padEnd(29)}║
+║     └─ Too New:           ${String(stats.skippedTooNew).padEnd(29)}║
+║     └─ No Keyword:        ${String(stats.skippedNoKeyword).padEnd(29)}║
+║     └─ High Performer:    ${String(stats.skippedHighPerformer).padEnd(29)}║
+║     └─ Not Yours:         ${String(stats.skippedNotYours).padEnd(29)}║
+║     └─ Pinned:            ${String(stats.skippedPinned).padEnd(29)}║
+║  ❌ Errors:               ${String(stats.errors).padEnd(29)}║
+║  📜 Scroll Attempts:      ${String(scrollAttempts).padEnd(29)}║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  if (deleteLog.length &gt; 0) {
+    download(
+      { profile: profileUser, stats, dryRun: CONFIG.dryRun, tweets: deleteLog },
+      `xactions-delete-tweets-${new Date().toISOString().slice(0, 10)}.json`
+    );
+  }
+
+  if (CONFIG.dryRun &amp;&amp; stats.wouldDelete &gt; 0) {
+    console.log(`%c⚡ Reviewed ${stats.wouldDelete} post(s). Set CONFIG.dryRun = false and re-run to PERMANENTLY delete them.`, 'color:#f4212e;font-weight:bold');
+  } else if (CONFIG.dryRun) {
+    log.info('Nothing matched your filters. Loosen olderThanDays / keywords / minLikesToKeep.');
+  }
+  log.success('Script completed! by nichxbt');
+
+  return stats;
+})();
+</code></pre>
+          </div>
+        </section>
+
+        <div class="cta-box">
+          <h3>⚡ More XActions Scripts</h3>
+          <p>Browse 300+ free browser scripts for X/Twitter automation. No API keys, no fees.</p>
+          <a href="/scripts">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>🗑️ Content Tools</h3>
+        <a href="/scripts/bookmark-exporter">📚 Bookmark Exporter</a>
+<a href="/scripts/bookmark-manager">📚 Bookmark Manager - Save</a>
+<a href="/scripts/bookmark-organizer">📂 Bookmark Organizer</a>
+<a href="/scripts/bulk-delete-tweets">🗑️ Bulk Delete Tweets</a>
+<a href="/scripts/clear-all-bookmarks">🗑️ Clear All Bookmarks</a>
+<a href="/scripts/clear-all-likes">🗑️ Clear All Likes</a>
+<a href="/scripts/clear-all-reposts">🗑️ Clear All Reposts</a>
+<a href="/scripts/clear-all-retweets">🗑️ Clear All Retweets</a>
+<a href="/scripts/content-repurposer">♻️ Content Repurposer</a>
+<a href="/scripts/manage-bookmarks">📑 Manage Bookmarks</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/scripts">All Scripts</a>
+        <a href="/features">Features</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+</body>
+</html>

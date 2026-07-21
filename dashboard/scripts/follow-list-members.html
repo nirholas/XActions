@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Follow List Members - XActions — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Follow every member of a Twitter List, skipping accounts you already follow, rate-limited.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, follow, list, members, lists &amp; communities">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Follow List Members - XActions — XActions">
+  <meta property="og:description" content="Follow every member of a Twitter List, skipping accounts you already follow, rate-limited.">
+  <meta property="og:url" content="https://xactions.app/scripts/follow-list-members">
+  <meta property="og:site_name" content="XActions">
+  <meta property="og:image" content="https://xactions.app/og-image.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Follow List Members - XActions — XActions">
+  <meta name="twitter:description" content="Follow every member of a Twitter List, skipping accounts you already follow, rate-limited.">
+
+  <link rel="canonical" href="https://xactions.app/scripts/follow-list-members">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Follow List Members - XActions — Free X/Twitter Script | XActions",
+    "description": "Follow every member of a Twitter List, skipping accounts you already follow, rate-limited.",
+    "url": "https://xactions.app/scripts/follow-list-members",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-03-30",
+    "dateModified": "2026-03-30",
+    "articleSection": "Lists & Communities",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, follow, list, members, lists & communities"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
+      { "@type": "ListItem", "position": 3, "name": "Lists & Communities", "item": "https://xactions.app/scripts#lists-communities" },
+      { "@type": "ListItem", "position": 4, "name": "Follow List Members - XActions", "item": "https://xactions.app/scripts/follow-list-members" }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="/css/common.css">
+  <style>
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .meta-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; font-size: 0.8125rem; color: var(--text-secondary); }
+    .meta-row span { display: flex; align-items: center; gap: 4px; }
+    .usage-steps { margin-left: 24px; margin-bottom: 16px; }
+    .usage-steps li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 8px; padding-left: 4px; }
+    .warning-box { background: rgba(244, 33, 46, 0.1); border: 1px solid var(--error); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .warning-box p { color: var(--error); margin: 0; font-size: 0.875rem; }
+    .controls-box { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .controls-box h3 { margin: 0 0 8px; font-size: 1rem; }
+    .code-block { position: relative; }
+    .copy-btn { position: absolute; top: 8px; right: 8px; background: var(--bg-tertiary); color: var(--text-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: 0.75rem; z-index: 10; transition: all .2s; }
+    .copy-btn:hover { background: var(--accent); color: #fff; }
+    .full-code { margin-top: 32px; }
+    .full-code pre { max-height: 600px; overflow-y: auto; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .source-badge { display: inline-block; background: var(--bg-tertiary); color: var(--text-secondary); padding: 2px 8px; border-radius: 6px; font-size: 0.6875rem; margin-left: 8px; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .article pre { font-size: 0.75rem; }
+      .meta-row { flex-direction: column; gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
+  <div class="layout">
+    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <script src="/js/sidebar.js"></script>
+
+    <main class="main-content" id="main-content">
+      <header class="main-header">
+        <h1>👣 Follow List Members - XActions</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#lists-communities">Lists &amp; Communities</a> › Follow List Members - XActions
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Lists &amp; Communities</span>
+        <span class="source-badge">scripts/twitter</span>
+
+        <div class="meta-row">
+          <span>v1.0.0</span>
+          <span>Updated: 2026-07-20</span>
+          <span>217 lines</span>
+          <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
+        </div>
+
+        <p>Follow every member of a Twitter List, skipping accounts you already follow, rate-limited.</p>
+
+        
+
+        <h2>How to Use</h2>
+        <ol class="usage-steps"><li>Open a List's members page: https://x.com/i/lists/&lt;list-id&gt;/members</li>
+<li>Open the browser console (F12 or Cmd+Option+I -&gt; Console)</li>
+<li>(Optional) edit the CONFIG options at the top of the script</li>
+<li>Paste this entire script and press Enter</li></ol>
+        
+
+        
+        
+        <section class="config-code">
+        <h2>Default Configuration</h2>
+        <div class="code-block">
+          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
+          <pre><code>const CONFIG = {
+    // Maximum number of members to follow this run
+    maxFollows: 50,
+
+    // Maximum scroll attempts before giving up
+    maxScrollAttempts: 100,
+
+    // Stop after this many scrolls with no new members (end of list)
+    noNewThreshold: 5,
+
+    // Skip verified accounts
+    skipVerified: false,
+
+    // Skip protected (private) accounts
+    skipProtected: false,
+
+    // Rate limiting between follows (randomized between min and max, ms)
+    minDelay: 2000,
+    maxDelay: 5000,
+
+    // Delay between scrolls (ms)
+    scrollDelay: 2000
+  };</code></pre>
+        </div>
+      </section>
+
+        <section class="full-code">
+          <h2>Full Script</h2>
+          <p>Copy and paste this entire script into your browser DevTools console on <a href="https://x.com" rel="noopener">x.com</a>.</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
+            <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * ============================================
+ * 👥 Follow List Members - XActions
+ * ============================================
+ *
+ * @name         follow-list-members
+ * @description  Follow every member of a Twitter List, skipping accounts you already follow, rate-limited.
+ * @author       nichxbt
+ * @version      1.0.0
+ * @date         2026-07-20
+ * @website      https://xactions.app
+ *
+ * Usage:
+ *   1. Open a List's members page: https://x.com/i/lists/&lt;list-id&gt;/members
+ *      (from a list, tap the member count, or add /members to the list URL)
+ *   2. Open the browser console (F12 or Cmd+Option+I -&gt; Console)
+ *   3. (Optional) edit the CONFIG options at the top of the script
+ *   4. Paste this entire script and press Enter
+ *
+ * Example:
+ *   With maxFollows: 50 and skipVerified: false, paste on a members page and the
+ *   script scrolls the member cells, clicks Follow on each account you are not
+ *   already following, and pauses 2-5s between follows, stopping at 50.
+ *   To stop early, run window.stopFollowListMembers() in the console.
+ *
+ * ============================================
+ */
+
+(async function followListMembers() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // Maximum number of members to follow this run
+    maxFollows: 50,
+
+    // Maximum scroll attempts before giving up
+    maxScrollAttempts: 100,
+
+    // Stop after this many scrolls with no new members (end of list)
+    noNewThreshold: 5,
+
+    // Skip verified accounts
+    skipVerified: false,
+
+    // Skip protected (private) accounts
+    skipProtected: false,
+
+    // Rate limiting between follows (randomized between min and max, ms)
+    minDelay: 2000,
+    maxDelay: 5000,
+
+    // Delay between scrolls (ms)
+    scrollDelay: 2000
+  };
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    userCell: '[data-testid=&quot;UserCell&quot;]',
+    // Follow button ends with -follow (id contains the user id); unfollow ends with -unfollow
+    followButton: '[data-testid$=&quot;-follow&quot;]',
+    unfollowButton: '[data-testid$=&quot;-unfollow&quot;]',
+    verifiedBadge: '[data-testid=&quot;icon-verified&quot;]',
+    protectedIcon: '[data-testid=&quot;icon-lock&quot;]',
+    profileLink: 'a[href^=&quot;/&quot;]'
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+  const randomDelay = () =&gt; Math.floor(Math.random() * (CONFIG.maxDelay - CONFIG.minDelay) + CONFIG.minDelay);
+
+  const log = {
+    info: (msg) =&gt; console.log(`ℹ️ ${msg}`),
+    success: (msg) =&gt; console.log(`✅ ${msg}`),
+    warning: (msg) =&gt; console.log(`⚠️ ${msg}`),
+    error: (msg) =&gt; console.log(`❌ ${msg}`)
+  };
+
+  const handleFromCell = (cell) =&gt; {
+    const link = cell.querySelector(SELECTORS.profileLink);
+    if (!link) return '';
+    const href = link.getAttribute('href') || '';
+    const m = href.match(/^\/([A-Za-z0-9_]{1,15})$/);
+    return m ? m[1] : '';
+  };
+
+  // ============================================
+  // 🎯 MAIN
+  // ============================================
+  let stopped = false;
+  window.stopFollowListMembers = () =&gt; {
+    stopped = true;
+    log.warning('Stop requested. Finishing the current member, then exiting.');
+  };
+
+  const stats = {
+    followed: 0,
+    alreadyFollowing: 0,
+    skippedVerified: 0,
+    skippedProtected: 0,
+    errors: 0
+  };
+
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  👥 FOLLOW LIST MEMBERS - XActions                       ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  // Page guard: must be on a list members page
+  if (!/\/lists\/[^/]+\/members/.test(window.location.pathname)) {
+    log.warning('You are not on a List members page.');
+    log.info('Open https://x.com/i/lists/&lt;list-id&gt;/members (or add /members to a list URL), then rerun.');
+    return;
+  }
+
+  log.info(`Max follows: ${CONFIG.maxFollows}`);
+  log.info(`Skip verified: ${CONFIG.skipVerified}, skip protected: ${CONFIG.skipProtected}`);
+  log.info('To stop early: window.stopFollowListMembers()');
+  console.log('');
+
+  const processed = new Set();
+  let scrollAttempts = 0;
+  let noNewCount = 0;
+
+  while (!stopped &amp;&amp; stats.followed &lt; CONFIG.maxFollows &amp;&amp; scrollAttempts &lt; CONFIG.maxScrollAttempts) {
+    const cells = document.querySelectorAll(SELECTORS.userCell);
+    let foundNew = false;
+
+    for (const cell of cells) {
+      if (stopped || stats.followed &gt;= CONFIG.maxFollows) break;
+
+      const handle = handleFromCell(cell);
+      const key = handle || (cell.textContent || '').slice(0, 40);
+      if (processed.has(key)) continue;
+      processed.add(key);
+      foundNew = true;
+
+      try {
+        // Already following? The cell shows an unfollow-style button.
+        if (cell.querySelector(SELECTORS.unfollowButton)) {
+          stats.alreadyFollowing++;
+          continue;
+        }
+
+        if (CONFIG.skipVerified &amp;&amp; cell.querySelector(SELECTORS.verifiedBadge)) {
+          stats.skippedVerified++;
+          continue;
+        }
+
+        if (CONFIG.skipProtected &amp;&amp; cell.querySelector(SELECTORS.protectedIcon)) {
+          stats.skippedProtected++;
+          continue;
+        }
+
+        const followBtn = cell.querySelector(SELECTORS.followButton);
+        if (!followBtn) continue;
+
+        cell.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        await sleep(400);
+        followBtn.click();
+        stats.followed++;
+        log.success(`Followed #${stats.followed}: @${handle || 'unknown'}`);
+
+        await sleep(randomDelay());
+      } catch (e) {
+        stats.errors++;
+        log.error(`Error following @${handle || 'unknown'}: ${e.message}`);
+      }
+    }
+
+    if (!foundNew) {
+      noNewCount++;
+      if (noNewCount &gt;= CONFIG.noNewThreshold) {
+        log.warning('No new members after several scrolls. Reached the end of the list.');
+        break;
+      }
+    } else {
+      noNewCount = 0;
+    }
+
+    window.scrollTo(0, document.body.scrollHeight);
+    await sleep(CONFIG.scrollDelay);
+    scrollAttempts++;
+  }
+
+  // ============================================
+  // 📊 SUMMARY
+  // ============================================
+  console.log('');
+  console.log('╔══════════════════════════════════════════════════════════╗');
+  console.log('║  📊 FOLLOW LIST MEMBERS - COMPLETE                       ║');
+  console.log('╚══════════════════════════════════════════════════════════╝');
+  console.log(`   ✅ Followed:          ${stats.followed}`);
+  console.log(`   💚 Already following: ${stats.alreadyFollowing}`);
+  console.log(`   ⏭️  Skipped verified:  ${stats.skippedVerified}`);
+  console.log(`   🔒 Skipped protected: ${stats.skippedProtected}`);
+  console.log(`   ❌ Errors:            ${stats.errors}`);
+  console.log(`   📜 Scroll attempts:   ${scrollAttempts}`);
+
+  if (stats.followed === 0 &amp;&amp; stats.alreadyFollowing === 0) {
+    log.warning('No member cells were processed. The list may be empty or still loading.');
+  }
+
+  console.log('✅ Script completed! by nichxbt');
+  return stats;
+})();
+</code></pre>
+          </div>
+        </section>
+
+        <div class="cta-box">
+          <h3>⚡ More XActions Scripts</h3>
+          <p>Browse 300+ free browser scripts for X/Twitter automation. No API keys, no fees.</p>
+          <a href="/scripts">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>👣 Lists &amp; Communities</h3>
+        <a href="/scripts/add-to-list">➕ Add To List - XActions</a>
+<a href="/scripts/advanced-lists">📝 Advanced Lists</a>
+<a href="/scripts/block-list-manager">📝 Block List Manager</a>
+<a href="/scripts/create-community">🏘️ Create Communities</a>
+<a href="/scripts/join-communities">🏘️ Join Communities</a>
+<a href="/scripts/leave-all-communities">🚪 Leave All Communities</a>
+<a href="/scripts/leave-community">🚪 Leave Specific Community</a>
+<a href="/scripts/list-manager">📝 List Manager</a>
+<a href="/scripts/manage-community">🏘️ Manage Communities</a>
+<a href="/scripts/manage-lists">📝 Manage Lists</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/scripts">All Scripts</a>
+        <a href="/features">Features</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+</body>
+</html>

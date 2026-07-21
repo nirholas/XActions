@@ -16,6 +16,14 @@
     "sourceDir": "src"
   },
   {
+    "slug": "account-settings",
+    "title": "Account Settings - XActions",
+    "description": "Toggle common X privacy and safety settings (protect posts, DMs, tagging, discoverability) from one script.",
+    "category": "Account Management",
+    "icon": "⚙️",
+    "sourceDir": "scripts/twitter"
+  },
+  {
     "slug": "actions",
     "title": "Actions",
     "description": "XActions Actions Library - Complete X/Twitter Actions",
@@ -30,6 +38,14 @@
     "category": "Other Tools",
     "icon": "⚡",
     "sourceDir": "src"
+  },
+  {
+    "slug": "add-to-list",
+    "title": "Add To List - XActions",
+    "description": "Add a batch of users to one of your Twitter Lists via the list's \"Manage members\" search, rate-limited.",
+    "category": "Lists & Communities",
+    "icon": "➕",
+    "sourceDir": "scripts/twitter"
   },
   {
     "slug": "ads-manager",
@@ -160,6 +176,22 @@
     "sourceDir": "src/automation"
   },
   {
+    "slug": "auto-reply-dms",
+    "title": "Auto Reply DMs - XActions",
+    "description": "Auto-reply to unread DM conversations with a single message template.",
+    "category": "Messaging",
+    "icon": "💌",
+    "sourceDir": "scripts/twitter"
+  },
+  {
+    "slug": "auto-reply-mentions",
+    "title": "Auto Reply Mentions - XActions",
+    "description": "Reply to your recent mentions with rotating templates so no @ goes unanswered.",
+    "category": "Engagement",
+    "icon": "📨",
+    "sourceDir": "scripts/twitter"
+  },
+  {
     "slug": "auto-repost",
     "title": "Auto Repost",
     "description": "Auto Repost (Retweet) on X - by nichxbt",
@@ -240,6 +272,14 @@
     "sourceDir": "src"
   },
   {
+    "slug": "block-list-transfer",
+    "title": "Block List Transfer - XActions",
+    "description": "Export your block list to JSON, import and block a list of users, or block-chain an account's followers.",
+    "category": "Safety & Privacy",
+    "icon": "🧱",
+    "sourceDir": "scripts/twitter"
+  },
+  {
     "slug": "bookmark-exporter",
     "title": "Bookmark Exporter",
     "description": "",
@@ -278,6 +318,14 @@
     "category": "Content Tools",
     "icon": "🗑️",
     "sourceDir": "src"
+  },
+  {
+    "slug": "bulk-dm",
+    "title": "Bulk DM - XActions",
+    "description": "Send a personalized DM to a list of users from one message template.",
+    "category": "Messaging",
+    "icon": "📤",
+    "sourceDir": "scripts/twitter"
   },
   {
     "slug": "business-analytics",
@@ -440,6 +488,14 @@
     "sourceDir": "src"
   },
   {
+    "slug": "delete-tweets",
+    "title": "Delete Tweets - XActions",
+    "description": "DESTRUCTIVE: bulk-delete your own posts by age, keywords, or performance. Defaults to a safe dry run.",
+    "category": "Content Tools",
+    "icon": "🗑️",
+    "sourceDir": "scripts/twitter"
+  },
+  {
     "slug": "detect-unfollowers",
     "title": "Detect Unfollowers",
     "description": "DetectUnfollowers.js — Find out who unfollowed you on X (Twitter)",
@@ -592,12 +648,28 @@
     "sourceDir": "src"
   },
   {
+    "slug": "follow-back",
+    "title": "Follow Back - XActions",
+    "description": "Follow every account that follows you but that you don't follow back yet.",
+    "category": "Growth",
+    "icon": "🔗",
+    "sourceDir": "scripts/twitter"
+  },
+  {
     "slug": "follow-engagers",
     "title": "Follow Engagers",
     "description": "XActions Automation - Follow Likers & Commenters",
     "category": "Growth",
     "icon": "🎯",
     "sourceDir": "src/automation"
+  },
+  {
+    "slug": "follow-list-members",
+    "title": "Follow List Members - XActions",
+    "description": "Follow every member of a Twitter List, skipping accounts you already follow, rate-limited.",
+    "category": "Lists & Communities",
+    "icon": "👣",
+    "sourceDir": "scripts/twitter"
   },
   {
     "slug": "follow-ratio-manager",
@@ -1056,6 +1128,14 @@
     "sourceDir": "src/automation"
   },
   {
+    "slug": "pin-tweet",
+    "title": "Pin Tweet - XActions",
+    "description": "Pin or unpin one of your own tweets to the top of your profile.",
+    "category": "Posting",
+    "icon": "📌",
+    "sourceDir": "scripts/twitter"
+  },
+  {
     "slug": "pin-tweet-manager",
     "title": "Pin Tweet Manager",
     "description": "Pin/unpin tweets, auto-rotate pinned content,",
@@ -1094,6 +1174,14 @@
     "category": "Posting",
     "icon": "🧵",
     "sourceDir": "src"
+  },
+  {
+    "slug": "post-tweet",
+    "title": "Post Tweet - XActions",
+    "description": "Compose and post a single tweet from your logged-in session.",
+    "category": "Posting",
+    "icon": "✍️",
+    "sourceDir": "scripts/twitter"
   },
   {
     "slug": "premium-features",
@@ -1184,6 +1272,14 @@
     "sourceDir": "scripts"
   },
   {
+    "slug": "quote-tweet",
+    "title": "Quote Tweet - XActions",
+    "description": "Quote-tweet the post you are currently viewing with your own text.",
+    "category": "Posting",
+    "icon": "💬",
+    "sourceDir": "scripts/twitter"
+  },
+  {
     "slug": "quote-tweet-automation",
     "title": "Quote Tweet Automation",
     "description": "Auto-retweet with quote using customizable",
@@ -1197,6 +1293,14 @@
     "description": "Rate limiting and quota management utility",
     "category": "Automation",
     "icon": "⏱️",
+    "sourceDir": "scripts/twitter"
+  },
+  {
+    "slug": "remove-follower",
+    "title": "Remove Follower - XActions",
+    "description": "Remove followers without blocking them: X's native \"Remove this follower\", or a soft-block fallback.",
+    "category": "Safety & Privacy",
+    "icon": "🚪",
     "sourceDir": "scripts/twitter"
   },
   {
@@ -1248,6 +1352,14 @@
     "sourceDir": "src"
   },
   {
+    "slug": "schedule-post",
+    "title": "Schedule Post - XActions",
+    "description": "Schedule a tweet for a future date/time using X's native scheduler.",
+    "category": "Posting",
+    "icon": "🗓️",
+    "sourceDir": "scripts/twitter"
+  },
+  {
     "slug": "schedule-posts",
     "title": "Schedule Posts",
     "description": "Schedule Posts on X - by nichxbt",
@@ -1272,12 +1384,28 @@
     "sourceDir": "scripts"
   },
   {
+    "slug": "scrape-retweeters",
+    "title": "Scrape Reposters",
+    "description": "Scroll a post's Reposts and Quotes tabs and export everyone who reposted or quote-tweeted it, each tagged repost or quote, to JSON and CSV.",
+    "category": "Scrapers",
+    "icon": "🔁",
+    "sourceDir": "scripts/twitter"
+  },
+  {
     "slug": "scrape-spaces",
     "title": "Scrape Spaces",
     "description": "Scrape Spaces (Audio/Video Broadcasts) on X - by nichxbt",
     "category": "Scrapers",
     "icon": "🎙️",
     "sourceDir": "src"
+  },
+  {
+    "slug": "scrape-user-likes",
+    "title": "Scrape User Likes - XActions",
+    "description": "Scroll a user's Likes timeline and export the posts they liked (url, author, text, counts) to JSON and CSV.",
+    "category": "Scrapers",
+    "icon": "💗",
+    "sourceDir": "scripts/twitter"
   },
   {
     "slug": "scrape-search",
@@ -1422,6 +1550,14 @@
     "category": "Discovery",
     "icon": "🏷️",
     "sourceDir": "src"
+  },
+  {
+    "slug": "trending-monitor",
+    "title": "Trending Monitor - XActions",
+    "description": "Capture the current X trends (name, post count, category), highlight watched keywords, and optionally re-scan on an interval.",
+    "category": "Analytics",
+    "icon": "📈",
+    "sourceDir": "scripts/twitter"
   },
   {
     "slug": "trending-topic-monitor",
@@ -1622,6 +1758,14 @@
     "category": "Scrapers",
     "icon": "🔥",
     "sourceDir": "scripts"
+  },
+  {
+    "slug": "vote-in-polls",
+    "title": "Vote In Polls - XActions",
+    "description": "Vote in polls found in a timeline or search as you scroll, using a fixed or random option strategy.",
+    "category": "Engagement",
+    "icon": "🗳️",
+    "sourceDir": "scripts/twitter"
   },
   {
     "slug": "advanced-spaces",

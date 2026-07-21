@@ -8,6 +8,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+#### 40 new browser tools, and the Command Center now covers 108
+- Added a full wave of browser-console tools so the toolkit covers essentially every X action, and folded them all into the Command Center (now 108 tools across 11 categories, with two new categories: **Create & Post** and **Lists**):
+  - **Create & Post:** post a tweet, post a thread, schedule a post, create a poll, quote tweet, pin/unpin.
+  - **Posting actions:** auto-repost, auto-reply to mentions, vote in polls, and **bulk-delete your own posts** by age/keyword/engagement (dry-run by default).
+  - **Scrape everything:** followers, following, post likers, reposters + quote-tweeters, a user's likes, search results, a hashtag, a List, profile media, tweet replies, notifications, DMs, and Spaces. Each exports JSON + CSV.
+  - **Lists:** create/rename/delete a List, add users to a List, follow all List members.
+  - **DMs & account:** bulk/welcome DM, auto-reply DMs, edit full profile, privacy/settings toggles, manage muted words, notification cleaner.
+  - **Grow & moderate:** follow-back everyone, remove a follower (dry-run), block-list import/export + block-chaining (dry-run).
+  - **Diagnostics:** shadowban checker, tweet performance ranking, sentiment analyzer, audience overlap, trending monitor.
+- Every new tool follows the same conventions as the rest: real `data-testid` DOM automation (no fragile hardcoded API IDs), randomized rate limiting, a `window.stop<Tool>()` switch on long loops, page guards, and JSON/CSV export on the scrapers. Bulk/irreversible tools default to a dry run.
+- Docs: each tool gets its own page at `/scripts`, plus a Command Center tutorial (`docs/examples/tutorials/command-center-tutorial.md`).
+
+#### Build fix
+- Fixed a Command Center bundler bug where a tool containing a `$`-anchored regex template literal (e.g. `` `/${x}/?$` ``) corrupted the generated file, `String.replace` was interpreting the `$\`` sequence as a special replacement pattern. The injector now uses a function replacer.
+
 #### ⚡ XActions Command Center: one script for every tool
 - New `scripts/twitter/xactions-command-center.js`: paste one script into the browser console and get a searchable command palette of all 68 browser tools, no more hunting for the right file. Search and arrow-key navigation, nine categories (Scrape, Analytics, Grow, Engage, Clean Up, Moderate, Communities, Profile, Utilities), favorites and recents, and a per-tool options form (rendered from each tool's own config, with an "Edit as JSON" mode) so you never edit source by hand.
 - Safety built in: every tool is tagged Safe / Writes / Bulk-irreversible, destructive tools require a second confirming click and show a warning, the palette tells you which page each tool expects (and warns if you're not on it), and a run dock lets you Stop long-running tools individually or all at once.

@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pin Tweet - XActions — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Pin or unpin one of your own tweets to the top of your profile.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, pin, tweet, posting">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Pin Tweet - XActions — XActions">
+  <meta property="og:description" content="Pin or unpin one of your own tweets to the top of your profile.">
+  <meta property="og:url" content="https://xactions.app/scripts/pin-tweet">
+  <meta property="og:site_name" content="XActions">
+  <meta property="og:image" content="https://xactions.app/og-image.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Pin Tweet - XActions — XActions">
+  <meta name="twitter:description" content="Pin or unpin one of your own tweets to the top of your profile.">
+
+  <link rel="canonical" href="https://xactions.app/scripts/pin-tweet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Pin Tweet - XActions — Free X/Twitter Script | XActions",
+    "description": "Pin or unpin one of your own tweets to the top of your profile.",
+    "url": "https://xactions.app/scripts/pin-tweet",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-03-30",
+    "dateModified": "2026-03-30",
+    "articleSection": "Posting",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, pin, tweet, posting"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
+      { "@type": "ListItem", "position": 3, "name": "Posting", "item": "https://xactions.app/scripts#posting" },
+      { "@type": "ListItem", "position": 4, "name": "Pin Tweet - XActions", "item": "https://xactions.app/scripts/pin-tweet" }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="/css/common.css">
+  <style>
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .meta-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; font-size: 0.8125rem; color: var(--text-secondary); }
+    .meta-row span { display: flex; align-items: center; gap: 4px; }
+    .usage-steps { margin-left: 24px; margin-bottom: 16px; }
+    .usage-steps li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 8px; padding-left: 4px; }
+    .warning-box { background: rgba(244, 33, 46, 0.1); border: 1px solid var(--error); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .warning-box p { color: var(--error); margin: 0; font-size: 0.875rem; }
+    .controls-box { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .controls-box h3 { margin: 0 0 8px; font-size: 1rem; }
+    .code-block { position: relative; }
+    .copy-btn { position: absolute; top: 8px; right: 8px; background: var(--bg-tertiary); color: var(--text-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: 0.75rem; z-index: 10; transition: all .2s; }
+    .copy-btn:hover { background: var(--accent); color: #fff; }
+    .full-code { margin-top: 32px; }
+    .full-code pre { max-height: 600px; overflow-y: auto; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .source-badge { display: inline-block; background: var(--bg-tertiary); color: var(--text-secondary); padding: 2px 8px; border-radius: 6px; font-size: 0.6875rem; margin-left: 8px; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .article pre { font-size: 0.75rem; }
+      .meta-row { flex-direction: column; gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
+  <div class="layout">
+    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <script src="/js/sidebar.js"></script>
+
+    <main class="main-content" id="main-content">
+      <header class="main-header">
+        <h1>📌 Pin Tweet - XActions</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#posting">Posting</a> › Pin Tweet - XActions
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Posting</span>
+        <span class="source-badge">scripts/twitter</span>
+
+        <div class="meta-row">
+          <span>v1.0.0</span>
+          <span>Updated: 2026-07-20</span>
+          <span>232 lines</span>
+          <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
+        </div>
+
+        <p>Pin or unpin one of your own tweets to the top of your profile.</p>
+
+        
+
+        <h2>How to Use</h2>
+        <ol class="usage-steps"><li>Go to your profile page (x.com/YOUR_USERNAME)</li>
+<li>Open the browser console (F12 or Cmd+Option+I -&gt; Console)</li>
+<li>(Optional) edit the CONFIG options at the top of the script</li>
+<li>Paste this entire script and press Enter</li></ol>
+        
+
+        
+        <section class="config-section">
+        <h2>Configuration Options</h2>
+        <table>
+          <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>Example</code></td><td><code>'https:</code></td><td>x.com/nichxbt/status/1234567890123456789'</td></tr>
+          </tbody>
+        </table>
+      </section>
+        <section class="config-code">
+        <h2>Default Configuration</h2>
+        <div class="code-block">
+          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
+          <pre><code>const CONFIG = {
+    // 'pin' or 'unpin'.
+    action: 'pin',
+
+    // Optional: the URL (or status id) of the tweet to act on. Must be your own
+    // tweet. Leave '' to use the first tweet shown on the current page.
+    // Example: 'https://x.com/nichxbt/status/1234567890123456789'
+    tweetUrl: '',
+
+    // Preview only: log what would happen without opening the menu.
+    dryRun: true
+  };</code></pre>
+        </div>
+      </section>
+
+        <section class="full-code">
+          <h2>Full Script</h2>
+          <p>Copy and paste this entire script into your browser DevTools console on <a href="https://x.com" rel="noopener">x.com</a>.</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
+            <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * ============================================
+ * 📌 Pin Tweet - XActions
+ * ============================================
+ *
+ * @name         pin-tweet
+ * @description  Pin or unpin one of your own tweets to the top of your profile.
+ * @author       nichxbt
+ * @version      1.0.0
+ * @date         2026-07-20
+ * @website      https://xactions.app
+ *
+ * Usage:
+ *   1. Go to your profile page (x.com/YOUR_USERNAME)
+ *   2. Open the browser console (F12 or Cmd+Option+I -&gt; Console)
+ *   3. (Optional) edit the CONFIG options at the top of the script
+ *   4. Paste this entire script and press Enter
+ *
+ * Example:
+ *   To pin a specific tweet, set CONFIG.action = &quot;pin&quot; and CONFIG.tweetUrl to its
+ *   URL, then dryRun = false. To unpin the current pinned tweet, set action =
+ *   &quot;unpin&quot; and leave tweetUrl empty. The script opens the tweet menu and confirms.
+ *
+ * ============================================
+ */
+
+(async function pinTweet() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // 'pin' or 'unpin'.
+    action: 'pin',
+
+    // Optional: the URL (or status id) of the tweet to act on. Must be your own
+    // tweet. Leave '' to use the first tweet shown on the current page.
+    // Example: 'https://x.com/nichxbt/status/1234567890123456789'
+    tweetUrl: '',
+
+    // Preview only: log what would happen without opening the menu.
+    dryRun: true
+  };
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    article: 'article[data-testid=&quot;tweet&quot;]',
+    caret: '[data-testid=&quot;caret&quot;]',
+    tweetText: '[data-testid=&quot;tweetText&quot;]',
+    socialContext: '[data-testid=&quot;socialContext&quot;]',
+    confirm: '[data-testid=&quot;confirmationSheetConfirm&quot;]'
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) =&gt; new Promise((r) =&gt; setTimeout(r, ms));
+
+  const log = {
+    info: (msg) =&gt; console.log(`ℹ️ ${msg}`),
+    success: (msg) =&gt; console.log(`✅ ${msg}`),
+    warning: (msg) =&gt; console.log(`⚠️ ${msg}`),
+    error: (msg) =&gt; console.log(`❌ ${msg}`)
+  };
+
+  const waitForSelector = async (selector, timeoutMs = 4000) =&gt; {
+    const start = Date.now();
+    while (Date.now() - start &lt; timeoutMs) {
+      const el = document.querySelector(selector);
+      if (el) return el;
+      await sleep(200);
+    }
+    return null;
+  };
+
+  const extractStatusId = (urlOrId) =&gt; {
+    if (!urlOrId) return '';
+    const m = String(urlOrId).match(/status\/(\d+)/);
+    if (m) return m[1];
+    const digits = String(urlOrId).match(/^\d{5,}$/);
+    return digits ? digits[0] : '';
+  };
+
+  // Locate the article for a given status id, scrolling to find it if needed.
+  const findArticleById = async (statusId) =&gt; {
+    for (let i = 0; i &lt; 12; i++) {
+      for (const a of document.querySelectorAll(SELECTORS.article)) {
+        const link = a.querySelector('a[href*=&quot;/status/&quot;]');
+        const href = link ? link.getAttribute('href') : '';
+        if (href &amp;&amp; href.includes(`/status/${statusId}`)) return a;
+      }
+      window.scrollBy(0, window.innerHeight * 0.8);
+      await sleep(700);
+    }
+    return null;
+  };
+
+  // Pick the Pin or Unpin item from the open tweet menu.
+  const findMenuItem = (wantPin) =&gt; {
+    const items = Array.from(document.querySelectorAll('[role=&quot;menuitem&quot;]'));
+    if (wantPin) {
+      return items.find((el) =&gt; /(^|\s)pin/i.test(el.textContent || '') &amp;&amp; !/unpin/i.test(el.textContent || '')) || null;
+    }
+    return items.find((el) =&gt; /unpin/i.test(el.textContent || '')) || null;
+  };
+
+  // ============================================
+  // 🎯 MAIN LOGIC
+  // ============================================
+  const action = (CONFIG.action || '').toLowerCase();
+  const stats = { action, targetFound: false, menuOpened: false, done: false, errors: 0 };
+
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📌 PIN TWEET - XActions                                 ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  try {
+    const host = window.location.hostname;
+    if (!/(^|\.)x\.com$/.test(host) &amp;&amp; !/(^|\.)twitter\.com$/.test(host)) {
+      log.warning('Not on x.com. Open your profile page, then re-run.');
+      return stats;
+    }
+    if (action !== 'pin' &amp;&amp; action !== 'unpin') {
+      log.error(`CONFIG.action must be &quot;pin&quot; or &quot;unpin&quot;. Got &quot;${CONFIG.action}&quot;.`);
+      return stats;
+    }
+
+    // Resolve the target article.
+    let article = null;
+    const statusId = extractStatusId(CONFIG.tweetUrl);
+
+    if (statusId) {
+      log.info(`Target status id: ${statusId}`);
+      article = await findArticleById(statusId);
+      if (!article) {
+        log.error(`Tweet ${statusId} not found on this page. Open its status page or your profile and re-run.`);
+        stats.errors++;
+        return stats;
+      }
+    } else {
+      article = document.querySelector(SELECTORS.article);
+      if (!article) {
+        log.error('No tweet found on this page. Open your profile (x.com/YOUR_USERNAME) and re-run.');
+        stats.errors++;
+        return stats;
+      }
+      log.info('No tweetUrl set. Using the first tweet on the page.');
+    }
+    stats.targetFound = true;
+
+    const preview = (article.querySelector(SELECTORS.tweetText)?.textContent || '').slice(0, 60);
+    const ctx = article.querySelector(SELECTORS.socialContext)?.textContent || '';
+    const isPinned = /pinned/i.test(ctx);
+    log.info(`Target: &quot;${preview}${preview.length &gt;= 60 ? '...' : ''}&quot;`);
+
+    // Guard against no-op actions.
+    if (action === 'unpin' &amp;&amp; !isPinned &amp;&amp; !statusId) {
+      log.warning('The first tweet is not marked pinned. Nothing to unpin.');
+      return stats;
+    }
+    if (action === 'pin' &amp;&amp; isPinned) {
+      log.success('This tweet is already pinned. Nothing to do.');
+      stats.done = true;
+      return stats;
+    }
+
+    if (CONFIG.dryRun) {
+      log.warning(`DRY RUN. Would ${action} this tweet. Set CONFIG.dryRun = false to do it.`);
+      return stats;
+    }
+
+    const caret = article.querySelector(SELECTORS.caret);
+    if (!caret) {
+      log.error('Tweet menu (caret) button not found on the target tweet.');
+      stats.errors++;
+      return stats;
+    }
+    caret.scrollIntoView({ block: 'center' });
+    await sleep(300);
+    caret.click();
+    await sleep(800);
+    stats.menuOpened = true;
+
+    const item = findMenuItem(action === 'pin');
+    if (!item) {
+      log.error(`&quot;${action === 'pin' ? 'Pin' : 'Unpin'}&quot; option not found in the menu. Is this your own tweet?`);
+      document.body.click();
+      stats.errors++;
+      return stats;
+    }
+    item.click();
+    await sleep(800);
+
+    // Pinning shows a confirmation sheet; unpin sometimes does too.
+    const confirm = await waitForSelector(SELECTORS.confirm, 2500);
+    if (confirm) {
+      confirm.click();
+      await sleep(800);
+    }
+
+    stats.done = true;
+    log.success(`Tweet ${action === 'pin' ? 'pinned' : 'unpinned'}.`);
+  } catch (error) {
+    log.error(`Error: ${error.message}`);
+    stats.errors++;
+  }
+
+  // ============================================
+  // 📊 SUMMARY
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 PIN TWEET - COMPLETE                                 ║
+╠══════════════════════════════════════════════════════════╣
+║  🎯 Action:            ${String(stats.action).padEnd(32)}║
+║  🔎 Target found:      ${String(stats.targetFound).padEnd(32)}║
+║  ✅ Done:              ${String(stats.done).padEnd(32)}║
+║  ❌ Errors:            ${String(stats.errors).padEnd(32)}║
+╚══════════════════════════════════════════════════════════╝
+  `);
+  log.success('Script completed! by nichxbt');
+  return stats;
+})();
+</code></pre>
+          </div>
+        </section>
+
+        <div class="cta-box">
+          <h3>⚡ More XActions Scripts</h3>
+          <p>Browse 300+ free browser scripts for X/Twitter automation. No API keys, no fees.</p>
+          <a href="/scripts">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📌 Posting</h3>
+        <a href="/scripts/article-publisher">📰 Article Publisher - Create and manage long-form articles</a>
+<a href="/scripts/content-calendar">📅 Content Calendar &amp; Tweet Scheduler</a>
+<a href="/scripts/create-poll">📊 Create Poll</a>
+<a href="/scripts/edit-post">✏️ Edit Post</a>
+<a href="/scripts/pin-tweet-manager">📌 Pin Tweet Manager</a>
+<a href="/scripts/poll-creator">📊 Poll Creator - Create and manage polls</a>
+<a href="/scripts/post-composer">✏️ Post Composer - Full content creation automation</a>
+<a href="/scripts/post-thread">🧵 Post Thread</a>
+<a href="/scripts/post-tweet">✍️ Post Tweet - XActions</a>
+<a href="/scripts/publish-article">📰 Publish Article</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/scripts">All Scripts</a>
+        <a href="/features">Features</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+</body>
+</html>

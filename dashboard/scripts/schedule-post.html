@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Schedule Post - XActions — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Schedule a tweet for a future date/time using X's native scheduler.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, schedule, post, posting">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Schedule Post - XActions — XActions">
+  <meta property="og:description" content="Schedule a tweet for a future date/time using X's native scheduler.">
+  <meta property="og:url" content="https://xactions.app/scripts/schedule-post">
+  <meta property="og:site_name" content="XActions">
+  <meta property="og:image" content="https://xactions.app/og-image.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Schedule Post - XActions — XActions">
+  <meta name="twitter:description" content="Schedule a tweet for a future date/time using X's native scheduler.">
+
+  <link rel="canonical" href="https://xactions.app/scripts/schedule-post">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Schedule Post - XActions — Free X/Twitter Script | XActions",
+    "description": "Schedule a tweet for a future date/time using X's native scheduler.",
+    "url": "https://xactions.app/scripts/schedule-post",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-03-30",
+    "dateModified": "2026-03-30",
+    "articleSection": "Posting",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, schedule, post, posting"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
+      { "@type": "ListItem", "position": 3, "name": "Posting", "item": "https://xactions.app/scripts#posting" },
+      { "@type": "ListItem", "position": 4, "name": "Schedule Post - XActions", "item": "https://xactions.app/scripts/schedule-post" }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="/css/common.css">
+  <style>
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .meta-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; font-size: 0.8125rem; color: var(--text-secondary); }
+    .meta-row span { display: flex; align-items: center; gap: 4px; }
+    .usage-steps { margin-left: 24px; margin-bottom: 16px; }
+    .usage-steps li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 8px; padding-left: 4px; }
+    .warning-box { background: rgba(244, 33, 46, 0.1); border: 1px solid var(--error); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .warning-box p { color: var(--error); margin: 0; font-size: 0.875rem; }
+    .controls-box { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .controls-box h3 { margin: 0 0 8px; font-size: 1rem; }
+    .code-block { position: relative; }
+    .copy-btn { position: absolute; top: 8px; right: 8px; background: var(--bg-tertiary); color: var(--text-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: 0.75rem; z-index: 10; transition: all .2s; }
+    .copy-btn:hover { background: var(--accent); color: #fff; }
+    .full-code { margin-top: 32px; }
+    .full-code pre { max-height: 600px; overflow-y: auto; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .source-badge { display: inline-block; background: var(--bg-tertiary); color: var(--text-secondary); padding: 2px 8px; border-radius: 6px; font-size: 0.6875rem; margin-left: 8px; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .article pre { font-size: 0.75rem; }
+      .meta-row { flex-direction: column; gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
+  <div class="layout">
+    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <script src="/js/sidebar.js"></script>
+
+    <main class="main-content" id="main-content">
+      <header class="main-header">
+        <h1>🗓️ Schedule Post - XActions</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#posting">Posting</a> › Schedule Post - XActions
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Posting</span>
+        <span class="source-badge">scripts/twitter</span>
+
+        <div class="meta-row">
+          <span>v1.0.0</span>
+          <span>Updated: 2026-07-20</span>
+          <span>273 lines</span>
+          <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
+        </div>
+
+        <p>Schedule a tweet for a future date/time using X's native scheduler.</p>
+
+        
+
+        <h2>How to Use</h2>
+        <ol class="usage-steps"><li>Go to x.com/compose/post</li>
+<li>Open the browser console (F12 or Cmd+Option+I -&gt; Console)</li>
+<li>(Optional) edit the CONFIG options at the top of the script</li>
+<li>Paste this entire script and press Enter</li></ol>
+        
+
+        
+        
+        <section class="config-code">
+        <h2>Default Configuration</h2>
+        <div class="code-block">
+          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
+          <pre><code>const CONFIG = {
+    // The text to schedule.
+    text: 'Scheduled with XActions 📅',
+
+    // When to post, as a local date/time. Format: &quot;YYYY-MM-DDTHH:MM&quot; (24-hour).
+    // Must be in the future. Example: &quot;2026-08-01T09:00&quot;.
+    scheduleISO: '2026-08-01T09:00',
+
+    // Preview only: log what would happen without confirming the schedule.
+    dryRun: true
+  };</code></pre>
+        </div>
+      </section>
+
+        <section class="full-code">
+          <h2>Full Script</h2>
+          <p>Copy and paste this entire script into your browser DevTools console on <a href="https://x.com" rel="noopener">x.com</a>.</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
+            <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * ============================================
+ * 📅 Schedule Post - XActions
+ * ============================================
+ *
+ * @name         schedule-post
+ * @description  Schedule a tweet for a future date/time using X's native scheduler.
+ * @author       nichxbt
+ * @version      1.0.0
+ * @date         2026-07-20
+ * @website      https://xactions.app
+ *
+ * Usage:
+ *   1. Go to x.com/compose/post
+ *   2. Open the browser console (F12 or Cmd+Option+I -&gt; Console)
+ *   3. (Optional) edit the CONFIG options at the top of the script
+ *   4. Paste this entire script and press Enter
+ *
+ * Example:
+ *   Set CONFIG.text = &quot;Launch day 🚀&quot; and CONFIG.scheduleISO = &quot;2026-08-01T09:00&quot;
+ *   with dryRun = true to preview. Flip dryRun = false: the script types the text,
+ *   opens X's Schedule dialog, sets Aug 1 2026 9:00 AM, and confirms the schedule.
+ *
+ * ============================================
+ */
+
+(async function schedulePost() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // The text to schedule.
+    text: 'Scheduled with XActions 📅',
+
+    // When to post, as a local date/time. Format: &quot;YYYY-MM-DDTHH:MM&quot; (24-hour).
+    // Must be in the future. Example: &quot;2026-08-01T09:00&quot;.
+    scheduleISO: '2026-08-01T09:00',
+
+    // Preview only: log what would happen without confirming the schedule.
+    dryRun: true
+  };
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    composer: '[data-testid=&quot;tweetTextarea_0&quot;]',
+    newTweetButton: 'a[data-testid=&quot;SideNav_NewTweet_Button&quot;]',
+    // The clock icon in the composer toolbar that opens the schedule dialog.
+    scheduleButton: '[data-testid=&quot;scheduleOption&quot;]',
+    // Legacy fallbacks for the schedule toolbar affordance.
+    createScheduleAria: '[aria-label=&quot;Schedule post&quot;], [aria-label=&quot;Schedule&quot;]',
+    confirmSchedule: '[data-testid=&quot;scheduledConfirmationPrimaryAction&quot;]'
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) =&gt; new Promise((r) =&gt; setTimeout(r, ms));
+
+  const log = {
+    info: (msg) =&gt; console.log(`ℹ️ ${msg}`),
+    success: (msg) =&gt; console.log(`✅ ${msg}`),
+    warning: (msg) =&gt; console.log(`⚠️ ${msg}`),
+    error: (msg) =&gt; console.log(`❌ ${msg}`)
+  };
+
+  const typeIntoComposer = async (el, text) =&gt; {
+    el.focus();
+    await sleep(150);
+    const inserted = document.execCommand('insertText', false, text);
+    if (!inserted) {
+      el.dispatchEvent(new InputEvent('beforeinput', { inputType: 'insertText', data: text, bubbles: true, cancelable: true }));
+      el.textContent = text;
+      el.dispatchEvent(new InputEvent('input', { inputType: 'insertText', data: text, bubbles: true }));
+    }
+    await sleep(300);
+  };
+
+  const waitForSelector = async (selector, timeoutMs = 6000) =&gt; {
+    const start = Date.now();
+    while (Date.now() - start &lt; timeoutMs) {
+      const el = document.querySelector(selector);
+      if (el) return el;
+      await sleep(200);
+    }
+    return null;
+  };
+
+  // Set a native &lt;select&gt; by matching an option's visible text or value, then
+  // dispatch the change event React listens for.
+  const setSelectByText = (select, wanted) =&gt; {
+    if (!select) return false;
+    const target = String(wanted).trim().toLowerCase();
+    const opts = Array.from(select.options);
+    const match =
+      opts.find((o) =&gt; o.textContent.trim().toLowerCase() === target) ||
+      opts.find((o) =&gt; o.value.trim().toLowerCase() === target) ||
+      opts.find((o) =&gt; o.textContent.trim().toLowerCase().startsWith(target));
+    if (!match) return false;
+    select.value = match.value;
+    select.dispatchEvent(new Event('input', { bubbles: true }));
+    select.dispatchEvent(new Event('change', { bubbles: true }));
+    return true;
+  };
+
+  // Find a select inside the dialog by its aria-label (case-insensitive contains).
+  const findSelectByLabel = (root, label) =&gt; {
+    const selects = Array.from(root.querySelectorAll('select'));
+    const l = label.toLowerCase();
+    return selects.find((s) =&gt; {
+      const aria = (s.getAttribute('aria-label') || '').toLowerCase();
+      const id = (s.getAttribute('id') || '').toLowerCase();
+      return aria.includes(l) || id.includes(l);
+    }) || null;
+  };
+
+  const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+  // ============================================
+  // 🎯 MAIN LOGIC
+  // ============================================
+  const stats = { typed: false, dialogOpened: false, scheduled: false, errors: 0, when: CONFIG.scheduleISO };
+
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📅 SCHEDULE POST - XActions                             ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  try {
+    const host = window.location.hostname;
+    if (!/(^|\.)x\.com$/.test(host) &amp;&amp; !/(^|\.)twitter\.com$/.test(host)) {
+      log.warning('Not on x.com. Open x.com/compose/post, then re-run.');
+      return stats;
+    }
+
+    if (!CONFIG.text || !CONFIG.text.trim()) {
+      log.error('CONFIG.text is empty. Set the text you want to schedule.');
+      return stats;
+    }
+
+    const when = new Date(CONFIG.scheduleISO);
+    if (Number.isNaN(when.getTime())) {
+      log.error(`CONFIG.scheduleISO is not a valid date/time: &quot;${CONFIG.scheduleISO}&quot;. Use &quot;YYYY-MM-DDTHH:MM&quot;.`);
+      return stats;
+    }
+    if (when.getTime() &lt;= Date.now()) {
+      log.error('CONFIG.scheduleISO is in the past. Pick a future date/time.');
+      return stats;
+    }
+
+    const monthName = MONTHS[when.getMonth()];
+    const day = String(when.getDate());
+    const year = String(when.getFullYear());
+    let hour12 = when.getHours() % 12;
+    if (hour12 === 0) hour12 = 12;
+    const minute = String(when.getMinutes()).padStart(2, '0');
+    const ampm = when.getHours() &lt; 12 ? 'AM' : 'PM';
+    log.info(`Scheduling for ${monthName} ${day}, ${year} at ${hour12}:${minute} ${ampm} (local time).`);
+
+    // Open the composer.
+    let composer = document.querySelector(SELECTORS.composer);
+    if (!composer) {
+      const newBtn = document.querySelector(SELECTORS.newTweetButton);
+      if (newBtn) {
+        newBtn.click();
+        composer = await waitForSelector(SELECTORS.composer, 6000);
+      }
+    }
+    if (!composer) {
+      log.error('Composer not found. Open x.com/compose/post and re-run.');
+      stats.errors++;
+      return stats;
+    }
+
+    await typeIntoComposer(composer, CONFIG.text);
+    stats.typed = true;
+    log.success('Text typed into composer.');
+
+    if (CONFIG.dryRun) {
+      log.warning('DRY RUN. The schedule dialog will not be opened or confirmed.');
+      log.info(`Would schedule: &quot;${CONFIG.text.slice(0, 60)}${CONFIG.text.length &gt; 60 ? '...' : ''}&quot; for ${monthName} ${day} ${year}, ${hour12}:${minute} ${ampm}.`);
+      return stats;
+    }
+
+    // Open the native Schedule dialog.
+    const scheduleBtn =
+      document.querySelector(SELECTORS.scheduleButton) ||
+      document.querySelector(SELECTORS.createScheduleAria);
+    if (!scheduleBtn) {
+      log.error('Schedule button not found in the composer toolbar.');
+      log.error('X native scheduling may be unavailable on this account. Post it now or schedule manually.');
+      stats.errors++;
+      return stats;
+    }
+    scheduleBtn.click();
+    await sleep(1500);
+
+    // The dialog is a modal with month/day/year and hour/minute/AM-PM selects.
+    const dialog = document.querySelector('[role=&quot;dialog&quot;]') || document;
+    const selects = Array.from(dialog.querySelectorAll('select'));
+    if (selects.length === 0) {
+      log.error('Schedule dialog selects not found. The scheduler UI did not open as expected.');
+      log.error('Set the date/time by hand in the dialog, then confirm.');
+      stats.errors++;
+      return stats;
+    }
+    stats.dialogOpened = true;
+
+    // Prefer aria-label matching; fall back to positional order.
+    const monthSel = findSelectByLabel(dialog, 'month') || selects[0];
+    const daySel = findSelectByLabel(dialog, 'day') || selects[1];
+    const yearSel = findSelectByLabel(dialog, 'year') || selects[2];
+    const hourSel = findSelectByLabel(dialog, 'hour') || selects[3];
+    const minSel = findSelectByLabel(dialog, 'minute') || selects[4];
+    const ampmSel = findSelectByLabel(dialog, 'am') || findSelectByLabel(dialog, 'pm') || selects[5];
+
+    const setOk = [];
+    setOk.push(['Month', setSelectByText(monthSel, monthName)]);
+    setOk.push(['Day', setSelectByText(daySel, day)]);
+    setOk.push(['Year', setSelectByText(yearSel, year)]);
+    setOk.push(['Hour', setSelectByText(hourSel, String(hour12))]);
+    setOk.push(['Minute', setSelectByText(minSel, minute)]);
+    setOk.push(['AM/PM', setSelectByText(ampmSel, ampm)]);
+    await sleep(500);
+
+    const failed = setOk.filter(([, ok]) =&gt; !ok).map(([name]) =&gt; name);
+    if (failed.length &gt; 0) {
+      log.warning(`Could not set: ${failed.join(', ')}. Adjust those fields by hand before confirming.`);
+    } else {
+      log.success('Date and time set in the schedule dialog.');
+    }
+
+    // Confirm the schedule.
+    const confirm = await waitForSelector(SELECTORS.confirmSchedule, 3000);
+    if (!confirm) {
+      log.error('Confirm button not found. Review the dialog and click Confirm manually.');
+      stats.errors++;
+      return stats;
+    }
+    confirm.click();
+    await sleep(1500);
+    stats.scheduled = true;
+    log.success('Schedule confirmed. Click Post/Schedule in the composer to queue it.');
+    log.info('Tip: scheduled posts appear under the composer\'s &quot;Unsent posts&quot; tab.');
+  } catch (error) {
+    log.error(`Error: ${error.message}`);
+    stats.errors++;
+  }
+
+  // ============================================
+  // 📊 SUMMARY
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 SCHEDULE POST - COMPLETE                             ║
+╠══════════════════════════════════════════════════════════╣
+║  ⌨️  Text typed:        ${String(stats.typed).padEnd(32)}║
+║  🗂️  Dialog opened:     ${String(stats.dialogOpened).padEnd(32)}║
+║  ✅ Scheduled:         ${String(stats.scheduled).padEnd(32)}║
+║  ❌ Errors:            ${String(stats.errors).padEnd(32)}║
+╚══════════════════════════════════════════════════════════╝
+  `);
+  log.success('Script completed! by nichxbt');
+  return stats;
+})();
+</code></pre>
+          </div>
+        </section>
+
+        <div class="cta-box">
+          <h3>⚡ More XActions Scripts</h3>
+          <p>Browse 300+ free browser scripts for X/Twitter automation. No API keys, no fees.</p>
+          <a href="/scripts">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>🗓️ Posting</h3>
+        <a href="/scripts/article-publisher">📰 Article Publisher - Create and manage long-form articles</a>
+<a href="/scripts/content-calendar">📅 Content Calendar &amp; Tweet Scheduler</a>
+<a href="/scripts/create-poll">📊 Create Poll</a>
+<a href="/scripts/edit-post">✏️ Edit Post</a>
+<a href="/scripts/pin-tweet">📌 Pin Tweet - XActions</a>
+<a href="/scripts/pin-tweet-manager">📌 Pin Tweet Manager</a>
+<a href="/scripts/poll-creator">📊 Poll Creator - Create and manage polls</a>
+<a href="/scripts/post-composer">✏️ Post Composer - Full content creation automation</a>
+<a href="/scripts/post-thread">🧵 Post Thread</a>
+<a href="/scripts/post-tweet">✍️ Post Tweet - XActions</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/scripts">All Scripts</a>
+        <a href="/features">Features</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+</body>
+</html>

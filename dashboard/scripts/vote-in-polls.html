@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vote In Polls - XActions — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Vote in polls found in a timeline or search as you scroll, using a fixed or random option strategy.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, vote, polls, engagement">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Vote In Polls - XActions — XActions">
+  <meta property="og:description" content="Vote in polls found in a timeline or search as you scroll, using a fixed or random option strategy.">
+  <meta property="og:url" content="https://xactions.app/scripts/vote-in-polls">
+  <meta property="og:site_name" content="XActions">
+  <meta property="og:image" content="https://xactions.app/og-image.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Vote In Polls - XActions — XActions">
+  <meta name="twitter:description" content="Vote in polls found in a timeline or search as you scroll, using a fixed or random option strategy.">
+
+  <link rel="canonical" href="https://xactions.app/scripts/vote-in-polls">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Vote In Polls - XActions — Free X/Twitter Script | XActions",
+    "description": "Vote in polls found in a timeline or search as you scroll, using a fixed or random option strategy.",
+    "url": "https://xactions.app/scripts/vote-in-polls",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-03-30",
+    "dateModified": "2026-03-30",
+    "articleSection": "Engagement",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, vote, polls, engagement"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
+      { "@type": "ListItem", "position": 3, "name": "Engagement", "item": "https://xactions.app/scripts#engagement" },
+      { "@type": "ListItem", "position": 4, "name": "Vote In Polls - XActions", "item": "https://xactions.app/scripts/vote-in-polls" }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="/css/common.css">
+  <style>
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .meta-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; font-size: 0.8125rem; color: var(--text-secondary); }
+    .meta-row span { display: flex; align-items: center; gap: 4px; }
+    .usage-steps { margin-left: 24px; margin-bottom: 16px; }
+    .usage-steps li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 8px; padding-left: 4px; }
+    .warning-box { background: rgba(244, 33, 46, 0.1); border: 1px solid var(--error); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .warning-box p { color: var(--error); margin: 0; font-size: 0.875rem; }
+    .controls-box { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .controls-box h3 { margin: 0 0 8px; font-size: 1rem; }
+    .code-block { position: relative; }
+    .copy-btn { position: absolute; top: 8px; right: 8px; background: var(--bg-tertiary); color: var(--text-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: 0.75rem; z-index: 10; transition: all .2s; }
+    .copy-btn:hover { background: var(--accent); color: #fff; }
+    .full-code { margin-top: 32px; }
+    .full-code pre { max-height: 600px; overflow-y: auto; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .source-badge { display: inline-block; background: var(--bg-tertiary); color: var(--text-secondary); padding: 2px 8px; border-radius: 6px; font-size: 0.6875rem; margin-left: 8px; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .article pre { font-size: 0.75rem; }
+      .meta-row { flex-direction: column; gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
+  <div class="layout">
+    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <script src="/js/sidebar.js"></script>
+
+    <main class="main-content" id="main-content">
+      <header class="main-header">
+        <h1>🗳️ Vote In Polls - XActions</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#engagement">Engagement</a> › Vote In Polls - XActions
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Engagement</span>
+        <span class="source-badge">scripts/twitter</span>
+
+        <div class="meta-row">
+          <span>v1.0.0</span>
+          <span>Updated: 2026-07-20</span>
+          <span>291 lines</span>
+          <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
+        </div>
+
+        <p>Vote in polls found in a timeline or search as you scroll, using a fixed or random option strategy.</p>
+
+        
+
+        <h2>How to Use</h2>
+        <ol class="usage-steps"><li>Go to a timeline or search results page that surfaces polls</li>
+<li>Open the browser console (F12 or Cmd+Option+I -&gt; Console)</li>
+<li>(Optional) edit the CONFIG options at the top of the script</li>
+<li>Paste this entire script and press Enter</li></ol>
+        
+
+        
+        
+        <section class="config-code">
+        <h2>Default Configuration</h2>
+        <div class="code-block">
+          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
+          <pre><code>const CONFIG = {
+    // How to choose an option in each poll:
+    //   'first'  = the first option
+    //   'last'   = the last option
+    //   'random' = a random option
+    //   'index'  = the option at CONFIG.optionIndex (0-based)
+    strategy: 'random',
+
+    // Used only when strategy is 'index'. 0 = first option.
+    optionIndex: 0,
+
+    // Maximum number of polls to vote in this run
+    maxVotes: 15,
+
+    // Minimum delay between votes (ms)
+    minDelay: 1500,
+
+    // Maximum delay between votes (ms)
+    maxDelay: 4000,
+
+    // Maximum scroll attempts to find more polls
+    maxScrollAttempts: 30,
+
+    // Stop if no new polls appear after this many consecutive scrolls
+    noNewPollsThreshold: 6
+  };</code></pre>
+        </div>
+      </section>
+
+        <section class="full-code">
+          <h2>Full Script</h2>
+          <p>Copy and paste this entire script into your browser DevTools console on <a href="https://x.com" rel="noopener">x.com</a>.</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
+            <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * ============================================
+ * 🗳️ Vote In Polls - XActions
+ * ============================================
+ *
+ * @name         vote-in-polls
+ * @description  Vote in polls found in a timeline or search as you scroll, using a fixed or random option strategy.
+ * @author       nichxbt
+ * @version      1.0.0
+ * @date         2026-07-20
+ * @website      https://xactions.app
+ *
+ * Usage:
+ *   1. Go to a timeline or search results page that surfaces polls
+ *      (e.g. x.com/home, or x.com/search?q=poll&amp;f=live)
+ *   2. Open the browser console (F12 or Cmd+Option+I -&gt; Console)
+ *   3. (Optional) edit the CONFIG options at the top of the script
+ *   4. Paste this entire script and press Enter
+ *
+ * Example:
+ *   strategy: 'random', maxVotes: 15. As you scroll, it finds each open poll,
+ *   picks a random option, and clicks it. Use strategy: 'index' with
+ *   optionIndex: 0 to always pick the first option, or 'first' / 'last'.
+ *   Already-voted and closed polls are skipped automatically.
+ *   Run window.stopVoteInPolls() to halt after the current poll.
+ *
+ * ============================================
+ */
+
+(async function voteInPolls() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // How to choose an option in each poll:
+    //   'first'  = the first option
+    //   'last'   = the last option
+    //   'random' = a random option
+    //   'index'  = the option at CONFIG.optionIndex (0-based)
+    strategy: 'random',
+
+    // Used only when strategy is 'index'. 0 = first option.
+    optionIndex: 0,
+
+    // Maximum number of polls to vote in this run
+    maxVotes: 15,
+
+    // Minimum delay between votes (ms)
+    minDelay: 1500,
+
+    // Maximum delay between votes (ms)
+    maxDelay: 4000,
+
+    // Maximum scroll attempts to find more polls
+    maxScrollAttempts: 30,
+
+    // Stop if no new polls appear after this many consecutive scrolls
+    noNewPollsThreshold: 6
+  };
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    tweet: 'article[data-testid=&quot;tweet&quot;]',
+    tweetText: '[data-testid=&quot;tweetText&quot;]',
+    // X renders poll options with a pollChoice testid; some builds expose them
+    // as ARIA radios inside the card. We match both, then keep only clickable ones.
+    pollChoice: '[data-testid=&quot;pollChoice&quot;], [data-testid^=&quot;pollChoice&quot;], div[role=&quot;radio&quot;]'
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+
+  const randomDelay = () =&gt; {
+    const delay = Math.floor(Math.random() * (CONFIG.maxDelay - CONFIG.minDelay + 1)) + CONFIG.minDelay;
+    return sleep(delay);
+  };
+
+  const scrollDown = () =&gt; window.scrollBy(0, window.innerHeight * 0.7);
+
+  const log = {
+    info: (msg) =&gt; console.log(`ℹ️ ${msg}`),
+    success: (msg) =&gt; console.log(`✅ ${msg}`),
+    warning: (msg) =&gt; console.log(`⚠️ ${msg}`),
+    error: (msg) =&gt; console.log(`❌ ${msg}`),
+    progress: (current, total) =&gt; console.log(`📊 Progress: ${current}/${total} voted`)
+  };
+
+  const getTweetId = (tweet) =&gt; {
+    const timeAnchor = tweet.querySelector('time')?.closest('a[href*=&quot;/status/&quot;]');
+    if (timeAnchor) {
+      const match = timeAnchor.href.match(/\/status\/(\d+)/);
+      if (match) return match[1];
+    }
+    const link = tweet.querySelector('a[href*=&quot;/status/&quot;]');
+    const m = link?.getAttribute('href')?.match(/\/status\/(\d+)/);
+    return m ? m[1] : (tweet.querySelector(SELECTORS.tweetText)?.textContent || '').substring(0, 100);
+  };
+
+  // Return the clickable poll option elements in a post, or [] if there is no
+  // open, unvoted poll. A poll already voted or closed renders results (percent
+  // bars) instead of interactive choices, so those elements are filtered out.
+  const getOpenPollChoices = (tweet) =&gt; {
+    const raw = Array.from(tweet.querySelectorAll(SELECTORS.pollChoice));
+    if (raw.length === 0) return [];
+
+    // Deduplicate: pollChoice and role=&quot;radio&quot; can select nested duplicates.
+    const seen = new Set();
+    const choices = [];
+    for (const el of raw) {
+      // Prefer the interactive ancestor (the actual clickable option row).
+      const clickable = el.closest('[role=&quot;radio&quot;], button, [role=&quot;button&quot;]') || el;
+      if (seen.has(clickable)) continue;
+      seen.add(clickable);
+
+      // Skip options that are disabled or already show as selected/results.
+      const ariaDisabled = clickable.getAttribute('aria-disabled') === 'true';
+      const disabledAttr = clickable.hasAttribute('disabled');
+      if (ariaDisabled || disabledAttr) continue;
+
+      choices.push(clickable);
+    }
+
+    // If any choice shows a result percentage, the poll is voted/closed -&gt; skip.
+    const showsResults = /\d+(\.\d+)?%/.test(tweet.textContent || '');
+    if (showsResults &amp;&amp; choices.every(c =&gt; c.getAttribute('role') !== 'radio')) {
+      return [];
+    }
+    // A genuine open poll has 2+ selectable options.
+    return choices.length &gt;= 2 ? choices : [];
+  };
+
+  const chooseIndex = (count) =&gt; {
+    switch (CONFIG.strategy) {
+      case 'first': return 0;
+      case 'last': return count - 1;
+      case 'random': return Math.floor(Math.random() * count);
+      case 'index': return Math.min(Math.max(CONFIG.optionIndex, 0), count - 1);
+      default: return 0;
+    }
+  };
+
+  // ============================================
+  // 🎯 MAIN LOGIC
+  // ============================================
+  const stats = {
+    voted: 0,
+    pollsSeen: 0,
+    skippedClosedOrVoted: 0,
+    errors: 0
+  };
+
+  const processed = new Set();
+
+  // Stop switch: run window.stopVoteInPolls() to abort after the current poll.
+  let stopped = false;
+  window.stopVoteInPolls = () =&gt; {
+    stopped = true;
+    log.warning('Stop requested. Finishing the current poll, then exiting.');
+  };
+
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  🗳️  VOTE IN POLLS - XActions                            ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  // Page guard: needs a rendered feed. Warn, do not redirect.
+  if (!/x\.com|twitter\.com/.test(window.location.href)) {
+    log.warning('Open x.com on a timeline or search page, then run this again.');
+    return;
+  }
+  if (document.querySelector(SELECTORS.tweet) === null) {
+    log.warning('No posts visible yet. Go to a timeline or search results page, wait for it to load, then re-run.');
+    return;
+  }
+
+  const validStrategies = ['first', 'last', 'random', 'index'];
+  if (!validStrategies.includes(CONFIG.strategy)) {
+    log.warning(`Unknown strategy &quot;${CONFIG.strategy}&quot;. Falling back to 'first'.`);
+    CONFIG.strategy = 'first';
+  }
+
+  log.info(`Strategy: ${CONFIG.strategy}${CONFIG.strategy === 'index' ? ` (option ${CONFIG.optionIndex})` : ''} | Max votes: ${CONFIG.maxVotes}`);
+  log.info('To stop early: window.stopVoteInPolls()');
+
+  let scrollAttempts = 0;
+  let noNewPollsCount = 0;
+
+  while (!stopped &amp;&amp; stats.voted &lt; CONFIG.maxVotes &amp;&amp; scrollAttempts &lt; CONFIG.maxScrollAttempts) {
+    const tweets = document.querySelectorAll(SELECTORS.tweet);
+    let foundNewPoll = false;
+
+    for (const tweet of tweets) {
+      if (stopped || stats.voted &gt;= CONFIG.maxVotes) break;
+
+      const tweetId = getTweetId(tweet);
+      if (processed.has(tweetId)) continue;
+
+      // Only mark posts that actually contain a poll as processed, so we do not
+      // burn the dedupe set on the majority of non-poll posts before they render.
+      const rawHasChoice = tweet.querySelector(SELECTORS.pollChoice) !== null;
+      if (!rawHasChoice) continue;
+
+      processed.add(tweetId);
+      stats.pollsSeen++;
+      foundNewPoll = true;
+
+      try {
+        const choices = getOpenPollChoices(tweet);
+        if (choices.length === 0) {
+          stats.skippedClosedOrVoted++;
+          continue;
+        }
+
+        const idx = chooseIndex(choices.length);
+        const target = choices[idx];
+        const label = (target.textContent || '').substring(0, 40).replace(/\n/g, ' ').trim() || `option ${idx + 1}`;
+
+        tweet.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        await sleep(500);
+
+        target.click();
+        await sleep(700);
+
+        // Verify the vote registered: the poll should now show results.
+        const registered = /\d+(\.\d+)?%/.test(tweet.textContent || '') ||
+                           tweet.querySelector(SELECTORS.pollChoice) === null ||
+                           getOpenPollChoices(tweet).length === 0;
+        if (registered) {
+          stats.voted++;
+          log.success(`Voted #${stats.voted}: &quot;${label}&quot; (${CONFIG.strategy})`);
+          log.progress(stats.voted, CONFIG.maxVotes);
+          await randomDelay();
+        } else {
+          log.warning('Click did not register a vote (poll may have closed). Skipping.');
+          stats.skippedClosedOrVoted++;
+        }
+      } catch (error) {
+        log.error(`Error voting in poll: ${error.message}`);
+        stats.errors++;
+      }
+    }
+
+    if (!foundNewPoll) {
+      noNewPollsCount++;
+      if (noNewPollsCount &gt;= CONFIG.noNewPollsThreshold) {
+        log.warning('No new polls found after multiple scrolls. Stopping.');
+        break;
+      }
+    } else {
+      noNewPollsCount = 0;
+    }
+
+    scrollDown();
+    scrollAttempts++;
+    log.info(`Scrolling for more polls... (attempt ${scrollAttempts}/${CONFIG.maxScrollAttempts})`);
+    await sleep(1500);
+  }
+
+  // ============================================
+  // 📊 SUMMARY
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 VOTE IN POLLS - COMPLETE                             ║
+╠══════════════════════════════════════════════════════════╣
+║  🗳️  Voted:                ${String(stats.voted).padEnd(28)}║
+║  🔎 Polls Seen:            ${String(stats.pollsSeen).padEnd(28)}║
+║  ⏭️  Closed/Already Voted: ${String(stats.skippedClosedOrVoted).padEnd(28)}║
+║  ❌ Errors:                ${String(stats.errors).padEnd(28)}║
+║  📜 Scroll Attempts:       ${String(scrollAttempts).padEnd(28)}║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  if (stats.pollsSeen === 0) {
+    log.warning('No polls found in this feed. Try a search like x.com/search?q=poll&amp;f=live.');
+  }
+  log.success('Script completed! by nichxbt');
+
+  return stats;
+})();
+</code></pre>
+          </div>
+        </section>
+
+        <div class="cta-box">
+          <h3>⚡ More XActions Scripts</h3>
+          <p>Browse 300+ free browser scripts for X/Twitter automation. No API keys, no fees.</p>
+          <a href="/scripts">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>🗳️ Engagement</h3>
+        <a href="/scripts/auto-commenter">💬 Auto Commenter</a>
+<a href="/scripts/auto-engage">⚡ Auto Engage</a>
+<a href="/scripts/auto-liker">❤️ Auto Liker</a>
+<a href="/scripts/auto-reply-mentions">📨 Auto Reply Mentions - XActions</a>
+<a href="/scripts/auto-repost">🔁 Auto Repost</a>
+<a href="/scripts/auto-plug-replies">🔌 Auto-Plug Replies</a>
+<a href="/scripts/auto-reply">💬 Auto-Reply / Auto-Respond</a>
+<a href="/scripts/engagement-booster">🚀 Engagement Booster v2</a>
+<a href="/scripts/engagement-leaderboard">🏆 Engagement Leaderboard</a>
+<a href="/scripts/engagement-manager">⚡ Engagement Manager - Likes</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/scripts">All Scripts</a>
+        <a href="/features">Features</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+</body>
+</html>

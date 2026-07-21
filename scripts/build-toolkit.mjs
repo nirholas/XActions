@@ -33,12 +33,14 @@ const VERSION = '1.0.0';
 // Ordered categories shown as filter chips in the palette.
 // ---------------------------------------------------------------------------
 const CATEGORIES = [
+  { id: 'create', label: 'Create & Post', emoji: '✍️' },
   { id: 'scrape', label: 'Scrape & Export', emoji: '📥' },
   { id: 'analyze', label: 'Analytics', emoji: '📊' },
   { id: 'grow', label: 'Grow', emoji: '🌱' },
   { id: 'engage', label: 'Engage', emoji: '💬' },
   { id: 'cleanup', label: 'Clean Up', emoji: '🧹' },
   { id: 'moderate', label: 'Moderate', emoji: '🛡️' },
+  { id: 'lists', label: 'Lists', emoji: '🗂️' },
   { id: 'community', label: 'Communities', emoji: '👥' },
   { id: 'profile', label: 'Profile', emoji: '🪪' },
   { id: 'utility', label: 'Utilities', emoji: '🧰' }
@@ -61,7 +63,19 @@ const W = {
   searchPeople: { label: 'Search → People tab (x.com/search?...&f=user)', match: ['^/search.*f=user', '^/search'] },
   searchLive: { label: 'Search → Latest tab (x.com/search?...&f=live)', match: ['^/search'] },
   openTweet: { label: 'The open tweet/thread (its status page)', match: ['/status/'] },
-  communities: { label: 'Your Communities', url: 'https://x.com/i/communities', match: ['communities'] }
+  communities: { label: 'Your Communities', url: 'https://x.com/i/communities', match: ['communities'] },
+  compose: { label: 'The post composer', url: 'https://x.com/compose/post', match: ['^/compose'] },
+  notifications: { label: 'Your Notifications', url: 'https://x.com/notifications', match: ['^/notifications'] },
+  mentions: { label: 'Your Mentions tab', url: 'https://x.com/notifications/mentions', match: ['^/notifications/mentions'] },
+  listsHome: { label: 'Your Lists', url: 'https://x.com/i/lists', match: ['/lists'] },
+  listPage: { label: 'A List page (x.com/i/lists/<id>)', match: ['/lists/'] },
+  listMembers: { label: "A List's members page", match: ['/lists/.*members', '/members'] },
+  explore: { label: 'Explore / Trends', url: 'https://x.com/explore', match: ['^/explore'] },
+  mutedWords: { label: 'Muted words settings', url: 'https://x.com/settings/muted_keywords', match: ['muted_keywords'] },
+  settings: { label: 'Settings', url: 'https://x.com/settings', match: ['^/settings'] },
+  mediaTab: { label: "A profile's Media tab", match: ['/media'] },
+  tweetLikes: { label: "A tweet's Likes page (.../likes)", match: ['/status/.*likes', '/likes'] },
+  tweetReposts: { label: "A tweet's Reposts page (.../retweets)", match: ['/status/.*(retweets|quotes)'] }
 };
 
 // ---------------------------------------------------------------------------
@@ -154,7 +168,67 @@ const META = {
   'blacklist': { title: 'Blacklist Manager', emoji: '📕', category: 'utility', danger: 'safe', where: W.any, desc: 'Maintain a list of users other tools should skip.' },
   'whitelist': { title: 'Whitelist Manager', emoji: '📗', category: 'utility', danger: 'safe', where: W.any, desc: 'Maintain a list of users to protect from actions.' },
   'filter-manager': { title: 'Filter Manager', emoji: '🎚️', category: 'utility', danger: 'safe', where: W.any, desc: 'Configure shared filters used across the automation tools.' },
-  'rate-limiter': { title: 'Rate Limiter', emoji: '⏱️', category: 'utility', danger: 'safe', where: W.any, desc: 'Tune the pacing/quota helper shared by the action tools.' }
+  'rate-limiter': { title: 'Rate Limiter', emoji: '⏱️', category: 'utility', danger: 'safe', where: W.any, desc: 'Tune the pacing/quota helper shared by the action tools.' },
+
+  // ---- Create & Post ----
+  'post-tweet': { title: 'Post a Tweet', emoji: '✍️', category: 'create', danger: 'caution', where: W.compose, desc: 'Compose and publish a single tweet from the console.' },
+  'post-thread': { title: 'Post a Thread', emoji: '🧵', category: 'create', danger: 'caution', where: W.compose, desc: 'Publish a multi-tweet thread from a list of texts.' },
+  'schedule-post': { title: 'Schedule a Post', emoji: '🗓️', category: 'create', danger: 'caution', where: W.compose, desc: "Schedule a tweet using X's native scheduler." },
+  'create-poll': { title: 'Create a Poll', emoji: '📊', category: 'create', danger: 'caution', where: W.compose, desc: 'Publish a poll with your choices and duration.' },
+  'quote-tweet': { title: 'Quote Tweet', emoji: '💬', category: 'create', danger: 'caution', where: W.openTweet, desc: 'Quote-tweet the post you are viewing with your own text.' },
+  'pin-tweet': { title: 'Pin / Unpin Tweet', emoji: '📌', category: 'create', danger: 'caution', where: W.yourProfile, desc: 'Pin or unpin one of your own tweets.' },
+
+  // ---- Engage (additions) ----
+  'auto-repost': { title: 'Auto Repost', emoji: '🔁', category: 'engage', danger: 'caution', where: W.searchLive, desc: 'Repost posts matching your criteria as you scroll.' },
+  'auto-reply-mentions': { title: 'Auto-Reply Mentions', emoji: '📨', category: 'engage', danger: 'caution', where: W.mentions, desc: 'Reply to your recent mentions with rotating templates.' },
+  'vote-in-polls': { title: 'Vote in Polls', emoji: '🗳️', category: 'engage', danger: 'caution', where: W.searchLive, desc: 'Auto-vote a chosen option on polls in the timeline.' },
+
+  // ---- Clean Up (addition) ----
+  'delete-tweets': { title: 'Bulk Delete Your Posts', emoji: '🗑️', category: 'cleanup', danger: 'destructive', where: W.yourProfile, desc: 'Delete your own tweets by age, keyword, or engagement (dry-run by default).' },
+
+  // ---- Scrape & Export (additions) ----
+  'scrape-followers': { title: 'Scrape Followers', emoji: '👥', category: 'scrape', danger: 'safe', where: W.yourFollowers, desc: 'Export a profile’s followers to JSON/CSV.' },
+  'scrape-following': { title: 'Scrape Following', emoji: '👣', category: 'scrape', danger: 'safe', where: W.yourFollowing, desc: 'Export who a profile follows to JSON/CSV.' },
+  'scrape-likers': { title: 'Scrape Post Likers', emoji: '❤️', category: 'scrape', danger: 'safe', where: W.tweetLikes, desc: 'Export the users who liked a post.' },
+  'scrape-retweeters': { title: 'Scrape Reposters', emoji: '🔁', category: 'scrape', danger: 'safe', where: W.tweetReposts, desc: 'Export reposters and quote-tweeters of a post.' },
+  'scrape-user-likes': { title: "Scrape a User's Likes", emoji: '💗', category: 'scrape', danger: 'safe', where: W.yourLikes, desc: 'Export the posts a user has liked.' },
+  'scrape-search': { title: 'Scrape Search Results', emoji: '🔎', category: 'scrape', danger: 'safe', where: W.searchLive, desc: 'Export posts from a search query.' },
+  'scrape-hashtag': { title: 'Scrape a Hashtag', emoji: '#️⃣', category: 'scrape', danger: 'safe', where: W.searchLive, desc: 'Export posts for a hashtag.' },
+  'scrape-list': { title: 'Scrape a List', emoji: '📋', category: 'scrape', danger: 'safe', where: W.listPage, desc: 'Export a List’s timeline or members.' },
+  'scrape-media': { title: 'Scrape Profile Media', emoji: '🖼️', category: 'scrape', danger: 'safe', where: W.mediaTab, desc: 'Export image and video URLs from a profile.' },
+  'scrape-replies': { title: 'Scrape Tweet Replies', emoji: '💬', category: 'scrape', danger: 'safe', where: W.openTweet, desc: 'Export the replies under a post.' },
+  'scrape-notifications': { title: 'Scrape Notifications', emoji: '🔔', category: 'scrape', danger: 'safe', where: W.notifications, desc: 'Export your notifications feed.' },
+  'scrape-dms': { title: 'Scrape DMs', emoji: '✉️', category: 'scrape', danger: 'safe', where: W.messages, desc: 'Export the open DM conversation.' },
+  'scrape-spaces': { title: 'Scrape Spaces', emoji: '🎙️', category: 'scrape', danger: 'safe', where: W.anyProfile, desc: 'Capture Spaces info from a profile or Space.' },
+
+  // ---- Lists ----
+  'list-manager': { title: 'List Manager', emoji: '🗂️', category: 'lists', danger: 'caution', where: W.listsHome, desc: 'Create, rename, or delete a List.' },
+  'add-to-list': { title: 'Add Users to List', emoji: '➕', category: 'lists', danger: 'caution', where: W.listsHome, desc: 'Add specified users to one of your Lists.' },
+  'follow-list-members': { title: 'Follow List Members', emoji: '👣', category: 'lists', danger: 'caution', where: W.listMembers, desc: 'Follow every member of a List.' },
+
+  // ---- Profile & Account (additions) ----
+  'bulk-dm': { title: 'Bulk / Welcome DM', emoji: '📤', category: 'profile', danger: 'caution', where: W.messages, desc: 'DM a list of users with a personalized template.' },
+  'auto-reply-dms': { title: 'Auto-Reply DMs', emoji: '💌', category: 'profile', danger: 'caution', where: W.messages, desc: 'Auto-reply to unread DM conversations with a template.' },
+  'edit-profile': { title: 'Edit Profile', emoji: '🪪', category: 'profile', danger: 'caution', where: W.settingsProfile, desc: 'Update your name, bio, location, website, or birthday.' },
+  'account-settings': { title: 'Privacy & Settings', emoji: '⚙️', category: 'profile', danger: 'caution', where: W.settings, desc: 'Toggle common privacy and safety settings.' },
+
+  // ---- Moderate (additions) ----
+  'remove-follower': { title: 'Remove a Follower', emoji: '🚪', category: 'moderate', danger: 'caution', where: W.yourFollowers, desc: 'Remove followers without blocking (dry-run by default).' },
+  'block-list-transfer': { title: 'Block List Import/Export', emoji: '🧱', category: 'moderate', danger: 'destructive', where: W.blocked, desc: 'Export your block list, import-and-block a list, or block an account’s followers.' },
+  'manage-muted-words': { title: 'Muted Words', emoji: '🔇', category: 'moderate', danger: 'caution', where: W.mutedWords, desc: 'Add, remove, or list your muted words and phrases.' },
+
+  // ---- Grow (addition) ----
+  'follow-back': { title: 'Follow Back Everyone', emoji: '🔗', category: 'grow', danger: 'caution', where: W.yourFollowers, desc: 'Follow accounts that follow you but you don’t follow back.' },
+
+  // ---- Utilities (addition) ----
+  'notification-manager': { title: 'Notification Cleaner', emoji: '🔕', category: 'utility', danger: 'safe', where: W.notifications, desc: 'Mark notifications read and summarize them.' },
+
+  // ---- Analytics (additions) ----
+  'shadowban-checker': { title: 'Shadowban Checker', emoji: '🚦', category: 'analyze', danger: 'safe', where: W.yourProfile, desc: 'Heuristic search-suggestion / search-ban / reply-deboost check.' },
+  'tweet-performance': { title: 'Tweet Performance', emoji: '📊', category: 'analyze', danger: 'safe', where: W.yourProfile, desc: 'Rank your recent posts by engagement.' },
+  'sentiment-analyzer': { title: 'Sentiment Analyzer', emoji: '🧠', category: 'analyze', danger: 'safe', where: W.any, desc: 'Score sentiment across posts on the current view.' },
+  'audience-overlap': { title: 'Audience Overlap', emoji: '🔀', category: 'analyze', danger: 'safe', where: W.any, desc: 'Compare two follower sets for overlap and unique handles.' },
+  'trending-monitor': { title: 'Trending Monitor', emoji: '📈', category: 'analyze', danger: 'safe', where: W.explore, desc: 'Capture current trends and watch for your keywords.' }
 };
 
 // ---------------------------------------------------------------------------
@@ -258,7 +332,10 @@ const dataBlock = [
 ].join('\n');
 
 let shell = readFileSync(SHELL, 'utf-8');
-shell = shell.replace('/* __XA_INJECT_DATA__ */', dataBlock).replace(/__XA_VERSION__/g, VERSION);
+// Use function replacers: a string replacement would interpret `$` sequences in
+// the tool source (e.g. a regex template literal like `/?$`) as special replace
+// patterns and corrupt the output.
+shell = shell.replace('/* __XA_INJECT_DATA__ */', () => dataBlock).replace(/__XA_VERSION__/g, () => VERSION);
 
 const header = `// Copyright (c) 2024-2026 nich (@nichxbt). All rights reserved.
 /**

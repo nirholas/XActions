@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scrape User Likes - XActions — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Scroll a user's Likes timeline and export the posts they liked (url, author, text, counts) to JSON and CSV.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, user, likes, scrapers">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Scrape User Likes - XActions — XActions">
+  <meta property="og:description" content="Scroll a user's Likes timeline and export the posts they liked (url, author, text, counts) to JSON and CSV.">
+  <meta property="og:url" content="https://xactions.app/scripts/scrape-user-likes">
+  <meta property="og:site_name" content="XActions">
+  <meta property="og:image" content="https://xactions.app/og-image.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Scrape User Likes - XActions — XActions">
+  <meta name="twitter:description" content="Scroll a user's Likes timeline and export the posts they liked (url, author, text, counts) to JSON and CSV.">
+
+  <link rel="canonical" href="https://xactions.app/scripts/scrape-user-likes">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Scrape User Likes - XActions — Free X/Twitter Script | XActions",
+    "description": "Scroll a user's Likes timeline and export the posts they liked (url, author, text, counts) to JSON and CSV.",
+    "url": "https://xactions.app/scripts/scrape-user-likes",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-03-30",
+    "dateModified": "2026-03-30",
+    "articleSection": "Scrapers",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, user, likes, scrapers"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
+      { "@type": "ListItem", "position": 3, "name": "Scrapers", "item": "https://xactions.app/scripts#scrapers" },
+      { "@type": "ListItem", "position": 4, "name": "Scrape User Likes - XActions", "item": "https://xactions.app/scripts/scrape-user-likes" }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="/css/common.css">
+  <style>
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .meta-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; font-size: 0.8125rem; color: var(--text-secondary); }
+    .meta-row span { display: flex; align-items: center; gap: 4px; }
+    .usage-steps { margin-left: 24px; margin-bottom: 16px; }
+    .usage-steps li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 8px; padding-left: 4px; }
+    .warning-box { background: rgba(244, 33, 46, 0.1); border: 1px solid var(--error); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .warning-box p { color: var(--error); margin: 0; font-size: 0.875rem; }
+    .controls-box { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .controls-box h3 { margin: 0 0 8px; font-size: 1rem; }
+    .code-block { position: relative; }
+    .copy-btn { position: absolute; top: 8px; right: 8px; background: var(--bg-tertiary); color: var(--text-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: 0.75rem; z-index: 10; transition: all .2s; }
+    .copy-btn:hover { background: var(--accent); color: #fff; }
+    .full-code { margin-top: 32px; }
+    .full-code pre { max-height: 600px; overflow-y: auto; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .source-badge { display: inline-block; background: var(--bg-tertiary); color: var(--text-secondary); padding: 2px 8px; border-radius: 6px; font-size: 0.6875rem; margin-left: 8px; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .article pre { font-size: 0.75rem; }
+      .meta-row { flex-direction: column; gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
+  <div class="layout">
+    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <script src="/js/sidebar.js"></script>
+
+    <main class="main-content" id="main-content">
+      <header class="main-header">
+        <h1>💗 Scrape User Likes - XActions</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#scrapers">Scrapers</a> › Scrape User Likes - XActions
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Scrapers</span>
+        <span class="source-badge">scripts/twitter</span>
+
+        <div class="meta-row">
+          <span>v1.0.0</span>
+          <span>Updated: 2026-07-20</span>
+          <span>310 lines</span>
+          <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
+        </div>
+
+        <p>Scroll a user's Likes timeline and export the posts they liked (url, author, text, counts) to JSON and CSV.</p>
+
+        
+
+        <h2>How to Use</h2>
+        <ol class="usage-steps"><li>Go to the Likes tab of a profile: x.com/&lt;user&gt;/likes</li>
+<li>Open the browser console (F12 or Cmd+Option+I -&gt; Console)</li>
+<li>(Optional) edit the CONFIG options at the top of the script</li>
+<li>Paste this entire script and press Enter</li></ol>
+        
+
+        
+        
+        <section class="config-code">
+        <h2>Default Configuration</h2>
+        <div class="code-block">
+          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
+          <pre><code>const CONFIG = {
+    // Stop after collecting this many liked posts (safety cap)
+    maxPosts: 1000,
+
+    // How far to scroll each step (pixels)
+    scrollStep: 1600,
+
+    // Delay between scrolls (ms). Raise to 2500+ on a slow connection so posts load.
+    scrollDelay: 1600,
+
+    // Give up after this many consecutive scrolls with no new posts (end of timeline)
+    stallLimit: 6,
+
+    // Hard cap on scroll attempts, independent of stalls
+    maxScrollAttempts: 400,
+
+    // Also trigger a browser download of the CSV file (JSON always downloads)
+    autoDownloadCsv: false
+  };</code></pre>
+        </div>
+      </section>
+
+        <section class="full-code">
+          <h2>Full Script</h2>
+          <p>Copy and paste this entire script into your browser DevTools console on <a href="https://x.com" rel="noopener">x.com</a>.</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
+            <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * ============================================
+ * 💛 Scrape User Likes - XActions
+ * ============================================
+ *
+ * @name         scrape-user-likes
+ * @description  Scroll a user's Likes timeline and export the posts they liked (url, author, text, counts) to JSON and CSV.
+ * @author       nichxbt
+ * @version      1.0.0
+ * @date         2026-07-20
+ * @website      https://xactions.app
+ *
+ * Usage:
+ *   1. Go to the Likes tab of a profile: x.com/&lt;user&gt;/likes
+ *      (X only shows the Likes tab for your own account unless it is public)
+ *   2. Open the browser console (F12 or Cmd+Option+I -&gt; Console)
+ *   3. (Optional) edit the CONFIG options at the top of the script
+ *   4. Paste this entire script and press Enter
+ *
+ * Example:
+ *   On x.com/&lt;you&gt;/likes the script scrolls your liked posts, prints a running
+ *   count (&quot;Collected 120 liked posts...&quot;), then downloads &lt;you&gt;_likes_&lt;date&gt;.json
+ *   with each post's url, author, text and like/repost/reply/view counts, and
+ *   reports the accounts you like most. To stop early: window.stopScrapeUserLikes().
+ *
+ * ============================================
+ */
+
+(async function scrapeUserLikes() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // Stop after collecting this many liked posts (safety cap)
+    maxPosts: 1000,
+
+    // How far to scroll each step (pixels)
+    scrollStep: 1600,
+
+    // Delay between scrolls (ms). Raise to 2500+ on a slow connection so posts load.
+    scrollDelay: 1600,
+
+    // Give up after this many consecutive scrolls with no new posts (end of timeline)
+    stallLimit: 6,
+
+    // Hard cap on scroll attempts, independent of stalls
+    maxScrollAttempts: 400,
+
+    // Also trigger a browser download of the CSV file (JSON always downloads)
+    autoDownloadCsv: false
+  };
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    tweet: 'article[data-testid=&quot;tweet&quot;]',
+    tweetText: '[data-testid=&quot;tweetText&quot;]',
+    userName: '[data-testid=&quot;User-Name&quot;]',
+    verified: 'svg[aria-label*=&quot;Verified&quot;], [data-testid=&quot;icon-verified&quot;]',
+    photo: '[data-testid=&quot;tweetPhoto&quot;]',
+    video: '[data-testid=&quot;videoPlayer&quot;], [data-testid=&quot;videoComponent&quot;]'
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) =&gt; new Promise((r) =&gt; setTimeout(r, ms));
+  const randomDelay = () =&gt; sleep(CONFIG.scrollDelay + Math.floor(Math.random() * 500));
+
+  const log = {
+    info: (m) =&gt; console.log(`ℹ️ ${m}`),
+    success: (m) =&gt; console.log(`✅ ${m}`),
+    warning: (m) =&gt; console.log(`⚠️ ${m}`),
+    error: (m) =&gt; console.log(`❌ ${m}`),
+    count: (n) =&gt; console.log(`💛 Collected ${n} liked posts...`)
+  };
+
+  const csvCell = (v) =&gt; `&quot;${String(v == null ? '' : v).replace(/&quot;/g, '&quot;&quot;').replace(/\r?\n/g, ' ')}&quot;`;
+
+  const parseNumber = (str) =&gt; {
+    if (!str) return 0;
+    const s = str.trim().toUpperCase();
+    const num = parseFloat(s.replace(/,/g, '')) || 0;
+    if (s.includes('K')) return Math.round(num * 1000);
+    if (s.includes('M')) return Math.round(num * 1000000);
+    return Math.round(num);
+  };
+
+  const download = (content, filename, type) =&gt; {
+    try {
+      const blob = new Blob([content], { type });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      return true;
+    } catch (e) {
+      log.error(`Download of ${filename} failed: ${e.message}`);
+      return false;
+    }
+  };
+
+  const extractPost = (article) =&gt; {
+    // The permalink around the timestamp is the post's own URL (not a quoted one).
+    const timeEl = article.querySelector('time');
+    const permalink = timeEl?.closest('a[href*=&quot;/status/&quot;]') || article.querySelector('a[href*=&quot;/status/&quot;]');
+    const url = permalink ? permalink.href : '';
+    const id = url ? (url.split('/status/')[1] || '').split(/[?/]/)[0] : '';
+    if (!id) return null;
+
+    // Author handle is reliable from the permalink path: /&lt;handle&gt;/status/&lt;id&gt;
+    const handle = (url.match(/x\.com\/([^/]+)\/status/) || [])[1] || '';
+    const nameText = article.querySelector(SELECTORS.userName)?.textContent || '';
+    const displayName = nameText.split('@')[0].trim();
+    const verified = !!article.querySelector(`${SELECTORS.userName} ${SELECTORS.verified}`);
+
+    const text = article.querySelector(SELECTORS.tweetText)?.textContent || '';
+    const time = timeEl ? timeEl.getAttribute('datetime') : '';
+
+    const getMetric = (testId) =&gt; {
+      const el = article.querySelector(`[data-testid=&quot;${testId}&quot;]`);
+      const span = el?.querySelector('span span');
+      return parseNumber(span ? span.textContent : '0');
+    };
+    const viewsEl = article.querySelector('a[href$=&quot;/analytics&quot;]');
+    const views = parseNumber(viewsEl ? viewsEl.textContent : '0');
+
+    const hasImage = article.querySelector(SELECTORS.photo) !== null;
+    const hasVideo = article.querySelector(SELECTORS.video) !== null;
+
+    return {
+      id,
+      url,
+      author: { handle, displayName, verified },
+      text,
+      time,
+      counts: {
+        likes: getMetric('like'),
+        retweets: getMetric('retweet'),
+        replies: getMetric('reply'),
+        views
+      },
+      hasMedia: hasImage || hasVideo
+    };
+  };
+
+  // ============================================
+  // 🛑 STOP SWITCH
+  // ============================================
+  let stopped = false;
+  window.stopScrapeUserLikes = () =&gt; {
+    stopped = true;
+    log.warning('Stop requested. Finishing the current scroll, then exporting what was collected.');
+  };
+
+  // ============================================
+  // 🚦 PAGE GUARD
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  💛 SCRAPE USER LIKES - XActions                         ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  if (!/\/likes\/?$/.test(window.location.pathname) || /\/status\//.test(window.location.pathname)) {
+    log.warning('You are not on a profile Likes page.');
+    log.info('Go to x.com/&lt;user&gt;/likes (the Likes tab of a profile), then run this again.');
+    return;
+  }
+
+  const username = window.location.pathname.split('/')[1] || 'unknown';
+  log.info(`Scraping liked posts of @${username}`);
+  log.info(`Max posts: ${CONFIG.maxPosts}. To stop early: window.stopScrapeUserLikes()`);
+
+  // ============================================
+  // 🎯 MAIN LOOP
+  // ============================================
+  const posts = new Map();
+  const stats = { collected: 0, withMedia: 0, scrolls: 0, errors: 0 };
+
+  let scrollAttempts = 0;
+  let stall = 0;
+
+  while (!stopped &amp;&amp; posts.size &lt; CONFIG.maxPosts &amp;&amp; stall &lt; CONFIG.stallLimit &amp;&amp; scrollAttempts &lt; CONFIG.maxScrollAttempts) {
+    const before = posts.size;
+
+    document.querySelectorAll(SELECTORS.tweet).forEach((article) =&gt; {
+      try {
+        const p = extractPost(article);
+        if (p &amp;&amp; p.id &amp;&amp; !posts.has(p.id)) posts.set(p.id, p);
+      } catch (e) {
+        stats.errors++;
+      }
+    });
+
+    if (posts.size &gt; before) {
+      log.count(posts.size);
+      stall = 0;
+    } else {
+      stall++;
+    }
+
+    window.scrollBy(0, CONFIG.scrollStep);
+    await randomDelay();
+    scrollAttempts++;
+    stats.scrolls = scrollAttempts;
+  }
+
+  const list = Array.from(posts.values()).slice(0, CONFIG.maxPosts);
+  stats.collected = list.length;
+  stats.withMedia = list.filter((p) =&gt; p.hasMedia).length;
+
+  // Most-liked accounts
+  const accountCounts = {};
+  list.forEach((p) =&gt; {
+    const h = p.author.handle || 'unknown';
+    accountCounts[h] = (accountCounts[h] || 0) + 1;
+  });
+  const topAccounts = Object.entries(accountCounts).sort((a, b) =&gt; b[1] - a[1]).slice(0, 5);
+
+  // ============================================
+  // 📤 EXPORT
+  // ============================================
+  const result = {
+    profile: username,
+    profileUrl: `https://x.com/${username}`,
+    scrapedAt: new Date().toISOString(),
+    total: list.length,
+    topLikedAccounts: topAccounts.map(([handle, count]) =&gt; ({ handle, count })),
+    posts: list
+  };
+
+  const buildCsv = () =&gt; {
+    const header = 'AuthorHandle,AuthorName,Verified,Text,Likes,Retweets,Replies,Views,HasMedia,URL,Time';
+    const rows = list.map((p) =&gt; [
+      csvCell('@' + p.author.handle),
+      csvCell(p.author.displayName),
+      p.author.verified,
+      csvCell(p.text),
+      p.counts.likes,
+      p.counts.retweets,
+      p.counts.replies,
+      p.counts.views,
+      p.hasMedia,
+      csvCell(p.url),
+      csvCell(p.time)
+    ].join(','));
+    return [header, ...rows].join('\n');
+  };
+
+  const csv = buildCsv();
+  const dateStr = new Date().toISOString().split('T')[0];
+
+  if (list.length === 0) {
+    log.warning('No liked posts were collected. The Likes tab may be empty or hidden (X hides it for other users).');
+  } else {
+    download(JSON.stringify(result, null, 2), `${username}_likes_${dateStr}.json`, 'application/json');
+    log.success(`Downloaded ${username}_likes_${dateStr}.json`);
+    if (CONFIG.autoDownloadCsv) {
+      download(csv, `${username}_likes_${dateStr}.csv`, 'text/csv');
+      log.success(`Downloaded ${username}_likes_${dateStr}.csv`);
+    }
+  }
+
+  window.scrapedUserLikes = result;
+  window.scrapeUserLikesExportCSV = () =&gt; {
+    download(csv, `${username}_likes_${dateStr}.csv`, 'text/csv');
+    return csv;
+  };
+
+  // ============================================
+  // 📊 SUMMARY
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 SCRAPE USER LIKES - COMPLETE                         ║
+╠══════════════════════════════════════════════════════════╣
+║  💛 Liked posts:         ${String(stats.collected).padEnd(30)}║
+║  🖼️  With media:          ${String(stats.withMedia).padEnd(30)}║
+║  📜 Scrolls:             ${String(stats.scrolls).padEnd(30)}║
+║  ❌ Row errors:          ${String(stats.errors).padEnd(30)}║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  if (topAccounts.length &gt; 0) {
+    console.log('📊 Most-liked accounts:');
+    topAccounts.forEach(([handle, count]) =&gt; console.log(`   @${handle}: ${count}`));
+  }
+
+  list.slice(0, 5).forEach((p, i) =&gt; {
+    console.log(`${i + 1}. @${p.author.handle} (${p.counts.likes} ❤️): &quot;${p.text.slice(0, 50)}...&quot;`);
+  });
+  if (list.length &gt; 5) console.log(`   ... and ${list.length - 5} more`);
+
+  console.log('\n📋 CSV preview (full string via window.scrapeUserLikesExportCSV()):');
+  console.log(csv.split('\n').slice(0, 6).join('\n'));
+  console.log('\n💡 window.scrapedUserLikes = full data. window.scrapeUserLikesExportCSV() = download + return CSV.');
+
+  return result;
+})();
+</code></pre>
+          </div>
+        </section>
+
+        <div class="cta-box">
+          <h3>⚡ More XActions Scripts</h3>
+          <p>Browse 300+ free browser scripts for X/Twitter automation. No API keys, no fees.</p>
+          <a href="/scripts">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>💗 Scrapers</h3>
+        <a href="/scripts/scrape-bookmarks">🔖 Bookmarks Scraper</a>
+<a href="/scripts/scrape-dms">✉️ DM Scraper</a>
+<a href="/scripts/export-to-csv">📄 Export to CSV Utility</a>
+<a href="/scripts/scrape-followers">👥 Followers Scraper</a>
+<a href="/scripts/scrape-following">👥 Following Scraper</a>
+<a href="/scripts/scrape-hashtag">#️⃣ Hashtag Scraper</a>
+<a href="/scripts/scrape-likers">❤️ Likers Scraper</a>
+<a href="/scripts/scrape-likes">❤️ Likes Scraper</a>
+<a href="/scripts/link-scraper">🔗 Link Scraper</a>
+<a href="/scripts/scrape-list">📝 List Members Scraper</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/scripts">All Scripts</a>
+        <a href="/features">Features</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+</body>
+</html>

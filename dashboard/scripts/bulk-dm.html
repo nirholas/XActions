@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bulk DM - XActions — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Send a personalized DM to a list of users from one message template.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, bulk, messaging">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Bulk DM - XActions — XActions">
+  <meta property="og:description" content="Send a personalized DM to a list of users from one message template.">
+  <meta property="og:url" content="https://xactions.app/scripts/bulk-dm">
+  <meta property="og:site_name" content="XActions">
+  <meta property="og:image" content="https://xactions.app/og-image.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Bulk DM - XActions — XActions">
+  <meta name="twitter:description" content="Send a personalized DM to a list of users from one message template.">
+
+  <link rel="canonical" href="https://xactions.app/scripts/bulk-dm">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Bulk DM - XActions — Free X/Twitter Script | XActions",
+    "description": "Send a personalized DM to a list of users from one message template.",
+    "url": "https://xactions.app/scripts/bulk-dm",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-03-30",
+    "dateModified": "2026-03-30",
+    "articleSection": "Messaging",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, bulk, messaging"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
+      { "@type": "ListItem", "position": 3, "name": "Messaging", "item": "https://xactions.app/scripts#messaging" },
+      { "@type": "ListItem", "position": 4, "name": "Bulk DM - XActions", "item": "https://xactions.app/scripts/bulk-dm" }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="/css/common.css">
+  <style>
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .meta-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; font-size: 0.8125rem; color: var(--text-secondary); }
+    .meta-row span { display: flex; align-items: center; gap: 4px; }
+    .usage-steps { margin-left: 24px; margin-bottom: 16px; }
+    .usage-steps li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 8px; padding-left: 4px; }
+    .warning-box { background: rgba(244, 33, 46, 0.1); border: 1px solid var(--error); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .warning-box p { color: var(--error); margin: 0; font-size: 0.875rem; }
+    .controls-box { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .controls-box h3 { margin: 0 0 8px; font-size: 1rem; }
+    .code-block { position: relative; }
+    .copy-btn { position: absolute; top: 8px; right: 8px; background: var(--bg-tertiary); color: var(--text-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: 0.75rem; z-index: 10; transition: all .2s; }
+    .copy-btn:hover { background: var(--accent); color: #fff; }
+    .full-code { margin-top: 32px; }
+    .full-code pre { max-height: 600px; overflow-y: auto; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .source-badge { display: inline-block; background: var(--bg-tertiary); color: var(--text-secondary); padding: 2px 8px; border-radius: 6px; font-size: 0.6875rem; margin-left: 8px; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .article pre { font-size: 0.75rem; }
+      .meta-row { flex-direction: column; gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
+  <div class="layout">
+    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <script src="/js/sidebar.js"></script>
+
+    <main class="main-content" id="main-content">
+      <header class="main-header">
+        <h1>📤 Bulk DM - XActions</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#messaging">Messaging</a> › Bulk DM - XActions
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Messaging</span>
+        <span class="source-badge">scripts/twitter</span>
+
+        <div class="meta-row">
+          <span>v1.0.0</span>
+          <span>Updated: 2026-07-20</span>
+          <span>273 lines</span>
+          <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
+        </div>
+
+        <p>Send a personalized DM to a list of users from one message template.</p>
+
+        <div class="warning-box"><p>⚠️ Mass DMing can get your account rate-limited or restricted. Keep the list</p></div>
+
+        <h2>How to Use</h2>
+        <ol class="usage-steps"><li>Go to x.com/messages</li>
+<li>Open the browser console (F12 or Cmd+Option+I -&gt; Console)</li>
+<li>Edit CONFIG.usernames and CONFIG.message at the top of the script</li>
+<li>Paste this entire script and press Enter</li></ol>
+        
+
+        
+        <section class="config-section">
+        <h2>Configuration Options</h2>
+        <table>
+          <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>maxDMs</code></td><td><code>10</code></td><td>hard cap on DMs sent this run</td></tr>
+<tr><td><code>skipExisting</code></td><td><code>true</code></td><td>skip anyone you already have a conversation with</td></tr>
+<tr><td><code>minDelay</code></td><td><code>25000</code></td><td>25s</td></tr>
+<tr><td><code>maxDelay</code></td><td><code>45000</code></td><td>45s</td></tr>
+          </tbody>
+        </table>
+      </section>
+        <section class="config-code">
+        <h2>Default Configuration</h2>
+        <div class="code-block">
+          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
+          <pre><code>const CONFIG = {
+    // Recipients (with or without the leading @)
+    usernames: [
+      // 'username1',
+      // 'username2',
+    ],
+
+    // Message template. Placeholders:
+    //   {username} -&gt; the @handle (lowercased, no @)
+    //   {name}     -&gt; the recipient's display name (falls back to handle)
+    message: `Hey {name}! 👋 Thanks for connecting.`,
+
+    // Safety limits
+    maxDMs: 10,            // hard cap on DMs sent this run
+    skipExisting: true,    // skip anyone you already have a conversation with
+
+    // Timing (randomized between min and max, per DM)
+    minDelay: 25000,       // 25s
+    maxDelay: 45000        // 45s
+  };</code></pre>
+        </div>
+      </section>
+
+        <section class="full-code">
+          <h2>Full Script</h2>
+          <p>Copy and paste this entire script into your browser DevTools console on <a href="https://x.com" rel="noopener">x.com</a>.</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
+            <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * ============================================
+ * 💬 Bulk DM - XActions
+ * ============================================
+ *
+ * @name         bulk-dm
+ * @description  Send a personalized DM to a list of users from one message template.
+ * @author       nichxbt
+ * @version      1.0.0
+ * @date         2026-07-20
+ * @website      https://xactions.app
+ *
+ * Usage:
+ *   1. Go to x.com/messages
+ *   2. Open the browser console (F12 or Cmd+Option+I -&gt; Console)
+ *   3. Edit CONFIG.usernames and CONFIG.message at the top of the script
+ *   4. Paste this entire script and press Enter
+ *
+ * Example:
+ *   usernames: ['jack', 'nichxbt'], message: 'Hey {name}! Loved your recent posts.'
+ *   The script opens a new DM to @jack, types the message with {name} filled in
+ *   from their display name, sends it, waits, then does @nichxbt. It skips anyone
+ *   you already have a conversation with (skipExisting) and stops at maxDMs.
+ *
+ * ⚠️ Mass DMing can get your account rate-limited or restricted. Keep the list
+ *    small, keep delays high, and only message people who want to hear from you.
+ *
+ * ============================================
+ */
+
+(async function bulkDM() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // Recipients (with or without the leading @)
+    usernames: [
+      // 'username1',
+      // 'username2',
+    ],
+
+    // Message template. Placeholders:
+    //   {username} -&gt; the @handle (lowercased, no @)
+    //   {name}     -&gt; the recipient's display name (falls back to handle)
+    message: `Hey {name}! 👋 Thanks for connecting.`,
+
+    // Safety limits
+    maxDMs: 10,            // hard cap on DMs sent this run
+    skipExisting: true,    // skip anyone you already have a conversation with
+
+    // Timing (randomized between min and max, per DM)
+    minDelay: 25000,       // 25s
+    maxDelay: 45000        // 45s
+  };
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    newMessageBtn: '[data-testid=&quot;NewDM_Button&quot;]',
+    searchInput: '[data-testid=&quot;searchPeople&quot;]',
+    userCell: '[data-testid=&quot;UserCell&quot;]',
+    typeaheadUser: '[data-testid=&quot;TypeaheadUser&quot;]',
+    nextButton: '[data-testid=&quot;nextButton&quot;]',
+    messageInput: '[data-testid=&quot;dmComposerTextInput&quot;]',
+    sendButton: '[data-testid=&quot;dmComposerSendButton&quot;]',
+    conversation: '[data-testid=&quot;conversation&quot;]'
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+
+  const randomDelay = () =&gt; {
+    const delay = Math.floor(Math.random() * (CONFIG.maxDelay - CONFIG.minDelay + 1)) + CONFIG.minDelay;
+    return sleep(delay);
+  };
+
+  const cleanHandle = (u) =&gt; String(u || '').trim().replace(/^@/, '').toLowerCase();
+
+  const fillTemplate = (tpl, username, name) =&gt;
+    tpl.split('{username}').join(username).split('{name}').join(name || username);
+
+  const log = {
+    info: (msg) =&gt; console.log(`ℹ️ ${msg}`),
+    success: (msg) =&gt; console.log(`✅ ${msg}`),
+    warning: (msg) =&gt; console.log(`⚠️ ${msg}`),
+    error: (msg) =&gt; console.log(`❌ ${msg}`),
+    progress: (current, total) =&gt; console.log(`📊 Progress: ${current}/${total} DMs sent`)
+  };
+
+  // ============================================
+  // 🎯 STATE
+  // ============================================
+  const stats = { sent: 0, skipped: 0, notFound: 0, errors: 0 };
+
+  // Stop switch: run window.stopBulkDM() from the console to abort after the
+  // recipient currently being processed.
+  let stopped = false;
+  window.stopBulkDM = () =&gt; {
+    stopped = true;
+    log.warning('Stop requested. Finishing the current DM, then exiting.');
+  };
+
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  💬 BULK DM - XActions                                   ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+  log.warning('Use responsibly. Mass DMing can get your account restricted.');
+  log.info('To stop early: window.stopBulkDM()');
+
+  // Page guard
+  if (!/\/messages/.test(window.location.pathname)) {
+    log.error('Not on the Messages page. Go to https://x.com/messages and re-run.');
+    return stats;
+  }
+
+  const recipients = CONFIG.usernames.map(cleanHandle).filter(Boolean);
+  if (recipients.length === 0) {
+    log.error('CONFIG.usernames is empty. Add at least one handle and re-run.');
+    return stats;
+  }
+
+  log.info(`Recipients: ${recipients.length}`);
+  log.info(`Max DMs this run: ${CONFIG.maxDMs}`);
+
+  // ============================================
+  // 📬 SEND ONE DM
+  // ============================================
+  const sendOne = async (handle) =&gt; {
+    // Open the new-message composer
+    const newBtn = document.querySelector(SELECTORS.newMessageBtn);
+    if (!newBtn) {
+      log.error('New Message button not found. Make sure the Messages inbox is open.');
+      stats.errors++;
+      return false;
+    }
+    newBtn.click();
+    await sleep(1500);
+
+    const searchInput = document.querySelector(SELECTORS.searchInput);
+    if (!searchInput) {
+      log.error('People search box not found.');
+      stats.errors++;
+      return false;
+    }
+
+    // Type the handle (contenteditable-safe via execCommand)
+    searchInput.focus();
+    document.execCommand('insertText', false, handle);
+    await sleep(2200);
+
+    // Match the exact @handle so a prefix like &quot;john&quot; can't select &quot;johnny&quot;.
+    const cells = document.querySelectorAll(`${SELECTORS.typeaheadUser}, ${SELECTORS.userCell}`);
+    const escaped = handle.replace(/[.*+?^${}()|[\]\\]/g, '\\$&amp;');
+    const handleRe = new RegExp('@' + escaped + '(?![a-zA-Z0-9_])', 'i');
+    let matchCell = null;
+    for (const cell of cells) {
+      if (handleRe.test(cell.textContent)) { matchCell = cell; break; }
+    }
+    if (!matchCell) {
+      log.error(`@${handle} not found in search results.`);
+      stats.notFound++;
+      return false;
+    }
+
+    // Pull the display name for the {name} placeholder before we navigate away.
+    let displayName = handle;
+    const nameSpan = matchCell.querySelector('span');
+    if (nameSpan &amp;&amp; nameSpan.textContent.trim()) displayName = nameSpan.textContent.trim();
+
+    matchCell.click();
+    await sleep(1200);
+
+    // Some flows require a &quot;Next&quot; click to open the conversation.
+    const nextBtn = document.querySelector(SELECTORS.nextButton);
+    if (nextBtn &amp;&amp; !nextBtn.disabled) {
+      nextBtn.click();
+      await sleep(1500);
+    }
+
+    const msgInput = document.querySelector(SELECTORS.messageInput);
+    if (!msgInput) {
+      log.error('DM text input not found.');
+      stats.errors++;
+      return false;
+    }
+
+    const message = fillTemplate(CONFIG.message, handle, displayName);
+    msgInput.focus();
+    document.execCommand('insertText', false, message);
+    await sleep(1000);
+
+    const sendBtn = document.querySelector(SELECTORS.sendButton);
+    if (!sendBtn || sendBtn.getAttribute('aria-disabled') === 'true' || sendBtn.disabled) {
+      log.error(`Send button unavailable for @${handle}. DMs may be closed for this account.`);
+      stats.errors++;
+      return false;
+    }
+    sendBtn.click();
+    await sleep(1500);
+
+    log.success(`Sent to @${handle} (${displayName})`);
+    return true;
+  };
+
+  // ============================================
+  // 🔁 MAIN LOOP
+  // ============================================
+  for (let i = 0; i &lt; recipients.length; i++) {
+    if (stopped) { log.warning('Stopped by user.'); break; }
+    if (stats.sent &gt;= CONFIG.maxDMs) {
+      log.warning(`Reached maxDMs (${CONFIG.maxDMs}). Stopping.`);
+      break;
+    }
+
+    const handle = recipients[i];
+
+    try {
+      if (CONFIG.skipExisting) {
+        const openConvos = document.querySelectorAll(SELECTORS.conversation);
+        const escaped = handle.replace(/[.*+?^${}()|[\]\\]/g, '\\$&amp;');
+        const existsRe = new RegExp('@' + escaped + '(?![a-zA-Z0-9_])', 'i');
+        const already = Array.from(openConvos).some(c =&gt; existsRe.test(c.textContent));
+        if (already) {
+          log.info(`Skipping @${handle} (existing conversation).`);
+          stats.skipped++;
+          continue;
+        }
+      }
+
+      const ok = await sendOne(handle);
+      if (ok) {
+        stats.sent++;
+        log.progress(stats.sent, Math.min(CONFIG.maxDMs, recipients.length));
+      }
+    } catch (error) {
+      log.error(`Error DMing @${handle}: ${error.message}`);
+      stats.errors++;
+    }
+
+    // Delay before the next recipient (skip the wait after the final one).
+    const more = !stopped &amp;&amp; stats.sent &lt; CONFIG.maxDMs &amp;&amp; i &lt; recipients.length - 1;
+    if (more) {
+      log.info(`Waiting before the next DM...`);
+      await randomDelay();
+    }
+  }
+
+  // ============================================
+  // 📊 SUMMARY
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 BULK DM - COMPLETE                                   ║
+╠══════════════════════════════════════════════════════════╣
+║  ✅ Sent:              ${String(stats.sent).padEnd(32)}║
+║  ⏭️  Skipped (exists):  ${String(stats.skipped).padEnd(32)}║
+║  ❓ Not found:         ${String(stats.notFound).padEnd(32)}║
+║  ❌ Errors:            ${String(stats.errors).padEnd(32)}║
+╚══════════════════════════════════════════════════════════╝
+  `);
+  log.success('Script completed! by nichxbt');
+  return stats;
+})();
+</code></pre>
+          </div>
+        </section>
+
+        <div class="cta-box">
+          <h3>⚡ More XActions Scripts</h3>
+          <p>Browse 300+ free browser scripts for X/Twitter automation. No API keys, no fees.</p>
+          <a href="/scripts">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📤 Messaging</h3>
+        <a href="/scripts/auto-reply-dms">💌 Auto Reply DMs - XActions</a>
+<a href="/scripts/dm-calls">📞 DM Audio &amp; Video Calls</a>
+<a href="/scripts/dm-exporter">📤 DM Exporter</a>
+<a href="/scripts/dm-manager">✉️ DM Manager - Send</a>
+<a href="/scripts/encrypted-dm">🔒 Encrypted Direct Messages</a>
+<a href="/scripts/group-dm">👥 Group Direct Messages</a>
+<a href="/scripts/send-direct-message">📬 Send Direct Message</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/scripts">All Scripts</a>
+        <a href="/features">Features</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+</body>
+</html>

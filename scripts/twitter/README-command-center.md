@@ -1,12 +1,12 @@
 # ⚡ XActions Command Center
 
-**The one script to run them all.** Paste a single file into your browser console and get a searchable menu of every XActions tool: scrape, analyze, grow, engage, clean up, moderate, and more. No hunting for the right file, no editing config by hand, no re-pasting.
+**The one script to run them all.** Paste a single file into your browser console and get a searchable menu of all 108 XActions tools: create, scrape, analyze, grow, engage, clean up, moderate, manage lists, and more. No hunting for the right file, no editing config by hand, no re-pasting.
 
 Script: [`xactions-command-center.js`](./xactions-command-center.js)
 
 ## Why this exists
 
-XActions ships 60+ browser-console tools, each in its own file. Finding the right one meant browsing the repo, opening a file, editing its `CONFIG`, and pasting it. The Command Center replaces that with one paste: a floating command palette lists every tool, grouped by category, with search, one-click run, and an options form so you never touch source code.
+XActions ships 100+ browser-console tools, each in its own file. Finding the right one meant browsing the repo, opening a file, editing its `CONFIG`, and pasting it. The Command Center replaces that with one paste: a floating command palette lists every tool, grouped by category, with search, one-click run, and an options form so you never touch source code.
 
 It bundles every tool in `scripts/twitter/` directly into one script, so there are no extra network requests and nothing to install. It works on x.com's strict Content-Security-Policy because it never fetches or `eval`s remote code: everything it can run is already in the file you pasted.
 
@@ -23,7 +23,7 @@ Reopen the palette any time with the floating **⚡** button (bottom-right) or *
 ## What you can do
 
 - **Search** across all tools by name, description, or category. Arrow keys navigate, Enter opens.
-- **Browse by category:** Scrape & Export, Analytics, Grow, Engage, Clean Up, Moderate, Communities, Profile, Utilities.
+- **Browse by category:** Create & Post, Scrape & Export, Analytics, Grow, Engage, Clean Up, Moderate, Lists, Communities, Profile, Utilities.
 - **Star favorites** and see recently used tools at the top.
 - **Set options in a form** instead of editing code. Every tool's settings render as fields (text, numbers, toggles, lists), with an "Edit as JSON" mode for power users. Options are applied to that run only.
 - **Safety by design.** Each tool is tagged **Safe** (read-only/export), **Writes** (acts on your account at a human pace), or **Bulk / irreversible**. Destructive tools (mass unfollow, unlike, block, clear) require a second confirming click and show a warning. The palette also tells you which page each tool expects and warns if you're not on it.

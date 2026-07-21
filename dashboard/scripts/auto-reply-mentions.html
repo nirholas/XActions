@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auto Reply Mentions - XActions — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Reply to your recent mentions with rotating templates so no @ goes unanswered.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, auto, reply, mentions, engagement">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Auto Reply Mentions - XActions — XActions">
+  <meta property="og:description" content="Reply to your recent mentions with rotating templates so no @ goes unanswered.">
+  <meta property="og:url" content="https://xactions.app/scripts/auto-reply-mentions">
+  <meta property="og:site_name" content="XActions">
+  <meta property="og:image" content="https://xactions.app/og-image.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Auto Reply Mentions - XActions — XActions">
+  <meta name="twitter:description" content="Reply to your recent mentions with rotating templates so no @ goes unanswered.">
+
+  <link rel="canonical" href="https://xactions.app/scripts/auto-reply-mentions">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Auto Reply Mentions - XActions — Free X/Twitter Script | XActions",
+    "description": "Reply to your recent mentions with rotating templates so no @ goes unanswered.",
+    "url": "https://xactions.app/scripts/auto-reply-mentions",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-03-30",
+    "dateModified": "2026-03-30",
+    "articleSection": "Engagement",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, auto, reply, mentions, engagement"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
+      { "@type": "ListItem", "position": 3, "name": "Engagement", "item": "https://xactions.app/scripts#engagement" },
+      { "@type": "ListItem", "position": 4, "name": "Auto Reply Mentions - XActions", "item": "https://xactions.app/scripts/auto-reply-mentions" }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="/css/common.css">
+  <style>
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .meta-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; font-size: 0.8125rem; color: var(--text-secondary); }
+    .meta-row span { display: flex; align-items: center; gap: 4px; }
+    .usage-steps { margin-left: 24px; margin-bottom: 16px; }
+    .usage-steps li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 8px; padding-left: 4px; }
+    .warning-box { background: rgba(244, 33, 46, 0.1); border: 1px solid var(--error); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .warning-box p { color: var(--error); margin: 0; font-size: 0.875rem; }
+    .controls-box { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .controls-box h3 { margin: 0 0 8px; font-size: 1rem; }
+    .code-block { position: relative; }
+    .copy-btn { position: absolute; top: 8px; right: 8px; background: var(--bg-tertiary); color: var(--text-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: 0.75rem; z-index: 10; transition: all .2s; }
+    .copy-btn:hover { background: var(--accent); color: #fff; }
+    .full-code { margin-top: 32px; }
+    .full-code pre { max-height: 600px; overflow-y: auto; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .source-badge { display: inline-block; background: var(--bg-tertiary); color: var(--text-secondary); padding: 2px 8px; border-radius: 6px; font-size: 0.6875rem; margin-left: 8px; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .article pre { font-size: 0.75rem; }
+      .meta-row { flex-direction: column; gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
+  <div class="layout">
+    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <script src="/js/sidebar.js"></script>
+
+    <main class="main-content" id="main-content">
+      <header class="main-header">
+        <h1>📨 Auto Reply Mentions - XActions</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#engagement">Engagement</a> › Auto Reply Mentions - XActions
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Engagement</span>
+        <span class="source-badge">scripts/twitter</span>
+
+        <div class="meta-row">
+          <span>v1.0.0</span>
+          <span>Updated: 2026-07-20</span>
+          <span>320 lines</span>
+          <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
+        </div>
+
+        <p>Reply to your recent mentions with rotating templates so no @ goes unanswered.</p>
+
+        
+
+        <h2>How to Use</h2>
+        <ol class="usage-steps"><li>Go to x.com/notifications/mentions</li>
+<li>Open the browser console (F12 or Cmd+Option+I -&gt; Console)</li>
+<li>(Optional) edit the CONFIG options at the top: fill in replyTemplates</li>
+<li>Paste this entire script and press Enter</li></ol>
+        
+
+        
+        
+        <section class="config-code">
+        <h2>Default Configuration</h2>
+        <div class="code-block">
+          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
+          <pre><code>const CONFIG = {
+    // Reply templates, used in rotation (one per mention). REQUIRED.
+    // Keep them generic and friendly, or personalise per your voice.
+    replyTemplates: [
+      'Thanks for the mention! 🙏',
+      'Appreciate you tagging me 🚀',
+      'Thanks for reaching out!',
+      'Glad you brought this up 💡'
+    ],
+
+    // Maximum number of mentions to reply to this run
+    maxReplies: 8,
+
+    // Skip mentions you have already replied to in a previous run
+    // (tracked in this browser's localStorage)
+    skipIfAlreadyReplied: true,
+
+    // Append a random emoji to each reply for variety
+    addRandomEmoji: false,
+
+    // Minimum delay between replies (ms)
+    minDelay: 3000,
+
+    // Maximum delay between replies (ms)
+    maxDelay: 6000,
+
+    // Maximum scroll attempts to find more mentions
+    maxScrollAttempts: 20,
+
+    // Stop if no new mentions appear after this many consecutive scrolls
+    noNewMentionsThreshold: 4
+  };</code></pre>
+        </div>
+      </section>
+
+        <section class="full-code">
+          <h2>Full Script</h2>
+          <p>Copy and paste this entire script into your browser DevTools console on <a href="https://x.com" rel="noopener">x.com</a>.</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
+            <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * ============================================
+ * 💬 Auto Reply Mentions - XActions
+ * ============================================
+ *
+ * @name         auto-reply-mentions
+ * @description  Reply to your recent mentions with rotating templates so no @ goes unanswered.
+ * @author       nichxbt
+ * @version      1.0.0
+ * @date         2026-07-20
+ * @website      https://xactions.app
+ *
+ * Usage:
+ *   1. Go to x.com/notifications/mentions
+ *   2. Open the browser console (F12 or Cmd+Option+I -&gt; Console)
+ *   3. (Optional) edit the CONFIG options at the top: fill in replyTemplates
+ *      with your own lines, set maxReplies, adjust the delays.
+ *   4. Paste this entire script and press Enter
+ *
+ * Example:
+ *   replyTemplates: ['Thanks for the tag!', 'Appreciate you 🙏', 'On it, thanks!']
+ *   maxReplies: 8. The script walks your mentions oldest-visible first, opens
+ *   each reply composer, types the next template in rotation, posts it, and
+ *   waits 3-6s. It skips any mention you have already replied to.
+ *   Run window.stopAutoReplyMentions() to halt after the current reply.
+ *
+ * ============================================
+ */
+
+(async function autoReplyMentions() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // Reply templates, used in rotation (one per mention). REQUIRED.
+    // Keep them generic and friendly, or personalise per your voice.
+    replyTemplates: [
+      'Thanks for the mention! 🙏',
+      'Appreciate you tagging me 🚀',
+      'Thanks for reaching out!',
+      'Glad you brought this up 💡'
+    ],
+
+    // Maximum number of mentions to reply to this run
+    maxReplies: 8,
+
+    // Skip mentions you have already replied to in a previous run
+    // (tracked in this browser's localStorage)
+    skipIfAlreadyReplied: true,
+
+    // Append a random emoji to each reply for variety
+    addRandomEmoji: false,
+
+    // Minimum delay between replies (ms)
+    minDelay: 3000,
+
+    // Maximum delay between replies (ms)
+    maxDelay: 6000,
+
+    // Maximum scroll attempts to find more mentions
+    maxScrollAttempts: 20,
+
+    // Stop if no new mentions appear after this many consecutive scrolls
+    noNewMentionsThreshold: 4
+  };
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    tweet: 'article[data-testid=&quot;tweet&quot;]',
+    tweetText: '[data-testid=&quot;tweetText&quot;]',
+    replyButton: '[data-testid=&quot;reply&quot;]',
+    composer: '[data-testid=&quot;tweetTextarea_0&quot;]',
+    postButton: '[data-testid=&quot;tweetButton&quot;]',
+    postButtonInline: '[data-testid=&quot;tweetButtonInline&quot;]',
+    userName: '[data-testid=&quot;User-Name&quot;] a[href^=&quot;/&quot;]'
+  };
+
+  const STORAGE_KEY = 'xactions_replied_mentions';
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+
+  const randomDelay = () =&gt; {
+    const delay = Math.floor(Math.random() * (CONFIG.maxDelay - CONFIG.minDelay + 1)) + CONFIG.minDelay;
+    return sleep(delay);
+  };
+
+  const emojis = ['🔥', '💯', '⚡', '🚀', '👏', '💡', '✨', '🙌', '💪', '🎯'];
+  const pick = (arr) =&gt; arr[Math.floor(Math.random() * arr.length)];
+
+  const scrollDown = () =&gt; window.scrollBy(0, window.innerHeight * 0.7);
+
+  const log = {
+    info: (msg) =&gt; console.log(`ℹ️ ${msg}`),
+    success: (msg) =&gt; console.log(`✅ ${msg}`),
+    warning: (msg) =&gt; console.log(`⚠️ ${msg}`),
+    error: (msg) =&gt; console.log(`❌ ${msg}`),
+    progress: (current, total) =&gt; console.log(`📊 Progress: ${current}/${total} replied`)
+  };
+
+  const loadReplied = () =&gt; {
+    try {
+      return new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'));
+    } catch {
+      return new Set();
+    }
+  };
+
+  const saveReplied = (set) =&gt; {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify([...set]));
+    } catch {
+      // localStorage may be unavailable in some contexts; tracking is best-effort.
+    }
+  };
+
+  const getTweetIdentifier = (tweet) =&gt; {
+    const timeAnchor = tweet.querySelector('time')?.closest('a[href*=&quot;/status/&quot;]');
+    if (timeAnchor) {
+      const match = timeAnchor.href.match(/\/status\/(\d+)/);
+      if (match) return match[1];
+    }
+    const links = tweet.querySelectorAll('a[href*=&quot;/status/&quot;]');
+    for (const link of links) {
+      const match = link.href.match(/\/status\/(\d+)/);
+      if (match) return match[1];
+    }
+    return null;
+  };
+
+  const getAuthor = (tweet) =&gt; {
+    const el = tweet.querySelector(SELECTORS.userName);
+    return el?.getAttribute('href')?.replace(/^\//, '').split('/')[0] || 'user';
+  };
+
+  // Type text into the composer. X uses a contenteditable Draft.js editor, so
+  // execCommand('insertText') is the reliable way to enter characters and fire
+  // the input events X listens for.
+  const typeInto = async (box, text) =&gt; {
+    box.focus();
+    await sleep(200);
+    document.execCommand('insertText', false, text);
+    await sleep(400);
+  };
+
+  // ============================================
+  // 🎯 MAIN LOGIC
+  // ============================================
+  const stats = {
+    replied: 0,
+    skippedAlready: 0,
+    skippedNoReplyButton: 0,
+    errors: 0
+  };
+
+  let templateIndex = 0;
+  const nextTemplate = () =&gt; {
+    let text = CONFIG.replyTemplates[templateIndex % CONFIG.replyTemplates.length];
+    templateIndex++;
+    if (CONFIG.addRandomEmoji) text += ' ' + pick(emojis);
+    return text;
+  };
+
+  // Stop switch: run window.stopAutoReplyMentions() to abort after the current reply.
+  let stopped = false;
+  window.stopAutoReplyMentions = () =&gt; {
+    stopped = true;
+    log.warning('Stop requested. Finishing the current reply, then exiting.');
+  };
+
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  💬 AUTO REPLY MENTIONS - XActions                       ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  // Page guard: warn (do not redirect) if not on the mentions timeline.
+  if (!/\/notifications\/mentions/.test(window.location.pathname)) {
+    log.warning('Go to x.com/notifications/mentions, then run this again.');
+    return;
+  }
+
+  // Config guard: templates are required and must be non-empty strings.
+  const templates = (CONFIG.replyTemplates || []).map(t =&gt; (t || '').trim()).filter(Boolean);
+  if (templates.length === 0) {
+    log.error('CONFIG.replyTemplates is empty. Add at least one reply line and re-run.');
+    return;
+  }
+  CONFIG.replyTemplates = templates;
+
+  const replied = CONFIG.skipIfAlreadyReplied ? loadReplied() : new Set();
+  const processedThisRun = new Set();
+
+  log.info(`Max replies: ${CONFIG.maxReplies}`);
+  log.info(`Templates: ${CONFIG.replyTemplates.length} | Skip already replied: ${CONFIG.skipIfAlreadyReplied}`);
+  log.info('To stop early: window.stopAutoReplyMentions()');
+
+  if (document.querySelector(SELECTORS.tweet) === null) {
+    log.warning('No mentions visible yet. Wait for the timeline to load, then re-run.');
+    return;
+  }
+
+  let scrollAttempts = 0;
+  let noNewMentionsCount = 0;
+
+  while (!stopped &amp;&amp; stats.replied &lt; CONFIG.maxReplies &amp;&amp; scrollAttempts &lt; CONFIG.maxScrollAttempts) {
+    const tweets = document.querySelectorAll(SELECTORS.tweet);
+    let foundNewMention = false;
+
+    for (const tweet of tweets) {
+      if (stopped || stats.replied &gt;= CONFIG.maxReplies) break;
+
+      const tweetId = getTweetIdentifier(tweet);
+      if (!tweetId || processedThisRun.has(tweetId)) continue;
+      processedThisRun.add(tweetId);
+      foundNewMention = true;
+
+      if (CONFIG.skipIfAlreadyReplied &amp;&amp; replied.has(tweetId)) {
+        stats.skippedAlready++;
+        continue;
+      }
+
+      const author = getAuthor(tweet);
+      const preview = (tweet.querySelector(SELECTORS.tweetText)?.textContent || '').substring(0, 50).replace(/\n/g, ' ');
+
+      try {
+        const replyButton = tweet.querySelector(SELECTORS.replyButton);
+        if (!replyButton) {
+          stats.skippedNoReplyButton++;
+          continue;
+        }
+
+        replyButton.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        await sleep(400);
+        replyButton.click();
+        await sleep(1500);
+
+        const box = document.querySelector(SELECTORS.composer);
+        if (!box) {
+          log.warning(`Reply composer did not open for @${author}. Skipping.`);
+          document.body.click();
+          await sleep(600);
+          continue;
+        }
+
+        const replyText = nextTemplate();
+        await typeInto(box, replyText);
+
+        const postButton = document.querySelector(SELECTORS.postButtonInline) ||
+                           document.querySelector(SELECTORS.postButton);
+        if (postButton &amp;&amp; postButton.getAttribute('aria-disabled') !== 'true') {
+          postButton.click();
+          stats.replied++;
+          replied.add(tweetId);
+          if (CONFIG.skipIfAlreadyReplied) saveReplied(replied);
+          log.success(`Replied #${stats.replied} to @${author} (&quot;${preview}...&quot;) -&gt; &quot;${replyText}&quot;`);
+          log.progress(stats.replied, CONFIG.maxReplies);
+          await sleep(1500);
+          await randomDelay();
+        } else {
+          log.warning(`Post button unavailable for @${author}. Closing composer.`);
+          document.body.click();
+          await sleep(600);
+        }
+      } catch (error) {
+        log.error(`Error replying to @${author}: ${error.message}`);
+        stats.errors++;
+        document.body.click();
+        await sleep(800);
+      }
+    }
+
+    if (!foundNewMention) {
+      noNewMentionsCount++;
+      if (noNewMentionsCount &gt;= CONFIG.noNewMentionsThreshold) {
+        log.warning('No new mentions found after multiple scrolls. Stopping.');
+        break;
+      }
+    } else {
+      noNewMentionsCount = 0;
+    }
+
+    scrollDown();
+    scrollAttempts++;
+    log.info(`Scrolling for more mentions... (attempt ${scrollAttempts}/${CONFIG.maxScrollAttempts})`);
+    await sleep(1500);
+  }
+
+  // ============================================
+  // 📊 SUMMARY
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 AUTO REPLY MENTIONS - COMPLETE                       ║
+╠══════════════════════════════════════════════════════════╣
+║  💬 Replied:              ${String(stats.replied).padEnd(29)}║
+║  ⏭️  Skipped (already):   ${String(stats.skippedAlready).padEnd(29)}║
+║  🚫 No Reply Button:      ${String(stats.skippedNoReplyButton).padEnd(29)}║
+║  ❌ Errors:               ${String(stats.errors).padEnd(29)}║
+║  📜 Scroll Attempts:      ${String(scrollAttempts).padEnd(29)}║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  if (stats.replied === 0) {
+    log.warning('No replies sent. You may have already replied to everything, or no mentions loaded.');
+  }
+  log.success('Script completed! by nichxbt');
+
+  return stats;
+})();
+</code></pre>
+          </div>
+        </section>
+
+        <div class="cta-box">
+          <h3>⚡ More XActions Scripts</h3>
+          <p>Browse 300+ free browser scripts for X/Twitter automation. No API keys, no fees.</p>
+          <a href="/scripts">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>📨 Engagement</h3>
+        <a href="/scripts/auto-commenter">💬 Auto Commenter</a>
+<a href="/scripts/auto-engage">⚡ Auto Engage</a>
+<a href="/scripts/auto-liker">❤️ Auto Liker</a>
+<a href="/scripts/auto-repost">🔁 Auto Repost</a>
+<a href="/scripts/auto-plug-replies">🔌 Auto-Plug Replies</a>
+<a href="/scripts/auto-reply">💬 Auto-Reply / Auto-Respond</a>
+<a href="/scripts/engagement-booster">🚀 Engagement Booster v2</a>
+<a href="/scripts/engagement-leaderboard">🏆 Engagement Leaderboard</a>
+<a href="/scripts/engagement-manager">⚡ Engagement Manager - Likes</a>
+<a href="/scripts/interact-by-hashtag">💬 Interact By Hashtag</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/scripts">All Scripts</a>
+        <a href="/features">Features</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+</body>
+</html>

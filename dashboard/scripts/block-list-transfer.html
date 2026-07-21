@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Block List Transfer - XActions — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Export your block list to JSON, import and block a list of users, or block-chain an account's followers.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, block, list, transfer, safety &amp; privacy">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Block List Transfer - XActions — XActions">
+  <meta property="og:description" content="Export your block list to JSON, import and block a list of users, or block-chain an account's followers.">
+  <meta property="og:url" content="https://xactions.app/scripts/block-list-transfer">
+  <meta property="og:site_name" content="XActions">
+  <meta property="og:image" content="https://xactions.app/og-image.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="Block List Transfer - XActions — XActions">
+  <meta name="twitter:description" content="Export your block list to JSON, import and block a list of users, or block-chain an account's followers.">
+
+  <link rel="canonical" href="https://xactions.app/scripts/block-list-transfer">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Block List Transfer - XActions — Free X/Twitter Script | XActions",
+    "description": "Export your block list to JSON, import and block a list of users, or block-chain an account's followers.",
+    "url": "https://xactions.app/scripts/block-list-transfer",
+    "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+    "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+    "datePublished": "2026-03-30",
+    "dateModified": "2026-03-30",
+    "articleSection": "Safety & Privacy",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, block, list, transfer, safety & privacy"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+      { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
+      { "@type": "ListItem", "position": 3, "name": "Safety & Privacy", "item": "https://xactions.app/scripts#safety-privacy" },
+      { "@type": "ListItem", "position": 4, "name": "Block List Transfer - XActions", "item": "https://xactions.app/scripts/block-list-transfer" }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="/css/common.css">
+  <style>
+    .article { padding: 24px 20px; }
+    .article h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
+    .article h2 { font-size: 1.375rem; font-weight: 700; margin: 32px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .article h3 { font-size: 1.125rem; font-weight: 600; margin: 24px 0 8px; color: var(--accent); }
+    .article p { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 16px; }
+    .article a { color: var(--accent); text-decoration: none; }
+    .article a:hover { text-decoration: underline; }
+    .article strong { color: var(--text-primary); }
+    .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+    .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
+    .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
+    .article th { background: var(--bg-secondary); padding: 10px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+    .article td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text-secondary); }
+    .cat-badge { display: inline-block; background: var(--accent-light); color: var(--accent); padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    .meta-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; font-size: 0.8125rem; color: var(--text-secondary); }
+    .meta-row span { display: flex; align-items: center; gap: 4px; }
+    .usage-steps { margin-left: 24px; margin-bottom: 16px; }
+    .usage-steps li { color: var(--text-secondary); font-size: 0.9375rem; margin-bottom: 8px; padding-left: 4px; }
+    .warning-box { background: rgba(244, 33, 46, 0.1); border: 1px solid var(--error); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .warning-box p { color: var(--error); margin: 0; font-size: 0.875rem; }
+    .controls-box { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .controls-box h3 { margin: 0 0 8px; font-size: 1rem; }
+    .code-block { position: relative; }
+    .copy-btn { position: absolute; top: 8px; right: 8px; background: var(--bg-tertiary); color: var(--text-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: 0.75rem; z-index: 10; transition: all .2s; }
+    .copy-btn:hover { background: var(--accent); color: #fff; }
+    .full-code { margin-top: 32px; }
+    .full-code pre { max-height: 600px; overflow-y: auto; }
+    .cta-box { background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 32px 0; text-align: center; }
+    .cta-box h3 { font-size: 1.25rem; margin-bottom: 8px; color: var(--text-primary); }
+    .cta-box p { color: var(--text-secondary); margin-bottom: 16px; }
+    .cta-box a { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; border-radius: 9999px; text-decoration: none; font-weight: 700; transition: background .2s; }
+    .cta-box a:hover { background: var(--accent-hover); }
+    .sidebar-right { width: 350px; padding: 16px 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .sidebar-card { background: var(--bg-secondary); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .sidebar-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .sidebar-card a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; padding: 6px 0; border-bottom: 1px solid var(--border); transition: color .2s; }
+    .sidebar-card a:last-child { border-bottom: none; }
+    .sidebar-card a:hover { color: var(--accent); }
+    .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .source-badge { display: inline-block; background: var(--bg-tertiary); color: var(--text-secondary); padding: 2px 8px; border-radius: 6px; font-size: 0.6875rem; margin-left: 8px; }
+    @media (max-width: 1024px) { .sidebar-right { display: none; } }
+    @media (max-width: 768px) {
+      .article pre { font-size: 0.75rem; }
+      .meta-row { flex-direction: column; gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
+  <div class="layout">
+    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <script src="/js/sidebar.js"></script>
+
+    <main class="main-content" id="main-content">
+      <header class="main-header">
+        <h1>🧱 Block List Transfer - XActions</h1>
+        <div class="breadcrumb">
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#safety-privacy">Safety &amp; Privacy</a> › Block List Transfer - XActions
+        </div>
+      </header>
+
+      <article class="article">
+        <span class="cat-badge">Safety &amp; Privacy</span>
+        <span class="source-badge">scripts/twitter</span>
+
+        <div class="meta-row">
+          <span>v1.0.0</span>
+          <span>Updated: 2026-07-20</span>
+          <span>445 lines</span>
+          <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
+        </div>
+
+        <p>Export your block list to JSON, import and block a list of users, or block-chain an account's followers.</p>
+
+        <div class="warning-box"><p>⚠️ DESTRUCTIVE. Blocking is a real, visible action against real accounts. This</p></div>
+
+        <h2>How to Use</h2>
+        <ol class="usage-steps"><li>Pick a mode and the page it needs:</li>
+<li>Open the browser console (F12 or Cmd+Option+I -&gt; Console)</li>
+<li>Set CONFIG.mode and CONFIG.dryRun = false to actually block</li>
+<li>Paste this entire script and press Enter</li></ol>
+        
+
+        
+        
+        <section class="config-code">
+        <h2>Default Configuration</h2>
+        <div class="code-block">
+          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
+          <pre><code>const CONFIG = {
+    // 'export' | 'importBlock' | 'blockFollowersOf'
+    mode: 'export',
+
+    // For 'importBlock': the accounts to block (with or without @).
+    usernames: [
+      // 'username1',
+      // 'username2',
+    ],
+
+    // For 'blockFollowersOf': whose followers to block (without @).
+    targetAccount: '',
+
+    // Never block these (with or without @).
+    whitelist: [],
+
+    // Cap on blocks this run (blocking modes only).
+    maxBlocks: 25,
+
+    // SAFETY: preview only. Set to false to actually block. Ignored by 'export'.
+    dryRun: true,
+
+    // Timing (randomized between min and max, per block)
+    minDelay: 3000,
+    maxDelay: 6000,
+
+    // Scrolling for scraping / follower sweeps
+    maxScrollRounds: 40,
+    scrollDelay: 2000,
+    maxEmptyScrolls: 6
+  };</code></pre>
+        </div>
+      </section>
+
+        <section class="full-code">
+          <h2>Full Script</h2>
+          <p>Copy and paste this entire script into your browser DevTools console on <a href="https://x.com" rel="noopener">x.com</a>.</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
+            <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * ============================================
+ * 🚫 Block List Transfer - XActions
+ * ============================================
+ *
+ * @name         block-list-transfer
+ * @description  Export your block list to JSON, import and block a list of users, or block-chain an account's followers.
+ * @author       nichxbt
+ * @version      1.0.0
+ * @date         2026-07-20
+ * @website      https://xactions.app
+ *
+ * Usage:
+ *   1. Pick a mode and the page it needs:
+ *      - 'export'          -&gt; go to x.com/settings/blocked_all
+ *      - 'importBlock'     -&gt; go to x.com (any page); set CONFIG.usernames
+ *      - 'blockFollowersOf'-&gt; go to x.com/&lt;targetAccount&gt;/followers
+ *   2. Open the browser console (F12 or Cmd+Option+I -&gt; Console)
+ *   3. Set CONFIG.mode and CONFIG.dryRun = false to actually block
+ *   4. Paste this entire script and press Enter
+ *
+ * Example:
+ *   mode: 'export' -&gt; scrapes every account on your blocked list and downloads
+ *   xactions-block-list-YYYY-MM-DD.json. Later, mode: 'importBlock' with those
+ *   usernames re-applies the whole list on another account. mode: 'blockFollowersOf'
+ *   with targetAccount: 'spamring' blocks that account's followers one by one.
+ *
+ * ⚠️ DESTRUCTIVE. Blocking is a real, visible action against real accounts. This
+ *    DEFAULTS TO A DRY RUN. Nothing is blocked until you set CONFIG.dryRun = false.
+ *    Export mode is always read-only.
+ *
+ * ============================================
+ */
+
+(async function blockListTransfer() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // 'export' | 'importBlock' | 'blockFollowersOf'
+    mode: 'export',
+
+    // For 'importBlock': the accounts to block (with or without @).
+    usernames: [
+      // 'username1',
+      // 'username2',
+    ],
+
+    // For 'blockFollowersOf': whose followers to block (without @).
+    targetAccount: '',
+
+    // Never block these (with or without @).
+    whitelist: [],
+
+    // Cap on blocks this run (blocking modes only).
+    maxBlocks: 25,
+
+    // SAFETY: preview only. Set to false to actually block. Ignored by 'export'.
+    dryRun: true,
+
+    // Timing (randomized between min and max, per block)
+    minDelay: 3000,
+    maxDelay: 6000,
+
+    // Scrolling for scraping / follower sweeps
+    maxScrollRounds: 40,
+    scrollDelay: 2000,
+    maxEmptyScrolls: 6
+  };
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    userCell: '[data-testid=&quot;UserCell&quot;]',
+    userActions: '[data-testid=&quot;userActions&quot;]',
+    blockMenuItem: '[data-testid=&quot;block&quot;]',
+    menuItem: '[role=&quot;menuitem&quot;]',
+    confirm: '[data-testid=&quot;confirmationSheetConfirm&quot;]'
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+
+  const randomDelay = () =&gt; {
+    const delay = Math.floor(Math.random() * (CONFIG.maxDelay - CONFIG.minDelay + 1)) + CONFIG.minDelay;
+    return sleep(delay);
+  };
+
+  const cleanHandle = (u) =&gt; String(u || '').trim().replace(/^@/, '').toLowerCase();
+
+  // SPA navigation keeps this script alive; a full window.location load kills it.
+  const spaNavigate = (path) =&gt; {
+    try {
+      const target = new URL(path, window.location.href);
+      if (target.origin === window.location.origin) {
+        window.history.pushState({}, '', target.href);
+        window.dispatchEvent(new PopStateEvent('popstate', { state: {} }));
+        return;
+      }
+    } catch (e) { /* fall through */ }
+    window.location.href = path;
+  };
+
+  const getUsername = (cell) =&gt; {
+    const link = cell.querySelector('a[href^=&quot;/&quot;][role=&quot;link&quot;]') || cell.querySelector('a[href^=&quot;/&quot;]');
+    if (!link) return null;
+    const m = (link.getAttribute('href') || '').match(/^\/([A-Za-z0-9_]+)/);
+    if (!m) return null;
+    if (['home', 'explore', 'notifications', 'messages', 'i', 'search', 'settings'].includes(m[1])) return null;
+    return m[1];
+  };
+
+  const getDisplayName = (cell) =&gt; {
+    const span = cell.querySelector('a[href^=&quot;/&quot;] span');
+    return span ? span.textContent.trim() : '';
+  };
+
+  const download = (data, filename) =&gt; {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    console.log(`📥 Downloaded: ${filename}`);
+  };
+
+  const log = {
+    info: (msg) =&gt; console.log(`ℹ️ ${msg}`),
+    success: (msg) =&gt; console.log(`✅ ${msg}`),
+    warning: (msg) =&gt; console.log(`⚠️ ${msg}`),
+    error: (msg) =&gt; console.log(`❌ ${msg}`),
+    progress: (current, total) =&gt; console.log(`📊 Progress: ${current}/${total} blocked`)
+  };
+
+  const whiteSet = new Set(CONFIG.whitelist.map(cleanHandle).filter(Boolean));
+
+  // ============================================
+  // 🎯 STATE
+  // ============================================
+  const stats = { blocked: 0, scraped: 0, skipped: 0, notFound: 0, errors: 0 };
+  const blockedList = [];
+
+  // Stop switch: run window.stopBlockListTransfer() to abort after the current item.
+  let stopped = false;
+  window.stopBlockListTransfer = () =&gt; {
+    stopped = true;
+    log.warning('Stop requested. Finishing the current account, then exiting.');
+  };
+
+  console.log(`
+╔══════════════════════════════════════════════════════════════╗
+║  🚫 BLOCK LIST TRANSFER - XActions                          ║
+║  👤 Author: nichxbt   🌐 https://xactions.app               ║
+${CONFIG.mode === 'export' ? '║  📤 EXPORT MODE - read-only                                 ║' : (CONFIG.dryRun ? '║  ⚠️  DRY RUN - No accounts will be blocked                 ║' : '║  🔴 LIVE MODE - Accounts WILL be blocked                    ║')}
+╚══════════════════════════════════════════════════════════════╝
+  `);
+  log.warning('DESTRUCTIVE tool. Blocking affects real accounts. To stop: window.stopBlockListTransfer()');
+
+  // ============================================
+  // 📤 EXPORT: scrape the blocked list
+  // ============================================
+  const exportBlocked = async () =&gt; {
+    if (!/\/settings\/blocked/.test(window.location.pathname)) {
+      log.error('Export needs the blocked-accounts page. Go to https://x.com/settings/blocked_all and re-run.');
+      return;
+    }
+
+    log.info('Scraping your blocked accounts...');
+    const found = new Map();
+    let rounds = 0;
+    let empty = 0;
+
+    while (rounds &lt; CONFIG.maxScrollRounds &amp;&amp; empty &lt; CONFIG.maxEmptyScrolls) {
+      const before = found.size;
+      for (const cell of document.querySelectorAll(SELECTORS.userCell)) {
+        const username = getUsername(cell);
+        if (!username) continue;
+        const key = username.toLowerCase();
+        if (found.has(key)) continue;
+        found.set(key, { username, displayName: getDisplayName(cell) });
+      }
+      stats.scraped = found.size;
+
+      if (found.size === before) empty++;
+      else empty = 0;
+
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(CONFIG.scrollDelay);
+      rounds++;
+    }
+
+    const list = [...found.values()];
+    if (list.length === 0) {
+      log.warning('No blocked accounts found. Your block list may be empty.');
+      return;
+    }
+
+    log.success(`Scraped ${list.length} blocked accounts.`);
+    download(
+      { exportedAt: new Date().toISOString(), count: list.length, usernames: list.map(u =&gt; u.username), accounts: list },
+      `xactions-block-list-${new Date().toISOString().slice(0, 10)}.json`
+    );
+  };
+
+  // ============================================
+  // 🚫 Block one account by profile navigation (importBlock)
+  // ============================================
+  const blockByProfile = async (username) =&gt; {
+    spaNavigate(`/${username}`);
+    await sleep(3000);
+
+    let moreBtn = document.querySelector(SELECTORS.userActions);
+    let waited = 0;
+    while (!moreBtn &amp;&amp; waited &lt; 5000) {
+      await sleep(500);
+      waited += 500;
+      moreBtn = document.querySelector(SELECTORS.userActions);
+    }
+    if (!moreBtn) {
+      log.warning(`Could not open the menu for @${username} (profile may not exist).`);
+      stats.notFound++;
+      return false;
+    }
+
+    moreBtn.click();
+    await sleep(600);
+
+    const blockItem = document.querySelector(SELECTORS.blockMenuItem)
+      || Array.from(document.querySelectorAll(SELECTORS.menuItem))
+        .find(i =&gt; /\bblock\b/i.test(i.textContent) &amp;&amp; !/unblock/i.test(i.textContent));
+    if (!blockItem) {
+      document.body.click();
+      await sleep(300);
+      log.warning(`No block option for @${username} (already blocked?).`);
+      stats.notFound++;
+      return false;
+    }
+
+    blockItem.click();
+    await sleep(600);
+    const confirm = document.querySelector(SELECTORS.confirm);
+    if (confirm) { confirm.click(); await sleep(700); }
+    return true;
+  };
+
+  // ============================================
+  // 🚫 Block one account from its follower row (blockFollowersOf)
+  // ============================================
+  const blockFromCell = async (cell, username) =&gt; {
+    const moreBtn = cell.querySelector(SELECTORS.userActions) || cell.querySelector('button[aria-label=&quot;More&quot;]');
+    if (!moreBtn) {
+      log.warning(`No actions (...) button for @${username}.`);
+      stats.notFound++;
+      return false;
+    }
+    moreBtn.click();
+    await sleep(600);
+
+    const blockItem = document.querySelector(SELECTORS.blockMenuItem)
+      || Array.from(document.querySelectorAll(SELECTORS.menuItem))
+        .find(i =&gt; /\bblock\b/i.test(i.textContent) &amp;&amp; !/unblock/i.test(i.textContent));
+    if (!blockItem) {
+      document.body.click();
+      await sleep(300);
+      log.warning(`No block option for @${username}.`);
+      stats.notFound++;
+      return false;
+    }
+
+    blockItem.click();
+    await sleep(600);
+    const confirm = document.querySelector(SELECTORS.confirm);
+    if (confirm) { confirm.click(); await sleep(700); }
+    return true;
+  };
+
+  // ============================================
+  // 🔁 importBlock
+  // ============================================
+  const importBlock = async () =&gt; {
+    const targets = CONFIG.usernames.map(cleanHandle).filter(Boolean);
+    if (targets.length === 0) {
+      log.error('CONFIG.usernames is empty. Add handles to block and re-run.');
+      return;
+    }
+    log.info(`Importing ${targets.length} account(s) to block. Max this run: ${CONFIG.maxBlocks}.`);
+
+    for (let i = 0; i &lt; targets.length; i++) {
+      if (stopped) { log.warning('Stopped by user.'); break; }
+      if (stats.blocked &gt;= CONFIG.maxBlocks) { log.warning(`Reached maxBlocks (${CONFIG.maxBlocks}).`); break; }
+
+      const username = targets[i];
+      if (whiteSet.has(username)) { stats.skipped++; continue; }
+
+      try {
+        if (CONFIG.dryRun) {
+          log.info(`Would block: @${username}`);
+          blockedList.push({ username, dryRun: true, timestamp: new Date().toISOString() });
+          stats.blocked++;
+          continue;
+        }
+        const ok = await blockByProfile(username);
+        if (ok) {
+          stats.blocked++;
+          blockedList.push({ username, timestamp: new Date().toISOString() });
+          log.success(`Blocked @${username}`);
+          log.progress(stats.blocked, Math.min(CONFIG.maxBlocks, targets.length));
+        } else {
+          stats.errors++;
+        }
+      } catch (error) {
+        log.error(`Error blocking @${username}: ${error.message}`);
+        stats.errors++;
+      }
+
+      const more = !stopped &amp;&amp; stats.blocked &lt; CONFIG.maxBlocks &amp;&amp; i &lt; targets.length - 1;
+      if (more &amp;&amp; !CONFIG.dryRun) await randomDelay();
+    }
+  };
+
+  // ============================================
+  // 🔁 blockFollowersOf
+  // ============================================
+  const blockFollowersOf = async () =&gt; {
+    const target = cleanHandle(CONFIG.targetAccount);
+    if (!target) {
+      log.error('CONFIG.targetAccount is empty. Set it to the account whose followers you want to block.');
+      return;
+    }
+    if (!/\/followers/.test(window.location.pathname) || !window.location.pathname.toLowerCase().includes(`/${target}/`)) {
+      log.error(`Go to https://x.com/${target}/followers and re-run (must be on that account's followers page).`);
+      return;
+    }
+
+    log.info(`Block-chaining @${target}'s followers. Max this run: ${CONFIG.maxBlocks}.`);
+    const processed = new Set();
+    let rounds = 0;
+    let empty = 0;
+
+    while (!stopped &amp;&amp; stats.blocked &lt; CONFIG.maxBlocks &amp;&amp; rounds &lt; CONFIG.maxScrollRounds &amp;&amp; empty &lt; CONFIG.maxEmptyScrolls) {
+      const cells = document.querySelectorAll(SELECTORS.userCell);
+      let foundNew = false;
+
+      for (const cell of cells) {
+        if (stopped || stats.blocked &gt;= CONFIG.maxBlocks) break;
+
+        const username = getUsername(cell);
+        if (!username) continue;
+        const key = username.toLowerCase();
+        if (processed.has(key)) continue;
+        processed.add(key);
+        foundNew = true;
+        stats.scraped++;
+
+        try {
+          if (whiteSet.has(key) || key === target) { stats.skipped++; continue; }
+
+          if (CONFIG.dryRun) {
+            log.info(`Would block: @${username}`);
+            blockedList.push({ username, dryRun: true, timestamp: new Date().toISOString() });
+            stats.blocked++;
+            continue;
+          }
+
+          const ok = await blockFromCell(cell, username);
+          if (ok) {
+            stats.blocked++;
+            blockedList.push({ username, timestamp: new Date().toISOString() });
+            log.success(`Blocked @${username}`);
+            log.progress(stats.blocked, CONFIG.maxBlocks);
+            await randomDelay();
+          } else {
+            stats.errors++;
+          }
+        } catch (error) {
+          log.error(`Error on @${username}: ${error.message}`);
+          stats.errors++;
+          document.body.click();
+          await sleep(300);
+        }
+      }
+
+      if (!foundNew) empty++;
+      else empty = 0;
+
+      window.scrollTo(0, document.body.scrollHeight);
+      rounds++;
+      await sleep(CONFIG.scrollDelay);
+    }
+  };
+
+  // ============================================
+  // 🎯 DISPATCH
+  // ============================================
+  try {
+    if (CONFIG.mode === 'export') {
+      await exportBlocked();
+    } else if (CONFIG.mode === 'importBlock') {
+      await importBlock();
+    } else if (CONFIG.mode === 'blockFollowersOf') {
+      await blockFollowersOf();
+    } else {
+      log.error(`Unknown mode &quot;${CONFIG.mode}&quot;. Use 'export', 'importBlock', or 'blockFollowersOf'.`);
+    }
+  } catch (error) {
+    log.error(`Fatal: ${error.message}`);
+  }
+
+  // ============================================
+  // 📊 SUMMARY
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 BLOCK LIST TRANSFER - COMPLETE                       ║
+╠══════════════════════════════════════════════════════════╣
+║  🚫 Blocked:           ${String(stats.blocked).padEnd(32)}║
+║  📤 Scraped:           ${String(stats.scraped).padEnd(32)}║
+║  ⏭️  Skipped:           ${String(stats.skipped).padEnd(32)}║
+║  ❓ Not found:         ${String(stats.notFound).padEnd(32)}║
+║  ❌ Errors:            ${String(stats.errors).padEnd(32)}║
+║  🧪 Dry run:           ${String(CONFIG.dryRun).padEnd(32)}║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  if ((CONFIG.mode === 'importBlock' || CONFIG.mode === 'blockFollowersOf') &amp;&amp; blockedList.length &gt; 0) {
+    download(
+      { mode: CONFIG.mode, dryRun: CONFIG.dryRun, stats, blocked: blockedList, exportedAt: new Date().toISOString() },
+      `xactions-block-transfer-${CONFIG.dryRun ? 'preview' : 'results'}-${new Date().toISOString().slice(0, 10)}.json`
+    );
+  }
+
+  if (CONFIG.dryRun &amp;&amp; CONFIG.mode !== 'export') {
+    log.warning('This was a DRY RUN. Set CONFIG.dryRun = false to actually block.');
+  }
+  log.success('Script completed! by nichxbt');
+  return stats;
+})();
+</code></pre>
+          </div>
+        </section>
+
+        <div class="cta-box">
+          <h3>⚡ More XActions Scripts</h3>
+          <p>Browse 300+ free browser scripts for X/Twitter automation. No API keys, no fees.</p>
+          <a href="/scripts">Browse All Scripts</a>
+        </div>
+      </article>
+    </main>
+
+    <aside class="sidebar-right">
+      <div class="sidebar-card">
+        <h3>🧱 Safety &amp; Privacy</h3>
+        <a href="/scripts/blacklist">🚫 Blacklist Manager</a>
+<a href="/scripts/block-bots">🤖 Block Bots</a>
+<a href="/scripts/block-by-keywords">🚫 Block By Keywords</a>
+<a href="/scripts/block-by-ratio">🚫 Block By Ratio</a>
+<a href="/scripts/filter-manager">🔍 Filter Manager</a>
+<a href="/scripts/manage-muted-words">🔇 Manage Muted Words</a>
+<a href="/scripts/manage-settings">⚙️ Manage Settings</a>
+<a href="/scripts/mass-block">🚫 Mass Block Users</a>
+<a href="/scripts/mass-unblock">🔓 Mass Unblock Users</a>
+<a href="/scripts/mass-unmute">🔊 Mass Unmute Users</a>
+      </div>
+      <div class="sidebar-card">
+        <h3>🔗 Quick Links</h3>
+        <a href="/scripts">All Scripts</a>
+        <a href="/features">Features</a>
+        <a href="/docs">Documentation</a>
+        <a href="/tutorials">Tutorials</a>
+        <a href="/mcp">MCP Server</a>
+        <a href="https://github.com/nirholas/XActions" rel="noopener">GitHub</a>
+      </div>
+    </aside>
+  </div>
+</body>
+</html>

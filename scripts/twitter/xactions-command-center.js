@@ -5,7 +5,7 @@
  * ============================================================
  * The one script to run them all. Paste this into your browser's DevTools
  * console on x.com and a searchable command palette appears with every
- * XActions tool (68 of them): scrape, analyze, grow, engage,
+ * XActions tool (108 of them): scrape, analyze, grow, engage,
  * clean up, moderate, and more. Pick a tool, set its options, press Run.
  *
  *   1. Open x.com and press F12 (or Cmd+Option+I) → Console tab.
@@ -50,10 +50,743 @@
     try { window.XActionsCommandCenter.destroy(); } catch (e) { /* ignore */ }
   }
 
-  const CATALOG = [{"id":"backup-account","title":"Account Backup","emoji":"💾","category":"scrape","danger":"safe","desc":"Make a comprehensive backup of your account data.","where":{"label":"Your own profile page"},"defaults":{"maxTweets":100,"maxLikes":100,"maxBookmarks":100,"maxFollowing":500,"maxFollowers":500,"scrollDelay":2000,"autoDownload":true},"stopGlobal":null},{"id":"bookmark-exporter","title":"Bookmark Exporter","emoji":"🔖","category":"scrape","danger":"safe","desc":"Export all of your bookmarks to JSON and CSV.","where":{"label":"Your Bookmarks","url":"https://x.com/i/bookmarks","match":["^/i/bookmarks"]},"defaults":{"maxBookmarks":1000,"scrollDelay":1500,"maxScrolls":200,"maxRetries":5,"exportJSON":true,"exportCSV":true,"copyToClipboard":true},"stopGlobal":null},{"id":"link-scraper","title":"Link Scraper","emoji":"🔗","category":"scrape","danger":"safe","desc":"Extract every external link a user has shared.","where":{"label":"The profile you want to target (x.com/username)"},"defaults":{"maxScrolls":100,"maxTweets":500,"scrollDelay":1500,"includeTwitterLinks":false,"includeMedia":false,"excludeDomains":["t.co"],"autoDownload":true,"maxRetries":5},"stopGlobal":null},{"id":"scrape-profile-with-replies","title":"Scrape Posts + Replies","emoji":"🧵","category":"scrape","danger":"safe","desc":"Scrape a profile including its replies, from the With replies tab.","where":{"label":"The profile you want to target (x.com/username)"},"defaults":{"targetPostCount":50,"maxRepliesPerPost":50,"maxFeedScrollAttempts":200,"maxThreadScrollAttempts":30,"scrollDelay":2000,"navigationDelay":3000,"range":{"startPostId":null,"endPostId":null},"filters":{"whitelist":[],"blacklist":[],"daysBack":0,"minLikes":0,"minRetweets":0,"excludeRetweets":false},"export":{"json":true,"csv":true,"markdown":false,"text":false,"html":false},"panel":{"enabled":true,"top":20,"right":20},"copyToClipboard":true,"verbose":true,"scrapeRepliesOnUserReplies":true},"stopGlobal":null},{"id":"scrape-profile-posts","title":"Scrape Profile Posts","emoji":"📜","category":"scrape","danger":"safe","desc":"Scrape every post from any profile with filters, analytics, and JSON/CSV/MD exports.","where":{"label":"The profile you want to target (x.com/username)"},"defaults":{"targetCount":300,"maxScrollAttempts":300,"scrollDelay":2000,"filters":{"whitelist":[],"blacklist":[],"daysBack":0,"minLikes":0,"minRetweets":0,"excludeRetweets":false,"excludeReplies":false,"mediaFilter":"all"},"export":{"json":true,"csv":true,"markdown":false,"text":false,"html":false},"display":{"showStats":true,"showTopPosts":5,"showHashtags":true,"showMentions":true,"showLinks":false,"prettyPrint":true,"prettyPrintLimit":10},"copyToClipboard":true,"verbose":true},"stopGlobal":null},{"id":"scraper-toolbox","title":"Scraper Toolbox","emoji":"🧰","category":"scrape","danger":"safe","desc":"Full on-page scraping control panel: start/pause/stop, live filters, one-click exports.","where":{"label":"Any X page"},"defaults":{},"stopGlobal":null},{"id":"thread-unroller","title":"Thread Unroller","emoji":"🪡","category":"scrape","danger":"safe","desc":"Save any thread as clean text, markdown, or JSON.","where":{"label":"The open tweet/thread (its status page)","match":["/status/"]},"defaults":{"format":"markdown","includeMedia":true,"includeStats":true,"maxTweets":50,"scrollDelay":1500,"autoDownload":true,"copyToClipboard":true},"stopGlobal":null},{"id":"video-downloader","title":"Video Downloader","emoji":"🎬","category":"scrape","danger":"safe","desc":"Download the video from any post, at your chosen quality.","where":{"label":"The open tweet/thread (its status page)","match":["/status/"]},"defaults":{"quality":"highest","autoDownload":true,"showAllQualities":true},"stopGlobal":null},{"id":"viral-tweets-scraper","title":"Viral Tweets Finder","emoji":"🔥","category":"scrape","danger":"safe","desc":"Find the top-performing viral posts from a search or any account.","where":{"label":"The profile you want to target (x.com/username)"},"defaults":{"minLikes":50,"minRetweets":5,"minReplies":0,"maxTweets":100,"maxScrolls":50,"sortBy":"likes","scrollDelay":1500,"maxRetries":5,"exportJSON":true,"exportCSV":true},"stopGlobal":null},{"id":"monitor-account","title":"Account Monitor","emoji":"👀","category":"analyze","danger":"safe","desc":"Track follower/following changes on any public account.","where":{"label":"The profile you want to target (x.com/username)"},"defaults":{"scrollDelay":2000,"maxScrolls":100,"maxRetries":5,"autoDownload":true},"stopGlobal":null},{"id":"best-time-to-post","title":"Best Time to Post","emoji":"⏰","category":"analyze","danger":"safe","desc":"Find when your audience is most active.","where":{"label":"Your own profile page"},"defaults":{"maxPosts":100,"scrollDelay":1500,"maxScrolls":50,"maxRetries":3},"stopGlobal":null},{"id":"competitor-analysis","title":"Competitor Analysis","emoji":"🕵️","category":"analyze","danger":"safe","desc":"Analyze a competitor account for content and engagement insights.","where":{"label":"The profile you want to target (x.com/username)"},"defaults":{"maxPosts":50,"scrollDelay":1500,"maxScrolls":30,"maxRetries":3},"stopGlobal":null},{"id":"continuous-monitor","title":"Continuous Monitor","emoji":"🔄","category":"analyze","danger":"safe","desc":"Auto-refresh watch with browser notifications on follower changes.","where":{"label":"Your own profile page"},"defaults":{"checkIntervalMinutes":5,"enableNotifications":true,"enableSound":true,"scrollDelay":1500,"maxScrolls":50,"maxRetries":3},"stopGlobal":"stopMonitor"},{"id":"engagement-analytics","title":"Engagement Analytics","emoji":"📈","category":"analyze","danger":"safe","desc":"Break down likes, replies, and reposts across your posts.","where":{"label":"Your own profile page"},"defaults":{"maxPosts":50,"scrollDelay":1500,"maxScrolls":30,"maxRetries":3},"stopGlobal":null},{"id":"find-fake-followers","title":"Fake Follower Finder","emoji":"🤖","category":"analyze","danger":"safe","desc":"Identify likely bot/fake accounts in your audience.","where":{"label":"Your Followers page (x.com/<you>/followers)","match":["/followers"]},"defaults":{"scrollDelay":1500,"maxScrolls":50,"maxRetries":3,"scoring":{"highFollowingRatio":25,"veryHighFollowingRatio":40,"defaultAvatar":20,"noBio":15,"suspiciousBio":25,"randomUsername":15,"massFollowing":15,"extremeFollowing":25,"noFollowers":20,"veryFewFollowers":10},"thresholds":{"highRatio":50,"veryHighRatio":100,"massFollowing":3000,"extremeFollowing":5000},"suspiciousKeywords":["crypto","nft","bitcoin","btc","eth","forex","trading signals","giveaway","airdrop","free money","passive income","onlyfans","fansly","dm for","link in bio","check bio","follow back","f4f","follow4follow","followback","18+","adult","nsfw","sexy","hot girl","make money","work from home","get rich","financial freedom","investment opportunity","guaranteed returns"],"minFakeScore":40,"likelyFakeScore":60},"stopGlobal":null},{"id":"audit-followers","title":"Follower Audit","emoji":"🔍","category":"analyze","danger":"safe","desc":"Score follower quality and surface likely fakes and inactives.","where":{"label":"Your Followers page (x.com/<you>/followers)","match":["/followers"]},"defaults":{"scrollDelay":1500,"maxScrolls":100,"maxRetries":5,"thresholds":{"influencer":10,"balanced":0.5,"aggressive":0.1,"massFollower":2000,"selectiveFollower":100}},"stopGlobal":null},{"id":"followers-growth-tracker","title":"Growth Tracker","emoji":"📉","category":"analyze","danger":"safe","desc":"Track follower growth over time with saved history.","where":{"label":"Your own profile page"},"defaults":{"storageKey":"xactions_growth_tracker","maxHistory":365,"showChart":true},"stopGlobal":null},{"id":"hashtag-analytics","title":"Hashtag Analytics","emoji":"#️⃣","category":"analyze","danger":"safe","desc":"Measure how your hashtags perform.","where":{"label":"Your own profile page"},"defaults":{"maxPosts":100,"scrollDelay":1500,"maxScrolls":50,"maxRetries":3},"stopGlobal":null},{"id":"new-followers-alert","title":"New Follower Alerts","emoji":"🔔","category":"analyze","danger":"safe","desc":"Track new followers with optional welcome-message templates.","where":{"label":"Your Followers page (x.com/<you>/followers)","match":["/followers"]},"defaults":{"scrollDelay":2000,"maxScrolls":100,"maxRetries":5,"welcomeMessages":["Hey {name}! Thanks for the follow! 🙏 Glad to connect!","Welcome {name}! 👋 Thanks for following! What brings you here?","Hey {name}! Appreciate the follow! Looking forward to connecting! 🚀","Thanks for following {name}! Always great to meet new people! ✨"],"autoDownload":true},"stopGlobal":null},{"id":"profile-stats","title":"Profile Stats","emoji":"📊","category":"analyze","danger":"safe","desc":"Get a quick, comprehensive stats card for any profile.","where":{"label":"The profile you want to target (x.com/username)"},"defaults":{},"stopGlobal":null},{"id":"detect-unfollowers","title":"Unfollower Detector","emoji":"💔","category":"analyze","danger":"safe","desc":"Compare against a saved snapshot to see who unfollowed you.","where":{"label":"Your Followers page (x.com/<you>/followers)","match":["/followers"]},"defaults":{"scrollDelay":2000,"maxScrolls":100,"maxRetries":5,"autoDownload":true,"storageKey":"xactions_my_followers"},"stopGlobal":null},{"id":"follow-engagers","title":"Follow Engagers","emoji":"🧲","category":"grow","danger":"caution","desc":"Follow the people who liked or reposted a specific tweet.","where":{"label":"The open tweet/thread (its status page)","match":["/status/"]},"defaults":{"mode":"likers","maxFollows":20,"filters":{"minFollowers":100,"maxFollowers":50000,"skipProtected":true,"skipVerified":false},"minDelay":2000,"maxDelay":4000,"scrollDelay":1500},"stopGlobal":null},{"id":"follow-target-users","title":"Follow Target Audience","emoji":"🎯","category":"grow","danger":"caution","desc":"Follow the followers/following of accounts you specify.","where":{"label":"The profile you want to target (x.com/username)"},"defaults":{"maxFollows":30,"maxScrolls":50,"filters":{"skipProtected":true,"skipVerified":false,"bioKeywords":[],"bioBlacklist":["bot","spam","promo"]},"minDelay":2000,"maxDelay":4000,"scrollDelay":1500},"stopGlobal":null},{"id":"growth-suite","title":"Growth Suite","emoji":"🚀","category":"grow","danger":"caution","desc":"All-in-one growth: auto-like, auto-follow, and smart-unfollow together.","where":{"label":"Any X page"},"defaults":{"keywords":["web3 developer","crypto trader","NFT artist"],"targetAccounts":[],"actions":{"follow":true,"like":true,"unfollow":true},"limits":{"follows":20,"likes":30,"unfollows":15},"timing":{"unfollowAfterDays":3,"delayBetweenActions":3000,"sessionDuration":30},"filters":{"minFollowers":50,"maxFollowers":50000,"mustHaveBio":true,"skipPrivate":true,"language":null}},"stopGlobal":null},{"id":"keyword-follow","title":"Keyword Follow","emoji":"🔑","category":"grow","danger":"caution","desc":"Follow users matching a keyword search, with bio filters.","where":{"label":"Search → People tab (x.com/search?...&f=user)","match":["^/search.*f=user","^/search"]},"defaults":{"maxFollows":20,"maxScrolls":30,"filters":{"skipProtected":true,"skipMutuals":false,"skipVerified":false,"bioMustContain":[],"bioBlacklist":["bot","automated","promo","giveaway"]},"trackFollows":true,"minDelay":2000,"maxDelay":5000,"scrollDelay":2000},"stopGlobal":null},{"id":"auto-commenter","title":"Auto Commenter","emoji":"💬","category":"engage","danger":"caution","desc":"Comment on a target user's posts with your templates.","where":{"label":"The profile you want to target (x.com/username)"},"defaults":{"comments":["🔥","Great point!","This is so true 👏","Interesting perspective!","Thanks for sharing this 🙏","💯","Well said!","Couldn't agree more","👀 interesting","This is gold ✨"],"maxComments":5,"maxPostAgeMinutes":60,"minPostAgeSeconds":30,"onlyOriginalTweets":true,"onlyWithMedia":false,"minDelay":30000,"maxDelay":60000,"scrollDelay":2000},"stopGlobal":null},{"id":"auto-liker","title":"Auto Liker","emoji":"❤️","category":"engage","danger":"caution","desc":"Like posts in a timeline or on a profile, at a human pace.","where":{"label":"The profile you want to target (x.com/username)"},"defaults":{"likeAll":false,"keywords":["web3","crypto","AI","startup"],"fromUsers":[],"maxLikes":20,"maxScrolls":50,"alsoRetweet":false,"skipReplies":true,"skipAds":true,"minDelay":2000,"maxDelay":5000,"scrollDelay":2000},"stopGlobal":null},{"id":"comment-by-hashtag","title":"Comment by Hashtag","emoji":"🗨️","category":"engage","danger":"caution","desc":"Find hashtag posts and comment with your templates.","where":{"label":"Search → Latest tab (x.com/search?...&f=live)","match":["^/search"]},"defaults":{"hashtags":["web3","crypto","NFT"],"comments":["Great point! 🔥","This is so true! 💯","Interesting perspective!","Thanks for sharing this! 🙌","Couldn't agree more!"],"maxComments":10,"minDelay":3000,"maxDelay":6000,"skipUsernames":[],"minLikes":0,"minRetweets":0},"stopGlobal":null},{"id":"comment-by-location","title":"Comment by Location","emoji":"📍","category":"engage","danger":"caution","desc":"Find posts from a location and comment on them.","where":{"label":"Search → Latest tab (x.com/search?...&f=live)","match":["^/search"]},"defaults":{"location":"New York","geocode":null,"searchQuery":"","comments":["Love seeing posts from this area! 🌍","Great content from a great place! 🔥","Thanks for sharing! 💯","Awesome post! 🙌","This is amazing! ✨"],"maxComments":10,"minDelay":3000,"maxDelay":7000,"skipUsernames":[],"maxTweetAge":24,"skipRetweets":true},"stopGlobal":null},{"id":"interact-by-hashtag","title":"Interact by Hashtag","emoji":"#️⃣","category":"engage","danger":"caution","desc":"Like/follow/reply on posts matching a hashtag.","where":{"label":"Search → Latest tab (x.com/search?...&f=live)","match":["^/search"]},"defaults":{"hashtags":["crypto","web3","bitcoin"],"actions":{"like":true,"retweet":false,"follow":true},"limits":{"likes":20,"retweets":5,"follows":10,"tweetsPerHashtag":10},"filters":{"minLikes":5,"minRetweets":0,"skipReplies":true,"skipRetweets":true,"requireMedia":false},"delayBetweenActions":2000,"scrollDelay":2000},"stopGlobal":null},{"id":"interact-by-place","title":"Interact by Place","emoji":"📍","category":"engage","danger":"caution","desc":"Like/follow/reply on posts from a location.","where":{"label":"Search → Latest tab (x.com/search?...&f=live)","match":["^/search"]},"defaults":{"locations":[{"name":"New York","query":"near:\"New York\""},{"name":"San Francisco","query":"near:\"San Francisco\""}],"keywords":[],"actions":{"like":true,"follow":true,"retweet":false},"limits":{"likes":15,"follows":10,"retweets":3},"delayBetweenActions":2000,"scrollDelay":2000},"stopGlobal":null},{"id":"interact-with-likers","title":"Interact with Likers","emoji":"🧲","category":"engage","danger":"caution","desc":"Engage the users who liked a specific post.","where":{"label":"The open tweet/thread (its status page)","match":["/status/"]},"defaults":{"actions":{"follow":true},"limits":{"follows":20},"filters":{"skipPrivate":true,"skipVerified":false,"skipNoPhoto":false},"delayBetweenActions":2000,"scrollDelay":2000},"stopGlobal":null},{"id":"interact-by-users","title":"Interact with Users","emoji":"🎯","category":"engage","danger":"caution","desc":"Full like/follow/reply suite aimed at specific users.","where":{"label":"The profile you want to target (x.com/username)"},"defaults":{"targetUsers":[],"actions":{"like":true,"retweet":false,"reply":false,"follow":true},"limits":{"likesPerUser":3,"retweetsPerUser":1,"repliesPerUser":1},"delayBetweenActions":2000,"delayBetweenUsers":5000,"replyTemplates":["Great point! 🔥","Couldn't agree more 👏","This is gold 💯","Thanks for sharing!"]},"stopGlobal":null},{"id":"like-by-user","title":"Like a User","emoji":"👤","category":"engage","danger":"caution","desc":"Auto-like posts from a specific user's profile.","where":{"label":"The profile you want to target (x.com/username)"},"defaults":{"maxLikes":50,"skipReplies":false,"skipRetweets":true,"skipQuoteTweets":false,"onlyWithMedia":false,"minLikes":0,"minRetweets":0,"minDelay":1500,"maxDelay":3500,"maxScrollAttempts":25,"stopAfterAlreadyLiked":10},"stopGlobal":"stopLikeByUser"},{"id":"like-by-hashtag","title":"Like by Hashtag","emoji":"#️⃣","category":"engage","danger":"caution","desc":"Auto-like posts containing specific hashtags.","where":{"label":"Search → Latest tab (x.com/search?...&f=live)","match":["^/search"]},"defaults":{"hashtags":["javascript","webdev","coding"],"maxLikesPerHashtag":10,"maxTotalLikes":30,"minDelay":2000,"maxDelay":4000,"skipRetweets":true,"skipMediaOnly":false,"maxScrollAttempts":5},"stopGlobal":"stopLikeByHashtag"},{"id":"like-by-location","title":"Like by Location","emoji":"📍","category":"engage","danger":"caution","desc":"Auto-like posts from a geographic area.","where":{"label":"Search → Latest tab (x.com/search?...&f=live)","match":["^/search"]},"defaults":{"location":"San Francisco","radiusMiles":25,"keyword":"","maxLikes":30,"minDelay":2000,"maxDelay":4000,"skipRetweets":true,"skipReplies":false,"maxScrollAttempts":15,"searchType":"live"},"stopGlobal":"stopLikeByLocation"},{"id":"like-by-feed","title":"Like Home Feed","emoji":"🏠","category":"engage","danger":"caution","desc":"Auto-like posts as you scroll your home timeline.","where":{"label":"Your Home timeline","url":"https://x.com/home","match":["^/home"]},"defaults":{"maxLikes":50,"skipReplies":true,"skipAds":true,"skipRetweets":true,"onlyWithMedia":false,"minDelay":1500,"maxDelay":3500,"maxScrollAttempts":20,"noNewTweetsThreshold":5},"stopGlobal":"stopLikeByFeed"},{"id":"like-user-replies","title":"Like Replies","emoji":"↩️","category":"engage","danger":"caution","desc":"Auto-like the replies under a specific post.","where":{"label":"The open tweet/thread (its status page)","match":["/status/"]},"defaults":{"maxLikes":30,"skipNestedReplies":false,"onlyVerified":false,"onlyWithMedia":false,"skipContaining":[],"onlyContaining":[],"minDelay":1500,"maxDelay":3500,"maxScrollAttempts":20,"skipOriginalTweet":true},"stopGlobal":"stopLikeUserReplies"},{"id":"clear-all-bookmarks","title":"Clear All Bookmarks","emoji":"🔖","category":"cleanup","danger":"destructive","desc":"Remove all of your bookmarks.","where":{"label":"Your Bookmarks","url":"https://x.com/i/bookmarks","match":["^/i/bookmarks"]},"defaults":{"maxRemove":0,"removeDelay":1500,"scrollDelay":2000,"maxRetries":5,"confirmStart":true},"stopGlobal":null},{"id":"clear-all-likes","title":"Clear All Likes","emoji":"🗑️","category":"cleanup","danger":"destructive","desc":"Remove all likes from your account.","where":{"label":"Your Likes page (x.com/<you>/likes)","match":["/likes"]},"defaults":{"maxUnlikes":0,"unlikeDelay":1500,"scrollDelay":2000,"maxRetries":5,"confirmStart":true},"stopGlobal":null},{"id":"clear-all-retweets","title":"Clear All Reposts","emoji":"🔁","category":"cleanup","danger":"destructive","desc":"Undo all of your reposts.","where":{"label":"Your own profile page"},"defaults":{"maxUndo":0,"unretweetDelay":2000,"scrollDelay":2500,"maxRetries":5,"confirmStart":true},"stopGlobal":null},{"id":"smart-unfollow","title":"Smart Unfollow","emoji":"🧠","category":"cleanup","danger":"destructive","desc":"Unfollow accounts that didn't follow back within N days (respects your whitelist).","where":{"label":"Your Following page (x.com/<you>/following)","match":["/following"]},"defaults":{"daysToWait":3,"maxUnfollows":30,"whitelist":[],"onlyTracked":true,"dryRun":false,"unfollowDelay":1500,"confirmDelay":1000,"scrollDelay":2000,"maxScrolls":100,"maxRetries":5},"stopGlobal":null},{"id":"unfollow-with-log","title":"Unfollow + Log","emoji":"📝","category":"cleanup","danger":"destructive","desc":"Unfollow non-followers and download a log of who was removed.","where":{"label":"Your Following page (x.com/<you>/following)","match":["/following"]},"defaults":{"maxRetries":5,"unfollowDelay":1500,"confirmDelay":1000,"scrollDelay":2000,"maxUnfollows":0,"autoDownload":true,"includeTimestamp":true},"stopGlobal":"stopUnfollow"},{"id":"unfollow-everyone","title":"Unfollow Everyone","emoji":"🧹","category":"cleanup","danger":"destructive","desc":"Mass-unfollow every account you follow.","where":{"label":"Your Following page (x.com/<you>/following)","match":["/following"]},"defaults":{"maxRetries":5,"unfollowDelay":1500,"confirmDelay":1000,"scrollDelay":2000,"maxUnfollows":0,"confirmStart":true},"stopGlobal":"stopUnfollow"},{"id":"unfollow-non-followers","title":"Unfollow Non-Followers","emoji":"✂️","category":"cleanup","danger":"destructive","desc":"Unfollow accounts that don't follow you back.","where":{"label":"Your Following page (x.com/<you>/following)","match":["/following"]},"defaults":{"maxRetries":5,"unfollowDelay":1500,"confirmDelay":1000,"scrollDelay":2000,"maxUnfollows":0,"confirmStart":true,"logKept":true},"stopGlobal":"stopUnfollow"},{"id":"unlike-all","title":"Unlike Everything","emoji":"💔","category":"cleanup","danger":"destructive","desc":"Remove every like from your Likes page.","where":{"label":"Your Likes page (x.com/<you>/likes)","match":["/likes"]},"defaults":{"maxUnlikes":1000,"minDelay":1000,"maxDelay":2500,"scrollDelay":1500,"confirmBeforeStart":true,"maxScrollAttempts":5,"logProgress":true},"stopGlobal":"stopUnlike"},{"id":"unlike-old","title":"Unlike Old Likes","emoji":"🕰️","category":"cleanup","danger":"destructive","desc":"Remove likes older than a number of days you set.","where":{"label":"Your Likes page (x.com/<you>/likes)","match":["/likes"]},"defaults":{"daysOld":30,"maxUnlikes":500,"minDelay":1000,"maxDelay":2500,"scrollDelay":1500,"maxScrollAttempts":10,"logProgress":true},"stopGlobal":"stopUnlike"},{"id":"block-bots","title":"Block Bots","emoji":"🤖","category":"moderate","danger":"destructive","desc":"Detect and block likely bots by ratio, age, and bio.","where":{"label":"Your Followers page (x.com/<you>/followers)","match":["/followers"]},"defaults":{"scrollDelay":1500,"maxScrolls":50,"maxRetries":3,"blockDelay":2000,"detection":{"maxFollowingRatio":50,"minAccountAgeDays":30,"maxFollowing":5000,"minFollowers":5,"suspiciousBioKeywords":["crypto","nft","giveaway","airdrop","free money","onlyfans","dm for","follow back","f4f","follow4follow","bitcoin","eth","$btc","$eth","forex","trading signals","make money","passive income","work from home","link in bio","check bio","clickhere","sexo","sex","camgirl","hot girl","sugar","seeking arrangement"],"flagDefaultAvatar":true,"flagNoBio":true,"flagRandomUsername":true},"dryRun":true,"maxBlocks":50},"stopGlobal":null},{"id":"block-by-keywords","title":"Block by Keywords","emoji":"🚫","category":"moderate","danger":"destructive","desc":"Block users whose bio contains keywords you set.","where":{"label":"Your Followers page (x.com/<you>/followers)","match":["/followers"]},"defaults":{"blockKeywords":["crypto","nft","giveaway","airdrop","onlyfans","dm for promo","follow back","f4f"],"scrollDelay":1500,"maxScrolls":30,"maxRetries":3,"blockDelay":2000,"dryRun":true,"maxBlocks":50},"stopGlobal":null},{"id":"block-by-ratio","title":"Block by Ratio","emoji":"📛","category":"moderate","danger":"destructive","desc":"Block accounts by follower/following ratio.","where":{"label":"Your Followers page (x.com/<you>/followers)","match":["/followers"]},"defaults":{"maxRatio":50,"minFollowing":100,"minFollowers":5,"scrollDelay":2000,"maxScrolls":30,"maxRetries":3,"blockDelay":2000,"dryRun":true,"maxBlocks":30},"stopGlobal":null},{"id":"mass-block","title":"Mass Block","emoji":"⛔","category":"moderate","danger":"destructive","desc":"Block every user in a list you provide.","where":{"label":"Any X page"},"defaults":{"usersToBlock":[],"blockDelay":3000,"dryRun":true},"stopGlobal":"stopMassBlock"},{"id":"mass-unblock","title":"Mass Unblock","emoji":"✅","category":"moderate","danger":"destructive","desc":"Unblock accounts in bulk from your blocked list.","where":{"label":"Blocked accounts","url":"https://x.com/settings/blocked_all","match":["^/settings/blocked"]},"defaults":{"unblockAll":true,"usersToUnblock":[],"unblockDelay":1500,"maxUnblocks":100,"scrollDelay":1500,"maxScrolls":20,"dryRun":true},"stopGlobal":"stopMassUnblock"},{"id":"mass-unmute","title":"Mass Unmute","emoji":"🔊","category":"moderate","danger":"destructive","desc":"Unmute accounts in bulk from your muted list.","where":{"label":"Muted accounts","url":"https://x.com/settings/muted_all","match":["^/settings/muted"]},"defaults":{"unmuteAll":true,"usersToUnmute":[],"unmuteDelay":1000,"maxUnmutes":200,"scrollDelay":1500,"maxScrolls":30,"dryRun":true},"stopGlobal":"stopMassUnmute"},{"id":"mute-by-keywords","title":"Mute by Keywords","emoji":"🔇","category":"moderate","danger":"destructive","desc":"Mute users whose bio contains keywords you set.","where":{"label":"Your Followers page (x.com/<you>/followers)","match":["/followers"]},"defaults":{"muteKeywords":["crypto","nft","giveaway","trading signals","dm for promo"],"scrollDelay":1500,"maxScrolls":30,"maxRetries":3,"muteDelay":2000,"dryRun":true,"maxMutes":50},"stopGlobal":"stopMuteByKeywords"},{"id":"report-spam","title":"Report Spam","emoji":"🚩","category":"moderate","danger":"destructive","desc":"Report spam accounts from your followers or mentions.","where":{"label":"Your Followers page (x.com/<you>/followers)","match":["/followers"]},"defaults":{"spamKeywords":["free giveaway","click my link","dm for cashapp","send nudes","sexchat","hot girls in","make $1000 daily","guaranteed profits"],"detection":{"flagDefaultAvatar":true,"maxFollowingRatio":100,"flagNewAccounts":true,"flagExternalLinks":false},"scrollDelay":1500,"maxScrolls":20,"dryRun":true,"maxReports":10,"reportDelay":5000},"stopGlobal":null},{"id":"join-communities","title":"Join Communities","emoji":"➕","category":"community","danger":"caution","desc":"Join multiple Communities from a list of IDs.","where":{"label":"Any X page"},"defaults":{"communities":[],"joinDelay":3000,"navigationDelay":3000,"maxJoin":0,"skipAlreadyJoined":true},"stopGlobal":null},{"id":"leave-community","title":"Leave a Community","emoji":"➖","category":"community","danger":"caution","desc":"Leave one Community by name or ID.","where":{"label":"Your Communities","url":"https://x.com/i/communities","match":["communities"]},"defaults":{"communityId":null,"confirmDelay":1500,"navigationDelay":2500},"stopGlobal":null},{"id":"leave-all-communities","title":"Leave All Communities","emoji":"🚪","category":"community","danger":"destructive","desc":"Leave every Community you have joined.","where":{"label":"Your Communities","url":"https://x.com/i/communities","match":["communities"]},"defaults":{"leaveDelay":1500,"confirmDelay":2000,"navDelay":2500,"maxToLeave":0},"stopGlobal":"stopLeaveCommunities"},{"id":"multi-account","title":"Multi-Account Manager","emoji":"🔀","category":"profile","danger":"safe","desc":"Manage and switch between multiple accounts.","where":{"label":"Any X page"},"defaults":{"storagePrefix":"xactions_multi_","autoDetect":true},"stopGlobal":null},{"id":"send-direct-message","title":"Send DMs","emoji":"✉️","category":"profile","danger":"caution","desc":"Send direct messages, with per-recipient personalization.","where":{"label":"Your Messages","url":"https://x.com/messages","match":["^/messages"]},"defaults":{"targetUsers":[],"messageTemplate":"Hey {username}! 👋\n\nJust wanted to reach out and connect.\n\nBest,\n[Your Name]","limits":{"messagesPerSession":10,"delayBetweenMessages":30000},"options":{"skipIfConversationExists":true,"randomizeDelay":true}},"stopGlobal":null},{"id":"update-profile-picture","title":"Update Avatar","emoji":"🖼️","category":"profile","danger":"caution","desc":"Guided helper for changing your profile picture.","where":{"label":"Edit profile","url":"https://x.com/settings/profile","match":["^/settings/profile"]},"defaults":{"actionDelay":1500,"autoOpenPicker":true},"stopGlobal":null},{"id":"update-banner","title":"Update Banner","emoji":"🖼️","category":"profile","danger":"caution","desc":"Guided helper for changing your profile banner.","where":{"label":"Edit profile","url":"https://x.com/settings/profile","match":["^/settings/profile"]},"defaults":{"actionDelay":1500,"autoOpenEditor":true},"stopGlobal":null},{"id":"update-bio","title":"Update Bio","emoji":"✍️","category":"profile","danger":"caution","desc":"Update your profile bio.","where":{"label":"Edit profile","url":"https://x.com/settings/profile","match":["^/settings/profile"]},"defaults":{"newBio":"🚀 Building cool stuff with code\n🐦 Automating X with @XActions\n💡 Open source enthusiast\n🔗 github.com/nirholas/XActions","actionDelay":1000,"autoSave":true},"stopGlobal":null},{"id":"blacklist","title":"Blacklist Manager","emoji":"📕","category":"utility","danger":"safe","desc":"Maintain a list of users other tools should skip.","where":{"label":"Any X page"},"defaults":{"storageKey":"xactions_blacklist","defaultBlacklist":[]},"stopGlobal":null},{"id":"filter-manager","title":"Filter Manager","emoji":"🎚️","category":"utility","danger":"safe","desc":"Configure shared filters used across the automation tools.","where":{"label":"Any X page"},"defaults":{},"stopGlobal":null},{"id":"protect-active-users","title":"Protect Active Users","emoji":"🛡️","category":"utility","danger":"safe","desc":"Scan your posts for engaged users and protect them from unfollow.","where":{"label":"Your own profile page"},"defaults":{"postsToScan":10,"engagementTypes":{"likers":true,"repliers":true,"retweeters":true,"quoters":false},"lookbackDays":30,"minEngagements":1,"scrollDelay":1500,"maxScrollsPerList":10},"stopGlobal":null},{"id":"rate-limiter","title":"Rate Limiter","emoji":"⏱️","category":"utility","danger":"safe","desc":"Tune the pacing/quota helper shared by the action tools.","where":{"label":"Any X page"},"defaults":{},"stopGlobal":null},{"id":"whitelist","title":"Whitelist Manager","emoji":"📗","category":"utility","danger":"safe","desc":"Maintain a list of users to protect from actions.","where":{"label":"Any X page"},"defaults":{"storageKey":"xactions_whitelist","defaultWhitelist":[]},"stopGlobal":null}];
-const CATEGORIES = [{"id":"scrape","label":"Scrape & Export","emoji":"📥"},{"id":"analyze","label":"Analytics","emoji":"📊"},{"id":"grow","label":"Grow","emoji":"🌱"},{"id":"engage","label":"Engage","emoji":"💬"},{"id":"cleanup","label":"Clean Up","emoji":"🧹"},{"id":"moderate","label":"Moderate","emoji":"🛡️"},{"id":"community","label":"Communities","emoji":"👥"},{"id":"profile","label":"Profile","emoji":"🪪"},{"id":"utility","label":"Utilities","emoji":"🧰"}];
+  const CATALOG = [{"id":"create-poll","title":"Create a Poll","emoji":"📊","category":"create","danger":"caution","desc":"Publish a poll with your choices and duration.","where":{"label":"The post composer","url":"https://x.com/compose/post","match":["^/compose"]},"defaults":{"text":"What should we build next?","choices":["Solana tools","Base tools","More avatars"],"durationDays":1,"durationHours":0,"durationMinutes":0,"dryRun":true},"stopGlobal":null},{"id":"pin-tweet","title":"Pin / Unpin Tweet","emoji":"📌","category":"create","danger":"caution","desc":"Pin or unpin one of your own tweets.","where":{"label":"Your own profile page"},"defaults":{"action":"pin","tweetUrl":"","dryRun":true},"stopGlobal":null},{"id":"post-thread","title":"Post a Thread","emoji":"🧵","category":"create","danger":"caution","desc":"Publish a multi-tweet thread from a list of texts.","where":{"label":"The post composer","url":"https://x.com/compose/post","match":["^/compose"]},"defaults":{"tweets":["Thread part 1 🧵","Thread part 2: the details.","Thread part 3: wrap up. Follow for more."],"autoNumber":false,"maxChars":280,"delayBetween":2000,"dryRun":true},"stopGlobal":null},{"id":"post-tweet","title":"Post a Tweet","emoji":"✍️","category":"create","danger":"caution","desc":"Compose and publish a single tweet from the console.","where":{"label":"The post composer","url":"https://x.com/compose/post","match":["^/compose"]},"defaults":{"text":"gm from XActions 🚀","replyToUrl":"","mediaNote":"","mediaWaitSeconds":15,"dryRun":true},"stopGlobal":null},{"id":"quote-tweet","title":"Quote Tweet","emoji":"💬","category":"create","danger":"caution","desc":"Quote-tweet the post you are viewing with your own text.","where":{"label":"The open tweet/thread (its status page)","match":["/status/"]},"defaults":{"text":"This is the take of the day 💯","dryRun":true},"stopGlobal":null},{"id":"schedule-post","title":"Schedule a Post","emoji":"🗓️","category":"create","danger":"caution","desc":"Schedule a tweet using X's native scheduler.","where":{"label":"The post composer","url":"https://x.com/compose/post","match":["^/compose"]},"defaults":{"text":"Scheduled with XActions 📅","scheduleISO":"2026-08-01T09:00","dryRun":true},"stopGlobal":null},{"id":"backup-account","title":"Account Backup","emoji":"💾","category":"scrape","danger":"safe","desc":"Make a comprehensive backup of your account data.","where":{"label":"Your own profile page"},"defaults":{"maxTweets":100,"maxLikes":100,"maxBookmarks":100,"maxFollowing":500,"maxFollowers":500,"scrollDelay":2000,"autoDownload":true},"stopGlobal":null},{"id":"bookmark-exporter","title":"Bookmark Exporter","emoji":"🔖","category":"scrape","danger":"safe","desc":"Export all of your bookmarks to JSON and CSV.","where":{"label":"Your Bookmarks","url":"https://x.com/i/bookmarks","match":["^/i/bookmarks"]},"defaults":{"maxBookmarks":1000,"scrollDelay":1500,"maxScrolls":200,"maxRetries":5,"exportJSON":true,"exportCSV":true,"copyToClipboard":true},"stopGlobal":null},{"id":"link-scraper","title":"Link Scraper","emoji":"🔗","category":"scrape","danger":"safe","desc":"Extract every external link a user has shared.","where":{"label":"The profile you want to target (x.com/username)"},"defaults":{"maxScrolls":100,"maxTweets":500,"scrollDelay":1500,"includeTwitterLinks":false,"includeMedia":false,"excludeDomains":["t.co"],"autoDownload":true,"maxRetries":5},"stopGlobal":null},{"id":"scrape-hashtag","title":"Scrape a Hashtag","emoji":"#️⃣","category":"scrape","danger":"safe","desc":"Export posts for a hashtag.","where":{"label":"Search → Latest tab (x.com/search?...&f=live)","match":["^/search"]},"defaults":{"hashtag":"","maxPosts":300,"includeReplies":true,"scrollDelay":1800,"noNewPostsThreshold":6,"maxScrollAttempts":400,"downloadCsv":true},"stopGlobal":"stopScrapeHashtag"},{"id":"scrape-list","title":"Scrape a List","emoji":"📋","category":"scrape","danger":"safe","desc":"Export a List’s timeline or members.","where":{"label":"A List page (x.com/i/lists/<id>)","match":["/lists/"]},"defaults":{"mode":"auto","maxItems":500,"includeReplies":true,"scrollDelay":1800,"noNewItemsThreshold":6,"maxScrollAttempts":500,"downloadCsv":true},"stopGlobal":"stopScrapeList"},{"id":"scrape-user-likes","title":"Scrape a User's Likes","emoji":"💗","category":"scrape","danger":"safe","desc":"Export the posts a user has liked.","where":{"label":"Your Likes page (x.com/<you>/likes)","match":["/likes"]},"defaults":{"maxPosts":1000,"scrollStep":1600,"scrollDelay":1600,"stallLimit":6,"maxScrollAttempts":400,"autoDownloadCsv":false},"stopGlobal":"stopScrapeUserLikes"},{"id":"scrape-dms","title":"Scrape DMs","emoji":"✉️","category":"scrape","danger":"safe","desc":"Export the open DM conversation.","where":{"label":"Your Messages","url":"https://x.com/messages","match":["^/messages"]},"defaults":{"maxMessages":2000,"maxScrollAttempts":120,"noNewThreshold":6,"scrollDelay":1200,"downloadJSON":true,"downloadCSV":true},"stopGlobal":"stopScrapeDMs"},{"id":"scrape-followers","title":"Scrape Followers","emoji":"👥","category":"scrape","danger":"safe","desc":"Export a profile’s followers to JSON/CSV.","where":{"label":"Your Followers page (x.com/<you>/followers)","match":["/followers"]},"defaults":{"maxUsers":5000,"scrollStep":1400,"scrollDelay":1500,"stallLimit":6,"maxScrollAttempts":400,"autoDownloadCsv":false},"stopGlobal":"stopScrapeFollowers"},{"id":"scrape-following","title":"Scrape Following","emoji":"👣","category":"scrape","danger":"safe","desc":"Export who a profile follows to JSON/CSV.","where":{"label":"Your Following page (x.com/<you>/following)","match":["/following"]},"defaults":{"maxUsers":5000,"scrollStep":1400,"scrollDelay":1500,"stallLimit":6,"maxScrollAttempts":400,"autoDownloadCsv":false},"stopGlobal":"stopScrapeFollowing"},{"id":"scrape-notifications","title":"Scrape Notifications","emoji":"🔔","category":"scrape","danger":"safe","desc":"Export your notifications feed.","where":{"label":"Your Notifications","url":"https://x.com/notifications","match":["^/notifications"]},"defaults":{"maxNotifications":500,"maxScrollAttempts":200,"noNewThreshold":5,"scrollDelay":1500,"downloadJSON":true,"downloadCSV":true},"stopGlobal":"stopScrapeNotifications"},{"id":"scrape-likers","title":"Scrape Post Likers","emoji":"❤️","category":"scrape","danger":"safe","desc":"Export the users who liked a post.","where":{"label":"A tweet's Likes page (.../likes)","match":["/status/.*likes","/likes"]},"defaults":{"maxUsers":5000,"scrollStep":1400,"scrollDelay":1500,"stallLimit":6,"maxScrollAttempts":400,"autoDownloadCsv":false},"stopGlobal":"stopScrapeLikers"},{"id":"scrape-profile-with-replies","title":"Scrape Posts + Replies","emoji":"🧵","category":"scrape","danger":"safe","desc":"Scrape a profile including its replies, from the With replies tab.","where":{"label":"The profile you want to target (x.com/username)"},"defaults":{"targetPostCount":50,"maxRepliesPerPost":50,"maxFeedScrollAttempts":200,"maxThreadScrollAttempts":30,"scrollDelay":2000,"navigationDelay":3000,"range":{"startPostId":null,"endPostId":null},"filters":{"whitelist":[],"blacklist":[],"daysBack":0,"minLikes":0,"minRetweets":0,"excludeRetweets":false},"export":{"json":true,"csv":true,"markdown":false,"text":false,"html":false},"panel":{"enabled":true,"top":20,"right":20},"copyToClipboard":true,"verbose":true,"scrapeRepliesOnUserReplies":true},"stopGlobal":null},{"id":"scrape-media","title":"Scrape Profile Media","emoji":"🖼️","category":"scrape","danger":"safe","desc":"Export image and video URLs from a profile.","where":{"label":"A profile's Media tab","match":["/media"]},"defaults":{"maxItems":500,"highestRes":true,"includeImages":true,"includeVideos":true,"includeGifs":true,"scrollDelay":1800,"noNewItemsThreshold":6,"maxScrollAttempts":400,"downloadCsv":true,"downloadUrlList":true},"stopGlobal":"stopScrapeMedia"},{"id":"scrape-profile-posts","title":"Scrape Profile Posts","emoji":"📜","category":"scrape","danger":"safe","desc":"Scrape every post from any profile with filters, analytics, and JSON/CSV/MD exports.","where":{"label":"The profile you want to target (x.com/username)"},"defaults":{"targetCount":300,"maxScrollAttempts":300,"scrollDelay":2000,"filters":{"whitelist":[],"blacklist":[],"daysBack":0,"minLikes":0,"minRetweets":0,"excludeRetweets":false,"excludeReplies":false,"mediaFilter":"all"},"export":{"json":true,"csv":true,"markdown":false,"text":false,"html":false},"display":{"showStats":true,"showTopPosts":5,"showHashtags":true,"showMentions":true,"showLinks":false,"prettyPrint":true,"prettyPrintLimit":10},"copyToClipboard":true,"verbose":true},"stopGlobal":null},{"id":"scrape-retweeters","title":"Scrape Reposters","emoji":"🔁","category":"scrape","danger":"safe","desc":"Export reposters and quote-tweeters of a post.","where":{"label":"A tweet's Reposts page (.../retweets)","match":["/status/.*(retweets|quotes)"]},"defaults":{"collectReposts":true,"collectQuotes":true,"maxEntries":5000,"scrollStep":1400,"scrollDelay":1500,"stallLimit":6,"maxScrollAttempts":300,"autoDownloadCsv":false},"stopGlobal":"stopScrapeReposters"},{"id":"scrape-search","title":"Scrape Search Results","emoji":"🔎","category":"scrape","danger":"safe","desc":"Export posts from a search query.","where":{"label":"Search → Latest tab (x.com/search?...&f=live)","match":["^/search"]},"defaults":{"maxPosts":300,"includeReplies":true,"scrollDelay":1800,"noNewPostsThreshold":6,"maxScrollAttempts":400,"downloadCsv":true},"stopGlobal":"stopScrapeSearch"},{"id":"scrape-spaces","title":"Scrape Spaces","emoji":"🎙️","category":"scrape","danger":"safe","desc":"Capture Spaces info from a profile or Space.","where":{"label":"The profile you want to target (x.com/username)"},"defaults":{"maxSpaces":50,"maxScrollAttempts":60,"noNewThreshold":4,"scrollDelay":1500,"downloadJSON":true,"downloadCSV":true},"stopGlobal":"stopScrapeSpaces"},{"id":"scrape-replies","title":"Scrape Tweet Replies","emoji":"💬","category":"scrape","danger":"safe","desc":"Export the replies under a post.","where":{"label":"The open tweet/thread (its status page)","match":["/status/"]},"defaults":{"maxReplies":500,"scrollDelay":1800,"noNewRepliesThreshold":6,"maxScrollAttempts":400,"downloadCsv":true},"stopGlobal":"stopScrapeReplies"},{"id":"scraper-toolbox","title":"Scraper Toolbox","emoji":"🧰","category":"scrape","danger":"safe","desc":"Full on-page scraping control panel: start/pause/stop, live filters, one-click exports.","where":{"label":"Any X page"},"defaults":{},"stopGlobal":null},{"id":"thread-unroller","title":"Thread Unroller","emoji":"🪡","category":"scrape","danger":"safe","desc":"Save any thread as clean text, markdown, or JSON.","where":{"label":"The open tweet/thread (its status page)","match":["/status/"]},"defaults":{"format":"markdown","includeMedia":true,"includeStats":true,"maxTweets":50,"scrollDelay":1500,"autoDownload":true,"copyToClipboard":true},"stopGlobal":null},{"id":"video-downloader","title":"Video Downloader","emoji":"🎬","category":"scrape","danger":"safe","desc":"Download the video from any post, at your chosen quality.","where":{"label":"The open tweet/thread (its status page)","match":["/status/"]},"defaults":{"quality":"highest","autoDownload":true,"showAllQualities":true},"stopGlobal":null},{"id":"viral-tweets-scraper","title":"Viral Tweets Finder","emoji":"🔥","category":"scrape","danger":"safe","desc":"Find the top-performing viral posts from a search or any account.","where":{"label":"The profile you want to target (x.com/username)"},"defaults":{"minLikes":50,"minRetweets":5,"minReplies":0,"maxTweets":100,"maxScrolls":50,"sortBy":"likes","scrollDelay":1500,"maxRetries":5,"exportJSON":true,"exportCSV":true},"stopGlobal":null},{"id":"monitor-account","title":"Account Monitor","emoji":"👀","category":"analyze","danger":"safe","desc":"Track follower/following changes on any public account.","where":{"label":"The profile you want to target (x.com/username)"},"defaults":{"scrollDelay":2000,"maxScrolls":100,"maxRetries":5,"autoDownload":true},"stopGlobal":null},{"id":"audience-overlap","title":"Audience Overlap","emoji":"🔀","category":"analyze","danger":"safe","desc":"Compare two follower sets for overlap and unique handles.","where":{"label":"Any X page"},"defaults":{"listA":[],"listB":[],"labelA":"A","labelB":"B","storageKeyA":"","storageKeyB":"","printLimit":20,"exportResults":true},"stopGlobal":null},{"id":"best-time-to-post","title":"Best Time to Post","emoji":"⏰","category":"analyze","danger":"safe","desc":"Find when your audience is most active.","where":{"label":"Your own profile page"},"defaults":{"maxPosts":100,"scrollDelay":1500,"maxScrolls":50,"maxRetries":3},"stopGlobal":null},{"id":"competitor-analysis","title":"Competitor Analysis","emoji":"🕵️","category":"analyze","danger":"safe","desc":"Analyze a competitor account for content and engagement insights.","where":{"label":"The profile you want to target (x.com/username)"},"defaults":{"maxPosts":50,"scrollDelay":1500,"maxScrolls":30,"maxRetries":3},"stopGlobal":null},{"id":"continuous-monitor","title":"Continuous Monitor","emoji":"🔄","category":"analyze","danger":"safe","desc":"Auto-refresh watch with browser notifications on follower changes.","where":{"label":"Your own profile page"},"defaults":{"checkIntervalMinutes":5,"enableNotifications":true,"enableSound":true,"scrollDelay":1500,"maxScrolls":50,"maxRetries":3},"stopGlobal":"stopMonitor"},{"id":"engagement-analytics","title":"Engagement Analytics","emoji":"📈","category":"analyze","danger":"safe","desc":"Break down likes, replies, and reposts across your posts.","where":{"label":"Your own profile page"},"defaults":{"maxPosts":50,"scrollDelay":1500,"maxScrolls":30,"maxRetries":3},"stopGlobal":null},{"id":"find-fake-followers","title":"Fake Follower Finder","emoji":"🤖","category":"analyze","danger":"safe","desc":"Identify likely bot/fake accounts in your audience.","where":{"label":"Your Followers page (x.com/<you>/followers)","match":["/followers"]},"defaults":{"scrollDelay":1500,"maxScrolls":50,"maxRetries":3,"scoring":{"highFollowingRatio":25,"veryHighFollowingRatio":40,"defaultAvatar":20,"noBio":15,"suspiciousBio":25,"randomUsername":15,"massFollowing":15,"extremeFollowing":25,"noFollowers":20,"veryFewFollowers":10},"thresholds":{"highRatio":50,"veryHighRatio":100,"massFollowing":3000,"extremeFollowing":5000},"suspiciousKeywords":["crypto","nft","bitcoin","btc","eth","forex","trading signals","giveaway","airdrop","free money","passive income","onlyfans","fansly","dm for","link in bio","check bio","follow back","f4f","follow4follow","followback","18+","adult","nsfw","sexy","hot girl","make money","work from home","get rich","financial freedom","investment opportunity","guaranteed returns"],"minFakeScore":40,"likelyFakeScore":60},"stopGlobal":null},{"id":"audit-followers","title":"Follower Audit","emoji":"🔍","category":"analyze","danger":"safe","desc":"Score follower quality and surface likely fakes and inactives.","where":{"label":"Your Followers page (x.com/<you>/followers)","match":["/followers"]},"defaults":{"scrollDelay":1500,"maxScrolls":100,"maxRetries":5,"thresholds":{"influencer":10,"balanced":0.5,"aggressive":0.1,"massFollower":2000,"selectiveFollower":100}},"stopGlobal":null},{"id":"followers-growth-tracker","title":"Growth Tracker","emoji":"📉","category":"analyze","danger":"safe","desc":"Track follower growth over time with saved history.","where":{"label":"Your own profile page"},"defaults":{"storageKey":"xactions_growth_tracker","maxHistory":365,"showChart":true},"stopGlobal":null},{"id":"hashtag-analytics","title":"Hashtag Analytics","emoji":"#️⃣","category":"analyze","danger":"safe","desc":"Measure how your hashtags perform.","where":{"label":"Your own profile page"},"defaults":{"maxPosts":100,"scrollDelay":1500,"maxScrolls":50,"maxRetries":3},"stopGlobal":null},{"id":"new-followers-alert","title":"New Follower Alerts","emoji":"🔔","category":"analyze","danger":"safe","desc":"Track new followers with optional welcome-message templates.","where":{"label":"Your Followers page (x.com/<you>/followers)","match":["/followers"]},"defaults":{"scrollDelay":2000,"maxScrolls":100,"maxRetries":5,"welcomeMessages":["Hey {name}! Thanks for the follow! 🙏 Glad to connect!","Welcome {name}! 👋 Thanks for following! What brings you here?","Hey {name}! Appreciate the follow! Looking forward to connecting! 🚀","Thanks for following {name}! Always great to meet new people! ✨"],"autoDownload":true},"stopGlobal":null},{"id":"profile-stats","title":"Profile Stats","emoji":"📊","category":"analyze","danger":"safe","desc":"Get a quick, comprehensive stats card for any profile.","where":{"label":"The profile you want to target (x.com/username)"},"defaults":{},"stopGlobal":null},{"id":"sentiment-analyzer","title":"Sentiment Analyzer","emoji":"🧠","category":"analyze","danger":"safe","desc":"Score sentiment across posts on the current view.","where":{"label":"Any X page"},"defaults":{"maxPosts":40,"maxScrollAttempts":25,"scrollDelay":1600,"examples":3,"exportResults":true},"stopGlobal":"stopSentimentAnalyzer"},{"id":"shadowban-checker","title":"Shadowban Checker","emoji":"🚦","category":"analyze","danger":"safe","desc":"Heuristic search-suggestion / search-ban / reply-deboost check.","where":{"label":"Your own profile page"},"defaults":{"username":"auto","testDelay":2500,"exportResults":true},"stopGlobal":null},{"id":"trending-monitor","title":"Trending Monitor","emoji":"📈","category":"analyze","danger":"safe","desc":"Capture current trends and watch for your keywords.","where":{"label":"Explore / Trends","url":"https://x.com/explore","match":["^/explore"]},"defaults":{"watchKeywords":[],"repeatIntervalMs":0,"scrollRounds":4,"scrollDelay":1400,"exportResults":true},"stopGlobal":"stopTrendingMonitor"},{"id":"tweet-performance","title":"Tweet Performance","emoji":"📊","category":"analyze","danger":"safe","desc":"Rank your recent posts by engagement.","where":{"label":"Your own profile page"},"defaults":{"maxPosts":30,"sortBy":"likes","topN":10,"excludeRetweets":true,"maxScrollAttempts":40,"scrollDelay":1800,"exportResults":true},"stopGlobal":"stopTweetPerformance"},{"id":"detect-unfollowers","title":"Unfollower Detector","emoji":"💔","category":"analyze","danger":"safe","desc":"Compare against a saved snapshot to see who unfollowed you.","where":{"label":"Your Followers page (x.com/<you>/followers)","match":["/followers"]},"defaults":{"scrollDelay":2000,"maxScrolls":100,"maxRetries":5,"autoDownload":true,"storageKey":"xactions_my_followers"},"stopGlobal":null},{"id":"follow-back","title":"Follow Back Everyone","emoji":"🔗","category":"grow","danger":"caution","desc":"Follow accounts that follow you but you don’t follow back.","where":{"label":"Your Followers page (x.com/<you>/followers)","match":["/followers"]},"defaults":{"maxFollows":50,"skipVerified":false,"skipProtected":false,"minDelay":2000,"maxDelay":5000,"maxScrollRounds":40,"scrollDelay":2000,"maxEmptyScrolls":6},"stopGlobal":"stopFollowBack"},{"id":"follow-engagers","title":"Follow Engagers","emoji":"🧲","category":"grow","danger":"caution","desc":"Follow the people who liked or reposted a specific tweet.","where":{"label":"The open tweet/thread (its status page)","match":["/status/"]},"defaults":{"mode":"likers","maxFollows":20,"filters":{"minFollowers":100,"maxFollowers":50000,"skipProtected":true,"skipVerified":false},"minDelay":2000,"maxDelay":4000,"scrollDelay":1500},"stopGlobal":null},{"id":"follow-target-users","title":"Follow Target Audience","emoji":"🎯","category":"grow","danger":"caution","desc":"Follow the followers/following of accounts you specify.","where":{"label":"The profile you want to target (x.com/username)"},"defaults":{"maxFollows":30,"maxScrolls":50,"filters":{"skipProtected":true,"skipVerified":false,"bioKeywords":[],"bioBlacklist":["bot","spam","promo"]},"minDelay":2000,"maxDelay":4000,"scrollDelay":1500},"stopGlobal":null},{"id":"growth-suite","title":"Growth Suite","emoji":"🚀","category":"grow","danger":"caution","desc":"All-in-one growth: auto-like, auto-follow, and smart-unfollow together.","where":{"label":"Any X page"},"defaults":{"keywords":["web3 developer","crypto trader","NFT artist"],"targetAccounts":[],"actions":{"follow":true,"like":true,"unfollow":true},"limits":{"follows":20,"likes":30,"unfollows":15},"timing":{"unfollowAfterDays":3,"delayBetweenActions":3000,"sessionDuration":30},"filters":{"minFollowers":50,"maxFollowers":50000,"mustHaveBio":true,"skipPrivate":true,"language":null}},"stopGlobal":null},{"id":"keyword-follow","title":"Keyword Follow","emoji":"🔑","category":"grow","danger":"caution","desc":"Follow users matching a keyword search, with bio filters.","where":{"label":"Search → People tab (x.com/search?...&f=user)","match":["^/search.*f=user","^/search"]},"defaults":{"maxFollows":20,"maxScrolls":30,"filters":{"skipProtected":true,"skipMutuals":false,"skipVerified":false,"bioMustContain":[],"bioBlacklist":["bot","automated","promo","giveaway"]},"trackFollows":true,"minDelay":2000,"maxDelay":5000,"scrollDelay":2000},"stopGlobal":null},{"id":"auto-commenter","title":"Auto Commenter","emoji":"💬","category":"engage","danger":"caution","desc":"Comment on a target user's posts with your templates.","where":{"label":"The profile you want to target (x.com/username)"},"defaults":{"comments":["🔥","Great point!","This is so true 👏","Interesting perspective!","Thanks for sharing this 🙏","💯","Well said!","Couldn't agree more","👀 interesting","This is gold ✨"],"maxComments":5,"maxPostAgeMinutes":60,"minPostAgeSeconds":30,"onlyOriginalTweets":true,"onlyWithMedia":false,"minDelay":30000,"maxDelay":60000,"scrollDelay":2000},"stopGlobal":null},{"id":"auto-liker","title":"Auto Liker","emoji":"❤️","category":"engage","danger":"caution","desc":"Like posts in a timeline or on a profile, at a human pace.","where":{"label":"The profile you want to target (x.com/username)"},"defaults":{"likeAll":false,"keywords":["web3","crypto","AI","startup"],"fromUsers":[],"maxLikes":20,"maxScrolls":50,"alsoRetweet":false,"skipReplies":true,"skipAds":true,"minDelay":2000,"maxDelay":5000,"scrollDelay":2000},"stopGlobal":null},{"id":"auto-repost","title":"Auto Repost","emoji":"🔁","category":"engage","danger":"caution","desc":"Repost posts matching your criteria as you scroll.","where":{"label":"Search → Latest tab (x.com/search?...&f=live)","match":["^/search"]},"defaults":{"maxReposts":10,"skipAds":true,"skipReplies":true,"onlyWithMedia":false,"mustContainKeywords":[],"minDelay":1500,"maxDelay":4000,"maxScrollAttempts":25,"noNewPostsThreshold":5},"stopGlobal":"stopAutoRepost"},{"id":"auto-reply-mentions","title":"Auto-Reply Mentions","emoji":"📨","category":"engage","danger":"caution","desc":"Reply to your recent mentions with rotating templates.","where":{"label":"Your Mentions tab","url":"https://x.com/notifications/mentions","match":["^/notifications/mentions"]},"defaults":{"replyTemplates":["Thanks for the mention! 🙏","Appreciate you tagging me 🚀","Thanks for reaching out!","Glad you brought this up 💡"],"maxReplies":8,"skipIfAlreadyReplied":true,"addRandomEmoji":false,"minDelay":3000,"maxDelay":6000,"maxScrollAttempts":20,"noNewMentionsThreshold":4},"stopGlobal":"stopAutoReplyMentions"},{"id":"comment-by-hashtag","title":"Comment by Hashtag","emoji":"🗨️","category":"engage","danger":"caution","desc":"Find hashtag posts and comment with your templates.","where":{"label":"Search → Latest tab (x.com/search?...&f=live)","match":["^/search"]},"defaults":{"hashtags":["web3","crypto","NFT"],"comments":["Great point! 🔥","This is so true! 💯","Interesting perspective!","Thanks for sharing this! 🙌","Couldn't agree more!"],"maxComments":10,"minDelay":3000,"maxDelay":6000,"skipUsernames":[],"minLikes":0,"minRetweets":0},"stopGlobal":null},{"id":"comment-by-location","title":"Comment by Location","emoji":"📍","category":"engage","danger":"caution","desc":"Find posts from a location and comment on them.","where":{"label":"Search → Latest tab (x.com/search?...&f=live)","match":["^/search"]},"defaults":{"location":"New York","geocode":null,"searchQuery":"","comments":["Love seeing posts from this area! 🌍","Great content from a great place! 🔥","Thanks for sharing! 💯","Awesome post! 🙌","This is amazing! ✨"],"maxComments":10,"minDelay":3000,"maxDelay":7000,"skipUsernames":[],"maxTweetAge":24,"skipRetweets":true},"stopGlobal":null},{"id":"interact-by-hashtag","title":"Interact by Hashtag","emoji":"#️⃣","category":"engage","danger":"caution","desc":"Like/follow/reply on posts matching a hashtag.","where":{"label":"Search → Latest tab (x.com/search?...&f=live)","match":["^/search"]},"defaults":{"hashtags":["crypto","web3","bitcoin"],"actions":{"like":true,"retweet":false,"follow":true},"limits":{"likes":20,"retweets":5,"follows":10,"tweetsPerHashtag":10},"filters":{"minLikes":5,"minRetweets":0,"skipReplies":true,"skipRetweets":true,"requireMedia":false},"delayBetweenActions":2000,"scrollDelay":2000},"stopGlobal":null},{"id":"interact-by-place","title":"Interact by Place","emoji":"📍","category":"engage","danger":"caution","desc":"Like/follow/reply on posts from a location.","where":{"label":"Search → Latest tab (x.com/search?...&f=live)","match":["^/search"]},"defaults":{"locations":[{"name":"New York","query":"near:\"New York\""},{"name":"San Francisco","query":"near:\"San Francisco\""}],"keywords":[],"actions":{"like":true,"follow":true,"retweet":false},"limits":{"likes":15,"follows":10,"retweets":3},"delayBetweenActions":2000,"scrollDelay":2000},"stopGlobal":null},{"id":"interact-with-likers","title":"Interact with Likers","emoji":"🧲","category":"engage","danger":"caution","desc":"Engage the users who liked a specific post.","where":{"label":"The open tweet/thread (its status page)","match":["/status/"]},"defaults":{"actions":{"follow":true},"limits":{"follows":20},"filters":{"skipPrivate":true,"skipVerified":false,"skipNoPhoto":false},"delayBetweenActions":2000,"scrollDelay":2000},"stopGlobal":null},{"id":"interact-by-users","title":"Interact with Users","emoji":"🎯","category":"engage","danger":"caution","desc":"Full like/follow/reply suite aimed at specific users.","where":{"label":"The profile you want to target (x.com/username)"},"defaults":{"targetUsers":[],"actions":{"like":true,"retweet":false,"reply":false,"follow":true},"limits":{"likesPerUser":3,"retweetsPerUser":1,"repliesPerUser":1},"delayBetweenActions":2000,"delayBetweenUsers":5000,"replyTemplates":["Great point! 🔥","Couldn't agree more 👏","This is gold 💯","Thanks for sharing!"]},"stopGlobal":null},{"id":"like-by-user","title":"Like a User","emoji":"👤","category":"engage","danger":"caution","desc":"Auto-like posts from a specific user's profile.","where":{"label":"The profile you want to target (x.com/username)"},"defaults":{"maxLikes":50,"skipReplies":false,"skipRetweets":true,"skipQuoteTweets":false,"onlyWithMedia":false,"minLikes":0,"minRetweets":0,"minDelay":1500,"maxDelay":3500,"maxScrollAttempts":25,"stopAfterAlreadyLiked":10},"stopGlobal":"stopLikeByUser"},{"id":"like-by-hashtag","title":"Like by Hashtag","emoji":"#️⃣","category":"engage","danger":"caution","desc":"Auto-like posts containing specific hashtags.","where":{"label":"Search → Latest tab (x.com/search?...&f=live)","match":["^/search"]},"defaults":{"hashtags":["javascript","webdev","coding"],"maxLikesPerHashtag":10,"maxTotalLikes":30,"minDelay":2000,"maxDelay":4000,"skipRetweets":true,"skipMediaOnly":false,"maxScrollAttempts":5},"stopGlobal":"stopLikeByHashtag"},{"id":"like-by-location","title":"Like by Location","emoji":"📍","category":"engage","danger":"caution","desc":"Auto-like posts from a geographic area.","where":{"label":"Search → Latest tab (x.com/search?...&f=live)","match":["^/search"]},"defaults":{"location":"San Francisco","radiusMiles":25,"keyword":"","maxLikes":30,"minDelay":2000,"maxDelay":4000,"skipRetweets":true,"skipReplies":false,"maxScrollAttempts":15,"searchType":"live"},"stopGlobal":"stopLikeByLocation"},{"id":"like-by-feed","title":"Like Home Feed","emoji":"🏠","category":"engage","danger":"caution","desc":"Auto-like posts as you scroll your home timeline.","where":{"label":"Your Home timeline","url":"https://x.com/home","match":["^/home"]},"defaults":{"maxLikes":50,"skipReplies":true,"skipAds":true,"skipRetweets":true,"onlyWithMedia":false,"minDelay":1500,"maxDelay":3500,"maxScrollAttempts":20,"noNewTweetsThreshold":5},"stopGlobal":"stopLikeByFeed"},{"id":"like-user-replies","title":"Like Replies","emoji":"↩️","category":"engage","danger":"caution","desc":"Auto-like the replies under a specific post.","where":{"label":"The open tweet/thread (its status page)","match":["/status/"]},"defaults":{"maxLikes":30,"skipNestedReplies":false,"onlyVerified":false,"onlyWithMedia":false,"skipContaining":[],"onlyContaining":[],"minDelay":1500,"maxDelay":3500,"maxScrollAttempts":20,"skipOriginalTweet":true},"stopGlobal":"stopLikeUserReplies"},{"id":"vote-in-polls","title":"Vote in Polls","emoji":"🗳️","category":"engage","danger":"caution","desc":"Auto-vote a chosen option on polls in the timeline.","where":{"label":"Search → Latest tab (x.com/search?...&f=live)","match":["^/search"]},"defaults":{"strategy":"random","optionIndex":0,"maxVotes":15,"minDelay":1500,"maxDelay":4000,"maxScrollAttempts":30,"noNewPollsThreshold":6},"stopGlobal":"stopVoteInPolls"},{"id":"delete-tweets","title":"Bulk Delete Your Posts","emoji":"🗑️","category":"cleanup","danger":"destructive","desc":"Delete your own tweets by age, keyword, or engagement (dry-run by default).","where":{"label":"Your own profile page"},"defaults":{"dryRun":true,"olderThanDays":0,"containingKeywords":[],"minLikesToKeep":0,"maxDeletes":25,"minDelay":1500,"maxDelay":4000,"maxScrollAttempts":60,"noNewPostsThreshold":5},"stopGlobal":"stopDeleteTweets"},{"id":"clear-all-bookmarks","title":"Clear All Bookmarks","emoji":"🔖","category":"cleanup","danger":"destructive","desc":"Remove all of your bookmarks.","where":{"label":"Your Bookmarks","url":"https://x.com/i/bookmarks","match":["^/i/bookmarks"]},"defaults":{"maxRemove":0,"removeDelay":1500,"scrollDelay":2000,"maxRetries":5,"confirmStart":true},"stopGlobal":null},{"id":"clear-all-likes","title":"Clear All Likes","emoji":"🗑️","category":"cleanup","danger":"destructive","desc":"Remove all likes from your account.","where":{"label":"Your Likes page (x.com/<you>/likes)","match":["/likes"]},"defaults":{"maxUnlikes":0,"unlikeDelay":1500,"scrollDelay":2000,"maxRetries":5,"confirmStart":true},"stopGlobal":null},{"id":"clear-all-retweets","title":"Clear All Reposts","emoji":"🔁","category":"cleanup","danger":"destructive","desc":"Undo all of your reposts.","where":{"label":"Your own profile page"},"defaults":{"maxUndo":0,"unretweetDelay":2000,"scrollDelay":2500,"maxRetries":5,"confirmStart":true},"stopGlobal":null},{"id":"smart-unfollow","title":"Smart Unfollow","emoji":"🧠","category":"cleanup","danger":"destructive","desc":"Unfollow accounts that didn't follow back within N days (respects your whitelist).","where":{"label":"Your Following page (x.com/<you>/following)","match":["/following"]},"defaults":{"daysToWait":3,"maxUnfollows":30,"whitelist":[],"onlyTracked":true,"dryRun":false,"unfollowDelay":1500,"confirmDelay":1000,"scrollDelay":2000,"maxScrolls":100,"maxRetries":5},"stopGlobal":null},{"id":"unfollow-with-log","title":"Unfollow + Log","emoji":"📝","category":"cleanup","danger":"destructive","desc":"Unfollow non-followers and download a log of who was removed.","where":{"label":"Your Following page (x.com/<you>/following)","match":["/following"]},"defaults":{"maxRetries":5,"unfollowDelay":1500,"confirmDelay":1000,"scrollDelay":2000,"maxUnfollows":0,"autoDownload":true,"includeTimestamp":true},"stopGlobal":"stopUnfollow"},{"id":"unfollow-everyone","title":"Unfollow Everyone","emoji":"🧹","category":"cleanup","danger":"destructive","desc":"Mass-unfollow every account you follow.","where":{"label":"Your Following page (x.com/<you>/following)","match":["/following"]},"defaults":{"maxRetries":5,"unfollowDelay":1500,"confirmDelay":1000,"scrollDelay":2000,"maxUnfollows":0,"confirmStart":true},"stopGlobal":"stopUnfollow"},{"id":"unfollow-non-followers","title":"Unfollow Non-Followers","emoji":"✂️","category":"cleanup","danger":"destructive","desc":"Unfollow accounts that don't follow you back.","where":{"label":"Your Following page (x.com/<you>/following)","match":["/following"]},"defaults":{"maxRetries":5,"unfollowDelay":1500,"confirmDelay":1000,"scrollDelay":2000,"maxUnfollows":0,"confirmStart":true,"logKept":true},"stopGlobal":"stopUnfollow"},{"id":"unlike-all","title":"Unlike Everything","emoji":"💔","category":"cleanup","danger":"destructive","desc":"Remove every like from your Likes page.","where":{"label":"Your Likes page (x.com/<you>/likes)","match":["/likes"]},"defaults":{"maxUnlikes":1000,"minDelay":1000,"maxDelay":2500,"scrollDelay":1500,"confirmBeforeStart":true,"maxScrollAttempts":5,"logProgress":true},"stopGlobal":"stopUnlike"},{"id":"unlike-old","title":"Unlike Old Likes","emoji":"🕰️","category":"cleanup","danger":"destructive","desc":"Remove likes older than a number of days you set.","where":{"label":"Your Likes page (x.com/<you>/likes)","match":["/likes"]},"defaults":{"daysOld":30,"maxUnlikes":500,"minDelay":1000,"maxDelay":2500,"scrollDelay":1500,"maxScrollAttempts":10,"logProgress":true},"stopGlobal":"stopUnlike"},{"id":"block-bots","title":"Block Bots","emoji":"🤖","category":"moderate","danger":"destructive","desc":"Detect and block likely bots by ratio, age, and bio.","where":{"label":"Your Followers page (x.com/<you>/followers)","match":["/followers"]},"defaults":{"scrollDelay":1500,"maxScrolls":50,"maxRetries":3,"blockDelay":2000,"detection":{"maxFollowingRatio":50,"minAccountAgeDays":30,"maxFollowing":5000,"minFollowers":5,"suspiciousBioKeywords":["crypto","nft","giveaway","airdrop","free money","onlyfans","dm for","follow back","f4f","follow4follow","bitcoin","eth","$btc","$eth","forex","trading signals","make money","passive income","work from home","link in bio","check bio","clickhere","sexo","sex","camgirl","hot girl","sugar","seeking arrangement"],"flagDefaultAvatar":true,"flagNoBio":true,"flagRandomUsername":true},"dryRun":true,"maxBlocks":50},"stopGlobal":null},{"id":"block-by-keywords","title":"Block by Keywords","emoji":"🚫","category":"moderate","danger":"destructive","desc":"Block users whose bio contains keywords you set.","where":{"label":"Your Followers page (x.com/<you>/followers)","match":["/followers"]},"defaults":{"blockKeywords":["crypto","nft","giveaway","airdrop","onlyfans","dm for promo","follow back","f4f"],"scrollDelay":1500,"maxScrolls":30,"maxRetries":3,"blockDelay":2000,"dryRun":true,"maxBlocks":50},"stopGlobal":null},{"id":"block-by-ratio","title":"Block by Ratio","emoji":"📛","category":"moderate","danger":"destructive","desc":"Block accounts by follower/following ratio.","where":{"label":"Your Followers page (x.com/<you>/followers)","match":["/followers"]},"defaults":{"maxRatio":50,"minFollowing":100,"minFollowers":5,"scrollDelay":2000,"maxScrolls":30,"maxRetries":3,"blockDelay":2000,"dryRun":true,"maxBlocks":30},"stopGlobal":null},{"id":"block-list-transfer","title":"Block List Import/Export","emoji":"🧱","category":"moderate","danger":"destructive","desc":"Export your block list, import-and-block a list, or block an account’s followers.","where":{"label":"Blocked accounts","url":"https://x.com/settings/blocked_all","match":["^/settings/blocked"]},"defaults":{"mode":"export","usernames":[],"targetAccount":"","whitelist":[],"maxBlocks":25,"dryRun":true,"minDelay":3000,"maxDelay":6000,"maxScrollRounds":40,"scrollDelay":2000,"maxEmptyScrolls":6},"stopGlobal":"stopBlockListTransfer"},{"id":"mass-block","title":"Mass Block","emoji":"⛔","category":"moderate","danger":"destructive","desc":"Block every user in a list you provide.","where":{"label":"Any X page"},"defaults":{"usersToBlock":[],"blockDelay":3000,"dryRun":true},"stopGlobal":"stopMassBlock"},{"id":"mass-unblock","title":"Mass Unblock","emoji":"✅","category":"moderate","danger":"destructive","desc":"Unblock accounts in bulk from your blocked list.","where":{"label":"Blocked accounts","url":"https://x.com/settings/blocked_all","match":["^/settings/blocked"]},"defaults":{"unblockAll":true,"usersToUnblock":[],"unblockDelay":1500,"maxUnblocks":100,"scrollDelay":1500,"maxScrolls":20,"dryRun":true},"stopGlobal":"stopMassUnblock"},{"id":"mass-unmute","title":"Mass Unmute","emoji":"🔊","category":"moderate","danger":"destructive","desc":"Unmute accounts in bulk from your muted list.","where":{"label":"Muted accounts","url":"https://x.com/settings/muted_all","match":["^/settings/muted"]},"defaults":{"unmuteAll":true,"usersToUnmute":[],"unmuteDelay":1000,"maxUnmutes":200,"scrollDelay":1500,"maxScrolls":30,"dryRun":true},"stopGlobal":"stopMassUnmute"},{"id":"mute-by-keywords","title":"Mute by Keywords","emoji":"🔇","category":"moderate","danger":"destructive","desc":"Mute users whose bio contains keywords you set.","where":{"label":"Your Followers page (x.com/<you>/followers)","match":["/followers"]},"defaults":{"muteKeywords":["crypto","nft","giveaway","trading signals","dm for promo"],"scrollDelay":1500,"maxScrolls":30,"maxRetries":3,"muteDelay":2000,"dryRun":true,"maxMutes":50},"stopGlobal":"stopMuteByKeywords"},{"id":"manage-muted-words","title":"Muted Words","emoji":"🔇","category":"moderate","danger":"caution","desc":"Add, remove, or list your muted words and phrases.","where":{"label":"Muted words settings","url":"https://x.com/settings/muted_keywords","match":["muted_keywords"]},"defaults":{"action":"list","words":["giveaway","airdrop scam"],"muteOptions":{"from":"anyone","home":true,"notifications":true,"duration":"forever"},"minDelay":1500,"maxDelay":4000},"stopGlobal":"stopManageMutedWords"},{"id":"remove-follower","title":"Remove a Follower","emoji":"🚪","category":"moderate","danger":"caution","desc":"Remove followers without blocking (dry-run by default).","where":{"label":"Your Followers page (x.com/<you>/followers)","match":["/followers"]},"defaults":{"usernames":[],"whitelist":[],"maxRemove":25,"dryRun":true,"confirm":true,"minDelay":2500,"maxDelay":5000,"maxScrollRounds":40,"scrollDelay":2000,"maxEmptyScrolls":6},"stopGlobal":"stopRemoveFollower"},{"id":"report-spam","title":"Report Spam","emoji":"🚩","category":"moderate","danger":"destructive","desc":"Report spam accounts from your followers or mentions.","where":{"label":"Your Followers page (x.com/<you>/followers)","match":["/followers"]},"defaults":{"spamKeywords":["free giveaway","click my link","dm for cashapp","send nudes","sexchat","hot girls in","make $1000 daily","guaranteed profits"],"detection":{"flagDefaultAvatar":true,"maxFollowingRatio":100,"flagNewAccounts":true,"flagExternalLinks":false},"scrollDelay":1500,"maxScrolls":20,"dryRun":true,"maxReports":10,"reportDelay":5000},"stopGlobal":null},{"id":"add-to-list","title":"Add Users to List","emoji":"➕","category":"lists","danger":"caution","desc":"Add specified users to one of your Lists.","where":{"label":"Your Lists","url":"https://x.com/i/lists","match":["/lists"]},"defaults":{"listName":"My List","usernames":[],"dryRun":true,"minDelay":2000,"maxDelay":4000,"searchWait":2200,"stepDelay":1500},"stopGlobal":"stopAddToList"},{"id":"follow-list-members","title":"Follow List Members","emoji":"👣","category":"lists","danger":"caution","desc":"Follow every member of a List.","where":{"label":"A List's members page","match":["/lists/.*members","/members"]},"defaults":{"maxFollows":50,"maxScrollAttempts":100,"noNewThreshold":5,"skipVerified":false,"skipProtected":false,"minDelay":2000,"maxDelay":5000,"scrollDelay":2000},"stopGlobal":"stopFollowListMembers"},{"id":"list-manager","title":"List Manager","emoji":"🗂️","category":"lists","danger":"caution","desc":"Create, rename, or delete a List.","where":{"label":"Your Lists","url":"https://x.com/i/lists","match":["/lists"]},"defaults":{"action":"create","name":"My New List","newName":"","description":"Created with XActions","isPrivate":false,"dryRun":true,"stepDelay":1500},"stopGlobal":"stopListManager"},{"id":"join-communities","title":"Join Communities","emoji":"➕","category":"community","danger":"caution","desc":"Join multiple Communities from a list of IDs.","where":{"label":"Any X page"},"defaults":{"communities":[],"joinDelay":3000,"navigationDelay":3000,"maxJoin":0,"skipAlreadyJoined":true},"stopGlobal":null},{"id":"leave-community","title":"Leave a Community","emoji":"➖","category":"community","danger":"caution","desc":"Leave one Community by name or ID.","where":{"label":"Your Communities","url":"https://x.com/i/communities","match":["communities"]},"defaults":{"communityId":null,"confirmDelay":1500,"navigationDelay":2500},"stopGlobal":null},{"id":"leave-all-communities","title":"Leave All Communities","emoji":"🚪","category":"community","danger":"destructive","desc":"Leave every Community you have joined.","where":{"label":"Your Communities","url":"https://x.com/i/communities","match":["communities"]},"defaults":{"leaveDelay":1500,"confirmDelay":2000,"navDelay":2500,"maxToLeave":0},"stopGlobal":"stopLeaveCommunities"},{"id":"auto-reply-dms","title":"Auto-Reply DMs","emoji":"💌","category":"profile","danger":"caution","desc":"Auto-reply to unread DM conversations with a template.","where":{"label":"Your Messages","url":"https://x.com/messages","match":["^/messages"]},"defaults":{"message":"Thanks for reaching out! I'll get back to you soon. 🙏","maxReplies":15,"onlyUnread":true,"minDelay":4000,"maxDelay":9000,"maxScrollRounds":12,"scrollDelay":1500},"stopGlobal":"stopAutoReplyDMs"},{"id":"bulk-dm","title":"Bulk / Welcome DM","emoji":"📤","category":"profile","danger":"caution","desc":"DM a list of users with a personalized template.","where":{"label":"Your Messages","url":"https://x.com/messages","match":["^/messages"]},"defaults":{"usernames":[],"message":"Hey {name}! 👋 Thanks for connecting.","maxDMs":10,"skipExisting":true,"minDelay":25000,"maxDelay":45000},"stopGlobal":"stopBulkDM"},{"id":"edit-profile","title":"Edit Profile","emoji":"🪪","category":"profile","danger":"caution","desc":"Update your name, bio, location, website, or birthday.","where":{"label":"Edit profile","url":"https://x.com/settings/profile","match":["^/settings/profile"]},"defaults":{"name":null,"bio":null,"location":null,"website":null,"birthdate":null,"autoSave":true,"actionDelay":700},"stopGlobal":null},{"id":"multi-account","title":"Multi-Account Manager","emoji":"🔀","category":"profile","danger":"safe","desc":"Manage and switch between multiple accounts.","where":{"label":"Any X page"},"defaults":{"storagePrefix":"xactions_multi_","autoDetect":true},"stopGlobal":null},{"id":"account-settings","title":"Privacy & Settings","emoji":"⚙️","category":"profile","danger":"caution","desc":"Toggle common privacy and safety settings.","where":{"label":"Settings","url":"https://x.com/settings","match":["^/settings"]},"defaults":{"settings":{},"actionDelay":900},"stopGlobal":null},{"id":"send-direct-message","title":"Send DMs","emoji":"✉️","category":"profile","danger":"caution","desc":"Send direct messages, with per-recipient personalization.","where":{"label":"Your Messages","url":"https://x.com/messages","match":["^/messages"]},"defaults":{"targetUsers":[],"messageTemplate":"Hey {username}! 👋\n\nJust wanted to reach out and connect.\n\nBest,\n[Your Name]","limits":{"messagesPerSession":10,"delayBetweenMessages":30000},"options":{"skipIfConversationExists":true,"randomizeDelay":true}},"stopGlobal":null},{"id":"update-profile-picture","title":"Update Avatar","emoji":"🖼️","category":"profile","danger":"caution","desc":"Guided helper for changing your profile picture.","where":{"label":"Edit profile","url":"https://x.com/settings/profile","match":["^/settings/profile"]},"defaults":{"actionDelay":1500,"autoOpenPicker":true},"stopGlobal":null},{"id":"update-banner","title":"Update Banner","emoji":"🖼️","category":"profile","danger":"caution","desc":"Guided helper for changing your profile banner.","where":{"label":"Edit profile","url":"https://x.com/settings/profile","match":["^/settings/profile"]},"defaults":{"actionDelay":1500,"autoOpenEditor":true},"stopGlobal":null},{"id":"update-bio","title":"Update Bio","emoji":"✍️","category":"profile","danger":"caution","desc":"Update your profile bio.","where":{"label":"Edit profile","url":"https://x.com/settings/profile","match":["^/settings/profile"]},"defaults":{"newBio":"🚀 Building cool stuff with code\n🐦 Automating X with @XActions\n💡 Open source enthusiast\n🔗 github.com/nirholas/XActions","actionDelay":1000,"autoSave":true},"stopGlobal":null},{"id":"blacklist","title":"Blacklist Manager","emoji":"📕","category":"utility","danger":"safe","desc":"Maintain a list of users other tools should skip.","where":{"label":"Any X page"},"defaults":{"storageKey":"xactions_blacklist","defaultBlacklist":[]},"stopGlobal":null},{"id":"filter-manager","title":"Filter Manager","emoji":"🎚️","category":"utility","danger":"safe","desc":"Configure shared filters used across the automation tools.","where":{"label":"Any X page"},"defaults":{},"stopGlobal":null},{"id":"notification-manager","title":"Notification Cleaner","emoji":"🔕","category":"utility","danger":"safe","desc":"Mark notifications read and summarize them.","where":{"label":"Your Notifications","url":"https://x.com/notifications","match":["^/notifications"]},"defaults":{"action":"summary","maxNotifications":100,"exportResults":true,"maxScrollRounds":30,"scrollDelay":1400},"stopGlobal":null},{"id":"protect-active-users","title":"Protect Active Users","emoji":"🛡️","category":"utility","danger":"safe","desc":"Scan your posts for engaged users and protect them from unfollow.","where":{"label":"Your own profile page"},"defaults":{"postsToScan":10,"engagementTypes":{"likers":true,"repliers":true,"retweeters":true,"quoters":false},"lookbackDays":30,"minEngagements":1,"scrollDelay":1500,"maxScrollsPerList":10},"stopGlobal":null},{"id":"rate-limiter","title":"Rate Limiter","emoji":"⏱️","category":"utility","danger":"safe","desc":"Tune the pacing/quota helper shared by the action tools.","where":{"label":"Any X page"},"defaults":{},"stopGlobal":null},{"id":"whitelist","title":"Whitelist Manager","emoji":"📗","category":"utility","danger":"safe","desc":"Maintain a list of users to protect from actions.","where":{"label":"Any X page"},"defaults":{"storageKey":"xactions_whitelist","defaultWhitelist":[]},"stopGlobal":null}];
+const CATEGORIES = [{"id":"create","label":"Create & Post","emoji":"✍️"},{"id":"scrape","label":"Scrape & Export","emoji":"📥"},{"id":"analyze","label":"Analytics","emoji":"📊"},{"id":"grow","label":"Grow","emoji":"🌱"},{"id":"engage","label":"Engage","emoji":"💬"},{"id":"cleanup","label":"Clean Up","emoji":"🧹"},{"id":"moderate","label":"Moderate","emoji":"🛡️"},{"id":"lists","label":"Lists","emoji":"🗂️"},{"id":"community","label":"Communities","emoji":"👥"},{"id":"profile","label":"Profile","emoji":"🪪"},{"id":"utility","label":"Utilities","emoji":"🧰"}];
 const TOOLS = {};
 function register(id, fn){ TOOLS[id] = fn; }
+  register("account-settings", function(){
+(async function accountSettings() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  // Only include the keys you want to change. Any key you omit is left untouched.
+  const CONFIG = {
+    settings: {
+      // true = protect your posts (private account), false = public.
+      // protectPosts: true,
+
+      // true = allow others to tag you in photos, false = turn photo tagging off.
+      // photoTagging: false,
+
+      // true = people with your email can find you, false = they cannot.
+      // discoverableByEmail: false,
+
+      // Who can send you message requests: 'everyone' | 'verified' | 'no-one'.
+      // allowDMsFrom: 'verified',
+    },
+
+    // Delay for UI interactions (ms).
+    actionDelay: 900
+  };
+try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG,window.__XA_LAUNCH_CFG);}}catch(_xa){}
+
+
+  // ============================================
+  // 🔧 SELECTORS + SETTINGS MAP
+  // ============================================
+  const SELECTORS = {
+    confirm: '[data-testid="confirmationSheetConfirm"]'
+  };
+
+  // Each supported setting: which /settings page it lives on, its type, and how
+  // to find its control. testids are tried first, then a label-text fallback,
+  // because X rotates and renames testids across builds.
+  const SETTINGS = {
+    protectPosts: {
+      page: '/settings/audience_and_tagging',
+      type: 'switch',
+      testids: ['[data-testid="protectedTweets"]'],
+      labelNeedles: ['protect your posts', 'protect your tweets'],
+      label: 'Protect your posts'
+    },
+    photoTagging: {
+      page: '/settings/audience_and_tagging',
+      type: 'switch',
+      testids: ['[data-testid="allowTagging"]', '[data-testid="photoTagging"]'],
+      labelNeedles: ['photo tagging', 'tag you in photos', 'allow people to tag'],
+      label: 'Photo tagging'
+    },
+    discoverableByEmail: {
+      page: '/settings/discoverability_and_contacts',
+      type: 'switch',
+      testids: ['[data-testid="allowEmailReverseLookup"]', '[data-testid="discoverableByEmail"]'],
+      labelNeedles: ['email address find', 'your email address'],
+      label: 'Discoverable by email'
+    },
+    allowDMsFrom: {
+      page: '/settings/messages',
+      type: 'radio',
+      label: 'Allow message requests from',
+      // desired value -> label text needles for the matching radio option.
+      options: {
+        everyone: ['everyone', 'no filtering', 'anyone'],
+        verified: ['verified'],
+        'no-one': ['no one', 'no-one', 'nobody', 'off']
+      }
+    }
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+  const log = {
+    info: (msg) => console.log(`ℹ️ ${msg}`),
+    success: (msg) => console.log(`✅ ${msg}`),
+    warning: (msg) => console.log(`⚠️ ${msg}`),
+    error: (msg) => console.log(`❌ ${msg}`)
+  };
+
+  const findByTestids = (testids) => {
+    for (const t of testids || []) {
+      const el = document.querySelector(t);
+      if (el) return el;
+    }
+    return null;
+  };
+
+  // Find a role=switch by nearby label text when no testid matches.
+  const findSwitchByLabel = (needles) => {
+    const wants = needles.map(n => n.toLowerCase());
+    const switches = document.querySelectorAll('[role="switch"]');
+    for (const sw of switches) {
+      const scope = sw.closest('label') || sw.closest('[role="group"]') || sw.parentElement?.parentElement || sw.parentElement;
+      const txt = (scope?.textContent || '').toLowerCase();
+      if (wants.some(w => txt.includes(w))) return sw;
+    }
+    return null;
+  };
+
+  const findRadioByText = (needles) => {
+    const wants = needles.map(n => n.toLowerCase());
+    const radios = document.querySelectorAll('[role="radio"], label');
+    for (const r of radios) {
+      const txt = (r.textContent || '').trim().toLowerCase();
+      if (txt && wants.some(w => txt.includes(w))) return r;
+    }
+    return null;
+  };
+
+  // SPA navigation: if we are not on `path`, click a same-page settings link to
+  // it (no full reload, so this script keeps running). Returns true when there.
+  const ensureOnPage = async (path) => {
+    if (window.location.pathname === path) return true;
+    const link = document.querySelector(`a[href="${path}"]`);
+    if (link) {
+      link.click();
+      for (let i = 0; i < 12; i++) {
+        await sleep(400);
+        if (window.location.pathname === path) return true;
+      }
+    }
+    return window.location.pathname === path;
+  };
+
+  // ============================================
+  // 🎯 MAIN LOGIC
+  // ============================================
+  const stats = { changed: 0, alreadyCorrect: 0, notFound: 0, errors: 0 };
+
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  ⚙️ ACCOUNT SETTINGS - XActions                          ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  // Page guard: warn, do not hard-redirect.
+  if (!/^\/settings/.test(window.location.pathname)) {
+    log.warning('Go to x.com/settings (any /settings/* page), then run this again.');
+    return stats;
+  }
+
+  const requested = Object.keys(CONFIG.settings || {}).filter(k => CONFIG.settings[k] !== undefined);
+  if (requested.length === 0) {
+    log.warning('No settings requested. Uncomment and set at least one key inside CONFIG.settings.');
+    return stats;
+  }
+  log.info(`Settings to apply: ${requested.join(', ')}`);
+
+  const applySwitch = async (def, desired) => {
+    let sw = findByTestids(def.testids);
+    if (!sw) sw = findSwitchByLabel(def.labelNeedles || []);
+    if (!sw) {
+      log.warning(`${def.label}: toggle not found on ${def.page}. Skipped (X may have renamed it, or the section did not render).`);
+      stats.notFound++;
+      return;
+    }
+    const current = sw.getAttribute('aria-checked') === 'true';
+    if (current === !!desired) {
+      log.info(`${def.label}: already ${desired ? 'ON' : 'OFF'}. No change.`);
+      stats.alreadyCorrect++;
+      return;
+    }
+    sw.click();
+    await sleep(CONFIG.actionDelay);
+    // Protect-posts style changes can raise a confirmation sheet.
+    const confirm = document.querySelector(SELECTORS.confirm);
+    if (confirm) {
+      confirm.click();
+      await sleep(CONFIG.actionDelay);
+    }
+    log.success(`${def.label}: set to ${desired ? 'ON' : 'OFF'}.`);
+    stats.changed++;
+  };
+
+  const applyRadio = async (def, desired) => {
+    const key = String(desired).toLowerCase();
+    const needles = def.options[key];
+    if (!needles) {
+      log.error(`${def.label}: "${desired}" is not a valid value. Use one of: ${Object.keys(def.options).join(', ')}.`);
+      stats.errors++;
+      return;
+    }
+    const opt = findRadioByText(needles);
+    if (!opt) {
+      log.warning(`${def.label}: option "${desired}" not found on ${def.page}. Skipped.`);
+      stats.notFound++;
+      return;
+    }
+    const radio = opt.getAttribute('role') === 'radio' ? opt : opt.querySelector('[role="radio"]');
+    if (radio && radio.getAttribute('aria-checked') === 'true') {
+      log.info(`${def.label}: already "${desired}". No change.`);
+      stats.alreadyCorrect++;
+      return;
+    }
+    opt.click();
+    await sleep(CONFIG.actionDelay);
+    log.success(`${def.label}: set to "${desired}".`);
+    stats.changed++;
+  };
+
+  for (const key of requested) {
+    const def = SETTINGS[key];
+    if (!def) {
+      log.warning(`Unknown setting "${key}". Supported: ${Object.keys(SETTINGS).join(', ')}. Skipped.`);
+      stats.notFound++;
+      continue;
+    }
+    const desired = CONFIG.settings[key];
+    try {
+      const onPage = await ensureOnPage(def.page);
+      if (!onPage) {
+        log.warning(`${def.label}: could not navigate to ${def.page} from here. Open x.com${def.page} and run this again to apply it.`);
+        stats.notFound++;
+        continue;
+      }
+      await sleep(CONFIG.actionDelay);
+      if (def.type === 'switch') await applySwitch(def, desired);
+      else if (def.type === 'radio') await applyRadio(def, desired);
+    } catch (error) {
+      log.error(`${def.label}: ${error.message}`);
+      stats.errors++;
+    }
+  }
+
+  // ============================================
+  // 📊 SUMMARY
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 ACCOUNT SETTINGS - COMPLETE                          ║
+╠══════════════════════════════════════════════════════════╣
+║  ✅ Changed:           ${String(stats.changed).padEnd(32)}║
+║  ➖ Already correct:   ${String(stats.alreadyCorrect).padEnd(32)}║
+║  ⚠️  Not found:         ${String(stats.notFound).padEnd(32)}║
+║  ❌ Errors:            ${String(stats.errors).padEnd(32)}║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  log.success('Script completed! by nichxbt');
+  return stats;
+})();
+
+});
+  register("add-to-list", function(){
+(async function addToList() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // The EXISTING list to add people to (must appear on your Lists page)
+    listName: 'My List',
+
+    // Users to add (handles without the leading @)
+    usernames: [
+      // 'user1',
+      // 'user2'
+    ],
+
+    // Safety: preview without adding anyone. Set to false to execute.
+    dryRun: true,
+
+    // Rate limiting between users (randomized between min and max, ms)
+    minDelay: 2000,
+    maxDelay: 4000,
+
+    // How long to wait for search results per user (ms)
+    searchWait: 2200,
+
+    // Delay between UI navigation steps (ms)
+    stepDelay: 1500
+  };
+try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG,window.__XA_LAUNCH_CFG);}}catch(_xa){}
+
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    listLink: 'a[href*="/lists/"]',
+    editButton: '[data-testid="editList"], [aria-label="Edit List"], [aria-label="Edit list"]',
+    manageMembers: '[data-testid="listManageMembers"]',
+    addMembersTab: '[data-testid="addMembers"]',
+    searchInput: '[data-testid="searchPeople"], input[data-testid="searchPeople"]',
+    userCell: '[data-testid="UserCell"]',
+    // Inside the add-members list, each row exposes an add/remove follow-style button
+    addButton: '[data-testid$="-follow"], [role="button"]'
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+  const randomDelay = () => Math.floor(Math.random() * (CONFIG.maxDelay - CONFIG.minDelay) + CONFIG.minDelay);
+
+  const log = {
+    info: (msg) => console.log(`ℹ️ ${msg}`),
+    success: (msg) => console.log(`✅ ${msg}`),
+    warning: (msg) => console.log(`⚠️ ${msg}`),
+    error: (msg) => console.log(`❌ ${msg}`),
+    step: (msg) => console.log(`   → ${msg}`)
+  };
+
+  let stopped = false;
+  window.stopAddToList = () => {
+    stopped = true;
+    log.warning('Stop requested. Finishing the current user, then exiting.');
+  };
+
+  const qs = (sel) => document.querySelector(sel);
+
+  const waitFor = async (sel, timeoutMs = 6000) => {
+    const start = Date.now();
+    while (Date.now() - start < timeoutMs) {
+      if (stopped) return null;
+      const el = qs(sel);
+      if (el) return el;
+      await sleep(200);
+    }
+    return null;
+  };
+
+  const setReactInput = (el, value) => {
+    const proto = el.tagName === 'TEXTAREA'
+      ? window.HTMLTextAreaElement.prototype
+      : window.HTMLInputElement.prototype;
+    const setter = Object.getOwnPropertyDescriptor(proto, 'value').set;
+    setter.call(el, value);
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+  };
+
+  const findButtonByText = (labels) => {
+    const wanted = labels.map(l => l.toLowerCase());
+    for (const b of document.querySelectorAll('[role="button"], button, [role="tab"], [role="menuitem"]')) {
+      const t = (b.textContent || '').trim().toLowerCase();
+      if (wanted.some(w => t === w || t.startsWith(w))) return b;
+    }
+    return null;
+  };
+
+  const findListLinkByName = (name) => {
+    const target = name.trim().toLowerCase();
+    for (const link of document.querySelectorAll(SELECTORS.listLink)) {
+      const text = (link.textContent || '').trim().toLowerCase();
+      if (text.includes(target)) return link;
+    }
+    return null;
+  };
+
+  const handleFromCell = (cell) => {
+    const link = cell.querySelector('a[href^="/"]');
+    if (!link) return '';
+    const href = link.getAttribute('href') || '';
+    const m = href.match(/^\/([A-Za-z0-9_]{1,15})$/);
+    return m ? m[1] : '';
+  };
+
+  // ============================================
+  // 🚀 RUN
+  // ============================================
+  const stats = { added: 0, notFound: 0, alreadyIn: 0, errors: 0 };
+
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  ➕ ADD TO LIST - XActions                               ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  // Page guard
+  if (!/\/lists/.test(window.location.pathname) && !/\/i\/lists/.test(window.location.pathname)) {
+    log.warning('You are not on a Lists page.');
+    log.info('Go to https://x.com/<your-handle>/lists, then paste this script again.');
+    return;
+  }
+
+  const users = CONFIG.usernames.map(u => u.replace(/^@/, '').trim()).filter(Boolean);
+  if (users.length === 0) {
+    log.warning('CONFIG.usernames is empty. Add at least one handle to CONFIG.usernames.');
+    return;
+  }
+
+  log.info(`Target list: "${CONFIG.listName}"`);
+  log.info(`Users to add: ${users.length}`);
+  if (CONFIG.dryRun) {
+    log.warning('DRY RUN is ON. No one will be added. Set CONFIG.dryRun = false to execute.');
+    users.forEach(u => log.step(`Would add @${u}`));
+    console.log('\n✅ Dry run complete. by nichxbt');
+    return { dryRun: true, wouldAdd: users };
+  }
+  log.info('To stop early: window.stopAddToList()');
+  console.log('');
+
+  // 1) Open the target list
+  const listLink = findListLinkByName(CONFIG.listName);
+  if (!listLink) {
+    log.error(`Could not find a list named "${CONFIG.listName}" on this page.`);
+    log.info('Confirm the name matches exactly and you are on x.com/<you>/lists.');
+    return;
+  }
+  log.step(`Opening list "${CONFIG.listName}"`);
+  listLink.click();
+  await sleep(CONFIG.stepDelay);
+
+  // 2) Open Edit -> Manage members -> Add members
+  const editBtn = await waitFor(SELECTORS.editButton, 5000) || findButtonByText(['edit list']);
+  if (editBtn) { editBtn.click(); await sleep(CONFIG.stepDelay); }
+
+  const manageBtn = await waitFor(SELECTORS.manageMembers, 4000) || findButtonByText(['manage members']);
+  if (manageBtn) { manageBtn.click(); await sleep(CONFIG.stepDelay); }
+
+  const addTab = await waitFor(SELECTORS.addMembersTab, 4000) || findButtonByText(['add members', 'suggested']);
+  if (addTab) { addTab.click(); await sleep(CONFIG.stepDelay); }
+
+  const searchInput = await waitFor(SELECTORS.searchInput, 5000);
+  if (!searchInput) {
+    log.error('Could not open the "Add members" search box.');
+    log.info('Open the list, tap Edit List then Manage members, then rerun this script.');
+    return;
+  }
+
+  // 3) Add each user, one at a time, rate-limited
+  for (const username of users) {
+    if (stopped) break;
+
+    try {
+      searchInput.focus();
+      setReactInput(searchInput, '');
+      await sleep(300);
+      setReactInput(searchInput, username);
+      await sleep(CONFIG.searchWait);
+
+      const cells = document.querySelectorAll(SELECTORS.userCell);
+      let matchedCell = null;
+      for (const cell of cells) {
+        if (handleFromCell(cell).toLowerCase() === username.toLowerCase()) { matchedCell = cell; break; }
+      }
+      // Fall back to a looser text match if the handle link was not resolvable
+      if (!matchedCell) {
+        for (const cell of cells) {
+          if ((cell.textContent || '').toLowerCase().includes('@' + username.toLowerCase())) { matchedCell = cell; break; }
+        }
+      }
+
+      if (!matchedCell) {
+        stats.notFound++;
+        log.warning(`@${username} not found in search results`);
+        continue;
+      }
+
+      // Already a member? X labels the row control "Remove" when present.
+      const control = matchedCell.querySelector(SELECTORS.addButton);
+      const controlText = control ? (control.textContent || '').trim().toLowerCase() : '';
+      if (controlText.includes('remove')) {
+        stats.alreadyIn++;
+        log.info(`@${username} is already in the list, skipping`);
+        continue;
+      }
+
+      if (control) control.click();
+      else matchedCell.click();
+
+      stats.added++;
+      log.success(`Added #${stats.added}: @${username}`);
+      await sleep(randomDelay());
+    } catch (e) {
+      stats.errors++;
+      log.error(`Error adding @${username}: ${e.message}`);
+    }
+  }
+
+  // 4) Save / close the manage-members dialog if a save control is present
+  const saveBtn = findButtonByText(['done', 'save']);
+  if (saveBtn) { try { saveBtn.click(); } catch (e) {} }
+
+  // ============================================
+  // 📊 SUMMARY
+  // ============================================
+  console.log('');
+  console.log('╔══════════════════════════════════════════════════════════╗');
+  console.log('║  📊 ADD TO LIST - COMPLETE                               ║');
+  console.log('╚══════════════════════════════════════════════════════════╝');
+  console.log(`   ✅ Added:        ${stats.added}`);
+  console.log(`   ⏭️  Already in:   ${stats.alreadyIn}`);
+  console.log(`   🔍 Not found:    ${stats.notFound}`);
+  console.log(`   ❌ Errors:       ${stats.errors}`);
+  console.log('✅ Script completed! by nichxbt');
+
+  return stats;
+})();
+
+});
+  register("audience-overlap", function(){
+(async function audienceOverlap() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // PRIMARY MODE: paste two arrays of handles here (with or without the @).
+    // Example: ['alice', 'bob', '@carol']
+    listA: [],
+    listB: [],
+
+    // Friendly labels for the two sets (used in the report and filename).
+    labelA: 'A',
+    labelB: 'B',
+
+    // OPTIONAL MODE: if the arrays above are empty, read handles from these
+    // localStorage keys instead. Each key must hold a JSON array of handles
+    // or an array of objects with a `username`/`handle`/`screen_name` field.
+    storageKeyA: '',
+    storageKeyB: '',
+
+    // How many handle examples to print per section.
+    printLimit: 20,
+
+    // Auto-download a JSON report when finished.
+    exportResults: true
+  };
+try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG,window.__XA_LAUNCH_CFG);}}catch(_xa){}
+
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const log = {
+    info: (msg) => console.log(`ℹ️ ${msg}`),
+    success: (msg) => console.log(`✅ ${msg}`),
+    warning: (msg) => console.log(`⚠️ ${msg}`),
+    error: (msg) => console.log(`❌ ${msg}`)
+  };
+
+  const download = (data, filename) => {
+    try {
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      log.success(`Report downloaded: ${filename}`);
+    } catch (e) {
+      log.error(`Could not download report: ${e.message}`);
+    }
+  };
+
+  // Turn any handle-ish value into a clean lowercase key. Accepts strings
+  // ("@alice", "/alice", "https://x.com/alice") and objects from scrapers.
+  const normalizeHandle = (raw) => {
+    let value = raw;
+    if (value && typeof value === 'object') {
+      value = value.username || value.handle || value.screen_name || value.screenName || '';
+    }
+    if (typeof value !== 'string') return null;
+    let handle = value.trim();
+    if (!handle) return null;
+    const urlMatch = handle.match(/(?:x\.com|twitter\.com)\/([A-Za-z0-9_]+)/i);
+    if (urlMatch) handle = urlMatch[1];
+    handle = handle.replace(/^\//, '').replace(/^@/, '').split(/[/?#]/)[0].trim();
+    if (!/^[A-Za-z0-9_]{1,15}$/.test(handle)) return null;
+    return handle.toLowerCase();
+  };
+
+  // Build a Map of normalizedKey -> original display handle, dropping dupes.
+  const toHandleMap = (list) => {
+    const map = new Map();
+    (Array.isArray(list) ? list : []).forEach((raw) => {
+      const key = normalizeHandle(raw);
+      if (!key || map.has(key)) return;
+      const display = (raw && typeof raw === 'object')
+        ? (raw.username || raw.handle || raw.screen_name || raw.screenName || key)
+        : key;
+      map.set(key, String(display).replace(/^@/, ''));
+    });
+    return map;
+  };
+
+  const readStorageList = (key) => {
+    if (!key) return null;
+    try {
+      const parsed = JSON.parse(localStorage.getItem(key) || 'null');
+      if (Array.isArray(parsed)) return parsed;
+      if (parsed && Array.isArray(parsed.followers)) return parsed.followers;
+      if (parsed && Array.isArray(parsed.handles)) return parsed.handles;
+      return null;
+    } catch (e) {
+      log.warning(`Could not read localStorage key "${key}": ${e.message}`);
+      return null;
+    }
+  };
+
+  // ============================================
+  // 🎯 MAIN LOGIC
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  🔀 AUDIENCE OVERLAP - XActions                         ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  // Resolve the two source lists in priority order:
+  // 1) CONFIG arrays  2) localStorage keys  3) interactive prompt.
+  let rawA = Array.isArray(CONFIG.listA) && CONFIG.listA.length ? CONFIG.listA : null;
+  let rawB = Array.isArray(CONFIG.listB) && CONFIG.listB.length ? CONFIG.listB : null;
+
+  if (!rawA && CONFIG.storageKeyA) rawA = readStorageList(CONFIG.storageKeyA);
+  if (!rawB && CONFIG.storageKeyB) rawB = readStorageList(CONFIG.storageKeyB);
+
+  if (!rawA || !rawB) {
+    log.warning('No lists in CONFIG and no usable localStorage keys. Falling back to a prompt.');
+    if (!rawA) {
+      const inputA = window.prompt(`Paste comma-separated handles for set "${CONFIG.labelA}":`, '');
+      rawA = inputA ? inputA.split(/[\s,]+/) : [];
+    }
+    if (!rawB) {
+      const inputB = window.prompt(`Paste comma-separated handles for set "${CONFIG.labelB}":`, '');
+      rawB = inputB ? inputB.split(/[\s,]+/) : [];
+    }
+  }
+
+  const mapA = toHandleMap(rawA);
+  const mapB = toHandleMap(rawB);
+
+  if (mapA.size === 0 || mapB.size === 0) {
+    log.error('Both sets need at least one valid handle.');
+    log.info(`Parsed: "${CONFIG.labelA}" = ${mapA.size} handles, "${CONFIG.labelB}" = ${mapB.size} handles.`);
+    log.info('Set CONFIG.listA and CONFIG.listB to arrays of handles and run again.');
+    return;
+  }
+
+  const keysA = new Set(mapA.keys());
+  const keysB = new Set(mapB.keys());
+  const shared = [...keysA].filter((k) => keysB.has(k));
+  const onlyA = [...keysA].filter((k) => !keysB.has(k));
+  const onlyB = [...keysB].filter((k) => !keysA.has(k));
+  const union = new Set([...keysA, ...keysB]);
+
+  const jaccardPct = Math.round((shared.length / union.size) * 1000) / 10;
+  const sharedOfAPct = Math.round((shared.length / keysA.size) * 1000) / 10;
+  const sharedOfBPct = Math.round((shared.length / keysB.size) * 1000) / 10;
+
+  const displayA = (k) => '@' + (mapA.get(k) || k);
+  const displayB = (k) => '@' + (mapB.get(k) || k);
+
+  // ============================================
+  // 📊 SUMMARY
+  // ============================================
+  console.log('');
+  console.log('━'.repeat(60));
+  console.log('🔀 AUDIENCE OVERLAP');
+  console.log('━'.repeat(60));
+  console.log(`   Set "${CONFIG.labelA}": ${keysA.size} unique handles`);
+  console.log(`   Set "${CONFIG.labelB}": ${keysB.size} unique handles`);
+  console.log('');
+  console.log(`   Shared:        ${shared.length}`);
+  console.log(`   Only in ${CONFIG.labelA}:    ${onlyA.length}`);
+  console.log(`   Only in ${CONFIG.labelB}:    ${onlyB.length}`);
+  console.log('');
+  console.log(`   Overlap (Jaccard):       ${jaccardPct}%`);
+  console.log(`   Shared as % of "${CONFIG.labelA}":   ${sharedOfAPct}%`);
+  console.log(`   Shared as % of "${CONFIG.labelB}":   ${sharedOfBPct}%`);
+
+  const preview = (keys, disp) => keys.slice(0, CONFIG.printLimit).map(disp).join(', ') + (keys.length > CONFIG.printLimit ? ` ... (+${keys.length - CONFIG.printLimit} more)` : '');
+
+  if (shared.length > 0) {
+    console.log('');
+    console.log(`👥 SHARED (${shared.length}):`);
+    console.log('   ' + preview(shared, displayA));
+  }
+  console.log('');
+  console.log(`🅰️ ONLY IN "${CONFIG.labelA}" (${onlyA.length}):`);
+  console.log('   ' + (onlyA.length ? preview(onlyA, displayA) : '(none)'));
+  console.log('');
+  console.log(`🅱️ ONLY IN "${CONFIG.labelB}" (${onlyB.length}):`);
+  console.log('   ' + (onlyB.length ? preview(onlyB, displayB) : '(none)'));
+
+  console.log('');
+  if (jaccardPct > 50) log.info('HIGH overlap. These audiences are largely the same crowd.');
+  else if (jaccardPct > 20) log.info('MODERATE overlap. Cross-promotion would reach some new people.');
+  else log.info('LOW overlap. Big opportunity for cross-pollination.');
+
+  const report = {
+    labelA: CONFIG.labelA,
+    labelB: CONFIG.labelB,
+    analyzedAt: new Date().toISOString(),
+    counts: {
+      setA: keysA.size,
+      setB: keysB.size,
+      shared: shared.length,
+      onlyA: onlyA.length,
+      onlyB: onlyB.length,
+      union: union.size
+    },
+    overlap: { jaccardPct, sharedOfAPct, sharedOfBPct },
+    sharedHandles: shared.map(displayA).map((h) => h.slice(1)),
+    uniqueToA: onlyA.map(displayA).map((h) => h.slice(1)),
+    uniqueToB: onlyB.map(displayB).map((h) => h.slice(1))
+  };
+
+  if (CONFIG.exportResults) {
+    console.log('');
+    const safe = (s) => String(s).replace(/[^A-Za-z0-9_-]/g, '');
+    download(report, `xactions-overlap-${safe(CONFIG.labelA)}-vs-${safe(CONFIG.labelB)}.json`);
+  }
+
+  window.xactionsOverlap = report;
+  console.log('');
+  log.info('Full report object: window.xactionsOverlap');
+  log.success('Done.');
+
+  return report;
+})();
+
+});
   register("audit-followers", function(){
 var CONFIG = {
   // Scroll settings
@@ -854,6 +1587,811 @@ try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG
   console.log('');
   
   return { liked: totalLiked, retweeted: totalRetweeted };
+})();
+
+});
+  register("auto-reply-dms", function(){
+(async function autoReplyDMs() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // The reply to send. {name} is filled from the conversation title.
+    message: `Thanks for reaching out! I'll get back to you soon. 🙏`,
+
+    // Safety limits
+    maxReplies: 15,        // hard cap on replies sent this run
+    onlyUnread: true,      // only reply to conversations marked unread
+
+    // Timing (randomized between min and max, per reply)
+    minDelay: 4000,
+    maxDelay: 9000,
+
+    // Scrolling the conversation list to load more threads
+    maxScrollRounds: 12,
+    scrollDelay: 1500
+  };
+try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG,window.__XA_LAUNCH_CFG);}}catch(_xa){}
+
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    conversation: '[data-testid="conversation"]',
+    unreadBadge: '[data-testid="unread"]',
+    messageInput: '[data-testid="dmComposerTextInput"]',
+    sendButton: '[data-testid="dmComposerSendButton"]',
+    backButton: '[data-testid="app-bar-back"]'
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+  const randomDelay = () => {
+    const delay = Math.floor(Math.random() * (CONFIG.maxDelay - CONFIG.minDelay + 1)) + CONFIG.minDelay;
+    return sleep(delay);
+  };
+
+  const fillTemplate = (tpl, name) => tpl.split('{name}').join(name || 'there');
+
+  // A stable-ish id for a conversation row: its data-testid href or its text.
+  const convoKey = (conv) => {
+    const link = conv.querySelector('a[href*="/messages/"]');
+    if (link) return link.getAttribute('href');
+    return (conv.textContent || '').slice(0, 80);
+  };
+
+  const isUnread = (conv) => {
+    if (conv.querySelector(SELECTORS.unreadBadge)) return true;
+    // Fallback: X flags unread rows on the aria attributes of the row.
+    return conv.getAttribute('aria-live') === 'polite' && /unread/i.test(conv.getAttribute('aria-label') || '');
+  };
+
+  const convoName = (conv) => {
+    const span = conv.querySelector('[dir="ltr"] span, span');
+    return span ? span.textContent.trim() : '';
+  };
+
+  const log = {
+    info: (msg) => console.log(`ℹ️ ${msg}`),
+    success: (msg) => console.log(`✅ ${msg}`),
+    warning: (msg) => console.log(`⚠️ ${msg}`),
+    error: (msg) => console.log(`❌ ${msg}`),
+    progress: (current, total) => console.log(`📊 Progress: ${current}/${total} replies sent`)
+  };
+
+  // ============================================
+  // 🎯 STATE
+  // ============================================
+  const stats = { replied: 0, skippedRead: 0, noInput: 0, errors: 0 };
+  const handled = new Set();
+
+  // Stop switch: run window.stopAutoReplyDMs() to abort after the current thread.
+  let stopped = false;
+  window.stopAutoReplyDMs = () => {
+    stopped = true;
+    log.warning('Stop requested. Finishing the current reply, then exiting.');
+  };
+
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  🤖 AUTO REPLY DMs - XActions                            ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+  log.info('To stop early: window.stopAutoReplyDMs()');
+
+  // Page guard
+  if (!/\/messages/.test(window.location.pathname)) {
+    log.error('Not on the Messages page. Go to https://x.com/messages and re-run.');
+    return stats;
+  }
+
+  log.info(`Only unread: ${CONFIG.onlyUnread}`);
+  log.info(`Max replies this run: ${CONFIG.maxReplies}`);
+
+  // ============================================
+  // 📬 REPLY IN THE OPEN THREAD
+  // ============================================
+  const replyInOpenThread = async (name) => {
+    // Poll briefly for the composer to render after opening a thread.
+    let input = document.querySelector(SELECTORS.messageInput);
+    let waited = 0;
+    while (!input && waited < 4000) {
+      await sleep(400);
+      waited += 400;
+      input = document.querySelector(SELECTORS.messageInput);
+    }
+    if (!input) {
+      stats.noInput++;
+      log.warning(`No composer for "${name}" (they may not allow replies).`);
+      return false;
+    }
+
+    const message = fillTemplate(CONFIG.message, name);
+    input.focus();
+    document.execCommand('insertText', false, message);
+    await sleep(900);
+
+    const sendBtn = document.querySelector(SELECTORS.sendButton);
+    if (!sendBtn || sendBtn.getAttribute('aria-disabled') === 'true' || sendBtn.disabled) {
+      stats.noInput++;
+      log.warning(`Send button unavailable for "${name}".`);
+      return false;
+    }
+    sendBtn.click();
+    await sleep(1200);
+    return true;
+  };
+
+  // ============================================
+  // 🔁 MAIN LOOP
+  // ============================================
+  let scrollRounds = 0;
+  let emptyRounds = 0;
+
+  while (!stopped && stats.replied < CONFIG.maxReplies && scrollRounds < CONFIG.maxScrollRounds) {
+    const convos = Array.from(document.querySelectorAll(SELECTORS.conversation));
+    if (convos.length === 0) {
+      log.warning('No conversations visible. Is the Messages inbox open?');
+      break;
+    }
+
+    let foundNew = false;
+
+    for (const conv of convos) {
+      if (stopped || stats.replied >= CONFIG.maxReplies) break;
+
+      const key = convoKey(conv);
+      if (handled.has(key)) continue;
+      handled.add(key);
+      foundNew = true;
+
+      const name = convoName(conv);
+
+      try {
+        if (CONFIG.onlyUnread && !isUnread(conv)) {
+          stats.skippedRead++;
+          continue;
+        }
+
+        conv.click();
+        await sleep(1600);
+
+        const ok = await replyInOpenThread(name);
+        if (ok) {
+          stats.replied++;
+          log.success(`Replied to "${name || 'conversation'}"`);
+          log.progress(stats.replied, CONFIG.maxReplies);
+          await randomDelay();
+        }
+
+        // Return to the inbox list so the next row is clickable on narrow layouts.
+        const back = document.querySelector(SELECTORS.backButton);
+        if (back) {
+          back.click();
+          await sleep(1000);
+        }
+      } catch (error) {
+        log.error(`Error on "${name}": ${error.message}`);
+        stats.errors++;
+        const back = document.querySelector(SELECTORS.backButton);
+        if (back) { back.click(); await sleep(800); }
+      }
+    }
+
+    if (!foundNew) {
+      emptyRounds++;
+      if (emptyRounds >= 3) {
+        log.info('No new conversations after several scrolls. Stopping.');
+        break;
+      }
+    } else {
+      emptyRounds = 0;
+    }
+
+    // Scroll the conversation list column to load more threads.
+    const firstConvo = document.querySelector(SELECTORS.conversation);
+    const scroller = firstConvo ? firstConvo.closest('[data-testid="primaryColumn"]') : null;
+    if (scroller) scroller.scrollTop = scroller.scrollHeight;
+    else window.scrollTo(0, document.body.scrollHeight);
+    scrollRounds++;
+    await sleep(CONFIG.scrollDelay);
+  }
+
+  // ============================================
+  // 📊 SUMMARY
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 AUTO REPLY DMs - COMPLETE                            ║
+╠══════════════════════════════════════════════════════════╣
+║  ✅ Replied:           ${String(stats.replied).padEnd(32)}║
+║  ⏭️  Skipped (read):    ${String(stats.skippedRead).padEnd(32)}║
+║  🚫 No composer:       ${String(stats.noInput).padEnd(32)}║
+║  ❌ Errors:            ${String(stats.errors).padEnd(32)}║
+╚══════════════════════════════════════════════════════════╝
+  `);
+  log.success('Script completed! by nichxbt');
+  return stats;
+})();
+
+});
+  register("auto-reply-mentions", function(){
+(async function autoReplyMentions() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // Reply templates, used in rotation (one per mention). REQUIRED.
+    // Keep them generic and friendly, or personalise per your voice.
+    replyTemplates: [
+      'Thanks for the mention! 🙏',
+      'Appreciate you tagging me 🚀',
+      'Thanks for reaching out!',
+      'Glad you brought this up 💡'
+    ],
+
+    // Maximum number of mentions to reply to this run
+    maxReplies: 8,
+
+    // Skip mentions you have already replied to in a previous run
+    // (tracked in this browser's localStorage)
+    skipIfAlreadyReplied: true,
+
+    // Append a random emoji to each reply for variety
+    addRandomEmoji: false,
+
+    // Minimum delay between replies (ms)
+    minDelay: 3000,
+
+    // Maximum delay between replies (ms)
+    maxDelay: 6000,
+
+    // Maximum scroll attempts to find more mentions
+    maxScrollAttempts: 20,
+
+    // Stop if no new mentions appear after this many consecutive scrolls
+    noNewMentionsThreshold: 4
+  };
+try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG,window.__XA_LAUNCH_CFG);}}catch(_xa){}
+
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    tweet: 'article[data-testid="tweet"]',
+    tweetText: '[data-testid="tweetText"]',
+    replyButton: '[data-testid="reply"]',
+    composer: '[data-testid="tweetTextarea_0"]',
+    postButton: '[data-testid="tweetButton"]',
+    postButtonInline: '[data-testid="tweetButtonInline"]',
+    userName: '[data-testid="User-Name"] a[href^="/"]'
+  };
+
+  const STORAGE_KEY = 'xactions_replied_mentions';
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+  const randomDelay = () => {
+    const delay = Math.floor(Math.random() * (CONFIG.maxDelay - CONFIG.minDelay + 1)) + CONFIG.minDelay;
+    return sleep(delay);
+  };
+
+  const emojis = ['🔥', '💯', '⚡', '🚀', '👏', '💡', '✨', '🙌', '💪', '🎯'];
+  const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+  const scrollDown = () => window.scrollBy(0, window.innerHeight * 0.7);
+
+  const log = {
+    info: (msg) => console.log(`ℹ️ ${msg}`),
+    success: (msg) => console.log(`✅ ${msg}`),
+    warning: (msg) => console.log(`⚠️ ${msg}`),
+    error: (msg) => console.log(`❌ ${msg}`),
+    progress: (current, total) => console.log(`📊 Progress: ${current}/${total} replied`)
+  };
+
+  const loadReplied = () => {
+    try {
+      return new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'));
+    } catch {
+      return new Set();
+    }
+  };
+
+  const saveReplied = (set) => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify([...set]));
+    } catch {
+      // localStorage may be unavailable in some contexts; tracking is best-effort.
+    }
+  };
+
+  const getTweetIdentifier = (tweet) => {
+    const timeAnchor = tweet.querySelector('time')?.closest('a[href*="/status/"]');
+    if (timeAnchor) {
+      const match = timeAnchor.href.match(/\/status\/(\d+)/);
+      if (match) return match[1];
+    }
+    const links = tweet.querySelectorAll('a[href*="/status/"]');
+    for (const link of links) {
+      const match = link.href.match(/\/status\/(\d+)/);
+      if (match) return match[1];
+    }
+    return null;
+  };
+
+  const getAuthor = (tweet) => {
+    const el = tweet.querySelector(SELECTORS.userName);
+    return el?.getAttribute('href')?.replace(/^\//, '').split('/')[0] || 'user';
+  };
+
+  // Type text into the composer. X uses a contenteditable Draft.js editor, so
+  // execCommand('insertText') is the reliable way to enter characters and fire
+  // the input events X listens for.
+  const typeInto = async (box, text) => {
+    box.focus();
+    await sleep(200);
+    document.execCommand('insertText', false, text);
+    await sleep(400);
+  };
+
+  // ============================================
+  // 🎯 MAIN LOGIC
+  // ============================================
+  const stats = {
+    replied: 0,
+    skippedAlready: 0,
+    skippedNoReplyButton: 0,
+    errors: 0
+  };
+
+  let templateIndex = 0;
+  const nextTemplate = () => {
+    let text = CONFIG.replyTemplates[templateIndex % CONFIG.replyTemplates.length];
+    templateIndex++;
+    if (CONFIG.addRandomEmoji) text += ' ' + pick(emojis);
+    return text;
+  };
+
+  // Stop switch: run window.stopAutoReplyMentions() to abort after the current reply.
+  let stopped = false;
+  window.stopAutoReplyMentions = () => {
+    stopped = true;
+    log.warning('Stop requested. Finishing the current reply, then exiting.');
+  };
+
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  💬 AUTO REPLY MENTIONS - XActions                       ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  // Page guard: warn (do not redirect) if not on the mentions timeline.
+  if (!/\/notifications\/mentions/.test(window.location.pathname)) {
+    log.warning('Go to x.com/notifications/mentions, then run this again.');
+    return;
+  }
+
+  // Config guard: templates are required and must be non-empty strings.
+  const templates = (CONFIG.replyTemplates || []).map(t => (t || '').trim()).filter(Boolean);
+  if (templates.length === 0) {
+    log.error('CONFIG.replyTemplates is empty. Add at least one reply line and re-run.');
+    return;
+  }
+  CONFIG.replyTemplates = templates;
+
+  const replied = CONFIG.skipIfAlreadyReplied ? loadReplied() : new Set();
+  const processedThisRun = new Set();
+
+  log.info(`Max replies: ${CONFIG.maxReplies}`);
+  log.info(`Templates: ${CONFIG.replyTemplates.length} | Skip already replied: ${CONFIG.skipIfAlreadyReplied}`);
+  log.info('To stop early: window.stopAutoReplyMentions()');
+
+  if (document.querySelector(SELECTORS.tweet) === null) {
+    log.warning('No mentions visible yet. Wait for the timeline to load, then re-run.');
+    return;
+  }
+
+  let scrollAttempts = 0;
+  let noNewMentionsCount = 0;
+
+  while (!stopped && stats.replied < CONFIG.maxReplies && scrollAttempts < CONFIG.maxScrollAttempts) {
+    const tweets = document.querySelectorAll(SELECTORS.tweet);
+    let foundNewMention = false;
+
+    for (const tweet of tweets) {
+      if (stopped || stats.replied >= CONFIG.maxReplies) break;
+
+      const tweetId = getTweetIdentifier(tweet);
+      if (!tweetId || processedThisRun.has(tweetId)) continue;
+      processedThisRun.add(tweetId);
+      foundNewMention = true;
+
+      if (CONFIG.skipIfAlreadyReplied && replied.has(tweetId)) {
+        stats.skippedAlready++;
+        continue;
+      }
+
+      const author = getAuthor(tweet);
+      const preview = (tweet.querySelector(SELECTORS.tweetText)?.textContent || '').substring(0, 50).replace(/\n/g, ' ');
+
+      try {
+        const replyButton = tweet.querySelector(SELECTORS.replyButton);
+        if (!replyButton) {
+          stats.skippedNoReplyButton++;
+          continue;
+        }
+
+        replyButton.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        await sleep(400);
+        replyButton.click();
+        await sleep(1500);
+
+        const box = document.querySelector(SELECTORS.composer);
+        if (!box) {
+          log.warning(`Reply composer did not open for @${author}. Skipping.`);
+          document.body.click();
+          await sleep(600);
+          continue;
+        }
+
+        const replyText = nextTemplate();
+        await typeInto(box, replyText);
+
+        const postButton = document.querySelector(SELECTORS.postButtonInline) ||
+                           document.querySelector(SELECTORS.postButton);
+        if (postButton && postButton.getAttribute('aria-disabled') !== 'true') {
+          postButton.click();
+          stats.replied++;
+          replied.add(tweetId);
+          if (CONFIG.skipIfAlreadyReplied) saveReplied(replied);
+          log.success(`Replied #${stats.replied} to @${author} ("${preview}...") -> "${replyText}"`);
+          log.progress(stats.replied, CONFIG.maxReplies);
+          await sleep(1500);
+          await randomDelay();
+        } else {
+          log.warning(`Post button unavailable for @${author}. Closing composer.`);
+          document.body.click();
+          await sleep(600);
+        }
+      } catch (error) {
+        log.error(`Error replying to @${author}: ${error.message}`);
+        stats.errors++;
+        document.body.click();
+        await sleep(800);
+      }
+    }
+
+    if (!foundNewMention) {
+      noNewMentionsCount++;
+      if (noNewMentionsCount >= CONFIG.noNewMentionsThreshold) {
+        log.warning('No new mentions found after multiple scrolls. Stopping.');
+        break;
+      }
+    } else {
+      noNewMentionsCount = 0;
+    }
+
+    scrollDown();
+    scrollAttempts++;
+    log.info(`Scrolling for more mentions... (attempt ${scrollAttempts}/${CONFIG.maxScrollAttempts})`);
+    await sleep(1500);
+  }
+
+  // ============================================
+  // 📊 SUMMARY
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 AUTO REPLY MENTIONS - COMPLETE                       ║
+╠══════════════════════════════════════════════════════════╣
+║  💬 Replied:              ${String(stats.replied).padEnd(29)}║
+║  ⏭️  Skipped (already):   ${String(stats.skippedAlready).padEnd(29)}║
+║  🚫 No Reply Button:      ${String(stats.skippedNoReplyButton).padEnd(29)}║
+║  ❌ Errors:               ${String(stats.errors).padEnd(29)}║
+║  📜 Scroll Attempts:      ${String(scrollAttempts).padEnd(29)}║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  if (stats.replied === 0) {
+    log.warning('No replies sent. You may have already replied to everything, or no mentions loaded.');
+  }
+  log.success('Script completed! by nichxbt');
+
+  return stats;
+})();
+
+});
+  register("auto-repost", function(){
+(async function autoRepost() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // Maximum number of posts to repost this run
+    maxReposts: 10,
+
+    // Skip promoted/ad posts
+    skipAds: true,
+
+    // Skip reply posts (only repost top-level posts)
+    skipReplies: true,
+
+    // Only repost posts that contain an image or video
+    onlyWithMedia: false,
+
+    // Only repost posts whose text contains AT LEAST ONE of these
+    // (case-insensitive). Empty array = no keyword filter (repost everything).
+    mustContainKeywords: [],
+
+    // Minimum delay between reposts (ms)
+    minDelay: 1500,
+
+    // Maximum delay between reposts (ms)
+    maxDelay: 4000,
+
+    // Maximum scroll attempts to find new posts
+    maxScrollAttempts: 25,
+
+    // Stop if no new posts appear after this many consecutive scrolls
+    noNewPostsThreshold: 5
+  };
+try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG,window.__XA_LAUNCH_CFG);}}catch(_xa){}
+
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    tweet: 'article[data-testid="tweet"]',
+    tweetText: '[data-testid="tweetText"]',
+    retweetButton: '[data-testid="retweet"]',
+    unretweetButton: '[data-testid="unretweet"]',
+    retweetConfirm: '[data-testid="retweetConfirm"]',
+    socialContext: '[data-testid="socialContext"]',
+    promotedLabel: '[data-testid="placementTracking"]',
+    media: '[data-testid="tweetPhoto"], [data-testid="videoPlayer"], [data-testid="videoComponent"]'
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+  const randomDelay = () => {
+    const delay = Math.floor(Math.random() * (CONFIG.maxDelay - CONFIG.minDelay + 1)) + CONFIG.minDelay;
+    return sleep(delay);
+  };
+
+  const scrollDown = () => window.scrollBy(0, window.innerHeight * 0.7);
+
+  const log = {
+    info: (msg) => console.log(`ℹ️ ${msg}`),
+    success: (msg) => console.log(`✅ ${msg}`),
+    warning: (msg) => console.log(`⚠️ ${msg}`),
+    error: (msg) => console.log(`❌ ${msg}`),
+    progress: (current, total) => console.log(`📊 Progress: ${current}/${total} reposted`)
+  };
+
+  const isReply = (tweet) => {
+    if (tweet.querySelector('[data-testid="in-reply-to"]') !== null) return true;
+    return Array.from(tweet.querySelectorAll('div[dir]')).some(el =>
+      el.innerText.startsWith('Replying to'));
+  };
+
+  const isAd = (tweet) => {
+    if (tweet.querySelector(SELECTORS.promotedLabel) !== null) return true;
+    return Array.from(tweet.querySelectorAll('span')).some(el => {
+      const t = el.textContent.trim();
+      return t === 'Ad' || t === 'Promoted';
+    });
+  };
+
+  const hasMedia = (tweet) => tweet.querySelector(SELECTORS.media) !== null;
+
+  const matchesKeywords = (text) => {
+    if (CONFIG.mustContainKeywords.length === 0) return true;
+    const lower = text.toLowerCase();
+    return CONFIG.mustContainKeywords.some(kw => lower.includes(kw.toLowerCase()));
+  };
+
+  const getTweetIdentifier = (tweet) => {
+    const timeAnchor = tweet.querySelector('time')?.closest('a[href*="/status/"]');
+    if (timeAnchor) {
+      const match = timeAnchor.href.match(/\/status\/(\d+)/);
+      if (match) return match[1];
+    }
+    const links = tweet.querySelectorAll('a[href*="/status/"]');
+    for (const link of links) {
+      const match = link.href.match(/\/status\/(\d+)/);
+      if (match) return match[1];
+    }
+    const text = tweet.querySelector(SELECTORS.tweetText)?.textContent || '';
+    return text.substring(0, 100);
+  };
+
+  // ============================================
+  // 🎯 MAIN LOGIC
+  // ============================================
+  const stats = {
+    reposted: 0,
+    skippedReplies: 0,
+    skippedAds: 0,
+    skippedNoMedia: 0,
+    skippedNoKeyword: 0,
+    alreadyReposted: 0,
+    errors: 0
+  };
+
+  const processedTweets = new Set();
+
+  // Stop switch: run window.stopAutoRepost() from the console to abort the
+  // loop after the post currently being processed.
+  let stopped = false;
+  window.stopAutoRepost = () => {
+    stopped = true;
+    log.warning('Stop requested. Finishing the current post, then exiting.');
+  };
+
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  🔄 AUTO REPOST - XActions                               ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  // Page guard: reposting reads the rendered timeline. Warn (do not redirect)
+  // if there is no post feed on screen.
+  const href = window.location.href;
+  const looksLikeFeed = /x\.com|twitter\.com/.test(href);
+  if (!looksLikeFeed) {
+    log.warning('Open x.com on a search, hashtag, or profile page, then run this again.');
+    return;
+  }
+  if (document.querySelector(SELECTORS.tweet) === null) {
+    log.warning('No posts visible yet. Go to a search/hashtag results page or a profile, wait for posts to load, then re-run.');
+    return;
+  }
+
+  log.info(`Max reposts: ${CONFIG.maxReposts}`);
+  log.info(`Skip ads: ${CONFIG.skipAds} | Skip replies: ${CONFIG.skipReplies} | Only media: ${CONFIG.onlyWithMedia}`);
+  log.info(`Keywords: ${CONFIG.mustContainKeywords.length ? CONFIG.mustContainKeywords.join(', ') : 'none (repost all)'}`);
+  log.info('To stop early: window.stopAutoRepost()');
+
+  let scrollAttempts = 0;
+  let noNewPostsCount = 0;
+
+  while (!stopped && stats.reposted < CONFIG.maxReposts && scrollAttempts < CONFIG.maxScrollAttempts) {
+    const tweets = document.querySelectorAll(SELECTORS.tweet);
+    let foundNewPost = false;
+
+    for (const tweet of tweets) {
+      if (stopped || stats.reposted >= CONFIG.maxReposts) break;
+
+      const tweetId = getTweetIdentifier(tweet);
+      if (processedTweets.has(tweetId)) continue;
+      processedTweets.add(tweetId);
+      foundNewPost = true;
+
+      try {
+        if (CONFIG.skipAds && isAd(tweet)) {
+          stats.skippedAds++;
+          continue;
+        }
+
+        if (CONFIG.skipReplies && isReply(tweet)) {
+          stats.skippedReplies++;
+          continue;
+        }
+
+        if (CONFIG.onlyWithMedia && !hasMedia(tweet)) {
+          stats.skippedNoMedia++;
+          continue;
+        }
+
+        const text = tweet.querySelector(SELECTORS.tweetText)?.textContent || '';
+        if (!matchesKeywords(text)) {
+          stats.skippedNoKeyword++;
+          continue;
+        }
+
+        // Already reposted? The button flips to unretweet.
+        if (tweet.querySelector(SELECTORS.unretweetButton)) {
+          stats.alreadyReposted++;
+          continue;
+        }
+
+        const retweetButton = tweet.querySelector(SELECTORS.retweetButton);
+        if (!retweetButton) continue;
+
+        tweet.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        await sleep(500);
+
+        retweetButton.click();
+        await sleep(800);
+
+        const confirm = document.querySelector(SELECTORS.retweetConfirm);
+        if (confirm) {
+          confirm.click();
+          stats.reposted++;
+          const preview = text.substring(0, 50).replace(/\n/g, ' ') || '(no text)';
+          log.success(`Reposted #${stats.reposted}: "${preview}..."`);
+          log.progress(stats.reposted, CONFIG.maxReposts);
+          await randomDelay();
+        } else {
+          // Menu did not open as expected (e.g. quote-only). Close it and move on.
+          document.body.click();
+          await sleep(400);
+        }
+      } catch (error) {
+        log.error(`Error processing post: ${error.message}`);
+        stats.errors++;
+        document.body.click();
+        await sleep(600);
+      }
+    }
+
+    if (!foundNewPost) {
+      noNewPostsCount++;
+      if (noNewPostsCount >= CONFIG.noNewPostsThreshold) {
+        log.warning('No new posts found after multiple scrolls. Stopping.');
+        break;
+      }
+    } else {
+      noNewPostsCount = 0;
+    }
+
+    scrollDown();
+    scrollAttempts++;
+    log.info(`Scrolling for more posts... (attempt ${scrollAttempts}/${CONFIG.maxScrollAttempts})`);
+    await sleep(1500);
+  }
+
+  // ============================================
+  // 📊 SUMMARY
+  // ============================================
+  const totalSkipped = stats.skippedReplies + stats.skippedAds + stats.skippedNoMedia + stats.skippedNoKeyword;
+
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 AUTO REPOST - COMPLETE                               ║
+╠══════════════════════════════════════════════════════════╣
+║  🔄 Total Reposted:    ${String(stats.reposted).padEnd(32)}║
+║  ⏭️  Total Skipped:     ${String(totalSkipped).padEnd(32)}║
+║     └─ Replies:        ${String(stats.skippedReplies).padEnd(32)}║
+║     └─ Ads:            ${String(stats.skippedAds).padEnd(32)}║
+║     └─ No Media:       ${String(stats.skippedNoMedia).padEnd(32)}║
+║     └─ No Keyword:     ${String(stats.skippedNoKeyword).padEnd(32)}║
+║  🔁 Already Reposted:  ${String(stats.alreadyReposted).padEnd(32)}║
+║  ❌ Errors:            ${String(stats.errors).padEnd(32)}║
+║  📜 Scroll Attempts:   ${String(scrollAttempts).padEnd(32)}║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  if (stats.reposted === 0) {
+    log.warning('Nothing reposted. Loosen your filters (keywords/media) or scroll a busier feed.');
+  }
+  log.success('Script completed! by nichxbt');
+
+  return stats;
 })();
 
 });
@@ -2387,6 +3925,420 @@ ${CONFIG.dryRun ? '║  ⚠️  DRY RUN MODE - No accounts will be blocked      
 })();
 
 });
+  register("block-list-transfer", function(){
+(async function blockListTransfer() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // 'export' | 'importBlock' | 'blockFollowersOf'
+    mode: 'export',
+
+    // For 'importBlock': the accounts to block (with or without @).
+    usernames: [
+      // 'username1',
+      // 'username2',
+    ],
+
+    // For 'blockFollowersOf': whose followers to block (without @).
+    targetAccount: '',
+
+    // Never block these (with or without @).
+    whitelist: [],
+
+    // Cap on blocks this run (blocking modes only).
+    maxBlocks: 25,
+
+    // SAFETY: preview only. Set to false to actually block. Ignored by 'export'.
+    dryRun: true,
+
+    // Timing (randomized between min and max, per block)
+    minDelay: 3000,
+    maxDelay: 6000,
+
+    // Scrolling for scraping / follower sweeps
+    maxScrollRounds: 40,
+    scrollDelay: 2000,
+    maxEmptyScrolls: 6
+  };
+try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG,window.__XA_LAUNCH_CFG);}}catch(_xa){}
+
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    userCell: '[data-testid="UserCell"]',
+    userActions: '[data-testid="userActions"]',
+    blockMenuItem: '[data-testid="block"]',
+    menuItem: '[role="menuitem"]',
+    confirm: '[data-testid="confirmationSheetConfirm"]'
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+  const randomDelay = () => {
+    const delay = Math.floor(Math.random() * (CONFIG.maxDelay - CONFIG.minDelay + 1)) + CONFIG.minDelay;
+    return sleep(delay);
+  };
+
+  const cleanHandle = (u) => String(u || '').trim().replace(/^@/, '').toLowerCase();
+
+  // SPA navigation keeps this script alive; a full window.location load kills it.
+  const spaNavigate = (path) => {
+    try {
+      const target = new URL(path, window.location.href);
+      if (target.origin === window.location.origin) {
+        window.history.pushState({}, '', target.href);
+        window.dispatchEvent(new PopStateEvent('popstate', { state: {} }));
+        return;
+      }
+    } catch (e) { /* fall through */ }
+    window.location.href = path;
+  };
+
+  const getUsername = (cell) => {
+    const link = cell.querySelector('a[href^="/"][role="link"]') || cell.querySelector('a[href^="/"]');
+    if (!link) return null;
+    const m = (link.getAttribute('href') || '').match(/^\/([A-Za-z0-9_]+)/);
+    if (!m) return null;
+    if (['home', 'explore', 'notifications', 'messages', 'i', 'search', 'settings'].includes(m[1])) return null;
+    return m[1];
+  };
+
+  const getDisplayName = (cell) => {
+    const span = cell.querySelector('a[href^="/"] span');
+    return span ? span.textContent.trim() : '';
+  };
+
+  const download = (data, filename) => {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    console.log(`📥 Downloaded: ${filename}`);
+  };
+
+  const log = {
+    info: (msg) => console.log(`ℹ️ ${msg}`),
+    success: (msg) => console.log(`✅ ${msg}`),
+    warning: (msg) => console.log(`⚠️ ${msg}`),
+    error: (msg) => console.log(`❌ ${msg}`),
+    progress: (current, total) => console.log(`📊 Progress: ${current}/${total} blocked`)
+  };
+
+  const whiteSet = new Set(CONFIG.whitelist.map(cleanHandle).filter(Boolean));
+
+  // ============================================
+  // 🎯 STATE
+  // ============================================
+  const stats = { blocked: 0, scraped: 0, skipped: 0, notFound: 0, errors: 0 };
+  const blockedList = [];
+
+  // Stop switch: run window.stopBlockListTransfer() to abort after the current item.
+  let stopped = false;
+  window.stopBlockListTransfer = () => {
+    stopped = true;
+    log.warning('Stop requested. Finishing the current account, then exiting.');
+  };
+
+  console.log(`
+╔══════════════════════════════════════════════════════════════╗
+║  🚫 BLOCK LIST TRANSFER - XActions                          ║
+║  👤 Author: nichxbt   🌐 https://xactions.app               ║
+${CONFIG.mode === 'export' ? '║  📤 EXPORT MODE - read-only                                 ║' : (CONFIG.dryRun ? '║  ⚠️  DRY RUN - No accounts will be blocked                 ║' : '║  🔴 LIVE MODE - Accounts WILL be blocked                    ║')}
+╚══════════════════════════════════════════════════════════════╝
+  `);
+  log.warning('DESTRUCTIVE tool. Blocking affects real accounts. To stop: window.stopBlockListTransfer()');
+
+  // ============================================
+  // 📤 EXPORT: scrape the blocked list
+  // ============================================
+  const exportBlocked = async () => {
+    if (!/\/settings\/blocked/.test(window.location.pathname)) {
+      log.error('Export needs the blocked-accounts page. Go to https://x.com/settings/blocked_all and re-run.');
+      return;
+    }
+
+    log.info('Scraping your blocked accounts...');
+    const found = new Map();
+    let rounds = 0;
+    let empty = 0;
+
+    while (rounds < CONFIG.maxScrollRounds && empty < CONFIG.maxEmptyScrolls) {
+      const before = found.size;
+      for (const cell of document.querySelectorAll(SELECTORS.userCell)) {
+        const username = getUsername(cell);
+        if (!username) continue;
+        const key = username.toLowerCase();
+        if (found.has(key)) continue;
+        found.set(key, { username, displayName: getDisplayName(cell) });
+      }
+      stats.scraped = found.size;
+
+      if (found.size === before) empty++;
+      else empty = 0;
+
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(CONFIG.scrollDelay);
+      rounds++;
+    }
+
+    const list = [...found.values()];
+    if (list.length === 0) {
+      log.warning('No blocked accounts found. Your block list may be empty.');
+      return;
+    }
+
+    log.success(`Scraped ${list.length} blocked accounts.`);
+    download(
+      { exportedAt: new Date().toISOString(), count: list.length, usernames: list.map(u => u.username), accounts: list },
+      `xactions-block-list-${new Date().toISOString().slice(0, 10)}.json`
+    );
+  };
+
+  // ============================================
+  // 🚫 Block one account by profile navigation (importBlock)
+  // ============================================
+  const blockByProfile = async (username) => {
+    spaNavigate(`/${username}`);
+    await sleep(3000);
+
+    let moreBtn = document.querySelector(SELECTORS.userActions);
+    let waited = 0;
+    while (!moreBtn && waited < 5000) {
+      await sleep(500);
+      waited += 500;
+      moreBtn = document.querySelector(SELECTORS.userActions);
+    }
+    if (!moreBtn) {
+      log.warning(`Could not open the menu for @${username} (profile may not exist).`);
+      stats.notFound++;
+      return false;
+    }
+
+    moreBtn.click();
+    await sleep(600);
+
+    const blockItem = document.querySelector(SELECTORS.blockMenuItem)
+      || Array.from(document.querySelectorAll(SELECTORS.menuItem))
+        .find(i => /\bblock\b/i.test(i.textContent) && !/unblock/i.test(i.textContent));
+    if (!blockItem) {
+      document.body.click();
+      await sleep(300);
+      log.warning(`No block option for @${username} (already blocked?).`);
+      stats.notFound++;
+      return false;
+    }
+
+    blockItem.click();
+    await sleep(600);
+    const confirm = document.querySelector(SELECTORS.confirm);
+    if (confirm) { confirm.click(); await sleep(700); }
+    return true;
+  };
+
+  // ============================================
+  // 🚫 Block one account from its follower row (blockFollowersOf)
+  // ============================================
+  const blockFromCell = async (cell, username) => {
+    const moreBtn = cell.querySelector(SELECTORS.userActions) || cell.querySelector('button[aria-label="More"]');
+    if (!moreBtn) {
+      log.warning(`No actions (...) button for @${username}.`);
+      stats.notFound++;
+      return false;
+    }
+    moreBtn.click();
+    await sleep(600);
+
+    const blockItem = document.querySelector(SELECTORS.blockMenuItem)
+      || Array.from(document.querySelectorAll(SELECTORS.menuItem))
+        .find(i => /\bblock\b/i.test(i.textContent) && !/unblock/i.test(i.textContent));
+    if (!blockItem) {
+      document.body.click();
+      await sleep(300);
+      log.warning(`No block option for @${username}.`);
+      stats.notFound++;
+      return false;
+    }
+
+    blockItem.click();
+    await sleep(600);
+    const confirm = document.querySelector(SELECTORS.confirm);
+    if (confirm) { confirm.click(); await sleep(700); }
+    return true;
+  };
+
+  // ============================================
+  // 🔁 importBlock
+  // ============================================
+  const importBlock = async () => {
+    const targets = CONFIG.usernames.map(cleanHandle).filter(Boolean);
+    if (targets.length === 0) {
+      log.error('CONFIG.usernames is empty. Add handles to block and re-run.');
+      return;
+    }
+    log.info(`Importing ${targets.length} account(s) to block. Max this run: ${CONFIG.maxBlocks}.`);
+
+    for (let i = 0; i < targets.length; i++) {
+      if (stopped) { log.warning('Stopped by user.'); break; }
+      if (stats.blocked >= CONFIG.maxBlocks) { log.warning(`Reached maxBlocks (${CONFIG.maxBlocks}).`); break; }
+
+      const username = targets[i];
+      if (whiteSet.has(username)) { stats.skipped++; continue; }
+
+      try {
+        if (CONFIG.dryRun) {
+          log.info(`Would block: @${username}`);
+          blockedList.push({ username, dryRun: true, timestamp: new Date().toISOString() });
+          stats.blocked++;
+          continue;
+        }
+        const ok = await blockByProfile(username);
+        if (ok) {
+          stats.blocked++;
+          blockedList.push({ username, timestamp: new Date().toISOString() });
+          log.success(`Blocked @${username}`);
+          log.progress(stats.blocked, Math.min(CONFIG.maxBlocks, targets.length));
+        } else {
+          stats.errors++;
+        }
+      } catch (error) {
+        log.error(`Error blocking @${username}: ${error.message}`);
+        stats.errors++;
+      }
+
+      const more = !stopped && stats.blocked < CONFIG.maxBlocks && i < targets.length - 1;
+      if (more && !CONFIG.dryRun) await randomDelay();
+    }
+  };
+
+  // ============================================
+  // 🔁 blockFollowersOf
+  // ============================================
+  const blockFollowersOf = async () => {
+    const target = cleanHandle(CONFIG.targetAccount);
+    if (!target) {
+      log.error('CONFIG.targetAccount is empty. Set it to the account whose followers you want to block.');
+      return;
+    }
+    if (!/\/followers/.test(window.location.pathname) || !window.location.pathname.toLowerCase().includes(`/${target}/`)) {
+      log.error(`Go to https://x.com/${target}/followers and re-run (must be on that account's followers page).`);
+      return;
+    }
+
+    log.info(`Block-chaining @${target}'s followers. Max this run: ${CONFIG.maxBlocks}.`);
+    const processed = new Set();
+    let rounds = 0;
+    let empty = 0;
+
+    while (!stopped && stats.blocked < CONFIG.maxBlocks && rounds < CONFIG.maxScrollRounds && empty < CONFIG.maxEmptyScrolls) {
+      const cells = document.querySelectorAll(SELECTORS.userCell);
+      let foundNew = false;
+
+      for (const cell of cells) {
+        if (stopped || stats.blocked >= CONFIG.maxBlocks) break;
+
+        const username = getUsername(cell);
+        if (!username) continue;
+        const key = username.toLowerCase();
+        if (processed.has(key)) continue;
+        processed.add(key);
+        foundNew = true;
+        stats.scraped++;
+
+        try {
+          if (whiteSet.has(key) || key === target) { stats.skipped++; continue; }
+
+          if (CONFIG.dryRun) {
+            log.info(`Would block: @${username}`);
+            blockedList.push({ username, dryRun: true, timestamp: new Date().toISOString() });
+            stats.blocked++;
+            continue;
+          }
+
+          const ok = await blockFromCell(cell, username);
+          if (ok) {
+            stats.blocked++;
+            blockedList.push({ username, timestamp: new Date().toISOString() });
+            log.success(`Blocked @${username}`);
+            log.progress(stats.blocked, CONFIG.maxBlocks);
+            await randomDelay();
+          } else {
+            stats.errors++;
+          }
+        } catch (error) {
+          log.error(`Error on @${username}: ${error.message}`);
+          stats.errors++;
+          document.body.click();
+          await sleep(300);
+        }
+      }
+
+      if (!foundNew) empty++;
+      else empty = 0;
+
+      window.scrollTo(0, document.body.scrollHeight);
+      rounds++;
+      await sleep(CONFIG.scrollDelay);
+    }
+  };
+
+  // ============================================
+  // 🎯 DISPATCH
+  // ============================================
+  try {
+    if (CONFIG.mode === 'export') {
+      await exportBlocked();
+    } else if (CONFIG.mode === 'importBlock') {
+      await importBlock();
+    } else if (CONFIG.mode === 'blockFollowersOf') {
+      await blockFollowersOf();
+    } else {
+      log.error(`Unknown mode "${CONFIG.mode}". Use 'export', 'importBlock', or 'blockFollowersOf'.`);
+    }
+  } catch (error) {
+    log.error(`Fatal: ${error.message}`);
+  }
+
+  // ============================================
+  // 📊 SUMMARY
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 BLOCK LIST TRANSFER - COMPLETE                       ║
+╠══════════════════════════════════════════════════════════╣
+║  🚫 Blocked:           ${String(stats.blocked).padEnd(32)}║
+║  📤 Scraped:           ${String(stats.scraped).padEnd(32)}║
+║  ⏭️  Skipped:           ${String(stats.skipped).padEnd(32)}║
+║  ❓ Not found:         ${String(stats.notFound).padEnd(32)}║
+║  ❌ Errors:            ${String(stats.errors).padEnd(32)}║
+║  🧪 Dry run:           ${String(CONFIG.dryRun).padEnd(32)}║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  if ((CONFIG.mode === 'importBlock' || CONFIG.mode === 'blockFollowersOf') && blockedList.length > 0) {
+    download(
+      { mode: CONFIG.mode, dryRun: CONFIG.dryRun, stats, blocked: blockedList, exportedAt: new Date().toISOString() },
+      `xactions-block-transfer-${CONFIG.dryRun ? 'preview' : 'results'}-${new Date().toISOString().slice(0, 10)}.json`
+    );
+  }
+
+  if (CONFIG.dryRun && CONFIG.mode !== 'export') {
+    log.warning('This was a DRY RUN. Set CONFIG.dryRun = false to actually block.');
+  }
+  log.success('Script completed! by nichxbt');
+  return stats;
+})();
+
+});
   register("bookmark-exporter", function(){
 var CONFIG = {
   // Maximum bookmarks to export
@@ -2640,6 +4592,252 @@ try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG
   console.log('💡 Access data via: window.exportedBookmarks');
   
   return result;
+})();
+
+});
+  register("bulk-dm", function(){
+(async function bulkDM() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // Recipients (with or without the leading @)
+    usernames: [
+      // 'username1',
+      // 'username2',
+    ],
+
+    // Message template. Placeholders:
+    //   {username} -> the @handle (lowercased, no @)
+    //   {name}     -> the recipient's display name (falls back to handle)
+    message: `Hey {name}! 👋 Thanks for connecting.`,
+
+    // Safety limits
+    maxDMs: 10,            // hard cap on DMs sent this run
+    skipExisting: true,    // skip anyone you already have a conversation with
+
+    // Timing (randomized between min and max, per DM)
+    minDelay: 25000,       // 25s
+    maxDelay: 45000        // 45s
+  };
+try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG,window.__XA_LAUNCH_CFG);}}catch(_xa){}
+
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    newMessageBtn: '[data-testid="NewDM_Button"]',
+    searchInput: '[data-testid="searchPeople"]',
+    userCell: '[data-testid="UserCell"]',
+    typeaheadUser: '[data-testid="TypeaheadUser"]',
+    nextButton: '[data-testid="nextButton"]',
+    messageInput: '[data-testid="dmComposerTextInput"]',
+    sendButton: '[data-testid="dmComposerSendButton"]',
+    conversation: '[data-testid="conversation"]'
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+  const randomDelay = () => {
+    const delay = Math.floor(Math.random() * (CONFIG.maxDelay - CONFIG.minDelay + 1)) + CONFIG.minDelay;
+    return sleep(delay);
+  };
+
+  const cleanHandle = (u) => String(u || '').trim().replace(/^@/, '').toLowerCase();
+
+  const fillTemplate = (tpl, username, name) =>
+    tpl.split('{username}').join(username).split('{name}').join(name || username);
+
+  const log = {
+    info: (msg) => console.log(`ℹ️ ${msg}`),
+    success: (msg) => console.log(`✅ ${msg}`),
+    warning: (msg) => console.log(`⚠️ ${msg}`),
+    error: (msg) => console.log(`❌ ${msg}`),
+    progress: (current, total) => console.log(`📊 Progress: ${current}/${total} DMs sent`)
+  };
+
+  // ============================================
+  // 🎯 STATE
+  // ============================================
+  const stats = { sent: 0, skipped: 0, notFound: 0, errors: 0 };
+
+  // Stop switch: run window.stopBulkDM() from the console to abort after the
+  // recipient currently being processed.
+  let stopped = false;
+  window.stopBulkDM = () => {
+    stopped = true;
+    log.warning('Stop requested. Finishing the current DM, then exiting.');
+  };
+
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  💬 BULK DM - XActions                                   ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+  log.warning('Use responsibly. Mass DMing can get your account restricted.');
+  log.info('To stop early: window.stopBulkDM()');
+
+  // Page guard
+  if (!/\/messages/.test(window.location.pathname)) {
+    log.error('Not on the Messages page. Go to https://x.com/messages and re-run.');
+    return stats;
+  }
+
+  const recipients = CONFIG.usernames.map(cleanHandle).filter(Boolean);
+  if (recipients.length === 0) {
+    log.error('CONFIG.usernames is empty. Add at least one handle and re-run.');
+    return stats;
+  }
+
+  log.info(`Recipients: ${recipients.length}`);
+  log.info(`Max DMs this run: ${CONFIG.maxDMs}`);
+
+  // ============================================
+  // 📬 SEND ONE DM
+  // ============================================
+  const sendOne = async (handle) => {
+    // Open the new-message composer
+    const newBtn = document.querySelector(SELECTORS.newMessageBtn);
+    if (!newBtn) {
+      log.error('New Message button not found. Make sure the Messages inbox is open.');
+      stats.errors++;
+      return false;
+    }
+    newBtn.click();
+    await sleep(1500);
+
+    const searchInput = document.querySelector(SELECTORS.searchInput);
+    if (!searchInput) {
+      log.error('People search box not found.');
+      stats.errors++;
+      return false;
+    }
+
+    // Type the handle (contenteditable-safe via execCommand)
+    searchInput.focus();
+    document.execCommand('insertText', false, handle);
+    await sleep(2200);
+
+    // Match the exact @handle so a prefix like "john" can't select "johnny".
+    const cells = document.querySelectorAll(`${SELECTORS.typeaheadUser}, ${SELECTORS.userCell}`);
+    const escaped = handle.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const handleRe = new RegExp('@' + escaped + '(?![a-zA-Z0-9_])', 'i');
+    let matchCell = null;
+    for (const cell of cells) {
+      if (handleRe.test(cell.textContent)) { matchCell = cell; break; }
+    }
+    if (!matchCell) {
+      log.error(`@${handle} not found in search results.`);
+      stats.notFound++;
+      return false;
+    }
+
+    // Pull the display name for the {name} placeholder before we navigate away.
+    let displayName = handle;
+    const nameSpan = matchCell.querySelector('span');
+    if (nameSpan && nameSpan.textContent.trim()) displayName = nameSpan.textContent.trim();
+
+    matchCell.click();
+    await sleep(1200);
+
+    // Some flows require a "Next" click to open the conversation.
+    const nextBtn = document.querySelector(SELECTORS.nextButton);
+    if (nextBtn && !nextBtn.disabled) {
+      nextBtn.click();
+      await sleep(1500);
+    }
+
+    const msgInput = document.querySelector(SELECTORS.messageInput);
+    if (!msgInput) {
+      log.error('DM text input not found.');
+      stats.errors++;
+      return false;
+    }
+
+    const message = fillTemplate(CONFIG.message, handle, displayName);
+    msgInput.focus();
+    document.execCommand('insertText', false, message);
+    await sleep(1000);
+
+    const sendBtn = document.querySelector(SELECTORS.sendButton);
+    if (!sendBtn || sendBtn.getAttribute('aria-disabled') === 'true' || sendBtn.disabled) {
+      log.error(`Send button unavailable for @${handle}. DMs may be closed for this account.`);
+      stats.errors++;
+      return false;
+    }
+    sendBtn.click();
+    await sleep(1500);
+
+    log.success(`Sent to @${handle} (${displayName})`);
+    return true;
+  };
+
+  // ============================================
+  // 🔁 MAIN LOOP
+  // ============================================
+  for (let i = 0; i < recipients.length; i++) {
+    if (stopped) { log.warning('Stopped by user.'); break; }
+    if (stats.sent >= CONFIG.maxDMs) {
+      log.warning(`Reached maxDMs (${CONFIG.maxDMs}). Stopping.`);
+      break;
+    }
+
+    const handle = recipients[i];
+
+    try {
+      if (CONFIG.skipExisting) {
+        const openConvos = document.querySelectorAll(SELECTORS.conversation);
+        const escaped = handle.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const existsRe = new RegExp('@' + escaped + '(?![a-zA-Z0-9_])', 'i');
+        const already = Array.from(openConvos).some(c => existsRe.test(c.textContent));
+        if (already) {
+          log.info(`Skipping @${handle} (existing conversation).`);
+          stats.skipped++;
+          continue;
+        }
+      }
+
+      const ok = await sendOne(handle);
+      if (ok) {
+        stats.sent++;
+        log.progress(stats.sent, Math.min(CONFIG.maxDMs, recipients.length));
+      }
+    } catch (error) {
+      log.error(`Error DMing @${handle}: ${error.message}`);
+      stats.errors++;
+    }
+
+    // Delay before the next recipient (skip the wait after the final one).
+    const more = !stopped && stats.sent < CONFIG.maxDMs && i < recipients.length - 1;
+    if (more) {
+      log.info(`Waiting before the next DM...`);
+      await randomDelay();
+    }
+  }
+
+  // ============================================
+  // 📊 SUMMARY
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 BULK DM - COMPLETE                                   ║
+╠══════════════════════════════════════════════════════════╣
+║  ✅ Sent:              ${String(stats.sent).padEnd(32)}║
+║  ⏭️  Skipped (exists):  ${String(stats.skipped).padEnd(32)}║
+║  ❓ Not found:         ${String(stats.notFound).padEnd(32)}║
+║  ❌ Errors:            ${String(stats.errors).padEnd(32)}║
+╚══════════════════════════════════════════════════════════╝
+  `);
+  log.success('Script completed! by nichxbt');
+  return stats;
 })();
 
 });
@@ -4297,6 +6495,660 @@ try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG
 })();
 
 });
+  register("create-poll", function(){
+(async function createPoll() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // The poll question / tweet text.
+    text: 'What should we build next?',
+
+    // 2 to 4 choices, max 25 characters each.
+    choices: ['Solana tools', 'Base tools', 'More avatars'],
+
+    // Poll duration. X caps a poll at 7 days total. Minimum is 5 minutes.
+    durationDays: 1,
+    durationHours: 0,
+    durationMinutes: 0,
+
+    // Preview only: validate and log without clicking Post.
+    dryRun: true
+  };
+try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG,window.__XA_LAUNCH_CFG);}}catch(_xa){}
+
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    composer: '[data-testid="tweetTextarea_0"]',
+    newTweetButton: 'a[data-testid="SideNav_NewTweet_Button"]',
+    addPoll: '[aria-label="Add poll"]',
+    addPollFallback: '[data-testid="pollButton"], [data-testid="createPoll"]',
+    choiceInput: '[data-testid="choiceInput"]',
+    // Older poll option inputs, kept as a fallback.
+    legacyChoice: (i) => `[data-testid="pollOption_${i}"], [data-testid="pollOptionTextInput_${i}"]`,
+    addChoice: '[data-testid="addPollOptionButton"], [aria-label="Add a choice"], [data-testid="addPollOption"]',
+    postButton: '[data-testid="tweetButton"]',
+    postButtonInline: '[data-testid="tweetButtonInline"]'
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+  const log = {
+    info: (msg) => console.log(`ℹ️ ${msg}`),
+    success: (msg) => console.log(`✅ ${msg}`),
+    warning: (msg) => console.log(`⚠️ ${msg}`),
+    error: (msg) => console.log(`❌ ${msg}`)
+  };
+
+  const waitForSelector = async (selector, timeoutMs = 6000) => {
+    const start = Date.now();
+    while (Date.now() - start < timeoutMs) {
+      const el = document.querySelector(selector);
+      if (el) return el;
+      await sleep(200);
+    }
+    return null;
+  };
+
+  // Type into a contenteditable composer via a real input dispatch.
+  const typeIntoComposer = async (el, text) => {
+    el.focus();
+    await sleep(150);
+    const inserted = document.execCommand('insertText', false, text);
+    if (!inserted) {
+      el.dispatchEvent(new InputEvent('beforeinput', { inputType: 'insertText', data: text, bubbles: true, cancelable: true }));
+      el.textContent = text;
+      el.dispatchEvent(new InputEvent('input', { inputType: 'insertText', data: text, bubbles: true }));
+    }
+    await sleep(250);
+  };
+
+  // Poll choice fields are native <input>. Use the native value setter so React
+  // picks up the change, then dispatch input. Falls back to execCommand for a
+  // contenteditable choice field.
+  const typeIntoField = async (el, text) => {
+    el.focus();
+    await sleep(120);
+    const tag = el.tagName.toLowerCase();
+    if (tag === 'input' || tag === 'textarea') {
+      const proto = tag === 'input' ? window.HTMLInputElement.prototype : window.HTMLTextAreaElement.prototype;
+      const setter = Object.getOwnPropertyDescriptor(proto, 'value').set;
+      setter.call(el, text);
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+      el.dispatchEvent(new Event('change', { bubbles: true }));
+    } else {
+      const inserted = document.execCommand('insertText', false, text);
+      if (!inserted) {
+        el.textContent = text;
+        el.dispatchEvent(new InputEvent('input', { inputType: 'insertText', data: text, bubbles: true }));
+      }
+    }
+    await sleep(250);
+  };
+
+  const setSelectByText = (select, wanted) => {
+    if (!select) return false;
+    const target = String(wanted).trim().toLowerCase();
+    const opts = Array.from(select.options);
+    const match =
+      opts.find((o) => o.textContent.trim().toLowerCase() === target) ||
+      opts.find((o) => o.value.trim().toLowerCase() === target) ||
+      opts.find((o) => o.textContent.trim().toLowerCase().startsWith(target));
+    if (!match) return false;
+    select.value = match.value;
+    select.dispatchEvent(new Event('input', { bubbles: true }));
+    select.dispatchEvent(new Event('change', { bubbles: true }));
+    return true;
+  };
+
+  const findSelectByLabel = (root, label) => {
+    const selects = Array.from(root.querySelectorAll('select'));
+    const l = label.toLowerCase();
+    return selects.find((s) => (s.getAttribute('aria-label') || '').toLowerCase().includes(l)) || null;
+  };
+
+  const getChoiceInputs = () => {
+    let inputs = Array.from(document.querySelectorAll(SELECTORS.choiceInput));
+    if (inputs.length === 0) {
+      for (let i = 0; i < 4; i++) {
+        const el = document.querySelector(SELECTORS.legacyChoice(i));
+        if (el) inputs.push(el);
+      }
+    }
+    return inputs;
+  };
+
+  // ============================================
+  // 🎯 MAIN LOGIC
+  // ============================================
+  const stats = { typed: false, choicesFilled: 0, durationSet: false, posted: false, errors: 0 };
+
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 CREATE POLL - XActions                               ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  try {
+    const host = window.location.hostname;
+    if (!/(^|\.)x\.com$/.test(host) && !/(^|\.)twitter\.com$/.test(host)) {
+      log.warning('Not on x.com. Open x.com/compose/post, then re-run.');
+      return stats;
+    }
+
+    const choices = (CONFIG.choices || []).map((c) => (c || '').trim()).filter(Boolean);
+    if (choices.length < 2 || choices.length > 4) {
+      log.error(`Polls need 2 to 4 choices. You provided ${choices.length}.`);
+      return stats;
+    }
+    const tooLong = choices.filter((c) => c.length > 25);
+    if (tooLong.length > 0) {
+      log.error(`Each choice must be <= 25 characters. Too long: ${tooLong.join(', ')}`);
+      return stats;
+    }
+    if (!CONFIG.text || !CONFIG.text.trim()) {
+      log.error('CONFIG.text is empty. Set the poll question.');
+      return stats;
+    }
+
+    const totalMinutes = (CONFIG.durationDays * 24 * 60) + (CONFIG.durationHours * 60) + CONFIG.durationMinutes;
+    if (totalMinutes < 5) {
+      log.error('Poll duration must be at least 5 minutes.');
+      return stats;
+    }
+    if (totalMinutes > 7 * 24 * 60) {
+      log.error('Poll duration cannot exceed 7 days.');
+      return stats;
+    }
+
+    log.info(`Question: "${CONFIG.text}"`);
+    choices.forEach((c, i) => log.info(`Choice ${i + 1}: "${c}" (${c.length}/25)`));
+    log.info(`Duration: ${CONFIG.durationDays}d ${CONFIG.durationHours}h ${CONFIG.durationMinutes}m`);
+
+    if (CONFIG.dryRun) {
+      log.warning('DRY RUN. Nothing posted. Set CONFIG.dryRun = false to post for real.');
+      return stats;
+    }
+
+    // Open the composer.
+    let composer = document.querySelector(SELECTORS.composer);
+    if (!composer) {
+      const newBtn = document.querySelector(SELECTORS.newTweetButton);
+      if (newBtn) {
+        newBtn.click();
+        composer = await waitForSelector(SELECTORS.composer, 6000);
+      }
+    }
+    if (!composer) {
+      log.error('Composer not found. Open x.com/compose/post and re-run.');
+      stats.errors++;
+      return stats;
+    }
+
+    await typeIntoComposer(composer, CONFIG.text);
+    stats.typed = true;
+    log.success('Question typed.');
+
+    // Open the poll UI.
+    const pollBtn =
+      document.querySelector(SELECTORS.addPoll) ||
+      document.querySelector(SELECTORS.addPollFallback);
+    if (!pollBtn) {
+      log.error('Poll button not found in the composer toolbar.');
+      stats.errors++;
+      return stats;
+    }
+    pollBtn.click();
+    await sleep(1200);
+
+    // Fill choices, adding extra slots for choice 3 and 4.
+    for (let i = 0; i < choices.length; i++) {
+      if (i >= 2) {
+        const addBtn = document.querySelector(SELECTORS.addChoice);
+        if (addBtn) {
+          addBtn.click();
+          await sleep(600);
+        }
+      }
+      const inputs = getChoiceInputs();
+      const field = inputs[i];
+      if (!field) {
+        log.warning(`Choice ${i + 1} input not found. Fill it by hand.`);
+        continue;
+      }
+      await typeIntoField(field, choices[i]);
+      stats.choicesFilled++;
+      log.success(`Choice ${i + 1}: "${choices[i]}"`);
+    }
+
+    // Set duration via the Days / Hours / Minutes selects if present.
+    const daysSel = findSelectByLabel(document, 'days');
+    const hoursSel = findSelectByLabel(document, 'hours');
+    const minsSel = findSelectByLabel(document, 'minutes');
+    if (daysSel || hoursSel || minsSel) {
+      const dOk = daysSel ? setSelectByText(daysSel, String(CONFIG.durationDays)) : true;
+      const hOk = hoursSel ? setSelectByText(hoursSel, String(CONFIG.durationHours)) : true;
+      const mOk = minsSel ? setSelectByText(minsSel, String(CONFIG.durationMinutes)) : true;
+      stats.durationSet = dOk && hOk && mOk;
+      if (stats.durationSet) log.success('Poll duration set.');
+      else log.warning('Some duration fields could not be set. Verify them by hand.');
+      await sleep(400);
+    } else {
+      log.warning('Duration selects not found. Default (1 day) will be used unless you change it.');
+    }
+
+    await sleep(500);
+    const postBtn =
+      document.querySelector(SELECTORS.postButton) ||
+      document.querySelector(SELECTORS.postButtonInline);
+    if (!postBtn) {
+      log.error('Post button not found. Poll is filled. Click Post manually.');
+      stats.errors++;
+      return stats;
+    }
+    if (postBtn.getAttribute('aria-disabled') === 'true' || postBtn.disabled) {
+      log.error('Post button is disabled. Check that every choice is filled.');
+      stats.errors++;
+      return stats;
+    }
+
+    postBtn.click();
+    await sleep(2500);
+
+    const stillOpen = document.querySelector(SELECTORS.composer);
+    const openText = stillOpen ? (stillOpen.textContent || '').trim() : '';
+    if (!stillOpen || openText.length === 0) {
+      stats.posted = true;
+      log.success('Poll posted.');
+    } else {
+      log.warning('Composer still open. The poll may not have posted. Check the page.');
+      stats.errors++;
+    }
+  } catch (error) {
+    log.error(`Error: ${error.message}`);
+    stats.errors++;
+  }
+
+  // ============================================
+  // 📊 SUMMARY
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 CREATE POLL - COMPLETE                               ║
+╠══════════════════════════════════════════════════════════╣
+║  ⌨️  Question typed:    ${String(stats.typed).padEnd(32)}║
+║  📋 Choices filled:    ${String(stats.choicesFilled).padEnd(32)}║
+║  ⏱️  Duration set:      ${String(stats.durationSet).padEnd(32)}║
+║  ✅ Posted:            ${String(stats.posted).padEnd(32)}║
+║  ❌ Errors:            ${String(stats.errors).padEnd(32)}║
+╚══════════════════════════════════════════════════════════╝
+  `);
+  log.success('Script completed! by nichxbt');
+  return stats;
+})();
+
+});
+  register("delete-tweets", function(){
+(async function deleteTweets() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // 🔒 SAFETY: true = preview only (logs what WOULD be deleted, deletes nothing).
+    // You MUST set this to false yourself to actually delete. Keep it true first.
+    dryRun: true,
+
+    // Only delete posts older than this many days. 0 = any age.
+    olderThanDays: 0,
+
+    // Only delete posts whose text contains AT LEAST ONE of these
+    // (case-insensitive). Empty array = ignore keywords (matches all).
+    containingKeywords: [],
+
+    // Protect high performers: skip any post with at least this many likes.
+    // Set to a high number to keep your best posts. 0 = delete regardless.
+    minLikesToKeep: 0,
+
+    // Maximum number of posts to delete this run
+    maxDeletes: 25,
+
+    // Minimum delay between deletions (ms)
+    minDelay: 1500,
+
+    // Maximum delay between deletions (ms)
+    maxDelay: 4000,
+
+    // Maximum scroll attempts to load more posts
+    maxScrollAttempts: 60,
+
+    // Stop if no new posts appear after this many consecutive scrolls
+    noNewPostsThreshold: 5
+  };
+try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG,window.__XA_LAUNCH_CFG);}}catch(_xa){}
+
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    tweet: 'article[data-testid="tweet"]',
+    tweetText: '[data-testid="tweetText"]',
+    caret: '[data-testid="caret"]',
+    likeButton: '[data-testid="like"], [data-testid="unlike"]',
+    socialContext: '[data-testid="socialContext"]',
+    confirm: '[data-testid="confirmationSheetConfirm"]',
+    menuItem: '[role="menuitem"]'
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+  const randomDelay = () => {
+    const delay = Math.floor(Math.random() * (CONFIG.maxDelay - CONFIG.minDelay + 1)) + CONFIG.minDelay;
+    return sleep(delay);
+  };
+
+  const scrollDown = () => window.scrollTo(0, document.body.scrollHeight);
+
+  const log = {
+    info: (msg) => console.log(`ℹ️ ${msg}`),
+    success: (msg) => console.log(`✅ ${msg}`),
+    warning: (msg) => console.log(`⚠️ ${msg}`),
+    error: (msg) => console.log(`❌ ${msg}`),
+    progress: (current, total) => console.log(`📊 Progress: ${current}/${total} processed`)
+  };
+
+  const parseCount = (str) => {
+    if (!str) return 0;
+    const m = str.replace(/,/g, '').match(/([\d.]+)\s*([KMB])?/i);
+    if (!m) return 0;
+    let n = parseFloat(m[1]);
+    if (m[2]) n *= { K: 1e3, M: 1e6, B: 1e9 }[m[2].toUpperCase()] || 1;
+    return Math.round(n);
+  };
+
+  const download = (data, filename) => {
+    try {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      log.info(`Saved a log of this run: ${filename}`);
+    } catch (e) {
+      log.warning(`Could not save the run log: ${e.message}`);
+    }
+  };
+
+  const getTweetId = (tweet) => {
+    const timeAnchor = tweet.querySelector('time')?.closest('a[href*="/status/"]');
+    if (timeAnchor) {
+      const match = timeAnchor.href.match(/\/status\/(\d+)/);
+      if (match) return match[1];
+    }
+    const link = tweet.querySelector('a[href*="/status/"]');
+    const m = link?.getAttribute('href')?.match(/\/status\/(\d+)/);
+    return m ? m[1] : null;
+  };
+
+  const getLikes = (tweet) => {
+    const el = tweet.querySelector(SELECTORS.likeButton);
+    return parseCount(el?.getAttribute('aria-label') || '0');
+  };
+
+  const getTimestamp = (tweet) => tweet.querySelector('time')?.getAttribute('datetime') || '';
+
+  const isPinned = (tweet) => /pinned/i.test(tweet.querySelector(SELECTORS.socialContext)?.textContent || '');
+  const isRepost = (tweet) => /reposted/i.test(tweet.querySelector(SELECTORS.socialContext)?.textContent || '');
+
+  // ============================================
+  // 🎯 MAIN LOGIC
+  // ============================================
+  const stats = {
+    deleted: 0,
+    wouldDelete: 0,
+    skippedTooNew: 0,
+    skippedNoKeyword: 0,
+    skippedHighPerformer: 0,
+    skippedNotYours: 0,
+    skippedPinned: 0,
+    errors: 0
+  };
+
+  const processed = new Set();
+  const deleteLog = [];
+
+  // Stop switch: run window.stopDeleteTweets() to abort after the current post.
+  let stopped = false;
+  window.stopDeleteTweets = () => {
+    stopped = true;
+    log.warning('Stop requested. Finishing the current post, then exiting.');
+  };
+
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  🗑️  DELETE TWEETS - XActions                            ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  // Page guard: must be on the user's own profile (a /<handle> path, not a
+  // reserved section). Warn, do not redirect.
+  const pathMatch = window.location.pathname.match(/^\/([A-Za-z0-9_]{1,15})\/?$/);
+  const reserved = ['home', 'explore', 'notifications', 'messages', 'i', 'search', 'settings', 'compose', 'hashtag'];
+  if (!pathMatch || reserved.includes(pathMatch[1].toLowerCase())) {
+    log.warning('Go to YOUR OWN profile page first (x.com/YOUR_USERNAME), then run this again.');
+    return;
+  }
+  const profileUser = pathMatch[1];
+  log.info(`Profile: @${profileUser}`);
+
+  // Loud destructive warning.
+  if (CONFIG.dryRun) {
+    console.log('%c🔍 DRY RUN - preview only. NOTHING will be deleted.', 'color:#1d9bf0;font-weight:bold;font-size:14px');
+    console.log('%c   To actually delete, set CONFIG.dryRun = false and run again.', 'color:#1d9bf0');
+  } else {
+    console.log('%c⚠️⚠️⚠️ LIVE MODE - posts WILL be PERMANENTLY DELETED. This CANNOT be undone. ⚠️⚠️⚠️', 'color:#f4212e;font-weight:bold;font-size:15px');
+  }
+
+  const cutoff = CONFIG.olderThanDays > 0 ? new Date(Date.now() - CONFIG.olderThanDays * 86400000) : null;
+  log.info(`Max deletes: ${CONFIG.maxDeletes} | Older than: ${CONFIG.olderThanDays || 'any'} days | Keep >= ${CONFIG.minLikesToKeep} likes`);
+  log.info(`Keywords: ${CONFIG.containingKeywords.length ? CONFIG.containingKeywords.join(', ') : 'none (matches all)'}`);
+  log.info('To stop early: window.stopDeleteTweets()');
+
+  if (document.querySelector(SELECTORS.tweet) === null) {
+    log.warning('No posts visible yet. Wait for your profile to load, then re-run.');
+    return;
+  }
+
+  let scrollAttempts = 0;
+  let noNewPostsCount = 0;
+
+  while (!stopped && stats.deleted < CONFIG.maxDeletes && stats.wouldDelete < CONFIG.maxDeletes && scrollAttempts < CONFIG.maxScrollAttempts) {
+    const tweets = document.querySelectorAll(SELECTORS.tweet);
+    let foundNewPost = false;
+
+    for (const tweet of tweets) {
+      if (stopped) break;
+      if (CONFIG.dryRun ? stats.wouldDelete >= CONFIG.maxDeletes : stats.deleted >= CONFIG.maxDeletes) break;
+
+      const tweetId = getTweetId(tweet);
+      if (!tweetId || processed.has(tweetId)) continue;
+      processed.add(tweetId);
+      foundNewPost = true;
+
+      try {
+        if (isPinned(tweet)) {
+          stats.skippedPinned++;
+          continue;
+        }
+
+        // Ownership: a repost by you counts; otherwise the author link must be you.
+        const repost = isRepost(tweet);
+        const ownAuthorLink = tweet.querySelector(`a[href="/${profileUser}" i]`);
+        if (!repost && !ownAuthorLink) {
+          stats.skippedNotYours++;
+          continue;
+        }
+
+        const text = tweet.querySelector(SELECTORS.tweetText)?.textContent || '';
+        const timestamp = getTimestamp(tweet);
+        const likes = getLikes(tweet);
+
+        // Filter: age
+        if (cutoff && timestamp && new Date(timestamp) > cutoff) {
+          stats.skippedTooNew++;
+          continue;
+        }
+
+        // Filter: keywords
+        if (CONFIG.containingKeywords.length > 0) {
+          const lower = text.toLowerCase();
+          if (!CONFIG.containingKeywords.some(kw => lower.includes(kw.toLowerCase()))) {
+            stats.skippedNoKeyword++;
+            continue;
+          }
+        }
+
+        // Filter: protect high performers
+        if (CONFIG.minLikesToKeep > 0 && likes >= CONFIG.minLikesToKeep) {
+          stats.skippedHighPerformer++;
+          continue;
+        }
+
+        const preview = text.slice(0, 60).replace(/\n/g, ' ') || (repost ? '(repost)' : '(no text)');
+
+        if (CONFIG.dryRun) {
+          stats.wouldDelete++;
+          deleteLog.push({ tweetId, text: text.slice(0, 200), likes, timestamp, repost, dryRun: true });
+          console.log(`🔍 [DRY] Would delete #${stats.wouldDelete}: "${preview}..." (❤️ ${likes})`);
+          continue;
+        }
+
+        // LIVE deletion via the post's overflow (caret) menu.
+        const caret = tweet.querySelector(SELECTORS.caret);
+        if (!caret) continue;
+
+        caret.scrollIntoView({ block: 'center' });
+        await sleep(300);
+        caret.click();
+        await sleep(800);
+
+        const menuItems = document.querySelectorAll(SELECTORS.menuItem);
+        let actionBtn = null;
+        for (const item of menuItems) {
+          if (/delete/i.test(item.textContent) || /undo repost/i.test(item.textContent)) {
+            actionBtn = item;
+            break;
+          }
+        }
+
+        if (!actionBtn) {
+          document.body.click();
+          await sleep(300);
+          continue;
+        }
+
+        const wasRepost = /undo repost/i.test(actionBtn.textContent);
+        actionBtn.click();
+        await sleep(800);
+
+        // Deleting an original post asks for confirmation; undo-repost is instant.
+        if (!wasRepost) {
+          const confirm = document.querySelector(SELECTORS.confirm);
+          if (!confirm) {
+            document.body.click();
+            await sleep(400);
+            continue;
+          }
+          confirm.click();
+        }
+
+        stats.deleted++;
+        deleteLog.push({ tweetId, text: text.slice(0, 200), likes, timestamp, repost: wasRepost });
+        log.success(`Deleted #${stats.deleted}: "${preview}..." (❤️ ${likes})`);
+        log.progress(stats.deleted, CONFIG.maxDeletes);
+        await randomDelay();
+      } catch (error) {
+        log.error(`Error processing post: ${error.message}`);
+        stats.errors++;
+        document.body.click();
+        await sleep(800);
+      }
+    }
+
+    if (!foundNewPost) {
+      noNewPostsCount++;
+      if (noNewPostsCount >= CONFIG.noNewPostsThreshold) {
+        log.warning('No new posts found after multiple scrolls. Stopping.');
+        break;
+      }
+    } else {
+      noNewPostsCount = 0;
+    }
+
+    scrollDown();
+    scrollAttempts++;
+    log.info(`Scrolling for more posts... (attempt ${scrollAttempts}/${CONFIG.maxScrollAttempts})`);
+    await sleep(2000);
+  }
+
+  // ============================================
+  // 📊 SUMMARY
+  // ============================================
+  const totalSkipped = stats.skippedTooNew + stats.skippedNoKeyword + stats.skippedHighPerformer + stats.skippedNotYours + stats.skippedPinned;
+
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 DELETE TWEETS - COMPLETE                             ║
+╠══════════════════════════════════════════════════════════╣
+║  🗑️  Deleted:             ${String(stats.deleted).padEnd(29)}║
+║  🔍 Would Delete (dry):   ${String(stats.wouldDelete).padEnd(29)}║
+║  ⏭️  Total Skipped:       ${String(totalSkipped).padEnd(29)}║
+║     └─ Too New:           ${String(stats.skippedTooNew).padEnd(29)}║
+║     └─ No Keyword:        ${String(stats.skippedNoKeyword).padEnd(29)}║
+║     └─ High Performer:    ${String(stats.skippedHighPerformer).padEnd(29)}║
+║     └─ Not Yours:         ${String(stats.skippedNotYours).padEnd(29)}║
+║     └─ Pinned:            ${String(stats.skippedPinned).padEnd(29)}║
+║  ❌ Errors:               ${String(stats.errors).padEnd(29)}║
+║  📜 Scroll Attempts:      ${String(scrollAttempts).padEnd(29)}║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  if (deleteLog.length > 0) {
+    download(
+      { profile: profileUser, stats, dryRun: CONFIG.dryRun, tweets: deleteLog },
+      `xactions-delete-tweets-${new Date().toISOString().slice(0, 10)}.json`
+    );
+  }
+
+  if (CONFIG.dryRun && stats.wouldDelete > 0) {
+    console.log(`%c⚡ Reviewed ${stats.wouldDelete} post(s). Set CONFIG.dryRun = false and re-run to PERMANENTLY delete them.`, 'color:#f4212e;font-weight:bold');
+  } else if (CONFIG.dryRun) {
+    log.info('Nothing matched your filters. Loosen olderThanDays / keywords / minLikesToKeep.');
+  }
+  log.success('Script completed! by nichxbt');
+
+  return stats;
+})();
+
+});
   register("detect-unfollowers", function(){
 var CONFIG = {
   // Delay between scrolls
@@ -4550,6 +7402,297 @@ try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG
   console.log('💡 Access data via: window.unfollowerReport');
   
   return result;
+})();
+
+});
+  register("edit-profile", function(){
+(async function editProfile() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // Display name (max 50 chars). null = leave unchanged.
+    name: null,
+
+    // Bio / description (max 160 chars). null = leave unchanged.
+    bio: null,
+
+    // Location string. null = leave unchanged. '' = clear the field.
+    location: null,
+
+    // Website URL. null = leave unchanged. '' = clear the field.
+    website: null,
+
+    // Birthdate as { month: 'March', day: 14, year: 1990 }. null = leave unchanged.
+    // month accepts a full month name ('March') or number (3). Any subset of
+    // month/day/year you provide will be set; omitted parts are left as-is.
+    birthdate: null,
+
+    // Click Save automatically after filling. If false, fields are filled and
+    // you click Save yourself.
+    autoSave: true,
+
+    // Delay for UI interactions (ms).
+    actionDelay: 700
+  };
+try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG,window.__XA_LAUNCH_CFG);}}catch(_xa){}
+
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    editButton: '[data-testid="editProfileButton"]',
+    // X has shipped several testids/name attrs over time; try each in order.
+    nameInput: [
+      '[data-testid="displayNameInput"]',
+      'input[name="displayName"]',
+      'input[name="name"]'
+    ],
+    bioInput: [
+      '[data-testid="bioTextarea"]',
+      '[data-testid="descriptionInput"]',
+      '[data-testid="ocf-bio-input"]',
+      'textarea[name="description"]'
+    ],
+    locationInput: [
+      '[data-testid="locationInput"]',
+      'input[name="location"]'
+    ],
+    websiteInput: [
+      '[data-testid="urlInput"]',
+      'input[name="url"]'
+    ],
+    saveButton: '[data-testid="Profile_Save_Button"]'
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+  const log = {
+    info: (msg) => console.log(`ℹ️ ${msg}`),
+    success: (msg) => console.log(`✅ ${msg}`),
+    warning: (msg) => console.log(`⚠️ ${msg}`),
+    error: (msg) => console.log(`❌ ${msg}`)
+  };
+
+  // Resolve the first matching element from an array of selectors (or a single string).
+  const findFirst = (selectors) => {
+    const list = Array.isArray(selectors) ? selectors : [selectors];
+    for (const sel of list) {
+      const el = document.querySelector(sel);
+      if (el) return el;
+    }
+    return null;
+  };
+
+  // Set an input/textarea value through the native setter so React's value
+  // tracker registers the change (a plain .value assignment is ignored by
+  // React and the old value would be saved).
+  const setNativeValue = (el, value) => {
+    const proto = el instanceof HTMLTextAreaElement
+      ? HTMLTextAreaElement.prototype
+      : HTMLInputElement.prototype;
+    const desc = Object.getOwnPropertyDescriptor(proto, 'value');
+    if (desc && desc.set) desc.set.call(el, value);
+    else el.value = value;
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+  };
+
+  // Fill one text field. Returns 'set' | 'notfound'.
+  const fillField = async (label, selectors, value) => {
+    const el = findFirst(selectors);
+    if (!el) {
+      log.warning(`${label} field not found on the page. Skipped.`);
+      return 'notfound';
+    }
+    el.focus();
+    await sleep(150);
+    setNativeValue(el, '');
+    await sleep(120);
+    setNativeValue(el, value);
+    await sleep(CONFIG.actionDelay);
+    const preview = value.length > 60 ? value.slice(0, 60) + '…' : value;
+    log.success(`${label} → "${preview}"`);
+    return 'set';
+  };
+
+  // Set a native <select> to the option whose text or value matches `wanted`.
+  const setSelectByText = (selectEl, wanted) => {
+    const target = String(wanted).trim().toLowerCase();
+    for (const opt of selectEl.options) {
+      const txt = opt.textContent.trim().toLowerCase();
+      const val = String(opt.value).trim().toLowerCase();
+      if (txt === target || val === target) {
+        setNativeValue(selectEl, opt.value);
+        return true;
+      }
+    }
+    // Numeric fallback (e.g. month '3' matching option value/text '3').
+    for (const opt of selectEl.options) {
+      if (parseInt(opt.value, 10) === parseInt(wanted, 10) && !Number.isNaN(parseInt(wanted, 10))) {
+        setNativeValue(selectEl, opt.value);
+        return true;
+      }
+    }
+    return false;
+  };
+
+  // Locate the three birthdate <select>s by their option content.
+  const findBirthdateSelects = () => {
+    const selects = Array.from(document.querySelectorAll('select'));
+    const out = { month: null, day: null, year: null };
+    for (const sel of selects) {
+      const texts = Array.from(sel.options).map(o => o.textContent.trim().toLowerCase());
+      const joined = texts.join(' ');
+      if (!out.month && (joined.includes('january') || joined.includes('month'))) out.month = sel;
+      else if (!out.year && texts.some(t => /^(19|20)\d\d$/.test(t))) out.year = sel;
+      else if (!out.day && texts.some(t => /^\d{1,2}$/.test(t)) && sel.options.length <= 40) out.day = sel;
+    }
+    return out;
+  };
+
+  const setBirthdate = async (bd) => {
+    const sel = findBirthdateSelects();
+    let anyField = false;
+    if (bd.month != null && sel.month) {
+      if (setSelectByText(sel.month, bd.month)) { log.success(`Birth month → ${bd.month}`); anyField = true; }
+      else log.warning(`Birth month "${bd.month}" not found in the dropdown.`);
+      await sleep(CONFIG.actionDelay);
+    }
+    if (bd.day != null && sel.day) {
+      if (setSelectByText(sel.day, bd.day)) { log.success(`Birth day → ${bd.day}`); anyField = true; }
+      else log.warning(`Birth day "${bd.day}" not found in the dropdown.`);
+      await sleep(CONFIG.actionDelay);
+    }
+    if (bd.year != null && sel.year) {
+      if (setSelectByText(sel.year, bd.year)) { log.success(`Birth year → ${bd.year}`); anyField = true; }
+      else log.warning(`Birth year "${bd.year}" not found in the dropdown.`);
+      await sleep(CONFIG.actionDelay);
+    }
+    if (!sel.month && !sel.day && !sel.year) {
+      log.warning('Birthdate dropdowns not found. If your profile has no birthdate yet, add one manually once, then this tool can update it.');
+      return 'notfound';
+    }
+    return anyField ? 'set' : 'notfound';
+  };
+
+  // ============================================
+  // 🎯 MAIN LOGIC
+  // ============================================
+  const stats = { set: 0, notFound: 0, errors: 0 };
+
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📝 EDIT PROFILE - XActions                              ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  // Page guard: warn, do not hard-redirect (a redirect would kill this script).
+  const onProfileSettings = /\/settings\/profile/.test(window.location.pathname);
+  const onOwnProfile = !!document.querySelector(SELECTORS.editButton);
+  if (!onProfileSettings && !onOwnProfile) {
+    log.warning('Go to x.com/settings/profile (or open your own profile so the "Edit profile" button is visible), then run this again.');
+    return stats;
+  }
+
+  // Validate lengths before touching anything.
+  if (CONFIG.name != null && CONFIG.name.length > 50) {
+    log.error(`Display name is ${CONFIG.name.length} chars (max 50). Shorten it and re-run.`);
+    return stats;
+  }
+  if (CONFIG.bio != null && CONFIG.bio.length > 160) {
+    log.error(`Bio is ${CONFIG.bio.length} chars (max 160). Shorten it and re-run.`);
+    return stats;
+  }
+
+  const requested = [];
+  if (CONFIG.name != null) requested.push('name');
+  if (CONFIG.bio != null) requested.push('bio');
+  if (CONFIG.location != null) requested.push('location');
+  if (CONFIG.website != null) requested.push('website');
+  if (CONFIG.birthdate != null) requested.push('birthdate');
+
+  if (requested.length === 0) {
+    log.warning('Nothing to change. Set at least one field (name, bio, location, website, birthdate) in CONFIG.');
+    return stats;
+  }
+  log.info(`Fields to update: ${requested.join(', ')}`);
+
+  // Open the Edit profile dialog if the form is not already mounted.
+  const formPresent = () => findFirst(SELECTORS.nameInput) || findFirst(SELECTORS.bioInput);
+  if (!formPresent()) {
+    const editBtn = document.querySelector(SELECTORS.editButton);
+    if (editBtn) {
+      log.info('Opening the Edit profile dialog...');
+      editBtn.click();
+    }
+    // The dialog / settings form may still be mounting on first paint.
+    let waited = 0;
+    while (!formPresent() && waited < 6) {
+      await sleep(CONFIG.actionDelay);
+      waited++;
+    }
+  }
+  if (!formPresent()) {
+    log.error('Could not find the profile form. Make sure you are on x.com/settings/profile or that the Edit profile dialog opened.');
+    return stats;
+  }
+
+  const tally = (result) => {
+    if (result === 'set') stats.set++;
+    else if (result === 'notfound') stats.notFound++;
+  };
+
+  try {
+    if (CONFIG.name != null) tally(await fillField('Name', SELECTORS.nameInput, CONFIG.name));
+    if (CONFIG.bio != null) tally(await fillField('Bio', SELECTORS.bioInput, CONFIG.bio));
+    if (CONFIG.location != null) tally(await fillField('Location', SELECTORS.locationInput, CONFIG.location));
+    if (CONFIG.website != null) tally(await fillField('Website', SELECTORS.websiteInput, CONFIG.website));
+    if (CONFIG.birthdate != null) tally(await setBirthdate(CONFIG.birthdate));
+  } catch (error) {
+    log.error(`Error while filling fields: ${error.message}`);
+    stats.errors++;
+  }
+
+  if (stats.set === 0) {
+    log.warning('No fields were actually changed (none of the requested fields were found). Nothing to save.');
+  } else if (CONFIG.autoSave) {
+    const saveBtn = document.querySelector(SELECTORS.saveButton);
+    if (saveBtn) {
+      log.info('Saving profile...');
+      saveBtn.click();
+      await sleep(CONFIG.actionDelay * 2);
+      log.success('Save clicked.');
+    } else {
+      log.warning('Save button not found. Click "Save" in the dialog to apply your changes.');
+    }
+  } else {
+    log.info('autoSave is off. Click "Save" in the dialog to apply your changes.');
+  }
+
+  // ============================================
+  // 📊 SUMMARY
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 EDIT PROFILE - COMPLETE                              ║
+╠══════════════════════════════════════════════════════════╣
+║  ✅ Fields updated:    ${String(stats.set).padEnd(32)}║
+║  ⚠️  Fields not found:  ${String(stats.notFound).padEnd(32)}║
+║  ❌ Errors:            ${String(stats.errors).padEnd(32)}║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  log.success('Script completed! by nichxbt');
+  return stats;
 })();
 
 });
@@ -5564,6 +8707,199 @@ try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG
 })();
 
 });
+  register("follow-back", function(){
+(async function followBack() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // Hard cap on follow-backs this run
+    maxFollows: 50,
+
+    // Skip verified (blue check) accounts
+    skipVerified: false,
+
+    // Skip protected/locked accounts
+    skipProtected: false,
+
+    // Timing (randomized between min and max, per follow)
+    minDelay: 2000,
+    maxDelay: 5000,
+
+    // Scrolling to load more followers
+    maxScrollRounds: 40,
+    scrollDelay: 2000,
+    maxEmptyScrolls: 6
+  };
+try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG,window.__XA_LAUNCH_CFG);}}catch(_xa){}
+
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    userCell: '[data-testid="UserCell"]',
+    followButton: '[data-testid$="-follow"]',     // ends with -follow (not -unfollow)
+    unfollowButton: '[data-testid$="-unfollow"]',
+    followsYou: '[data-testid="userFollowIndicator"]',
+    verified: '[data-testid="icon-verified"]',
+    protectedIcon: '[data-testid="icon-lock"]'
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+  const randomDelay = () => {
+    const delay = Math.floor(Math.random() * (CONFIG.maxDelay - CONFIG.minDelay + 1)) + CONFIG.minDelay;
+    return sleep(delay);
+  };
+
+  const getUsername = (cell) => {
+    const link = cell.querySelector('a[href^="/"][role="link"]') || cell.querySelector('a[href^="/"]');
+    if (!link) return null;
+    const m = (link.getAttribute('href') || '').match(/^\/([A-Za-z0-9_]+)/);
+    if (!m) return null;
+    if (['home', 'explore', 'notifications', 'messages', 'i', 'search', 'settings'].includes(m[1])) return null;
+    return m[1];
+  };
+
+  const log = {
+    info: (msg) => console.log(`ℹ️ ${msg}`),
+    success: (msg) => console.log(`✅ ${msg}`),
+    warning: (msg) => console.log(`⚠️ ${msg}`),
+    error: (msg) => console.log(`❌ ${msg}`),
+    progress: (current, total) => console.log(`📊 Progress: ${current}/${total} followed back`)
+  };
+
+  // ============================================
+  // 🎯 STATE
+  // ============================================
+  const stats = { followed: 0, alreadyFollowing: 0, notMutual: 0, skippedVerified: 0, skippedProtected: 0, errors: 0 };
+  const processed = new Set();
+
+  // Stop switch: run window.stopFollowBack() to abort after the current account.
+  let stopped = false;
+  window.stopFollowBack = () => {
+    stopped = true;
+    log.warning('Stop requested. Finishing the current account, then exiting.');
+  };
+
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  🔁 FOLLOW BACK - XActions                               ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+  log.info('To stop early: window.stopFollowBack()');
+
+  // Page guard
+  if (!/\/followers/.test(window.location.pathname)) {
+    log.error('Not on a followers page. Go to https://x.com/<your-username>/followers and re-run.');
+    return stats;
+  }
+
+  log.info(`Max follow-backs: ${CONFIG.maxFollows}`);
+  log.info(`Skip verified: ${CONFIG.skipVerified} | Skip protected: ${CONFIG.skipProtected}`);
+
+  // ============================================
+  // 🔁 MAIN LOOP
+  // ============================================
+  let scrollRounds = 0;
+  let emptyScrolls = 0;
+
+  while (!stopped && stats.followed < CONFIG.maxFollows && scrollRounds < CONFIG.maxScrollRounds && emptyScrolls < CONFIG.maxEmptyScrolls) {
+    const cells = document.querySelectorAll(SELECTORS.userCell);
+    if (cells.length === 0) {
+      log.warning('No follower rows visible yet. Scrolling...');
+    }
+
+    let foundNew = false;
+
+    for (const cell of cells) {
+      if (stopped || stats.followed >= CONFIG.maxFollows) break;
+
+      const username = getUsername(cell);
+      if (!username) continue;
+      const key = username.toLowerCase();
+      if (processed.has(key)) continue;
+      processed.add(key);
+      foundNew = true;
+
+      try {
+        // Must follow you.
+        if (!cell.querySelector(SELECTORS.followsYou)) {
+          stats.notMutual++;
+          continue;
+        }
+
+        // Already following? A -unfollow button means you follow them.
+        if (cell.querySelector(SELECTORS.unfollowButton)) {
+          stats.alreadyFollowing++;
+          continue;
+        }
+
+        if (CONFIG.skipVerified && cell.querySelector(SELECTORS.verified)) {
+          stats.skippedVerified++;
+          continue;
+        }
+        if (CONFIG.skipProtected && cell.querySelector(SELECTORS.protectedIcon)) {
+          stats.skippedProtected++;
+          continue;
+        }
+
+        const followBtn = cell.querySelector(SELECTORS.followButton);
+        if (!followBtn) continue;
+
+        cell.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        await sleep(400);
+        followBtn.click();
+        stats.followed++;
+        log.success(`Followed back #${stats.followed}: @${username}`);
+        log.progress(stats.followed, CONFIG.maxFollows);
+        await randomDelay();
+      } catch (error) {
+        log.error(`Error on @${username}: ${error.message}`);
+        stats.errors++;
+      }
+    }
+
+    if (!foundNew) emptyScrolls++;
+    else emptyScrolls = 0;
+
+    window.scrollTo(0, document.body.scrollHeight);
+    scrollRounds++;
+    await sleep(CONFIG.scrollDelay);
+  }
+
+  if (emptyScrolls >= CONFIG.maxEmptyScrolls) {
+    log.info('Reached the end of the followers list.');
+  }
+
+  // ============================================
+  // 📊 SUMMARY
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 FOLLOW BACK - COMPLETE                               ║
+╠══════════════════════════════════════════════════════════╣
+║  ✅ Followed back:     ${String(stats.followed).padEnd(32)}║
+║  🤝 Already following: ${String(stats.alreadyFollowing).padEnd(32)}║
+║  🚫 Not mutual:        ${String(stats.notMutual).padEnd(32)}║
+║  ✔️  Skipped verified:  ${String(stats.skippedVerified).padEnd(32)}║
+║  🔒 Skipped protected: ${String(stats.skippedProtected).padEnd(32)}║
+║  ❌ Errors:            ${String(stats.errors).padEnd(32)}║
+╚══════════════════════════════════════════════════════════╝
+  `);
+  log.success('Script completed! by nichxbt');
+  return stats;
+})();
+
+});
   register("follow-engagers", function(){
 var CONFIG = {
   // ---- ENGAGEMENT TYPE ----
@@ -5773,6 +9109,198 @@ try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG
   console.log('');
   
   return { followed: totalFollowed };
+})();
+
+});
+  register("follow-list-members", function(){
+(async function followListMembers() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // Maximum number of members to follow this run
+    maxFollows: 50,
+
+    // Maximum scroll attempts before giving up
+    maxScrollAttempts: 100,
+
+    // Stop after this many scrolls with no new members (end of list)
+    noNewThreshold: 5,
+
+    // Skip verified accounts
+    skipVerified: false,
+
+    // Skip protected (private) accounts
+    skipProtected: false,
+
+    // Rate limiting between follows (randomized between min and max, ms)
+    minDelay: 2000,
+    maxDelay: 5000,
+
+    // Delay between scrolls (ms)
+    scrollDelay: 2000
+  };
+try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG,window.__XA_LAUNCH_CFG);}}catch(_xa){}
+
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    userCell: '[data-testid="UserCell"]',
+    // Follow button ends with -follow (id contains the user id); unfollow ends with -unfollow
+    followButton: '[data-testid$="-follow"]',
+    unfollowButton: '[data-testid$="-unfollow"]',
+    verifiedBadge: '[data-testid="icon-verified"]',
+    protectedIcon: '[data-testid="icon-lock"]',
+    profileLink: 'a[href^="/"]'
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+  const randomDelay = () => Math.floor(Math.random() * (CONFIG.maxDelay - CONFIG.minDelay) + CONFIG.minDelay);
+
+  const log = {
+    info: (msg) => console.log(`ℹ️ ${msg}`),
+    success: (msg) => console.log(`✅ ${msg}`),
+    warning: (msg) => console.log(`⚠️ ${msg}`),
+    error: (msg) => console.log(`❌ ${msg}`)
+  };
+
+  const handleFromCell = (cell) => {
+    const link = cell.querySelector(SELECTORS.profileLink);
+    if (!link) return '';
+    const href = link.getAttribute('href') || '';
+    const m = href.match(/^\/([A-Za-z0-9_]{1,15})$/);
+    return m ? m[1] : '';
+  };
+
+  // ============================================
+  // 🎯 MAIN
+  // ============================================
+  let stopped = false;
+  window.stopFollowListMembers = () => {
+    stopped = true;
+    log.warning('Stop requested. Finishing the current member, then exiting.');
+  };
+
+  const stats = {
+    followed: 0,
+    alreadyFollowing: 0,
+    skippedVerified: 0,
+    skippedProtected: 0,
+    errors: 0
+  };
+
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  👥 FOLLOW LIST MEMBERS - XActions                       ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  // Page guard: must be on a list members page
+  if (!/\/lists\/[^/]+\/members/.test(window.location.pathname)) {
+    log.warning('You are not on a List members page.');
+    log.info('Open https://x.com/i/lists/<list-id>/members (or add /members to a list URL), then rerun.');
+    return;
+  }
+
+  log.info(`Max follows: ${CONFIG.maxFollows}`);
+  log.info(`Skip verified: ${CONFIG.skipVerified}, skip protected: ${CONFIG.skipProtected}`);
+  log.info('To stop early: window.stopFollowListMembers()');
+  console.log('');
+
+  const processed = new Set();
+  let scrollAttempts = 0;
+  let noNewCount = 0;
+
+  while (!stopped && stats.followed < CONFIG.maxFollows && scrollAttempts < CONFIG.maxScrollAttempts) {
+    const cells = document.querySelectorAll(SELECTORS.userCell);
+    let foundNew = false;
+
+    for (const cell of cells) {
+      if (stopped || stats.followed >= CONFIG.maxFollows) break;
+
+      const handle = handleFromCell(cell);
+      const key = handle || (cell.textContent || '').slice(0, 40);
+      if (processed.has(key)) continue;
+      processed.add(key);
+      foundNew = true;
+
+      try {
+        // Already following? The cell shows an unfollow-style button.
+        if (cell.querySelector(SELECTORS.unfollowButton)) {
+          stats.alreadyFollowing++;
+          continue;
+        }
+
+        if (CONFIG.skipVerified && cell.querySelector(SELECTORS.verifiedBadge)) {
+          stats.skippedVerified++;
+          continue;
+        }
+
+        if (CONFIG.skipProtected && cell.querySelector(SELECTORS.protectedIcon)) {
+          stats.skippedProtected++;
+          continue;
+        }
+
+        const followBtn = cell.querySelector(SELECTORS.followButton);
+        if (!followBtn) continue;
+
+        cell.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        await sleep(400);
+        followBtn.click();
+        stats.followed++;
+        log.success(`Followed #${stats.followed}: @${handle || 'unknown'}`);
+
+        await sleep(randomDelay());
+      } catch (e) {
+        stats.errors++;
+        log.error(`Error following @${handle || 'unknown'}: ${e.message}`);
+      }
+    }
+
+    if (!foundNew) {
+      noNewCount++;
+      if (noNewCount >= CONFIG.noNewThreshold) {
+        log.warning('No new members after several scrolls. Reached the end of the list.');
+        break;
+      }
+    } else {
+      noNewCount = 0;
+    }
+
+    window.scrollTo(0, document.body.scrollHeight);
+    await sleep(CONFIG.scrollDelay);
+    scrollAttempts++;
+  }
+
+  // ============================================
+  // 📊 SUMMARY
+  // ============================================
+  console.log('');
+  console.log('╔══════════════════════════════════════════════════════════╗');
+  console.log('║  📊 FOLLOW LIST MEMBERS - COMPLETE                       ║');
+  console.log('╚══════════════════════════════════════════════════════════╝');
+  console.log(`   ✅ Followed:          ${stats.followed}`);
+  console.log(`   💚 Already following: ${stats.alreadyFollowing}`);
+  console.log(`   ⏭️  Skipped verified:  ${stats.skippedVerified}`);
+  console.log(`   🔒 Skipped protected: ${stats.skippedProtected}`);
+  console.log(`   ❌ Errors:            ${stats.errors}`);
+  console.log(`   📜 Scroll attempts:   ${scrollAttempts}`);
+
+  if (stats.followed === 0 && stats.alreadyFollowing === 0) {
+    log.warning('No member cells were processed. The list may be empty or still loading.');
+  }
+
+  console.log('✅ Script completed! by nichxbt');
+  return stats;
 })();
 
 });
@@ -10544,6 +14072,579 @@ try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG
 })();
 
 });
+  register("list-manager", function(){
+(async function listManager() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // What to do: 'create' | 'rename' | 'delete'
+    action: 'create',
+
+    // For 'create': the new list name. For 'rename'/'delete': the EXISTING list name to target.
+    name: 'My New List',
+
+    // For 'rename' only: the name to change it to
+    newName: '',
+
+    // For 'create' only: optional description and privacy
+    description: 'Created with XActions',
+    isPrivate: false,
+
+    // Safety: preview the steps without changing anything. Set to false to execute.
+    dryRun: true,
+
+    // Delay between UI steps (ms)
+    stepDelay: 1500
+  };
+try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG,window.__XA_LAUNCH_CFG);}}catch(_xa){}
+
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    createButton: '[data-testid="createList"], a[href="/i/lists/create"]',
+    nameInput: '[data-testid="listNameInput"], input[name="name"]',
+    descInput: '[data-testid="listDescriptionInput"], textarea[name="description"]',
+    saveButton: '[data-testid="listSaveButton"], [data-testid="listCreationSheet-headerButton"]',
+    listLink: 'a[href*="/lists/"]',
+    editButton: '[data-testid="editList"], [aria-label="Edit List"], [aria-label="Edit list"]',
+    deleteButton: '[data-testid="listDeleteButton"]',
+    confirm: '[data-testid="confirmationSheetConfirm"]'
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+  const log = {
+    info: (msg) => console.log(`ℹ️ ${msg}`),
+    success: (msg) => console.log(`✅ ${msg}`),
+    warning: (msg) => console.log(`⚠️ ${msg}`),
+    error: (msg) => console.log(`❌ ${msg}`),
+    step: (msg) => console.log(`   → ${msg}`)
+  };
+
+  let stopped = false;
+  window.stopListManager = () => {
+    stopped = true;
+    log.warning('Stop requested. The script will halt at the next step.');
+  };
+
+  const qs = (sel) => document.querySelector(sel);
+
+  // Wait for an element to appear (up to timeoutMs)
+  const waitFor = async (sel, timeoutMs = 6000) => {
+    const start = Date.now();
+    while (Date.now() - start < timeoutMs) {
+      if (stopped) return null;
+      const el = qs(sel);
+      if (el) return el;
+      await sleep(200);
+    }
+    return null;
+  };
+
+  // Set a value on a React-controlled input/textarea so the framework registers it
+  const setReactInput = (el, value) => {
+    const proto = el.tagName === 'TEXTAREA'
+      ? window.HTMLTextAreaElement.prototype
+      : window.HTMLInputElement.prototype;
+    const setter = Object.getOwnPropertyDescriptor(proto, 'value').set;
+    setter.call(el, value);
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+  };
+
+  // Find a clickable button whose visible text matches one of the labels
+  const findButtonByText = (labels) => {
+    const wanted = labels.map(l => l.toLowerCase());
+    const buttons = document.querySelectorAll('[role="button"], button, [role="menuitem"]');
+    for (const b of buttons) {
+      const t = (b.textContent || '').trim().toLowerCase();
+      if (wanted.some(w => t === w || t.startsWith(w))) return b;
+    }
+    return null;
+  };
+
+  // Locate a list row on the Lists page by its visible name
+  const findListLinkByName = (name) => {
+    const target = name.trim().toLowerCase();
+    for (const link of document.querySelectorAll(SELECTORS.listLink)) {
+      const text = (link.textContent || '').trim().toLowerCase();
+      if (text.includes(target)) return link;
+    }
+    return null;
+  };
+
+  // ============================================
+  // 🎯 ACTIONS
+  // ============================================
+  const doCreate = async () => {
+    log.info(`Create list: "${CONFIG.name}" (${CONFIG.isPrivate ? 'private' : 'public'})`);
+    if (!CONFIG.name.trim()) { log.error('CONFIG.name is empty. Set a name to create.'); return false; }
+
+    if (CONFIG.dryRun) {
+      log.step('DRY RUN: would open the create-list dialog');
+      log.step(`DRY RUN: would type name "${CONFIG.name}" and description "${CONFIG.description}"`);
+      log.step('DRY RUN: would save. Set CONFIG.dryRun = false to execute.');
+      return true;
+    }
+
+    const createBtn = await waitFor(SELECTORS.createButton, 4000);
+    if (!createBtn) { log.error('Could not find the "Create a new List" button. Are you on x.com/<you>/lists?'); return false; }
+    createBtn.click();
+    await sleep(CONFIG.stepDelay);
+
+    const nameInput = await waitFor(SELECTORS.nameInput);
+    if (!nameInput) { log.error('List name input did not appear.'); return false; }
+    nameInput.focus();
+    setReactInput(nameInput, CONFIG.name);
+    await sleep(500);
+
+    if (CONFIG.description) {
+      const descInput = qs(SELECTORS.descInput);
+      if (descInput) {
+        descInput.focus();
+        setReactInput(descInput, CONFIG.description);
+        await sleep(500);
+      }
+    }
+
+    // First "Next" advances past the details step in the current flow
+    let next = findButtonByText(['next']);
+    if (next && !next.getAttribute('aria-disabled')) {
+      next.click();
+      await sleep(CONFIG.stepDelay);
+    }
+
+    const saveBtn = qs(SELECTORS.saveButton) || findButtonByText(['done', 'create', 'save']);
+    if (!saveBtn) { log.error('Could not find the save/create button.'); return false; }
+    saveBtn.click();
+    await sleep(CONFIG.stepDelay);
+    log.success(`List "${CONFIG.name}" created.`);
+    return true;
+  };
+
+  const openTargetList = async () => {
+    const link = findListLinkByName(CONFIG.name);
+    if (!link) {
+      log.error(`Could not find a list named "${CONFIG.name}" on this page.`);
+      log.info('Make sure you are on x.com/<you>/lists and the list name matches.');
+      return false;
+    }
+    log.step(`Opening list "${CONFIG.name}"`);
+    link.click();
+    await sleep(CONFIG.stepDelay);
+    return true;
+  };
+
+  const doRename = async () => {
+    log.info(`Rename list: "${CONFIG.name}" -> "${CONFIG.newName}"`);
+    if (!CONFIG.newName.trim()) { log.error('CONFIG.newName is empty. Set the new name.'); return false; }
+
+    if (CONFIG.dryRun) {
+      log.step(`DRY RUN: would open "${CONFIG.name}", edit it, set name to "${CONFIG.newName}", and save.`);
+      log.step('Set CONFIG.dryRun = false to execute.');
+      return true;
+    }
+
+    if (!await openTargetList()) return false;
+
+    const editBtn = await waitFor(SELECTORS.editButton, 5000) || findButtonByText(['edit list']);
+    if (!editBtn) { log.error('Could not find the "Edit List" control.'); return false; }
+    editBtn.click();
+    await sleep(CONFIG.stepDelay);
+
+    const nameInput = await waitFor(SELECTORS.nameInput);
+    if (!nameInput) { log.error('List name input did not appear in the edit dialog.'); return false; }
+    nameInput.focus();
+    setReactInput(nameInput, CONFIG.newName);
+    await sleep(500);
+
+    const saveBtn = qs(SELECTORS.saveButton) || findButtonByText(['done', 'save']);
+    if (!saveBtn) { log.error('Could not find the save button.'); return false; }
+    saveBtn.click();
+    await sleep(CONFIG.stepDelay);
+    log.success(`List renamed to "${CONFIG.newName}".`);
+    return true;
+  };
+
+  const doDelete = async () => {
+    log.info(`Delete list: "${CONFIG.name}"`);
+
+    if (CONFIG.dryRun) {
+      log.step(`DRY RUN: would open "${CONFIG.name}", edit it, click Delete, and confirm.`);
+      log.step('Set CONFIG.dryRun = false to execute. This cannot be undone.');
+      return true;
+    }
+
+    if (!await openTargetList()) return false;
+
+    const editBtn = await waitFor(SELECTORS.editButton, 5000) || findButtonByText(['edit list']);
+    if (!editBtn) { log.error('Could not find the "Edit List" control.'); return false; }
+    editBtn.click();
+    await sleep(CONFIG.stepDelay);
+
+    const deleteBtn = await waitFor(SELECTORS.deleteButton, 4000) || findButtonByText(['delete list']);
+    if (!deleteBtn) { log.error('Could not find the "Delete List" button.'); return false; }
+    deleteBtn.click();
+    await sleep(CONFIG.stepDelay);
+
+    const confirm = await waitFor(SELECTORS.confirm, 4000) || findButtonByText(['delete']);
+    if (!confirm) { log.error('Could not find the delete confirmation button.'); return false; }
+    confirm.click();
+    await sleep(CONFIG.stepDelay);
+    log.success(`List "${CONFIG.name}" deleted.`);
+    return true;
+  };
+
+  // ============================================
+  // 🚀 RUN
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  🗂️ LIST MANAGER - XActions                              ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  // Page guard: warn (do not hard-redirect) if not on a lists page
+  if (!/\/lists/.test(window.location.pathname) && !/\/i\/lists/.test(window.location.pathname)) {
+    log.warning('You are not on your Lists page.');
+    log.info('Go to https://x.com/<your-handle>/lists, then paste this script again.');
+    return;
+  }
+
+  if (CONFIG.dryRun) {
+    log.warning('DRY RUN is ON. No changes will be made. Set CONFIG.dryRun = false to execute.');
+  }
+  log.info('To abort mid-flow: window.stopListManager()');
+  console.log('');
+
+  let ok = false;
+  try {
+    if (CONFIG.action === 'create') ok = await doCreate();
+    else if (CONFIG.action === 'rename') ok = await doRename();
+    else if (CONFIG.action === 'delete') ok = await doDelete();
+    else log.error(`Unknown action "${CONFIG.action}". Use 'create', 'rename', or 'delete'.`);
+  } catch (e) {
+    log.error(`Action failed: ${e.message}`);
+  }
+
+  console.log('');
+  console.log('╔══════════════════════════════════════════════════════════╗');
+  console.log('║  🏁 LIST MANAGER - DONE                                  ║');
+  console.log('╚══════════════════════════════════════════════════════════╝');
+  console.log(`   Action:  ${CONFIG.action}`);
+  console.log(`   Target:  ${CONFIG.name}`);
+  console.log(`   Result:  ${CONFIG.dryRun ? 'dry run (no change)' : (ok ? 'success' : 'not completed')}`);
+  console.log('✅ Script completed! by nichxbt');
+
+  return { action: CONFIG.action, dryRun: CONFIG.dryRun, success: ok };
+})();
+
+});
+  register("manage-muted-words", function(){
+(async function manageMutedWords() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // 'add'    -> mute every phrase in `words`
+    // 'remove' -> unmute every phrase in `words`
+    // 'list'   -> scrape the words you already mute (console + JSON download)
+    action: 'list',
+
+    // The words/phrases to add or remove. Ignored for 'list'.
+    words: [
+      'giveaway',
+      'airdrop scam'
+    ],
+
+    // Options applied to each word when adding (X's mute settings).
+    muteOptions: {
+      // 'anyone' (from anyone) or 'follow' (from people you don't follow).
+      from: 'anyone',
+      // Mute in the Home timeline.
+      home: true,
+      // Mute in Notifications.
+      notifications: true,
+      // 'forever', '24h', '7d', or '30d'.
+      duration: 'forever'
+    },
+
+    // Minimum delay between actions (ms).
+    minDelay: 1500,
+
+    // Maximum delay between actions (ms).
+    maxDelay: 4000
+  };
+try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG,window.__XA_LAUNCH_CFG);}}catch(_xa){}
+
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    // Entry points into the "Add muted word" flow.
+    addLink: 'a[href*="add_muted_keyword"], [data-testid="addMutedWord"]',
+    keywordInput: 'input[name="keyword"], [data-testid="mutedKeywordTextInput"]',
+    saveButton: '[data-testid="settingsDetailSave"], [data-testid="settingsSave"], [data-testid="Profile_Save_Button"]',
+    unmuteButton: '[data-testid="unmuteKeyword"], [data-testid="deleteMutedKeyword"]',
+    confirm: '[data-testid="confirmationSheetConfirm"]',
+    // Each muted word renders in a settings row.
+    row: '[data-testid="cellInnerDiv"], [data-testid="MutedKeyword"]'
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+  const randomDelay = () => sleep(
+    Math.floor(Math.random() * (CONFIG.maxDelay - CONFIG.minDelay + 1)) + CONFIG.minDelay
+  );
+
+  const log = {
+    info: (msg) => console.log(`ℹ️ ${msg}`),
+    success: (msg) => console.log(`✅ ${msg}`),
+    warning: (msg) => console.log(`⚠️ ${msg}`),
+    error: (msg) => console.log(`❌ ${msg}`)
+  };
+
+  // Poll for an element to appear (returns element or null).
+  const waitFor = async (selector, tries = 8, gap = 500) => {
+    for (let i = 0; i < tries; i++) {
+      const el = document.querySelector(selector);
+      if (el) return el;
+      await sleep(gap);
+    }
+    return null;
+  };
+
+  // Set an input value through React's native setter so the change registers.
+  const setNativeValue = (el, value) => {
+    const desc = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value');
+    if (desc && desc.set) desc.set.call(el, value);
+    else el.value = value;
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+  };
+
+  // Click a radio/checkbox/switch whose visible label matches any of `needles`.
+  const clickOptionByText = (needles) => {
+    const wants = needles.map(n => n.toLowerCase());
+    const controls = document.querySelectorAll('[role="radio"], [role="checkbox"], [role="switch"], label');
+    for (const ctrl of controls) {
+      const txt = (ctrl.textContent || '').trim().toLowerCase();
+      if (txt && wants.some(w => txt.includes(w))) {
+        ctrl.click();
+        return true;
+      }
+    }
+    return false;
+  };
+
+  const download = (data, filename) => {
+    try {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      log.success(`Downloaded ${filename}`);
+    } catch (e) {
+      log.warning(`Could not trigger download: ${e.message}`);
+    }
+  };
+
+  // Read the muted words currently rendered in the list.
+  const scrapeMutedWords = () => {
+    const words = new Set();
+    // Muted words each link to their own edit page: /settings/muted_keywords/<id>.
+    document.querySelectorAll('a[href*="/settings/muted_keywords/"]').forEach(a => {
+      const text = (a.textContent || '').trim();
+      if (text) words.add(text);
+    });
+    // Fallback: settings rows on the muted keywords page.
+    if (words.size === 0) {
+      document.querySelectorAll(SELECTORS.row).forEach(row => {
+        const span = row.querySelector('span');
+        const text = (span?.textContent || '').trim();
+        if (text && text.length <= 100) words.add(text);
+      });
+    }
+    return Array.from(words);
+  };
+
+  // ============================================
+  // 🎯 MAIN LOGIC
+  // ============================================
+  const stats = { added: 0, removed: 0, listed: 0, skipped: 0, errors: 0 };
+
+  // Stop switch: run window.stopManageMutedWords() to abort after the current word.
+  let stopped = false;
+  window.stopManageMutedWords = () => {
+    stopped = true;
+    log.warning('Stop requested. Finishing the current word, then exiting.');
+  };
+
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  🔇 MANAGE MUTED WORDS - XActions                        ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  // Page guard: warn, do not hard-redirect.
+  if (!/muted_keywords/.test(window.location.pathname)) {
+    log.warning('Go to x.com/settings/muted_keywords, then run this again.');
+    return stats;
+  }
+
+  const action = String(CONFIG.action || '').toLowerCase();
+
+  // ---- LIST ----
+  if (action === 'list') {
+    const words = scrapeMutedWords();
+    stats.listed = words.length;
+    if (words.length === 0) {
+      log.info('No muted words found on this page. If you have some, scroll the list once so they render, then re-run.');
+    } else {
+      log.success(`You currently mute ${words.length} word(s)/phrase(s):`);
+      words.forEach((w, i) => console.log(`   ${i + 1}. "${w}"`));
+      download(
+        { scrapedAt: new Date().toISOString(), count: words.length, mutedWords: words },
+        `xactions-muted-words-${new Date().toISOString().slice(0, 10)}.json`
+      );
+    }
+    console.log(`\n✅ Listed ${stats.listed} muted word(s). by nichxbt`);
+    return stats;
+  }
+
+  // ---- ADD / REMOVE guardrails ----
+  if (action !== 'add' && action !== 'remove') {
+    log.error(`Unknown action "${CONFIG.action}". Use 'add', 'remove', or 'list'.`);
+    return stats;
+  }
+  const words = Array.isArray(CONFIG.words) ? CONFIG.words.map(w => String(w).trim()).filter(Boolean) : [];
+  if (words.length === 0) {
+    log.warning('CONFIG.words is empty. Add the phrases you want to ' + action + '.');
+    return stats;
+  }
+  log.info(`Action: ${action} | ${words.length} word(s)`);
+  log.info('To stop early: window.stopManageMutedWords()');
+
+  // ---- ADD ----
+  const addWord = async (word) => {
+    const addLink = await waitFor(SELECTORS.addLink, 6, 400);
+    if (!addLink) throw new Error('Add control not found');
+    addLink.click();
+
+    const input = await waitFor(SELECTORS.keywordInput, 10, 400);
+    if (!input) throw new Error('Keyword input did not appear');
+    input.focus();
+    setNativeValue(input, word);
+    await sleep(400);
+
+    // Apply mute options (best-effort; X wording varies by build).
+    const o = CONFIG.muteOptions || {};
+    if (o.from === 'follow') clickOptionByText(["people you don't follow", 'you don’t follow', "don't follow"]);
+    else clickOptionByText(['from anyone', 'anyone']);
+    if (o.duration && o.duration !== 'forever') {
+      const map = { '24h': ['24 hours', '24'], '7d': ['7 days', '7'], '30d': ['30 days', '30'] };
+      clickOptionByText(map[o.duration] || ['forever']);
+    }
+    await sleep(300);
+
+    const saveBtn = await waitFor(SELECTORS.saveButton, 6, 400);
+    if (!saveBtn) throw new Error('Save button not found');
+    saveBtn.click();
+    await sleep(1200);
+  };
+
+  // ---- REMOVE ----
+  const removeWord = async (word) => {
+    const target = word.toLowerCase();
+    // Find the row/link for this exact word.
+    const links = Array.from(document.querySelectorAll('a[href*="/settings/muted_keywords/"]'));
+    let entry = links.find(a => (a.textContent || '').trim().toLowerCase() === target);
+    if (!entry) {
+      // Fallback to a settings row containing the text.
+      entry = Array.from(document.querySelectorAll(SELECTORS.row))
+        .find(r => (r.textContent || '').trim().toLowerCase().includes(target));
+    }
+    if (!entry) return false;
+
+    entry.click();
+    const unmute = await waitFor(SELECTORS.unmuteButton, 8, 400);
+    if (!unmute) {
+      // Some builds show unmute as a button labelled "Unmute word".
+      const byText = Array.from(document.querySelectorAll('[role="button"], button'))
+        .find(b => (b.textContent || '').trim().toLowerCase().includes('unmute'));
+      if (!byText) throw new Error('Unmute control not found');
+      byText.click();
+    } else {
+      unmute.click();
+    }
+    const confirm = await waitFor(SELECTORS.confirm, 4, 400);
+    if (confirm) confirm.click();
+    await sleep(1000);
+    return true;
+  };
+
+  for (const word of words) {
+    if (stopped) break;
+    try {
+      if (action === 'add') {
+        await addWord(word);
+        stats.added++;
+        log.success(`Muted: "${word}" (${stats.added}/${words.length})`);
+      } else {
+        const ok = await removeWord(word);
+        if (ok) {
+          stats.removed++;
+          log.success(`Unmuted: "${word}" (${stats.removed} removed)`);
+        } else {
+          stats.skipped++;
+          log.warning(`Not in your muted list: "${word}". Skipped.`);
+        }
+      }
+    } catch (error) {
+      stats.errors++;
+      log.error(`Failed to ${action} "${word}": ${error.message}`);
+    }
+    if (!stopped) await randomDelay();
+  }
+
+  // ============================================
+  // 📊 SUMMARY
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 MANAGE MUTED WORDS - COMPLETE                        ║
+╠══════════════════════════════════════════════════════════╣
+║  ✅ Added:             ${String(stats.added).padEnd(32)}║
+║  🗑️  Removed:           ${String(stats.removed).padEnd(32)}║
+║  ⏭️  Skipped:           ${String(stats.skipped).padEnd(32)}║
+║  ❌ Errors:            ${String(stats.errors).padEnd(32)}║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  log.success('Script completed! by nichxbt');
+  return stats;
+})();
+
+});
   register("mass-block", function(){
 var CONFIG = {
   // List of usernames to block (without @)
@@ -12182,6 +16283,867 @@ try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG
 })();
 
 });
+  register("notification-manager", function(){
+(async function notificationManager() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // 'markRead' -> clear the unread state. 'summary' -> scrape + export.
+    action: 'summary',
+
+    // ---- summary options ----
+    maxNotifications: 100,   // cap for the summary scrape
+    exportResults: true,     // download JSON + CSV when action is 'summary'
+
+    // ---- shared scrolling ----
+    maxScrollRounds: 30,
+    scrollDelay: 1400
+  };
+try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG,window.__XA_LAUNCH_CFG);}}catch(_xa){}
+
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    cell: '[data-testid="cellInnerDiv"]',
+    notification: '[data-testid="notification"]',
+    tweet: 'article[data-testid="tweet"]',
+    verified: '[data-testid="icon-verified"]',
+    caret: '[data-testid="caret"]',
+    menuItem: '[role="menuitem"]',
+    confirm: '[data-testid="confirmationSheetConfirm"]'
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+  const download = (blob, filename) => {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    console.log(`📥 Downloaded: ${filename}`);
+  };
+
+  const downloadJSON = (data, filename) =>
+    download(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }), filename);
+
+  const downloadCSV = (rows, filename) => {
+    const esc = (v) => `"${String(v == null ? '' : v).replace(/"/g, '""')}"`;
+    const headers = ['type', 'time', 'verified', 'text'];
+    const lines = [headers.join(',')];
+    for (const r of rows) {
+      lines.push([r.type, r.time, r.isVerified, r.text].map(esc).join(','));
+    }
+    download(new Blob([lines.join('\n')], { type: 'text/csv' }), filename);
+  };
+
+  const classify = (text) => {
+    const lc = text.toLowerCase();
+    if (lc.includes('liked your') || lc.includes(' liked ')) return 'like';
+    if (lc.includes('reposted') || lc.includes('retweeted')) return 'repost';
+    if (lc.includes('followed you')) return 'follow';
+    if (lc.includes('quoted')) return 'quote';
+    if (lc.includes('replied') || lc.includes('mentioned') || lc.includes(' tagged ')) return 'mention';
+    return 'other';
+  };
+
+  const log = {
+    info: (msg) => console.log(`ℹ️ ${msg}`),
+    success: (msg) => console.log(`✅ ${msg}`),
+    warning: (msg) => console.log(`⚠️ ${msg}`),
+    error: (msg) => console.log(`❌ ${msg}`)
+  };
+
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  🔔 NOTIFICATION MANAGER - XActions                      ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  // Page guard
+  if (!/\/notifications/.test(window.location.pathname)) {
+    log.error('Not on the Notifications page. Go to https://x.com/notifications and re-run.');
+    return;
+  }
+
+  // ============================================
+  // ✅ ACTION: MARK ALL AS READ
+  // ============================================
+  const markRead = async () => {
+    log.info('Attempting to mark all notifications as read...');
+
+    // Try the timeline overflow (...) menu first. X labels it via the caret testid.
+    let clickedMenu = false;
+    const carets = document.querySelectorAll(SELECTORS.caret);
+    // The header caret sits high on the page; take the top-most one.
+    const headerCaret = Array.from(carets)
+      .sort((a, b) => a.getBoundingClientRect().top - b.getBoundingClientRect().top)[0];
+
+    if (headerCaret) {
+      try {
+        headerCaret.click();
+        await sleep(700);
+        const items = document.querySelectorAll(SELECTORS.menuItem);
+        for (const item of items) {
+          if (/mark all as read/i.test(item.textContent)) {
+            item.click();
+            clickedMenu = true;
+            await sleep(700);
+            const confirm = document.querySelector(SELECTORS.confirm);
+            if (confirm) { confirm.click(); await sleep(700); }
+            log.success('Clicked "Mark all as read".');
+            break;
+          }
+        }
+        if (!clickedMenu) {
+          // Close the menu we opened.
+          document.body.click();
+          await sleep(300);
+        }
+      } catch (e) {
+        log.warning(`Overflow menu path failed: ${e.message}`);
+      }
+    }
+
+    if (!clickedMenu) {
+      log.info('No "Mark all as read" menu item found. Falling back to scroll-to-view.');
+    }
+
+    // Scrolling the feed makes X mark notifications read server-side on view.
+    let seen = 0;
+    let rounds = 0;
+    let lastHeight = -1;
+    while (rounds < CONFIG.maxScrollRounds) {
+      seen = document.querySelectorAll(`${SELECTORS.cell}, ${SELECTORS.notification}, ${SELECTORS.tweet}`).length;
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(CONFIG.scrollDelay);
+      rounds++;
+      if (document.body.scrollHeight === lastHeight) break;
+      lastHeight = document.body.scrollHeight;
+    }
+    window.scrollTo(0, 0);
+
+    log.success(`Done. Menu action: ${clickedMenu ? 'yes' : 'no'}. Notifications viewed: ${seen}.`);
+    log.info('X marks notifications read as they scroll into view; the blue badge should clear shortly.');
+  };
+
+  // ============================================
+  // 📊 ACTION: SUMMARY (SCRAPE + EXPORT)
+  // ============================================
+  const summary = async () => {
+    log.info(`Scraping up to ${CONFIG.maxNotifications} notifications...`);
+    const seen = new Map();
+    let rounds = 0;
+    let empty = 0;
+
+    while (seen.size < CONFIG.maxNotifications && rounds < CONFIG.maxScrollRounds && empty < 5) {
+      const before = seen.size;
+      const cells = document.querySelectorAll(`${SELECTORS.cell}, ${SELECTORS.notification}, ${SELECTORS.tweet}`);
+      for (const cell of cells) {
+        const text = (cell.textContent || '').trim().slice(0, 280);
+        if (!text || text.length < 5) continue;
+        const time = cell.querySelector('time')?.getAttribute('datetime') || '';
+        const key = text.slice(0, 90) + time;
+        if (seen.has(key)) continue;
+        seen.set(key, {
+          type: classify(text),
+          text,
+          time,
+          isVerified: !!cell.querySelector(SELECTORS.verified)
+        });
+      }
+
+      if (seen.size === before) empty++;
+      else empty = 0;
+
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(CONFIG.scrollDelay);
+      rounds++;
+    }
+    window.scrollTo(0, 0);
+
+    const all = [...seen.values()].slice(0, CONFIG.maxNotifications);
+    if (all.length === 0) {
+      log.warning('No notifications found to summarize.');
+      return;
+    }
+
+    const byType = {};
+    for (const n of all) byType[n.type] = (byType[n.type] || 0) + 1;
+
+    console.log(`\n🔔 Total notifications: ${all.length}\n📊 BY TYPE:`);
+    const emoji = { like: '❤️', repost: '🔁', follow: '👤', mention: '💬', quote: '💭', other: '📌' };
+    Object.entries(byType).sort((a, b) => b[1] - a[1]).forEach(([t, c]) => {
+      console.log(`   ${emoji[t] || '📌'} ${t}: ${c}`);
+    });
+
+    if (CONFIG.exportResults) {
+      const date = new Date().toISOString().slice(0, 10);
+      downloadJSON(
+        { exportedAt: new Date().toISOString(), total: all.length, byType, notifications: all },
+        `xactions-notifications-${date}.json`
+      );
+      downloadCSV(all, `xactions-notifications-${date}.csv`);
+    }
+  };
+
+  // ============================================
+  // 🎯 DISPATCH
+  // ============================================
+  try {
+    if (CONFIG.action === 'markRead') await markRead();
+    else if (CONFIG.action === 'summary') await summary();
+    else log.error(`Unknown action "${CONFIG.action}". Use 'markRead' or 'summary'.`);
+  } catch (error) {
+    log.error(`Fatal: ${error.message}`);
+  }
+
+  log.success('Script completed! by nichxbt');
+})();
+
+});
+  register("pin-tweet", function(){
+(async function pinTweet() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // 'pin' or 'unpin'.
+    action: 'pin',
+
+    // Optional: the URL (or status id) of the tweet to act on. Must be your own
+    // tweet. Leave '' to use the first tweet shown on the current page.
+    // Example: 'https://x.com/nichxbt/status/1234567890123456789'
+    tweetUrl: '',
+
+    // Preview only: log what would happen without opening the menu.
+    dryRun: true
+  };
+try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG,window.__XA_LAUNCH_CFG);}}catch(_xa){}
+
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    article: 'article[data-testid="tweet"]',
+    caret: '[data-testid="caret"]',
+    tweetText: '[data-testid="tweetText"]',
+    socialContext: '[data-testid="socialContext"]',
+    confirm: '[data-testid="confirmationSheetConfirm"]'
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+  const log = {
+    info: (msg) => console.log(`ℹ️ ${msg}`),
+    success: (msg) => console.log(`✅ ${msg}`),
+    warning: (msg) => console.log(`⚠️ ${msg}`),
+    error: (msg) => console.log(`❌ ${msg}`)
+  };
+
+  const waitForSelector = async (selector, timeoutMs = 4000) => {
+    const start = Date.now();
+    while (Date.now() - start < timeoutMs) {
+      const el = document.querySelector(selector);
+      if (el) return el;
+      await sleep(200);
+    }
+    return null;
+  };
+
+  const extractStatusId = (urlOrId) => {
+    if (!urlOrId) return '';
+    const m = String(urlOrId).match(/status\/(\d+)/);
+    if (m) return m[1];
+    const digits = String(urlOrId).match(/^\d{5,}$/);
+    return digits ? digits[0] : '';
+  };
+
+  // Locate the article for a given status id, scrolling to find it if needed.
+  const findArticleById = async (statusId) => {
+    for (let i = 0; i < 12; i++) {
+      for (const a of document.querySelectorAll(SELECTORS.article)) {
+        const link = a.querySelector('a[href*="/status/"]');
+        const href = link ? link.getAttribute('href') : '';
+        if (href && href.includes(`/status/${statusId}`)) return a;
+      }
+      window.scrollBy(0, window.innerHeight * 0.8);
+      await sleep(700);
+    }
+    return null;
+  };
+
+  // Pick the Pin or Unpin item from the open tweet menu.
+  const findMenuItem = (wantPin) => {
+    const items = Array.from(document.querySelectorAll('[role="menuitem"]'));
+    if (wantPin) {
+      return items.find((el) => /(^|\s)pin/i.test(el.textContent || '') && !/unpin/i.test(el.textContent || '')) || null;
+    }
+    return items.find((el) => /unpin/i.test(el.textContent || '')) || null;
+  };
+
+  // ============================================
+  // 🎯 MAIN LOGIC
+  // ============================================
+  const action = (CONFIG.action || '').toLowerCase();
+  const stats = { action, targetFound: false, menuOpened: false, done: false, errors: 0 };
+
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📌 PIN TWEET - XActions                                 ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  try {
+    const host = window.location.hostname;
+    if (!/(^|\.)x\.com$/.test(host) && !/(^|\.)twitter\.com$/.test(host)) {
+      log.warning('Not on x.com. Open your profile page, then re-run.');
+      return stats;
+    }
+    if (action !== 'pin' && action !== 'unpin') {
+      log.error(`CONFIG.action must be "pin" or "unpin". Got "${CONFIG.action}".`);
+      return stats;
+    }
+
+    // Resolve the target article.
+    let article = null;
+    const statusId = extractStatusId(CONFIG.tweetUrl);
+
+    if (statusId) {
+      log.info(`Target status id: ${statusId}`);
+      article = await findArticleById(statusId);
+      if (!article) {
+        log.error(`Tweet ${statusId} not found on this page. Open its status page or your profile and re-run.`);
+        stats.errors++;
+        return stats;
+      }
+    } else {
+      article = document.querySelector(SELECTORS.article);
+      if (!article) {
+        log.error('No tweet found on this page. Open your profile (x.com/YOUR_USERNAME) and re-run.');
+        stats.errors++;
+        return stats;
+      }
+      log.info('No tweetUrl set. Using the first tweet on the page.');
+    }
+    stats.targetFound = true;
+
+    const preview = (article.querySelector(SELECTORS.tweetText)?.textContent || '').slice(0, 60);
+    const ctx = article.querySelector(SELECTORS.socialContext)?.textContent || '';
+    const isPinned = /pinned/i.test(ctx);
+    log.info(`Target: "${preview}${preview.length >= 60 ? '...' : ''}"`);
+
+    // Guard against no-op actions.
+    if (action === 'unpin' && !isPinned && !statusId) {
+      log.warning('The first tweet is not marked pinned. Nothing to unpin.');
+      return stats;
+    }
+    if (action === 'pin' && isPinned) {
+      log.success('This tweet is already pinned. Nothing to do.');
+      stats.done = true;
+      return stats;
+    }
+
+    if (CONFIG.dryRun) {
+      log.warning(`DRY RUN. Would ${action} this tweet. Set CONFIG.dryRun = false to do it.`);
+      return stats;
+    }
+
+    const caret = article.querySelector(SELECTORS.caret);
+    if (!caret) {
+      log.error('Tweet menu (caret) button not found on the target tweet.');
+      stats.errors++;
+      return stats;
+    }
+    caret.scrollIntoView({ block: 'center' });
+    await sleep(300);
+    caret.click();
+    await sleep(800);
+    stats.menuOpened = true;
+
+    const item = findMenuItem(action === 'pin');
+    if (!item) {
+      log.error(`"${action === 'pin' ? 'Pin' : 'Unpin'}" option not found in the menu. Is this your own tweet?`);
+      document.body.click();
+      stats.errors++;
+      return stats;
+    }
+    item.click();
+    await sleep(800);
+
+    // Pinning shows a confirmation sheet; unpin sometimes does too.
+    const confirm = await waitForSelector(SELECTORS.confirm, 2500);
+    if (confirm) {
+      confirm.click();
+      await sleep(800);
+    }
+
+    stats.done = true;
+    log.success(`Tweet ${action === 'pin' ? 'pinned' : 'unpinned'}.`);
+  } catch (error) {
+    log.error(`Error: ${error.message}`);
+    stats.errors++;
+  }
+
+  // ============================================
+  // 📊 SUMMARY
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 PIN TWEET - COMPLETE                                 ║
+╠══════════════════════════════════════════════════════════╣
+║  🎯 Action:            ${String(stats.action).padEnd(32)}║
+║  🔎 Target found:      ${String(stats.targetFound).padEnd(32)}║
+║  ✅ Done:              ${String(stats.done).padEnd(32)}║
+║  ❌ Errors:            ${String(stats.errors).padEnd(32)}║
+╚══════════════════════════════════════════════════════════╝
+  `);
+  log.success('Script completed! by nichxbt');
+  return stats;
+})();
+
+});
+  register("post-thread", function(){
+(async function postThread() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // Each string is one tweet in the thread, top to bottom.
+    tweets: [
+      'Thread part 1 🧵',
+      'Thread part 2: the details.',
+      'Thread part 3: wrap up. Follow for more.'
+    ],
+
+    // Prepend "1/N" numbering to each tweet automatically.
+    autoNumber: false,
+
+    // Max characters per tweet before the script refuses to post.
+    maxChars: 280,
+
+    // Milliseconds to wait after adding each new tweet box.
+    delayBetween: 2000,
+
+    // Preview only: validate and log without clicking Post.
+    dryRun: true
+  };
+try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG,window.__XA_LAUNCH_CFG);}}catch(_xa){}
+
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    composer: '[data-testid="tweetTextarea_0"]',
+    anyComposer: '[data-testid^="tweetTextarea_"]',
+    newTweetButton: 'a[data-testid="SideNav_NewTweet_Button"]',
+    addButton: '[data-testid="addButton"]',
+    postButton: '[data-testid="tweetButton"]',
+    postButtonInline: '[data-testid="tweetButtonInline"]'
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+  const log = {
+    info: (msg) => console.log(`ℹ️ ${msg}`),
+    success: (msg) => console.log(`✅ ${msg}`),
+    warning: (msg) => console.log(`⚠️ ${msg}`),
+    error: (msg) => console.log(`❌ ${msg}`)
+  };
+
+  // Real input dispatch into X's contenteditable composer.
+  const typeIntoComposer = async (el, text) => {
+    el.focus();
+    await sleep(150);
+    const inserted = document.execCommand('insertText', false, text);
+    if (!inserted) {
+      el.dispatchEvent(new InputEvent('beforeinput', { inputType: 'insertText', data: text, bubbles: true, cancelable: true }));
+      el.textContent = text;
+      el.dispatchEvent(new InputEvent('input', { inputType: 'insertText', data: text, bubbles: true }));
+    }
+    await sleep(300);
+  };
+
+  const waitForSelector = async (selector, timeoutMs = 6000) => {
+    const start = Date.now();
+    while (Date.now() - start < timeoutMs) {
+      const el = document.querySelector(selector);
+      if (el) return el;
+      await sleep(200);
+    }
+    return null;
+  };
+
+  // ============================================
+  // 🎯 MAIN LOGIC
+  // ============================================
+  const stats = { total: 0, typed: 0, posted: false, errors: 0 };
+
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  🧵 POST THREAD - XActions                               ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  try {
+    const host = window.location.hostname;
+    if (!/(^|\.)x\.com$/.test(host) && !/(^|\.)twitter\.com$/.test(host)) {
+      log.warning('Not on x.com. Open x.com/compose/post, then re-run.');
+      return stats;
+    }
+
+    const raw = (CONFIG.tweets || []).map((t) => (t || '').trim()).filter(Boolean);
+    if (raw.length === 0) {
+      log.error('CONFIG.tweets is empty. Add at least one tweet string.');
+      return stats;
+    }
+
+    // Apply numbering, then validate lengths.
+    const tweets = raw.map((t, i) => (CONFIG.autoNumber ? `${i + 1}/${raw.length} ${t}` : t));
+    stats.total = tweets.length;
+
+    let overLimit = false;
+    tweets.forEach((t, i) => {
+      const status = t.length > CONFIG.maxChars ? '🔴 OVER' : '🟢 OK';
+      log.info(`Tweet ${i + 1}/${tweets.length} [${t.length}/${CONFIG.maxChars}] ${status}`);
+      if (t.length > CONFIG.maxChars) overLimit = true;
+    });
+
+    if (overLimit) {
+      log.error(`One or more tweets exceed ${CONFIG.maxChars} characters. Fix them and re-run.`);
+      return stats;
+    }
+
+    if (CONFIG.dryRun) {
+      log.warning('DRY RUN. Nothing posted. Set CONFIG.dryRun = false to post for real.');
+      return stats;
+    }
+
+    // Open the composer if needed.
+    let firstBox = document.querySelector(SELECTORS.composer);
+    if (!firstBox) {
+      const newBtn = document.querySelector(SELECTORS.newTweetButton);
+      if (newBtn) {
+        newBtn.click();
+        firstBox = await waitForSelector(SELECTORS.composer, 6000);
+      }
+    }
+    if (!firstBox) {
+      log.error('Composer not found. Open x.com/compose/post and re-run.');
+      stats.errors++;
+      return stats;
+    }
+
+    await typeIntoComposer(firstBox, tweets[0]);
+    stats.typed = 1;
+    log.success(`Tweet 1/${tweets.length} typed.`);
+
+    // Add each subsequent tweet via the "+" add button, then type into the newest box.
+    for (let i = 1; i < tweets.length; i++) {
+      const addBtn = document.querySelector(SELECTORS.addButton);
+      if (!addBtn) {
+        log.error(`Add-tweet button not found before tweet ${i + 1}. Stopping.`);
+        stats.errors++;
+        break;
+      }
+      addBtn.click();
+      await sleep(CONFIG.delayBetween);
+
+      const boxes = document.querySelectorAll(SELECTORS.anyComposer);
+      const newBox = boxes[boxes.length - 1];
+      if (!newBox) {
+        log.error(`New composer box not found for tweet ${i + 1}. Stopping.`);
+        stats.errors++;
+        break;
+      }
+      await typeIntoComposer(newBox, tweets[i]);
+      stats.typed++;
+      log.success(`Tweet ${i + 1}/${tweets.length} typed.`);
+    }
+
+    await sleep(800);
+    const postBtn =
+      document.querySelector(SELECTORS.postButton) ||
+      document.querySelector(SELECTORS.postButtonInline);
+    if (!postBtn) {
+      log.error('Post button not found. Thread is typed. Click "Post all" manually.');
+      stats.errors++;
+      return stats;
+    }
+    if (postBtn.getAttribute('aria-disabled') === 'true' || postBtn.disabled) {
+      log.error('Post button is disabled. Check the composer for an empty or over-limit tweet.');
+      stats.errors++;
+      return stats;
+    }
+
+    postBtn.click();
+    await sleep(3000);
+
+    const stillOpen = document.querySelector(SELECTORS.composer);
+    const openText = stillOpen ? (stillOpen.textContent || '').trim() : '';
+    if (!stillOpen || openText.length === 0) {
+      stats.posted = true;
+      log.success(`Thread posted: ${stats.typed} tweet(s).`);
+    } else {
+      log.warning('Composer still open. The thread may not have posted. Check the page.');
+      stats.errors++;
+    }
+  } catch (error) {
+    log.error(`Error: ${error.message}`);
+    stats.errors++;
+  }
+
+  // ============================================
+  // 📊 SUMMARY
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 POST THREAD - COMPLETE                               ║
+╠══════════════════════════════════════════════════════════╣
+║  🧵 Tweets in thread:  ${String(stats.total).padEnd(32)}║
+║  ⌨️  Typed:             ${String(stats.typed).padEnd(32)}║
+║  ✅ Posted:            ${String(stats.posted).padEnd(32)}║
+║  ❌ Errors:            ${String(stats.errors).padEnd(32)}║
+╚══════════════════════════════════════════════════════════╝
+  `);
+  log.success('Script completed! by nichxbt');
+  return stats;
+})();
+
+});
+  register("post-tweet", function(){
+(async function postTweet() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // The text to post (max 280 for non-Premium, longer allowed on Premium).
+    text: 'gm from XActions 🚀',
+
+    // Optional: URL of a tweet to reply to. Leave '' to post a standalone tweet.
+    // Example: 'https://x.com/nichxbt/status/1234567890123456789'
+    replyToUrl: '',
+
+    // Optional note about media. This script types text only; attach any image
+    // or video by hand in the composer before it clicks Post. Set a value here
+    // (e.g. '1 image') and the script will PAUSE for you to attach it.
+    mediaNote: '',
+
+    // Seconds to wait for you to attach media when mediaNote is set.
+    mediaWaitSeconds: 15,
+
+    // Preview only: log what would happen without clicking Post.
+    dryRun: true
+  };
+try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG,window.__XA_LAUNCH_CFG);}}catch(_xa){}
+
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    composer: '[data-testid="tweetTextarea_0"]',
+    newTweetButton: 'a[data-testid="SideNav_NewTweet_Button"]',
+    inlineReply: '[data-testid="tweetTextarea_0"]',
+    postButtonInline: '[data-testid="tweetButtonInline"]',
+    postButton: '[data-testid="tweetButton"]',
+    replyButton: '[data-testid="reply"]'
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+  const log = {
+    info: (msg) => console.log(`ℹ️ ${msg}`),
+    success: (msg) => console.log(`✅ ${msg}`),
+    warning: (msg) => console.log(`⚠️ ${msg}`),
+    error: (msg) => console.log(`❌ ${msg}`)
+  };
+
+  // Type into X's contenteditable composer with a real input dispatch so React
+  // registers the value. focus + execCommand('insertText') is what X's own
+  // editor listens for; a plain .textContent assignment does not update state.
+  const typeIntoComposer = async (el, text) => {
+    el.focus();
+    await sleep(150);
+    const inserted = document.execCommand('insertText', false, text);
+    if (!inserted) {
+      // Fallback for environments where execCommand is a no-op: dispatch a
+      // beforeinput/input pair after setting text on the editable node.
+      el.dispatchEvent(new InputEvent('beforeinput', { inputType: 'insertText', data: text, bubbles: true, cancelable: true }));
+      el.textContent = text;
+      el.dispatchEvent(new InputEvent('input', { inputType: 'insertText', data: text, bubbles: true }));
+    }
+    await sleep(300);
+  };
+
+  const waitForSelector = async (selector, timeoutMs = 6000) => {
+    const start = Date.now();
+    while (Date.now() - start < timeoutMs) {
+      const el = document.querySelector(selector);
+      if (el) return el;
+      await sleep(200);
+    }
+    return null;
+  };
+
+  // ============================================
+  // 🎯 MAIN LOGIC
+  // ============================================
+  const stats = { posted: 0, mode: CONFIG.replyToUrl ? 'reply' : 'tweet', errors: 0 };
+
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📝 POST TWEET - XActions                                ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  try {
+    if (!CONFIG.text || !CONFIG.text.trim()) {
+      log.error('CONFIG.text is empty. Set the text you want to post.');
+      return stats;
+    }
+
+    const host = window.location.hostname;
+    if (!/(^|\.)x\.com$/.test(host) && !/(^|\.)twitter\.com$/.test(host)) {
+      log.warning('Not on x.com. Open x.com/home or x.com/compose/post, then re-run.');
+      return stats;
+    }
+
+    log.info(`Mode: ${stats.mode}`);
+    log.info(`Length: ${CONFIG.text.length} characters`);
+
+    // If replying, navigate to the target tweet and open its reply composer.
+    if (CONFIG.replyToUrl) {
+      const onTarget = window.location.href.split('?')[0] === CONFIG.replyToUrl.split('?')[0];
+      if (!onTarget) {
+        log.warning(`Open the tweet you want to reply to first: ${CONFIG.replyToUrl}`);
+        log.warning('Then re-run this script on that page.');
+        return stats;
+      }
+      const replyBtn = document.querySelector(SELECTORS.replyButton);
+      if (replyBtn) {
+        replyBtn.click();
+        await sleep(1200);
+      }
+    }
+
+    // Open the composer if it is not already present.
+    let composer = document.querySelector(SELECTORS.composer);
+    if (!composer) {
+      const newBtn = document.querySelector(SELECTORS.newTweetButton);
+      if (newBtn) {
+        newBtn.click();
+        composer = await waitForSelector(SELECTORS.composer, 6000);
+      }
+    }
+
+    if (!composer) {
+      log.error('Composer not found. Open x.com/compose/post and re-run.');
+      stats.errors++;
+      return stats;
+    }
+
+    await typeIntoComposer(composer, CONFIG.text);
+    log.success('Text typed into composer.');
+
+    if (CONFIG.mediaNote) {
+      log.warning(`Media note set ("${CONFIG.mediaNote}"). Attach it now.`);
+      log.info(`Waiting ${CONFIG.mediaWaitSeconds}s for you to attach media...`);
+      await sleep(CONFIG.mediaWaitSeconds * 1000);
+    }
+
+    if (CONFIG.dryRun) {
+      log.warning('DRY RUN. Nothing posted. Set CONFIG.dryRun = false to post for real.');
+      log.info(`Would post: "${CONFIG.text.slice(0, 80)}${CONFIG.text.length > 80 ? '...' : ''}"`);
+      return stats;
+    }
+
+    await sleep(400);
+    const postBtn =
+      document.querySelector(SELECTORS.postButtonInline) ||
+      document.querySelector(SELECTORS.postButton);
+
+    if (!postBtn) {
+      log.error('Post button not found. Text is typed. Click Post manually.');
+      stats.errors++;
+      return stats;
+    }
+
+    if (postBtn.getAttribute('aria-disabled') === 'true' || postBtn.disabled) {
+      log.error('Post button is disabled (empty or over the character limit). Check your text.');
+      stats.errors++;
+      return stats;
+    }
+
+    postBtn.click();
+    await sleep(2500);
+
+    // Verify: a successful post clears the composer.
+    const stillThere = document.querySelector(SELECTORS.composer);
+    const composerText = stillThere ? (stillThere.textContent || '').trim() : '';
+    if (!stillThere || composerText.length === 0) {
+      stats.posted = 1;
+      log.success(`Posted ${stats.mode}: "${CONFIG.text.slice(0, 60)}${CONFIG.text.length > 60 ? '...' : ''}"`);
+    } else {
+      log.warning('Composer still has text. The post may not have gone through. Check the page.');
+      stats.errors++;
+    }
+  } catch (error) {
+    log.error(`Error: ${error.message}`);
+    stats.errors++;
+  }
+
+  // ============================================
+  // 📊 SUMMARY
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 POST TWEET - COMPLETE                                ║
+╠══════════════════════════════════════════════════════════╣
+║  📝 Mode:              ${String(stats.mode).padEnd(32)}║
+║  ✅ Posted:            ${String(stats.posted).padEnd(32)}║
+║  ❌ Errors:            ${String(stats.errors).padEnd(32)}║
+╚══════════════════════════════════════════════════════════╝
+  `);
+  log.success('Script completed! by nichxbt');
+  return stats;
+})();
+
+});
   register("profile-stats", function(){
 (async function profileStats() {
   const sleep = (ms) => new Promise(r => setTimeout(r, ms));
@@ -12753,6 +17715,207 @@ try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG
 })();
 
 });
+  register("quote-tweet", function(){
+(async function quoteTweet() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // The text of your quote tweet.
+    text: 'This is the take of the day 💯',
+
+    // Preview only: log what would happen without posting.
+    dryRun: true
+  };
+try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG,window.__XA_LAUNCH_CFG);}}catch(_xa){}
+
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    article: 'article[data-testid="tweet"]',
+    retweet: '[data-testid="retweet"]',
+    unretweet: '[data-testid="unretweet"]',
+    composer: '[data-testid="tweetTextarea_0"]',
+    postButton: '[data-testid="tweetButton"]',
+    postButtonInline: '[data-testid="tweetButtonInline"]',
+    close: '[data-testid="app-bar-close"]',
+    confirmDiscard: '[data-testid="confirmationSheetConfirm"]'
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+  const log = {
+    info: (msg) => console.log(`ℹ️ ${msg}`),
+    success: (msg) => console.log(`✅ ${msg}`),
+    warning: (msg) => console.log(`⚠️ ${msg}`),
+    error: (msg) => console.log(`❌ ${msg}`)
+  };
+
+  const typeIntoComposer = async (el, text) => {
+    el.focus();
+    await sleep(150);
+    const inserted = document.execCommand('insertText', false, text);
+    if (!inserted) {
+      el.dispatchEvent(new InputEvent('beforeinput', { inputType: 'insertText', data: text, bubbles: true, cancelable: true }));
+      el.textContent = text;
+      el.dispatchEvent(new InputEvent('input', { inputType: 'insertText', data: text, bubbles: true }));
+    }
+    await sleep(300);
+  };
+
+  const waitForSelector = async (selector, timeoutMs = 6000) => {
+    const start = Date.now();
+    while (Date.now() - start < timeoutMs) {
+      const el = document.querySelector(selector);
+      if (el) return el;
+      await sleep(200);
+    }
+    return null;
+  };
+
+  // Find the "Quote" item in the repost dropdown menu (locale note: matches the
+  // English label; on other locales pick the second menu item).
+  const findQuoteMenuItem = () => {
+    const items = Array.from(document.querySelectorAll('[role="menuitem"]'));
+    const byText = items.find((el) => /quote/i.test(el.textContent || ''));
+    if (byText) return byText;
+    // Fallback: the repost menu is [Repost, Quote]; take the last item.
+    return items.length >= 2 ? items[items.length - 1] : null;
+  };
+
+  // ============================================
+  // 🎯 MAIN LOGIC
+  // ============================================
+  const stats = { typed: false, posted: false, errors: 0 };
+
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  🔁 QUOTE TWEET - XActions                               ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  try {
+    const host = window.location.hostname;
+    if (!/(^|\.)x\.com$/.test(host) && !/(^|\.)twitter\.com$/.test(host)) {
+      log.warning('Not on x.com. Open the tweet you want to quote, then re-run.');
+      return stats;
+    }
+    if (!/\/status\/\d+/.test(window.location.pathname)) {
+      log.warning('Open the target tweet\'s status page first (x.com/<user>/status/<id>), then re-run.');
+      return stats;
+    }
+    if (!CONFIG.text || !CONFIG.text.trim()) {
+      log.error('CONFIG.text is empty. Set your quote text.');
+      return stats;
+    }
+
+    // Use the primary (top) article on the status page.
+    const article = document.querySelector(SELECTORS.article);
+    if (!article) {
+      log.error('Tweet article not found on this page.');
+      stats.errors++;
+      return stats;
+    }
+
+    if (article.querySelector(SELECTORS.unretweet)) {
+      log.info('You have already reposted this tweet. A quote will still be posted as a new tweet.');
+    }
+
+    const rtBtn = article.querySelector(SELECTORS.retweet) || article.querySelector(SELECTORS.unretweet);
+    if (!rtBtn) {
+      log.error('Repost button not found on the target tweet.');
+      stats.errors++;
+      return stats;
+    }
+
+    if (CONFIG.dryRun) {
+      log.warning('DRY RUN. Nothing posted. Set CONFIG.dryRun = false to post for real.');
+      log.info(`Would quote with: "${CONFIG.text.slice(0, 80)}${CONFIG.text.length > 80 ? '...' : ''}"`);
+      return stats;
+    }
+
+    rtBtn.click();
+    await sleep(900);
+
+    const quoteItem = findQuoteMenuItem();
+    if (!quoteItem) {
+      log.error('Quote option not found in the repost menu.');
+      document.body.click();
+      stats.errors++;
+      return stats;
+    }
+    quoteItem.click();
+    await sleep(1500);
+
+    const composer = await waitForSelector(SELECTORS.composer, 6000);
+    if (!composer) {
+      log.error('Quote composer did not open.');
+      stats.errors++;
+      return stats;
+    }
+
+    await typeIntoComposer(composer, CONFIG.text);
+    stats.typed = true;
+    log.success('Quote text typed.');
+
+    await sleep(400);
+    const postBtn =
+      document.querySelector(SELECTORS.postButton) ||
+      document.querySelector(SELECTORS.postButtonInline);
+    if (!postBtn) {
+      log.error('Post button not found. Text is typed. Click Post manually.');
+      stats.errors++;
+      return stats;
+    }
+    if (postBtn.getAttribute('aria-disabled') === 'true' || postBtn.disabled) {
+      log.error('Post button is disabled (empty or over the character limit).');
+      stats.errors++;
+      return stats;
+    }
+
+    postBtn.click();
+    await sleep(2500);
+
+    const stillOpen = document.querySelector(SELECTORS.composer);
+    const openText = stillOpen ? (stillOpen.textContent || '').trim() : '';
+    if (!stillOpen || openText.length === 0) {
+      stats.posted = true;
+      log.success(`Quote posted: "${CONFIG.text.slice(0, 60)}${CONFIG.text.length > 60 ? '...' : ''}"`);
+    } else {
+      log.warning('Composer still open. The quote may not have posted. Check the page.');
+      stats.errors++;
+    }
+  } catch (error) {
+    log.error(`Error: ${error.message}`);
+    stats.errors++;
+  }
+
+  // ============================================
+  // 📊 SUMMARY
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 QUOTE TWEET - COMPLETE                               ║
+╠══════════════════════════════════════════════════════════╣
+║  ⌨️  Text typed:        ${String(stats.typed).padEnd(32)}║
+║  ✅ Posted:            ${String(stats.posted).padEnd(32)}║
+║  ❌ Errors:            ${String(stats.errors).padEnd(32)}║
+╚══════════════════════════════════════════════════════════╝
+  `);
+  log.success('Script completed! by nichxbt');
+  return stats;
+})();
+
+});
   register("rate-limiter", function(){
 (function rateLimiter() {
   console.log('╔════════════════════════════════════════════════════════════╗');
@@ -13104,6 +18267,287 @@ try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG
 })();
 
 });
+  register("remove-follower", function(){
+(async function removeFollower() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // Specific followers to remove (with or without @). Empty = remove from the
+    // top of your followers list up to maxRemove.
+    usernames: [
+      // 'username1',
+      // 'username2',
+    ],
+
+    // Never remove these, even if they appear in usernames or the top-N sweep.
+    whitelist: [],
+
+    // Cap on removals this run (also the top-N count when usernames is empty).
+    maxRemove: 25,
+
+    // SAFETY: preview only. Set to false to actually remove followers.
+    dryRun: true,
+
+    // Extra confirm() prompt before the first live removal.
+    confirm: true,
+
+    // Timing (randomized between min and max, per removal)
+    minDelay: 2500,
+    maxDelay: 5000,
+
+    // Scrolling to load more followers (top-N mode)
+    maxScrollRounds: 40,
+    scrollDelay: 2000,
+    maxEmptyScrolls: 6
+  };
+try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG,window.__XA_LAUNCH_CFG);}}catch(_xa){}
+
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    userCell: '[data-testid="UserCell"]',
+    userActions: '[data-testid="userActions"]',
+    menuItem: '[role="menuitem"]',
+    confirm: '[data-testid="confirmationSheetConfirm"]'
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+  const randomDelay = () => {
+    const delay = Math.floor(Math.random() * (CONFIG.maxDelay - CONFIG.minDelay + 1)) + CONFIG.minDelay;
+    return sleep(delay);
+  };
+
+  const cleanHandle = (u) => String(u || '').trim().replace(/^@/, '').toLowerCase();
+
+  const getUsername = (cell) => {
+    const link = cell.querySelector('a[href^="/"][role="link"]') || cell.querySelector('a[href^="/"]');
+    if (!link) return null;
+    const m = (link.getAttribute('href') || '').match(/^\/([A-Za-z0-9_]+)/);
+    if (!m) return null;
+    if (['home', 'explore', 'notifications', 'messages', 'i', 'search', 'settings'].includes(m[1])) return null;
+    return m[1];
+  };
+
+  const download = (data, filename) => {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    console.log(`📥 Downloaded: ${filename}`);
+  };
+
+  const log = {
+    info: (msg) => console.log(`ℹ️ ${msg}`),
+    success: (msg) => console.log(`✅ ${msg}`),
+    warning: (msg) => console.log(`⚠️ ${msg}`),
+    error: (msg) => console.log(`❌ ${msg}`),
+    progress: (current, total) => console.log(`📊 Progress: ${current}/${total} removed`)
+  };
+
+  // ============================================
+  // 🎯 STATE
+  // ============================================
+  const stats = { removed: 0, scanned: 0, skipped: 0, notFound: 0, errors: 0 };
+  const removedList = [];
+  const processed = new Set();
+
+  // Stop switch: run window.stopRemoveFollower() to abort after the current row.
+  let stopped = false;
+  window.stopRemoveFollower = () => {
+    stopped = true;
+    log.warning('Stop requested. Finishing the current follower, then exiting.');
+  };
+
+  console.log(`
+╔══════════════════════════════════════════════════════════════╗
+║  👋 REMOVE FOLLOWER - XActions                               ║
+${CONFIG.dryRun ? '║  ⚠️  DRY RUN - No followers will be removed                 ║' : '║  🔴 LIVE MODE - Followers WILL be removed                   ║'}
+╚══════════════════════════════════════════════════════════════╝
+  `);
+  log.info('To stop early: window.stopRemoveFollower()');
+
+  // Page guard
+  if (!/\/followers/.test(window.location.pathname)) {
+    log.error('Not on a followers page. Go to https://x.com/<your-username>/followers and re-run.');
+    return stats;
+  }
+
+  const targetSet = new Set(CONFIG.usernames.map(cleanHandle).filter(Boolean));
+  const whiteSet = new Set(CONFIG.whitelist.map(cleanHandle).filter(Boolean));
+  const targetMode = targetSet.size > 0;
+
+  log.info(`Mode: ${targetMode ? `list (${targetSet.size} targets)` : `top ${CONFIG.maxRemove} followers`}`);
+  log.info(`Max removals: ${CONFIG.maxRemove} | Dry run: ${CONFIG.dryRun}`);
+
+  if (!CONFIG.dryRun && CONFIG.confirm) {
+    const proceed = window.confirm(
+      `Remove up to ${CONFIG.maxRemove} follower(s) for real? This cannot be auto-undone.`
+    );
+    if (!proceed) {
+      log.warning('Cancelled at confirmation prompt. Nothing removed.');
+      return stats;
+    }
+  }
+
+  // ============================================
+  // 🧹 REMOVE ONE (native remove, else soft-block)
+  // ============================================
+  const removeOne = async (cell, username) => {
+    const moreBtn = cell.querySelector(SELECTORS.userActions) || cell.querySelector('button[aria-label="More"]');
+    if (!moreBtn) {
+      log.warning(`No actions (...) button for @${username}.`);
+      stats.notFound++;
+      return false;
+    }
+    moreBtn.click();
+    await sleep(700);
+
+    const items = Array.from(document.querySelectorAll(SELECTORS.menuItem));
+
+    // 1) Preferred: native "Remove this follower" (no block).
+    const removeItem = items.find(i => /remove\s+this\s+follower|remove\s+follower/i.test(i.textContent));
+    if (removeItem) {
+      removeItem.click();
+      await sleep(600);
+      const confirm = document.querySelector(SELECTORS.confirm);
+      if (confirm) { confirm.click(); await sleep(700); }
+      log.success(`Removed @${username} (native remove).`);
+      return true;
+    }
+
+    // 2) Fallback: soft-block = block, confirm, then immediately unblock.
+    const blockItem = items.find(i => /\bblock\b/i.test(i.textContent) && !/unblock/i.test(i.textContent));
+    if (!blockItem) {
+      document.body.click();
+      await sleep(300);
+      log.warning(`No remove or block option for @${username}.`);
+      stats.notFound++;
+      return false;
+    }
+
+    blockItem.click();
+    await sleep(600);
+    const blockConfirm = document.querySelector(SELECTORS.confirm);
+    if (blockConfirm) { blockConfirm.click(); await sleep(800); }
+
+    // Re-open the menu on the same row and unblock to complete the soft-block.
+    const moreBtn2 = cell.querySelector(SELECTORS.userActions) || cell.querySelector('button[aria-label="More"]');
+    if (moreBtn2) {
+      moreBtn2.click();
+      await sleep(700);
+      const items2 = Array.from(document.querySelectorAll(SELECTORS.menuItem));
+      const unblock = items2.find(i => /unblock/i.test(i.textContent));
+      if (unblock) {
+        unblock.click();
+        await sleep(500);
+        const unblockConfirm = document.querySelector(SELECTORS.confirm);
+        if (unblockConfirm) { unblockConfirm.click(); await sleep(500); }
+      } else {
+        document.body.click();
+        await sleep(300);
+      }
+    }
+    log.success(`Removed @${username} (soft-block).`);
+    return true;
+  };
+
+  // ============================================
+  // 🔁 MAIN LOOP
+  // ============================================
+  let scrollRounds = 0;
+  let emptyScrolls = 0;
+
+  while (!stopped && stats.removed < CONFIG.maxRemove && scrollRounds < CONFIG.maxScrollRounds && emptyScrolls < CONFIG.maxEmptyScrolls) {
+    const cells = document.querySelectorAll(SELECTORS.userCell);
+    let foundNew = false;
+
+    for (const cell of cells) {
+      if (stopped || stats.removed >= CONFIG.maxRemove) break;
+
+      const username = getUsername(cell);
+      if (!username) continue;
+      const key = username.toLowerCase();
+      if (processed.has(key)) continue;
+      processed.add(key);
+      foundNew = true;
+      stats.scanned++;
+
+      try {
+        if (whiteSet.has(key)) { stats.skipped++; continue; }
+        if (targetMode && !targetSet.has(key)) { stats.skipped++; continue; }
+
+        if (CONFIG.dryRun) {
+          log.info(`Would remove: @${username}`);
+          removedList.push({ username, dryRun: true, timestamp: new Date().toISOString() });
+          stats.removed++;
+          continue;
+        }
+
+        const ok = await removeOne(cell, username);
+        if (ok) {
+          stats.removed++;
+          removedList.push({ username, timestamp: new Date().toISOString() });
+          log.progress(stats.removed, CONFIG.maxRemove);
+          await randomDelay();
+        } else {
+          stats.errors++;
+        }
+      } catch (error) {
+        log.error(`Error on @${username}: ${error.message}`);
+        stats.errors++;
+        document.body.click();
+        await sleep(300);
+      }
+    }
+
+    if (!foundNew) emptyScrolls++;
+    else emptyScrolls = 0;
+
+    window.scrollTo(0, document.body.scrollHeight);
+    scrollRounds++;
+    await sleep(CONFIG.scrollDelay);
+  }
+
+  // ============================================
+  // 📊 SUMMARY
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 REMOVE FOLLOWER - COMPLETE                           ║
+╠══════════════════════════════════════════════════════════╣
+║  ✅ Removed:           ${String(stats.removed).padEnd(32)}║
+║  🔍 Scanned:           ${String(stats.scanned).padEnd(32)}║
+║  ⏭️  Skipped:           ${String(stats.skipped).padEnd(32)}║
+║  ❓ Not found:         ${String(stats.notFound).padEnd(32)}║
+║  ❌ Errors:            ${String(stats.errors).padEnd(32)}║
+║  🧪 Dry run:           ${String(CONFIG.dryRun).padEnd(32)}║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  if (removedList.length > 0) {
+    download(
+      { stats, dryRun: CONFIG.dryRun, removed: removedList, exportedAt: new Date().toISOString() },
+      `xactions-removed-followers-${CONFIG.dryRun ? 'preview' : 'results'}-${new Date().toISOString().slice(0, 10)}.json`
+    );
+  }
+
+  if (CONFIG.dryRun) log.warning('This was a DRY RUN. Set CONFIG.dryRun = false to actually remove.');
+  log.success('Script completed! by nichxbt');
+  return stats;
+})();
+
+});
   register("report-spam", function(){
 var CONFIG = {
   // Spam detection keywords in bio
@@ -13366,6 +18810,2512 @@ ${CONFIG.dryRun ? '║  ⚠️  DRY RUN MODE - Accounts will NOT be reported    
 
   console.log('\n💾 Results saved to localStorage');
 
+})();
+
+});
+  register("schedule-post", function(){
+(async function schedulePost() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // The text to schedule.
+    text: 'Scheduled with XActions 📅',
+
+    // When to post, as a local date/time. Format: "YYYY-MM-DDTHH:MM" (24-hour).
+    // Must be in the future. Example: "2026-08-01T09:00".
+    scheduleISO: '2026-08-01T09:00',
+
+    // Preview only: log what would happen without confirming the schedule.
+    dryRun: true
+  };
+try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG,window.__XA_LAUNCH_CFG);}}catch(_xa){}
+
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    composer: '[data-testid="tweetTextarea_0"]',
+    newTweetButton: 'a[data-testid="SideNav_NewTweet_Button"]',
+    // The clock icon in the composer toolbar that opens the schedule dialog.
+    scheduleButton: '[data-testid="scheduleOption"]',
+    // Legacy fallbacks for the schedule toolbar affordance.
+    createScheduleAria: '[aria-label="Schedule post"], [aria-label="Schedule"]',
+    confirmSchedule: '[data-testid="scheduledConfirmationPrimaryAction"]'
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+  const log = {
+    info: (msg) => console.log(`ℹ️ ${msg}`),
+    success: (msg) => console.log(`✅ ${msg}`),
+    warning: (msg) => console.log(`⚠️ ${msg}`),
+    error: (msg) => console.log(`❌ ${msg}`)
+  };
+
+  const typeIntoComposer = async (el, text) => {
+    el.focus();
+    await sleep(150);
+    const inserted = document.execCommand('insertText', false, text);
+    if (!inserted) {
+      el.dispatchEvent(new InputEvent('beforeinput', { inputType: 'insertText', data: text, bubbles: true, cancelable: true }));
+      el.textContent = text;
+      el.dispatchEvent(new InputEvent('input', { inputType: 'insertText', data: text, bubbles: true }));
+    }
+    await sleep(300);
+  };
+
+  const waitForSelector = async (selector, timeoutMs = 6000) => {
+    const start = Date.now();
+    while (Date.now() - start < timeoutMs) {
+      const el = document.querySelector(selector);
+      if (el) return el;
+      await sleep(200);
+    }
+    return null;
+  };
+
+  // Set a native <select> by matching an option's visible text or value, then
+  // dispatch the change event React listens for.
+  const setSelectByText = (select, wanted) => {
+    if (!select) return false;
+    const target = String(wanted).trim().toLowerCase();
+    const opts = Array.from(select.options);
+    const match =
+      opts.find((o) => o.textContent.trim().toLowerCase() === target) ||
+      opts.find((o) => o.value.trim().toLowerCase() === target) ||
+      opts.find((o) => o.textContent.trim().toLowerCase().startsWith(target));
+    if (!match) return false;
+    select.value = match.value;
+    select.dispatchEvent(new Event('input', { bubbles: true }));
+    select.dispatchEvent(new Event('change', { bubbles: true }));
+    return true;
+  };
+
+  // Find a select inside the dialog by its aria-label (case-insensitive contains).
+  const findSelectByLabel = (root, label) => {
+    const selects = Array.from(root.querySelectorAll('select'));
+    const l = label.toLowerCase();
+    return selects.find((s) => {
+      const aria = (s.getAttribute('aria-label') || '').toLowerCase();
+      const id = (s.getAttribute('id') || '').toLowerCase();
+      return aria.includes(l) || id.includes(l);
+    }) || null;
+  };
+
+  const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+  // ============================================
+  // 🎯 MAIN LOGIC
+  // ============================================
+  const stats = { typed: false, dialogOpened: false, scheduled: false, errors: 0, when: CONFIG.scheduleISO };
+
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📅 SCHEDULE POST - XActions                             ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  try {
+    const host = window.location.hostname;
+    if (!/(^|\.)x\.com$/.test(host) && !/(^|\.)twitter\.com$/.test(host)) {
+      log.warning('Not on x.com. Open x.com/compose/post, then re-run.');
+      return stats;
+    }
+
+    if (!CONFIG.text || !CONFIG.text.trim()) {
+      log.error('CONFIG.text is empty. Set the text you want to schedule.');
+      return stats;
+    }
+
+    const when = new Date(CONFIG.scheduleISO);
+    if (Number.isNaN(when.getTime())) {
+      log.error(`CONFIG.scheduleISO is not a valid date/time: "${CONFIG.scheduleISO}". Use "YYYY-MM-DDTHH:MM".`);
+      return stats;
+    }
+    if (when.getTime() <= Date.now()) {
+      log.error('CONFIG.scheduleISO is in the past. Pick a future date/time.');
+      return stats;
+    }
+
+    const monthName = MONTHS[when.getMonth()];
+    const day = String(when.getDate());
+    const year = String(when.getFullYear());
+    let hour12 = when.getHours() % 12;
+    if (hour12 === 0) hour12 = 12;
+    const minute = String(when.getMinutes()).padStart(2, '0');
+    const ampm = when.getHours() < 12 ? 'AM' : 'PM';
+    log.info(`Scheduling for ${monthName} ${day}, ${year} at ${hour12}:${minute} ${ampm} (local time).`);
+
+    // Open the composer.
+    let composer = document.querySelector(SELECTORS.composer);
+    if (!composer) {
+      const newBtn = document.querySelector(SELECTORS.newTweetButton);
+      if (newBtn) {
+        newBtn.click();
+        composer = await waitForSelector(SELECTORS.composer, 6000);
+      }
+    }
+    if (!composer) {
+      log.error('Composer not found. Open x.com/compose/post and re-run.');
+      stats.errors++;
+      return stats;
+    }
+
+    await typeIntoComposer(composer, CONFIG.text);
+    stats.typed = true;
+    log.success('Text typed into composer.');
+
+    if (CONFIG.dryRun) {
+      log.warning('DRY RUN. The schedule dialog will not be opened or confirmed.');
+      log.info(`Would schedule: "${CONFIG.text.slice(0, 60)}${CONFIG.text.length > 60 ? '...' : ''}" for ${monthName} ${day} ${year}, ${hour12}:${minute} ${ampm}.`);
+      return stats;
+    }
+
+    // Open the native Schedule dialog.
+    const scheduleBtn =
+      document.querySelector(SELECTORS.scheduleButton) ||
+      document.querySelector(SELECTORS.createScheduleAria);
+    if (!scheduleBtn) {
+      log.error('Schedule button not found in the composer toolbar.');
+      log.error('X native scheduling may be unavailable on this account. Post it now or schedule manually.');
+      stats.errors++;
+      return stats;
+    }
+    scheduleBtn.click();
+    await sleep(1500);
+
+    // The dialog is a modal with month/day/year and hour/minute/AM-PM selects.
+    const dialog = document.querySelector('[role="dialog"]') || document;
+    const selects = Array.from(dialog.querySelectorAll('select'));
+    if (selects.length === 0) {
+      log.error('Schedule dialog selects not found. The scheduler UI did not open as expected.');
+      log.error('Set the date/time by hand in the dialog, then confirm.');
+      stats.errors++;
+      return stats;
+    }
+    stats.dialogOpened = true;
+
+    // Prefer aria-label matching; fall back to positional order.
+    const monthSel = findSelectByLabel(dialog, 'month') || selects[0];
+    const daySel = findSelectByLabel(dialog, 'day') || selects[1];
+    const yearSel = findSelectByLabel(dialog, 'year') || selects[2];
+    const hourSel = findSelectByLabel(dialog, 'hour') || selects[3];
+    const minSel = findSelectByLabel(dialog, 'minute') || selects[4];
+    const ampmSel = findSelectByLabel(dialog, 'am') || findSelectByLabel(dialog, 'pm') || selects[5];
+
+    const setOk = [];
+    setOk.push(['Month', setSelectByText(monthSel, monthName)]);
+    setOk.push(['Day', setSelectByText(daySel, day)]);
+    setOk.push(['Year', setSelectByText(yearSel, year)]);
+    setOk.push(['Hour', setSelectByText(hourSel, String(hour12))]);
+    setOk.push(['Minute', setSelectByText(minSel, minute)]);
+    setOk.push(['AM/PM', setSelectByText(ampmSel, ampm)]);
+    await sleep(500);
+
+    const failed = setOk.filter(([, ok]) => !ok).map(([name]) => name);
+    if (failed.length > 0) {
+      log.warning(`Could not set: ${failed.join(', ')}. Adjust those fields by hand before confirming.`);
+    } else {
+      log.success('Date and time set in the schedule dialog.');
+    }
+
+    // Confirm the schedule.
+    const confirm = await waitForSelector(SELECTORS.confirmSchedule, 3000);
+    if (!confirm) {
+      log.error('Confirm button not found. Review the dialog and click Confirm manually.');
+      stats.errors++;
+      return stats;
+    }
+    confirm.click();
+    await sleep(1500);
+    stats.scheduled = true;
+    log.success('Schedule confirmed. Click Post/Schedule in the composer to queue it.');
+    log.info('Tip: scheduled posts appear under the composer\'s "Unsent posts" tab.');
+  } catch (error) {
+    log.error(`Error: ${error.message}`);
+    stats.errors++;
+  }
+
+  // ============================================
+  // 📊 SUMMARY
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 SCHEDULE POST - COMPLETE                             ║
+╠══════════════════════════════════════════════════════════╣
+║  ⌨️  Text typed:        ${String(stats.typed).padEnd(32)}║
+║  🗂️  Dialog opened:     ${String(stats.dialogOpened).padEnd(32)}║
+║  ✅ Scheduled:         ${String(stats.scheduled).padEnd(32)}║
+║  ❌ Errors:            ${String(stats.errors).padEnd(32)}║
+╚══════════════════════════════════════════════════════════╝
+  `);
+  log.success('Script completed! by nichxbt');
+  return stats;
+})();
+
+});
+  register("scrape-dms", function(){
+(async function scrapeDMs() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // Maximum number of messages to collect
+    maxMessages: 2000,
+
+    // Maximum scroll attempts before giving up
+    maxScrollAttempts: 120,
+
+    // Stop after this many scrolls with no new messages (top of history)
+    noNewThreshold: 6,
+
+    // Delay between upward scrolls (ms). Raise if history loads slowly.
+    scrollDelay: 1200,
+
+    // Auto-download the results as files when finished
+    downloadJSON: true,
+    downloadCSV: true
+  };
+try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG,window.__XA_LAUNCH_CFG);}}catch(_xa){}
+
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    // Each message bubble
+    message: '[data-testid="messageEntry"]',
+    // Scroller that holds the conversation history
+    scroller: '[data-testid="DmScrollerContainer"]',
+    // Conversation heading (used to name the export file)
+    heading: 'h2[role="heading"], [data-testid="DMConversationHeader"]'
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+  const log = {
+    info: (msg) => console.log(`ℹ️ ${msg}`),
+    success: (msg) => console.log(`✅ ${msg}`),
+    warning: (msg) => console.log(`⚠️ ${msg}`),
+    error: (msg) => console.log(`❌ ${msg}`)
+  };
+
+  const download = (content, filename, type) => {
+    try {
+      const blob = new Blob([content], { type });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      return true;
+    } catch (e) {
+      log.error(`Failed to download ${filename}: ${e.message}`);
+      return false;
+    }
+  };
+
+  const getConversationName = () => {
+    const el = document.querySelector(SELECTORS.heading);
+    const raw = el ? el.textContent.trim() : '';
+    return (raw || 'conversation').replace(/[^A-Za-z0-9_]+/g, '_').slice(0, 40) || 'conversation';
+  };
+
+  const getScroller = () => {
+    return document.querySelector(SELECTORS.scroller) ||
+           document.querySelector('[data-testid="DMDrawer"] [role="region"]') ||
+           document.querySelector('[role="main"] [style*="overflow"]') ||
+           document.querySelector('[role="main"]');
+  };
+
+  // Direction is derived from horizontal position, which is locale-independent:
+  // outgoing (yours) bubbles sit on the right half, incoming on the left.
+  const getDirection = (msg, containerRect) => {
+    try {
+      const rect = msg.getBoundingClientRect();
+      if (!rect.width || !containerRect || !containerRect.width) return 'unknown';
+      const msgCenter = rect.left + rect.width / 2;
+      const containerCenter = containerRect.left + containerRect.width / 2;
+      return msgCenter > containerCenter ? 'out' : 'in';
+    } catch (e) {
+      return 'unknown';
+    }
+  };
+
+  const getTimestamp = (msg) => {
+    // X stores the exact time in a title attribute or a nearby time element
+    const timeEl = msg.querySelector('time') ||
+                   (msg.closest('[role="listitem"]') || msg.parentElement || msg).querySelector('time');
+    if (timeEl) return timeEl.getAttribute('datetime') || timeEl.textContent.trim() || '';
+    const titled = msg.querySelector('[title]');
+    return titled ? (titled.getAttribute('title') || '') : '';
+  };
+
+  const extractText = (msg) => {
+    const textEl = msg.querySelector('[data-testid="tweetText"]');
+    if (textEl && textEl.textContent.trim()) return textEl.textContent.trim();
+    return (msg.textContent || '').trim();
+  };
+
+  // ============================================
+  // 🎯 MAIN
+  // ============================================
+  let stopped = false;
+  window.stopScrapeDMs = () => {
+    stopped = true;
+    log.warning('Stop requested. Finishing the current pass, then exporting.');
+  };
+
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  💬 SCRAPE DMS - XActions                                ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  // Page guard: must be inside an open conversation (messages/<id>)
+  if (!/\/messages\/[^/]+/.test(window.location.pathname)) {
+    log.warning('You do not have a single DM conversation open.');
+    log.info('Go to https://x.com/messages, click a conversation, then paste this script again.');
+    return;
+  }
+
+  const conversationName = getConversationName();
+  log.info(`Conversation: ${conversationName}`);
+  log.info(`Max messages: ${CONFIG.maxMessages}`);
+  log.info('Scrolling upward to load history...');
+  log.info('To stop early: window.stopScrapeDMs()');
+  console.log('');
+
+  const scroller = getScroller();
+  if (!scroller) {
+    log.warning('Could not locate the message pane. Try clicking inside the conversation first.');
+    return;
+  }
+
+  const seen = new Set();
+  const messages = [];
+  let scrollAttempts = 0;
+  let noNewCount = 0;
+
+  while (!stopped && messages.length < CONFIG.maxMessages && scrollAttempts < CONFIG.maxScrollAttempts) {
+    const containerRect = scroller.getBoundingClientRect();
+    const bubbles = document.querySelectorAll(SELECTORS.message);
+    const fresh = [];
+
+    bubbles.forEach(msg => {
+      try {
+        const text = extractText(msg);
+        if (!text) return;
+        const timestamp = getTimestamp(msg);
+        const direction = getDirection(msg, containerRect);
+        const key = `${direction}|${text.slice(0, 80)}|${timestamp}`;
+        if (seen.has(key)) return;
+        seen.add(key);
+        fresh.push({
+          sender: direction === 'out' ? 'you' : (direction === 'in' ? 'them' : 'unknown'),
+          direction,
+          text,
+          timestamp
+        });
+      } catch (e) {
+        // Skip malformed bubbles
+      }
+    });
+
+    if (fresh.length > 0) {
+      // Scrolling upward reveals OLDER messages at the top, so prepend them
+      // (in DOM order) to keep the final array chronological (oldest first).
+      messages.unshift(...fresh);
+      log.info(`Collected ${messages.length} messages (+${fresh.length})`);
+      noNewCount = 0;
+    } else {
+      noNewCount++;
+      if (noNewCount >= CONFIG.noNewThreshold) {
+        log.warning('No new messages after several scrolls. Reached the top of the history.');
+        break;
+      }
+    }
+
+    scroller.scrollTop = Math.max(0, scroller.scrollTop - Math.round(scroller.clientHeight * 0.8) - 200);
+    await sleep(CONFIG.scrollDelay);
+    scrollAttempts++;
+  }
+
+  // ============================================
+  // 📊 SUMMARY
+  // ============================================
+  const outCount = messages.filter(m => m.direction === 'out').length;
+  const inCount = messages.filter(m => m.direction === 'in').length;
+
+  console.log('');
+  console.log('╔══════════════════════════════════════════════════════════╗');
+  console.log('║  📊 SCRAPE DMS - COMPLETE                                ║');
+  console.log('╚══════════════════════════════════════════════════════════╝');
+  console.log(`💬 Total messages: ${messages.length}`);
+  console.log(`   → Sent (you):   ${outCount}`);
+  console.log(`   ← Received:     ${inCount}`);
+  console.log(`📜 Scroll attempts: ${scrollAttempts}`);
+
+  if (messages.length === 0) {
+    log.warning('No messages found. Scroll into the conversation body and try again.');
+    return { conversation: conversationName, messages: [] };
+  }
+
+  console.log('\n📝 Preview:');
+  messages.slice(0, 5).forEach(m => {
+    const arrow = m.direction === 'out' ? '→' : (m.direction === 'in' ? '←' : '·');
+    console.log(`   ${arrow} ${m.text.slice(0, 60)}${m.text.length > 60 ? '...' : ''}`);
+  });
+
+  // ============================================
+  // 💾 EXPORT
+  // ============================================
+  const dateStr = new Date().toISOString().split('T')[0];
+  const result = {
+    conversation: conversationName,
+    exportedAt: new Date().toISOString(),
+    messageCount: messages.length,
+    messages
+  };
+
+  console.log('');
+  if (CONFIG.downloadJSON) {
+    if (download(JSON.stringify(result, null, 2), `dm_${conversationName}_${dateStr}.json`, 'application/json')) {
+      log.success('JSON downloaded');
+    }
+  }
+
+  if (CONFIG.downloadCSV) {
+    const esc = (v) => `"${String(v).replace(/"/g, '""').replace(/\n/g, ' ')}"`;
+    const csv = [
+      ['Direction', 'Sender', 'Text', 'Timestamp'].join(','),
+      ...messages.map(m => [esc(m.direction), esc(m.sender), esc(m.text), esc(m.timestamp)].join(','))
+    ].join('\n');
+    if (download(csv, `dm_${conversationName}_${dateStr}.csv`, 'text/csv')) {
+      log.success('CSV downloaded');
+    }
+  }
+
+  window.scrapedDMs = result;
+  console.log('\n💡 Access your data: window.scrapedDMs');
+  console.log('⚠️ Privacy note: be careful sharing DM exports.');
+  console.log('✅ Script completed! by nichxbt');
+
+  return result;
+})();
+
+});
+  register("scrape-followers", function(){
+(async function scrapeFollowers() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // Stop after collecting this many followers (safety cap)
+    maxUsers: 5000,
+
+    // How far to scroll each step (pixels)
+    scrollStep: 1400,
+
+    // Delay between scrolls (ms). Raise to 2500+ on a slow connection so rows load.
+    scrollDelay: 1500,
+
+    // Give up after this many consecutive scrolls with no new followers (end of list)
+    stallLimit: 6,
+
+    // Hard cap on scroll attempts, independent of stalls
+    maxScrollAttempts: 400,
+
+    // Also trigger a browser download of the CSV file (JSON always downloads)
+    autoDownloadCsv: false
+  };
+try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG,window.__XA_LAUNCH_CFG);}}catch(_xa){}
+
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    userCell: '[data-testid="UserCell"]',
+    userDescription: '[data-testid="UserDescription"]',
+    followsYou: '[data-testid="userFollowIndicator"]',
+    verified: 'svg[aria-label*="Verified"], [data-testid="icon-verified"]',
+    profileLink: 'a[href^="/"]'
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  const randomDelay = () => sleep(CONFIG.scrollDelay + Math.floor(Math.random() * 500));
+
+  const log = {
+    info: (m) => console.log(`ℹ️ ${m}`),
+    success: (m) => console.log(`✅ ${m}`),
+    warning: (m) => console.log(`⚠️ ${m}`),
+    error: (m) => console.log(`❌ ${m}`),
+    count: (n) => console.log(`👥 Collected ${n} followers...`)
+  };
+
+  const csvCell = (v) => `"${String(v == null ? '' : v).replace(/"/g, '""').replace(/\r?\n/g, ' ')}"`;
+
+  const download = (content, filename, type) => {
+    try {
+      const blob = new Blob([content], { type });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      return true;
+    } catch (e) {
+      log.error(`Download of ${filename} failed: ${e.message}`);
+      return false;
+    }
+  };
+
+  // Pull {handle, displayName, bio, verified, followsYou} from one UserCell.
+  const extractUser = (cell) => {
+    const anchors = Array.from(cell.querySelectorAll(SELECTORS.profileLink));
+
+    // Canonical handle: the bare /username link (avoids /username/photo etc.)
+    let handle = '';
+    for (const a of anchors) {
+      const href = a.getAttribute('href') || '';
+      const m = href.match(/^\/([A-Za-z0-9_]{1,15})$/);
+      if (m) { handle = m[1]; break; }
+    }
+    if (!handle) {
+      // Fallback: an anchor whose visible text is the @handle
+      const at = anchors.find((a) => a.textContent.trim().startsWith('@'));
+      if (at) handle = at.textContent.trim().slice(1).split(/\s/)[0];
+    }
+    if (!handle) return null;
+
+    // Display name: profile-link text that is not the @handle line
+    let displayName = '';
+    const nameAnchor = anchors.find((a) => {
+      const t = a.textContent.trim();
+      return t && !t.startsWith('@');
+    });
+    displayName = (nameAnchor && nameAnchor.textContent.trim()) ||
+      (cell.querySelector('div[dir="ltr"] span')?.textContent.trim()) || '';
+
+    let bio = cell.querySelector(SELECTORS.userDescription)?.textContent?.trim() || '';
+    if (!bio) {
+      const auto = cell.querySelector('[dir="auto"]:not([data-testid])')?.textContent?.trim();
+      if (auto && auto.length >= 10 && !auto.startsWith('@')) bio = auto;
+    }
+
+    return {
+      handle,
+      displayName,
+      bio,
+      verified: !!cell.querySelector(SELECTORS.verified),
+      followsYou: !!cell.querySelector(SELECTORS.followsYou),
+      profileUrl: `https://x.com/${handle}`
+    };
+  };
+
+  // ============================================
+  // 🛑 STOP SWITCH
+  // ============================================
+  let stopped = false;
+  window.stopScrapeFollowers = () => {
+    stopped = true;
+    log.warning('Stop requested. Finishing the current scroll, then exporting what was collected.');
+  };
+
+  // ============================================
+  // 🚦 PAGE GUARD
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  👥 SCRAPE FOLLOWERS - XActions                          ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  if (!/\/followers\/?$/.test(window.location.pathname)) {
+    log.warning('You are not on a followers page.');
+    log.info('Go to x.com/<user>/followers (for example x.com/nasa/followers), then run this again.');
+    return;
+  }
+
+  const username = window.location.pathname.split('/')[1] || 'unknown';
+  log.info(`Scraping followers of @${username}`);
+  log.info(`Max followers: ${CONFIG.maxUsers}. To stop early: window.stopScrapeFollowers()`);
+
+  // ============================================
+  // 🎯 MAIN LOOP
+  // ============================================
+  const users = new Map();
+  const stats = { collected: 0, verified: 0, followsYou: 0, scrolls: 0, errors: 0 };
+
+  let scrollAttempts = 0;
+  let stall = 0;
+
+  while (!stopped && users.size < CONFIG.maxUsers && stall < CONFIG.stallLimit && scrollAttempts < CONFIG.maxScrollAttempts) {
+    const before = users.size;
+    const cells = document.querySelectorAll(SELECTORS.userCell);
+
+    cells.forEach((cell) => {
+      try {
+        const u = extractUser(cell);
+        if (u && u.handle && !users.has(u.handle)) users.set(u.handle, u);
+      } catch (e) {
+        stats.errors++;
+      }
+    });
+
+    if (users.size > before) {
+      log.count(users.size);
+      stall = 0;
+    } else {
+      stall++;
+    }
+
+    window.scrollBy(0, CONFIG.scrollStep);
+    await randomDelay();
+    scrollAttempts++;
+    stats.scrolls = scrollAttempts;
+  }
+
+  const list = Array.from(users.values()).slice(0, CONFIG.maxUsers);
+  stats.collected = list.length;
+  stats.verified = list.filter((u) => u.verified).length;
+  stats.followsYou = list.filter((u) => u.followsYou).length;
+
+  // ============================================
+  // 📤 EXPORT
+  // ============================================
+  const result = {
+    profile: username,
+    profileUrl: `https://x.com/${username}`,
+    scrapedAt: new Date().toISOString(),
+    total: list.length,
+    followers: list
+  };
+
+  const buildCsv = () => {
+    const header = 'Handle,DisplayName,Bio,Verified,FollowsYou,ProfileURL';
+    const rows = list.map((u) => [
+      csvCell('@' + u.handle),
+      csvCell(u.displayName),
+      csvCell(u.bio),
+      u.verified,
+      u.followsYou,
+      csvCell(u.profileUrl)
+    ].join(','));
+    return [header, ...rows].join('\n');
+  };
+
+  const csv = buildCsv();
+  const dateStr = new Date().toISOString().split('T')[0];
+
+  if (list.length === 0) {
+    log.warning('No followers were collected. The list may be empty, private, or blocked from view.');
+  } else {
+    download(JSON.stringify(result, null, 2), `${username}_followers_${dateStr}.json`, 'application/json');
+    log.success(`Downloaded ${username}_followers_${dateStr}.json`);
+    if (CONFIG.autoDownloadCsv) {
+      download(csv, `${username}_followers_${dateStr}.csv`, 'text/csv');
+      log.success(`Downloaded ${username}_followers_${dateStr}.csv`);
+    }
+  }
+
+  window.scrapedFollowers = result;
+  window.scrapeFollowersExportCSV = () => {
+    download(csv, `${username}_followers_${dateStr}.csv`, 'text/csv');
+    return csv;
+  };
+
+  // ============================================
+  // 📊 SUMMARY
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 SCRAPE FOLLOWERS - COMPLETE                          ║
+╠══════════════════════════════════════════════════════════╣
+║  👥 Followers collected: ${String(stats.collected).padEnd(30)}║
+║  ✔️  Verified:            ${String(stats.verified).padEnd(30)}║
+║  🔁 Follow you back:     ${String(stats.followsYou).padEnd(30)}║
+║  📜 Scrolls:             ${String(stats.scrolls).padEnd(30)}║
+║  ❌ Row errors:          ${String(stats.errors).padEnd(30)}║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  list.slice(0, 5).forEach((u, i) => {
+    console.log(`${i + 1}. @${u.handle}${u.verified ? ' ✓' : ''} - ${u.displayName}${u.followsYou ? ' (follows you)' : ''}`);
+  });
+  if (list.length > 5) console.log(`   ... and ${list.length - 5} more`);
+
+  console.log('\n📋 CSV preview (full string via window.scrapeFollowersExportCSV()):');
+  console.log(csv.split('\n').slice(0, 6).join('\n'));
+  console.log('\n💡 window.scrapedFollowers = full data. window.scrapeFollowersExportCSV() = download + return CSV.');
+
+  return result;
+})();
+
+});
+  register("scrape-following", function(){
+(async function scrapeFollowing() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // Stop after collecting this many accounts (safety cap)
+    maxUsers: 5000,
+
+    // How far to scroll each step (pixels)
+    scrollStep: 1400,
+
+    // Delay between scrolls (ms). Raise to 2500+ on a slow connection so rows load.
+    scrollDelay: 1500,
+
+    // Give up after this many consecutive scrolls with no new accounts (end of list)
+    stallLimit: 6,
+
+    // Hard cap on scroll attempts, independent of stalls
+    maxScrollAttempts: 400,
+
+    // Also trigger a browser download of the CSV file (JSON always downloads)
+    autoDownloadCsv: false
+  };
+try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG,window.__XA_LAUNCH_CFG);}}catch(_xa){}
+
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    userCell: '[data-testid="UserCell"]',
+    userDescription: '[data-testid="UserDescription"]',
+    followsYou: '[data-testid="userFollowIndicator"]',
+    verified: 'svg[aria-label*="Verified"], [data-testid="icon-verified"]',
+    profileLink: 'a[href^="/"]'
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  const randomDelay = () => sleep(CONFIG.scrollDelay + Math.floor(Math.random() * 500));
+
+  const log = {
+    info: (m) => console.log(`ℹ️ ${m}`),
+    success: (m) => console.log(`✅ ${m}`),
+    warning: (m) => console.log(`⚠️ ${m}`),
+    error: (m) => console.log(`❌ ${m}`),
+    count: (n) => console.log(`👣 Collected ${n} following...`)
+  };
+
+  const csvCell = (v) => `"${String(v == null ? '' : v).replace(/"/g, '""').replace(/\r?\n/g, ' ')}"`;
+
+  const download = (content, filename, type) => {
+    try {
+      const blob = new Blob([content], { type });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      return true;
+    } catch (e) {
+      log.error(`Download of ${filename} failed: ${e.message}`);
+      return false;
+    }
+  };
+
+  const extractUser = (cell) => {
+    const anchors = Array.from(cell.querySelectorAll(SELECTORS.profileLink));
+
+    let handle = '';
+    for (const a of anchors) {
+      const href = a.getAttribute('href') || '';
+      const m = href.match(/^\/([A-Za-z0-9_]{1,15})$/);
+      if (m) { handle = m[1]; break; }
+    }
+    if (!handle) {
+      const at = anchors.find((a) => a.textContent.trim().startsWith('@'));
+      if (at) handle = at.textContent.trim().slice(1).split(/\s/)[0];
+    }
+    if (!handle) return null;
+
+    let displayName = '';
+    const nameAnchor = anchors.find((a) => {
+      const t = a.textContent.trim();
+      return t && !t.startsWith('@');
+    });
+    displayName = (nameAnchor && nameAnchor.textContent.trim()) ||
+      (cell.querySelector('div[dir="ltr"] span')?.textContent.trim()) || '';
+
+    let bio = cell.querySelector(SELECTORS.userDescription)?.textContent?.trim() || '';
+    if (!bio) {
+      const auto = cell.querySelector('[dir="auto"]:not([data-testid])')?.textContent?.trim();
+      if (auto && auto.length >= 10 && !auto.startsWith('@')) bio = auto;
+    }
+
+    return {
+      handle,
+      displayName,
+      bio,
+      verified: !!cell.querySelector(SELECTORS.verified),
+      followsYou: !!cell.querySelector(SELECTORS.followsYou),
+      profileUrl: `https://x.com/${handle}`
+    };
+  };
+
+  // ============================================
+  // 🛑 STOP SWITCH
+  // ============================================
+  let stopped = false;
+  window.stopScrapeFollowing = () => {
+    stopped = true;
+    log.warning('Stop requested. Finishing the current scroll, then exporting what was collected.');
+  };
+
+  // ============================================
+  // 🚦 PAGE GUARD
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  👣 SCRAPE FOLLOWING - XActions                          ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  if (!/\/following\/?$/.test(window.location.pathname)) {
+    log.warning('You are not on a following page.');
+    log.info('Go to x.com/<user>/following (for example x.com/nasa/following), then run this again.');
+    return;
+  }
+
+  const username = window.location.pathname.split('/')[1] || 'unknown';
+  log.info(`Scraping following list of @${username}`);
+  log.info(`Max accounts: ${CONFIG.maxUsers}. To stop early: window.stopScrapeFollowing()`);
+
+  // ============================================
+  // 🎯 MAIN LOOP
+  // ============================================
+  const users = new Map();
+  const stats = { collected: 0, verified: 0, mutuals: 0, scrolls: 0, errors: 0 };
+
+  let scrollAttempts = 0;
+  let stall = 0;
+
+  while (!stopped && users.size < CONFIG.maxUsers && stall < CONFIG.stallLimit && scrollAttempts < CONFIG.maxScrollAttempts) {
+    const before = users.size;
+    const cells = document.querySelectorAll(SELECTORS.userCell);
+
+    cells.forEach((cell) => {
+      try {
+        const u = extractUser(cell);
+        if (u && u.handle && !users.has(u.handle)) users.set(u.handle, u);
+      } catch (e) {
+        stats.errors++;
+      }
+    });
+
+    if (users.size > before) {
+      log.count(users.size);
+      stall = 0;
+    } else {
+      stall++;
+    }
+
+    window.scrollBy(0, CONFIG.scrollStep);
+    await randomDelay();
+    scrollAttempts++;
+    stats.scrolls = scrollAttempts;
+  }
+
+  const list = Array.from(users.values()).slice(0, CONFIG.maxUsers);
+  stats.collected = list.length;
+  stats.verified = list.filter((u) => u.verified).length;
+  stats.mutuals = list.filter((u) => u.followsYou).length;
+
+  // ============================================
+  // 📤 EXPORT
+  // ============================================
+  const result = {
+    profile: username,
+    profileUrl: `https://x.com/${username}`,
+    scrapedAt: new Date().toISOString(),
+    total: list.length,
+    mutuals: stats.mutuals,
+    following: list
+  };
+
+  const buildCsv = () => {
+    const header = 'Handle,DisplayName,Bio,Verified,FollowsYou,ProfileURL';
+    const rows = list.map((u) => [
+      csvCell('@' + u.handle),
+      csvCell(u.displayName),
+      csvCell(u.bio),
+      u.verified,
+      u.followsYou,
+      csvCell(u.profileUrl)
+    ].join(','));
+    return [header, ...rows].join('\n');
+  };
+
+  const csv = buildCsv();
+  const dateStr = new Date().toISOString().split('T')[0];
+
+  if (list.length === 0) {
+    log.warning('No accounts were collected. The list may be empty, private, or blocked from view.');
+  } else {
+    download(JSON.stringify(result, null, 2), `${username}_following_${dateStr}.json`, 'application/json');
+    log.success(`Downloaded ${username}_following_${dateStr}.json`);
+    if (CONFIG.autoDownloadCsv) {
+      download(csv, `${username}_following_${dateStr}.csv`, 'text/csv');
+      log.success(`Downloaded ${username}_following_${dateStr}.csv`);
+    }
+  }
+
+  window.scrapedFollowing = result;
+  window.scrapeFollowingExportCSV = () => {
+    download(csv, `${username}_following_${dateStr}.csv`, 'text/csv');
+    return csv;
+  };
+
+  // ============================================
+  // 📊 SUMMARY
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 SCRAPE FOLLOWING - COMPLETE                          ║
+╠══════════════════════════════════════════════════════════╣
+║  👣 Accounts collected:  ${String(stats.collected).padEnd(30)}║
+║  ✔️  Verified:            ${String(stats.verified).padEnd(30)}║
+║  🤝 Mutuals (follow you):${String(stats.mutuals).padEnd(30)}║
+║  📜 Scrolls:             ${String(stats.scrolls).padEnd(30)}║
+║  ❌ Row errors:          ${String(stats.errors).padEnd(30)}║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  list.slice(0, 5).forEach((u, i) => {
+    console.log(`${i + 1}. @${u.handle}${u.verified ? ' ✓' : ''} - ${u.displayName}${u.followsYou ? ' (follows you)' : ''}`);
+  });
+  if (list.length > 5) console.log(`   ... and ${list.length - 5} more`);
+
+  console.log('\n📋 CSV preview (full string via window.scrapeFollowingExportCSV()):');
+  console.log(csv.split('\n').slice(0, 6).join('\n'));
+  console.log('\n💡 window.scrapedFollowing = full data. window.scrapeFollowingExportCSV() = download + return CSV.');
+
+  return result;
+})();
+
+});
+  register("scrape-hashtag", function(){
+(async function scrapeHashtag() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // Hashtag to scrape WITHOUT the # (e.g. "solana"). Leave "" to scrape the
+    // hashtag already open in the current search results.
+    hashtag: '',
+
+    // Maximum number of posts to collect before stopping
+    maxPosts: 300,
+
+    // Include reply posts in the results (false = original posts only)
+    includeReplies: true,
+
+    // Delay between scrolls (ms). Raise if posts load slowly.
+    scrollDelay: 1800,
+
+    // Give up after this many scrolls that add no new posts
+    noNewPostsThreshold: 6,
+
+    // Hard cap on scroll attempts so the loop can never run forever
+    maxScrollAttempts: 400,
+
+    // Auto-download a CSV file too (JSON always downloads)
+    downloadCsv: true
+  };
+try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG,window.__XA_LAUNCH_CFG);}}catch(_xa){}
+
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    tweet: 'article[data-testid="tweet"]',
+    tweetText: '[data-testid="tweetText"]',
+    userName: '[data-testid="User-Name"]',
+    actionGroup: '[role="group"]',
+    photo: '[data-testid="tweetPhoto"] img',
+    video: 'video'
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+  const log = {
+    info: (msg) => console.log(`ℹ️ ${msg}`),
+    success: (msg) => console.log(`✅ ${msg}`),
+    warning: (msg) => console.log(`⚠️ ${msg}`),
+    error: (msg) => console.log(`❌ ${msg}`),
+    progress: (n, total) => console.log(`📊 Collected ${n}/${total} posts...`)
+  };
+
+  const countFromLabel = (label) => {
+    if (!label) return 0;
+    const raw = (label.match(/[\d.,]+\s*[KMB]?/i) || ['0'])[0].trim().toUpperCase();
+    const num = parseFloat(raw.replace(/,/g, '')) || 0;
+    if (raw.includes('K')) return Math.round(num * 1e3);
+    if (raw.includes('M')) return Math.round(num * 1e6);
+    if (raw.includes('B')) return Math.round(num * 1e9);
+    return Math.round(num);
+  };
+
+  const getCounts = (article) => {
+    const counts = { replies: 0, reposts: 0, likes: 0, views: 0 };
+    const group = article.querySelector(SELECTORS.actionGroup);
+    const nodes = group ? group.querySelectorAll('[aria-label]') : [];
+    nodes.forEach((node) => {
+      const label = (node.getAttribute('aria-label') || '').toLowerCase();
+      const value = countFromLabel(label);
+      if (label.includes('repl')) counts.replies = value;
+      else if (label.includes('repost') || label.includes('retweet')) counts.reposts = value;
+      else if (label.includes('like')) counts.likes = value;
+      else if (label.includes('view')) counts.views = value;
+    });
+    return counts;
+  };
+
+  const toOriginalImage = (url) => {
+    if (!url) return url;
+    return url.replace(/&name=[^&]*/i, '&name=orig').replace(/\?name=[^&]*/i, '?name=orig');
+  };
+
+  const getMediaUrls = (article) => {
+    const urls = new Set();
+    article.querySelectorAll(SELECTORS.photo).forEach((img) => {
+      if (img.src) urls.add(toOriginalImage(img.src));
+    });
+    article.querySelectorAll(SELECTORS.video).forEach((v) => {
+      if (v.src) urls.add(v.src);
+      else if (v.poster) urls.add(v.poster);
+    });
+    return Array.from(urls);
+  };
+
+  const isReply = (article) => {
+    if (article.querySelector('[data-testid="in-reply-to"]') !== null) return true;
+    return Array.from(article.querySelectorAll('div[dir]')).some((el) =>
+      (el.textContent || '').startsWith('Replying to'));
+  };
+
+  const extractHashtags = (text) => text.match(/#\w+/g) || [];
+
+  const extractPost = (article) => {
+    const timeEl = article.querySelector('time');
+    const permalink = timeEl ? timeEl.closest('a[href*="/status/"]') : null;
+    const anchor = permalink || article.querySelector('a[href*="/status/"]');
+    const url = anchor ? anchor.href : '';
+    const id = url ? (url.split('/status/')[1] || '').split(/[?/]/)[0] : '';
+    if (!id) return null;
+
+    const nameBlock = article.querySelector(SELECTORS.userName);
+    const nameText = nameBlock ? nameBlock.textContent : '';
+    const handle = (nameText.match(/@(\w+)/) || [, ''])[1];
+    const name = nameText.split('@')[0].trim();
+
+    const textEl = article.querySelector(SELECTORS.tweetText);
+    const text = textEl ? textEl.textContent : '';
+
+    const counts = getCounts(article);
+
+    return {
+      id,
+      url,
+      author: { handle, name },
+      text,
+      likes: counts.likes,
+      reposts: counts.reposts,
+      replies: counts.replies,
+      views: counts.views,
+      timestamp: timeEl ? timeEl.getAttribute('datetime') : null,
+      mediaUrls: getMediaUrls(article),
+      hashtags: extractHashtags(text),
+      isReply: isReply(article),
+      scrapedAt: new Date().toISOString()
+    };
+  };
+
+  const downloadFile = (content, filename, mime) => {
+    try {
+      const blob = new Blob([content], { type: mime });
+      const href = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = href;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(href);
+      return true;
+    } catch (e) {
+      log.error(`Failed to download ${filename}: ${e.message}`);
+      return false;
+    }
+  };
+
+  const csvCell = (value) => `"${String(value == null ? '' : value).replace(/"/g, '""').replace(/\r?\n/g, ' ')}"`;
+
+  const toCSV = (posts) => {
+    const headers = ['id', 'handle', 'name', 'text', 'likes', 'reposts', 'replies', 'views', 'timestamp', 'hashtags', 'mediaUrls', 'url'];
+    const rows = posts.map((p) => [
+      p.id,
+      '@' + p.author.handle,
+      p.author.name,
+      p.text,
+      p.likes,
+      p.reposts,
+      p.replies,
+      p.views,
+      p.timestamp || '',
+      p.hashtags.join(' '),
+      p.mediaUrls.join(' '),
+      p.url
+    ].map(csvCell).join(','));
+    return [headers.join(','), ...rows].join('\n');
+  };
+
+  // Resolve the target hashtag from CONFIG or the current URL.
+  const currentHashtag = () => {
+    const q = new URLSearchParams(window.location.search).get('q') || '';
+    const fromSearch = q.match(/#(\w+)/) || q.match(/%23(\w+)/i);
+    if (fromSearch) return fromSearch[1];
+    const fromPath = window.location.pathname.match(/hashtag\/(\w+)/);
+    return fromPath ? fromPath[1] : '';
+  };
+
+  // ============================================
+  // 🎯 MAIN
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  #️⃣ SCRAPE HASHTAG - XActions                           ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  const configTag = CONFIG.hashtag.replace(/^#/, '').trim();
+  const openTag = currentHashtag();
+
+  // If a hashtag is configured and we are not already on its results, navigate
+  // there once. Re-run the script after the page loads to collect.
+  if (configTag && configTag.toLowerCase() !== openTag.toLowerCase()) {
+    const target = `https://x.com/search?q=%23${encodeURIComponent(configTag)}&f=live`;
+    log.warning(`Not on the #${configTag} results yet. Opening them now.`);
+    log.info('When the results finish loading, paste this script again to collect.');
+    window.location.href = target;
+    return;
+  }
+
+  const hashtag = configTag || openTag;
+  if (!hashtag) {
+    log.warning('No hashtag detected.');
+    log.info('Set CONFIG.hashtag = "yourtag", or go to x.com/search?q=%23yourtag&f=live, then run again.');
+    return;
+  }
+
+  const posts = new Map();
+
+  // Stop switch: run window.stopScrapeHashtag() to end the scroll loop.
+  let stopped = false;
+  window.stopScrapeHashtag = () => {
+    stopped = true;
+    log.warning('Stop requested. Finishing the current pass, then exporting.');
+  };
+
+  log.info(`Hashtag: #${hashtag}`);
+  log.info(`Max posts: ${CONFIG.maxPosts} | Include replies: ${CONFIG.includeReplies}`);
+  log.info('To stop early: window.stopScrapeHashtag()');
+
+  let scrollAttempts = 0;
+  let noNewCount = 0;
+
+  while (!stopped && posts.size < CONFIG.maxPosts && scrollAttempts < CONFIG.maxScrollAttempts) {
+    const before = posts.size;
+    const articles = document.querySelectorAll(SELECTORS.tweet);
+
+    articles.forEach((article) => {
+      try {
+        const post = extractPost(article);
+        if (!post || posts.has(post.id)) return;
+        if (!CONFIG.includeReplies && post.isReply) return;
+        posts.set(post.id, post);
+      } catch (e) {
+        log.error(`Skipped a post: ${e.message}`);
+      }
+    });
+
+    if (posts.size > before) {
+      log.progress(posts.size, CONFIG.maxPosts);
+      noNewCount = 0;
+    } else {
+      noNewCount++;
+      if (noNewCount >= CONFIG.noNewPostsThreshold) {
+        log.warning('No new posts after several scrolls. Reached the end of the results.');
+        break;
+      }
+    }
+
+    if (posts.size >= CONFIG.maxPosts) break;
+
+    window.scrollTo(0, document.body.scrollHeight);
+    await sleep(CONFIG.scrollDelay);
+    scrollAttempts++;
+  }
+
+  const list = Array.from(posts.values()).slice(0, CONFIG.maxPosts);
+
+  // ============================================
+  // 📊 SUMMARY + EXPORT
+  // ============================================
+  if (list.length === 0) {
+    log.warning('No posts were found for this hashtag. The results may be empty, or the page had not loaded yet.');
+    return;
+  }
+
+  const totalLikes = list.reduce((s, p) => s + p.likes, 0);
+  const coTags = {};
+  list.forEach((p) => p.hashtags.forEach((h) => {
+    const k = h.toLowerCase();
+    coTags[k] = (coTags[k] || 0) + 1;
+  }));
+  const topCoTags = Object.entries(coTags).sort((a, b) => b[1] - a[1]).slice(0, 8);
+
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 SCRAPE HASHTAG - COMPLETE                           ║
+╠══════════════════════════════════════════════════════════╣
+║  #️⃣ Hashtag:      ${String('#' + hashtag).slice(0, 36).padEnd(37)}║
+║  📝 Posts:        ${String(list.length).padEnd(37)}║
+║  ❤️  Total likes:  ${String(totalLikes.toLocaleString()).padEnd(37)}║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  if (topCoTags.length > 0) {
+    console.log('🏷️ Co-occurring hashtags:');
+    topCoTags.forEach(([tag, count], i) => console.log(`   ${i + 1}. ${tag} (${count})`));
+  }
+
+  list.slice(0, 5).forEach((p, i) => {
+    console.log(`${i + 1}. @${p.author.handle} (${p.likes} ❤️): "${p.text.slice(0, 60)}"`);
+  });
+
+  const stamp = new Date().toISOString().split('T')[0];
+  const result = { hashtag, scrapedAt: new Date().toISOString(), count: list.length, posts: list };
+
+  if (downloadFile(JSON.stringify(result, null, 2), `hashtag_${hashtag}_${stamp}.json`, 'application/json')) {
+    log.success('JSON downloaded');
+  }
+  if (CONFIG.downloadCsv && downloadFile(toCSV(list), `hashtag_${hashtag}_${stamp}.csv`, 'text/csv')) {
+    log.success('CSV downloaded');
+  }
+
+  window.scrapedHashtag = result;
+  window.exportCSV = () => toCSV(list);
+  console.log('');
+  log.info('window.scrapedHashtag holds the full data. window.exportCSV() returns the CSV string.');
+  log.success('Done! by nichxbt');
+
+  return result;
+})();
+
+});
+  register("scrape-likers", function(){
+(async function scrapeLikers() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // Stop after collecting this many likers (safety cap)
+    maxUsers: 5000,
+
+    // How far to scroll each step (pixels)
+    scrollStep: 1400,
+
+    // Delay between scrolls (ms). Raise to 2500+ on a slow connection so rows load.
+    scrollDelay: 1500,
+
+    // Give up after this many consecutive scrolls with no new likers (end of list)
+    stallLimit: 6,
+
+    // Hard cap on scroll attempts, independent of stalls
+    maxScrollAttempts: 400,
+
+    // Also trigger a browser download of the CSV file (JSON always downloads)
+    autoDownloadCsv: false
+  };
+try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG,window.__XA_LAUNCH_CFG);}}catch(_xa){}
+
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    userCell: '[data-testid="UserCell"]',
+    userDescription: '[data-testid="UserDescription"]',
+    followsYou: '[data-testid="userFollowIndicator"]',
+    verified: 'svg[aria-label*="Verified"], [data-testid="icon-verified"]',
+    profileLink: 'a[href^="/"]'
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  const randomDelay = () => sleep(CONFIG.scrollDelay + Math.floor(Math.random() * 500));
+
+  const log = {
+    info: (m) => console.log(`ℹ️ ${m}`),
+    success: (m) => console.log(`✅ ${m}`),
+    warning: (m) => console.log(`⚠️ ${m}`),
+    error: (m) => console.log(`❌ ${m}`),
+    count: (n) => console.log(`❤️ Collected ${n} likers...`)
+  };
+
+  const csvCell = (v) => `"${String(v == null ? '' : v).replace(/"/g, '""').replace(/\r?\n/g, ' ')}"`;
+
+  const download = (content, filename, type) => {
+    try {
+      const blob = new Blob([content], { type });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      return true;
+    } catch (e) {
+      log.error(`Download of ${filename} failed: ${e.message}`);
+      return false;
+    }
+  };
+
+  const extractUser = (cell) => {
+    const anchors = Array.from(cell.querySelectorAll(SELECTORS.profileLink));
+
+    let handle = '';
+    for (const a of anchors) {
+      const href = a.getAttribute('href') || '';
+      const m = href.match(/^\/([A-Za-z0-9_]{1,15})$/);
+      if (m) { handle = m[1]; break; }
+    }
+    if (!handle) {
+      const at = anchors.find((a) => a.textContent.trim().startsWith('@'));
+      if (at) handle = at.textContent.trim().slice(1).split(/\s/)[0];
+    }
+    if (!handle) return null;
+
+    let displayName = '';
+    const nameAnchor = anchors.find((a) => {
+      const t = a.textContent.trim();
+      return t && !t.startsWith('@');
+    });
+    displayName = (nameAnchor && nameAnchor.textContent.trim()) ||
+      (cell.querySelector('div[dir="ltr"] span')?.textContent.trim()) || '';
+
+    let bio = cell.querySelector(SELECTORS.userDescription)?.textContent?.trim() || '';
+    if (!bio) {
+      const auto = cell.querySelector('[dir="auto"]:not([data-testid])')?.textContent?.trim();
+      if (auto && auto.length >= 10 && !auto.startsWith('@')) bio = auto;
+    }
+
+    return {
+      handle,
+      displayName,
+      bio,
+      verified: !!cell.querySelector(SELECTORS.verified),
+      followsYou: !!cell.querySelector(SELECTORS.followsYou),
+      profileUrl: `https://x.com/${handle}`
+    };
+  };
+
+  const getTweetId = () => (window.location.pathname.match(/status\/(\d+)/) || [])[1] || null;
+
+  // ============================================
+  // 🛑 STOP SWITCH
+  // ============================================
+  let stopped = false;
+  window.stopScrapeLikers = () => {
+    stopped = true;
+    log.warning('Stop requested. Finishing the current scroll, then exporting what was collected.');
+  };
+
+  // ============================================
+  // 🚦 PAGE GUARD
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  ❤️ SCRAPE LIKERS - XActions                             ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  const tweetId = getTweetId();
+  if (!/\/likes\/?$/.test(window.location.pathname) || !tweetId) {
+    log.warning('You are not on a post Likes page.');
+    log.info('Open a post, click its likes count, and land on x.com/<user>/status/<id>/likes, then run this again.');
+    return;
+  }
+
+  log.info(`Scraping likers of post ${tweetId}`);
+  log.info(`Max likers: ${CONFIG.maxUsers}. To stop early: window.stopScrapeLikers()`);
+
+  // ============================================
+  // 🎯 MAIN LOOP
+  // ============================================
+  const users = new Map();
+  const stats = { collected: 0, verified: 0, followsYou: 0, scrolls: 0, errors: 0 };
+
+  let scrollAttempts = 0;
+  let stall = 0;
+
+  while (!stopped && users.size < CONFIG.maxUsers && stall < CONFIG.stallLimit && scrollAttempts < CONFIG.maxScrollAttempts) {
+    const before = users.size;
+    const cells = document.querySelectorAll(SELECTORS.userCell);
+
+    cells.forEach((cell) => {
+      try {
+        const u = extractUser(cell);
+        if (u && u.handle && !users.has(u.handle)) users.set(u.handle, u);
+      } catch (e) {
+        stats.errors++;
+      }
+    });
+
+    if (users.size > before) {
+      log.count(users.size);
+      stall = 0;
+    } else {
+      stall++;
+    }
+
+    window.scrollBy(0, CONFIG.scrollStep);
+    await randomDelay();
+    scrollAttempts++;
+    stats.scrolls = scrollAttempts;
+  }
+
+  const list = Array.from(users.values()).slice(0, CONFIG.maxUsers);
+  stats.collected = list.length;
+  stats.verified = list.filter((u) => u.verified).length;
+  stats.followsYou = list.filter((u) => u.followsYou).length;
+
+  // ============================================
+  // 📤 EXPORT
+  // ============================================
+  const result = {
+    tweetId,
+    tweetUrl: `https://x.com${window.location.pathname.replace(/\/likes\/?$/, '')}`,
+    scrapedAt: new Date().toISOString(),
+    total: list.length,
+    likers: list
+  };
+
+  const buildCsv = () => {
+    const header = 'Handle,DisplayName,Bio,Verified,FollowsYou,ProfileURL';
+    const rows = list.map((u) => [
+      csvCell('@' + u.handle),
+      csvCell(u.displayName),
+      csvCell(u.bio),
+      u.verified,
+      u.followsYou,
+      csvCell(u.profileUrl)
+    ].join(','));
+    return [header, ...rows].join('\n');
+  };
+
+  const csv = buildCsv();
+  const dateStr = new Date().toISOString().split('T')[0];
+
+  if (list.length === 0) {
+    log.warning('No likers were collected. The post may have zero likes, or the list is hidden.');
+  } else {
+    download(JSON.stringify(result, null, 2), `tweet_${tweetId}_likers_${dateStr}.json`, 'application/json');
+    log.success(`Downloaded tweet_${tweetId}_likers_${dateStr}.json`);
+    if (CONFIG.autoDownloadCsv) {
+      download(csv, `tweet_${tweetId}_likers_${dateStr}.csv`, 'text/csv');
+      log.success(`Downloaded tweet_${tweetId}_likers_${dateStr}.csv`);
+    }
+  }
+
+  window.scrapedLikers = result;
+  window.scrapeLikersExportCSV = () => {
+    download(csv, `tweet_${tweetId}_likers_${dateStr}.csv`, 'text/csv');
+    return csv;
+  };
+
+  // ============================================
+  // 📊 SUMMARY
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 SCRAPE LIKERS - COMPLETE                             ║
+╠══════════════════════════════════════════════════════════╣
+║  ❤️ Likers collected:    ${String(stats.collected).padEnd(30)}║
+║  ✔️  Verified:            ${String(stats.verified).padEnd(30)}║
+║  🔁 Follow you:          ${String(stats.followsYou).padEnd(30)}║
+║  📜 Scrolls:             ${String(stats.scrolls).padEnd(30)}║
+║  ❌ Row errors:          ${String(stats.errors).padEnd(30)}║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  list.slice(0, 5).forEach((u, i) => {
+    console.log(`${i + 1}. @${u.handle}${u.verified ? ' ✓' : ''} - ${u.displayName}`);
+  });
+  if (list.length > 5) console.log(`   ... and ${list.length - 5} more`);
+
+  console.log('\n📋 CSV preview (full string via window.scrapeLikersExportCSV()):');
+  console.log(csv.split('\n').slice(0, 6).join('\n'));
+  console.log('\n💡 window.scrapedLikers = full data. window.scrapeLikersExportCSV() = download + return CSV.');
+
+  return result;
+})();
+
+});
+  register("scrape-list", function(){
+(async function scrapeList() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // What to scrape: 'timeline' (the List's posts) or 'members' (the accounts
+    // on the List). Match this to the page you are on. Leave 'auto' to detect
+    // from the URL (a /members path selects members, otherwise timeline).
+    mode: 'auto',
+
+    // Maximum posts (timeline) or members to collect before stopping
+    maxItems: 500,
+
+    // Include reply posts in timeline mode (false = original posts only)
+    includeReplies: true,
+
+    // Delay between scrolls (ms). Raise if content loads slowly.
+    scrollDelay: 1800,
+
+    // Give up after this many scrolls that add nothing new
+    noNewItemsThreshold: 6,
+
+    // Hard cap on scroll attempts so the loop can never run forever
+    maxScrollAttempts: 500,
+
+    // Auto-download a CSV file too (JSON always downloads)
+    downloadCsv: true
+  };
+try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG,window.__XA_LAUNCH_CFG);}}catch(_xa){}
+
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    tweet: 'article[data-testid="tweet"]',
+    tweetText: '[data-testid="tweetText"]',
+    userName: '[data-testid="User-Name"]',
+    actionGroup: '[role="group"]',
+    photo: '[data-testid="tweetPhoto"] img',
+    video: 'video',
+    userCell: '[data-testid="UserCell"]',
+    userDescription: '[data-testid="UserDescription"]',
+    heading: 'h2[role="heading"], [data-testid="primaryColumn"] h1'
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+  const log = {
+    info: (msg) => console.log(`ℹ️ ${msg}`),
+    success: (msg) => console.log(`✅ ${msg}`),
+    warning: (msg) => console.log(`⚠️ ${msg}`),
+    error: (msg) => console.log(`❌ ${msg}`),
+    progress: (n, total, noun) => console.log(`📊 Collected ${n}/${total} ${noun}...`)
+  };
+
+  const countFromLabel = (label) => {
+    if (!label) return 0;
+    const raw = (label.match(/[\d.,]+\s*[KMB]?/i) || ['0'])[0].trim().toUpperCase();
+    const num = parseFloat(raw.replace(/,/g, '')) || 0;
+    if (raw.includes('K')) return Math.round(num * 1e3);
+    if (raw.includes('M')) return Math.round(num * 1e6);
+    if (raw.includes('B')) return Math.round(num * 1e9);
+    return Math.round(num);
+  };
+
+  const getCounts = (article) => {
+    const counts = { replies: 0, reposts: 0, likes: 0, views: 0 };
+    const group = article.querySelector(SELECTORS.actionGroup);
+    const nodes = group ? group.querySelectorAll('[aria-label]') : [];
+    nodes.forEach((node) => {
+      const label = (node.getAttribute('aria-label') || '').toLowerCase();
+      const value = countFromLabel(label);
+      if (label.includes('repl')) counts.replies = value;
+      else if (label.includes('repost') || label.includes('retweet')) counts.reposts = value;
+      else if (label.includes('like')) counts.likes = value;
+      else if (label.includes('view')) counts.views = value;
+    });
+    return counts;
+  };
+
+  const toOriginalImage = (url) => {
+    if (!url) return url;
+    return url.replace(/&name=[^&]*/i, '&name=orig').replace(/\?name=[^&]*/i, '?name=orig');
+  };
+
+  const getMediaUrls = (article) => {
+    const urls = new Set();
+    article.querySelectorAll(SELECTORS.photo).forEach((img) => {
+      if (img.src) urls.add(toOriginalImage(img.src));
+    });
+    article.querySelectorAll(SELECTORS.video).forEach((v) => {
+      if (v.src) urls.add(v.src);
+      else if (v.poster) urls.add(v.poster);
+    });
+    return Array.from(urls);
+  };
+
+  const isReply = (article) => {
+    if (article.querySelector('[data-testid="in-reply-to"]') !== null) return true;
+    return Array.from(article.querySelectorAll('div[dir]')).some((el) =>
+      (el.textContent || '').startsWith('Replying to'));
+  };
+
+  const extractPost = (article) => {
+    const timeEl = article.querySelector('time');
+    const permalink = timeEl ? timeEl.closest('a[href*="/status/"]') : null;
+    const anchor = permalink || article.querySelector('a[href*="/status/"]');
+    const url = anchor ? anchor.href : '';
+    const id = url ? (url.split('/status/')[1] || '').split(/[?/]/)[0] : '';
+    if (!id) return null;
+
+    const nameBlock = article.querySelector(SELECTORS.userName);
+    const nameText = nameBlock ? nameBlock.textContent : '';
+    const handle = (nameText.match(/@(\w+)/) || [, ''])[1];
+    const name = nameText.split('@')[0].trim();
+
+    const textEl = article.querySelector(SELECTORS.tweetText);
+    const text = textEl ? textEl.textContent : '';
+
+    const counts = getCounts(article);
+
+    return {
+      id,
+      url,
+      author: { handle, name },
+      text,
+      likes: counts.likes,
+      reposts: counts.reposts,
+      replies: counts.replies,
+      views: counts.views,
+      timestamp: timeEl ? timeEl.getAttribute('datetime') : null,
+      mediaUrls: getMediaUrls(article),
+      isReply: isReply(article),
+      scrapedAt: new Date().toISOString()
+    };
+  };
+
+  const extractMember = (cell) => {
+    const handleAnchor = cell.querySelector('a[href^="/"]');
+    const href = handleAnchor ? handleAnchor.getAttribute('href') : '';
+    const handle = (href || '').replace(/^\//, '').split('/')[0];
+    if (!handle) return null;
+
+    const nameBlock = cell.querySelector(SELECTORS.userName) || cell.querySelector('a[href^="/"]');
+    const nameText = nameBlock ? nameBlock.textContent : '';
+    const name = nameText.split('@')[0].trim();
+    const bioEl = cell.querySelector(SELECTORS.userDescription);
+    const verified = !!cell.querySelector('svg[aria-label*="Verified"]');
+
+    return {
+      handle,
+      name,
+      bio: bioEl ? bioEl.textContent : '',
+      verified,
+      profileUrl: `https://x.com/${handle}`,
+      scrapedAt: new Date().toISOString()
+    };
+  };
+
+  const downloadFile = (content, filename, mime) => {
+    try {
+      const blob = new Blob([content], { type: mime });
+      const href = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = href;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(href);
+      return true;
+    } catch (e) {
+      log.error(`Failed to download ${filename}: ${e.message}`);
+      return false;
+    }
+  };
+
+  const csvCell = (value) => `"${String(value == null ? '' : value).replace(/"/g, '""').replace(/\r?\n/g, ' ')}"`;
+
+  const postsToCSV = (posts) => {
+    const headers = ['id', 'handle', 'name', 'text', 'likes', 'reposts', 'replies', 'views', 'timestamp', 'mediaUrls', 'url'];
+    const rows = posts.map((p) => [
+      p.id, '@' + p.author.handle, p.author.name, p.text, p.likes, p.reposts,
+      p.replies, p.views, p.timestamp || '', p.mediaUrls.join(' '), p.url
+    ].map(csvCell).join(','));
+    return [headers.join(','), ...rows].join('\n');
+  };
+
+  const membersToCSV = (members) => {
+    const headers = ['handle', 'name', 'bio', 'verified', 'profileUrl'];
+    const rows = members.map((m) => [
+      '@' + m.handle, m.name, m.bio, m.verified, m.profileUrl
+    ].map(csvCell).join(','));
+    return [headers.join(','), ...rows].join('\n');
+  };
+
+  const getListId = () => {
+    const match = window.location.pathname.match(/lists\/(\d+)/);
+    return match ? match[1] : null;
+  };
+
+  const getListName = () => {
+    const header = document.querySelector(SELECTORS.heading);
+    return header ? header.textContent.trim() : 'list';
+  };
+
+  // ============================================
+  // 🎯 MAIN
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📋 SCRAPE LIST - XActions                              ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  // Page guard: warn and return, never hard-redirect.
+  if (!/\/lists\/\d+/.test(window.location.pathname)) {
+    log.warning('You are not on an X List page.');
+    log.info('Go to x.com/i/lists/<listId> (timeline) or x.com/i/lists/<listId>/members, then run again.');
+    return;
+  }
+
+  const mode = CONFIG.mode === 'auto'
+    ? (/\/members\b/.test(window.location.pathname) ? 'members' : 'timeline')
+    : CONFIG.mode;
+  if (mode !== 'timeline' && mode !== 'members') {
+    log.error(`Invalid CONFIG.mode "${CONFIG.mode}". Use 'timeline', 'members', or 'auto'.`);
+    return;
+  }
+
+  const listId = getListId();
+  const listName = getListName();
+
+  const items = new Map();
+
+  // Stop switch: run window.stopScrapeList() to end the scroll loop.
+  let stopped = false;
+  window.stopScrapeList = () => {
+    stopped = true;
+    log.warning('Stop requested. Finishing the current pass, then exporting.');
+  };
+
+  const noun = mode === 'members' ? 'members' : 'posts';
+  log.info(`List: "${listName}" (id ${listId})`);
+  log.info(`Mode: ${mode} | Max ${noun}: ${CONFIG.maxItems}`);
+  if (mode === 'timeline') log.info(`Include replies: ${CONFIG.includeReplies}`);
+  log.info('To stop early: window.stopScrapeList()');
+
+  let scrollAttempts = 0;
+  let noNewCount = 0;
+
+  while (!stopped && items.size < CONFIG.maxItems && scrollAttempts < CONFIG.maxScrollAttempts) {
+    const before = items.size;
+
+    if (mode === 'members') {
+      document.querySelectorAll(SELECTORS.userCell).forEach((cell) => {
+        try {
+          const member = extractMember(cell);
+          if (member && !items.has(member.handle)) items.set(member.handle, member);
+        } catch (e) {
+          log.error(`Skipped a member: ${e.message}`);
+        }
+      });
+    } else {
+      document.querySelectorAll(SELECTORS.tweet).forEach((article) => {
+        try {
+          const post = extractPost(article);
+          if (!post || items.has(post.id)) return;
+          if (!CONFIG.includeReplies && post.isReply) return;
+          items.set(post.id, post);
+        } catch (e) {
+          log.error(`Skipped a post: ${e.message}`);
+        }
+      });
+    }
+
+    if (items.size > before) {
+      log.progress(items.size, CONFIG.maxItems, noun);
+      noNewCount = 0;
+    } else {
+      noNewCount++;
+      if (noNewCount >= CONFIG.noNewItemsThreshold) {
+        log.warning(`No new ${noun} after several scrolls. Reached the end.`);
+        break;
+      }
+    }
+
+    if (items.size >= CONFIG.maxItems) break;
+
+    window.scrollTo(0, document.body.scrollHeight);
+    await sleep(CONFIG.scrollDelay);
+    scrollAttempts++;
+  }
+
+  const list = Array.from(items.values()).slice(0, CONFIG.maxItems);
+
+  // ============================================
+  // 📊 SUMMARY + EXPORT
+  // ============================================
+  if (list.length === 0) {
+    log.warning(`No ${noun} were found. The List may be empty, or the page had not loaded yet.`);
+    return;
+  }
+
+  const safeName = listName.replace(/[^a-z0-9]/gi, '_').slice(0, 30) || 'list';
+  const stamp = new Date().toISOString().split('T')[0];
+
+  if (mode === 'members') {
+    const verified = list.filter((m) => m.verified).length;
+    console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 SCRAPE LIST (MEMBERS) - COMPLETE                    ║
+╠══════════════════════════════════════════════════════════╣
+║  📋 List:         ${String(listName).slice(0, 36).padEnd(37)}║
+║  👥 Members:      ${String(list.length).padEnd(37)}║
+║  ✓  Verified:     ${String(verified).padEnd(37)}║
+╚══════════════════════════════════════════════════════════╝
+    `);
+    list.slice(0, 5).forEach((m, i) => console.log(`${i + 1}. @${m.handle}${m.verified ? ' ✓' : ''} - ${m.name}`));
+
+    const result = { listId, listName, mode, scrapedAt: new Date().toISOString(), count: list.length, members: list };
+    if (downloadFile(JSON.stringify(result, null, 2), `list_${safeName}_members_${stamp}.json`, 'application/json')) log.success('JSON downloaded');
+    if (CONFIG.downloadCsv && downloadFile(membersToCSV(list), `list_${safeName}_members_${stamp}.csv`, 'text/csv')) log.success('CSV downloaded');
+    window.scrapedList = result;
+    window.exportCSV = () => membersToCSV(list);
+  } else {
+    const totalLikes = list.reduce((s, p) => s + p.likes, 0);
+    console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 SCRAPE LIST (TIMELINE) - COMPLETE                   ║
+╠══════════════════════════════════════════════════════════╣
+║  📋 List:         ${String(listName).slice(0, 36).padEnd(37)}║
+║  📝 Posts:        ${String(list.length).padEnd(37)}║
+║  ❤️  Total likes:  ${String(totalLikes.toLocaleString()).padEnd(37)}║
+╚══════════════════════════════════════════════════════════╝
+    `);
+    list.slice(0, 5).forEach((p, i) => console.log(`${i + 1}. @${p.author.handle} (${p.likes} ❤️): "${p.text.slice(0, 60)}"`));
+
+    const result = { listId, listName, mode, scrapedAt: new Date().toISOString(), count: list.length, posts: list };
+    if (downloadFile(JSON.stringify(result, null, 2), `list_${safeName}_timeline_${stamp}.json`, 'application/json')) log.success('JSON downloaded');
+    if (CONFIG.downloadCsv && downloadFile(postsToCSV(list), `list_${safeName}_timeline_${stamp}.csv`, 'text/csv')) log.success('CSV downloaded');
+    window.scrapedList = result;
+    window.exportCSV = () => postsToCSV(list);
+  }
+
+  console.log('');
+  log.info('window.scrapedList holds the full data. window.exportCSV() returns the CSV string.');
+  log.success('Done! by nichxbt');
+
+  return window.scrapedList;
+})();
+
+});
+  register("scrape-media", function(){
+(async function scrapeMedia() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // Maximum number of media items to collect before stopping
+    maxItems: 500,
+
+    // Upgrade image URLs to original resolution (strip the &name= size param)
+    highestRes: true,
+
+    // Which media types to keep
+    includeImages: true,
+    includeVideos: true,
+    includeGifs: true,
+
+    // Delay between scrolls (ms). Raise if the grid loads slowly.
+    scrollDelay: 1800,
+
+    // Give up after this many scrolls that add nothing new
+    noNewItemsThreshold: 6,
+
+    // Hard cap on scroll attempts so the loop can never run forever
+    maxScrollAttempts: 400,
+
+    // Auto-download a CSV file and a plain-text URL list too (JSON always downloads)
+    downloadCsv: true,
+    downloadUrlList: true
+  };
+try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG,window.__XA_LAUNCH_CFG);}}catch(_xa){}
+
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    tweet: 'article[data-testid="tweet"]',
+    userName: '[data-testid="User-Name"]',
+    tweetPhoto: '[data-testid="tweetPhoto"] img',
+    video: 'video',
+    gifThumb: 'img[src*="tweet_video_thumb"]'
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+  const log = {
+    info: (msg) => console.log(`ℹ️ ${msg}`),
+    success: (msg) => console.log(`✅ ${msg}`),
+    warning: (msg) => console.log(`⚠️ ${msg}`),
+    error: (msg) => console.log(`❌ ${msg}`),
+    progress: (n, total) => console.log(`📊 Collected ${n}/${total} media items...`)
+  };
+
+  // Rewrite the &name= / ?name= size param to the original resolution.
+  const toOriginalImage = (url) => {
+    if (!url) return url;
+    if (/[?&]name=/i.test(url)) {
+      return url.replace(/&name=[^&]*/i, '&name=orig').replace(/\?name=[^&]*/i, '?name=orig');
+    }
+    // Some grid thumbnails encode the size in the path (e.g. ?format=jpg with no name).
+    return url.includes('?') ? `${url}&name=orig` : `${url}?name=orig`;
+  };
+
+  const isDecorative = (src) => !src || src.includes('profile_images') || src.includes('emoji') || src.includes('profile_banners');
+
+  const getPostContext = (article) => {
+    const timeEl = article.querySelector('time');
+    const permalink = timeEl ? timeEl.closest('a[href*="/status/"]') : null;
+    const anchor = permalink || article.querySelector('a[href*="/status/"]');
+    const url = anchor ? anchor.href : '';
+    const id = url ? (url.split('/status/')[1] || '').split(/[?/]/)[0] : '';
+    const nameBlock = article.querySelector(SELECTORS.userName);
+    const handle = nameBlock ? (nameBlock.textContent.match(/@(\w+)/) || [, ''])[1] : '';
+    return { tweetId: id, tweetUrl: url, handle, timestamp: timeEl ? timeEl.getAttribute('datetime') : null };
+  };
+
+  const extractMedia = (article) => {
+    const out = [];
+    const ctx = getPostContext(article);
+
+    if (CONFIG.includeGifs) {
+      article.querySelectorAll(SELECTORS.gifThumb).forEach((gif) => {
+        if (!gif.src) return;
+        out.push({ type: 'gif', url: gif.src, ...ctx });
+      });
+    }
+
+    if (CONFIG.includeImages) {
+      article.querySelectorAll(SELECTORS.tweetPhoto).forEach((img) => {
+        if (isDecorative(img.src) || (img.src && img.src.includes('tweet_video_thumb'))) return;
+        const url = CONFIG.highestRes ? toOriginalImage(img.src) : img.src;
+        out.push({ type: 'image', url, ...ctx });
+      });
+    }
+
+    if (CONFIG.includeVideos) {
+      article.querySelectorAll(SELECTORS.video).forEach((v) => {
+        const url = v.src || v.currentSrc || v.poster || '';
+        if (!url) return;
+        out.push({ type: 'video', url, poster: v.poster || '', ...ctx });
+      });
+    }
+
+    return out;
+  };
+
+  const downloadFile = (content, filename, mime) => {
+    try {
+      const blob = new Blob([content], { type: mime });
+      const href = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = href;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(href);
+      return true;
+    } catch (e) {
+      log.error(`Failed to download ${filename}: ${e.message}`);
+      return false;
+    }
+  };
+
+  const csvCell = (value) => `"${String(value == null ? '' : value).replace(/"/g, '""').replace(/\r?\n/g, ' ')}"`;
+
+  const toCSV = (media) => {
+    const headers = ['type', 'url', 'handle', 'tweetId', 'tweetUrl', 'timestamp'];
+    const rows = media.map((m) => [
+      m.type, m.url, '@' + m.handle, m.tweetId, m.tweetUrl, m.timestamp || ''
+    ].map(csvCell).join(','));
+    return [headers.join(','), ...rows].join('\n');
+  };
+
+  // ============================================
+  // 🎯 MAIN
+  // ============================================
+  const username = window.location.pathname.split('/').filter(Boolean)[0] || 'profile';
+
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  🖼️ SCRAPE MEDIA - XActions                             ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  // Page guard: warn and return, never hard-redirect.
+  if (!/\/media\/?$/.test(window.location.pathname)) {
+    log.warning('You are not on a profile Media tab.');
+    log.info(`Go to x.com/${username}/media, then run this script again.`);
+    return;
+  }
+
+  const media = new Map();
+
+  // Stop switch: run window.stopScrapeMedia() to end the scroll loop.
+  let stopped = false;
+  window.stopScrapeMedia = () => {
+    stopped = true;
+    log.warning('Stop requested. Finishing the current pass, then exporting.');
+  };
+
+  log.info(`Profile: @${username}`);
+  log.info(`Max items: ${CONFIG.maxItems} | Highest resolution: ${CONFIG.highestRes}`);
+  log.info('To stop early: window.stopScrapeMedia()');
+
+  let scrollAttempts = 0;
+  let noNewCount = 0;
+
+  while (!stopped && media.size < CONFIG.maxItems && scrollAttempts < CONFIG.maxScrollAttempts) {
+    const before = media.size;
+
+    document.querySelectorAll(SELECTORS.tweet).forEach((article) => {
+      try {
+        extractMedia(article).forEach((item) => {
+          // Dedupe by the base URL (without query) so re-rendered thumbnails
+          // do not create duplicate entries.
+          const key = `${item.type}:${item.url.split('?')[0]}`;
+          if (!media.has(key)) media.set(key, item);
+        });
+      } catch (e) {
+        log.error(`Skipped a media item: ${e.message}`);
+      }
+    });
+
+    if (media.size > before) {
+      log.progress(media.size, CONFIG.maxItems);
+      noNewCount = 0;
+    } else {
+      noNewCount++;
+      if (noNewCount >= CONFIG.noNewItemsThreshold) {
+        log.warning('No new media after several scrolls. Reached the end of the tab.');
+        break;
+      }
+    }
+
+    if (media.size >= CONFIG.maxItems) break;
+
+    window.scrollTo(0, document.body.scrollHeight);
+    await sleep(CONFIG.scrollDelay);
+    scrollAttempts++;
+  }
+
+  const list = Array.from(media.values()).slice(0, CONFIG.maxItems);
+
+  // ============================================
+  // 📊 SUMMARY + EXPORT
+  // ============================================
+  if (list.length === 0) {
+    log.warning('No media was found. The Media tab may be empty, or the grid had not loaded yet.');
+    return;
+  }
+
+  const images = list.filter((m) => m.type === 'image');
+  const videos = list.filter((m) => m.type === 'video');
+  const gifs = list.filter((m) => m.type === 'gif');
+
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 SCRAPE MEDIA - COMPLETE                             ║
+╠══════════════════════════════════════════════════════════╣
+║  👤 Profile:      ${String('@' + username).slice(0, 36).padEnd(37)}║
+║  🖼️  Total:        ${String(list.length).padEnd(37)}║
+║  📷 Images:       ${String(images.length).padEnd(37)}║
+║  🎥 Videos:       ${String(videos.length).padEnd(37)}║
+║  🎞️  GIFs:         ${String(gifs.length).padEnd(37)}║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  const stamp = new Date().toISOString().split('T')[0];
+  const result = {
+    username,
+    scrapedAt: new Date().toISOString(),
+    stats: { images: images.length, videos: videos.length, gifs: gifs.length, total: list.length },
+    media: list
+  };
+
+  if (downloadFile(JSON.stringify(result, null, 2), `${username}_media_${stamp}.json`, 'application/json')) {
+    log.success('JSON downloaded');
+  }
+  if (CONFIG.downloadUrlList) {
+    const urlText = list.map((m) => m.url).join('\n');
+    if (downloadFile(urlText, `${username}_media_urls_${stamp}.txt`, 'text/plain')) log.success('URL list (.txt) downloaded');
+  }
+  if (CONFIG.downloadCsv && downloadFile(toCSV(list), `${username}_media_${stamp}.csv`, 'text/csv')) {
+    log.success('CSV downloaded');
+  }
+
+  window.scrapedMedia = result;
+  window.exportCSV = () => toCSV(list);
+  console.log('');
+  log.info('window.scrapedMedia holds the full data. window.exportCSV() returns the CSV string.');
+  log.info('Open any URL from the JSON to save the file, or feed the .txt list to a downloader.');
+  log.success('Done! by nichxbt');
+
+  return result;
+})();
+
+});
+  register("scrape-notifications", function(){
+(async function scrapeNotifications() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // Maximum number of notifications to collect
+    maxNotifications: 500,
+
+    // Maximum scroll attempts before giving up
+    maxScrollAttempts: 200,
+
+    // Stop after this many scrolls with no new notifications (end of feed)
+    noNewThreshold: 5,
+
+    // Delay between scrolls (ms). Raise if items load slowly.
+    scrollDelay: 1500,
+
+    // Auto-download the results as files when finished
+    downloadJSON: true,
+    downloadCSV: true
+  };
+try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG,window.__XA_LAUNCH_CFG);}}catch(_xa){}
+
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    // Notification rows render as cellInnerDiv; older layouts use article
+    row: '[data-testid="cellInnerDiv"], article',
+    // Any profile link inside a row (used to extract actor handles)
+    profileLink: 'a[href^="/"]',
+    // Link to the related tweet, when the notification references one
+    statusLink: 'a[href*="/status/"]',
+    time: 'time'
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+  const log = {
+    info: (msg) => console.log(`ℹ️ ${msg}`),
+    success: (msg) => console.log(`✅ ${msg}`),
+    warning: (msg) => console.log(`⚠️ ${msg}`),
+    error: (msg) => console.log(`❌ ${msg}`)
+  };
+
+  // Reserved handles that appear as links but are not actors
+  const NON_ACTOR = new Set([
+    'home', 'explore', 'notifications', 'messages', 'search', 'settings',
+    'i', 'compose', 'hashtag', 'intent'
+  ]);
+
+  const download = (content, filename, type) => {
+    try {
+      const blob = new Blob([content], { type });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      return true;
+    } catch (e) {
+      log.error(`Failed to download ${filename}: ${e.message}`);
+      return false;
+    }
+  };
+
+  const classifyType = (text) => {
+    const t = text.toLowerCase();
+    if (t.includes('liked')) return 'like';
+    if (t.includes('reposted') || t.includes('retweeted')) return 'retweet';
+    if (t.includes('followed')) return 'follow';
+    if (t.includes('quoted')) return 'quote';
+    if (t.includes('replied') || t.includes('replying to')) return 'reply';
+    if (t.includes('mentioned')) return 'mention';
+    if (t.includes('there was a login') || t.includes('new login')) return 'security';
+    if (t.includes('live') && t.includes('space')) return 'space';
+    return 'other';
+  };
+
+  const extractActors = (row) => {
+    const handles = [];
+    row.querySelectorAll(SELECTORS.profileLink).forEach(link => {
+      const href = link.getAttribute('href') || '';
+      // A bare "/handle" link, no deeper path, is a profile
+      const m = href.match(/^\/([A-Za-z0-9_]{1,15})$/);
+      if (!m) return;
+      const handle = m[1];
+      if (NON_ACTOR.has(handle.toLowerCase())) return;
+      if (!handles.includes(handle)) handles.push(handle);
+    });
+    return handles;
+  };
+
+  const extractNotification = (row) => {
+    const text = (row.textContent || '').trim();
+    if (text.length < 4) return null;
+
+    const actors = extractActors(row);
+    const statusLink = row.querySelector(SELECTORS.statusLink);
+    const tweetUrl = statusLink ? statusLink.href : '';
+
+    const timeEl = row.querySelector(SELECTORS.time);
+    const timestamp = timeEl ? (timeEl.getAttribute('datetime') || '') : '';
+    const displayTime = timeEl ? timeEl.textContent.trim() : '';
+
+    return {
+      type: classifyType(text),
+      actors,
+      text: text.slice(0, 500),
+      tweetUrl,
+      timestamp,
+      displayTime,
+      scrapedAt: new Date().toISOString()
+    };
+  };
+
+  // ============================================
+  // 🎯 MAIN
+  // ============================================
+  let stopped = false;
+  window.stopScrapeNotifications = () => {
+    stopped = true;
+    log.warning('Stop requested. Finishing the current pass, then exporting.');
+  };
+
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  🔔 SCRAPE NOTIFICATIONS - XActions                      ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  // Page guard: warn (do not hard-redirect) if we are not on notifications
+  if (!window.location.pathname.includes('/notifications')) {
+    log.warning('You are not on the notifications page.');
+    log.info('Go to https://x.com/notifications, then paste this script again.');
+    return;
+  }
+
+  log.info(`Max notifications: ${CONFIG.maxNotifications}`);
+  log.info('To stop early: window.stopScrapeNotifications()');
+  console.log('');
+
+  const notifications = new Map();
+  let scrollAttempts = 0;
+  let noNewCount = 0;
+
+  while (!stopped && notifications.size < CONFIG.maxNotifications && scrollAttempts < CONFIG.maxScrollAttempts) {
+    const rows = document.querySelectorAll(SELECTORS.row);
+    const before = notifications.size;
+
+    rows.forEach(row => {
+      try {
+        const n = extractNotification(row);
+        if (!n) return;
+        // Dedupe on type + actors + a text fingerprint
+        const key = `${n.type}|${n.actors.join(',')}|${n.text.slice(0, 80)}`;
+        if (!notifications.has(key)) notifications.set(key, n);
+      } catch (e) {
+        // One malformed row must not kill the run
+      }
+    });
+
+    const added = notifications.size - before;
+    if (added > 0) {
+      log.info(`Collected ${notifications.size} notifications (+${added})`);
+      noNewCount = 0;
+    } else {
+      noNewCount++;
+      if (noNewCount >= CONFIG.noNewThreshold) {
+        log.warning('No new notifications after several scrolls. Reached the end.');
+        break;
+      }
+    }
+
+    window.scrollTo(0, document.body.scrollHeight);
+    await sleep(CONFIG.scrollDelay);
+    scrollAttempts++;
+  }
+
+  const list = Array.from(notifications.values());
+
+  // ============================================
+  // 📊 SUMMARY
+  // ============================================
+  const byType = {};
+  const byActor = {};
+  list.forEach(n => {
+    byType[n.type] = (byType[n.type] || 0) + 1;
+    n.actors.forEach(a => { byActor[a] = (byActor[a] || 0) + 1; });
+  });
+
+  console.log('');
+  console.log('╔══════════════════════════════════════════════════════════╗');
+  console.log('║  📊 NOTIFICATIONS - COMPLETE                             ║');
+  console.log('╚══════════════════════════════════════════════════════════╝');
+  console.log(`🔔 Total notifications: ${list.length}`);
+  console.log(`📜 Scroll attempts: ${scrollAttempts}`);
+
+  if (list.length === 0) {
+    log.warning('No notifications found. Your feed may be empty, or the page had not loaded.');
+    return { notifications: [] };
+  }
+
+  console.log('\n📊 By type:');
+  Object.entries(byType).sort((a, b) => b[1] - a[1]).forEach(([type, count]) => {
+    console.log(`   ${type}: ${count}`);
+  });
+
+  const topActors = Object.entries(byActor).sort((a, b) => b[1] - a[1]).slice(0, 5);
+  if (topActors.length > 0) {
+    console.log('\n👥 Top interactors:');
+    topActors.forEach(([user, count]) => console.log(`   @${user}: ${count}`));
+  }
+
+  // ============================================
+  // 💾 EXPORT
+  // ============================================
+  const dateStr = new Date().toISOString().split('T')[0];
+  const result = {
+    exportedAt: new Date().toISOString(),
+    count: list.length,
+    byType,
+    notifications: list
+  };
+
+  console.log('');
+  if (CONFIG.downloadJSON) {
+    if (download(JSON.stringify(result, null, 2), `notifications_${dateStr}.json`, 'application/json')) {
+      log.success('JSON downloaded');
+    }
+  }
+
+  if (CONFIG.downloadCSV) {
+    const esc = (v) => `"${String(v).replace(/"/g, '""').replace(/\n/g, ' ')}"`;
+    const csv = [
+      ['Type', 'Actors', 'Text', 'TweetURL', 'Timestamp', 'DisplayTime'].join(','),
+      ...list.map(n => [
+        esc(n.type),
+        esc(n.actors.join(' ')),
+        esc(n.text),
+        esc(n.tweetUrl),
+        esc(n.timestamp),
+        esc(n.displayTime)
+      ].join(','))
+    ].join('\n');
+    if (download(csv, `notifications_${dateStr}.csv`, 'text/csv')) {
+      log.success('CSV downloaded');
+    }
+  }
+
+  window.scrapedNotifications = result;
+  console.log('\n💡 Access your data: window.scrapedNotifications');
+  console.log('✅ Script completed! by nichxbt');
+
+  return result;
 })();
 
 });
@@ -15519,6 +23469,1565 @@ try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG
 })();
 
 });
+  register("scrape-replies", function(){
+(async function scrapeReplies() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // Maximum number of replies to collect before stopping
+    maxReplies: 500,
+
+    // Delay between scrolls (ms). Raise if replies load slowly.
+    scrollDelay: 1800,
+
+    // Give up after this many scrolls that add no new replies
+    noNewRepliesThreshold: 6,
+
+    // Hard cap on scroll attempts so the loop can never run forever
+    maxScrollAttempts: 400,
+
+    // Auto-download a CSV file too (JSON always downloads)
+    downloadCsv: true
+  };
+try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG,window.__XA_LAUNCH_CFG);}}catch(_xa){}
+
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    tweet: 'article[data-testid="tweet"]',
+    tweetText: '[data-testid="tweetText"]',
+    userName: '[data-testid="User-Name"]',
+    actionGroup: '[role="group"]',
+    photo: '[data-testid="tweetPhoto"] img',
+    video: 'video'
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+  const log = {
+    info: (msg) => console.log(`ℹ️ ${msg}`),
+    success: (msg) => console.log(`✅ ${msg}`),
+    warning: (msg) => console.log(`⚠️ ${msg}`),
+    error: (msg) => console.log(`❌ ${msg}`),
+    progress: (n, total) => console.log(`📊 Collected ${n}/${total} replies...`)
+  };
+
+  const countFromLabel = (label) => {
+    if (!label) return 0;
+    const raw = (label.match(/[\d.,]+\s*[KMB]?/i) || ['0'])[0].trim().toUpperCase();
+    const num = parseFloat(raw.replace(/,/g, '')) || 0;
+    if (raw.includes('K')) return Math.round(num * 1e3);
+    if (raw.includes('M')) return Math.round(num * 1e6);
+    if (raw.includes('B')) return Math.round(num * 1e9);
+    return Math.round(num);
+  };
+
+  const getCounts = (article) => {
+    const counts = { replies: 0, reposts: 0, likes: 0, views: 0 };
+    const group = article.querySelector(SELECTORS.actionGroup);
+    const nodes = group ? group.querySelectorAll('[aria-label]') : [];
+    nodes.forEach((node) => {
+      const label = (node.getAttribute('aria-label') || '').toLowerCase();
+      const value = countFromLabel(label);
+      if (label.includes('repl')) counts.replies = value;
+      else if (label.includes('repost') || label.includes('retweet')) counts.reposts = value;
+      else if (label.includes('like')) counts.likes = value;
+      else if (label.includes('view')) counts.views = value;
+    });
+    return counts;
+  };
+
+  const toOriginalImage = (url) => {
+    if (!url) return url;
+    return url.replace(/&name=[^&]*/i, '&name=orig').replace(/\?name=[^&]*/i, '?name=orig');
+  };
+
+  const getMediaUrls = (article) => {
+    const urls = new Set();
+    article.querySelectorAll(SELECTORS.photo).forEach((img) => {
+      if (img.src) urls.add(toOriginalImage(img.src));
+    });
+    article.querySelectorAll(SELECTORS.video).forEach((v) => {
+      if (v.src) urls.add(v.src);
+      else if (v.poster) urls.add(v.poster);
+    });
+    return Array.from(urls);
+  };
+
+  const extractReply = (article) => {
+    const timeEl = article.querySelector('time');
+    const permalink = timeEl ? timeEl.closest('a[href*="/status/"]') : null;
+    const anchor = permalink || article.querySelector('a[href*="/status/"]');
+    const url = anchor ? anchor.href : '';
+    const id = url ? (url.split('/status/')[1] || '').split(/[?/]/)[0] : '';
+    if (!id) return null;
+
+    const nameBlock = article.querySelector(SELECTORS.userName);
+    const nameText = nameBlock ? nameBlock.textContent : '';
+    const handle = (nameText.match(/@(\w+)/) || [, ''])[1];
+    const name = nameText.split('@')[0].trim();
+    const verified = !!article.querySelector(`${SELECTORS.userName} svg[aria-label*="Verified"]`);
+
+    const textEl = article.querySelector(SELECTORS.tweetText);
+    const text = textEl ? textEl.textContent : '';
+
+    const counts = getCounts(article);
+
+    return {
+      id,
+      url,
+      author: { handle, name },
+      verified,
+      text,
+      likes: counts.likes,
+      reposts: counts.reposts,
+      replies: counts.replies,
+      views: counts.views,
+      timestamp: timeEl ? timeEl.getAttribute('datetime') : null,
+      mediaUrls: getMediaUrls(article),
+      scrapedAt: new Date().toISOString()
+    };
+  };
+
+  const downloadFile = (content, filename, mime) => {
+    try {
+      const blob = new Blob([content], { type: mime });
+      const href = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = href;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(href);
+      return true;
+    } catch (e) {
+      log.error(`Failed to download ${filename}: ${e.message}`);
+      return false;
+    }
+  };
+
+  const csvCell = (value) => `"${String(value == null ? '' : value).replace(/"/g, '""').replace(/\r?\n/g, ' ')}"`;
+
+  const toCSV = (replies) => {
+    const headers = ['id', 'handle', 'name', 'verified', 'text', 'likes', 'reposts', 'replies', 'views', 'timestamp', 'url'];
+    const rows = replies.map((r) => [
+      r.id, '@' + r.author.handle, r.author.name, r.verified, r.text,
+      r.likes, r.reposts, r.replies, r.views, r.timestamp || '', r.url
+    ].map(csvCell).join(','));
+    return [headers.join(','), ...rows].join('\n');
+  };
+
+  const getStatusId = () => {
+    const match = window.location.pathname.match(/status\/(\d+)/);
+    return match ? match[1] : null;
+  };
+
+  const getOriginalAuthor = () => {
+    const match = window.location.pathname.match(/^\/(\w+)\/status\//);
+    return match ? match[1] : null;
+  };
+
+  // ============================================
+  // 🎯 MAIN
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  💬 SCRAPE REPLIES - XActions                           ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  const statusId = getStatusId();
+  const originalAuthor = getOriginalAuthor();
+
+  // Page guard: warn and return, never hard-redirect.
+  if (!statusId) {
+    log.warning('You are not on a post status page.');
+    log.info('Open a post (x.com/<user>/status/<id>), then run this script again.');
+    return;
+  }
+
+  const replies = new Map();
+
+  // Stop switch: run window.stopScrapeReplies() to end the scroll loop.
+  let stopped = false;
+  window.stopScrapeReplies = () => {
+    stopped = true;
+    log.warning('Stop requested. Finishing the current pass, then exporting.');
+  };
+
+  log.info(`Original post: @${originalAuthor || 'unknown'} / ${statusId}`);
+  log.info(`Max replies: ${CONFIG.maxReplies}`);
+  log.info('To stop early: window.stopScrapeReplies()');
+
+  let scrollAttempts = 0;
+  let noNewCount = 0;
+
+  while (!stopped && replies.size < CONFIG.maxReplies && scrollAttempts < CONFIG.maxScrollAttempts) {
+    const before = replies.size;
+
+    document.querySelectorAll(SELECTORS.tweet).forEach((article) => {
+      try {
+        const reply = extractReply(article);
+        if (!reply) return;
+        // Skip the original post: it shares the status id in the URL.
+        if (reply.id === statusId) return;
+        if (!replies.has(reply.id)) replies.set(reply.id, reply);
+      } catch (e) {
+        log.error(`Skipped a reply: ${e.message}`);
+      }
+    });
+
+    if (replies.size > before) {
+      log.progress(replies.size, CONFIG.maxReplies);
+      noNewCount = 0;
+    } else {
+      noNewCount++;
+      if (noNewCount >= CONFIG.noNewRepliesThreshold) {
+        log.warning('No new replies after several scrolls. Reached the end of the conversation.');
+        break;
+      }
+    }
+
+    if (replies.size >= CONFIG.maxReplies) break;
+
+    window.scrollTo(0, document.body.scrollHeight);
+    await sleep(CONFIG.scrollDelay);
+    scrollAttempts++;
+  }
+
+  const list = Array.from(replies.values()).slice(0, CONFIG.maxReplies);
+
+  // ============================================
+  // 📊 SUMMARY + EXPORT
+  // ============================================
+  if (list.length === 0) {
+    log.warning('No replies were found. The post may have no replies, or the thread had not loaded yet.');
+    return;
+  }
+
+  const uniqueUsers = new Set(list.map((r) => r.author.handle)).size;
+  const verifiedCount = list.filter((r) => r.verified).length;
+
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 SCRAPE REPLIES - COMPLETE                           ║
+╠══════════════════════════════════════════════════════════╣
+║  💬 Replies:      ${String(list.length).padEnd(37)}║
+║  👥 Unique users: ${String(uniqueUsers).padEnd(37)}║
+║  ✓  Verified:     ${String(verifiedCount).padEnd(37)}║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  list.slice(0, 5).forEach((r, i) => {
+    console.log(`${i + 1}. @${r.author.handle}${r.verified ? ' ✓' : ''} (${r.likes} ❤️): "${r.text.slice(0, 60)}"`);
+  });
+
+  const stamp = new Date().toISOString().split('T')[0];
+  const result = {
+    originalStatusId: statusId,
+    originalAuthor,
+    scrapedAt: new Date().toISOString(),
+    count: list.length,
+    replies: list
+  };
+
+  if (downloadFile(JSON.stringify(result, null, 2), `replies_${statusId}_${stamp}.json`, 'application/json')) {
+    log.success('JSON downloaded');
+  }
+  if (CONFIG.downloadCsv && downloadFile(toCSV(list), `replies_${statusId}_${stamp}.csv`, 'text/csv')) {
+    log.success('CSV downloaded');
+  }
+
+  window.scrapedReplies = result;
+  window.exportCSV = () => toCSV(list);
+  console.log('');
+  log.info('window.scrapedReplies holds the full data. window.exportCSV() returns the CSV string.');
+  log.success('Done! by nichxbt');
+
+  return result;
+})();
+
+});
+  register("scrape-retweeters", function(){
+(async function scrapeReposters() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // Collect users who reposted (the /retweets tab)
+    collectReposts: true,
+
+    // Collect users who quote-tweeted (the /quotes tab)
+    collectQuotes: true,
+
+    // Stop after collecting this many entries total (safety cap)
+    maxEntries: 5000,
+
+    // How far to scroll each step (pixels)
+    scrollStep: 1400,
+
+    // Delay between scrolls (ms). Raise to 2500+ on a slow connection so rows load.
+    scrollDelay: 1500,
+
+    // Give up on a tab after this many consecutive scrolls with no new rows
+    stallLimit: 6,
+
+    // Hard cap on scroll attempts per tab, independent of stalls
+    maxScrollAttempts: 300,
+
+    // Also trigger a browser download of the CSV file (JSON always downloads)
+    autoDownloadCsv: false
+  };
+try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG,window.__XA_LAUNCH_CFG);}}catch(_xa){}
+
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    userCell: '[data-testid="UserCell"]',
+    tweet: 'article[data-testid="tweet"]',
+    tweetText: '[data-testid="tweetText"]',
+    userName: '[data-testid="User-Name"]',
+    userDescription: '[data-testid="UserDescription"]',
+    followsYou: '[data-testid="userFollowIndicator"]',
+    verified: 'svg[aria-label*="Verified"], [data-testid="icon-verified"]',
+    profileLink: 'a[href^="/"]'
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  const randomDelay = () => sleep(CONFIG.scrollDelay + Math.floor(Math.random() * 500));
+
+  const log = {
+    info: (m) => console.log(`ℹ️ ${m}`),
+    success: (m) => console.log(`✅ ${m}`),
+    warning: (m) => console.log(`⚠️ ${m}`),
+    error: (m) => console.log(`❌ ${m}`),
+    count: (label, n) => console.log(`🔁 Collected ${n} ${label}...`)
+  };
+
+  const csvCell = (v) => `"${String(v == null ? '' : v).replace(/"/g, '""').replace(/\r?\n/g, ' ')}"`;
+
+  const parseNumber = (str) => {
+    if (!str) return 0;
+    const s = str.trim().toUpperCase();
+    const num = parseFloat(s.replace(/,/g, '')) || 0;
+    if (s.includes('K')) return Math.round(num * 1000);
+    if (s.includes('M')) return Math.round(num * 1000000);
+    return Math.round(num);
+  };
+
+  const download = (content, filename, type) => {
+    try {
+      const blob = new Blob([content], { type });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      return true;
+    } catch (e) {
+      log.error(`Download of ${filename} failed: ${e.message}`);
+      return false;
+    }
+  };
+
+  // Reposters render as UserCell rows (people).
+  const extractUser = (cell) => {
+    const anchors = Array.from(cell.querySelectorAll(SELECTORS.profileLink));
+
+    let handle = '';
+    for (const a of anchors) {
+      const href = a.getAttribute('href') || '';
+      const m = href.match(/^\/([A-Za-z0-9_]{1,15})$/);
+      if (m) { handle = m[1]; break; }
+    }
+    if (!handle) {
+      const at = anchors.find((a) => a.textContent.trim().startsWith('@'));
+      if (at) handle = at.textContent.trim().slice(1).split(/\s/)[0];
+    }
+    if (!handle) return null;
+
+    let displayName = '';
+    const nameAnchor = anchors.find((a) => {
+      const t = a.textContent.trim();
+      return t && !t.startsWith('@');
+    });
+    displayName = (nameAnchor && nameAnchor.textContent.trim()) ||
+      (cell.querySelector('div[dir="ltr"] span')?.textContent.trim()) || '';
+
+    let bio = cell.querySelector(SELECTORS.userDescription)?.textContent?.trim() || '';
+    if (!bio) {
+      const auto = cell.querySelector('[dir="auto"]:not([data-testid])')?.textContent?.trim();
+      if (auto && auto.length >= 10 && !auto.startsWith('@')) bio = auto;
+    }
+
+    return {
+      type: 'repost',
+      handle,
+      displayName,
+      bio,
+      verified: !!cell.querySelector(SELECTORS.verified),
+      followsYou: !!cell.querySelector(SELECTORS.followsYou),
+      profileUrl: `https://x.com/${handle}`
+    };
+  };
+
+  // Quote-tweets render as full article tweets (post + author + counts).
+  const extractQuote = (article) => {
+    const timeEl = article.querySelector('time');
+    const permalink = timeEl?.closest('a[href*="/status/"]') || article.querySelector('a[href*="/status/"]');
+    const url = permalink ? permalink.href : '';
+    const quoteId = url ? (url.split('/status/')[1] || '').split(/[?/]/)[0] : '';
+    if (!quoteId) return null;
+
+    const handle = (url.match(/x\.com\/([^/]+)\/status/) || [])[1] || '';
+    const nameText = article.querySelector(SELECTORS.userName)?.textContent || '';
+    const displayName = nameText.split('@')[0].trim();
+    const verified = !!article.querySelector(`${SELECTORS.userName} ${SELECTORS.verified}`);
+    const text = article.querySelector(SELECTORS.tweetText)?.textContent || '';
+    const time = timeEl ? timeEl.getAttribute('datetime') : '';
+
+    const getMetric = (testId) => {
+      const el = article.querySelector(`[data-testid="${testId}"]`);
+      const span = el?.querySelector('span span');
+      return parseNumber(span ? span.textContent : '0');
+    };
+    const viewsEl = article.querySelector('a[href$="/analytics"]');
+    const views = parseNumber(viewsEl ? viewsEl.textContent : '0');
+
+    return {
+      type: 'quote',
+      quoteId,
+      handle,
+      displayName,
+      verified,
+      text,
+      url,
+      time,
+      replies: getMetric('reply'),
+      retweets: getMetric('retweet'),
+      likes: getMetric('like'),
+      views
+    };
+  };
+
+  const getTweetId = () => (window.location.pathname.match(/status\/(\d+)/) || [])[1] || null;
+
+  // ============================================
+  // 🛑 STOP SWITCH
+  // ============================================
+  let stopped = false;
+  window.stopScrapeReposters = () => {
+    stopped = true;
+    log.warning('Stop requested. Finishing the current scroll, then exporting what was collected.');
+  };
+
+  // ============================================
+  // 🚦 PAGE GUARD
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  🔁 SCRAPE REPOSTERS + QUOTERS - XActions                ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  const tweetId = getTweetId();
+  if (!tweetId || !/\/(retweets|quotes)\/?$/.test(window.location.pathname)) {
+    log.warning('You are not on a post Reposts or Quotes page.');
+    log.info('Open a post, tap its reposts count, and land on x.com/<user>/status/<id>/retweets (or /quotes), then run this again.');
+    return;
+  }
+
+  log.info(`Scraping reposters and quoters of post ${tweetId}`);
+  log.info(`To stop early: window.stopScrapeReposters()`);
+
+  // ============================================
+  // 🎯 COLLECTION (merges across tabs and across runs)
+  // ============================================
+  const items = new Map();
+  const stats = { reposts: 0, quotes: 0, verified: 0, scrolls: 0, errors: 0 };
+
+  // Seed from a prior run against the same post so a manual two-tab flow merges.
+  const prior = window.__scrapeRepostersData;
+  if (prior && prior.tweetId === tweetId && Array.isArray(prior.entries)) {
+    prior.entries.forEach((e) => {
+      const key = e.type === 'quote' ? `quote:${e.quoteId}` : `repost:${e.handle}`;
+      if (!items.has(key)) items.set(key, e);
+    });
+    if (items.size) log.info(`Merged ${items.size} entries from a previous run on this post.`);
+  }
+
+  const harvest = async (kind) => {
+    const label = kind === 'repost' ? 'reposters' : 'quotes';
+    let scrollAttempts = 0;
+    let stall = 0;
+
+    while (!stopped && items.size < CONFIG.maxEntries && stall < CONFIG.stallLimit && scrollAttempts < CONFIG.maxScrollAttempts) {
+      const before = items.size;
+
+      if (kind === 'repost') {
+        document.querySelectorAll(SELECTORS.userCell).forEach((cell) => {
+          try {
+            const u = extractUser(cell);
+            if (u && u.handle) {
+              const key = `repost:${u.handle}`;
+              if (!items.has(key)) items.set(key, u);
+            }
+          } catch (e) { stats.errors++; }
+        });
+      } else {
+        document.querySelectorAll(SELECTORS.tweet).forEach((article) => {
+          try {
+            const q = extractQuote(article);
+            if (q && q.quoteId && q.quoteId !== tweetId) {
+              const key = `quote:${q.quoteId}`;
+              if (!items.has(key)) items.set(key, q);
+            }
+          } catch (e) { stats.errors++; }
+        });
+      }
+
+      if (items.size > before) {
+        log.count(label, items.size);
+        stall = 0;
+      } else {
+        stall++;
+      }
+
+      window.scrollBy(0, CONFIG.scrollStep);
+      await randomDelay();
+      scrollAttempts++;
+      stats.scrolls++;
+    }
+  };
+
+  // Switch tabs inside the single-page app (no full reload, script keeps running).
+  const goToTab = async (segment) => {
+    if (new RegExp(`/${segment}/?$`).test(window.location.pathname)) return true;
+    const link = Array.from(document.querySelectorAll('a[href*="/status/"]'))
+      .find((a) => new RegExp(`/status/${tweetId}/${segment}$`).test(a.getAttribute('href') || ''));
+    if (!link) return false;
+    link.click();
+    for (let i = 0; i < 40 && !stopped; i++) {
+      await sleep(300);
+      if (new RegExp(`/${segment}/?$`).test(window.location.pathname)) {
+        await sleep(900); // let the first rows render
+        return true;
+      }
+    }
+    return new RegExp(`/${segment}/?$`).test(window.location.pathname);
+  };
+
+  // Scrape reposts first, then quotes, whichever tab we started on.
+  if (CONFIG.collectReposts && !stopped) {
+    if (await goToTab('retweets')) {
+      window.scrollTo(0, 0);
+      await sleep(600);
+      await harvest('repost');
+    } else {
+      log.warning('Could not open the Reposts tab automatically. Open x.com/<user>/status/<id>/retweets and run again to add reposters.');
+    }
+  }
+
+  if (CONFIG.collectQuotes && !stopped) {
+    if (await goToTab('quotes')) {
+      window.scrollTo(0, 0);
+      await sleep(600);
+      await harvest('quote');
+    } else {
+      log.warning('Could not open the Quotes tab automatically. Open x.com/<user>/status/<id>/quotes and run again to add quote-tweets.');
+    }
+  }
+
+  const list = Array.from(items.values()).slice(0, CONFIG.maxEntries);
+  stats.reposts = list.filter((e) => e.type === 'repost').length;
+  stats.quotes = list.filter((e) => e.type === 'quote').length;
+  stats.verified = list.filter((e) => e.verified).length;
+
+  // ============================================
+  // 📤 EXPORT
+  // ============================================
+  const result = {
+    tweetId,
+    scrapedAt: new Date().toISOString(),
+    total: list.length,
+    reposts: stats.reposts,
+    quotes: stats.quotes,
+    entries: list
+  };
+
+  const buildCsv = () => {
+    const header = 'Type,Handle,DisplayName,Verified,FollowsYou,Bio,QuoteId,Text,Likes,Retweets,Replies,Views,URL,Time';
+    const rows = list.map((e) => [
+      e.type,
+      csvCell('@' + (e.handle || '')),
+      csvCell(e.displayName),
+      !!e.verified,
+      e.type === 'repost' ? !!e.followsYou : '',
+      csvCell(e.type === 'repost' ? (e.bio || '') : ''),
+      csvCell(e.type === 'quote' ? e.quoteId : ''),
+      csvCell(e.type === 'quote' ? e.text : ''),
+      e.type === 'quote' ? e.likes : '',
+      e.type === 'quote' ? e.retweets : '',
+      e.type === 'quote' ? e.replies : '',
+      e.type === 'quote' ? e.views : '',
+      csvCell(e.type === 'quote' ? e.url : (e.profileUrl || '')),
+      csvCell(e.type === 'quote' ? e.time : '')
+    ].join(','));
+    return [header, ...rows].join('\n');
+  };
+
+  const csv = buildCsv();
+  const dateStr = new Date().toISOString().split('T')[0];
+
+  // Persist for a possible follow-up run on the other tab.
+  window.__scrapeRepostersData = { tweetId, entries: list };
+
+  if (list.length === 0) {
+    log.warning('No reposters or quoters were collected. The post may have none, or both tabs were unreachable.');
+  } else {
+    download(JSON.stringify(result, null, 2), `tweet_${tweetId}_reposters_${dateStr}.json`, 'application/json');
+    log.success(`Downloaded tweet_${tweetId}_reposters_${dateStr}.json`);
+    if (CONFIG.autoDownloadCsv) {
+      download(csv, `tweet_${tweetId}_reposters_${dateStr}.csv`, 'text/csv');
+      log.success(`Downloaded tweet_${tweetId}_reposters_${dateStr}.csv`);
+    }
+  }
+
+  window.scrapedReposters = result;
+  window.scrapeRepostersExportCSV = () => {
+    download(csv, `tweet_${tweetId}_reposters_${dateStr}.csv`, 'text/csv');
+    return csv;
+  };
+
+  // ============================================
+  // 📊 SUMMARY
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 SCRAPE REPOSTERS + QUOTERS - COMPLETE                ║
+╠══════════════════════════════════════════════════════════╣
+║  🔁 Reposters:           ${String(stats.reposts).padEnd(30)}║
+║  💬 Quote-tweets:        ${String(stats.quotes).padEnd(30)}║
+║  ✔️  Verified (either):   ${String(stats.verified).padEnd(30)}║
+║  📜 Scrolls:             ${String(stats.scrolls).padEnd(30)}║
+║  ❌ Row errors:          ${String(stats.errors).padEnd(30)}║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  list.slice(0, 5).forEach((e, i) => {
+    if (e.type === 'quote') {
+      console.log(`${i + 1}. [quote] @${e.handle}${e.verified ? ' ✓' : ''} (${e.likes} ❤️): "${e.text.slice(0, 50)}..."`);
+    } else {
+      console.log(`${i + 1}. [repost] @${e.handle}${e.verified ? ' ✓' : ''} - ${e.displayName}`);
+    }
+  });
+  if (list.length > 5) console.log(`   ... and ${list.length - 5} more`);
+
+  console.log('\n📋 CSV preview (full string via window.scrapeRepostersExportCSV()):');
+  console.log(csv.split('\n').slice(0, 6).join('\n'));
+  console.log('\n💡 window.scrapedReposters = full data. window.scrapeRepostersExportCSV() = download + return CSV.');
+
+  return result;
+})();
+
+});
+  register("scrape-search", function(){
+(async function scrapeSearch() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // Maximum number of posts to collect before stopping
+    maxPosts: 300,
+
+    // Include reply posts in the results (false = original posts only)
+    includeReplies: true,
+
+    // Delay between scrolls (ms). Raise if posts load slowly.
+    scrollDelay: 1800,
+
+    // Give up after this many scrolls that add no new posts
+    noNewPostsThreshold: 6,
+
+    // Hard cap on scroll attempts so the loop can never run forever
+    maxScrollAttempts: 400,
+
+    // Auto-download a CSV file too (JSON always downloads)
+    downloadCsv: true
+  };
+try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG,window.__XA_LAUNCH_CFG);}}catch(_xa){}
+
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    primaryColumn: '[data-testid="primaryColumn"]',
+    tweet: 'article[data-testid="tweet"]',
+    tweetText: '[data-testid="tweetText"]',
+    userName: '[data-testid="User-Name"]',
+    actionGroup: '[role="group"]',
+    photo: '[data-testid="tweetPhoto"] img',
+    video: 'video'
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+  const log = {
+    info: (msg) => console.log(`ℹ️ ${msg}`),
+    success: (msg) => console.log(`✅ ${msg}`),
+    warning: (msg) => console.log(`⚠️ ${msg}`),
+    error: (msg) => console.log(`❌ ${msg}`),
+    progress: (n, total) => console.log(`📊 Collected ${n}/${total} posts...`)
+  };
+
+  // Turn an aria-label like "1,234 Likes. Like" into the number 1234.
+  const countFromLabel = (label) => {
+    if (!label) return 0;
+    const raw = (label.match(/[\d.,]+\s*[KMB]?/i) || ['0'])[0].trim().toUpperCase();
+    const num = parseFloat(raw.replace(/,/g, '')) || 0;
+    if (raw.includes('K')) return Math.round(num * 1e3);
+    if (raw.includes('M')) return Math.round(num * 1e6);
+    if (raw.includes('B')) return Math.round(num * 1e9);
+    return Math.round(num);
+  };
+
+  // Read the reply/repost/like counts from the action buttons' aria-labels.
+  const getCounts = (article) => {
+    const counts = { replies: 0, reposts: 0, likes: 0, views: 0 };
+    const group = article.querySelector(SELECTORS.actionGroup);
+    const nodes = group ? group.querySelectorAll('[aria-label]') : [];
+    nodes.forEach((node) => {
+      const label = (node.getAttribute('aria-label') || '').toLowerCase();
+      const value = countFromLabel(label);
+      if (label.includes('repl')) counts.replies = value;
+      else if (label.includes('repost') || label.includes('retweet')) counts.reposts = value;
+      else if (label.includes('like')) counts.likes = value;
+      else if (label.includes('view')) counts.views = value;
+    });
+    return counts;
+  };
+
+  // Strip the &name= sizing param so image URLs point at the original resolution.
+  const toOriginalImage = (url) => {
+    if (!url) return url;
+    return url.replace(/&name=[^&]*/i, '&name=orig').replace(/\?name=[^&]*/i, '?name=orig');
+  };
+
+  const getMediaUrls = (article) => {
+    const urls = new Set();
+    article.querySelectorAll(SELECTORS.photo).forEach((img) => {
+      if (img.src) urls.add(toOriginalImage(img.src));
+    });
+    article.querySelectorAll(SELECTORS.video).forEach((v) => {
+      if (v.src) urls.add(v.src);
+      else if (v.poster) urls.add(v.poster);
+    });
+    return Array.from(urls);
+  };
+
+  const isReply = (article) => {
+    if (article.querySelector('[data-testid="in-reply-to"]') !== null) return true;
+    return Array.from(article.querySelectorAll('div[dir]')).some((el) =>
+      (el.textContent || '').startsWith('Replying to'));
+  };
+
+  // Build a post object from an article, or null if it has no resolvable id.
+  const extractPost = (article) => {
+    // The permalink around the timestamp is the post's own URL; the first
+    // /status/ link in the article can belong to a quoted post.
+    const timeEl = article.querySelector('time');
+    const permalink = timeEl ? timeEl.closest('a[href*="/status/"]') : null;
+    const anchor = permalink || article.querySelector('a[href*="/status/"]');
+    const url = anchor ? anchor.href : '';
+    const id = url ? (url.split('/status/')[1] || '').split(/[?/]/)[0] : '';
+    if (!id) return null;
+
+    const nameBlock = article.querySelector(SELECTORS.userName);
+    const nameText = nameBlock ? nameBlock.textContent : '';
+    const handle = (nameText.match(/@(\w+)/) || [, ''])[1];
+    const name = nameText.split('@')[0].trim();
+
+    const textEl = article.querySelector(SELECTORS.tweetText);
+    const text = textEl ? textEl.textContent : '';
+
+    const counts = getCounts(article);
+
+    return {
+      id,
+      url,
+      author: { handle, name },
+      text,
+      likes: counts.likes,
+      reposts: counts.reposts,
+      replies: counts.replies,
+      views: counts.views,
+      timestamp: timeEl ? timeEl.getAttribute('datetime') : null,
+      mediaUrls: getMediaUrls(article),
+      isReply: isReply(article),
+      scrapedAt: new Date().toISOString()
+    };
+  };
+
+  const downloadFile = (content, filename, mime) => {
+    try {
+      const blob = new Blob([content], { type: mime });
+      const href = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = href;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(href);
+      return true;
+    } catch (e) {
+      log.error(`Failed to download ${filename}: ${e.message}`);
+      return false;
+    }
+  };
+
+  const csvCell = (value) => `"${String(value == null ? '' : value).replace(/"/g, '""').replace(/\r?\n/g, ' ')}"`;
+
+  const toCSV = (posts) => {
+    const headers = ['id', 'handle', 'name', 'text', 'likes', 'reposts', 'replies', 'views', 'timestamp', 'mediaUrls', 'url'];
+    const rows = posts.map((p) => [
+      p.id,
+      '@' + p.author.handle,
+      p.author.name,
+      p.text,
+      p.likes,
+      p.reposts,
+      p.replies,
+      p.views,
+      p.timestamp || '',
+      p.mediaUrls.join(' '),
+      p.url
+    ].map(csvCell).join(','));
+    return [headers.join(','), ...rows].join('\n');
+  };
+
+  // ============================================
+  // 🎯 MAIN
+  // ============================================
+  const query = new URLSearchParams(window.location.search).get('q') || 'search';
+
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  🔍 SCRAPE SEARCH - XActions                            ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  // Page guard: warn and return, never hard-redirect (that kills the script).
+  if (!/\/search/.test(window.location.pathname)) {
+    log.warning('You are not on a search results page.');
+    log.info('Go to x.com/search?q=YOUR+TERM&f=live, then run this script again.');
+    return;
+  }
+
+  const posts = new Map();
+
+  // Stop switch: run window.stopScrapeSearch() to end the scroll loop.
+  let stopped = false;
+  window.stopScrapeSearch = () => {
+    stopped = true;
+    log.warning('Stop requested. Finishing the current pass, then exporting.');
+  };
+
+  log.info(`Search query: "${query}"`);
+  log.info(`Max posts: ${CONFIG.maxPosts} | Include replies: ${CONFIG.includeReplies}`);
+  log.info('To stop early: window.stopScrapeSearch()');
+
+  let scrollAttempts = 0;
+  let noNewCount = 0;
+
+  while (!stopped && posts.size < CONFIG.maxPosts && scrollAttempts < CONFIG.maxScrollAttempts) {
+    const before = posts.size;
+    const articles = document.querySelectorAll(SELECTORS.tweet);
+
+    articles.forEach((article) => {
+      try {
+        const post = extractPost(article);
+        if (!post || posts.has(post.id)) return;
+        if (!CONFIG.includeReplies && post.isReply) return;
+        posts.set(post.id, post);
+      } catch (e) {
+        log.error(`Skipped a post: ${e.message}`);
+      }
+    });
+
+    if (posts.size > before) {
+      log.progress(posts.size, CONFIG.maxPosts);
+      noNewCount = 0;
+    } else {
+      noNewCount++;
+      if (noNewCount >= CONFIG.noNewPostsThreshold) {
+        log.warning('No new posts after several scrolls. Reached the end of the results.');
+        break;
+      }
+    }
+
+    if (posts.size >= CONFIG.maxPosts) break;
+
+    window.scrollTo(0, document.body.scrollHeight);
+    await sleep(CONFIG.scrollDelay);
+    scrollAttempts++;
+  }
+
+  const list = Array.from(posts.values()).slice(0, CONFIG.maxPosts);
+
+  // ============================================
+  // 📊 SUMMARY + EXPORT
+  // ============================================
+  if (list.length === 0) {
+    log.warning('No posts were found. The results may be empty, or the page had not loaded yet.');
+    return;
+  }
+
+  const totalLikes = list.reduce((s, p) => s + p.likes, 0);
+  const totalReposts = list.reduce((s, p) => s + p.reposts, 0);
+
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 SCRAPE SEARCH - COMPLETE                            ║
+╠══════════════════════════════════════════════════════════╣
+║  🔍 Query:        ${String(query.slice(0, 36)).padEnd(37)}║
+║  📝 Posts:        ${String(list.length).padEnd(37)}║
+║  ❤️  Total likes:  ${String(totalLikes.toLocaleString()).padEnd(37)}║
+║  🔄 Total reposts:${String(totalReposts.toLocaleString()).padEnd(37)}║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  list.slice(0, 5).forEach((p, i) => {
+    console.log(`${i + 1}. @${p.author.handle} (${p.likes} ❤️): "${p.text.slice(0, 60)}"`);
+  });
+
+  const safeQuery = query.replace(/[^a-z0-9]/gi, '_').slice(0, 30) || 'search';
+  const stamp = new Date().toISOString().split('T')[0];
+  const result = { query, scrapedAt: new Date().toISOString(), count: list.length, posts: list };
+
+  if (downloadFile(JSON.stringify(result, null, 2), `search_${safeQuery}_${stamp}.json`, 'application/json')) {
+    log.success('JSON downloaded');
+  }
+  if (CONFIG.downloadCsv && downloadFile(toCSV(list), `search_${safeQuery}_${stamp}.csv`, 'text/csv')) {
+    log.success('CSV downloaded');
+  }
+
+  window.scrapedSearch = result;
+  window.exportCSV = () => toCSV(list);
+  console.log('');
+  log.info('window.scrapedSearch holds the full data. window.exportCSV() returns the CSV string.');
+  log.success('Done! by nichxbt');
+
+  return result;
+})();
+
+});
+  register("scrape-spaces", function(){
+(async function scrapeSpaces() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // Maximum number of Space cards to collect when listing
+    maxSpaces: 50,
+
+    // Maximum scroll attempts when listing Spaces on a profile
+    maxScrollAttempts: 60,
+
+    // Stop after this many scrolls with no new Spaces
+    noNewThreshold: 4,
+
+    // Delay between scrolls (ms)
+    scrollDelay: 1500,
+
+    // Auto-download the results as files when finished
+    downloadJSON: true,
+    downloadCSV: true
+  };
+try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG,window.__XA_LAUNCH_CFG);}}catch(_xa){}
+
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    // Markers that we are INSIDE a Space (listening/hosting)
+    inSpace: '[data-testid="spaceSpeakers"], [data-testid="audioSpaceInlineTitle"], [aria-label="Space"]',
+    // Space title inside an open Space
+    spaceTitle: '[data-testid="audioSpaceInlineTitle"], [data-testid="spaceTitle"]',
+    // Speaker/participant cells
+    userCell: '[data-testid="UserCell"]',
+    // A Space card / link anywhere in the timeline
+    spaceCard: 'a[href*="/i/spaces/"], [data-testid="placementTracking"] a[href*="/spaces/"]'
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+  const log = {
+    info: (msg) => console.log(`ℹ️ ${msg}`),
+    success: (msg) => console.log(`✅ ${msg}`),
+    warning: (msg) => console.log(`⚠️ ${msg}`),
+    error: (msg) => console.log(`❌ ${msg}`)
+  };
+
+  const download = (content, filename, type) => {
+    try {
+      const blob = new Blob([content], { type });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      return true;
+    } catch (e) {
+      log.error(`Failed to download ${filename}: ${e.message}`);
+      return false;
+    }
+  };
+
+  const handleFromLink = (link) => {
+    if (!link) return '';
+    const href = link.getAttribute('href') || '';
+    const m = href.match(/^\/([A-Za-z0-9_]{1,15})$/);
+    return m ? m[1] : '';
+  };
+
+  // ============================================
+  // 🎯 MAIN
+  // ============================================
+  let stopped = false;
+  window.stopScrapeSpaces = () => {
+    stopped = true;
+    log.warning('Stop requested. Finishing the current pass, then exporting.');
+  };
+
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  🎙️ SCRAPE SPACES - XActions                             ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  const insideSpace = document.querySelector(SELECTORS.inSpace) !== null;
+
+  // ------------------------------------------------------------------
+  // MODE A: inside a live/open Space -> capture its metadata + speakers
+  // ------------------------------------------------------------------
+  if (insideSpace) {
+    log.info('Detected an open Space. Capturing metadata and speakers...');
+
+    const titleEl = document.querySelector(SELECTORS.spaceTitle);
+    const title = titleEl ? titleEl.textContent.trim() : '';
+
+    // Listener count: X renders it as text like "1,234 listening". Find the
+    // nearest element whose text mentions listening/tuned in.
+    let listeners = '';
+    const candidates = document.querySelectorAll('span, div');
+    for (const el of candidates) {
+      const t = el.textContent.trim();
+      if (/^[\d,\.KMB]+\s+(listening|listeners|tuned in)/i.test(t)) { listeners = t; break; }
+    }
+
+    const speakers = [];
+    document.querySelectorAll(SELECTORS.userCell).forEach(cell => {
+      try {
+        const handle = handleFromLink(cell.querySelector('a[href^="/"]'));
+        const nameEl = cell.querySelector('[dir="ltr"] span, [dir="ltr"]');
+        const name = nameEl ? nameEl.textContent.trim() : '';
+        if (!handle) return;
+        if (!speakers.find(s => s.handle === handle)) {
+          speakers.push({ handle, name });
+        }
+      } catch (e) {
+        // Skip malformed cell
+      }
+    });
+
+    const result = {
+      mode: 'space',
+      url: window.location.href,
+      title,
+      listeners,
+      host: speakers.length > 0 ? speakers[0].handle : '',
+      speakers,
+      scrapedAt: new Date().toISOString()
+    };
+
+    console.log('');
+    console.log(`📋 Title: ${title || '(not found)'}`);
+    console.log(`👥 Listeners: ${listeners || '(not found)'}`);
+    console.log(`🎤 Speakers captured: ${speakers.length}`);
+    if (speakers.length > 0) {
+      speakers.slice(0, 10).forEach((s, i) => console.log(`   ${i + 1}. @${s.handle}${s.name ? ` (${s.name})` : ''}`));
+    }
+
+    const dateStr = new Date().toISOString().split('T')[0];
+    console.log('');
+    if (CONFIG.downloadJSON) {
+      if (download(JSON.stringify(result, null, 2), `space_${dateStr}.json`, 'application/json')) {
+        log.success('JSON downloaded');
+      }
+    }
+    if (CONFIG.downloadCSV) {
+      const esc = (v) => `"${String(v).replace(/"/g, '""').replace(/\n/g, ' ')}"`;
+      const csv = [
+        ['Handle', 'Name'].join(','),
+        ...speakers.map(s => [esc(s.handle), esc(s.name)].join(','))
+      ].join('\n');
+      if (download(csv, `space_speakers_${dateStr}.csv`, 'text/csv')) {
+        log.success('CSV (speakers) downloaded');
+      }
+    }
+
+    window.scrapedSpace = result;
+    console.log('\n💡 Access your data: window.scrapedSpace');
+    console.log('✅ Script completed! by nichxbt');
+    return result;
+  }
+
+  // ------------------------------------------------------------------
+  // MODE B: on a profile / timeline -> list Space cards
+  // ------------------------------------------------------------------
+  log.info('No open Space detected. Listing Space cards from the page...');
+  log.info(`Max Spaces: ${CONFIG.maxSpaces}`);
+  log.info('To stop early: window.stopScrapeSpaces()');
+  console.log('');
+
+  const spaces = new Map();
+  let scrollAttempts = 0;
+  let noNewCount = 0;
+
+  const collectCards = () => {
+    document.querySelectorAll(SELECTORS.spaceCard).forEach(card => {
+      try {
+        const link = card.href || (card.querySelector('a[href*="/spaces/"]') || {}).href || '';
+        if (!link) return;
+        const idMatch = link.match(/\/spaces\/([A-Za-z0-9]+)/);
+        const id = idMatch ? idMatch[1] : link;
+        if (spaces.has(id)) return;
+
+        const container = card.closest('article, [data-testid="cellInnerDiv"]') || card;
+        const text = (container.textContent || '').trim();
+        const lower = text.toLowerCase();
+        const isLive = lower.includes('live') && !lower.includes('recorded');
+
+        // Listener/participant count if present in the card text
+        const listenersMatch = text.match(/([\d,\.KMB]+)\s+(listening|listeners|tuned in|played)/i);
+        const listeners = listenersMatch ? listenersMatch[0] : '';
+
+        // Host handle: first bare profile link in the card container
+        let host = '';
+        for (const a of container.querySelectorAll('a[href^="/"]')) {
+          const h = handleFromLink(a);
+          if (h) { host = h; break; }
+        }
+
+        spaces.set(id, {
+          id,
+          title: text.slice(0, 140),
+          host,
+          listeners,
+          isLive,
+          link: link.startsWith('http') ? link : `https://x.com${link}`
+        });
+      } catch (e) {
+        // Skip malformed card
+      }
+    });
+  };
+
+  while (!stopped && spaces.size < CONFIG.maxSpaces && scrollAttempts < CONFIG.maxScrollAttempts) {
+    const before = spaces.size;
+    collectCards();
+
+    const added = spaces.size - before;
+    if (added > 0) {
+      log.info(`Collected ${spaces.size} Spaces (+${added})`);
+      noNewCount = 0;
+    } else {
+      noNewCount++;
+      if (noNewCount >= CONFIG.noNewThreshold) {
+        break;
+      }
+    }
+
+    window.scrollTo(0, document.body.scrollHeight);
+    await sleep(CONFIG.scrollDelay);
+    scrollAttempts++;
+  }
+  collectCards();
+
+  const list = Array.from(spaces.values());
+
+  console.log('');
+  console.log('╔══════════════════════════════════════════════════════════╗');
+  console.log('║  📊 SCRAPE SPACES - COMPLETE                             ║');
+  console.log('╚══════════════════════════════════════════════════════════╝');
+  console.log(`🎙️ Total Spaces: ${list.length}`);
+  console.log(`📜 Scroll attempts: ${scrollAttempts}`);
+
+  if (list.length === 0) {
+    log.warning('No Space cards found on this page.');
+    log.info('Open a profile that hosts Spaces (scroll to a Space card), or open a Space directly, then rerun.');
+    return { spaces: [] };
+  }
+
+  list.forEach((s, i) => {
+    console.log(`   ${s.isLive ? '🔴' : '⏳'} ${i + 1}. ${s.title.slice(0, 70)}${s.listeners ? ` (${s.listeners})` : ''}`);
+  });
+
+  const dateStr = new Date().toISOString().split('T')[0];
+  const result = { mode: 'listing', count: list.length, spaces: list, scrapedAt: new Date().toISOString() };
+
+  console.log('');
+  if (CONFIG.downloadJSON) {
+    if (download(JSON.stringify(result, null, 2), `spaces_${dateStr}.json`, 'application/json')) {
+      log.success('JSON downloaded');
+    }
+  }
+  if (CONFIG.downloadCSV) {
+    const esc = (v) => `"${String(v).replace(/"/g, '""').replace(/\n/g, ' ')}"`;
+    const csv = [
+      ['Title', 'Host', 'Listeners', 'IsLive', 'Link'].join(','),
+      ...list.map(s => [esc(s.title), esc(s.host), esc(s.listeners), s.isLive, esc(s.link)].join(','))
+    ].join('\n');
+    if (download(csv, `spaces_${dateStr}.csv`, 'text/csv')) {
+      log.success('CSV downloaded');
+    }
+  }
+
+  window.scrapedSpaces = result;
+  console.log('\n💡 Access your data: window.scrapedSpaces');
+  console.log('✅ Script completed! by nichxbt');
+
+  return result;
+})();
+
+});
+  register("scrape-user-likes", function(){
+(async function scrapeUserLikes() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // Stop after collecting this many liked posts (safety cap)
+    maxPosts: 1000,
+
+    // How far to scroll each step (pixels)
+    scrollStep: 1600,
+
+    // Delay between scrolls (ms). Raise to 2500+ on a slow connection so posts load.
+    scrollDelay: 1600,
+
+    // Give up after this many consecutive scrolls with no new posts (end of timeline)
+    stallLimit: 6,
+
+    // Hard cap on scroll attempts, independent of stalls
+    maxScrollAttempts: 400,
+
+    // Also trigger a browser download of the CSV file (JSON always downloads)
+    autoDownloadCsv: false
+  };
+try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG,window.__XA_LAUNCH_CFG);}}catch(_xa){}
+
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    tweet: 'article[data-testid="tweet"]',
+    tweetText: '[data-testid="tweetText"]',
+    userName: '[data-testid="User-Name"]',
+    verified: 'svg[aria-label*="Verified"], [data-testid="icon-verified"]',
+    photo: '[data-testid="tweetPhoto"]',
+    video: '[data-testid="videoPlayer"], [data-testid="videoComponent"]'
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  const randomDelay = () => sleep(CONFIG.scrollDelay + Math.floor(Math.random() * 500));
+
+  const log = {
+    info: (m) => console.log(`ℹ️ ${m}`),
+    success: (m) => console.log(`✅ ${m}`),
+    warning: (m) => console.log(`⚠️ ${m}`),
+    error: (m) => console.log(`❌ ${m}`),
+    count: (n) => console.log(`💛 Collected ${n} liked posts...`)
+  };
+
+  const csvCell = (v) => `"${String(v == null ? '' : v).replace(/"/g, '""').replace(/\r?\n/g, ' ')}"`;
+
+  const parseNumber = (str) => {
+    if (!str) return 0;
+    const s = str.trim().toUpperCase();
+    const num = parseFloat(s.replace(/,/g, '')) || 0;
+    if (s.includes('K')) return Math.round(num * 1000);
+    if (s.includes('M')) return Math.round(num * 1000000);
+    return Math.round(num);
+  };
+
+  const download = (content, filename, type) => {
+    try {
+      const blob = new Blob([content], { type });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      return true;
+    } catch (e) {
+      log.error(`Download of ${filename} failed: ${e.message}`);
+      return false;
+    }
+  };
+
+  const extractPost = (article) => {
+    // The permalink around the timestamp is the post's own URL (not a quoted one).
+    const timeEl = article.querySelector('time');
+    const permalink = timeEl?.closest('a[href*="/status/"]') || article.querySelector('a[href*="/status/"]');
+    const url = permalink ? permalink.href : '';
+    const id = url ? (url.split('/status/')[1] || '').split(/[?/]/)[0] : '';
+    if (!id) return null;
+
+    // Author handle is reliable from the permalink path: /<handle>/status/<id>
+    const handle = (url.match(/x\.com\/([^/]+)\/status/) || [])[1] || '';
+    const nameText = article.querySelector(SELECTORS.userName)?.textContent || '';
+    const displayName = nameText.split('@')[0].trim();
+    const verified = !!article.querySelector(`${SELECTORS.userName} ${SELECTORS.verified}`);
+
+    const text = article.querySelector(SELECTORS.tweetText)?.textContent || '';
+    const time = timeEl ? timeEl.getAttribute('datetime') : '';
+
+    const getMetric = (testId) => {
+      const el = article.querySelector(`[data-testid="${testId}"]`);
+      const span = el?.querySelector('span span');
+      return parseNumber(span ? span.textContent : '0');
+    };
+    const viewsEl = article.querySelector('a[href$="/analytics"]');
+    const views = parseNumber(viewsEl ? viewsEl.textContent : '0');
+
+    const hasImage = article.querySelector(SELECTORS.photo) !== null;
+    const hasVideo = article.querySelector(SELECTORS.video) !== null;
+
+    return {
+      id,
+      url,
+      author: { handle, displayName, verified },
+      text,
+      time,
+      counts: {
+        likes: getMetric('like'),
+        retweets: getMetric('retweet'),
+        replies: getMetric('reply'),
+        views
+      },
+      hasMedia: hasImage || hasVideo
+    };
+  };
+
+  // ============================================
+  // 🛑 STOP SWITCH
+  // ============================================
+  let stopped = false;
+  window.stopScrapeUserLikes = () => {
+    stopped = true;
+    log.warning('Stop requested. Finishing the current scroll, then exporting what was collected.');
+  };
+
+  // ============================================
+  // 🚦 PAGE GUARD
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  💛 SCRAPE USER LIKES - XActions                         ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  if (!/\/likes\/?$/.test(window.location.pathname) || /\/status\//.test(window.location.pathname)) {
+    log.warning('You are not on a profile Likes page.');
+    log.info('Go to x.com/<user>/likes (the Likes tab of a profile), then run this again.');
+    return;
+  }
+
+  const username = window.location.pathname.split('/')[1] || 'unknown';
+  log.info(`Scraping liked posts of @${username}`);
+  log.info(`Max posts: ${CONFIG.maxPosts}. To stop early: window.stopScrapeUserLikes()`);
+
+  // ============================================
+  // 🎯 MAIN LOOP
+  // ============================================
+  const posts = new Map();
+  const stats = { collected: 0, withMedia: 0, scrolls: 0, errors: 0 };
+
+  let scrollAttempts = 0;
+  let stall = 0;
+
+  while (!stopped && posts.size < CONFIG.maxPosts && stall < CONFIG.stallLimit && scrollAttempts < CONFIG.maxScrollAttempts) {
+    const before = posts.size;
+
+    document.querySelectorAll(SELECTORS.tweet).forEach((article) => {
+      try {
+        const p = extractPost(article);
+        if (p && p.id && !posts.has(p.id)) posts.set(p.id, p);
+      } catch (e) {
+        stats.errors++;
+      }
+    });
+
+    if (posts.size > before) {
+      log.count(posts.size);
+      stall = 0;
+    } else {
+      stall++;
+    }
+
+    window.scrollBy(0, CONFIG.scrollStep);
+    await randomDelay();
+    scrollAttempts++;
+    stats.scrolls = scrollAttempts;
+  }
+
+  const list = Array.from(posts.values()).slice(0, CONFIG.maxPosts);
+  stats.collected = list.length;
+  stats.withMedia = list.filter((p) => p.hasMedia).length;
+
+  // Most-liked accounts
+  const accountCounts = {};
+  list.forEach((p) => {
+    const h = p.author.handle || 'unknown';
+    accountCounts[h] = (accountCounts[h] || 0) + 1;
+  });
+  const topAccounts = Object.entries(accountCounts).sort((a, b) => b[1] - a[1]).slice(0, 5);
+
+  // ============================================
+  // 📤 EXPORT
+  // ============================================
+  const result = {
+    profile: username,
+    profileUrl: `https://x.com/${username}`,
+    scrapedAt: new Date().toISOString(),
+    total: list.length,
+    topLikedAccounts: topAccounts.map(([handle, count]) => ({ handle, count })),
+    posts: list
+  };
+
+  const buildCsv = () => {
+    const header = 'AuthorHandle,AuthorName,Verified,Text,Likes,Retweets,Replies,Views,HasMedia,URL,Time';
+    const rows = list.map((p) => [
+      csvCell('@' + p.author.handle),
+      csvCell(p.author.displayName),
+      p.author.verified,
+      csvCell(p.text),
+      p.counts.likes,
+      p.counts.retweets,
+      p.counts.replies,
+      p.counts.views,
+      p.hasMedia,
+      csvCell(p.url),
+      csvCell(p.time)
+    ].join(','));
+    return [header, ...rows].join('\n');
+  };
+
+  const csv = buildCsv();
+  const dateStr = new Date().toISOString().split('T')[0];
+
+  if (list.length === 0) {
+    log.warning('No liked posts were collected. The Likes tab may be empty or hidden (X hides it for other users).');
+  } else {
+    download(JSON.stringify(result, null, 2), `${username}_likes_${dateStr}.json`, 'application/json');
+    log.success(`Downloaded ${username}_likes_${dateStr}.json`);
+    if (CONFIG.autoDownloadCsv) {
+      download(csv, `${username}_likes_${dateStr}.csv`, 'text/csv');
+      log.success(`Downloaded ${username}_likes_${dateStr}.csv`);
+    }
+  }
+
+  window.scrapedUserLikes = result;
+  window.scrapeUserLikesExportCSV = () => {
+    download(csv, `${username}_likes_${dateStr}.csv`, 'text/csv');
+    return csv;
+  };
+
+  // ============================================
+  // 📊 SUMMARY
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 SCRAPE USER LIKES - COMPLETE                         ║
+╠══════════════════════════════════════════════════════════╣
+║  💛 Liked posts:         ${String(stats.collected).padEnd(30)}║
+║  🖼️  With media:          ${String(stats.withMedia).padEnd(30)}║
+║  📜 Scrolls:             ${String(stats.scrolls).padEnd(30)}║
+║  ❌ Row errors:          ${String(stats.errors).padEnd(30)}║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  if (topAccounts.length > 0) {
+    console.log('📊 Most-liked accounts:');
+    topAccounts.forEach(([handle, count]) => console.log(`   @${handle}: ${count}`));
+  }
+
+  list.slice(0, 5).forEach((p, i) => {
+    console.log(`${i + 1}. @${p.author.handle} (${p.counts.likes} ❤️): "${p.text.slice(0, 50)}..."`);
+  });
+  if (list.length > 5) console.log(`   ... and ${list.length - 5} more`);
+
+  console.log('\n📋 CSV preview (full string via window.scrapeUserLikesExportCSV()):');
+  console.log(csv.split('\n').slice(0, 6).join('\n'));
+  console.log('\n💡 window.scrapedUserLikes = full data. window.scrapeUserLikesExportCSV() = download + return CSV.');
+
+  return result;
+})();
+
+});
   register("scraper-toolbox", function(){
 (function xactionsScraperToolbox() {
   'use strict';
@@ -16925,7 +26434,7 @@ try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG
         // Click on user - match the exact @handle so a prefix like "john"
         // can't select "johnny" (wrong DM recipient)
         const userCells = document.querySelectorAll(SELECTORS.userCell);
-        const handleRe = new RegExp('@' + cleanUsername.replace(/[.*+?^${}()|[\]\\]/g, '\\/* __XA_INJECT_DATA__ */') + '(?![a-zA-Z0-9_])', 'i');
+        const handleRe = new RegExp('@' + cleanUsername.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '(?![a-zA-Z0-9_])', 'i');
         let found = false;
 
         for (const cell of userCells) {
@@ -17106,6 +26615,558 @@ try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG
   console.log('✅ Direct Message Helper loaded!');
   console.log('   Run XActions.DM.help() for commands.');
   console.log('');
+})();
+
+});
+  register("sentiment-analyzer", function(){
+(async function sentimentAnalyzer() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // Maximum number of posts to score.
+    maxPosts: 40,
+
+    // Max scroll attempts before giving up on loading more posts.
+    maxScrollAttempts: 25,
+
+    // Delay between scrolls (ms).
+    scrollDelay: 1600,
+
+    // How many example posts to show for most-positive / most-negative.
+    examples: 3,
+
+    // Auto-download a JSON report when finished.
+    exportResults: true
+  };
+try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG,window.__XA_LAUNCH_CFG);}}catch(_xa){}
+
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    tweet: 'article[data-testid="tweet"]',
+    tweetText: '[data-testid="tweetText"]',
+    authorLink: 'a[href^="/"][role="link"]'
+  };
+
+  // ============================================
+  // 📚 SENTIMENT LEXICON (inline, no external API)
+  // ============================================
+  const POSITIVE = {
+    amazing: 3, incredible: 3, fantastic: 3, brilliant: 3, outstanding: 3,
+    excellent: 3, wonderful: 3, phenomenal: 3, revolutionary: 3, legendary: 3,
+    great: 2, awesome: 2, love: 2, perfect: 2, beautiful: 2, impressive: 2,
+    thrilled: 2, excited: 2, grateful: 2, blessed: 2, proud: 2, inspired: 2,
+    superb: 2, remarkable: 2, winning: 2, victory: 2, bullish: 2,
+    good: 1, nice: 1, happy: 1, like: 1, thanks: 1, helpful: 1,
+    interesting: 1, cool: 1, agree: 1, support: 1, hope: 1, enjoy: 1,
+    fun: 1, smart: 1, useful: 1, solid: 1, better: 1, congrats: 1
+  };
+
+  const NEGATIVE = {
+    terrible: 3, horrible: 3, disgusting: 3, pathetic: 3, disastrous: 3,
+    hate: 3, despise: 3, devastating: 3, atrocious: 3, unforgivable: 3,
+    bad: 2, awful: 2, worst: 2, angry: 2, furious: 2, disappointed: 2,
+    frustrated: 2, annoying: 2, stupid: 2, trash: 2, garbage: 2, broken: 2,
+    scam: 2, toxic: 2, ridiculous: 2, ruined: 2, useless: 2, failed: 2, bearish: 2,
+    sad: 1, boring: 1, wrong: 1, slow: 1, confusing: 1, worried: 1,
+    problem: 1, issue: 1, lost: 1, doubt: 1, fear: 1, weak: 1, worse: 1
+  };
+
+  const NEGATORS = new Set(['not', "n't", 'no', 'never', 'hardly', 'barely']);
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+  const log = {
+    info: (msg) => console.log(`ℹ️ ${msg}`),
+    success: (msg) => console.log(`✅ ${msg}`),
+    warning: (msg) => console.log(`⚠️ ${msg}`),
+    error: (msg) => console.log(`❌ ${msg}`)
+  };
+
+  const download = (data, filename) => {
+    try {
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      log.success(`Report downloaded: ${filename}`);
+    } catch (e) {
+      log.error(`Could not download report: ${e.message}`);
+    }
+  };
+
+  // Score one post. Handles simple negation ("not good" flips the sign).
+  const analyze = (text) => {
+    const words = text.toLowerCase().replace(/[^\w\s']/g, ' ').split(/\s+/).filter(Boolean);
+    let score = 0;
+    const posWords = [];
+    const negWords = [];
+
+    for (let i = 0; i < words.length; i++) {
+      const word = words[i];
+      const prev = i > 0 ? words[i - 1] : '';
+      const negated = NEGATORS.has(prev) || prev.endsWith("n't");
+
+      if (POSITIVE[word] !== undefined) {
+        score += POSITIVE[word] * (negated ? -0.5 : 1);
+        if (!negated) posWords.push(word);
+      }
+      if (NEGATIVE[word] !== undefined) {
+        score -= NEGATIVE[word] * (negated ? -0.5 : 1);
+        if (!negated) negWords.push(word);
+      }
+    }
+
+    const normalized = Math.max(-1, Math.min(1, score / Math.max(words.length * 0.3, 1)));
+    const rounded = Math.round(normalized * 100) / 100;
+    const label = rounded > 0.15 ? 'positive' : rounded < -0.15 ? 'negative' : 'neutral';
+    return { score: rounded, label, positiveWords: [...new Set(posWords)], negativeWords: [...new Set(negWords)] };
+  };
+
+  // ============================================
+  // 🎯 MAIN LOGIC
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  🧠 SENTIMENT ANALYZER - XActions                       ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  if (!/(^|\.)x\.com$/.test(location.hostname) && !/(^|\.)twitter\.com$/.test(location.hostname)) {
+    log.warning('Not on x.com. Open a timeline, search, or profile and run again.');
+    return;
+  }
+
+  log.info(`Scoring up to ${CONFIG.maxPosts} posts on this page`);
+  log.warning('Lexicon-based scoring. It cannot detect sarcasm, slang, or context.');
+  log.info('To stop early: window.stopSentimentAnalyzer()');
+  console.log('');
+
+  let stopped = false;
+  window.stopSentimentAnalyzer = () => {
+    stopped = true;
+    log.warning('Stop requested. Finishing the current pass, then reporting.');
+  };
+
+  const collected = new Map();
+  let scrollAttempts = 0;
+  let stalls = 0;
+
+  const collect = () => {
+    document.querySelectorAll(SELECTORS.tweet).forEach((article) => {
+      const textEl = article.querySelector(SELECTORS.tweetText);
+      if (!textEl) return;
+      const text = textEl.textContent.trim();
+      if (text.length < 5 || collected.has(text)) return;
+      const authorLink = article.querySelector(SELECTORS.authorLink);
+      const author = authorLink
+        ? (authorLink.getAttribute('href') || '').replace(/^\//, '').split('/')[0]
+        : 'unknown';
+      collected.set(text, { text, author });
+    });
+  };
+
+  while (!stopped && collected.size < CONFIG.maxPosts && scrollAttempts < CONFIG.maxScrollAttempts) {
+    const before = collected.size;
+    collect();
+    if (collected.size > before) {
+      log.info(`Collected ${collected.size}/${CONFIG.maxPosts} posts`);
+      stalls = 0;
+    } else {
+      stalls++;
+      if (stalls >= 5) {
+        log.warning('No new posts after several scrolls. Reached the end of what loaded.');
+        break;
+      }
+    }
+    if (collected.size >= CONFIG.maxPosts) break;
+    window.scrollTo(0, document.body.scrollHeight);
+    scrollAttempts++;
+    await sleep(CONFIG.scrollDelay);
+  }
+  collect();
+
+  if (collected.size === 0) {
+    log.error('No posts found on this page. Scroll to some posts and run again.');
+    return;
+  }
+
+  const results = [];
+  let positive = 0;
+  let negative = 0;
+  let neutral = 0;
+  let totalScore = 0;
+  const wordFreq = {};
+
+  for (const tweet of collected.values()) {
+    if (results.length >= CONFIG.maxPosts) break;
+    const sentiment = analyze(tweet.text);
+    results.push({ ...tweet, ...sentiment });
+    totalScore += sentiment.score;
+    if (sentiment.label === 'positive') positive++;
+    else if (sentiment.label === 'negative') negative++;
+    else neutral++;
+    [...sentiment.positiveWords, ...sentiment.negativeWords].forEach((w) => {
+      wordFreq[w] = (wordFreq[w] || 0) + 1;
+    });
+  }
+
+  const total = results.length;
+  const avgScore = Math.round((totalScore / total) * 1000) / 1000;
+  const mood = avgScore > 0.1 ? '😊 Positive' : avgScore < -0.1 ? '😠 Negative' : '😐 Neutral';
+
+  // ============================================
+  // 📊 SUMMARY
+  // ============================================
+  const barW = 40;
+  const posBar = Math.round((positive / total) * barW);
+  const negBar = Math.round((negative / total) * barW);
+  const neuBar = Math.max(0, barW - posBar - negBar);
+  const pct = (n) => ((n / total) * 100).toFixed(1) + '%';
+
+  console.log('');
+  console.log('━'.repeat(60));
+  console.log(`🧠 SENTIMENT REPORT (${total} posts) at ${window.location.pathname}`);
+  console.log('━'.repeat(60));
+  console.log(`   Average score: ${avgScore}  (${mood})`);
+  console.log('');
+  console.log(`   😊 Positive: ${String(positive).padStart(3)} (${pct(positive).padStart(6)}) ${'█'.repeat(posBar)}`);
+  console.log(`   😐 Neutral:  ${String(neutral).padStart(3)} (${pct(neutral).padStart(6)}) ${'░'.repeat(neuBar)}`);
+  console.log(`   😠 Negative: ${String(negative).padStart(3)} (${pct(negative).padStart(6)}) ${'▓'.repeat(negBar)}`);
+
+  const sorted = [...results].sort((a, b) => b.score - a.score);
+  const topPos = sorted.filter((t) => t.label === 'positive').slice(0, CONFIG.examples);
+  const topNeg = sorted.filter((t) => t.label === 'negative').slice(-CONFIG.examples).reverse();
+
+  if (topPos.length > 0) {
+    console.log('');
+    console.log('🏆 Most positive:');
+    topPos.forEach((t) => console.log(`   [${t.score.toFixed(2)}] @${t.author}: "${t.text.replace(/\s+/g, ' ').slice(0, 100)}"`));
+  }
+  if (topNeg.length > 0) {
+    console.log('');
+    console.log('💀 Most negative:');
+    topNeg.forEach((t) => console.log(`   [${t.score.toFixed(2)}] @${t.author}: "${t.text.replace(/\s+/g, ' ').slice(0, 100)}"`));
+  }
+
+  const topWords = Object.entries(wordFreq).sort((a, b) => b[1] - a[1]).slice(0, 10);
+  if (topWords.length > 0) {
+    console.log('');
+    console.log('📝 Top emotional words:');
+    topWords.forEach(([word, count]) => {
+      console.log(`   ${POSITIVE[word] !== undefined ? '😊' : '😠'} "${word}" x${count}`);
+    });
+  }
+
+  const stronglyNegative = results.filter((t) => t.score < -0.5).length;
+  if (stronglyNegative > total * 0.2) {
+    console.log('');
+    log.warning(`High negativity: ${((stronglyNegative / total) * 100).toFixed(0)}% of posts are strongly negative.`);
+  }
+
+  const report = {
+    page: window.location.href,
+    analyzedAt: new Date().toISOString(),
+    summary: { total, positive, negative, neutral, avgScore, stronglyNegative },
+    topWords,
+    posts: results
+  };
+
+  if (CONFIG.exportResults) {
+    console.log('');
+    download(report, `xactions-sentiment-${new Date().toISOString().slice(0, 10)}.json`);
+  }
+
+  window.xactionsSentiment = report;
+  console.log('');
+  log.info('Full report object: window.xactionsSentiment');
+  log.success('Done.');
+
+  return report;
+})();
+
+});
+  register("shadowban-checker", function(){
+(async function shadowbanChecker() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // Handle to check. 'auto' detects the logged-in account from the page.
+    // Set to a bare handle (no @) to check any public account.
+    username: 'auto',
+
+    // Delay between the individual checks (ms). Keep this polite so X does
+    // not rate-limit the read requests.
+    testDelay: 2500,
+
+    // Auto-download a JSON report of the results when finished.
+    exportResults: true
+  };
+try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG,window.__XA_LAUNCH_CFG);}}catch(_xa){}
+
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+  const log = {
+    info: (msg) => console.log(`ℹ️ ${msg}`),
+    success: (msg) => console.log(`✅ ${msg}`),
+    warning: (msg) => console.log(`⚠️ ${msg}`),
+    error: (msg) => console.log(`❌ ${msg}`),
+    unknown: (msg) => console.log(`❓ ${msg}`)
+  };
+
+  const download = (data, filename) => {
+    try {
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      log.success(`Report downloaded: ${filename}`);
+    } catch (e) {
+      log.error(`Could not download report: ${e.message}`);
+    }
+  };
+
+  // Fetch a page's HTML in the current session. Used for search-visibility
+  // heuristics: we cannot see X's internal ranking, only whether the handle
+  // shows up in the returned markup.
+  const fetchPage = async (url) => {
+    try {
+      const resp = await fetch(url, {
+        credentials: 'include',
+        headers: { Accept: 'text/html,application/xhtml+xml' }
+      });
+      if (!resp.ok) return { status: resp.status, text: '' };
+      return { status: resp.status, text: await resp.text() };
+    } catch (e) {
+      return { status: 0, text: '', error: e.message };
+    }
+  };
+
+  // Detect the logged-in handle from the nav profile link or a meta tag.
+  const detectUsername = () => {
+    const navLink = document.querySelector('a[data-testid="AppTabBar_Profile_Link"]');
+    const href = navLink?.getAttribute('href') || '';
+    const navMatch = href.match(/^\/([A-Za-z0-9_]+)/);
+    if (navMatch) return navMatch[1];
+
+    const meta = document.querySelector('meta[property="al:android:url"]');
+    const metaMatch = meta?.getAttribute('content')?.match(/screen_name=([^&]+)/);
+    if (metaMatch) return metaMatch[1];
+
+    return null;
+  };
+
+  // ============================================
+  // 🎯 MAIN LOGIC
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  🕵️ SHADOWBAN CHECKER - XActions                        ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  // Page guard: any x.com / twitter.com page works because we only issue
+  // read requests, but we do need to be on the site for session cookies.
+  if (!/(^|\.)x\.com$/.test(location.hostname) && !/(^|\.)twitter\.com$/.test(location.hostname)) {
+    log.warning('Not on x.com. Open x.com (any page, logged in) and run this again.');
+    return;
+  }
+
+  const username = CONFIG.username === 'auto' ? detectUsername() : CONFIG.username.replace(/^@/, '').trim();
+  if (!username) {
+    log.error('Could not detect your username. Set CONFIG.username manually (without the @).');
+    return;
+  }
+
+  log.info(`Checking @${username} for shadowban indicators`);
+  log.warning('These are HEURISTICS, not an official ruling. X does not expose real');
+  log.warning('shadowban status. Treat the result as a signal, not proof.');
+  console.log('');
+
+  const results = {
+    username,
+    timestamp: new Date().toISOString(),
+    disclaimer: 'Heuristic checks run from the browser. Not an official or definitive shadowban verdict.',
+    tests: {},
+    overallStatus: 'UNKNOWN'
+  };
+
+  // ── Test 1: Account existence ────────────────
+  log.info('Test 1: Account existence');
+  const profileResp = await fetchPage(`https://x.com/${username}`);
+  if (profileResp.status === 404 || /Account suspended/i.test(profileResp.text)) {
+    results.tests.exists = { status: 'FAIL', detail: 'Account not found or suspended' };
+    results.overallStatus = 'SUSPENDED / NOT FOUND';
+    log.error('Account not found or suspended. Stopping.');
+    if (CONFIG.exportResults) download(results, `xactions-shadowban-${username}-${new Date().toISOString().slice(0, 10)}.json`);
+    return;
+  }
+  results.tests.exists = { status: 'PASS', detail: 'Account exists and is active' };
+  log.success('Account exists and is active');
+  await sleep(CONFIG.testDelay);
+
+  // ── Test 2: Search suggestion ban ────────────
+  // Heuristic: query the typeahead for the handle and see whether it comes
+  // back. A missing handle can mean a suggestion ban, but can also just be a
+  // low-signal or brand-new account.
+  console.log('');
+  log.info('Test 2: Search suggestion ban (typeahead)');
+  try {
+    const resp = await fetch(
+      `https://x.com/i/api/1.1/search/typeahead.json?q=${encodeURIComponent(username)}&src=search_box&result_type=users`,
+      { credentials: 'include', headers: { 'x-twitter-active-user': 'yes' } }
+    );
+    if (resp.ok) {
+      const data = await resp.json();
+      const found = Array.isArray(data.users) && data.users.some(
+        (u) => u.screen_name?.toLowerCase() === username.toLowerCase()
+      );
+      results.tests.suggestion = {
+        status: found ? 'PASS' : 'WARN',
+        detail: found ? 'Appears in search suggestions' : 'Not appearing in suggestions (possible suggestion ban)'
+      };
+      if (found) log.success('Appears in search suggestions');
+      else log.warning('Not appearing in suggestions. Possible suggestion ban (or just low signal).');
+    } else {
+      results.tests.suggestion = { status: 'UNKNOWN', detail: `Typeahead API returned ${resp.status}` };
+      log.unknown(`Could not check (typeahead API ${resp.status})`);
+    }
+  } catch (e) {
+    results.tests.suggestion = { status: 'UNKNOWN', detail: e.message };
+    log.unknown(`Could not check: ${e.message}`);
+  }
+  await sleep(CONFIG.testDelay);
+
+  // ── Test 3: Search ban ───────────────────────
+  // Heuristic: request the live search for from:<handle> and check whether
+  // the handle shows up in the returned HTML. The rendered search page is
+  // JS-driven, so this is a coarse signal only.
+  console.log('');
+  log.info('Test 3: Search ban (tweet visibility in from: search)');
+  try {
+    const resp = await fetchPage(`https://x.com/search?q=${encodeURIComponent('from:' + username)}&f=live`);
+    const found = new RegExp(`[/@]${username}\\b`, 'i').test(resp.text) || resp.text.toLowerCase().includes(username.toLowerCase());
+    results.tests.searchBan = {
+      status: found ? 'PASS' : 'WARN',
+      detail: found ? 'Handle appears in its own from: search markup' : 'Handle may not appear in search (possible search ban)'
+    };
+    if (found) log.success('Handle appears in its own from: search');
+    else log.warning('Handle may not appear in search. Possible search ban.');
+  } catch (e) {
+    results.tests.searchBan = { status: 'UNKNOWN', detail: e.message };
+    log.unknown(`Could not check: ${e.message}`);
+  }
+  await sleep(CONFIG.testDelay);
+
+  // ── Test 4: Reply deboost hint ───────────────
+  // Heuristic: check whether the account's replies show up in a replies-only
+  // search. A miss hints at reply deboosting but is far from conclusive.
+  console.log('');
+  log.info('Test 4: Reply deboost hint (replies in search)');
+  try {
+    const resp = await fetchPage(`https://x.com/search?q=${encodeURIComponent('from:' + username + ' filter:replies')}&f=live`);
+    const found = resp.text.toLowerCase().includes(username.toLowerCase());
+    results.tests.replyDeboost = {
+      status: found ? 'PASS' : 'WARN',
+      detail: found ? 'Replies appear visible in search' : 'Replies may be hidden (possible reply deboost)'
+    };
+    if (found) log.success('Replies appear visible in search');
+    else log.warning('Replies may be hidden. Possible reply deboost.');
+  } catch (e) {
+    results.tests.replyDeboost = { status: 'UNKNOWN', detail: e.message };
+    log.unknown(`Could not check: ${e.message}`);
+  }
+
+  // ── Overall assessment ───────────────────────
+  const testList = Object.values(results.tests);
+  const fails = testList.filter((t) => t.status === 'FAIL').length;
+  const warns = testList.filter((t) => t.status === 'WARN').length;
+
+  if (fails > 0) results.overallStatus = 'LIKELY SHADOWBANNED';
+  else if (warns >= 2) results.overallStatus = 'POSSIBLY SHADOWBANNED';
+  else if (warns === 1) results.overallStatus = 'MINOR SIGNALS';
+  else results.overallStatus = 'CLEAN (no signals detected)';
+
+  // ============================================
+  // 📊 SUMMARY
+  // ============================================
+  console.log('');
+  console.log('━'.repeat(60));
+  console.log(`📊 SHADOWBAN HEURISTIC REPORT: @${username}`);
+  console.log('━'.repeat(60));
+  for (const [name, result] of Object.entries(results.tests)) {
+    const icon = result.status === 'PASS' ? '✅' : result.status === 'FAIL' ? '❌' : result.status === 'WARN' ? '⚠️' : '❓';
+    console.log(`   ${icon} ${name.padEnd(14)} ${result.detail}`);
+  }
+  const statusIcon = results.overallStatus.startsWith('CLEAN') ? '✅'
+    : results.overallStatus.includes('LIKELY') ? '❌' : '⚠️';
+  console.log('');
+  console.log(`   ${statusIcon} Overall: ${results.overallStatus}`);
+  console.log('');
+  console.log('   ℹ️ Reminder: these are browser-side heuristics. A WARN can be caused');
+  console.log('      by a new/low-activity account, a private profile, or a rate limit,');
+  console.log('      not only by a real shadowban.');
+
+  if (!results.overallStatus.startsWith('CLEAN')) {
+    console.log('');
+    console.log('💡 If you see repeated signals:');
+    console.log('   1. Pause automated activity for 48-72 hours.');
+    console.log('   2. Remove content that may violate the rules.');
+    console.log('   3. Verify your email and phone number.');
+    console.log('   4. Engage naturally: like, reply, browse.');
+  }
+
+  // Save a rolling history in localStorage for later comparison.
+  try {
+    const key = `xactions_shadowban_${username}`;
+    const history = JSON.parse(localStorage.getItem(key) || '[]');
+    history.push(results);
+    localStorage.setItem(key, JSON.stringify(history.slice(-30)));
+    console.log('');
+    log.info(`Snapshot saved. Retrieve: JSON.parse(localStorage.getItem("${key}"))`);
+  } catch (e) {
+    log.warning(`Could not save snapshot: ${e.message}`);
+  }
+
+  if (CONFIG.exportResults) {
+    console.log('');
+    download(results, `xactions-shadowban-${username}-${new Date().toISOString().slice(0, 10)}.json`);
+  }
+
+  window.xactionsShadowban = results;
+  console.log('');
+  log.info('Full result object: window.xactionsShadowban');
+
+  return results;
 })();
 
 });
@@ -17703,6 +27764,638 @@ try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG
   console.log('💡 Access via: window.unrolledThread');
   
   return { author: threadAuthor, tweets };
+})();
+
+});
+  register("trending-monitor", function(){
+(async function trendingMonitor() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // Highlight any trend whose name contains one of these words (case-insensitive).
+    watchKeywords: [],
+
+    // Re-scan interval in ms. Set to 0 for a single one-off scan.
+    // 300000 = every 5 minutes. Stop with window.stopTrendingMonitor().
+    repeatIntervalMs: 0,
+
+    // Scroll passes per scan to load the full trends list.
+    scrollRounds: 4,
+
+    // Delay between scrolls (ms).
+    scrollDelay: 1400,
+
+    // Auto-download a JSON snapshot after each scan.
+    exportResults: true
+  };
+try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG,window.__XA_LAUNCH_CFG);}}catch(_xa){}
+
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    trend: '[data-testid="trend"]'
+  };
+
+  // ============================================
+  // 🗂️ CATEGORY KEYWORDS
+  // ============================================
+  const CATEGORIES = {
+    Tech: ['ai', 'chatgpt', 'openai', 'google', 'apple', 'microsoft', 'nvidia', 'coding', 'crypto', 'bitcoin', 'solana', 'web3', 'ethereum'],
+    Politics: ['trump', 'biden', 'congress', 'election', 'democrat', 'republican', 'government', 'senate'],
+    Sports: ['nfl', 'nba', 'mlb', 'soccer', 'football', 'basketball', 'fifa', 'ufc', 'f1', 'olympics'],
+    Entertainment: ['movie', 'music', 'album', 'netflix', 'disney', 'grammy', 'oscar', 'tour', 'concert'],
+    Business: ['stock', 'market', 'earnings', 'ipo', 'startup', 'economy', 'fed', 'inflation'],
+    Gaming: ['gaming', 'playstation', 'xbox', 'nintendo', 'steam', 'esports', 'minecraft']
+  };
+
+  const classify = (text) => {
+    if (!text) return 'Other';
+    const lower = text.toLowerCase();
+    for (const [category, words] of Object.entries(CATEGORIES)) {
+      if (words.some((w) => lower.includes(w))) return category;
+    }
+    return 'Other';
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const STORAGE_KEY = 'xactions_trends_history';
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+  const log = {
+    info: (msg) => console.log(`ℹ️ ${msg}`),
+    success: (msg) => console.log(`✅ ${msg}`),
+    warning: (msg) => console.log(`⚠️ ${msg}`),
+    error: (msg) => console.log(`❌ ${msg}`)
+  };
+
+  const download = (data, filename) => {
+    try {
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      log.success(`Snapshot downloaded: ${filename}`);
+    } catch (e) {
+      log.error(`Could not download snapshot: ${e.message}`);
+    }
+  };
+
+  const parsePostCount = (text) => {
+    if (!text) return 0;
+    const match = text.match(/([\d,.]+)\s*([KMB])?/i);
+    if (!match) return 0;
+    let num = parseFloat(match[1].replace(/,/g, ''));
+    if (Number.isNaN(num)) return 0;
+    const mult = { K: 1e3, M: 1e6, B: 1e9 };
+    if (match[2]) num *= mult[match[2].toUpperCase()];
+    return Math.round(num);
+  };
+
+  const loadHistory = () => {
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    } catch {
+      return [];
+    }
+  };
+
+  const saveSnapshot = (trends) => {
+    try {
+      const history = loadHistory();
+      history.push({
+        timestamp: new Date().toISOString(),
+        trends: trends.map((t) => ({ rank: t.rank, topic: t.topic, postCount: t.postCount, category: t.category }))
+      });
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(history.slice(-50)));
+    } catch (e) {
+      log.warning(`Could not save history: ${e.message}`);
+    }
+  };
+
+  // Read one trends scan from the DOM. Each trend cell holds several spans;
+  // the topic is the longest non-metadata span and the post count is the
+  // span that mentions "posts"/"Tweets".
+  const scrapeTrends = async () => {
+    const trends = [];
+    const seen = new Set();
+
+    for (let round = 0; round < CONFIG.scrollRounds; round++) {
+      document.querySelectorAll(SELECTORS.trend).forEach((cell) => {
+        let topic = '';
+        let postCountRaw = '';
+        cell.querySelectorAll('span').forEach((span) => {
+          const text = span.textContent.trim();
+          if (/[\d,.]+[KMB]?\s*(posts|tweets)/i.test(text)) {
+            postCountRaw = text;
+            return;
+          }
+          const isMeta = text.includes('·') || /Trending|Only on X|Promoted/i.test(text) || /posts|tweets/i.test(text) || /^\d+$/.test(text);
+          if (!isMeta && text.length > 1 && text.length < 80 && text.length > topic.length) {
+            topic = text;
+          }
+        });
+        if (!topic || seen.has(topic.toLowerCase())) return;
+        seen.add(topic.toLowerCase());
+        trends.push({
+          rank: trends.length + 1,
+          topic,
+          category: classify(topic),
+          postCount: parsePostCount(postCountRaw),
+          postCountRaw: postCountRaw || null
+        });
+      });
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(CONFIG.scrollDelay);
+    }
+    return trends;
+  };
+
+  const compareWithPrevious = (trends) => {
+    const history = loadHistory();
+    if (history.length < 2) return;
+    const prev = history[history.length - 2];
+    const prevMap = new Map(prev.trends.map((t) => [t.topic.toLowerCase(), t]));
+
+    const fresh = [];
+    const rising = [];
+    trends.forEach((t) => {
+      const p = prevMap.get(t.topic.toLowerCase());
+      if (!p) fresh.push(t);
+      else if (t.rank < p.rank) rising.push({ ...t, prevRank: p.rank, change: p.rank - t.rank });
+    });
+
+    if (fresh.length > 0) {
+      console.log('');
+      console.log(`   🆕 NEW since last scan (${fresh.length}):`);
+      fresh.slice(0, 8).forEach((t) => console.log(`      #${t.rank} ${t.topic} [${t.category}]`));
+    }
+    if (rising.length > 0) {
+      console.log('');
+      console.log(`   📈 RISING (${rising.length}):`);
+      rising.sort((a, b) => b.change - a.change).slice(0, 5).forEach((t) => {
+        console.log(`      ↑${t.change} ${t.topic} (#${t.prevRank} -> #${t.rank})`);
+      });
+    }
+  };
+
+  // ============================================
+  // 🎯 MAIN LOGIC
+  // ============================================
+  const runScan = async (scanNo) => {
+    console.log('');
+    console.log('━'.repeat(60));
+    console.log(`📡 TRENDS SCAN ${scanNo} at ${new Date().toLocaleTimeString()}`);
+    console.log('━'.repeat(60));
+
+    const trends = await scrapeTrends();
+    if (trends.length === 0) {
+      log.error('No trends found. Go to x.com/explore/tabs/trending and make sure trends are visible.');
+      return null;
+    }
+
+    trends.forEach((t) => {
+      const count = t.postCountRaw ? ` (${t.postCountRaw})` : '';
+      console.log(`   ${String(t.rank).padStart(2)}. [${t.category.padEnd(13)}] ${t.topic}${count}`);
+    });
+
+    // Category distribution.
+    const catCounts = {};
+    trends.forEach((t) => { catCounts[t.category] = (catCounts[t.category] || 0) + 1; });
+    console.log('');
+    console.log('   📊 CATEGORY MIX:');
+    Object.entries(catCounts).sort((a, b) => b[1] - a[1]).forEach(([cat, count]) => {
+      const bar = '█'.repeat(Math.round((count / trends.length) * 20));
+      console.log(`      ${cat.padEnd(14)} ${count} (${((count / trends.length) * 100).toFixed(0)}%) ${bar}`);
+    });
+
+    // Watched keyword highlights.
+    const matches = [];
+    if (CONFIG.watchKeywords.length > 0) {
+      trends.forEach((t) => {
+        CONFIG.watchKeywords.forEach((kw) => {
+          if (t.topic.toLowerCase().includes(kw.toLowerCase())) {
+            matches.push({ topic: t.topic, keyword: kw, rank: t.rank, postCount: t.postCount });
+          }
+        });
+      });
+      console.log('');
+      console.log('   🔔 WATCHED KEYWORDS:');
+      if (matches.length === 0) {
+        console.log('      No watched keywords in the current trends.');
+      } else {
+        matches.forEach((m) => console.log(`      🚨 "${m.topic}" matches "${m.keyword}" (rank #${m.rank})`));
+      }
+    }
+
+    saveSnapshot(trends);
+    compareWithPrevious(trends);
+
+    const snapshot = {
+      scannedAt: new Date().toISOString(),
+      page: window.location.href,
+      totalTrends: trends.length,
+      watchKeywords: CONFIG.watchKeywords,
+      keywordMatches: matches,
+      categoryMix: catCounts,
+      trends
+    };
+
+    if (CONFIG.exportResults) {
+      console.log('');
+      const stamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+      download(snapshot, `xactions-trends-${stamp}.json`);
+    }
+
+    window.xactionsTrends = snapshot;
+    return snapshot;
+  };
+
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📡 TRENDING MONITOR - XActions                         ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  if (!/(^|\.)x\.com$/.test(location.hostname) && !/(^|\.)twitter\.com$/.test(location.hostname)) {
+    log.warning('Not on x.com. Open x.com/explore/tabs/trending and run again.');
+    return;
+  }
+  if (!/\/explore/.test(location.pathname)) {
+    log.warning('You are not on the Explore/Trends page. Go to x.com/explore/tabs/trending for the full list.');
+    log.info('Continuing anyway in case trends are rendered in a sidebar.');
+  }
+
+  if (CONFIG.watchKeywords.length > 0) log.info(`Watching keywords: ${CONFIG.watchKeywords.join(', ')}`);
+
+  // Stop switch for the repeating monitor.
+  let stopped = false;
+  window.stopTrendingMonitor = () => {
+    stopped = true;
+    log.warning('Stop requested. The monitor will exit after the current scan.');
+  };
+
+  // First scan always runs.
+  await runScan(1);
+
+  if (CONFIG.repeatIntervalMs > 0) {
+    log.info(`Repeat mode ON. Re-scanning every ${(CONFIG.repeatIntervalMs / 60000).toFixed(1)} min.`);
+    log.info('To stop: window.stopTrendingMonitor()');
+    let scanNo = 2;
+    while (!stopped) {
+      // Sleep in short slices so the stop switch responds quickly.
+      const slices = Math.max(1, Math.round(CONFIG.repeatIntervalMs / 1000));
+      for (let i = 0; i < slices && !stopped; i++) await sleep(1000);
+      if (stopped) break;
+      await runScan(scanNo++);
+    }
+    log.success('Trending monitor stopped.');
+  } else {
+    log.info('Single scan complete. Set CONFIG.repeatIntervalMs > 0 for continuous monitoring.');
+  }
+
+  return window.xactionsTrends;
+})();
+
+});
+  register("tweet-performance", function(){
+(async function tweetPerformance() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // Maximum number of posts to collect.
+    maxPosts: 30,
+
+    // Ranking key for the printed table:
+    // 'likes' | 'reposts' | 'replies' | 'engagementRate'
+    // engagementRate = (likes + reposts + replies) / views, as a percentage.
+    sortBy: 'likes',
+
+    // How many rows to print in the top table.
+    topN: 10,
+
+    // Skip reposts (other people's tweets this account reposted).
+    excludeRetweets: true,
+
+    // Max scroll attempts before giving up on loading more posts.
+    maxScrollAttempts: 40,
+
+    // Delay between scrolls (ms). Increase if posts load slowly.
+    scrollDelay: 1800,
+
+    // Auto-download a JSON report when finished.
+    exportResults: true
+  };
+try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG,window.__XA_LAUNCH_CFG);}}catch(_xa){}
+
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    tweet: 'article[data-testid="tweet"]',
+    tweetText: '[data-testid="tweetText"]',
+    socialContext: '[data-testid="socialContext"]',
+    actionGroup: '[role="group"]',
+    photo: '[data-testid="tweetPhoto"]',
+    video: '[data-testid="videoPlayer"], [data-testid="videoComponent"]',
+    card: '[data-testid="card.wrapper"]',
+    poll: '[data-testid="poll"]',
+    analytics: 'a[href*="/analytics"]'
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+  const log = {
+    info: (msg) => console.log(`ℹ️ ${msg}`),
+    success: (msg) => console.log(`✅ ${msg}`),
+    warning: (msg) => console.log(`⚠️ ${msg}`),
+    error: (msg) => console.log(`❌ ${msg}`)
+  };
+
+  // Parse "1,234", "12.3K", "4.5M" into an integer.
+  const parseCount = (text) => {
+    if (!text) return 0;
+    const cleaned = text.trim().replace(/,/g, '');
+    const match = cleaned.match(/([\d.]+)\s*([KMB])?/i);
+    if (!match) return 0;
+    let num = parseFloat(match[1]);
+    if (Number.isNaN(num)) return 0;
+    const mult = { K: 1e3, M: 1e6, B: 1e9 };
+    if (match[2]) num *= mult[match[2].toUpperCase()];
+    return Math.round(num);
+  };
+
+  const fmt = (n) => (n >= 1e6 ? (n / 1e6).toFixed(1) + 'M' : n >= 1e3 ? (n / 1e3).toFixed(1) + 'K' : String(n));
+
+  const download = (data, filename) => {
+    try {
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      log.success(`Report downloaded: ${filename}`);
+    } catch (e) {
+      log.error(`Could not download report: ${e.message}`);
+    }
+  };
+
+  // Extract likes/reposts/replies/views from a tweet's action bar. The action
+  // buttons expose aria-labels that hold the real numbers even when the
+  // visible text is abbreviated.
+  const readMetrics = (article) => {
+    let replies = 0;
+    let reposts = 0;
+    let likes = 0;
+    let views = 0;
+
+    const group = article.querySelector(SELECTORS.actionGroup);
+    if (group) {
+      group.querySelectorAll('button, a').forEach((el) => {
+        const label = (el.getAttribute('aria-label') || '').toLowerCase();
+        if (!label) return;
+        const numMatch = label.match(/([\d,.]+)/);
+        const count = numMatch ? parseCount(numMatch[1]) : parseCount(el.textContent);
+        if (/repl/.test(label)) replies = count || replies;
+        else if (/repost|retweet/.test(label)) reposts = count || reposts;
+        else if (/like/.test(label)) likes = count || likes;
+        else if (/view/.test(label)) views = count || views;
+      });
+    }
+
+    if (views === 0) {
+      const viewLink = article.querySelector(SELECTORS.analytics);
+      if (viewLink) views = parseCount(viewLink.textContent);
+    }
+
+    return { replies, reposts, likes, views };
+  };
+
+  const getTweetId = (article) => {
+    const timeAnchor = article.querySelector('time')?.closest('a[href*="/status/"]');
+    const anchor = timeAnchor || article.querySelector('a[href*="/status/"]');
+    if (!anchor) return null;
+    const match = anchor.href.match(/\/status\/(\d+)/);
+    return match ? match[1] : null;
+  };
+
+  const isRetweet = (article) => {
+    const ctx = article.querySelector(SELECTORS.socialContext);
+    return !!ctx && ctx.closest('a') !== null;
+  };
+
+  // ============================================
+  // 🎯 MAIN LOGIC
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  🎯 TWEET PERFORMANCE - XActions                        ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  const pathHandle = location.pathname.match(/^\/([A-Za-z0-9_]+)/)?.[1];
+  const reserved = ['home', 'explore', 'notifications', 'messages', 'i', 'settings', 'search'];
+  if (!pathHandle || reserved.includes(pathHandle)) {
+    log.warning('Not on a profile page. Go to x.com/<username> (e.g. your own profile) and run again.');
+    return;
+  }
+
+  const validSorts = ['likes', 'reposts', 'replies', 'engagementRate'];
+  if (!validSorts.includes(CONFIG.sortBy)) {
+    log.warning(`Unknown sortBy "${CONFIG.sortBy}". Falling back to "likes".`);
+    CONFIG.sortBy = 'likes';
+  }
+
+  log.info(`Profile: @${pathHandle}`);
+  log.info(`Collecting up to ${CONFIG.maxPosts} posts, ranking by ${CONFIG.sortBy}`);
+  log.info('To stop early: window.stopTweetPerformance()');
+  console.log('');
+
+  // Stop switch for the scroll loop.
+  let stopped = false;
+  window.stopTweetPerformance = () => {
+    stopped = true;
+    log.warning('Stop requested. Finishing the current pass, then reporting.');
+  };
+
+  const posts = new Map();
+  let scrollAttempts = 0;
+  let stalls = 0;
+
+  const collect = () => {
+    document.querySelectorAll(SELECTORS.tweet).forEach((article) => {
+      try {
+        if (CONFIG.excludeRetweets && isRetweet(article)) return;
+        const id = getTweetId(article);
+        if (!id || posts.has(id)) return;
+
+        const text = (article.querySelector(SELECTORS.tweetText)?.textContent || '').trim();
+        const metrics = readMetrics(article);
+        const hasImage = !!article.querySelector(SELECTORS.photo);
+        const hasVideo = !!article.querySelector(SELECTORS.video);
+        const hasCard = !!article.querySelector(SELECTORS.card);
+        const hasPoll = !!article.querySelector(SELECTORS.poll);
+        const type = hasPoll ? 'poll' : hasVideo ? 'video' : hasImage ? 'image' : hasCard ? 'link' : 'text';
+
+        const engagement = metrics.likes + metrics.reposts + metrics.replies;
+        const engagementRate = metrics.views > 0
+          ? Math.round((engagement / metrics.views) * 10000) / 100
+          : 0;
+        const timeEl = article.querySelector('time');
+
+        posts.set(id, {
+          id,
+          url: `https://x.com/${pathHandle}/status/${id}`,
+          text: text.slice(0, 280),
+          type,
+          likes: metrics.likes,
+          reposts: metrics.reposts,
+          replies: metrics.replies,
+          views: metrics.views,
+          engagement,
+          engagementRate,
+          hashtags: text.match(/#\w+/g) || [],
+          timestamp: timeEl?.getAttribute('datetime') || null
+        });
+      } catch (e) {
+        log.warning(`Skipped a post: ${e.message}`);
+      }
+    });
+  };
+
+  while (!stopped && posts.size < CONFIG.maxPosts && scrollAttempts < CONFIG.maxScrollAttempts) {
+    const before = posts.size;
+    collect();
+    if (posts.size > before) {
+      log.info(`Collected ${posts.size}/${CONFIG.maxPosts} posts`);
+      stalls = 0;
+    } else {
+      stalls++;
+      if (stalls >= 5) {
+        log.warning('No new posts after several scrolls. Reached the end of what loaded.');
+        break;
+      }
+    }
+    if (posts.size >= CONFIG.maxPosts) break;
+    window.scrollTo(0, document.body.scrollHeight);
+    scrollAttempts++;
+    await sleep(CONFIG.scrollDelay);
+  }
+  collect();
+
+  const tweets = [...posts.values()].slice(0, CONFIG.maxPosts);
+  if (tweets.length === 0) {
+    log.error('No posts found. Make sure the profile has visible posts and try scrolling once manually.');
+    return;
+  }
+
+  // Rankings.
+  const sortKey = CONFIG.sortBy;
+  const ranked = [...tweets].sort((a, b) => b[sortKey] - a[sortKey]);
+
+  const sum = (key) => tweets.reduce((s, t) => s + t[key], 0);
+  const avg = (key) => Math.round(sum(key) / tweets.length);
+  const totalEngagement = sum('engagement');
+
+  const byType = {};
+  tweets.forEach((t) => {
+    byType[t.type] = byType[t.type] || { count: 0, engagement: 0 };
+    byType[t.type].count++;
+    byType[t.type].engagement += t.engagement;
+  });
+
+  // ============================================
+  // 📊 SUMMARY
+  // ============================================
+  const labelFor = { likes: '❤️ Likes', reposts: '🔁 Reposts', replies: '💬 Replies', engagementRate: '📊 Eng. rate' };
+
+  console.log('');
+  console.log('━'.repeat(64));
+  console.log(`🏆 TOP ${Math.min(CONFIG.topN, ranked.length)} POSTS BY ${labelFor[sortKey].toUpperCase()} (@${pathHandle})`);
+  console.log('━'.repeat(64));
+  console.log(`   #   ❤️ Likes  🔁 RT     💬 Rep    👀 Views   Rate%   Post`);
+  console.log('   ' + '─'.repeat(60));
+  ranked.slice(0, CONFIG.topN).forEach((t, i) => {
+    const preview = (t.text.replace(/\s+/g, ' ').slice(0, 40) || '(no text)');
+    console.log(
+      `   ${String(i + 1).padEnd(3)} ${fmt(t.likes).padEnd(9)} ${fmt(t.reposts).padEnd(9)} ${fmt(t.replies).padEnd(9)} ${fmt(t.views).padEnd(10)} ${String(t.engagementRate).padEnd(6)} ${preview}`
+    );
+  });
+
+  console.log('');
+  console.log('📊 AVERAGES (across ' + tweets.length + ' posts):');
+  console.log(`   ❤️ ${fmt(avg('likes'))} likes   🔁 ${fmt(avg('reposts'))} reposts   💬 ${fmt(avg('replies'))} replies   👀 ${fmt(avg('views'))} views`);
+
+  console.log('');
+  console.log('📐 BY CONTENT TYPE (avg engagement):');
+  Object.entries(byType)
+    .map(([type, d]) => [type, Math.round(d.engagement / d.count), d.count])
+    .sort((a, b) => b[1] - a[1])
+    .forEach(([type, avgEng, count]) => {
+      console.log(`   ${type.padEnd(6)} avg ${fmt(avgEng).padEnd(8)} engagement  (${count} post${count === 1 ? '' : 's'})`);
+    });
+
+  const withMedia = tweets.filter((t) => t.type === 'image' || t.type === 'video');
+  const textOnly = tweets.filter((t) => t.type === 'text');
+  const avgOf = (arr) => (arr.length ? Math.round(arr.reduce((s, t) => s + t.engagement, 0) / arr.length) : 0);
+  console.log('');
+  console.log(`📸 Media posts avg ${fmt(avgOf(withMedia))} eng (${withMedia.length})  vs  Text posts avg ${fmt(avgOf(textOnly))} eng (${textOnly.length})`);
+
+  const report = {
+    profile: pathHandle,
+    profileUrl: `https://x.com/${pathHandle}`,
+    sortedBy: sortKey,
+    analyzedAt: new Date().toISOString(),
+    summary: {
+      totalPosts: tweets.length,
+      totalEngagement,
+      avgLikes: avg('likes'),
+      avgReposts: avg('reposts'),
+      avgReplies: avg('replies'),
+      avgViews: avg('views'),
+      byType
+    },
+    ranked,
+    posts: tweets
+  };
+
+  if (CONFIG.exportResults) {
+    console.log('');
+    download(report, `xactions-performance-${pathHandle}-${new Date().toISOString().slice(0, 10)}.json`);
+  }
+
+  window.xactionsPerformance = report;
+  console.log('');
+  log.info('Full report object: window.xactionsPerformance');
+  log.success('Done.');
+
+  return report;
 })();
 
 });
@@ -19695,6 +30388,271 @@ try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG
   console.log('💡 Access via: window.viralTweets');
   
   return result;
+})();
+
+});
+  register("vote-in-polls", function(){
+(async function voteInPolls() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // How to choose an option in each poll:
+    //   'first'  = the first option
+    //   'last'   = the last option
+    //   'random' = a random option
+    //   'index'  = the option at CONFIG.optionIndex (0-based)
+    strategy: 'random',
+
+    // Used only when strategy is 'index'. 0 = first option.
+    optionIndex: 0,
+
+    // Maximum number of polls to vote in this run
+    maxVotes: 15,
+
+    // Minimum delay between votes (ms)
+    minDelay: 1500,
+
+    // Maximum delay between votes (ms)
+    maxDelay: 4000,
+
+    // Maximum scroll attempts to find more polls
+    maxScrollAttempts: 30,
+
+    // Stop if no new polls appear after this many consecutive scrolls
+    noNewPollsThreshold: 6
+  };
+try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG,window.__XA_LAUNCH_CFG);}}catch(_xa){}
+
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    tweet: 'article[data-testid="tweet"]',
+    tweetText: '[data-testid="tweetText"]',
+    // X renders poll options with a pollChoice testid; some builds expose them
+    // as ARIA radios inside the card. We match both, then keep only clickable ones.
+    pollChoice: '[data-testid="pollChoice"], [data-testid^="pollChoice"], div[role="radio"]'
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+  const randomDelay = () => {
+    const delay = Math.floor(Math.random() * (CONFIG.maxDelay - CONFIG.minDelay + 1)) + CONFIG.minDelay;
+    return sleep(delay);
+  };
+
+  const scrollDown = () => window.scrollBy(0, window.innerHeight * 0.7);
+
+  const log = {
+    info: (msg) => console.log(`ℹ️ ${msg}`),
+    success: (msg) => console.log(`✅ ${msg}`),
+    warning: (msg) => console.log(`⚠️ ${msg}`),
+    error: (msg) => console.log(`❌ ${msg}`),
+    progress: (current, total) => console.log(`📊 Progress: ${current}/${total} voted`)
+  };
+
+  const getTweetId = (tweet) => {
+    const timeAnchor = tweet.querySelector('time')?.closest('a[href*="/status/"]');
+    if (timeAnchor) {
+      const match = timeAnchor.href.match(/\/status\/(\d+)/);
+      if (match) return match[1];
+    }
+    const link = tweet.querySelector('a[href*="/status/"]');
+    const m = link?.getAttribute('href')?.match(/\/status\/(\d+)/);
+    return m ? m[1] : (tweet.querySelector(SELECTORS.tweetText)?.textContent || '').substring(0, 100);
+  };
+
+  // Return the clickable poll option elements in a post, or [] if there is no
+  // open, unvoted poll. A poll already voted or closed renders results (percent
+  // bars) instead of interactive choices, so those elements are filtered out.
+  const getOpenPollChoices = (tweet) => {
+    const raw = Array.from(tweet.querySelectorAll(SELECTORS.pollChoice));
+    if (raw.length === 0) return [];
+
+    // Deduplicate: pollChoice and role="radio" can select nested duplicates.
+    const seen = new Set();
+    const choices = [];
+    for (const el of raw) {
+      // Prefer the interactive ancestor (the actual clickable option row).
+      const clickable = el.closest('[role="radio"], button, [role="button"]') || el;
+      if (seen.has(clickable)) continue;
+      seen.add(clickable);
+
+      // Skip options that are disabled or already show as selected/results.
+      const ariaDisabled = clickable.getAttribute('aria-disabled') === 'true';
+      const disabledAttr = clickable.hasAttribute('disabled');
+      if (ariaDisabled || disabledAttr) continue;
+
+      choices.push(clickable);
+    }
+
+    // If any choice shows a result percentage, the poll is voted/closed -> skip.
+    const showsResults = /\d+(\.\d+)?%/.test(tweet.textContent || '');
+    if (showsResults && choices.every(c => c.getAttribute('role') !== 'radio')) {
+      return [];
+    }
+    // A genuine open poll has 2+ selectable options.
+    return choices.length >= 2 ? choices : [];
+  };
+
+  const chooseIndex = (count) => {
+    switch (CONFIG.strategy) {
+      case 'first': return 0;
+      case 'last': return count - 1;
+      case 'random': return Math.floor(Math.random() * count);
+      case 'index': return Math.min(Math.max(CONFIG.optionIndex, 0), count - 1);
+      default: return 0;
+    }
+  };
+
+  // ============================================
+  // 🎯 MAIN LOGIC
+  // ============================================
+  const stats = {
+    voted: 0,
+    pollsSeen: 0,
+    skippedClosedOrVoted: 0,
+    errors: 0
+  };
+
+  const processed = new Set();
+
+  // Stop switch: run window.stopVoteInPolls() to abort after the current poll.
+  let stopped = false;
+  window.stopVoteInPolls = () => {
+    stopped = true;
+    log.warning('Stop requested. Finishing the current poll, then exiting.');
+  };
+
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  🗳️  VOTE IN POLLS - XActions                            ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  // Page guard: needs a rendered feed. Warn, do not redirect.
+  if (!/x\.com|twitter\.com/.test(window.location.href)) {
+    log.warning('Open x.com on a timeline or search page, then run this again.');
+    return;
+  }
+  if (document.querySelector(SELECTORS.tweet) === null) {
+    log.warning('No posts visible yet. Go to a timeline or search results page, wait for it to load, then re-run.');
+    return;
+  }
+
+  const validStrategies = ['first', 'last', 'random', 'index'];
+  if (!validStrategies.includes(CONFIG.strategy)) {
+    log.warning(`Unknown strategy "${CONFIG.strategy}". Falling back to 'first'.`);
+    CONFIG.strategy = 'first';
+  }
+
+  log.info(`Strategy: ${CONFIG.strategy}${CONFIG.strategy === 'index' ? ` (option ${CONFIG.optionIndex})` : ''} | Max votes: ${CONFIG.maxVotes}`);
+  log.info('To stop early: window.stopVoteInPolls()');
+
+  let scrollAttempts = 0;
+  let noNewPollsCount = 0;
+
+  while (!stopped && stats.voted < CONFIG.maxVotes && scrollAttempts < CONFIG.maxScrollAttempts) {
+    const tweets = document.querySelectorAll(SELECTORS.tweet);
+    let foundNewPoll = false;
+
+    for (const tweet of tweets) {
+      if (stopped || stats.voted >= CONFIG.maxVotes) break;
+
+      const tweetId = getTweetId(tweet);
+      if (processed.has(tweetId)) continue;
+
+      // Only mark posts that actually contain a poll as processed, so we do not
+      // burn the dedupe set on the majority of non-poll posts before they render.
+      const rawHasChoice = tweet.querySelector(SELECTORS.pollChoice) !== null;
+      if (!rawHasChoice) continue;
+
+      processed.add(tweetId);
+      stats.pollsSeen++;
+      foundNewPoll = true;
+
+      try {
+        const choices = getOpenPollChoices(tweet);
+        if (choices.length === 0) {
+          stats.skippedClosedOrVoted++;
+          continue;
+        }
+
+        const idx = chooseIndex(choices.length);
+        const target = choices[idx];
+        const label = (target.textContent || '').substring(0, 40).replace(/\n/g, ' ').trim() || `option ${idx + 1}`;
+
+        tweet.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        await sleep(500);
+
+        target.click();
+        await sleep(700);
+
+        // Verify the vote registered: the poll should now show results.
+        const registered = /\d+(\.\d+)?%/.test(tweet.textContent || '') ||
+                           tweet.querySelector(SELECTORS.pollChoice) === null ||
+                           getOpenPollChoices(tweet).length === 0;
+        if (registered) {
+          stats.voted++;
+          log.success(`Voted #${stats.voted}: "${label}" (${CONFIG.strategy})`);
+          log.progress(stats.voted, CONFIG.maxVotes);
+          await randomDelay();
+        } else {
+          log.warning('Click did not register a vote (poll may have closed). Skipping.');
+          stats.skippedClosedOrVoted++;
+        }
+      } catch (error) {
+        log.error(`Error voting in poll: ${error.message}`);
+        stats.errors++;
+      }
+    }
+
+    if (!foundNewPoll) {
+      noNewPollsCount++;
+      if (noNewPollsCount >= CONFIG.noNewPollsThreshold) {
+        log.warning('No new polls found after multiple scrolls. Stopping.');
+        break;
+      }
+    } else {
+      noNewPollsCount = 0;
+    }
+
+    scrollDown();
+    scrollAttempts++;
+    log.info(`Scrolling for more polls... (attempt ${scrollAttempts}/${CONFIG.maxScrollAttempts})`);
+    await sleep(1500);
+  }
+
+  // ============================================
+  // 📊 SUMMARY
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 VOTE IN POLLS - COMPLETE                             ║
+╠══════════════════════════════════════════════════════════╣
+║  🗳️  Voted:                ${String(stats.voted).padEnd(28)}║
+║  🔎 Polls Seen:            ${String(stats.pollsSeen).padEnd(28)}║
+║  ⏭️  Closed/Already Voted: ${String(stats.skippedClosedOrVoted).padEnd(28)}║
+║  ❌ Errors:                ${String(stats.errors).padEnd(28)}║
+║  📜 Scroll Attempts:       ${String(scrollAttempts).padEnd(28)}║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  if (stats.pollsSeen === 0) {
+    log.warning('No polls found in this feed. Try a search like x.com/search?q=poll&f=live.');
+  }
+  log.success('Script completed! by nichxbt');
+
+  return stats;
 })();
 
 });
