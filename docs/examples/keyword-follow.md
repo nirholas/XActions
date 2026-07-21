@@ -1438,4 +1438,4 @@ Don't want to run scripts? Use the web dashboard at **[xactions.app](https://xac
 
 **Author:** nich ([@nichxbt](https://x.com/nichxbt))
 
-**License:** MIT - Use responsibly!
+**License:** Apache 2.0 - Use responsibly!

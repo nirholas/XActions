@@ -1,4 +1,4 @@
-// Copyright (c) 2024-2026 nich (@nichxbt). Business Source License 1.1.
+// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 // scripts/multiAccountTimelineLiker.js
 // Like the entire timeline of multiple X accounts in sequence
 // Example: like 500 posts on @nichxbt, then 500 on @doi, etc.

@@ -1,7 +1,7 @@
 ---
 name: lists-management
 description: Creates, populates, and exports X/Twitter lists from the browser console. Supports creating public or private lists, bulk-adding members by username, and exporting list members as JSON. Use when users want to create lists, add members to lists, or export list data on X.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "3.0"

@@ -1,7 +1,7 @@
 ---
 name: competitor-intelligence
 description: Analyzes competitor X/Twitter accounts including profile, content strategy, audience, engagement patterns, and network. Combines MCP tools and browser scripts for comprehensive competitive analysis. Use when comparing accounts, researching competitors, or benchmarking social performance.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "4.0"

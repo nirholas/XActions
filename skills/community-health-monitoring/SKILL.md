@@ -1,7 +1,7 @@
 ---
 name: community-health-monitoring
 description: Audits follower quality, engagement authenticity, unfollower patterns, and network efficiency to produce a community health score. Use when monitoring account health or detecting bot/spam followers.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "4.0"

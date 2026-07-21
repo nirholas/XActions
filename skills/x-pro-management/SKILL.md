@@ -1,7 +1,7 @@
 ---
 name: x-pro-management
 description: Navigate to X Pro (TweetDeck), set up monitoring columns, and manage multi-column view. Use when users want to use X Pro / TweetDeck features or set up a multi-column dashboard.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "1.0"

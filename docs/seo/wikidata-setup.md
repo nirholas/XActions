@@ -54,7 +54,7 @@ After creating the item, add these statements one by one. Click "add statement" 
 | **programmed in** (P277) | JavaScript (Q2005) | |
 | **platform** (P400) | Node.js (Q756100) | |
 | **platform** (P400) | web browser (Q6368) | Add second value |
-| **license** (P275) | MIT license (Q334661) | |
+| **license** (P275) | Apache 2.0 license (Q334661) | |
 
 ### Links & Identifiers
 
@@ -108,7 +108,7 @@ This helps Google understand XActions as an entity across languages.
 2. Upload the XActions logo (SVG preferred, PNG acceptable)
 3. **Filename:** `XActions_logo.svg`
 4. **Description:** `Logo of XActions, an open-source X/Twitter automation toolkit`
-5. **License:** Select the appropriate free license (e.g., MIT, CC-BY-SA)
+5. **License:** Select the project license: Apache License 2.0
 6. After upload, go back to the Wikidata item and add the image (P18) property
 
 ---

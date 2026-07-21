@@ -1,7 +1,7 @@
 ---
 name: graph-analysis
 description: Analyze follower/following network graphs — find clusters, influencers, bridges, and audience segments using graph algorithms. Use when users want to understand the network structure of their X audience or competitor's audience.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "1.0"

@@ -1,7 +1,7 @@
 ---
 name: content-posting
 description: Create and publish content on X/Twitter programmatically. Post threads, schedule posts, create polls, auto-repost by keyword, compose threads with preview, quote-tweet with templates, repurpose content, and auto-plug replies on viral tweets. Use when automating content creation, scheduling, thread building, or content repurposing.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "4.0"

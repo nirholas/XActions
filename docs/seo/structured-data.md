@@ -86,7 +86,7 @@ Defines XActions as a software product with rich metadata that Google can displa
   "softwareVersion": "3.1.0",
   "datePublished": "2024-01-01",
   "dateModified": "2026-02-25",
-  "license": "https://opensource.org/licenses/MIT",
+  "license": "https://opensource.org/licenses/Apache-2.0",
   "isAccessibleForFree": true,
   "offers": {
     "@type": "Offer",
@@ -240,7 +240,7 @@ Targets Google's "People Also Ask" and Featured Snippets.
       "name": "Is XActions safe to use?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes. XActions is open-source (MIT license). Scripts run locally in your browser — your credentials never leave your device. Built-in rate limiting prevents account issues."
+        "text": "Yes. XActions is open-source (Apache 2.0 license). Scripts run locally in your browser — your credentials never leave your device. Built-in rate limiting prevents account issues."
       }
     }
   ]

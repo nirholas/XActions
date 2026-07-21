@@ -88,7 +88,7 @@ Create the file src/client/Scraper.js with:
 4. Internal properties: this._auth (null), this._http (null), this._isLoggedIn (false)
 5. A `SearchMode` enum export: { Top: 'Top', Latest: 'Latest', Photos: 'Photos', Videos: 'Videos' }
 6. JSDoc on every method with @param and @returns
-7. Header comment with @author nich (@nichxbt) and @license MIT
+7. Header comment with @author nich (@nichxbt) and @license Apache-2.0
 8. ESM export: `export { Scraper, SearchMode }`
 
 The class must be real production code. Do NOT use placeholder comments like "// TODO" — stubs should have proper method signatures and return types that match the JSDoc. Methods that need auth/http will be connected in later prompts.

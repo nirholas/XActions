@@ -1,7 +1,7 @@
 ---
 name: algorithm-cultivation
 description: Trains an X/Twitter account's algorithmic feed to surface niche-relevant content and positions the account as a thought leader. Browser scripts for manual operation, Persona Engine for identity management, and 24/7 Algorithm Builder with LLM-powered engagement via Puppeteer. Use when a user wants to build their algorithm, cultivate their feed for a niche, grow a fresh account, become a thought leader, or run automated engagement with AI-generated content.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "4.0"

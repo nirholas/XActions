@@ -1,7 +1,7 @@
 ---
 name: engagement-interaction
 description: Automates X/Twitter engagement actions — like, unlike, reply, bookmark, hide replies, and auto-like by keyword. Also bulk-unlikes all posts. Use when users want to automate likes, send replies, manage bookmarks on tweets, hide replies, or clear their entire likes history.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "3.0"

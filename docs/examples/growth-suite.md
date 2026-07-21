@@ -1043,4 +1043,4 @@ Better Content → More Follow-Backs → Better Ratio
 
 **Disclaimer:** This tool is for educational purposes. You are responsible for how you use it. Aggressive automation violates X's Terms of Service and can result in account suspension. Always use conservative limits and monitor your account's health.
 
-**License:** MIT - See [LICENSE](../../LICENSE) for details.
+**License:** Apache 2.0 - See [LICENSE](../../LICENSE) for details.

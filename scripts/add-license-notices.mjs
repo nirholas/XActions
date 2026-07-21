@@ -1,11 +1,11 @@
-// Copyright (c) 2024-2026 nich (@nichxbt). Business Source License 1.1.
+// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 import { readFileSync, writeFileSync, readdirSync, statSync } from 'fs';
 import { join, resolve } from 'path';
 
 const ROOT = resolve('/workspaces/XActions');
 
 const MIT = '// Copyright (c) 2024-2026 nich (@nichxbt). MIT License.';
-const BSL = '// Copyright (c) 2024-2026 nich (@nichxbt). Business Source License 1.1.';
+const BSL = '// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.';
 
 function addNotice(filePath, notice) {
   let content;
@@ -118,7 +118,7 @@ try {
   const content = readFileSync(binFile, 'utf8');
   if (!content.split('\n').slice(0, 5).join('\n').includes('Copyright')) {
     const lines = content.split('\n');
-    const shellNotice = '# Copyright (c) 2024-2026 nich (@nichxbt). Business Source License 1.1.';
+    const shellNotice = '# Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.';
     if (lines[0].startsWith('#!')) {
       lines.splice(1, 0, shellNotice);
     } else {

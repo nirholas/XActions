@@ -1,7 +1,7 @@
 ---
 name: business-ads
 description: Manages X/Twitter business intelligence including brand monitoring, audience insights, competitor analysis, tweet A/B testing, auto-plug replies for promotion, and content performance optimization. Use when users want brand monitoring, audience analysis, competitor comparison, or promotion optimization on X.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "4.0"

@@ -1,7 +1,7 @@
 ---
 name: media-studio
 description: Navigate and automate X Media Studio — upload media, manage your media library, view media analytics, configure monetization, and add video captions. Use when users want to manage their uploaded media or access creator video tools on X.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "1.0"

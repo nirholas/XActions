@@ -1,4 +1,4 @@
-// Copyright (c) 2024-2026 nich (@nichxbt). Business Source License 1.1.
+// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 // scripts/clearAllReposts.js
 // Browser console script for removing all reposts/retweets from your profile
 // Paste in DevTools console on x.com/YOUR_USERNAME (your profile)

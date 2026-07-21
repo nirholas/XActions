@@ -1,7 +1,7 @@
 ---
 name: grok-ai
 description: Integrates with X/Twitter's Grok AI for chat, image generation, tweet analysis, and content creation. Automates Grok prompts, scrapes Grok responses, and uses Grok for content strategy. Requires X Premium+. Use when users want to use Grok AI for content generation, analysis, or chat automation on X.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "4.0"

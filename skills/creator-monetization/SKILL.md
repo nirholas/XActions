@@ -1,7 +1,7 @@
 ---
 name: creator-monetization
 description: Manages X/Twitter creator monetization features including ad revenue analytics, subscription management, tipping, and creator dashboard insights. Tracks earnings, analyzes monetization performance, and optimizes for revenue. Use when users want to check earnings, manage subscriptions, optimize monetization, or analyze ad revenue on X.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "4.0"

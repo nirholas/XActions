@@ -1,7 +1,7 @@
 ---
 name: saved-searches
 description: Create, manage, and run saved searches on X/Twitter. Save search queries, list saved searches, delete them, and run them to see fresh results. Use when users want to save or manage search queries on X.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "1.0"

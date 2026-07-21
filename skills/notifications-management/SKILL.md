@@ -1,7 +1,7 @@
 ---
 name: notifications-management
 description: Manages X/Twitter notifications including filtering by type, bulk management, notification scraping, and automated notification handling. Use when users want to manage, filter, scrape, or process X notifications in bulk.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "4.0"

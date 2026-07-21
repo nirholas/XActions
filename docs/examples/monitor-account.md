@@ -795,4 +795,4 @@ Don't want to run scripts? Use **[xactions.app](https://xactions.app)** for:
 ---
 
 **Author:** nich ([@nichxbt](https://x.com/nichxbt))  
-**License:** MIT
+**License:** Apache 2.0

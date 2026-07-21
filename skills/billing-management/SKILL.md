@@ -1,7 +1,7 @@
 ---
 name: billing-management
 description: Manage XActions subscriptions and billing — view plans, start a Stripe checkout, open the billing portal, or cancel a subscription. Use when users want to upgrade, downgrade, or manage their XActions subscription.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "1.0"

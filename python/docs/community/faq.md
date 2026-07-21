@@ -15,7 +15,7 @@ Xeepy is a Python toolkit for X/Twitter automation. It uses browser automation (
 
 ### Is Xeepy free?
 
-Yes! Xeepy is open-source and free under the MIT license.
+Yes! Xeepy is open-source and free under the Apache 2.0 license.
 
 ### Is Xeepy legal?
 

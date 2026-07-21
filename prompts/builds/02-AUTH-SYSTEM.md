@@ -978,7 +978,7 @@ personalization_id — Personalization tracking (optional)
 You are building the XActions authentication system. Create src/client/auth/CookieAuth.js — a cookie management class that stores, serializes, and loads Twitter session cookies.
 
 Requirements:
-- ESM module (import/export), @author nich (@nichxbt), @license MIT
+- ESM module (import/export), @author nich (@nichxbt), @license Apache-2.0
 - Class CookieAuth with these methods:
   - constructor() — initializes empty cookie map
   - set(name, value) — set a cookie
@@ -1016,7 +1016,7 @@ File: src/client/auth/CookieAuth.js
 Create src/client/auth/GuestToken.js — manages Twitter guest tokens for unauthenticated API access.
 
 Requirements:
-- ESM module, @author nich (@nichxbt), @license MIT
+- ESM module, @author nich (@nichxbt), @license Apache-2.0
 - Uses the public bearer token: "AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA"
 - Class GuestToken with:
   - constructor({ maxAge = 3 * 60 * 60 * 1000 }) — default 3hr TTL
@@ -1041,7 +1041,7 @@ File: src/client/auth/GuestToken.js
 Create src/client/auth/TokenManager.js — coordinates bearer tokens, CSRF tokens, and guest tokens for all API requests.
 
 Requirements:
-- ESM module, @author nich (@nichxbt), @license MIT
+- ESM module, @author nich (@nichxbt), @license Apache-2.0
 - Class TokenManager with:
   - constructor({ cookieAuth, guestToken }) — accepts CookieAuth and GuestToken instances
   - getHeaders() — returns complete headers object for authenticated requests:
@@ -1075,7 +1075,7 @@ File: src/client/auth/TokenManager.js
 Create src/client/auth/CredentialAuth.js — implements Twitter's internal login flow using the onboarding/task.json endpoint.
 
 Requirements:
-- ESM module, @author nich (@nichxbt), @license MIT
+- ESM module, @author nich (@nichxbt), @license Apache-2.0
 - Class CredentialAuth with:
   - constructor({ cookieAuth, tokenManager }) — accepts auth dependencies
   - async login({ username, password, email }) — executes the full login flow:
@@ -1110,7 +1110,7 @@ File: src/client/auth/CredentialAuth.js
 Create src/client/auth/TwoFactorAuth.js — handles two-factor authentication for Twitter login.
 
 Requirements:
-- ESM module, @author nich (@nichxbt), @license MIT
+- ESM module, @author nich (@nichxbt), @license Apache-2.0
 - Class TwoFactorAuth with:
   - constructor({ tokenManager }) — stores token manager reference
   - async submitTotp({ flowToken, code }) — submit a 6-digit TOTP code from authenticator app
@@ -1137,7 +1137,7 @@ File: src/client/auth/TwoFactorAuth.js
 Create src/client/auth/index.js — the barrel export file for the auth module.
 
 Requirements:
-- ESM module, @author nich (@nichxbt), @license MIT
+- ESM module, @author nich (@nichxbt), @license Apache-2.0
 - Re-export all auth classes:
   export { CookieAuth, createCookieAuth } from './CookieAuth.js';
   export { GuestToken } from './GuestToken.js';
@@ -1206,7 +1206,7 @@ File: src/client/auth/storage.js
 Create src/client/auth/SessionValidator.js — validates that stored cookies are still active and handles session refresh.
 
 Requirements:
-- ESM module, @author nich (@nichxbt), @license MIT
+- ESM module, @author nich (@nichxbt), @license Apache-2.0
 - Class SessionValidator with:
   - constructor({ tokenManager, cookieAuth })
   - async validate() — makes a lightweight authenticated request to verify the session:

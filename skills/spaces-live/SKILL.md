@@ -1,7 +1,7 @@
 ---
 name: spaces-live
 description: Interacts with X/Twitter Spaces (live audio) including joining rooms, scraping metadata, discovering live or scheduled Spaces, and managing Space participation. Use when finding Spaces, scraping Space data, or interacting with live audio features on X.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "4.0"

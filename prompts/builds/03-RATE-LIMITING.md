@@ -1070,7 +1070,7 @@ src/client/http/
 Create src/client/http/RateLimiter.js — tracks Twitter's rate limits per endpoint from response headers.
 
 Requirements:
-- ESM module, @author nich (@nichxbt), @license MIT
+- ESM module, @author nich (@nichxbt), @license Apache-2.0
 - Class RateLimiter with:
   - constructor({ defaultLimit = 50, defaultWindowMs = 15 * 60 * 1000 })
   - update(endpoint, headers) — extract x-rate-limit-limit, x-rate-limit-remaining, x-rate-limit-reset from response headers object and store per endpoint
@@ -1097,7 +1097,7 @@ File: src/client/http/RateLimiter.js
 Create src/client/http/BackoffStrategy.js — implements retry logic with exponential backoff and full jitter.
 
 Requirements:
-- ESM module, @author nich (@nichxbt), @license MIT
+- ESM module, @author nich (@nichxbt), @license Apache-2.0
 - Class BackoffStrategy with:
   - constructor({ baseDelay = 1000, maxDelay = 60000, maxRetries = 5, jitterFactor = 1.0 })
   - getDelay(attempt) — returns delay in ms using exponential backoff with full jitter:
@@ -1134,7 +1134,7 @@ File: src/client/http/BackoffStrategy.js
 Create src/client/http/RequestQueue.js — queues HTTP requests with concurrency limits and priority levels.
 
 Requirements:
-- ESM module, @author nich (@nichxbt), @license MIT
+- ESM module, @author nich (@nichxbt), @license Apache-2.0
 - Class RequestQueue with:
   - constructor({ concurrency = 3, intervalMs = 1000, intervalCap = 10, rateLimiter = null })
     - concurrency: max parallel requests
@@ -1170,7 +1170,7 @@ File: src/client/http/RequestQueue.js
 Create src/client/http/HttpClient.js — the primary HTTP client that wraps native fetch with rate limiting, retries, and request queuing.
 
 Requirements:
-- ESM module, @author nich (@nichxbt), @license MIT
+- ESM module, @author nich (@nichxbt), @license Apache-2.0
 - Class HttpClient with:
   - constructor({ tokenManager, rateLimiter = new RateLimiter(), backoff = BackoffStrategy.twitter(), queue = new RequestQueue(), timeout = 30000 })
   - async request(url, options = {}) — the main request method:
@@ -1210,7 +1210,7 @@ File: src/client/http/HttpClient.js
 Create src/client/http/graphql.js — GraphQL query ID registry and variable builders for Twitter's internal API.
 
 Requirements:
-- ESM module, @author nich (@nichxbt), @license MIT
+- ESM module, @author nich (@nichxbt), @license Apache-2.0
 
 Export a QUERIES object mapping operation names to their query IDs:
 (These are actual query IDs from Twitter's web client — they change periodically but these are current as of 2026)
@@ -1271,7 +1271,7 @@ File: src/client/http/graphql.js
 Create src/client/http/rateLimitPresets.js — known rate limits for Twitter endpoints so we can pre-populate the rate limiter without waiting for the first response.
 
 Requirements:
-- ESM module, @author nich (@nichxbt), @license MIT
+- ESM module, @author nich (@nichxbt), @license Apache-2.0
 
 Export RATE_LIMITS — a Map of endpoint patterns to their known limits:
 
@@ -1312,7 +1312,7 @@ File: src/client/http/rateLimitPresets.js
 Create src/client/http/index.js — barrel exports for the HTTP module.
 
 Requirements:
-- ESM module, @author nich (@nichxbt), @license MIT
+- ESM module, @author nich (@nichxbt), @license Apache-2.0
 - Re-export everything:
   export { RateLimiter } from './RateLimiter.js';
   export { BackoffStrategy, withRetry } from './BackoffStrategy.js';

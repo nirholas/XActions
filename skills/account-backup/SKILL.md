@@ -1,7 +1,7 @@
 ---
 name: account-backup
 description: Export and backup your X/Twitter account data — tweets, likes, bookmarks, followers, and following — as downloadable JSON. Also triggers X's official data archive download. Use when users want to backup, export, or archive their X account data.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "1.0"

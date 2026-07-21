@@ -5,7 +5,7 @@
   "author": "nichxbt",
   "homepage": "https://xactions.app",
   "repository": "https://github.com/nirholas/xactions",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "tags": [
     "twitter",
     "x",
@@ -23,7 +23,9 @@
   "mcpServers": {
     "xactions": {
       "command": "node",
-      "args": ["node_modules/xactions/src/mcp/server.js"],
+      "args": [
+        "node_modules/xactions/src/mcp/server.js"
+      ],
       "env": {
         "XACTIONS_MODE": "local"
       }

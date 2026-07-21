@@ -53,7 +53,7 @@ This script provides the following capabilities:
  * Used by algorithmBuilder.js to run 24/7 automated account growth.
  * 
  * @author nich (@nichxbt) - https://github.com/nirholas
- * @license MIT
+ * @license Apache-2.0
  */
 
 import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, unlinkSync } from 'fs';

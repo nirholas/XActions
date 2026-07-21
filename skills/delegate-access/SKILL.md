@@ -1,7 +1,7 @@
 ---
 name: delegate-access
 description: Add, remove, and manage delegate accounts on X/Twitter. Delegates can post, reply, or like on behalf of your account. Use when users want to grant or revoke access to their account for a team member or manager.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "1.0"

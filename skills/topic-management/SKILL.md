@@ -1,7 +1,7 @@
 ---
 name: topic-management
 description: Browse, follow, and unfollow X Topics. Manage your followed topics list and discover new ones by keyword. Use when users want to follow or unfollow topics on X, or manage their topic feed.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "1.0"

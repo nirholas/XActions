@@ -884,7 +884,7 @@ Don't want to run scripts? **[xactions.app](https://xactions.app)** Pro tier inc
 
 ## 📄 License
 
-MIT License - See [LICENSE](../../LICENSE)
+Apache 2.0 License - See [LICENSE](../../LICENSE)
 
 ---
 

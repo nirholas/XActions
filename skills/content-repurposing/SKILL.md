@@ -1,7 +1,7 @@
 ---
 name: content-repurposing
 description: Identifies top-performing tweets and generates repurposed content variations including threads, tweet storms, blog outlines, summary tweets, and quote-tweet templates. Maximizes content ROI through systematic repurposing. Use when maximizing content output, planning a content calendar, or converting between content formats.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "4.0"

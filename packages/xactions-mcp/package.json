@@ -11,7 +11,7 @@
   "bugs": {
     "url": "https://github.com/nirholas/xactions/issues"
   },
-  "license": "MIT",
+  "license": "Apache-2.0",
   "author": "nichxbt",
   "type": "module",
   "bin": {

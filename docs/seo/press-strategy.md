@@ -156,7 +156,7 @@ $100/mo API with browser automation. It includes:
 - CLI tool and npm library
 - Auto-liker, auto-follow, monitoring
 
-It's 100% free, MIT licensed, and runs locally — no API keys or fees.
+It's 100% free, Apache 2.0 licensed, and runs locally — no API keys or fees.
 
 GitHub: https://github.com/nirholas/XActions
 Website: https://xactions.app
@@ -182,7 +182,7 @@ What makes it interesting for your audience:
 1. People paste JavaScript into DevTools and it just works
 2. It has an MCP server so you can give Claude/GPT access to Twitter
 3. Zero API fees — browser automation instead of API calls
-4. MIT licensed, [X] GitHub stars
+4. Apache 2.0 licensed, [X] GitHub stars
 
 Would make a great "build with me" or tool review video.
 

@@ -1,7 +1,7 @@
 ---
 name: growth-automation
 description: Automates X/Twitter growth via browser console scripts. Auto-likes tweets by keyword/user filters, auto-comments on target users, follows by keyword search or engagement, follows audiences of target accounts with rich filtering, trains the algorithm for niches, and runs combined growth suites. All require pasting core.js first. Use when automating Twitter growth, engagement, following, or audience building.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "4.0"

@@ -24,7 +24,7 @@ x, xactions, scraper, social-media
 
 **Description** — Keep current (it's good). Under 350 chars with keywords front-loaded.
 
-**License** — Fix the "NOASSERTION" license display. Add/verify the LICENSE file is a proper MIT license file so GitHub renders it correctly.
+**License** — Fix the "NOASSERTION" license display. Add/verify the LICENSE file is a proper Apache 2.0 license file so GitHub renders it correctly.
 
 **Social Preview Image** — Create a 1280x640px social preview image:
 - Title: "⚡ XActions"
@@ -257,7 +257,7 @@ At 10k+ stars, media picks up naturally:
 - [ ] Post on r/programming and r/javascript
 - [ ] Submit PR to awesome-mcp-servers repos
 - [ ] Create social preview image (1280x640)
-- [ ] Fix LICENSE file so GitHub shows "MIT" properly
+- [ ] Fix LICENSE file so GitHub shows "Apache 2.0" properly
 - [ ] Record a 60-second demo video
 - [ ] Add `scraper` and `social-media` to GitHub topics (via Settings)
 - [ ] Write Dev.to article

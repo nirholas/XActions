@@ -1,7 +1,7 @@
 ---
 name: video-downloading
 description: Download videos and GIFs from X/Twitter posts in the browser or via API. Single video, batch download, and quality selection. Use when users want to save or download Twitter/X videos.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "1.0"

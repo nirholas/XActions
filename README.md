@@ -23,7 +23,7 @@ Scrapers &nbsp;·&nbsp; MCP Server for AI Agents &nbsp;·&nbsp; CLI &nbsp;·&nbs
 <p>
   <a href="https://www.npmjs.com/package/xactions"><img src="https://img.shields.io/npm/v/xactions.svg?style=flat-square&color=cb3837&label=npm" alt="npm version"></a>&nbsp;
   <a href="https://www.npmjs.com/package/xactions"><img src="https://img.shields.io/npm/dm/xactions.svg?style=flat-square&color=cb3837&label=downloads" alt="npm downloads"></a>&nbsp;
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" alt="MIT License"></a>&nbsp;
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache_2.0-green?style=flat-square" alt="Apache 2.0 License"></a>&nbsp;
   <a href="https://github.com/nirholas/xactions"><img src="https://img.shields.io/github/stars/nirholas/xactions?style=flat-square&color=f5c542&label=stars" alt="Stars"></a>
 </p>
 
@@ -1230,7 +1230,7 @@ No console, no code, no setup!
 
 <p align="center">
   <b>⚡ XActions</b> — The Complete X/Twitter Automation Toolkit<br>
-  <b>100% Free & Open Source</b> · MIT License<br><br>
+  <b>100% Free & Open Source</b> · Apache 2.0 License<br><br>
   <a href="https://xactions.app">xactions.app</a> · 
   <a href="https://github.com/nirholas/xactions">GitHub</a> · 
   <a href="https://x.com/nichxbt">@nichxbt</a><br><br>

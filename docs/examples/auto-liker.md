@@ -1070,7 +1070,7 @@ The web version includes additional safety features and is easier to use for non
 
 ## 📄 License
 
-MIT License - Use at your own risk. The author is not responsible for any account restrictions resulting from the use of these scripts.
+Apache 2.0 License - Use at your own risk. The author is not responsible for any account restrictions resulting from the use of these scripts.
 
 ---
 

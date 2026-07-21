@@ -1,7 +1,7 @@
 ---
 name: premium-subscriptions
 description: Manages X/Twitter Premium subscription features including plan detection, feature access verification, and subscription-dependent script guidance. Use when checking Premium status, understanding which features require Premium, or managing subscription-gated functionality.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "4.0"

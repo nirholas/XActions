@@ -1,7 +1,7 @@
 ---
 name: direct-messages
 description: Sends, manages, and automates direct messages on X/Twitter. Supports personalized bulk DMs with templates, conversation management, message request filtering, and DM export. The agent uses this skill when a user needs to send DMs, manage conversations, or automate direct messaging workflows.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "3.0"

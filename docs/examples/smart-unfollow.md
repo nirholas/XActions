@@ -109,7 +109,7 @@ MAX_UNFOLLOWS_PER_SESSION=50
  * Maintains persistent logs to track follow dates and unfollow history.
  * 
  * @author nich (@nichxbt)
- * @license MIT
+ * @license Apache-2.0
  */
 
 require('dotenv').config();

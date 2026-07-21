@@ -1,7 +1,7 @@
 ---
 name: account-tools
 description: Miscellaneous account utilities — view join date, login history, connected accounts, appeal suspension, QR code sharing, share/embed tweets, upload contacts, and calculate account age. Use when users need account info tools not covered by other skills.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "1.0"

@@ -1,7 +1,7 @@
 ---
 name: follower-monitoring
 description: Monitors X/Twitter follower changes using browser console scripts. Detects who unfollowed, tracks new followers with welcome messages, monitors any public account, runs continuous monitoring with alerts, tracks follower growth over time, and analyzes follower demographics. Use when tracking follower changes, detecting unfollowers, or monitoring Twitter accounts.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "4.0"

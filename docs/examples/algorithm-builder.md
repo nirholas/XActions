@@ -62,7 +62,7 @@ This script provides the following capabilities:
  *   await startAlgorithmBuilder({ personaId: 'my_persona', authToken: '...' });
  * 
  * @author nich (@nichxbt) - https://github.com/nirholas
- * @license MIT
+ * @license Apache-2.0
  */
 
 import {

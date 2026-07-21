@@ -12,7 +12,7 @@ A Knowledge Panel is the information box that appears on the right side of Googl
 - Name, logo, description
 - Official website link
 - Social profiles (GitHub, X/Twitter, npm)
-- Key facts (open-source, MIT license, Node.js)
+- Key facts (open-source, Apache 2.0 license, Node.js)
 - Related tools (alternatives)
 
 ---

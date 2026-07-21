@@ -1,7 +1,7 @@
 ---
 name: timeline-viewing
 description: Switch between For You / Following timelines, auto-scroll and collect posts, scrape timeline data, and export as JSON. Use when users want to browse, collect, or export tweets from their X timeline.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "1.0"

@@ -1,7 +1,7 @@
 ---
 name: lead-generation
 description: Finds and qualifies B2B leads from X/Twitter conversations using keyword search, profile analysis, and intent scoring. Combines MCP tools for automated prospecting pipelines. Use when prospecting, finding potential customers, or mining social conversations for leads.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "4.0"

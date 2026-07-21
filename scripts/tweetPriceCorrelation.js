@@ -1,4 +1,4 @@
-// Copyright (c) 2024-2026 nich (@nichxbt). Business Source License 1.1.
+// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 // scripts/tweetPriceCorrelation.js
 // Browser console script — correlate a founder's tweet frequency with token price movements
 // Paste in DevTools console on x.com/USERNAME (any crypto founder's profile)

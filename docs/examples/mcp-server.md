@@ -465,4 +465,4 @@ npm install
 
 ## 📄 License
 
-MIT License - Use freely in your own projects.
+Apache 2.0 License - Use freely in your own projects.

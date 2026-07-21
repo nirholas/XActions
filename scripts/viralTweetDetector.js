@@ -1,4 +1,4 @@
-// Copyright (c) 2024-2026 nich (@nichxbt). Business Source License 1.1.
+// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 // scripts/viralTweetDetector.js
 // Browser console script for detecting tweets with unusually high engagement (viral)
 // Paste in DevTools console on x.com (any timeline or search)

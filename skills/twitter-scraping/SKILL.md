@@ -1,7 +1,7 @@
 ---
 name: twitter-scraping
 description: Scrapes X/Twitter data without API access using Puppeteer stealth and browser console scripts. Extracts profiles, followers, following lists, tweets, search results, hashtags, threads, media, bookmarks, notifications, DMs, likes, and viral tweets. Exports to JSON/CSV. Use when collecting, exporting, or analyzing Twitter data.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "4.0"

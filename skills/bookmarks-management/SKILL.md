@@ -1,7 +1,7 @@
 ---
 name: bookmarks-management
 description: Manages X/Twitter bookmarks — organize by category with auto-tagging, clear all bookmarks in bulk, and export/scrape bookmarks with full metadata. Supports keyword-based categorization, CSV and JSON export, keep-filters, and folder creation (Premium). Use when users want to export, organize, or clear their X bookmarks.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "3.0"

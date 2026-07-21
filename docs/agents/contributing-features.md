@@ -36,7 +36,7 @@ Paste in DevTools console.
 ---
 name: your-skill-name
 description: Third-person description of what this does and when to use it.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "3.0"

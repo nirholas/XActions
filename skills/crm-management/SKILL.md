@@ -1,7 +1,7 @@
 ---
 name: crm-management
 description: Manage a CRM (Contact Relationship Management) system for your X followers and contacts. Tag, segment, search, and sync follower data. Use when users want to manage relationships with their X audience at scale.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "1.0"

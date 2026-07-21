@@ -1,7 +1,7 @@
 ---
 name: x402-payments
 description: Enable and integrate x402 crypto payment protocol for XActions API access. Supports multi-chain, multi-token payments for pay-per-use API calls. Use when users want to pay for XActions operations with crypto or integrate x402 into their own agent/app.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "1.0"

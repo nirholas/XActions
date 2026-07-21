@@ -3,7 +3,7 @@
 > **Authors:** nichxbt & contributors  
 > **Date:** February 2026  
 > **Repository:** [XActions](https://github.com/nirholas/XActions)  
-> **License:** MIT  
+> **License:** Apache 2.0  
 > **Status:** Research / Proof-of-Concept  
 
 ---

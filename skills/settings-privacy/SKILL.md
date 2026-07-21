@@ -1,7 +1,7 @@
 ---
 name: settings-privacy
 description: Manages X/Twitter account settings and privacy controls including protected tweets, muted words, content filtering, notification preferences, and account configuration. Use when changing privacy settings, managing muted words, or configuring account preferences.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "4.0"

@@ -14,7 +14,7 @@
   "homepage": "https://xactions.app",
   "repository": "https://github.com/nirholas/xactions",
   "documentation": "https://xactions.app/docs",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "keywords": [
     "xactions",
     "twitter automation",
@@ -103,22 +103,38 @@
       {
         "name": "Free",
         "price": 0,
-        "features": ["50 credits/month", "Browser scripts", "Basic features"]
+        "features": [
+          "50 credits/month",
+          "Browser scripts",
+          "Basic features"
+        ]
       },
       {
         "name": "Basic",
         "price": 9,
-        "features": ["500 credits/month", "All features", "Email support"]
+        "features": [
+          "500 credits/month",
+          "All features",
+          "Email support"
+        ]
       },
       {
         "name": "Pro",
         "price": 29,
-        "features": ["Unlimited", "Multi-account", "Priority support"]
+        "features": [
+          "Unlimited",
+          "Multi-account",
+          "Priority support"
+        ]
       },
       {
         "name": "Enterprise",
         "price": 99,
-        "features": ["Custom limits", "API access", "Dedicated support"]
+        "features": [
+          "Custom limits",
+          "API access",
+          "Dedicated support"
+        ]
       }
     ]
   },
@@ -163,4 +179,3 @@
     "support": "support@xactions.app"
   }
 }
-

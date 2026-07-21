@@ -1,7 +1,7 @@
 ---
 name: content-cleanup
 description: Mass-cleanup your X/Twitter account. Unlike all posts, clear all reposts/retweets, clear all bookmarks, and remove unwanted followers. Use when users want to clean their account history, remove old likes, or start fresh.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "3.0"

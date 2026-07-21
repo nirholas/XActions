@@ -1,7 +1,7 @@
 ---
 name: viral-thread-generation
 description: Researches trending topics and competitor threads to generate high-engagement thread content with optimized hooks, value ladders, and calls to action. Use when creating threads or planning viral content.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "3.0"

@@ -1,7 +1,7 @@
 ---
 name: blocking-muting-management
 description: Mass block, unblock, mute, unmute, and manage accounts on X/Twitter. Includes bot detection and blocking, keyword-based muting, muted word management, spam reporting, and follower removal via soft-block. Use when users want to block bots, mass block/unblock accounts, mute by keywords, manage muted words, or remove followers.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "4.0"

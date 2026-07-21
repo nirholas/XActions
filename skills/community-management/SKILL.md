@@ -1,7 +1,7 @@
 ---
 name: community-management
 description: Manages X/Twitter community memberships. Bulk-leave all communities, join communities by topic, and manage community interactions. Use when leaving all communities, joining niche communities, or managing community presence.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "3.0"

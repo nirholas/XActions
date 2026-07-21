@@ -1,7 +1,7 @@
 ---
 name: discovery-explore
 description: Explores X/Twitter trending topics, searches for content, and discovers new accounts. Includes trending topic monitoring, keyword search, explore page scraping, and topic discovery. Use when users want to explore trends, search for content, or discover new accounts and topics on X.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "4.0"

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Copyright (c) 2024-2026 nich (@nichxbt). Business Source License 1.1.
+// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * Build SEO-Optimized HTML Pages from docs/examples/*.md
  * Generates dashboard/docs/<slug>.html for each markdown file

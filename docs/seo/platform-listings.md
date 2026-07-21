@@ -30,7 +30,7 @@
   - [ ] Add up to 20 topics (Settings → Topics)
   - [ ] Set description: "⚡ The Complete X/Twitter Automation Toolkit — Scrapers, MCP server for AI agents, CLI, browser scripts. No API fees."
   - [ ] Upload social preview image (1280×640px) at Settings → Social preview
-  - [ ] Verify LICENSE file renders properly (should show "MIT")
+  - [ ] Verify LICENSE file renders properly (should show "Apache 2.0")
   - [ ] Pin important discussions/issues
   - [ ] Add "Releases" with detailed changelogs
 
@@ -179,7 +179,7 @@ XActions includes an MCP (Model Context Protocol) server with 20+ tools, making 
 
 No Twitter API required — XActions uses browser automation, so there are no API fees, no developer account needed, and no monthly charges. Scripts run locally in your browser; your credentials never leave your device.
 
-Tech stack: Node.js, Express, Prisma, Puppeteer, Redis. MIT licensed.
+Tech stack: Node.js, Express, Prisma, Puppeteer, Redis. Apache 2.0 licensed.
 ```
 
 ---

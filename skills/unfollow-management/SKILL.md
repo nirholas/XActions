@@ -1,7 +1,7 @@
 ---
 name: unfollow-management
 description: Mass unfollow on X/Twitter via browser console scripts. Unfollows everyone, only non-followers, non-followers with username logging, smart time-based unfollow with whitelists, and follow/following ratio management. Use when cleaning up a following list, removing non-followers, bulk unfollowing accounts, or optimizing your follow ratio.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "3.0"

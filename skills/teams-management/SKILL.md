@@ -1,7 +1,7 @@
 ---
 name: teams-management
 description: Create and manage teams in XActions — invite members, assign roles, and collaborate on automation tasks. Use when users want to set up multi-user access or team-based account management.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "1.0"

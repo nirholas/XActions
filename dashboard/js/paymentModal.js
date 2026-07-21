@@ -1,4 +1,4 @@
-// Copyright (c) 2024-2026 nich (@nichxbt). Business Source License 1.1.
+// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * apiFetch — drop-in replacement for fetch() that intercepts 402 responses
  * and shows a payment modal instead of swallowing the error silently.

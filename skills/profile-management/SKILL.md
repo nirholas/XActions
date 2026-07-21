@@ -1,7 +1,7 @@
 ---
 name: profile-management
 description: Updates X/Twitter profile information including bio, avatar, header image, display name, location, website, and QR code sharing. Use when updating profile fields, optimizing profile for growth, or sharing profile via QR code.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "4.0"

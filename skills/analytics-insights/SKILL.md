@@ -1,7 +1,7 @@
 ---
 name: analytics-insights
 description: Analyze X/Twitter engagement, hashtags, competitors, best posting times, follower demographics, tweet performance, viral detection, content calendar gaps, A/B testing, and engagement leaderboards. Browser console scripts for data-driven X optimization. Use when users want insights about their X performance.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "4.0"

@@ -1,4 +1,4 @@
-// Copyright (c) 2024-2026 nich (@nichxbt). Business Source License 1.1.
+// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 // scripts/manageLists.js
 // Browser console script to manage X/Twitter Lists
 // Paste in DevTools console on x.com/i/lists

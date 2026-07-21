@@ -1,7 +1,7 @@
 ---
 name: webhooks
 description: Create, manage, and test webhooks in XActions. Get notified via HTTP when automation jobs complete, followers change, or operations finish. Use when users want to integrate XActions events into external systems.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "1.0"

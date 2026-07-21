@@ -1,7 +1,7 @@
 ---
 name: xactions-cli
 description: Command-line interface for scraping X/Twitter data, managing MCP server config, and running automation. Scrapes profiles, followers, tweets, search results, and more from terminal. Outputs text, JSON, or CSV. Uses Puppeteer stealth. Use when running Twitter operations from command line or automated pipelines.
-license: MIT
+license: Apache-2.0
 compatibility: Requires Node.js 18+. Install with npm install -g xactions.
 metadata:
   author: nichxbt

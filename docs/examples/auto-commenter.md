@@ -1392,7 +1392,7 @@ The web version includes additional safety features and is recommended for users
 
 ## 📄 License
 
-MIT License - Use at your own risk. The author is not responsible for any account restrictions or suspensions resulting from the use of these scripts.
+Apache 2.0 License - Use at your own risk. The author is not responsible for any account restrictions or suspensions resulting from the use of these scripts.
 
 **Remember:** With great automation comes great responsibility. Don't be a spammer!
 

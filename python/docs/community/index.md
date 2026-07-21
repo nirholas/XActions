@@ -165,7 +165,7 @@ Thank you to our generous sponsors:
 
 - [Roadmap](roadmap.md) - See what's coming next
 - [Changelog](../changelog.md) - Version history
-- [License](https://github.com/xeepy/xeepy/blob/main/LICENSE) - MIT License
+- [License](https://github.com/xeepy/xeepy/blob/main/LICENSE) - Apache 2.0 License
 
 ---
 

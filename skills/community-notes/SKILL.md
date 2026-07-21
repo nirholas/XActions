@@ -1,7 +1,7 @@
 ---
 name: community-notes
 description: View, write, rate, and browse Community Notes on X/Twitter posts. Use when users want to interact with Community Notes — reading fact-checks, contributing notes, or rating existing notes as helpful or not.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "1.0"

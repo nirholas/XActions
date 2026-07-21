@@ -1,7 +1,7 @@
 ---
 name: articles-longform
 description: Compose, preview, publish, and manage long-form Articles on X/Twitter. Premium+ feature. Includes article creation, formatting, media insertion, and performance tracking. Use when users want to write, publish, manage, or analyze X Articles.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "4.0"

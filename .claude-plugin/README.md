@@ -68,4 +68,4 @@ Or pass it to the MCP server via the plugin's env configuration.
 - **Repository**: [github.com/nirholas/xactions](https://github.com/nirholas/xactions)
 - **npm**: [npmjs.com/package/xactions](https://www.npmjs.com/package/xactions)
 - **Author**: [@nichxbt](https://x.com/nichxbt)
-- **License**: MIT
+- **License**: Apache-2.0

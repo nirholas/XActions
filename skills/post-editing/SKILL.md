@@ -1,7 +1,7 @@
 ---
 name: post-editing
 description: Edit existing posts or undo a recently posted tweet on X/Twitter. Post editing and undo are X Premium features. Use when users want to edit a tweet they already posted or undo a tweet within the 30-second window.
-license: MIT
+license: Apache-2.0
 metadata:
   author: nichxbt
   version: "1.0"

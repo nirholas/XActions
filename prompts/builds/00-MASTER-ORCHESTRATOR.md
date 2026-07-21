@@ -109,7 +109,7 @@ i18n/                         ← NEW: Translated READMEs
 - The `Scraper` class wraps Twitter's internal GraphQL API (same as twikit / agent-twitter-client)
 - Puppeteer scrapers in `src/scrapers/` remain untouched — the new `src/client/` is a parallel HTTP-only approach
 - The `Scraper` class is exported from the package root: `import { Scraper } from 'xactions'`
-- Every file has `@author nich (@nichxbt)` and `@license MIT`
+- Every file has `@author nich (@nichxbt)` and `@license Apache-2.0`
 - No external API keys required for core functionality; v2 API is opt-in
 - Real HTTP intercepts against Twitter's GraphQL endpoints, not mock data
 

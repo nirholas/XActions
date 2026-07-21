@@ -17,7 +17,7 @@ Xeepy is a Python toolkit for X/Twitter automation. It provides:
 
 ### Is Xeepy free?
 
-Yes! Xeepy is completely free and open-source (MIT License).
+Yes! Xeepy is completely free and open-source (Apache 2.0 License).
 
 ### Do I need a Twitter API key?
 
@@ -327,7 +327,7 @@ Web scraping public data is generally legal, but:
 
 ### Can I use Xeepy commercially?
 
-Yes, under the MIT License. However:
+Yes, under the Apache 2.0 License. However:
 - Automation may violate X/Twitter ToS
 - Don't use for spam or harassment
 - Users are responsible for their usage

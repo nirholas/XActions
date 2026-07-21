@@ -311,4 +311,4 @@ npx puppeteer browsers install chrome
 
 ---
 
-*Built by [@nichxbt](https://x.com/nichxbt). MIT License.*
+*Built by [@nichxbt](https://x.com/nichxbt). Apache 2.0 License.*

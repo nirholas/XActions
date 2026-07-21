@@ -1011,4 +1011,4 @@ Don't want to run scripts? Use our web app:
 
 **Author:** nich ([@nichxbt](https://x.com/nichxbt))
 
-**License:** MIT
+**License:** Apache 2.0
