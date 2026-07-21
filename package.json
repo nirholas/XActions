@@ -1,6 +1,6 @@
 {
   "name": "xactions",
-  "version": "3.4.3",
+  "version": "3.4.4",
   "description": "XActions - The Complete X/Twitter Automation Toolkit. Scrapers, MCP server for AI agents, CLI, and browser scripts. No API required. Open source by @nichxbt. Don't Panic.",
   "homepage": "https://xactions.app",
   "repository": {
@@ -188,5 +188,6 @@
     "src",
     "types",
     "api/config/x402-config.js"
-  ]
+  ],
+  "mcpName": "io.github.nirholas/xactions"
 }

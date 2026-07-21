@@ -2,7 +2,7 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.nirholas/xactions",
   "title": "XActions",
-  "description": "X/Twitter automation MCP - scraping, posting, scheduling, analytics, engagement, monitoring. No API required. AI agents for social media.",
+  "description": "X/Twitter automation MCP: scrape, post, schedule, analyze, engage. No API key required.",
   "license": "Apache-2.0",
   "authors": [
     {
@@ -14,7 +14,7 @@
     "url": "https://github.com/nirholas/XActions",
     "source": "github"
   },
-  "version": "3.4.3",
+  "version": "3.4.4",
   "links": {
     "homepage": "https://github.com/nirholas/XActions",
     "bugs": "https://github.com/nirholas/XActions/issues",
@@ -22,15 +22,18 @@
   },
   "icons": [
     {
-      "url": "https://raw.githubusercontent.com/nirholas/g1t/d9a0ee206b8136472c04384905999369f198b3c9/milady.svg",
-      "type": "svg"
+      "src": "https://xactions.app/icon-192.png",
+      "mimeType": "image/png",
+      "sizes": [
+        "192x192"
+      ]
     }
   ],
   "packages": [
     {
       "registryType": "npm",
       "identifier": "xactions",
-      "version": "3.4.3",
+      "version": "3.4.4",
       "runtimeHint": "npx",
       "transport": {
         "type": "stdio"
