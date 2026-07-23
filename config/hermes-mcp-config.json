@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "xactions": {
+      "command": "npx",
+      "args": ["-y", "xactions-mcp"],
+      "env": {
+        "XACTIONS_SESSION_COOKIE": "${XACTIONS_SESSION_COOKIE}",
+        "XACTIONS_MODE": "local"
+      }
+    }
+  }
+}
