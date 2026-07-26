@@ -3197,6 +3197,283 @@ clientCmd
   });
 
 // ============================================================================
+// Fleet — multi-account orchestrator
+// ============================================================================
+
+const fleetCmd = program
+  .command('fleet')
+  .description('Run a task across many X accounts, one proxy egress each');
+
+fleetCmd
+  .command('list')
+  .description('List accounts in ~/.xactions/accounts.json')
+  .action(async () => {
+    try {
+      const { loadAccounts, validateAccount, normalizeAccount } = await import('../orchestrator/accountStore.js');
+      const { redactProxy } = await import('../orchestrator/proxiedFetch.js');
+      const accounts = await loadAccounts();
+
+      if (accounts.length === 0) return;
+
+      console.log(chalk.bold(`\n  ${accounts.length} account(s)\n`));
+      for (const entry of accounts) {
+        const account = normalizeAccount(entry);
+        const { valid, errors } = validateAccount(entry);
+        const mark = valid ? chalk.green('✓') : chalk.red('✗');
+        const proxy = redactProxy(account.proxyUrl) || chalk.yellow('none');
+        console.log(`  ${mark} @${account.handle}  ${chalk.gray(account.status)}  proxy: ${proxy}`);
+        if (!valid) console.log(chalk.red(`      ${errors.join('; ')}`));
+      }
+      console.log('');
+    } catch (error) {
+      console.error(chalk.red(error.message.startsWith('❌') ? error.message : `❌ ${error.message}`));
+      process.exitCode = 1;
+    }
+  });
+
+fleetCmd
+  .command('health')
+  .description('Probe every account through its proxy and bucket alive/dead')
+  .option('--only <handle>', 'Check a single account')
+  .option('-c, --concurrency <n>', 'Max parallel probes')
+  .option('--allow-direct', 'Permit un-proxied accounts in a proxied fleet (co-location risk)')
+  .option('--debug', 'Log every HTTP request')
+  .action(async (options) => {
+    try {
+      const { runFleet } = await import('../orchestrator/runner.js');
+      const report = await runFleet({
+        healthOnly: true,
+        only: options.only,
+        concurrency: options.concurrency ? parseInt(options.concurrency, 10) : undefined,
+        allowDirect: Boolean(options.allowDirect),
+        debug: Boolean(options.debug),
+      });
+      console.log(
+        chalk.bold(`\n  alive ${chalk.green(report.totals.alive)}  ·  parked ${chalk.yellow(report.totals.dead)}\n`)
+      );
+    } catch (error) {
+      console.error(chalk.red(error.message.startsWith('❌') ? error.message : `❌ ${error.message}`));
+      process.exitCode = 1;
+    }
+  });
+
+fleetCmd
+  .command('run')
+  .description('Run one task across the fleet')
+  .option('-t, --task <name>', 'Task name', 'homeTimeline')
+  .option('-p, --params <json>', 'Task params as JSON', '{}')
+  .option('--only <handle>', 'Run for a single account')
+  .option('-c, --concurrency <n>', 'Max parallel accounts')
+  .option('--allow-direct', 'Permit un-proxied accounts in a proxied fleet (co-location risk)')
+  .option('--dry-run', 'Print the plan and exit without touching X')
+  .option('--debug', 'Log every HTTP request')
+  .action(async (options) => {
+    try {
+      const { runFleet } = await import('../orchestrator/runner.js');
+
+      let params;
+      try {
+        params = JSON.parse(options.params);
+      } catch (error) {
+        throw new Error(`--params is not valid JSON: ${error.message}`);
+      }
+
+      const report = await runFleet({
+        taskName: options.task,
+        params,
+        only: options.only,
+        concurrency: options.concurrency ? parseInt(options.concurrency, 10) : undefined,
+        allowDirect: Boolean(options.allowDirect),
+        dryRun: Boolean(options.dryRun),
+        debug: Boolean(options.debug),
+      });
+
+      if (report.dryRun) return;
+
+      const { ok, fail, skipped } = report.totals;
+      console.log(
+        chalk.bold(`\n  ok ${chalk.green(ok)}  ·  failed ${chalk.red(fail)}  ·  skipped ${chalk.yellow(skipped)}\n`)
+      );
+      if (fail > 0) process.exitCode = 1;
+    } catch (error) {
+      console.error(chalk.red(error.message.startsWith('❌') ? error.message : `❌ ${error.message}`));
+      process.exitCode = 1;
+    }
+  });
+
+fleetCmd
+  .command('import <file>')
+  .description('Import a combolist or TSV into the account store (mints ct0 as needed)')
+  .option('--proxies <file>', 'Pair a 1:1 proxy list onto accounts, by line order')
+  .option('--write', 'Persist to the store (default is a dry run)')
+  .action(async (file, options) => {
+    try {
+      const fs = await import('fs/promises');
+      const { importAccounts, describeAccount } = await import('../orchestrator/import.js');
+
+      const text = await fs.readFile(file, 'utf8');
+      const proxyText = options.proxies ? await fs.readFile(options.proxies, 'utf8') : undefined;
+
+      const { accounts, problems, skipped, written } = await importAccounts({ text, proxyText, write: Boolean(options.write) });
+
+      for (const a of accounts) console.log(chalk.green(`✓ ${describeAccount(a)}`));
+      for (const s of skipped) console.log(chalk.yellow(`⚠️  ${s}`));
+      for (const p of problems) console.log(chalk.red(`❌ ${p}`));
+
+      const withProxy = accounts.filter((a) => a.proxyUrl).length;
+      console.log(chalk.bold(`\n  importable ${accounts.length}  ·  skipped ${skipped.length}  ·  rejected ${problems.length}  ·  with proxy ${withProxy}`));
+      if (withProxy > 0 && withProxy < accounts.length) {
+        console.log(chalk.yellow(`  ${accounts.length - withProxy} account(s) have no proxy — they will be parked (co-location ban).`));
+      }
+      if (problems.length > 0) {
+        console.log(chalk.red('\n❌ Not written — fix the rejected rows and re-run.\n'));
+        process.exitCode = 1;
+      } else if (written) {
+        console.log(chalk.green('\n✅ Store written (mode 600). Next: xactions fleet doctor\n'));
+      } else {
+        console.log(chalk.gray('\nDry run — re-run with --write to save.\n'));
+      }
+    } catch (error) {
+      console.error(chalk.red(error.message.startsWith('❌') ? error.message : `❌ ${error.message}`));
+      process.exitCode = 1;
+    }
+  });
+
+fleetCmd
+  .command('doctor')
+  .description('Offline store check, then optionally a live auth probe per account')
+  .option('--only <handle>', 'Check a single account')
+  .option('--live', 'Also probe each account against X (exits its egress)')
+  .action(async (options) => {
+    try {
+      const os = await import('os');
+      const path = await import('path');
+      const fsSync = await import('fs');
+      const { loadAccounts, validateAccount, normalizeAccount } = await import('../orchestrator/accountStore.js');
+      const { redactProxy } = await import('../orchestrator/proxiedFetch.js');
+
+      const store = path.join(os.homedir(), '.xactions', 'accounts.json');
+      try {
+        const mode = fsSync.statSync(store).mode & 0o777;
+        if (mode & 0o077) console.log(chalk.yellow(`⚠️  store is mode ${mode.toString(8)} — run: chmod 600 ${store}`));
+      } catch { /* loadAccounts reports a missing store */ }
+
+      const raw = await loadAccounts();
+      const only = options.only ? String(options.only).replace(/^@/, '').toLowerCase() : null;
+      const seenHandle = new Map();
+      const seenCookie = new Map();
+      let usable = 0;
+      const live = [];
+
+      for (const entry of raw) {
+        const account = normalizeAccount(entry);
+        if (only && account.handle !== only) continue;
+        const { valid, errors } = validateAccount(entry);
+        if (!valid) { console.log(chalk.red(`❌ @${account.handle || '?'} — ${errors.join('; ')}`)); continue; }
+        if (seenHandle.has(account.handle)) { console.log(chalk.red(`❌ @${account.handle} — duplicate handle`)); continue; }
+        const key = account.cookies.replace(/\s/g, '');
+        if (seenCookie.has(key)) { console.log(chalk.red(`❌ @${account.handle} — identical cookies to @${seenCookie.get(key)} (one session, two labels)`)); continue; }
+        seenHandle.set(account.handle, account.handle);
+        seenCookie.set(key, account.handle);
+        usable += 1;
+        live.push(account);
+        console.log(chalk.green(`✓ @${account.handle}  proxy: ${redactProxy(account.proxyUrl) ?? 'none'}`));
+      }
+
+      console.log(chalk.bold(`\n  usable ${usable} / offline check`));
+
+      if (options.live && usable > 0) {
+        const { buildScraperForAccount, healthProbe, resolveHandleRestId } = await import('../orchestrator/runner.js');
+        const { closeFetch } = await import('../orchestrator/proxiedFetch.js');
+        console.log(chalk.bold('\n  live probe (exits each account egress):'));
+        for (const account of live) {
+          let built = null;
+          try {
+            built = await buildScraperForAccount(account);
+            const probe = await healthProbe(built.scraper);
+            const target = await resolveHandleRestId(built.scraper, account.handle);
+            const handleNote = target.restId
+              ? `@${account.handle} live (id ${target.restId})`
+              : chalk.yellow(`@${account.handle} not resolvable (${target.reason})`);
+            const icon = probe.alive ? chalk.green('✅') : chalk.red('❌');
+            console.log(`  ${icon} @${account.handle} → ${probe.status}${probe.reason ? ` (${probe.reason})` : ''}  ${handleNote}`);
+          } catch (error) {
+            console.log(chalk.red(`  ❌ @${account.handle} → ${error.message}`));
+          } finally {
+            if (built) await closeFetch(built.proxiedFetch);
+          }
+        }
+      }
+      console.log('');
+    } catch (error) {
+      console.error(chalk.red(error.message.startsWith('❌') ? error.message : `❌ ${error.message}`));
+      process.exitCode = 1;
+    }
+  });
+
+fleetCmd
+  .command('post')
+  .description('Publish one tweet from one account, with every safety guard')
+  .requiredOption('--handle <handle>', 'Account to post from')
+  .requiredOption('--text <text>', 'Tweet body')
+  .option('--confirm', 'Actually publish (without this it only previews)')
+  .option('--allow-direct', 'Permit posting from an un-proxied account in a proxied fleet')
+  .action(async (options) => {
+    try {
+      const { postTweetSafe } = await import('../orchestrator/write.js');
+      console.log('');
+      const result = await postTweetSafe({
+        handle: options.handle,
+        text: options.text,
+        confirm: Boolean(options.confirm),
+        allowDirect: Boolean(options.allowDirect),
+        log: (line) => console.log(chalk.gray(`  ${line}`)),
+      });
+
+      if (!result.ok) {
+        console.log(chalk.red(`\n❌ Refused: ${result.reason}\n`));
+        process.exitCode = 1;
+        return;
+      }
+      if (result.preview) {
+        console.log(chalk.cyan('\n  PREVIEW ONLY — nothing published. Re-run with --confirm to post.\n'));
+        return;
+      }
+      const bind = result.boundToHandle
+        ? chalk.green(`author @${result.author} == label ✓`)
+        : chalk.yellow('author not readable from response — binding unverified');
+      console.log(chalk.green(`\n✅ Posted ${result.id} (${bind})`));
+      console.log(`   ${result.url}`);
+      console.log(chalk.gray(`   Rollback: xactions fleet rm --handle ${options.handle.replace(/^@/, '')} --id ${result.id}\n`));
+    } catch (error) {
+      console.error(chalk.red(error.message.startsWith('❌') ? error.message : `❌ ${error.message}`));
+      process.exitCode = 1;
+    }
+  });
+
+fleetCmd
+  .command('rm')
+  .description('Delete one tweet and confirm it is gone (rollback for post)')
+  .requiredOption('--handle <handle>', 'Account that owns the tweet')
+  .requiredOption('--id <tweetId>', 'Tweet id to delete')
+  .action(async (options) => {
+    try {
+      const { deleteTweetSafe } = await import('../orchestrator/write.js');
+      const result = await deleteTweetSafe({ handle: options.handle, id: options.id });
+      if (result.ok) {
+        console.log(chalk.green(`✅ Deleted ${options.id} — confirmed gone.`));
+      } else {
+        console.log(chalk.red(`❌ ${result.reason}`));
+        console.log(chalk.gray(`   Remove manually: ${result.url}`));
+        process.exitCode = 1;
+      }
+    } catch (error) {
+      console.error(chalk.red(error.message.startsWith('❌') ? error.message : `❌ ${error.message}`));
+      process.exitCode = 1;
+    }
+  });
+
+// ============================================================================
 // Parse and Run
 // ============================================================================
 

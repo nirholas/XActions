@@ -27,7 +27,8 @@
     "./mcp": "./src/mcp/server.js",
     "./cli": "./src/cli/index.js",
     "./client": "./src/client/index.js",
-    "./spaces": "./src/spaces/agent.js"
+    "./spaces": "./src/spaces/agent.js",
+    "./orchestrator": "./src/orchestrator/index.js"
   },
   "bin": {
     "xactions": "./src/cli/index.js",
@@ -114,7 +115,8 @@
     "redis": "^4.6.11",
     "remotion": "^4.0.428",
     "socket.io": "^4.7.5",
-    "stripe": "^14.10.0"
+    "stripe": "^14.10.0",
+    "undici": "^7.22.0"
   },
   "optionalDependencies": {
     "@atproto/api": "^0.13.35",

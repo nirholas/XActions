@@ -140,3 +140,12 @@ pages-out/
 *.bak
 *.orig
 *.rej
+
+# Fleet account stores — contain live X session cookies (auth_token/ct0).
+# The real files live in ~/.xactions/ outside this repo; these patterns are a
+# belt-and-braces guard in case one is ever copied in.
+accounts.tsv
+accounts.json
+accounts*.tsv
+accounts*.json
+*.accounts.tsv
