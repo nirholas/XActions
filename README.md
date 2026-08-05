@@ -1,3 +1,5 @@
+[![MCP Toplist](https://mcptoplist.com/badge/io.github.nirholas%2Fxactions.svg)](https://mcptoplist.com/server/io.github.nirholas%2Fxactions)
+
 <div align="center">    
   
 <pre align="center">
