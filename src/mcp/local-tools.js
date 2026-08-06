@@ -1483,6 +1483,8 @@ export async function x_client_get_trends() {
 // ============================================================================
 
 export const toolMap = {
+  // Internal helper used by xeepy tools in server.js
+  getPage,
   // Auth
   x_login,
   // Scraping (delegated to scrapers/index.js — single source of truth)
