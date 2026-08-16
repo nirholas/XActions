@@ -1228,11 +1228,11 @@ npm run mcp                       # Run MCP server
 
 If XActions saved you from paying $100/mo for Twitter's API, **star the repo** — it's how open source grows.
 
-<a href="https://star-history.com/#nirholas/xactions&Date">
+<a href="https://star-history.dera.page/#nirholas/xactions&Date">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=nirholas/xactions&type=Date&theme=dark">
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=nirholas/xactions&type=Date">
-    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=nirholas/xactions&type=Date" width="600">
+    <source media="(prefers-color-scheme: dark)" srcset="https://star-history.dera.page/svg?repos=nirholas/xactions&type=Date&theme=dark">
+    <source media="(prefers-color-scheme: light)" srcset="https://star-history.dera.page/svg?repos=nirholas/xactions&type=Date">
+    <img alt="Star History Chart" src="https://star-history.dera.page/svg?repos=nirholas/xactions&type=Date" width="600">
   </picture>
 </a>
 
