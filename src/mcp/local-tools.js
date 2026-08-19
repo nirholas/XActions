@@ -124,6 +124,15 @@ async function preferHttp(viaHttp, viaBrowser) {
 }
 
 /**
+ * Get the current Puppeteer page, creating the browser/page pair if needed.
+ * Used by MCP server fallback tools that drive the page directly.
+ */
+export async function getPage() {
+  const { page: pg } = await ensureBrowser();
+  return pg;
+}
+
+/**
  * Close browser (called by server.js on SIGINT/SIGTERM)
  */
 export async function closeBrowser() {
@@ -1560,8 +1569,9 @@ export const toolMap = {
   x_client_send_tweet,
   x_client_get_followers,
   x_client_get_trends,
-  // Utility (not an MCP tool, used by server.js cleanup)
+  // Utility (not an MCP tool, used by server.js cleanup / raw page access)
   closeBrowser,
+  getPage,
 };
 
 export default toolMap;

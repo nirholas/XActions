@@ -12,6 +12,8 @@
 import fs from 'fs/promises';
 import path from 'path';
 import os from 'os';
+import dns from 'node:dns/promises';
+import { isIP } from 'node:net';
 import { fetchRemoteAgentCard } from './agentCard.js';
 import { applyAuth } from './auth.js';
 
@@ -43,6 +45,65 @@ async function readJson(filePath, fallback = {}) {
 async function writeJson(filePath, data) {
   await ensureDir();
   await fs.writeFile(filePath, JSON.stringify(data, null, 2));
+}
+
+/**
+ * Check whether an IP address is private, loopback, link-local, or otherwise
+ * non-routable (blocks SSRF to internal networks and the cloud metadata endpoint).
+ */
+function isPrivateOrReservedIp(ip) {
+  const version = isIP(ip);
+  if (version === 4) {
+    const [a, b] = ip.split('.').map(Number);
+    if (a === 127) return true; // loopback
+    if (a === 10) return true; // 10.0.0.0/8
+    if (a === 172 && b >= 16 && b <= 31) return true; // 172.16.0.0/12
+    if (a === 192 && b === 168) return true; // 192.168.0.0/16
+    if (a === 169 && b === 254) return true; // 169.254.0.0/16 (incl. 169.254.169.254 metadata)
+    if (a === 0) return true; // 0.0.0.0/8
+    return false;
+  }
+  if (version === 6) {
+    const normalized = ip.toLowerCase();
+    if (normalized === '::1') return true; // loopback
+    if (normalized.startsWith('fc') || normalized.startsWith('fd')) return true; // fc00::/7 unique local
+    if (normalized.startsWith('fe80')) return true; // link-local
+    const mapped = normalized.match(/^::ffff:(\d+\.\d+\.\d+\.\d+)$/);
+    if (mapped) return isPrivateOrReservedIp(mapped[1]);
+    return false;
+  }
+  return true; // not a valid literal IP — treat as unsafe
+}
+
+/**
+ * Validate a caller-supplied agent URL before it is fetched. Requires
+ * http(s), rejects 'localhost', and resolves the hostname to make sure it
+ * doesn't point at a private/loopback/link-local address (SSRF guard).
+ */
+async function isSafeAgentUrl(urlString) {
+  let parsed;
+  try {
+    parsed = new URL(urlString);
+  } catch {
+    return false;
+  }
+
+  if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') return false;
+
+  const hostname = parsed.hostname.toLowerCase();
+  if (hostname === 'localhost') return false;
+
+  if (isIP(hostname)) {
+    return !isPrivateOrReservedIp(hostname);
+  }
+
+  try {
+    const records = await dns.lookup(hostname, { all: true });
+    if (records.length === 0) return false;
+    return records.every(({ address }) => !isPrivateOrReservedIp(address));
+  } catch {
+    return false;
+  }
 }
 
 // ============================================================================
@@ -87,6 +148,10 @@ export class AgentRegistry {
    */
   async register(agentUrl) {
     await this._ensureLoaded();
+    if (!(await isSafeAgentUrl(agentUrl))) {
+      console.warn(`⚠️  Refusing to register agent at ${agentUrl}: URL failed SSRF safety check`);
+      return null;
+    }
     const card = await fetchRemoteAgentCard(agentUrl);
     if (!card) {
       console.warn(`⚠️  Could not register agent at ${agentUrl}: failed to fetch agent card`);
@@ -178,6 +243,12 @@ export class AgentRegistry {
     let refreshed = 0;
 
     for (const url of urls) {
+      if (!(await isSafeAgentUrl(url))) {
+        console.warn(`⚠️  Skipping refresh for ${url}: URL failed SSRF safety check`);
+        const unsafeExisting = this._agents.get(url);
+        if (unsafeExisting) unsafeExisting.healthy = false;
+        continue;
+      }
       const card = await fetchRemoteAgentCard(url);
       if (card) {
         const existing = this._agents.get(url) || {};

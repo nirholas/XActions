@@ -11,9 +11,15 @@
   // ============================================
   // INJECT AUTOMATION CODE INTO PAGE CONTEXT
   // ============================================
+  // Bridge token: shared secret minted per page load and handed to
+  // injected.js via its own script src, so the page-context listener can
+  // reject messages from any other same-document script.
+  let bridgeToken = null;
+
   function injectScript() {
+    bridgeToken = crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
     const script = document.createElement('script');
-    script.src = chrome.runtime.getURL('content/injected.js');
+    script.src = `${chrome.runtime.getURL('content/injected.js')}?t=${encodeURIComponent(bridgeToken)}`;
     script.onload = () => script.remove();
     (document.head || document.documentElement).appendChild(script);
   }
@@ -97,7 +103,8 @@
           type: 'RUN_AUTOMATION',
           automationId: message.automationId,
           settings: message.settings,
-        }, '*');
+          token: bridgeToken,
+        }, window.location.origin);
         sendResponse({ success: true });
         break;
 
@@ -106,7 +113,8 @@
           source: 'xactions-extension',
           type: 'STOP_AUTOMATION',
           automationId: message.automationId,
-        }, '*');
+          token: bridgeToken,
+        }, window.location.origin);
         sendResponse({ success: true });
         break;
 
@@ -114,7 +122,8 @@
         window.postMessage({
           source: 'xactions-extension',
           type: 'STOP_ALL',
-        }, '*');
+          token: bridgeToken,
+        }, window.location.origin);
         sendResponse({ success: true });
         break;
 
@@ -122,7 +131,8 @@
         window.postMessage({
           source: 'xactions-extension',
           type: 'PAUSE_ALL',
-        }, '*');
+          token: bridgeToken,
+        }, window.location.origin);
         sendResponse({ success: true });
         break;
 
@@ -130,7 +140,8 @@
         window.postMessage({
           source: 'xactions-extension',
           type: 'RESUME_ALL',
-        }, '*');
+          token: bridgeToken,
+        }, window.location.origin);
         sendResponse({ success: true });
         break;
 
@@ -138,7 +149,8 @@
         window.postMessage({
           source: 'xactions-extension',
           type: 'GET_ACCOUNT_INFO',
-        }, '*');
+          token: bridgeToken,
+        }, window.location.origin);
         sendResponse({ success: true });
         break;
 

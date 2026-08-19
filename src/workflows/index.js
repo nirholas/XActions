@@ -63,11 +63,11 @@ async function get(idOrName) {
 }
 
 /**
- * List all workflows
+ * List workflows, optionally scoped to a single owner
  */
-async function list() {
+async function list(userId) {
   const store = await getStore();
-  return store.listWorkflows();
+  return store.listWorkflows(userId);
 }
 
 /**

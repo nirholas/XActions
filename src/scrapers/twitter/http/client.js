@@ -227,7 +227,7 @@ export class TwitterHttpClient {
         if (
           err instanceof AuthError ||
           err instanceof NotFoundError ||
-          (err instanceof TwitterApiError && !(err instanceof RateLimitError))
+          err instanceof TwitterApiError
         ) {
           throw err;
         }

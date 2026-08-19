@@ -6,8 +6,12 @@
  */
 
 import { Router } from 'express';
+import { authMiddleware } from '../middleware/auth.js';
 
 const router = Router();
+
+// All routes require authentication
+router.use(authMiddleware);
 
 // GET /api/schedule — list all jobs
 router.get('/', async (req, res) => {

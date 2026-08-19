@@ -43,6 +43,20 @@
   const loadTests = () => { try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch { return {}; } };
   const saveTests = (t) => localStorage.setItem(STORAGE_KEY, JSON.stringify(t));
 
+  // Navigate within the SPA via history.pushState + a synthetic popstate.
+  // Assigning window.location.href triggers a full page reload, which wipes
+  // this console script's context (and the async chain awaiting it) mid-run.
+  // Only fall back to a real navigation for cross-origin URLs.
+  const nav = (url) => {
+    const target = new URL(url, window.location.href);
+    if (target.origin === window.location.origin) {
+      window.history.pushState({}, '', target.href);
+      window.dispatchEvent(new PopStateEvent('popstate', { state: {} }));
+    } else {
+      window.location.href = url;
+    }
+  };
+
   const postTweet = async (text) => {
     if (CONFIG.dryRun) {
       console.log(`  🏃 [DRY RUN] Would post: "${text.slice(0, 60)}..."`);
@@ -63,11 +77,11 @@
 
   const measureTweet = async (url) => {
     const origUrl = window.location.href;
-    window.location.href = url;
+    nav(url);
     await sleep(4000);
 
     const article = document.querySelector('article[data-testid="tweet"]');
-    if (!article) { console.log('  ⚠️ Could not load tweet.'); window.location.href = origUrl; await sleep(2000); return null; }
+    if (!article) { console.log('  ⚠️ Could not load tweet.'); nav(origUrl); await sleep(2000); return null; }
 
     const likeBtn = article.querySelector('[data-testid="like"] span') || article.querySelector('[data-testid="unlike"] span');
     const rtBtn = article.querySelector('[data-testid="retweet"] span') || article.querySelector('[data-testid="unretweet"] span');
@@ -84,7 +98,7 @@
     m.totalEngagement = m.likes + m.retweets + m.replies;
     m.engagementRate = m.views > 0 ? (m.totalEngagement / m.views * 100) : 0;
 
-    window.location.href = origUrl;
+    nav(origUrl);
     await sleep(2000);
     return m;
   };

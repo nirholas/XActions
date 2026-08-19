@@ -80,6 +80,7 @@ export function createMonitor(config, deps = {}) {
 
   const monitor = {
     id,
+    userId: config.userId ?? null,
     target,
     type: config.type || 'mentions',
     status: 'active',
@@ -138,11 +139,13 @@ export function stopMonitor(monitorId) {
 /**
  * Get monitor results
  * @param {string} monitorId
+ * @param {string} [userId] - If provided, only returns the monitor when owned by this user
  * @returns {Monitor|null}
  */
-export function getMonitor(monitorId) {
+export function getMonitor(monitorId, userId) {
   const monitor = activeMonitors.get(monitorId);
   if (!monitor) return null;
+  if (userId !== undefined && monitor.userId !== userId) return null;
   return _serializeMonitor(monitor);
 }
 
@@ -170,10 +173,13 @@ export function getMonitorHistory(monitorId, options = {}) {
 
 /**
  * List all active monitors
+ * @param {string} [userId] - If provided, only returns monitors owned by this user
  * @returns {Monitor[]}
  */
-export function listMonitors() {
-  return Array.from(activeMonitors.values()).map(_serializeMonitor);
+export function listMonitors(userId) {
+  const monitors = Array.from(activeMonitors.values());
+  const owned = userId !== undefined ? monitors.filter(m => m.userId === userId) : monitors;
+  return owned.map(_serializeMonitor);
 }
 
 /**
@@ -266,9 +272,10 @@ async function _searchTweets(monitor) {
   }
 
   // Try to use scrapers
+  let browser;
   try {
     const scrapers = await import('../scrapers/index.js');
-    const browser = await scrapers.createBrowser({ headless: true });
+    browser = await scrapers.createBrowser({ headless: true });
     const page = await scrapers.createPage(browser);
 
     let results;
@@ -284,11 +291,12 @@ async function _searchTweets(monitor) {
       results = await scrapers.searchTweets(page, monitor.target, { limit: 20 });
     }
 
-    await browser.close();
     return results || [];
   } catch (error) {
     console.error(`⚠️ Scraper unavailable for ${monitor.id}: ${error.message}`);
     return [];
+  } finally {
+    if (browser) await browser.close();
   }
 }
 

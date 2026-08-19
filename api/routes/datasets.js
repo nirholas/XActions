@@ -6,8 +6,19 @@
  */
 
 import { Router } from 'express';
+import { authMiddleware } from '../middleware/auth.js';
 
 const router = Router();
+
+router.use(authMiddleware);
+
+// Reject dataset names that could escape the datasets directory (path traversal)
+router.param('name', (req, res, next, name) => {
+  if (!/^[a-zA-Z0-9_-]+$/.test(name)) {
+    return res.status(400).json({ error: 'Invalid dataset name' });
+  }
+  next();
+});
 
 // GET /api/datasets — list all datasets
 router.get('/', async (req, res) => {

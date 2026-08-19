@@ -7,6 +7,21 @@
 (() => {
   const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
+  // Navigate within the SPA via history.pushState + a synthetic popstate.
+  // Assigning window.location.href triggers a full page reload, which wipes
+  // this console script's entire execution context mid-run.
+  const spaNavigate = (url) => {
+    try {
+      const target = new URL(url, window.location.href);
+      if (target.origin === window.location.origin) {
+        window.history.pushState({}, '', target.href);
+        window.dispatchEvent(new PopStateEvent('popstate', { state: {} }));
+        return;
+      }
+    } catch (e) { /* fall through to hard navigation */ }
+    window.location.href = url;
+  };
+
   // =============================================
   // CONFIGURATION
   // =============================================
@@ -26,7 +41,7 @@
 
   const reportUser = async (username) => {
     try {
-      window.location.href = `https://x.com/${username}`;
+      spaNavigate(`https://x.com/${username}`);
       await sleep(3500);
 
       // Wait for profile to load

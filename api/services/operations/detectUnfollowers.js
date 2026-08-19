@@ -4,12 +4,17 @@ import { getTwitterClient } from '../../routes/twitter.js';
 
 const prisma = new PrismaClient();
 
-async function processDetectUnfollowers({ operationId, userId }) {
+async function processDetectUnfollowers({ operationId, userId }, isCancelled = () => false) {
   try {
     await prisma.operation.update({
       where: { id: operationId },
       data: { status: 'processing', startedAt: new Date() }
     });
+
+    if (isCancelled()) {
+      console.log(`🛑 Job ${operationId} cancelled`);
+      return { cancelled: true };
+    }
 
     const user = await prisma.user.findUnique({
       where: { id: userId }
@@ -68,7 +73,8 @@ async function processDetectUnfollowers({ operationId, userId }) {
         id: f.id,
         username: f.username,
         name: f.name
-      }))
+      })),
+      cancelled: isCancelled()
     };
   } catch (error) {
     console.error('❌ Detect unfollowers error:', error);

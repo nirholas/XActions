@@ -15,8 +15,69 @@
  */
 
 import { PrismaClient } from '@prisma/client';
+import dns from 'node:dns/promises';
+import { isIP } from 'node:net';
 
 const prisma = new PrismaClient();
+
+/**
+ * Check whether an IP address is private, loopback, link-local, or otherwise
+ * non-routable (blocks SSRF to internal networks and the cloud metadata endpoint).
+ */
+function isPrivateOrReservedIp(ip) {
+  const version = isIP(ip);
+  if (version === 4) {
+    const [a, b] = ip.split('.').map(Number);
+    if (a === 127) return true; // loopback
+    if (a === 10) return true; // 10.0.0.0/8
+    if (a === 172 && b >= 16 && b <= 31) return true; // 172.16.0.0/12
+    if (a === 192 && b === 168) return true; // 192.168.0.0/16
+    if (a === 169 && b === 254) return true; // 169.254.0.0/16 (incl. 169.254.169.254 metadata)
+    if (a === 0) return true; // 0.0.0.0/8
+    return false;
+  }
+  if (version === 6) {
+    const normalized = ip.toLowerCase();
+    if (normalized === '::1') return true; // loopback
+    if (normalized.startsWith('fc') || normalized.startsWith('fd')) return true; // fc00::/7 unique local
+    if (normalized.startsWith('fe80')) return true; // link-local
+    const mapped = normalized.match(/^::ffff:(\d+\.\d+\.\d+\.\d+)$/);
+    if (mapped) return isPrivateOrReservedIp(mapped[1]);
+    return false;
+  }
+  return true; // not a valid literal IP — treat as unsafe
+}
+
+/**
+ * Validate a user-supplied webhook URL before it is persisted or fetched.
+ * Requires http(s), rejects 'localhost', and resolves the hostname to make
+ * sure it doesn't point at a private/loopback/link-local address.
+ */
+export async function isSafeWebhookUrl(urlString) {
+  let parsed;
+  try {
+    parsed = new URL(urlString);
+  } catch {
+    return false;
+  }
+
+  if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') return false;
+
+  const hostname = parsed.hostname.toLowerCase();
+  if (hostname === 'localhost') return false;
+
+  if (isIP(hostname)) {
+    return !isPrivateOrReservedIp(hostname);
+  }
+
+  try {
+    const records = await dns.lookup(hostname, { all: true });
+    if (records.length === 0) return false;
+    return records.every(({ address }) => !isPrivateOrReservedIp(address));
+  } catch {
+    return false;
+  }
+}
 
 /**
  * Check scan results for notable events and send alerts
@@ -104,8 +165,8 @@ export async function checkAndAlert(io, userId, scanResult) {
       alerts,
     };
 
-    io.emit(`unfollower:alerts:${userId}`, payload);
-    io.emit('unfollower:scan-complete', {
+    io.to(`user:${userId}`).emit(`unfollower:alerts:${userId}`, payload);
+    io.to(`user:${userId}`).emit('unfollower:scan-complete', {
       userId,
       scanDate,
       totalFollowers,
@@ -114,7 +175,7 @@ export async function checkAndAlert(io, userId, scanResult) {
     });
   } else {
     // Still emit scan completion even without alerts
-    io.emit('unfollower:scan-complete', {
+    io.to(`user:${userId}`).emit('unfollower:scan-complete', {
       userId,
       scanDate,
       totalFollowers,
@@ -149,6 +210,11 @@ async function deliverWebhook(userId, payload) {
 
     if (!schedule?.webhookUrl) return;
 
+    if (!(await isSafeWebhookUrl(schedule.webhookUrl))) {
+      console.warn(`⚠️ Webhook delivery blocked for user ${userId}: URL failed SSRF safety check`);
+      return;
+    }
+
     const response = await fetch(schedule.webhookUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -159,9 +225,12 @@ async function deliverWebhook(userId, payload) {
         ...payload,
       }),
       signal: AbortSignal.timeout(10000), // 10s timeout
+      redirect: 'manual', // never auto-follow redirects: an attacker-controlled endpoint could 3xx us to a private/metadata address
     });
 
-    if (!response.ok) {
+    if (response.type === 'opaqueredirect' || (response.status >= 300 && response.status < 400)) {
+      console.warn(`⚠️ Webhook delivery blocked for user ${userId}: endpoint returned a redirect, which is not followed`);
+    } else if (!response.ok) {
       console.warn(`⚠️ Webhook delivery failed for user ${userId}: ${response.status}`);
     } else {
       console.log(`📨 Webhook delivered for user ${userId}`);
@@ -191,6 +260,10 @@ const INTERVAL_MS = {
 export async function setSchedule(userId, interval, webhookUrl = null) {
   if (!INTERVAL_MS[interval]) {
     throw new Error(`Invalid interval: ${interval}. Must be one of: ${Object.keys(INTERVAL_MS).join(', ')}`);
+  }
+
+  if (webhookUrl && !(await isSafeWebhookUrl(webhookUrl))) {
+    throw new Error('Invalid webhookUrl: must be a public http(s) URL, not a private/internal address');
   }
 
   const nextRunAt = new Date(Date.now() + INTERVAL_MS[interval]);

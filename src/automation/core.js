@@ -428,30 +428,35 @@ window.XActions.Core = (() => {
   
   const rateLimit = {
     _counts: {},
-    
-    check: (action, limit, period = 'hour') => {
+
+    _getData: (action, period) => {
       const key = `ratelimit_${action}_${period}`;
       const data = storage.get(key) || { count: 0, timestamp: Date.now() };
-      
+
       const periodMs = period === 'hour' ? 3600000 : 86400000;
       if (Date.now() - data.timestamp > periodMs) {
         data.count = 0;
         data.timestamp = Date.now();
       }
-      
+
+      storage.set(key, data);
+      return data;
+    },
+
+    check: (action, limit, period = 'hour') => {
+      const data = rateLimit._getData(action, period);
       return data.count < limit;
     },
-    
+
     increment: (action, period = 'hour') => {
       const key = `ratelimit_${action}_${period}`;
-      const data = storage.get(key) || { count: 0, timestamp: Date.now() };
+      const data = rateLimit._getData(action, period);
       data.count++;
       storage.set(key, data);
     },
-    
+
     getRemaining: (action, limit, period = 'hour') => {
-      const key = `ratelimit_${action}_${period}`;
-      const data = storage.get(key) || { count: 0, timestamp: Date.now() };
+      const data = rateLimit._getData(action, period);
       return Math.max(0, limit - data.count);
     },
   };

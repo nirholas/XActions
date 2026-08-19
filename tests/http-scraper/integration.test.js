@@ -122,7 +122,7 @@ function routedFetch(routes, fallback = mockResponse({})) {
 describe('Integration: Full Profile Scrape Flow', () => {
   it('mocked fetch → client → scrapeProfile → parsed profile', async () => {
     const fetchMock = vi.fn().mockResolvedValue(
-      mockResponse(graphqlBody(PROFILE_RESPONSE)),
+      mockResponse(PROFILE_RESPONSE),
     );
     const client = createClient(fetchMock);
 
@@ -153,7 +153,7 @@ describe('Integration: Full Profile Scrape Flow', () => {
 
   it('verifies request URL, headers, and query params', async () => {
     const fetchMock = vi.fn().mockResolvedValue(
-      mockResponse(graphqlBody(PROFILE_RESPONSE)),
+      mockResponse(PROFILE_RESPONSE),
     );
     const client = createClient(fetchMock);
 
@@ -595,7 +595,7 @@ describe('Integration: Rate Limit Recovery', () => {
     // First call returns 429, second call returns success
     const fetchMock = vi.fn()
       .mockResolvedValueOnce(makeRateLimitResponse(now + 1)) // 429, resets in 1 sec
-      .mockResolvedValueOnce(mockResponse(graphqlBody(PROFILE_RESPONSE)));
+      .mockResolvedValueOnce(mockResponse(PROFILE_RESPONSE));
 
     const client = new TwitterHttpClient({
       cookies: 'auth_token=tok123; ct0=csrf456',
@@ -741,7 +741,7 @@ describe('Integration: Guest Token + Public Scrape', () => {
 
   it('unauthenticated client sends no auth cookies', async () => {
     const fetchMock = vi.fn().mockResolvedValue(
-      mockResponse(graphqlBody(PROFILE_RESPONSE)),
+      mockResponse(PROFILE_RESPONSE),
     );
 
     // Create client WITHOUT cookies

@@ -173,7 +173,7 @@ export function createA2AServer(options = {}) {
 
   // ------- Auth (optional) -------
   if (enableAuth) {
-    const auth = createAuthMiddleware({ allowUnauthenticated: true });
+    const auth = createAuthMiddleware({ required: true });
     app.use('/a2a', auth);
   }
 

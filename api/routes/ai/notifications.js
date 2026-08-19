@@ -9,6 +9,7 @@
 
 import express from 'express';
 import crypto from 'crypto';
+import { isSafeWebhookUrl } from '../../services/unfollowerAlerts.js';
 
 const router = express.Router();
 
@@ -88,6 +89,11 @@ router.post('/test', async (req, res) => {
     return res.status(400).json({ error: 'INVALID_INPUT', message: 'webhookUrl is required' });
   }
 
+  if (!(await isSafeWebhookUrl(webhookUrl))) {
+    return errorResponse(res, 400, 'INVALID_WEBHOOK_URL',
+      'webhookUrl must be a public http(s) URL, not a private/internal address', { retryable: false });
+  }
+
   try {
     const response = await fetch(webhookUrl, {
       method: 'POST',
@@ -99,7 +105,13 @@ router.post('/test', async (req, res) => {
         source: 'xactions-ai-api',
       }),
       signal: AbortSignal.timeout(10000),
+      redirect: 'manual',
     });
+
+    if (response.type === 'opaqueredirect' || (response.status >= 300 && response.status < 400)) {
+      return errorResponse(res, 400, 'WEBHOOK_UNREACHABLE',
+        'Webhook endpoint returned a redirect, which is not followed', { retryable: false });
+    }
 
     return successResponse(res, {
       webhookUrl,

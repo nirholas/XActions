@@ -132,7 +132,10 @@ export async function bulkExecute(usernames, action, options = {}) {
   if (resumeFrom) {
     try {
       const progress = JSON.parse(await fsp.readFile(resumeFrom, 'utf-8'));
-      processedSet = new Set([...(progress.succeeded || []), ...(progress.failed || [])]);
+      processedSet = new Set([
+        ...(progress.succeeded || []).map(u => String(u).toLowerCase()),
+        ...(progress.failed || []).map(f => String(f?.username ?? f).toLowerCase()),
+      ]);
       console.log(`🔄 Resuming: skipping ${processedSet.size} already-processed users`);
     } catch {
       console.log('⚠️  Could not load progress file, starting fresh');
@@ -324,14 +327,19 @@ async function getActionExecutor(action) {
   const actionMap = {
     follow: (u) => localTools.x_follow?.({ username: u }) || Promise.resolve(),
     unfollow: (u) => localTools.x_unfollow?.({ username: u }) || Promise.resolve(),
-    block: (u) => localTools.x_block?.({ username: u }) || Promise.resolve(),
-    unblock: (u) => localTools.x_unblock?.({ username: u }) || Promise.resolve(),
-    mute: (u) => localTools.x_mute?.({ username: u }) || Promise.resolve(),
-    unmute: (u) => localTools.x_unmute?.({ username: u }) || Promise.resolve(),
-    'like-latest': (u) => localTools.x_like?.({ username: u }) || Promise.resolve(),
+    block: () => Promise.reject(new Error('block action is not supported: no x_block MCP tool exists')),
+    unblock: () => Promise.reject(new Error('unblock action is not supported: no x_unblock MCP tool exists')),
+    mute: (u) => localTools.x_mute_user({ username: u }),
+    unmute: (u) => localTools.x_unmute_user({ username: u }),
+    'like-latest': async (u) => {
+      const tweets = await localTools.x_get_tweets({ username: u, limit: 1 });
+      const latest = Array.isArray(tweets) ? tweets[0] : null;
+      if (!latest?.id) throw new Error(`No tweets found for @${u}`);
+      return localTools.x_like({ url: `https://x.com/${u}/status/${latest.id}` });
+    },
     'scrape-profile': (u) => localTools.x_get_profile?.({ username: u }) || Promise.resolve(),
     dm: (u, opts) => localTools.x_send_dm?.({ username: u, message: opts?.message }) || Promise.resolve(),
-    'add-to-list': (u, opts) => localTools.x_add_to_list?.({ username: u, listName: opts?.listName }) || Promise.resolve(),
+    'add-to-list': () => Promise.reject(new Error('add-to-list action is not supported: no x_add_to_list MCP tool exists')),
   };
   return actionMap[action] || (() => Promise.reject(new Error(`Unknown action: ${action}`)));
 }

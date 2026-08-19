@@ -143,8 +143,8 @@
     for (const field of block.fields) {
       html += `
         <div class="form-group">
-          <label class="form-label">${field.label}</label>
-          <input class="form-input" data-field="${field.key}" value="${field.value || ''}" placeholder="${field.placeholder || ''}">
+          <label class="form-label">${escapeHtml(field.label)}</label>
+          <input class="form-input" data-field="${escapeHtml(field.key)}" value="${escapeHtml(field.value || '')}" placeholder="${escapeHtml(field.placeholder || '')}">
         </div>`;
     }
     html += `<button class="btn btn--danger btn--sm" id="delete-block">🗑 Delete Block</button>`;
@@ -163,6 +163,11 @@
 
   function hideProps() {
     propsPanel.classList.remove('visible');
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
 
   // ── Rendering ─────────────────────────────────────────

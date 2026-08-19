@@ -7,6 +7,18 @@
   if (window.__xactions_injected) return;
   window.__xactions_injected = true;
 
+  // Bridge token: minted by bridge.js and passed via this script's own src
+  // query string, so only the extension's content script (which injected
+  // this file) can produce messages this listener will accept.
+  const BRIDGE_TOKEN = (() => {
+    try {
+      const src = document.currentScript && document.currentScript.src;
+      return src ? new URL(src).searchParams.get('t') : null;
+    } catch {
+      return null;
+    }
+  })();
+
   // ============================================
   // CORE MODULE (from src/automation/core.js)
   // ============================================
@@ -622,7 +634,9 @@
   // ============================================
   window.addEventListener('message', async (event) => {
     if (event.source !== window) return;
+    if (event.origin !== window.location.origin) return;
     if (!event.data || event.data.source !== 'xactions-extension') return;
+    if (!BRIDGE_TOKEN || event.data.token !== BRIDGE_TOKEN) return;
 
     const msg = event.data;
 

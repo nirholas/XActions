@@ -405,10 +405,18 @@ function ensureDir() {
   }
 }
 
+// Reject persona ids that could escape the personas directory (path traversal)
+function assertValidPersonaId(id) {
+  if (typeof id !== 'string' || !/^[a-zA-Z0-9_-]+$/.test(id)) {
+    throw new Error(`Invalid persona id: ${id}`);
+  }
+}
+
 /**
  * Save persona to disk
  */
 function savePersona(persona) {
+  assertValidPersonaId(persona.id);
   ensureDir();
   // Convert Sets to arrays for JSON serialization
   const serializable = {
@@ -427,6 +435,7 @@ function savePersona(persona) {
  * Load persona from disk
  */
 function loadPersona(id) {
+  assertValidPersonaId(id);
   const filePath = join(PERSONAS_DIR, `${id}.json`);
   if (!existsSync(filePath)) {
     throw new Error(`Persona not found: ${id}`);
@@ -469,6 +478,7 @@ function listPersonas() {
  * Delete a persona
  */
 function deletePersona(id) {
+  assertValidPersonaId(id);
   const filePath = join(PERSONAS_DIR, `${id}.json`);
   if (!existsSync(filePath)) {
     throw new Error(`Persona not found: ${id}`);

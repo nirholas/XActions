@@ -96,11 +96,15 @@
     for (let i = 0; i < withReplies.length; i++) {
       const tweet = withReplies[i];
       console.log(`   [${i + 1}/${withReplies.length}] "${tweet.text.slice(0, 40)}..."`);
-      const origUrl = window.location.href;
-      window.location.href = 'https://x.com' + tweet.href;
+      // Open tweet in a new tab — navigating the current tab would destroy this script's execution context
+      const popup = window.open('https://x.com' + tweet.href, '_blank');
+      if (!popup) {
+        console.warn('   ⚠️  Popup blocked — allow popups for x.com to analyze replies. Skipping.');
+        continue;
+      }
       await sleep(3000);
 
-      const replyArticles = document.querySelectorAll('article[data-testid="tweet"]');
+      const replyArticles = popup.document.querySelectorAll('article[data-testid="tweet"]');
       let count = 0;
       for (const article of replyArticles) {
         if (count === 0) { count++; continue; } // skip original tweet
@@ -115,8 +119,8 @@
         replierMap[username].replies++;
         count++;
       }
-      window.history.back();
-      await sleep(2000);
+      popup.close();
+      await sleep(1000);
     }
 
     const repliers = Object.values(replierMap).sort((a, b) => b.replies - a.replies);

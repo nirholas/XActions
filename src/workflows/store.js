@@ -66,7 +66,7 @@ class FileStore {
     }
   }
 
-  async listWorkflows() {
+  async listWorkflows(userId) {
     await this._init();
     try {
       const files = await fs.readdir(WORKFLOWS_DIR);
@@ -76,6 +76,7 @@ class FileStore {
         try {
           const data = await fs.readFile(path.join(WORKFLOWS_DIR, file), 'utf-8');
           const wf = JSON.parse(data);
+          if (userId && wf.userId !== userId) continue;
           workflows.push({
             id: wf.id,
             name: wf.name,
@@ -83,6 +84,7 @@ class FileStore {
             trigger: wf.trigger,
             enabled: wf.enabled !== false,
             stepsCount: wf.steps?.length || 0,
+            userId: wf.userId,
             createdAt: wf.createdAt,
             updatedAt: wf.updatedAt,
           });
@@ -232,10 +234,10 @@ class PrismaStore {
     }
   }
 
-  async listWorkflows() {
+  async listWorkflows(userId) {
     try {
       const ops = await this._prisma.operation.findMany({
-        where: { type: 'workflow_definition' },
+        where: { type: 'workflow_definition', ...(userId ? { userId } : {}) },
         orderBy: { updatedAt: 'desc' },
       });
       return ops.map(op => {
@@ -247,6 +249,7 @@ class PrismaStore {
           trigger: wf.trigger,
           enabled: wf.enabled !== false,
           stepsCount: wf.steps?.length || 0,
+          userId: op.userId,
           createdAt: op.createdAt?.toISOString(),
           updatedAt: op.updatedAt?.toISOString(),
         };

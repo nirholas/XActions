@@ -7193,11 +7193,14 @@ try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG
     console.log('📍 Go to: https://x.com/YOUR_USERNAME/followers');
     return;
   }
-  
+
+  const username = window.location.pathname.split('/')[1];
+  const storageKey = `${CONFIG.storageKey}_${username}`;
+
   console.log('🚀 Scraping current followers...');
   console.log('📜 Auto-scrolling to load all followers...');
   console.log('');
-  
+
   /**
    * Extract username from user cell
    */
@@ -7255,7 +7258,7 @@ try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG
   // Load previous snapshot
   let previousSnapshot = null;
   try {
-    const saved = localStorage.getItem(CONFIG.storageKey);
+    const saved = localStorage.getItem(storageKey);
     if (saved) {
       previousSnapshot = JSON.parse(saved);
     }
@@ -7271,7 +7274,7 @@ try{if(typeof window!=='undefined'&&window.__XA_LAUNCH_CFG){Object.assign(CONFIG
     count: currentFollowers.size,
     followers: Object.fromEntries(currentFollowers)
   };
-  localStorage.setItem(CONFIG.storageKey, JSON.stringify(snapshot));
+  localStorage.setItem(storageKey, JSON.stringify(snapshot));
   console.log('💾 Saved new snapshot to localStorage');
   console.log('');
   

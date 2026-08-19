@@ -6,8 +6,11 @@
  */
 
 import { Router } from 'express';
+import { authMiddleware, requireAdmin } from '../middleware/auth.js';
 
 const router = Router();
+
+router.use(authMiddleware);
 
 // POST /api/notifications/send
 router.post('/send', async (req, res) => {
@@ -36,7 +39,7 @@ router.post('/test/:channel', async (req, res) => {
 });
 
 // POST /api/notifications/configure
-router.post('/configure', async (req, res) => {
+router.post('/configure', requireAdmin, async (req, res) => {
   try {
     const { getNotifier } = await import('../../src/notifications/notifier.js');
     const notifier = await getNotifier();

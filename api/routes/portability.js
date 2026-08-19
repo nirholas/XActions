@@ -47,6 +47,7 @@ router.post('/export', async (req, res) => {
     const job = {
       id: jobId,
       type: 'export',
+      userId: req.user.id,
       username: username.replace(/^@/, ''),
       status: 'queued',
       progress: null,
@@ -105,7 +106,7 @@ router.post('/export', async (req, res) => {
 
 router.get('/export/:id', (req, res) => {
   const job = jobs.get(req.params.id);
-  if (!job) {
+  if (!job || job.userId !== req.user.id) {
     return res.status(404).json({ error: 'Job not found' });
   }
   res.json({
@@ -125,7 +126,7 @@ router.get('/export/:id', (req, res) => {
 
 router.get('/export/:id/download', async (req, res) => {
   const job = jobs.get(req.params.id);
-  if (!job) {
+  if (!job || job.userId !== req.user.id) {
     return res.status(404).json({ error: 'Job not found' });
   }
   if (job.status !== 'completed' || !job.result?.dir) {

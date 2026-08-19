@@ -18,7 +18,7 @@ export { TaskStore, TaskExecutor, createTaskManager } from './taskManager.js';
 export { createBridge } from './bridge.js';
 export { StreamManager, bridgeTaskStream, attachStreamEndpoint, connectToAgentStream } from './streaming.js';
 export { PushNotificationServer, PushNotificationClient, SubscriptionManager } from './push.js';
-export { createAuthMiddleware, generateApiKey, verifyApiKey, createJWT, verifyJWT, storeCredential, applyAuth, PERMISSIONS } from './auth.js';
+export { generateApiKey, validateApiKey, revokeApiKey, listApiKeys, generateToken, validateToken, refreshToken, checkPermission, createAuthMiddleware, createOutboundAuth, getOutboundAuth, applyAuth, PERMISSIONS, PERMISSION_PRESETS } from './auth.js';
 export { AgentRegistry, SkillMatcher, TrustScorer, createDiscovery } from './discovery.js';
 export { TaskDecomposer, Delegator, Orchestrator, createOrchestrator } from './orchestrator.js';
 export { createA2AServer } from './server.js';

@@ -258,9 +258,19 @@
   // NAVIGATION
   // ============================================================
 
+  // Navigate within the SPA via history.pushState + a synthetic popstate.
+  // Assigning window.location.href triggers a full page reload, which wipes
+  // this console script's entire state (state, window.stopCultivator, etc.)
+  // mid-run. Only fall back to a real navigation for cross-origin URLs.
   const nav = async (url) => {
     log(`🧭 → ${url}`, 'act');
-    window.location.href = url;
+    const target = new URL(url, window.location.href);
+    if (target.origin === window.location.origin) {
+      window.history.pushState({}, '', target.href);
+      window.dispatchEvent(new PopStateEvent('popstate', { state: {} }));
+    } else {
+      window.location.href = url;
+    }
     await sleep(3500);
     await waitFor(S.primaryCol, 15000);
     await sleep(1500);

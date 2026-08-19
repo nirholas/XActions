@@ -211,6 +211,11 @@ export class SeleniumAdapter extends BaseAdapter {
     await driver.switchTo().window(page._windowHandle);
 
     // Selenium requires being on the cookie's domain first
+    const domain = (cookie.domain || '').replace(/^\./, '');
+    if (domain) {
+      await driver.get(`https://${domain}/`);
+    }
+
     await driver.manage().addCookie({
       name: cookie.name,
       value: cookie.value,

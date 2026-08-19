@@ -34,11 +34,14 @@
     console.log('💼 XActions Business Analytics');
     console.log('==============================');
 
-    // If brand is specified, search for it
+    // If brand is specified, make sure we're already on that search page
     if (CONFIG.brand) {
+      const searchUrl = `https://x.com/search?q=${encodeURIComponent(CONFIG.brand)}&f=live`;
+      if (!window.location.href.includes(`q=${encodeURIComponent(CONFIG.brand)}`)) {
+        console.error(`❌ Navigate to ${searchUrl} first, then re-run this script!`);
+        return;
+      }
       console.log(`🔍 Monitoring brand: "${CONFIG.brand}"`);
-      window.location.href = `https://x.com/search?q=${encodeURIComponent(CONFIG.brand)}&f=live`;
-      await sleep(5000);
     }
 
     const mentions = [];
