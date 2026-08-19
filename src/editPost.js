@@ -2,7 +2,7 @@
 // Edit Post & Undo Post on X - by nichxbt
 // https://github.com/nirholas/xactions
 // Edit an existing post or undo a recently posted tweet (Premium feature, 30s window)
-// 1. Go to x.com
+// 1. Go to the post you want to edit (its permalink, e.g. x.com/user/status/123) — or x.com for undo mode
 // 2. Open Developer Console (F12)
 // 3. Edit CONFIG below
 // 4. Paste and run
@@ -65,11 +65,11 @@
       return;
     }
 
-    // Navigate to the post if not already there
+    // Must already be on the post — navigating away would reload the page and kill this script
     if (!window.location.href.includes(CONFIG.postUrl.replace('https://x.com', ''))) {
-      console.log('🔄 Navigating to post...');
-      window.location.href = CONFIG.postUrl;
-      await sleep(CONFIG.navigationDelay);
+      console.error('❌ Navigate to the post first, then re-run this script!');
+      console.log(`💡 Go to: ${CONFIG.postUrl}`);
+      return;
     }
 
     // Find and click the caret (three-dot menu) on the tweet

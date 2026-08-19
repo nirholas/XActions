@@ -14,6 +14,62 @@
 // Built-in Condition Evaluators
 // ============================================================================
 
+import { Worker } from 'node:worker_threads';
+
+// ReDoS guardrails for the 'matches' operator: workflow authors fully control
+// the pattern text, so cap its length/the string it runs against, and run
+// the actual match on a worker thread with a hard wall-clock timeout. A
+// regex-source heuristic can only ever recognize the specific catastrophic-
+// backtracking *shapes* it was written for (nested quantifiers, alternation
+// ambiguity, etc. are all different shapes) — it cannot enumerate them all,
+// so it is not a sound defense. Only a timeout that can forcibly interrupt
+// the runaway match is: the main thread can't preempt synchronous JS, but a
+// worker thread can be terminated from outside while it's still running.
+const MAX_MATCHES_PATTERN_LENGTH = 200;
+const MAX_MATCHES_INPUT_LENGTH = 10000;
+const MATCHES_TIMEOUT_MS = 250;
+
+// The parent package is ESM ("type": "module"), so an eval-mode Worker
+// inherits that and has no CommonJS require() — use static import instead.
+const REGEX_WORKER_SRC = `
+  import { parentPort, workerData } from 'node:worker_threads';
+  const { pattern, flags, str } = workerData;
+  let result = false;
+  try {
+    result = new RegExp(pattern, flags).test(str);
+  } catch {
+    result = false;
+  }
+  parentPort.postMessage(result);
+`;
+
+/**
+ * Run a regex .test() on a worker thread with a hard timeout, so a
+ * catastrophic-backtracking pattern can be forcibly killed instead of
+ * hanging the main event loop. Resolves false if the pattern doesn't match,
+ * errors, or times out.
+ */
+function safeRegexTest(pattern, flags, str, timeoutMs = MATCHES_TIMEOUT_MS) {
+  return new Promise((resolve) => {
+    let settled = false;
+    const worker = new Worker(REGEX_WORKER_SRC, { eval: true, workerData: { pattern, flags, str } });
+
+    const finish = (value) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      worker.terminate().catch(() => {});
+      resolve(value);
+    };
+
+    const timer = setTimeout(() => finish(false), timeoutMs);
+
+    worker.once('message', (result) => finish(!!result));
+    worker.once('error', () => finish(false));
+    worker.once('exit', () => finish(false));
+  });
+}
+
 const OPERATORS = {
   '>': (a, b) => Number(a) > Number(b),
   '<': (a, b) => Number(a) < Number(b),
@@ -23,7 +79,13 @@ const OPERATORS = {
   '!=': (a, b) => String(a) !== String(b),
   'contains': (a, b) => String(a).toLowerCase().includes(String(b).toLowerCase()),
   'not_contains': (a, b) => !String(a).toLowerCase().includes(String(b).toLowerCase()),
-  'matches': (a, b) => new RegExp(b, 'i').test(String(a)),
+  'matches': async (a, b) => {
+    const str = String(a);
+    const pattern = String(b);
+    if (typeof pattern !== 'string' || pattern.length > MAX_MATCHES_PATTERN_LENGTH) return false;
+    if (str.length > MAX_MATCHES_INPUT_LENGTH) return false;
+    return safeRegexTest(pattern, 'i', str);
+  },
   'exists': (a) => a !== undefined && a !== null,
   'empty': (a) => !a || (Array.isArray(a) && a.length === 0) || (typeof a === 'string' && a.trim() === ''),
   'not_empty': (a) => a && (!Array.isArray(a) || a.length > 0) && (typeof a !== 'string' || a.trim() !== ''),
@@ -125,28 +187,28 @@ function parseExpression(expression) {
  * 
  * @param {string|object} condition - The condition to evaluate
  * @param {object} context - The workflow variable context
- * @returns {{ passed: boolean, details: string }}
+ * @returns {Promise<{ passed: boolean, details: string }>}
  */
-export function evaluateCondition(condition, context) {
+export async function evaluateCondition(condition, context) {
   try {
     if (typeof condition === 'string') {
-      return evaluateExpression(condition, context);
+      return await evaluateExpression(condition, context);
     }
-    
+
     if (typeof condition === 'object') {
       // AND conditions
       if (condition.all && Array.isArray(condition.all)) {
-        const results = condition.all.map(expr => evaluateExpression(expr, context));
+        const results = await Promise.all(condition.all.map(expr => evaluateExpression(expr, context)));
         const passed = results.every(r => r.passed);
         return {
           passed,
           details: `ALL(${results.map(r => `${r.details}=${r.passed}`).join(', ')})`,
         };
       }
-      
+
       // OR conditions
       if (condition.any && Array.isArray(condition.any)) {
-        const results = condition.any.map(expr => evaluateExpression(expr, context));
+        const results = await Promise.all(condition.any.map(expr => evaluateExpression(expr, context)));
         const passed = results.some(r => r.passed);
         return {
           passed,
@@ -163,15 +225,15 @@ export function evaluateCondition(condition, context) {
         if (!op) {
           return { passed: false, details: `Unknown operator: ${condition.operator}` };
         }
-        
-        const passed = op(leftVal, rightVal);
+
+        const passed = await op(leftVal, rightVal);
         return {
           passed,
           details: `${condition.left}(${leftVal}) ${condition.operator} ${condition.right ?? ''}(${rightVal ?? ''})`,
         };
       }
     }
-    
+
     return { passed: false, details: 'Invalid condition format' };
   } catch (error) {
     return { passed: false, details: `Condition error: ${error.message}` };
@@ -181,17 +243,17 @@ export function evaluateCondition(condition, context) {
 /**
  * Evaluate a single expression string
  */
-function evaluateExpression(expression, context) {
+async function evaluateExpression(expression, context) {
   const parsed = parseExpression(expression);
   const leftVal = resolveValue(parsed.left, context);
   const rightVal = parsed.right !== undefined ? resolveValue(parsed.right, context) : undefined;
   const op = OPERATORS[parsed.operator];
-  
+
   if (!op) {
     return { passed: false, details: `Unknown operator: ${parsed.operator}` };
   }
-  
-  const passed = op(leftVal, rightVal);
+
+  const passed = await op(leftVal, rightVal);
   return {
     passed,
     details: `${parsed.left}(${JSON.stringify(leftVal)}) ${parsed.operator} ${parsed.right ?? ''}`,

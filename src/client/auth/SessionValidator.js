@@ -148,8 +148,8 @@ export class SessionValidator {
         const name = mainPart.slice(0, eqIndex).trim();
         const value = mainPart.slice(eqIndex + 1).trim();
         if (name === 'ct0' && value) {
-          this._cookieAuth.set('ct0', value);
-          this._tokenManager.refreshCsrf(value);
+          this._cookieAuth.setCookies([{ name: 'ct0', value }]);
+          this._tokenManager.setCsrfToken(value);
         }
       }
     }

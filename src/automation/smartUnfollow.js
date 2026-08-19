@@ -123,6 +123,12 @@
         continue;
       }
 
+      // Skip if protected (active engager tracked by protectActiveUsers.js)
+      if (window.XActions.ActiveUsers?.isProtected(username)) {
+        log(`Skipping protected active user: @${username}`, 'info');
+        continue;
+      }
+
       // Skip if not expired yet
       if (!isExpired(data.followedAt)) {
         const daysLeft = OPTIONS.DAYS_TO_WAIT - ((Date.now() - data.followedAt) / (1000 * 60 * 60 * 24));

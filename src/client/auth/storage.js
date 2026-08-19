@@ -13,6 +13,7 @@ import { promises as fs } from 'node:fs';
 import { homedir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { CookieAuth } from './CookieAuth.js';
+import { TokenManager } from './TokenManager.js';
 
 const CONFIG_DIR = join(homedir(), '.xactions');
 const CONFIG_FILE = join(CONFIG_DIR, 'config.json');
@@ -75,7 +76,7 @@ export async function saveCookiesToConfig(cookieAuth, username) {
   }
 
   config.sessions[username] = {
-    cookies: cookieAuth.getAll(),
+    cookies: cookieAuth.getCookies(),
     created: new Date().toISOString(),
     lastUsed: new Date().toISOString(),
   };
@@ -104,8 +105,8 @@ export async function loadCookiesFromConfig(username) {
   config.activeSession = username;
   await writeConfig(config);
 
-  const auth = CookieAuth.fromObject(session.cookies);
-  auth.setUsername(username);
+  const auth = new CookieAuth(new TokenManager());
+  auth.setCookies(session.cookies);
   return auth;
 }
 

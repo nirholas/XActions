@@ -37,13 +37,8 @@ const errorResponse = (res, statusCode, error, message, extras = {}) => {
 
 // Require session cookie for monitoring
 router.use(async (req, res, next) => {
-  // Skip for certain read-only endpoints
-  if (req.path.startsWith('/snapshot/') && req.method === 'GET') {
-    return next();
-  }
-  
   const sessionCookie = req.body.sessionCookie || req.headers['x-session-cookie'];
-  
+
   if (!sessionCookie) {
     return res.status(400).json({
       error: 'SESSION_REQUIRED',
@@ -52,8 +47,14 @@ router.use(async (req, res, next) => {
       docs: 'https://xactions.app/docs/ai-api#authentication',
     });
   }
-  
+
   req.sessionCookie = sessionCookie;
+  // This route family authenticates callers by raw X session cookie, not a
+  // platform JWT — there is no req.user. The hash of that cookie is the only
+  // available tenant boundary, so every AccountSnapshot read/write/delete is
+  // scoped by it to prevent one caller from reading/deleting another
+  // caller's monitoring data.
+  req.ownerHash = crypto.createHash('sha256').update(sessionCookie).digest('hex');
   next();
 });
 
@@ -250,7 +251,7 @@ router.get('/snapshot/:username', async (req, res) => {
   
   try {
     const { getLatestSnapshot } = await import('../../services/monitoring.js');
-    const snapshot = await getLatestSnapshot(cleanUsername);
+    const snapshot = await getLatestSnapshot(cleanUsername, 'full', req.ownerHash);
     
     if (!snapshot) {
       return res.status(404).json({
@@ -304,52 +305,53 @@ router.post('/compare', async (req, res) => {
   }
   
   try {
-    const { compareSnapshots } = await import('../../services/monitoring.js');
-    const comparison = await compareSnapshots({
-      username: username?.replace(/^@/, '').toLowerCase(),
-      snapshotId1,
-      snapshotId2,
-    });
-    
+    const { compareSnapshots, listSnapshots } = await import('../../services/monitoring.js');
+    const cleanUsername = username?.replace(/^@/, '').toLowerCase();
+
+    let id1 = snapshotId1;
+    let id2 = snapshotId2;
+
+    if (!id1 || !id2) {
+      const recent = await listSnapshots(cleanUsername, 2, req.ownerHash);
+      if (recent.length < 2) {
+        return res.status(404).json({
+          error: 'NOT_FOUND',
+          message: `Need at least 2 snapshots for @${cleanUsername} to compare`,
+        });
+      }
+      id2 = recent[0].id; // most recent
+      id1 = recent[1].id; // previous
+    }
+
+    const comparison = await compareSnapshots(id1, id2, req.ownerHash);
+
     if (!comparison) {
       return res.status(404).json({
         error: 'NOT_FOUND',
         message: 'Could not find snapshots to compare',
       });
     }
-    
+
     res.json({
       success: true,
       data: {
-        username: comparison.username,
+        username: cleanUsername || null,
         comparison: {
-          from: {
-            snapshotId: comparison.snapshot1.id,
-            createdAt: comparison.snapshot1.createdAt,
-            followerCount: comparison.snapshot1.followerCount,
-            followingCount: comparison.snapshot1.followingCount,
-          },
-          to: {
-            snapshotId: comparison.snapshot2.id,
-            createdAt: comparison.snapshot2.createdAt,
-            followerCount: comparison.snapshot2.followerCount,
-            followingCount: comparison.snapshot2.followingCount,
-          },
+          snapshotId1: id1,
+          snapshotId2: id2,
+          timespan: comparison.timespan,
           changes: {
             followers: {
-              gained: comparison.followersGained || [],
-              lost: comparison.followersLost || [],
-              netChange: (comparison.followersGained?.length || 0) - (comparison.followersLost?.length || 0),
+              gained: comparison.followers.gained,
+              lost: comparison.followers.lost,
+              netChange: comparison.followers.gained.length - comparison.followers.lost.length,
             },
             following: {
-              added: comparison.followingAdded || [],
-              removed: comparison.followingRemoved || [],
-              netChange: (comparison.followingAdded?.length || 0) - (comparison.followingRemoved?.length || 0),
+              added: comparison.following.added,
+              removed: comparison.following.removed,
+              netChange: comparison.following.added.length - comparison.following.removed.length,
             },
-          },
-          timeBetween: {
-            ms: Date.parse(comparison.snapshot2.createdAt) - Date.parse(comparison.snapshot1.createdAt),
-            human: comparison.timeBetweenHuman,
+            profile: comparison.profile.changes,
           },
         },
       },
@@ -391,7 +393,7 @@ router.post('/alert/new-followers', async (req, res) => {
     const currentUsernames = new Set((current.users || []).map(u => u.username.toLowerCase()));
     
     // Get previous snapshot
-    const previous = await getLatestSnapshot(cleanUsername);
+    const previous = await getLatestSnapshot(cleanUsername, 'full', req.ownerHash);
     
     let newFollowers = [];
     let lostFollowers = [];
@@ -419,7 +421,7 @@ router.post('/alert/new-followers', async (req, res) => {
     await saveSnapshot(cleanUsername, {
       followers: (current.users || []).map(u => u.username.toLowerCase()),
       followerCount: current.users?.length || 0,
-    });
+    }, 'full', req.ownerHash);
     
     res.json({
       success: true,
@@ -462,7 +464,7 @@ router.delete('/snapshot/:username', async (req, res) => {
   
   try {
     const { deleteSnapshots } = await import('../../services/monitoring.js');
-    const deleted = await deleteSnapshots(cleanUsername);
+    const deleted = await deleteSnapshots(cleanUsername, req.ownerHash);
     
     res.json({
       success: true,
@@ -490,6 +492,7 @@ router.get('/list', async (req, res) => {
     const { listMonitoredAccounts } = await import('../../services/monitoring.js');
     const accounts = await listMonitoredAccounts({
       limit: Math.min(parseInt(limit) || 50, 200),
+      ownerHash: req.ownerHash,
     });
     
     res.json({

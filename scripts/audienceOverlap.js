@@ -31,6 +31,23 @@
 
   const datasets = {};
 
+  // ⚠️ IMPORTANT: window.location.href navigation destroys the JS context,
+  // so progress is tracked in sessionStorage and the script resumes on re-paste.
+  const STATE_KEY = 'xactions_audience_overlap';
+
+  const getState = () => {
+    try { return JSON.parse(sessionStorage.getItem(STATE_KEY)); }
+    catch { return null; }
+  };
+
+  const setState = (state) => {
+    sessionStorage.setItem(STATE_KEY, JSON.stringify(state));
+  };
+
+  const clearState = () => {
+    sessionStorage.removeItem(STATE_KEY);
+  };
+
   const scrapeFollowers = async (label) => {
     const followers = new Map();
     for (let round = 0; round < CONFIG.scrollRounds && followers.size < CONFIG.maxFollowers; round++) {
@@ -103,11 +120,16 @@
   };
 
   const analyze = async (accountA, accountB) => {
-    const acctA = accountA || CONFIG.accounts[0];
-    const acctB = accountB || CONFIG.accounts[1];
-    if (acctA === 'accountA' || acctB === 'accountB') {
-      console.log('❌ Set real account names in CONFIG or pass to analyze("acctA","acctB")');
-      return;
+    let state = getState();
+
+    if (!state) {
+      const acctA = accountA || CONFIG.accounts[0];
+      const acctB = accountB || CONFIG.accounts[1];
+      if (acctA === 'accountA' || acctB === 'accountB') {
+        console.log('❌ Set real account names in CONFIG or pass to analyze("acctA","acctB")');
+        return;
+      }
+      state = { acctA, acctB, stage: 'scrapeA', datasets: {} };
     }
 
     console.log('╔════════════════════════════════════════════════╗');
@@ -115,18 +137,36 @@
     console.log('║  by nichxbt — v1.0                            ║');
     console.log('╚════════════════════════════════════════════════╝');
 
-    console.log(`\n📊 Scraping @${acctA}'s followers...`);
-    window.location.href = `https://x.com/${acctA}/followers`;
-    await sleep(4000);
-    datasets[acctA] = await scrapeFollowers(acctA);
-    console.log(`  ✅ @${acctA}: ${datasets[acctA].size} followers\n`);
+    const { acctA, acctB } = state;
+    const currentPath = window.location.pathname.toLowerCase();
+    const target = state.stage === 'scrapeA' ? acctA : acctB;
+    const targetPath = `/${target.toLowerCase()}/followers`;
 
-    console.log(`📊 Scraping @${acctB}'s followers...`);
-    window.location.href = `https://x.com/${acctB}/followers`;
-    await sleep(4000);
-    datasets[acctB] = await scrapeFollowers(acctB);
-    console.log(`  ✅ @${acctB}: ${datasets[acctB].size} followers\n`);
+    if (!currentPath.startsWith(targetPath)) {
+      console.log(`\n📊 Scraping @${target}'s followers...`);
+      console.log(`🔗 Navigating to https://x.com/${target}/followers — re-paste this script after the page loads.\n`);
+      setState(state);
+      window.location.href = `https://x.com/${target}/followers`;
+      return;
+    }
 
+    await sleep(4000);
+    const followers = await scrapeFollowers(target);
+    state.datasets[target] = [...followers.entries()];
+    console.log(`  ✅ @${target}: ${followers.size} followers\n`);
+
+    if (state.stage === 'scrapeA') {
+      state.stage = 'scrapeB';
+      setState(state);
+      console.log(`📊 Scraping @${acctB}'s followers...`);
+      console.log(`🔗 Navigating to https://x.com/${acctB}/followers — re-paste this script after the page loads.\n`);
+      window.location.href = `https://x.com/${acctB}/followers`;
+      return;
+    }
+
+    datasets[acctA] = new Map(state.datasets[acctA]);
+    datasets[acctB] = new Map(state.datasets[acctB]);
+    clearState();
     compare();
   };
 

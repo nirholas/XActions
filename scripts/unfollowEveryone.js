@@ -13,7 +13,7 @@
   const CONFIG = {
     maxUnfollows: Infinity,   // Cap total unfollows (e.g. 50 for testing)
     whitelist: [],            // Usernames to never unfollow (without @)
-    dryRun: false,            // Preview without acting
+    dryRun: true,             // Preview without acting — SET FALSE TO RUN
     delay: 2000,              // ms between unfollows
     scrollDelay: 2000,        // ms to wait after scroll
     maxEmptyScrolls: 8,       // Give up after N scrolls with no new users

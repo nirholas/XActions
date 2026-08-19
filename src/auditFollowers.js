@@ -121,6 +121,12 @@
     }
 
     const all = [...followers.values()];
+
+    if (all.length === 0) {
+      console.error('❌ No followers collected — nothing to audit.');
+      return;
+    }
+
     const legitimate = all.filter(f => f.category === 'legitimate');
     const suspicious = all.filter(f => f.category === 'suspicious');
     const fakes = all.filter(f => f.category === 'likely-fake');

@@ -31,13 +31,14 @@ const THREADS_BASE = 'https://www.threads.net';
 export async function createBrowser(options = {}) {
   return puppeteer.launch({
     headless: options.headless !== false ? 'new' : false,
+    ...options,
     args: [
       '--no-sandbox',
       '--disable-setuid-sandbox',
       '--disable-blink-features=AutomationControlled',
       '--disable-web-security',
+      ...(options.args || []),
     ],
-    ...options,
   });
 }
 

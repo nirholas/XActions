@@ -4,7 +4,7 @@ import { getTwitterClient } from '../../routes/twitter.js';
 
 const prisma = new PrismaClient();
 
-async function processUnfollowNonFollowers({ operationId, userId, config }) {
+async function processUnfollowNonFollowers({ operationId, userId, config }, isCancelled = () => false) {
   try {
     // Update operation status
     await prisma.operation.update({
@@ -42,6 +42,11 @@ async function processUnfollowNonFollowers({ operationId, userId, config }) {
 
     // Check each following to see if they follow back
     for (const followedUser of following) {
+      if (isCancelled()) {
+        console.log(`🛑 Job ${operationId} cancelled`);
+        break;
+      }
+
       if (unfollowedCount >= maxUnfollows) break;
 
       try {
@@ -83,7 +88,8 @@ async function processUnfollowNonFollowers({ operationId, userId, config }) {
       unfollowedCount: dryRun ? 0 : unfollowedCount,
       nonFollowersFound: nonFollowers.length,
       nonFollowers: nonFollowers.slice(0, 50), // Return first 50
-      dryRun
+      dryRun,
+      cancelled: isCancelled()
     };
   } catch (error) {
     console.error('❌ Unfollow non-followers error:', error);

@@ -1,7 +1,7 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 import browserAutomation from '../../browserAutomation.js';
 
-async function unfollowEveryoneBrowser(userId, config, updateProgress) {
+async function unfollowEveryoneBrowser(userId, config, updateProgress, isCancelled = () => false) {
   const page = await browserAutomation.createPage(config.sessionCookie);
   
   try {
@@ -34,8 +34,13 @@ async function unfollowEveryoneBrowser(userId, config, updateProgress) {
     const limit = config.limit || following.length;
 
     for (let i = 0; i < Math.min(following.length, limit); i++) {
+      if (isCancelled()) {
+        updateProgress('Job cancelled by user');
+        break;
+      }
+
       const user = following[i];
-      
+
       updateProgress(`Unfollowing ${user.username} (${i + 1}/${Math.min(following.length, limit)})`);
 
       const result = await browserAutomation.unfollowUser(page, user.username);
@@ -66,7 +71,8 @@ async function unfollowEveryoneBrowser(userId, config, updateProgress) {
       success: true,
       unfollowed,
       failed,
-      totalProcessed: unfollowed.length + failed.length
+      totalProcessed: unfollowed.length + failed.length,
+      cancelled: isCancelled()
     };
 
   } finally {

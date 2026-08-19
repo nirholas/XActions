@@ -74,9 +74,9 @@ async function loadGraph(graphId) {
 }
 
 /**
- * List all saved graphs
+ * List all saved graphs, optionally scoped to a single owner
  */
-async function listGraphs() {
+async function listGraphs(userId) {
   await ensureDir();
   try {
     const files = await fs.readdir(GRAPHS_DIR);
@@ -86,9 +86,11 @@ async function listGraphs() {
       try {
         const raw = await fs.readFile(path.join(GRAPHS_DIR, file), 'utf-8');
         const data = JSON.parse(raw);
+        if (userId && data.userId !== userId) continue;
         graphs.push({
           id: data.id,
           seed: data.seed,
+          userId: data.userId || null,
           nodesCount: data.nodes?.length || 0,
           edgesCount: data.edges?.length || 0,
           status: data.metadata?.status || 'unknown',
@@ -136,10 +138,10 @@ async function get(graphId) {
 }
 
 /**
- * List all graphs
+ * List all graphs, optionally scoped to a single owner
  */
-async function list() {
-  return listGraphs();
+async function list(userId) {
+  return listGraphs(userId);
 }
 
 /**

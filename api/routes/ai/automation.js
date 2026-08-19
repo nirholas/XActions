@@ -33,10 +33,24 @@ const requireSession = (req, res) => {
 /** @param {import('express').Response} res @param {string} operationId @param {string} type @param {Record<string, unknown>} config */
 const queueOperation = async (res, operationId, type, config) => {
   try {
-    const { queueJob } = await import('../../services/jobQueue.js');
+    const { queueJob, REGISTERED_JOB_TYPES } = await import('../../services/jobQueue.js');
+    if (!REGISTERED_JOB_TYPES.has(type)) {
+      // Bull's queue.add() does not throw for a type with no registered processor — the
+      // job would just sit in 'waiting' forever, so we must reject it here instead of
+      // reporting a fake 'queued' success.
+      return res.status(501).json({
+        success: false,
+        error: 'NO_PROCESSOR_REGISTERED',
+        message: `Operation type '${type}' has no worker registered yet and cannot be queued`,
+      });
+    }
     await queueJob({ id: operationId, type, config, status: 'queued' });
-  } catch {
-    // Job queue unavailable — accepted anyway
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      error: 'QUEUE_FAILED',
+      message: err.message || `Failed to queue operation ${type}`,
+    });
   }
   return res.json({
     success: true,

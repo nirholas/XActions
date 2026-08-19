@@ -98,7 +98,7 @@ export async function runWorkflow(workflow, options = {}) {
       try {
         if (step.condition) {
           // --- Condition Step ---
-          const evaluation = evaluateCondition(step.condition, context);
+          const evaluation = await evaluateCondition(step.condition, context);
           stepLog.result = evaluation;
           stepLog.status = 'completed';
           

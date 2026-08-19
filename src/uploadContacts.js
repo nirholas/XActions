@@ -164,8 +164,7 @@
 
     if (!disconnectBtn) {
       // Try alternative selectors
-      disconnectBtn = document.querySelector('[aria-label*="isconnect"], [aria-label*="Remove"]') ||
-                      document.querySelector('button');
+      disconnectBtn = document.querySelector('[aria-label*="isconnect"], [aria-label*="Remove"]');
 
       // Look through buttons for disconnect text
       const buttons = document.querySelectorAll('button, [role="button"]');

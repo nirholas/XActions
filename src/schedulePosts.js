@@ -92,18 +92,36 @@
           const dateInput = document.querySelector($scheduleDateInput);
           const timeInput = document.querySelector($scheduleTimeInput);
 
+          const pad = (n) => String(n).padStart(2, '0');
+          const dateStr = `${schedDate.getFullYear()}-${pad(schedDate.getMonth() + 1)}-${pad(schedDate.getDate())}`;
+          const timeStr = `${pad(schedDate.getHours())}:${pad(schedDate.getMinutes())}`;
+
           if (dateInput) {
             dateInput.click();
             await sleep(500);
             // Set the value through the picker
+            dateInput.value = dateStr;
+            dateInput.dispatchEvent(new Event('input', { bubbles: true }));
+            dateInput.dispatchEvent(new Event('change', { bubbles: true }));
+            await sleep(300);
+          }
+
+          if (timeInput) {
+            timeInput.value = timeStr;
+            timeInput.dispatchEvent(new Event('input', { bubbles: true }));
+            timeInput.dispatchEvent(new Event('change', { bubbles: true }));
+            await sleep(300);
           }
 
           // Confirm schedule
           const confirmBtn = document.querySelector($scheduleConfirm);
-          if (confirmBtn) {
+          if (confirmBtn && dateInput && timeInput) {
             confirmBtn.click();
             results.scheduled.push(post);
             console.log(`✅ Scheduled for ${schedDate.toLocaleString()}`);
+          } else {
+            console.warn('⚠️ Could not set schedule date/time');
+            results.failed.push(post);
           }
         } else {
           console.warn('⚠️ Native scheduler not available (Premium feature)');

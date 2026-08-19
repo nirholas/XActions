@@ -271,6 +271,17 @@ export function computeInfluenceScores(graph, iterations = 20, dampingFactor = 0
   for (let iter = 0; iter < iterations; iter++) {
     const newScores = new Map();
 
+    // Dangling nodes (no outgoing edges) don't pass their score to any
+    // specific neighbor — redistribute their mass evenly across all nodes,
+    // as standard PageRank does.
+    let danglingScore = 0;
+    for (const node of nodes) {
+      const targets = outgoing.get(node);
+      if (!targets || targets.size === 0) {
+        danglingScore += scores.get(node) || 0;
+      }
+    }
+
     for (const node of nodes) {
       let incomingScore = 0;
 
@@ -283,6 +294,8 @@ export function computeInfluenceScores(graph, iterations = 20, dampingFactor = 0
           }
         }
       }
+
+      incomingScore += danglingScore / n;
 
       newScores.set(node, (1 - dampingFactor) / n + dampingFactor * incomingScore);
     }

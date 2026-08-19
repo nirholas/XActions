@@ -83,10 +83,15 @@ async function addJob(type, data, options = {}) {
  * Queue job (legacy function for backward compatibility)
  */
 async function queueJob(jobData) {
-  const job = await operationsQueue.add(jobData.type, jobData, {
-    priority: jobData.priority || 10
+  // Callers key the operation record by `id` (or `operationId`); normalize onto
+  // job.data.operationId and Bull's jobId so downstream event handlers can find it.
+  const operationId = jobData.operationId || jobData.id;
+
+  const job = await operationsQueue.add(jobData.type, { ...jobData, operationId }, {
+    priority: jobData.priority || 10,
+    ...(operationId ? { jobId: operationId } : {})
   });
-  
+
   console.log(`📨 Job queued: ${job.id} (${jobData.type})`);
   return job;
 }
@@ -139,6 +144,42 @@ async function getJob(jobId) {
 async function getHistory(userId, limit = 50) {
   const operations = await prisma.operation.findMany({
     where: { userId },
+    orderBy: { createdAt: 'desc' },
+    take: limit,
+    select: {
+      id: true,
+      type: true,
+      status: true,
+      config: true,
+      result: true,
+      error: true,
+      createdAt: true,
+      startedAt: true,
+      completedAt: true,
+      retryCount: true
+    }
+  });
+
+  return operations;
+}
+
+/**
+ * Get job status (alias of getJob used by API routes)
+ * @param {string} jobId - The operation/job ID
+ */
+async function getJobStatus(jobId) {
+  return getJob(jobId);
+}
+
+/**
+ * Get recent jobs across users, optionally filtered by type
+ * @param {object} filter
+ * @param {string} [filter.type] - Job type to filter by
+ * @param {number} [filter.limit] - Max results (default 20)
+ */
+async function getRecentJobs({ type, limit = 20 } = {}) {
+  const operations = await prisma.operation.findMany({
+    where: type ? { type } : {},
     orderBy: { createdAt: 'desc' },
     take: limit,
     select: {
@@ -391,10 +432,16 @@ operationsQueue.on('progress', (job, progress) => {
 operationsQueue.on('completed', async (job, result) => {
   console.log(`✅ Job completed: ${job.id}`);
 
-  await prisma.operation.update({
-    where: { id: job.data.operationId },
-    data: { status: 'completed', completedAt: new Date(), result },
-  });
+  if (job.data.operationId) {
+    try {
+      await prisma.operation.update({
+        where: { id: job.data.operationId },
+        data: { status: 'completed', completedAt: new Date(), result },
+      });
+    } catch (err) {
+      console.warn(`⚠️  Could not mark operation ${job.data.operationId} completed: ${err.message}`);
+    }
+  }
 
   global.io?.to(`job:${job.data.operationId}`).emit('job:completed', {
     jobId: job.data.operationId,
@@ -414,10 +461,16 @@ operationsQueue.on('completed', async (job, result) => {
 operationsQueue.on('failed', async (job, err) => {
   console.error(`❌ Job failed: ${job.id}`, err);
 
-  await prisma.operation.update({
-    where: { id: job.data.operationId },
-    data: { status: 'failed', error: err.message, retryCount: job.attemptsMade },
-  });
+  if (job.data.operationId) {
+    try {
+      await prisma.operation.update({
+        where: { id: job.data.operationId },
+        data: { status: 'failed', error: err.message, retryCount: job.attemptsMade },
+      });
+    } catch (updateErr) {
+      console.warn(`⚠️  Could not mark operation ${job.data.operationId} failed: ${updateErr.message}`);
+    }
+  }
 
   global.io?.to(`job:${job.data.operationId}`).emit('job:failed', {
     jobId: job.data.operationId,
@@ -476,12 +529,31 @@ process.on('SIGINT',  () => gracefulShutdown('SIGINT'));
 // Periodic cleanup of cancelled job markers
 setInterval(cleanupCancelledJobs, 3600000); // Every hour
 
+// Job type names that actually have an operationsQueue.process() handler registered above.
+// Bull's queue.add() does not throw for an unregistered type — the job just sits in
+// 'waiting' forever — so callers must check this before enqueueing and telling a user
+// their job is 'queued'.
+const REGISTERED_JOB_TYPES = new Set([
+  'unfollowNonFollowers',
+  'unfollowEveryone',
+  'detectUnfollowers',
+  'autoLike',
+  'followEngagers',
+  'keywordFollow',
+  'autoComment',
+  'scriptRun',
+  'datasetFetch',
+]);
+
 export {
   addJob,
   queueJob,
   getJob,
+  getJobStatus,
   getHistory,
+  getRecentJobs,
   cancelJob,
   isJobCancelled,
-  operationsQueue
+  operationsQueue,
+  REGISTERED_JOB_TYPES
 };

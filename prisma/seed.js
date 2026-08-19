@@ -26,31 +26,38 @@ async function main() {
 
   console.log('✅ Created demo user:', demoUser.email);
 
-  // Create sample operations for demo user
-  await prisma.operation.createMany({
-    data: [
-      {
-        userId: demoUser.id,
-        type: 'unfollowNonFollowers',
-        status: 'completed',
-        unfollowedCount: 25,
-        creditsUsed: 10,
-        startedAt: new Date(Date.now() - 86400000 * 2),
-        completedAt: new Date(Date.now() - 86400000 * 2 + 3600000)
-      },
-      {
-        userId: demoUser.id,
-        type: 'detectUnfollowers',
-        status: 'completed',
-        unfollowedCount: 5,
-        creditsUsed: 5,
-        startedAt: new Date(Date.now() - 86400000),
-        completedAt: new Date(Date.now() - 86400000 + 1800000)
-      }
-    ]
+  // Create sample operations for demo user (skip if already seeded)
+  const existingOperations = await prisma.operation.count({
+    where: { userId: demoUser.id }
   });
 
-  console.log('✅ Created sample operations');
+  if (existingOperations === 0) {
+    await prisma.operation.createMany({
+      data: [
+        {
+          userId: demoUser.id,
+          type: 'unfollowNonFollowers',
+          status: 'completed',
+          unfollowedCount: 25,
+          creditsUsed: 10,
+          startedAt: new Date(Date.now() - 86400000 * 2),
+          completedAt: new Date(Date.now() - 86400000 * 2 + 3600000)
+        },
+        {
+          userId: demoUser.id,
+          type: 'detectUnfollowers',
+          status: 'completed',
+          unfollowedCount: 5,
+          creditsUsed: 5,
+          startedAt: new Date(Date.now() - 86400000),
+          completedAt: new Date(Date.now() - 86400000 + 1800000)
+        }
+      ]
+    });
+    console.log('✅ Created sample operations');
+  } else {
+    console.log('ℹ️ Sample operations already exist, skipping');
+  }
   console.log('🌟 Seeding completed!');
 }
 

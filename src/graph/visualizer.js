@@ -128,12 +128,25 @@ export function toGEXF(graph) {
 export function toHTML(graph) {
   const d3Data = toD3(graph);
 
+  const escapeHtml = (str) =>
+    String(str || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+
+  const safeJSON = (obj) =>
+    JSON.stringify(obj)
+      .replace(/</g, '\\u003c')
+      .replace(/>/g, '\\u003e')
+      .replace(/&/g, '\\u0026');
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Social Graph: @${graph.seed} — XActions</title>
+<title>Social Graph: @${escapeHtml(graph.seed)} — XActions</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { background: #000; color: #e7e9ea; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; overflow: hidden; }
@@ -159,7 +172,7 @@ export function toHTML(graph) {
 </head>
 <body>
 <div id="controls">
-  <h2>📊 @${graph.seed}</h2>
+  <h2>📊 @${escapeHtml(graph.seed)}</h2>
   <p>${d3Data.nodes.length} accounts · ${d3Data.links.length} connections</p>
   <input type="text" id="search" placeholder="Search accounts...">
   <label><input type="checkbox" id="showLabels" checked> Show labels</label>
@@ -176,7 +189,7 @@ export function toHTML(graph) {
 
 <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
 <script>
-const graphData = ${JSON.stringify(d3Data)};
+const graphData = ${safeJSON(d3Data)};
 
 const svg = d3.select('svg');
 const width = window.innerWidth;

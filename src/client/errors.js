@@ -187,11 +187,15 @@ export class TwitterApiError extends ScraperError {
 
       const mapped = TWITTER_ERROR_MAP[code];
       if (mapped) {
-        return new mapped.ErrorClass(mapped.message, mapped.code || 'API_ERROR', {
+        const errorOptions = {
           ...context,
           twitterErrorCode: code,
           twitterMessage: message,
-        });
+        };
+        if (mapped.ErrorClass === RateLimitError) {
+          return new mapped.ErrorClass(mapped.message, errorOptions);
+        }
+        return new mapped.ErrorClass(mapped.message, mapped.code || 'API_ERROR', errorOptions);
       }
 
       return new TwitterApiError(message, {

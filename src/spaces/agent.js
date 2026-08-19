@@ -159,7 +159,16 @@ export async function joinSpace(args = {}) {
     activeAgent = null;
   });
 
-  await agent.join(args.url);
+  try {
+    await agent.join(args.url);
+  } catch (err) {
+    try {
+      await agent.leave();
+    } catch {
+      // ignore cleanup errors — surface the original join failure
+    }
+    throw err;
+  }
   activeAgent = { agent, url: args.url, joinedAt: Date.now(), events };
 
   return {

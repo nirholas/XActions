@@ -146,14 +146,21 @@ const PROTECTED_USER_RAW = {
   },
 };
 
-/** Wrap a user result in the full GraphQL response envelope */
+/**
+ * Wrap a user result the way TwitterHttpClient#graphql() actually resolves it:
+ * `{ data: json, cursor }` where `json` is the raw GraphQL response body
+ * (itself `{ data: {...}, errors: [...] }` per the GraphQL spec).
+ */
 function wrapGraphQLResponse(userResult) {
   return {
     data: {
-      user: {
-        result: userResult,
+      data: {
+        user: {
+          result: userResult,
+        },
       },
     },
+    cursor: null,
   };
 }
 

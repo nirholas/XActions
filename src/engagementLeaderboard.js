@@ -103,13 +103,17 @@
       const tweet = withReplies[i];
       console.log(`   [${i + 1}/${withReplies.length}] Checking replies for: "${tweet.text.slice(0, 40)}..."`);
 
-      // Navigate to tweet
-      const origUrl = window.location.href;
-      window.location.href = 'https://x.com' + tweet.href;
+      // Open tweet in a new tab — navigating the current tab would destroy this script's execution context
+      const popup = window.open('https://x.com' + tweet.href, '_blank');
+      if (!popup) {
+        console.warn(`   ⚠️  Popup blocked — allow popups for x.com to analyze replies. Skipping.`);
+        processed.push({ ...tweet, repliersFound: 0 });
+        continue;
+      }
       await sleep(3000);
 
       // Collect visible repliers
-      const replyArticles = document.querySelectorAll('article[data-testid="tweet"]');
+      const replyArticles = popup.document.querySelectorAll('article[data-testid="tweet"]');
       let count = 0;
 
       for (const article of replyArticles) {
@@ -136,9 +140,9 @@
 
       processed.push({ ...tweet, repliersFound: count - 1 });
 
-      // Go back
-      window.history.back();
-      await sleep(2000);
+      // Close the tab
+      popup.close();
+      await sleep(1000);
     }
 
     return { replierMap, processed };

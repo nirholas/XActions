@@ -264,7 +264,6 @@ export async function getLatestTweet(http, userId) {
  */
 export async function sendTweet(http, text, options = {}) {
   const endpoint = GRAPHQL_ENDPOINTS.CreateTweet;
-  const url = endpoint.url(endpoint.queryId);
 
   const variables = {
     tweet_text: text,
@@ -283,6 +282,7 @@ export async function sendTweet(http, text, options = {}) {
     };
   }
 
+  const url = buildGraphQLUrl(endpoint, variables);
   const body = {
     variables,
     features: DEFAULT_FEATURES,
@@ -314,7 +314,6 @@ export async function sendTweet(http, text, options = {}) {
  */
 export async function sendQuoteTweet(http, text, quotedTweetId, mediaIds = []) {
   const endpoint = GRAPHQL_ENDPOINTS.CreateTweet;
-  const url = endpoint.url(endpoint.queryId);
 
   const variables = {
     tweet_text: text,
@@ -327,6 +326,7 @@ export async function sendQuoteTweet(http, text, quotedTweetId, mediaIds = []) {
     semantic_annotation_ids: [],
   };
 
+  const url = buildGraphQLUrl(endpoint, variables);
   const body = {
     variables,
     features: DEFAULT_FEATURES,
@@ -357,11 +357,9 @@ export async function sendQuoteTweet(http, text, quotedTweetId, mediaIds = []) {
  */
 export async function deleteTweet(http, tweetId) {
   const endpoint = GRAPHQL_ENDPOINTS.DeleteTweet;
-  const url = endpoint.url(endpoint.queryId);
-  const body = {
-    variables: { tweet_id: tweetId, dark_request: false },
-    queryId: endpoint.queryId,
-  };
+  const variables = { tweet_id: tweetId, dark_request: false };
+  const url = buildGraphQLUrl(endpoint, variables);
+  const body = { variables, queryId: endpoint.queryId };
   await http.post(url, body);
 }
 
@@ -374,11 +372,9 @@ export async function deleteTweet(http, tweetId) {
  */
 export async function likeTweet(http, tweetId) {
   const endpoint = GRAPHQL_ENDPOINTS.FavoriteTweet;
-  const url = endpoint.url(endpoint.queryId);
-  const body = {
-    variables: { tweet_id: tweetId },
-    queryId: endpoint.queryId,
-  };
+  const variables = { tweet_id: tweetId };
+  const url = buildGraphQLUrl(endpoint, variables);
+  const body = { variables, queryId: endpoint.queryId };
   await http.post(url, body);
 }
 
@@ -391,11 +387,9 @@ export async function likeTweet(http, tweetId) {
  */
 export async function unlikeTweet(http, tweetId) {
   const endpoint = GRAPHQL_ENDPOINTS.UnfavoriteTweet;
-  const url = endpoint.url(endpoint.queryId);
-  const body = {
-    variables: { tweet_id: tweetId },
-    queryId: endpoint.queryId,
-  };
+  const variables = { tweet_id: tweetId };
+  const url = buildGraphQLUrl(endpoint, variables);
+  const body = { variables, queryId: endpoint.queryId };
   await http.post(url, body);
 }
 
@@ -408,11 +402,9 @@ export async function unlikeTweet(http, tweetId) {
  */
 export async function retweet(http, tweetId) {
   const endpoint = GRAPHQL_ENDPOINTS.CreateRetweet;
-  const url = endpoint.url(endpoint.queryId);
-  const body = {
-    variables: { tweet_id: tweetId, dark_request: false },
-    queryId: endpoint.queryId,
-  };
+  const variables = { tweet_id: tweetId, dark_request: false };
+  const url = buildGraphQLUrl(endpoint, variables);
+  const body = { variables, queryId: endpoint.queryId };
   await http.post(url, body);
 }
 
@@ -425,10 +417,8 @@ export async function retweet(http, tweetId) {
  */
 export async function unretweet(http, tweetId) {
   const endpoint = GRAPHQL_ENDPOINTS.DeleteRetweet;
-  const url = endpoint.url(endpoint.queryId);
-  const body = {
-    variables: { source_tweet_id: tweetId, dark_request: false },
-    queryId: endpoint.queryId,
-  };
+  const variables = { source_tweet_id: tweetId, dark_request: false };
+  const url = buildGraphQLUrl(endpoint, variables);
+  const body = { variables, queryId: endpoint.queryId };
   await http.post(url, body);
 }

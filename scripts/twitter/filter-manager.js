@@ -295,6 +295,20 @@
       if (filters.bio.enabled && filters.bio.required && !userData.bio) {
         failures.push('no bio');
       }
+      if (filters.bio.enabled) {
+        const bio = userData.bio || '';
+        if (filters.bio.minLength > 0 && bio.length < filters.bio.minLength) {
+          failures.push(`bio shorter than ${filters.bio.minLength} chars`);
+        }
+        if (filters.bio.keywords.length > 0) {
+          const hasKeyword = filters.bio.keywords.some(kw => bio.toLowerCase().includes(kw.toLowerCase()));
+          if (!hasKeyword) failures.push('bio missing required keywords');
+        }
+        if (filters.bio.excludeKeywords.length > 0) {
+          const hasExcluded = filters.bio.excludeKeywords.some(kw => bio.toLowerCase().includes(kw.toLowerCase()));
+          if (hasExcluded) failures.push('bio contains excluded keywords');
+        }
+      }
       
       // Profile pic
       if (filters.profilePic.enabled && filters.profilePic.required && !userData.hasProfilePic) {

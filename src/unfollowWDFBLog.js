@@ -252,7 +252,15 @@
 
         // Execute unfollow
         const btn = $(SEL.unfollowBtn, cell);
-        if (!btn) { errors++; consecutiveErrors++; continue; }
+        if (!btn) {
+          errors++;
+          consecutiveErrors++;
+          if (consecutiveErrors >= CONFIG.maxConsecutiveErrors) {
+            console.error(`❌ ${CONFIG.maxConsecutiveErrors} consecutive errors — aborting.`);
+            break;
+          }
+          continue;
+        }
 
         try {
           btn.click();

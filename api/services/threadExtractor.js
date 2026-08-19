@@ -109,6 +109,16 @@ export async function closePool() {
 const threadCache = new Map();
 const CACHE_TTL = 24 * 60 * 60 * 1000;
 
+// Cleanup expired entries periodically so tweet IDs requested once and never
+// looked up again don't accumulate forever.
+const cacheCleanupInterval = setInterval(() => {
+  const now = Date.now();
+  for (const [tweetId, entry] of threadCache) {
+    if (now - entry.timestamp > CACHE_TTL) threadCache.delete(tweetId);
+  }
+}, CACHE_TTL);
+if (cacheCleanupInterval.unref) cacheCleanupInterval.unref();
+
 /**
  * Parse a tweet URL and extract the tweet ID and username
  * @param {string} url - Twitter/X URL

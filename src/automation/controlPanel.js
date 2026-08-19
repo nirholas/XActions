@@ -673,6 +673,11 @@
         if (keepVerified && user.isVerified) continue;
         // Keep keyword matches
         if (keepKeywords.length > 0 && keepKeywords.some(kw => (user.bio || '').toLowerCase().includes(kw))) continue;
+        // Skip if protected (active engager tracked by protectActiveUsers.js)
+        if (window.XActions.ActiveUsers?.isProtected(user.username)) {
+          panelLog(`Skipping protected active user: @${user.username}`, 'info');
+          continue;
+        }
 
         const unfollowBtn = cell.querySelector(SELECTORS.unfollowButton);
         if (unfollowBtn) {

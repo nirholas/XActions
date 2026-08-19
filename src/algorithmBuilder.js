@@ -369,24 +369,37 @@ async function browseHome(page) {
 async function likeTweet(page, tweetIndex = null) {
   try {
     const likeButtons = await page.$$(SELECTORS.likeButton);
-    if (likeButtons.length === 0) return false;
+    if (likeButtons.length === 0) return null;
 
     const idx = tweetIndex ?? randomBetween(0, Math.min(likeButtons.length - 1, 5));
     const btn = likeButtons[idx];
-    if (!btn) return false;
+    if (!btn) return null;
 
-    // Get tweet info for logging
-    const tweets = await extractVisibleTweets(page);
-    const tweet = tweets[idx];
+    // Get info for the tweet that actually owns this like button
+    const tweet = await page.evaluate((el, sel) => {
+      const tweetEl = el.closest(sel.tweet);
+      if (!tweetEl) return null;
+      const text = tweetEl.querySelector(sel.tweetText)?.textContent || '';
+      const links = tweetEl.querySelectorAll('a[role="link"]');
+      let author = '';
+      for (const link of links) {
+        const href = link.getAttribute('href');
+        if (href && href.startsWith('/') && !href.includes('/status/') && href.split('/').length === 2) {
+          author = href.slice(1);
+          break;
+        }
+      }
+      return { text, author };
+    }, btn, SELECTORS);
 
     const clicked = await humanClick(page, btn);
     if (clicked) {
       log('❤️', `Liked tweet by @${tweet?.author || 'unknown'}: "${(tweet?.text || '').slice(0, 60)}..."`);
     }
     await randomDelay(TIMING.BETWEEN_ACTIONS);
-    return clicked;
+    return clicked ? tweet : null;
   } catch {
-    return false;
+    return null;
   }
 }
 
@@ -667,7 +680,6 @@ async function runSession(page, persona, plan) {
   // Collect tweets and users as we browse
   let collectedTweets = [];
   let collectedUsers = [];
-  let tweetCursor = 0;
   let userCursor = 0;
 
   for (const activity of plan.activities) {
@@ -707,13 +719,12 @@ async function runSession(page, persona, plan) {
           }
 
           // Like a tweet on the current page
-          const liked = await likeTweet(page);
-          if (liked) {
+          const likedTweet = await likeTweet(page);
+          if (likedTweet) {
             stats.likes++;
-            // Mark as engaged
-            if (collectedTweets[tweetCursor]) {
-              persona.state.engagedPosts.add(collectedTweets[tweetCursor].text.slice(0, 50));
-              tweetCursor++;
+            // Mark as engaged using the tweet that was actually liked
+            if (likedTweet.text) {
+              persona.state.engagedPosts.add(likedTweet.text.slice(0, 50));
             }
           }
           break;

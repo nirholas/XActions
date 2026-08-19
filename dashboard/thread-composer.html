@@ -151,7 +151,7 @@
         html += `
           <div class="tweet-editor${i === activeIndex ? ' active' : ''}" data-index="${i}">
             <div class="tweet-num">${i + 1}/${tweets.length}</div>
-            <textarea placeholder="${i === 0 ? 'Start your thread...' : 'Continue the thread...'}" data-index="${i}">${tweet.text}</textarea>
+            <textarea placeholder="${i === 0 ? 'Start your thread...' : 'Continue the thread...'}" data-index="${i}">${escapeHtml(tweet.text)}</textarea>
             <div class="tweet-meta">
               <span class="char-count${isOver ? ' over' : ''}">${charCount}/${MAX_CHARS}</span>
               <div class="tweet-actions">

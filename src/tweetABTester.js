@@ -118,16 +118,19 @@
 
   // ── Measure engagement from tweet page ─────────────────────
   const measureTweet = async (url) => {
-    const origUrl = window.location.href;
-
-    window.location.href = url;
+    // Open tweet in a new tab — navigating the current tab would destroy this script's execution context
+    const popup = window.open(url, '_blank');
+    if (!popup) {
+      console.log('  ⚠️ Popup blocked — allow popups for x.com to measure tweets. Skipping.');
+      return null;
+    }
     await sleep(4000);
 
-    const article = document.querySelector('article[data-testid="tweet"]');
+    const article = popup.document.querySelector('article[data-testid="tweet"]');
     if (!article) {
       console.log('  ⚠️ Could not load tweet. Returning...');
-      window.location.href = origUrl;
-      await sleep(2000);
+      popup.close();
+      await sleep(1000);
       return null;
     }
 
@@ -147,8 +150,8 @@
     metrics.totalEngagement = metrics.likes + metrics.retweets + metrics.replies;
     metrics.engagementRate = metrics.views > 0 ? (metrics.totalEngagement / metrics.views * 100) : 0;
 
-    window.location.href = origUrl;
-    await sleep(2000);
+    popup.close();
+    await sleep(1000);
     return metrics;
   };
 

@@ -52,6 +52,21 @@
   const sleep = (ms) => new Promise(r => setTimeout(r, ms));
   const randomDelay = () => Math.floor(Math.random() * (CONFIG.maxDelay - CONFIG.minDelay + 1)) + CONFIG.minDelay;
 
+  // Navigate within the SPA via history.pushState + a synthetic popstate.
+  // Assigning window.location.href triggers a full page reload, which wipes
+  // this console script's entire execution context mid-run.
+  const spaNavigate = (url) => {
+    try {
+      const target = new URL(url, window.location.href);
+      if (target.origin === window.location.origin) {
+        window.history.pushState({}, '', target.href);
+        window.dispatchEvent(new PopStateEvent('popstate', { state: {} }));
+        return;
+      }
+    } catch (e) { /* fall through to hard navigation */ }
+    window.location.href = url;
+  };
+
   const waitForElement = async (selector, timeout = 10000) => {
     const selectors = Array.isArray(selector) ? selector : [selector];
     const start = Date.now();
@@ -116,7 +131,7 @@
   const followUser = async (username) => {
     // Navigate to profile
     const profileUrl = `https://x.com/${username}`;
-    window.location.href = profileUrl;
+    spaNavigate(profileUrl);
     await sleep(CONFIG.navigationDelay);
 
     // Check for account issues

@@ -53,10 +53,10 @@ function createMocks() {
         'x-csrf-token': 'csrf123',
         Cookie: 'ct0=csrf123; auth_token=at123',
       })),
-      refreshCsrf: vi.fn(),
+      setCsrfToken: vi.fn(),
     },
     cookieAuth: {
-      set: vi.fn(),
+      setCookies: vi.fn(),
     },
     fetch: vi.fn(),
   };
@@ -230,8 +230,8 @@ describe('SessionValidator', () => {
       const result = await validator.validateAndRefreshCsrf();
 
       expect(result.valid).toBe(true);
-      expect(mocks.cookieAuth.set).toHaveBeenCalledWith('ct0', 'newcsrf123');
-      expect(mocks.tokenManager.refreshCsrf).toHaveBeenCalledWith('newcsrf123');
+      expect(mocks.cookieAuth.setCookies).toHaveBeenCalledWith([{ name: 'ct0', value: 'newcsrf123' }]);
+      expect(mocks.tokenManager.setCsrfToken).toHaveBeenCalledWith('newcsrf123');
     });
 
     it('returns valid=false on 401', async () => {
@@ -258,8 +258,8 @@ describe('SessionValidator', () => {
 
       await validator.validateAndRefreshCsrf();
 
-      expect(mocks.cookieAuth.set).not.toHaveBeenCalled();
-      expect(mocks.tokenManager.refreshCsrf).not.toHaveBeenCalled();
+      expect(mocks.cookieAuth.setCookies).not.toHaveBeenCalled();
+      expect(mocks.tokenManager.setCsrfToken).not.toHaveBeenCalled();
     });
   });
 

@@ -54,7 +54,6 @@
     smart: {
       noAvatar: true,                 // Remove users with default avatar
       noBio: true,                    // Remove users with empty bio
-      followingRatioAbove: 20,        // Remove if following/followers > N
       nameHasNumbers: false,          // Remove if name mostly numbers
     },
   };

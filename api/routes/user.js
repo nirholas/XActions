@@ -159,6 +159,11 @@ router.delete('/account', async (req, res) => {
 
     res.json({ message: 'Account deleted successfully' });
   } catch (error) {
+    if (error.code === 'P2003') {
+      return res.status(400).json({
+        error: 'Account has existing payment, subscription, or operation records and cannot be deleted'
+      });
+    }
     console.error('❌ Account deletion error:', error);
     res.status(500).json({ error: 'Failed to delete account' });
   }

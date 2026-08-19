@@ -385,7 +385,7 @@
 ╠═══════════════════════════════════════════════════════════╣
 ║                                                           ║
 ║  Account: @${account.username.padEnd(20)}                 ║
-║  Password: ${account.password.substring(0, 3)}${'*'.repeat(account.password.length - 3).padEnd(17)}                 ║
+║  Password: ${account.password.substring(0, 3)}${'*'.repeat(Math.max(0, account.password.length - 3)).padEnd(17)}                 ║
 ║                                                           ║
 ║  Please log in manually, then run your automation.        ║
 ║                                                           ║

@@ -68,7 +68,10 @@
     console.log(`Keywords: ${CONFIG.keywords.length ? CONFIG.keywords.join(', ') : 'all'}`);
     console.log('');
 
-    while (actionCount < CONFIG.maxActions) {
+    let noNewItems = 0;
+
+    while (actionCount < CONFIG.maxActions && noNewItems < 5) {
+      const prevProcessed = processed.size;
       const tweets = document.querySelectorAll(SELECTORS.tweet);
 
       for (const tweet of tweets) {
@@ -112,6 +115,9 @@
         }
       }
 
+      if (processed.size === prevProcessed) noNewItems++;
+      else noNewItems = 0;
+
       // Scroll for more tweets
       window.scrollBy(0, 1000);
       await sleep(2000);
@@ -121,6 +127,10 @@
         console.log('⚠️ No more tweets found');
         break;
       }
+    }
+
+    if (noNewItems >= 5) {
+      console.log('⚠️ No new tweets after multiple scrolls');
     }
 
     console.log(`\n🎉 Done! ${actionCount} actions completed.`);

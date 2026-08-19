@@ -2354,6 +2354,25 @@ async function executeTool(name, args) {
 }
 
 /**
+ * Resolve the handle of the account the active session is logged in as, by
+ * reading the profile link X renders in its own nav bar — the same selector
+ * the browser-paste scripts (e.g. src/automation/controlPanel.js) use to find
+ * "my" account. Needed because scraping "/me/following" is not a real X route.
+ */
+async function resolveOwnUsername() {
+  const page = await localTools.getPage();
+  await page.goto('https://x.com/home', { waitUntil: 'networkidle2', timeout: 30000 });
+  const username = await page.evaluate(() => {
+    const link = document.querySelector('a[data-testid="AppTabBar_Profile_Link"]');
+    return link?.getAttribute('href')?.replace('/', '') || null;
+  });
+  if (!username) {
+    throw new Error('Could not determine the authenticated username — make sure the session is logged in');
+  }
+  return username;
+}
+
+/**
  * Execute xeepy-ported tools (scrapers, follow/unfollow automation, engagement, AI, monitoring)
  * Ported from github.com/nirholas/xeepy — Python → JavaScript
  */
@@ -2531,7 +2550,11 @@ async function executeXeepyTool(name, args) {
         if (!username || seen.has(username)) continue;
         seen.add(username);
         if (args.mustHaveBio || args.mustHaveAvatar || args.minFollowers || args.maxFollowers) {
-          // Apply filters — would need profile scrape for full filtering
+          const profile = await localTools.x_get_profile?.({ username }).catch(() => null);
+          if (args.mustHaveBio && !profile?.bio) continue;
+          if (args.mustHaveAvatar && (!profile?.avatar || profile.avatar.includes('default_profile'))) continue;
+          if (args.minFollowers && (profile?.followers || 0) < args.minFollowers) continue;
+          if (args.maxFollowers && (profile?.followers || 0) > args.maxFollowers) continue;
         }
         try {
           await localTools.x_follow?.({ username });
@@ -2543,13 +2566,41 @@ async function executeXeepyTool(name, args) {
     }
 
     case 'x_follow_engagers': {
+      const limit = args.limit || 10;
+      const engagementType = args.engagementType || 'all';
       const tweets = await localTools.x_get_tweets?.({ username: args.username, limit: 10 });
+      const tweetList = Array.isArray(tweets) ? tweets : (tweets?.tweets || []);
+
       const engagers = new Set();
+      for (const tweet of tweetList.slice(0, 5)) {
+        if (engagers.size >= limit || !tweet.url) continue;
+        try {
+          if (engagementType === 'likers' || engagementType === 'all') {
+            const r = await executeXeepyTool('x_get_likers', { tweetUrl: tweet.url, limit });
+            (r.likers || []).forEach(u => { if (u.username) engagers.add(u.username); });
+          }
+          if (engagementType === 'retweeters' || engagementType === 'all') {
+            const r = await executeXeepyTool('x_get_retweeters', { tweetUrl: tweet.url, limit });
+            (r.retweeters || []).forEach(u => { if (u.username) engagers.add(u.username); });
+          }
+          if (engagementType === 'repliers' || engagementType === 'all') {
+            const r = await executeXeepyTool('x_get_replies', { tweetUrl: tweet.url, limit });
+            (r.replies || []).forEach(rp => {
+              const match = (rp.author || '').match(/@(\w+)/);
+              if (match) engagers.add(match[1]);
+            });
+          }
+        } catch (e) { /* skip tweet */ }
+      }
+
       const followed = [];
-      // Simplified — follow repliers from recent tweets
-      for (const tweet of (tweets?.tweets || []).slice(0, 5)) {
-        if (followed.length >= (args.limit || 10)) break;
-        // Would scrape replies for full implementation
+      for (const username of engagers) {
+        if (followed.length >= limit) break;
+        try {
+          await localTools.x_follow?.({ username });
+          followed.push(username);
+          await new Promise(r => setTimeout(r, (args.delay || 3) * 1000));
+        } catch (e) { /* skip failed follows */ }
       }
       return { followed, count: followed.length, source: args.username };
     }
@@ -2559,9 +2610,10 @@ async function executeXeepyTool(name, args) {
       if (!args.confirm) {
         return { error: 'Must set confirm: true to mass unfollow everyone' };
       }
-      const following = await localTools.x_get_following?.({ username: 'me', limit: args.limit || 1000 });
+      const myUsername = await resolveOwnUsername();
+      const following = await localTools.x_get_following?.({ username: myUsername, limit: args.limit || 1000 });
       const unfollowed = [];
-      for (const user of (following?.users || [])) {
+      for (const user of (following || [])) {
         try {
           await localTools.x_unfollow?.({ username: user.username });
           unfollowed.push(user.username);
@@ -2573,15 +2625,54 @@ async function executeXeepyTool(name, args) {
 
     case 'x_smart_unfollow': {
       // Get following list, then filter by criteria
-      const following = await localTools.x_get_following?.({ username: 'me', limit: 500 });
-      const toUnfollow = [];
-      
+      const myUsername = await resolveOwnUsername();
+      const following = (await localTools.x_get_following?.({ username: myUsername, limit: 500 })) || [];
+
       if (args.dryRun) {
-        return { message: `Dry run — would analyze ${following?.users?.length || 0} accounts with criteria: ${args.criteria}`, criteria: args.criteria };
+        return { message: `Dry run — would analyze ${following.length} accounts with criteria: ${args.criteria}`, criteria: args.criteria };
       }
-      
+
+      const inactiveDays = args.inactiveDays || 90;
+      const toUnfollow = [];
+      for (const user of following) {
+        if (toUnfollow.length >= (args.limit || 20)) break;
+        let matches = false;
+        switch (args.criteria) {
+          case 'no_bio':
+            matches = !user.bio;
+            break;
+          case 'no_engagement':
+            matches = !user.followsBack;
+            break;
+          case 'no_avatar': {
+            const profile = await localTools.x_get_profile?.({ username: user.username }).catch(() => null);
+            matches = !profile?.avatar;
+            break;
+          }
+          case 'high_following_ratio': {
+            const profile = await localTools.x_get_profile?.({ username: user.username }).catch(() => null);
+            matches = !!profile?.followers && (profile.following / profile.followers) > 10;
+            break;
+          }
+          case 'inactive': {
+            const tweets = await localTools.x_get_tweets?.({ username: user.username, limit: 1 }).catch(() => null);
+            const tweetList = Array.isArray(tweets) ? tweets : (tweets?.tweets || []);
+            const last = tweetList[0]?.timestamp;
+            matches = !last || (Date.now() - new Date(last).getTime()) / 86400000 > inactiveDays;
+            break;
+          }
+          case 'spam':
+            matches = !user.bio && !user.followsBack;
+            break;
+          case 'off_niche':
+          default:
+            matches = false;
+        }
+        if (matches) toUnfollow.push(user);
+      }
+
       const unfollowed = [];
-      for (const user of toUnfollow.slice(0, args.limit || 20)) {
+      for (const user of toUnfollow) {
         try {
           await localTools.x_unfollow?.({ username: user.username });
           unfollowed.push(user.username);
@@ -3358,20 +3449,20 @@ async function executeCompetitiveTool(name, args) {
     // ── 09-C: CRM ──
     case 'x_crm_sync': {
       const { syncFollowers } = await import('../analytics/followerCRM.js');
-      return await syncFollowers(args.username);
+      return await syncFollowers('', args.username);
     }
     case 'x_crm_tag': {
       const { tagContact } = await import('../analytics/followerCRM.js');
-      tagContact(args.username, args.tag);
+      tagContact('', args.username, args.tag);
       return { status: 'tagged', username: args.username, tag: args.tag };
     }
     case 'x_crm_search': {
       const { searchContacts } = await import('../analytics/followerCRM.js');
-      return searchContacts(args.query);
+      return searchContacts('', args.query);
     }
     case 'x_crm_segment': {
       const { getSegment } = await import('../analytics/followerCRM.js');
-      return getSegment(args.name);
+      return getSegment('', args.name);
     }
 
     // ── 09-D: Bulk Operations ──
@@ -3619,7 +3710,7 @@ async function executePersonaTool(name, args) {
         authToken,
         headless: args.headless !== false,
         dryRun: args.dryRun || false,
-        maxSessions: args.sessions || 1, // Default 1 session for MCP (not infinite)
+        maxSessions: args.sessions ?? 1, // Default 1 session for MCP; 0 = infinite
       });
 
       return {

@@ -173,7 +173,7 @@ export function createA2AServer(options = {}) {
 
   // ------- Auth (optional) -------
   if (enableAuth) {
-    const auth = createAuthMiddleware({ allowUnauthenticated: true });
+    const auth = createAuthMiddleware({ required: true });
     app.use('/a2a', auth);
   }
 
@@ -283,10 +283,9 @@ export function createA2AServer(options = {}) {
       return res.status(404).json(jsonRpcError(null, ERROR_CODES.TASK_NOT_FOUND, 'Task not found'));
     }
 
-    // Append incoming message to task history
+    // Append incoming message via the store's event-emitting update path
     if (req.body?.params?.message) {
-      task.history = task.history || [];
-      task.history.push(req.body.params.message);
+      await taskStore.addMessage(taskId, req.body.params.message);
     }
 
     res.json(jsonRpcSuccess(null, { taskId, accepted: true }));

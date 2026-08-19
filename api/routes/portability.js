@@ -47,6 +47,7 @@ router.post('/export', async (req, res) => {
     const job = {
       id: jobId,
       type: 'export',
+      userId: req.user.id,
       username: username.replace(/^@/, ''),
       status: 'queued',
       progress: null,
@@ -105,7 +106,7 @@ router.post('/export', async (req, res) => {
 
 router.get('/export/:id', (req, res) => {
   const job = jobs.get(req.params.id);
-  if (!job) {
+  if (!job || job.userId !== req.user.id) {
     return res.status(404).json({ error: 'Job not found' });
   }
   res.json({
@@ -125,7 +126,7 @@ router.get('/export/:id', (req, res) => {
 
 router.get('/export/:id/download', async (req, res) => {
   const job = jobs.get(req.params.id);
-  if (!job) {
+  if (!job || job.userId !== req.user.id) {
     return res.status(404).json({ error: 'Job not found' });
   }
   if (job.status !== 'completed' || !job.result?.dir) {
@@ -158,10 +159,15 @@ router.post('/migrate', async (req, res) => {
     }
 
     // Find export directory
+    const exportsRoot = path.join(process.cwd(), 'exports');
     let dir = exportDir;
-    if (!dir) {
+    if (dir) {
+      dir = path.resolve(path.join(exportsRoot, dir));
+      if (!dir.startsWith(exportsRoot + path.sep) && dir !== exportsRoot) {
+        return res.status(403).json({ error: 'Access denied' });
+      }
+    } else {
       const user = username.replace(/^@/, '');
-      const exportsRoot = path.join(process.cwd(), 'exports');
       try {
         const dirs = await fs.readdir(exportsRoot);
         const match = dirs.filter((d) => d.startsWith(user + '_')).sort().pop();
@@ -201,8 +207,18 @@ router.post('/diff', async (req, res) => {
       return res.status(400).json({ error: 'dirA and dirB are required' });
     }
 
+    const exportsRoot = path.join(process.cwd(), 'exports');
+    const resolvedA = path.resolve(path.join(exportsRoot, dirA));
+    const resolvedB = path.resolve(path.join(exportsRoot, dirB));
+    if (
+      (!resolvedA.startsWith(exportsRoot + path.sep) && resolvedA !== exportsRoot) ||
+      (!resolvedB.startsWith(exportsRoot + path.sep) && resolvedB !== exportsRoot)
+    ) {
+      return res.status(403).json({ error: 'Access denied' });
+    }
+
     const { diffAndReport } = await import('../../src/portability/differ.js');
-    const { diff, report } = await diffAndReport(dirA, dirB);
+    const { diff, report } = await diffAndReport(resolvedA, resolvedB);
 
     res.json({ summary: diff.summary, diff, report });
   } catch (error) {

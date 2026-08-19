@@ -23,7 +23,7 @@ import express from 'express';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { authMiddleware, optionalAuthMiddleware } from '../middleware/auth.js';
+import { authMiddleware } from '../middleware/auth.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -44,7 +44,7 @@ let agentStartedAt = null;
  * GET /api/agent/status
  * Returns running status, uptime, and basic stats
  */
-router.get('/status', optionalAuthMiddleware, (req, res) => {
+router.get('/status', authMiddleware, (req, res) => {
   try {
     const running = agentInstance !== null;
     const uptime = running && agentStartedAt ? Date.now() - agentStartedAt : 0;
@@ -82,7 +82,7 @@ router.get('/status', optionalAuthMiddleware, (req, res) => {
  * GET /api/agent/metrics?days=7
  * Returns daily metrics over a time period
  */
-router.get('/metrics', optionalAuthMiddleware, (req, res) => {
+router.get('/metrics', authMiddleware, (req, res) => {
   try {
     const days = Math.min(parseInt(/** @type {string} */ (req.query.days)) || 7, 90);
 
@@ -107,7 +107,7 @@ router.get('/metrics', optionalAuthMiddleware, (req, res) => {
  * GET /api/agent/actions?limit=50&offset=0&type=like
  * Returns paginated action log
  */
-router.get('/actions', optionalAuthMiddleware, (req, res) => {
+router.get('/actions', authMiddleware, (req, res) => {
   try {
     const limit = Math.min(parseInt(/** @type {string} */ (req.query.limit)) || 50, 200);
     const offset = parseInt(/** @type {string} */ (req.query.offset)) || 0;
@@ -136,7 +136,7 @@ router.get('/actions', optionalAuthMiddleware, (req, res) => {
  * GET /api/agent/llm-usage?days=7
  * Returns LLM token usage and estimated cost
  */
-router.get('/llm-usage', optionalAuthMiddleware, (req, res) => {
+router.get('/llm-usage', authMiddleware, (req, res) => {
   try {
     const days = Math.min(parseInt(/** @type {string} */ (req.query.days)) || 7, 90);
 
@@ -237,7 +237,12 @@ router.post('/start', authMiddleware, async (req, res) => {
       return res.status(400).json({ error: 'Agent is already running' });
     }
 
-    const configPath = req.body.configPath || path.resolve('data', 'agent-config.json');
+    const DATA_ROOT = path.resolve('data');
+    const configName = req.body.configPath ? path.basename(req.body.configPath) : 'agent-config.json';
+    const configPath = path.resolve(DATA_ROOT, configName);
+    if (!configPath.startsWith(DATA_ROOT + path.sep) && configPath !== DATA_ROOT) {
+      return res.status(403).json({ error: 'Access denied' });
+    }
 
     if (!fs.existsSync(configPath)) {
       return res.status(400).json({
@@ -334,7 +339,7 @@ router.post('/feed-score', authMiddleware, async (req, res) => {
  * GET /api/agent/report?days=30
  * Comprehensive growth report
  */
-router.get('/report', optionalAuthMiddleware, (req, res) => {
+router.get('/report', authMiddleware, (req, res) => {
   try {
     const days = Math.min(parseInt(/** @type {string} */ (req.query.days)) || 30, 90);
 
@@ -359,7 +364,7 @@ router.get('/report', optionalAuthMiddleware, (req, res) => {
  * GET /api/agent/schedule
  * Today's scheduled activities
  */
-router.get('/schedule', optionalAuthMiddleware, (req, res) => {
+router.get('/schedule', authMiddleware, (req, res) => {
   try {
     if (!agentInstance?.scheduler) {
       return res.json({ schedule: [], message: 'Agent not running' });
@@ -391,7 +396,7 @@ router.get('/schedule', optionalAuthMiddleware, (req, res) => {
  * GET /api/agent/content?limit=20
  * Content created by the agent
  */
-router.get('/content', optionalAuthMiddleware, (req, res) => {
+router.get('/content', authMiddleware, (req, res) => {
   try {
     const limit = Math.min(parseInt(/** @type {string} */ (req.query.limit)) || 20, 100);
 

@@ -14,6 +14,8 @@
 
 import { Router } from 'express';
 import { errorResponse } from '../utils/errorResponse.js';
+import { createAuthMiddleware } from '../../src/a2a/auth.js';
+import { isSafeWebhookUrl } from '../services/unfollowerAlerts.js';
 
 const router = Router();
 
@@ -53,7 +55,7 @@ router.get('/skills', async (req, res) => {
  *   callbackUrl {string}  optional  Webhook URL — result is POSTed here on completion
  *   contextId   {string}  optional  Conversation/thread ID for multi-step workflows
  */
-router.post('/task', async (req, res) => {
+router.post('/task', createAuthMiddleware({ required: true }), async (req, res) => {
   const { id, skill, input, callbackUrl, contextId } = req.body;
 
   if (!skill) {
@@ -62,13 +64,8 @@ router.post('/task', async (req, res) => {
   if (!input || typeof input !== 'object' || Array.isArray(input)) {
     return errorResponse(res, 400, 'INVALID_INPUT', 'input must be a plain object', { retryable: false });
   }
-  if (callbackUrl) {
-    try {
-      const u = new URL(callbackUrl);
-      if (!['http:', 'https:'].includes(u.protocol)) throw new Error();
-    } catch {
-      return errorResponse(res, 400, 'INVALID_INPUT', 'callbackUrl must be a valid http/https URL', { retryable: false });
-    }
+  if (callbackUrl && !(await isSafeWebhookUrl(callbackUrl))) {
+    return errorResponse(res, 400, 'INVALID_INPUT', 'callbackUrl must be a valid http/https URL that does not resolve to a private/internal address', { retryable: false });
   }
 
   try {

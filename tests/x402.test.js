@@ -15,76 +15,14 @@
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
 import request from 'supertest';
 import express from 'express';
-
-// Mock the x402 middleware for isolated testing
-const mockX402Middleware = (req, res, next) => {
-  if (!req.path.startsWith('/api/ai/')) {
-    return next();
-  }
-  
-  // Health check is free
-  if (req.path === '/api/ai/health') {
-    return next();
-  }
-  
-  const paymentHeader = req.headers['x-payment'] || req.headers['payment-signature'];
-  
-  if (!paymentHeader) {
-    const paymentRequired = {
-      x402Version: 2,
-      error: 'Payment required for AI agent access',
-      accepts: [{
-        scheme: 'exact',
-        price: '$0.001',
-        network: 'eip155:84532',
-        payTo: '0xTestAddress',
-      }],
-    };
-    
-    const encodedRequirements = Buffer.from(JSON.stringify(paymentRequired)).toString('base64');
-    
-    res.status(402);
-    res.set('PAYMENT-REQUIRED', encodedRequirements);
-    res.set('Content-Type', 'application/json');
-    
-    return res.json({
-      error: 'Payment Required',
-      message: 'This endpoint requires payment. AI agents must include X-PAYMENT header.',
-      price: '$0.001',
-      network: 'eip155:84532',
-      payTo: '0xTestAddress',
-      humanAlternative: 'Use free browser scripts at https://xactions.app/features',
-      docs: 'https://xactions.app/docs/ai-api',
-    });
-  }
-  
-  // Payment provided - validate format
-  try {
-    const paymentPayload = JSON.parse(Buffer.from(paymentHeader, 'base64').toString('utf-8'));
-    
-    if (!paymentPayload.x402Version || !paymentPayload.scheme || !paymentPayload.payload) {
-      return res.status(402).json({
-        error: 'Invalid payment format',
-        message: 'Payment payload must include x402Version, scheme, and payload',
-      });
-    }
-    
-    // Mock successful verification
-    req.x402 = { verified: true, price: '$0.001' };
-    next();
-  } catch (e) {
-    return res.status(402).json({
-      error: 'Payment processing failed',
-      message: e.message,
-    });
-  }
-};
+import { x402Middleware } from '../api/middleware/x402.js';
+import { createMockPayment, encodePayment, createInvalidPayment } from './x402-mock-payment.js';
 
 // Create test app
 function createTestApp() {
   const app = express();
   app.use(express.json());
-  app.use(mockX402Middleware);
+  app.use(x402Middleware);
   
   // AI endpoints (protected)
   app.post('/api/ai/scrape/profile', (req, res) => {
@@ -200,17 +138,17 @@ describe('x402 AI API', () => {
         .send({ username: 'test' });
       
       expect(res.status).toBe(402);
-      expect(res.headers['payment-required']).toBeDefined();
-      expect(res.body.error).toBe('Payment Required');
+      // The official @x402/express SDK uses x-payment-requirements; keep the
+      // legacy header name as a fallback for backwards compatibility.
+      expect(res.headers['x-payment-requirements'] || res.headers['payment-required']).toBeDefined();
     });
-    
+
     it('returns 402 for AI scrape/followers endpoint', async () => {
       const res = await request(app)
         .post('/api/ai/scrape/followers')
         .send({ username: 'test', limit: 100 });
-      
+
       expect(res.status).toBe(402);
-      expect(res.body.error).toBe('Payment Required');
     });
     
     it('returns 402 for AI scrape/tweets endpoint', async () => {
@@ -237,145 +175,96 @@ describe('x402 AI API', () => {
       expect(res.status).toBe(402);
     });
     
-    it('includes payment requirements in response body', async () => {
+    it('includes payment requirements header with base64-encoded requirements', async () => {
       const res = await request(app)
         .post('/api/ai/scrape/profile')
         .send({ username: 'test' });
-      
-      expect(res.body.price).toBeDefined();
-      expect(res.body.network).toBe('eip155:84532');
-      expect(res.body.payTo).toBe('0xTestAddress');
-      expect(res.body.humanAlternative).toContain('xactions.app');
-      expect(res.body.docs).toContain('xactions.app');
-    });
-    
-    it('includes PAYMENT-REQUIRED header with base64-encoded requirements', async () => {
-      const res = await request(app)
-        .post('/api/ai/scrape/profile')
-        .send({ username: 'test' });
-      
-      const paymentRequiredHeader = res.headers['payment-required'];
-      expect(paymentRequiredHeader).toBeDefined();
-      
+
+      const header = res.headers['x-payment-requirements'] || res.headers['payment-required'];
+      expect(header).toBeDefined();
+
       // Decode and verify structure
-      const decoded = JSON.parse(Buffer.from(paymentRequiredHeader, 'base64').toString('utf-8'));
-      expect(decoded.x402Version).toBe(2);
+      const decoded = JSON.parse(Buffer.from(header, 'base64').toString('utf-8'));
       expect(decoded.accepts).toBeInstanceOf(Array);
-      expect(decoded.accepts[0].scheme).toBe('exact');
-      expect(decoded.accepts[0].price).toBeDefined();
-      expect(decoded.accepts[0].network).toBeDefined();
-      expect(decoded.accepts[0].payTo).toBeDefined();
+      expect(decoded.accepts.length).toBeGreaterThan(0);
+
+      const accept = decoded.accepts[0];
+      expect(accept.scheme).toBe('exact');
+      expect(accept.network).toMatch(/^eip155:\d+$/);
+      expect(accept.payTo).toMatch(/^0x[a-fA-F0-9]{40}$/);
+      // x402 v2 renamed the v1 `maxAmountRequired` field to `amount`.
+      // Accept either so this passes against both protocol versions.
+      expect(accept.amount ?? accept.maxAmountRequired).toBeDefined();
     });
   });
   
-  describe('With valid payment', () => {
-    const createValidPayment = () => {
-      const payment = {
-        x402Version: 2,
-        scheme: 'exact',
-        network: 'eip155:84532',
-        payload: {
-          signature: '0xMockSignature',
-          from: '0xTestPayer',
-          to: '0xTestAddress',
-          value: '1000',
-          validAfter: 0,
-          validBefore: Math.floor(Date.now() / 1000) + 3600,
-          nonce: '0x1234567890abcdef',
-        },
-      };
-      return Buffer.from(JSON.stringify(payment)).toString('base64');
-    };
-    
-    it('returns 200 for AI scrape/profile with valid payment', async () => {
+  describe('With a well-formed but unverifiable payment', () => {
+    // A syntactically valid payload with a fabricated signature. Real
+    // verification goes through the facilitator against the chain, so —
+    // same as the "Payment Verification" section of x402-integration.test.js —
+    // this can only be proven to be rejected, never accepted. Producing a
+    // genuinely accepted payment would require an actual signed USDC
+    // transfer, which no unit test can fake.
+    it('rejects a payment with a fabricated signature', async () => {
       const res = await request(app)
         .post('/api/ai/scrape/profile')
-        .set('X-PAYMENT', createValidPayment())
+        .set('X-PAYMENT', encodePayment(createMockPayment()))
         .send({ username: 'test' });
-      
-      expect(res.status).toBe(200);
-      expect(res.body.success).toBe(true);
-      expect(res.body.data.username).toBe('test');
+
+      expect([400, 402]).toContain(res.status);
     });
-    
-    it('returns 200 for AI scrape/followers with valid payment', async () => {
-      const res = await request(app)
-        .post('/api/ai/scrape/followers')
-        .set('X-PAYMENT', createValidPayment())
-        .send({ username: 'test', limit: 100 });
-      
-      expect(res.status).toBe(200);
-      expect(res.body.success).toBe(true);
-      expect(res.body.data.followers).toBeInstanceOf(Array);
-    });
-    
-    it('returns 200 for AI action endpoints with valid payment', async () => {
+
+    it('rejects a fabricated payment on AI action endpoints', async () => {
       const res = await request(app)
         .post('/api/ai/action/unfollow-non-followers')
-        .set('X-PAYMENT', createValidPayment())
+        .set('X-PAYMENT', encodePayment(createMockPayment()))
         .send({ maxUnfollows: 50 });
-      
-      expect(res.status).toBe(200);
-      expect(res.body.success).toBe(true);
-      expect(res.body.data.operationId).toBeDefined();
-      expect(res.body.data.status).toBe('queued');
+
+      expect([400, 402]).toContain(res.status);
     });
-    
-    it('accepts payment via PAYMENT-SIGNATURE header (alternative)', async () => {
+
+    it('parses payment via the PAYMENT-SIGNATURE header (alternative) without crashing', async () => {
       const res = await request(app)
         .post('/api/ai/scrape/profile')
-        .set('PAYMENT-SIGNATURE', createValidPayment())
+        .set('PAYMENT-SIGNATURE', encodePayment(createMockPayment()))
         .send({ username: 'test' });
-      
-      expect(res.status).toBe(200);
-      expect(res.body.success).toBe(true);
-    });
-    
-    it('indicates payment was verified in response metadata', async () => {
-      const res = await request(app)
-        .post('/api/ai/scrape/profile')
-        .set('X-PAYMENT', createValidPayment())
-        .send({ username: 'test' });
-      
-      expect(res.body.meta.paid).toBe(true);
+
+      // Won't be 200 (no real signature), but the alternate header must
+      // still be recognized and parsed rather than crashing the server.
+      expect(res.status).toBeLessThan(500);
     });
   });
   
   describe('With invalid payment', () => {
-    it('returns 402 for malformed base64 payment', async () => {
+    it('rejects malformed base64 payment without crashing', async () => {
       const res = await request(app)
         .post('/api/ai/scrape/profile')
         .set('X-PAYMENT', 'not-valid-base64!!!')
         .send({ username: 'test' });
-      
-      expect(res.status).toBe(402);
-      expect(res.body.error).toContain('failed');
+
+      expect(res.status).toBeLessThan(500);
+      expect(res.status).not.toBe(200);
     });
-    
-    it('returns 402 for payment missing required fields', async () => {
-      const invalidPayment = Buffer.from(JSON.stringify({
-        x402Version: 2,
-        // missing scheme and payload
-      })).toString('base64');
-      
+
+    it('rejects payment missing required fields', async () => {
       const res = await request(app)
         .post('/api/ai/scrape/profile')
-        .set('X-PAYMENT', invalidPayment)
+        .set('X-PAYMENT', encodePayment(createInvalidPayment('missing-payload')))
         .send({ username: 'test' });
-      
-      expect(res.status).toBe(402);
-      expect(res.body.error).toBe('Invalid payment format');
+
+      expect([400, 402]).toContain(res.status);
     });
-    
-    it('returns 402 for invalid JSON in payment', async () => {
+
+    it('rejects invalid JSON in payment without crashing', async () => {
       const invalidPayment = Buffer.from('{not valid json').toString('base64');
-      
+
       const res = await request(app)
         .post('/api/ai/scrape/profile')
         .set('X-PAYMENT', invalidPayment)
         .send({ username: 'test' });
-      
-      expect(res.status).toBe(402);
+
+      expect(res.status).toBeLessThan(500);
+      expect(res.status).not.toBe(200);
     });
   });
   
@@ -452,88 +341,60 @@ describe('x402 AI API', () => {
   });
   
   describe('Response format consistency', () => {
-    const createValidPayment = () => {
-      const payment = {
-        x402Version: 2,
-        scheme: 'exact',
-        network: 'eip155:84532',
-        payload: {
-          signature: '0xMockSignature',
-          from: '0xTestPayer',
-          to: '0xTestAddress',
-          value: '1000',
-          validAfter: 0,
-          validBefore: Math.floor(Date.now() / 1000) + 3600,
-          nonce: '0x1234567890abcdef',
-        },
-      };
-      return Buffer.from(JSON.stringify(payment)).toString('base64');
-    };
-    
-    it('returns consistent JSON structure for successful responses', async () => {
-      const res = await request(app)
-        .post('/api/ai/scrape/profile')
-        .set('X-PAYMENT', createValidPayment())
-        .send({ username: 'test' });
-      
-      expect(res.body).toHaveProperty('success');
-      expect(res.body).toHaveProperty('data');
-      expect(res.body).toHaveProperty('meta');
-    });
-    
     it('returns consistent JSON structure for 402 responses', async () => {
       const res = await request(app)
         .post('/api/ai/scrape/profile')
         .send({ username: 'test' });
-      
-      expect(res.body).toHaveProperty('error');
-      expect(res.body).toHaveProperty('message');
-      expect(res.body).toHaveProperty('price');
-      expect(res.body).toHaveProperty('network');
-      expect(res.body).toHaveProperty('payTo');
+
+      expect(res.status).toBe(402);
+      expect(res.headers['content-type']).toContain('application/json');
     });
-    
+
     it('returns application/json content-type for all responses', async () => {
       const res402 = await request(app)
         .post('/api/ai/scrape/profile')
         .send({ username: 'test' });
-      
+
       expect(res402.headers['content-type']).toContain('application/json');
-      
-      const res200 = await request(app)
+
+      const resForged = await request(app)
         .post('/api/ai/scrape/profile')
-        .set('X-PAYMENT', createValidPayment())
+        .set('X-PAYMENT', encodePayment(createMockPayment()))
         .send({ username: 'test' });
-      
-      expect(res200.headers['content-type']).toContain('application/json');
+
+      expect(resForged.headers['content-type']).toContain('application/json');
     });
   });
   
-  describe('AI agent detection', () => {
-    it('detects requests without User-Agent as AI agents', async () => {
+  describe('Payment requirement is independent of User-Agent', () => {
+    // x402Middleware has no User-Agent inspection — payment is required for
+    // every caller on a protected path. These tests confirm that an empty or
+    // spoofed User-Agent is not a way to bypass the 402, not that the
+    // middleware fingerprints AI agents by User-Agent (it doesn't).
+    it('requires payment even when User-Agent is empty', async () => {
       const res = await request(app)
         .post('/api/ai/scrape/profile')
         .set('User-Agent', '')
         .send({ username: 'test' });
-      
+
       expect(res.status).toBe(402);
     });
-    
-    it('detects requests with automation User-Agents as AI agents', async () => {
-      const aiUserAgents = [
+
+    it('requires payment regardless of the client User-Agent', async () => {
+      const userAgents = [
         'python-requests/2.28.0',
         'axios/1.4.0',
         'node-fetch/3.0.0',
         'OpenAI-SDK/4.0.0',
         'Anthropic-Client/1.0.0',
       ];
-      
-      for (const ua of aiUserAgents) {
+
+      for (const ua of userAgents) {
         const res = await request(app)
           .post('/api/ai/scrape/profile')
           .set('User-Agent', ua)
           .send({ username: 'test' });
-        
+
         expect(res.status).toBe(402);
       }
     });

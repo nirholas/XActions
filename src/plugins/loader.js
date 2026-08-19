@@ -24,8 +24,8 @@ const CONFIG_DIR = path.join(os.homedir(), '.xactions');
 const PLUGINS_FILE = path.join(CONFIG_DIR, 'plugins.json');
 
 const PLUGIN_NAME_PATTERNS = [
-  /^xactions-plugin-/,
-  /^@xactions\//,
+  /^xactions-plugin-[a-zA-Z0-9_-]+$/,
+  /^@xactions\/[a-zA-Z0-9_-]+$/,
 ];
 
 // ============================================================================

@@ -43,7 +43,12 @@ export function recordPayment(payment) {
   }
 
   stats.totalPayments++;
-  stats.totalRevenue += parseFloat(payment.price.replace('$', '')) * 100;
+  const parsedPrice = typeof payment.price === 'string'
+    ? parseFloat(payment.price.replace(/[^0-9.]/g, ''))
+    : NaN;
+  if (!Number.isNaN(parsedPrice)) {
+    stats.totalRevenue += parsedPrice * 100;
+  }
   
   // By operation
   const op = payment.operation;

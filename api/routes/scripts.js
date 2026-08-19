@@ -19,6 +19,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import crypto from 'crypto';
 import { SCRIPT_PRICES } from '../config/x402-config.js';
+import { authMiddleware } from '../middleware/auth.js';
 
 const router = Router();
 const __filename = fileURLToPath(import.meta.url);
@@ -129,7 +130,7 @@ router.get('/automation/:name', async (req, res) => {
  *   startUrl      {string}  optional  Page to navigate to before running (default: x.com/home)
  *   callbackUrl   {string}  optional  POST job result here when complete
  */
-router.post('/run', async (req, res) => {
+router.post('/run', authMiddleware, async (req, res) => {
   const { script, sessionCookie, params = {}, startUrl, callbackUrl } = req.body;
 
   if (!script) {

@@ -17,36 +17,94 @@ import scrapers from '../scrapers/index.js';
 // ============================================================================
 
 let _browser = null;
+let _browserPromise = null; // in-flight creation, so concurrent callers share one browser
 let _browserUseCount = 0;
+const _activeHandles = new Map(); // browser -> count of open pages (covers current + retiring browsers)
 const MAX_BROWSER_USES = 50; // Recycle browser after N uses
 
-async function getBrowser() {
-  if (!_browser || _browserUseCount >= MAX_BROWSER_USES) {
-    if (_browser) {
-      try { await _browser.close(); } catch {}
-    }
-    _browser = await scrapers.createBrowser();
-    _browserUseCount = 0;
+function retireBrowser(browser) {
+  const count = _activeHandles.get(browser) || 0;
+  if (count <= 0) {
+    _activeHandles.delete(browser);
+    browser.close().catch(() => {});
   }
+  // else: leave it tracked — releaseBrowserHandle() closes it once its last active page finishes.
+}
+
+function releaseBrowserHandle(browser) {
+  const count = (_activeHandles.get(browser) || 1) - 1;
+  _activeHandles.set(browser, count);
+  if (count <= 0 && browser !== _browser) {
+    _activeHandles.delete(browser);
+    browser.close().catch(() => {});
+  }
+}
+
+async function getBrowser() {
+  if (_browser && _browserUseCount >= MAX_BROWSER_USES) {
+    // Retire the current browser instead of closing it outright — other
+    // steps may still hold pages open on it.
+    retireBrowser(_browser);
+    _browser = null;
+  }
+
+  if (!_browser) {
+    if (!_browserPromise) {
+      _browserPromise = (async () => {
+        const browser = await scrapers.createBrowser();
+        _browser = browser;
+        _browserUseCount = 0;
+        _activeHandles.set(browser, 0);
+        return browser;
+      })().finally(() => { _browserPromise = null; });
+    }
+    await _browserPromise;
+  }
+
   _browserUseCount++;
+  _activeHandles.set(_browser, (_activeHandles.get(_browser) || 0) + 1);
   return _browser;
 }
 
 async function getAuthenticatedPage(authToken) {
   const browser = await getBrowser();
-  const page = await scrapers.createPage(browser);
-  if (authToken) {
-    await scrapers.loginWithCookie(page, authToken);
+  let page;
+  try {
+    page = await scrapers.createPage(browser);
+    if (authToken) {
+      await scrapers.loginWithCookie(page, authToken);
+    }
+  } catch (err) {
+    // getBrowser() already incremented the handle count for this browser —
+    // if setup fails before the close-wrapper below is installed, that
+    // increment must still be released or the browser can never retire.
+    // Also close the page itself if createPage succeeded but the subsequent
+    // login step is what failed, so we don't leave an open tab behind too.
+    if (page) await page.close().catch(() => {});
+    releaseBrowserHandle(browser);
+    throw err;
   }
+  const originalClose = page.close.bind(page);
+  page.close = async (...args) => {
+    try {
+      return await originalClose(...args);
+    } finally {
+      releaseBrowserHandle(browser);
+    }
+  };
   return page;
 }
 
 export async function closeBrowser() {
-  if (_browser) {
-    try { await _browser.close(); } catch {}
-    _browser = null;
-    _browserUseCount = 0;
+  const browsers = new Set(_activeHandles.keys());
+  if (_browser) browsers.add(_browser);
+  for (const browser of browsers) {
+    try { await browser.close(); } catch {}
   }
+  _activeHandles.clear();
+  _browser = null;
+  _browserPromise = null;
+  _browserUseCount = 0;
 }
 
 // ============================================================================

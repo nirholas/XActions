@@ -21,10 +21,10 @@ export function mountWebhookRoutes(router) {
       const { jobName } = req.params;
       const { secret } = req.query;
 
-      // Optional secret check
+      // Secret check — jobs without a configured secret cannot be triggered
       const job = scheduler.jobs.get(jobName);
       if (!job) return res.status(404).json({ error: `Job "${jobName}" not found` });
-      if (job.config.webhookSecret && job.config.webhookSecret !== secret) {
+      if (!job.config.webhookSecret || job.config.webhookSecret !== secret) {
         return res.status(403).json({ error: 'Invalid webhook secret' });
       }
 

@@ -69,13 +69,19 @@
     return false;
   };
 
+  // Returns true if already on `path` and safe to continue, or false if a
+  // navigation was just triggered — window.location.href is a real page
+  // load, which destroys this injected script, so callers must stop and
+  // let the user re-run after the page loads (see docs/agents/browser-script-patterns.md).
   const navigateTo = async (path) => {
     const currentPath = window.location.pathname;
     if (currentPath !== path) {
       window.location.href = `https://x.com${path}`;
-      await sleep(3000);
+      console.log('⚠️ Navigating to verification settings. Re-run this function after the page loads.');
+      return false;
     }
     await sleep(1000);
+    return true;
   };
 
   const findTextOnPage = (text) => {
@@ -116,7 +122,10 @@
 
     // Step 1: Navigate to verification settings
     console.log('🔄 Navigating to verification settings...');
-    await navigateTo('/settings/account/verification');
+    const onTarget = await navigateTo('/settings/account/verification');
+    if (!onTarget) {
+      return { success: false, navigated: true, message: 'Navigating to verification settings. Re-run initiateVerification() after the page loads.' };
+    }
     await sleep(2000);
 
     // Check if the page loaded correctly
@@ -241,7 +250,12 @@
 
     // Check 2: Navigate to verification settings for detailed status
     console.log('🔄 Navigating to verification settings...');
-    await navigateTo('/settings/account/verification');
+    const onTarget = await navigateTo('/settings/account/verification');
+    if (!onTarget) {
+      statusResult.details = 'Navigating to verification settings. Re-run checkStatus() after the page loads.';
+      setState(statusResult);
+      return statusResult;
+    }
     await sleep(2000);
 
     const primaryColumn = await waitForSelector(SEL.primaryColumn, 10000);
@@ -328,7 +342,10 @@
     console.log('🔄 Navigating to verification document management...');
 
     // Navigate to the verification settings area
-    await navigateTo('/settings/account/verification');
+    const onTarget = await navigateTo('/settings/account/verification');
+    if (!onTarget) {
+      return { success: false, navigated: true, message: 'Navigating to verification settings. Re-run manageDocuments() after the page loads.' };
+    }
     await sleep(2000);
 
     const primaryColumn = await waitForSelector(SEL.primaryColumn, 10000);
