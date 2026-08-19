@@ -34,13 +34,19 @@ export async function getOrCreateCustomer(user) {
     return existing.stripeCustomerId;
   }
 
-  // Create new Stripe customer
+  // Create new Stripe customer. A deterministic idempotency key means
+  // concurrent requests for the same user that race past the findUnique
+  // check above all resolve to the SAME Stripe customer object (Stripe
+  // itself deduplicates), rather than each creating its own and leaving
+  // extras orphaned.
   const customer = await stripe.customers.create({
     email: user.email,
     metadata: {
       userId: user.id,
       username: user.username,
     },
+  }, {
+    idempotencyKey: `getOrCreateCustomer:${user.id}`,
   });
 
   // Upsert subscription record with customer ID
@@ -284,6 +290,13 @@ async function recordPayment(invoice) {
 
   if (!sub) return;
 
+  if (invoice.payment_intent) {
+    const existing = await prisma.payment.findUnique({
+      where: { stripePaymentId: invoice.payment_intent },
+    });
+    if (existing) return;
+  }
+
   await prisma.payment.create({
     data: {
       userId: sub.userId,
@@ -311,6 +324,13 @@ async function handleFailedPayment(invoice) {
     data: { status: 'past_due' },
   });
 
+  if (invoice.payment_intent) {
+    const existing = await prisma.payment.findUnique({
+      where: { stripePaymentId: invoice.payment_intent },
+    });
+    if (existing) return;
+  }
+
   await prisma.payment.create({
     data: {
       userId: sub.userId,
@@ -336,5 +356,5 @@ function mapStripeStatus(stripeStatus) {
     incomplete_expired: 'expired',
     trialing: 'active',
   };
-  return map[stripeStatus] || 'active';
+  return map[stripeStatus] || 'past_due';
 }

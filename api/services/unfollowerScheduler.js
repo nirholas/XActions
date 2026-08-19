@@ -45,6 +45,18 @@ async function processDueSchedules(io) {
 
     for (const schedule of dueSchedules) {
       try {
+        // Atomically claim this schedule so a second horizontally-scaled
+        // instance polling concurrently can't also pick it up.
+        const claim = await prisma.unfollowerSchedule.updateMany({
+          where: { userId: schedule.userId, nextRunAt: schedule.nextRunAt },
+          data: { nextRunAt: new Date(Date.now() + POLL_INTERVAL) },
+        });
+
+        if (claim.count === 0) {
+          // Another instance already claimed this schedule
+          continue;
+        }
+
         // Look up user for session cookie
         const user = await prisma.user.findUnique({
           where: { id: schedule.userId },

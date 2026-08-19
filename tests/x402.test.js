@@ -366,31 +366,35 @@ describe('x402 AI API', () => {
     });
   });
   
-  describe('AI agent detection', () => {
-    it('detects requests without User-Agent as AI agents', async () => {
+  describe('Payment requirement is independent of User-Agent', () => {
+    // x402Middleware has no User-Agent inspection — payment is required for
+    // every caller on a protected path. These tests confirm that an empty or
+    // spoofed User-Agent is not a way to bypass the 402, not that the
+    // middleware fingerprints AI agents by User-Agent (it doesn't).
+    it('requires payment even when User-Agent is empty', async () => {
       const res = await request(app)
         .post('/api/ai/scrape/profile')
         .set('User-Agent', '')
         .send({ username: 'test' });
-      
+
       expect(res.status).toBe(402);
     });
-    
-    it('detects requests with automation User-Agents as AI agents', async () => {
-      const aiUserAgents = [
+
+    it('requires payment regardless of the client User-Agent', async () => {
+      const userAgents = [
         'python-requests/2.28.0',
         'axios/1.4.0',
         'node-fetch/3.0.0',
         'OpenAI-SDK/4.0.0',
         'Anthropic-Client/1.0.0',
       ];
-      
-      for (const ua of aiUserAgents) {
+
+      for (const ua of userAgents) {
         const res = await request(app)
           .post('/api/ai/scrape/profile')
           .set('User-Agent', ua)
           .send({ username: 'test' });
-        
+
         expect(res.status).toBe(402);
       }
     });

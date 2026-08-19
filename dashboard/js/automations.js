@@ -228,27 +228,32 @@
   }
 
   // ── Form helpers ──────────────────────────────────────
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
   function formField(label, key, value, type, placeholder) {
     return `
       <div class="form-group">
-        <label class="form-label">${label}</label>
-        <input class="form-input" type="${type}" data-key="${key}" value="${value ?? ''}" placeholder="${placeholder || ''}">
+        <label class="form-label">${escapeHtml(label)}</label>
+        <input class="form-input" type="${type}" data-key="${key}" value="${escapeHtml(value ?? '')}" placeholder="${escapeHtml(placeholder || '')}">
       </div>`;
   }
 
   function checkboxField(label, key, checked) {
     return `
       <div class="form-group form-group--inline">
-        <label class="form-label">${label}</label>
+        <label class="form-label">${escapeHtml(label)}</label>
         <input class="form-checkbox" type="checkbox" data-key="${key}" ${checked ? 'checked' : ''}>
       </div>`;
   }
 
   function selectField(label, key, current, options) {
-    const opts = options.map(o => `<option value="${o}" ${o === current ? 'selected' : ''}>${o}</option>`).join('');
+    const opts = options.map(o => `<option value="${escapeHtml(o)}" ${o === current ? 'selected' : ''}>${escapeHtml(o)}</option>`).join('');
     return `
       <div class="form-group">
-        <label class="form-label">${label}</label>
+        <label class="form-label">${escapeHtml(label)}</label>
         <select class="form-input" data-key="${key}">${opts}</select>
       </div>`;
   }
@@ -256,8 +261,8 @@
   function textareaField(label, key, value, placeholder) {
     return `
       <div class="form-group">
-        <label class="form-label">${label}</label>
-        <textarea class="form-input form-textarea" data-key="${key}" placeholder="${placeholder || ''}" rows="4">${value ?? ''}</textarea>
+        <label class="form-label">${escapeHtml(label)}</label>
+        <textarea class="form-input form-textarea" data-key="${key}" placeholder="${escapeHtml(placeholder || '')}" rows="4">${escapeHtml(value ?? '')}</textarea>
       </div>`;
   }
 

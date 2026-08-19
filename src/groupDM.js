@@ -144,14 +144,14 @@
 
       console.log(`🔍 Searching for @${username}...`);
 
-      const searchInput = await waitForSelector(SEL.searchPeople);
-      if (!searchInput) {
-        console.log(`❌ Could not find search input for @${username}`);
-        stats.recipientsFailed.push(username);
-        continue;
-      }
-
       if (!CONFIG.dryRun) {
+        const searchInput = await waitForSelector(SEL.searchPeople);
+        if (!searchInput) {
+          console.log(`❌ Could not find search input for @${username}`);
+          stats.recipientsFailed.push(username);
+          continue;
+        }
+
         clearInput(searchInput);
         await sleep(500);
         await typeText(searchInput, username);

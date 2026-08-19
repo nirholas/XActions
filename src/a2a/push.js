@@ -116,9 +116,10 @@ export class PushNotificationClient {
    *
    * @param {string} callbackUrl
    * @param {object} notification
+   * @param {Object} [extraHeaders] - Custom per-subscription headers
    * @returns {Promise<boolean>} true if delivered
    */
-  async sendNotification(callbackUrl, notification) {
+  async sendNotification(callbackUrl, notification, extraHeaders = {}) {
     const body = JSON.stringify({
       ...notification,
       timestamp: notification.timestamp || new Date().toISOString(),
@@ -135,6 +136,7 @@ export class PushNotificationClient {
           headers: {
             'Content-Type': 'application/json',
             ...(signature && { 'X-XActions-Signature': signature }),
+            ...extraHeaders,
           },
           body,
         });
@@ -182,7 +184,7 @@ export class PushNotificationClient {
 
 export class SubscriptionManager {
   constructor() {
-    /** @type {Map<string, Set<string>>} taskId → Set<callbackUrl> */
+    /** @type {Map<string, Map<string, Object>>} taskId → Map<callbackUrl, headers> */
     this._subscriptions = new Map();
     this._client = new PushNotificationClient();
   }
@@ -192,12 +194,13 @@ export class SubscriptionManager {
    *
    * @param {string} taskId
    * @param {string} callbackUrl
+   * @param {Object} [headers] - Custom headers to send with notifications
    */
-  subscribe(taskId, callbackUrl) {
+  subscribe(taskId, callbackUrl, headers = {}) {
     if (!this._subscriptions.has(taskId)) {
-      this._subscriptions.set(taskId, new Set());
+      this._subscriptions.set(taskId, new Map());
     }
-    this._subscriptions.get(taskId).add(callbackUrl);
+    this._subscriptions.get(taskId).set(callbackUrl, headers);
   }
 
   /**
@@ -217,7 +220,7 @@ export class SubscriptionManager {
    */
   getSubscriptions(taskId) {
     const subs = this._subscriptions.get(taskId);
-    return subs ? Array.from(subs) : [];
+    return subs ? Array.from(subs.keys()) : [];
   }
 
   /**
@@ -228,12 +231,14 @@ export class SubscriptionManager {
    * @returns {Promise<void>}
    */
   async notifySubscribers(taskId, event) {
-    const urls = this.getSubscriptions(taskId);
-    if (urls.length === 0) return;
+    const subs = this._subscriptions.get(taskId);
+    if (!subs || subs.size === 0) return;
 
     const notification = { taskId, ...event, timestamp: new Date().toISOString() };
     await Promise.allSettled(
-      urls.map(url => this._client.sendNotification(url, notification))
+      Array.from(subs.entries()).map(([url, headers]) =>
+        this._client.sendNotification(url, notification, headers)
+      )
     );
   }
 }

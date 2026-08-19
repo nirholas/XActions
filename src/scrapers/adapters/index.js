@@ -97,7 +97,7 @@ export async function getAdapter(name) {
  * @returns {Promise<BaseAdapter>} First available adapter
  */
 export async function getAvailableAdapter(preferred) {
-  const candidates = [preferred, defaultAdapterName, 'puppeteer', 'playwright', 'crawlee', 'got-jsdom', 'selenium', 'cheerio'].filter(Boolean);
+  const candidates = [preferred, defaultAdapterName, 'puppeteer', 'playwright', 'crawlee', 'got-jsdom', 'selenium', 'cheerio', 'http'].filter(Boolean);
   const tried = new Set();
 
   for (const name of candidates) {

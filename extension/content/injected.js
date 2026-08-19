@@ -185,6 +185,9 @@
   // ============================================
   const automationRunners = {};
   const automationStopFlags = {};
+  const automationSettings = {};    // last settings used to run each automation, for RESUME_ALL
+  const runningAutomations = new Set(); // automation ids currently executing
+  const pausedAutomations = new Set();  // automation ids halted by PAUSE_ALL, eligible for RESUME_ALL
 
   function registerAutomation(id, runFn) {
     automationRunners[id] = runFn;
@@ -645,11 +648,16 @@
         const runner = automationRunners[msg.automationId];
         if (runner) {
           automationStopFlags[msg.automationId] = false;
+          automationSettings[msg.automationId] = msg.settings || {};
+          pausedAutomations.delete(msg.automationId);
+          runningAutomations.add(msg.automationId);
           try {
             await runner(msg.settings || {});
           } catch (err) {
             console.error(`XActions automation error (${msg.automationId}):`, err);
             window.postMessage({ source: 'xactions-page', type: 'AUTOMATION_ERROR', automationId: msg.automationId, error: err.message }, '*');
+          } finally {
+            runningAutomations.delete(msg.automationId);
           }
         }
         break;
@@ -657,17 +665,38 @@
 
       case 'STOP_AUTOMATION':
         automationStopFlags[msg.automationId] = true;
+        pausedAutomations.delete(msg.automationId);
         break;
 
       case 'STOP_ALL':
+        Object.keys(automationStopFlags).forEach(k => automationStopFlags[k] = true);
+        Object.keys(automationRunners).forEach(k => automationStopFlags[k] = true);
+        pausedAutomations.clear();
+        break;
+
       case 'PAUSE_ALL':
+        runningAutomations.forEach(id => pausedAutomations.add(id));
         Object.keys(automationStopFlags).forEach(k => automationStopFlags[k] = true);
         Object.keys(automationRunners).forEach(k => automationStopFlags[k] = true);
         break;
 
-      case 'RESUME_ALL':
-        // Resuming would need re-running, handled by popup
+      case 'RESUME_ALL': {
+        const toResume = Array.from(pausedAutomations);
+        pausedAutomations.clear();
+        for (const id of toResume) {
+          const runner = automationRunners[id];
+          if (!runner) continue;
+          automationStopFlags[id] = false;
+          runningAutomations.add(id);
+          runner(automationSettings[id] || {})
+            .catch(err => {
+              console.error(`XActions automation error (${id}):`, err);
+              window.postMessage({ source: 'xactions-page', type: 'AUTOMATION_ERROR', automationId: id, error: err.message }, '*');
+            })
+            .finally(() => runningAutomations.delete(id));
+        }
         break;
+      }
 
       case 'GET_ACCOUNT_INFO':
         window.postMessage({ source: 'xactions-page', type: 'ACCOUNT_INFO', data: scrapeAccountInfo() }, '*');

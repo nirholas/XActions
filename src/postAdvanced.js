@@ -758,8 +758,8 @@
     }
 
     // Fallback: delete drafts one by one
-    const draftItems = document.querySelectorAll('[data-testid="tweet"]')
-      || document.querySelectorAll('article');
+    const tweetDrafts = document.querySelectorAll('[data-testid="tweet"]');
+    const draftItems = tweetDrafts.length ? tweetDrafts : document.querySelectorAll('article');
 
     for (const draft of draftItems) {
       const deleteIcon = draft.querySelector('[aria-label="Delete"]')

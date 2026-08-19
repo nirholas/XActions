@@ -467,10 +467,12 @@
       await typeIntoInput(filterInput, filterText);
       await sleep(500);
 
-      // Confirm / apply filter
-      const applyBtn = document.querySelector('button[aria-label*="Apply"]')
-        || document.querySelector('button[aria-label*="Save"]')
-        || [...document.querySelectorAll('button')].find(b =>
+      // Confirm / apply filter — scope to the settings panel/dialog so we
+      // never fall back onto an unrelated document-wide button (e.g. "Add column").
+      const panel = filterInput.closest(SEL.dialog) || filterInput.closest(SEL.columnSettings) || col.element;
+      const applyBtn = panel.querySelector('button[aria-label*="Apply"]')
+        || panel.querySelector('button[aria-label*="Save"]')
+        || [...panel.querySelectorAll('button')].find(b =>
           b.textContent.toLowerCase().includes('apply') ||
           b.textContent.toLowerCase().includes('save') ||
           b.textContent.toLowerCase().includes('add')

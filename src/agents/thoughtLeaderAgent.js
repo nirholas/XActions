@@ -376,8 +376,8 @@ class ThoughtLeaderAgent {
       return;
     }
 
-    // Check calendar for scheduled content first
-    const queuedItem = this.calendar.getQueue()?.[0];
+    // Check calendar for scheduled content first (reviewed/approved items only)
+    const queuedItem = this.calendar.getNextToPost();
     if (queuedItem?.text) {
       console.log('📅 Posting scheduled content from calendar...');
       try {

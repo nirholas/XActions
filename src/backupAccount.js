@@ -132,28 +132,55 @@
     console.log('💾 BACKUP ACCOUNT - XActions by nichxbt');
     console.log('ℹ️ This backs up visible data from the browser.\n');
 
-    const username = window.location.pathname.replace('/', '').split('/')[0];
+    const pathname = window.location.pathname;
+    const rawPathUsername = pathname.replace(/^\//, '').split('/')[0];
+    const pathUsername = ['home', 'explore', 'notifications', 'messages', 'i'].includes(rawPathUsername) ? '' : rawPathUsername;
+    // /i/bookmarks has no username in the URL — fall back to the nav bar's
+    // own-profile link so the download filename and other-page guidance
+    // below still resolve to the real handle.
+    const navHandle = document.querySelector('a[data-testid="AppTabBar_Profile_Link"]')?.getAttribute('href')?.replace(/^\//, '') || '';
+    const username = pathUsername || navHandle;
 
-    if (CONFIG.sections.profile) {
+    // Detect which section (if any) the CURRENT page matches, so a paste on
+    // that page collects into the matching backupData key instead of always
+    // falling through to the generic tweets collector regardless of page.
+    const pageSection = pathname === '/i/bookmarks' ? 'bookmarks'
+      : (username && pathname === `/${username}/likes`) ? 'likes'
+      : (username && pathname === `/${username}/following`) ? 'following'
+      : (username && pathname === `/${username}/followers`) ? 'followers'
+      : null;
+
+    if (CONFIG.sections.profile && !pageSection) {
       console.log('📋 Backing up profile...');
       backupData.profile = scrapeProfile();
       console.log(`   ✅ Profile saved`);
     }
 
-    if (CONFIG.sections.tweets) {
+    if (pageSection === 'bookmarks' && CONFIG.sections.bookmarks) {
+      backupData.bookmarks = await scrollAndCollect($tweet, extractTweet, CONFIG.maxBookmarks, 'bookmarks');
+    } else if (pageSection === 'likes' && CONFIG.sections.likes) {
+      backupData.likes = await scrollAndCollect($tweet, extractTweet, CONFIG.maxLikes, 'likes');
+    } else if (pageSection === 'following' && CONFIG.sections.following) {
+      backupData.following = await scrollAndCollect($userCell, extractUser, CONFIG.maxFollowing, 'following');
+    } else if (pageSection === 'followers' && CONFIG.sections.followers) {
+      backupData.followers = await scrollAndCollect($userCell, extractUser, CONFIG.maxFollowers, 'followers');
+    } else if (CONFIG.sections.tweets) {
       backupData.tweets = await scrollAndCollect($tweet, extractTweet, CONFIG.maxTweets, 'tweets');
     }
 
-    // For other sections, we need to navigate
-    const backupSections = [];
-    if (CONFIG.sections.likes) backupSections.push({ path: `/${username}/likes`, key: 'likes', selector: $tweet, extractor: extractTweet, max: CONFIG.maxLikes });
-    if (CONFIG.sections.following) backupSections.push({ path: `/${username}/following`, key: 'following', selector: $userCell, extractor: extractUser, max: CONFIG.maxFollowing });
-    if (CONFIG.sections.followers) backupSections.push({ path: `/${username}/followers`, key: 'followers', selector: $userCell, extractor: extractUser, max: CONFIG.maxFollowers });
+    // For sections this run didn't cover, tell the user where to run the
+    // script next — each run downloads its own JSON, so backing up every
+    // section means pasting the script once per page below.
+    const remaining = [];
+    if (CONFIG.sections.likes && pageSection !== 'likes') remaining.push({ path: `/${username}/likes`, key: 'likes' });
+    if (CONFIG.sections.bookmarks && pageSection !== 'bookmarks') remaining.push({ path: `/i/bookmarks`, key: 'bookmarks' });
+    if (CONFIG.sections.following && pageSection !== 'following') remaining.push({ path: `/${username}/following`, key: 'following' });
+    if (CONFIG.sections.followers && pageSection !== 'followers') remaining.push({ path: `/${username}/followers`, key: 'followers' });
 
-    if (backupSections.length > 0) {
+    if (remaining.length > 0) {
       console.log('\n⚠️ Remaining sections require page navigation.');
-      console.log('💡 To backup likes/following/followers, run this script on each page:');
-      backupSections.forEach(s => {
+      console.log('💡 To backup the rest, run this script on each page:');
+      remaining.forEach(s => {
         console.log(`   📍 ${s.key}: x.com${s.path}`);
       });
     }
@@ -173,6 +200,7 @@
     console.log(`   📊 Profile: ${backupData.profile ? 'Yes' : 'No'}`);
     console.log(`   📊 Tweets: ${backupData.tweets.length}`);
     console.log(`   📊 Likes: ${backupData.likes.length}`);
+    console.log(`   📊 Bookmarks: ${backupData.bookmarks.length}`);
     console.log(`   📊 Following: ${backupData.following.length}`);
     console.log(`   📊 Followers: ${backupData.followers.length}`);
   };

@@ -209,8 +209,12 @@ class LLMBrain {
         },
       ], { temperature: 0.1, maxTokens: 8 });
 
-      const score = parseInt(text.replace(/\D/g, ''), 10);
-      if (isNaN(score) || score < 0 || score > 100) return 50;
+      const match = text.match(/\d+/);
+      const score = match ? parseInt(match[0], 10) : NaN;
+      if (isNaN(score) || score < 0 || score > 100) {
+        console.log(`⚠️ scoreRelevance: unparseable response "${text}" — returning default 50`);
+        return 50;
+      }
       return score;
     } catch (err) {
       console.log(`⚠️ scoreRelevance error: ${err.message} — returning default 50`);
@@ -259,11 +263,12 @@ class LLMBrain {
   /**
    * Generate original content (tweet, thread, or quote commentary).
    * Uses the smart model for highest quality.
-   * @param {{ type: 'tweet'|'thread'|'quote', persona: Object, niche: Object, trends?: string[], recentPosts?: Array }} params
+   * @param {{ type: 'tweet'|'thread'|'quote', persona: Object, niche: Object, trends?: string[], recentPosts?: Array, networkDiscoveries?: string[], context?: string }} params
    * @returns {Promise<{ type: string, text: string|string[] }>}
    */
-  async generateContent({ type, persona, niche, trends, recentPosts }) {
+  async generateContent({ type, persona, niche, trends, recentPosts, networkDiscoveries, context }) {
     const recentTexts = (recentPosts || []).slice(0, 10).map((p) => p.text).join('\n- ');
+    const networkTexts = (networkDiscoveries || []).slice(0, 5).join('\n- ');
 
     const systemPrompt = [
       `You are ${persona.name}. Voice: ${persona.tone}.`,
@@ -285,7 +290,9 @@ class LLMBrain {
       userMsg = [
         'Write a single tweet (≤280 characters).',
         `Niche: ${niche.name}`,
+        context ? `Context: ${context}` : '',
         trends?.length ? `Current trends: ${trends.join(', ')}` : '',
+        networkTexts ? `Network discoveries for inspiration:\n- ${networkTexts}` : '',
         recentTexts ? `Recent posts to avoid repeating:\n- ${recentTexts}` : '',
         '',
         'Return ONLY the tweet text.',
@@ -294,7 +301,9 @@ class LLMBrain {
       userMsg = [
         'Write a Twitter thread (3-6 tweets). First tweet is the hook.',
         `Niche: ${niche.name}`,
+        context ? `Context: ${context}` : '',
         trends?.length ? `Current trends: ${trends.join(', ')}` : '',
+        networkTexts ? `Network discoveries for inspiration:\n- ${networkTexts}` : '',
         recentTexts ? `Recent posts to avoid repeating:\n- ${recentTexts}` : '',
         '',
         'Return each tweet on its own line, separated by ---',
@@ -303,6 +312,7 @@ class LLMBrain {
       userMsg = [
         'Write a quote-tweet commentary (≤280 characters). Add your unique angle.',
         `Niche: ${niche.name}`,
+        context ? `Context: ${context}` : '',
         '',
         'Return ONLY the commentary text.',
       ].filter(Boolean).join('\n');

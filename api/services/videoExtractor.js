@@ -494,6 +494,9 @@ async function extractViaPuppeteer(tweetId, username) {
         const jsonStr = JSON.stringify(json);
 
         extractVideoInfoFromJson(json, interceptedVideos);
+        if (interceptedVideos._durationMs && !durationMs) {
+          durationMs = interceptedVideos._durationMs;
+        }
 
         if (!tweetText) {
           const textMatch = jsonStr.match(/"full_text":"((?:[^"\\]|\\.)*)"/);

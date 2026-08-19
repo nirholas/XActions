@@ -109,8 +109,8 @@
       result.recentPosts = await scrapeRecentPosts();
 
       // Calculate engagement summary
-      const totalLikes = result.recentPosts.reduce((sum, p) => sum + parseInt(p.likes.replace(/[,K]/g, '')) || 0, 0);
-      const totalReposts = result.recentPosts.reduce((sum, p) => sum + parseInt(p.reposts.replace(/[,K]/g, '')) || 0, 0);
+      const totalLikes = result.recentPosts.reduce((sum, p) => sum + (parseInt(p.likes.replace(/[,K]/g, '')) || 0), 0);
+      const totalReposts = result.recentPosts.reduce((sum, p) => sum + (parseInt(p.reposts.replace(/[,K]/g, '')) || 0), 0);
 
       result.summary = {
         totalPosts: result.recentPosts.length,

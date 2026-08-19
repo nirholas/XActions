@@ -137,7 +137,6 @@
         // This logs the intent — full automation would need page navigation.
         console.log(`   📨 @${follower.username}: "${message}"`);
         console.log(`      ⏳ Waiting ${CONFIG.dmDelay / 1000}s...`);
-        dmsSent++;
         await sleep(CONFIG.dmDelay);
       }
     } else if (CONFIG.dryRun) {

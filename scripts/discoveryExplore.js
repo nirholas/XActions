@@ -90,9 +90,12 @@
       searchInput.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', keyCode: 13, bubbles: true }));
       await sleep(3000);
     } else {
-      // Navigate directly
-      window.location.href = `https://x.com/search?q=${encodeURIComponent(CONFIG.searchQuery)}&f=live`;
-      await sleep(4000);
+      // Assigning window.location.href would destroy this console script's JS
+      // context before results could be collected/exported, so ask the user
+      // to navigate manually and re-run instead of doing it here.
+      const searchUrl = `https://x.com/search?q=${encodeURIComponent(CONFIG.searchQuery)}&f=live`;
+      console.error(`❌ Search box not found. Navigate to ${searchUrl} first, then re-run this script!`);
+      return null;
     }
 
     const results = new Map();

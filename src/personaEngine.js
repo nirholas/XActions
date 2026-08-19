@@ -495,10 +495,10 @@ function deletePersona(id) {
  * Determine if the persona should be active right now
  */
 function shouldBeActive(persona) {
-  const now = new Date();
-  const hour = now.getHours();
   const pattern = persona.activityPattern;
-  
+  const now = new Date(new Date().toLocaleString('en-US', { timeZone: pattern.timezone }));
+  const hour = now.getHours();
+
   // Check if current hour is in active hours
   if (pattern.sleepHours.includes(hour)) return false;
   if (!pattern.activeHours.includes(hour)) return false;
@@ -511,10 +511,10 @@ function shouldBeActive(persona) {
  * Peak hours = more activity, off-peak = less
  */
 function getActivityIntensity(persona) {
-  const now = new Date();
+  const pattern = persona.activityPattern;
+  const now = new Date(new Date().toLocaleString('en-US', { timeZone: pattern.timezone }));
   const hour = now.getHours();
   const dayOfWeek = now.getDay();
-  const pattern = persona.activityPattern;
 
   let intensity = 1.0;
 

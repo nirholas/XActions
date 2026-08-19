@@ -127,7 +127,7 @@ export function stopMonitor(monitorId) {
   }
 
   if (monitor.timer) {
-    clearInterval(monitor.timer);
+    clearTimeout(monitor.timer);
     monitor.timer = null;
   }
   monitor.status = 'stopped';
@@ -196,19 +196,24 @@ export function removeMonitor(monitorId) {
 // ============================================================================
 
 function _startPolling(monitor) {
-  // Do first poll immediately
-  _poll(monitor).catch(err => {
-    console.error(`❌ Poll error for ${monitor.id}:`, err.message);
-  });
-
-  // Then poll on interval
-  monitor.timer = setInterval(() => {
+  const scheduleNext = () => {
     if (monitor.status !== 'active') return;
+    monitor.timer = setTimeout(() => {
+      _poll(monitor)
+        .catch(err => {
+          console.error(`❌ Poll error for ${monitor.id}:`, err.message);
+        })
+        .finally(scheduleNext);
+    }, monitor._backoffMs || monitor.intervalMs);
+  };
 
-    _poll(monitor).catch(err => {
+  // Do first poll immediately, then schedule subsequent polls
+  // (applying any backoff computed by a failed poll).
+  _poll(monitor)
+    .catch(err => {
       console.error(`❌ Poll error for ${monitor.id}:`, err.message);
-    });
-  }, monitor.intervalMs);
+    })
+    .finally(scheduleNext);
 }
 
 async function _poll(monitor) {
@@ -218,6 +223,9 @@ async function _poll(monitor) {
   try {
     // Get search results
     const tweets = await _searchTweets(monitor);
+
+    // Successful poll: clear any backoff from prior failures
+    monitor._backoffMs = null;
 
     if (!tweets || tweets.length === 0) {
       return;

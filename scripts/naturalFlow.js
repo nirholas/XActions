@@ -463,8 +463,14 @@
 
     shareBtn.click();
     await sleep(600);
-    const bmBtn = document.querySelector('[data-testid="bookmark"], [role="menuitem"]');
-    if (bmBtn && /bookmark/i.test(bmBtn.textContent)) {
+    let bmBtn = null;
+    for (const item of document.querySelectorAll('[role="menuitem"]')) {
+      if (/bookmark/i.test(item.textContent)) {
+        bmBtn = item;
+        break;
+      }
+    }
+    if (bmBtn) {
       bmBtn.click();
       await sleep(400);
       stats.bookmarked++;

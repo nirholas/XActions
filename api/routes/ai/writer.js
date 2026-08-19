@@ -20,8 +20,18 @@
 
 import express from 'express';
 import rateLimit from 'express-rate-limit';
+import crypto from 'crypto';
 
 const router = express.Router();
+
+/**
+ * This route family authenticates callers by raw X auth token, not a
+ * platform JWT — there is no req.user. The hash of that token is the only
+ * available tenant boundary, so every voice profile read/write below is
+ * scoped by it to prevent one caller from listing or reusing another
+ * caller's saved voice profile.
+ */
+const ownerHashOf = (authToken) => crypto.createHash('sha256').update(authToken).digest('hex');
 
 // ============================================================================
 // Rate Limiting — 10 generations/minute
@@ -87,8 +97,8 @@ router.post('/analyze-voice', generationLimiter, async (req, res) => {
     const profile = analyzeVoice(username, tweets);
     const summary = summarizeVoiceProfile(profile);
 
-    // Step 3: Save profile
-    voiceProfiles.set(username.toLowerCase().replace(/^@/, ''), {
+    // Step 3: Save profile, scoped to the caller's own auth token
+    voiceProfiles.set(`${ownerHashOf(authToken)}:${username.toLowerCase().replace(/^@/, '')}`, {
       profile,
       savedAt: new Date().toISOString(),
     });
@@ -122,7 +132,7 @@ router.post('/generate', generationLimiter, async (req, res) => {
     const {
       username, topic, style, count = 3,
       type = 'tweet', threadLength = 5,
-      model, apiKey,
+      model, apiKey, authToken,
       // Allow passing a voice profile directly
       voiceProfile: directProfile,
     } = req.body;
@@ -134,7 +144,13 @@ router.post('/generate', generationLimiter, async (req, res) => {
     // Resolve voice profile
     let voiceProfile = directProfile;
     if (!voiceProfile && username) {
-      const saved = voiceProfiles.get(username.toLowerCase().replace(/^@/, ''));
+      if (!authToken) {
+        return res.status(400).json({
+          error: 'authToken is required',
+          hint: 'Provide the authToken used when analyzing this username to load its saved voice profile',
+        });
+      }
+      const saved = voiceProfiles.get(`${ownerHashOf(authToken)}:${username.toLowerCase().replace(/^@/, '')}`);
       if (saved) {
         voiceProfile = saved.profile;
       }
@@ -184,7 +200,7 @@ router.post('/rewrite', generationLimiter, async (req, res) => {
   try {
     const {
       username, text, goal = 'more_engaging', count = 3,
-      model, apiKey, voiceProfile: directProfile,
+      model, apiKey, authToken, voiceProfile: directProfile,
     } = req.body;
 
     if (!text) {
@@ -193,7 +209,13 @@ router.post('/rewrite', generationLimiter, async (req, res) => {
 
     let voiceProfile = directProfile;
     if (!voiceProfile && username) {
-      const saved = voiceProfiles.get(username.toLowerCase().replace(/^@/, ''));
+      if (!authToken) {
+        return res.status(400).json({
+          error: 'authToken is required',
+          hint: 'Provide the authToken used when analyzing this username to load its saved voice profile',
+        });
+      }
+      const saved = voiceProfiles.get(`${ownerHashOf(authToken)}:${username.toLowerCase().replace(/^@/, '')}`);
       if (saved) voiceProfile = saved.profile;
     }
 
@@ -230,12 +252,18 @@ router.post('/calendar', generationLimiter, async (req, res) => {
   try {
     const {
       username, topics, postsPerDay = 2, days = 7,
-      model, apiKey, voiceProfile: directProfile,
+      model, apiKey, authToken, voiceProfile: directProfile,
     } = req.body;
 
     let voiceProfile = directProfile;
     if (!voiceProfile && username) {
-      const saved = voiceProfiles.get(username.toLowerCase().replace(/^@/, ''));
+      if (!authToken) {
+        return res.status(400).json({
+          error: 'authToken is required',
+          hint: 'Provide the authToken used when analyzing this username to load its saved voice profile',
+        });
+      }
+      const saved = voiceProfiles.get(`${ownerHashOf(authToken)}:${username.toLowerCase().replace(/^@/, '')}`);
       if (saved) voiceProfile = saved.profile;
     }
 
@@ -272,7 +300,7 @@ router.post('/reply', generationLimiter, async (req, res) => {
   try {
     const {
       username, originalTweet, tone, count = 3,
-      model, apiKey, voiceProfile: directProfile,
+      model, apiKey, authToken, voiceProfile: directProfile,
     } = req.body;
 
     if (!originalTweet) {
@@ -281,7 +309,13 @@ router.post('/reply', generationLimiter, async (req, res) => {
 
     let voiceProfile = directProfile;
     if (!voiceProfile && username) {
-      const saved = voiceProfiles.get(username.toLowerCase().replace(/^@/, ''));
+      if (!authToken) {
+        return res.status(400).json({
+          error: 'authToken is required',
+          hint: 'Provide the authToken used when analyzing this username to load its saved voice profile',
+        });
+      }
+      const saved = voiceProfiles.get(`${ownerHashOf(authToken)}:${username.toLowerCase().replace(/^@/, '')}`);
       if (saved) voiceProfile = saved.profile;
     }
 
@@ -313,10 +347,20 @@ router.post('/reply', generationLimiter, async (req, res) => {
  * GET /api/ai/writer/voice-profiles
  */
 router.get('/voice-profiles', (req, res) => {
+  const authToken = req.headers['x-auth-token'] || req.query.authToken;
+  if (!authToken) {
+    return res.status(400).json({
+      error: 'authToken is required',
+      hint: 'Provide your X/Twitter auth_token via the x-auth-token header or authToken query param',
+    });
+  }
+
+  const prefix = `${ownerHashOf(authToken)}:`;
   const profiles = [];
-  for (const [username, data] of voiceProfiles) {
+  for (const [key, data] of voiceProfiles) {
+    if (!key.startsWith(prefix)) continue;
     profiles.push({
-      username,
+      username: key.slice(prefix.length),
       tweetCount: data.profile.tweetCount,
       contentPillars: data.profile.contentPillars.map(p => p.topic),
       savedAt: data.savedAt,
@@ -336,8 +380,16 @@ router.get('/voice-profiles', (req, res) => {
  * GET /api/ai/writer/voice-profiles/:username
  */
 router.get('/voice-profiles/:username', (req, res) => {
+  const authToken = req.headers['x-auth-token'] || req.query.authToken;
+  if (!authToken) {
+    return res.status(400).json({
+      error: 'authToken is required',
+      hint: 'Provide your X/Twitter auth_token via the x-auth-token header or authToken query param',
+    });
+  }
+
   const username = req.params.username.toLowerCase().replace(/^@/, '');
-  const saved = voiceProfiles.get(username);
+  const saved = voiceProfiles.get(`${ownerHashOf(authToken)}:${username}`);
 
   if (!saved) {
     return res.status(404).json({

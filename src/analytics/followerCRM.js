@@ -34,7 +34,8 @@ function getDb() {
   _db.exec(`
     CREATE TABLE IF NOT EXISTS crm_contacts (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      username TEXT UNIQUE NOT NULL,
+      user_id TEXT NOT NULL DEFAULT '',
+      username TEXT NOT NULL,
       display_name TEXT,
       bio TEXT,
       followers_count INTEGER DEFAULT 0,
@@ -51,17 +52,21 @@ function getDb() {
       profile_image_url TEXT,
       location TEXT,
       website TEXT,
-      updated_at TEXT
+      updated_at TEXT,
+      UNIQUE(user_id, username)
     );
 
     CREATE INDEX IF NOT EXISTS idx_crm_contacts_username ON crm_contacts(username);
     CREATE INDEX IF NOT EXISTS idx_crm_contacts_score ON crm_contacts(score);
+    CREATE INDEX IF NOT EXISTS idx_crm_contacts_user ON crm_contacts(user_id);
 
     CREATE TABLE IF NOT EXISTS crm_tags (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT UNIQUE NOT NULL,
+      user_id TEXT NOT NULL DEFAULT '',
+      name TEXT NOT NULL,
       color TEXT DEFAULT '#1d9bf0',
-      created_at TEXT
+      created_at TEXT,
+      UNIQUE(user_id, name)
     );
 
     CREATE TABLE IF NOT EXISTS crm_contact_tags (
@@ -82,18 +87,35 @@ function getDb() {
 
     CREATE TABLE IF NOT EXISTS crm_segments (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT UNIQUE NOT NULL,
+      user_id TEXT NOT NULL DEFAULT '',
+      name TEXT NOT NULL,
       filter_json TEXT NOT NULL,
-      created_at TEXT
+      created_at TEXT,
+      UNIQUE(user_id, name)
     );
 
     CREATE TABLE IF NOT EXISTS crm_auto_tag_rules (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id TEXT NOT NULL DEFAULT '',
       rule_json TEXT NOT NULL,
       enabled INTEGER DEFAULT 1,
       created_at TEXT
     );
   `);
+
+  // Migrate pre-existing databases created before per-user scoping was added.
+  for (const [table, column] of [
+    ['crm_contacts', 'user_id'],
+    ['crm_tags', 'user_id'],
+    ['crm_segments', 'user_id'],
+    ['crm_auto_tag_rules', 'user_id'],
+  ]) {
+    try {
+      _db.exec(`ALTER TABLE ${table} ADD COLUMN ${column} TEXT NOT NULL DEFAULT ''`);
+    } catch {
+      // Column already exists — ignore.
+    }
+  }
 
   return _db;
 }
@@ -105,7 +127,7 @@ function getDb() {
 /**
  * Sync followers/following into CRM
  */
-export async function syncFollowers(username) {
+export async function syncFollowers(userId, username) {
   const db = getDb();
   const user = username.toLowerCase().replace('@', '');
   const now = new Date().toISOString();
@@ -134,9 +156,9 @@ export async function syncFollowers(username) {
   const followingSet = new Set(following.map(f => (f.username || f.screen_name || f).toString().toLowerCase()));
 
   const upsertStmt = db.prepare(`
-    INSERT INTO crm_contacts (username, display_name, bio, followers_count, following_count, tweet_count, verified, is_follower, is_following, profile_image_url, location, website, updated_at)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    ON CONFLICT(username) DO UPDATE SET
+    INSERT INTO crm_contacts (user_id, username, display_name, bio, followers_count, following_count, tweet_count, verified, is_follower, is_following, profile_image_url, location, website, updated_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT(user_id, username) DO UPDATE SET
       display_name = COALESCE(excluded.display_name, crm_contacts.display_name),
       bio = COALESCE(excluded.bio, crm_contacts.bio),
       followers_count = excluded.followers_count,
@@ -165,6 +187,7 @@ export async function syncFollowers(username) {
         || {};
 
       upsertStmt.run(
+        userId,
         u,
         profileData.displayName || profileData.display_name || profileData.name || null,
         profileData.bio || profileData.description || null,
@@ -186,9 +209,9 @@ export async function syncFollowers(username) {
   transaction();
 
   // Run auto-tag rules
-  const rules = getAutoTagRules();
+  const rules = getAutoTagRules(userId);
   if (rules.length > 0) {
-    runAutoTagRules(rules);
+    runAutoTagRules(userId, rules);
   }
 
   console.log(`✅ Synced ${synced} contacts for @${user}`);
@@ -198,14 +221,14 @@ export async function syncFollowers(username) {
 /**
  * Tag a contact
  */
-export function tagContact(username, tagName) {
+export function tagContact(userId, username, tagName) {
   const db = getDb();
   const user = username.toLowerCase().replace('@', '');
 
   // Ensure tag exists
-  db.prepare('INSERT OR IGNORE INTO crm_tags (name, created_at) VALUES (?, ?)').run(tagName, new Date().toISOString());
-  const tag = db.prepare('SELECT id FROM crm_tags WHERE name = ?').get(tagName);
-  const contact = db.prepare('SELECT id FROM crm_contacts WHERE username = ?').get(user);
+  db.prepare('INSERT OR IGNORE INTO crm_tags (user_id, name, created_at) VALUES (?, ?, ?)').run(userId, tagName, new Date().toISOString());
+  const tag = db.prepare('SELECT id FROM crm_tags WHERE user_id = ? AND name = ?').get(userId, tagName);
+  const contact = db.prepare('SELECT id FROM crm_contacts WHERE user_id = ? AND username = ?').get(userId, user);
 
   if (!contact) return { error: `Contact @${user} not found` };
   if (!tag) return { error: `Tag creation failed` };
@@ -217,11 +240,11 @@ export function tagContact(username, tagName) {
 /**
  * Remove tag from contact
  */
-export function untagContact(username, tagName) {
+export function untagContact(userId, username, tagName) {
   const db = getDb();
   const user = username.toLowerCase().replace('@', '');
-  const contact = db.prepare('SELECT id FROM crm_contacts WHERE username = ?').get(user);
-  const tag = db.prepare('SELECT id FROM crm_tags WHERE name = ?').get(tagName);
+  const contact = db.prepare('SELECT id FROM crm_contacts WHERE user_id = ? AND username = ?').get(userId, user);
+  const tag = db.prepare('SELECT id FROM crm_tags WHERE user_id = ? AND name = ?').get(userId, tagName);
 
   if (!contact || !tag) return { error: 'Contact or tag not found' };
 
@@ -232,10 +255,10 @@ export function untagContact(username, tagName) {
 /**
  * Add note to contact
  */
-export function addNote(username, note) {
+export function addNote(userId, username, note) {
   const db = getDb();
   const user = username.toLowerCase().replace('@', '');
-  const contact = db.prepare('SELECT id FROM crm_contacts WHERE username = ?').get(user);
+  const contact = db.prepare('SELECT id FROM crm_contacts WHERE user_id = ? AND username = ?').get(userId, user);
   if (!contact) return { error: `Contact @${user} not found` };
 
   db.prepare('INSERT INTO crm_notes (contact_id, note, created_at) VALUES (?, ?, ?)').run(contact.id, note, new Date().toISOString());
@@ -245,20 +268,20 @@ export function addNote(username, note) {
 /**
  * Manually set contact score
  */
-export function scoreContact(username, score) {
+export function scoreContact(userId, username, score) {
   const db = getDb();
   const user = username.toLowerCase().replace('@', '');
-  db.prepare('UPDATE crm_contacts SET score = ? WHERE username = ?').run(Math.max(0, Math.min(100, score)), user);
+  db.prepare('UPDATE crm_contacts SET score = ? WHERE user_id = ? AND username = ?').run(Math.max(0, Math.min(100, score)), userId, user);
   return { username: user, score };
 }
 
 /**
  * Auto-score contact based on heuristics
  */
-export function autoScore(username) {
+export function autoScore(userId, username) {
   const db = getDb();
   const user = username.toLowerCase().replace('@', '');
-  const contact = db.prepare('SELECT * FROM crm_contacts WHERE username = ?').get(user);
+  const contact = db.prepare('SELECT * FROM crm_contacts WHERE user_id = ? AND username = ?').get(userId, user);
   if (!contact) return { error: `Contact @${user} not found` };
 
   let score = 0;
@@ -294,14 +317,14 @@ export function autoScore(username) {
   score += ratioScore;
 
   const finalScore = Math.round(Math.min(100, score));
-  db.prepare('UPDATE crm_contacts SET score = ? WHERE username = ?').run(finalScore, user);
+  db.prepare('UPDATE crm_contacts SET score = ? WHERE user_id = ? AND username = ?').run(finalScore, userId, user);
   return { username: user, score: finalScore, breakdown: { followerScore: Math.round(followerScore), tweetScore: Math.round(tweetScore) } };
 }
 
 /**
  * Full-text search across contacts
  */
-export function searchContacts(query) {
+export function searchContacts(userId, query) {
   const db = getDb();
   const like = `%${query}%`;
   return db.prepare(`
@@ -309,20 +332,20 @@ export function searchContacts(query) {
     FROM crm_contacts c
     LEFT JOIN crm_contact_tags ct ON c.id = ct.contact_id
     LEFT JOIN crm_tags t ON ct.tag_id = t.id
-    WHERE c.username LIKE ? OR c.display_name LIKE ? OR c.bio LIKE ?
+    WHERE c.user_id = ? AND (c.username LIKE ? OR c.display_name LIKE ? OR c.bio LIKE ?)
     GROUP BY c.id
     ORDER BY c.score DESC
     LIMIT 100
-  `).all(like, like, like);
+  `).all(userId, like, like, like);
 }
 
 /**
  * Rich filter contacts
  */
-export function filterContacts(filters = {}) {
+export function filterContacts(userId, filters = {}) {
   const db = getDb();
-  const conditions = [];
-  const params = [];
+  const conditions = ['c.user_id = ?'];
+  const params = [userId];
 
   if (filters.minFollowers !== undefined) { conditions.push('c.followers_count >= ?'); params.push(filters.minFollowers); }
   if (filters.maxFollowers !== undefined) { conditions.push('c.followers_count <= ?'); params.push(filters.maxFollowers); }
@@ -361,33 +384,33 @@ export function filterContacts(filters = {}) {
 /**
  * Create a saved segment
  */
-export function createSegment(name, filters) {
+export function createSegment(userId, name, filters) {
   const db = getDb();
-  db.prepare('INSERT OR REPLACE INTO crm_segments (name, filter_json, created_at) VALUES (?, ?, ?)').run(name, JSON.stringify(filters), new Date().toISOString());
+  db.prepare('INSERT OR REPLACE INTO crm_segments (user_id, name, filter_json, created_at) VALUES (?, ?, ?, ?)').run(userId, name, JSON.stringify(filters), new Date().toISOString());
   return { name, filters, status: 'created' };
 }
 
 /**
  * Run a saved segment
  */
-export function getSegment(name) {
+export function getSegment(userId, name) {
   const db = getDb();
-  const segment = db.prepare('SELECT * FROM crm_segments WHERE name = ?').get(name);
+  const segment = db.prepare('SELECT * FROM crm_segments WHERE user_id = ? AND name = ?').get(userId, name);
   if (!segment) return { error: `Segment "${name}" not found` };
   const filters = JSON.parse(segment.filter_json);
-  const contacts = filterContacts(filters);
+  const contacts = filterContacts(userId, filters);
   return { name, filters, contacts, count: contacts.length };
 }
 
 /**
  * List all segments
  */
-export function listSegments() {
+export function listSegments(userId) {
   const db = getDb();
-  const segments = db.prepare('SELECT * FROM crm_segments ORDER BY created_at DESC').all();
+  const segments = db.prepare('SELECT * FROM crm_segments WHERE user_id = ? ORDER BY created_at DESC').all(userId);
   return segments.map(s => {
     const filters = JSON.parse(s.filter_json);
-    const count = filterContacts({ ...filters, limit: 100000 }).length;
+    const count = filterContacts(userId, { ...filters, limit: 100000 }).length;
     return { name: s.name, filters, count, created_at: s.created_at };
   });
 }
@@ -395,21 +418,21 @@ export function listSegments() {
 /**
  * Bulk tag contacts
  */
-export function bulkTag(filterOrUsernames, tagName) {
+export function bulkTag(userId, filterOrUsernames, tagName) {
   const db = getDb();
   let contacts;
 
   if (Array.isArray(filterOrUsernames)) {
     contacts = filterOrUsernames.map(u => {
       const user = u.toLowerCase().replace('@', '');
-      return db.prepare('SELECT id FROM crm_contacts WHERE username = ?').get(user);
+      return db.prepare('SELECT id FROM crm_contacts WHERE user_id = ? AND username = ?').get(userId, user);
     }).filter(Boolean);
   } else {
-    contacts = filterContacts(filterOrUsernames);
+    contacts = filterContacts(userId, filterOrUsernames);
   }
 
-  db.prepare('INSERT OR IGNORE INTO crm_tags (name, created_at) VALUES (?, ?)').run(tagName, new Date().toISOString());
-  const tag = db.prepare('SELECT id FROM crm_tags WHERE name = ?').get(tagName);
+  db.prepare('INSERT OR IGNORE INTO crm_tags (user_id, name, created_at) VALUES (?, ?, ?)').run(userId, tagName, new Date().toISOString());
+  const tag = db.prepare('SELECT id FROM crm_tags WHERE user_id = ? AND name = ?').get(userId, tagName);
 
   let tagged = 0;
   const stmt = db.prepare('INSERT OR IGNORE INTO crm_contact_tags (contact_id, tag_id) VALUES (?, ?)');
@@ -427,10 +450,10 @@ export function bulkTag(filterOrUsernames, tagName) {
 /**
  * Get contact timeline
  */
-export function getContactTimeline(username) {
+export function getContactTimeline(userId, username) {
   const db = getDb();
   const user = username.toLowerCase().replace('@', '');
-  const contact = db.prepare('SELECT * FROM crm_contacts WHERE username = ?').get(user);
+  const contact = db.prepare('SELECT * FROM crm_contacts WHERE user_id = ? AND username = ?').get(userId, user);
   if (!contact) return { error: `Contact @${user} not found` };
 
   const notes = db.prepare('SELECT * FROM crm_notes WHERE contact_id = ? ORDER BY created_at DESC').all(contact.id);
@@ -442,8 +465,8 @@ export function getContactTimeline(username) {
 /**
  * Export segment to JSON/CSV
  */
-export function exportSegment(name, format = 'json') {
-  const result = getSegment(name);
+export function exportSegment(userId, name, format = 'json') {
+  const result = getSegment(userId, name);
   if (result.error) return result;
 
   if (format === 'csv') {
@@ -467,26 +490,26 @@ export function exportSegment(name, format = 'json') {
 /**
  * Add auto-tag rule
  */
-export function addAutoTagRule(rule) {
+export function addAutoTagRule(userId, rule) {
   const db = getDb();
-  db.prepare('INSERT INTO crm_auto_tag_rules (rule_json, created_at) VALUES (?, ?)').run(JSON.stringify(rule), new Date().toISOString());
+  db.prepare('INSERT INTO crm_auto_tag_rules (user_id, rule_json, created_at) VALUES (?, ?, ?)').run(userId, JSON.stringify(rule), new Date().toISOString());
   return { status: 'added', rule };
 }
 
 /**
  * Get auto-tag rules
  */
-function getAutoTagRules() {
+function getAutoTagRules(userId) {
   const db = getDb();
-  return db.prepare('SELECT * FROM crm_auto_tag_rules WHERE enabled = 1').all().map(r => ({ ...r, rule: JSON.parse(r.rule_json) }));
+  return db.prepare('SELECT * FROM crm_auto_tag_rules WHERE user_id = ? AND enabled = 1').all(userId).map(r => ({ ...r, rule: JSON.parse(r.rule_json) }));
 }
 
 /**
  * Run auto-tag rules on all contacts
  */
-function runAutoTagRules(rules) {
+function runAutoTagRules(userId, rules) {
   const db = getDb();
-  const contacts = db.prepare('SELECT * FROM crm_contacts').all();
+  const contacts = db.prepare('SELECT * FROM crm_contacts WHERE user_id = ?').all(userId);
 
   for (const contact of contacts) {
     for (const { rule } of rules) {
@@ -507,7 +530,7 @@ function runAutoTagRules(rules) {
       }
 
       if (matches && rule.then?.tag) {
-        tagContact(contact.username, rule.then.tag);
+        tagContact(userId, contact.username, rule.then.tag);
       }
     }
   }

@@ -2550,7 +2550,11 @@ async function executeXeepyTool(name, args) {
         if (!username || seen.has(username)) continue;
         seen.add(username);
         if (args.mustHaveBio || args.mustHaveAvatar || args.minFollowers || args.maxFollowers) {
-          // Apply filters — would need profile scrape for full filtering
+          const profile = await localTools.x_get_profile?.({ username }).catch(() => null);
+          if (args.mustHaveBio && !profile?.bio) continue;
+          if (args.mustHaveAvatar && (!profile?.avatar || profile.avatar.includes('default_profile'))) continue;
+          if (args.minFollowers && (profile?.followers || 0) < args.minFollowers) continue;
+          if (args.maxFollowers && (profile?.followers || 0) > args.maxFollowers) continue;
         }
         try {
           await localTools.x_follow?.({ username });
@@ -3445,20 +3449,20 @@ async function executeCompetitiveTool(name, args) {
     // ── 09-C: CRM ──
     case 'x_crm_sync': {
       const { syncFollowers } = await import('../analytics/followerCRM.js');
-      return await syncFollowers(args.username);
+      return await syncFollowers('', args.username);
     }
     case 'x_crm_tag': {
       const { tagContact } = await import('../analytics/followerCRM.js');
-      tagContact(args.username, args.tag);
+      tagContact('', args.username, args.tag);
       return { status: 'tagged', username: args.username, tag: args.tag };
     }
     case 'x_crm_search': {
       const { searchContacts } = await import('../analytics/followerCRM.js');
-      return searchContacts(args.query);
+      return searchContacts('', args.query);
     }
     case 'x_crm_segment': {
       const { getSegment } = await import('../analytics/followerCRM.js');
-      return getSegment(args.name);
+      return getSegment('', args.name);
     }
 
     // ── 09-D: Bulk Operations ──
@@ -3706,7 +3710,7 @@ async function executePersonaTool(name, args) {
         authToken,
         headless: args.headless !== false,
         dryRun: args.dryRun || false,
-        maxSessions: args.sessions || 1, // Default 1 session for MCP (not infinite)
+        maxSessions: args.sessions ?? 1, // Default 1 session for MCP; 0 = infinite
       });
 
       return {
