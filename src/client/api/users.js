@@ -193,22 +193,10 @@ export async function* getFollowing(http, userId, count = 100) {
 export async function followUser(http, userId) {
   const endpoint = GRAPHQL_ENDPOINTS.CreateFollow;
   const url = endpoint.url();
-  const body = new URLSearchParams({
-    include_profile_interstitial_type: '1',
-    include_blocking: '1',
-    include_blocked_by: '1',
-    include_followed_by: '1',
-    include_want_retweets: '1',
-    include_mute_edge: '1',
-    include_can_dm: '1',
-    include_can_media_tag: '1',
-    include_ext_is_blue_verified: '1',
-    include_ext_verified_type: '1',
-    include_ext_profile_image_shape: '1',
-    skip_status: '1',
-    user_id: userId,
-  });
-  await http.post(url, body, { contentType: 'application/x-www-form-urlencoded' });
+  // X rejects the legacy 14-param include_* body with 403; the minimal
+  // user_id form is what the web client sends and what X accepts.
+  const body = new URLSearchParams({ user_id: userId }).toString();
+  await http.post(url, body, { 'Content-Type': 'application/x-www-form-urlencoded' });
 }
 
 /**
@@ -221,20 +209,7 @@ export async function followUser(http, userId) {
 export async function unfollowUser(http, userId) {
   const endpoint = GRAPHQL_ENDPOINTS.DestroyFollow;
   const url = endpoint.url();
-  const body = new URLSearchParams({
-    include_profile_interstitial_type: '1',
-    include_blocking: '1',
-    include_blocked_by: '1',
-    include_followed_by: '1',
-    include_want_retweets: '1',
-    include_mute_edge: '1',
-    include_can_dm: '1',
-    include_can_media_tag: '1',
-    include_ext_is_blue_verified: '1',
-    include_ext_verified_type: '1',
-    include_ext_profile_image_shape: '1',
-    skip_status: '1',
-    user_id: userId,
-  });
-  await http.post(url, body, { contentType: 'application/x-www-form-urlencoded' });
+  // See followUser: minimal user_id body as a string, legacy params rejected.
+  const body = new URLSearchParams({ user_id: userId }).toString();
+  await http.post(url, body, { 'Content-Type': 'application/x-www-form-urlencoded' });
 }

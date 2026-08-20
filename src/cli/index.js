@@ -558,8 +558,9 @@ program
     const hashtag = tag.startsWith('#') ? tag : `#${tag}`;
     const spinner = ora(`Scraping ${hashtag}`).start();
 
+    let browser;
     try {
-      const browser = await scrapers.createBrowser();
+      browser = await scrapers.createBrowser();
       const page = await scrapers.createPage(browser);
 
       const config = await loadConfig();
@@ -568,7 +569,6 @@ program
       }
 
       const tweets = await scrapers.scrapeHashtag(page, tag, { limit });
-      await browser.close();
 
       spinner.succeed(`Found ${tweets.length} tweets`);
 
@@ -583,6 +583,8 @@ program
     } catch (error) {
       spinner.fail('Scraping failed');
       console.error(chalk.red(error.message));
+    } finally {
+      if (browser) await browser.close().catch(() => {});
     }
   });
 
@@ -594,8 +596,9 @@ program
   .action(async (url, options) => {
     const spinner = ora('Scraping thread...').start();
 
+    let browser;
     try {
-      const browser = await scrapers.createBrowser();
+      browser = await scrapers.createBrowser();
       const page = await scrapers.createPage(browser);
 
       const config = await loadConfig();
@@ -604,7 +607,6 @@ program
       }
 
       const thread = await scrapers.scrapeThread(page, url);
-      await browser.close();
 
       spinner.succeed(`Scraped ${thread.length} tweets in thread`);
 
@@ -623,6 +625,8 @@ program
     } catch (error) {
       spinner.fail('Failed to scrape thread');
       console.error(chalk.red(error.message));
+    } finally {
+      if (browser) await browser.close().catch(() => {});
     }
   });
 
@@ -636,8 +640,9 @@ program
     const limit = parseInt(options.limit);
     const spinner = ora(`Scraping media from @${username}`).start();
 
+    let browser;
     try {
-      const browser = await scrapers.createBrowser();
+      browser = await scrapers.createBrowser();
       const page = await scrapers.createPage(browser);
 
       const config = await loadConfig();
@@ -646,7 +651,6 @@ program
       }
 
       const media = await scrapers.scrapeMedia(page, username, { limit });
-      await browser.close();
 
       spinner.succeed(`Found ${media.length} media items`);
 
@@ -661,6 +665,8 @@ program
     } catch (error) {
       spinner.fail('Failed to scrape media');
       console.error(chalk.red(error.message));
+    } finally {
+      if (browser) await browser.close().catch(() => {});
     }
   });
 
@@ -1414,8 +1420,9 @@ program
 
     const spinner = ora(`Exporting @${user}...`).start();
 
+    let browser;
     try {
-      const browser = await scrapers.createBrowser();
+      browser = await scrapers.createBrowser();
       const page = await scrapers.createPage(browser);
 
       const config = await loadConfig();
@@ -1436,8 +1443,6 @@ program
           spinner.text = `[${phase}] ${currentItem || ''} (${completed}/${total})`;
         },
       });
-
-      await browser.close();
 
       spinner.succeed(`Export complete → ${summary.dir}`);
 
@@ -1460,6 +1465,8 @@ program
     } catch (error) {
       spinner.fail('Export failed');
       console.error(chalk.red(error.message));
+    } finally {
+      if (browser) await browser.close().catch(() => {});
     }
   });
 
@@ -1971,14 +1978,14 @@ ai
       process.exit(1);
     }
     const spinner = ora(`Analyzing @${username}'s writing voice...`).start();
+    let browser;
     try {
       const { scrapeTweets, createBrowser, createPage, loginWithCookie } = scrapers;
       const { analyzeVoice, summarizeVoiceProfile } = await import('../ai/index.js');
-      const browser = await createBrowser();
+      browser = await createBrowser();
       const page = await createPage(browser);
       await loginWithCookie(page, token);
       const tweets = await scrapeTweets(page, username, { limit: parseInt(options.limit) });
-      await browser.close();
       if (!tweets || tweets.length === 0) {
         spinner.fail(`No tweets found for @${username}`);
         return;
@@ -2002,6 +2009,8 @@ ai
     } catch (error) {
       spinner.fail('Voice analysis failed');
       console.error(chalk.red(error.message));
+    } finally {
+      if (browser) await browser.close().catch(() => {});
     }
   });
 
@@ -2034,14 +2043,14 @@ ai
     if (options.model) process.env.OPENROUTER_MODEL = options.model;
 
     const spinner = ora(`Scraping @${options.voice}'s tweets...`).start();
+    let browser;
     try {
       const { scrapeTweets, createBrowser, createPage, loginWithCookie } = scrapers;
       const { analyzeVoice, generateTweet, generateThread } = await import('../ai/index.js');
-      const browser = await createBrowser();
+      browser = await createBrowser();
       const page = await createPage(browser);
       await loginWithCookie(page, token);
       const tweets = await scrapeTweets(page, options.voice, { limit: 100 });
-      await browser.close();
       if (!tweets || tweets.length === 0) {
         spinner.fail(`No tweets found for @${options.voice}`);
         return;
@@ -2073,6 +2082,8 @@ ai
     } catch (error) {
       spinner.fail('Generation failed');
       console.error(chalk.red(error.message));
+    } finally {
+      if (browser) await browser.close().catch(() => {});
     }
   });
 
@@ -2104,14 +2115,14 @@ ai
     if (options.model) process.env.OPENROUTER_MODEL = options.model;
 
     const spinner = ora(`Scraping @${options.voice}'s tweets...`).start();
+    let browser;
     try {
       const { scrapeTweets, createBrowser, createPage, loginWithCookie } = scrapers;
       const { analyzeVoice, rewriteTweet } = await import('../ai/index.js');
-      const browser = await createBrowser();
+      browser = await createBrowser();
       const page = await createPage(browser);
       await loginWithCookie(page, token);
       const tweets = await scrapeTweets(page, options.voice, { limit: 100 });
-      await browser.close();
       if (!tweets || tweets.length === 0) {
         spinner.fail(`No tweets found for @${options.voice}`);
         return;
@@ -2132,6 +2143,8 @@ ai
     } catch (error) {
       spinner.fail('Rewrite failed');
       console.error(chalk.red(error.message));
+    } finally {
+      if (browser) await browser.close().catch(() => {});
     }
   });
 
@@ -2160,14 +2173,14 @@ ai
     if (options.model) process.env.OPENROUTER_MODEL = options.model;
 
     const spinner = ora(`Scraping @${username}'s tweets...`).start();
+    let browser;
     try {
       const { scrapeTweets, createBrowser, createPage, loginWithCookie } = scrapers;
       const { analyzeVoice, generateWeek } = await import('../ai/index.js');
-      const browser = await createBrowser();
+      browser = await createBrowser();
       const page = await createPage(browser);
       await loginWithCookie(page, token);
       const tweets = await scrapeTweets(page, username, { limit: 100 });
-      await browser.close();
       if (!tweets || tweets.length === 0) {
         spinner.fail(`No tweets found for @${username}`);
         return;
@@ -2199,6 +2212,8 @@ ai
     } catch (error) {
       spinner.fail('Calendar generation failed');
       console.error(chalk.red(error.message));
+    } finally {
+      if (browser) await browser.close().catch(() => {});
     }
   });
 
