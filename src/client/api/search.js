@@ -9,7 +9,7 @@
  * @license MIT
  */
 
-import { GRAPHQL_ENDPOINTS, DEFAULT_FEATURES, buildGraphQLUrl } from './graphqlQueries.js';
+import { GRAPHQL_ENDPOINTS, graphqlRequest } from './graphqlQueries.js';
 import { Tweet } from '../models/Tweet.js';
 import { Profile } from '../models/Profile.js';
 import { parseTimelineEntries, parseTweetEntry, parseUserEntry } from './parsers.js';
@@ -49,7 +49,6 @@ export async function* searchTweets(http, query, count = 100, mode = 'Latest') {
   let cursor = null;
 
   while (yielded < count) {
-    const endpoint = GRAPHQL_ENDPOINTS.SearchTimeline;
     const variables = {
       rawQuery: query,
       count: 20,
@@ -58,8 +57,7 @@ export async function* searchTweets(http, query, count = 100, mode = 'Latest') {
     };
     if (cursor) variables.cursor = cursor;
 
-    const url = buildGraphQLUrl(endpoint, variables);
-    const data = await http.get(url);
+    const data = await graphqlRequest(http, GRAPHQL_ENDPOINTS.SearchTimeline, variables);
 
     const { entries, cursor: nextCursor } = parseTimelineEntries(
       data,
@@ -96,7 +94,6 @@ export async function* searchProfiles(http, query, count = 100) {
   let cursor = null;
 
   while (yielded < count) {
-    const endpoint = GRAPHQL_ENDPOINTS.SearchTimeline;
     const variables = {
       rawQuery: query,
       count: 20,
@@ -105,8 +102,7 @@ export async function* searchProfiles(http, query, count = 100) {
     };
     if (cursor) variables.cursor = cursor;
 
-    const url = buildGraphQLUrl(endpoint, variables);
-    const data = await http.get(url);
+    const data = await graphqlRequest(http, GRAPHQL_ENDPOINTS.SearchTimeline, variables);
 
     const { entries, cursor: nextCursor } = parseTimelineEntries(
       data,

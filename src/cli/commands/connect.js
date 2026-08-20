@@ -105,9 +105,21 @@ async function verifySession(cookies) {
   const { Scraper } = await import('../../client/index.js');
   const scraper = new Scraper();
   await scraper.setCookies(`auth_token=${cookies.auth_token}; ct0=${cookies.ct0}`);
-  const profile = await scraper.me();
-  if (!profile?.username) throw new Error('X accepted the cookies but returned no account.');
-  return { username: profile.username, followers: profile.followersCount || 0 };
+  try {
+    const me = await scraper.me();
+    if (me?.username) {
+      return { username: me.username, followers: me.followersCount || 0 };
+    }
+  } catch {
+    // me() needs a twid cookie, which the config-file session doesn't store.
+    // Fall back to an authenticated read (Followers) to prove the session works.
+  }
+  const probe = scraper.getFollowers('nasa', 1);
+  const first = await probe.next();
+  if (first.value?.username) {
+    return { username: null, followers: null };
+  }
+  throw new Error('X accepted the connection but an authenticated read attempt returned no data.');
 }
 
 /**
@@ -161,14 +173,22 @@ export async function connectCommand(options = {}) {
     const identity = await verifySession(cookies);
 
     const savedTo = await saveCookieJar(cookies);
-    spinner.succeed(chalk.green(`Connected as @${identity.username}`));
+    spinner.succeed(
+      identity.username
+        ? chalk.green(`Connected as @${identity.username}`)
+        : chalk.green('Connected — session verified'),
+    );
 
     console.log(chalk.gray(`\n  Saved to ${savedTo} (owner-only)`));
-    console.log(chalk.gray(`  Verified against X: ${identity.followers.toLocaleString('en-US')} followers\n`));
+    console.log(
+      identity.followers != null
+        ? chalk.gray(`  Verified against X: ${identity.followers.toLocaleString('en-US')} followers\n`)
+        : chalk.gray('  Verified against X: authenticated read OK\n'),
+    );
     console.log('  Session-tier commands are now unlocked:\n');
     console.log(chalk.cyan(`    xactions search "your brand" --limit 50`));
-    console.log(chalk.cyan(`    xactions followers ${identity.username} --limit 200`));
-    console.log(chalk.cyan(`    xactions non-followers ${identity.username}`));
+    console.log(chalk.cyan(`    xactions followers ${identity.username ?? 'yourhandle'} --limit 200`));
+    console.log(chalk.cyan(`    xactions non-followers ${identity.username ?? 'yourhandle'}`));
     console.log(chalk.gray('\n  Revoke at any time with `xactions logout`.\n'));
   } catch (error) {
     spinner.fail(chalk.red(error.message));

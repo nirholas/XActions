@@ -16,7 +16,6 @@ import {
   REST_BASE,
   DEFAULT_FEATURES,
   USER_AGENTS,
-  buildGraphQLUrl,
 } from './endpoints.js';
 import {
   TwitterApiError,
@@ -245,31 +244,33 @@ export class TwitterHttpClient {
   // ---- GraphQL helpers ----------------------------------------------------
 
   /**
-   * Execute a GraphQL query (GET) or mutation (POST).
+   * Execute a GraphQL query or mutation (POST).
+   *
+   * X now rejects GET on several GraphQL endpoints (SearchTimeline, Followers)
+   * with HTTP 404 and requires POST with body `{ variables, features, queryId }`.
+   * Every queryId works over POST, so queries use the same transport as mutations.
    *
    * @param {string} queryId
    * @param {string} operationName
    * @param {object} variables
    * @param {object} [options]
    * @param {object} [options.features]
-   * @param {boolean} [options.mutation=false] - If true, sends POST
+   * @param {boolean} [options.mutation=false] - If true, returns raw JSON (no cursor wrapper)
    * @returns {Promise<object>}
    */
   async graphql(queryId, operationName, variables, options = {}) {
     const features = options.features || DEFAULT_FEATURES;
-    const isMutation = options.mutation === true;
+    const url = `${GRAPHQL_BASE}/${queryId}/${operationName}`;
 
-    if (isMutation) {
-      const url = `${GRAPHQL_BASE}/${queryId}/${operationName}`;
+    const json = await this.request(url, {
+      method: 'POST',
+      body: { variables, features, queryId },
+    });
+
+    if (options.mutation === true) {
       // Mutations don't paginate — return raw JSON
-      return this.request(url, {
-        method: 'POST',
-        body: { variables, features, queryId },
-      });
+      return json;
     }
-
-    const url = buildGraphQLUrl(queryId, operationName, variables, features);
-    const json = await this.request(url);
 
     // Extract bottom cursor for pagination (queries only)
     const cursor = this._extractCursor(json);

@@ -9,7 +9,7 @@
  * @license MIT
  */
 
-import { GRAPHQL_ENDPOINTS, DEFAULT_FEATURES, buildGraphQLUrl } from './graphqlQueries.js';
+import { GRAPHQL_ENDPOINTS, graphqlRequest } from './graphqlQueries.js';
 import { Profile } from '../models/Profile.js';
 import { NotFoundError, ScraperError } from '../errors.js';
 import { parseTimelineEntries, parseUserEntry } from './parsers.js';
@@ -28,13 +28,11 @@ function randomDelay(min = 1000, max = 2000) {
  * @throws {NotFoundError}
  */
 export async function getUserByScreenName(http, username) {
-  const endpoint = GRAPHQL_ENDPOINTS.UserByScreenName;
   const variables = {
     screen_name: username,
     withSafetyModeUserFields: true,
   };
-  const url = buildGraphQLUrl(endpoint, variables);
-  const data = await http.get(url);
+  const data = await graphqlRequest(http, GRAPHQL_ENDPOINTS.UserByScreenName, variables);
 
   const userResult = data?.data?.user?.result;
   if (!userResult || userResult.__typename === 'UserUnavailable') {
@@ -62,13 +60,11 @@ export async function getUserByScreenName(http, username) {
  * @throws {NotFoundError}
  */
 export async function getUserById(http, userId) {
-  const endpoint = GRAPHQL_ENDPOINTS.UserByRestId;
   const variables = {
     userId,
     withSafetyModeUserFields: true,
   };
-  const url = buildGraphQLUrl(endpoint, variables);
-  const data = await http.get(url);
+  const data = await graphqlRequest(http, GRAPHQL_ENDPOINTS.UserByRestId, variables);
 
   const userResult = data?.data?.user?.result;
   if (!userResult || userResult.__typename === 'UserUnavailable') {
@@ -112,7 +108,6 @@ export async function* getFollowers(http, userId, count = 100) {
   let cursor = null;
 
   while (yielded < count) {
-    const endpoint = GRAPHQL_ENDPOINTS.Followers;
     const variables = {
       userId,
       count: 20,
@@ -120,8 +115,7 @@ export async function* getFollowers(http, userId, count = 100) {
     };
     if (cursor) variables.cursor = cursor;
 
-    const url = buildGraphQLUrl(endpoint, variables);
-    const data = await http.get(url);
+    const data = await graphqlRequest(http, GRAPHQL_ENDPOINTS.Followers, variables);
 
     const { entries, cursor: nextCursor } = parseTimelineEntries(
       data,
@@ -158,7 +152,6 @@ export async function* getFollowing(http, userId, count = 100) {
   let cursor = null;
 
   while (yielded < count) {
-    const endpoint = GRAPHQL_ENDPOINTS.Following;
     const variables = {
       userId,
       count: 20,
@@ -166,8 +159,7 @@ export async function* getFollowing(http, userId, count = 100) {
     };
     if (cursor) variables.cursor = cursor;
 
-    const url = buildGraphQLUrl(endpoint, variables);
-    const data = await http.get(url);
+    const data = await graphqlRequest(http, GRAPHQL_ENDPOINTS.Following, variables);
 
     const { entries, cursor: nextCursor } = parseTimelineEntries(
       data,
@@ -201,22 +193,10 @@ export async function* getFollowing(http, userId, count = 100) {
 export async function followUser(http, userId) {
   const endpoint = GRAPHQL_ENDPOINTS.CreateFollow;
   const url = endpoint.url();
-  const body = new URLSearchParams({
-    include_profile_interstitial_type: '1',
-    include_blocking: '1',
-    include_blocked_by: '1',
-    include_followed_by: '1',
-    include_want_retweets: '1',
-    include_mute_edge: '1',
-    include_can_dm: '1',
-    include_can_media_tag: '1',
-    include_ext_is_blue_verified: '1',
-    include_ext_verified_type: '1',
-    include_ext_profile_image_shape: '1',
-    skip_status: '1',
-    user_id: userId,
-  });
-  await http.post(url, body, { contentType: 'application/x-www-form-urlencoded' });
+  // X rejects the legacy 14-param include_* body with 403; the minimal
+  // user_id form is what the web client sends and what X accepts.
+  const body = new URLSearchParams({ user_id: userId }).toString();
+  await http.post(url, body, { 'Content-Type': 'application/x-www-form-urlencoded' });
 }
 
 /**
@@ -229,20 +209,7 @@ export async function followUser(http, userId) {
 export async function unfollowUser(http, userId) {
   const endpoint = GRAPHQL_ENDPOINTS.DestroyFollow;
   const url = endpoint.url();
-  const body = new URLSearchParams({
-    include_profile_interstitial_type: '1',
-    include_blocking: '1',
-    include_blocked_by: '1',
-    include_followed_by: '1',
-    include_want_retweets: '1',
-    include_mute_edge: '1',
-    include_can_dm: '1',
-    include_can_media_tag: '1',
-    include_ext_is_blue_verified: '1',
-    include_ext_verified_type: '1',
-    include_ext_profile_image_shape: '1',
-    skip_status: '1',
-    user_id: userId,
-  });
-  await http.post(url, body, { contentType: 'application/x-www-form-urlencoded' });
+  // See followUser: minimal user_id body as a string, legacy params rejected.
+  const body = new URLSearchParams({ user_id: userId }).toString();
+  await http.post(url, body, { 'Content-Type': 'application/x-www-form-urlencoded' });
 }

@@ -12,7 +12,11 @@
  * @license MIT
  */
 
-import { GRAPHQL, BEARER_TOKEN as SHARED_BEARER_TOKEN } from '../../scrapers/twitter/http/endpoints.js';
+import {
+  GRAPHQL,
+  GRAPHQL_BASE,
+  BEARER_TOKEN as SHARED_BEARER_TOKEN,
+} from '../../scrapers/twitter/http/endpoints.js';
 
 /**
  * Public bearer token embedded in Twitter's web client JavaScript.
@@ -100,7 +104,7 @@ export const GRAPHQL_ENDPOINTS = {
   UserTweetsAndReplies: {
     queryId: queryId('UserTweetsAndReplies', 'Q6aAvPw7azXZbqXzuqTALA'),
     operationName: 'UserTweetsAndReplies',
-    method: 'GET',
+    method: 'POST',
   },
   TweetDetail: {
     queryId: queryId('TweetDetail', 'BbCrSoXIR7z93lLCVFlQ2Q'),
@@ -110,22 +114,22 @@ export const GRAPHQL_ENDPOINTS = {
   SearchTimeline: {
     queryId: queryId('SearchTimeline', 'gkjsKepM6gl_HmFWoWKfgg'),
     operationName: 'SearchTimeline',
-    method: 'GET',
+    method: 'POST',
   },
   Followers: {
     queryId: queryId('Followers', 'djdTXDIk2qhd4OStqlUFeQ'),
     operationName: 'Followers',
-    method: 'GET',
+    method: 'POST',
   },
   Following: {
     queryId: queryId('Following', 'IWP6Zt14sARO29lJT35bBw'),
     operationName: 'Following',
-    method: 'GET',
+    method: 'POST',
   },
   Likes: {
     queryId: queryId('Likes', 'eSSNbhECHHBBew2wkHY_Bw'),
     operationName: 'Likes',
-    method: 'GET',
+    method: 'POST',
   },
   CreateTweet: {
     queryId: queryId('CreateTweet', 'a1p9RWpkYKBjWv_I3WzS-A'),
@@ -186,19 +190,22 @@ export const GRAPHQL_ENDPOINTS = {
     isRest: true,
   },
   ListLatestTweetsTimeline: {
-    queryId: queryId('ListLatestTweetsTimeline', '2Vjeyo_L0nizAUhHe3fKyA'),
+    queryId: queryId('ListTimeline', '2Vjeyo_L0nizAUhHe3fKyA'),
     operationName: 'ListLatestTweetsTimeline',
-    method: 'GET',
+    method: 'POST',
   },
   ListMembers: {
     queryId: queryId('ListMembers', 'BQp2IEYkgxuSxqbTAr1e1g'),
     operationName: 'ListMembers',
-    method: 'GET',
+    method: 'POST',
   },
+  // NOTE: ListByRestId has no shared-map entry and the fallback ID is stale
+  // ("Query not found"); only used by getListById, which has no in-repo consumer.
+  // Add a shared GRAPHQL entry when a current ID is found.
   ListByRestId: {
     queryId: queryId('ListByRestId', 'lAzEhcd0SKDsk8qSCWgNbg'),
     operationName: 'ListByRestId',
-    method: 'GET',
+    method: 'POST',
   },
   Trends: {
     queryId: null,
@@ -233,4 +240,43 @@ export function buildGraphQLUrl(endpoint, variables = {}, features) {
   params.set('features', JSON.stringify(mergedFeatures));
 
   return `${base}?${params.toString()}`;
+}
+
+/**
+ * Execute a GraphQL query/mutation through the HTTP client.
+ *
+ * Transport is per-endpoint (`endpoint.method`), driven by what X accepts:
+ * some GraphQL endpoints still answer GET and work unauthenticated
+ * (UserByScreenName, UserTweets, TweetDetail), others 404 on GET and require
+ * POST (SearchTimeline, Followers, ...). Guest POSTs are rejected outright,
+ * so GET must be preserved where X still serves it. REST GET endpoints
+ * (Trends, DM inbox) keep GET via their url() factory.
+ *
+ * @param {Object} http - HTTP client with get/post methods
+ * @param {Object} endpoint - Entry from GRAPHQL_ENDPOINTS
+ * @param {Object} [variables={}] - GraphQL variables
+ * @param {Object} [features] - Feature flags (defaults to DEFAULT_FEATURES)
+ * @returns {Promise<Object>} Parsed JSON response
+ */
+export async function graphqlRequest(http, endpoint, variables = {}, features) {
+  if (endpoint.isRest) {
+    if (endpoint.method === 'GET') return http.get(endpoint.url());
+    throw new Error(
+      `graphqlRequest: REST ${endpoint.method} endpoint (${endpoint.url()}) must call http directly`,
+    );
+  }
+
+  const mergedVars = { ...endpoint.defaultVariables, ...variables };
+  const mergedFeatures = features || DEFAULT_FEATURES;
+
+  if (endpoint.method === 'GET') {
+    return http.get(buildGraphQLUrl(endpoint, mergedVars, mergedFeatures));
+  }
+
+  const url = `${GRAPHQL_BASE}/${endpoint.queryId}/${endpoint.operationName}`;
+  return http.post(url, {
+    variables: mergedVars,
+    features: mergedFeatures,
+    queryId: endpoint.queryId,
+  });
 }

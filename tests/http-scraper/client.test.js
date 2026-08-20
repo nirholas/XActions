@@ -21,8 +21,6 @@ import {
 import {
   BEARER_TOKEN,
   GRAPHQL_BASE,
-  DEFAULT_FEATURES,
-  buildGraphQLUrl,
 } from '../../src/scrapers/twitter/http/endpoints.js';
 import {
   RateLimitError,
@@ -262,7 +260,7 @@ describe('Proxy URL parsing', () => {
 // ---------------------------------------------------------------------------
 
 describe('GraphQL URL construction', () => {
-  it('graphql() builds correct GET URL using buildGraphQLUrl', async () => {
+  it('graphql() sends POST with variables/features/queryId body', async () => {
     const fetch = mockFetch(200, { data: {} });
     const client = new TwitterHttpClient({
       cookies: 'auth_token=x; ct0=y',
@@ -273,8 +271,14 @@ describe('GraphQL URL construction', () => {
     await client.graphql('testQID', 'TestOp', { foo: 'bar' });
 
     const calledUrl = fetch.mock.calls[0][0];
-    const expected = buildGraphQLUrl('testQID', 'TestOp', { foo: 'bar' }, DEFAULT_FEATURES);
-    expect(calledUrl).toBe(expected);
+    const calledOpts = fetch.mock.calls[0][1];
+    expect(calledUrl).toBe(`${GRAPHQL_BASE}/testQID/TestOp`);
+    expect(calledOpts.method).toBe('POST');
+
+    const body = JSON.parse(calledOpts.body);
+    expect(body.variables).toEqual({ foo: 'bar' });
+    expect(body.queryId).toBe('testQID');
+    expect(body.features).toBeDefined();
   });
 
   it('graphql() sends POST for mutations', async () => {

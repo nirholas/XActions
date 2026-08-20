@@ -92,6 +92,23 @@ const PROBES = {
   HomeLatestTimeline: { count: 1 },
 };
 
+/**
+ * Transport per operation, mirroring the client map in
+ * src/client/api/graphqlQueries.js (GRAPHQL_ENDPOINTS `method`).
+ *
+ * X 404s GET on several GraphQL endpoints (SearchTimeline, Followers, ...),
+ * which need POST with a JSON body. Conversely, guest POSTs are rejected, so
+ * the endpoints X still serves over GET must be probed with GET or a guest
+ * run misreports them as "needs a session".
+ */
+const GET_OPERATIONS = new Set([
+  'UserByScreenName',
+  'UserByRestId',
+  'UserTweets',
+  'TweetDetail',
+  'TweetResultByRestId',
+]);
+
 const FEATURES = {
   responsive_web_graphql_exclude_directive_enabled: true,
   verified_phone_label_enabled: false,
@@ -141,14 +158,30 @@ async function probe(name, endpoint, headers) {
     return { name, queryId: endpoint.queryId, status: 'skipped', detail: 'no probe defined' };
   }
 
-  const url =
-    `${GRAPHQL_BASE}/${endpoint.queryId}/${endpoint.operationName}` +
-    `?variables=${encodeURIComponent(JSON.stringify(variables))}` +
-    `&features=${encodeURIComponent(JSON.stringify(FEATURES))}`;
+  // Transport follows the operation: GET for the endpoints X still serves
+  // over GET (works unauthenticated), POST with a JSON body for the rest.
+  const url = `${GRAPHQL_BASE}/${endpoint.queryId}/${endpoint.operationName}`;
 
   let res;
   try {
-    res = await fetch(url, { headers, signal: AbortSignal.timeout(15_000) });
+    if (GET_OPERATIONS.has(name)) {
+      const params = new URLSearchParams({
+        variables: JSON.stringify(variables),
+        features: JSON.stringify(FEATURES),
+      });
+      res = await fetch(`${url}?${params}`, {
+        method: 'GET',
+        headers,
+        signal: AbortSignal.timeout(15_000),
+      });
+    } else {
+      res = await fetch(url, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ variables, features: FEATURES, queryId: endpoint.queryId }),
+        signal: AbortSignal.timeout(15_000),
+      });
+    }
   } catch (error) {
     return { name, queryId: endpoint.queryId, status: 'error', detail: error.message };
   }
@@ -182,11 +215,13 @@ async function probe(name, endpoint, headers) {
   }
 
   if ([401, 403, 404].includes(res.status)) {
+    // With a session these codes mean the endpoint itself is broken or
+    // gated, not that a login is missing.
     return {
       name,
       queryId: endpoint.queryId,
-      status: 'auth',
-      detail: `HTTP ${res.status}, needs a session`,
+      status: authenticated ? 'error' : 'auth',
+      detail: `HTTP ${res.status}${authenticated ? ' despite a session — endpoint may be dead or gated' : ', needs a session'}`,
     };
   }
 
