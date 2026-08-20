@@ -189,9 +189,21 @@ async function checkSessionLive(stored) {
       const config = JSON.parse(await fs.readFile(CONFIG_FILE, 'utf-8'));
       await scraper.setCookies(`auth_token=${config.authToken}; ct0=${config.csrfToken}`);
     });
-    const me = await scraper.me();
-    if (!me?.username) throw new Error('X returned no account for this session');
-    return { status: 'ok', detail: `Signed in as @${me.username}` };
+    try {
+      const me = await scraper.me();
+      if (me?.username) {
+        return { status: 'ok', detail: `Signed in as @${me.username}` };
+      }
+    } catch {
+      // me() needs a twid cookie, which the config-file session doesn't store.
+      // Fall back to an authenticated read (Followers) to prove the session works.
+    }
+    const probe = scraper.getFollowers('nasa', 1);
+    const first = await probe.next();
+    if (first.value?.username) {
+      return { status: 'ok', detail: 'Session valid (authenticated read OK)' };
+    }
+    throw new Error('authenticated read attempt returned no data');
   } catch (error) {
     return {
       status: 'fail',

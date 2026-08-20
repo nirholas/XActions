@@ -85,10 +85,10 @@ describe('graphqlRequest', () => {
     const post = vi.fn(async () => ({}));
     const http = { get: vi.fn(), post };
 
-    await graphqlRequest(http, GRAPHQL_ENDPOINTS.UserByScreenName, { screen_name: 'nasa' });
+    await graphqlRequest(http, GRAPHQL_ENDPOINTS.SearchTimeline, { rawQuery: 'nix' });
 
     const body = post.mock.calls[0][1];
-    expect(body.variables).toEqual({ screen_name: 'nasa', withSafetyModeUserFields: true });
+    expect(body.variables).toEqual({ rawQuery: 'nix' });
   });
 
   it('keeps REST endpoints on GET via their url() factory', async () => {
@@ -109,5 +109,45 @@ describe('graphqlRequest', () => {
     );
     expect(http.get).not.toHaveBeenCalled();
     expect(http.post).not.toHaveBeenCalled();
+  });
+
+  it('sends GET-endpoint queries as GET with query-param variables', async () => {
+    const get = vi.fn(async () => ({}));
+    const http = { get, post: vi.fn() };
+
+    await graphqlRequest(http, GRAPHQL_ENDPOINTS.UserByScreenName, { screen_name: 'nasa' });
+
+    const url = get.mock.calls[0][0];
+    expect(url).toContain(`/graphql/${GRAPHQL.UserByScreenName.queryId}/UserByScreenName`);
+    expect(decodeURIComponent(url)).toContain('"screen_name":"nasa"');
+    expect(http.post).not.toHaveBeenCalled();
+  });
+
+  it('locks the transport map so random endpoints conversion fails loudly', () => {
+    const methods = Object.fromEntries(
+      Object.entries(GRAPHQL_ENDPOINTS).map(([name, ep]) => [name, ep.method]),
+    );
+
+    // Guest-reachable endpoints must stay GET — X rejects guest POSTs outright.
+    expect(methods.UserByScreenName).toBe('GET');
+    expect(methods.UserByRestId).toBe('GET');
+    expect(methods.UserTweets).toBe('GET');
+    expect(methods.TweetDetail).toBe('GET');
+
+    // Endpoints X 404s on GET must be POST.
+    expect(methods.SearchTimeline).toBe('POST');
+    expect(methods.Followers).toBe('POST');
+    expect(methods.Following).toBe('POST');
+    expect(methods.UserTweetsAndReplies).toBe('POST');
+    expect(methods.Likes).toBe('POST');
+    expect(methods.ListMembers).toBe('POST');
+    expect(methods.ListLatestTweetsTimeline).toBe('POST');
+    expect(methods.ListByRestId).toBe('POST');
+
+    // Every GraphQL entry has an explicit method.
+    for (const [name, ep] of Object.entries(GRAPHQL_ENDPOINTS)) {
+      if (ep.isRest) continue;
+      expect(['GET', 'POST'], `${name} must declare GET or POST`).toContain(ep.method);
+    }
   });
 });
