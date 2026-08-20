@@ -100,4 +100,14 @@ describe('graphqlRequest', () => {
     expect(get).toHaveBeenCalledWith('https://x.com/i/api/2/guide.json');
     expect(http.post).not.toHaveBeenCalled();
   });
+
+  it('fails fast when handed a REST POST endpoint', async () => {
+    const http = { get: vi.fn(), post: vi.fn() };
+
+    await expect(graphqlRequest(http, GRAPHQL_ENDPOINTS.CreateFollow)).rejects.toThrow(
+      /must call http directly/,
+    );
+    expect(http.get).not.toHaveBeenCalled();
+    expect(http.post).not.toHaveBeenCalled();
+  });
 });

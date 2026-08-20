@@ -255,7 +255,10 @@ export function buildGraphQLUrl(endpoint, variables = {}, features) {
  */
 export async function graphqlRequest(http, endpoint, variables = {}, features) {
   if (endpoint.isRest) {
-    return http.get(endpoint.url());
+    if (endpoint.method === 'GET') return http.get(endpoint.url());
+    throw new Error(
+      `graphqlRequest: REST ${endpoint.method} endpoint (${endpoint.url()}) must call http directly`,
+    );
   }
 
   const mergedVars = { ...endpoint.defaultVariables, ...variables };

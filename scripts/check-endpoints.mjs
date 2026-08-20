@@ -141,14 +141,24 @@ async function probe(name, endpoint, headers) {
     return { name, queryId: endpoint.queryId, status: 'skipped', detail: 'no probe defined' };
   }
 
-  const url =
-    `${GRAPHQL_BASE}/${endpoint.queryId}/${endpoint.operationName}` +
-    `?variables=${encodeURIComponent(JSON.stringify(variables))}` +
-    `&features=${encodeURIComponent(JSON.stringify(FEATURES))}`;
+  // X rejects GET on several GraphQL endpoints (SearchTimeline, Followers)
+  // with HTTP 404 and requires POST with a JSON body. Every queryId works
+  // over POST, so probe the POST form.
+  const url = `${GRAPHQL_BASE}/${endpoint.queryId}/${endpoint.operationName}`;
+  const payload = JSON.stringify({
+    variables,
+    features: FEATURES,
+    queryId: endpoint.queryId,
+  });
 
   let res;
   try {
-    res = await fetch(url, { headers, signal: AbortSignal.timeout(15_000) });
+    res = await fetch(url, {
+      method: 'POST',
+      headers,
+      body: payload,
+      signal: AbortSignal.timeout(15_000),
+    });
   } catch (error) {
     return { name, queryId: endpoint.queryId, status: 'error', detail: error.message };
   }
