@@ -355,24 +355,28 @@ export class Scraper {
   /**
    * Get followers of a user.
    *
-   * @param {string} userId - Twitter user ID
+   * @param {string} username - Twitter handle
    * @param {number} [count=100] - Maximum number of followers to return
    * @returns {AsyncGenerator<import('./models/Profile.js').Profile>}
    */
-  async *getFollowers(userId, count = 100) {
+  async *getFollowers(username, count = 100) {
     const validCount = validateCount(count, 1, 10000);
+    const clean = validateUsername(username);
+    const userId = await this._resolveUserId(clean);
     yield* usersApi.getFollowers(this._http, userId, validCount);
   }
 
   /**
    * Get users that a user is following.
    *
-   * @param {string} userId - Twitter user ID
+   * @param {string} username - Twitter handle
    * @param {number} [count=100] - Maximum number of following to return
    * @returns {AsyncGenerator<import('./models/Profile.js').Profile>}
    */
-  async *getFollowing(userId, count = 100) {
+  async *getFollowing(username, count = 100) {
     const validCount = validateCount(count, 1, 10000);
+    const clean = validateUsername(username);
+    const userId = await this._resolveUserId(clean);
     yield* usersApi.getFollowing(this._http, userId, validCount);
   }
 
