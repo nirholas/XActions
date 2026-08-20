@@ -167,8 +167,8 @@ describe('Integration: Full Profile Scrape Flow', () => {
     expect(url).toContain(GRAPHQL.UserByScreenName.queryId);
     expect(url).toContain('UserByScreenName');
 
-    // Should be GET for queries
-    expect(opts.method).toBe('GET');
+    // Queries POST the JSON body form X now requires
+    expect(opts.method).toBe('POST');
 
     // Headers include bearer token and auth
     expect(opts.headers.authorization).toContain('Bearer');
@@ -176,16 +176,12 @@ describe('Integration: Full Profile Scrape Flow', () => {
     expect(opts.headers['x-twitter-auth-type']).toBe('OAuth2Session');
     expect(opts.headers.cookie).toContain('auth_token=tok123');
 
-    // URL query params include variables with screen_name
-    const parsed = new URL(url);
-    const variables = JSON.parse(parsed.searchParams.get('variables'));
-    expect(variables.screen_name).toBe('testuser');
-    expect(variables.withSafetyModeUserFields).toBe(true);
-
-    // Features param exists
-    const features = JSON.parse(parsed.searchParams.get('features'));
-    expect(features).toBeDefined();
-    expect(typeof features).toBe('object');
+    // Body carries variables with screen_name, features, and queryId
+    const body = JSON.parse(opts.body);
+    expect(body.variables.screen_name).toBe('testuser');
+    expect(body.variables.withSafetyModeUserFields).toBe(true);
+    expect(body.queryId).toBe(GRAPHQL.UserByScreenName.queryId);
+    expect(typeof body.features).toBe('object');
   });
 
   it('throws NotFoundError for missing user', async () => {
@@ -233,11 +229,10 @@ describe('Integration: Tweet Scrape with Pagination', () => {
 
     // Verify cursor was passed on the second request
     const secondUrl = fetchMock.mock.calls[1][0];
-    expect(secondUrl).toContain('cursor');
-    // The URL should contain the cursor from the first page
-    const parsedUrl = new URL(secondUrl);
-    const vars = JSON.parse(parsedUrl.searchParams.get('variables'));
-    expect(vars.cursor).toBeTruthy();
+    expect(secondUrl).toContain('UserTweets');
+    // The body should contain the cursor from the first page
+    const secondBody = JSON.parse(fetchMock.mock.calls[1][1].body);
+    expect(secondBody.variables.cursor).toBeTruthy();
   });
 
   it('verifies tweet entries are present in the response data', async () => {
@@ -365,17 +360,16 @@ describe('Integration: Search via GraphQL', () => {
       product: 'Latest',
     });
 
-    // Verify fetch was called with correct query params
+    // Verify fetch was called with correct endpoint
     expect(fetchMock).toHaveBeenCalledOnce();
-    const [url] = fetchMock.mock.calls[0];
+    const [url, opts] = fetchMock.mock.calls[0];
     expect(url).toContain(GRAPHQL.SearchTimeline.queryId);
     expect(url).toContain('SearchTimeline');
 
-    // Verify search variables were sent
-    const parsed = new URL(url);
-    const variables = JSON.parse(parsed.searchParams.get('variables'));
-    expect(variables.rawQuery).toBe('javascript lang:en');
-    expect(variables.product).toBe('Latest');
+    // Verify search variables were sent in the POST body
+    const body = JSON.parse(opts.body);
+    expect(body.variables.rawQuery).toBe('javascript lang:en');
+    expect(body.variables.product).toBe('Latest');
 
     // Verify search results are parseable
     const timeline = result.data?.search_by_raw_query?.search_timeline?.timeline;
@@ -388,7 +382,7 @@ describe('Integration: Search via GraphQL', () => {
     expect(result.cursor).toBeTruthy();
   });
 
-  it('encodes query parameters correctly in URL', async () => {
+  it('encodes query parameters correctly in body', async () => {
     const fetchMock = vi.fn().mockResolvedValue(
       mockResponse(graphqlBody(SEARCH_RESPONSE)),
     );
@@ -400,12 +394,9 @@ describe('Integration: Search via GraphQL', () => {
       count: 20,
     });
 
-    const [url] = fetchMock.mock.calls[0];
-    // Verify the complex query is URL-encoded correctly — URLSearchParams uses + for spaces,
-    // so check via decoded variables rather than raw encodeURIComponent
-    const parsedUrl = new URL(url);
-    const variables = JSON.parse(parsedUrl.searchParams.get('variables'));
-    expect(variables.rawQuery).toContain('"hello world"');
+    // Verify the complex query survives JSON round-trip in the POST body
+    const body = JSON.parse(fetchMock.mock.calls[0][1].body);
+    expect(body.variables.rawQuery).toContain('"hello world"');
   });
 });
 
@@ -841,13 +832,13 @@ describe('Integration: Thread Reconstruction', () => {
       focalTweetId: '1810000000000000001',
     });
 
-    const [url] = fetchMock.mock.calls[0];
+    const [url, opts] = fetchMock.mock.calls[0];
     expect(url).toContain(GRAPHQL.TweetDetail.queryId);
     expect(url).toContain('TweetDetail');
+    expect(opts.method).toBe('POST');
 
-    // Variables should include the focal tweet ID
-    const parsed = new URL(url);
-    const variables = JSON.parse(parsed.searchParams.get('variables'));
-    expect(variables.focalTweetId).toBe('1810000000000000001');
+    // Body should include the focal tweet ID
+    const body = JSON.parse(opts.body);
+    expect(body.variables.focalTweetId).toBe('1810000000000000001');
   });
 });

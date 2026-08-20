@@ -11,8 +11,14 @@
  * @author nich (@nichxbt)
  */
 
-import { describe, it, expect } from 'vitest';
-import { GRAPHQL_ENDPOINTS, BEARER_TOKEN, buildGraphQLUrl } from '../../src/client/api/graphqlQueries.js';
+import { describe, it, expect, vi } from 'vitest';
+import {
+  GRAPHQL_ENDPOINTS,
+  BEARER_TOKEN,
+  buildGraphQLUrl,
+  graphqlRequest,
+  DEFAULT_FEATURES,
+} from '../../src/client/api/graphqlQueries.js';
 import { GRAPHQL, BEARER_TOKEN as SHARED_BEARER_TOKEN } from '../../src/scrapers/twitter/http/endpoints.js';
 
 describe('GraphQL query ID registry', () => {
@@ -56,5 +62,42 @@ describe('GraphQL query ID registry', () => {
 
   it('builds REST URLs from their url() factory', () => {
     expect(buildGraphQLUrl(GRAPHQL_ENDPOINTS.Trends)).toBe('https://x.com/i/api/2/guide.json');
+  });
+});
+
+describe('graphqlRequest', () => {
+  it('POSTs variables/features/queryId body to the GraphQL endpoint', async () => {
+    const post = vi.fn(async () => ({}));
+    const http = { get: vi.fn(), post };
+
+    await graphqlRequest(http, GRAPHQL_ENDPOINTS.SearchTimeline, { rawQuery: 'nix' });
+
+    expect(post).toHaveBeenCalledTimes(1);
+    const [url, body] = post.mock.calls[0];
+    expect(url).toContain(`/graphql/${GRAPHQL.SearchTimeline.queryId}/SearchTimeline`);
+    expect(body.variables).toEqual({ rawQuery: 'nix' });
+    expect(body.queryId).toBe(GRAPHQL.SearchTimeline.queryId);
+    expect(body.features).toEqual(DEFAULT_FEATURES);
+    expect(http.get).not.toHaveBeenCalled();
+  });
+
+  it('merges endpoint defaultVariables with caller variables', async () => {
+    const post = vi.fn(async () => ({}));
+    const http = { get: vi.fn(), post };
+
+    await graphqlRequest(http, GRAPHQL_ENDPOINTS.UserByScreenName, { screen_name: 'nasa' });
+
+    const body = post.mock.calls[0][1];
+    expect(body.variables).toEqual({ screen_name: 'nasa', withSafetyModeUserFields: true });
+  });
+
+  it('keeps REST endpoints on GET via their url() factory', async () => {
+    const get = vi.fn(async () => ({}));
+    const http = { get, post: vi.fn() };
+
+    await graphqlRequest(http, GRAPHQL_ENDPOINTS.Trends);
+
+    expect(get).toHaveBeenCalledWith('https://x.com/i/api/2/guide.json');
+    expect(http.post).not.toHaveBeenCalled();
   });
 });

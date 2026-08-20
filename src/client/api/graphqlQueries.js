@@ -12,7 +12,11 @@
  * @license MIT
  */
 
-import { GRAPHQL, BEARER_TOKEN as SHARED_BEARER_TOKEN } from '../../scrapers/twitter/http/endpoints.js';
+import {
+  GRAPHQL,
+  GRAPHQL_BASE,
+  BEARER_TOKEN as SHARED_BEARER_TOKEN,
+} from '../../scrapers/twitter/http/endpoints.js';
 
 /**
  * Public bearer token embedded in Twitter's web client JavaScript.
@@ -233,4 +237,32 @@ export function buildGraphQLUrl(endpoint, variables = {}, features) {
   params.set('features', JSON.stringify(mergedFeatures));
 
   return `${base}?${params.toString()}`;
+}
+
+/**
+ * Execute a GraphQL query/mutation through the HTTP client.
+ *
+ * X now rejects GET on several GraphQL endpoints (SearchTimeline, Followers)
+ * with HTTP 404 and requires POST with body `{ variables, features, queryId }`.
+ * Every queryId works over POST, so all GraphQL endpoints POST. REST GET
+ * endpoints (Trends, DM inbox) keep GET via their url() factory.
+ *
+ * @param {Object} http - HTTP client with get/post methods
+ * @param {Object} endpoint - Entry from GRAPHQL_ENDPOINTS
+ * @param {Object} [variables={}] - GraphQL variables
+ * @param {Object} [features] - Feature flags (defaults to DEFAULT_FEATURES)
+ * @returns {Promise<Object>} Parsed JSON response
+ */
+export async function graphqlRequest(http, endpoint, variables = {}, features) {
+  if (endpoint.isRest) {
+    return http.get(endpoint.url());
+  }
+
+  const mergedVars = { ...endpoint.defaultVariables, ...variables };
+  const url = `${GRAPHQL_BASE}/${endpoint.queryId}/${endpoint.operationName}`;
+  return http.post(url, {
+    variables: mergedVars,
+    features: features || DEFAULT_FEATURES,
+    queryId: endpoint.queryId,
+  });
 }

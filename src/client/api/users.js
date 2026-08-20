@@ -9,7 +9,7 @@
  * @license MIT
  */
 
-import { GRAPHQL_ENDPOINTS, DEFAULT_FEATURES, buildGraphQLUrl } from './graphqlQueries.js';
+import { GRAPHQL_ENDPOINTS, graphqlRequest } from './graphqlQueries.js';
 import { Profile } from '../models/Profile.js';
 import { NotFoundError, ScraperError } from '../errors.js';
 import { parseTimelineEntries, parseUserEntry } from './parsers.js';
@@ -28,13 +28,11 @@ function randomDelay(min = 1000, max = 2000) {
  * @throws {NotFoundError}
  */
 export async function getUserByScreenName(http, username) {
-  const endpoint = GRAPHQL_ENDPOINTS.UserByScreenName;
   const variables = {
     screen_name: username,
     withSafetyModeUserFields: true,
   };
-  const url = buildGraphQLUrl(endpoint, variables);
-  const data = await http.get(url);
+  const data = await graphqlRequest(http, GRAPHQL_ENDPOINTS.UserByScreenName, variables);
 
   const userResult = data?.data?.user?.result;
   if (!userResult || userResult.__typename === 'UserUnavailable') {
@@ -62,13 +60,11 @@ export async function getUserByScreenName(http, username) {
  * @throws {NotFoundError}
  */
 export async function getUserById(http, userId) {
-  const endpoint = GRAPHQL_ENDPOINTS.UserByRestId;
   const variables = {
     userId,
     withSafetyModeUserFields: true,
   };
-  const url = buildGraphQLUrl(endpoint, variables);
-  const data = await http.get(url);
+  const data = await graphqlRequest(http, GRAPHQL_ENDPOINTS.UserByRestId, variables);
 
   const userResult = data?.data?.user?.result;
   if (!userResult || userResult.__typename === 'UserUnavailable') {
@@ -112,7 +108,6 @@ export async function* getFollowers(http, userId, count = 100) {
   let cursor = null;
 
   while (yielded < count) {
-    const endpoint = GRAPHQL_ENDPOINTS.Followers;
     const variables = {
       userId,
       count: 20,
@@ -120,8 +115,7 @@ export async function* getFollowers(http, userId, count = 100) {
     };
     if (cursor) variables.cursor = cursor;
 
-    const url = buildGraphQLUrl(endpoint, variables);
-    const data = await http.get(url);
+    const data = await graphqlRequest(http, GRAPHQL_ENDPOINTS.Followers, variables);
 
     const { entries, cursor: nextCursor } = parseTimelineEntries(
       data,
@@ -158,7 +152,6 @@ export async function* getFollowing(http, userId, count = 100) {
   let cursor = null;
 
   while (yielded < count) {
-    const endpoint = GRAPHQL_ENDPOINTS.Following;
     const variables = {
       userId,
       count: 20,
@@ -166,8 +159,7 @@ export async function* getFollowing(http, userId, count = 100) {
     };
     if (cursor) variables.cursor = cursor;
 
-    const url = buildGraphQLUrl(endpoint, variables);
-    const data = await http.get(url);
+    const data = await graphqlRequest(http, GRAPHQL_ENDPOINTS.Following, variables);
 
     const { entries, cursor: nextCursor } = parseTimelineEntries(
       data,

@@ -524,7 +524,7 @@ export function buildGraphQLVariables(type, params = {}) {
 
 /**
  * Validate that GraphQL endpoint query IDs are still active.
- * Makes a lightweight OPTIONS/HEAD probe to confirm the endpoint returns
+ * Makes a lightweight POST probe to confirm the endpoint returns
  * a recognizable response (not 404). Requires a valid auth cookie or guest token.
  *
  * @param {object} [options]
@@ -549,11 +549,16 @@ export async function validateEndpoints(options = {}) {
 
     try {
       const res = await fetchFn(url, {
-        method: 'GET',
+        method: 'POST',
         headers: {
           Authorization: `Bearer ${BEARER_TOKEN}`,
           'Content-Type': 'application/json',
         },
+        body: JSON.stringify({
+          variables: {},
+          features: DEFAULT_FEATURES,
+          queryId: endpoint.queryId,
+        }),
         signal: AbortSignal.timeout(10000),
       });
 

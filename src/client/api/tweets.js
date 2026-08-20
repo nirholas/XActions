@@ -9,7 +9,7 @@
  * @license MIT
  */
 
-import { GRAPHQL_ENDPOINTS, DEFAULT_FEATURES, buildGraphQLUrl } from './graphqlQueries.js';
+import { GRAPHQL_ENDPOINTS, DEFAULT_FEATURES, graphqlRequest } from './graphqlQueries.js';
 import { Tweet } from '../models/Tweet.js';
 import { NotFoundError, ScraperError } from '../errors.js';
 import { parseTimelineEntries, parseTweetEntry, parseModuleEntry } from './parsers.js';
@@ -28,7 +28,6 @@ function randomDelay(min = 1000, max = 2000) {
  * @throws {NotFoundError}
  */
 export async function getTweet(http, tweetId) {
-  const endpoint = GRAPHQL_ENDPOINTS.TweetDetail;
   const variables = {
     focalTweetId: tweetId,
     with_rux_injections: false,
@@ -39,8 +38,7 @@ export async function getTweet(http, tweetId) {
     withVoice: true,
     withV2Timeline: true,
   };
-  const url = buildGraphQLUrl(endpoint, variables);
-  const data = await http.get(url);
+  const data = await graphqlRequest(http, GRAPHQL_ENDPOINTS.TweetDetail, variables);
 
   // Navigate the TweetDetail response — entries are nested in instructions
   const instructions = data?.data?.tweetResult?.result?.tweet
@@ -93,7 +91,6 @@ export async function* getTweets(http, userId, count = 40) {
   let cursor = null;
 
   while (yielded < count) {
-    const endpoint = GRAPHQL_ENDPOINTS.UserTweets;
     const variables = {
       userId,
       count: 20,
@@ -104,8 +101,7 @@ export async function* getTweets(http, userId, count = 40) {
     };
     if (cursor) variables.cursor = cursor;
 
-    const url = buildGraphQLUrl(endpoint, variables);
-    const data = await http.get(url);
+    const data = await graphqlRequest(http, GRAPHQL_ENDPOINTS.UserTweets, variables);
 
     const { entries, cursor: nextCursor } = parseTimelineEntries(
       data,
@@ -142,7 +138,6 @@ export async function* getTweetsAndReplies(http, userId, count = 40) {
   let cursor = null;
 
   while (yielded < count) {
-    const endpoint = GRAPHQL_ENDPOINTS.UserTweetsAndReplies;
     const variables = {
       userId,
       count: 20,
@@ -153,8 +148,7 @@ export async function* getTweetsAndReplies(http, userId, count = 40) {
     };
     if (cursor) variables.cursor = cursor;
 
-    const url = buildGraphQLUrl(endpoint, variables);
-    const data = await http.get(url);
+    const data = await graphqlRequest(http, GRAPHQL_ENDPOINTS.UserTweetsAndReplies, variables);
 
     const { entries, cursor: nextCursor } = parseTimelineEntries(
       data,
@@ -202,7 +196,6 @@ export async function* getLikedTweets(http, userId, count = 40) {
   let cursor = null;
 
   while (yielded < count) {
-    const endpoint = GRAPHQL_ENDPOINTS.Likes;
     const variables = {
       userId,
       count: 20,
@@ -214,8 +207,7 @@ export async function* getLikedTweets(http, userId, count = 40) {
     };
     if (cursor) variables.cursor = cursor;
 
-    const url = buildGraphQLUrl(endpoint, variables);
-    const data = await http.get(url);
+    const data = await graphqlRequest(http, GRAPHQL_ENDPOINTS.Likes, variables);
 
     const { entries, cursor: nextCursor } = parseTimelineEntries(
       data,
