@@ -35,12 +35,12 @@ function mockResponse(body, { status = 200, headers = {}, setCookies = [] } = {}
 
 const VALID_COOKIE_STRING = 'auth_token=abc123; ct0=csrf_tok; twid=u%3D999; guest_id=v1%3A1234';
 
-const VERIFY_CREDENTIALS_RESPONSE = {
-  id: 999,
-  id_str: '999',
-  name: 'Test User',
-  screen_name: 'testuser',
-};
+// The GraphQL probe response shape (data.user.result) — see validateSession.
+const VERIFY_CREDENTIALS_RESPONSE = { data: { user: { result: {
+  __typename: 'User',
+  rest_id: '999',
+  legacy: { name: 'Test User', screen_name: 'testuser' },
+} } } };
 
 // ---------------------------------------------------------------------------
 // 1. Cookie String Parsing
@@ -224,13 +224,17 @@ describe('validateSession', () => {
       mockResponse(VERIFY_CREDENTIALS_RESPONSE),
     );
     const auth = new TwitterAuth({ fetch: fetchMock });
-    auth.setCookies({ auth_token: 'at', ct0: 'ct' });
+    auth.setCookies({ auth_token: 'at', ct0: 'ct', twid: 'u%3D999' });
 
     const result = await auth.validateSession();
 
     expect(result.valid).toBe(true);
-    expect(result.user).toEqual({ id: '999', username: 'testuser', name: 'Test User' });
+    expect(result.user).toEqual({ id: '999', username: '', name: '' });
     expect(result.reason).toBe('ok');
+    // Probe must hit a live GraphQL endpoint, not the retired verify_credentials
+    const calledUrl = fetchMock.mock.calls[0][0];
+    expect(calledUrl).toContain('/i/api/graphql/');
+    expect(calledUrl).toContain('UserByScreenName');
   });
 
   it('returns invalid when cookies are missing', async () => {
@@ -256,17 +260,31 @@ describe('validateSession', () => {
     expect(result.status).toBe(401);
   });
 
-  it('returns invalid when response has no user ID', async () => {
+  it('returns valid without user when probe payload is not a User', async () => {
     const fetchMock = vi.fn().mockResolvedValue(
-      mockResponse({ name: 'No ID user' }),
+      mockResponse({ data: {} }),
     );
     const auth = new TwitterAuth({ fetch: fetchMock });
     auth.setCookies({ auth_token: 'at', ct0: 'ct' });
 
     const result = await auth.validateSession();
 
-    expect(result.valid).toBe(false);
-    expect(result.reason).toContain('missing user ID');
+    expect(result.valid).toBe(true);
+    expect(result.user).toBeNull();
+  });
+
+  it('treats unexpected probe status as unverifiable, not invalid', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(
+      mockResponse({}, { status: 500 }),
+    );
+    const auth = new TwitterAuth({ fetch: fetchMock });
+    auth.setCookies({ auth_token: 'at', ct0: 'ct' });
+
+    const result = await auth.validateSession();
+
+    expect(result.valid).toBe(true);
+    expect(result.user).toBeNull();
+    expect(result.reason).toContain('Could not verify');
   });
 
   it('handles network errors gracefully', async () => {
@@ -403,7 +421,8 @@ describe('loginWithCookies', () => {
 
     const user = await auth.loginWithCookies(VALID_COOKIE_STRING);
 
-    expect(user).toEqual({ id: '999', username: 'testuser', name: 'Test User' });
+    // twid=u%3D999 in VALID_COOKIE_STRING supplies the session identity
+    expect(user).toEqual({ id: '999', username: '', name: '' });
     expect(auth.isAuthenticated()).toBe(true);
     expect(auth.getCsrfToken()).toBe('csrf_tok');
   });
@@ -510,7 +529,7 @@ describe('loginWithCredentials', () => {
           return res;
         }
       }
-      if (url.includes('verify_credentials')) {
+      if (url.includes('/i/api/graphql/') && url.includes('UserByScreenName')) {
         return mockResponse(VERIFY_CREDENTIALS_RESPONSE);
       }
       return mockResponse({}, { status: 500 });
@@ -520,7 +539,8 @@ describe('loginWithCredentials', () => {
     const auth = new TwitterAuth({ fetch: fetchMock2 });
     const user = await auth.loginWithCredentials('testuser', 'password123', 'test@example.com');
 
-    expect(user).toEqual({ id: '999', username: 'testuser', name: 'Test User' });
+    // Probe proves liveness but not identity (no twid cookie in the mock flow)
+    expect(user).toEqual({});
     expect(auth.isAuthenticated()).toBe(true);
   });
 
@@ -563,15 +583,15 @@ describe('loginWithCredentials', () => {
           return res;
         }
       }
-      if (url.includes('verify_credentials')) {
+      if (url.includes('/i/api/graphql/') && url.includes('UserByScreenName')) {
         return mockResponse(VERIFY_CREDENTIALS_RESPONSE);
       }
       return mockResponse({}, { status: 500 });
     });
 
     const auth = new TwitterAuth({ fetch: fetchMock });
-    const user = await auth.loginWithCredentials('user', 'pass', 'e@e.com');
-    expect(user.username).toBe('testuser');
+    await auth.loginWithCredentials('user', 'pass', 'e@e.com');
+    expect(auth.isAuthenticated()).toBe(true);
   });
 
   it('handles LoginAcid (email verification) subtask', async () => {
@@ -609,15 +629,15 @@ describe('loginWithCredentials', () => {
           return res;
         }
       }
-      if (url.includes('verify_credentials')) {
+      if (url.includes('/i/api/graphql/') && url.includes('UserByScreenName')) {
         return mockResponse(VERIFY_CREDENTIALS_RESPONSE);
       }
       return mockResponse({}, { status: 500 });
     });
 
     const auth = new TwitterAuth({ fetch: fetchMock });
-    const user = await auth.loginWithCredentials('user', 'pass', 'verify@test.com');
-    expect(user.username).toBe('testuser');
+    await auth.loginWithCredentials('user', 'pass', 'verify@test.com');
+    expect(auth.isAuthenticated()).toBe(true);
   });
 
   it('throws when LoginAcid requires email but none provided', async () => {
@@ -764,7 +784,7 @@ describe('refreshSession', () => {
           return res;
         }
       }
-      if (url.includes('verify_credentials')) {
+      if (url.includes('/i/api/graphql/') && url.includes('UserByScreenName')) {
         return mockResponse(VERIFY_CREDENTIALS_RESPONSE);
       }
       return mockResponse({}, { status: 500 });
@@ -776,8 +796,8 @@ describe('refreshSession', () => {
     await auth.loginWithCredentials('myuser', 'mypass', 'my@email.com');
 
     // Now refresh
-    const user = await auth.refreshSession();
-    expect(user.username).toBe('testuser');
+    await auth.refreshSession();
+    expect(auth.isAuthenticated()).toBe(true);
   });
 
   it('throws AuthError when no credentials stored (cookie-only)', async () => {
@@ -821,7 +841,7 @@ describe('accessors', () => {
     await auth.loginWithCookies(VALID_COOKIE_STRING);
 
     const user = auth.getUser();
-    expect(user).toEqual({ id: '999', username: 'testuser', name: 'Test User' });
+    expect(user).toEqual({ id: '999', username: '', name: '' });
   });
 
   it('getCookieString builds semicolon-separated string', () => {

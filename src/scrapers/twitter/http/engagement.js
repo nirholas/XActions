@@ -262,11 +262,11 @@ export async function followByUsername(client, username) {
     withSafetyModeUserFields: true,
   });
 
-  // graphql() returns { data: rawJson, cursor } for queries
-  const raw = response?.data;
+  // graphql() returns { data: payload, cursor } for queries
+  const payload = response?.data;
   const userId =
-    raw?.data?.user?.result?.rest_id ||
-    raw?.data?.user?.rest_id;
+    payload?.user?.result?.rest_id ||
+    payload?.user?.rest_id;
 
   if (!userId) {
     throw new NotFoundError(`User @${cleanName} not found`);
