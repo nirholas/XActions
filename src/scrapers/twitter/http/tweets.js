@@ -10,7 +10,7 @@
  * @license MIT
  */
 
-import { GRAPHQL, DEFAULT_FEATURES } from './endpoints.js';
+import { GRAPHQL, DEFAULT_FEATURES, buildGraphQLUrl } from './endpoints.js';
 import { NotFoundError, TwitterApiError } from './errors.js';
 
 // ---------------------------------------------------------------------------
@@ -462,6 +462,105 @@ export async function scrapeTweetById(client, tweetId) {
   }
 
   return parsed;
+}
+
+// ---------------------------------------------------------------------------
+// scrapeArticle — X long-form Article full-body reader
+// ---------------------------------------------------------------------------
+
+/**
+ * Parse an article tweet id from a numeric id or an x.com URL.
+ *
+ * Accepts `x.com/i/article/<id>`, `https://www.x.com/i/article/<id>` and any
+ * `/status/<id>` variant; bare numeric ids pass through unchanged.
+ *
+ * @param {string} tweetIdOrUrl
+ * @returns {string}
+ * @throws {NotFoundError} If no plausible tweet/article id can be extracted.
+ */
+export function parseArticleId(tweetIdOrUrl) {
+  if (/^\d+$/.test(tweetIdOrUrl)) return tweetIdOrUrl;
+  const m = tweetIdOrUrl.match(/\/(?:article|status)\/(\d+)/);
+  if (!m) {
+    throw new NotFoundError(`Could not parse a tweet/article id from "${tweetIdOrUrl}"`);
+  }
+  return m[1];
+}
+
+/**
+ * Fetch the FULL body of an X long-form Article (x.com/i/article/<id>) via
+ * the TweetResultByRestId GraphQL endpoint — no browser required.
+ *
+ * The full body is only served when fieldToggles carries
+ * withArticlePlainText: true (the browser default false yields only
+ * preview_text). client.graphql() does not forward fieldToggles, so this
+ * builds the request URL directly.
+ *
+ * @param {import('./client.js').TwitterHttpClient} client
+ * @param {string} tweetIdOrUrl — numeric article/tweet id or an
+ *   x.com/i/article/<id> (or /status/<id>) URL.
+ * @returns {Promise<object>} { title, text, summaryText, previewText,
+ *   coverImageUrl, author: { username, name }, metrics, url }
+ * @throws {NotFoundError} When the tweet doesn't exist or is not an article.
+ */
+export async function scrapeArticle(client, tweetIdOrUrl) {
+  const { queryId, operationName } = GRAPHQL.TweetResultByRestId;
+  const tweetId = parseArticleId(String(tweetIdOrUrl));
+
+  const variables = {
+    tweetId,
+    includePromotedContent: true,
+    withBirdwatchNotes: true,
+    withVoice: true,
+    withCommunity: true,
+  };
+  const features = {
+    ...DEFAULT_FEATURES,
+    articles_preview_enabled: true,
+    responsive_web_twitter_article_tweet_consumption_enabled: true,
+    longform_notetweets_rich_text_read_enabled: true,
+  };
+  const fieldToggles = {
+    withArticleRichContentState: true,
+    withArticlePlainText: true,
+    withArticleSummaryText: true,
+    withArticleVoiceOver: true,
+  };
+
+  // client.graphql() never forwards fieldToggles — fetch the URL directly.
+  const url = buildGraphQLUrl(queryId, operationName, variables, features, fieldToggles);
+  const resp = await client.request(url);
+
+  const result = resp?.data?.tweetResult?.result;
+  if (!result) throw new NotFoundError(`Tweet ${tweetId} not found`);
+
+  const article = result.article?.article_results?.result;
+  if (!article) {
+    throw new NotFoundError(
+      `Tweet ${tweetId} is not an article (no article_results in response)`,
+    );
+  }
+
+  const user = result.core?.user_results?.result?.legacy;
+
+  return {
+    title: article.title || null,
+    text: article.plain_text || null,
+    summaryText: article.summary_text || null,
+    previewText: article.preview_text || null,
+    coverImageUrl: article.cover_media?.media_info?.original_img_url || null,
+    author: {
+      username: user?.screen_name || null,
+      name: user?.name || null,
+    },
+    metrics: {
+      likes: result.legacy?.favorite_count ?? 0,
+      retweets: result.legacy?.retweet_count ?? 0,
+      replies: result.legacy?.reply_count ?? 0,
+      views: result.views?.count ? parseInt(result.views.count, 10) : null,
+    },
+    url: `https://x.com/i/article/${tweetId}`,
+  };
 }
 
 // ---------------------------------------------------------------------------

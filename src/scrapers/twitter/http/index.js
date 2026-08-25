@@ -18,7 +18,7 @@ export { harvestSession, SessionPool, createClientFromSession, DEFAULT_SESSION_T
 
 // Scraping functions
 export { scrapeProfile, scrapeProfileById, parseUserData } from './profile.js';
-export { scrapeTweets, scrapeTweetsAndReplies, scrapeTweetById, parseTweetData, parseTimelineInstructions } from './tweets.js';
+export { scrapeTweets, scrapeTweetsAndReplies, scrapeTweetById, scrapeArticle, parseArticleId, parseTweetData, parseTimelineInstructions } from './tweets.js';
 export { scrapeThread, scrapeFullThread, scrapeConversation, parseConversationModule, reconstructThread } from './thread.js';
 export { scrapeFollowers, scrapeFollowing, scrapeNonFollowers, scrapeLikers, scrapeRetweeters, scrapeListMembers } from './relationships.js';
 
@@ -93,6 +93,7 @@ export async function createHttpScraper(options = {}) {
     scrapeTweets: (username, opts) => tweetsMod.scrapeTweets(client, username, opts),
     scrapeTweetsAndReplies: (username, opts) => tweetsMod.scrapeTweetsAndReplies(client, username, opts),
     scrapeTweetById: (tweetId) => tweetsMod.scrapeTweetById(client, tweetId),
+    scrapeArticle: (tweetIdOrUrl) => tweetsMod.scrapeArticle(client, tweetIdOrUrl),
     parseTweetData: tweetsMod.parseTweetData,
     parseTimelineInstructions: tweetsMod.parseTimelineInstructions,
 
