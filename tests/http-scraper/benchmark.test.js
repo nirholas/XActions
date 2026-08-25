@@ -21,7 +21,7 @@ import { PROFILE_RESPONSE, mockResponse } from './fixtures/responses.js';
 // ---------------------------------------------------------------------------
 
 /** Strip the outer `data` wrapper — see integration.test.js for rationale */
-const graphqlBody = (fixture) => fixture.data ?? fixture;
+const graphqlBody = (fixture) => fixture;
 
 /**
  * Time how many milliseconds a function takes to execute.

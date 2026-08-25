@@ -273,7 +273,8 @@ export class TwitterHttpClient {
 
     // Extract bottom cursor for pagination (queries only)
     const cursor = this._extractCursor(json);
-    return { data: json, cursor };
+    // Unwrap X's top-level `data` key: consumers read response.data.<payload>.
+    return { data: json?.data ?? null, cursor };
   }
 
   /**

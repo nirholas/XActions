@@ -18,6 +18,8 @@
 import fs from 'fs/promises';
 import crypto from 'crypto';
 
+import { GRAPHQL, DEFAULT_FEATURES, buildGraphQLUrl } from './endpoints.js';
+
 // ---------------------------------------------------------------------------
 // Bearer token — embedded in Twitter's web client JS bundle (public)
 // Same token used by the-convocation/twitter-scraper, d60/twikit, etc.
@@ -111,6 +113,24 @@ function buildCookieHeader(cookies) {
   return Object.entries(cookies)
     .map(([k, v]) => `${k}=${v}`)
     .join('; ');
+}
+
+/**
+ * Decode X's `twid` cookie ("u%3D<numeric id>" / "u=<numeric id>") into the
+ * numeric user ID it carries.
+ *
+ * @param {string|undefined} raw
+ * @returns {string|null} Numeric user ID, or null if absent/malformed.
+ */
+export function parseTwidCookie(raw) {
+  if (!raw) return null;
+  try {
+    const decoded = raw.startsWith('u=') ? raw : decodeURIComponent(raw);
+    const m = /^u=(\d+)$/.exec(decoded);
+    return m ? m[1] : null;
+  } catch {
+    return null;
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -562,6 +582,15 @@ export class TwitterAuth {
   /**
    * Validate the current authenticated session.
    *
+   * X retired v1.1 account/verify_credentials.json (now HTTP 404 for all
+   * callers), so validation probes UserByScreenName GraphQL instead.
+   * Verified live (2026-08): dead cookie -> 401, live cookie -> 200, even
+   * when the queried account is not visible to the session. (UserByRestId
+   * is Cloudflare-blocked from non-browser contexts.)
+   *
+   * The probe proves liveness, not identity; identity comes from the
+   * `twid` cookie when present.
+   *
    * @returns {Promise<{ valid: boolean, user: { id: string, username: string, name: string } | null, reason: string, status?: number }>}
    */
   async validateSession() {
@@ -569,35 +598,51 @@ export class TwitterAuth {
       return { valid: false, user: null, reason: 'Missing auth_token or ct0 cookies' };
     }
 
-    try {
-      const res = await this.#fetch(
-        `${WEB_BASE}/i/api/1.1/account/verify_credentials.json`,
-        {
-          method: 'GET',
-          headers: this.getHeaders(true),
-          redirect: 'manual',
-        },
-      );
+    const twid = parseTwidCookie(this.#cookies.twid);
+    const { queryId, operationName } = GRAPHQL.UserByScreenName;
+    const variables = { screen_name: 'x', withSafetyModeUserFields: true };
 
-      if (!res.ok) {
+    try {
+      const url = buildGraphQLUrl(queryId, operationName, variables, DEFAULT_FEATURES);
+      const res = await this.#fetch(url, {
+        method: 'GET',
+        headers: this.getHeaders(true),
+        redirect: 'manual',
+      });
+
+      if (res.status === 401 || res.status === 403) {
         return {
           valid: false,
           user: null,
-          reason: `verify_credentials returned HTTP ${res.status}`,
+          reason: `GraphQL probe rejected the session (HTTP ${res.status}) — cookies expired`,
+          status: res.status,
+        };
+      }
+
+      if (!res.ok) {
+        // Transient failure: proceed; downstream calls surface real auth errors.
+        return {
+          valid: true,
+          user: null,
+          reason: `Could not verify session (probe returned HTTP ${res.status}); proceeding with supplied cookies`,
           status: res.status,
         };
       }
 
       const data = await res.json();
-      if (!data.id_str && !data.id) {
-        return { valid: false, user: null, reason: 'Response missing user ID' };
+      const result = data?.data?.user?.result;
+      if (!result || result.__typename !== 'User') {
+        return {
+          valid: true,
+          user: null,
+          reason: 'Probe succeeded but no usable user payload; proceeding with supplied cookies',
+        };
       }
 
-      const user = {
-        id: String(data.id_str ?? data.id),
-        username: data.screen_name ?? '',
-        name: data.name ?? '',
-      };
+      // Identity comes from the twid cookie when X supplied one; otherwise
+      // the session has no resolved user (same shape as unverifiable paths).
+      const user = twid ? { id: twid, username: '', name: '' } : null;
+
       return { valid: true, user, reason: 'ok' };
     } catch (err) {
       return { valid: false, user: null, reason: `Network error: ${err.message}` };

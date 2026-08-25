@@ -6,10 +6,9 @@
  * functions → parsed output. Fixtures provide realistic Twitter API
  * response shapes.
  *
- * NOTE: client.graphql() wraps raw JSON as { data: json, cursor }.
- * Consumers access response.data.xxx, so the fetch mock must return
- * the INNER part of the Twitter API response (without the outer `data`
- * wrapper). Use `graphqlBody(FIXTURE)` helper to strip it.
+ * NOTE: client.graphql() unwraps the raw JSON's top-level `data` key and
+ * returns { data: payload, cursor }. Consumers access response.data.xxx,
+ * so the fetch mock returns the FULL Twitter API response shape.
  *
  * @see fixtures/responses.js
  * @author nich (@nichxbt)
@@ -74,14 +73,14 @@ import {
 // ---------------------------------------------------------------------------
 
 /**
- * Strip the outer `data` wrapper from a fixture for fetch-level mocking.
- * client.graphql() adds its own { data: json, cursor } wrapper, so
- * consumers access response.data.xxx = json.xxx.
+ * Fixture passthrough for fetch-level mocking.
+ * client.graphql() now unwraps X's top-level `data` key itself, so mocks
+ * return the full realistic response shape (outer `data` included).
  *
  * @param {object} fixture — Full realistic Twitter API response
- * @returns {object} Inner content suitable for mock fetch json()
+ * @returns {object} Content suitable for mock fetch json()
  */
-const graphqlBody = (fixture) => fixture.data ?? fixture;
+const graphqlBody = (fixture) => fixture;
 
 /**
  * Create an authenticated TwitterHttpClient with a mock fetch.
@@ -327,9 +326,9 @@ describe('Integration: Non-Follower Detection Flow', () => {
 
   it('verifies set comparison is correct with overlapping lists', async () => {
     // Minimal inline test — parse user lists directly
-    const followersInstructions = graphqlBody(FOLLOWERS_RESPONSE)
+    const followersInstructions = FOLLOWERS_RESPONSE.data
       .user.result.timeline.timeline.instructions;
-    const followingInstructions = graphqlBody(FOLLOWING_RESPONSE)
+    const followingInstructions = FOLLOWING_RESPONSE.data
       .user.result.timeline.timeline.instructions;
 
     const followers = parseUserList(followersInstructions);
