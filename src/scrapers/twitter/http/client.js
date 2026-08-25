@@ -273,10 +273,7 @@ export class TwitterHttpClient {
 
     // Extract bottom cursor for pagination (queries only)
     const cursor = this._extractCursor(json);
-    // X's GraphQL responses wrap their payload in a top-level `data` key;
-    // every consumer of this method reads `response.data.<payload>` expecting
-    // that payload directly (e.g. data.user.result), so unwrap here rather
-    // than making ~20 scraper modules reach through response.data.data.
+    // Unwrap X's top-level `data` key: consumers read response.data.<payload>.
     return { data: json?.data ?? null, cursor };
   }
 

@@ -582,16 +582,14 @@ export class TwitterAuth {
   /**
    * Validate the current authenticated session.
    *
-   * X retired the v1.1 `account/verify_credentials.json` endpoint (it now
-   * returns HTTP 404 for every caller), so validation probes a live
-   * authenticated GraphQL query instead. Verified against the live API
-   * (2026-08): an expired/dead cookie gets HTTP 401 from UserByScreenName,
-   * a live one gets 200 — even when the queried account is not visible to
-   * the session. (UserByRestId is Cloudflare-blocked from non-browser
-   * contexts, so it is not usable as a probe.)
+   * X retired v1.1 account/verify_credentials.json (now HTTP 404 for all
+   * callers), so validation probes UserByScreenName GraphQL instead.
+   * Verified live (2026-08): dead cookie -> 401, live cookie -> 200, even
+   * when the queried account is not visible to the session. (UserByRestId
+   * is Cloudflare-blocked from non-browser contexts.)
    *
-   * The probe queries a known-public account, so it proves liveness but not
-   * identity; identity is taken from the `twid` cookie when present.
+   * The probe proves liveness, not identity; identity comes from the
+   * `twid` cookie when present.
    *
    * @returns {Promise<{ valid: boolean, user: { id: string, username: string, name: string } | null, reason: string, status?: number }>}
    */
@@ -622,8 +620,7 @@ export class TwitterAuth {
       }
 
       if (!res.ok) {
-        // Transient/unknown failure — do not fail login over it; downstream
-        // calls will surface real auth problems themselves.
+        // Transient failure: proceed; downstream calls surface real auth errors.
         return {
           valid: true,
           user: null,
@@ -642,9 +639,8 @@ export class TwitterAuth {
         };
       }
 
-      // The probed account is not us — identity comes from the twid cookie
-      // when X supplied one, otherwise callers get a session without a
-      // resolved user object (same shape as the unverifiable paths above).
+      // Identity comes from the twid cookie when X supplied one; otherwise
+      // the session has no resolved user (same shape as unverifiable paths).
       const user = twid ? { id: twid, username: '', name: '' } : null;
 
       return { valid: true, user, reason: 'ok' };
