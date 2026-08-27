@@ -92,7 +92,7 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.30.0",
-    "@prisma/client": "^5.7.1",
+    "@prisma/client": "^7.9.1",
     "axios": "^1.15.2",
     "bcryptjs": "^2.4.3",
     "better-sqlite3": "^11.10.0",
