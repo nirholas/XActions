@@ -72,8 +72,12 @@ router.post('/save-session',
 
       // Test the session cookie by attempting to authenticate
       const page = await browserAutomation.createPage(sessionCookie);
-      const isAuthenticated = await browserAutomation.checkAuthentication(page);
-      await page.close();
+      let isAuthenticated;
+      try {
+        isAuthenticated = await browserAutomation.checkAuthentication(page);
+      } finally {
+        await page.close();
+      }
 
       if (!isAuthenticated) {
         return res.status(401).json({ 

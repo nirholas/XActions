@@ -7,6 +7,20 @@
 (() => {
   const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
+  // Navigate within the SPA. Assigning window.location.href triggers a full
+  // page load, which destroys this console script after the first user.
+  const spaNavigate = (url) => {
+    try {
+      const target = new URL(url, window.location.href);
+      if (target.origin === window.location.origin) {
+        window.history.pushState({}, '', target.href);
+        window.dispatchEvent(new PopStateEvent('popstate', { state: {} }));
+        return;
+      }
+    } catch (e) {}
+    window.location.href = url;
+  };
+
   // =============================================
   // CONFIGURATION
   // =============================================
@@ -131,7 +145,7 @@
         continue;
       }
 
-      window.location.href = `https://x.com/${username}`;
+      spaNavigate(`https://x.com/${username}`);
       await sleep(3500);
 
       let attempts = 0;

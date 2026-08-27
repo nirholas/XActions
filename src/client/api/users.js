@@ -216,7 +216,7 @@ export async function followUser(http, userId) {
     skip_status: '1',
     user_id: userId,
   });
-  await http.post(url, body, { contentType: 'application/x-www-form-urlencoded' });
+  await http.post(url, body.toString(), { 'Content-Type': 'application/x-www-form-urlencoded' });
 }
 
 /**
@@ -244,5 +244,5 @@ export async function unfollowUser(http, userId) {
     skip_status: '1',
     user_id: userId,
   });
-  await http.post(url, body, { contentType: 'application/x-www-form-urlencoded' });
+  await http.post(url, body.toString(), { 'Content-Type': 'application/x-www-form-urlencoded' });
 }

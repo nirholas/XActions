@@ -60,7 +60,12 @@
       const link = document.querySelector('a[href="/settings/audience_and_tagging"]');
       if (link) { link.click(); await sleep(2000); }
       else {
-        window.location.href = 'https://x.com/settings/audience_and_tagging';
+        // Navigate within the SPA via history.pushState + a synthetic popstate.
+        // Assigning window.location.href triggers a full page reload, which wipes
+        // this console script's context mid-run.
+        const target = new URL('/settings/audience_and_tagging', window.location.href);
+        window.history.pushState({}, '', target.href);
+        window.dispatchEvent(new PopStateEvent('popstate', { state: {} }));
         await sleep(3000);
       }
     }

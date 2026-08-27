@@ -19,6 +19,7 @@
  */
 
 import express from 'express';
+import { authMiddleware } from '../middleware/auth.js';
 import {
   createStream,
   stopStream,
@@ -36,6 +37,9 @@ import {
 } from '../../src/streaming/index.js';
 
 const router = express.Router();
+
+// All routes require authentication
+router.use(authMiddleware);
 
 // ============================================================================
 // POST /api/streams — Create a new stream

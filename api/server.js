@@ -86,6 +86,10 @@ import { generateSpec as generateOpenAPISpec, generateWellKnown as generateX402W
 const app = express();
 const httpServer = createServer(app);
 
+// Trust the first hop reverse proxy (Railway, load balancers) so req.ip reflects
+// the real client address instead of the proxy — required for IP-based rate limiting.
+app.set('trust proxy', 1);
+
 // Initialize Socket.io for real-time browser-to-browser communication
 const io = initializeSocketIO(httpServer);
 

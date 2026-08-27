@@ -83,7 +83,19 @@ export async function toggleProtectedAccount(page, protect) {
   }
 
   // Click toggle
-  await page.click('[role="switch"]');
+  const clicked = await page.evaluate((sel) => {
+    const toggle = document.querySelector(sel.protectedToggle) || document.querySelector('[role="switch"]');
+    if (toggle) {
+      toggle.click();
+      return true;
+    }
+    return false;
+  }, SELECTORS);
+
+  if (!clicked) {
+    return { success: false, error: 'Protected account toggle not found' };
+  }
+
   await sleep(1000);
 
   // Confirm if needed

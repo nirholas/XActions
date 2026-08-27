@@ -19,6 +19,8 @@ import {
 } from './endpoints.js';
 import { AuthError, NotFoundError } from './errors.js';
 
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
 // ---------------------------------------------------------------------------
 // Constants
 // ---------------------------------------------------------------------------
@@ -219,6 +221,7 @@ async function scrapeUserList(client, endpoint, baseVariables, options = {}, res
   const seen = new Map(); // username → user (deduplication)
   let nextCursor = initialCursor;
   let pageNum = 0;
+  let firstRun = true;
 
   while (seen.size < limit) {
     const variables = {
@@ -254,6 +257,12 @@ async function scrapeUserList(client, endpoint, baseVariables, options = {}, res
 
     nextCursor = cursor;
     pageNum++;
+
+    // Rate-limit courtesy delay between pages
+    if (!firstRun) {
+      await sleep(1000 + Math.random() * 1000);
+    }
+    firstRun = false;
   }
 
   return Array.from(seen.values()).slice(0, limit);

@@ -206,7 +206,17 @@ export async function checkRevenueEligibility(page, username) {
     return { followers };
   });
 
-  const followerCount = parseInt(profile.followers.replace(/[,K.M]/g, '')) || 0;
+  const parseCount = (str) => {
+    if (!str) return 0;
+    str = String(str).replace(/,/g, '').trim();
+    const m = str.match(/([\d.]+)\s*([KMBkmb])?/);
+    if (!m) return 0;
+    let n = parseFloat(m[1]);
+    if (m[2]) n *= { k: 1e3, m: 1e6, b: 1e9 }[m[2].toLowerCase()] || 1;
+    return Math.round(n) || 0;
+  };
+
+  const followerCount = parseCount(profile.followers);
 
   return {
     username,

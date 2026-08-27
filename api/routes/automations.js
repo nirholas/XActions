@@ -7,7 +7,7 @@ const router = express.Router();
 router.use(authMiddleware);
 
 /**
- * In-memory automation state
+ * In-memory automation state, scoped per user (userId -> Map(automationId -> state))
  * In production, this would be backed by Redis or Prisma
  */
 const automationState = new Map();
@@ -45,19 +45,30 @@ const AUTOMATION_DEFINITIONS = {
   }
 };
 
-// Initialize automation state
-for (const [id, def] of Object.entries(AUTOMATION_DEFINITIONS)) {
-  automationState.set(id, {
-    id,
-    name: def.name,
-    description: def.description,
-    status: 'stopped',
-    actionCount: 0,
-    startedAt: null,
-    settings: { ...def.defaults },
-    lastAction: null,
-    errors: 0
-  });
+/**
+ * Get (initializing if needed) the automation state map for a single user.
+ * Automations are process-wide definitions, but their running state must be
+ * isolated per user so one tenant can't start/stop/reconfigure another's.
+ */
+function getUserAutomations(userId) {
+  if (!automationState.has(userId)) {
+    const userState = new Map();
+    for (const [id, def] of Object.entries(AUTOMATION_DEFINITIONS)) {
+      userState.set(id, {
+        id,
+        name: def.name,
+        description: def.description,
+        status: 'stopped',
+        actionCount: 0,
+        startedAt: null,
+        settings: { ...def.defaults },
+        lastAction: null,
+        errors: 0
+      });
+    }
+    automationState.set(userId, userState);
+  }
+  return automationState.get(userId);
 }
 
 /**
@@ -66,8 +77,9 @@ for (const [id, def] of Object.entries(AUTOMATION_DEFINITIONS)) {
  */
 router.get('/status', (req, res) => {
   try {
+    const userAutomations = getUserAutomations(req.user.id);
     const statuses = {};
-    for (const [id, state] of automationState) {
+    for (const [id, state] of userAutomations) {
       statuses[id] = { ...state };
     }
     res.json({ automations: statuses });
@@ -85,12 +97,13 @@ router.post('/:name/start', (req, res) => {
   try {
     const { name } = req.params;
     const settings = req.body.settings || {};
+    const userAutomations = getUserAutomations(req.user.id);
 
-    if (!automationState.has(name)) {
+    if (!userAutomations.has(name)) {
       return res.status(404).json({ error: `Automation '${name}' not found` });
     }
 
-    const state = automationState.get(name);
+    const state = userAutomations.get(name);
     if (state.status === 'running') {
       return res.status(400).json({ error: `Automation '${name}' is already running` });
     }
@@ -102,7 +115,7 @@ router.post('/:name/start', (req, res) => {
     state.errors = 0;
     state.settings = { ...state.settings, ...settings };
 
-    automationState.set(name, state);
+    userAutomations.set(name, state);
 
     // Emit Socket.IO event if io is available
     const io = req.app.get('io');
@@ -124,16 +137,17 @@ router.post('/:name/start', (req, res) => {
 router.post('/:name/stop', (req, res) => {
   try {
     const { name } = req.params;
+    const userAutomations = getUserAutomations(req.user.id);
 
-    if (!automationState.has(name)) {
+    if (!userAutomations.has(name)) {
       return res.status(404).json({ error: `Automation '${name}' not found` });
     }
 
-    const state = automationState.get(name);
+    const state = userAutomations.get(name);
     state.status = 'stopped';
     state.startedAt = null;
 
-    automationState.set(name, state);
+    userAutomations.set(name, state);
 
     // Emit Socket.IO event
     const io = req.app.get('io');
@@ -156,8 +170,9 @@ router.post('/:name/settings', (req, res) => {
   try {
     const { name } = req.params;
     const { settings } = req.body;
+    const userAutomations = getUserAutomations(req.user.id);
 
-    if (!automationState.has(name)) {
+    if (!userAutomations.has(name)) {
       return res.status(404).json({ error: `Automation '${name}' not found` });
     }
 
@@ -165,9 +180,9 @@ router.post('/:name/settings', (req, res) => {
       return res.status(400).json({ error: 'Settings object is required' });
     }
 
-    const state = automationState.get(name);
+    const state = userAutomations.get(name);
     state.settings = { ...state.settings, ...settings };
-    automationState.set(name, state);
+    userAutomations.set(name, state);
 
     res.json({ status: 'updated', automation: state });
   } catch (error) {
@@ -182,12 +197,13 @@ router.post('/:name/settings', (req, res) => {
  */
 router.post('/stop-all', (req, res) => {
   try {
+    const userAutomations = getUserAutomations(req.user.id);
     const stopped = [];
-    for (const [id, state] of automationState) {
+    for (const [id, state] of userAutomations) {
       if (state.status === 'running') {
         state.status = 'stopped';
         state.startedAt = null;
-        automationState.set(id, state);
+        userAutomations.set(id, state);
         stopped.push(id);
       }
     }

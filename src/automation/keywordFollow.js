@@ -207,12 +207,7 @@
     log(`Run smartUnfollow.js later to remove non-followers!`, 'info');
   };
 
-  // If we're on search page, start immediately. Otherwise, navigate first.
-  if (window.location.pathname.includes('/search')) {
-    processSearchResults(OPTIONS.KEYWORDS[0]);
-  } else {
-    run();
-  }
+  run();
 
   window.stopKeywordFollow = () => {
     OPTIONS.MAX_FOLLOWS_TOTAL = 0;

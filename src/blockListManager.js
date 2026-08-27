@@ -34,6 +34,21 @@
   const BLOCKED_URL = 'https://x.com/settings/blocked/all';
   const MUTED_KEYWORDS_URL = 'https://x.com/settings/muted_keywords';
 
+  // Navigate within the SPA via history.pushState + a synthetic popstate.
+  // Assigning window.location.href triggers a full page reload, which wipes
+  // this console script's entire execution context mid-run.
+  const spaNavigate = (url) => {
+    try {
+      const target = new URL(url, window.location.href);
+      if (target.origin === window.location.origin) {
+        window.history.pushState({}, '', target.href);
+        window.dispatchEvent(new PopStateEvent('popstate', { state: {} }));
+        return;
+      }
+    } catch (e) { /* fall through to hard navigation */ }
+    window.location.href = url;
+  };
+
   const waitForSelector = async (selector, timeout = 10000) => {
     const start = Date.now();
     while (Date.now() - start < timeout) {
@@ -191,7 +206,7 @@
       console.log(`🔄 [${i + 1}/${cleaned.length}] Blocking @${username}...`);
 
       try {
-        window.location.href = `https://x.com/${username}`;
+        spaNavigate(`https://x.com/${username}`);
         await sleep(3000);
 
         // Wait for the profile page to load

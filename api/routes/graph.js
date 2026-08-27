@@ -68,6 +68,7 @@ router.post('/build', async (req, res) => {
         maxFollowing,
         maxNodes,
         authToken: authToken || req.user?.sessionCookie,
+        userId: req.user.id,
       });
 
       buildPromise.then((result) => {
@@ -97,6 +98,7 @@ router.post('/build', async (req, res) => {
       maxFollowing,
       maxNodes,
       authToken: authToken || req.user?.sessionCookie,
+      userId: req.user.id,
     });
 
     res.status(201).json(result);
@@ -116,7 +118,7 @@ router.post('/build', async (req, res) => {
 router.get('/', async (req, res) => {
   try {
     const graph = await getGraph();
-    const graphs = await graph.list();
+    const graphs = await graph.list(req.user.isAdmin ? undefined : req.user.id);
     res.json({ graphs, count: graphs.length });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -130,7 +132,7 @@ router.get('/:id', async (req, res) => {
   try {
     const graph = await getGraph();
     const data = await graph.get(req.params.id);
-    if (!data) {
+    if (!data || (!req.user.isAdmin && data.userId !== req.user.id)) {
       return res.status(404).json({ error: 'Graph not found' });
     }
     res.json(graph.serializeGraph(data));
@@ -145,6 +147,10 @@ router.get('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   try {
     const graph = await getGraph();
+    const existing = await graph.get(req.params.id);
+    if (!existing || (!req.user.isAdmin && existing.userId !== req.user.id)) {
+      return res.status(404).json({ error: 'Graph not found' });
+    }
     const deleted = await graph.delete(req.params.id);
     if (!deleted) {
       return res.status(404).json({ error: 'Graph not found' });
@@ -166,7 +172,7 @@ router.get('/:id/analysis', async (req, res) => {
   try {
     const graphMod = await getGraph();
     const data = await graphMod.get(req.params.id);
-    if (!data) {
+    if (!data || (!req.user.isAdmin && data.userId !== req.user.id)) {
       return res.status(404).json({ error: 'Graph not found' });
     }
     const analysis = graphMod.analyze(data);
@@ -183,7 +189,7 @@ router.get('/:id/recommendations', async (req, res) => {
   try {
     const graphMod = await getGraph();
     const data = await graphMod.get(req.params.id);
-    if (!data) {
+    if (!data || (!req.user.isAdmin && data.userId !== req.user.id)) {
       return res.status(404).json({ error: 'Graph not found' });
     }
     const recs = graphMod.recommend(data, data.seed);
@@ -201,7 +207,7 @@ router.get('/:id/visualization', async (req, res) => {
   try {
     const graphMod = await getGraph();
     const data = await graphMod.get(req.params.id);
-    if (!data) {
+    if (!data || (!req.user.isAdmin && data.userId !== req.user.id)) {
       return res.status(404).json({ error: 'Graph not found' });
     }
 

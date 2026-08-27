@@ -69,8 +69,19 @@
 
   const engageTopic = async (topic) => {
     console.log(`\n🔍 Searching: "${topic}"...`);
-    window.location.href = `https://x.com/search?q=${encodeURIComponent(topic)}&src=typed_query&f=live`;
-    await sleep(4000);
+
+    const searchInput = document.querySelector('[data-testid="SearchBox_Search_Input"]');
+    if (searchInput) {
+      searchInput.focus();
+      searchInput.value = '';
+      document.execCommand('insertText', false, topic);
+      await sleep(500);
+      searchInput.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', keyCode: 13, bubbles: true }));
+      await sleep(3000);
+    } else {
+      window.location.href = `https://x.com/search?q=${encodeURIComponent(topic)}&src=typed_query&f=live`;
+      await sleep(4000);
+    }
 
     const tweets = await scrapeTweets();
     console.log(`📊 Found ${tweets.length} tweets for "${topic}"`);

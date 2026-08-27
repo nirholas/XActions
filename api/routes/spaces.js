@@ -72,6 +72,9 @@ router.get('/scrape', async (req, res) => {
   try {
     const { url } = req.query;
     if (!url) return res.status(400).json({ error: 'Space URL is required' });
+    if (!/^https:\/\/(x|twitter)\.com\//.test(url)) {
+      return res.status(400).json({ error: 'url must be an x.com or twitter.com URL' });
+    }
 
     const operation = await prisma.operation.create({
       data: {

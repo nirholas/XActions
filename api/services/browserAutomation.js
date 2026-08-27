@@ -82,30 +82,35 @@ async function getAuthenticatedPage(sessionCookie) {
   const browser = await getBrowser();
   const page = await browser.newPage();
 
-  // Set viewport with slight randomization
-  await page.setViewport({ 
-    width: 1280 + Math.floor(Math.random() * 100), 
-    height: 800 + Math.floor(Math.random() * 100) 
-  });
-
-  // Set user agent
-  await page.setUserAgent(
-    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-  );
-
-  // Set session cookie if provided
-  if (sessionCookie) {
-    await page.setCookie({
-      name: 'auth_token',
-      value: sessionCookie,
-      domain: '.x.com',
-      path: '/',
-      httpOnly: true,
-      secure: true,
+  try {
+    // Set viewport with slight randomization
+    await page.setViewport({
+      width: 1280 + Math.floor(Math.random() * 100),
+      height: 800 + Math.floor(Math.random() * 100)
     });
-  }
 
-  return page;
+    // Set user agent
+    await page.setUserAgent(
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+    );
+
+    // Set session cookie if provided
+    if (sessionCookie) {
+      await page.setCookie({
+        name: 'auth_token',
+        value: sessionCookie,
+        domain: '.x.com',
+        path: '/',
+        httpOnly: true,
+        secure: true,
+      });
+    }
+
+    return page;
+  } catch (err) {
+    await page.close().catch(() => {});
+    throw err;
+  }
 }
 
 // ============================================================================

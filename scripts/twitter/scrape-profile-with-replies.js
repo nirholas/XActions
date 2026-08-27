@@ -379,6 +379,8 @@ var CONFIG = {
   let progressBarEl = null;
   let currentPostEl = null;
   let logAreaEl = null;
+  let panelTimerId = null;
+  let panelDragCleanup = null;
 
   function createPanel() {
     if (!CONFIG.panel.enabled) return;
@@ -386,6 +388,8 @@ var CONFIG = {
     // Remove existing panel if re-running
     const existing = document.getElementById('x-scraper-panel');
     if (existing) existing.remove();
+    if (panelTimerId) clearInterval(panelTimerId);
+    if (panelDragCleanup) panelDragCleanup();
 
     panelEl = document.createElement('div');
     panelEl.id = 'x-scraper-panel';
@@ -573,13 +577,19 @@ var CONFIG = {
       dragX = e.clientX - panelEl.offsetLeft;
       dragY = e.clientY - panelEl.offsetTop;
     });
-    document.addEventListener('mousemove', (e) => {
+    const onPanelMouseMove = (e) => {
       if (!isDragging) return;
       panelEl.style.left = (e.clientX - dragX) + 'px';
       panelEl.style.right = 'auto';
       panelEl.style.top = (e.clientY - dragY) + 'px';
-    });
-    document.addEventListener('mouseup', () => { isDragging = false; });
+    };
+    const onPanelMouseUp = () => { isDragging = false; };
+    document.addEventListener('mousemove', onPanelMouseMove);
+    document.addEventListener('mouseup', onPanelMouseUp);
+    panelDragCleanup = () => {
+      document.removeEventListener('mousemove', onPanelMouseMove);
+      document.removeEventListener('mouseup', onPanelMouseUp);
+    };
 
     // ── Minimize ──
     const body = document.getElementById('xsp-body');
@@ -636,7 +646,7 @@ var CONFIG = {
     });
 
     // Timer
-    setInterval(() => {
+    panelTimerId = setInterval(() => {
       if (elapsedEl) elapsedEl.textContent = elapsed() + 's';
     }, 1000);
   }

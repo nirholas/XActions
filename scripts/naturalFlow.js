@@ -463,8 +463,14 @@
 
     shareBtn.click();
     await sleep(600);
-    const bmBtn = document.querySelector('[data-testid="bookmark"], [role="menuitem"]');
-    if (bmBtn && /bookmark/i.test(bmBtn.textContent)) {
+    let bmBtn = null;
+    for (const item of document.querySelectorAll('[role="menuitem"]')) {
+      if (/bookmark/i.test(item.textContent)) {
+        bmBtn = item;
+        break;
+      }
+    }
+    if (bmBtn) {
       bmBtn.click();
       await sleep(400);
       stats.bookmarked++;
@@ -485,15 +491,16 @@
     }
 
     console.log(`   ➕ Following @${author}...`);
-    window.location.href = `https://x.com/${author}`;
+    // Assumes the author's profile is already the loaded page (runLive()
+    // navigates there via saveAndNav before resuming here) — a same-script
+    // window.location.href navigation would unload this context before any
+    // of the polling/click logic below could run.
 
     let loaded = false;
     for (let i = 0; i < 20; i++) {
       await sleep(500);
       if (document.querySelector(SEL.unfollowBtn)) {
         console.log(`   ℹ️ Already following @${author}`);
-        window.history.back();
-        await sleep(3000);
         return false;
       }
       const followBtn = document.querySelector('[data-testid$="-follow"]:not([data-testid$="-unfollow"])');
@@ -511,9 +518,6 @@
       }
     }
 
-    await sleep(rand(2000, 4000));
-    window.history.back();
-    await sleep(3000);
     return true;
   };
 
@@ -617,17 +621,27 @@
     console.log(`   ✅ Timeline: ${stats.liked} liked, ${stats.replied} replied, ${stats.retweeted} RT, ${stats.bookmarked} saved`);
 
     // Follow queued authors
-    if (authorsToFollow.length > 0 && !aborted) {
-      console.log(`\n   👥 Following ${Math.min(authorsToFollow.length, config.follows.max)} accounts...`);
-      for (const author of authorsToFollow.slice(0, config.follows.max - stats.followed)) {
-        if (aborted) break;
-        await waitForUnpause();
-        await doFollow(config, author);
-        actionLog.push({ action: 'follow', author, ts: Date.now() });
-        updateHUD('latest', `➕ Followed @${author}`);
-        await escalatedDelay(config, 'betweenActions', stats.followed);
+    const pendingFollows = authorsToFollow.slice(0, Math.max(0, config.follows.max - stats.followed));
+    if (pendingFollows.length > 0 && !aborted) {
+      if (config.dryRun) {
+        console.log(`\n   👥 Following ${pendingFollows.length} accounts...`);
+        for (const author of pendingFollows) {
+          if (aborted) break;
+          await waitForUnpause();
+          await doFollow(config, author);
+          actionLog.push({ action: 'follow', author, ts: Date.now() });
+          updateHUD('latest', `➕ Followed @${author}`);
+          await escalatedDelay(config, 'betweenActions', stats.followed);
+        }
+      } else {
+        // Following requires visiting each profile, which navigates away and
+        // destroys this script's execution context — hand the queue back to
+        // runLive() so it can process it via the saveAndNav resume pattern.
+        console.log(`\n   👥 Queued ${pendingFollows.length} accounts to follow...`);
+        return { followQueue: pendingFollows };
       }
     }
+    return { followQueue: [] };
   };
 
   const phaseSelfProfile = async (config) => {
@@ -814,11 +828,36 @@
 
     try {
       if (state.phase === 1) {
-        if (!window.location.pathname.includes('/home') && window.location.pathname !== '/') {
-          window.location.href = 'https://x.com/home';
-          return;
+        if (state.pendingFollow) {
+          const author = state.pendingFollow;
+          updateHUD('phase', 'Phase 1/4');
+          await doFollow(config, author);
+          actionLog.push({ action: 'follow', author, ts: Date.now() });
+          updateHUD('latest', `➕ Followed @${author}`);
+          delete state.pendingFollow;
+
+          const remaining = state.followQueue || [];
+          state.followQueue = [];
+          if (!aborted && remaining.length > 0) {
+            state.pendingFollow = remaining[0];
+            state.followQueue = remaining.slice(1);
+            saveAndNav(1, `https://x.com/${state.pendingFollow}`);
+            return;
+          }
+        } else {
+          if (!window.location.pathname.includes('/home') && window.location.pathname !== '/') {
+            window.location.href = 'https://x.com/home';
+            return;
+          }
+          const { followQueue } = await phaseTimeline(config);
+
+          if (!aborted && followQueue && followQueue.length > 0) {
+            state.pendingFollow = followQueue[0];
+            state.followQueue = followQueue.slice(1);
+            saveAndNav(1, `https://x.com/${state.pendingFollow}`);
+            return;
+          }
         }
-        await phaseTimeline(config);
 
         if (!aborted && config.selfProfile.enabled) {
           const username = getMyUsername(config);

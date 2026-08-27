@@ -44,17 +44,19 @@ export class PuppeteerAdapter extends BaseAdapter {
 
   async launch(options = {}) {
     const puppeteer = await this.#getPuppeteer();
+    const args = [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-blink-features=AutomationControlled',
+      '--disable-web-security',
+      ...(options.args || []),
+    ];
+    if (options.proxy) {
+      args.push(`--proxy-server=${options.proxy.server}`);
+    }
     const browser = await puppeteer.launch({
       headless: options.headless !== false ? 'new' : false,
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-blink-features=AutomationControlled',
-        '--disable-web-security',
-        ...(options.args || []),
-      ],
-      ...(options.proxy ? { args: [...(options.args || []), `--proxy-server=${options.proxy.server}`] } : {}),
-      ...options,
+      args,
     });
     return { _native: browser, _adapter: this.name };
   }

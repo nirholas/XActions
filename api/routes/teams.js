@@ -10,8 +10,10 @@ import { authenticate as authMiddleware } from '../middleware/auth.js';
 
 const router = Router();
 
+router.use(authMiddleware);
+
 // GET /api/teams — list teams for the authenticated user
-router.get('/', authMiddleware, async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const { getUserTeams } = await import('../../src/auth/teamManager.js');
     const teams = await getUserTeams(req.user.username);

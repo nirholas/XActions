@@ -113,19 +113,21 @@ describe('getGuestToken', () => {
 
     const auth = new TwitterAuth({ fetch: fetchMock });
 
-    const first = await auth.getGuestToken();
-    expect(first.guestToken).toBe('old');
+    vi.useFakeTimers();
+    try {
+      const first = await auth.getGuestToken();
+      expect(first.guestToken).toBe('old');
 
-    // Force expiration by reaching into internal state
-    // We'll call getGuestToken again after the first one technically expires.
-    // Since we can't modify private fields, we'll simulate by creating a new auth
-    // where the first call gives an already-expired token.
+      // Advance past the guest token TTL (2.5 hours) so the cached token
+      // is expired on this same instance.
+      vi.advanceTimersByTime(2.5 * 60 * 60 * 1000 + 1);
 
-    // Actually, let's just set the timestamp to the past via a wrapper:
-    const auth2 = new TwitterAuth({ fetch: fetchMock });
-    // First call caches the token
-    const r1 = await auth2.getGuestToken();
-    expect(r1.guestToken).toBe('new'); // second mock call
+      const second = await auth.getGuestToken();
+      expect(second.guestToken).toBe('new');
+      expect(fetchMock).toHaveBeenCalledTimes(2);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it('throws AuthError on activation failure', async () => {

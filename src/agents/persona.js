@@ -165,6 +165,24 @@ class Persona {
       issues.push(`Too many emojis (${emojis.length}) — keep ≤4`);
     }
 
+    // Reject links. A short reactive reply never legitimately needs one, and
+    // an unexpected URL is the single most common payload an LLM could be
+    // steered into producing if it were fed injected instructions hidden in
+    // the tweet/thread it was replying to (phishing, drive-by links, etc).
+    if (/https?:\/\/\S+|\bt\.co\/\S+/i.test(text)) {
+      issues.push('Contains a URL — replies should never include links');
+    }
+
+    // Reject @mentions. X already threads a reply to its author without the
+    // author's handle needing to appear in the body text, so any @mention in
+    // generated content is either redundant or an attempt (including one
+    // steered by injected instructions in the source tweet) to tag/promote
+    // an arbitrary, unreviewed account.
+    const mentions = text.match(/@\w+/g) || [];
+    if (mentions.length > 0) {
+      issues.push(`Contains @mention(s) (${mentions.join(', ')}) — replies should not tag other accounts`);
+    }
+
     return { valid: issues.length === 0, issues };
   }
 

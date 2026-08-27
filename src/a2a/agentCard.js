@@ -223,8 +223,14 @@ export async function fetchRemoteAgentCard(agentUrl) {
     const response = await fetch(url, {
       signal: controller.signal,
       headers: { Accept: 'application/json' },
+      redirect: 'manual', // never auto-follow redirects: an attacker-controlled endpoint could 3xx us to a private/metadata address
     });
     clearTimeout(timeout);
+
+    if (response.type === 'opaqueredirect' || (response.status >= 300 && response.status < 400)) {
+      console.warn(`⚠️  Refusing to follow redirect from ${url}`);
+      return null;
+    }
 
     if (!response.ok) {
       console.warn(`⚠️  Failed to fetch agent card from ${url}: HTTP ${response.status}`);

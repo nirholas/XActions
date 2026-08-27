@@ -10,9 +10,9 @@
     "activeTab",
     "storage",
     "alarms",
-    "scripting",
     "contextMenus",
-    "notifications"
+    "notifications",
+    "webRequest"
   ],
 
   "host_permissions": [

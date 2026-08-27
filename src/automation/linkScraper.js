@@ -72,7 +72,7 @@
 
       // Skip Twitter internal links unless opted in
       if (!OPTIONS.INCLUDE_TWITTER_LINKS) {
-        if (['x.com', 'x.com'].includes(domain)) return false;
+        if (['x.com', 'twitter.com'].includes(domain)) return false;
       }
 
       // Skip media links unless opted in

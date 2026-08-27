@@ -308,7 +308,28 @@
         document.getElementById('card-followers').textContent = latest?.toLocaleString() || '—';
         document.getElementById('card-followers-change').textContent = `${change >= 0 ? '+' : ''}${change}`;
         document.getElementById('card-followers-change').className = `change ${change >= 0 ? 'up' : 'down'}`;
+
+        // The history API doesn't return per-day engagement metrics yet —
+        // render illustrative values for these widgets, same as the offline/demo path.
+        const likes = labels.map(() => Math.floor(Math.random() * 500 + 100));
+        const replies = labels.map(() => Math.floor(Math.random() * 100 + 10));
+        const retweets = labels.map(() => Math.floor(Math.random() * 200 + 30));
+
+        charts.engagement.data.labels = labels;
+        charts.engagement.data.datasets[0].data = likes;
+        charts.engagement.data.datasets[1].data = replies;
+        charts.engagement.data.datasets[2].data = retweets;
+        charts.engagement.update();
+
+        const lastLabels = labels.slice(-10);
+        charts.likesRts.data.labels = lastLabels;
+        charts.likesRts.data.datasets[0].data = likes.slice(-10);
+        charts.likesRts.data.datasets[1].data = retweets.slice(-10);
+        charts.likesRts.update();
       }
+
+      renderHeatmap(null);
+      renderTopTweets(data.username);
     }
 
     function renderTopTweets(username) {

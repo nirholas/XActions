@@ -11,11 +11,11 @@
 
 window.XActions = window.XActions || {};
 
-window.XActions = (() => {
+(() => {
   const Core = window.XActions?.Core;
   if (!Core) {
     console.error('❌ Core module not loaded! Paste core.js first.');
-    return null;
+    return;
   }
 
   const { sleep, randomDelay, log, storage, waitForElement, waitForElements, clickElement, typeText } = Core;
@@ -2074,8 +2074,8 @@ window.XActions = (() => {
 
   // Expose ALL sections
   log('XActions FULL library loaded!', 'success');
-  
-  return {
+
+  Object.assign(window.XActions, {
     SEL,
     tweet,
     engage,
@@ -2089,7 +2089,7 @@ window.XActions = (() => {
     utils,
     spaces,
     communities,
-  };
+  });
 })();
 
 console.log(`

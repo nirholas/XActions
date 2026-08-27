@@ -197,11 +197,14 @@ const CONFIG = {
 
   // Set up interval
   const intervalMs = CONFIG.CHECK_INTERVAL_MINUTES * 60 * 1000;
-  const intervalId = setInterval(runCheck, intervalMs);
+
+  // Clear any interval left over from a prior paste of this script
+  if (window._xactionsContinuousMonitorInterval) clearInterval(window._xactionsContinuousMonitorInterval);
+  window._xactionsContinuousMonitorInterval = setInterval(runCheck, intervalMs);
 
   // Provide stop function
   window.stopXActionsMonitor = () => {
-    clearInterval(intervalId);
+    clearInterval(window._xactionsContinuousMonitorInterval);
     console.log('\n🛑 Monitoring stopped.');
   };
 

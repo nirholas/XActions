@@ -175,13 +175,13 @@
 
     // Search for the user
     console.log(`🔍 Searching for @${CONFIG.username}...`);
-    const searchInput = await waitForSelector(SEL.searchPeople);
-    if (!searchInput) {
-      console.log('❌ Could not find people search input');
-      return;
-    }
-
     if (!CONFIG.dryRun) {
+      const searchInput = await waitForSelector(SEL.searchPeople);
+      if (!searchInput) {
+        console.log('❌ Could not find people search input');
+        return;
+      }
+
       searchInput.focus();
       await typeText(searchInput, CONFIG.username);
       await sleep(2000);
@@ -203,6 +203,8 @@
       }
       nextBtn.click();
       await sleep(CONFIG.navigationDelay);
+    } else {
+      console.log(`🏃 [DRY RUN] Would search for and select @${CONFIG.username}`);
     }
 
     // Type and send the message

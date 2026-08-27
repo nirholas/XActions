@@ -52,7 +52,7 @@ async function benchmark(fn, iterations = 10) {
 describe('HTTP Scraper — Performance Benchmarks', () => {
   it('profile scrape is fast with mocked fetch', async () => {
     const fetchMock = vi.fn().mockResolvedValue(
-      mockResponse(graphqlBody(PROFILE_RESPONSE)),
+      mockResponse(PROFILE_RESPONSE),
     );
     const client = new TwitterHttpClient({
       cookies: 'auth_token=tok123; ct0=csrf456',
@@ -135,7 +135,7 @@ describe('HTTP vs Puppeteer — Performance Comparison', () => {
     //   HTTP:      < 5ms
 
     const fetchMock = vi.fn().mockResolvedValue(
-      mockResponse(graphqlBody(PROFILE_RESPONSE)),
+      mockResponse(PROFILE_RESPONSE),
     );
     const client = new TwitterHttpClient({
       cookies: 'auth_token=tok123; ct0=csrf456',
@@ -162,7 +162,7 @@ describe('HTTP vs Puppeteer — Performance Comparison', () => {
 
   it('logs comparison table for CI visibility', async () => {
     const fetchMock = vi.fn().mockResolvedValue(
-      mockResponse(graphqlBody(PROFILE_RESPONSE)),
+      mockResponse(PROFILE_RESPONSE),
     );
     const client = new TwitterHttpClient({
       cookies: 'auth_token=tok123; ct0=csrf456',

@@ -31,6 +31,9 @@ model User {
   operations          Operation[]
   payments            Payment[]
   subscription        Subscription?
+  followerSnapshots   FollowerSnapshot[]
+  followerChanges     FollowerChange[]
+  unfollowerSchedule  UnfollowerSchedule?
 
   @@index([email])
   @@index([username])
@@ -49,7 +52,7 @@ model Subscription {
   cancelAt             DateTime?
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @updatedAt
-  user                 User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                 User      @relation(fields: [userId], references: [id], onDelete: Restrict)
 
   @@index([userId])
   @@index([stripeCustomerId])
@@ -71,7 +74,7 @@ model Operation {
   retryCount      Int       @default(0)
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
-  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user            User      @relation(fields: [userId], references: [id], onDelete: Restrict)
 
   @@index([userId, status])
   @@index([createdAt])
@@ -90,7 +93,7 @@ model Payment {
   metadata        String?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user            User     @relation(fields: [userId], references: [id], onDelete: Restrict)
 
   @@index([userId])
   @@index([createdAt])
@@ -172,10 +175,15 @@ model AccountSnapshot {
   username  String
   type      String   @default("full")
   data      String
+  // SHA-256 hash of the caller's X session cookie — this route family has no
+  // JWT/req.user, so this is the only available tenant boundary. Nullable to
+  // stay backward-compatible with any pre-existing unscoped rows.
+  ownerHash String?
   createdAt DateTime @default(now())
 
   @@index([username, type])
   @@index([createdAt])
+  @@index([ownerHash, username])
 }
 
 model FollowerSnapshot {
@@ -185,6 +193,7 @@ model FollowerSnapshot {
   followers  String
   totalCount Int
   createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([username, createdAt])
@@ -199,6 +208,7 @@ model FollowerChange {
   avatarUrl     String?
   detectedAt    DateTime  @default(now())
   followedSince DateTime?
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, detectedAt])
   @@index([userId, type])
@@ -214,6 +224,7 @@ model UnfollowerSchedule {
   webhookUrl String?
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([active, nextRunAt])
 }

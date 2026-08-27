@@ -187,15 +187,15 @@ export async function scrapeProfile(client, username) {
   const response = await client.graphql(queryId, operationName, variables);
 
   // Validate response structure
-  const result = response?.data?.user?.result;
+  const result = response?.data?.data?.user?.result;
 
   if (!result) {
     throw new NotFoundError(`User @${username} not found`);
   }
 
   // Handle errors array in response (rate-limit, partial errors)
-  if (response.errors?.length) {
-    const msg = response.errors.map((e) => e.message).join('; ');
+  if (response.data?.errors?.length) {
+    const msg = response.data.errors.map((e) => e.message).join('; ');
     throw new TwitterApiError(`GraphQL errors: ${msg}`, { data: response });
   }
 
@@ -231,14 +231,14 @@ export async function scrapeProfileById(client, userId) {
 
   const response = await client.graphql(queryId, operationName, variables);
 
-  const result = response?.data?.user?.result;
+  const result = response?.data?.data?.user?.result;
 
   if (!result) {
     throw new NotFoundError(`User with ID ${userId} not found`);
   }
 
-  if (response.errors?.length) {
-    const msg = response.errors.map((e) => e.message).join('; ');
+  if (response.data?.errors?.length) {
+    const msg = response.data.errors.map((e) => e.message).join('; ');
     throw new TwitterApiError(`GraphQL errors: ${msg}`, { data: response });
   }
 

@@ -19,10 +19,11 @@ import crypto from 'crypto';
 /**
  * Create a new empty graph
  */
-export function createGraph(seedUsername) {
+export function createGraph(seedUsername, userId) {
   return {
     id: crypto.randomUUID(),
     seed: seedUsername,
+    userId: userId || null,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
     nodes: new Map(),   // username → node
@@ -112,6 +113,7 @@ export async function buildGraph(seedUsername, options = {}) {
     maxFollowing = 200,
     maxNodes = 500,
     authToken,
+    userId,
     onProgress = () => {},
     isCancelled = () => false,
   } = options;
@@ -119,7 +121,7 @@ export async function buildGraph(seedUsername, options = {}) {
   // Lazy-load scrapers
   const scrapers = options.scrapers || (await import('../scrapers/index.js')).default;
 
-  const graph = createGraph(seedUsername);
+  const graph = createGraph(seedUsername, userId);
   graph.metadata.depth = depth;
   graph.metadata.status = 'crawling';
 
@@ -281,6 +283,7 @@ export function serializeGraph(graph) {
   return {
     id: graph.id,
     seed: graph.seed,
+    userId: graph.userId || null,
     createdAt: graph.createdAt,
     updatedAt: graph.updatedAt,
     nodes: Array.from(graph.nodes.values()),
@@ -296,6 +299,7 @@ export function deserializeGraph(data) {
   const graph = {
     id: data.id,
     seed: data.seed,
+    userId: data.userId || null,
     createdAt: data.createdAt,
     updatedAt: data.updatedAt,
     nodes: new Map(),

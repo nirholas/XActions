@@ -117,6 +117,16 @@ export async function loginWithCookie(page, authToken) {
   return page;
 }
 
+/**
+ * Resolve the adapter instance for a page, if it was created via createBrowser({ adapter }).
+ * Returns null for native Puppeteer pages so callers can fall back to direct page.* calls.
+ */
+async function getPageAdapter(page) {
+  if (!page._adapter) return null;
+  const { getAdapter } = await import('../adapters/index.js');
+  return getAdapter(page._adapter);
+}
+
 // ============================================================================
 // Profile Scraper
 // ============================================================================
@@ -125,10 +135,15 @@ export async function loginWithCookie(page, authToken) {
  * Scrape profile information for a user
  */
 export async function scrapeProfile(page, username) {
-  await page.goto(`https://x.com/${username}`, { waitUntil: 'networkidle2' });
+  const adapter = await getPageAdapter(page);
+  if (adapter) {
+    await adapter.goto(page, `https://x.com/${username}`, { waitUntil: 'networkidle' });
+  } else {
+    await page.goto(`https://x.com/${username}`, { waitUntil: 'networkidle2' });
+  }
   await randomDelay();
 
-  const profile = await page.evaluate(() => {
+  const evaluateFn = () => {
     const getText = (sel) => document.querySelector(sel)?.textContent?.trim() || null;
     const getAttr = (sel, attr) => document.querySelector(sel)?.getAttribute(attr) || null;
 
@@ -160,7 +175,11 @@ export async function scrapeProfile(page, username) {
       protected: !!document.querySelector('[data-testid="UserName"] svg[aria-label*="Protected"]'),
       platform: 'twitter',
     };
-  });
+  };
+
+  const profile = adapter
+    ? await adapter.evaluate(page, evaluateFn)
+    : await page.evaluate(evaluateFn);
 
   return profile;
 }
@@ -174,37 +193,47 @@ export async function scrapeProfile(page, username) {
  */
 export async function scrapeFollowers(page, username, options = {}) {
   const { limit = 1000, onProgress } = options;
-  
-  await page.goto(`https://x.com/${username}/followers`, { waitUntil: 'networkidle2' });
+  const adapter = await getPageAdapter(page);
+
+  if (adapter) {
+    await adapter.goto(page, `https://x.com/${username}/followers`, { waitUntil: 'networkidle' });
+  } else {
+    await page.goto(`https://x.com/${username}/followers`, { waitUntil: 'networkidle2' });
+  }
   await randomDelay();
 
   const followers = new Map();
   let retries = 0;
   const maxRetries = 10;
 
+  const extractUsers = () => {
+    const cells = document.querySelectorAll('[data-testid="UserCell"]');
+    return Array.from(cells).map((cell) => {
+      const link = cell.querySelector('a[href^="/"]');
+      const nameEl = cell.querySelector('[dir="ltr"] > span');
+      const bioEl = cell.querySelector('[data-testid="UserDescription"]');
+      const verifiedEl = cell.querySelector('svg[aria-label*="Verified"]');
+      const avatarEl = cell.querySelector('img[src*="profile_images"]');
+
+      const href = link?.getAttribute('href') || '';
+      const username = href.split('/')[1];
+
+      return {
+        username,
+        name: nameEl?.textContent || null,
+        bio: bioEl?.textContent || null,
+        verified: !!verifiedEl,
+        avatar: avatarEl?.src || null,
+        platform: 'twitter',
+      };
+    }).filter(u => u.username && !u.username.includes('?'));
+  };
+  const scrollToBottom = () => window.scrollTo(0, document.body.scrollHeight);
+
   while (followers.size < limit && retries < maxRetries) {
-    const users = await page.evaluate(() => {
-      const cells = document.querySelectorAll('[data-testid="UserCell"]');
-      return Array.from(cells).map((cell) => {
-        const link = cell.querySelector('a[href^="/"]');
-        const nameEl = cell.querySelector('[dir="ltr"] > span');
-        const bioEl = cell.querySelector('[data-testid="UserDescription"]');
-        const verifiedEl = cell.querySelector('svg[aria-label*="Verified"]');
-        const avatarEl = cell.querySelector('img[src*="profile_images"]');
-
-        const href = link?.getAttribute('href') || '';
-        const username = href.split('/')[1];
-
-        return {
-          username,
-          name: nameEl?.textContent || null,
-          bio: bioEl?.textContent || null,
-          verified: !!verifiedEl,
-          avatar: avatarEl?.src || null,
-          platform: 'twitter',
-        };
-      }).filter(u => u.username && !u.username.includes('?'));
-    });
+    const users = adapter
+      ? await adapter.evaluate(page, extractUsers)
+      : await page.evaluate(extractUsers);
 
     const prevSize = followers.size;
     users.forEach((u) => followers.set(u.username, u));
@@ -219,7 +248,11 @@ export async function scrapeFollowers(page, username, options = {}) {
       retries = 0;
     }
 
-    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    if (adapter) {
+      await adapter.evaluate(page, scrollToBottom);
+    } else {
+      await page.evaluate(scrollToBottom);
+    }
     await randomDelay(1500, 3000);
   }
 
@@ -235,35 +268,45 @@ export async function scrapeFollowers(page, username, options = {}) {
  */
 export async function scrapeFollowing(page, username, options = {}) {
   const { limit = 1000, onProgress } = options;
-  
-  await page.goto(`https://x.com/${username}/following`, { waitUntil: 'networkidle2' });
+  const adapter = await getPageAdapter(page);
+
+  if (adapter) {
+    await adapter.goto(page, `https://x.com/${username}/following`, { waitUntil: 'networkidle' });
+  } else {
+    await page.goto(`https://x.com/${username}/following`, { waitUntil: 'networkidle2' });
+  }
   await randomDelay();
 
   const following = new Map();
   let retries = 0;
   const maxRetries = 10;
 
+  const extractUsers = () => {
+    const cells = document.querySelectorAll('[data-testid="UserCell"]');
+    return Array.from(cells).map((cell) => {
+      const link = cell.querySelector('a[href^="/"]');
+      const nameEl = cell.querySelector('[dir="ltr"] > span');
+      const bioEl = cell.querySelector('[data-testid="UserDescription"]');
+      const followsBackEl = cell.querySelector('[data-testid="userFollowIndicator"]');
+
+      const href = link?.getAttribute('href') || '';
+      const username = href.split('/')[1];
+
+      return {
+        username,
+        name: nameEl?.textContent || null,
+        bio: bioEl?.textContent || null,
+        followsBack: !!followsBackEl,
+        platform: 'twitter',
+      };
+    }).filter(u => u.username && !u.username.includes('?'));
+  };
+  const scrollToBottom = () => window.scrollTo(0, document.body.scrollHeight);
+
   while (following.size < limit && retries < maxRetries) {
-    const users = await page.evaluate(() => {
-      const cells = document.querySelectorAll('[data-testid="UserCell"]');
-      return Array.from(cells).map((cell) => {
-        const link = cell.querySelector('a[href^="/"]');
-        const nameEl = cell.querySelector('[dir="ltr"] > span');
-        const bioEl = cell.querySelector('[data-testid="UserDescription"]');
-        const followsBackEl = cell.querySelector('[data-testid="userFollowIndicator"]');
-
-        const href = link?.getAttribute('href') || '';
-        const username = href.split('/')[1];
-
-        return {
-          username,
-          name: nameEl?.textContent || null,
-          bio: bioEl?.textContent || null,
-          followsBack: !!followsBackEl,
-          platform: 'twitter',
-        };
-      }).filter(u => u.username && !u.username.includes('?'));
-    });
+    const users = adapter
+      ? await adapter.evaluate(page, extractUsers)
+      : await page.evaluate(extractUsers);
 
     const prevSize = following.size;
     users.forEach((u) => following.set(u.username, u));
@@ -278,7 +321,11 @@ export async function scrapeFollowing(page, username, options = {}) {
       retries = 0;
     }
 
-    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    if (adapter) {
+      await adapter.evaluate(page, scrollToBottom);
+    } else {
+      await page.evaluate(scrollToBottom);
+    }
     await randomDelay(1500, 3000);
   }
 
@@ -295,53 +342,63 @@ export async function scrapeFollowing(page, username, options = {}) {
 export async function scrapeTweets(page, username, options = {}) {
   const { limit = 100, includeReplies = false, onProgress } = options;
   
-  const url = includeReplies 
+  const url = includeReplies
     ? `https://x.com/${username}/with_replies`
     : `https://x.com/${username}`;
-    
-  await page.goto(url, { waitUntil: 'networkidle2' });
+
+  const adapter = await getPageAdapter(page);
+  if (adapter) {
+    await adapter.goto(page, url, { waitUntil: 'networkidle' });
+  } else {
+    await page.goto(url, { waitUntil: 'networkidle2' });
+  }
   await randomDelay();
 
   const tweets = new Map();
   let retries = 0;
   const maxRetries = 10;
 
+  const extractTweets = () => {
+    const articles = document.querySelectorAll('article[data-testid="tweet"]');
+    return Array.from(articles).map((article) => {
+      const textEl = article.querySelector('[data-testid="tweetText"]');
+      const timeEl = article.querySelector('time');
+      const likesEl = article.querySelector('[data-testid="like"] span span');
+      const retweetsEl = article.querySelector('[data-testid="retweet"] span span');
+      const repliesEl = article.querySelector('[data-testid="reply"] span span');
+      const viewsEl = article.querySelector('a[href*="/analytics"] span span');
+      const linkEl = article.querySelector('a[href*="/status/"]');
+
+      const images = Array.from(article.querySelectorAll('[data-testid="tweetPhoto"] img')).map(i => i.src);
+      const video = article.querySelector('[data-testid="videoPlayer"]') ? true : false;
+
+      const quotedEl = article.querySelector('[data-testid="quoteTweet"]');
+
+      return {
+        id: linkEl?.href?.match(/status\/(\d+)/)?.[1] || null,
+        text: textEl?.textContent || null,
+        timestamp: timeEl?.getAttribute('datetime') || null,
+        likes: likesEl?.textContent || '0',
+        retweets: retweetsEl?.textContent || '0',
+        replies: repliesEl?.textContent || '0',
+        views: viewsEl?.textContent || null,
+        url: linkEl?.href || null,
+        media: {
+          images,
+          hasVideo: video,
+        },
+        isQuote: !!quotedEl,
+        isRetweet: !!article.querySelector('[data-testid="socialContext"]'),
+        platform: 'twitter',
+      };
+    }).filter(t => t.id);
+  };
+  const scrollToBottom = () => window.scrollTo(0, document.body.scrollHeight);
+
   while (tweets.size < limit && retries < maxRetries) {
-    const tweetData = await page.evaluate(() => {
-      const articles = document.querySelectorAll('article[data-testid="tweet"]');
-      return Array.from(articles).map((article) => {
-        const textEl = article.querySelector('[data-testid="tweetText"]');
-        const timeEl = article.querySelector('time');
-        const likesEl = article.querySelector('[data-testid="like"] span span');
-        const retweetsEl = article.querySelector('[data-testid="retweet"] span span');
-        const repliesEl = article.querySelector('[data-testid="reply"] span span');
-        const viewsEl = article.querySelector('a[href*="/analytics"] span span');
-        const linkEl = article.querySelector('a[href*="/status/"]');
-        
-        const images = Array.from(article.querySelectorAll('[data-testid="tweetPhoto"] img')).map(i => i.src);
-        const video = article.querySelector('[data-testid="videoPlayer"]') ? true : false;
-        
-        const quotedEl = article.querySelector('[data-testid="quoteTweet"]');
-        
-        return {
-          id: linkEl?.href?.match(/status\/(\d+)/)?.[1] || null,
-          text: textEl?.textContent || null,
-          timestamp: timeEl?.getAttribute('datetime') || null,
-          likes: likesEl?.textContent || '0',
-          retweets: retweetsEl?.textContent || '0',
-          replies: repliesEl?.textContent || '0',
-          views: viewsEl?.textContent || null,
-          url: linkEl?.href || null,
-          media: {
-            images,
-            hasVideo: video,
-          },
-          isQuote: !!quotedEl,
-          isRetweet: !!article.querySelector('[data-testid="socialContext"]'),
-          platform: 'twitter',
-        };
-      }).filter(t => t.id);
-    });
+    const tweetData = adapter
+      ? await adapter.evaluate(page, extractTweets)
+      : await page.evaluate(extractTweets);
 
     const prevSize = tweets.size;
     tweetData.forEach((t) => tweets.set(t.id, t));
@@ -356,7 +413,11 @@ export async function scrapeTweets(page, username, options = {}) {
       retries = 0;
     }
 
-    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    if (adapter) {
+      await adapter.evaluate(page, scrollToBottom);
+    } else {
+      await page.evaluate(scrollToBottom);
+    }
     await randomDelay(1500, 3000);
   }
 
@@ -383,37 +444,46 @@ export async function searchTweets(page, query, options = {}) {
   
   const encodedQuery = encodeURIComponent(query);
   const f = filterMap[filter] || 'live';
-  
-  await page.goto(`https://x.com/search?q=${encodedQuery}&src=typed_query&f=${f}`, {
-    waitUntil: 'networkidle2',
-  });
+
+  const searchUrl = `https://x.com/search?q=${encodedQuery}&src=typed_query&f=${f}`;
+  const adapter = await getPageAdapter(page);
+  if (adapter) {
+    await adapter.goto(page, searchUrl, { waitUntil: 'networkidle' });
+  } else {
+    await page.goto(searchUrl, { waitUntil: 'networkidle2' });
+  }
   await randomDelay();
 
   const tweets = new Map();
   let retries = 0;
   const maxRetries = 10;
 
+  const extractTweets = () => {
+    const articles = document.querySelectorAll('article[data-testid="tweet"]');
+    return Array.from(articles).map((article) => {
+      const textEl = article.querySelector('[data-testid="tweetText"]');
+      const authorLink = article.querySelector('[data-testid="User-Name"] a[href^="/"]');
+      const timeEl = article.querySelector('time');
+      const linkEl = article.querySelector('a[href*="/status/"]');
+      const likesEl = article.querySelector('[data-testid="like"] span span');
+
+      return {
+        id: linkEl?.href?.match(/status\/(\d+)/)?.[1] || null,
+        text: textEl?.textContent || null,
+        author: authorLink?.href?.split('/')[3] || null,
+        timestamp: timeEl?.getAttribute('datetime') || null,
+        likes: likesEl?.textContent || '0',
+        url: linkEl?.href || null,
+        platform: 'twitter',
+      };
+    }).filter(t => t.id);
+  };
+  const scrollToBottom = () => window.scrollTo(0, document.body.scrollHeight);
+
   while (tweets.size < limit && retries < maxRetries) {
-    const tweetData = await page.evaluate(() => {
-      const articles = document.querySelectorAll('article[data-testid="tweet"]');
-      return Array.from(articles).map((article) => {
-        const textEl = article.querySelector('[data-testid="tweetText"]');
-        const authorLink = article.querySelector('[data-testid="User-Name"] a[href^="/"]');
-        const timeEl = article.querySelector('time');
-        const linkEl = article.querySelector('a[href*="/status/"]');
-        const likesEl = article.querySelector('[data-testid="like"] span span');
-        
-        return {
-          id: linkEl?.href?.match(/status\/(\d+)/)?.[1] || null,
-          text: textEl?.textContent || null,
-          author: authorLink?.href?.split('/')[3] || null,
-          timestamp: timeEl?.getAttribute('datetime') || null,
-          likes: likesEl?.textContent || '0',
-          url: linkEl?.href || null,
-          platform: 'twitter',
-        };
-      }).filter(t => t.id);
-    });
+    const tweetData = adapter
+      ? await adapter.evaluate(page, extractTweets)
+      : await page.evaluate(extractTweets);
 
     const prevSize = tweets.size;
     tweetData.forEach((t) => tweets.set(t.id, t));
@@ -428,7 +498,11 @@ export async function searchTweets(page, query, options = {}) {
       retries = 0;
     }
 
-    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    if (adapter) {
+      await adapter.evaluate(page, scrollToBottom);
+    } else {
+      await page.evaluate(scrollToBottom);
+    }
     await randomDelay(1500, 3000);
   }
 
@@ -443,19 +517,29 @@ export async function searchTweets(page, query, options = {}) {
  * Scrape a full tweet thread
  */
 export async function scrapeThread(page, tweetUrl) {
-  await page.goto(tweetUrl, { waitUntil: 'networkidle2' });
+  const adapter = await getPageAdapter(page);
+  if (adapter) {
+    await adapter.goto(page, tweetUrl, { waitUntil: 'networkidle' });
+  } else {
+    await page.goto(tweetUrl, { waitUntil: 'networkidle2' });
+  }
   await randomDelay();
 
+  const scrollToBottom = () => window.scrollTo(0, document.body.scrollHeight);
   for (let i = 0; i < 5; i++) {
-    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    if (adapter) {
+      await adapter.evaluate(page, scrollToBottom);
+    } else {
+      await page.evaluate(scrollToBottom);
+    }
     await randomDelay(1000, 2000);
   }
 
-  const thread = await page.evaluate(() => {
+  const extractThread = () => {
     const articles = document.querySelectorAll('article[data-testid="tweet"]');
     const mainTweetId = window.location.pathname.match(/status\/(\d+)/)?.[1];
-    
-    const mainArticle = Array.from(articles).find(a => 
+
+    const mainArticle = Array.from(articles).find(a =>
       a.querySelector(`a[href*="/status/${mainTweetId}"]`)
     );
     const mainAuthor = mainArticle?.querySelector('[data-testid="User-Name"] a')?.href?.split('/')[3];
@@ -466,9 +550,9 @@ export async function scrapeThread(page, tweetUrl) {
         const authorLink = article.querySelector('[data-testid="User-Name"] a[href^="/"]');
         const timeEl = article.querySelector('time');
         const linkEl = article.querySelector('a[href*="/status/"]');
-        
+
         const author = authorLink?.href?.split('/')[3];
-        
+
         return {
           id: linkEl?.href?.match(/status\/(\d+)/)?.[1] || null,
           text: textEl?.textContent || null,
@@ -480,7 +564,11 @@ export async function scrapeThread(page, tweetUrl) {
         };
       })
       .filter(t => t.id && t.isMainAuthor);
-  });
+  };
+
+  const thread = adapter
+    ? await adapter.evaluate(page, extractThread)
+    : await page.evaluate(extractThread);
 
   return thread;
 }
@@ -496,31 +584,41 @@ export async function scrapeLikes(page, tweetUrl, options = {}) {
   const { limit = 100 } = options;
   
   const likesUrl = tweetUrl.replace(/\/status\//, '/status/') + '/likes';
-  await page.goto(likesUrl, { waitUntil: 'networkidle2' });
+  const adapter = await getPageAdapter(page);
+  if (adapter) {
+    await adapter.goto(page, likesUrl, { waitUntil: 'networkidle' });
+  } else {
+    await page.goto(likesUrl, { waitUntil: 'networkidle2' });
+  }
   await randomDelay();
 
   const users = new Map();
   let retries = 0;
   const maxRetries = 10;
 
+  const extractUsers = () => {
+    const cells = document.querySelectorAll('[data-testid="UserCell"]');
+    return Array.from(cells).map((cell) => {
+      const link = cell.querySelector('a[href^="/"]');
+      const nameEl = cell.querySelector('[dir="ltr"] > span');
+      const bioEl = cell.querySelector('[data-testid="UserDescription"]');
+
+      const href = link?.getAttribute('href') || '';
+      const username = href.split('/')[1];
+
+      return {
+        username,
+        name: nameEl?.textContent || null,
+        bio: bioEl?.textContent || null,
+      };
+    }).filter(u => u.username && !u.username.includes('?'));
+  };
+  const scrollToBottom = () => window.scrollTo(0, document.body.scrollHeight);
+
   while (users.size < limit && retries < maxRetries) {
-    const userData = await page.evaluate(() => {
-      const cells = document.querySelectorAll('[data-testid="UserCell"]');
-      return Array.from(cells).map((cell) => {
-        const link = cell.querySelector('a[href^="/"]');
-        const nameEl = cell.querySelector('[dir="ltr"] > span');
-        const bioEl = cell.querySelector('[data-testid="UserDescription"]');
-
-        const href = link?.getAttribute('href') || '';
-        const username = href.split('/')[1];
-
-        return {
-          username,
-          name: nameEl?.textContent || null,
-          bio: bioEl?.textContent || null,
-        };
-      }).filter(u => u.username && !u.username.includes('?'));
-    });
+    const userData = adapter
+      ? await adapter.evaluate(page, extractUsers)
+      : await page.evaluate(extractUsers);
 
     const prevSize = users.size;
     userData.forEach((u) => users.set(u.username, u));
@@ -531,7 +629,11 @@ export async function scrapeLikes(page, tweetUrl, options = {}) {
       retries = 0;
     }
 
-    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    if (adapter) {
+      await adapter.evaluate(page, scrollToBottom);
+    } else {
+      await page.evaluate(scrollToBottom);
+    }
     await randomDelay(1500, 3000);
   }
 
@@ -561,36 +663,46 @@ export async function scrapeHashtag(page, hashtag, options = {}) {
  */
 export async function scrapeMedia(page, username, options = {}) {
   const { limit = 100 } = options;
-  
-  await page.goto(`https://x.com/${username}/media`, { waitUntil: 'networkidle2' });
+  const adapter = await getPageAdapter(page);
+
+  if (adapter) {
+    await adapter.goto(page, `https://x.com/${username}/media`, { waitUntil: 'networkidle' });
+  } else {
+    await page.goto(`https://x.com/${username}/media`, { waitUntil: 'networkidle2' });
+  }
   await randomDelay();
 
   const media = [];
   let retries = 0;
   const maxRetries = 10;
 
-  while (media.length < limit && retries < maxRetries) {
-    const newMedia = await page.evaluate(() => {
-      const items = document.querySelectorAll('article[data-testid="tweet"]');
-      return Array.from(items).flatMap((article) => {
-        const images = Array.from(article.querySelectorAll('[data-testid="tweetPhoto"] img'))
-          .map(img => ({
-            type: 'image',
-            url: img.src.replace(/&name=\w+/, '&name=large'),
-          }));
-        
-        const videos = article.querySelector('[data-testid="videoPlayer"]')
-          ? [{ type: 'video', url: article.querySelector('a[href*="/status/"]')?.href }]
-          : [];
-        
-        const tweetUrl = article.querySelector('a[href*="/status/"]')?.href;
-        
-        return [...images, ...videos].map(m => ({
-          ...m,
-          tweetUrl,
+  const extractMedia = () => {
+    const items = document.querySelectorAll('article[data-testid="tweet"]');
+    return Array.from(items).flatMap((article) => {
+      const images = Array.from(article.querySelectorAll('[data-testid="tweetPhoto"] img'))
+        .map(img => ({
+          type: 'image',
+          url: img.src.replace(/&name=\w+/, '&name=large'),
         }));
-      });
+
+      const videos = article.querySelector('[data-testid="videoPlayer"]')
+        ? [{ type: 'video', url: article.querySelector('a[href*="/status/"]')?.href }]
+        : [];
+
+      const tweetUrl = article.querySelector('a[href*="/status/"]')?.href;
+
+      return [...images, ...videos].map(m => ({
+        ...m,
+        tweetUrl,
+      }));
     });
+  };
+  const scrollToBottom = () => window.scrollTo(0, document.body.scrollHeight);
+
+  while (media.length < limit && retries < maxRetries) {
+    const newMedia = adapter
+      ? await adapter.evaluate(page, extractMedia)
+      : await page.evaluate(extractMedia);
 
     const prevLength = media.length;
     newMedia.forEach((m) => {
@@ -605,7 +717,11 @@ export async function scrapeMedia(page, username, options = {}) {
       retries = 0;
     }
 
-    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    if (adapter) {
+      await adapter.evaluate(page, scrollToBottom);
+    } else {
+      await page.evaluate(scrollToBottom);
+    }
     await randomDelay(1500, 3000);
   }
 
@@ -621,33 +737,43 @@ export async function scrapeMedia(page, username, options = {}) {
  */
 export async function scrapeListMembers(page, listUrl, options = {}) {
   const { limit = 500 } = options;
-  
+  const adapter = await getPageAdapter(page);
+
   const membersUrl = listUrl.endsWith('/members') ? listUrl : `${listUrl}/members`;
-  await page.goto(membersUrl, { waitUntil: 'networkidle2' });
+  if (adapter) {
+    await adapter.goto(page, membersUrl, { waitUntil: 'networkidle' });
+  } else {
+    await page.goto(membersUrl, { waitUntil: 'networkidle2' });
+  }
   await randomDelay();
 
   const members = new Map();
   let retries = 0;
   const maxRetries = 10;
 
+  const extractUsers = () => {
+    const cells = document.querySelectorAll('[data-testid="UserCell"]');
+    return Array.from(cells).map((cell) => {
+      const link = cell.querySelector('a[href^="/"]');
+      const nameEl = cell.querySelector('[dir="ltr"] > span');
+      const bioEl = cell.querySelector('[data-testid="UserDescription"]');
+
+      const href = link?.getAttribute('href') || '';
+      const username = href.split('/')[1];
+
+      return {
+        username,
+        name: nameEl?.textContent || null,
+        bio: bioEl?.textContent || null,
+      };
+    }).filter(u => u.username && !u.username.includes('?'));
+  };
+  const scrollToBottom = () => window.scrollTo(0, document.body.scrollHeight);
+
   while (members.size < limit && retries < maxRetries) {
-    const users = await page.evaluate(() => {
-      const cells = document.querySelectorAll('[data-testid="UserCell"]');
-      return Array.from(cells).map((cell) => {
-        const link = cell.querySelector('a[href^="/"]');
-        const nameEl = cell.querySelector('[dir="ltr"] > span');
-        const bioEl = cell.querySelector('[data-testid="UserDescription"]');
-
-        const href = link?.getAttribute('href') || '';
-        const username = href.split('/')[1];
-
-        return {
-          username,
-          name: nameEl?.textContent || null,
-          bio: bioEl?.textContent || null,
-        };
-      }).filter(u => u.username && !u.username.includes('?'));
-    });
+    const users = adapter
+      ? await adapter.evaluate(page, extractUsers)
+      : await page.evaluate(extractUsers);
 
     const prevSize = members.size;
     users.forEach((u) => members.set(u.username, u));
@@ -658,7 +784,11 @@ export async function scrapeListMembers(page, listUrl, options = {}) {
       retries = 0;
     }
 
-    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    if (adapter) {
+      await adapter.evaluate(page, scrollToBottom);
+    } else {
+      await page.evaluate(scrollToBottom);
+    }
     await randomDelay(1500, 3000);
   }
 
@@ -674,28 +804,37 @@ export async function scrapeListMembers(page, listUrl, options = {}) {
  */
 export async function scrapeBookmarks(page, options = {}) {
   const { limit = 100, scrollDelay = 2000 } = options;
-  
-  await page.goto('https://x.com/i/bookmarks', { waitUntil: 'networkidle2' });
+  const adapter = await getPageAdapter(page);
+
+  if (adapter) {
+    await adapter.goto(page, 'https://x.com/i/bookmarks', { waitUntil: 'networkidle' });
+  } else {
+    await page.goto('https://x.com/i/bookmarks', { waitUntil: 'networkidle2' });
+  }
   await randomDelay(2000, 3000);
-  
+
   const bookmarks = [];
   const seen = new Set();
   let scrolls = 0;
   const maxScrolls = Math.ceil(limit / 5);
-  
+
+  const mapArticles = (articles) =>
+    articles.map((article) => {
+      const text = article.querySelector('[data-testid="tweetText"]')?.innerText || '';
+      const author = article.querySelector('[data-testid="User-Name"] a')?.getAttribute('href')?.replace('/', '') || '';
+      const time = article.querySelector('time')?.getAttribute('datetime') || '';
+      const likes = article.querySelector('[data-testid="like"] span')?.innerText || '0';
+      const retweets = article.querySelector('[data-testid="retweet"] span')?.innerText || '0';
+      const link = article.querySelector('a[href*="/status/"]')?.getAttribute('href') || '';
+      return { author, text, time, likes, retweets, link: link ? `https://x.com${link}` : '', platform: 'twitter' };
+    });
+  const scrollBy = () => window.scrollBy(0, window.innerHeight * 2);
+
   while (bookmarks.length < limit && scrolls < maxScrolls) {
-    const tweets = await page.$$eval('article[data-testid="tweet"]', (articles) =>
-      articles.map((article) => {
-        const text = article.querySelector('[data-testid="tweetText"]')?.innerText || '';
-        const author = article.querySelector('[data-testid="User-Name"] a')?.getAttribute('href')?.replace('/', '') || '';
-        const time = article.querySelector('time')?.getAttribute('datetime') || '';
-        const likes = article.querySelector('[data-testid="like"] span')?.innerText || '0';
-        const retweets = article.querySelector('[data-testid="retweet"] span')?.innerText || '0';
-        const link = article.querySelector('a[href*="/status/"]')?.getAttribute('href') || '';
-        return { author, text, time, likes, retweets, link: link ? `https://x.com${link}` : '', platform: 'twitter' };
-      })
-    );
-    
+    const tweets = adapter
+      ? await adapter.queryAll(page, 'article[data-testid="tweet"]', mapArticles)
+      : await page.$$eval('article[data-testid="tweet"]', mapArticles);
+
     for (const tweet of tweets) {
       const key = tweet.link || tweet.text.slice(0, 80);
       if (!seen.has(key) && key) {
@@ -703,12 +842,16 @@ export async function scrapeBookmarks(page, options = {}) {
         bookmarks.push(tweet);
       }
     }
-    
-    await page.evaluate(() => window.scrollBy(0, window.innerHeight * 2));
+
+    if (adapter) {
+      await adapter.evaluate(page, scrollBy);
+    } else {
+      await page.evaluate(scrollBy);
+    }
     await sleep(scrollDelay);
     scrolls++;
   }
-  
+
   return bookmarks.slice(0, limit);
 }
 
@@ -721,29 +864,38 @@ export async function scrapeBookmarks(page, options = {}) {
  */
 export async function scrapeNotifications(page, options = {}) {
   const { limit = 50, tab = 'all', scrollDelay = 2000 } = options;
-  
+  const adapter = await getPageAdapter(page);
+
   const url = tab === 'mentions'
     ? 'https://x.com/notifications/mentions'
     : 'https://x.com/notifications';
-  
-  await page.goto(url, { waitUntil: 'networkidle2' });
+
+  if (adapter) {
+    await adapter.goto(page, url, { waitUntil: 'networkidle' });
+  } else {
+    await page.goto(url, { waitUntil: 'networkidle2' });
+  }
   await randomDelay(2000, 3000);
-  
+
   const notifications = [];
   const seen = new Set();
   let scrolls = 0;
   const maxScrolls = Math.ceil(limit / 5);
-  
+
+  const mapItems = (els) =>
+    els.map((el) => {
+      const text = el.innerText || '';
+      const time = el.querySelector('time')?.getAttribute('datetime') || '';
+      const links = Array.from(el.querySelectorAll('a[href*="/status/"]')).map(a => a.getAttribute('href'));
+      return { text: text.slice(0, 280), time, links: links.map(l => `https://x.com${l}`), platform: 'twitter' };
+    });
+  const scrollBy = () => window.scrollBy(0, window.innerHeight * 2);
+
   while (notifications.length < limit && scrolls < maxScrolls) {
-    const items = await page.$$eval('article[data-testid="tweet"], [data-testid="notification"]', (els) =>
-      els.map((el) => {
-        const text = el.innerText || '';
-        const time = el.querySelector('time')?.getAttribute('datetime') || '';
-        const links = Array.from(el.querySelectorAll('a[href*="/status/"]')).map(a => a.getAttribute('href'));
-        return { text: text.slice(0, 280), time, links: links.map(l => `https://x.com${l}`), platform: 'twitter' };
-      })
-    );
-    
+    const items = adapter
+      ? await adapter.queryAll(page, 'article[data-testid="tweet"], [data-testid="notification"]', mapItems)
+      : await page.$$eval('article[data-testid="tweet"], [data-testid="notification"]', mapItems);
+
     for (const item of items) {
       const key = item.text.slice(0, 100) + item.time;
       if (!seen.has(key) && key.trim()) {
@@ -751,12 +903,16 @@ export async function scrapeNotifications(page, options = {}) {
         notifications.push(item);
       }
     }
-    
-    await page.evaluate(() => window.scrollBy(0, window.innerHeight * 2));
+
+    if (adapter) {
+      await adapter.evaluate(page, scrollBy);
+    } else {
+      await page.evaluate(scrollBy);
+    }
     await sleep(scrollDelay);
     scrolls++;
   }
-  
+
   return notifications.slice(0, limit);
 }
 
@@ -769,16 +925,26 @@ export async function scrapeNotifications(page, options = {}) {
  */
 export async function scrapeTrending(page, options = {}) {
   const { limit = 30 } = options;
-  
-  await page.goto('https://x.com/explore/tabs/trending', { waitUntil: 'networkidle2' });
+  const adapter = await getPageAdapter(page);
+
+  if (adapter) {
+    await adapter.goto(page, 'https://x.com/explore/tabs/trending', { waitUntil: 'networkidle' });
+  } else {
+    await page.goto('https://x.com/explore/tabs/trending', { waitUntil: 'networkidle2' });
+  }
   await randomDelay(2000, 3000);
-  
+
+  const scrollBy = () => window.scrollBy(0, window.innerHeight);
   for (let i = 0; i < 3; i++) {
-    await page.evaluate(() => window.scrollBy(0, window.innerHeight));
+    if (adapter) {
+      await adapter.evaluate(page, scrollBy);
+    } else {
+      await page.evaluate(scrollBy);
+    }
     await sleep(1500);
   }
-  
-  const trends = await page.$$eval('[data-testid="trend"]', (els) =>
+
+  const mapTrends = (els) =>
     els.map((el) => {
       const spans = el.querySelectorAll('span');
       const texts = Array.from(spans).map(s => s.innerText).filter(Boolean);
@@ -786,9 +952,12 @@ export async function scrapeTrending(page, options = {}) {
       const topic = texts.find(t => t.startsWith('#') || t.length > 3) || texts[1] || '';
       const posts = texts.find(t => /posts|tweets/i.test(t)) || '';
       return { category, topic, posts, platform: 'twitter' };
-    })
-  );
-  
+    });
+
+  const trends = adapter
+    ? await adapter.queryAll(page, '[data-testid="trend"]', mapTrends)
+    : await page.$$eval('[data-testid="trend"]', mapTrends);
+
   return trends.slice(0, limit);
 }
 
@@ -801,41 +970,54 @@ export async function scrapeTrending(page, options = {}) {
  */
 export async function scrapeCommunityMembers(page, communityUrl, options = {}) {
   const { limit = 100, scrollDelay = 2000 } = options;
-  
+  const adapter = await getPageAdapter(page);
+
   const membersUrl = communityUrl.endsWith('/members')
     ? communityUrl
     : `${communityUrl}/members`;
-  
-  await page.goto(membersUrl, { waitUntil: 'networkidle2' });
+
+  if (adapter) {
+    await adapter.goto(page, membersUrl, { waitUntil: 'networkidle' });
+  } else {
+    await page.goto(membersUrl, { waitUntil: 'networkidle2' });
+  }
   await randomDelay(2000, 3000);
-  
+
   const members = [];
   const seen = new Set();
   let scrolls = 0;
   const maxScrolls = Math.ceil(limit / 10);
-  
+
+  const mapUsers = (cells) =>
+    cells.map((cell) => {
+      const name = cell.querySelector('[dir="ltr"] span')?.innerText || '';
+      const handle = cell.querySelector('a[href^="/"]')?.getAttribute('href')?.replace('/', '') || '';
+      const bio = cell.querySelector('[data-testid="userDescription"]')?.innerText || '';
+      return { name, handle, bio, platform: 'twitter' };
+    });
+  const scrollBy = () => window.scrollBy(0, window.innerHeight * 2);
+
   while (members.length < limit && scrolls < maxScrolls) {
-    const users = await page.$$eval('[data-testid="UserCell"]', (cells) =>
-      cells.map((cell) => {
-        const name = cell.querySelector('[dir="ltr"] span')?.innerText || '';
-        const handle = cell.querySelector('a[href^="/"]')?.getAttribute('href')?.replace('/', '') || '';
-        const bio = cell.querySelector('[data-testid="userDescription"]')?.innerText || '';
-        return { name, handle, bio, platform: 'twitter' };
-      })
-    );
-    
+    const users = adapter
+      ? await adapter.queryAll(page, '[data-testid="UserCell"]', mapUsers)
+      : await page.$$eval('[data-testid="UserCell"]', mapUsers);
+
     for (const user of users) {
       if (!seen.has(user.handle) && user.handle) {
         seen.add(user.handle);
         members.push(user);
       }
     }
-    
-    await page.evaluate(() => window.scrollBy(0, window.innerHeight * 2));
+
+    if (adapter) {
+      await adapter.evaluate(page, scrollBy);
+    } else {
+      await page.evaluate(scrollBy);
+    }
     await sleep(scrollDelay);
     scrolls++;
   }
-  
+
   return members.slice(0, limit);
 }
 
@@ -848,43 +1030,55 @@ export async function scrapeCommunityMembers(page, communityUrl, options = {}) {
  */
 export async function scrapeSpaces(page, query, options = {}) {
   const { limit = 20, scrollDelay = 2000 } = options;
-  
-  await page.goto(`https://x.com/search?q=${encodeURIComponent(query)}&f=top`, {
-    waitUntil: 'networkidle2',
-  });
+  const adapter = await getPageAdapter(page);
+
+  const spacesSearchUrl = `https://x.com/search?q=${encodeURIComponent(query)}&f=top`;
+  if (adapter) {
+    await adapter.goto(page, spacesSearchUrl, { waitUntil: 'networkidle' });
+  } else {
+    await page.goto(spacesSearchUrl, { waitUntil: 'networkidle2' });
+  }
   await randomDelay(2000, 3000);
-  
+
   const spaces = [];
   const seen = new Set();
   let scrolls = 0;
   const maxScrolls = Math.ceil(limit / 3);
-  
+
+  const mapSpaces = (links) =>
+    links.map((link) => {
+      const href = link.getAttribute('href') || '';
+      const card = link.closest('div[data-testid]') || link.parentElement;
+      const title = card?.querySelector('span')?.innerText || '';
+      return {
+        title,
+        link: href.startsWith('http') ? href : `https://x.com${href}`,
+        platform: 'twitter',
+      };
+    });
+  const scrollBy = () => window.scrollBy(0, window.innerHeight * 2);
+
   while (spaces.length < limit && scrolls < maxScrolls) {
-    const found = await page.$$eval('a[href*="/i/spaces/"]', (links) =>
-      links.map((link) => {
-        const href = link.getAttribute('href') || '';
-        const card = link.closest('div[data-testid]') || link.parentElement;
-        const title = card?.querySelector('span')?.innerText || '';
-        return {
-          title,
-          link: href.startsWith('http') ? href : `https://x.com${href}`,
-          platform: 'twitter',
-        };
-      })
-    );
-    
+    const found = adapter
+      ? await adapter.queryAll(page, 'a[href*="/i/spaces/"]', mapSpaces)
+      : await page.$$eval('a[href*="/i/spaces/"]', mapSpaces);
+
     for (const space of found) {
       if (!seen.has(space.link) && space.link) {
         seen.add(space.link);
         spaces.push(space);
       }
     }
-    
-    await page.evaluate(() => window.scrollBy(0, window.innerHeight * 2));
+
+    if (adapter) {
+      await adapter.evaluate(page, scrollBy);
+    } else {
+      await page.evaluate(scrollBy);
+    }
     await sleep(scrollDelay);
     scrolls++;
   }
-  
+
   return spaces.slice(0, limit);
 }
 

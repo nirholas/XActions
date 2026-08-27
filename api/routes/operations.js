@@ -3,7 +3,7 @@ import express from 'express';
 import { PrismaClient } from '@prisma/client';
 import { authMiddleware } from '../middleware/auth.js';
 import { getTwitterClient } from './twitter.js';
-import { queueJob } from '../services/jobQueue.js';
+import { queueJob, cancelJob } from '../services/jobQueue.js';
 
 // Payment routes archived - XActions is now 100% free and open-source
 // All credit checks have been removed - unlimited operations for all users
@@ -178,10 +178,7 @@ router.post('/cancel/:operationId', async (req, res) => {
       return res.status(404).json({ error: 'Operation not found or already completed' });
     }
 
-    await prisma.operation.update({
-      where: { id: operationId },
-      data: { status: 'cancelled' }
-    });
+    await cancelJob(operationId);
 
     res.json({ message: 'Operation cancelled successfully' });
   } catch (error) {

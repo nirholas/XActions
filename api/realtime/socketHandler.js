@@ -29,23 +29,20 @@ export function initializeSocketIO(httpServer) {
       const token = socket.handshake.auth.token;
       const role = socket.handshake.auth.role; // 'agent', 'dashboard', or 'admin'
 
-      if (!token && role !== 'agent') {
+      if (!token) {
         return next(new Error('Authentication required'));
       }
 
-      if (token) {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const user = await prisma.user.findUnique({
-          where: { id: decoded.userId }
-        });
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const user = await prisma.user.findUnique({
+        where: { id: decoded.userId }
+      });
 
-        if (!user) {
-          return next(new Error('User not found'));
-        }
-
-        socket.user = user;
+      if (!user) {
+        return next(new Error('User not found'));
       }
 
+      socket.user = user;
       socket.role = role || 'dashboard';
       next();
     } catch (error) {
@@ -67,9 +64,23 @@ export function initializeSocketIO(httpServer) {
 
     // ===== STREAM ROOMS =====
     // Clients can join/leave stream rooms to receive real-time events
-    socket.on('stream:join', (streamId) => {
+    socket.on('stream:join', async (streamId) => {
+      if (!socket.user?.isAdmin) {
+        try {
+          const { getStreamStatus } = await import('../../src/streaming/index.js');
+          const stream = await getStreamStatus(streamId);
+          if (!stream || stream.userId !== socket.user?.id) {
+            return socket.emit('error', { message: 'Not authorized to join this stream room' });
+          }
+        } catch (err) {
+          return socket.emit('error', { message: 'Unable to verify stream ownership' });
+        }
+      }
+
       socket.join(`stream:${streamId}`);
-      socket.join('streams'); // global stream room
+      if (socket.user?.isAdmin) {
+        socket.join('streams'); // global stream room — admins only
+      }
       console.log(`📡 Socket ${socket.id} joined stream room: ${streamId}`);
     });
 
@@ -81,7 +92,16 @@ export function initializeSocketIO(httpServer) {
     // ===== JOB PROGRESS ROOMS =====
     // Subscribe to a specific job's lifecycle events (active, progress, completed, failed).
     // Usage: socket.emit('job:join', operationId)
-    socket.on('job:join', (jobId) => {
+    socket.on('job:join', async (jobId) => {
+      if (!socket.user?.isAdmin) {
+        const operation = await prisma.operation.findFirst({
+          where: { id: jobId, userId: socket.user?.id }
+        });
+        if (!operation) {
+          return socket.emit('error', { message: 'Not authorized to join this job room' });
+        }
+      }
+
       socket.join(`job:${jobId}`);
       console.log(`📡 Socket ${socket.id} joined job room: ${jobId}`);
     });
@@ -253,6 +273,10 @@ function handleDashboardConnection(io, socket) {
   });
 
   socket.sessionId = sessionId;
+
+  // Join a per-user room so user-scoped events (e.g. unfollower alerts)
+  // are only delivered to this user's own sockets, not broadcast globally.
+  socket.join(`user:${socket.user.id}`);
 
   // Send session ID to dashboard (they'll use this in the agent script)
   socket.emit('session:created', { 

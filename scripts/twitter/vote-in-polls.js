@@ -69,7 +69,9 @@
     tweetText: '[data-testid="tweetText"]',
     // X renders poll options with a pollChoice testid; some builds expose them
     // as ARIA radios inside the card. We match both, then keep only clickable ones.
-    pollChoice: '[data-testid="pollChoice"], [data-testid^="pollChoice"], div[role="radio"]'
+    pollChoice: '[data-testid="pollChoice"], [data-testid^="pollChoice"], div[role="radio"]',
+    // Container X renders around poll result bars once a poll is voted/closed.
+    pollResults: '[data-testid="pollResults"], [role="group"]'
   };
 
   // ============================================
@@ -127,8 +129,11 @@
       choices.push(clickable);
     }
 
-    // If any choice shows a result percentage, the poll is voted/closed -> skip.
-    const showsResults = /\d+(\.\d+)?%/.test(tweet.textContent || '');
+    // If the poll results container shows a result percentage, the poll is
+    // voted/closed -> skip. Scoped to the results container so caption text
+    // elsewhere in the tweet can't be mistaken for a result bar.
+    const pollResultsEl = tweet.querySelector(SELECTORS.pollResults);
+    const showsResults = pollResultsEl !== null && /\d+(\.\d+)?%/.test(pollResultsEl.textContent || '');
     if (showsResults && choices.every(c => c.getAttribute('role') !== 'radio')) {
       return [];
     }
@@ -231,8 +236,11 @@
         target.click();
         await sleep(700);
 
-        // Verify the vote registered: the poll should now show results.
-        const registered = /\d+(\.\d+)?%/.test(tweet.textContent || '') ||
+        // Verify the vote registered: the poll results container should now
+        // show a percentage. Scoped to that container, not the whole tweet,
+        // so unrelated caption text can't be mistaken for a registered vote.
+        const postClickResultsEl = tweet.querySelector(SELECTORS.pollResults);
+        const registered = (postClickResultsEl !== null && /\d+(\.\d+)?%/.test(postClickResultsEl.textContent || '')) ||
                            tweet.querySelector(SELECTORS.pollChoice) === null ||
                            getOpenPollChoices(tweet).length === 0;
         if (registered) {

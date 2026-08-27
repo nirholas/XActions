@@ -34,11 +34,24 @@
     a.remove();
   };
 
-  const analyzeProfile = async (username) => {
-    console.log(`\n📊 Analyzing @${username}...`);
-    window.location.href = `https://x.com/${username}`;
-    await sleep(3000);
+  // ⚠️ IMPORTANT: window.location.href navigation destroys the JS context,
+  // so progress is tracked in sessionStorage and the script resumes on re-paste.
+  const STATE_KEY = 'xactions_competitor_analysis';
 
+  const getState = () => {
+    try { return JSON.parse(sessionStorage.getItem(STATE_KEY)); }
+    catch { return null; }
+  };
+
+  const setState = (state) => {
+    sessionStorage.setItem(STATE_KEY, JSON.stringify(state));
+  };
+
+  const clearState = () => {
+    sessionStorage.removeItem(STATE_KEY);
+  };
+
+  const scrapeProfile = async (username) => {
     const followingEl = document.querySelector(`a[href="/${username}/following"]`);
     const followersEl = document.querySelector(`a[href="/${username}/followers"]`);
     const bio = document.querySelector('[data-testid="UserDescription"]')?.textContent || '';
@@ -95,27 +108,7 @@
     };
   };
 
-  const run = async () => {
-    console.log('🏆 COMPETITOR ANALYSIS — by nichxbt');
-
-    if (CONFIG.accounts.length === 0 || (CONFIG.accounts.length === 2 && CONFIG.accounts[0] === 'user1')) {
-      console.error('❌ Edit CONFIG.accounts with real usernames first!');
-      return;
-    }
-
-    console.log(`📋 Accounts: ${CONFIG.accounts.map(a => '@' + a).join(', ')}\n`);
-
-    const results = [];
-    for (const account of CONFIG.accounts) {
-      try {
-        const data = await analyzeProfile(account);
-        results.push(data);
-        console.log(`   ✅ @${account}: ${data.followers.toLocaleString()} followers, ${data.avgLikes} avg likes`);
-      } catch (e) {
-        console.error(`   ❌ @${account}: ${e.message}`);
-      }
-    }
-
+  const printResults = (results) => {
     results.sort((a, b) => parseFloat(b.avgEngagement) - parseFloat(a.avgEngagement));
 
     console.log('\n🏆 COMPETITOR COMPARISON:\n');
@@ -134,5 +127,67 @@
     }
   };
 
-  run();
+  // ── Resume-aware runner ────────────────────────────────────
+  // Because window.location.href kills the script, we analyze one
+  // account, save state, navigate, then the user re-runs the script
+  // to continue with the next account.
+  const runWithResume = async () => {
+    let state = getState();
+    if (!state) {
+      state = { currentIndex: 0, results: [], startedAt: new Date().toISOString() };
+    }
+
+    console.log('🏆 COMPETITOR ANALYSIS — by nichxbt');
+
+    if (CONFIG.accounts.length === 0 || (CONFIG.accounts.length === 2 && CONFIG.accounts[0] === 'user1')) {
+      console.error('❌ Edit CONFIG.accounts with real usernames first!');
+      clearState();
+      return;
+    }
+
+    console.log(`📋 Accounts: ${CONFIG.accounts.map(a => '@' + a).join(', ')}`);
+    console.log(`   Progress: ${state.currentIndex}/${CONFIG.accounts.length} accounts done\n`);
+
+    if (state.currentIndex >= CONFIG.accounts.length) {
+      printResults(state.results);
+      clearState();
+      return;
+    }
+
+    const username = CONFIG.accounts[state.currentIndex];
+    const currentPath = window.location.pathname.toLowerCase();
+
+    if (!currentPath.startsWith(`/${username.toLowerCase()}`)) {
+      console.log(`\n🔗 Navigate to https://x.com/${username} and re-run this script.`);
+      console.log(`   (Or we'll navigate now — re-paste the script after the page loads)\n`);
+      setState(state);
+      window.location.href = `https://x.com/${username}`;
+      return;
+    }
+
+    console.log(`\n📊 Analyzing @${username}...`);
+    await sleep(3000);
+
+    try {
+      const data = await scrapeProfile(username);
+      state.results.push(data);
+      console.log(`   ✅ @${username}: ${data.followers.toLocaleString()} followers, ${data.avgLikes} avg likes`);
+    } catch (e) {
+      console.error(`   ❌ @${username}: ${e.message}`);
+    }
+    state.currentIndex++;
+    setState(state);
+
+    if (state.currentIndex < CONFIG.accounts.length) {
+      const next = CONFIG.accounts[state.currentIndex];
+      console.log(`\n➡️ Next: @${next}`);
+      window.location.href = `https://x.com/${next}`;
+      console.log('\n   📋 Re-paste this script after the page loads to continue!\n');
+    } else {
+      printResults(state.results);
+      clearState();
+    }
+  };
+
+  runWithResume();
 })();

@@ -194,7 +194,9 @@ export async function validateToken(token) {
     const secret = await getOrCreateSecret();
     const expectedSig = crypto.createHmac('sha256', secret).update(`${encHeader}.${encPayload}`).digest('base64url');
 
-    if (signature !== expectedSig) return { valid: false, error: 'Invalid signature' };
+    if (!crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expectedSig))) {
+      return { valid: false, error: 'Invalid signature' };
+    }
 
     const payload = JSON.parse(Buffer.from(encPayload, 'base64url').toString());
     if (payload.exp && payload.exp < Math.floor(Date.now() / 1000)) {

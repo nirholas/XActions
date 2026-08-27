@@ -99,6 +99,7 @@ router.post('/monitor', async (req, res) => {
 
     const monitor = createMonitor({
       target,
+      userId: req.user.id,
       type: type || 'mentions',
       intervalMs: interval ? Math.max(60, Number(interval)) * 1000 : undefined, // min 60s
       sentimentMode: sentimentMode || 'rules',
@@ -128,7 +129,7 @@ router.post('/monitor', async (req, res) => {
  * List all active monitors
  */
 router.get('/monitor', (req, res) => {
-  const monitors = listMonitors();
+  const monitors = listMonitors(req.user.id);
   return res.json({ monitors, count: monitors.length });
 });
 
@@ -137,7 +138,7 @@ router.get('/monitor', (req, res) => {
  * Get monitor details and recent history
  */
 router.get('/monitor/:id', (req, res) => {
-  const monitor = getMonitor(req.params.id);
+  const monitor = getMonitor(req.params.id, req.user.id);
   if (!monitor) {
     return res.status(404).json({ error: 'Monitor not found' });
   }
@@ -155,7 +156,7 @@ router.get('/monitor/:id', (req, res) => {
  * Stop and remove a monitor
  */
 router.delete('/monitor/:id', (req, res) => {
-  const monitor = getMonitor(req.params.id);
+  const monitor = getMonitor(req.params.id, req.user.id);
   if (!monitor) {
     return res.status(404).json({ error: 'Monitor not found' });
   }
@@ -180,7 +181,7 @@ router.get('/reports/:username', (req, res) => {
   const format = req.query.format || 'json';
 
   // Find monitor for this username
-  const monitors = listMonitors();
+  const monitors = listMonitors(req.user.id);
   const monitor = monitors.find(m =>
     m.target.replace(/^@/, '').toLowerCase() === username.toLowerCase()
   );

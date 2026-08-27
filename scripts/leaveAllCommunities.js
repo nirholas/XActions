@@ -114,6 +114,9 @@
         // Navigate back
         window.history.back();
         await sleep(CONFIG.delay);
+
+        // Links snapshot is stale after navigating away and back — re-query on next pass
+        break;
       }
 
       if (!foundNew) retries++;

@@ -187,9 +187,9 @@ async function startAutomation(automationId, settings) {
   await syncState();
   updateBadge();
 
-  // Notify content scripts
-  const tabs = await getXTabs();
-  for (const tab of tabs) {
+  // Notify the active content script only, to avoid duplicate runs across tabs
+  const tab = await getActiveXTab();
+  if (tab) {
     try {
       await chrome.tabs.sendMessage(tab.id, {
         type: 'RUN_AUTOMATION',
@@ -445,6 +445,15 @@ async function getXTabs() {
     url: ['https://x.com/*', 'https://twitter.com/*'],
   });
   return tabs;
+}
+
+async function getActiveXTab() {
+  const tabs = await chrome.tabs.query({
+    active: true,
+    currentWindow: true,
+    url: ['https://x.com/*', 'https://twitter.com/*'],
+  });
+  return tabs[0];
 }
 
 // Restore state on service worker restart

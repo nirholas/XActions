@@ -20,6 +20,7 @@
  */
 
 import express from 'express';
+import { authMiddleware } from '../middleware/auth.js';
 
 const router = express.Router();
 
@@ -32,6 +33,31 @@ async function getWorkflows() {
   }
   return _workflows;
 }
+
+// ============================================================================
+// Webhook Trigger (registered BEFORE authMiddleware — external callers like
+// Zapier authenticate via the unguessable :webhookId itself, not a user JWT)
+// ============================================================================
+
+/**
+ * POST /api/workflows/webhook/:webhookId — External webhook trigger
+ */
+router.post('/webhook/:webhookId', async (req, res) => {
+  try {
+    const workflows = await getWorkflows();
+    const handled = workflows.triggerManager.handleWebhook(req.params.webhookId, req.body);
+
+    if (!handled) {
+      return res.status(404).json({ error: 'Unknown webhook ID' });
+    }
+
+    res.json({ success: true, message: 'Workflow triggered' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.use(authMiddleware);
 
 // ============================================================================
 // Workflow CRUD
@@ -79,7 +105,7 @@ router.post('/', async (req, res) => {
 router.get('/', async (req, res) => {
   try {
     const workflows = await getWorkflows();
-    const list = await workflows.list();
+    const list = await workflows.list(req.user.isAdmin ? undefined : req.user.id);
     res.json({ workflows: list, count: list.length });
   } catch (error) {
     console.error('❌ List workflows error:', error.message);
@@ -108,7 +134,7 @@ router.get('/:id', async (req, res) => {
   try {
     const workflows = await getWorkflows();
     const workflow = await workflows.get(req.params.id);
-    if (!workflow) {
+    if (!workflow || (!req.user.isAdmin && workflow.userId !== req.user.id)) {
       return res.status(404).json({ error: 'Workflow not found' });
     }
     res.json(workflow);
@@ -123,6 +149,10 @@ router.get('/:id', async (req, res) => {
 router.put('/:id', async (req, res) => {
   try {
     const workflows = await getWorkflows();
+    const existing = await workflows.get(req.params.id);
+    if (!existing || (!req.user.isAdmin && existing.userId !== req.user.id)) {
+      return res.status(404).json({ error: 'Workflow not found' });
+    }
     const updated = await workflows.update(req.params.id, req.body);
     res.json(updated);
   } catch (error) {
@@ -139,6 +169,10 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   try {
     const workflows = await getWorkflows();
+    const existing = await workflows.get(req.params.id);
+    if (!existing || (!req.user.isAdmin && existing.userId !== req.user.id)) {
+      return res.status(404).json({ error: 'Workflow not found' });
+    }
     const deleted = await workflows.remove(req.params.id);
     if (!deleted) {
       return res.status(404).json({ error: 'Workflow not found' });
@@ -155,25 +189,25 @@ router.delete('/:id', async (req, res) => {
 
 /**
  * POST /api/workflows/:id/run — Manually run a workflow
- * Body: { context?: {}, authToken?: string }
+ * Body: { context?: {} }
  */
 router.post('/:id/run', async (req, res) => {
   try {
     const workflows = await getWorkflows();
     const workflow = await workflows.get(req.params.id);
-    
-    if (!workflow) {
+
+    if (!workflow || (!req.user.isAdmin && workflow.userId !== req.user.id)) {
       return res.status(404).json({ error: 'Workflow not found' });
     }
 
-    const { context, authToken } = req.body || {};
+    const { context } = req.body || {};
 
     // Start execution (non-blocking — returns immediately, runs in background)
     const runPromise = workflows.run(workflow, {
       trigger: 'manual',
       initialContext: context || {},
-      authToken: authToken || req.user?.sessionCookie,
-      userId: req.user?.id || 'anonymous',
+      authToken: req.user.sessionCookie,
+      userId: req.user.id,
       onProgress: (event) => {
         // Could emit via Socket.IO here
         if (event.type === 'step_error') {
@@ -213,6 +247,10 @@ router.post('/:id/run', async (req, res) => {
 router.get('/:id/runs', async (req, res) => {
   try {
     const workflows = await getWorkflows();
+    const workflow = await workflows.get(req.params.id);
+    if (!workflow || (!req.user.isAdmin && workflow.userId !== req.user.id)) {
+      return res.status(404).json({ error: 'Workflow not found' });
+    }
     const limit = parseInt(req.query.limit) || 20;
     const runsList = await workflows.runs(req.params.id, limit);
     res.json({ runs: runsList, count: runsList.length });
@@ -227,33 +265,15 @@ router.get('/:id/runs', async (req, res) => {
 router.get('/:id/runs/:runId', async (req, res) => {
   try {
     const workflows = await getWorkflows();
+    const workflow = await workflows.get(req.params.id);
+    if (!workflow || (!req.user.isAdmin && workflow.userId !== req.user.id)) {
+      return res.status(404).json({ error: 'Workflow not found' });
+    }
     const run = await workflows.getRun(req.params.id, req.params.runId);
     if (!run) {
       return res.status(404).json({ error: 'Run not found' });
     }
     res.json(run);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// ============================================================================
-// Webhook Trigger
-// ============================================================================
-
-/**
- * POST /api/workflows/webhook/:webhookId — External webhook trigger
- */
-router.post('/webhook/:webhookId', async (req, res) => {
-  try {
-    const workflows = await getWorkflows();
-    const handled = workflows.triggerManager.handleWebhook(req.params.webhookId, req.body);
-    
-    if (!handled) {
-      return res.status(404).json({ error: 'Unknown webhook ID' });
-    }
-
-    res.json({ success: true, message: 'Workflow triggered' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

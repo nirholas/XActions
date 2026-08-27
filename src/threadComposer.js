@@ -173,7 +173,7 @@
       console.log(`  [${i + 1}/${currentThread.length}] Posting: "${text.slice(0, 50)}..."`);
 
       // Find the tweet box (for thread, the latest/last one)
-      const tweetBoxes = document.querySelectorAll('[data-testid="tweetTextarea_0"]');
+      const tweetBoxes = document.querySelectorAll('[data-testid^="tweetTextarea_"]');
       const tweetBox = tweetBoxes[tweetBoxes.length - 1];
       if (!tweetBox) {
         console.error(`  ❌ Tweet box not found at tweet ${i + 1}. Aborting.`);
