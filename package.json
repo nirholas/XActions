@@ -122,7 +122,7 @@
     "nodemailer": "^9.0.3",
     "ora": "^8.0.0",
     "prisma": "^5.7.1",
-    "puppeteer": "^24.34.0",
+    "puppeteer": "^25.8.0",
     "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2",
     "redis": "^4.6.11",
