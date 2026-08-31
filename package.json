@@ -120,7 +120,7 @@
     "morgan": "^1.10.1",
     "node-cron": "^4.6.0",
     "nodemailer": "^9.0.3",
-    "ora": "^8.0.0",
+    "ora": "^9.4.1",
     "prisma": "^5.7.1",
     "puppeteer": "^24.34.0",
     "puppeteer-extra": "^3.3.6",
