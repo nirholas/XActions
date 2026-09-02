@@ -119,6 +119,7 @@ const PORT = process.env.PORT || 3001;
  */
 export function createApp({ rateLimiting = true } = {}) {
   const app = express();
+  app.set('trust proxy', 1);
   const httpServer = createServer(app);
 
   // Initialize Socket.io for real-time browser-to-browser communication
