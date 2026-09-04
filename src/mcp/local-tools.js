@@ -310,9 +310,9 @@ export async function x_get_tweets({ username, limit = 50 }) {
   );
 }
 
-export async function x_search_tweets({ query, limit = 50 }) {
+export async function x_search_tweets({ query, limit = 50, filter = 'latest' }) {
   const { page: pg } = await ensureBrowser();
-  return searchTweets(pg, query, { limit });
+  return searchTweets(pg, query, { limit, filter });
 }
 
 // ============================================================================

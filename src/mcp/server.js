@@ -223,6 +223,11 @@ const TOOLS = [
           type: 'number',
           description: 'Maximum results (default: 50)',
         },
+        filter: {
+          type: 'string',
+          enum: ['latest', 'top', 'people', 'photos', 'videos'],
+          description: 'Result ranking (default: latest). Use "top" for the highest-engagement results; "latest" returns the newest, which typically have no engagement yet.',
+        },
         platform: {
           type: 'string',
           enum: ['twitter', 'bluesky', 'mastodon', 'threads'],
@@ -2793,6 +2798,25 @@ async function executePlatformTool() {
 }
 
 /**
+ * Coerce a scraped engagement count to a number.
+ *
+ * The HTTP scraper returns numbers, but DOM-scraped fields have been strings,
+ * sometimes abbreviated ("3.9K"). `+` concatenated those instead of summing,
+ * so every engagement threshold below silently failed to match.
+ *
+ * @param {unknown} value
+ * @returns {number}
+ */
+function toCount(value) {
+  if (typeof value === 'number') return Number.isFinite(value) ? value : 0;
+  if (typeof value !== 'string') return 0;
+  const match = value.trim().replace(/,/g, '').match(/^([\d.]+)\s*([KMB])?$/i);
+  if (!match) return 0;
+  const scale = { k: 1e3, m: 1e6, b: 1e9 }[(match[2] || '').toLowerCase()] || 1;
+  return Math.round(parseFloat(match[1]) * scale);
+}
+
+/**
  * Normalise a tweet-list result into an array.
  *
  * `localTools.x_search_tweets` and `localTools.x_get_tweets` both resolve to a
@@ -3084,7 +3108,7 @@ async function executeXeepyTool(name, args) {
       const searchResults = await localTools.x_search_tweets?.({ query: args.query, limit: args.limit || 5 });
       const retweeted = [];
       for (const tweet of asTweetList(searchResults)) {
-        if (args.minLikes && tweet.likes < args.minLikes) continue;
+        if (args.minLikes && toCount(tweet.likes) < args.minLikes) continue;
         try {
           await localTools.x_retweet?.({ tweetUrl: tweet.url });
           retweeted.push(tweet.url);
@@ -3139,7 +3163,7 @@ async function executeXeepyTool(name, args) {
         }
         const entry = authorMap.get(username);
         entry.tweetCount++;
-        entry.totalEngagement += (tweet.likes || 0) + (tweet.retweets || 0) + (tweet.replies || 0);
+        entry.totalEngagement += toCount(tweet.likes) + toCount(tweet.retweets) + toCount(tweet.replies);
       }
       
       const influencers = Array.from(authorMap.values())
@@ -3178,7 +3202,15 @@ async function executeXeepyTool(name, args) {
     }
 
     case 'x_crypto_analyze': {
-      const searchResults = await localTools.x_search_tweets?.({ query: args.query, limit: args.limit || 100 });
+      // Rank by 'top' rather than the default 'latest'. The newest tweets for
+      // a ticker have had no time to accumulate engagement, so sampling them
+      // measured sentiment over fresh spam and left topInfluencers — which
+      // requires engagement > 50 — permanently empty.
+      const searchResults = await localTools.x_search_tweets?.({
+        query: args.query,
+        limit: args.limit || 100,
+        filter: 'top',
+      });
       const tweets = asTweetList(searchResults);
       
       let bullish = 0, bearish = 0, neutral = 0;
@@ -3186,7 +3218,7 @@ async function executeXeepyTool(name, args) {
       
       for (const tweet of tweets) {
         const text = (tweet.text || '').toLowerCase();
-        const engagement = (tweet.likes || 0) + (tweet.retweets || 0);
+        const engagement = toCount(tweet.likes) + toCount(tweet.retweets);
         
         if (text.match(/bull|moon|pump|buy|long|breakout|ath|🚀|💎|🔥/)) bullish++;
         else if (text.match(/bear|dump|sell|short|crash|dead|rug|💀|📉/)) bearish++;
@@ -3303,10 +3335,10 @@ async function executeXeepyTool(name, args) {
       let bestTweet = null, bestEngagement = 0;
       
       for (const t of tweetList) {
-        const eng = (t.likes || 0) + (t.retweets || 0) + (t.replies || 0);
-        totalLikes += t.likes || 0;
-        totalRetweets += t.retweets || 0;
-        totalReplies += t.replies || 0;
+        const eng = toCount(t.likes) + toCount(t.retweets) + toCount(t.replies);
+        totalLikes += toCount(t.likes);
+        totalRetweets += toCount(t.retweets);
+        totalReplies += toCount(t.replies);
         if (eng > bestEngagement) { bestEngagement = eng; bestTweet = t; }
       }
       

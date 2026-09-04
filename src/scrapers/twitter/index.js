@@ -312,11 +312,22 @@ export async function scrapeTweets(page, username, options = {}) {
       return Array.from(articles).map((article) => {
         const textEl = article.querySelector('[data-testid="tweetText"]');
         const timeEl = article.querySelector('time');
-        const likesEl = article.querySelector('[data-testid="like"] span span');
-        const retweetsEl = article.querySelector('[data-testid="retweet"] span span');
-        const repliesEl = article.querySelector('[data-testid="reply"] span span');
-        const viewsEl = article.querySelector('a[href*="/analytics"] span span');
         const linkEl = article.querySelector('a[href*="/status/"]');
+
+        // Counts live in each action button's aria-label ("3944 Likes. Like"),
+        // which carries the exact figure. The visible span read before is
+        // abbreviated ("3.9K") and renders empty whenever the count is zero,
+        // so every tweet came back with '0' — and as a string, which then
+        // concatenated instead of summing in the callers. The fixture in
+        // tests/searchSweep.test.js documents this same aria-label shape.
+        const ariaCount = (selector) => {
+          const label = article
+            .querySelector(selector)
+            ?.getAttribute('aria-label');
+          const digits = label?.replace(/,/g, '').match(/\d+/);
+          return digits ? Number(digits[0]) : 0;
+        };
+
         
         const images = Array.from(article.querySelectorAll('[data-testid="tweetPhoto"] img')).map(i => i.src);
         const video = article.querySelector('[data-testid="videoPlayer"]') ? true : false;
@@ -327,10 +338,10 @@ export async function scrapeTweets(page, username, options = {}) {
           id: linkEl?.href?.match(/status\/(\d+)/)?.[1] || null,
           text: textEl?.textContent || null,
           timestamp: timeEl?.getAttribute('datetime') || null,
-          likes: likesEl?.textContent || '0',
-          retweets: retweetsEl?.textContent || '0',
-          replies: repliesEl?.textContent || '0',
-          views: viewsEl?.textContent || null,
+          likes: ariaCount('[data-testid="like"]'),
+          retweets: ariaCount('[data-testid="retweet"]'),
+          replies: ariaCount('[data-testid="reply"]'),
+          views: ariaCount('a[href*="/analytics"]'),
           url: linkEl?.href || null,
           media: {
             images,
@@ -401,14 +412,30 @@ export async function searchTweets(page, query, options = {}) {
         const authorLink = article.querySelector('[data-testid="User-Name"] a[href^="/"]');
         const timeEl = article.querySelector('time');
         const linkEl = article.querySelector('a[href*="/status/"]');
-        const likesEl = article.querySelector('[data-testid="like"] span span');
-        
+
+        // Counts live in each action button's aria-label ("3944 Likes. Like"),
+        // which carries the exact figure. The visible span read before is
+        // abbreviated ("3.9K") and renders empty whenever the count is zero,
+        // so every tweet came back with '0' — and as a string, which then
+        // concatenated instead of summing in the callers. The fixture in
+        // tests/searchSweep.test.js documents this same aria-label shape.
+        const ariaCount = (selector) => {
+          const label = article
+            .querySelector(selector)
+            ?.getAttribute('aria-label');
+          const digits = label?.replace(/,/g, '').match(/\d+/);
+          return digits ? Number(digits[0]) : 0;
+        };
+
         return {
           id: linkEl?.href?.match(/status\/(\d+)/)?.[1] || null,
           text: textEl?.textContent || null,
           author: authorLink?.href?.split('/')[3] || null,
           timestamp: timeEl?.getAttribute('datetime') || null,
-          likes: likesEl?.textContent || '0',
+          likes: ariaCount('[data-testid="like"]'),
+          retweets: ariaCount('[data-testid="retweet"]'),
+          replies: ariaCount('[data-testid="reply"]'),
+          views: ariaCount('a[href*="/analytics"]'),
           url: linkEl?.href || null,
           platform: 'twitter',
         };
@@ -780,12 +807,34 @@ export async function scrapeTrending(page, options = {}) {
   
   const trends = await page.$$eval('[data-testid="trend"]', (els) =>
     els.map((el) => {
-      const spans = el.querySelectorAll('span');
-      const texts = Array.from(spans).map(s => s.innerText).filter(Boolean);
-      const category = texts[0] || '';
-      const topic = texts.find(t => t.startsWith('#') || t.length > 3) || texts[1] || '';
-      const posts = texts.find(t => /posts|tweets/i.test(t)) || '';
-      return { category, topic, posts, platform: 'twitter' };
+      // A trend cell renders as [rank, "·", category, topic, ...context], e.g.
+      // ["4", "·", "Trending in Hong Kong SAR China", "Clara", "Ethan"].
+      // Read it by structure: the first span over three characters long is the
+      // category label ("Only on X · Trending"), not the topic, and index 0 is
+      // the rank — so the old heuristic returned the label as the topic and
+      // the rank as the category.
+      const texts = Array.from(el.querySelectorAll('span'))
+        .map((s) => s.innerText?.trim())
+        .filter((t) => t && t !== '·');
+
+      const rank = /^\d+$/.test(texts[0] || '') ? Number(texts[0]) : null;
+      const categoryIndex = texts.findIndex((t) => /trending/i.test(t));
+      const category = categoryIndex === -1 ? null : texts[categoryIndex];
+
+      // The topic is the span directly after the category label; with no label
+      // present, fall back to the first span that is not the rank.
+      const topic =
+        (categoryIndex === -1
+          ? texts.find((t) => t !== texts[0] || rank === null)
+          : texts[categoryIndex + 1]) || null;
+
+      // X no longer renders a post count in this view, so this is normally
+      // absent. Report null rather than '' so a caller can tell "not shown"
+      // from "zero".
+      const posts =
+        texts.find((t) => /\d[\d.,]*\s*[KMB]?\s+(posts?|tweets?)/i.test(t)) || null;
+
+      return { rank, category, topic, posts, platform: 'twitter' };
     })
   );
   
