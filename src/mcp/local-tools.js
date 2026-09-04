@@ -57,6 +57,19 @@ async function ensureBrowser() {
     }
     browser = await createBrowser();
     page = await createPage(browser);
+    // Authenticate the singleton browser from the environment. Without this
+    // the whole Puppeteer path runs logged out: x.com serves an empty DOM to
+    // an anonymous session, every selector matches nothing, and the scrape
+    // tools resolve to [] / {} — indistinguishable from an account that
+    // genuinely has no data, with no error for the caller to act on.
+    const envCookie = process.env.XACTIONS_SESSION_COOKIE;
+    if (envCookie) {
+      try {
+        await loginWithCookie(page, envCookie);
+      } catch (err) {
+        console.error('[xactions] browser auto-login failed:', err.message);
+      }
+    }
   }
   return { browser, page };
 }
@@ -297,9 +310,9 @@ export async function x_get_tweets({ username, limit = 50 }) {
   );
 }
 
-export async function x_search_tweets({ query, limit = 50 }) {
+export async function x_search_tweets({ query, limit = 50, filter = 'latest' }) {
   const { page: pg } = await ensureBrowser();
-  return searchTweets(pg, query, { limit });
+  return searchTweets(pg, query, { limit, filter });
 }
 
 // ============================================================================

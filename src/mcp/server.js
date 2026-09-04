@@ -223,6 +223,11 @@ const TOOLS = [
           type: 'number',
           description: 'Maximum results (default: 50)',
         },
+        filter: {
+          type: 'string',
+          enum: ['latest', 'top', 'people', 'photos', 'videos'],
+          description: 'Result ranking (default: latest). Use "top" for the highest-engagement results; "latest" returns the newest, which typically have no engagement yet.',
+        },
         platform: {
           type: 'string',
           enum: ['twitter', 'bluesky', 'mastodon', 'threads'],
@@ -2793,6 +2798,42 @@ async function executePlatformTool() {
 }
 
 /**
+ * Coerce a scraped engagement count to a number.
+ *
+ * The HTTP scraper returns numbers, but DOM-scraped fields have been strings,
+ * sometimes abbreviated ("3.9K"). `+` concatenated those instead of summing,
+ * so every engagement threshold below silently failed to match.
+ *
+ * @param {unknown} value
+ * @returns {number}
+ */
+function toCount(value) {
+  if (typeof value === 'number') return Number.isFinite(value) ? value : 0;
+  if (typeof value !== 'string') return 0;
+  const match = value.trim().replace(/,/g, '').match(/^([\d.]+)\s*([KMB])?$/i);
+  if (!match) return 0;
+  const scale = { k: 1e3, m: 1e6, b: 1e9 }[(match[2] || '').toLowerCase()] || 1;
+  return Math.round(parseFloat(match[1]) * scale);
+}
+
+/**
+ * Normalise a tweet-list result into an array.
+ *
+ * `localTools.x_search_tweets` and `localTools.x_get_tweets` both resolve to a
+ * plain array, but the handlers below read `.tweets` off the result. That
+ * property is undefined on an array, so each consumer silently saw zero
+ * tweets and reported an empty analysis instead of failing.
+ *
+ * @param {unknown} result
+ * @returns {Array<object>}
+ */
+function asTweetList(result) {
+  if (Array.isArray(result)) return result;
+  if (Array.isArray(result?.tweets)) return result.tweets;
+  return [];
+}
+
+/**
  * Execute xeepy-ported tools (scrapers, follow/unfollow automation, engagement, AI, monitoring)
  * Ported from github.com/nirholas/xeepy — Python → JavaScript
  */
@@ -2964,7 +3005,7 @@ async function executeXeepyTool(name, args) {
       });
       const users = [];
       const seen = new Set();
-      for (const tweet of (searchResults?.tweets || [])) {
+      for (const tweet of asTweetList(searchResults)) {
         if (users.length >= (args.limit || 10)) break;
         const username = tweet.authorUsername || tweet.author;
         if (!username || seen.has(username)) continue;
@@ -2986,7 +3027,7 @@ async function executeXeepyTool(name, args) {
       const engagers = new Set();
       const followed = [];
       // Simplified — follow repliers from recent tweets
-      for (const tweet of (tweets?.tweets || []).slice(0, 5)) {
+      for (const tweet of asTweetList(tweets).slice(0, 5)) {
         if (followed.length >= (args.limit || 10)) break;
         // Would scrape replies for full implementation
       }
@@ -3053,7 +3094,7 @@ async function executeXeepyTool(name, args) {
     case 'x_auto_comment': {
       const searchResults = await localTools.x_search_tweets?.({ query: args.query, limit: args.limit || 5 });
       const commented = [];
-      for (const tweet of (searchResults?.tweets || [])) {
+      for (const tweet of asTweetList(searchResults)) {
         try {
           await localTools.x_reply?.({ tweetUrl: tweet.url, text: args.comment });
           commented.push(tweet.url);
@@ -3066,8 +3107,8 @@ async function executeXeepyTool(name, args) {
     case 'x_auto_retweet': {
       const searchResults = await localTools.x_search_tweets?.({ query: args.query, limit: args.limit || 5 });
       const retweeted = [];
-      for (const tweet of (searchResults?.tweets || [])) {
-        if (args.minLikes && tweet.likes < args.minLikes) continue;
+      for (const tweet of asTweetList(searchResults)) {
+        if (args.minLikes && toCount(tweet.likes) < args.minLikes) continue;
         try {
           await localTools.x_retweet?.({ tweetUrl: tweet.url });
           retweeted.push(tweet.url);
@@ -3093,8 +3134,9 @@ async function executeXeepyTool(name, args) {
         if (!profile.avatar || profile.avatar.includes('default_profile')) { signals.push('default_avatar'); botScore += 20; }
       }
       
-      if (tweets?.tweets) {
-        const texts = tweets.tweets.map(t => t.text);
+      const botTweets = asTweetList(tweets);
+      if (botTweets.length) {
+        const texts = botTweets.map(t => t.text);
         const uniqueTexts = new Set(texts);
         if (texts.length > 5 && uniqueTexts.size < texts.length * 0.5) {
           signals.push('repetitive_content'); botScore += 30;
@@ -3113,7 +3155,7 @@ async function executeXeepyTool(name, args) {
     case 'x_find_influencers': {
       const searchResults = await localTools.x_search_tweets?.({ query: args.niche, limit: 100 });
       const authorMap = new Map();
-      for (const tweet of (searchResults?.tweets || [])) {
+      for (const tweet of asTweetList(searchResults)) {
         const username = tweet.authorUsername || tweet.author;
         if (!username) continue;
         if (!authorMap.has(username)) {
@@ -3121,7 +3163,7 @@ async function executeXeepyTool(name, args) {
         }
         const entry = authorMap.get(username);
         entry.tweetCount++;
-        entry.totalEngagement += (tweet.likes || 0) + (tweet.retweets || 0) + (tweet.replies || 0);
+        entry.totalEngagement += toCount(tweet.likes) + toCount(tweet.retweets) + toCount(tweet.replies);
       }
       
       const influencers = Array.from(authorMap.values())
@@ -3138,7 +3180,7 @@ async function executeXeepyTool(name, args) {
       
       // Extract niche keywords from user's tweets
       const keywords = new Set();
-      for (const tweet of (tweets?.tweets || [])) {
+      for (const tweet of asTweetList(tweets)) {
         const hashtags = tweet.text.match(/#\w+/g) || [];
         hashtags.forEach(h => keywords.add(h));
       }
@@ -3148,7 +3190,7 @@ async function executeXeepyTool(name, args) {
       
       const seen = new Set([args.username]);
       const result = [];
-      for (const tweet of (targets?.tweets || [])) {
+      for (const tweet of asTweetList(targets)) {
         const u = tweet.authorUsername || tweet.author;
         if (!u || seen.has(u)) continue;
         seen.add(u);
@@ -3160,15 +3202,23 @@ async function executeXeepyTool(name, args) {
     }
 
     case 'x_crypto_analyze': {
-      const searchResults = await localTools.x_search_tweets?.({ query: args.query, limit: args.limit || 100 });
-      const tweets = searchResults?.tweets || [];
+      // Rank by 'top' rather than the default 'latest'. The newest tweets for
+      // a ticker have had no time to accumulate engagement, so sampling them
+      // measured sentiment over fresh spam and left topInfluencers — which
+      // requires engagement > 50 — permanently empty.
+      const searchResults = await localTools.x_search_tweets?.({
+        query: args.query,
+        limit: args.limit || 100,
+        filter: 'top',
+      });
+      const tweets = asTweetList(searchResults);
       
       let bullish = 0, bearish = 0, neutral = 0;
       const influencerMentions = new Map();
       
       for (const tweet of tweets) {
         const text = (tweet.text || '').toLowerCase();
-        const engagement = (tweet.likes || 0) + (tweet.retweets || 0);
+        const engagement = toCount(tweet.likes) + toCount(tweet.retweets);
         
         if (text.match(/bull|moon|pump|buy|long|breakout|ath|🚀|💎|🔥/)) bullish++;
         else if (text.match(/bear|dump|sell|short|crash|dead|rug|💀|📉/)) bearish++;
@@ -3279,16 +3329,16 @@ async function executeXeepyTool(name, args) {
     case 'x_engagement_report': {
       const profile = await localTools.x_get_profile?.({ username: args.username });
       const tweets = await localTools.x_get_tweets?.({ username: args.username, limit: 50 });
-      const tweetList = tweets?.tweets || [];
+      const tweetList = asTweetList(tweets);
       
       let totalLikes = 0, totalRetweets = 0, totalReplies = 0;
       let bestTweet = null, bestEngagement = 0;
       
       for (const t of tweetList) {
-        const eng = (t.likes || 0) + (t.retweets || 0) + (t.replies || 0);
-        totalLikes += t.likes || 0;
-        totalRetweets += t.retweets || 0;
-        totalReplies += t.replies || 0;
+        const eng = toCount(t.likes) + toCount(t.retweets) + toCount(t.replies);
+        totalLikes += toCount(t.likes);
+        totalRetweets += toCount(t.retweets);
+        totalReplies += toCount(t.replies);
         if (eng > bestEngagement) { bestEngagement = eng; bestTweet = t; }
       }
       
@@ -3322,7 +3372,7 @@ async function executeXeepyTool(name, args) {
           followers: profile?.followers,
           following: profile?.following,
           bio: profile?.bio?.slice(0, 100),
-          latestTweet: latestTweet?.tweets?.[0]?.text?.slice(0, 100),
+          latestTweet: asTweetList(latestTweet)[0]?.text?.slice(0, 100),
           capturedAt: new Date().toISOString(),
         },
         message: `Monitoring started. Compare future snapshots with this baseline to detect changes.`,
@@ -3333,18 +3383,19 @@ async function executeXeepyTool(name, args) {
       const keywords = args.keywords || [];
       const query = keywords.join(' OR ');
       const results = await localTools.x_search_tweets?.({ query, limit: 20 });
+      const matches = asTweetList(results);
       
       return {
         keywords,
         interval: `${args.interval || 10} minutes`,
-        currentMatches: results?.tweets?.length || 0,
-        latestTweets: (results?.tweets || []).slice(0, 5).map(t => ({
+        currentMatches: matches.length,
+        latestTweets: matches.slice(0, 5).map(t => ({
           text: t.text?.slice(0, 200),
           author: t.authorUsername || t.author,
           likes: t.likes,
           url: t.url,
         })),
-        message: `Monitoring ${keywords.length} keywords. ${results?.tweets?.length || 0} current matches found.`,
+        message: `Monitoring ${keywords.length} keywords. ${matches.length} current matches found.`,
       };
     }
 
@@ -3386,7 +3437,7 @@ async function executeXeepyTool(name, args) {
       return {
         username: args.username,
         followers: profile?.followers,
-        recentEngagement: (tweets?.tweets || []).slice(0, 5).map(t => ({
+        recentEngagement: asTweetList(tweets).slice(0, 5).map(t => ({
           text: t.text?.slice(0, 80),
           likes: t.likes,
           retweets: t.retweets,
