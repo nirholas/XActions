@@ -17,6 +17,7 @@ import {
   DEFAULT_FEATURES,
   USER_AGENTS,
   buildGraphQLUrl,
+  graphqlRequestMethod,
 } from './endpoints.js';
 import {
   TwitterApiError,
@@ -343,7 +344,8 @@ export class TwitterHttpClient {
   // ---- GraphQL helpers ----------------------------------------------------
 
   /**
-   * Execute a GraphQL query (GET) or mutation (POST).
+   * Execute a GraphQL query (usually GET; operation-specific POST where X
+   * requires it) or mutation (POST).
    *
    * @param {string} queryId
    * @param {string} operationName
@@ -394,8 +396,16 @@ export class TwitterHttpClient {
       });
     }
 
-    const url = buildGraphQLUrl(queryId, operationName, variables, features);
-    const json = await this.request(url);
+    const method = graphqlRequestMethod(operationName);
+    const url = method === 'POST'
+      ? `${GRAPHQL_BASE}/${queryId}/${operationName}`
+      : buildGraphQLUrl(queryId, operationName, variables, features);
+    const json = await this.request(
+      url,
+      method === 'POST'
+        ? { method, body: { variables, features, queryId } }
+        : undefined,
+    );
 
     // x.com answers every GraphQL query with the envelope { data, errors }.
     // Consumers read `response.data.user`, `response.data.tweetResult` and so

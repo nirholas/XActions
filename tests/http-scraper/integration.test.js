@@ -366,15 +366,15 @@ describe('Integration: Search via GraphQL', () => {
       product: 'Latest',
     });
 
-    // Verify fetch was called with correct query params
+    // SearchTimeline is one of the reads X requires over POST.
     expect(fetchMock).toHaveBeenCalledOnce();
-    const [url] = fetchMock.mock.calls[0];
+    const [url, request] = fetchMock.mock.calls[0];
     expect(url).toContain(GRAPHQL.SearchTimeline.queryId);
     expect(url).toContain('SearchTimeline');
+    expect(request.method).toBe('POST');
 
     // Verify search variables were sent
-    const parsed = new URL(url);
-    const variables = JSON.parse(parsed.searchParams.get('variables'));
+    const { variables } = JSON.parse(request.body);
     expect(variables.rawQuery).toBe('javascript lang:en');
     expect(variables.product).toBe('Latest');
 
@@ -401,11 +401,8 @@ describe('Integration: Search via GraphQL', () => {
       count: 20,
     });
 
-    const [url] = fetchMock.mock.calls[0];
-    // Verify the complex query is URL-encoded correctly — URLSearchParams uses + for spaces,
-    // so check via decoded variables rather than raw encodeURIComponent
-    const parsedUrl = new URL(url);
-    const variables = JSON.parse(parsedUrl.searchParams.get('variables'));
+    const [, request] = fetchMock.mock.calls[0];
+    const { variables } = JSON.parse(request.body);
     expect(variables.rawQuery).toContain('"hello world"');
   });
 });

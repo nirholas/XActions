@@ -860,19 +860,26 @@ console.log('Fast:', result.FastGasPrice, 'Gwei');
 console.log('Base fee:', result.suggestBaseFee, 'Gwei');
 \`\`\`
 
-## Blocknative Gas API
+## Native RPC Fee History
+
+Prefer your existing chain RPC provider for fee estimation. \`eth_feeHistory\`
+is standardized across EIP-1559 networks, avoids a vendor-specific dependency,
+and lets you choose a percentile appropriate to your application.
 
 \`\`\`javascript
-const res = await fetch('https://api.blocknative.com/gasprices/blockprices', {
-  headers: { 'Authorization': process.env.BLOCKNATIVE_API_KEY }
-});
-const { blockPrices } = await res.json();
-const block = blockPrices[0];
+const history = await provider.send('eth_feeHistory', [
+  '0x5',
+  'latest',
+  [10, 50, 90],
+]);
 
-console.log('Base fee:', block.baseFeePerGas, 'Gwei');
-block.estimatedPrices.forEach(p => {
-  console.log(\`\${p.confidence}% confident: max \${p.maxFeePerGas} / priority \${p.maxPriorityFeePerGas} Gwei\`);
-});
+const latestBaseFee = BigInt(history.baseFeePerGas.at(-1));
+const medianPriorityFee = BigInt(history.reward.at(-1)[1]);
+const maxFeePerGas = latestBaseFee * 2n + medianPriorityFee;
+
+console.log('Base fee:', ethers.formatUnits(latestBaseFee, 'gwei'), 'Gwei');
+console.log('Priority fee:', ethers.formatUnits(medianPriorityFee, 'gwei'), 'Gwei');
+console.log('Suggested max fee:', ethers.formatUnits(maxFeePerGas, 'gwei'), 'Gwei');
 \`\`\`
 
 ## Mempool.space (Bitcoin)

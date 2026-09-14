@@ -454,6 +454,7 @@ describe('TwitterHttpClient stale query ID handling', () => {
     const client = new TwitterHttpClient({ fetch: routed, maxRetries: 0, autoRefreshQueryIds: false });
 
     await client.graphql(GRAPHQL.SearchTimeline.queryId, 'SearchTimeline', { rawQuery: 'x' });
-    expect(routed.mock.calls[0][0]).toContain(`/i/api/graphql/${LIVE.SearchTimeline}/SearchTimeline?`);
+    expect(routed.mock.calls[0][0]).toContain(`/i/api/graphql/${LIVE.SearchTimeline}/SearchTimeline`);
+    expect(routed.mock.calls[0][1].method).toBe('POST');
   });
 });

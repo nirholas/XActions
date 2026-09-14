@@ -23,6 +23,7 @@ import {
   GRAPHQL_BASE,
   DEFAULT_FEATURES,
   buildGraphQLUrl,
+  graphqlRequestMethod,
 } from '../../src/scrapers/twitter/http/endpoints.js';
 import {
   RateLimitError,
@@ -296,6 +297,30 @@ describe('GraphQL URL construction', () => {
     expect(body.variables).toEqual({ text: 'hello' });
     expect(body.queryId).toBe('mutQID');
     expect(body.features).toBeDefined();
+  });
+
+  it.each(['SearchTimeline', 'Followers'])('graphql() sends %s over POST', async (operationName) => {
+    const fetch = mockFetch(200, { data: {} });
+    const client = new TwitterHttpClient({
+      cookies: 'auth_token=x; ct0=y',
+      fetch,
+      maxRetries: 0,
+    });
+
+    await client.graphql('queryQID', operationName, { count: 20 });
+
+    const [calledUrl, calledOpts] = fetch.mock.calls[0];
+    expect(graphqlRequestMethod(operationName)).toBe('POST');
+    expect(calledUrl).toBe(`${GRAPHQL_BASE}/queryQID/${operationName}`);
+    expect(calledOpts.method).toBe('POST');
+    expect(JSON.parse(calledOpts.body)).toMatchObject({
+      queryId: 'queryQID',
+      variables: { count: 20 },
+    });
+  });
+
+  it('keeps unrelated GraphQL reads on GET', () => {
+    expect(graphqlRequestMethod('UserTweets')).toBe('GET');
   });
 });
 

@@ -220,6 +220,29 @@ export const GRAPHQL = Object.freeze(
 );
 
 /**
+ * Read operations which X currently serves only over POST. Most persisted
+ * GraphQL reads still use GET, so this stays an explicit, per-operation map
+ * rather than changing every query transport at once.
+ *
+ * @type {ReadonlySet<string>}
+ */
+export const POST_QUERY_OPERATIONS = new Set([
+  'SearchTimeline',
+  'Followers',
+]);
+
+/**
+ * Return the transport method required by a persisted GraphQL operation.
+ *
+ * @param {string} operationName
+ * @param {boolean} [mutation=false]
+ * @returns {'GET'|'POST'}
+ */
+export function graphqlRequestMethod(operationName, mutation = false) {
+  return mutation || POST_QUERY_OPERATIONS.has(operationName) ? 'POST' : 'GET';
+}
+
+/**
  * Resolve a GRAPHQL table entry to the query ID currently in use.
  *
  * The table above is the offline fallback. When query-ID discovery
@@ -537,7 +560,8 @@ export const USER_AGENTS = [...USER_AGENT_STRINGS];
 // ---------------------------------------------------------------------------
 
 /**
- * Build a full GraphQL GET URL with encoded query params.
+ * Build a full GraphQL GET URL with encoded query params. Operations returned
+ * by graphqlRequestMethod() as POST use the same base path without params.
  *
  * @param {string} queryId
  * @param {string} operationName
@@ -807,12 +831,16 @@ export async function validateEndpoints(options = {}) {
     const url = `${GRAPHQL_BASE}/${queryId}/${endpoint.operationName}`;
 
     try {
+      const method = graphqlRequestMethod(endpoint.operationName);
       const res = await fetchFn(url, {
-        method: 'GET',
+        method,
         headers: {
           Authorization: `Bearer ${BEARER_TOKEN}`,
           'Content-Type': 'application/json',
         },
+        ...(method === 'POST'
+          ? { body: JSON.stringify({ variables: {}, features: DEFAULT_FEATURES, queryId }) }
+          : {}),
         signal: AbortSignal.timeout(10000),
       });
 
