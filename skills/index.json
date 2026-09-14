@@ -399,7 +399,7 @@
       "name": "XActions MCP Server",
       "version": "4.0",
       "path": "skills/xactions-mcp-server/SKILL.md",
-      "description": "153 MCP tools for AI agents to automate X/Twitter (scrape, post, engage, analyze).",
+      "description": "154 MCP tools for AI agents to automate X/Twitter (scrape, post, engage, analyze).",
       "tags": [
         "mcp"
       ]

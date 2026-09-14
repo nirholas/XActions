@@ -1,4 +1,4 @@
-{"version":1,"digest":"b431b3446c278c22","counts":{"cli":135,"mcp":153,"script":177},"actions":[
+{"version":1,"digest":"28dfc6af6070c6a7","counts":{"cli":135,"mcp":154,"script":177},"actions":[
 {"kind":"cli","id":"agent","title":"xactions agent","command":"xactions agent","description":"24/7 LLM-powered thought leadership agent","alias":null,"path":"src/cli/index.js"},
 {"kind":"cli","id":"agent-login","title":"xactions agent login","command":"xactions agent login","description":"Open browser for manual X.com login (saves session cookies)","alias":null,"path":"src/cli/index.js"},
 {"kind":"cli","id":"agent-report","title":"xactions agent report","command":"xactions agent report","description":"Generate a growth report for the last N days","alias":null,"path":"src/cli/index.js"},
@@ -185,12 +185,13 @@
 {"kind":"mcp","id":"x_generate_variations","title":"x_generate_variations","description":"Generate alternative versions of a tweet.","required":["text"],"path":"src/mcp/server.js"},
 {"kind":"mcp","id":"x_get_analytics","title":"x_get_analytics","description":"Fetch the authenticated account's analytics dashboard: impressions, engagements, profile visits, and follower change for the period.","required":["url"],"path":"src/mcp/server.js"},
 {"kind":"mcp","id":"x_get_blocked","title":"x_get_blocked","description":"List the accounts the authenticated user has blocked, with usernames and display names.","required":["brand"],"path":"src/mcp/server.js"},
-{"kind":"mcp","id":"x_get_bookmarks","title":"x_get_bookmarks","description":"List the authenticated account's saved bookmarks, newest first, up to the requested limit.","required":["username"],"path":"src/mcp/server.js"},
+{"kind":"mcp","id":"x_get_bookmarks","title":"x_get_bookmarks","description":"List the authenticated account's saved bookmarks, newest first, up to the requested limit.","required":[],"path":"src/mcp/server.js"},
 {"kind":"mcp","id":"x_get_conversations","title":"x_get_conversations","description":"List the authenticated account's direct-message conversations with participants and the latest message preview.","required":["query"],"path":"src/mcp/server.js"},
 {"kind":"mcp","id":"x_get_explore","title":"x_get_explore","description":"Scrape the Explore feed for trending content.","required":["username"],"path":"src/mcp/server.js"},
 {"kind":"mcp","id":"x_get_followers","title":"x_get_followers","description":"Scrape followers for an account. Supports Twitter, Bluesky, Mastodon, and Threads.","required":["username"],"path":"src/mcp/server.js"},
 {"kind":"mcp","id":"x_get_following","title":"x_get_following","description":"Scrape accounts that a user is following. Supports Twitter, Bluesky, Mastodon, and Threads.","required":["username"],"path":"src/mcp/server.js"},
 {"kind":"mcp","id":"x_get_hashtag","title":"x_get_hashtag","description":"Scrape tweets containing a specific hashtag. More focused than general search — returns trending metrics and top contributors.","required":["hashtag"],"path":"src/mcp/server.js"},
+{"kind":"mcp","id":"x_get_home_timeline","title":"x_get_home_timeline","description":"Read posts from your home timeline on X/Twitter. Supports For You or Following.","required":["username"],"path":"src/mcp/server.js"},
 {"kind":"mcp","id":"x_get_likers","title":"x_get_likers","description":"Get the list of users who liked a specific tweet. Useful for finding engaged audiences.","required":["tweetUrl"],"path":"src/mcp/server.js"},
 {"kind":"mcp","id":"x_get_likes","title":"x_get_likes","description":"Scrape tweets that a user has liked. Shows what content a user engages with.","required":["username"],"path":"src/mcp/server.js"},
 {"kind":"mcp","id":"x_get_list_members","title":"x_get_list_members","description":"Get members of a specific X/Twitter list.","required":["listUrl"],"path":"src/mcp/server.js"},

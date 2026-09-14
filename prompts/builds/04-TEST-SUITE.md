@@ -221,7 +221,7 @@ Create tests/mcp/tools.test.js.
 Test MCP server tool registration and the new x_client_* tools.
 
 15 tests:
-1. MCP server registers 153 tools
+1. MCP server registers 154 tools
 2. x_client_get_profile returns formatted profile data
 3. x_client_get_tweet returns formatted tweet data
 4. x_client_search returns array of results

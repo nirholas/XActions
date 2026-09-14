@@ -11,7 +11,7 @@
 | [CLI Reference](cli-reference.md) | All 56 `xactions` commands and the subcommands under them |
 | [API Reference](api-reference.md) | REST API across 40 route modules |
 | [Hosted MCP server](mcp-remote.md) | Point any agent at `https://xactions.app/mcp` and read public X with no API key, no account, no install |
-| [MCP Server](mcp-setup.md) | Set up the local MCP server for Claude, Cursor, Windsurf, GPT: 153 tools, write access, your own session |
+| [MCP Server](mcp-setup.md) | Set up the local MCP server for Claude, Cursor, Windsurf, GPT: 154 tools, write access, your own session |
 | [Browser Scripts](browser-scripts.md) | 95 console scripts, generated from the scripts themselves |
 | [Search Sweep](search-sweep.md) | Delete, like, repost, or reply to every result of an X search |
 | [Engage a profile](engage.md) | Like, repost and reply across a whole profile, from the console or the CLI |
@@ -60,7 +60,7 @@ XActions provides **5 interfaces** to the same underlying toolkit:
 ```
 
 1. **CLI**: `xactions <command>` from your terminal. 56 commands, grouped by task, with 85 subcommands under them.
-2. **MCP Server**: 153 tools for Claude, Cursor, Windsurf, GPT. stdio or Streamable HTTP, filterable by tool group.
+2. **MCP Server**: 154 tools for Claude, Cursor, Windsurf, GPT. stdio or Streamable HTTP, filterable by tool group.
 3. **REST API**: 40 route modules served at `localhost:3001/api`.
 4. **Web Dashboard**: full-featured UI at `localhost:3001`.
 5. **Browser Scripts**: 95 scripts you paste into DevTools on x.com, no install at all.

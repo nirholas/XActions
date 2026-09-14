@@ -214,7 +214,7 @@ Successful reads are cached at the Cloudflare edge, so the second person to ask 
 ## Limits
 
 - **Public data only.** Protected accounts, DMs, and anything behind a login are not readable, by design.
-- **Reads only.** Writing to X needs your own session. That is what the [local MCP server](mcp-setup.md) is for, with 153 tools including posting, following and scheduling.
+- **Reads only.** Writing to X needs your own session. That is what the [local MCP server](mcp-setup.md) is for, with 154 tools including posting, following and scheduling.
 - **`x_thread` continues downward only as far as the author's recent timeline reaches.** It always walks up to the root, at any age. When the tail is out of reach it returns `truncated: true` rather than implying the thread ended.
 - **Anonymous rate limits are x.com's, not ours.** When they bite, calls fail with a message saying to wait about a minute. They recover on their own.
 - **Two tools are priced.** `x_profile` and `x_posts` answer an unpaid call with x402 terms rather than data. The other four are free.
@@ -232,7 +232,7 @@ npx wrangler pages dev dashboard
 
 ## Related
 
-- [Local MCP server](mcp-setup.md): 153 tools, write access, your own session
+- [Local MCP server](mcp-setup.md): 154 tools, write access, your own session
 - [Video downloader](video-downloader.md): the same extraction lanes, as a web page and a REST endpoint
 - [Cloudflare Pages Functions](https://github.com/nirholas/XActions/tree/main/functions): every endpoint xactions.app serves at the edge
 

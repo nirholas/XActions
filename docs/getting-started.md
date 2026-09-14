@@ -163,7 +163,7 @@ Generate this config automatically:
 xactions mcp-config
 ```
 
-153 MCP tools are available: scraping, posting, engagement, analytics, streaming, and more. See [MCP Setup](mcp-setup.md).
+154 MCP tools are available: scraping, posting, engagement, analytics, streaming, and more. See [MCP Setup](mcp-setup.md).
 
 Three flags shape what an agent gets. Run `npx xactions-mcp --help` for the full list.
 

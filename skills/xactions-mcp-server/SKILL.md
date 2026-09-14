@@ -1,6 +1,6 @@
 ---
 name: xactions-mcp-server
-description: Free MCP server providing 153 tools for AI agents to automate X/Twitter. Scrapes profiles, followers, tweets. Posts, follows, likes, retweets, downloads videos, analyzes sentiment, monitors brands, manages DMs, runs workflows, and more. Uses local Puppeteer -- no API keys or payments required. Compatible with Claude Desktop, Cursor, Windsurf, VS Code. Use when setting up or using AI agent Twitter automation via MCP.
+description: Free MCP server providing 154 tools for AI agents to automate X/Twitter. Scrapes profiles, followers, tweets. Posts, follows, likes, retweets, downloads videos, analyzes sentiment, monitors brands, manages DMs, runs workflows, and more. Uses local Puppeteer -- no API keys or payments required. Compatible with Claude Desktop, Cursor, Windsurf, VS Code. Use when setting up or using AI agent Twitter automation via MCP.
 license: Apache-2.0
 compatibility: Requires Node.js 18+. Works with Claude Desktop, Cursor, Windsurf, VS Code, and MCP-compatible clients.
 metadata:
@@ -10,7 +10,7 @@ metadata:
 
 # XActions MCP Server
 
-The definitive free Twitter/X MCP server. 153 tools for AI agents.
+The definitive free Twitter/X MCP server. 154 tools for AI agents.
 
 ## Quick Start
 

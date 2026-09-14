@@ -335,7 +335,7 @@ call that would exceed it is refused before anything reaches X.
 onto Claude Desktop > Settings > Extensions; it prompts for the session cookie
 and tool groups at install time.
 
-### 6.2 Complete MCP Tool List (153 tools)
+### 6.2 Complete MCP Tool List (154 tools)
 
 Grouped by tool group, alphabetical within each group. "Write" marks the tools
 the approval gate holds and the daily caps charge.

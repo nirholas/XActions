@@ -374,7 +374,7 @@ relative path instead.
 
 ## MCP Server
 
-153 tools for AI agent integration. See [MCP Server docs](examples/mcp-server.md)
+154 tools for AI agent integration. See [MCP Server docs](examples/mcp-server.md)
 and [mcp-setup.md](mcp-setup.md).
 
 ```bash

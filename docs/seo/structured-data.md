@@ -232,7 +232,7 @@ Targets Google's "People Also Ask" and Featured Snippets.
       "name": "What is the XActions MCP server?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "The MCP server lets AI agents like Claude, GPT-4, and Cursor automate X/Twitter actions. It provides 153 tools for scraping, posting, unfollowing, and monitoring."
+        "text": "The MCP server lets AI agents like Claude, GPT-4, and Cursor automate X/Twitter actions. It provides 154 tools for scraping, posting, unfollowing, and monitoring."
       }
     },
     {

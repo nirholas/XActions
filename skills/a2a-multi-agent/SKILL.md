@@ -1,6 +1,6 @@
 ---
 name: a2a-multi-agent
-description: Runs XActions as an A2A (Agent-to-Agent) compatible agent that serves an Agent Card, accepts JSON-RPC tasks, bridges them onto the 153 MCP tools, streams progress over SSE, and discovers and delegates to other agents. Use when connecting XActions to external AI agents, building multi-agent orchestration, serving or reading an agent card, running the A2A server, or debugging inter-agent auth, discovery, streaming, or task delegation.
+description: Runs XActions as an A2A (Agent-to-Agent) compatible agent that serves an Agent Card, accepts JSON-RPC tasks, bridges them onto the 154 MCP tools, streams progress over SSE, and discovers and delegates to other agents. Use when connecting XActions to external AI agents, building multi-agent orchestration, serving or reading an agent card, running the A2A server, or debugging inter-agent auth, discovery, streaming, or task delegation.
 license: Apache-2.0
 compatibility: Requires Node.js 18+ and a free port for the A2A HTTP server (3100 by default).
 metadata:
@@ -133,7 +133,7 @@ curl 'http://localhost:3100/a2a/skills?query=scrape'
 Every A2A agent publishes a JSON document at `/.well-known/agent.json` describing its capabilities, skills, and supported protocols.
 
 ### Skills
-XActions converts its 153 MCP tools into A2A skills, each with a unique ID (`xactions.<tool_name>`), description, input schema, and category tags.
+XActions converts its 154 MCP tools into A2A skills, each with a unique ID (`xactions.<tool_name>`), description, input schema, and category tags.
 
 ### Task Lifecycle
 ```

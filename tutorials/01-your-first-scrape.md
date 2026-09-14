@@ -269,7 +269,7 @@ npx xactions doctor
   Environment
   ✓ Node                 Node 24.14.0
   ✓ Browser              Chromium installed for browser-driven commands
-  ✓ MCP server           MCP server exposes 153 tools
+  ✓ MCP server           MCP server exposes 154 tools
   ! Skills               No skills installed (claude 0, cursor 0, codex 0, windsurf 0)
     → Run `xactions skills install --all --global` so your agent knows which script to reach for.
   ✓ GraphQL query IDs    148 query IDs cached, 13h old (/home/you/.xactions/query-ids.json)

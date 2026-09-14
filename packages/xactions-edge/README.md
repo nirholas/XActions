@@ -196,7 +196,7 @@ Reads are cached at the edge per post and per account, so repeated lookups of th
 
 ## Related
 
-- [`xactions`](https://www.npmjs.com/package/xactions): the full toolkit, CLI, 153 MCP tools, browser scripts, Puppeteer scrapers
+- [`xactions`](https://www.npmjs.com/package/xactions): the full toolkit, CLI, 154 MCP tools, browser scripts, Puppeteer scrapers
 - [`xactions-mcp`](https://www.npmjs.com/package/xactions-mcp): the local MCP server, for write access with your own session
 
 Apache-2.0, by [nichxbt](https://x.com/nichxbt).

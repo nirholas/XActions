@@ -229,7 +229,7 @@ _50 skills. Generated from [`skills/index.json`](../skills/index.json)._
 | [X Pro Management](../skills/x-pro-management/SKILL.md) | Navigate X Pro (TweetDeck), set up monitoring columns, manage multi-column view. |
 | [x402 Payments](../skills/x402-payments/SKILL.md) | Enable x402 crypto payment protocol for XActions API access — multi-chain, multi-currency. |
 | [XActions CLI](../skills/xactions-cli/SKILL.md) | Command-line interface for scraping, MCP server config, and automation — `npm install -g xactions`. |
-| [XActions MCP Server](../skills/xactions-mcp-server/SKILL.md) | 153 MCP tools for AI agents to automate X/Twitter (scrape, post, engage, analyze). |
+| [XActions MCP Server](../skills/xactions-mcp-server/SKILL.md) | 154 MCP tools for AI agents to automate X/Twitter (scrape, post, engage, analyze). |
 
 ---
 
@@ -270,7 +270,7 @@ Rules that keep a skill useful:
 
 ## Related
 
-- [MCP Setup](mcp-setup.md): the 153 tools skills drive
+- [MCP Setup](mcp-setup.md): the 154 tools skills drive
 - [Browser Scripts](browser-scripts.md): what most skills reference
 - [Agents](agents.md): the autonomous agent that consumes skills
 - [AGENTS.md](../AGENTS.md): integration notes for AI coding assistants, and when to shell out to the CLI instead of loading the MCP server

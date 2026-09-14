@@ -212,7 +212,7 @@ want a downloadable log of who was unfollowed. The full catalog is in
 These examples cover the Node.js library. XActions has four more entry points:
 
 - **CLI** — 55 top-level commands, 157 counting sub-commands. `npx xactions profile nasa`. See [docs/cli-reference.md](../docs/cli-reference.md).
-- **MCP server** — 153 tools for Claude, Cursor, and Windsurf. See [docs/mcp-setup.md](../docs/mcp-setup.md).
+- **MCP server** — 154 tools for Claude, Cursor, and Windsurf. See [docs/mcp-setup.md](../docs/mcp-setup.md).
 - **Agent skills** — 49 of them, installable with `npx xactions skills install --all`. See [docs/skills.md](../docs/skills.md).
 - **Browser scripts** — 95 of them, pasted into DevTools with no install. See [docs/browser-scripts.md](../docs/browser-scripts.md).
 - **REST API** — self-hosted. See [docs/rest-api.md](../docs/rest-api.md).
