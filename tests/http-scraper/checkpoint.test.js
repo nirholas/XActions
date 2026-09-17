@@ -111,10 +111,14 @@ function ok(body) {
  */
 function fetchFor(pages) {
   const calls = [];
-  const fetch = vi.fn(async (url) => {
+  const fetch = vi.fn(async (url, init) => {
     const u = new URL(url);
     const op = u.pathname.split('/').pop();
-    const vars = JSON.parse(u.searchParams.get('variables') || '{}');
+    // GET queries carry `variables` in the query string; the operations in
+    // POST_QUERY_OPERATIONS (Followers, SearchTimeline) carry them in the body.
+    const vars = init?.body
+      ? (JSON.parse(init.body).variables ?? {})
+      : JSON.parse(u.searchParams.get('variables') || '{}');
     const key = vars.cursor ?? 'first';
     calls.push({ op, cursor: vars.cursor ?? null });
     const entry = pages[op]?.[key];
