@@ -150,7 +150,7 @@
     "eslint": "^10.9.1",
     "globals": "^17.11.0",
     "jsdom": "^28.1.0",
-    "marked": "^17.0.3",
+    "marked": "^18.0.13",
     "nodemon": "^3.0.2",
     "remotion": "^4.0.428",
     "supertest": "^6.3.4",
