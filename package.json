@@ -145,7 +145,7 @@
     "@remotion/cli": "^4.0.428",
     "@remotion/player": "^4.0.428",
     "@remotion/renderer": "^4.0.428",
-    "@vitest/coverage-v8": "^4.1.11",
+    "@vitest/coverage-v8": "^5.0.0",
     "archiver": "^5.3.2",
     "eslint": "^10.9.1",
     "globals": "^17.11.0",
