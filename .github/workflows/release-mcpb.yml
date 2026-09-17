@@ -77,7 +77,7 @@ jobs:
         run: sha256sum "${{ steps.bundle.outputs.path }}" | sed 's|dist/||' > dist/SHA256SUMS.txt
 
       - name: Upload workflow artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ steps.bundle.outputs.name }}
           path: |
