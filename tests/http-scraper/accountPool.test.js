@@ -80,7 +80,7 @@ function fetchByAccount(plan) {
   const calls = [];
   const fetch = vi.fn(async (url, init) => {
     const account = accountOf(init);
-    calls.push({ account, url });
+    calls.push({ account, url, init });
     counts[account] = (counts[account] || 0) + 1;
     const handler = plan[account];
     if (!handler) throw new Error(`no plan for account ${account}`);
@@ -401,7 +401,8 @@ describe('createPooledClient', () => {
     expect(pages).toHaveLength(2);
     expect(pages[0].cursor).toBe('c2');
     expect(fetch.calls.map((c) => c.account)).toEqual(['a', 'b']);
-    const secondUrl = fetch.calls[1].url;
-    expect(JSON.parse(new URL(secondUrl).searchParams.get('variables')).cursor).toBe('c2');
+    // Followers is one of the POST_QUERY_OPERATIONS, so its variables ride in
+    // the request body rather than the query string.
+    expect(JSON.parse(fetch.calls[1].init.body).variables.cursor).toBe('c2');
   });
 });
