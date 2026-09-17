@@ -115,7 +115,7 @@
     "express-rate-limit": "^7.5.1",
     "express-validator": "^7.0.1",
     "helmet": "^7.1.0",
-    "inquirer": "^9.2.0",
+    "inquirer": "^14.2.2",
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.1",
     "node-cron": "^4.6.0",
