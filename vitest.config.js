@@ -18,11 +18,8 @@ export default defineConfig({
     // Cap worker processes: an uncapped fork pool on a loaded machine produced
     // "Worker exited unexpectedly" crashes mid-suite.
     pool: 'forks',
-    poolOptions: {
-      forks: {
-        maxForks: 4,
-      },
-    },
+    // Vitest 5 removed `poolOptions`; the cap is a top-level option now.
+    maxWorkers: 4,
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
