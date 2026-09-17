@@ -95,7 +95,9 @@ export async function scrapeTweets(client, username, options = {}) {
     }
 
     // No more pages or no new tweets
-    if (!bottomCursor || tweets.length === 0) break;
+    // A cursor that comes back unchanged means the page did not advance;
+    // continuing would append the same items again.
+    if (!bottomCursor || tweets.length === 0 || bottomCursor === nextCursor) break;
     nextCursor = bottomCursor;
     checkpoint.record(bottomCursor, allTweets.length);
   }
@@ -157,7 +159,9 @@ export async function scrapeTweetsAndReplies(client, username, options = {}) {
       onProgress({ fetched: allTweets.length, limit });
     }
 
-    if (!bottomCursor || tweets.length === 0) break;
+    // A cursor that comes back unchanged means the page did not advance;
+    // continuing would append the same items again.
+    if (!bottomCursor || tweets.length === 0 || bottomCursor === nextCursor) break;
     nextCursor = bottomCursor;
     checkpoint.record(bottomCursor, allTweets.length);
   }

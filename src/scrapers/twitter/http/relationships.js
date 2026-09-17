@@ -258,8 +258,11 @@ async function scrapeUserList(client, endpoint, baseVariables, options = {}, res
     // Report progress
     onProgress?.({ fetched: seen.size, limit, page: pageNum });
 
-    // Stop if no cursor (end of list) or no new users returned
-    if (!cursor || users.length === 0) break;
+    // Stop if no cursor (end of list) or no new users returned. A cursor that
+    // comes back unchanged means the page did not advance: because this loop
+    // deduplicates, `seen` would stop growing and the limit would never be
+    // reached, so without this guard the same request repeats forever.
+    if (!cursor || users.length === 0 || cursor === nextCursor) break;
 
     nextCursor = cursor;
     pageNum++;

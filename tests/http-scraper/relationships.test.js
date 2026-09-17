@@ -354,6 +354,39 @@ describe('scrapeFollowers', () => {
     expect(client.graphql).toHaveBeenCalledTimes(3);
   });
 
+  it('stops when the cursor stops advancing instead of looping forever', async () => {
+    const userLookupResponse = {
+      data: {
+        user: {
+          result: {
+            __typename: 'User',
+            rest_id: '99999',
+            legacy: { screen_name: 'stuck', name: 'Stuck' },
+          },
+        },
+      },
+    };
+
+    // x.com hands back the same cursor and the same three users on every
+    // request. Those users deduplicate, so the limit is never reached and the
+    // loop only terminates because a repeated cursor ends it.
+    const samePage = () =>
+      buildGraphQLResponse(
+        buildInstructions(['a', 'b', 'c'], 'cursor-stuck'),
+        'data.user.result.timeline.timeline.instructions',
+      );
+
+    const client = createMockClient({
+      graphqlResponses: [userLookupResponse, samePage(), samePage(), samePage()],
+    });
+
+    const result = await scrapeFollowers(client, 'stuck', { limit: 100 });
+
+    expect(result.map((u) => u.username)).toEqual(['a', 'b', 'c']);
+    // UserByScreenName, the first page, and the repeat that detects the stall.
+    expect(client.graphql).toHaveBeenCalledTimes(3);
+  });
+
   it('respects limit option and stops early', async () => {
     const userLookupResponse = {
       data: {

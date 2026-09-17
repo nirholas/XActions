@@ -180,7 +180,9 @@ export async function searchTweets(client, query, options = {}) {
     }
 
     // No more pages or no new tweets
-    if (!bottomCursor || tweets.length === 0) break;
+    // A cursor that comes back unchanged means the page did not advance;
+    // continuing would append the same items again.
+    if (!bottomCursor || tweets.length === 0 || bottomCursor === nextCursor) break;
     nextCursor = bottomCursor;
     checkpoint.record(bottomCursor, allTweets.length);
   }
@@ -237,7 +239,9 @@ export async function searchUsers(client, query, options = {}) {
       onProgress({ fetched: allUsers.length, limit });
     }
 
-    if (!bottomCursor || users.length === 0) break;
+    // A cursor that comes back unchanged means the page did not advance;
+    // continuing would append the same items again.
+    if (!bottomCursor || users.length === 0 || bottomCursor === nextCursor) break;
     nextCursor = bottomCursor;
   }
 
