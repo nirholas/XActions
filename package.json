@@ -154,7 +154,7 @@
     "nodemon": "^3.0.2",
     "remotion": "^4.0.428",
     "supertest": "^6.3.4",
-    "vitest": "^4.0.18"
+    "vitest": "^5.0.0"
   },
   "author": {
     "name": "nich",
