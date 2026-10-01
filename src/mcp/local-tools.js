@@ -932,21 +932,83 @@ export async function x_get_bookmarks({ limit = 100 }) {
 
 export async function x_clear_bookmarks() {
   const { page: pg } = await ensureBrowser();
-  await pg.goto('https://x.com/i/bookmarks', { waitUntil: 'networkidle2' });
+  await pg.goto('https://x.com/i/history', { waitUntil: 'networkidle2' });
   await randomDelay();
 
-  // Open the ⋯ overflow menu
-  if (await clickIfPresent(pg, '[data-testid="caret"], [aria-label="More"]')) {
-    await sleep(500);
-    if (await clickMenuItemByText(pg, /clear all bookmarks/i)) {
-      await sleep(500);
-      if (await clickIfPresent(pg, '[data-testid="confirmationSheetConfirm"]')) {
-        await randomDelay();
-        return { success: true, message: 'All bookmarks cleared' };
-      }
+  // X has no bulk-clear control here, so remove bookmarks one post at a time.
+  const removeSelector = 'article[data-testid="tweet"] [data-testid="removeBookmark"], article[data-testid="tweet"] button[aria-label*="Remove"]';
+  let removed = 0;
+  let consecutiveErrors = 0;
+  let emptyScrolls = 0;
+
+  while (emptyScrolls < 6 && consecutiveErrors < 10) {
+    const rateLimited = await pg.evaluate(() => {
+      const toast = document.querySelector('[data-testid="toast"], [role="alert"]');
+      return /rate limit|try again|too many|slow down/i.test(toast?.textContent || '');
+    });
+    if (rateLimited) {
+      await sleep(60000);
+      continue;
     }
+
+    const button = await pg.$(removeSelector);
+    if (button) {
+      // Keep a stable identity because X may replace the clicked DOM node.
+      const postHref = await button.evaluate((element) => {
+        const article = element.closest('article[data-testid="tweet"]');
+        return article?.querySelector('a[href*="/status/"] time')?.closest('a')?.getAttribute('href') || null;
+      });
+      if (!postHref) {
+        return { success: false, message: 'Could not identify the bookmark post before removal', removed };
+      }
+
+      try {
+        await button.click();
+      } catch {
+        consecutiveErrors++;
+        await randomDelay();
+        continue;
+      }
+
+      try {
+        // Count only after this specific post disappears from the feed.
+        await pg.waitForFunction((href) => {
+          const articles = document.querySelectorAll('article[data-testid="tweet"]');
+          return !Array.from(articles).some((article) => {
+            const timestampLink = article.querySelector('a[href*="/status/"] time')?.closest('a');
+            return timestampLink?.getAttribute('href') === href;
+          });
+        }, { timeout: 5000 }, postHref);
+      } catch {
+        return {
+          success: false,
+          message: 'Bookmark removal was not confirmed; stopped to avoid retrying the same post',
+          removed,
+          unconfirmedBookmark: postHref,
+        };
+      }
+
+      removed++;
+      consecutiveErrors = 0;
+      emptyScrolls = 0;
+      await randomDelay();
+      continue;
+    }
+
+    emptyScrolls++;
+    await pg.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await randomDelay(1800, 2600);
   }
-  return { success: false, message: 'Could not clear bookmarks' };
+
+  if (consecutiveErrors >= 10) {
+    return { success: false, message: 'Stopped after repeated bookmark-removal errors', removed, errors: consecutiveErrors };
+  }
+
+  if (removed === 0) {
+    return { success: false, message: 'No bookmark removal buttons found; confirm the MCP browser is logged in and bookmarks are loaded', removed };
+  }
+
+  return { success: true, message: 'All loaded bookmarks cleared', removed };
 }
 
 export async function x_auto_like({ keywords = [], maxLikes = 20 }) {

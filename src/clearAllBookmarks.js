@@ -81,8 +81,9 @@
     console.log('║  by nichxbt — v2.0' + ' '.repeat(W - 21) + '║');
     console.log('╚' + '═'.repeat(W) + '╝');
 
-    if (!window.location.href.includes('/bookmarks')) {
-      console.error('❌ Navigate to x.com/i/bookmarks first!');
+    // X moved bookmarks to history; keep the old route working too.
+    if (!window.location.pathname.includes('/history') && !window.location.pathname.includes('/bookmarks')) {
+      console.error('❌ Navigate to x.com/i/history first!');
       return;
     }
 

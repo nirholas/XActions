@@ -17,7 +17,7 @@ Browser console scripts for managing, organizing, exporting, and clearing X/Twit
 |------|------|-------------|
 | Export bookmarks (full metadata) | `scripts/scrapeBookmarks.js` | `x.com/i/bookmarks` |
 | Organize bookmarks by category | `src/bookmarkOrganizer.js` | `x.com/i/bookmarks` |
-| Clear all bookmarks | `src/clearAllBookmarks.js` | `x.com/i/bookmarks` |
+| Clear all bookmarks | `src/clearAllBookmarks.js` | `x.com/i/history` |
 | Manage bookmarks (Puppeteer) | `src/bookmarkManager.js` | `x.com/i/bookmarks` |
 
 ## Scrape Bookmarks
@@ -61,7 +61,7 @@ Removes all bookmarks. Tries the built-in "Clear All" button first, then falls b
 
 ### How to Use
 
-1. Navigate to `x.com/i/bookmarks` → paste in DevTools → Enter
+1. Navigate to `x.com/i/history` → paste in DevTools → Enter
 
 ### Features
 

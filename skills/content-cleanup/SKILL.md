@@ -117,7 +117,7 @@ Remove all saved bookmarks. Tries the built-in "Clear All" button first, falls b
 
 ### How to use
 
-1. Navigate to `x.com/i/bookmarks`
+1. Navigate to `x.com/i/history`
 2. Open DevTools (F12) → Console
 3. Paste the script → Enter
 

@@ -16,7 +16,7 @@ Remove all bookmarks from your X/Twitter account.
 ## 🌐 Browser Console Script
 
 **Steps:**
-1. Go to `x.com/i/bookmarks`
+1. Go to `https://x.com/i/history`. The legacy bookmarks URL on `x.com` redirects here.
 2. Open console (F12) and paste `src/clearAllBookmarks.js`
 
 **Configuration:**

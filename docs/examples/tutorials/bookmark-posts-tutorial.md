@@ -131,7 +131,7 @@ await createFolder(page, 'Funny');
 
 ### Clear All Bookmarks
 
-**Step 1:** Navigate to `https://x.com/i/bookmarks`.
+**Step 1:** Navigate to `https://x.com/i/history`.
 
 **Step 2:** Paste `src/clearAllBookmarks.js`.
 
@@ -173,7 +173,7 @@ This keeps any bookmark whose text contains "important", "save", or "reference".
 
 | Problem | Solution |
 |---------|----------|
-| "Navigate to x.com/i/bookmarks first!" | You must be on the bookmarks page |
+| "Navigate to x.com/i/history first!" | Navigate to `https://x.com/i/history`. |
 | No bookmarks found | Scroll delay may be too short. Increase `scrollDelay`. |
 | Bulk clear button not found | X may have changed the UI. Set `useBulkClear: false` to use individual removal. |
 | "Could not create folder -- Premium required" | Bookmark folders need X Premium subscription |

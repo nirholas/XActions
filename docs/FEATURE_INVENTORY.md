@@ -93,7 +93,7 @@ that genuinely need a browser.
 |---|------|-------------|---------------|------------|
 | 4 | `src/unlikeAllPosts.js` | Unlike all your liked posts | `x.com/USERNAME/likes` | `maxUnlikes`, `minDelay`, `maxDelay` |
 | 5 | `src/clearAllReposts.js` | Remove all your retweets | `x.com/USERNAME` | `maxUnretweets`, `minDelay`, `maxDelay` |
-| 6 | `src/clearAllBookmarks.js` | Clear all bookmarks (tries bulk clear first, then one-by-one) | `x.com/i/bookmarks` | None |
+| 6 | `src/clearAllBookmarks.js` | Clear all bookmarks (tries bulk clear first, then one-by-one) | `x.com/i/history` | None |
 
 ### 2.3 Blocking & Muting
 
