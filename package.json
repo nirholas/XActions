@@ -121,7 +121,7 @@
     "node-cron": "^4.6.0",
     "nodemailer": "^10.0.10",
     "ora": "^8.0.0",
-    "prisma": "^5.7.1",
+    "prisma": "^7.10.0",
     "puppeteer": "^25.11.0",
     "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2",
