@@ -153,7 +153,7 @@
     "marked": "^18.0.13",
     "nodemon": "^3.0.2",
     "remotion": "^4.0.428",
-    "supertest": "^6.3.4",
+    "supertest": "^7.3.0",
     "vitest": "^5.0.2"
   },
   "author": {
