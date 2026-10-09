@@ -68,7 +68,10 @@ const result = await bulkExecute(usernames, 'follow', {
   skipErrors: true,
   logFile: 'follow-log.json'
 });
-// { action: 'follow', total: 100, succeeded: 95, failed: 3, skippedBlacklist: 2, duration: '3m 20s' }
+// Counts, not arrays. The usernames behind them are in result.results.
+// { action: 'follow', total: 100, processed: 100, succeeded: 95, alreadyFollowing: 2,
+//   failed: 3, skippedBlacklist: 2, remaining: 0, duration: '3m 20s',
+//   results: { succeeded: [...], already: [...], failed: [{ username, status, error }] } }
 
 // Bulk scrape to JSON
 const { results } = await bulkScrape(usernames, { output: 'profiles.json' });
@@ -169,11 +172,27 @@ Auto-detects file format and returns a clean array of usernames.
 | `options.skipErrors` | `boolean` | `true` | Continue on failure |
 | `options.logFile` | `string` | — | Path to save action log |
 | `options.resumeFrom` | `string` | — | Progress file to resume from |
+| `options.resume` | `boolean` | `false` | Resume from the newest progress file for this action |
 | `options.force` | `boolean` | `false` | Ignore daily caps |
 | `options.message` | `string` | — | DM message template |
 | `options.listName` | `string` | — | List name for `add-to-list` |
 
-**Returns:** `{ action, total, succeeded, failed, skippedBlacklist, duration, progressFile }`
+**Returns:** `{ action, total, processed, succeeded, alreadyFollowing, failed, skippedBlacklist, remaining, stoppedEarly, duration, progressFile, results: { succeeded, already, failed } }`
+
+`succeeded` and `failed` are counts. `results` carries the usernames behind those counts, and each failed entry records `status` and `error`:
+
+| `status` | Meaning |
+|---|---|
+| `success` | The action ran and X confirmed it |
+| `already_following` | The account was already in that state; nothing was sent |
+| `failed` | Ran, but X never confirmed it — the reason is in `error` |
+| `browser_error` | The browser died or the page was lost; retried, then reported with the original message |
+| `auth_error` | No usable session — the run stops early and points at `xactions login` |
+| `rate_limited` | X refused on quota; retried |
+| `target_not_found` | The profile does not exist |
+| `not_implemented` | That action has no implementation behind it |
+
+Only `failed`, `browser_error` and `rate_limited` are retried; `auth_error` and `target_not_found` are final.
 
 ### `bulkScrape(usernames, options)`
 

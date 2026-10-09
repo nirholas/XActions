@@ -33,6 +33,7 @@ import {
   isStaleQueryIdError,
 } from './queryIds.js';
 import { getTransactionId, isTransactionIdEnabled } from './transactionId.js';
+import { withHttp2 } from '../../../utils/http2.js';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -178,29 +179,37 @@ export class TwitterHttpClient {
   }
 
   /**
-   * Build (once) the undici ProxyAgent that routes this client's requests
-   * through `options.proxy`. Node's global fetch honours the `dispatcher`
-   * request option, so no fetch wrapper is needed. A custom `options.fetch`
-   * is left alone: it owns its own transport.
+   * Build the fetch init, choosing the dispatcher for it: the proxy agent when
+   * `options.proxy` is set, otherwise the shared HTTP/2 agent. Node's global
+   * fetch honours the `dispatcher` request option, so no fetch wrapper is
+   * needed. A custom `options.fetch` is left alone: it owns its own transport.
+   *
+   * HTTP/2 matters here for the same reason it matters in a browser: X's edge
+   * answers some operations with a Cloudflare challenge when they arrive over
+   * HTTP/1.1, and `UserByRestId` did so on every attempt until this client
+   * started negotiating h2.
    * @private
    */
   async _requestInit(method, headers, body) {
     const init = { method, headers, body };
-    if (!this._proxy || this._fetch !== globalThis.fetch) return init;
-    if (!this._proxyDispatcher) {
-      let undici;
-      try {
-        undici = await import('undici');
-      } catch {
-        throw new NetworkError(
-          `A proxy was configured (${this._proxy}) but the "undici" package is not installed; run "npm install undici" to route requests through it.`,
-          { endpoint: this._proxy }
-        );
+    if (this._fetch !== globalThis.fetch) return init;
+    if (this._proxy) {
+      if (!this._proxyDispatcher) {
+        let undici;
+        try {
+          undici = await import('undici');
+        } catch {
+          throw new NetworkError(
+            `A proxy was configured (${this._proxy}) but the "undici" package is not installed; run "npm install undici" to route requests through it.`,
+            { endpoint: this._proxy }
+          );
+        }
+        this._proxyDispatcher = new undici.ProxyAgent(this._proxy);
       }
-      this._proxyDispatcher = new undici.ProxyAgent(this._proxy);
+      init.dispatcher = this._proxyDispatcher;
+      return init;
     }
-    init.dispatcher = this._proxyDispatcher;
-    return init;
+    return withHttp2(init, this._fetch);
   }
 
   // ---- Header construction ------------------------------------------------
@@ -455,13 +464,46 @@ export class TwitterHttpClient {
   }
 
   /**
+   * Fetch for query-ID discovery: this client's own transport, carrying this
+   * client's session cookies on x.com navigations.
+   *
+   * Discovery passes its fetch straight through, so it never picks up the
+   * jar on disk, and X only inlines the webpack manifest in the HTML a
+   * signed-in session gets. Without the cookies on the entry navigation the
+   * refresh finds no bundle, fails, and leaves the stale ID in place.
+   * @private
+   * @returns {typeof globalThis.fetch}
+   */
+  _discoveryFetch() {
+    const cookie = Object.entries(this._cookies)
+      .map(([k, v]) => `${k}=${v}`)
+      .join('; ');
+    if (!cookie) return this._fetch;
+    const base = this._fetch.bind(this);
+    return (url, opts = {}) => {
+      const headers = opts.headers ?? {};
+      let host = '';
+      try {
+        host = new URL(url).hostname;
+      } catch {
+        host = '';
+      }
+      const sameSite =
+        host === 'x.com' || host.endsWith('.x.com') || host === 'twitter.com' || host.endsWith('.twitter.com');
+      const alreadySet = typeof headers.cookie === 'string' && headers.cookie.length > 0;
+      if (!sameSite || alreadySet) return base(url, opts);
+      return base(url, { ...opts, headers: { ...headers, cookie } });
+    };
+  }
+
+  /**
    * Re-discover query IDs from the live bundles and return the operation's
    * new ID, or null if discovery failed (offline, blocked, no bundle).
    * @private
    */
   async _refreshedQueryId(operationName) {
     try {
-      await refreshQueryIds({ fetch: this._fetch });
+      await refreshQueryIds({ fetch: this._discoveryFetch() });
     } catch (err) {
       if (this._debug) {
         console.log(`[TwitterHttpClient] query ID refresh failed: ${err.message}`);

@@ -33,6 +33,10 @@ import fs from 'fs/promises';
 import path from 'path';
 import os from 'os';
 
+import { isBrowserConnected, isPageUsable } from '../utils/browserState.js';
+import { loadSavedSession } from '../utils/savedSession.js';
+import { performFollow, performUnfollow, FOLLOW_STATUS } from './followAction.js';
+
 // ============================================================================
 // Singleton Browser Management
 // ============================================================================
@@ -45,31 +49,60 @@ const randomDelay = (min = 1000, max = 3000) =>
   sleep(min + Math.random() * (max - min));
 
 /**
+ * Put the saved session on a freshly opened page.
+ *
+ * Without this the whole Puppeteer path runs logged out: X serves a shell
+ * with no `data-testid` in it to visitors it does not know, so no action
+ * selector ever matches and the tools report a failure that reads like a
+ * missing feature. `loadSavedSession` prefers `XACTIONS_SESSION_COOKIE` when
+ * it is set, then falls back to the jar `xactions connect` wrote.
+ *
+ * @param {object} pg
+ * @returns {Promise<void>}
+ */
+async function applySavedSession(pg) {
+  const session = await loadSavedSession();
+  if (!session) return;
+  try {
+    await pg.setCookie({
+      name: 'auth_token',
+      value: session.authToken,
+      domain: '.x.com',
+      path: '/',
+      httpOnly: true,
+      secure: true,
+    });
+    if (session.ct0) {
+      await pg.setCookie({
+        name: 'ct0',
+        value: session.ct0,
+        domain: '.x.com',
+        path: '/',
+        httpOnly: true,
+        secure: true,
+      });
+    }
+  } catch (err) {
+    console.error('[xactions] browser session could not be applied:', err.message);
+  }
+}
+
+/**
  * Ensure a browser/page pair is available, creating if needed.
  * Uses createBrowser/createPage from the canonical scrapers module.
  */
 async function ensureBrowser() {
-  if (!browser || !browser.isConnected()) {
+  if (!isBrowserConnected(browser) || !isPageUsable(page)) {
     if (browser) {
       try {
         await browser.close();
       } catch {}
     }
+    browser = null;
+    page = null;
     browser = await createBrowser();
     page = await createPage(browser);
-    // Authenticate the singleton browser from the environment. Without this
-    // the whole Puppeteer path runs logged out: x.com serves an empty DOM to
-    // an anonymous session, every selector matches nothing, and the scrape
-    // tools resolve to [] / {} — indistinguishable from an account that
-    // genuinely has no data, with no error for the caller to act on.
-    const envCookie = process.env.XACTIONS_SESSION_COOKIE;
-    if (envCookie) {
-      try {
-        await loginWithCookie(page, envCookie);
-      } catch (err) {
-        console.error('[xactions] browser auto-login failed:', err.message);
-      }
-    }
+    await applySavedSession(page);
   }
   return { browser, page };
 }
@@ -422,33 +455,49 @@ export async function x_best_time_to_post({ username, limit = 100 }) {
 // ============================================================================
 
 export async function x_follow({ username }) {
-  const { page: pg } = await ensureBrowser();
-  await pg.goto(`https://x.com/${username}`, { waitUntil: 'networkidle2' });
-  await randomDelay();
-
-  // The follow button is the primary action in the placement tracking area,
-  // but only if the user isn't already followed (no -unfollow testid).
-  const followBtn = await pg.$('[data-testid="placementTracking"] [role="button"]:not([data-testid$="-unfollow"])');
-  if (followBtn) {
-    await followBtn.click();
-    await randomDelay();
-    return { success: true, message: `Followed @${username}` };
+  const handle = String(username || '').trim().replace(/^@/, '');
+  if (!handle) {
+    return { success: false, status: FOLLOW_STATUS.FAILED, message: 'No username given' };
   }
-  return { success: false, message: `Could not follow @${username}` };
+
+  let pg;
+  try {
+    ({ page: pg } = await ensureBrowser());
+  } catch (error) {
+    return {
+      success: false,
+      status: FOLLOW_STATUS.BROWSER,
+      message: `Could not start a browser: ${error.message}`,
+      username: handle,
+    };
+  }
+
+  const result = await performFollow(pg, handle);
+  if (result.status === FOLLOW_STATUS.BROWSER) await closeBrowser();
+  return result;
 }
 
 export async function x_unfollow({ username }) {
-  const { page: pg } = await ensureBrowser();
-  await pg.goto(`https://x.com/${username}`, { waitUntil: 'networkidle2' });
-  await randomDelay();
-
-  if (await clickIfPresent(pg, '[data-testid$="-unfollow"]')) {
-    await sleep(500);
-    await clickIfPresent(pg, '[data-testid="confirmationSheetConfirm"]');
-    await randomDelay();
-    return { success: true, message: `Unfollowed @${username}` };
+  const handle = String(username || '').trim().replace(/^@/, '');
+  if (!handle) {
+    return { success: false, status: FOLLOW_STATUS.FAILED, message: 'No username given' };
   }
-  return { success: false, message: `Could not unfollow @${username}` };
+
+  let pg;
+  try {
+    ({ page: pg } = await ensureBrowser());
+  } catch (error) {
+    return {
+      success: false,
+      status: FOLLOW_STATUS.BROWSER,
+      message: `Could not start a browser: ${error.message}`,
+      username: handle,
+    };
+  }
+
+  const result = await performUnfollow(pg, handle);
+  if (result.status === FOLLOW_STATUS.BROWSER) await closeBrowser();
+  return result;
 }
 
 // ============================================================================

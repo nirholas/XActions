@@ -20,10 +20,12 @@
  *
  * Bundle layout observed 2026-08 (subject to change, all of it is parsed
  * defensively):
- *   - `https://x.com/` is a new server-rendered shell with no client bundles.
- *     `https://x.com/home` and `https://x.com/i/flow/login` still ship the
- *     classic client: `vendor.<hash>a.js`, `main.<hash>a.js`, plus an inline
- *     webpack runtime.
+ *   - `https://x.com/` is a server-rendered shell. Since 2026-10 a logged-out
+ *     visitor gets the newer `x-web` shell, which ships no classic bundles at
+ *     all, while a signed-in session still gets the classic client:
+ *     `vendor.<hash>a.js`, `main.<hash>a.js`, plus an inline webpack runtime.
+ *     Discovery attaches the saved session for exactly that reason
+ *     (`sessionFetch()` below).
  *   - The runtime's chunk URL builder is
  *     `p.u=e=>""+({<id>:"<name>",...}[e]||e)+"."+({<id>:"<hash>",...})[e]+"a.js"`
  *     with `p.p="https://abs.twimg.com/responsive-web/client-web/"`.
@@ -334,6 +336,59 @@ async function fetchText(fetchFn, url, headers) {
   return res.text();
 }
 
+/**
+ * Cookie header built from the jar `xactions login` / `xactions connect`
+ * writes, or null when there is no jar to read.
+ *
+ * @returns {string|null}
+ */
+function savedSessionCookie() {
+  if (!hasFilesystem()) return null;
+  try {
+    const jar = JSON.parse(fs.readFileSync(path.join(resolveCacheDir(), 'cookies.json'), 'utf8'));
+    if (!Array.isArray(jar)) return null;
+    const cookie = jar
+      .filter((entry) => entry && entry.name && entry.value)
+      .map((entry) => `${entry.name}=${entry.value}`)
+      .join('; ');
+    return cookie || null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * The fetch used when a caller supplies none.
+ *
+ * Since X stopped shipping the classic client to logged-out visitors, the
+ * webpack manifest only appears in the HTML a signed-in browser gets: a guest
+ * navigation of `https://x.com/home` now redirects into the login flow, whose
+ * shell has no bundle in it. Discovery therefore carries the saved session on
+ * x.com and twitter.com navigations; everywhere else, and whenever there is no
+ * jar, this is the global fetch unchanged.
+ *
+ * @returns {typeof globalThis.fetch}
+ */
+function sessionFetch() {
+  const cookie = savedSessionCookie();
+  if (!cookie) return globalThis.fetch;
+  const base = globalThis.fetch.bind(globalThis);
+  return (url, opts = {}) => {
+    const headers = opts.headers ?? {};
+    const host = (() => {
+      try {
+        return new URL(url, 'https://x.com').hostname;
+      } catch {
+        return '';
+      }
+    })();
+    const sameSite = host === 'x.com' || host.endsWith('.x.com') || host === 'twitter.com' || host.endsWith('.twitter.com');
+    const alreadySet = typeof headers.cookie === 'string' && headers.cookie.length > 0;
+    if (!sameSite || alreadySet) return base(url, opts);
+    return base(url, { ...opts, headers: { ...headers, cookie } });
+  };
+}
+
 async function mapWithConcurrency(items, limit, worker) {
   const results = new Array(items.length);
   let next = 0;
@@ -364,7 +419,7 @@ async function mapWithConcurrency(items, limit, worker) {
  * @returns {Promise<{operations: Record<string, {queryId: string, operationType: string}>, fetchedAt: string, count: number, source: {entryUrl: string, mainBundle: string, chunksFetched: number, chunksFailed: string[], bytes: number}, cachePath: string|null}>}
  */
 export async function discoverQueryIds(options = {}) {
-  const fetchFn = options.fetch ?? state.config.fetch ?? globalThis.fetch;
+  const fetchFn = options.fetch ?? state.config.fetch ?? sessionFetch();
   if (typeof fetchFn !== 'function') throw new Error('discoverQueryIds needs a fetch implementation');
   const scope = options.scope === 'full' ? 'full' : 'core';
   const entryUrls = options.entryUrls ?? ENTRY_URLS;

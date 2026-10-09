@@ -16,6 +16,7 @@
  */
 
 import { createBrowser, createPage, loginWithCookie } from '../scrapers/index.js';
+import { isBrowserConnected } from '../utils/browserState.js';
 
 const MAX_BROWSERS = parseInt(process.env.XACTIONS_MAX_BROWSERS || '3', 10);
 const MAX_PAGES_PER_BROWSER = 5;
@@ -39,7 +40,7 @@ async function prunePool() {
 
   for (let i = pool.length - 1; i >= 0; i--) {
     const entry = pool[i];
-    const disconnected = !entry.browser.isConnected();
+    const disconnected = !isBrowserConnected(entry.browser);
     const tooOld = (now - entry.createdAt.getTime()) > MAX_BROWSER_AGE_MS && entry.pages === 0;
 
     if (disconnected || tooOld) {
@@ -73,7 +74,7 @@ export async function acquireBrowser() {
     await prunePool();
 
     const available = pool
-      .filter((b) => b.browser.isConnected())
+      .filter((b) => isBrowserConnected(b.browser))
       .sort((a, b) => a.pages - b.pages);
 
     // Reuse if a browser has capacity
@@ -169,7 +170,7 @@ export function getPoolStatus() {
     totalActivePages: pool.reduce((sum, b) => sum + b.pages, 0),
     details: pool.map((b) => ({
       id: b.id,
-      connected: b.browser.isConnected(),
+      connected: isBrowserConnected(b.browser),
       activePages: b.pages,
       ageMs: Date.now() - b.createdAt.getTime(),
     })),
@@ -182,7 +183,7 @@ export function getPoolStatus() {
 export async function isHealthy() {
   try {
     await prunePool();
-    const connected = pool.filter((b) => b.browser.isConnected()).length;
+    const connected = pool.filter((b) => isBrowserConnected(b.browser)).length;
     return connected > 0 || pool.length < MAX_BROWSERS;
   } catch {
     return false;

@@ -128,6 +128,7 @@
     "redis": "^4.6.11",
     "socket.io": "^4.7.5",
     "stripe": "^22.6.2",
+    "undici": "^7.30.0",
     "yauzl": "^3.4.0"
   },
   "optionalDependencies": {

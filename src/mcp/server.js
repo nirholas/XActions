@@ -243,7 +243,7 @@ const TOOLS = [
   },
   {
     name: 'x_follow',
-    description: 'Follow an X/Twitter account by username. Requires an authenticated session (XACTIONS_SESSION_COOKIE).',
+    description: 'Follow an X/Twitter account by username. Requires a saved session (`xactions login` / `xactions connect`, or XACTIONS_SESSION_COOKIE). Returns success only once the profile shows Following.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -257,7 +257,7 @@ const TOOLS = [
   },
   {
     name: 'x_unfollow',
-    description: 'Unfollow an X/Twitter account by username. Requires an authenticated session (XACTIONS_SESSION_COOKIE).',
+    description: 'Unfollow an X/Twitter account by username. Requires a saved session (`xactions login` / `xactions connect`, or XACTIONS_SESSION_COOKIE). Returns success only once the profile no longer shows Following.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -3025,10 +3025,13 @@ async function executeXeepyTool(name, args) {
           // Apply filters — would need profile scrape for full filtering
         }
         try {
-          await localTools.x_follow?.({ username });
-          users.push(username);
+          const outcome = await localTools.x_follow?.({ username });
+          // A follow counts once it is confirmed, not because nothing threw.
+          if (outcome && outcome.success !== false) users.push(username);
+        } catch { /* skip failed follows */ }
+        if (users.length < (args.limit || 10)) {
           await new Promise(r => setTimeout(r, (args.delay || 3) * 1000));
-        } catch (e) { /* skip failed follows */ }
+        }
       }
       return { followed: users, count: users.length };
     }

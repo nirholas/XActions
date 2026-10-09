@@ -509,7 +509,10 @@ export async function scrapeMedia(client, username, options = {}) {
   while (mediaItems.length < limit) {
     const variables = {
       userId,
-      count: Math.min(20, limit - mediaItems.length),
+      // `count` is tweets per page, not media items. Scaling it by the media
+      // still missing asked X for a 2-tweet page whenever two photos were
+      // left, which starved the pagination cursor and stopped the scrape.
+      count: 20,
       includePromotedContent: false,
       withClientEventToken: false,
       withBirdwatchNotes: false,

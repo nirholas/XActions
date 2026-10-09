@@ -30,6 +30,35 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const randomDelay = (min = 1000, max = 3000) => sleep(min + Math.random() * (max - min));
 
 /**
+ * Navigate to a page and wait for the content the scrape needs.
+ *
+ * `networkidle2` never settles on x.com's profile pages: media and ads keep
+ * the connection pool busy, so the wait burned Puppeteer's whole 30s timeout
+ * and `xactions export` died before reading a single field. `domcontentloaded`
+ * returns as soon as the shell is in place; the selector is what makes that
+ * wait meaningful, and a miss falls through to the caller's retry loop instead
+ * of throwing.
+ *
+ * @param {Object} page
+ * @param {string} url
+ * @param {string} [waitFor] CSS selector marking the content to scrape
+ * @returns {Promise<void>}
+ */
+async function gotoAndRender(page, url, waitFor) {
+  await page.goto(url, { waitUntil: 'domcontentloaded' });
+  if (waitFor) {
+    try {
+      await page.waitForSelector(waitFor, { timeout: 15000 });
+    } catch {
+      // Nothing appeared; the caller's retries decide whether that is fatal.
+    }
+    return;
+  }
+  await randomDelay();
+}
+
+
+/**
  * Create a browser instance with stealth settings.
  * 
  * Supports adapter mode:
@@ -101,7 +130,7 @@ export async function loginWithCookie(page, authToken) {
       httpOnly: true,
       secure: true,
     });
-    await adapter.goto(page, 'https://x.com/home', { waitUntil: 'networkidle' });
+    await adapter.goto(page, 'https://x.com/home', { waitUntil: 'domcontentloaded' });
     return page;
   }
 
@@ -113,7 +142,11 @@ export async function loginWithCookie(page, authToken) {
     httpOnly: true,
     secure: true,
   });
-  await page.goto('https://x.com/home', { waitUntil: 'networkidle2' });
+  // Only the cookie has to land here — nothing is read off this page — so do
+  // not ask for `networkidle2`: x.com's timeline sits just under the 30s
+  // navigation timeout and blew past it on busy connections, failing every
+  // command before it reached its own URL.
+  await gotoAndRender(page, 'https://x.com/home');
   return page;
 }
 
@@ -125,8 +158,7 @@ export async function loginWithCookie(page, authToken) {
  * Scrape profile information for a user
  */
 export async function scrapeProfile(page, username) {
-  await page.goto(`https://x.com/${username}`, { waitUntil: 'networkidle2' });
-  await randomDelay();
+  await gotoAndRender(page, `https://x.com/${username}`, '[data-testid="UserName"]');
 
   const profile = await page.evaluate(() => {
     const getText = (sel) => document.querySelector(sel)?.textContent?.trim() || null;
@@ -175,8 +207,7 @@ export async function scrapeProfile(page, username) {
 export async function scrapeFollowers(page, username, options = {}) {
   const { limit = 1000, onProgress } = options;
   
-  await page.goto(`https://x.com/${username}/followers`, { waitUntil: 'networkidle2' });
-  await randomDelay();
+  await gotoAndRender(page, `https://x.com/${username}/followers`, '[data-testid="UserCell"]');
 
   const followers = new Map();
   let retries = 0;
@@ -236,8 +267,7 @@ export async function scrapeFollowers(page, username, options = {}) {
 export async function scrapeFollowing(page, username, options = {}) {
   const { limit = 1000, onProgress } = options;
   
-  await page.goto(`https://x.com/${username}/following`, { waitUntil: 'networkidle2' });
-  await randomDelay();
+  await gotoAndRender(page, `https://x.com/${username}/following`, '[data-testid="UserCell"]');
 
   const following = new Map();
   let retries = 0;
@@ -299,8 +329,7 @@ export async function scrapeTweets(page, username, options = {}) {
     ? `https://x.com/${username}/with_replies`
     : `https://x.com/${username}`;
     
-  await page.goto(url, { waitUntil: 'networkidle2' });
-  await randomDelay();
+  await gotoAndRender(page, url, 'article[data-testid="tweet"]');
 
   const tweets = new Map();
   let retries = 0;
@@ -395,10 +424,11 @@ export async function searchTweets(page, query, options = {}) {
   const encodedQuery = encodeURIComponent(query);
   const f = filterMap[filter] || 'live';
   
-  await page.goto(`https://x.com/search?q=${encodedQuery}&src=typed_query&f=${f}`, {
-    waitUntil: 'networkidle2',
-  });
-  await randomDelay();
+  await gotoAndRender(
+    page,
+    `https://x.com/search?q=${encodedQuery}&src=typed_query&f=${f}`,
+    'article[data-testid="tweet"]',
+  );
 
   const tweets = new Map();
   let retries = 0;
@@ -702,7 +732,7 @@ export async function scrapeListMembers(page, listUrl, options = {}) {
 export async function scrapeBookmarks(page, options = {}) {
   const { limit = 100, scrollDelay = 2000 } = options;
   
-  await page.goto('https://x.com/i/bookmarks', { waitUntil: 'networkidle2' });
+  await gotoAndRender(page, 'https://x.com/i/bookmarks', 'article[data-testid="tweet"]');
   await randomDelay(2000, 3000);
   
   const bookmarks = [];

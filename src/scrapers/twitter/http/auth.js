@@ -18,6 +18,53 @@
 import fs from 'fs/promises';
 import crypto from 'crypto';
 
+import { getTransactionId, isTransactionIdEnabled } from './transactionId.js';
+
+// ---------------------------------------------------------------------------
+// Request signing
+// ---------------------------------------------------------------------------
+
+/**
+ * Wrap a fetch so every request to x.com carries `x-client-transaction-id`,
+ * the header x.com's own web client attaches to its internal REST calls.
+ *
+ * X answers an unsigned call to some of them — `account/verify_credentials.json`
+ * among them — with a bare 404 ("Sorry, that page does not exist"), so without
+ * this every `validateSession()` reported a perfectly good session as expired.
+ * Signing is best-effort: if the keys cannot be obtained the request goes out
+ * unsigned, exactly as it did before.
+ *
+ * @param {typeof globalThis.fetch} fetchFn
+ * @returns {typeof globalThis.fetch}
+ */
+function signedFetch(fetchFn) {
+  return async (input, init = {}) => {
+    const url = typeof input === 'string' ? input : (input && input.url) || '';
+    const onTwitter = /^https:\/\/([a-z0-9-]+\.)?(twitter|x)\.com\//i.test(url);
+    const method = String(init.method || (input && input.method) || 'GET').toUpperCase();
+    const headers =
+      input instanceof Request && !init.headers
+        ? new Headers(input.headers)
+        : new Headers(init.headers || {});
+
+    if (!onTwitter || headers.has('x-client-transaction-id') || !isTransactionIdEnabled()) {
+      return fetchFn(input, init);
+    }
+
+    try {
+      const id = await getTransactionId(method, url, { fetch: fetchFn });
+      if (id) headers.set('x-client-transaction-id', id);
+    } catch {
+      // Signing never blocks a request.
+    }
+
+    return fetchFn(input instanceof Request ? new Request(input, { headers }) : input, {
+      ...init,
+      headers,
+    });
+  };
+}
+
 // ---------------------------------------------------------------------------
 // Bearer token — embedded in Twitter's web client JS bundle (public)
 // Same token used by the-convocation/twitter-scraper, d60/twikit, etc.
@@ -182,7 +229,7 @@ export class TwitterAuth {
    */
   constructor(options = {}) {
     this.#encryptionKey = options.encryptionKey ?? null;
-    this.#fetch = options.fetch ?? globalThis.fetch;
+    this.#fetch = signedFetch(options.fetch ?? globalThis.fetch);
     this.#userAgent = options.userAgent ?? randomUA();
   }
 

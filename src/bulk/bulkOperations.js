@@ -14,8 +14,9 @@ import fsp from 'fs/promises';
 import path from 'path';
 import os from 'os';
 
+import { FOLLOW_STATUS, isRetryableStatus, classifyBrowserError } from '../mcp/followAction.js';
+
 const PROGRESS_DIR = path.join(os.homedir(), '.xactions');
-const BLACKLIST_FILE = path.join(PROGRESS_DIR, 'blacklist.txt');
 
 // Daily action caps (configurable)
 const DEFAULT_CAPS = {
@@ -103,13 +104,19 @@ export async function bulkExecute(usernames, action, options = {}) {
     skipErrors = true,
     logFile,
     resumeFrom,
+    resume,
     force = false,
     message, // for DM action
     listName, // for add-to-list action
+    executor: injectedExecutor, // supplied by tests
+    stateDir, // supplied by tests
   } = options;
 
+  const stateRoot = stateDir || PROGRESS_DIR;
+  const alreadyLabel = action === 'follow' ? 'Already following' : 'Already done';
+
   // Load blacklist
-  const blacklist = await loadBlacklist();
+  const blacklist = await loadBlacklist(stateRoot);
 
   // Filter blacklisted
   const filtered = usernames.filter(u => !blacklist.has(u.toLowerCase()));
@@ -123,35 +130,48 @@ export async function bulkExecute(usernames, action, options = {}) {
 
   // Safety warning check
   if (filtered.length > 100 && !force && !dryRun) {
-    console.log(`⚠️  About to ${action} ${filtered.length} users. Use --force to skip this warning.`);
+    console.log(`\u26a0\ufe0f  About to ${action} ${filtered.length} users. Use --force to skip this warning.`);
     return { error: `Safety warning: ${filtered.length} actions. Use --force flag.` };
   }
 
-  // Resume support
+  // Resume support: `--resume` is a flag, a path to a progress file is also
+  // accepted for callers that keep their own checkpoint.
+  const resumeTarget = resumeFrom || resume;
   let processedSet = new Set();
-  if (resumeFrom) {
+  if (resumeTarget) {
     try {
-      const progress = JSON.parse(await fsp.readFile(resumeFrom, 'utf-8'));
-      processedSet = new Set([...(progress.succeeded || []), ...(progress.failed || [])]);
-      console.log(`🔄 Resuming: skipping ${processedSet.size} already-processed users`);
+      const progressFile = resumeTarget === true
+        ? await findLatestProgress(stateRoot, action)
+        : resumeTarget;
+      if (!progressFile) throw new Error('no previous run');
+      const progress = JSON.parse(await fsp.readFile(progressFile, 'utf-8'));
+      processedSet = new Set([
+        ...(progress.succeeded || []),
+        ...(progress.already || []),
+        ...(progress.failed || []).map(f => (typeof f === 'string' ? f : f.username)),
+      ]);
+      console.log(`\ud83d\udd04 Resuming: skipping ${processedSet.size} already-processed users`);
     } catch {
-      console.log('⚠️  Could not load progress file, starting fresh');
+      console.log('\u26a0\ufe0f  Could not load progress file, starting fresh');
     }
   }
 
   const toProcess = filtered.filter(u => !processedSet.has(u.toLowerCase()));
 
   // Progress tracking
-  const progressFile = path.join(PROGRESS_DIR, `bulk-progress-${Date.now()}.json`);
+  const progressFile = path.join(stateRoot, `bulk-progress-${Date.now()}.json`);
   const succeeded = [];
+  const already = [];
   const failed = [];
-  const skipped = [];
   const startTime = Date.now();
 
   // Lazy-load action executor
-  const executor = dryRun ? null : await getActionExecutor(action);
+  const executor = dryRun ? null : (injectedExecutor || await getActionExecutor(action));
 
   let consecutiveFailures = 0;
+  let consecutiveAuthFailures = 0;
+  let processed = 0;
+  let stoppedEarly = '';
 
   for (let i = 0; i < toProcess.length; i++) {
     const username = toProcess[i];
@@ -160,48 +180,82 @@ export async function bulkExecute(usernames, action, options = {}) {
     if (dryRun) {
       console.log(`[DRY RUN] [${num}/${toProcess.length}] Would ${action} @${username}`);
       succeeded.push(username);
+      processed++;
       continue;
     }
 
     let success = false;
     let lastError = '';
+    let lastStatus = '';
 
     for (let retry = 0; retry <= maxRetries; retry++) {
       try {
         const start = Date.now();
-        await executor(username, { message, listName });
+        const outcome = normalizeOutcome(await executor(username, { message, listName }), username, action);
         const elapsed = ((Date.now() - start) / 1000).toFixed(1);
-        console.log(`[${num}/${toProcess.length}] ✅ ${action} @${username} (${elapsed}s)`);
-        succeeded.push(username);
-        success = true;
-        consecutiveFailures = 0;
-        break;
+
+        if (outcome.success) {
+          if (outcome.status.startsWith('already_')) {
+            console.log(`[${num}/${toProcess.length}] \u23ed\ufe0f  ${alreadyLabel} @${username} (${elapsed}s)`);
+            already.push(username);
+          } else {
+            console.log(`[${num}/${toProcess.length}] \u2705 ${action} @${username} (${elapsed}s)`);
+            succeeded.push(username);
+          }
+          success = true;
+          consecutiveFailures = 0;
+          consecutiveAuthFailures = 0;
+          break;
+        }
+
+        lastError = outcome.message;
+        lastStatus = outcome.status;
+        if (!isRetryableStatus(lastStatus)) break;
+        if (retry < maxRetries) {
+          console.log(`[${num}/${toProcess.length}] \u26a0\ufe0f  Retry ${retry + 1}/${maxRetries} for @${username}: ${lastError}`);
+          if (lastStatus === FOLLOW_STATUS.BROWSER) await resetBrowser();
+          await sleep(delayMs * 2);
+        }
       } catch (error) {
         lastError = error.message;
+        lastStatus = classifyBrowserError(error);
         if (retry < maxRetries) {
-          console.log(`[${num}/${toProcess.length}] ⚠️  Retry ${retry + 1}/${maxRetries} for @${username}: ${lastError}`);
+          console.log(`[${num}/${toProcess.length}] \u26a0\ufe0f  Retry ${retry + 1}/${maxRetries} for @${username}: ${lastError}`);
+          if (lastStatus === FOLLOW_STATUS.BROWSER) await resetBrowser();
           await sleep(delayMs * 2);
         }
       }
     }
 
-    if (!success) {
-      console.log(`[${num}/${toProcess.length}] ❌ Failed @${username}: ${lastError}`);
-      failed.push({ username, error: lastError });
+    processed++;
+
+    if (success) {
+      await saveProgress(progressFile, { action, startTime, succeeded, already, failed });
+    } else {
+      console.log(`[${num}/${toProcess.length}] \u274c Failed @${username}: ${lastError}`);
+      failed.push({ username, status: lastStatus || FOLLOW_STATUS.FAILED, error: lastError });
       consecutiveFailures++;
+
+      // A session that X refuses is not going to start working mid-run.
+      if (lastStatus === FOLLOW_STATUS.AUTH) {
+        consecutiveAuthFailures++;
+        if (consecutiveAuthFailures >= 3) {
+          stoppedEarly = '3 in a row without a usable session — stopped early. Run `xactions login`, then `--resume`.';
+          console.log(`\ud83d\uded1 ${stoppedEarly}`);
+          break;
+        }
+      }
 
       // Rate limit detection
       if (consecutiveFailures >= 3) {
-        console.log('⏸️  3 consecutive failures — pausing for 5 minutes...');
+        console.log('\u23f8\ufe0f  3 consecutive failures \u2014 pausing for 5 minutes...');
         await sleep(300000);
         consecutiveFailures = 0;
       }
 
+      await saveProgress(progressFile, { action, startTime, succeeded, already, failed });
       if (!skipErrors) break;
     }
-
-    // Save progress after each action
-    await saveProgress(progressFile, { succeeded, failed, skipped, action, startTime });
 
     // Delay between actions
     if (i < toProcess.length - 1) {
@@ -209,30 +263,142 @@ export async function bulkExecute(usernames, action, options = {}) {
 
       // Batch cooldown
       if ((i + 1) % batchSize === 0) {
-        console.log(`⏸️  Batch cooldown (30s) after ${i + 1} actions...`);
+        console.log(`\u23f8\ufe0f  Batch cooldown (30s) after ${i + 1} actions...`);
         await sleep(30000);
       }
     }
   }
 
+  // The executor may have left the shared Puppeteer singleton open, and a
+  // process that keeps it alive never exits after printing its own summary.
+  // A dry run opened nothing, and resetBrowser is a no-op when the browser
+  // is already closed.
+  if (executor) await resetBrowser();
+
   const duration = Math.round((Date.now() - startTime) / 1000);
   const summary = {
     action,
     total: toProcess.length,
+    processed,
     succeeded: succeeded.length,
+    alreadyFollowing: already.length,
     failed: failed.length,
     skippedBlacklist,
+    remaining: toProcess.length - processed,
+    stoppedEarly: stoppedEarly || null,
     duration: `${duration}s`,
     progressFile: dryRun ? null : progressFile,
   };
 
-  console.log(`\n📊 Bulk ${action} complete:`);
-  console.log(`   ✅ Succeeded: ${succeeded.length}`);
-  console.log(`   ❌ Failed: ${failed.length}`);
-  console.log(`   ⏭️  Blacklisted: ${skippedBlacklist}`);
-  console.log(`   ⏱️  Duration: ${duration}s`);
+  console.log(`\n\ud83d\udcca Bulk ${action} complete:`);
+  console.log(`   \u2705 Succeeded: ${succeeded.length}`);
+  if (action === 'follow' || already.length > 0) {
+    console.log(`   \u23ed\ufe0f  ${alreadyLabel}: ${already.length}`);
+  }
+  console.log(`   \u274c Failed: ${failed.length}`);
+  console.log(`   \u23ed\ufe0f  Blacklisted: ${skippedBlacklist}`);
+  console.log(`   \u23f1\ufe0f  Duration: ${duration}s`);
 
-  return { ...summary, succeeded, failed: failed.map(f => f.username || f) };
+  return {
+    ...summary,
+    results: { succeeded: [...succeeded], already: [...already], failed: [...failed] },
+  };
+}
+
+/**
+ * Turn whatever an action returned into an outcome.
+ *
+ * A tool that answers `{ success: false, status }` is a failure whatever it
+ * threw or did not throw, a tool that carries no verdict at all is treated as
+ * having run, and a tool that returned nothing ran nothing. Without this,
+ * `bulk follow` counted a follow that never happened as a success.
+ *
+ * @param {*} result
+ * @param {string} username
+ * @param {string} action
+ * @returns {{success: boolean, status: string, message: string}}
+ */
+function normalizeOutcome(result, username, action) {
+  if (result === undefined || result === null) {
+    return {
+      success: false,
+      status: 'not_implemented',
+      message: `Action "${action}" has no implementation in this build`,
+    };
+  }
+
+  if (typeof result === 'object') {
+    if (typeof result.status === 'string' && result.status) {
+      const ok = result.status === 'success' || result.status.startsWith('already_');
+      return {
+        success: ok,
+        status: result.status,
+        message: result.message || `@${username}: ${result.status}`,
+      };
+    }
+    if (result.success === false) {
+      return { success: false, status: 'failed', message: result.message || `@${username}: failed` };
+    }
+    return { success: true, status: 'success', message: result.message || `@${username}: ok` };
+  }
+
+  if (typeof result === 'boolean') {
+    return {
+      success: result,
+      status: result ? 'success' : 'failed',
+      message: `@${username}: ${result ? 'ok' : 'failed'}`,
+    };
+  }
+
+  return { success: true, status: 'success', message: `@${username}: ok` };
+}
+
+/**
+ * Relaunch the shared browser before the next retry.
+ * @returns {Promise<void>}
+ */
+async function resetBrowser() {
+  try {
+    const { closeBrowser } = await import('../mcp/local-tools.js');
+    await closeBrowser();
+  } catch {
+    // Nothing to close, or a build without the browser singleton.
+  }
+}
+
+/**
+ * The newest progress file for this action, so `--resume` can be a flag.
+ *
+ * @param {string} stateRoot
+ * @param {string} action
+ * @returns {Promise<string|null>}
+ */
+async function findLatestProgress(stateRoot, action) {
+  let entries;
+  try {
+    entries = await fsp.readdir(stateRoot);
+  } catch {
+    return null;
+  }
+
+  let newest = null;
+  let newestMtime = -1;
+  for (const name of entries) {
+    if (!name.startsWith('bulk-progress-') || !name.endsWith('.json')) continue;
+    const full = path.join(stateRoot, name);
+    try {
+      const stat = await fsp.stat(full);
+      const data = JSON.parse(await fsp.readFile(full, 'utf-8'));
+      if (data.action && data.action !== action) continue;
+      if (stat.mtimeMs > newestMtime) {
+        newestMtime = stat.mtimeMs;
+        newest = full;
+      }
+    } catch {
+      // A half-written file from a run that died — skip it.
+    }
+  }
+  return newest;
 }
 
 /**
@@ -304,9 +470,9 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function loadBlacklist() {
+async function loadBlacklist(stateRoot = PROGRESS_DIR) {
   try {
-    const content = await fsp.readFile(BLACKLIST_FILE, 'utf-8');
+    const content = await fsp.readFile(path.join(stateRoot, 'blacklist.txt'), 'utf-8');
     return new Set(content.split('\n').map(l => l.trim().toLowerCase()).filter(Boolean));
   } catch {
     return new Set();

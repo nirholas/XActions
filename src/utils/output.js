@@ -123,7 +123,14 @@ export function flattenRecord(record) {
 
   const flat = {
     id: first(record.id, record.tweetId, record.userId),
-    username: first(record.username, author.username, record.screenName, record.handle),
+    username: first(
+      record.username,
+      author.username,
+      // The browser scrapers put the handle in `author` as a plain string.
+      typeof author === 'string' ? author : undefined,
+      record.screenName,
+      record.handle,
+    ),
     name: first(record.name, author.name, record.displayName),
     date: toIsoDate(first(record.timeParsed, record.timestamp, record.createdAt, record.date, record.joined)),
     likes: first(record.likes, metrics.likes, record.likesCount, record.favoriteCount),

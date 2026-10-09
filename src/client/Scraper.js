@@ -19,6 +19,8 @@ import * as dmsApi from './api/dms.js';
 import { ScraperError, AuthenticationError } from './errors.js';
 import { validateUsername, validateTweetId, validateTweetText, validateCount } from './validation.js';
 import { TokenManager } from './auth/TokenManager.js';
+import { getTransactionId, isTransactionIdEnabled } from '../scrapers/twitter/http/transactionId.js';
+import { withHttp2 } from '../utils/http2.js';
 
 /**
  * Search mode enum for Twitter search.
@@ -101,8 +103,33 @@ class SimpleHttp {
     this._fetchFn = options.fetch || globalThis.fetch;
     this._proxy = options.proxy || null;
     this._transform = options.transform || null;
+    this._transactionId = options.transactionId;
     this._cookies = null;
     this._authenticated = false;
+  }
+
+  /**
+   * Attach `x-client-transaction-id` to a request's headers, in place.
+   *
+   * x.com signs every GraphQL and internal REST call with it; a session that
+   * omits the header answers a bare 404 with an empty body on operations the
+   * pinned query table addresses, which reads as "endpoint is broken" rather
+   * than "request looked unsigned". Best-effort by design: a signing failure
+   * leaves the headers untouched and the request still goes out.
+   *
+   * @param {string} method
+   * @param {string} url
+   * @param {object} headers Mutated in place
+   * @private
+   */
+  async _sign(method, url, headers) {
+    if (headers['x-client-transaction-id']) return;
+    if (!isTransactionIdEnabled({ enabled: this._transactionId })) return;
+    const id = await getTransactionId(method, url, {
+      enabled: this._transactionId,
+      fetch: this._fetchFn,
+    });
+    if (id) headers['x-client-transaction-id'] = id;
   }
 
   /**
@@ -119,7 +146,10 @@ class SimpleHttp {
 
     let req = { method: 'GET', headers };
     if (this._transform) req = this._transform(req) || req;
+    req.headers = req.headers || headers;
 
+    await this._sign('GET', url, req.headers);
+    await withHttp2(req, this._fetchFn);
     const res = await this._fetchFn(url, req);
     if (!res.ok) {
       throw describeHttpFailure(res, url, this._authenticated);
@@ -151,7 +181,10 @@ class SimpleHttp {
 
     let req = { method: 'POST', headers, body: payload };
     if (this._transform) req = this._transform(req) || req;
+    req.headers = req.headers || headers;
 
+    await this._sign('POST', url, req.headers);
+    await withHttp2(req, this._fetchFn);
     const res = await this._fetchFn(url, req);
     if (!res.ok) {
       throw describeHttpFailure(res, url, this._authenticated);
@@ -187,6 +220,9 @@ export class Scraper {
    * @param {string} [options.proxy] - Proxy URL
    * @param {Function} [options.fetch] - Custom fetch function
    * @param {Function} [options.transform] - Request transform function
+   * @param {boolean} [options.transactionId] - Sign requests with an
+   *   `x-client-transaction-id` header, the way x.com's own web client does.
+   *   Defaults to on outside vitest; signing never blocks a request.
    */
   constructor(options = {}) {
     /** @private */
@@ -355,25 +391,25 @@ export class Scraper {
   /**
    * Get followers of a user.
    *
-   * @param {string} userId - Twitter user ID
+   * @param {string} userId - Twitter user ID, or a @handle to resolve to one
    * @param {number} [count=100] - Maximum number of followers to return
    * @returns {AsyncGenerator<import('./models/Profile.js').Profile>}
    */
   async *getFollowers(userId, count = 100) {
     const validCount = validateCount(count, 1, 10000);
-    yield* usersApi.getFollowers(this._http, userId, validCount);
+    yield* usersApi.getFollowers(this._http, await this._userIdOrResolve(userId), validCount);
   }
 
   /**
    * Get users that a user is following.
    *
-   * @param {string} userId - Twitter user ID
+   * @param {string} userId - Twitter user ID, or a @handle to resolve to one
    * @param {number} [count=100] - Maximum number of following to return
    * @returns {AsyncGenerator<import('./models/Profile.js').Profile>}
    */
   async *getFollowing(userId, count = 100) {
     const validCount = validateCount(count, 1, 10000);
-    yield* usersApi.getFollowing(this._http, userId, validCount);
+    yield* usersApi.getFollowing(this._http, await this._userIdOrResolve(userId), validCount);
   }
 
   /**
@@ -709,6 +745,24 @@ export class Scraper {
         'AUTH_REQUIRED',
       );
     }
+  }
+
+  /**
+   * Accept what a caller actually has: a numeric user ID passes straight
+   * through, anything else is treated as a handle and resolved. X's GraphQL
+   * follower queries parse `rest_id` as an int, so a handle answers HTTP 200
+   * with `strconv.ParseInt: parsing "NASA": invalid syntax` in `errors` and no
+   * data — which the CLI reports as "no followers", the one message that sends
+   * people looking for a rate limit that was never hit.
+   *
+   * @private
+   * @param {string} idOrUsername
+   * @returns {Promise<string>}
+   */
+  async _userIdOrResolve(idOrUsername) {
+    const value = String(idOrUsername ?? '').replace(/^@/, '').trim();
+    if (/^\d+$/.test(value)) return value;
+    return this._resolveUserId(validateUsername(value));
   }
 
   /**

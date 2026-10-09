@@ -131,6 +131,42 @@ async function createHttpScraper() {
 }
 
 /**
+ * Build the low-level HTTP client the thread scraper talks through.
+ *
+ * Same session sources as `createHttpScraper` — the cookie jar first, then the
+ * two tokens in config.json — but the thread parser lives in the http layer,
+ * which takes a cookie string rather than a Scraper. Puppeteer's `thread`
+ * command was replaced by this because x.com's page load never reached
+ * `networkidle2`, so every run died on a 30s navigation timeout; the
+ * `TweetDetail` query answers the same question in one request.
+ *
+ * @returns {Promise<import('../scrapers/twitter/http/client.js').TwitterHttpClient>}
+ */
+async function createTwitterHttpClient() {
+  const { TwitterHttpClient } = await import('../scrapers/twitter/http/client.js');
+
+  try {
+    const jar = JSON.parse(await fs.readFile(COOKIE_FILE, 'utf-8'));
+    const cookies = (Array.isArray(jar) ? jar : jar.cookies || [])
+      .filter((c) => c && c.name && c.value)
+      .map((c) => `${c.name}=${c.value}`)
+      .join('; ');
+    if (cookies.includes('auth_token=')) return new TwitterHttpClient({ cookies });
+  } catch {
+    // No cookie jar saved; fall through to the values `xactions login` stores.
+  }
+
+  const config = await loadConfig();
+  if (config.authToken) {
+    const parts = [`auth_token=${config.authToken}`];
+    if (config.csrfToken) parts.push(`ct0=${config.csrfToken}`);
+    return new TwitterHttpClient({ cookies: parts.join('; ') });
+  }
+
+  return new TwitterHttpClient();
+}
+
+/**
  * Fail loudly when a scrape came back empty.
  *
  * Silently reporting "0 results" as success is the single most confusing thing
@@ -660,7 +696,7 @@ program
       const scraper = await createHttpScraper();
       const { SearchMode } = await import('../client/index.js');
 
-      const mode =
+      const searchMode =
         {
           latest: SearchMode.Latest,
           top: SearchMode.Top,
@@ -669,7 +705,7 @@ program
         }[String(options.filter).toLowerCase()] || SearchMode.Latest;
 
       const tweets = [];
-      for await (const tweet of scraper.searchTweets(query, limit, mode)) {
+      for await (const tweet of scraper.searchTweets(query, limit, searchMode)) {
         tweets.push(tweet);
         spinner.text = `Searching for "${query}" (${tweets.length}/${limit})`;
       }
@@ -746,17 +782,17 @@ program
     const spinner = createSpinner('Scraping thread...', mode);
 
     try {
-      const browser = await scrapers.createBrowser();
-      const page = await scrapers.createPage(browser);
-
-      const config = await loadConfig();
-      if (config.authToken) {
-        await scrapers.loginWithCookie(page, config.authToken);
+      const tweetId = url.match(/status(?:es)?\/(\d{5,})/)?.[1] || (/^\d{5,}$/.test(url) ? url : null);
+      if (!tweetId) {
+        throw new Error(`Could not find a tweet id in "${url}". Pass a status URL or a numeric id.`);
       }
 
-      const thread = await scrapers.scrapeThread(page, url);
-      await browser.close();
+      const client = await createTwitterHttpClient();
+      const { scrapeFullThread } = await import('../scrapers/twitter/http/thread.js');
+      const result = await scrapeFullThread(client, tweetId);
+      const thread = [result.rootTweet, ...result.authorReplies].filter(Boolean);
 
+      assertNotEmpty(thread, 'tweets in thread', AUTH_HINT);
       spinner.succeed(`Scraped ${thread.length} tweets in thread`);
 
       if (mode.compact) {
@@ -770,12 +806,13 @@ program
         console.log('\n' + chalk.bold('🧵 Thread:\n'));
         thread.forEach((tweet, i) => {
           console.log(chalk.cyan(`${i + 1}.`) + ` ${tweet.text?.slice(0, 100)}...`);
-          console.log(chalk.gray(`   ${tweet.timestamp || ''}\n`));
+          console.log(chalk.gray(`   ${tweet.createdAt || tweet.timestamp || ''}\n`));
         });
       }
     } catch (error) {
       spinner.fail('Failed to scrape thread');
       console.error(chalk.red(error.message));
+      process.exitCode = 1;
     }
   });
 
@@ -791,17 +828,20 @@ program
     const spinner = createSpinner(`Scraping media from @${username}`, mode);
 
     try {
-      const browser = await scrapers.createBrowser();
-      const page = await scrapers.createPage(browser);
+      const client = await createTwitterHttpClient();
+      const { scrapeMedia } = await import('../scrapers/twitter/http/media.js');
+      const handle = username.replace(/^@/, '');
+      const raw = await scrapeMedia(client, handle, { limit });
+      const media = raw.map((m) => ({
+        type: m.mediaType,
+        url: m.url,
+        tweetUrl: m.tweetId ? `https://x.com/${handle}/status/${m.tweetId}` : undefined,
+        width: m.width || undefined,
+        height: m.height || undefined,
+        altText: m.altText || undefined,
+      }));
 
-      const config = await loadConfig();
-      if (config.authToken) {
-        await scrapers.loginWithCookie(page, config.authToken);
-      }
-
-      const media = await scrapers.scrapeMedia(page, username, { limit });
-      await browser.close();
-
+      assertNotEmpty(media, 'media items', AUTH_HINT);
       spinner.succeed(`Found ${media.length} media items`);
 
       if (mode.compact) {
@@ -817,6 +857,7 @@ program
     } catch (error) {
       spinner.fail('Failed to scrape media');
       console.error(chalk.red(error.message));
+      process.exitCode = 1;
     }
   });
 
@@ -2765,11 +2806,29 @@ program
         console.log(chalk.green(`✅ Scraped ${result.results?.length || 0} profiles`));
       } else {
         const result = await bulkExecute(usernames, action, {
-          delay: parseInt(options.delay), dryRun: options.dryRun, resume: options.resume,
+          delayMs: parseInt(options.delay, 10) || 2000,
+          dryRun: options.dryRun,
+          resume: options.resume,
         });
-        console.log(chalk.green(`✅ Bulk ${action}: ${result.succeeded} succeeded, ${result.failed} failed`));
+        if (result.error) {
+          console.error(chalk.red(`❌ ${result.error}`));
+          process.exitCode = 1;
+        } else {
+          const already = result.alreadyFollowing ? `, ${result.alreadyFollowing} already done` : '';
+          console.log(chalk.green(`✅ Bulk ${action}: ${result.succeeded} succeeded, ${result.failed} failed${already}`));
+        }
       }
-    } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+    } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); } finally {
+      // bulkExecute closes the browser it opened; this covers the paths that
+      // throw before it gets the chance, so the CLI never hangs on a live
+      // Puppeteer singleton after printing its summary.
+      if (action !== 'scrape' && !options.dryRun) {
+        try {
+          const { closeBrowser } = await import('../mcp/local-tools.js');
+          await closeBrowser();
+        } catch { /* nothing to close */ }
+      }
+    }
   });
 
 // ============================================================================
