@@ -6,7 +6,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { promises as fs, createWriteStream } from 'fs';
 import os from 'os';
 import path from 'path';
-import archiver from 'archiver';
+import { ZipArchive } from 'archiver';
 
 import {
   importTwitterArchive,
@@ -166,7 +166,7 @@ async function writeFixture(root, { withDms = true, withLists = true, withBlocks
 function zipFolder(folder, zipPath) {
   return new Promise((resolve, reject) => {
     const out = createWriteStream(zipPath);
-    const zip = archiver('zip', { zlib: { level: 6 } });
+    const zip = new ZipArchive({ zlib: { level: 6 } });
     out.on('close', resolve);
     zip.on('error', reject);
     zip.pipe(out);
