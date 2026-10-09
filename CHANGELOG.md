@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed
+
+- **[`scripts/twitter/scrape-profile-posts.js`](scripts/twitter/scrape-profile-posts.js) no longer loses posts on long timelines.** It scrolled by jumping to the bottom of the page, and X virtualizes the timeline, so posts between two extraction passes were never rendered and never scraped. It now scrolls one screen at a time. A rate-limited timeline that shows a "Retry" button was read as the end of the feed; the button is now clicked and the pass is not counted as a stall. The stall check counted kept posts, so a run of filtered-out posts ended the scrape early; it now counts posts seen. Emoji were missing from every scraped text because X renders them as images; they are read from the image alt text. Other accounts' posts that X renders on a profile (the parent of a reply, conversation context on `/with_replies`) were attributed to the profile being scraped; each post now carries `author`, and `filters.excludeOtherAuthors` (default `true`) drops them, retweets excepted. Long posts cut off behind "Show more" are flagged `truncated: true` instead of passing as complete. The CSV export gains `Author` and `Truncated` columns.
+
 ### Added
 
 - **[CONTRIBUTORS.md](CONTRIBUTORS.md) credits the people behind XActions**: code authors, and everyone whose bug report or investigation led to a fix, each with a link to their issue or PR. The README links it, and [CONTRIBUTING.md](CONTRIBUTING.md#credit) says how credit is given from now on.

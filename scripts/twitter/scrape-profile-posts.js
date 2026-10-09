@@ -8,8 +8,8 @@
  * @description Scrapes posts from any Twitter/X profile with filtering,
  *              multiple export formats, and analytics
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     2.1.0
- * @date        2026-07-19
+ * @version     2.2.0
+ * @date        2026-10-09
  * @repository  https://github.com/nirholas/XActions
  * 
  * ============================================================
@@ -110,6 +110,12 @@ var CONFIG = {
     // Exclude replies (tweets that are responses to others)
     // 💡 Set to true to only see top-level posts
     excludeReplies: false,
+
+    // Exclude posts written by OTHER accounts that X renders on this profile
+    // (the parent post above a reply, conversation context on /with_replies)
+    // 💡 Retweets are always kept: the original author differs by design
+    // 💡 Set to false to also keep the other side of conversations
+    excludeOtherAuthors: true,
     
     // ---- MEDIA FILTERS ----
     // Filter by media content
@@ -233,6 +239,7 @@ var CONFIG = {
   if (CONFIG.filters.minRetweets > 0) activeFilters.push(`Min ${CONFIG.filters.minRetweets} RTs`);
   if (CONFIG.filters.excludeRetweets) activeFilters.push('No retweets');
   if (CONFIG.filters.excludeReplies) activeFilters.push('No replies');
+  if (!CONFIG.filters.excludeOtherAuthors) activeFilters.push('Keeping other authors');
   if (CONFIG.filters.mediaFilter !== 'all') activeFilters.push(`Media: ${CONFIG.filters.mediaFilter}`);
   
   if (activeFilters.length > 0) {
@@ -336,6 +343,32 @@ var CONFIG = {
   }
   
   /**
+   * Read an element's text, keeping emoji. X renders emoji as <img alt="…">
+   * and innerText ignores alt text, so emoji vanish from the scraped text.
+   */
+  function textOf(el) {
+    if (!el) return '';
+    return Array.from(el.childNodes).map(n => {
+      if (n.nodeType === Node.TEXT_NODE) return n.data;
+      if (n.nodeType !== Node.ELEMENT_NODE) return '';
+      if (n.tagName === 'IMG') return n.getAttribute('alt') || '';
+      if (n.tagName === 'BR') return '\n';
+      return textOf(n);
+    }).join('');
+  }
+
+  /**
+   * Click X's "Retry" / "Try again" button when a rate-limited timeline
+   * stops loading. Without this the stall looks like the end of the timeline.
+   */
+  function clickRetryIfPresent() {
+    const btn = Array.from(document.querySelectorAll('[role="button"]'))
+      .find(b => /^(retry|try again)$/i.test((b.innerText || '').trim()));
+    if (btn) { btn.click(); return true; }
+    return false;
+  }
+
+  /**
    * Extract tweets from the current page DOM
    */
   function extractTweets() {
@@ -360,9 +393,13 @@ var CONFIG = {
         if (!tweetId || seenIds.has(tweetId)) return;
         seenIds.add(tweetId);
 
-        // Get the tweet text content
+        // Get the tweet text content (keeps emoji, see textOf)
         const textElement = tweet.querySelector('[data-testid="tweetText"]');
-        const text = textElement ? textElement.innerText : '';
+        const text = textOf(textElement);
+
+        // Long posts are cut off in the timeline behind a "Show more" link.
+        // Flag them so the caller knows `text` is not the full post.
+        const truncated = tweet.querySelector('[data-testid="tweet-text-show-more-link"]') !== null;
         
         // Helper function to extract engagement metrics
         const getMetric = (testId) => {
@@ -398,11 +435,23 @@ var CONFIG = {
         const isReply = tweet.querySelector('[data-testid="in-reply-to"]') !== null ||
           Array.from(tweet.querySelectorAll('div[dir]')).some(el =>
             el.innerText.startsWith('Replying to'));
+
+        // Author handle. X renders other accounts' posts on a profile too (the
+        // parent of a reply, conversation context on /with_replies); without
+        // this they were silently attributed to the profile being scraped.
+        const authorLink = tweet.querySelector('[data-testid="User-Name"] a[href^="/"]');
+        const author = authorLink ? authorLink.getAttribute('href').slice(1).split(/[/?]/)[0] : null;
+        if (CONFIG.filters.excludeOtherAuthors && author && !isRetweet &&
+            author.toLowerCase() !== profileName.toLowerCase()) {
+          return;
+        }
         
         const tweetData = {
           id: tweetId,
           url: tweetUrl,
+          author: author,
           text: text,
+          truncated: truncated,
           timestamp: timestamp,
           displayTime: displayTime,
           metrics: {
@@ -448,32 +497,41 @@ var CONFIG = {
   // ==========================================
   
   let scrollAttempts = 0;
-  let lastTweetCount = 0;
+  let lastSeenCount = 0;
   let noNewTweetsCount = 0;
   
   while (tweets.length < CONFIG.targetCount && scrollAttempts < CONFIG.maxScrollAttempts) {
     const newCount = extractTweets();
 
-    // Track stalls independently of logging so the end-of-timeline check
-    // still works when verbose is off
-    if (tweets.length !== lastTweetCount) {
+    // Track stalls on tweets *seen*, not tweets *kept*: with filters on, a
+    // run of filtered-out tweets must not be mistaken for the end of the feed
+    if (seenIds.size !== lastSeenCount) {
       if (CONFIG.verbose) {
-        console.log(`📊 Progress: ${tweets.length}/${CONFIG.targetCount} tweets (${newCount} new this scroll)`);
+        console.log(`📊 Progress: ${tweets.length}/${CONFIG.targetCount} tweets (${newCount} new this scroll, ${seenIds.size} seen)`);
       }
-      lastTweetCount = tweets.length;
+      lastSeenCount = seenIds.size;
       noNewTweetsCount = 0;
     } else {
-      noNewTweetsCount++;
-      if (noNewTweetsCount >= 5) {
-        console.log('⚠️ No new tweets found after 5 scroll attempts. May have reached the end.');
-        break;
+      // A rate-limited timeline shows a Retry button instead of more posts;
+      // click it and do not count that pass as a stall
+      if (clickRetryIfPresent()) {
+        if (CONFIG.verbose) console.log('🔁 Timeline stalled with a Retry button, clicked it...');
+        await new Promise(r => setTimeout(r, CONFIG.scrollDelay * 2));
+      } else {
+        noNewTweetsCount++;
+        if (noNewTweetsCount >= 5) {
+          console.log('⚠️ No new tweets found after 5 scroll attempts. May have reached the end.');
+          break;
+        }
       }
     }
     
     if (tweets.length >= CONFIG.targetCount) break;
     
-    // Scroll down to load more tweets
-    window.scrollTo(0, document.body.scrollHeight);
+    // Scroll one screen at a time. X virtualizes the timeline, so jumping
+    // straight to the bottom lands past posts that were never rendered
+    // between two extraction passes, and those posts are lost.
+    window.scrollBy(0, window.innerHeight * 0.8);
     await new Promise(r => setTimeout(r, CONFIG.scrollDelay));
     
     scrollAttempts++;
@@ -664,10 +722,12 @@ var CONFIG = {
    * Convert tweets to CSV format
    */
   function toCSV() {
-    const headers = ['Date', 'Text', 'Likes', 'Retweets', 'Replies', 'Views', 'Has Image', 'Has Video', 'Is Retweet', 'Is Reply', 'Hashtags', 'URL'];
+    const headers = ['Date', 'Author', 'Text', 'Truncated', 'Likes', 'Retweets', 'Replies', 'Views', 'Has Image', 'Has Video', 'Is Retweet', 'Is Reply', 'Hashtags', 'URL'];
     const rows = finalTweets.map(t => [
       t.displayTime,
+      t.author || '',
       `"${t.text.replace(/"/g, '""').replace(/\n/g, ' ')}"`,
+      t.truncated,
       parseEngagement(t.metrics.likes),
       parseEngagement(t.metrics.retweets),
       parseEngagement(t.metrics.replies),
