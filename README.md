@@ -1562,3 +1562,26 @@ Full documentation site: **https://nirholas.github.io/XActions/**
 
 - [Getting started](docs/getting-started.md) covers install and first run.
 - [Examples](docs/examples.md) has copy-paste snippets.
+
+<!-- three.ws:growth -->
+## Support the project
+
+If XActions saves you time, **[star it on GitHub](https://github.com/nirholas/XActions)**. Stars are how other developers and AI agents find the repositories worth trusting, and they cost you one click.
+
+Know someone who would use it? [Post on X](https://twitter.com/intent/tweet?text=XActions%3A%20%E2%9A%A1%20The%20Complete%20X%2FTwitter%20Automation%20Toolkit%3A%20Scrapers%2C%20MCP%20server%20for%20AI%20agents%20(Claude%2FGPT)%2C%20CLI&url=https%3A%2F%2Fgithub.com%2Fnirholas%2FXActions) · [Share on Bluesky](https://bsky.app/intent/compose?text=XActions%3A%20%E2%9A%A1%20The%20Complete%20X%2FTwitter%20Automation%20Toolkit%3A%20Scrapers%2C%20MCP%20server%20for%20AI%20agents%20(Claude%2FGPT)%2C%20CLI%20https%3A%2F%2Fgithub.com%2Fnirholas%2FXActions) · [Share on LinkedIn](https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fgithub.com%2Fnirholas%2FXActions) · [Submit to Hacker News](https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fgithub.com%2Fnirholas%2FXActions&t=XActions%3A%20%E2%9A%A1%20The%20Complete%20X%2FTwitter%20Automation%20Toolkit%3A%20Scrapers%2C%20MCP%20server%20for%20AI%20agents%20(Claude%2FGPT)%2C%20CLI) · [Share on Reddit](https://www.reddit.com/submit?url=https%3A%2F%2Fgithub.com%2Fnirholas%2FXActions&title=XActions%3A%20%E2%9A%A1%20The%20Complete%20X%2FTwitter%20Automation%20Toolkit%3A%20Scrapers%2C%20MCP%20server%20for%20AI%20agents%20(Claude%2FGPT)%2C%20CLI)
+
+## Built for AI agents too
+
+Coding agents and LLM tooling can read this repo directly: [AGENTS.md](./AGENTS.md), [llms.txt](./llms.txt), [llms-full.txt](./llms-full.txt). Point an agent at `https://github.com/nirholas/XActions` and it has the context it needs.
+
+## More from the same author
+
+- [All repositories by nirholas](https://github.com/nirholas/nirholas#readme): the full catalog, grouped by topic
+- [three.ws](https://three.ws): the platform for 3D AI agents with Solana wallets, a skill marketplace and x402 payments
+- Questions or ideas: [open an issue](https://github.com/nirholas/XActions/issues) or [start a discussion](https://github.com/nirholas/XActions/discussions)
+
+## Contributors
+
+[![Contributors](https://contrib.rocks/image?repo=nirholas/XActions)](https://github.com/nirholas/XActions/graphs/contributors)
+
+<!-- /three.ws:growth -->
