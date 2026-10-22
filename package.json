@@ -133,7 +133,7 @@
     "yauzl": "^3.4.0"
   },
   "optionalDependencies": {
-    "@atproto/api": "^0.23.1",
+    "@atproto/api": "^0.28.0",
     "@x402/core": "^2.8.0",
     "@x402/evm": "^2.8.0",
     "@x402/express": "^2.8.0",
