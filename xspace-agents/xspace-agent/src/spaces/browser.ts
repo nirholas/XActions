@@ -1,17 +1,21 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2026 nirholas (https://github.com/nirholas/xspace-agent) [§82]
 
-import puppeteer from "puppeteer-extra";
+import vanillaPuppeteer from "puppeteer";
+import { addExtra } from "puppeteer-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
 import fs from "node:fs";
 import path from "node:path";
-import type { Browser, Page } from "puppeteer";
+import type { Browser, CookieData, Page } from "puppeteer";
 import { config } from "../config.js";
 import { createChildLogger } from "../utils/logger.js";
 import type { BrowserInstance } from "../types.js";
 
 const log = createChildLogger("browser");
 
+// Wrap the puppeteer this package installs, rather than letting puppeteer-extra
+// require() it: puppeteer 25 is ESM-only.
+const puppeteer = addExtra(vanillaPuppeteer);
 puppeteer.use(StealthPlugin());
 
 const AUDIO_FILE = "/tmp/xspace-agent-silent.wav";
@@ -52,7 +56,7 @@ export async function launch(): Promise<BrowserInstance> {
   const audioFile = ensureSilentWav();
 
   const browser = await puppeteer.launch({
-    headless: config.headless ? "new" : false,
+    headless: config.headless,
     args: [
       "--no-sandbox",
       "--disable-setuid-sandbox",
@@ -73,20 +77,13 @@ export async function launch(): Promise<BrowserInstance> {
     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
   );
 
-  // Restore cookies
+  // Restore cookies. Puppeteer 25 deprecates the page-level cookie API, so
+  // cookies are set on the browser, which shares them with every page.
   const cookiePath = getCookiePath();
   if (fs.existsSync(cookiePath)) {
     try {
-      const cookies = JSON.parse(fs.readFileSync(cookiePath, "utf8")) as Array<{
-        name: string;
-        value: string;
-        domain?: string;
-        path?: string;
-        secure?: boolean;
-        httpOnly?: boolean;
-        sameSite?: "Strict" | "Lax" | "None";
-      }>;
-      await page.setCookie(...cookies);
+      const cookies = JSON.parse(fs.readFileSync(cookiePath, "utf8")) as CookieData[];
+      await browser.setCookie(...cookies);
       log.info("Restored saved cookies from %s", cookiePath);
     } catch (e) {
       log.warn("Failed to restore cookies: %s", (e as Error).message);
@@ -98,7 +95,7 @@ export async function launch(): Promise<BrowserInstance> {
 
 export async function saveCookies(page: Page): Promise<void> {
   const cookiePath = getCookiePath();
-  const cookies = await page.cookies();
+  const cookies = await page.browser().cookies();
   fs.writeFileSync(cookiePath, JSON.stringify(cookies, null, 2));
   log.info("Cookies saved to %s", cookiePath);
 }

@@ -137,6 +137,11 @@ process.on("SIGINT", () => void shutdown("SIGINT"));
 
 // ── Start ───────────────────────────────────────────────────────────────────
 
+server.on("error", (error: NodeJS.ErrnoException) => {
+  log.error("Could not listen on port %d: %s", config.port, error.message);
+  process.exit(1);
+});
+
 server.listen(config.port, () => {
   logger.info(
     {

@@ -60,7 +60,7 @@ async function findButton(
       );
     }, text);
 
-    const el = btn.asElement();
+    const el = btn.asElement() as ElementHandle<Element> | null;
     if (el) return el;
   }
   return null;
@@ -129,7 +129,7 @@ export async function joinSpace(
         }) ?? null
       );
     });
-    const forcedEl = forced.asElement();
+    const forcedEl = forced.asElement() as ElementHandle<Element> | null;
     if (forcedEl) {
       await forceClick(page, forcedEl);
       log.info("Force-clicked fallback join button");
@@ -203,7 +203,7 @@ export async function unmute(
       );
     });
 
-    const el = handle.asElement();
+    const el = handle.asElement() as ElementHandle<Element> | null;
     if (el) {
       unmuteBtn = el;
       break;

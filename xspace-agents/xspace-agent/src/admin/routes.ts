@@ -3,12 +3,24 @@
 
 import type { Request, Response, Router } from "express";
 import express from "express";
+import { createHash, timingSafeEqual } from "node:crypto";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { config } from "../config.js";
 import type { SpaceState, LLMProvider } from "../types.js";
+import { createChildLogger } from "../utils/logger.js";
 
+const log = createChildLogger("admin:routes");
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+type AgentParams = { agentId: string };
+
+/** Compares digests so neither the key's contents nor its length leak through timing. */
+function isAdminKey(candidate: unknown, expected: string): boolean {
+  if (typeof candidate !== "string") return false;
+  const digest = (value: string) => createHash("sha256").update(value).digest();
+  return timingSafeEqual(digest(candidate), digest(expected));
+}
 
 export function createAdminRoutes(
   spaceState: SpaceState,
@@ -19,11 +31,11 @@ export function createAdminRoutes(
   const router = express.Router();
 
   // Admin API key middleware
-  router.use("/api/*", (req: Request, res: Response, next) => {
+  router.use("/api", (req: Request, res: Response, next) => {
     if (config.adminApiKey) {
       const key =
         req.headers["x-api-key"] ?? req.query["api_key"];
-      if (key !== config.adminApiKey) {
+      if (!isAdminKey(key, config.adminApiKey)) {
         res.status(401).json({ error: "Unauthorized" });
         return;
       }
@@ -57,8 +69,8 @@ export function createAdminRoutes(
   });
 
   // Session endpoint (for WebRTC mode)
-  router.get("/api/session/:agentId", async (req: Request, res: Response) => {
-    const agentId = parseInt(req.params["agentId"] ?? "", 10);
+  router.get("/api/session/:agentId", async (req: Request<AgentParams>, res: Response) => {
+    const agentId = parseInt(req.params.agentId, 10);
     if (agentId !== 0 && agentId !== 1) {
       res.status(400).json({ error: "Invalid agent ID" });
       return;
@@ -71,18 +83,20 @@ export function createAdminRoutes(
       const data = await provider.createSession!(agentId, prompts, voices);
       res.json(data);
     } catch (error) {
+      log.error("Session for agent %d failed: %s", agentId, (error as Error).message);
       res.status(500).json({ error: "Failed to create session" });
     }
   });
 
   // Update agent prompts
-  router.put("/api/prompts/:agentId", express.json(), (req: Request, res: Response) => {
-    const agentId = parseInt(req.params["agentId"] ?? "", 10);
+  router.put("/api/prompts/:agentId", express.json(), (req: Request<AgentParams>, res: Response) => {
+    const agentId = parseInt(req.params.agentId, 10);
     if (agentId !== 0 && agentId !== 1) {
       res.status(400).json({ error: "Invalid agent ID" });
       return;
     }
-    const { prompt } = req.body as { prompt?: string };
+    // Express 5 leaves req.body undefined when the request has no body.
+    const { prompt } = (req.body ?? {}) as { prompt?: unknown };
     if (!prompt || typeof prompt !== "string") {
       res.status(400).json({ error: "prompt is required" });
       return;

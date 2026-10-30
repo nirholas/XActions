@@ -18,6 +18,14 @@ describe('deepmerge (vendored, GHSA-gcqx-w48m-w2h4)', () => {
 		expect(tracked.trim()).toMatch(/vendor\/deepmerge\/index\.js$/);
 	});
 
+	it('xspace-agents keeps a byte-identical copy for its own Docker context', () => {
+		const { readdirSync, readFileSync } = require('node:fs');
+		const { join } = require('node:path');
+		const copies = [join(import.meta.dirname, '..', 'vendor', 'deepmerge'), join(import.meta.dirname, '..', 'xspace-agents', 'vendor', 'deepmerge')];
+		const [root, xspace] = copies.map((dir) => Object.fromEntries(readdirSync(dir).sort().map((name) => [name, readFileSync(join(dir, name), 'utf8')])));
+		expect(xspace).toEqual(root);
+	});
+
 	it.each(consumers)('%s resolves the vendored copy', (name) => {
 		const resolved = fromConsumer(name).resolve('deepmerge');
 		expect(fromConsumer(name)(resolved)).toBe(deepmerge);

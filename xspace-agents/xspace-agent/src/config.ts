@@ -22,8 +22,8 @@ const configSchema = z.object({
   xSpacesEnabled: z
     .string()
     .transform((v) => v === "true")
-    .default("false"),
-  xSpaceUrl: z.string().url().optional().or(z.literal("")),
+    .default(false),
+  xSpaceUrl: z.url().optional(),
   cookiePath: z.string().default(".cookies.json"),
 
   // AI Provider
@@ -39,7 +39,7 @@ const configSchema = z.object({
   openaiRealtimeModel: z
     .string()
     .default("gpt-4o-realtime-preview-2024-12-17"),
-  claudeModel: z.string().default("claude-sonnet-4-20250514"),
+  claudeModel: z.string().default("claude-sonnet-5-5"),
   groqModel: z.string().default("llama-3.3-70b-versatile"),
   maxTokens: z.coerce.number().int().min(1).max(4096).default(300),
 
@@ -58,7 +58,7 @@ const configSchema = z.object({
   headless: z
     .string()
     .transform((v) => v !== "false")
-    .default("true"),
+    .default(true),
 
   // Reconnection
   reconnectMaxRetries: z.coerce.number().int().min(0).default(5),
@@ -73,9 +73,7 @@ const configSchema = z.object({
 
 export type Config = z.infer<typeof configSchema>;
 
-function loadConfig(): Config {
-  const env = process.env;
-
+export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
   const raw = {
     port: env["PORT"],
     adminApiKey: env["ADMIN_API_KEY"],

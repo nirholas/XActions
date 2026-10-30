@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2026 nirholas (https://github.com/nirholas/xspace-agent) [§69]
 
-import type { Page } from "puppeteer";
+import type { CookieData, Page } from "puppeteer";
 import type { EventEmitter } from "node:events";
 import { config } from "../config.js";
 import { saveCookies } from "./browser.js";
@@ -36,15 +36,7 @@ export async function login(page: Page, emitter: EventEmitter): Promise<boolean>
     log.info("Logging in via X_AUTH_TOKEN cookie");
     emitter.emit("status", "logging-in");
 
-    const cookies: Array<{
-      name: string;
-      value: string;
-      domain: string;
-      path: string;
-      secure: boolean;
-      httpOnly: boolean;
-      sameSite: "Strict" | "Lax" | "None";
-    }> = [
+    const cookies: CookieData[] = [
       {
         name: "auth_token",
         value: config.xAuthToken,
@@ -66,7 +58,7 @@ export async function login(page: Page, emitter: EventEmitter): Promise<boolean>
         sameSite: "Lax",
       });
     }
-    await page.setCookie(...cookies);
+    await page.browser().setCookie(...cookies);
 
     const ok = await isLoggedIn(page);
     if (!ok) {

@@ -8,6 +8,16 @@ import { createChildLogger } from "../utils/logger.js";
 
 const log = createChildLogger("audio-bridge");
 
+// Functions the page and Node expose to each other on `window`: the first two
+// through page.exposeFunction, the third from the injected hooks.
+declare global {
+  interface Window {
+    __onSpaceAudio?: (pcmBase64: string, sampleRate: number) => void;
+    __audioLog?: (msg: string) => void;
+    __injectAudioChunk?: (pcmFloat32Base64: string) => void;
+  }
+}
+
 // Check for ffmpeg at startup
 let hasFFmpeg = false;
 try {
@@ -71,7 +81,7 @@ export async function injectAudioHooks(
         });
       });
 
-      (window as unknown as Record<string, unknown>).__audioLog?.(
+      window.__audioLog?.(
         "Controlled audio stream created (48kHz)",
       );
       return controlledStream;
@@ -81,7 +91,7 @@ export async function injectAudioHooks(
       constraints?: MediaStreamConstraints,
     ) => {
       if (constraints?.audio) {
-        (window as unknown as Record<string, unknown>).__audioLog?.(
+        window.__audioLog?.(
           "getUserMedia intercepted — returning controlled stream",
         );
         const stream = getControlledStream();
@@ -99,7 +109,7 @@ export async function injectAudioHooks(
     };
 
     // Function to inject audio chunks from Node
-    (window as unknown as Record<string, (b64: string) => void>).__injectAudioChunk = (
+    window.__injectAudioChunk = (
       pcmFloat32Base64: string,
     ) => {
       if (!audioCtx || !destNode) getControlledStream();
@@ -118,7 +128,7 @@ export async function injectAudioHooks(
         source.connect(destNode!);
         source.start();
       } catch (e) {
-        (window as unknown as Record<string, unknown>).__audioLog?.(
+        window.__audioLog?.(
           "Audio injection error: " + (e as Error).message,
         );
       }
@@ -132,12 +142,12 @@ export async function injectAudioHooks(
       ...args: ConstructorParameters<typeof RTCPeerConnection>
     ): RTCPeerConnection {
       const pc = new _OrigRTC(...args);
-      (window as unknown as Record<string, unknown>).__audioLog?.(
+      window.__audioLog?.(
         "RTCPeerConnection created",
       );
 
       const handleTrack = (event: RTCTrackEvent): void => {
-        (window as unknown as Record<string, unknown>).__audioLog?.(
+        window.__audioLog?.(
           "track event: kind=" + event.track.kind + " id=" + event.track.id,
         );
         if (event.track.kind === "audio") {
@@ -173,7 +183,7 @@ export async function injectAudioHooks(
       try {
         const captureCtx = new AudioContext({ sampleRate: 16000 });
         captureCtx.resume().then(() => {
-          (window as unknown as Record<string, unknown>).__audioLog?.(
+          window.__audioLog?.(
             "Capture AudioContext state: " + captureCtx.state,
           );
         });
@@ -204,16 +214,11 @@ export async function injectAudioHooks(
               Array.from(bytes.subarray(i, i + chunk)),
             );
           }
-          (
-            window as unknown as Record<
-              string,
-              (b64: string, sr: number) => void
-            >
-          ).__onSpaceAudio(btoa(binary), 16000);
+          window.__onSpaceAudio?.(btoa(binary), 16000);
           chunkCount++;
 
           if (chunkCount % 50 === 0) {
-            (window as unknown as Record<string, unknown>).__audioLog?.(
+            window.__audioLog?.(
               `Captured ${chunkCount} audio chunks from Space`,
             );
           }
@@ -221,11 +226,11 @@ export async function injectAudioHooks(
 
         source.connect(processor);
         processor.connect(captureCtx.destination);
-        (window as unknown as Record<string, unknown>).__audioLog?.(
+        window.__audioLog?.(
           "Audio capture pipeline started (16kHz)",
         );
       } catch (e) {
-        (window as unknown as Record<string, unknown>).__audioLog?.(
+        window.__audioLog?.(
           "Audio capture error: " + (e as Error).message,
         );
       }
@@ -269,9 +274,7 @@ export async function injectAudio(
     const base64 = chunk.toString("base64");
 
     await page.evaluate((b64: string) => {
-      const inject = (window as unknown as Record<string, (b64: string) => void>)
-        .__injectAudioChunk;
-      if (inject) inject(b64);
+      window.__injectAudioChunk?.(b64);
     }, base64);
 
     // Pace playback — wait roughly the chunk duration
