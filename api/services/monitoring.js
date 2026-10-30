@@ -1,8 +1,6 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../../src/utils/prisma.js';
 import * as automation from './browserAutomation.js';
-
-const prisma = new PrismaClient();
 
 /**
  * Create a snapshot of account state

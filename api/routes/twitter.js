@@ -2,13 +2,12 @@
 import express from 'express';
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../../src/utils/prisma.js';
 import { authMiddleware } from '../middleware/auth.js';
 import crypto from 'crypto';
 import { requireJwtSecret } from '../utils/secrets.js';
 
 const router = express.Router();
-const prisma = new PrismaClient();
 
 // Twitter OAuth 2.0 configuration
 const TWITTER_CLIENT_ID = process.env.TWITTER_CLIENT_ID;

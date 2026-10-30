@@ -1,9 +1,7 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 import jwt from 'jsonwebtoken';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../../src/utils/prisma.js';
 import { tierMeetsRequirement, getTier, isWithinLimit } from '../config/subscription-tiers.js';
-
-const prisma = new PrismaClient();
 
 const authMiddleware = async (req, res, next) => {
   try {

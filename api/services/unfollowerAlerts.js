@@ -14,9 +14,7 @@
  * @author nichxbt
  */
 
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { prisma } from '../../src/utils/prisma.js';
 
 /**
  * Check scan results for notable events and send alerts

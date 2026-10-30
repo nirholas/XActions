@@ -16,7 +16,7 @@
  */
 
 import express from 'express';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../../src/utils/prisma.js';
 import { authMiddleware } from '../middleware/auth.js';
 import { queueJob } from '../services/jobQueue.js';
 import {
@@ -34,7 +34,6 @@ import {
 } from '../services/unfollowerAlerts.js';
 
 const router = express.Router();
-const prisma = new PrismaClient();
 
 // All routes require authentication
 router.use(authMiddleware);

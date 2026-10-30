@@ -1547,16 +1547,11 @@ export async function analyticsViaOAuth(api, { period = '7d', now = new Date() }
   return analyticsResult({ period, ms, now, profile, posts, timelineEnded, engine: 'oauth' });
 }
 
-/** Prisma, created once, for the OAuth fallback's user lookup. */
-let prismaClient = null;
-
 /** An X API v2 client for a dashboard user connected by OAuth. */
 async function oauthApiFor(userId) {
-  if (!prismaClient) {
-    const { PrismaClient } = await import('@prisma/client');
-    prismaClient = new PrismaClient();
-  }
-  const user = await prismaClient.user.findUnique({ where: { id: userId } });
+  // Loaded on first use, so processors that never take the OAuth fallback never load Prisma.
+  const { prisma } = await import('../../../src/utils/prisma.js');
+  const user = await prisma.user.findUnique({ where: { id: userId } });
   if (!user?.twitterAccessToken) {
     throw Object.assign(
       new Error('No X account is connected. Connect X, or save a session with POST /api/session/save-session.'),

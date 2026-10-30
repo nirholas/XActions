@@ -11,4 +11,7 @@ Database schema and migrations for the API (PostgreSQL through Prisma).
     npm run db:seed
     npm run db:studio    # browse data
 
-Requires `DATABASE_URL` in `.env`.
+Requires `DATABASE_URL` in the environment or `.env`. The CLI reads it through
+[`../prisma.config.js`](../prisma.config.js); application code uses the shared
+client in [`../src/utils/prisma.js`](../src/utils/prisma.js) instead of constructing
+`PrismaClient`, because Prisma 7 needs the PostgreSQL driver adapter set up there.

@@ -52,7 +52,7 @@ npm install
 # 4. Generate Prisma client + push schema
 echo "🗄️  Setting up database schema..."
 npx prisma generate
-npx prisma db push --skip-generate
+npx prisma db push
 
 echo ""
 echo "✅ Setup complete!"

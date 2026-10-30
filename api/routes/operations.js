@@ -1,6 +1,6 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 import express from 'express';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../../src/utils/prisma.js';
 import { authMiddleware } from '../middleware/auth.js';
 import { getTwitterClient } from './twitter.js';
 import { queueJob } from '../services/jobQueue.js';
@@ -9,7 +9,6 @@ import { queueJob } from '../services/jobQueue.js';
 // All credit checks have been removed - unlimited operations for all users
 
 const router = express.Router();
-const prisma = new PrismaClient();
 
 // All routes require authentication
 router.use(authMiddleware);

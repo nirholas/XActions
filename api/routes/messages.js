@@ -1,12 +1,11 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 import express from 'express';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../../src/utils/prisma.js';
 import { authMiddleware } from '../middleware/auth.js';
 import { queueJob } from '../services/jobQueue.js';
 import { clientForUser, listDmGroups, XSessionError } from '../services/xSession.js';
 
 const router = express.Router();
-const prisma = new PrismaClient();
 
 router.use(authMiddleware);
 

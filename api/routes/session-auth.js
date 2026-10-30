@@ -2,12 +2,11 @@
 import express from 'express';
 import crypto from 'crypto';
 import { body, validationResult } from 'express-validator';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../../src/utils/prisma.js';
 import { authenticate } from '../middleware/auth.js';
 import browserAutomation from '../services/browserAutomation.js';
 
 const router = express.Router();
-const prisma = new PrismaClient();
 
 // Encryption helpers for session cookies.
 // COOKIE_ENCRYPTION_KEY is the dedicated key; SESSION_SECRET / JWT_SECRET remain

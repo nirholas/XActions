@@ -369,8 +369,7 @@ export async function getStore() {
 
   if (process.env.DATABASE_URL) {
     try {
-      const { PrismaClient } = await import('@prisma/client');
-      const prisma = new PrismaClient();
+      const { prisma } = await import('../utils/prisma.js');
       _store = new PrismaStore(prisma);
       return _store;
     } catch {

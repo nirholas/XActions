@@ -10,10 +10,8 @@
  * @author nichxbt
  */
 
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../../src/utils/prisma.js';
 import { scrapeFollowers } from './browserAutomation.js';
-
-const prisma = new PrismaClient();
 
 /**
  * Run a full follower scan for a user

@@ -1,12 +1,10 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 import Queue from 'bull';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../../src/utils/prisma.js';
 import crypto from 'node:crypto';
 import { SESSION_KEYS, createJobContext, isPermanentFailure, sessionHashOf } from './processors/context.js';
 import { assertRunnable, loadProcessors } from './processors/registry.js';
 import { assertPublicUrl } from '../utils/publicUrl.js';
-
-const prisma = new PrismaClient();
 
 // In-memory job cancellation tracking
 const cancelledJobs = new Set();

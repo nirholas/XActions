@@ -15,13 +15,12 @@
  */
 
 import express from 'express';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../../../src/utils/prisma.js';
 import { authMiddleware } from '../../middleware/auth.js';
 import { TIERS } from '../../config/subscription-tiers.js';
 import { createCheckoutSession, createPortalSession, getSubscriptionStatus } from '../../services/stripeService.js';
 
 const router = express.Router();
-const prisma = new PrismaClient();
 
 /** Tiers a caller can buy through Checkout. */
 const PURCHASABLE = Object.keys(TIERS).filter((key) => key !== 'free' && key !== 'enterprise');

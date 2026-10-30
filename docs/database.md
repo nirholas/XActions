@@ -5,7 +5,11 @@ and the browser console scripts all run with no database at all. This page is
 for the self-hosted API server and dashboard, which persist users, jobs,
 billing, and follower history in PostgreSQL via [Prisma](https://www.prisma.io/).
 
-Schema: [`prisma/schema.prisma`](../prisma/schema.prisma).
+Schema: [`prisma/schema.prisma`](../prisma/schema.prisma). The Prisma CLI reads
+`DATABASE_URL` (and `.env`) through [`prisma.config.js`](../prisma.config.js), and
+the server connects through the PostgreSQL driver adapter in
+[`src/utils/prisma.js`](../src/utils/prisma.js), the one client every module shares.
+A `?schema=` parameter in the URL selects the PostgreSQL schema.
 
 ---
 
@@ -118,8 +122,7 @@ inside them. Parse on read.
 ## Common queries
 
 ```js
-import { PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient();
+import { prisma } from './src/utils/prisma.js';
 
 // Who unfollowed a user in the last week
 const lost = await prisma.followerChange.findMany({

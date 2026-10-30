@@ -18,11 +18,9 @@
  * @author nichxbt
  */
 
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../../src/utils/prisma.js';
 import { runFollowerScan } from './followerScanner.js';
 import { checkAndAlert, getDueSchedules, markScheduleExecuted } from './unfollowerAlerts.js';
-
-const prisma = new PrismaClient();
 
 let schedulerInterval = null;
 const POLL_INTERVAL = 60 * 1000; // Check every 60 seconds

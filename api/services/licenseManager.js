@@ -7,9 +7,7 @@
 
 import crypto from 'crypto';
 import { requireJwtSecret } from '../utils/secrets.js';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { prisma } from '../../src/utils/prisma.js';
 
 // Tier codes for key generation
 const TIER_CODES = {

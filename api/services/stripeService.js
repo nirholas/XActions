@@ -7,10 +7,8 @@
  */
 
 import Stripe from 'stripe';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../../src/utils/prisma.js';
 import { TIERS } from '../config/subscription-tiers.js';
-
-const prisma = new PrismaClient();
 
 function getStripe() {
   if (!process.env.STRIPE_SECRET_KEY) {

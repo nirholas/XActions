@@ -35,6 +35,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   - The AI API's `'*'` 404 route crashed the server at startup under Express 5's path syntax. It is now a plain fallthrough handler.
   - A request with no body (or a content type no parser reads) left `req.body` undefined, so about 300 routes answered 500. The contract test now walks every route both with and without a body.
   - A port that is already taken was reported as a successful start. A2A and MCP HTTP startup now fail with the listen error instead.
+- **Prisma 7.** The client now connects through the PostgreSQL driver adapter (`@prisma/adapter-pg`), and the CLI reads `DATABASE_URL` from [`prisma.config.js`](prisma.config.js) instead of `schema.prisma`. Prisma 7 refuses a `PrismaClient` built without an adapter, and 35 modules each built their own, so every module now uses the one shared client in [`src/utils/prisma.js`](src/utils/prisma.js), and the process holds one connection pool instead of one per module. It reads `DATABASE_URL` on first connect, so `.env` still works however early a module loads. A missing URL fails the first query with a message that names it, and `?schema=` in the URL still selects the schema. `setup.sh` and the CI fallback no longer pass `--skip-generate`, which Prisma 7 removed. [`tests/db/prisma-client.test.js`](tests/db/prisma-client.test.js) fails if a module builds its own client, and checks writes, reads and `?schema=` against the real PostgreSQL in `DATABASE_URL`.
 
 ### Security
 
