@@ -112,7 +112,7 @@
     "cors": "^2.8.5",
     "dotenv": "^18.0.4",
     "exceljs": "^4.4.0",
-    "express": "^4.21.2",
+    "express": "^5.3.0",
     "express-rate-limit": "^8.7.0",
     "express-validator": "^7.0.1",
     "helmet": "^7.1.0",
