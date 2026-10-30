@@ -48,6 +48,12 @@ const authLimiter = rateLimit({
 // Body parsing
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
+// Express 5's parsers leave req.body undefined when none of them ran (no body,
+// or another content type); handlers read fields off it, as they could on 4.
+app.use((req, res, next) => {
+  req.body ??= {};
+  next();
+});
 
 // Health check
 app.get('/api/health', (req, res) => {

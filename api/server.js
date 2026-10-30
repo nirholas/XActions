@@ -256,6 +256,12 @@ export function createApp({ rateLimiting = true } = {}) {
     express.json({ limit: '10kb' })(req, res, next);
   });
   app.use(express.urlencoded({ extended: true, limit: '10kb' }));
+  // Express 5's parsers leave req.body undefined when none of them ran (no body,
+  // or another content type); handlers read fields off it, as they could on 4.
+  app.use((req, res, next) => {
+    req.body ??= {};
+    next();
+  });
 
   // AI Agent Detection - adds req.isAI and req.agentType
   app.use(aiDetectorMiddleware);

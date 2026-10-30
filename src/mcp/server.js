@@ -4906,7 +4906,9 @@ async function startHttpTransport({ port, host, serverOverrides = {} } = {}) {
   const listenHost = host || process.env.XACTIONS_MCP_HOST || '127.0.0.1';
 
   return await new Promise((resolve, reject) => {
-    const httpServer = app.listen(listenPort, listenHost, () => {
+    // Express 5 hands a listen failure (EADDRINUSE, EACCES) to this callback.
+    const httpServer = app.listen(listenPort, listenHost, (err) => {
+      if (err) return reject(err);
       const actual = httpServer.address();
       const shownPort = typeof actual === 'object' && actual ? actual.port : listenPort;
       console.error(`✅ Server running on Streamable HTTP: http://${listenHost}:${shownPort}/mcp`);

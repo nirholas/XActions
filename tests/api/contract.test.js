@@ -116,6 +116,14 @@ describe('health and discovery', () => {
     expect(res.status).toBe(404);
     expect(res.body).toEqual(UNMOUNTED_BODY);
   });
+
+  it('answers the AI API 404 for any method on a path under /api/ai that nothing mounts', async () => {
+    for (const method of ['get', 'post', 'delete']) {
+      const res = await request(app)[method]('/api/ai/no/such/endpoint');
+      expect(res.status).toBe(404);
+      expect(res.body).toMatchObject({ error: 'ENDPOINT_NOT_FOUND', message: `Endpoint ${method.toUpperCase()} /no/such/endpoint not found` });
+    }
+  });
 });
 
 describe('every OpenAPI path is mounted and refuses unauthenticated calls cleanly', () => {
@@ -123,7 +131,12 @@ describe('every OpenAPI path is mounted and refuses unauthenticated calls cleanl
     expect(specRoutes.length).toBeGreaterThan(300);
   });
 
-  it('walks every documented method without a 5xx or an unmounted 404', async () => {
+  // A client that posts with no body (no content type, so no body parser
+  // runs) must get the same validation answer as one that posts `{}`.
+  it.each([
+    ['an empty JSON body', (req) => req.send({})],
+    ['no body at all', (req) => req],
+  ])('walks every documented method with %s without a 5xx or an unmounted 404', async (_, withBody) => {
     const unmounted = [];
     const crashed = [];
 
@@ -139,7 +152,7 @@ describe('every OpenAPI path is mounted and refuses unauthenticated calls cleanl
       const label = `${method.toUpperCase()} ${specPath}`;
       let res;
       try {
-        res = await request(app)[method](url).send({}).timeout(PER_REQUEST_MS);
+        res = await withBody(request(app)[method](url)).timeout(PER_REQUEST_MS);
       } catch (error) {
         if (error.timeout) return;
         throw error;

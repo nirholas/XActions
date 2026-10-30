@@ -128,6 +128,12 @@ export function createA2AServer(options = {}) {
 
   // ------- Core middleware -------
   app.use(express.json({ limit: '1mb' }));
+  // Express 5's parsers leave req.body undefined when none of them ran (no body,
+  // or another content type); handlers read fields off it, as they could on 4.
+  app.use((req, res, next) => {
+    req.body ??= {};
+    next();
+  });
 
   // CORS
   app.use((req, res, next) => {
@@ -348,8 +354,10 @@ export function createA2AServer(options = {}) {
 
   function start(customPort) {
     const p = customPort || port;
-    return new Promise((resolve) => {
-      server = app.listen(p, () => {
+    return new Promise((resolve, reject) => {
+      // Express 5 hands a listen failure (EADDRINUSE, EACCES) to this callback.
+      server = app.listen(p, (err) => {
+        if (err) return reject(err);
         console.log(`⚡ XActions A2A Agent listening on port ${p}`);
         console.log(`   Agent Card: http://localhost:${p}/.well-known/agent.json`);
         console.log(`   Health:     http://localhost:${p}/a2a/health`);

@@ -543,7 +543,7 @@ router.use('/bookmarks', bookmarksRoutes);
 router.use('/media', mediaRoutes);
 
 // Catch-all for undefined routes
-router.all('*', (req, res) => {
+router.use((req, res) => {
   res.status(404).json({
     error: 'ENDPOINT_NOT_FOUND',
     message: `Endpoint ${req.method} ${req.path} not found`,

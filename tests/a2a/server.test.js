@@ -182,3 +182,11 @@ describe('CORS', () => {
     expect(res.headers.get('access-control-allow-origin')).toBe('*');
   });
 });
+
+describe('start()', () => {
+  it('rejects when the port is already taken instead of reporting it is listening', async () => {
+    const other = createA2AServer({ enableAuth: false, enableRateLimit: false, enableLogging: false, mode: 'local' });
+    await expect(other.start(PORT)).rejects.toMatchObject({ code: 'EADDRINUSE' });
+    other.shutdown();
+  });
+});
