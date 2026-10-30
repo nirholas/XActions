@@ -20,7 +20,7 @@ import { ScraperError, AuthenticationError } from './errors.js';
 import { validateUsername, validateTweetId, validateTweetText, validateCount } from './validation.js';
 import { TokenManager } from './auth/TokenManager.js';
 import { getTransactionId, isTransactionIdEnabled } from '../scrapers/twitter/http/transactionId.js';
-import { withHttp2 } from '../utils/http2.js';
+import { withHttp2, fetchWithDispatcher } from '../utils/http2.js';
 
 /**
  * Search mode enum for Twitter search.
@@ -150,7 +150,7 @@ class SimpleHttp {
 
     await this._sign('GET', url, req.headers);
     await withHttp2(req, this._fetchFn);
-    const res = await this._fetchFn(url, req);
+    const res = await fetchWithDispatcher(this._fetchFn, url, req);
     if (!res.ok) {
       throw describeHttpFailure(res, url, this._authenticated);
     }
@@ -185,7 +185,7 @@ class SimpleHttp {
 
     await this._sign('POST', url, req.headers);
     await withHttp2(req, this._fetchFn);
-    const res = await this._fetchFn(url, req);
+    const res = await fetchWithDispatcher(this._fetchFn, url, req);
     if (!res.ok) {
       throw describeHttpFailure(res, url, this._authenticated);
     }

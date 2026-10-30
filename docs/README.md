@@ -76,7 +76,7 @@ XActions provides **5 interfaces** to the same underlying toolkit:
 
 ## Requirements
 
-Node.js 22.12 or newer. CI runs the full Vitest suite on Node 22 and 24.
+Node.js 22.19 or newer. CI runs the full Vitest suite on Node 22 and 24.
 
 ## Version
 

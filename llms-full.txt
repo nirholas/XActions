@@ -18,7 +18,7 @@ Three runtime contexts. Code that is correct in one is broken in another:
 
 ## Tech Stack
 
-- **Runtime**: Node.js >= 22.12 (CI runs the suite on 22 and 24), ESM (`"type": "module"`)
+- **Runtime**: Node.js >= 22.19 (CI runs the suite on 22 and 24), ESM (`"type": "module"`)
 - **Backend**: Express.js, Helmet, CORS, rate limiting, Morgan
 - **Database**: PostgreSQL via Prisma ORM (`prisma/schema.prisma`)
 - **Job Queue**: Bull + Redis
@@ -137,7 +137,7 @@ xactions/portability            -> ./src/portability/index.js
 - Language: JavaScript (ESM)
 - License: Apache-2.0
 - Author: nirholas (@nichxbt)
-- Node.js >= 22.12 required
+- Node.js >= 22.19 required
 
 ## Contributing
 

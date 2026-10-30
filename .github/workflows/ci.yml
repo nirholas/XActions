@@ -57,7 +57,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # engines.node says >=22.12, so prove it on the floor and on what
+        # engines.node says >=22.19, so prove it on the floor and on what
         # people actually run. A test that only ever sees 22 is a claim,
         # not a guarantee.
         node-version: [22, 24]

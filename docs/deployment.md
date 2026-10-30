@@ -9,7 +9,7 @@ XActions has two deployable components:
 | Component | What | Needs |
 |---|---|---|
 | **Static Frontend** | `dashboard/` — HTML/CSS/JS pages | Any static host (CDN) |
-| **API Backend** | `api/server.js` — Express + Puppeteer + WebSocket | Node.js 22.12+, Chromium, Postgres, Redis |
+| **API Backend** | `api/server.js` — Express + Puppeteer + WebSocket | Node.js 22.19+, Chromium, Postgres, Redis |
 
 You can deploy them together (Docker, Fly.io, Railway) or split them across services (Cloudflare Workers for the site and edge API + Railway for the optional reads/analytics backend). X account actions run in the [browser extension](https://xactions.app/extension), not on any backend.
 

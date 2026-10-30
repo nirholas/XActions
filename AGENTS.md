@@ -369,10 +369,10 @@ The three runtime contexts, because code that is correct in one is broken in ano
 | Context | Runs in | Entry point | Hard constraint |
 |---|---|---|---|
 | Browser scripts | the DevTools console on x.com | an IIFE you paste | no Node APIs; DOM and `sessionStorage` only |
-| Library, CLI, MCP | your machine | `src/cli/index.js`, `src/mcp/server.js` | Node >= 22.12, ESM throughout |
+| Library, CLI, MCP | your machine | `src/cli/index.js`, `src/mcp/server.js` | Node >= 22.19, ESM throughout |
 | API server | an Express process | `api/server.js` | PostgreSQL via Prisma, Redis for the queue |
 
-Stack: Node >= 22.12 ESM (CI runs 22 and 24), Express with Helmet and rate limiting, Prisma, Bull on Redis,
+Stack: Node >= 22.19 ESM (CI runs 22 and 24), Express with Helmet and rate limiting, Prisma, Bull on Redis,
 Puppeteer with the stealth plugin, Vitest, `@modelcontextprotocol/sdk`, Socket.io.
 
 Deeper map: [`docs/`](docs/), starting with

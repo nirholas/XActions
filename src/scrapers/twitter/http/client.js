@@ -33,7 +33,7 @@ import {
   isStaleQueryIdError,
 } from './queryIds.js';
 import { getTransactionId, isTransactionIdEnabled } from './transactionId.js';
-import { withHttp2 } from '../../../utils/http2.js';
+import { withHttp2, fetchWithDispatcher, isPlatformFetch } from '../../../utils/http2.js';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -180,9 +180,10 @@ export class TwitterHttpClient {
 
   /**
    * Build the fetch init, choosing the dispatcher for it: the proxy agent when
-   * `options.proxy` is set, otherwise the shared HTTP/2 agent. Node's global
-   * fetch honours the `dispatcher` request option, so no fetch wrapper is
-   * needed. A custom `options.fetch` is left alone: it owns its own transport.
+   * `options.proxy` is set, otherwise the shared HTTP/2 agent. `request()`
+   * sends it with `fetchWithDispatcher`, which pairs the dispatcher with
+   * undici's own fetch. A custom `options.fetch` is left alone: it owns its
+   * own transport.
    *
    * HTTP/2 matters here for the same reason it matters in a browser: X's edge
    * answers some operations with a Cloudflare challenge when they arrive over
@@ -192,7 +193,7 @@ export class TwitterHttpClient {
    */
   async _requestInit(method, headers, body) {
     const init = { method, headers, body };
-    if (this._fetch !== globalThis.fetch) return init;
+    if (!isPlatformFetch(this._fetch)) return init;
     if (this._proxy) {
       if (!this._proxyDispatcher) {
         let undici;
@@ -307,7 +308,7 @@ export class TwitterHttpClient {
         // second, and x.com's web client never replays one. A caller that
         // supplied its own header keeps it.
         if (!callerSigned) await this._signRequest(method, url, headers);
-        const res = await this._fetch(url, await this._requestInit(method, headers, body));
+        const res = await fetchWithDispatcher(this._fetch, url, await this._requestInit(method, headers, body));
         const elapsed = Date.now() - startTime;
         if (this._debug) {
           console.log(`[TwitterHttpClient] ${method} ${url} → ${res.status} (${elapsed}ms)`);

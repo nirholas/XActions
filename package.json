@@ -129,7 +129,7 @@
     "redis": "^4.6.11",
     "socket.io": "^4.7.5",
     "stripe": "^22.6.2",
-    "undici": "^7.30.0",
+    "undici": "^8.12.3",
     "yauzl": "^3.4.0"
   },
   "optionalDependencies": {
@@ -209,7 +209,7 @@
     "x-algorithm"
   ],
   "engines": {
-    "node": ">=22.12"
+    "node": ">=22.19"
   },
   "files": [
     "src",

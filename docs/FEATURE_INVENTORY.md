@@ -2,7 +2,7 @@
 
 > Every surface this repository ships, with the file that implements each one.
 > Package: `xactions` on npm | Author: nichxbt ([@nichxbt](https://x.com/nichxbt))
-> Apache-2.0 | Node.js >= 22.12 (CI runs 22 and 24) | Vitest suite runs offline
+> Apache-2.0 | Node.js >= 22.19 (CI runs 22 and 24) | Vitest suite runs offline
 
 The counted tables below (MCP tools, CLI commands, skills) are transcribed from
 the code that defines them: `src/mcp/server.js`, `src/cli/help-groups.js` and

@@ -39,4 +39,4 @@ XActions automates X/Twitter without official API access. It ships 152 MCP tools
 
 ## Tech Stack
 
-- Node.js >= 22.12 (CI runs 22 and 24), ESM modules, Express.js, Puppeteer, Prisma (PostgreSQL), Bull (Redis), Vitest, Socket.io, Stripe
+- Node.js >= 22.19 (CI runs 22 and 24), ESM modules, Express.js, Puppeteer, Prisma (PostgreSQL), Bull (Redis), Vitest, Socket.io, Stripe
