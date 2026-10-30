@@ -5,6 +5,7 @@
 
 const { DEFAULT_RATE_LIMIT_WINDOW_MS, RATE_LIMIT_TIERS } = require("../constants")
 const rateLimit = require("express-rate-limit")
+const { ipKeyGenerator } = rateLimit
 
 const RATE_LIMIT_MESSAGE = parseInt(process.env.RATE_LIMIT_MESSAGE, 10) || 20
 const RATE_LIMIT_SESSION = parseInt(process.env.RATE_LIMIT_SESSION, 10) || 5
@@ -15,11 +16,15 @@ const RATE_LIMIT_GENERAL = parseInt(process.env.RATE_LIMIT_GENERAL, 10) || 100
 /**
  * Generates a rate-limit key from the request.
  * Priority: JWT sub > API key hash > IP address.
+ *
+ * IPv6 clients are keyed by their /56 subnet (ipKeyGenerator) rather than the raw
+ * address: a single host usually controls a whole /64 or larger, so keying on the full
+ * address lets it dodge the limit by rotating addresses.
  */
 function keyGenerator(req) {
   if (req.user?.sub) return `user:${req.user.sub}`
   if (req.user?.apiKeyHash) return `key:${req.user.apiKeyHash}`
-  return `ip:${req.ip}`
+  return `ip:${ipKeyGenerator(req.ip)}`
 }
 
 // ── Redis store setup (optional) ─────────────────────────────────────────────
@@ -72,9 +77,9 @@ function dynamicMax(tier, defaultMax) {
 
 const rateLimitResponse = (req, res) => {
   const resetTime = req.rateLimit?.resetTime
-  const retryAfter = resetTime
-    ? Math.ceil((resetTime instanceof Date ? resetTime.getTime() : resetTime) / 1000)
-    : 60
+  // Retry-After is a delay in seconds (RFC 9110), not an absolute timestamp
+  const resetMs = resetTime instanceof Date ? resetTime.getTime() : resetTime
+  const retryAfter = resetMs ? Math.max(1, Math.ceil((resetMs - Date.now()) / 1000)) : 60
 
   res.set("Retry-After", String(retryAfter))
   res.status(429).json({

@@ -108,8 +108,9 @@ describe("Registry API", () => {
         .post("/api/agents/registry/validate")
         .send({ agents: [] })
       expect(res.status).toBe(400)
-      expect(res.body.data.valid).toBe(false)
-      expect(res.body.data.errors.length).toBeGreaterThan(0)
+      expect(res.body.ok).toBe(false)
+      expect(res.body.error.code).toBe("VALIDATION_ERROR")
+      expect(res.body.error.details.length).toBeGreaterThan(0)
     })
 
     it("should detect duplicate IDs in validation", async () => {
@@ -122,7 +123,7 @@ describe("Registry API", () => {
           ]
         })
       expect(res.status).toBe(400)
-      expect(res.body.data.errors.some(e => e.message.includes("Duplicate"))).toBe(true)
+      expect(res.body.error.details.some(e => e.message.includes("Duplicate"))).toBe(true)
     })
 
     it("should reject empty body", async () => {

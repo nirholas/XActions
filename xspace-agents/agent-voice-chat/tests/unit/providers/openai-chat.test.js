@@ -3,12 +3,7 @@
 
 import { vi, describe, it, expect, beforeEach, afterEach } from "vitest"
 
-// Hoisted mock — must be set up before provider is imported
-vi.mock("axios", () => ({
-  default: { post: vi.fn() }
-}))
-
-import axios from "axios"
+import { createRequire } from "module"
 import OpenAIChatProvider from "../../../providers/openai-chat.js"
 import openaiStreamChunks from "../../fixtures/provider-responses/openai-stream-chunks.json" assert { type: "json" }
 import openaiError429 from "../../fixtures/provider-responses/openai-error-429.json" assert { type: "json" }
@@ -33,9 +28,17 @@ function makeFixtureStream(chunks) {
   return makeSSEStream(...chunks)
 }
 
+// The providers load axios with CommonJS require(), which vi.mock() does not intercept
+// (an axios mock here would silently leave the real client in place and hit the
+// network). Load the same CommonJS instance the providers use and stub its post().
+const axios = createRequire(import.meta.url)("axios")
+
 describe("OpenAI Chat Provider", () => {
   beforeEach(() => {
-    vi.clearAllMocks()
+    vi.restoreAllMocks()
+    vi.spyOn(axios, "post").mockImplementation(() => {
+      throw new Error("axios.post called without a test stub")
+    })
     vi.stubEnv("OPENAI_API_KEY", "test-openai-key")
     vi.stubEnv("OPENAI_MODEL", "")
   })

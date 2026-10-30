@@ -149,7 +149,11 @@ class MemoryStore {
     const memoriesPath = this._memoriesPath()
     if (!fs.existsSync(memoriesPath)) return null
 
-    const version = Date.now()
+    // Versions are millisecond timestamps used as file names. Two backups taken in the
+    // same millisecond must not share a name (the second would silently overwrite the
+    // first), so keep versions strictly increasing.
+    const latest = this.listVersions()[0] || 0
+    const version = Math.max(Date.now(), latest + 1)
     const backupPath = path.join(this.storagePath, `memories.${version}.json`)
     try {
       fs.copyFileSync(memoriesPath, backupPath)

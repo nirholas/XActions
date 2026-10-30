@@ -8,7 +8,9 @@
  * res.fail(code, message, status?, details?) -> { ok: false, error: { code, message, details? } }
  */
 function responseHelpers(req, res, next) {
-  res.success = (data, statusCode = 200) => {
+  // A status set earlier in the chain (res.status(201).success(...)) is kept unless
+  // an explicit statusCode is passed.
+  res.success = (data, statusCode = res.statusCode || 200) => {
     res.status(statusCode).json({ ok: true, data })
   }
 

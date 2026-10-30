@@ -16,6 +16,9 @@ function createMockKnowledgeBase() {
   return {
     directory: "/tmp/mock-knowledge",
 
+    // The real KnowledgeBase exposes its document map; routes read it directly
+    documents,
+
     getStats: vi.fn(() => ({
       documents: Object.keys(documents).length,
       chunks: chunks.length,
@@ -115,7 +118,7 @@ describe("Knowledge API routes", () => {
   describe("POST /api/knowledge/ingest", () => {
     it("ingests a specific document by filename", async () => {
       // Mock fs.existsSync to return true for the mocked knowledge dir
-      const fs = await import("fs")
+      const fs = (await import("fs")).default
       const existsSyncSpy = vi.spyOn(fs, "existsSync").mockReturnValue(true)
 
       const res = await request(app)
@@ -130,7 +133,7 @@ describe("Knowledge API routes", () => {
     })
 
     it("returns 404 when the file does not exist", async () => {
-      const fs = await import("fs")
+      const fs = (await import("fs")).default
       const existsSyncSpy = vi.spyOn(fs, "existsSync").mockReturnValue(false)
 
       const res = await request(app)
@@ -152,7 +155,7 @@ describe("Knowledge API routes", () => {
     })
 
     it("prevents path traversal by using only the basename of the filename", async () => {
-      const fs = await import("fs")
+      const fs = (await import("fs")).default
       const existsSyncSpy = vi.spyOn(fs, "existsSync").mockReturnValue(false)
 
       const res = await request(app)
@@ -170,7 +173,7 @@ describe("Knowledge API routes", () => {
     })
 
     it("handles ingestion errors gracefully", async () => {
-      const fs = await import("fs")
+      const fs = (await import("fs")).default
       const existsSyncSpy = vi.spyOn(fs, "existsSync").mockReturnValue(true)
       knowledgeBase.ingestDocument.mockRejectedValue(new Error("Embedding service down"))
 
@@ -295,7 +298,7 @@ describe("Knowledge API routes", () => {
 
   describe("GET /api/knowledge/files", () => {
     it("returns empty array when knowledge directory does not exist", async () => {
-      const fs = await import("fs")
+      const fs = (await import("fs")).default
       const existsSyncSpy = vi.spyOn(fs, "existsSync").mockReturnValue(false)
 
       const res = await request(app).get("/api/knowledge/files")
@@ -306,7 +309,7 @@ describe("Knowledge API routes", () => {
     })
 
     it("lists files in the knowledge directory with indexed status", async () => {
-      const fs = await import("fs")
+      const fs = (await import("fs")).default
       knowledgeBase._addDocument("indexed.md")
 
       vi.spyOn(fs, "existsSync").mockReturnValue(true)

@@ -262,3 +262,49 @@ describe("createSocketRateLimiter", () => {
     })
   })
 })
+
+// ─── keyGenerator / rateLimitResponse ──────────────────────────────────────────
+
+describe("keyGenerator", () => {
+  const { keyGenerator } = require("../../../src/server/middleware/rate-limit.js")
+
+  it("prefers the JWT subject, then the API key hash", () => {
+    expect(keyGenerator({ user: { sub: "u1", apiKeyHash: "h" }, ip: "1.2.3.4" })).toBe("user:u1")
+    expect(keyGenerator({ user: { apiKeyHash: "h" }, ip: "1.2.3.4" })).toBe("key:h")
+  })
+
+  it("keys an IPv4 client by its address", () => {
+    expect(keyGenerator({ ip: "203.0.113.7" })).toBe("ip:203.0.113.7")
+  })
+
+  it("gives every address in one IPv6 subnet the same key, so rotating addresses cannot dodge the limit", () => {
+    const a = keyGenerator({ ip: "2001:db8:abcd:12::1" })
+    const b = keyGenerator({ ip: "2001:db8:abcd:12:ffff:ffff:ffff:ffff" })
+    const other = keyGenerator({ ip: "2001:db8:1111:12::1" })
+    expect(a).toBe(b)
+    expect(a).not.toBe(other)
+  })
+})
+
+describe("rateLimitResponse", () => {
+  const { rateLimitResponse } = require("../../../src/server/middleware/rate-limit.js")
+
+  function run(resetTime) {
+    const res = { set: vi.fn(), status: vi.fn().mockReturnThis(), json: vi.fn() }
+    rateLimitResponse({ rateLimit: { resetTime } }, res)
+    return res
+  }
+
+  it("answers 429 with Retry-After as a delay in seconds, not an epoch timestamp", () => {
+    const res = run(new Date(Date.now() + 30_000))
+    const header = Number(res.set.mock.calls[0][1])
+    expect(res.status).toHaveBeenCalledWith(429)
+    expect(header).toBeGreaterThan(0)
+    expect(header).toBeLessThanOrEqual(30)
+    expect(res.json.mock.calls[0][0].error.retryAfter).toBe(header)
+  })
+
+  it("falls back to 60 seconds when the reset time is unknown", () => {
+    expect(run(undefined).set).toHaveBeenCalledWith("Retry-After", "60")
+  })
+})

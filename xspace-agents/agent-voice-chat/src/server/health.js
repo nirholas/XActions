@@ -164,14 +164,17 @@ function getHealthResponse() {
 
 /**
  * Returns per-provider health with circuit breaker state (cached data).
+ * @param {{ llm?: object, stt?: object, tts?: object }} [breakers] Breakers to report on.
+ *   Defaults to the ones registered with setCircuitBreakers(), so callers that own
+ *   their breakers (the system routes) do not depend on module-global state.
  */
-function getProviderHealth() {
+function getProviderHealth(breakers = circuitBreakers) {
   const roles = ["llm", "stt", "tts"]
   const result = {}
 
   for (const role of roles) {
     const cached = providerStatus[role]
-    const breaker = circuitBreakers?.[role]
+    const breaker = breakers?.[role]
     const breakerState = breaker ? breaker.getState() : null
 
     result[role] = {
@@ -195,10 +198,10 @@ function getProviderHealth() {
  * Checks that at least the LLM provider is not in error/unconfigured state
  * and that no circuit breaker is OPEN.
  */
-function isReady() {
+function isReady(breakers = circuitBreakers) {
   const llmStatus = providerStatus.llm.status
   if (llmStatus === "error" || llmStatus === "unconfigured") return false
-  if (circuitBreakers?.llm?.state === "OPEN") return false
+  if (breakers?.llm?.state === "OPEN") return false
   return true
 }
 

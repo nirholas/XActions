@@ -138,8 +138,11 @@ function combineSentencesIntoChunks(sentences, chunkSize, overlap) {
 }
 
 function chunkByParagraphs(text, chunkSize, overlap) {
-  const paragraphs = text.split(/\n\s*\n/).filter(p => p.trim())
   const wordsPerChunk = Math.floor(chunkSize * 0.75)
+  // A single paragraph larger than one chunk is windowed so no chunk balloons past the limit
+  const paragraphs = text.split(/\n\s*\n/).filter(p => p.trim()).flatMap(p =>
+    p.trim().split(/\s+/).length > wordsPerChunk ? chunkByWordWindows(p, chunkSize, overlap) : [p]
+  )
   const overlapWords = Math.floor(overlap * 0.75)
   const chunks = []
   let currentGroup = []
@@ -165,6 +168,45 @@ function chunkByParagraphs(text, chunkSize, overlap) {
   }
 
   return chunks.length > 0 ? chunks : [text]
+}
+
+/**
+ * Split text into fixed-size, overlapping word windows. Last resort for text with no
+ * paragraph or sentence structure to split on.
+ */
+function chunkByWordWindows(text, chunkSize, overlap) {
+  const words = text.split(/\s+/).filter(Boolean)
+  const wordsPerChunk = Math.max(1, Math.floor(chunkSize * 0.75))
+  // The window must always advance, even if the overlap is configured >= the chunk size.
+  const overlapWords = Math.min(Math.floor(overlap * 0.75), wordsPerChunk - 1)
+  const chunks = []
+
+  let start = 0
+  while (start < words.length) {
+    const end = Math.min(start + wordsPerChunk, words.length)
+    chunks.push(words.slice(start, end).join(" "))
+    if (end >= words.length) break
+    start = end - overlapWords
+  }
+
+  return chunks.length > 0 ? chunks : [text]
+}
+
+/**
+ * Break a block that is bigger than one chunk (for example a markdown section with no
+ * sub-headers) into chunk-sized pieces: by paragraph first, then by word window for any
+ * paragraph that is still too large.
+ */
+function splitOversizedBlock(text, chunkSize, overlap) {
+  const wordsPerChunk = Math.floor(chunkSize * 0.75)
+  const wordCount = text.split(/\s+/).filter(Boolean).length
+  if (wordCount <= wordsPerChunk) return [text]
+
+  return chunkByParagraphs(text, chunkSize, overlap).flatMap(piece =>
+    piece.split(/\s+/).filter(Boolean).length > wordsPerChunk
+      ? chunkByWordWindows(piece, chunkSize, overlap)
+      : [piece]
+  )
 }
 
 function chunkMarkdown(text, chunkSize, overlap) {
@@ -197,12 +239,16 @@ function chunkMarkdown(text, chunkSize, overlap) {
     sections.push(currentSection.join("\n"))
   }
 
-  // Now chunk sections, keeping small sections together
+  // Now chunk sections, keeping small sections together. A section larger than one
+  // chunk (a long run of prose under a single header) is split first, otherwise it
+  // would be embedded as one oversized chunk.
   const chunks = []
   let group = []
   let groupWordCount = 0
 
-  for (const section of sections) {
+  const units = sections.flatMap(section => splitOversizedBlock(section, chunkSize, overlap))
+
+  for (const section of units) {
     const sectionWords = section.split(/\s+/).length
     if (groupWordCount + sectionWords > wordsPerChunk && group.length > 0) {
       chunks.push(group.join("\n\n"))
@@ -366,21 +412,8 @@ class KnowledgeBase {
       return combineSentencesIntoChunks(sentences, this.chunkSize, this.chunkOverlap)
     }
 
-    // Fallback: word-based chunking (original behavior)
-    const words = text.split(/\s+/)
-    const wordsPerChunk = Math.floor(this.chunkSize * 0.75)
-    const overlapWords = Math.floor(this.chunkOverlap * 0.75)
-    const chunks = []
-
-    let start = 0
-    while (start < words.length) {
-      const end = Math.min(start + wordsPerChunk, words.length)
-      chunks.push(words.slice(start, end).join(" "))
-      if (end >= words.length) break
-      start = end - overlapWords
-    }
-
-    return chunks
+    // Fallback: word-based chunking
+    return chunkByWordWindows(text, this.chunkSize, this.chunkOverlap)
   }
 
   /**

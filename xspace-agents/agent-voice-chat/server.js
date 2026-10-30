@@ -316,8 +316,13 @@ app.get("/session/:agentId", apiKeyAuth, sessionLimiter, async (req, res) => {
   }
 })
 
-// ===== GLOBAL ERROR HANDLER =====
+// ===== NOT FOUND (unmatched /api routes answer JSON; everything else keeps Express's default 404) =====
 const { AppError, ERROR_CODES } = require("./src/server/errors")
+const { notFound } = require("./src/server/middleware/not-found")
+
+app.use("/api", notFound)
+
+// ===== GLOBAL ERROR HANDLER =====
 
 app.use((err, req, res, _next) => {
   if (err instanceof AppError) {
@@ -990,6 +995,13 @@ function redactKey(val) {
   if (val.length <= 8) return "***"
   return val.slice(0, 4) + "..." + val.slice(-4)
 }
+
+server.once("error", (err) => {
+  logger.fatal({ err, port: PORT, code: err.code }, err.code === "EADDRINUSE"
+    ? `Port ${PORT} is already in use. Set PORT to a free port.`
+    : "HTTP server failed to start")
+  process.exit(1)
+})
 
 server.listen(PORT, () => {
   logAuthStatus()

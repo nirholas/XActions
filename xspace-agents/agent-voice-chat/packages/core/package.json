@@ -30,7 +30,7 @@
   "devDependencies": {
     "typescript": "^5.4.0",
     "vite": "^6.4.4",
-    "vite-plugin-dts": "^3.9.0"
+    "vite-plugin-dts": "^5.1.2"
   },
   "sideEffects": false,
   "license": "UNLICENSED",

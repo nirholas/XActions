@@ -51,6 +51,7 @@ describe("KnowledgeBase", () => {
       // Write a fake index
       fs.mkdirSync(TEST_INDEX_DIR, { recursive: true })
       const indexData = {
+        version: 2,
         chunks: [{ id: "c1", docName: "test.md", chunkIndex: 0, content: "hello", embedding: [1, 2] }],
         documents: { "test.md": { name: "test.md", chunksCount: 1, indexedAt: "2026-01-01" } }
       }
@@ -96,6 +97,38 @@ describe("KnowledgeBase", () => {
     it("handles empty text", () => {
       const chunks = kb._chunkText("")
       expect(chunks.length).toBe(1)
+    })
+  })
+
+  describe("oversized blocks", () => {
+    it("splits a long markdown section under a single header", () => {
+      const body = Array.from({ length: 200 }, (_, i) => `word${i}`).join(" ")
+      const chunks = kb._chunkText(`# Title\n\n${body}`, ".md")
+      // A chunk may carry the overlap seed from the previous one on top of the window
+      const maxWords = Math.floor(50 * 0.75) + Math.floor(10 * 0.75)
+      expect(chunks.length).toBeGreaterThan(1)
+      chunks.forEach(c => expect(c.split(/\s+/).length).toBeLessThanOrEqual(maxWords))
+    })
+
+    it("splits a single oversized paragraph in a multi-paragraph text file", () => {
+      const long = Array.from({ length: 200 }, (_, i) => `w${i}`).join(" ")
+      const chunks = kb._chunkText(`short intro paragraph\n\n${long}`, ".txt")
+      const maxWords = Math.floor(50 * 0.75) + Math.floor(10 * 0.75)
+      expect(chunks.length).toBeGreaterThan(1)
+      chunks.forEach(c => expect(c.split(/\s+/).length).toBeLessThanOrEqual(maxWords))
+    })
+
+    it("always advances when the overlap is not smaller than the chunk size", () => {
+      const tight = new KnowledgeBase({
+        directory: TEST_KB_DIR,
+        indexPath: path.join(TEST_INDEX_DIR, "tight.json"),
+        chunkSize: 4,
+        chunkOverlap: 40
+      })
+      const text = Array.from({ length: 30 }, (_, i) => `t${i}`).join(" ")
+      const chunks = tight._chunkText(text, ".txt")
+      expect(chunks.length).toBeGreaterThan(1)
+      expect(chunks.length).toBeLessThan(100)
     })
   })
 
@@ -192,11 +225,21 @@ describe("KnowledgeBase", () => {
       expect(results).toEqual([])
     })
 
-    it("returns empty array when chunks have no embeddings", async () => {
+    it("falls back to keyword matching when chunks have no embeddings", async () => {
       kb.chunks = [
         { id: "c1", docName: "doc.md", chunkIndex: 0, content: "hello", embedding: [] }
       ]
       const results = await kb.search("hello")
+      expect(results).toHaveLength(1)
+      expect(results[0].docName).toBe("doc.md")
+      expect(results[0].content).toBe("hello")
+    })
+
+    it("returns empty array when chunks have no embeddings and nothing matches by keyword", async () => {
+      kb.chunks = [
+        { id: "c1", docName: "doc.md", chunkIndex: 0, content: "hello", embedding: [] }
+      ]
+      const results = await kb.search("zebra")
       expect(results).toEqual([])
     })
   })

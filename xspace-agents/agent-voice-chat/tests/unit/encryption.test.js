@@ -200,44 +200,64 @@ describe("createFileStore", () => {
 })
 
 describe("Performance", () => {
+  // The claim under test is the overhead ENCRYPTION adds, so each operation is compared
+  // against the same operation on a PlainFileStore (JSON serialisation and disk I/O are
+  // common to both). Medians over many iterations keep one slow disk flush or GC pause
+  // from deciding the result.
+  function median(values) {
+    const sorted = [...values].sort((a, b) => a - b)
+    return sorted[Math.floor(sorted.length / 2)]
+  }
+
+  function timeEach(iterations, fn) {
+    const samples = []
+    for (let i = 0; i < iterations; i++) {
+      const start = performance.now()
+      fn()
+      samples.push(performance.now() - start)
+    }
+    return median(samples)
+  }
+
   it("encryption adds < 5ms per read/write for typical memory files", () => {
-    const enc = new FileEncryption("perf-key")
-    const store = new EncryptedFileStore(enc)
+    const encrypted = new EncryptedFileStore(new FileEncryption("perf-key"))
+    const plain = new PlainFileStore()
     const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "perf-test-"))
-    const filePath = path.join(tmpDir, "perf.json")
+    const encPath = path.join(tmpDir, "perf-enc.json")
+    const plainPath = path.join(tmpDir, "perf-plain.json")
 
-    // Simulate a typical memory file (~100 memories)
-    const data = {
-      memories: Array.from({ length: 100 }, (_, i) => ({
-        id: `mem_${i}`,
-        type: "episodic",
-        content: `This is memory number ${i} with some content that represents a typical memory entry.`,
-        embedding: Array.from({ length: 256 }, () => Math.random()),
-        createdAt: new Date().toISOString(),
-      })),
+    try {
+      // Simulate a typical memory file (~100 memories)
+      const data = {
+        memories: Array.from({ length: 100 }, (_, i) => ({
+          id: `mem_${i}`,
+          type: "episodic",
+          content: `This is memory number ${i} with some content that represents a typical memory entry.`,
+          embedding: Array.from({ length: 256 }, () => Math.random()),
+          createdAt: new Date().toISOString(),
+        })),
+      }
+
+      // Warm up both paths (JIT, page cache)
+      for (let i = 0; i < 10; i++) {
+        encrypted.write(encPath, data)
+        encrypted.read(encPath)
+        plain.write(plainPath, data)
+        plain.read(plainPath)
+      }
+
+      const ITERATIONS = 51
+      const writeOverhead =
+        timeEach(ITERATIONS, () => encrypted.write(encPath, data)) -
+        timeEach(ITERATIONS, () => plain.write(plainPath, data))
+      const readOverhead =
+        timeEach(ITERATIONS, () => encrypted.read(encPath)) -
+        timeEach(ITERATIONS, () => plain.read(plainPath))
+
+      expect(writeOverhead).toBeLessThan(5)
+      expect(readOverhead).toBeLessThan(5)
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true })
     }
-
-    // Warm up
-    store.write(filePath, data)
-    store.read(filePath)
-
-    // Measure write
-    const writeStart = performance.now()
-    for (let i = 0; i < 100; i++) {
-      store.write(filePath, data)
-    }
-    const writeAvg = (performance.now() - writeStart) / 100
-
-    // Measure read
-    const readStart = performance.now()
-    for (let i = 0; i < 100; i++) {
-      store.read(filePath)
-    }
-    const readAvg = (performance.now() - readStart) / 100
-
-    expect(writeAvg).toBeLessThan(5)
-    expect(readAvg).toBeLessThan(5)
-
-    fs.rmSync(tmpDir, { recursive: true, force: true })
   })
 })

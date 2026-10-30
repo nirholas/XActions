@@ -181,14 +181,17 @@ describe("Agent Control API routes", () => {
       provider.type = "socket" // restore
     })
 
-    it("handles LLM failure gracefully (still returns 200)", async () => {
+    it("reports an LLM failure as a 500 instead of claiming the message was queued", async () => {
       handleLLMResponse.mockRejectedValue(new Error("LLM exploded"))
       const res = await request(app)
         .post("/api/agent/bob/say")
         .send({ text: "Trigger error" })
-      // Fire-and-forget: route responds 200 before LLM finishes
-      expect(res.status).toBe(200)
-      expect(res.body.queued).toBe(true)
+      // The route awaits the LLM pipeline (it answers completed: true on success), so a
+      // failure must surface to the caller rather than be reported as queued.
+      expect(res.status).toBe(500)
+      expect(res.body.error.code).toBe("LLM_ERROR")
+      expect(res.body.error.message).toContain("LLM exploded")
+      expect(res.body.queued).toBeUndefined()
     })
   })
 

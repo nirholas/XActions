@@ -47,7 +47,7 @@ module.exports = function createSystemRoutes(deps) {
       }
     }
 
-    const providerHealth = getProviderHealth()
+    const providerHealth = getProviderHealth(breakers)
     const status = apiKeyOk ? "ok" : "degraded"
 
     res.status(apiKeyOk ? 200 : 503).json({
@@ -74,7 +74,7 @@ module.exports = function createSystemRoutes(deps) {
   // ── GET /api/health/providers ────────────────────────────────────
   // Returns per-provider health with circuit breaker state (cached data)
   router.get("/health/providers", (req, res) => {
-    res.json(getProviderHealth())
+    res.json(getProviderHealth(breakers))
   })
 
   // ── POST /api/health/providers/check ─────────────────────────────
@@ -101,8 +101,8 @@ module.exports = function createSystemRoutes(deps) {
   // Readiness probe: ready to serve (200 only if providers are connected)
   // Kubernetes: readinessProbe
   router.get("/health/ready", (req, res) => {
-    const ready = isReady()
-    const providerHealth = getProviderHealth()
+    const ready = isReady(breakers)
+    const providerHealth = getProviderHealth(breakers)
 
     res.status(ready ? 200 : 503).json({
       status: ready ? "ready" : "not_ready",
@@ -191,7 +191,7 @@ module.exports = function createSystemRoutes(deps) {
       {
         name: "claude",
         type: "socket",
-        models: ["claude-sonnet-4-20250514", "claude-opus-4-20250514"],
+        models: ["claude-sonnet-5-5", "claude-opus-5-5"],
         current: AI_PROVIDER === "claude"
       },
       {
@@ -236,7 +236,7 @@ function isApiKeySet(providerName) {
 
 function getModelName(providerName) {
   switch (providerName) {
-    case "claude": return process.env.CLAUDE_MODEL || "claude-sonnet-4-20250514"
+    case "claude": return process.env.CLAUDE_MODEL || "claude-sonnet-5-5"
     case "openai": return process.env.OPENAI_REALTIME_MODEL || "gpt-4o-realtime-preview-2024-12-17"
     case "openai-chat": return process.env.OPENAI_MODEL || "gpt-4o-mini"
     case "groq": return process.env.GROQ_MODEL || "llama-3.3-70b-versatile"

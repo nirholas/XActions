@@ -396,9 +396,10 @@ describe("MemoryStore", () => {
       await store.createVersion()
 
       const versions = store.listVersions()
+      // Two backups taken back to back (often within one millisecond) are distinct versions
       expect(versions.length).toBe(2)
       // Newest first
-      expect(versions[0]).toBeGreaterThanOrEqual(versions[1])
+      expect(versions[0]).toBeGreaterThan(versions[1])
     })
 
     it("rolls back to a previous version", async () => {
