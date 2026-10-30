@@ -77,7 +77,8 @@ export async function createCheckoutSession(user, tier) {
   const session = await stripe.checkout.sessions.create({
     customer: customerId,
     mode: 'subscription',
-    payment_method_types: ['card'],
+    // The endive API versions (stripe 23+) replaced payment_method_types with this filter.
+    allowed_payment_method_types: ['card'],
     line_items: [
       {
         price: tierConfig.stripePriceId,
