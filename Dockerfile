@@ -15,6 +15,8 @@ WORKDIR /app
 # Copy package files
 COPY package.json package-lock.json* ./
 COPY prisma ./prisma/
+# package.json overrides deepmerge with this patched copy, so npm ci needs it
+COPY vendor ./vendor/
 
 # Install production dependencies only
 RUN npm ci --omit=dev && npx prisma generate

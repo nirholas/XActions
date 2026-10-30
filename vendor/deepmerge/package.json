@@ -1,0 +1,15 @@
+{
+  "name": "deepmerge",
+  "version": "4.3.1",
+  "description": "deepmerge 4.3.1 with a fix for GHSA-gcqx-w48m-w2h4 (vendored by XActions; upstream has no patched release)",
+  "license": "MIT",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/TehShrike/deepmerge.git"
+  }
+}
