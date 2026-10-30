@@ -6,11 +6,18 @@
 
 import { createRequire } from 'module';
 import { pathToFileURL } from 'url';
-import { resolve } from 'path';
 
 // Resolve the MCP server entry point from the xactions package
 const require = createRequire(import.meta.url);
 const serverPath = require.resolve('xactions/mcp');
 
-// Import and run the MCP server (it self-starts via main())
-await import(pathToFileURL(serverPath).href);
+// The server only starts itself when it is the process entry point, and here
+// this file is, so importing it is not enough: run its main() explicitly.
+const { main } = await import(pathToFileURL(serverPath).href);
+try {
+  await main();
+} catch (error) {
+  console.error('❌ Fatal error:', error.message);
+  if (process.env.DEBUG) console.error(error.stack);
+  process.exit(1);
+}
