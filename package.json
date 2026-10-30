@@ -128,7 +128,7 @@
     "puppeteer-extra-plugin-stealth": "^2.11.2",
     "redis": "^4.6.11",
     "socket.io": "^4.7.5",
-    "stripe": "^22.6.2",
+    "stripe": "^23.0.1",
     "undici": "^8.12.3",
     "yauzl": "^3.4.0"
   },
