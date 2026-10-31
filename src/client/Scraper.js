@@ -48,11 +48,14 @@ export const SearchMode = Object.freeze({
  *
  * @param {Response} res - The failed fetch response
  * @param {string} url - Requested URL
- * @param {boolean} authenticated - Whether the request carried a session
+ * @param {{authenticated?: boolean, hasAuthToken?: boolean}} [session] - Whether the
+ *   request carried a full session (auth_token + ct0), and whether an auth_token
+ *   was present even without ct0
  * @returns {ScraperError} Error ready to throw
  * @private
  */
-function describeHttpFailure(res, url, authenticated) {
+export function describeHttpFailure(res, url, session = {}) {
+  const { authenticated = false, hasAuthToken = false } = session;
   const endpoint = (() => {
     try {
       return new URL(url).pathname;
@@ -75,12 +78,35 @@ function describeHttpFailure(res, url, authenticated) {
     );
   }
 
-  if (!authenticated && (res.status === 401 || res.status === 403 || res.status === 404)) {
+  const sessionStatus = res.status === 401 || res.status === 403 || res.status === 404;
+
+  if (!authenticated && hasAuthToken && sessionStatus) {
+    return new AuthenticationError(
+      `HTTP ${res.status} on ${endpoint}: the saved session has an auth_token but no ct0 cookie, ` +
+        'and X treats a session without ct0 as logged out. Run `xactions connect` to capture both, ' +
+        'or `xactions doctor` to check the session.',
+      'AUTH_REQUIRED',
+      { endpoint, httpStatus: res.status },
+    );
+  }
+
+  if (!authenticated && sessionStatus) {
     return new AuthenticationError(
       `HTTP ${res.status} on ${endpoint} while unauthenticated. X restricts this endpoint ` +
         'to logged-in sessions. Authenticate first with scraper.login(...), ' +
         'scraper.setCookies(...), or scraper.loadCookies(...) using your auth_token cookie ' +
         '(DevTools > Application > Cookies > x.com > auth_token), then retry.',
+      'AUTH_REQUIRED',
+      { endpoint, httpStatus: res.status },
+    );
+  }
+
+  if (authenticated && sessionStatus) {
+    return new AuthenticationError(
+      `HTTP ${res.status} on ${endpoint} even with a saved session. X answers an expired, ` +
+        'rejected or unsigned session with an empty ' + res.status + ', so this is usually a stale ' +
+        'cookie rather than a missing resource. Run `xactions connect` to refresh the session, ' +
+        'or `xactions doctor` to see which check fails.',
       'AUTH_REQUIRED',
       { endpoint, httpStatus: res.status },
     );
@@ -133,6 +159,18 @@ class SimpleHttp {
   }
 
   /**
+   * Session facts describeHttpFailure needs to word a 401/403/404.
+   * @returns {{authenticated: boolean, hasAuthToken: boolean}}
+   * @private
+   */
+  _sessionState() {
+    return {
+      authenticated: this._authenticated,
+      hasAuthToken: /(?:^|;\s*)auth_token=/.test(this._cookies || ''),
+    };
+  }
+
+  /**
    * Make a GET request.
    * @param {string} url
    * @returns {Promise<any>}
@@ -152,7 +190,7 @@ class SimpleHttp {
     await withHttp2(req, this._fetchFn);
     const res = await fetchWithDispatcher(this._fetchFn, url, req);
     if (!res.ok) {
-      throw describeHttpFailure(res, url, this._authenticated);
+      throw describeHttpFailure(res, url, this._sessionState());
     }
     return res.json();
   }
@@ -187,7 +225,7 @@ class SimpleHttp {
     await withHttp2(req, this._fetchFn);
     const res = await fetchWithDispatcher(this._fetchFn, url, req);
     if (!res.ok) {
-      throw describeHttpFailure(res, url, this._authenticated);
+      throw describeHttpFailure(res, url, this._sessionState());
     }
     return res.json();
   }
