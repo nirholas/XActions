@@ -20,22 +20,22 @@
   },
   "license": "UNLICENSED",
   "dependencies": {
-    "xspace-agent": "workspace:*",
     "@xspace/server": "workspace:*",
     "chalk": "^4.1.2",
-    "commander": "^12.0.0",
-    "dotenv": "^16.3.1",
-    "express": "^4.18.2",
-    "inquirer": "^9.3.0",
+    "commander": "^12.1.0",
+    "dotenv": "^16.6.1",
+    "express": "^4.22.3",
+    "inquirer": "^9.3.8",
     "ora": "^5.4.1",
+    "xspace-agent": "workspace:*",
     "zod": "^3.25.76"
   },
   "devDependencies": {
-    "@types/express": "^4.17.21",
-    "@types/inquirer": "^9.0.7",
-    "@types/node": "^20.11.0",
-    "@vitest/coverage-v8": "^4.1.0",
+    "@types/express": "^4.17.25",
+    "@types/inquirer": "^9.0.10",
+    "@types/node": "^20.19.43",
+    "@vitest/coverage-v8": "^4.1.12",
     "typescript": "^5.9.3",
-    "vitest": "^4.1.0"
+    "vitest": "^4.1.12"
   }
 }

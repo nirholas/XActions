@@ -6,11 +6,11 @@
     "start": "tsx index.ts"
   },
   "dependencies": {
-    "xspace-agent": "workspace:*",
-    "node-cron": "^3.0.3"
+    "node-cron": "^3.0.3",
+    "xspace-agent": "workspace:*"
   },
   "devDependencies": {
     "@types/node-cron": "^3.0.11",
-    "tsx": "^4.21.0"
+    "tsx": "^4.23.15"
   }
 }
