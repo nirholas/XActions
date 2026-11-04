@@ -52,7 +52,7 @@ export const SkipStepBodySchema = z.object({
 export const EvaluateTriggersBodySchema = z.object({
   orgId: z.string().min(1, 'orgId is required'),
   currentPlan: z.string().min(1, 'currentPlan is required'),
-  quotas: z.record(z.any()),
+  quotas: z.record(z.string(), z.any()),
   context: z.any().optional(),
 })
 
@@ -65,7 +65,7 @@ export const TrackActivationBodySchema = z.object({
   event: z.string().min(1, 'event is required'),
   userId: z.string().min(1, 'userId is required'),
   orgId: z.string().min(1, 'orgId is required'),
-  metadata: z.record(z.unknown()).optional(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
 })
 
 export const DripEvaluateBodySchema = z.object({

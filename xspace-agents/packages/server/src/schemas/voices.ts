@@ -14,7 +14,7 @@ export const CloneVoiceBodySchema = z.object({
     consentType: z.enum(['self', 'authorized', 'synthetic']),
     consentDocument: z.string().optional(),
     agreedToTerms: z.literal(true, {
-      errorMap: () => ({ message: 'You must agree to the terms of service' }),
+      error: 'You must agree to the terms of service',
     }),
   }),
 })

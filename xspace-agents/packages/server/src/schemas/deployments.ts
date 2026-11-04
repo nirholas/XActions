@@ -18,7 +18,7 @@ export const VersionParamsSchema = z.object({
 })
 
 export const CreateVersionBodySchema = z.object({
-  config: z.record(z.any()).refine((v) => Object.keys(v).length > 0, {
+  config: z.record(z.string(), z.any()).refine((v) => Object.keys(v).length > 0, {
     message: 'config is required',
   }),
   changelog: z.string().optional(),
@@ -36,20 +36,20 @@ export const RunTestsBodySchema = z.object({
 export const DeployBodySchema = z.object({
   versionId: z.string().min(1, 'versionId is required'),
   environment: z.enum(VALID_ENVIRONMENTS, {
-    errorMap: () => ({ message: `Must be one of: ${VALID_ENVIRONMENTS.join(', ')}` }),
+    error: `Must be one of: ${VALID_ENVIRONMENTS.join(', ')}`,
   }),
 })
 
 export const PromoteBodySchema = z.object({
   versionId: z.string().min(1, 'versionId is required'),
   targetEnvironment: z.enum(VALID_ENVIRONMENTS, {
-    errorMap: () => ({ message: `Must be one of: ${VALID_ENVIRONMENTS.join(', ')}` }),
+    error: `Must be one of: ${VALID_ENVIRONMENTS.join(', ')}`,
   }),
 })
 
 export const RollbackBodySchema = z.object({
   environment: z.enum(VALID_ENVIRONMENTS, {
-    errorMap: () => ({ message: `Must be one of: ${VALID_ENVIRONMENTS.join(', ')}` }),
+    error: `Must be one of: ${VALID_ENVIRONMENTS.join(', ')}`,
   }),
   reason: z.string().min(1, 'reason is required'),
 })
