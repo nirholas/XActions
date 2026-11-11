@@ -1,29 +1,22 @@
 {
   "name": "xactions",
-  "displayName": "XActions — X/Twitter Automation",
-  "description": "Complete X/Twitter automation toolkit with 154 MCP tools. Scrape, post, engage, analyze — no API fees.",
-  "version": "1.0.0",
-  "author": "nichxbt",
-  "homepage": "https://xactions.app",
-  "repository": "https://github.com/nirholas/xactions",
+  "owner": {
+    "name": "nirholas"
+  },
+  "description": "Plugin for the XActions X/Twitter automation toolkit and MCP server.",
   "plugins": [
     {
       "name": "xactions",
-      "description": "Complete X/Twitter automation — 154 MCP tools for scraping, posting, engagement, analytics, DMs, moderation, streaming, workflows, and data portability. Uses Puppeteer browser automation. No API fees.",
-      "version": "3.5.0",
-      "path": ".",
+      "source": "./plugins/xactions",
+      "description": "Scrape X/Twitter profiles, followers, tweets and search without the paid API, and run approval-gated account actions through the XActions MCP server.",
+      "category": "automation",
       "tags": [
         "twitter",
         "x",
-        "social-media",
-        "automation",
         "scraping",
-        "mcp",
-        "engagement",
-        "analytics"
-      ],
-      "homepage": "https://xactions.app",
-      "repository": "https://github.com/nirholas/xactions"
+        "automation",
+        "mcp"
+      ]
     }
   ]
 }
