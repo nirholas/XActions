@@ -1,0 +1,18 @@
+{
+  "name": "xactions",
+  "version": "4.0.1",
+  "description": "Scrape X/Twitter profiles, followers, tweets and search without the paid API, and run approval-gated account actions through the XActions MCP server.",
+  "author": {
+    "name": "nirholas"
+  },
+  "repository": "https://github.com/nirholas/XActions",
+  "homepage": "https://xactions.app",
+  "license": "Apache-2.0",
+  "keywords": [
+    "twitter",
+    "x",
+    "scraping",
+    "automation",
+    "mcp"
+  ]
+}

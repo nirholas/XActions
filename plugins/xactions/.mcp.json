@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "xactions": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "-p",
+        "xactions",
+        "xactions-mcp",
+        "--require-approval"
+      ]
+    }
+  }
+}
