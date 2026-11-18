@@ -43,6 +43,10 @@ export const GROUP_RULES = Object.freeze([
   { group: 'drafts', names: [...ALWAYS_AVAILABLE_TOOLS] },
   { group: 'auth', names: ['x_login'] },
   {
+    group: 'accounts',
+    prefixes: ['x_accounts_'],
+  },
+  {
     group: 'dm',
     names: ['x_send_dm', 'x_get_conversations', 'x_export_dms'],
   },

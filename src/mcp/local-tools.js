@@ -46,6 +46,7 @@ import {
 } from './composer.js';
 import { clearBookmarksOneByOne } from './clearBookmarks.js';
 import { isLiveRun } from './tool-groups.js';
+import { createAccountVault } from '../vault/accountVault.js';
 
 // ============================================================================
 // Singleton Browser Management
@@ -2014,12 +2015,116 @@ export async function x_client_get_trends() {
 }
 
 // ============================================================================
+// Account vault tools (x_accounts_*) — local credential store, no approval gate
+// ============================================================================
+
+/**
+ * Resolve a credential file path handed in by the agent. `~` expands to the
+ * user's home; anything else is used as given (absolute or cwd-relative).
+ * @param {string} filePath
+ * @returns {string|null}
+ */
+function resolveVaultFilePath(filePath) {
+  const p = String(filePath || '').trim();
+  if (!p) return null;
+  return p === '~' || p.startsWith('~/') ? path.join(os.homedir(), p.slice(1)) : p;
+}
+
+/**
+ * Build the credentials object for x_accounts_add.
+ *
+ * File-path inputs are preferred over inline secret fields so credentials
+ * never have to cross the MCP conversation log: `credentials_file` (a JSON
+ * object of credential fields, any platform) beats `cookies_file` (a twitter
+ * session cookie file in any format `xactions login` accepts), which beats
+ * the inline fields (`cookies`, `identifier`, `password`, `service`,
+ * `instance`, `accessToken`).
+ *
+ * @param {object} args
+ * @returns {Promise<object|Array<object>>}
+ */
+async function vaultCredentialsFromArgs(args) {
+  const credentialsFile = resolveVaultFilePath(args.credentials_file || args.credentialsFile);
+  if (credentialsFile) {
+    let parsed;
+    try {
+      parsed = JSON.parse(await fs.readFile(credentialsFile, 'utf8'));
+    } catch (error) {
+      throw new Error(`x_accounts_add: cannot read credentials_file "${credentialsFile}": ${error.message}`);
+    }
+    if (!parsed || typeof parsed !== 'object') {
+      throw new Error('x_accounts_add: credentials_file must contain a JSON object (or cookie array for twitter) of credential fields.');
+    }
+    return parsed;
+  }
+
+  const cookiesFile = resolveVaultFilePath(args.cookies_file || args.cookiesFile);
+  if (cookiesFile) {
+    try {
+      return { cookies: await fs.readFile(cookiesFile, 'utf8') };
+    } catch (error) {
+      throw new Error(`x_accounts_add: cannot read cookies_file "${cookiesFile}": ${error.message}`);
+    }
+  }
+
+  const credentials = {};
+  for (const key of ['cookies', 'identifier', 'password', 'service', 'instance', 'accessToken']) {
+    if (args[key] != null && args[key] !== '') credentials[key] = args[key];
+  }
+  return credentials;
+}
+
+/** Run `fn` against a fresh vault handle and always close it. */
+async function withAccountVault(fn) {
+  const vault = createAccountVault();
+  try {
+    return await fn(vault);
+  } finally {
+    vault.close();
+  }
+}
+
+/** Store or update credentials for a platform account in the vault. */
+export async function x_accounts_add(args = {}) {
+  const credentials = await vaultCredentialsFromArgs(args);
+  return withAccountVault((vault) =>
+    vault.add({ platform: args.platform, name: args.name, credentials, proxy: args.proxy })
+  );
+}
+
+/** List vault accounts — masked: platform, name, proxy host, timestamps only. */
+export async function x_accounts_list(args = {}) {
+  return withAccountVault((vault) => vault.list({ platform: args.platform }));
+}
+
+/** Delete a vault account. */
+export async function x_accounts_remove(args = {}) {
+  return withAccountVault((vault) => vault.remove({ platform: args.platform, name: args.name }));
+}
+
+/** Activate a twitter vault account as the live X session (backs up cookies.json). */
+export async function x_accounts_use(args = {}) {
+  return withAccountVault((vault) => vault.use({ platform: args.platform, name: args.name }));
+}
+
+/** Check stored credentials against the platform — returns { ok, reason }, never secrets. */
+export async function x_accounts_test(args = {}) {
+  return withAccountVault((vault) => vault.test({ platform: args.platform, name: args.name }));
+}
+
+// ============================================================================
 // Tool Map — all tools matching server.js TOOLS (excluding streaming)
 // ============================================================================
 
 export const toolMap = {
   // Auth
   x_login,
+  // Account vault (local credential store — no approval gate)
+  x_accounts_add,
+  x_accounts_list,
+  x_accounts_remove,
+  x_accounts_use,
+  x_accounts_test,
   // Scraping (delegated to scrapers/index.js — single source of truth)
   x_get_profile,
   x_get_followers,
