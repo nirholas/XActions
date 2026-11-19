@@ -818,7 +818,8 @@ describe('automation', () => {
       rawTweet('9503', 'Evergreen advice that still holds', h.world.me, { likes: 40, createdAt: old }),
       rawTweet('9502', 'Breaking: something today', h.world.me, { likes: 90, createdAt: old }),
       rawTweet('9501', 'Also timeless thinking', h.world.me, { likes: 20, createdAt: old }),
-      rawTweet('9500', 'too new', h.world.me, { likes: 99 }),
+      // Relative to now: a fixed date here silently ages past minAge.
+      rawTweet('9500', 'too new', h.world.me, { likes: 99, createdAt: new Date(Date.now() - 86_400_000).toUTCString() }),
     ]);
     const result = await h.run('evergreenRecycle', { minAge: 30, minEngagement: 10, limit: 2 }, { key: 'session' });
     expect(result).toMatchObject({ candidates: 2, succeeded: 2 });
