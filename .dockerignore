@@ -1,0 +1,42 @@
+# Keeps the build context, and with it the public GHCR image (Dockerfile
+# `COPY . .`), free of history, secrets and host-built artifacts. Exclusions are
+# deliberately narrow: the server reads docs/, data/, dashboard/, scripts/,
+# plugins/ and more at runtime, so only provably unused paths are dropped.
+
+# Version control and CI
+.git
+.github
+
+# Dependencies come from the deps stage; a host copy would overwrite them with
+# binaries built for the wrong platform.
+**/node_modules
+
+# Secrets (mirrors .gitignore, so local builds cannot bake them in)
+**/.env
+**/.env.*
+# Templates hold no secrets
+!**/.env.example
+!**/.env.*.example
+**/.dev.vars
+**/.xactions
+**/cookies.json
+**/*.cookies.json
+**/cookies.txt
+**/storage-state.json
+**/session.json
+**/*.session.json
+**/mcp-drafts.json
+**/.x402-wallets.json
+**/.x402-buyer.json
+**/vertex-ai-key.json
+**/*.pem
+
+# Not used by the running server
+tests
+xspace-agents
+coverage
+.nyc_output
+**/*.log
+**/__pycache__
+**/.venv
+**/venv
