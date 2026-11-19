@@ -99,6 +99,7 @@ import { x402Middleware, x402HealthCheck, x402Pricing } from './middleware/x402.
 import scriptsRoutes from './routes/scripts.js';
 import a2aRoutes from './routes/a2a.js';
 import askRoutes from './routes/ask.js';
+import chatRoutes from './routes/chat.js';
 import aiDetectorMiddleware from './middleware/ai-detector.js';
 import { validateConfig as validateX402Config } from './config/x402-config.js';
 import { generateSpec as generateOpenAPISpec, generateWellKnown as generateX402WellKnown } from './openapi.js';
@@ -253,7 +254,10 @@ export function createApp({ rateLimiting = true } = {}) {
   // Body parsing — skip JSON parsing for Stripe webhooks (needs raw body for signature verification)
   app.use((req, res, next) => {
     if (req.originalUrl === '/webhooks/stripe') return next();
-    express.json({ limit: '10kb' })(req, res, next);
+    // A chat question carries the attached posts it is about (up to a 24K
+    // token budget, ~100 KB); every other route keeps the 10 KB limit.
+    const limit = req.originalUrl.split('?')[0] === '/api/chat' ? '256kb' : '10kb';
+    express.json({ limit })(req, res, next);
   });
   app.use(express.urlencoded({ extended: true, limit: '10kb' }));
   // Express 5's parsers leave req.body undefined when none of them ran (no body,
@@ -319,6 +323,7 @@ export function createApp({ rateLimiting = true } = {}) {
   app.use('/api/scripts', scriptsRoutes);
   app.use('/api/a2a', a2aRoutes);
   app.use('/api/ask', askRoutes); // Ask XActions: docs-grounded answers over the free LLM chain
+  app.use('/api/chat', chatRoutes); // XActions Chat: questions about attached X accounts and posts
 
   // Serve public assets (icons, OG images, logo)
   app.use(express.static(path.join(__dirname, '../public'), {

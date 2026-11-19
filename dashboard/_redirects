@@ -30,6 +30,7 @@
 /admin /admin.html 200
 /ai /ai.html 200
 /ask /ask.html 200
+/chat /chat.html 200
 /ai-api /ai-api.html 200
 /monitor /monitor.html 200
 /automations /automations.html 200

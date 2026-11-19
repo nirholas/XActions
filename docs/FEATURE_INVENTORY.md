@@ -764,7 +764,7 @@ the narrative catalogue is [skills.md](skills.md).
 | Directory | Contents |
 |-----------|----------|
 | `api/server.js` | Express entry point |
-| `api/routes/` | 40 route modules |
+| `api/routes/` | 41 route modules |
 | `api/services/` | Business logic |
 | `api/middleware/` | Auth, rate limiting |
 | `api/config/` | Configuration |

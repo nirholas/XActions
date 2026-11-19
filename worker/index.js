@@ -14,6 +14,8 @@
  *   /thread/*                                     -> rewritten to /thread
  *   /api/ask, /api/ask/health                     -> Ask XActions, answered at the
  *                                                    edge (docs index + free LLM lanes)
+ *   /api/chat, /api/chat/context, /api/chat/health -> XActions Chat, answered at the
+ *                                                    edge (guest X reads + free LLM lanes)
  *   every other /api/*                            -> proxied to API_ORIGIN
  *                                                    (the Node backend: Railway,
  *                                                    Fly, or Docker self-host)
@@ -28,6 +30,10 @@ import { Buffer } from 'node:buffer';
 import { ask, createSearcher, SUGGESTED_QUESTIONS } from '../src/ask/engine.js';
 import { createActionMatcher } from '../src/ask/actions.js';
 import { buildLaneChain } from '../src/ask/lanes.js';
+import { chat, SUGGESTED_PROMPTS } from '../src/chat/engine.js';
+import { CONTEXT_BUDGET, MAX_ITEMS, resolveAttachment } from '../src/chat/context.js';
+import { edgeReader } from '../src/chat/reader.js';
+import { statusForError } from '../src/edge/twitterClient.js';
 import { verifyPayment } from '../src/edge/x402.js';
 
 const ALLOWED_ORIGINS = new Set([
@@ -342,6 +348,60 @@ async function handleAsk(request, url, env) {
   });
 }
 
+// XActions Chat runs at the edge too: attachments resolve through the
+// guest-token readers in src/edge/, answers stream through the Ask lanes.
+async function handleChat(request, url, env) {
+  const cors = corsHeaders(request);
+  if (url.pathname === '/api/chat/health') {
+    return json({ status: 'ok', edge: 'cloudflare', lanes: buildLaneChain(env).map((l) => l.name), budget: CONTEXT_BUDGET, maxItems: MAX_ITEMS, suggested: SUGGESTED_PROMPTS }, 200, cors);
+  }
+  if (request.method !== 'POST') return json({ error: 'method_not_allowed' }, 405, cors);
+  let body;
+  try { body = await request.json(); } catch { body = {}; }
+
+  if (url.pathname === '/api/chat/context') {
+    const input = typeof body?.input === 'string' ? body.input.slice(0, 300) : '';
+    try {
+      return json(await resolveAttachment(input, edgeReader), 200, { 'cache-control': 'no-store', ...cors });
+    } catch (error) {
+      return json({ error: 'CONTEXT_FAILED', message: error.message }, error.status || statusForError(error), cors);
+    }
+  }
+
+  const { question, history, items, byok } = body || {};
+  if (typeof question !== 'string' || !question.trim()) {
+    return json({ error: 'INVALID_INPUT', message: 'question is required' }, 400, cors);
+  }
+  if (!Array.isArray(items) || !items.length) {
+    return json({ error: 'NO_CONTEXT', message: 'Attach an account, a post or a thread first.' }, 400, cors);
+  }
+  const encoder = new TextEncoder();
+  const stream = new ReadableStream({
+    async start(controller) {
+      const send = (event) => controller.enqueue(encoder.encode(`data: ${JSON.stringify(event)}\n\n`));
+      try {
+        await chat({
+          question,
+          history: Array.isArray(history) ? history : [],
+          items,
+          env,
+          byok: byok && typeof byok === 'object' ? byok : undefined,
+          onEvent: send,
+          signal: request.signal,
+        });
+      } catch (error) {
+        send({ type: 'error', message: error.message });
+      } finally {
+        controller.close();
+      }
+    },
+  });
+  return new Response(stream, {
+    status: 200,
+    headers: { 'content-type': 'text/event-stream; charset=utf-8', 'cache-control': 'no-store', ...cors },
+  });
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -366,6 +426,7 @@ export default {
     const api = await loadApiModules(env);
 
     if (path === '/api/ask' || path === '/api/ask/health') return handleAsk(request, url, env);
+    if (path === '/api/chat' || path === '/api/chat/context' || path === '/api/chat/health') return handleChat(request, url, env);
 
     if (path === '/openapi.json') return json(api.generateSpec());
     if (path === '/.well-known/x402') return json(api.generateWellKnown());

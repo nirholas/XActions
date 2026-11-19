@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XActions Chat - Ask questions about any X account or post</title>
+  <meta name="description" content="Attach an X account, a post or a thread, then ask. Answers cite the posts they come from, with links you can click. Free, no account, no login.">
+  <meta name="author" content="nich (@nichxbt)">
+  <meta name="robots" content="index, follow">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="XActions Chat - Ask questions about any X account or post">
+  <meta property="og:description" content="Attach an account, a post or a thread, then ask. Every answer cites the posts it comes from.">
+  <meta property="og:url" content="https://xactions.app/chat">
+  <meta property="og:site_name" content="XActions">
+  <meta property="og:image" content="https://xactions.app/og-ai.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nichxbt">
+  <meta name="twitter:title" content="XActions Chat">
+  <meta name="twitter:description" content="Ask questions about any X account or post. Answers cite the posts.">
+  <meta name="twitter:image" content="https://xactions.app/og-ai.png">
+  <link rel="canonical" href="https://xactions.app/chat">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebApplication","name":"XActions Chat","url":"https://xactions.app/chat","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Ask questions about X accounts, posts and threads you attach. Answers cite the posts they come from.","author":{"@type":"Person","name":"nich","url":"https://x.com/nichxbt"}}
+  </script>
+  <link rel="stylesheet" href="/css/common.css">
+  <style>
+    html, body { height: 100%; }
+    body { overflow: hidden; }
+    [hidden] { display: none !important; }
+    .layout { max-width: none; height: 100vh; }
+    .main-content {
+      flex: 1; max-width: none; border-right: none; min-width: 0;
+      display: flex; height: 100vh; overflow: hidden; background: var(--bg-primary);
+    }
+
+    /* Conversation rail */
+    .rail {
+      width: 264px; flex-shrink: 0; display: flex; flex-direction: column; gap: 4px;
+      border-right: 1px solid var(--border); padding: 14px 10px; background: var(--bg-primary);
+      transition: margin-left 0.25s var(--ease);
+    }
+    .rail.is-collapsed { margin-left: -264px; }
+    .rail-head { display: flex; align-items: center; justify-content: space-between; padding: 2px 6px 10px; }
+    .rail-title { font-weight: 700; font-size: 1.125rem; display: flex; align-items: center; gap: 10px; }
+    .rail-mark { width: 30px; height: 30px; border-radius: 9px; background: #fff; color: #000; display: grid; place-items: center; font-size: 0.95rem; }
+    .rail-btn {
+      display: flex; align-items: center; gap: 12px; width: 100%; text-align: left;
+      background: none; border: none; color: var(--text-primary); font: inherit; font-size: 0.9375rem;
+      padding: 10px 10px; border-radius: 10px; cursor: pointer; transition: background 0.2s;
+    }
+    .rail-btn:hover { background: var(--bg-tertiary); }
+    .rail-btn:focus-visible { outline: none; box-shadow: var(--ring); }
+    .rail-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+    .rail-search { display: none; padding: 2px 4px 6px; }
+    .rail-search.is-open { display: block; }
+    .rail-search input {
+      width: 100%; background: var(--bg-secondary); border: 1px solid var(--border); color: var(--text-primary);
+      font: inherit; font-size: 0.875rem; padding: 8px 12px; border-radius: 10px; outline: none;
+    }
+    .rail-search input:focus { border-color: var(--border-glow); box-shadow: var(--ring); }
+    .rail-label { color: var(--text-secondary); font-size: 0.75rem; padding: 14px 10px 6px; }
+    .convo-list { flex: 1; min-height: 0; overflow-y: auto; display: grid; align-content: start; gap: 2px; }
+    .convo { display: flex; align-items: center; gap: 6px; border-radius: 10px; transition: background 0.2s; }
+    .convo:hover, .convo.is-active { background: var(--bg-tertiary); }
+    .convo-open {
+      flex: 1; min-width: 0; text-align: left; background: none; border: none; color: var(--text-primary);
+      font: inherit; font-size: 0.875rem; padding: 9px 10px; cursor: pointer; border-radius: 10px;
+    }
+    .convo-open:focus-visible { outline: none; box-shadow: var(--ring); }
+    .convo-t { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .convo-s { display: block; color: var(--text-secondary); font-size: 0.75rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .convo-del { opacity: 0; color: var(--text-secondary); background: none; border: none; cursor: pointer; padding: 4px 8px; border-radius: 6px; font-size: 1rem; }
+    .convo:hover .convo-del, .convo-del:focus-visible { opacity: 1; }
+    .convo-del:hover { color: var(--error); background: rgba(244,33,46,0.12); }
+    .rail-empty { color: var(--text-secondary); font-size: 0.875rem; padding: 8px 10px; }
+
+    /* Pane */
+    .pane { flex: 1; min-width: 0; display: flex; flex-direction: column; position: relative; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 18px; }
+    .topbar-group { display: flex; align-items: center; gap: 8px; min-width: 0; }
+    .chip-btn {
+      display: inline-flex; align-items: center; gap: 8px; max-width: 100%;
+      background: var(--bg-secondary); border: 1px solid var(--border); color: var(--text-primary);
+      font: inherit; font-size: 0.875rem; padding: 7px 12px; border-radius: 10px; cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .chip-btn:hover { border-color: var(--border-glow); }
+    .chip-btn:focus-visible { outline: none; box-shadow: var(--ring); }
+    .chip-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+    .chip-btn .model-wrap { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .chip-btn .model { color: var(--text-secondary); }
+    .icon-only { background: none; border: none; color: var(--text-secondary); padding: 8px; border-radius: 10px; cursor: pointer; display: grid; place-items: center; }
+    .icon-only:hover { color: var(--text-primary); background: var(--bg-tertiary); }
+    .icon-only:focus-visible { outline: none; box-shadow: var(--ring); }
+    .icon-only:disabled { opacity: 0.4; cursor: not-allowed; }
+    .icon-only svg { width: 18px; height: 18px; }
+    .meter { display: inline-flex; align-items: center; gap: 10px; border: 1px solid var(--border); border-radius: 9999px; padding: 6px 14px; font-size: 0.8125rem; font-variant-numeric: tabular-nums; color: var(--text-secondary); }
+    .meter-bar { width: 72px; height: 4px; border-radius: 4px; background: var(--bg-tertiary); overflow: hidden; }
+    .meter-fill { height: 100%; width: 0; background: var(--text-primary); border-radius: 4px; transition: width 0.3s var(--ease); }
+    .meter.is-warn .meter-fill { background: var(--warning); }
+    .meter.is-over .meter-fill { background: var(--error); }
+
+    .stage { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; align-items: center; padding: 0 24px; }
+    .hero { flex: 1; width: 100%; max-width: 760px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 14px; padding: 32px 0 8px; }
+    .hero.is-hidden { display: none; }
+    .hero h1 { font-size: clamp(2rem, 4vw, 2.75rem); line-height: 1.15; letter-spacing: -0.02em; font-weight: 700; max-width: 560px; }
+    .hero p { color: var(--text-secondary); font-size: 1rem; max-width: 560px; }
+    .thread { width: 100%; max-width: 760px; padding: 8px 0 24px; display: none; }
+    .thread.is-visible { display: block; }
+
+    /* Composer */
+    .composer-wrap { padding: 8px 24px 18px; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+    .composer {
+      width: 100%; max-width: 760px; background: var(--bg-secondary); border: 1px solid var(--border);
+      border-radius: 22px; padding: 10px 12px 10px 16px; transition: border-color 0.2s, box-shadow 0.25s;
+    }
+    .composer:focus-within { border-color: var(--border-glow); box-shadow: var(--ring); }
+    .composer.is-drop { border-color: var(--accent); }
+    .attachments { display: flex; flex-wrap: wrap; gap: 8px; padding: 4px 0 8px; }
+    .attachments:empty { display: none; }
+    .att {
+      display: inline-flex; align-items: center; gap: 8px; max-width: 100%;
+      background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 12px; padding: 5px 6px 5px 6px;
+      font-size: 0.8125rem; animation: rise 0.25s var(--ease) both;
+    }
+    .att-ico { width: 26px; height: 26px; border-radius: 8px; background: var(--bg-primary); display: grid; place-items: center; overflow: hidden; flex-shrink: 0; font-weight: 700; font-size: 0.75rem; }
+    .att-ico img { width: 100%; height: 100%; object-fit: cover; }
+    .att-body { min-width: 0; display: grid; }
+    .att-t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 260px; color: var(--text-primary); text-decoration: none; }
+    a.att-t:hover { text-decoration: underline; }
+    .att-s { color: var(--text-secondary); font-size: 0.6875rem; }
+    .att-x { background: none; border: none; color: var(--text-secondary); cursor: pointer; padding: 2px 6px; border-radius: 6px; font-size: 1rem; line-height: 1; }
+    .att-x:hover { color: var(--text-primary); background: var(--bg-secondary); }
+    .att.is-loading .att-ico::after { content: ''; width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--text-secondary); border-top-color: transparent; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .composer textarea {
+      width: 100%; resize: none; border: none; outline: none; background: transparent; color: var(--text-primary);
+      font: inherit; font-size: 1rem; line-height: 1.45; padding: 6px 0; max-height: 200px; min-height: 48px;
+    }
+    .composer textarea::placeholder { color: var(--text-secondary); }
+    .composer textarea:focus-visible { outline: none; box-shadow: none; }
+    .tools { display: flex; align-items: center; gap: 4px; }
+    .tools .hint { margin-left: auto; color: var(--text-secondary); font-size: 0.8125rem; margin-right: 8px; }
+    .send-btn {
+      width: 40px; height: 40px; border-radius: 50%; border: none; cursor: pointer; flex-shrink: 0;
+      background: #fff; color: #000; display: grid; place-items: center; transition: transform 0.16s var(--ease), opacity 0.2s;
+    }
+    .send-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+    .send-btn:not(:disabled):hover { transform: scale(1.06); }
+    .send-btn:focus-visible { outline: none; box-shadow: var(--ring); }
+    .send-btn svg { width: 18px; height: 18px; }
+    .send-btn.is-stop { background: var(--error); color: #fff; }
+    .quick { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; max-width: 760px; }
+    .quick:empty { display: none; }
+    .quick-btn {
+      display: inline-flex; align-items: center; gap: 8px; background: transparent; border: 1px solid var(--border);
+      color: var(--text-primary); font: inherit; font-size: 0.9375rem; padding: 10px 18px; border-radius: 9999px; cursor: pointer;
+      transition: border-color 0.2s, background 0.2s, transform 0.16s;
+    }
+    .quick-btn:hover { border-color: var(--border-glow); background: var(--bg-secondary); transform: translateY(-1px); }
+    .quick-btn:focus-visible { outline: none; box-shadow: var(--ring); }
+    .quick-btn svg { width: 16px; height: 16px; }
+    .footnote { color: var(--text-secondary); font-size: 0.75rem; text-align: center; }
+
+    /* Attach popover */
+    .popover {
+      position: absolute; z-index: 30; left: 50%; bottom: 150px; transform: translateX(-50%);
+      width: min(520px, calc(100% - 32px)); background: var(--bg-secondary); border: 1px solid var(--border);
+      border-radius: 18px; box-shadow: var(--shadow-3); padding: 16px; display: none; animation: rise 0.2s var(--ease) both;
+    }
+    .popover.is-open { display: block; }
+    .popover h2 { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+    .popover p { color: var(--text-secondary); font-size: 0.8125rem; margin-bottom: 12px; }
+    .attach-row { display: flex; gap: 8px; }
+    .attach-row input {
+      flex: 1; min-width: 0; background: var(--bg-primary); border: 1px solid var(--border); color: var(--text-primary);
+      font: inherit; font-size: 0.9375rem; padding: 10px 12px; border-radius: 12px; outline: none;
+    }
+    .attach-row input:focus { border-color: var(--border-glow); box-shadow: var(--ring); }
+    .btn-primary { background: #fff; color: #000; border: none; border-radius: 12px; padding: 10px 16px; font: inherit; font-weight: 700; cursor: pointer; }
+    .btn-primary:disabled { opacity: 0.5; cursor: progress; }
+    .btn-primary:focus-visible { outline: none; box-shadow: var(--ring); }
+    .examples { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+    .example { background: var(--bg-tertiary); border: 1px solid var(--border); color: var(--text-primary); font: inherit; font-size: 0.8125rem; padding: 5px 10px; border-radius: 9999px; cursor: pointer; }
+    .example:hover { border-color: var(--border-glow); }
+    .example:focus-visible { outline: none; box-shadow: var(--ring); }
+
+    /* Model panel */
+    .panel { position: absolute; z-index: 30; top: 54px; left: 18px; width: min(340px, calc(100% - 36px)); background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 16px; box-shadow: var(--shadow-3); padding: 8px; display: none; animation: rise 0.2s var(--ease) both; }
+    .panel.is-open { display: block; }
+    .panel-title { font-weight: 700; padding: 8px 10px 6px; font-size: 0.9375rem; }
+    .lane-option { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; background: none; border: none; color: var(--text-primary); font: inherit; font-size: 0.9375rem; padding: 9px 10px; border-radius: 10px; cursor: pointer; }
+    .lane-option:hover, .lane-option[aria-checked="true"] { background: var(--bg-tertiary); }
+    .lane-option:focus-visible { outline: none; box-shadow: var(--ring); }
+    .lane-option .check { width: 18px; color: var(--accent); }
+    .lane-option .sub { color: var(--text-secondary); font-size: 0.75rem; display: block; }
+    .lane-key { display: none; padding: 6px 10px 10px; }
+    .lane-key.is-open { display: block; }
+    .lane-key input { width: 100%; background: var(--bg-primary); border: 1px solid var(--border); color: var(--text-primary); font: inherit; font-size: 0.875rem; padding: 9px 12px; border-radius: 10px; outline: none; }
+    .lane-key input:focus { border-color: var(--border-glow); box-shadow: var(--ring); }
+    .lane-key small { display: block; color: var(--text-secondary); font-size: 0.75rem; margin-top: 6px; }
+
+    /* Messages */
+    .msg { display: flex; gap: 12px; padding: 14px 0; animation: rise 0.3s var(--ease) both; }
+    @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+    .msg-user { justify-content: flex-end; }
+    .msg-user .bubble { background: var(--bg-tertiary); border-radius: 20px 20px 6px 20px; padding: 11px 16px; max-width: 78%; white-space: pre-wrap; word-break: break-word; }
+    .avatar { width: 30px; height: 30px; border-radius: 9px; background: #fff; color: #000; display: grid; place-items: center; flex-shrink: 0; font-size: 0.9rem; margin-top: 2px; }
+    .answer { flex: 1; min-width: 0; line-height: 1.6; overflow-wrap: anywhere; }
+    .answer p { margin: 0 0 12px; }
+    .answer p:last-child { margin-bottom: 0; }
+    .answer ul, .answer ol { margin: 0 0 12px 22px; }
+    .answer li { margin: 4px 0; }
+    .answer h1, .answer h2, .answer h3 { font-size: 1rem; font-weight: 700; margin: 16px 0 8px; }
+    .answer code { background: rgba(255,255,255,0.08); border: 1px solid var(--border); border-radius: 6px; padding: 1px 6px; font-size: 0.9em; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    .answer pre { background: #0b0d10; border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; overflow-x: auto; margin: 0 0 12px; }
+    .answer pre code { background: none; border: none; padding: 0; }
+    .answer blockquote { border-left: 3px solid var(--border); padding-left: 12px; color: var(--text-secondary); margin: 0 0 12px; }
+    .answer a { color: var(--accent); text-decoration: none; }
+    .answer a:hover { text-decoration: underline; }
+    .answer table { border-collapse: collapse; margin: 0 0 12px; width: 100%; font-size: 0.9375rem; display: block; overflow-x: auto; }
+    .answer th, .answer td { border: 1px solid var(--border); padding: 6px 10px; text-align: left; }
+    .cite { display: inline-block; min-width: 20px; padding: 0 5px; margin: 0 1px; border-radius: 6px; background: var(--accent-light); color: var(--accent); font-size: 0.75rem; font-weight: 700; text-align: center; position: relative; top: -0.4em; line-height: 1.5; }
+    .cite:hover { background: rgba(29,155,240,0.25); text-decoration: none !important; }
+    .sources { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .source { display: inline-flex; align-items: center; gap: 6px; max-width: 100%; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 9999px; padding: 4px 10px 4px 5px; color: var(--text-primary); font-size: 0.8125rem; text-decoration: none; transition: border-color 0.2s; }
+    .source:hover { border-color: var(--border-glow); }
+    .source:focus-visible { outline: none; box-shadow: var(--ring); }
+    .source-n { width: 18px; height: 18px; border-radius: 50%; background: var(--accent-light); color: var(--accent); font-size: 0.7rem; font-weight: 700; display: grid; place-items: center; flex-shrink: 0; }
+    .source-t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 280px; }
+    .meta { display: flex; align-items: center; gap: 10px; margin-top: 10px; color: var(--text-secondary); font-size: 0.75rem; }
+    .meta-actions { display: inline-flex; gap: 2px; margin-left: auto; }
+    .meta-btn { background: none; border: none; color: var(--text-secondary); cursor: pointer; padding: 4px 6px; border-radius: 8px; font: inherit; font-size: 0.75rem; }
+    .meta-btn:hover { color: var(--text-primary); background: var(--bg-tertiary); }
+    .meta-btn:focus-visible { outline: none; box-shadow: var(--ring); }
+    .thinking { display: inline-flex; gap: 4px; padding: 8px 0; }
+    .thinking i { width: 6px; height: 6px; border-radius: 50%; background: var(--text-secondary); animation: blink 1.2s infinite ease-in-out; }
+    .thinking i:nth-child(2) { animation-delay: 0.15s; } .thinking i:nth-child(3) { animation-delay: 0.3s; }
+    @keyframes blink { 0%, 80%, 100% { opacity: 0.25; } 40% { opacity: 1; } }
+    .cursor { display: inline-block; width: 7px; height: 1em; background: var(--text-primary); vertical-align: text-bottom; margin-left: 2px; border-radius: 2px; animation: blink 1s infinite; }
+    .error-card { border: 1px solid rgba(244,33,46,0.45); background: rgba(244,33,46,0.08); border-radius: 12px; padding: 12px 14px; font-size: 0.9375rem; }
+    .error-card strong { display: block; margin-bottom: 4px; }
+    .notice { color: var(--text-secondary); font-size: 0.75rem; margin-top: 8px; }
+
+    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--bg-tertiary); border: 1px solid var(--border); color: var(--text-primary); padding: 10px 16px; border-radius: 9999px; font-size: 0.875rem; opacity: 0; pointer-events: none; transition: opacity 0.25s, transform 0.25s; z-index: 60; max-width: calc(100vw - 32px); }
+    .toast.is-visible { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+    .skip-nav { position: absolute; top: -40px; left: 0; background: var(--accent); color: white; padding: 8px 16px; z-index: 100; text-decoration: none; }
+    .skip-nav:focus { top: 0; }
+
+    @media (max-width: 1100px) {
+      .rail { position: absolute; z-index: 40; top: 0; bottom: 0; left: 0; box-shadow: var(--shadow-3); }
+      .main-content { position: relative; }
+    }
+    @media (max-width: 640px) {
+      .topbar { padding: 10px 12px; }
+      .stage, .composer-wrap { padding-left: 12px; padding-right: 12px; }
+      .meter-bar { display: none; }
+      .tools .hint { display: none; }
+      .msg-user .bubble { max-width: 92%; }
+      .att-t { max-width: 160px; }
+      .popover { bottom: 170px; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+  </style>
+</head>
+<body>
+  <a href="#question" class="skip-nav">Skip to the message box</a>
+  <div class="layout">
+    <aside class="sidebar-left" aria-label="Main navigation"></aside>
+    <script src="/js/sidebar.js"></script>
+
+    <main class="main-content" id="main-content">
+      <aside class="rail" id="rail" aria-label="Conversations">
+        <div class="rail-head">
+          <span class="rail-title"><span class="rail-mark" aria-hidden="true">⚡</span>Chat</span>
+          <button type="button" class="icon-only" id="btn-rail-close" aria-label="Hide conversations" title="Hide conversations">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/><path d="m16 15-3-3 3-3"/></svg>
+          </button>
+        </div>
+        <button type="button" class="rail-btn" id="btn-new">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+          New chat
+        </button>
+        <button type="button" class="rail-btn" id="btn-search" aria-expanded="false" aria-controls="rail-search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          Search
+        </button>
+        <div class="rail-search" id="rail-search">
+          <label for="search-input" class="sr-only">Search conversations</label>
+          <input type="search" id="search-input" placeholder="Search conversations" autocomplete="off">
+        </div>
+        <div class="rail-label" id="rail-label">Recent</div>
+        <div class="convo-list" id="convo-list"></div>
+        <p class="rail-empty" id="rail-empty">No conversations yet.</p>
+      </aside>
+
+      <section class="pane">
+        <header class="topbar">
+          <div class="topbar-group">
+            <button type="button" class="icon-only" id="btn-rail-open" aria-label="Show conversations" title="Show conversations" hidden>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/><path d="m14 9 3 3-3 3"/></svg>
+            </button>
+            <button type="button" class="chip-btn" id="lane-select" aria-haspopup="listbox" aria-expanded="false" aria-controls="lane-panel" title="Choose which model answers">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/></svg>
+              <span class="model-wrap"><span id="lane-label">Auto</span><span class="model" id="lane-model"></span></span>
+            </button>
+          </div>
+          <div class="topbar-group">
+            <span class="meter" id="meter" title="Estimated tokens of attached context, against the budget one question can carry">
+              <span id="meter-text">0 / 24K</span>
+              <span class="meter-bar" aria-hidden="true"><span class="meter-fill" id="meter-fill"></span></span>
+            </span>
+            <button type="button" class="icon-only" id="btn-export" aria-label="Download this conversation as Markdown" title="Download as Markdown" disabled>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            </button>
+          </div>
+        </header>
+
+        <section class="panel" id="lane-panel" role="listbox" aria-label="Model">
+          <div class="panel-title">Model</div>
+          <div id="lane-options"></div>
+          <div class="lane-key" id="lane-key">
+            <input type="password" id="lane-key-input" placeholder="API key" autocomplete="off" aria-label="API key for the selected provider">
+            <small>Stored only in this browser and sent with your question so the provider you chose answers first. Shared with Ask. Auto needs no key.</small>
+          </div>
+        </section>
+
+        <div class="stage" id="stage">
+          <div class="hero" id="hero">
+            <h1 id="hero-title">What do you want to know about an account?</h1>
+            <p id="hero-sub">Attach an X account, a post or a thread, then ask. Answers cite the posts they come from, with links you can click.</p>
+          </div>
+          <div class="thread" id="thread" aria-live="polite"></div>
+        </div>
+
+        <div class="composer-wrap">
+          <form class="composer" id="composer">
+            <div class="attachments" id="attachments" aria-label="Attached context"></div>
+            <label for="question" class="sr-only">Ask about the attached accounts and posts</label>
+            <textarea id="question" rows="2" placeholder="Ask about an account or post. Paste an x.com link to attach it." autocomplete="off" spellcheck="true" maxlength="2000"></textarea>
+            <div class="tools">
+              <button type="button" class="icon-only" id="btn-attach" aria-label="Attach an account or post" title="Attach an account or post" aria-expanded="false" aria-controls="attach-popover">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+              </button>
+              <span class="hint" id="hint">Attach an account or post to ask about it</span>
+              <button type="submit" class="send-btn" id="send" aria-label="Send" disabled>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>
+              </button>
+            </div>
+          </form>
+          <div class="quick" id="quick" aria-label="Suggestions"></div>
+          <p class="footnote">Reads public posts with no login. Conversations stay in this browser.</p>
+        </div>
+
+        <section class="popover" id="attach-popover" role="dialog" aria-labelledby="attach-title">
+          <h2 id="attach-title">Attach context</h2>
+          <p>An @handle or profile link reads the account and its recent posts. A post link reads the post and its thread.</p>
+          <form class="attach-row" id="attach-form">
+            <label for="attach-input" class="sr-only">Handle or link</label>
+            <input type="text" id="attach-input" placeholder="@handle, profile link or post link" autocomplete="off" spellcheck="false">
+            <button type="submit" class="btn-primary" id="attach-submit">Attach</button>
+          </form>
+          <div class="examples" id="examples"></div>
+        </section>
+
+        <div class="toast" id="toast" role="status" aria-live="polite"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked@15.0.12/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
+  <script type="module" src="/js/chat.js"></script>
+</body>
+</html>

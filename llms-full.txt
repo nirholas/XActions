@@ -50,7 +50,7 @@ src/                 Core library
   utils/             Shared utilities
 api/                 Express.js backend
   server.js          Main entry
-  routes/            40 REST route modules
+  routes/            41 REST route modules
   services/          Business logic, job queue, payments
   middleware/        Auth, rate limiting, error handling
   realtime/          Socket.io handlers

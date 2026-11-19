@@ -66,6 +66,7 @@ Visit [xactions.app](https://xactions.app) or deploy your own instance (see [dep
 
 | Page | URL | Description |
 |------|-----|-------------|
+| Chat | `/chat` | Ask questions about attached X accounts, posts and threads; answers cite the posts ([docs](chat.md)) |
 | AI | `/ai` | AI-powered tweet generation and analysis |
 | AI API | `/ai-api` | AI API playground and docs |
 | MCP | `/mcp` | MCP server setup and tool reference |

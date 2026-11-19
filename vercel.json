@@ -60,6 +60,10 @@
       "dest": "/dashboard/ask.html"
     },
     {
+      "src": "/chat",
+      "dest": "/dashboard/chat.html"
+    },
+    {
       "src": "/data/(.*)",
       "dest": "/dashboard/data/$1"
     },
