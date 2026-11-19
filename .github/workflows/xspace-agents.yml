@@ -1,0 +1,61 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# xspace-agents CI — build every package and run every test suite
+# ═══════════════════════════════════════════════════════════════════════════════
+#
+# xspace-agents is a pnpm/turbo monorepo that ci.yml never ran, and its suites
+# drifted to 181 failures before anyone noticed. Path-filtered so it only spends
+# minutes when that tree (or this file) changes.
+
+name: xspace-agents
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'xspace-agents/**'
+      - '.github/workflows/xspace-agents.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'xspace-agents/**'
+      - '.github/workflows/xspace-agents.yml'
+
+concurrency:
+  group: xspace-agents-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    name: Build and test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: xspace-agents
+    env:
+      TURBO_TELEMETRY_DISABLED: 1
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      # pnpm version comes from packageManager in xspace-agents/package.json.
+      - name: Enable pnpm
+        run: corepack enable
+
+      # Lifecycle scripts are skipped: puppeteer's postinstall would download a
+      # browser that no test launches.
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --ignore-scripts
+
+      - name: Build all packages
+        run: pnpm build
+
+      # create-xspace-agent has no tests, and `vitest run` fails on an empty set.
+      - name: Test
+        run: pnpm --filter xspace-agent --filter @xspace/server --filter @xspace/cli --filter @xspace/widget test
