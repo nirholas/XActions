@@ -11,6 +11,7 @@
  */
 
 import scrapers from '../scrapers/index.js';
+import { gotoAndRender } from '../utils/navigation.js';
 
 // ============================================================================
 // Browser Pool (shared across action executions)
@@ -220,7 +221,7 @@ registerAction('follow', {
     const username = params.target.replace(/^@/, '');
     const page = await getAuthenticatedPage(context.authToken);
     try {
-      await page.goto(`https://x.com/${username}`, { waitUntil: 'networkidle2' });
+      await gotoAndRender(page, `https://x.com/${username}`, '[data-testid="placementTracking"]');
       await new Promise(r => setTimeout(r, 1000 + Math.random() * 1000));
       const followBtn = await page.$('[data-testid="placementTracking"] [role="button"]:not([data-testid$="-unfollow"])');
       if (followBtn) {
@@ -245,7 +246,7 @@ registerAction('unfollow', {
     const username = params.target.replace(/^@/, '');
     const page = await getAuthenticatedPage(context.authToken);
     try {
-      await page.goto(`https://x.com/${username}`, { waitUntil: 'networkidle2' });
+      await gotoAndRender(page, `https://x.com/${username}`, '[data-testid="placementTracking"]');
       await new Promise(r => setTimeout(r, 1000 + Math.random() * 1000));
       const unfollowBtn = await page.$('[data-testid$="-unfollow"]');
       if (unfollowBtn) {
@@ -272,7 +273,7 @@ registerAction('postTweet', {
   async execute(params, context) {
     const page = await getAuthenticatedPage(context.authToken);
     try {
-      await page.goto('https://x.com/compose/tweet', { waitUntil: 'networkidle2' });
+      await gotoAndRender(page, 'https://x.com/compose/tweet', '[data-testid="tweetTextarea_0"]');
       await new Promise(r => setTimeout(r, 1000 + Math.random() * 1000));
       const textbox = await page.$('[data-testid="tweetTextarea_0"]');
       if (textbox) {
@@ -301,7 +302,7 @@ registerAction('like', {
   async execute(params, context) {
     const page = await getAuthenticatedPage(context.authToken);
     try {
-      await page.goto(params.url, { waitUntil: 'networkidle2' });
+      await gotoAndRender(page, params.url, '[data-testid="like"], [data-testid="unlike"]');
       await new Promise(r => setTimeout(r, 1000 + Math.random() * 1000));
       const likeBtn = await page.$('[data-testid="like"]');
       if (likeBtn) {
@@ -325,7 +326,7 @@ registerAction('retweet', {
   async execute(params, context) {
     const page = await getAuthenticatedPage(context.authToken);
     try {
-      await page.goto(params.url, { waitUntil: 'networkidle2' });
+      await gotoAndRender(page, params.url, '[data-testid="retweet"], [data-testid="unretweet"]');
       await new Promise(r => setTimeout(r, 1000 + Math.random() * 1000));
       const retweetBtn = await page.$('[data-testid="retweet"]');
       if (retweetBtn) {
@@ -353,7 +354,7 @@ registerAction('reply', {
   async execute(params, context) {
     const page = await getAuthenticatedPage(context.authToken);
     try {
-      await page.goto(params.url, { waitUntil: 'networkidle2' });
+      await gotoAndRender(page, params.url, '[data-testid="tweetTextarea_0"]');
       await new Promise(r => setTimeout(r, 1000 + Math.random() * 1000));
       const replyBox = await page.$('[data-testid="tweetTextarea_0"]');
       if (replyBox) {

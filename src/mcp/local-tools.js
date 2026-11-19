@@ -36,6 +36,7 @@ import os from 'os';
 import { isBrowserConnected, isPageUsable } from '../utils/browserState.js';
 import { loadSavedSession, sessionDir } from '../utils/savedSession.js';
 import { performFollow, performUnfollow, FOLLOW_STATUS } from './followAction.js';
+import { gotoAndRender } from '../utils/navigation.js';
 
 // ============================================================================
 // Singleton Browser Management
@@ -642,7 +643,7 @@ export async function x_detect_unfollowers({ username }) {
 
 export async function x_post_tweet({ text }) {
   const { page: pg } = await ensureBrowser();
-  await pg.goto('https://x.com/compose/tweet', { waitUntil: 'networkidle2' });
+  await gotoAndRender(pg, 'https://x.com/compose/tweet', '[data-testid="tweetTextarea_0"]');
   await randomDelay();
 
   const textbox = await pg.$('[data-testid="tweetTextarea_0"]');
@@ -659,7 +660,7 @@ export async function x_post_tweet({ text }) {
 
 export async function x_like({ url }) {
   const { page: pg } = await ensureBrowser();
-  await pg.goto(url, { waitUntil: 'networkidle2' });
+  await gotoAndRender(pg, url, '[data-testid="like"], [data-testid="unlike"]');
   await randomDelay();
 
   if (await clickIfPresent(pg, '[data-testid="like"]')) {
@@ -671,7 +672,7 @@ export async function x_like({ url }) {
 
 export async function x_retweet({ url }) {
   const { page: pg } = await ensureBrowser();
-  await pg.goto(url, { waitUntil: 'networkidle2' });
+  await gotoAndRender(pg, url, '[data-testid="retweet"], [data-testid="unretweet"]');
   await randomDelay();
 
   if (await clickIfPresent(pg, '[data-testid="retweet"]')) {
@@ -824,7 +825,10 @@ export async function x_engage(args = {}) {
 
 export async function x_download_video({ tweetUrl }) {
   const { page: pg } = await ensureBrowser();
-  await pg.goto(tweetUrl, { waitUntil: 'networkidle2' });
+  await gotoAndRender(pg, tweetUrl, 'article[data-testid="tweet"]');
+  // The player mounts after the post itself; give it a moment, but a post
+  // with no video is answered below, not here.
+  await pg.waitForSelector('article[data-testid="tweet"] video', { timeout: 5000 }).catch(() => {});
   await randomDelay();
 
   const videoUrls = await pg.evaluate(() => {
@@ -882,7 +886,7 @@ export async function x_download_video({ tweetUrl }) {
 
 export async function x_update_profile({ name, bio, location, website }) {
   const { page: pg } = await ensureBrowser();
-  await pg.goto('https://x.com/settings/profile', { waitUntil: 'networkidle2' });
+  await gotoAndRender(pg, 'https://x.com/settings/profile', '[data-testid="editProfileButton"], input[name="displayName"]');
   await randomDelay();
 
   // If redirected to the profile page, open the edit dialog
@@ -923,7 +927,7 @@ export async function x_post_thread({ tweets }) {
   }
 
   const { page: pg } = await ensureBrowser();
-  await pg.goto('https://x.com/compose/tweet', { waitUntil: 'networkidle2' });
+  await gotoAndRender(pg, 'https://x.com/compose/tweet', '[data-testid="tweetTextarea_0"]');
   await randomDelay();
 
   const textbox = await pg.$('[data-testid="tweetTextarea_0"]');
@@ -955,7 +959,7 @@ export async function x_create_poll({ question, options, durationMinutes = 1440 
   }
 
   const { page: pg } = await ensureBrowser();
-  await pg.goto('https://x.com/compose/tweet', { waitUntil: 'networkidle2' });
+  await gotoAndRender(pg, 'https://x.com/compose/tweet', '[data-testid="tweetTextarea_0"]');
   await randomDelay();
 
   const textbox = await pg.$('[data-testid="tweetTextarea_0"]');
@@ -991,7 +995,7 @@ export async function x_create_poll({ question, options, durationMinutes = 1440 
 
 export async function x_schedule_post({ text, scheduledAt }) {
   const { page: pg } = await ensureBrowser();
-  await pg.goto('https://x.com/compose/tweet', { waitUntil: 'networkidle2' });
+  await gotoAndRender(pg, 'https://x.com/compose/tweet', '[data-testid="tweetTextarea_0"]');
   await randomDelay();
 
   const textbox = await pg.$('[data-testid="tweetTextarea_0"]');
@@ -1017,7 +1021,7 @@ export async function x_schedule_post({ text, scheduledAt }) {
 
 export async function x_delete_tweet({ url }) {
   const { page: pg } = await ensureBrowser();
-  await pg.goto(url, { waitUntil: 'networkidle2' });
+  await gotoAndRender(pg, url, '[data-testid="caret"]');
   await randomDelay();
 
   // Open the caret "⋯" menu on the tweet
@@ -1041,7 +1045,7 @@ export async function x_delete_tweet({ url }) {
 
 export async function x_reply({ url, text }) {
   const { page: pg } = await ensureBrowser();
-  await pg.goto(url, { waitUntil: 'networkidle2' });
+  await gotoAndRender(pg, url, '[data-testid="tweetTextarea_0"]');
   await randomDelay();
 
   const replyBox = await pg.$('[data-testid="tweetTextarea_0"]');
@@ -1062,7 +1066,7 @@ export async function x_reply({ url, text }) {
 
 export async function x_bookmark({ url }) {
   const { page: pg } = await ensureBrowser();
-  await pg.goto(url, { waitUntil: 'networkidle2' });
+  await gotoAndRender(pg, url, '[data-testid="bookmark"], [data-testid="removeBookmark"]');
   await randomDelay();
 
   if (await clickIfPresent(pg, '[data-testid="bookmark"]')) {
@@ -1079,7 +1083,7 @@ export async function x_get_bookmarks({ limit = 100 }) {
 
 export async function x_clear_bookmarks() {
   const { page: pg } = await ensureBrowser();
-  await pg.goto('https://x.com/i/bookmarks', { waitUntil: 'networkidle2' });
+  await gotoAndRender(pg, 'https://x.com/i/bookmarks', '[data-testid="caret"], [aria-label="More"]');
   await randomDelay();
 
   // Open the ⋯ overflow menu
@@ -1098,7 +1102,7 @@ export async function x_clear_bookmarks() {
 
 export async function x_auto_like({ keywords = [], maxLikes = 20 }) {
   const { page: pg } = await ensureBrowser();
-  await pg.goto('https://x.com/home', { waitUntil: 'networkidle2' });
+  await gotoAndRender(pg, 'https://x.com/home', 'article[data-testid="tweet"]');
   await randomDelay();
 
   let liked = 0;
@@ -1153,9 +1157,8 @@ export async function x_get_home_timeline({ timeline = 'for_you', limit = 25 }) 
   const normalizedTimeline = timeline === 'following' ? 'following' : 'for_you';
   const targetLabel = normalizedTimeline === 'following' ? 'Following' : 'For you';
 
-  await pg.goto('https://x.com/home', { waitUntil: 'networkidle2', timeout: 30000 });
+  await gotoAndRender(pg, 'https://x.com/home', 'article[data-testid="tweet"]');
   await randomDelay(2000, 3000);
-  await pg.waitForSelector('article[data-testid="tweet"]', { timeout: 30000 }).catch(() => {});
 
   await pg.evaluate(async (label) => {
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -1253,7 +1256,7 @@ export async function x_get_notifications({ limit = 100, filter = 'all' }) {
 
 export async function x_mute_user({ username }) {
   const { page: pg } = await ensureBrowser();
-  await pg.goto(`https://x.com/${username}`, { waitUntil: 'networkidle2' });
+  await gotoAndRender(pg, `https://x.com/${username}`, '[data-testid="userActions"]');
   await randomDelay();
 
   if (await clickIfPresent(pg, '[data-testid="userActions"]')) {
@@ -1268,7 +1271,7 @@ export async function x_mute_user({ username }) {
 
 export async function x_unmute_user({ username }) {
   const { page: pg } = await ensureBrowser();
-  await pg.goto(`https://x.com/${username}`, { waitUntil: 'networkidle2' });
+  await gotoAndRender(pg, `https://x.com/${username}`, '[data-testid="userActions"]');
   await randomDelay();
 
   if (await clickIfPresent(pg, '[data-testid="userActions"]')) {
@@ -1287,7 +1290,7 @@ export async function x_unmute_user({ username }) {
 
 export async function x_send_dm({ username, message }) {
   const { page: pg } = await ensureBrowser();
-  await pg.goto('https://x.com/messages', { waitUntil: 'networkidle2' });
+  await gotoAndRender(pg, 'https://x.com/messages', '[data-testid="NewDM_Button"]');
   await randomDelay();
 
   // Start new conversation
@@ -1321,7 +1324,7 @@ export async function x_send_dm({ username, message }) {
 
 export async function x_get_conversations({ limit = 20 }) {
   const { page: pg } = await ensureBrowser();
-  await pg.goto('https://x.com/messages', { waitUntil: 'networkidle2' });
+  await gotoAndRender(pg, 'https://x.com/messages', '[data-testid="conversation"]');
   await randomDelay(2000, 3000);
 
   const conversations = await pg.evaluate((max) => {
@@ -1345,7 +1348,7 @@ export async function x_get_conversations({ limit = 20 }) {
 
 export async function x_export_dms({ limit = 100 }) {
   const { page: pg } = await ensureBrowser();
-  await pg.goto('https://x.com/messages', { waitUntil: 'networkidle2' });
+  await gotoAndRender(pg, 'https://x.com/messages', '[data-testid="conversation"]');
   await randomDelay(2000, 3000);
 
   const convos = await x_get_conversations({ limit: 10 });
@@ -1392,7 +1395,7 @@ export async function x_export_dms({ limit = 100 }) {
 
 export async function x_grok_query({ query, mode = 'default' }) {
   const { page: pg } = await ensureBrowser();
-  await pg.goto('https://x.com/i/grok', { waitUntil: 'networkidle2' });
+  await gotoAndRender(pg, 'https://x.com/i/grok', '[data-testid="grokTextArea"], textarea, [contenteditable="true"]');
   await randomDelay(2000, 3000);
 
   // Find input
@@ -1454,7 +1457,7 @@ export async function x_grok_summarize({ topic }) {
 
 export async function x_get_lists({ limit = 50 }) {
   const { page: pg } = await ensureBrowser();
-  await pg.goto('https://x.com/i/lists', { waitUntil: 'networkidle2' });
+  await gotoAndRender(pg, 'https://x.com/i/lists', 'a[href*="/i/lists/"]');
   await randomDelay();
 
   const lists = await pg.evaluate((max) => {
@@ -1488,7 +1491,7 @@ export async function x_get_spaces({ filter = 'live', topic, limit = 20 }) {
 
 export async function x_scrape_space({ url }) {
   const { page: pg } = await ensureBrowser();
-  await pg.goto(url, { waitUntil: 'networkidle2' });
+  await gotoAndRender(pg, url, '[data-testid="primaryColumn"]');
   await randomDelay(3000, 5000);
 
   const space = await pg.evaluate(() => {
@@ -1517,7 +1520,7 @@ export async function x_scrape_space({ url }) {
 
 export async function x_get_analytics({ period = '28d' }) {
   const { page: pg } = await ensureBrowser();
-  await pg.goto('https://x.com/i/account_analytics', { waitUntil: 'networkidle2' });
+  await gotoAndRender(pg, 'https://x.com/i/account_analytics', '[data-testid="primaryColumn"]');
   await randomDelay(2000, 3000);
 
   const analytics = await pg.evaluate(() => {
@@ -1553,7 +1556,7 @@ export async function x_get_analytics({ period = '28d' }) {
 
 export async function x_get_post_analytics({ url }) {
   const { page: pg } = await ensureBrowser();
-  await pg.goto(url, { waitUntil: 'networkidle2' });
+  await gotoAndRender(pg, url, 'article[data-testid="tweet"]');
   await randomDelay();
 
   const analytics = await pg.evaluate(() => {
@@ -1586,7 +1589,7 @@ export async function x_get_post_analytics({ url }) {
 
 export async function x_get_settings() {
   const { page: pg } = await ensureBrowser();
-  await pg.goto('https://x.com/settings/account', { waitUntil: 'networkidle2' });
+  await gotoAndRender(pg, 'https://x.com/settings/account', 'a[href*="/settings/"]');
   await randomDelay();
 
   return pg.evaluate(() => {
@@ -1602,9 +1605,7 @@ export async function x_get_settings() {
 
 export async function x_toggle_protected({ enabled }) {
   const { page: pg } = await ensureBrowser();
-  await pg.goto('https://x.com/settings/audience_and_tagging', {
-    waitUntil: 'networkidle2',
-  });
+  await gotoAndRender(pg, 'https://x.com/settings/audience_and_tagging', 'input[type="checkbox"]');
   await randomDelay();
 
   const checkbox = await pg.$('input[type="checkbox"]');
@@ -1632,9 +1633,7 @@ export async function x_toggle_protected({ enabled }) {
 
 export async function x_get_blocked({ limit = 200 }) {
   const { page: pg } = await ensureBrowser();
-  await pg.goto('https://x.com/settings/blocked/all', {
-    waitUntil: 'networkidle2',
-  });
+  await gotoAndRender(pg, 'https://x.com/settings/blocked/all', '[data-testid="UserCell"], [data-testid="primaryColumn"]');
   await randomDelay();
 
   return scrollCollect(
@@ -1726,9 +1725,7 @@ export async function x_competitor_analysis({ handles }) {
 
 export async function x_check_premium() {
   const { page: pg } = await ensureBrowser();
-  await pg.goto('https://x.com/settings/your_twitter_data/account', {
-    waitUntil: 'networkidle2',
-  });
+  await gotoAndRender(pg, 'https://x.com/settings/your_twitter_data/account', '[data-testid="primaryColumn"]');
   await randomDelay();
 
   return pg.evaluate(() => {
@@ -1746,7 +1743,7 @@ export async function x_check_premium() {
 
 export async function x_publish_article({ title, body, publish = false }) {
   const { page: pg } = await ensureBrowser();
-  await pg.goto('https://x.com/i/articles/new', { waitUntil: 'networkidle2' });
+  await gotoAndRender(pg, 'https://x.com/i/articles/new', '[data-testid="articleTitle"], [contenteditable="true"], input[placeholder*="Title"]');
   await randomDelay(2000, 3000);
 
   const titleEl = await pg.$(
@@ -1786,7 +1783,7 @@ export async function x_publish_article({ title, body, publish = false }) {
 
 export async function x_creator_analytics({ period = '28d' }) {
   const { page: pg } = await ensureBrowser();
-  await pg.goto('https://x.com/i/monetization', { waitUntil: 'networkidle2' });
+  await gotoAndRender(pg, 'https://x.com/i/monetization', '[data-testid="primaryColumn"]');
   await randomDelay(2000, 3000);
 
   return pg.evaluate(() => {
