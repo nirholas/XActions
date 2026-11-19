@@ -13,7 +13,14 @@
 
 import { describe, it, expect } from 'vitest';
 import { GRAPHQL_ENDPOINTS, BEARER_TOKEN, buildGraphQLUrl } from '../../src/client/api/graphqlQueries.js';
-import { GRAPHQL, BEARER_TOKEN as SHARED_BEARER_TOKEN } from '../../src/scrapers/twitter/http/endpoints.js';
+import {
+  GRAPHQL,
+  BEARER_TOKEN as SHARED_BEARER_TOKEN,
+  POST_QUERY_OPERATIONS,
+  graphqlRequestMethod,
+} from '../../src/scrapers/twitter/http/endpoints.js';
+import { getFollowers, getUserByScreenName } from '../../src/client/api/users.js';
+import { searchTweets } from '../../src/client/api/search.js';
 
 describe('GraphQL query ID registry', () => {
   it('shares one bearer token with the HTTP scraper', () => {
@@ -56,5 +63,64 @@ describe('GraphQL query ID registry', () => {
 
   it('builds REST URLs from their url() factory', () => {
     expect(buildGraphQLUrl(GRAPHQL_ENDPOINTS.Trends)).toBe('https://x.com/i/api/2/guide.json');
+  });
+});
+
+// #99: X serves Followers and SearchTimeline only over POST and answers a GET
+// with a bare 404. The http scraper switched in #42; this client did not, so
+// `xactions followers` and `xactions search` failed with `HTTP 404:`.
+describe('GraphQL transport', () => {
+  /** Records each request and answers with an empty timeline. */
+  function recorder() {
+    const calls = [];
+    const empty = { data: {} };
+    return {
+      calls,
+      async get(url) { calls.push({ method: 'GET', url }); return empty; },
+      async post(url, body) { calls.push({ method: 'POST', url, body }); return empty; },
+    };
+  }
+
+  it('sends Followers as POST with variables, features and queryId in the body', async () => {
+    const http = recorder();
+    for await (const _ of getFollowers(http, '11348282', 5)) { /* drain */ }
+
+    expect(http.calls).toHaveLength(1);
+    const [call] = http.calls;
+    expect(call.method).toBe('POST');
+    expect(call.url).toBe(`https://x.com/i/api/graphql/${GRAPHQL_ENDPOINTS.Followers.queryId}/Followers`);
+    expect(call.body.queryId).toBe(GRAPHQL_ENDPOINTS.Followers.queryId);
+    expect(call.body.variables).toMatchObject({ userId: '11348282', count: 20 });
+    expect(call.body.features).toBeTypeOf('object');
+  });
+
+  it('sends SearchTimeline as POST', async () => {
+    const http = recorder();
+    for await (const _ of searchTweets(http, 'from:nasa', 5)) { /* drain */ }
+
+    expect(http.calls.map((c) => c.method)).toEqual(['POST']);
+    expect(http.calls[0].url).toMatch(/\/SearchTimeline$/);
+    expect(http.calls[0].body.variables.rawQuery).toBe('from:nasa');
+  });
+
+  it('keeps GET reads as GET with variables in the query string', async () => {
+    const http = recorder();
+    await getUserByScreenName(http, 'nasa').catch(() => {}); // empty body is fine; we only check transport
+
+    expect(http.calls[0].method).toBe('GET');
+    expect(decodeURIComponent(http.calls[0].url)).toContain('"screen_name":"nasa"');
+  });
+
+  it('declares the same transport as the shared map for every read', () => {
+    const wrong = [];
+    for (const [name, endpoint] of Object.entries(GRAPHQL_ENDPOINTS)) {
+      if (endpoint.isRest) continue;
+      const postQuery = POST_QUERY_OPERATIONS.has(endpoint.operationName);
+      if (postQuery && endpoint.method !== 'POST') wrong.push(`${name} must be POST`);
+      if (!postQuery && endpoint.method === 'GET' && graphqlRequestMethod(endpoint.operationName) !== 'GET') {
+        wrong.push(`${name} must not be GET`);
+      }
+    }
+    expect(wrong).toEqual([]);
   });
 });
