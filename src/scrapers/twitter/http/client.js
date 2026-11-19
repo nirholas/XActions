@@ -542,8 +542,12 @@ export class TwitterHttpClient {
         options.onProgress({ fetched, limit: limit === Infinity ? null : limit });
       }
 
+      // A cursor that comes back unchanged means the page did not advance.
+      // With the default limit of Infinity, continuing would request the same
+      // page from x.com forever, so treat it as the end of the list, as the
+      // relationship, tweet and search loops already do.
+      if (!result.cursor || result.cursor === cursor) break;
       cursor = result.cursor;
-      if (!cursor) break;
     }
   }
 
