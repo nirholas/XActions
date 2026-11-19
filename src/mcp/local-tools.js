@@ -390,6 +390,34 @@ export async function x_get_thread({ url }) {
 }
 
 /**
+ * Full text of an X long-form Article, in one GraphQL read and no browser.
+ *
+ * Uses the http layer's `scrapeArticle`, which asks `TweetResultByRestId` for
+ * the article body (`withArticlePlainText`). A response carrying only the
+ * preview is an error, not a short article.
+ *
+ * @param {{url: string}} args Article URL, status URL, or numeric id
+ * @returns {Promise<object>}
+ */
+export async function x_get_article({ url }) {
+  const [{ TwitterHttpClient }, { scrapeArticle }] = await Promise.all([
+    import('../scrapers/twitter/http/client.js'),
+    import('../scrapers/twitter/http/tweets.js'),
+  ]);
+
+  const authToken = process.env.XACTIONS_SESSION_COOKIE;
+  const csrfToken = process.env.XACTIONS_CSRF_TOKEN;
+  const cookies = authToken ? [`auth_token=${authToken}`, csrfToken && `ct0=${csrfToken}`].filter(Boolean).join('; ') : null;
+  const client = new TwitterHttpClient(cookies ? { cookies } : {});
+
+  const article = await scrapeArticle(client, url);
+  if (!article.text) {
+    throw new Error(`X returned only the preview of article ${article.id}, not its body. Set XACTIONS_SESSION_COOKIE and retry.`);
+  }
+  return article;
+}
+
+/**
  * Collect a profile and a timeline sample, then run the shared analyser.
  *
  * The HTTP client is used rather than the browser because X stopped serving
@@ -1859,6 +1887,7 @@ export const toolMap = {
   x_get_tweets,
   x_search_tweets,
   x_get_thread,
+  x_get_article,
   x_best_time_to_post,
   x_account_report,
   x_account_brief,

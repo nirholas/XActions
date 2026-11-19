@@ -276,6 +276,9 @@ export async function scrapeHighlights(client, user, options = {}) {
 /**
  * A user's Articles tab (`UserArticlesTweets`).
  *
+ * Returns the tweets that carry each article, not the article bodies; pass an
+ * item's `id` to `scrapeArticle` (./tweets.js) for the full text.
+ *
  * @param {object} client TwitterHttpClient instance (authenticated)
  * @param {string|{userId: string}} user Username, numeric id, or `{ userId }`
  * @param {object} [options] `{ limit, cursor, onProgress }`

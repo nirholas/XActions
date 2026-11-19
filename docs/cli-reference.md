@@ -51,6 +51,7 @@ The answer streams as it is written and ends with a **Run it** block naming the 
   - [xactions search](#xactions-search)
   - [xactions hashtag](#xactions-hashtag)
   - [xactions thread](#xactions-thread)
+  - [xactions article](#xactions-article)
   - [xactions media](#xactions-media)
   - [xactions info](#xactions-info)
 - [Persona Commands](#xactions-persona-create)
@@ -696,6 +697,47 @@ xactions thread https://x.com/nichxbt/status/1234567890123456789
 # Save thread to file
 xactions thread https://x.com/user/status/123456789 -o thread.json
 ```
+
+---
+
+### xactions article
+
+Read the full text of an X long-form Article in one GraphQL request, with no browser.
+
+X's own web client asks for articles with `withArticlePlainText: false` and gets only the short preview back. This command sets it to `true`, so the response carries the whole body. If X still answers with the preview only, the command fails rather than printing a teaser as if it were the article.
+
+**Syntax:**
+
+```bash
+xactions article <url> [options]
+```
+
+**Arguments:**
+
+| Argument | Description                                                        | Required |
+|----------|--------------------------------------------------------------------|----------|
+| `url`    | `x.com/i/article/<id>` URL, a status URL, or the numeric id        | Yes      |
+
+**Options:**
+
+| Option            | Alias | Description                                  | Default |
+|-------------------|-------|----------------------------------------------|---------|
+| `--output <file>` | `-o`  | Write the article as JSON to a file          | stdout  |
+| `--json`          |       | Print the full JSON object                   |         |
+
+`--compact` prints `id username date likes views title url text` on one line.
+
+**Examples:**
+
+```bash
+# Title, author and the whole body
+xactions article https://x.com/i/article/1234567890123456789
+
+# Just the body, for piping
+xactions article https://x.com/i/article/1234567890123456789 --json | jq -r .text
+```
+
+From Node, the same read is `scrapeArticle(client, url)` from `xactions/scrapers/twitter/http`, and the MCP tool is `x_get_article`.
 
 ---
 

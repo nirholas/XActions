@@ -387,11 +387,15 @@ export class TwitterHttpClient {
    * @param {object} variables
    * @param {object} [options]
    * @param {object} [options.features]
+   * @param {Record<string, boolean>} [options.fieldToggles] - Sent as the
+   *   `fieldToggles` parameter (query string on GET, body on POST). Omitted
+   *   from the request when not given.
    * @param {boolean} [options.mutation=false] - If true, sends POST
    * @returns {Promise<object>}
    */
   async graphql(queryId, operationName, variables, options = {}) {
     const features = options.features || DEFAULT_FEATURES;
+    const fieldToggles = options.fieldToggles;
     const isMutation = options.mutation === true;
 
     // The caller's queryId is the hardcoded table value. Prefer the ID
@@ -405,7 +409,7 @@ export class TwitterHttpClient {
     }
 
     try {
-      return await this._graphqlOnce(resolvedId, operationName, variables, features, isMutation);
+      return await this._graphqlOnce(resolvedId, operationName, variables, features, isMutation, fieldToggles);
     } catch (err) {
       if (!this._autoRefreshQueryIds || !this._isStaleQueryIdFailure(err)) throw err;
       const freshId = await this._refreshedQueryId(operationName);
@@ -413,7 +417,7 @@ export class TwitterHttpClient {
       if (this._debug) {
         console.log(`[TwitterHttpClient] ${operationName}: query ID ${resolvedId} is stale, retrying with ${freshId}`);
       }
-      return this._graphqlOnce(freshId, operationName, variables, features, isMutation);
+      return this._graphqlOnce(freshId, operationName, variables, features, isMutation, fieldToggles);
     }
   }
 
@@ -421,26 +425,25 @@ export class TwitterHttpClient {
    * One GraphQL round-trip with a fixed query ID.
    * @private
    */
-  async _graphqlOnce(queryId, operationName, variables, features, isMutation) {
+  async _graphqlOnce(queryId, operationName, variables, features, isMutation, fieldToggles) {
+    // Field toggles go in the body of a POST next to variables and features,
+    // and are left out entirely when the caller set none, so a request made
+    // without them is byte-for-byte what it was before they were supported.
+    const body = fieldToggles
+      ? { variables, features, fieldToggles, queryId }
+      : { variables, features, queryId };
+
     if (isMutation) {
       const url = `${GRAPHQL_BASE}/${queryId}/${operationName}`;
       // Mutations don't paginate: return raw JSON
-      return this.request(url, {
-        method: 'POST',
-        body: { variables, features, queryId },
-      });
+      return this.request(url, { method: 'POST', body });
     }
 
     const method = graphqlRequestMethod(operationName);
     const url = method === 'POST'
       ? `${GRAPHQL_BASE}/${queryId}/${operationName}`
-      : buildGraphQLUrl(queryId, operationName, variables, features);
-    const json = await this.request(
-      url,
-      method === 'POST'
-        ? { method, body: { variables, features, queryId } }
-        : undefined,
-    );
+      : buildGraphQLUrl(queryId, operationName, variables, features, fieldToggles);
+    const json = await this.request(url, method === 'POST' ? { method, body } : undefined);
 
     // x.com answers every GraphQL query with the envelope { data, errors }.
     // Consumers read `response.data.user`, `response.data.tweetResult` and so

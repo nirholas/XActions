@@ -155,6 +155,7 @@ The rest of the read surface, same flags:
 ```bash
 xactions hashtag ai --limit 50 --compact
 xactions thread https://x.com/NASA/status/1234567890 --compact
+xactions article https://x.com/i/article/1234567890 --json | jq -r .text
 xactions media NASA --limit 30 --compact
 ```
 
@@ -324,6 +325,7 @@ is not, that is a bug in this table.
 | Run a long-lived LLM-driven agent | `src/algorithmBuilder.js` with `src/personaEngine.js`, via `xactions persona run <id>` |
 | Read an account without logging in | `xactions profile <user>`, `xactions tweets <user>` |
 | Research accounts before tagging them in a post | `xactions brief --file accounts.txt --topic x402`, or the `x_account_brief` MCP tool. See [`docs/brief.md`](docs/brief.md) |
+| Read the full text of a long-form Article | `xactions article <url>`, the `x_get_article` MCP tool, or `scrapeArticle` in `src/scrapers/twitter/http/tweets.js` |
 | Import an official X archive | `xactions archive <path-to-zip>` |
 | Hold agent writes for human approval | set `XACTIONS_MCP_REQUIRE_APPROVAL=1`, then `xactions drafts` |
 | Log in from a browser already signed in to x.com | `xactions login --from-browser`, or `--cookies-file` for an export |

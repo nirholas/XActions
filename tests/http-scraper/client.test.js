@@ -319,6 +319,40 @@ describe('GraphQL URL construction', () => {
     });
   });
 
+  it('graphql() puts fieldToggles in the GET query string when given', async () => {
+    const fetch = mockFetch(200, { data: {} });
+    const client = new TwitterHttpClient({ cookies: 'auth_token=x; ct0=y', fetch, maxRetries: 0 });
+    const fieldToggles = { withArticlePlainText: true };
+
+    await client.graphql('testQID', 'TestOp', { foo: 'bar' }, { fieldToggles });
+
+    const calledUrl = fetch.mock.calls[0][0];
+    expect(calledUrl).toBe(buildGraphQLUrl('testQID', 'TestOp', { foo: 'bar' }, DEFAULT_FEATURES, fieldToggles));
+    expect(JSON.parse(new URL(calledUrl).searchParams.get('fieldToggles'))).toEqual(fieldToggles);
+  });
+
+  it('graphql() puts fieldToggles in the POST body when given', async () => {
+    const fetch = mockFetch(200, { data: {} });
+    const client = new TwitterHttpClient({ cookies: 'auth_token=x; ct0=y', fetch, maxRetries: 0 });
+
+    await client.graphql('queryQID', 'SearchTimeline', { count: 20 }, { fieldToggles: { withArticlePlainText: true } });
+    await client.graphql('mutQID', 'CreateTweet', { text: 'hi' }, { mutation: true, fieldToggles: { withAuxiliaryUserLabels: false } });
+
+    expect(JSON.parse(fetch.mock.calls[0][1].body).fieldToggles).toEqual({ withArticlePlainText: true });
+    expect(JSON.parse(fetch.mock.calls[1][1].body).fieldToggles).toEqual({ withAuxiliaryUserLabels: false });
+  });
+
+  it('graphql() sends no fieldToggles when none are given', async () => {
+    const fetch = mockFetch(200, { data: {} });
+    const client = new TwitterHttpClient({ cookies: 'auth_token=x; ct0=y', fetch, maxRetries: 0 });
+
+    await client.graphql('testQID', 'TestOp', {});
+    await client.graphql('queryQID', 'SearchTimeline', {});
+
+    expect(new URL(fetch.mock.calls[0][0]).searchParams.has('fieldToggles')).toBe(false);
+    expect(JSON.parse(fetch.mock.calls[1][1].body)).not.toHaveProperty('fieldToggles');
+  });
+
   it('keeps unrelated GraphQL reads on GET', () => {
     expect(graphqlRequestMethod('UserTweets')).toBe('GET');
   });

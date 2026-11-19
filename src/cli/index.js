@@ -827,6 +827,46 @@ program
   });
 
 program
+  .command('article <url>')
+  .description('Read the full text of an X long-form Article')
+  .option('-o, --output <file>', 'Output file')
+  .option('--json', 'Force JSON on stdout, ignoring --output and --google-sheets')
+  .action(async (url, options) => {
+    const mode = resolveOutputMode(program, options);
+    const spinner = createSpinner('Fetching article...', mode);
+
+    try {
+      const client = await createTwitterHttpClient();
+      const { scrapeArticle } = await import('../scrapers/twitter/http/tweets.js');
+      const article = await scrapeArticle(client, url);
+
+      // The preview alone is not the article; reporting it as one would be the
+      // silent partial result the read commands refuse to give.
+      if (!article.text) {
+        throw new Error(`X returned only the preview of article ${article.id}, not its body.\n  ${AUTH_HINT}`);
+      }
+      spinner.succeed(`Fetched "${article.title || article.id}"`);
+
+      if (mode.compact) {
+        printCompact(article, { kind: 'article', fields: mode.fields });
+      } else if (options.json) {
+        console.log(JSON.stringify(article, null, 2));
+      } else if (options.output) {
+        await scrapers.exportToJSON(article, options.output);
+        console.log(chalk.green(`✓ Saved to ${options.output}`));
+      } else {
+        console.log('\n' + chalk.bold(article.title || '(untitled)'));
+        console.log(chalk.gray(`@${article.author.username}  ${article.createdAt || ''}  ${article.url}\n`));
+        console.log(article.text + '\n');
+      }
+    } catch (error) {
+      spinner.fail('Failed to fetch article');
+      console.error(chalk.red(error.message));
+      process.exitCode = 1;
+    }
+  });
+
+program
   .command('media <username>')
   .description('Scrape media from a user')
   .option('-l, --limit <number>', 'Maximum items', '50')

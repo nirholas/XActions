@@ -33,7 +33,7 @@ export const GROUPS = [
   {
     title: 'Read an account',
     hint: 'Works with no login at all',
-    commands: ['profile', 'tweets', 'thread', 'media', 'analyze', 'brief', 'report', 'history', 'snapshot'],
+    commands: ['profile', 'tweets', 'thread', 'article', 'media', 'analyze', 'brief', 'report', 'history', 'snapshot'],
   },
   {
     title: 'Followers and audience',
