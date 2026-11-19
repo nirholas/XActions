@@ -99,9 +99,10 @@ const requireSubscription = (requiredTier = 'free') => {
 
       next();
     } catch (error) {
+      // Fail closed: letting the request through on a DB error would hand
+      // every caller the required tier whenever the database is unreachable.
       console.error('❌ Subscription check error:', error.message);
-      // Fail open — don't block users if DB is down
-      next();
+      return res.status(503).json({ error: 'Subscription check unavailable, try again shortly' });
     }
   };
 };
@@ -147,8 +148,9 @@ const checkUsageLimit = (limitKey) => {
 
       next();
     } catch (error) {
+      // Fail closed for the same reason: an unreachable DB must not mean unlimited usage.
       console.error('❌ Usage limit check error:', error.message);
-      next();
+      return res.status(503).json({ error: 'Usage check unavailable, try again shortly' });
     }
   };
 };
