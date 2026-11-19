@@ -1304,6 +1304,39 @@ const tip = (i) => {
 console.log(\`Base fee \${baseFee.toFixed(2)} Gwei; tip slow \${tip(0)} / normal \${tip(1)} / fast \${tip(2)} Gwei\`);
 \`\`\`
 
+## Mempool.space (Bitcoin)
+
+\`\`\`javascript
+const BASE = 'https://mempool.space/api';
+
+// Mempool overview
+const mempool = await fetch(\`\${BASE}/mempool\`).then(r => r.json());
+console.log('Pending TXs:', mempool.count);
+console.log('Mempool size:', (mempool.vsize / 1e6).toFixed(1), 'MB');
+
+// Fee recommendations
+const fees = await fetch(\`\${BASE}/v1/fees/recommended\`).then(r => r.json());
+console.log('Fastest:', fees.fastestFee, 'sat/vB (~10 min)');
+console.log('Hour:', fees.hourFee, 'sat/vB');
+console.log('Day:', fees.minimumFee, 'sat/vB');
+
+// Specific transaction status
+const tx = await fetch(\`\${BASE}/tx/TXID\`).then(r => r.json());
+console.log('Confirmed:', tx.status.confirmed);
+console.log('Block:', tx.status.block_height);
+console.log('Fee rate:', tx.fee / tx.weight * 4, 'sat/vB');
+
+// Real-time via WebSocket
+const ws = new WebSocket('wss://mempool.space/api/v1/ws');
+ws.on('open', () => ws.send(JSON.stringify({ action: 'init' })));
+ws.on('message', (data) => {
+  const msg = JSON.parse(data);
+  if (msg['mempool-blocks']) {
+    console.log('Next block fee:', msg['mempool-blocks'][0].feeRange);
+  }
+});
+\`\`\`
+
 ## MEV Detection
 
 \`\`\`javascript
