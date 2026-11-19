@@ -69,7 +69,7 @@ xactions/
 │
 ├── src/                    # Core source code
 │   ├── cli/                # CLI entry point
-│   │   └── index.js        # 56 commands
+│   │   └── index.js        # 58 commands
 │   ├── mcp/                # MCP server
 │   │   └── server.js       # 144 tools
 │   ├── scrapers/           # Multi-platform scrapers
@@ -291,7 +291,7 @@ workflow run morning-engage
 | Document | Covers |
 |----------|--------|
 | [getting-started.md](getting-started.md) | Installation, quick start |
-| [cli-reference.md](cli-reference.md) | 56 CLI commands |
+| [cli-reference.md](cli-reference.md) | 58 CLI commands |
 | [rest-api.md](rest-api.md) | 175+ REST API endpoints |
 | [mcp-setup.md](mcp-setup.md) | MCP server for AI agents |
 | [agents.md](agents.md) | Autonomous thought leader agent |

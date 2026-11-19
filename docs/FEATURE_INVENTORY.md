@@ -335,7 +335,7 @@ call that would exceed it is refused before anything reaches X.
 onto Claude Desktop > Settings > Extensions; it prompts for the session cookie
 and tool groups at install time.
 
-### 6.2 Complete MCP Tool List (154 tools)
+### 6.2 Complete MCP Tool List (156 tools)
 
 Grouped by tool group, alphabetical within each group. "Write" marks the tools
 the approval gate holds and the daily caps charge.
@@ -503,7 +503,7 @@ the approval gate holds and the daily caps charge.
 > **How to use:** `npx xactions <command>`, or `npm run cli -- <command>` from a clone.
 > **Auth:** stored under `~/.xactions` (override with `XACTIONS_HOME`).
 
-56 commands, grouped by task exactly as `xactions` with no arguments prints
+58 commands, grouped by task exactly as `xactions` with no arguments prints
 them, plus 85 subcommands. Two more are registered but ungrouped: `completion`,
 which prints a shell completion script generated from the live command tree,
 and `ask`.

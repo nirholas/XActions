@@ -56,7 +56,7 @@ xactions followers elonmusk --limit 500 --output followers.csv
 xactions non-followers myhandle
 ```
 
-See the full [CLI Reference](cli-reference.md) for all 56 commands.
+See the full [CLI Reference](cli-reference.md) for all 58 commands.
 
 Two global flags make the CLI easy to pipe into another program: `--compact`
 prints one record per line with no colours or spinners, and `--fields` picks
@@ -163,7 +163,7 @@ Generate this config automatically:
 xactions mcp-config
 ```
 
-154 MCP tools are available: scraping, posting, engagement, analytics, streaming, and more. See [MCP Setup](mcp-setup.md).
+156 MCP tools are available: scraping, posting, engagement, analytics, streaming, and more. See [MCP Setup](mcp-setup.md).
 
 Three flags shape what an agent gets. Run `npx xactions-mcp --help` for the full list.
 
@@ -268,7 +268,7 @@ X. Ask an agent to call `x_action_budget` to see what is left.
 
 | Guide | Description |
 |-------|-------------|
-| [CLI Reference](cli-reference.md) | All 56 CLI commands |
+| [CLI Reference](cli-reference.md) | All 58 CLI commands |
 | [API Reference](api-reference.md) | Node.js library functions |
 | [MCP Setup](mcp-setup.md) | AI agent integration |
 | [Browser Scripts](browser-scripts.md) | Complete script catalog |
