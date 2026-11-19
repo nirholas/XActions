@@ -3,14 +3,14 @@
  * Twitter HTTP Tweet Scraper
  *
  * Scrapes tweets via Twitter's internal GraphQL API — no browser required.
- * Supports user timelines, replies, single tweet lookup, and thread
- * reconstruction.
+ * Supports user timelines, replies, single tweet lookup, long-form Article
+ * bodies, and thread reconstruction.
  *
  * @author nich (@nichxbt)
  * @license Apache-2.0
  */
 
-import { GRAPHQL, DEFAULT_FEATURES } from './endpoints.js';
+import { GRAPHQL, DEFAULT_FEATURES, buildGraphQLVariables, operationFieldToggles } from './endpoints.js';
 import { bindCheckpoint } from './checkpoint.js';
 import { NotFoundError, TwitterApiError } from './errors.js';
 
@@ -205,6 +205,125 @@ export async function scrapeTweetById(client, tweetId) {
   }
 
   return parsed;
+}
+
+// ---------------------------------------------------------------------------
+// scrapeArticle — Full body of an X long-form Article
+// ---------------------------------------------------------------------------
+
+/**
+ * Feature switches an Article read needs. All three are in the default set
+ * today; they are pinned here so an upstream change to that set cannot quietly
+ * turn the article payload off.
+ */
+const ARTICLE_FEATURES = Object.freeze({
+  ...DEFAULT_FEATURES,
+  articles_preview_enabled: true,
+  responsive_web_twitter_article_tweet_consumption_enabled: true,
+  longform_notetweets_rich_text_read_enabled: true,
+});
+
+/**
+ * Field toggles that make `TweetResultByRestId` return the article body.
+ *
+ * `withArticlePlainText` is the one that matters: x.com's web client sends it
+ * as `false`, and with that value the response carries only `preview_text`.
+ * Set to `true`, `article_results.result.plain_text` holds the whole article.
+ * The other toggles TweetResultByRestId declares keep their usual values.
+ *
+ * @returns {Record<string, boolean>}
+ */
+function articleFieldToggles() {
+  return {
+    ...operationFieldToggles(GRAPHQL.TweetResultByRestId.operationName),
+    withArticleRichContentState: true,
+    withArticlePlainText: true,
+    withArticleSummaryText: true,
+    withArticleVoiceOver: true,
+  };
+}
+
+/**
+ * Read the tweet id out of an Article reference.
+ *
+ * Accepts a bare numeric id, an `x.com/i/article/<id>` URL, or any
+ * `/status/<id>` URL (with or without scheme, `www.` or query string).
+ *
+ * @param {string|number} tweetIdOrUrl
+ * @returns {string} The numeric id.
+ * @throws {Error} When no id can be found in the input.
+ */
+export function parseArticleId(tweetIdOrUrl) {
+  const input = String(tweetIdOrUrl ?? '').trim();
+  if (/^\d+$/.test(input)) return input;
+  const match = input.match(/\/(?:article|status|statuses)\/(\d+)/);
+  if (!match) {
+    throw new Error(
+      `Could not find an article or tweet id in "${input}". Pass an x.com/i/article/<id> URL, a status URL, or a numeric id.`,
+    );
+  }
+  return match[1];
+}
+
+/**
+ * Fetch the full body of an X long-form Article via `TweetResultByRestId`,
+ * with no browser.
+ *
+ * The request is the one `scrapeTweetById` makes, plus the field toggles that
+ * ask for the article text (see `articleFieldToggles`). `text` is the whole
+ * article as plain text; `previewText` is the short teaser x.com shows in the
+ * timeline. When X answers without the body, `text` is null and `previewText`
+ * is what there is.
+ *
+ * @param {import('./client.js').TwitterHttpClient} client
+ * @param {string} tweetIdOrUrl Numeric id, `x.com/i/article/<id>` or a status URL.
+ * @returns {Promise<{
+ *   id: string, articleId: string|null, url: string, title: string|null,
+ *   text: string|null, previewText: string|null, summaryText: string|null,
+ *   coverImageUrl: string|null, createdAt: string|null,
+ *   author: object, metrics: object
+ * }>}
+ * @throws {NotFoundError} When the tweet does not exist, is unavailable, or is
+ *   not an Article.
+ */
+export async function scrapeArticle(client, tweetIdOrUrl) {
+  const tweetId = parseArticleId(tweetIdOrUrl);
+  const { queryId, operationName } = GRAPHQL.TweetResultByRestId;
+
+  const resp = await client.graphql(
+    queryId,
+    operationName,
+    buildGraphQLVariables('TweetResultByRestId', { tweetId }),
+    { features: ARTICLE_FEATURES, fieldToggles: articleFieldToggles() },
+  );
+
+  const result = resp?.data?.tweetResult?.result;
+  if (!result) throw new NotFoundError(`Tweet ${tweetId} not found`);
+
+  const tweet = parseTweetData(result);
+  if (!tweet || tweet.tombstone) throw new NotFoundError(`Tweet ${tweetId} is unavailable`);
+
+  const inner = result.__typename === 'TweetWithVisibilityResults' ? result.tweet || result : result;
+  const article = inner.article?.article_results?.result;
+  if (!article) {
+    throw new NotFoundError(`Tweet ${tweetId} is not an article (the response has no article_results)`);
+  }
+
+  const id = tweet.id || tweetId;
+  const { username } = tweet.author;
+  return {
+    id,
+    articleId: article.rest_id || null,
+    url: username ? `https://x.com/${username}/status/${id}` : `https://x.com/i/status/${id}`,
+    title: article.title || null,
+    text: article.plain_text || null,
+    previewText: article.preview_text || null,
+    summaryText: article.summary_text || null,
+    coverImageUrl: article.cover_media?.media_info?.original_img_url || null,
+    createdAt: tweet.createdAt || null,
+    author: tweet.author,
+    metrics: tweet.metrics,
+  };
 }
 
 // ---------------------------------------------------------------------------

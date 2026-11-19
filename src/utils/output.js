@@ -52,6 +52,7 @@ export const DEFAULT_FIELDS = {
   profile: ['id', 'username', 'name', 'followers', 'following', 'tweets', 'verified', 'bio'],
   user: ['id', 'username', 'name', 'followers', 'verified', 'bio'],
   media: ['type', 'url', 'tweetUrl'],
+  article: ['id', 'username', 'date', 'likes', 'views', 'title', 'url', 'text'],
   report: [
     'username',
     'followers',
@@ -218,7 +219,7 @@ export function selectFields(kind, fields) {
  *
  * @param {object|object[]} data - One record or a list
  * @param {object} [options]
- * @param {'tweet'|'profile'|'user'|'media'|'report'|'record'} [options.kind='record']
+ * @param {'tweet'|'profile'|'user'|'media'|'article'|'report'|'brief'|'record'} [options.kind='record']
  * @param {string[]|string|null} [options.fields] - Explicit column selection
  * @returns {string} One line per record, no trailing newline
  */

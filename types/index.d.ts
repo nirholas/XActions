@@ -501,6 +501,25 @@ export interface HttpScraperOptions {
   [key: string]: unknown;
 }
 
+/** An X long-form Article read by `scrapeArticle`. */
+export interface HttpArticle {
+  /** Id of the tweet that carries the article */
+  id: string;
+  /** The article's own id (`article_results.result.rest_id`) */
+  articleId: string | null;
+  url: string;
+  title: string | null;
+  /** The whole article as plain text; null when X answered with the preview only */
+  text: string | null;
+  /** The short teaser shown in the timeline */
+  previewText: string | null;
+  summaryText: string | null;
+  coverImageUrl: string | null;
+  createdAt: string | null;
+  author: { id: string | null; username: string; name: string; avatar: string | null; verified: boolean };
+  metrics: { likes: number; retweets: number; replies: number; quotes: number; bookmarks: number; views: number };
+}
+
 /**
  * Scraper returned by `createHttpScraper`: every HTTP scraper function with
  * the client argument already bound.
@@ -519,6 +538,8 @@ export interface HttpScraper {
   scrapeTweets(username: string, options?: ScrapeOptions): Promise<Record<string, unknown>[]>;
   scrapeTweetsAndReplies(username: string, options?: ScrapeOptions): Promise<Record<string, unknown>[]>;
   scrapeTweetById(tweetId: string): Promise<Record<string, unknown>>;
+  /** Full body of an X long-form Article, from its id, x.com/i/article/<id> or status URL */
+  scrapeArticle(tweetIdOrUrl: string): Promise<HttpArticle>;
   parseTweetData(raw: Record<string, unknown>): Record<string, unknown>;
   parseTimelineInstructions(instructions: unknown[]): Record<string, unknown>[];
   scrapeThread(tweetId: string, options?: Record<string, unknown>): Promise<Record<string, unknown>[]>;

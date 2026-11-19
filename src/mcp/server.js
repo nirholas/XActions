@@ -1204,6 +1204,20 @@ const TOOLS = [
       required: ['url'],
     },
   },
+  {
+    name: 'x_get_article',
+    description: 'Read the full text of an X long-form Article (x.com/i/article/<id>) with no browser: title, the whole body as plain text, preview and summary text, cover image, author and engagement counts. Accepts the article URL, the status URL of the post that carries it, or its numeric id.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        url: {
+          type: 'string',
+          description: 'x.com/i/article/<id> URL, a status URL, or a numeric id',
+        },
+      },
+      required: ['url'],
+    },
+  },
   // ====== Posting Analytics ======
   {
     name: 'x_best_time_to_post',
