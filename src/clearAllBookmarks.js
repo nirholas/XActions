@@ -81,7 +81,12 @@
     console.log('║  by nichxbt — v2.0' + ' '.repeat(W - 21) + '║');
     console.log('╚' + '═'.repeat(W) + '╝');
 
-    if (!window.location.href.includes('/bookmarks')) {
+    // Some accounts are redirected from the bookmarks page to /i/history
+    // (reported in https://github.com/nirholas/XActions/pull/88); the list
+    // there is the same, so run on either. Only the path is checked, so a
+    // search for "/bookmarks" does not count.
+    const path = window.location.pathname;
+    if (!path.includes('/bookmarks') && !/^\/i\/history(\/|$)/.test(path)) {
       console.error('❌ Navigate to x.com/i/bookmarks first!');
       return;
     }

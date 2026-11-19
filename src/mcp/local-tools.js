@@ -46,6 +46,7 @@ import {
   scheduleSelectValues,
   pollDurationValues,
 } from './composer.js';
+import { clearBookmarksOneByOne } from './clearBookmarks.js';
 
 // ============================================================================
 // Singleton Browser Management
@@ -1165,21 +1166,9 @@ export async function x_get_bookmarks({ limit = 100 }) {
 
 export async function x_clear_bookmarks() {
   const { page: pg } = await ensureBrowser();
-  await gotoAndRender(pg, 'https://x.com/i/bookmarks', '[data-testid="caret"], [aria-label="More"]');
-  await randomDelay();
-
-  // Open the ⋯ overflow menu
-  if (await clickIfPresent(pg, '[data-testid="caret"], [aria-label="More"]')) {
-    await sleep(500);
-    if (await clickMenuItemByText(pg, /clear all bookmarks/i)) {
-      await sleep(500);
-      if (await clickIfPresent(pg, '[data-testid="confirmationSheetConfirm"]')) {
-        await randomDelay();
-        return { success: true, message: 'All bookmarks cleared' };
-      }
-    }
-  }
-  return { success: false, message: 'Could not clear bookmarks' };
+  // X dropped the "Clear all bookmarks" menu item, so each bookmark is
+  // removed through its own button; see src/mcp/clearBookmarks.js.
+  return clearBookmarksOneByOne(pg);
 }
 
 export async function x_auto_like({ keywords = [], maxLikes = 20 }) {

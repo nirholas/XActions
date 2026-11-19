@@ -63,6 +63,10 @@ Removes all bookmarks. Tries the built-in "Clear All" button first, then falls b
 
 1. Navigate to `x.com/i/bookmarks` → paste in DevTools → Enter
 
+If X redirects that page to `x.com/i/history` for your account, run the script there; it accepts both.
+
+The MCP tool `x_clear_bookmarks` does the same job from an agent. X no longer has a "Clear all" menu item, so it removes bookmarks one at a time with 1 to 3 second pauses, counts a removal only after the post has left the feed, and stops rather than retry a removal X did not confirm.
+
 ### Features
 
 - `keepKeywords: []` — protect bookmarks containing specific words
