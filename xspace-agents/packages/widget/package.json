@@ -18,14 +18,22 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "socket.io-client": "^4.8.4"
+    "socket.io-client": "^4.8.3"
   },
   "devDependencies": {
-    "@vitest/coverage-v8": "^4.1.12",
+    "@vitest/coverage-v8": "^4.1.0",
     "jsdom": "^25.0.1",
-    "typescript": "^5.9.3",
-    "vite": "^8.3.5",
-    "vite-plugin-dts": "^4.5.4",
-    "vitest": "^4.1.12"
+    "typescript": "^5.3.3",
+    "vite": "^8.1.6",
+    "vite-plugin-dts": "^4.0.0",
+    "vitest": "^4.1.11"
+  },
+  "overrides": {
+    "nanoid@<3.3.12": "^3.3.12",
+    "picomatch@>=4.0.0 <4.0.4": "^4.0.4",
+    "postcss@<8.5.23": "^8.5.23",
+    "source-map-js@>=1.0.0 <1.2.2": "^1.2.2",
+    "vite@<6.4.4": "^6.4.4",
+    "vitest@>=2.1.0 <4.1.11": "^4.1.11"
   }
 }

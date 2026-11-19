@@ -2849,7 +2849,8 @@ schedCmd.command('add <name> <cron>').description('Add scheduled job').option('-
   try {
     const { getScheduler } = await import('../scheduler/scheduler.js');
     const scheduler = getScheduler();
-    scheduler.addJob({ name, cron, action: options.command || 'echo "Job: ' + name + '"' });
+    await scheduler.load();
+    scheduler.addJob({ name, cron, command: options.command || 'echo "Job: ' + name + '"' });
     console.log(chalk.green(`✅ Job "${name}" scheduled: ${cron}`));
   } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
 });
@@ -2858,6 +2859,7 @@ schedCmd.command('list').description('List all jobs').action(async () => {
   try {
     const { getScheduler } = await import('../scheduler/scheduler.js');
     const scheduler = getScheduler();
+    await scheduler.load();
     const jobs = scheduler.listJobs();
     if (jobs.length === 0) { console.log(chalk.dim('No scheduled jobs')); return; }
     jobs.forEach(j => console.log(`  ${j.enabled ? '🟢' : '🔴'} ${j.name}  ${chalk.dim(j.cron)}  ${chalk.dim('Next: ' + (j.nextRun || '—'))}`));
@@ -2867,16 +2869,22 @@ schedCmd.command('list').description('List all jobs').action(async () => {
 schedCmd.command('remove <name>').description('Remove a scheduled job').action(async (name) => {
   try {
     const { getScheduler } = await import('../scheduler/scheduler.js');
-    getScheduler().removeJob(name);
-    console.log(chalk.green(`✅ Job "${name}" removed`));
+    const scheduler = getScheduler();
+    await scheduler.load();
+    const result = scheduler.removeJob(name);
+    if (result?.error) { console.error(chalk.red(`❌ ${result.error}`)); process.exitCode = 1; }
+    else console.log(chalk.green(`✅ Job "${name}" removed`));
   } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
 });
 
 schedCmd.command('run <name>').description('Run a job immediately').action(async (name) => {
   try {
     const { getScheduler } = await import('../scheduler/scheduler.js');
-    await getScheduler().runJobNow(name);
-    console.log(chalk.green(`✅ Job "${name}" executed`));
+    const scheduler = getScheduler();
+    await scheduler.load();
+    const result = await scheduler.runJobNow(name);
+    if (result?.error) { console.error(chalk.red(`❌ ${result.error}`)); process.exitCode = 1; }
+    else console.log(chalk.green(`✅ Job "${name}" executed`));
   } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
 });
 

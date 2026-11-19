@@ -86,7 +86,7 @@ export class VoiceInput {
   }
 
   static isSupported(): boolean {
-    return !!(navigator.mediaDevices?.getUserMedia && window.MediaRecorder)
+    return typeof navigator.mediaDevices?.getUserMedia === 'function' && typeof window.MediaRecorder !== 'undefined'
   }
 
   private setState(state: VoiceState): void {

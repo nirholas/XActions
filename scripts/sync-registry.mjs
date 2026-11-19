@@ -9,7 +9,8 @@
  * plugin.json said 3.1.0 and "87+ tools" while the server shipped 3.5.0 with 145.
  *
  * This rewrites the version and tool-count fields in:
- *   .claude-plugin/plugin.json, .claude-plugin/marketplace.json,
+ *   plugins/xactions/.claude-plugin/plugin.json and .claude-plugin/marketplace.json
+ *     (tool count only: the plugin carries its own semver, independent of the package),
  *   server.json, glama.json (validated only: it carries neither field),
  *   smithery.yaml (stdio start command, env schema mirrored from server.json).
  *
@@ -61,15 +62,13 @@ function reconcile(rel, mutate) {
   if (after !== before) changes.push({ file: rel, before, after });
 }
 
-reconcile('.claude-plugin/plugin.json', (j) => {
-  j.version = VERSION;
+reconcile('plugins/xactions/.claude-plugin/plugin.json', (j) => {
   j.description = j.description.replace(TOOL_RE, toolPhrase);
 });
 
 reconcile('.claude-plugin/marketplace.json', (j) => {
   j.description = j.description.replace(TOOL_RE, toolPhrase);
   for (const plugin of j.plugins || []) {
-    plugin.version = VERSION;
     plugin.description = plugin.description.replace(TOOL_RE, toolPhrase);
   }
 });

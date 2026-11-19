@@ -47,7 +47,7 @@ export const ValidateFlowBodySchema = z.object({
 export const DeployFlowBodySchema = z.object({
   platform: z.string().min(1, 'Deploy platform is required'),
   mode: z.string().optional(),
-  credentials: z.record(z.string()).optional(),
+  credentials: z.record(z.string(), z.string()).optional(),
 }).passthrough()
 
 export const PreviewFlowBodySchema = z.object({

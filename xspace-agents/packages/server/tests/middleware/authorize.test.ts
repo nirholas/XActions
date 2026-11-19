@@ -14,6 +14,13 @@ import type { TenantContext, Plan, Quotas, FeatureFlags, Organization } from 'xs
 // that exports hasPermission as a vi.fn().
 import { hasPermission } from 'xspace-agent/rbac/permissions'
 
+// authorize.ts imports hasPermission from the package root; point it at the same
+// stub so the middleware actually consults the function these tests control.
+vi.mock('xspace-agent', async () => {
+  const rbac = await import('xspace-agent/rbac/permissions')
+  return { hasPermission: rbac.hasPermission }
+})
+
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------

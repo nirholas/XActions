@@ -79,7 +79,7 @@ const VIDEO = {
  * Write a synthetic archive folder. `withDms` and `withLists` toggle optional
  * sections so missing-section handling gets exercised.
  */
-async function writeFixture(root, { withDms = true, withLists = true, withBlocks = true } = {}) {
+async function writeFixture(root, { withDms = true, withLists = true, withBlocks = true, withBookmarks = true, withGrok = true } = {}) {
   const data = path.join(root, 'data');
   await fs.mkdir(path.join(data, 'tweets_media'), { recursive: true });
   const w = (name, body) => fs.writeFile(path.join(data, name), body);
@@ -158,6 +158,17 @@ async function writeFixture(root, { withDms = true, withLists = true, withBlocks
     await w('lists-created.js', ytd('lists-created', 0, [{ userListInfo: { url: 'https://twitter.com/i/lists/1', name: 'Builders' } }]));
     await w('lists-member.js', ytd('lists-member', 0, [{ userListInfo: { url: 'https://twitter.com/i/lists/2', name: 'Tools' } }]));
     await w('lists-subscribed.js', ytd('lists-subscribed', 0, []));
+  }
+  if (withBookmarks) {
+    await w('bookmarks.js', ytd('bookmarks', 0, [
+      { bookmark: { tweetId: '777', fullText: 'saved for later', expandedUrl: 'https://twitter.com/i/web/status/777' } },
+    ]));
+  }
+  if (withGrok) {
+    await w('grok-chat-item.js', ytd('grok-chat-item', 0, [
+      { grokChatItem: { chatId: 'c1', sender: 'Grok', message: 'hello human', createdAt: '2025-01-01T00:00:01.000Z' } },
+      { grokChatItem: { chatId: 'c1', sender: 'User', message: 'hi grok', createdAt: '2025-01-01T00:00:00.000Z' } },
+    ]));
   }
   await fs.writeFile(path.join(data, 'tweets_media', '3-9001.jpg'), Buffer.from('not really a jpeg'));
   await fs.writeFile(path.join(root, 'Your archive.html'), '<html></html>');
@@ -341,8 +352,18 @@ describe('sections and missing data', () => {
     expect(r.sections).toEqual({ present: ['tweets', 'likes'], missing: [] });
   });
 
+  it('reads bookmarks and Grok chat items', async () => {
+    const r = await importTwitterArchive(folder, { sections: ['bookmarks', 'grok'] });
+    expect(r.bookmarks).toEqual([
+      { id: '777', text: 'saved for later', url: 'https://twitter.com/i/web/status/777' },
+    ]);
+    expect(r.grok.map((g) => g.message)).toEqual(['hi grok', 'hello human']);
+    expect(r.grok[0]).toMatchObject({ chatId: 'c1', sender: 'User', createdAt: '2025-01-01T00:00:00.000Z' });
+    expect(r.sections).toEqual({ present: ['bookmarks', 'grok'], missing: [] });
+  });
+
   it('rejects unknown section names', async () => {
-    await expect(importTwitterArchive(folder, { sections: ['bookmarks'] })).rejects.toThrow(/Unknown archive section/);
+    await expect(importTwitterArchive(folder, { sections: ['circles'] })).rejects.toThrow(/Unknown archive section/);
   });
 
   it('reports optional sections that the archive does not contain', async () => {

@@ -132,6 +132,28 @@ vi.mock('xspace-agent', () => {
     ENDPOINT_GROUP_LIMITS: {},
     getQuotaLimit: () => Infinity,
     UsageRepository: StubRepo,
+    // Analytics + deployments now import these from the package root
+    ConversationDBRepository: StubRepo,
+    CICDService: StubRepo,
+    // Org / RBAC (routes/org.ts, middleware/authorize.ts)
+    OrganizationRepository: StubRepo,
+    MemberRepository: StubRepo,
+    CustomRoleRepository: StubRepo,
+    InvitationRepository: StubRepo,
+    TeamRepository: StubRepo,
+    UserRepository: StubRepo,
+    ROLES: {},
+    hasPermission: () => true,
+    isRoleAtLeast: () => true,
+    resolvePermissions: () => new Set<string>(),
+    validatePermissions: () => ({ valid: true, invalid: [] }),
+    // Templates, events, white-label, admin
+    AgentTemplateRepository: StubRepo,
+    ConnectionManager: StubRepo,
+    CustomDomainService: StubRepo,
+    ImpersonationService: StubRepo,
+    ResellerRepository: StubRepo,
+    ResellerService: StubRepo,
   }
 })
 
@@ -236,14 +258,16 @@ describe('createServer integration', () => {
   // 5. Protected endpoints return 401 without API key
   // --------------------------------------------------------------------------
 
-  it('GET /config returns 401 without API key', async () => {
+  // /config is deliberately public: public/js/agent-loader.js fetches it without
+  // credentials to pick a voice provider. It must expose nothing beyond that.
+  it('GET /config is public and exposes only aiProvider and status', async () => {
     const srv = await buildServer()
     const app = srv.getApp()
 
     const res = await request(app).get('/config')
 
-    expect(res.status).toBe(401)
-    expect(res.body).toHaveProperty('error', 'Unauthorized')
+    expect(res.status).toBe(200)
+    expect(Object.keys(res.body).sort()).toEqual(['aiProvider', 'status'])
   })
 
   it('GET /state returns 401 without API key', async () => {

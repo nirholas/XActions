@@ -57,6 +57,10 @@ function graphqlEndpoint(name, fallback, rest) {
     get queryId() {
       return queryId(name, fallback);
     },
+    url(qid) {
+      const id = qid ?? queryId(name, fallback);
+      return `https://x.com/i/api/graphql/${id}/${name}`;
+    },
     operationName: name,
     ...rest,
   };

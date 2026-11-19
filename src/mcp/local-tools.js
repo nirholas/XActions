@@ -34,7 +34,7 @@ import path from 'path';
 import os from 'os';
 
 import { isBrowserConnected, isPageUsable } from '../utils/browserState.js';
-import { loadSavedSession } from '../utils/savedSession.js';
+import { loadSavedSession, sessionDir } from '../utils/savedSession.js';
 import { performFollow, performUnfollow, FOLLOW_STATUS } from './followAction.js';
 
 // ============================================================================
@@ -43,6 +43,31 @@ import { performFollow, performUnfollow, FOLLOW_STATUS } from './followAction.js
 
 let browser = null;
 let page = null;
+let appliedSessionStamp = null;
+
+/**
+ * Fingerprint of the on-disk session the browser was last primed with.
+ *
+ * `applySavedSession` injects cookies once at browser launch, but a
+ * `login`/`connect` in another process rewrites the jar at any moment —
+ * and without this check every browser-lane tool keeps running the stale
+ * logged-out page and silently returns `[]` until the server restarts.
+ * mtime-based, covers both the jar and the `config.json` token mirror.
+ */
+async function sessionStamp() {
+  if (process.env.XACTIONS_SESSION_COOKIE) return 'env-session';
+  const dir = sessionDir();
+  let stamp = '';
+  for (const f of ['cookies.json', 'config.json']) {
+    try {
+      const s = await fs.stat(path.join(dir, f));
+      stamp += `${s.mtimeMs}:${s.size};`;
+    } catch {
+      stamp += '0:';
+    }
+  }
+  return stamp;
+}
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const randomDelay = (min = 1000, max = 3000) =>
@@ -92,7 +117,8 @@ async function applySavedSession(pg) {
  * Uses createBrowser/createPage from the canonical scrapers module.
  */
 async function ensureBrowser() {
-  if (!isBrowserConnected(browser) || !isPageUsable(page)) {
+  const stamp = await sessionStamp();
+  if (!isBrowserConnected(browser) || !isPageUsable(page) || stamp !== appliedSessionStamp) {
     if (browser) {
       try {
         await browser.close();
@@ -103,6 +129,7 @@ async function ensureBrowser() {
     browser = await createBrowser();
     page = await createPage(browser);
     await applySavedSession(page);
+    appliedSessionStamp = stamp;
   }
   return { browser, page };
 }

@@ -20,22 +20,43 @@
   },
   "license": "UNLICENSED",
   "dependencies": {
+    "xspace-agent": "workspace:*",
     "@xspace/server": "workspace:*",
     "chalk": "^4.1.2",
-    "commander": "^12.1.0",
-    "dotenv": "^16.6.1",
-    "express": "^4.22.3",
-    "inquirer": "^9.3.8",
+    "commander": "^12.0.0",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "inquirer": "^9.3.0",
     "ora": "^5.4.1",
-    "xspace-agent": "workspace:*",
-    "zod": "^3.25.76"
+    "zod": "^4.6.6"
   },
   "devDependencies": {
-    "@types/express": "^4.17.25",
-    "@types/inquirer": "^9.0.10",
-    "@types/node": "^20.19.43",
-    "@vitest/coverage-v8": "^4.1.12",
+    "@types/express": "^4.17.21",
+    "@types/inquirer": "^9.0.7",
+    "@types/node": "^20.11.0",
+    "@vitest/coverage-v8": "^4.1.0",
     "typescript": "^5.9.3",
-    "vitest": "^4.1.12"
+    "vitest": "^4.1.11"
+  },
+  "overrides": {
+    "body-parser@<1.20.9": "^1.20.9",
+    "brace-expansion@<1.1.21": "^1.1.21",
+    "brace-expansion@>=2.0.0 <2.1.7": "^2.1.7",
+    "brace-expansion@>=3.0.0 <5.0.12": "^5.0.12",
+    "cross-spawn@<6.0.6": "^6.0.6",
+    "debug@>=4.0.0 <4.3.1": "^4.3.1",
+    "esbuild@<0.28.1": "^0.28.1",
+    "glob@>=9.0.0 <14.0.2": "^14.0.2",
+    "minimatch@>=7.0.0 <11.0.1": "^11.0.1",
+    "nanoid@<3.3.12": "^3.3.12",
+    "path-to-regexp@<0.1.13": "^0.1.13",
+    "postcss@<8.5.23": "^8.5.23",
+    "proxy-addr@>=1.1.0 <2.0.8": "^2.0.8",
+    "qs@>=2.2.5 <6.16.1": "^6.16.1",
+    "source-map-js@>=1.0.0 <1.2.2": "^1.2.2",
+    "tinypool@<2.1.2": "^2.1.2",
+    "vite@<6.4.4": "^6.4.4",
+    "vitest@>=2.1.0 <4.1.11": "^4.1.11",
+    "zod@>=4.0.0 <4.6.6": "^4.6.6"
   }
 }

@@ -6,10 +6,10 @@
     "start": "tsx index.ts"
   },
   "dependencies": {
-    "discord.js": "^14.28.1",
-    "xspace-agent": "workspace:*"
+    "xspace-agent": "workspace:*",
+    "discord.js": "^14.16.0"
   },
   "devDependencies": {
-    "tsx": "^4.23.15"
+    "tsx": "^4.21.0"
   }
 }

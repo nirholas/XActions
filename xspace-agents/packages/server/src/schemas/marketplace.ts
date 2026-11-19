@@ -24,12 +24,12 @@ export const MarketplaceSearchQuerySchema = z.object({
 export const PublishListingBodySchema = z.object({
   name: z.string().min(1, 'name is required'),
   type: z.enum(VALID_LISTING_TYPES, {
-    errorMap: () => ({ message: `Must be one of: ${VALID_LISTING_TYPES.join(', ')}` }),
+    error: `Must be one of: ${VALID_LISTING_TYPES.join(', ')}`,
   }),
   category: z.string().min(1, 'category is required'),
   description: z.string().min(1, 'description is required'),
   pricingModel: z.enum(VALID_PRICING_MODELS, {
-    errorMap: () => ({ message: `Must be one of: ${VALID_PRICING_MODELS.join(', ')}` }),
+    error: `Must be one of: ${VALID_PRICING_MODELS.join(', ')}`,
   }),
   version: z.string().min(1, 'version is required'),
   longDescription: z.string().optional(),
@@ -41,7 +41,7 @@ export const PublishListingBodySchema = z.object({
   sourceUrl: z.string().url().optional(),
   documentationUrl: z.string().url().optional(),
   supportEmail: z.string().email().optional(),
-  manifest: z.record(z.any()).optional().default({}),
+  manifest: z.record(z.string(), z.any()).optional().default({}),
   minPlatformVersion: z.string().optional(),
 }).refine(
   (data) => data.pricingModel === 'free' || (data.priceCents != null && data.priceCents > 0),
@@ -61,7 +61,7 @@ export const UpdateReviewBodySchema = z.object({
 })
 
 export const InstallBodySchema = z.object({
-  config: z.record(z.any()).optional().default({}),
+  config: z.record(z.string(), z.any()).optional().default({}),
 })
 
 export const AdminRejectBodySchema = z.object({

@@ -182,6 +182,20 @@ function normaliseLike(record) {
   };
 }
 
+function normaliseBookmark(record) {
+  return normaliseLike(record.bookmark || record);
+}
+
+function normaliseGrokItem(record) {
+  const g = record.grokChatItem || record;
+  return {
+    chatId: g.chatId ?? g.conversationId ?? null,
+    sender: g.sender ?? null,
+    message: g.message ?? g.text ?? '',
+    createdAt: g.createdAt ?? null,
+  };
+}
+
 function normaliseRelation(record) {
   const r = record.following || record.follower || record.blocking || record.muting || record;
   return { id: r.accountId || null, url: r.userLink || (r.accountId ? `https://x.com/intent/user?user_id=${r.accountId}` : null) };
@@ -286,6 +300,8 @@ function emptyResult(archivePath) {
     mutes: [],
     dms: [],
     lists: [],
+    bookmarks: [],
+    grok: [],
     media: [],
     sections: { present: [], missing: [] },
     files: [],
@@ -370,6 +386,15 @@ class Assembler {
     for (const [base, kind] of listKinds) {
       const list = this.records(base);
       if (list) { r.lists.push(...list.map((l) => normaliseList(l, kind))); seen('lists'); }
+    }
+
+    const bookmarks = this.records('bookmarks');
+    if (bookmarks) { r.bookmarks = bookmarks.map(normaliseBookmark); seen('bookmarks'); }
+
+    const grok = this.records('grok-chat-item');
+    if (grok) {
+      r.grok = grok.map(normaliseGrokItem).sort((a, b) => (a.createdAt || '').localeCompare(b.createdAt || ''));
+      seen('grok');
     }
 
     if (r.media.length) {
@@ -497,7 +522,7 @@ async function isZip(archivePath) {
  * @param {object} [options]
  * @param {string[]} [options.sections] - Subset of ALL_SECTIONS to load (default: all)
  * @param {function} [options.onProgress] - Called with `{ phase, file, ... }` as entries are scanned and parsed
- * @returns {Promise<object>} Normalised archive: account, profile, tweets, likes, following, followers, blocks, mutes, dms, lists, media
+ * @returns {Promise<object>} Normalised archive: account, profile, tweets, likes, following, followers, blocks, mutes, dms, lists, bookmarks, grok, media
  */
 export async function importTwitterArchive(archivePath, options = {}) {
   const { sections = ALL_SECTIONS, onProgress } = options;
@@ -759,6 +784,8 @@ export async function exportArchive(result, options = {}) {
     mutes: { data: result.mutes, md: () => idsToMarkdown(result.mutes, 'Muted accounts') },
     dms: { data: result.dms, csv: () => result.dms.flatMap(flattenDm), md: () => dmsToMarkdown(result.dms) },
     lists: { data: result.lists, md: () => listsToMarkdown(result.lists) },
+    bookmarks: { data: result.bookmarks || [], md: () => tweetsToMarkdown(result.bookmarks || [], `${username}'s Bookmarks`) },
+    grok: { data: result.grok || [] },
     media: { data: result.media },
   };
 
@@ -785,7 +812,7 @@ export async function exportArchive(result, options = {}) {
       tweets: result.tweets,
       followers: result.followers,
       following: result.following,
-      bookmarks: [],
+      bookmarks: result.bookmarks || [],
       likes: result.likes,
     }));
   }
