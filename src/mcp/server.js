@@ -1741,7 +1741,7 @@ const TOOLS = [
   // ── 09-F: Scheduler ──
   {
     name: 'x_schedule_add',
-    description: 'Queue a tweet to be posted later at the given ISO timestamp by the local scheduler. Returns the scheduled job id.',
+    description: 'Add a cron job to the local scheduler — a shell/xactions command run on a cron expression (persisted in ~/.xactions/scheduler.json). Returns the registered job name.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -1754,12 +1754,12 @@ const TOOLS = [
   },
   {
     name: 'x_schedule_list',
-    description: 'List every tweet queued in the local scheduler with its id, text, scheduled time, and status.',
+    description: 'List every job registered in the local scheduler with its name, cron expression, command, enabled flag, and last-run status.',
     inputSchema: { type: 'object', properties: {} },
   },
   {
     name: 'x_schedule_remove',
-    description: 'Cancel a queued tweet in the local scheduler by its job id so it is never posted.',
+    description: 'Remove a job from the local scheduler by its name so it never runs again.',
     inputSchema: {
       type: 'object',
       properties: { name: { type: 'string', description: 'Job name' } },
@@ -3888,17 +3888,21 @@ async function executeCompetitiveTool(name, args) {
     case 'x_schedule_add': {
       const { getScheduler } = await import('../scheduler/scheduler.js');
       const scheduler = getScheduler();
-      scheduler.addJob({ name: args.name, cron: args.cron, action: args.action || args.name });
+      await scheduler.load();
+      scheduler.addJob({ name: args.name, cron: args.cron, command: args.action || args.name });
       return { status: 'scheduled', name: args.name, cron: args.cron };
     }
     case 'x_schedule_list': {
       const { getScheduler } = await import('../scheduler/scheduler.js');
-      return getScheduler().listJobs();
+      const scheduler = getScheduler();
+      await scheduler.load();
+      return scheduler.listJobs();
     }
     case 'x_schedule_remove': {
       const { getScheduler } = await import('../scheduler/scheduler.js');
-      getScheduler().removeJob(args.name);
-      return { status: 'removed', name: args.name };
+      const scheduler = getScheduler();
+      await scheduler.load();
+      return scheduler.removeJob(args.name);
     }
 
     // ── 09-H: Evergreen ──
@@ -4934,6 +4938,9 @@ async function startHttpTransport({ port, host, serverOverrides = {} } = {}) {
 // ============================================================================
 
 async function startStdioTransport(serverOverrides = {}) {
+  // stdout is the JSON-RPC channel — app modules that console.log (e.g. the
+  // scheduler) would corrupt it, so route log output to stderr here.
+  console.log = (...a) => console.error(...a);
   const server = createMcpServer(serverOverrides);
   const transport = new StdioServerTransport();
   await server.connect(transport);
