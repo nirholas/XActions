@@ -38,5 +38,7 @@ const CONFIG = {
 
 - The bulk clear option may not be available on all accounts
 - If bulk clear fails, the script falls back to removing bookmarks individually
+- If X redirects the bookmarks page to `x.com/i/history`, run the script there; it accepts both
+- The MCP tool `x_clear_bookmarks` always removes bookmarks one at a time, counts a removal only once the post has left the feed, and stops instead of retrying a removal X did not confirm
 - Consider running `src/bookmarkOrganizer.js` first to export/categorize your bookmarks before deleting
 - This action cannot be undone

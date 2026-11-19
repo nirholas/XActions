@@ -57,6 +57,8 @@ import {
 } from './tool-groups.js';
 import * as drafts from './drafts.js';
 import * as actionCaps from './action-caps.js';
+import { gotoAndRender } from '../utils/navigation.js';
+import { typeIntoComposer, clickPostButton, confirmPosted } from './composer.js';
 
 // ============================================================================
 // Configuration
@@ -2904,7 +2906,7 @@ async function executeXeepyTool(name, args) {
     case 'x_get_replies': {
       const page = await localTools.getPage();
       const url = args.tweetUrl;
-      await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 });
+      await gotoAndRender(page, url, 'article[data-testid="tweet"]');
       await new Promise(r => setTimeout(r, 3000));
       const replies = await page.evaluate((limit) => {
         const articles = document.querySelectorAll('article[data-testid="tweet"]');
@@ -2937,7 +2939,7 @@ async function executeXeepyTool(name, args) {
     case 'x_get_likers': {
       const page = await localTools.getPage();
       const tweetId = args.tweetUrl.split('/status/')[1]?.split(/[?/]/)[0];
-      await page.goto(`https://x.com/i/status/${tweetId}/likes`, { waitUntil: 'networkidle2', timeout: 30000 });
+      await gotoAndRender(page, `https://x.com/i/status/${tweetId}/likes`, '[data-testid="UserCell"]');
       await new Promise(r => setTimeout(r, 3000));
       const likers = await page.evaluate((limit) => {
         const cells = document.querySelectorAll('[data-testid="UserCell"]');
@@ -2953,7 +2955,7 @@ async function executeXeepyTool(name, args) {
     case 'x_get_retweeters': {
       const page = await localTools.getPage();
       const tweetId = args.tweetUrl.split('/status/')[1]?.split(/[?/]/)[0];
-      await page.goto(`https://x.com/i/status/${tweetId}/retweets`, { waitUntil: 'networkidle2', timeout: 30000 });
+      await gotoAndRender(page, `https://x.com/i/status/${tweetId}/retweets`, '[data-testid="UserCell"]');
       await new Promise(r => setTimeout(r, 3000));
       const retweeters = await page.evaluate((limit) => {
         const cells = document.querySelectorAll('[data-testid="UserCell"]');
@@ -2968,7 +2970,7 @@ async function executeXeepyTool(name, args) {
 
     case 'x_get_media': {
       const page = await localTools.getPage();
-      await page.goto(`https://x.com/${args.username}/media`, { waitUntil: 'networkidle2', timeout: 30000 });
+      await gotoAndRender(page, `https://x.com/${args.username}/media`, 'article[data-testid="tweet"]');
       await new Promise(r => setTimeout(r, 3000));
       const media = await page.evaluate((opts) => {
         const items = [];
@@ -2987,10 +2989,11 @@ async function executeXeepyTool(name, args) {
     case 'x_get_recommendations': {
       const page = await localTools.getPage();
       const target = args.username ? `https://x.com/${args.username}` : 'https://x.com/i/connect_people';
-      await page.goto(target, { waitUntil: 'networkidle2', timeout: 30000 });
       if (args.username) {
-        // Navigate to "Similar to" or connect page
-        await page.goto(`https://x.com/i/connect_people?user_id=${args.username}`, { waitUntil: 'networkidle2', timeout: 30000 });
+        // Go straight to the "Similar to" page; the profile itself is not read.
+        await gotoAndRender(page, `https://x.com/i/connect_people?user_id=${args.username}`, '[data-testid="UserCell"]');
+      } else {
+        await gotoAndRender(page, target, '[data-testid="UserCell"]');
       }
       await new Promise(r => setTimeout(r, 3000));
       const recommendations = await page.evaluate((limit) => {
@@ -3015,7 +3018,7 @@ async function executeXeepyTool(name, args) {
       const page = await localTools.getPage();
       const tweetId = args.tweetUrl.split('/status/')[1]?.split(/[?/]/)[0];
       const user = args.tweetUrl.split('x.com/')[1]?.split('/')[0];
-      await page.goto(`https://x.com/${user}/status/${tweetId}/quotes`, { waitUntil: 'networkidle2', timeout: 30000 });
+      await gotoAndRender(page, `https://x.com/${user}/status/${tweetId}/quotes`, 'article[data-testid="tweet"]');
       await new Promise(r => setTimeout(r, 3000));
       const quotes = await page.evaluate((limit) => {
         const articles = document.querySelectorAll('article[data-testid="tweet"]');
@@ -3031,7 +3034,7 @@ async function executeXeepyTool(name, args) {
 
     case 'x_get_likes': {
       const page = await localTools.getPage();
-      await page.goto(`https://x.com/${args.username}/likes`, { waitUntil: 'networkidle2', timeout: 30000 });
+      await gotoAndRender(page, `https://x.com/${args.username}/likes`, 'article[data-testid="tweet"]');
       await new Promise(r => setTimeout(r, 3000));
       const likedTweets = await page.evaluate((limit) => {
         const articles = document.querySelectorAll('article[data-testid="tweet"]');
@@ -3126,21 +3129,28 @@ async function executeXeepyTool(name, args) {
     // ── Engagement Automation ──
     case 'x_quote_tweet': {
       const page = await localTools.getPage();
-      await page.goto(args.tweetUrl, { waitUntil: 'networkidle2', timeout: 30000 });
+      await gotoAndRender(page, args.tweetUrl, '[data-testid="retweet"]');
       // Click retweet button, select quote
       await page.click('[data-testid="retweet"]').catch(() => {});
       await new Promise(r => setTimeout(r, 1000));
       const quoteOption = await page.$('text/Quote');
-      if (quoteOption) await quoteOption.click();
-      await new Promise(r => setTimeout(r, 1500));
-      // Type the quote text
-      const composer = await page.$('[data-testid="tweetTextarea_0"]');
-      if (composer) {
-        await composer.type(args.text, { delay: 30 });
-        await new Promise(r => setTimeout(r, 500));
-        await page.click('[data-testid="tweetButton"]').catch(() => {});
+      if (!quoteOption) {
+        return { success: false, message: 'The Quote option was not in the repost menu', quotedUrl: args.tweetUrl };
       }
-      return { success: true, quotedUrl: args.tweetUrl, text: args.text };
+      await quoteOption.click();
+      await new Promise(r => setTimeout(r, 1500));
+      // The quote opens the same contenteditable composer as a new post, so it
+      // takes the same click-then-keyboard input and the same confirmation.
+      if (!(await typeIntoComposer(page, 0, args.text))) {
+        return { success: false, message: 'The quote text did not reach the composer, so nothing was posted', quotedUrl: args.tweetUrl };
+      }
+      await new Promise(r => setTimeout(r, 500));
+      if (!(await clickPostButton(page))) {
+        return { success: false, message: 'The post button never became enabled, so nothing was posted', quotedUrl: args.tweetUrl };
+      }
+      const confirmation = await confirmPosted(page, { typed: args.text });
+      if (!confirmation.ok) return { success: false, message: confirmation.reason, quotedUrl: args.tweetUrl };
+      return { success: true, quotedUrl: args.tweetUrl, text: args.text, confirmedBy: confirmation.via };
     }
 
     case 'x_auto_comment': {
@@ -3148,8 +3158,9 @@ async function executeXeepyTool(name, args) {
       const commented = [];
       for (const tweet of asTweetList(searchResults)) {
         try {
-          await localTools.x_reply?.({ tweetUrl: tweet.url, text: args.comment });
-          commented.push(tweet.url);
+          const outcome = await localTools.x_reply?.({ url: tweet.url, text: args.comment });
+          // A reply counts once it is confirmed, not because nothing threw.
+          if (outcome && outcome.success !== false) commented.push(tweet.url);
           await new Promise(r => setTimeout(r, (args.delay || 5) * 1000));
         } catch (e) { /* skip */ }
       }
@@ -3313,7 +3324,7 @@ async function executeXeepyTool(name, args) {
       if (!imageUrl && args.tweetUrl) {
         // Scrape tweet to extract image
         const page = await localTools.getPage();
-        await page.goto(args.tweetUrl, { waitUntil: 'networkidle2', timeout: 30000 });
+        await gotoAndRender(page, args.tweetUrl, 'article img[src*="pbs.twimg.com/media"]');
         imageUrl = await page.evaluate(() => {
           const img = document.querySelector('article img[src*="pbs.twimg.com/media"]');
           return img?.src || null;
@@ -3467,7 +3478,7 @@ async function executeXeepyTool(name, args) {
     case 'x_track_engagement': {
       if (args.tweetUrl) {
         const page = await localTools.getPage();
-        await page.goto(args.tweetUrl, { waitUntil: 'networkidle2', timeout: 30000 });
+        await gotoAndRender(page, args.tweetUrl, 'article[data-testid="tweet"]');
         await new Promise(r => setTimeout(r, 2000));
         const metrics = await page.evaluate(() => {
           const article = document.querySelector('article[data-testid="tweet"]');

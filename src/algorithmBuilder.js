@@ -38,6 +38,7 @@ import {
   createPage,
   loginWithCookie,
 } from './scrapers/index.js';
+import { gotoAndRender } from './utils/navigation.js';
 
 // ============================================================================
 // Configuration
@@ -334,10 +335,7 @@ async function extractVisibleUsers(page) {
 async function doSearch(page, term, tab = 'top') {
   log('🔍', `Searching: "${term}" (${tab})`);
   try {
-    await page.goto(`https://x.com/search?q=${encodeURIComponent(term)}&src=typed_query&f=${tab === 'latest' ? 'live' : 'top'}`, {
-      waitUntil: 'networkidle2',
-      timeout: 30000,
-    });
+    await gotoAndRender(page, `https://x.com/search?q=${encodeURIComponent(term)}&src=typed_query&f=${tab === 'latest' ? 'live' : 'top'}`, 'article[data-testid="tweet"]');
     await randomDelay(TIMING.PAGE_LOAD);
     await humanScroll(page, { scrolls: randomBetween(2, 5) });
     return true;
@@ -353,7 +351,7 @@ async function doSearch(page, term, tab = 'top') {
 async function browseHome(page) {
   log('🏠', 'Browsing home timeline');
   try {
-    await page.goto('https://x.com/home', { waitUntil: 'networkidle2', timeout: 30000 });
+    await gotoAndRender(page, 'https://x.com/home', 'article[data-testid="tweet"]');
     await randomDelay(TIMING.PAGE_LOAD);
     await humanScroll(page, { scrolls: randomBetween(3, 8) });
     return true;
@@ -397,7 +395,7 @@ async function followUser(page, persona, username = null) {
   try {
     if (username) {
       // Navigate to specific user's profile
-      await page.goto(`https://x.com/${username}`, { waitUntil: 'networkidle2', timeout: 30000 });
+      await gotoAndRender(page, `https://x.com/${username}`, '[data-testid="UserName"]');
       await randomDelay(TIMING.PAGE_LOAD);
     }
 
@@ -486,7 +484,7 @@ async function createPost(page, persona) {
 
   try {
     // Navigate to compose
-    await page.goto('https://x.com/compose/post', { waitUntil: 'networkidle2', timeout: 30000 });
+    await gotoAndRender(page, 'https://x.com/compose/post', SELECTORS.tweetTextarea);
     await sleep(randomBetween(1500, 3000));
 
     // Type the post with human-like speed
@@ -518,7 +516,7 @@ async function createPost(page, persona) {
 async function visitProfile(page, username) {
   log('👤', `Visiting @${username}'s profile`);
   try {
-    await page.goto(`https://x.com/${username}`, { waitUntil: 'networkidle2', timeout: 30000 });
+    await gotoAndRender(page, `https://x.com/${username}`, '[data-testid="UserName"]');
     await randomDelay(TIMING.PAGE_LOAD);
 
     // Scroll through their tweets like a human would
@@ -542,7 +540,7 @@ async function checkOwnProfile(page) {
   log('🪞', 'Checking own profile');
   try {
     // Click profile link in sidebar or navigate
-    await page.goto('https://x.com/home', { waitUntil: 'networkidle2' });
+    await gotoAndRender(page, 'https://x.com/home', 'a[data-testid="AppTabBar_Profile_Link"]');
     await sleep(1000);
 
     // Look for profile link in nav
@@ -564,7 +562,7 @@ async function checkOwnProfile(page) {
 async function checkNotifications(page) {
   log('🔔', 'Checking notifications');
   try {
-    await page.goto('https://x.com/notifications', { waitUntil: 'networkidle2', timeout: 30000 });
+    await gotoAndRender(page, 'https://x.com/notifications', 'article[data-testid="tweet"], [data-testid="notification"]');
     await randomDelay(TIMING.PAGE_LOAD);
     await humanScroll(page, { scrolls: randomBetween(1, 4) });
     return true;
@@ -596,7 +594,7 @@ async function smartUnfollow(page, persona, maxUnfollows = 5) {
 
   for (const [username] of candidates) {
     try {
-      await page.goto(`https://x.com/${username}`, { waitUntil: 'networkidle2', timeout: 30000 });
+      await gotoAndRender(page, `https://x.com/${username}`, '[data-testid="UserName"]');
       await randomDelay(TIMING.PAGE_LOAD);
 
       // Check if they follow us back (look for "Follows you" indicator)
@@ -729,7 +727,7 @@ async function runSession(page, persona, plan) {
           } else if (persona.niche.targetAccounts.length > 0) {
             // Visit a target account's followers and follow some
             const target = persona.niche.targetAccounts[Math.floor(Math.random() * persona.niche.targetAccounts.length)];
-            await page.goto(`https://x.com/${target}/followers`, { waitUntil: 'networkidle2', timeout: 30000 });
+            await gotoAndRender(page, `https://x.com/${target}/followers`, '[data-testid="UserCell"]');
             await randomDelay(TIMING.PAGE_LOAD);
             await humanScroll(page, { scrolls: randomBetween(1, 3) });
             const users = await extractVisibleUsers(page);

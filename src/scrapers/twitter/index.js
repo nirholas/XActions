@@ -20,6 +20,8 @@ import puppeteer from 'puppeteer-extra';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import fs from 'fs/promises';
 
+import { gotoAndRender } from '../../utils/navigation.js';
+
 puppeteer.use(StealthPlugin());
 
 // ============================================================================
@@ -28,35 +30,6 @@ puppeteer.use(StealthPlugin());
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const randomDelay = (min = 1000, max = 3000) => sleep(min + Math.random() * (max - min));
-
-/**
- * Navigate to a page and wait for the content the scrape needs.
- *
- * `networkidle2` never settles on x.com's profile pages: media and ads keep
- * the connection pool busy, so the wait burned Puppeteer's whole 30s timeout
- * and `xactions export` died before reading a single field. `domcontentloaded`
- * returns as soon as the shell is in place; the selector is what makes that
- * wait meaningful, and a miss falls through to the caller's retry loop instead
- * of throwing.
- *
- * @param {Object} page
- * @param {string} url
- * @param {string} [waitFor] CSS selector marking the content to scrape
- * @returns {Promise<void>}
- */
-async function gotoAndRender(page, url, waitFor) {
-  await page.goto(url, { waitUntil: 'domcontentloaded' });
-  if (waitFor) {
-    try {
-      await page.waitForSelector(waitFor, { timeout: 15000 });
-    } catch {
-      // Nothing appeared; the caller's retries decide whether that is fatal.
-    }
-    return;
-  }
-  await randomDelay();
-}
-
 
 /**
  * Create a browser instance with stealth settings.
@@ -500,7 +473,7 @@ export async function searchTweets(page, query, options = {}) {
  * Scrape a full tweet thread
  */
 export async function scrapeThread(page, tweetUrl) {
-  await page.goto(tweetUrl, { waitUntil: 'networkidle2' });
+  await gotoAndRender(page, tweetUrl, 'article[data-testid="tweet"]');
   await randomDelay();
 
   for (let i = 0; i < 5; i++) {
@@ -553,7 +526,7 @@ export async function scrapeLikes(page, tweetUrl, options = {}) {
   const { limit = 100 } = options;
   
   const likesUrl = tweetUrl.replace(/\/status\//, '/status/') + '/likes';
-  await page.goto(likesUrl, { waitUntil: 'networkidle2' });
+  await gotoAndRender(page, likesUrl, '[data-testid="UserCell"]');
   await randomDelay();
 
   const users = new Map();
@@ -619,7 +592,7 @@ export async function scrapeHashtag(page, hashtag, options = {}) {
 export async function scrapeMedia(page, username, options = {}) {
   const { limit = 100 } = options;
   
-  await page.goto(`https://x.com/${username}/media`, { waitUntil: 'networkidle2' });
+  await gotoAndRender(page, `https://x.com/${username}/media`, 'article[data-testid="tweet"]');
   await randomDelay();
 
   const media = [];
@@ -680,7 +653,7 @@ export async function scrapeListMembers(page, listUrl, options = {}) {
   const { limit = 500 } = options;
   
   const membersUrl = listUrl.endsWith('/members') ? listUrl : `${listUrl}/members`;
-  await page.goto(membersUrl, { waitUntil: 'networkidle2' });
+  await gotoAndRender(page, membersUrl, '[data-testid="UserCell"]');
   await randomDelay();
 
   const members = new Map();
@@ -783,7 +756,7 @@ export async function scrapeNotifications(page, options = {}) {
     ? 'https://x.com/notifications/mentions'
     : 'https://x.com/notifications';
   
-  await page.goto(url, { waitUntil: 'networkidle2' });
+  await gotoAndRender(page, url, 'article[data-testid="tweet"], [data-testid="notification"]');
   await randomDelay(2000, 3000);
   
   const notifications = [];
@@ -835,7 +808,7 @@ export async function scrapeTrending(page, options = {}) {
     'for-you': 'foryou',
   })[category] || 'trending';
 
-  await page.goto(`https://x.com/explore/tabs/${tab}`, { waitUntil: 'networkidle2' });
+  await gotoAndRender(page, `https://x.com/explore/tabs/${tab}`, '[data-testid="trend"]');
   await randomDelay(2000, 3000);
 
   for (let i = 0; i < 3; i++) {
@@ -893,7 +866,7 @@ export async function scrapeCommunityMembers(page, communityUrl, options = {}) {
     ? communityUrl
     : `${communityUrl}/members`;
   
-  await page.goto(membersUrl, { waitUntil: 'networkidle2' });
+  await gotoAndRender(page, membersUrl, '[data-testid="UserCell"]');
   await randomDelay(2000, 3000);
   
   const members = [];
@@ -936,9 +909,7 @@ export async function scrapeCommunityMembers(page, communityUrl, options = {}) {
 export async function scrapeSpaces(page, query, options = {}) {
   const { limit = 20, scrollDelay = 2000 } = options;
   
-  await page.goto(`https://x.com/search?q=${encodeURIComponent(query)}&f=top`, {
-    waitUntil: 'networkidle2',
-  });
+  await gotoAndRender(page, `https://x.com/search?q=${encodeURIComponent(query)}&f=top`, 'article[data-testid="tweet"]');
   await randomDelay(2000, 3000);
   
   const spaces = [];

@@ -11,6 +11,8 @@
  */
 
 import scrapers from '../scrapers/index.js';
+import { gotoAndRender } from '../utils/navigation.js';
+import { openComposer, typeIntoComposer, clickPostButton, confirmPosted } from '../mcp/composer.js';
 
 // ============================================================================
 // Browser Pool (shared across action executions)
@@ -220,7 +222,7 @@ registerAction('follow', {
     const username = params.target.replace(/^@/, '');
     const page = await getAuthenticatedPage(context.authToken);
     try {
-      await page.goto(`https://x.com/${username}`, { waitUntil: 'networkidle2' });
+      await gotoAndRender(page, `https://x.com/${username}`, '[data-testid="placementTracking"]');
       await new Promise(r => setTimeout(r, 1000 + Math.random() * 1000));
       const followBtn = await page.$('[data-testid="placementTracking"] [role="button"]:not([data-testid$="-unfollow"])');
       if (followBtn) {
@@ -245,7 +247,7 @@ registerAction('unfollow', {
     const username = params.target.replace(/^@/, '');
     const page = await getAuthenticatedPage(context.authToken);
     try {
-      await page.goto(`https://x.com/${username}`, { waitUntil: 'networkidle2' });
+      await gotoAndRender(page, `https://x.com/${username}`, '[data-testid="placementTracking"]');
       await new Promise(r => setTimeout(r, 1000 + Math.random() * 1000));
       const unfollowBtn = await page.$('[data-testid$="-unfollow"]');
       if (unfollowBtn) {
@@ -272,20 +274,20 @@ registerAction('postTweet', {
   async execute(params, context) {
     const page = await getAuthenticatedPage(context.authToken);
     try {
-      await page.goto('https://x.com/compose/tweet', { waitUntil: 'networkidle2' });
+      // Same composer flow as the MCP x_post_tweet tool (src/mcp/composer.js).
+      if (!(await openComposer(page))) return { success: false, message: 'Could not open the composer' };
       await new Promise(r => setTimeout(r, 1000 + Math.random() * 1000));
-      const textbox = await page.$('[data-testid="tweetTextarea_0"]');
-      if (textbox) {
-        await textbox.type(params.text, { delay: 50 });
-        await new Promise(r => setTimeout(r, 500));
-        const tweetBtn = await page.$('[data-testid="tweetButton"]');
-        if (tweetBtn) {
-          await tweetBtn.click();
-          await new Promise(r => setTimeout(r, 1000 + Math.random() * 1000));
-          return { success: true, message: 'Tweet posted successfully' };
-        }
+      if (!(await typeIntoComposer(page, 0, params.text, { delay: 50 }))) {
+        return { success: false, message: 'The text did not reach the composer, so nothing was posted' };
       }
-      return { success: false, message: 'Could not post tweet' };
+      await new Promise(r => setTimeout(r, 500));
+      if (!(await clickPostButton(page))) {
+        return { success: false, message: 'The post button never became enabled, so nothing was posted' };
+      }
+      const confirmation = await confirmPosted(page, { typed: params.text });
+      if (!confirmation.ok) return { success: false, message: confirmation.reason };
+      await new Promise(r => setTimeout(r, 1000 + Math.random() * 1000));
+      return { success: true, message: 'Tweet posted' };
     } finally {
       await page.close();
     }
@@ -301,7 +303,7 @@ registerAction('like', {
   async execute(params, context) {
     const page = await getAuthenticatedPage(context.authToken);
     try {
-      await page.goto(params.url, { waitUntil: 'networkidle2' });
+      await gotoAndRender(page, params.url, '[data-testid="like"], [data-testid="unlike"]');
       await new Promise(r => setTimeout(r, 1000 + Math.random() * 1000));
       const likeBtn = await page.$('[data-testid="like"]');
       if (likeBtn) {
@@ -325,7 +327,7 @@ registerAction('retweet', {
   async execute(params, context) {
     const page = await getAuthenticatedPage(context.authToken);
     try {
-      await page.goto(params.url, { waitUntil: 'networkidle2' });
+      await gotoAndRender(page, params.url, '[data-testid="retweet"], [data-testid="unretweet"]');
       await new Promise(r => setTimeout(r, 1000 + Math.random() * 1000));
       const retweetBtn = await page.$('[data-testid="retweet"]');
       if (retweetBtn) {
@@ -353,20 +355,19 @@ registerAction('reply', {
   async execute(params, context) {
     const page = await getAuthenticatedPage(context.authToken);
     try {
-      await page.goto(params.url, { waitUntil: 'networkidle2' });
+      await gotoAndRender(page, params.url, '[data-testid="tweetTextarea_0"]');
       await new Promise(r => setTimeout(r, 1000 + Math.random() * 1000));
-      const replyBox = await page.$('[data-testid="tweetTextarea_0"]');
-      if (replyBox) {
-        await replyBox.type(params.text, { delay: 50 });
-        await new Promise(r => setTimeout(r, 500));
-        const replyBtn = await page.$('[data-testid="tweetButtonInline"]');
-        if (replyBtn) {
-          await replyBtn.click();
-          await new Promise(r => setTimeout(r, 1000 + Math.random() * 1000));
-          return { success: true, message: 'Reply posted' };
-        }
+      if (!(await typeIntoComposer(page, 0, params.text, { delay: 50 }))) {
+        return { success: false, message: 'Could not reply to tweet: the reply box did not take the text' };
       }
-      return { success: false, message: 'Could not reply to tweet' };
+      await new Promise(r => setTimeout(r, 500));
+      if (!(await clickPostButton(page, { testids: ['tweetButtonInline', 'tweetButton'] }))) {
+        return { success: false, message: 'Could not reply to tweet: the reply button never became enabled' };
+      }
+      const confirmation = await confirmPosted(page, { typed: params.text });
+      if (!confirmation.ok) return { success: false, message: `Could not reply to tweet: ${confirmation.reason}` };
+      await new Promise(r => setTimeout(r, 1000 + Math.random() * 1000));
+      return { success: true, message: 'Reply posted' };
     } finally {
       await page.close();
     }
