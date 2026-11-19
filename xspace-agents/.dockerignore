@@ -1,0 +1,13 @@
+# The builder stage installs and compiles everything itself; host-built
+# node_modules or dist copied in by `COPY packages/ packages/` would replace
+# them with artifacts for the wrong platform. Keep secrets out of the context.
+**/node_modules
+**/dist
+**/.turbo
+**/.env
+**/.env.*
+!**/.env.example
+**/*.pem
+**/coverage
+**/*.log
+.git
