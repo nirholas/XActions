@@ -4,8 +4,31 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { prisma } from '../../src/utils/prisma.js';
 import { body, validationResult } from 'express-validator';
+import validator from 'validator';
 
 const router = express.Router();
+
+/**
+ * The stored forms an email typed at login can match.
+ *
+ * Register runs express-validator's normalizeEmail(), which for Gmail drops
+ * dots and +tags (Foo.Bar+x@gmail.com is stored as foobar@gmail.com). Login
+ * used to match only the lowercased input, so those accounts could never sign
+ * in by email. Match both the lowercased input (accounts stored before
+ * normalization) and the normalized form (everything since).
+ *
+ * @param {string} identifier - Username or email as typed
+ * @returns {string[]}
+ */
+export function loginEmailForms(identifier) {
+  const lowered = String(identifier).toLowerCase();
+  const forms = [lowered];
+  if (validator.isEmail(String(identifier))) {
+    const normalized = validator.normalizeEmail(String(identifier));
+    if (normalized && normalized !== lowered) forms.push(normalized);
+  }
+  return forms;
+}
 
 // Register new user (email optional)
 router.post('/register',
@@ -118,7 +141,7 @@ router.post('/login',
       const user = await prisma.user.findFirst({
         where: {
           OR: [
-            { email: identifier.toLowerCase() },
+            { email: { in: loginEmailForms(identifier) } },
             { username: identifier }
           ]
         },
