@@ -21,11 +21,13 @@
  *
  * `use` is the only bridge back to a live session, and only for twitter:
  * it backs up the current `cookies.json` to `cookies.json.bak` and writes
- * the stored jar (mode 0600) into `~/.xactions/` — the hardcoded session
- * directory the CLI reads (`src/cli/index.js` CONFIG_DIR) — plus the
- * auth_token/ct0 mirror into config.json that `xactions login` performs.
- * Bluesky/Mastodon rows are stored credentials waiting for the
- * multiplatform-wiring work; activating them is a later goal.<|end_message|><|message_model|>Edit<|content_invoke_tool_json|>{
+ * the stored jar (mode 0600) into both session directories — `~/.xactions/`
+ * (the hardcoded path the CLI reads, `src/cli/index.js` CONFIG_DIR) and
+ * `resolveCacheDir()` when that differs (the `$XACTIONS_HOME` readers in
+ * `src/utils/savedSession.js`) — plus the auth_token/ct0 mirror into
+ * config.json that `xactions login` performs. Bluesky/Mastodon rows are
+ * stored credentials waiting for the multiplatform-wiring work; activating
+ * them is a later goal.
  *
  * @author nich (@nichxbt)
  * @license Apache-2.0
@@ -110,6 +112,15 @@ function cookieArray(input) {
     if (cookies.length === 0) {
       throw new AccountVaultError('Twitter credentials contained no usable cookies.');
     }
+    // A cookie name is a bare token; anything with separators or whitespace
+    // would inject extra attributes when the jar is rebuilt as a header.
+    for (const cookie of cookies) {
+      if (/[;=\s]/.test(cookie.name)) {
+        throw new AccountVaultError(
+          `Cookie name "${cookie.name}" contains separator or whitespace characters and was rejected.`,
+        );
+      }
+    }
     return cookies;
   }
 
@@ -164,7 +175,15 @@ function normalizeCredentials(platform, credentials = {}) {
       throw new AccountVaultError(`Bluesky credentials are missing: ${missing.join(', ')}.`);
     }
     const out = { identifier, password };
-    if (credentials.service) out.service = String(credentials.service).trim().replace(/\/+$/, '');
+    if (credentials.service) {
+      const service = String(credentials.service).trim().replace(/\/+$/, '');
+      if (/^http:\/\//i.test(service)) {
+        throw new AccountVaultError(
+          'Bluesky service must be an https:// URL — plaintext http would send the app password unencrypted.',
+        );
+      }
+      out.service = service;
+    }
     return out;
   }
 
@@ -177,6 +196,11 @@ function normalizeCredentials(platform, credentials = {}) {
   ];
   if (missing.length > 0) {
     throw new AccountVaultError(`Mastodon credentials are missing: ${missing.join(', ')}.`);
+  }
+  if (/^http:\/\//i.test(instance)) {
+    throw new AccountVaultError(
+      'Mastodon instance must be an https:// URL — plaintext http would send the access token unencrypted.',
+    );
   }
   return {
     instance: /^https?:\/\//i.test(instance) ? instance : `https://${instance}`,
@@ -205,6 +229,28 @@ function proxyHost(proxy) {
 }
 
 /**
+ * Validate the optional per-account proxy. Accepts a full URL
+ * (`http://user:pass@host:port`, `socks5://...`) or a bare `host:port`.
+ *
+ * @param {unknown} proxy
+ * @returns {string|null}
+ */
+function normalizeProxy(proxy) {
+  if (proxy == null || String(proxy).trim() === '') return null;
+  const value = String(proxy).trim();
+  try {
+    // A value that already carries a scheme must parse as-is — prefixing it
+    // would turn 'http://[bad' into the bogus host 'http'.
+    new URL(/^[a-z][a-z0-9+.-]*:\/\//i.test(value) ? value : `http://${value}`);
+  } catch {
+    throw new AccountVaultError(
+      `Proxy "${value}" is not a valid URL — use http(s)://[user:pass@]host:port or socks5://host:port.`,
+    );
+  }
+  return value;
+}
+
+/**
  * The directory the CLI reads the live X session from. `src/cli/index.js`
  * hardcodes `os.homedir()/.xactions` (CONFIG_DIR/COOKIE_FILE), so `use`
  * must write there regardless of `$XACTIONS_HOME` — the vault DB honours
@@ -222,6 +268,9 @@ function sessionDir() {
  * `saveImportedSession` in src/cli/index.js: other config keys are
  * preserved, modes stay owner-only.
  *
+ * Runs BEFORE the jar write in `use` — a mirror failure must abort the
+ * activation, not leave a half-applied session.
+ *
  * @param {string} dir
  * @param {Array<object>} cookies
  */
@@ -231,17 +280,40 @@ function mirrorSessionTokens(dir, cookies) {
 
   const configPath = path.join(dir, 'config.json');
   let config = {};
+  let raw = null;
   try {
-    config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+    raw = fs.readFileSync(configPath, 'utf8');
   } catch {
-    // Missing or unreadable config starts empty; other keys are preserved
-    // whenever the file parsed.
+    // Missing config starts empty.
+  }
+  if (raw != null) {
+    try {
+      config = JSON.parse(raw);
+    } catch {
+      throw new AccountVaultError(
+        `Existing ${configPath} is not valid JSON — fix or remove it before activating an account ` +
+          '(refusing to overwrite it with a two-key stub).',
+      );
+    }
   }
   if (authToken) config.authToken = authToken;
   if (csrfToken) config.csrfToken = csrfToken;
   else delete config.csrfToken;
   fs.writeFileSync(configPath, JSON.stringify(config, null, 2), { mode: 0o600 });
   fs.chmodSync(configPath, 0o600);
+}
+
+/**
+ * A `test()` failure reason goes straight back to the calling agent. Cap it
+ * and strip URLs so a remote error page (or an HTML dump) cannot smuggle
+ * hosts or markup into agent-visible output.
+ *
+ * @param {string} reason
+ * @returns {string}
+ */
+function sanitizeReason(reason) {
+  const text = String(reason || '').replace(/https?:\/\/\S+/gi, '<url>');
+  return text.length > 200 ? `${text.slice(0, 197)}...` : text;
 }
 
 // ---------------------------------------------------------------------------
@@ -273,18 +345,35 @@ async function defaultTwitterTest(cookieHeader, proxy) {
  * swallows login failures into a fetch fallback client that never
  * authenticates, so a bad password would look like a pass.
  *
+ * When `proxy` is set, the request goes through undici's ProxyAgent via
+ * `fetchWithDispatcher` — the same mechanism the HTTP client uses — so a
+ * stored per-account proxy is honoured for this check too.
+ *
  * @param {object} creds `{ identifier, password, service? }`
  * @param {typeof fetch} fetchImpl
+ * @param {string|null} proxy
  * @returns {Promise<{ok: boolean, reason: string}>}
  */
-async function blueskyTest(creds, fetchImpl) {
+async function blueskyTest(creds, fetchImpl, proxy) {
   const service = String(creds.service || DEFAULT_BSKY_SERVICE).replace(/\/+$/, '');
-  const res = await fetchImpl(`${service}/xrpc/com.atproto.server.createSession`, {
+  const init = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ identifier: creds.identifier, password: creds.password }),
     signal: AbortSignal.timeout(TEST_TIMEOUT_MS),
-  });
+  };
+  let res;
+  if (proxy) {
+    const { fetchWithDispatcher } = await import('../utils/http2.js');
+    const undici = await import('undici').catch(() => null);
+    if (!undici) {
+      return { ok: false, reason: 'proxy configured but undici is not installed' };
+    }
+    init.dispatcher = new undici.ProxyAgent(proxy);
+    res = await fetchWithDispatcher(fetchImpl, `${service}/xrpc/com.atproto.server.createSession`, init);
+  } else {
+    res = await fetchImpl(`${service}/xrpc/com.atproto.server.createSession`, init);
+  }
   if (res.ok) return { ok: true, reason: 'login succeeded' };
   let detail = `HTTP ${res.status}`;
   try {
@@ -299,16 +388,30 @@ async function blueskyTest(creds, fetchImpl) {
 
 /**
  * Mastodon: `verify_credentials` is the endpoint built for exactly this.
+ * Honours the stored proxy the same way blueskyTest does.
  *
  * @param {object} creds `{ instance, accessToken }`
  * @param {typeof fetch} fetchImpl
+ * @param {string|null} proxy
  * @returns {Promise<{ok: boolean, reason: string}>}
  */
-async function mastodonTest(creds, fetchImpl) {
-  const res = await fetchImpl(`${creds.instance}/api/v1/accounts/verify_credentials`, {
+async function mastodonTest(creds, fetchImpl, proxy) {
+  const init = {
     headers: { Authorization: `Bearer ${creds.accessToken}` },
     signal: AbortSignal.timeout(TEST_TIMEOUT_MS),
-  });
+  };
+  let res;
+  if (proxy) {
+    const { fetchWithDispatcher } = await import('../utils/http2.js');
+    const undici = await import('undici').catch(() => null);
+    if (!undici) {
+      return { ok: false, reason: 'proxy configured but undici is not installed' };
+    }
+    init.dispatcher = new undici.ProxyAgent(proxy);
+    res = await fetchWithDispatcher(fetchImpl, `${creds.instance}/api/v1/accounts/verify_credentials`, init);
+  } else {
+    res = await fetchImpl(`${creds.instance}/api/v1/accounts/verify_credentials`, init);
+  }
   if (res.ok) return { ok: true, reason: 'token accepted' };
   return { ok: false, reason: `HTTP ${res.status}` };
 }
@@ -318,7 +421,7 @@ async function mastodonTest(creds, fetchImpl) {
 // ---------------------------------------------------------------------------
 
 function openVaultDb(dbPath) {
-  fs.mkdirSync(path.dirname(dbPath), { recursive: true });
+  fs.mkdirSync(path.dirname(dbPath), { recursive: true, mode: 0o700 });
   const db = new Database(dbPath);
   db.pragma('journal_mode = WAL');
   db.pragma('busy_timeout = 5000');
@@ -336,7 +439,7 @@ function openVaultDb(dbPath) {
   `);
   // Credentials sit in the WAL until a checkpoint, so the sidecar files get
   // the same owner-only mode as the main database file.
-  for (const sidecar of ['', '-wal', '-shm']) {
+  for (const sidecar of ['', '-wal', '-shm', '-journal']) {
     try {
       fs.chmodSync(`${dbPath}${sidecar}`, 0o600);
     } catch {
@@ -354,7 +457,7 @@ function openVaultDb(dbPath) {
  * @param {string} dbPath
  */
 function tightenDbSidecarModes(dbPath) {
-  for (const sidecar of ['', '-wal', '-shm']) {
+  for (const sidecar of ['', '-wal', '-shm', '-journal']) {
     try {
       fs.chmodSync(`${dbPath}${sidecar}`, 0o600);
     } catch {
@@ -378,7 +481,7 @@ function tightenDbSidecarModes(dbPath) {
  */
 export function createAccountVault(options = {}) {
   const dbPath = options.dbPath || path.join(resolveCacheDir(), DB_FILENAME);
-  if (dbPath.startsWith('memory:')) {
+  if (dbPath.startsWith('memory:') || dbPath.startsWith(':memory:')) {
     throw new AccountVaultError('The account vault needs a filesystem-backed XActions home.');
   }
   const fetchImpl = options.fetchImpl || fetch;
@@ -403,6 +506,41 @@ export function createAccountVault(options = {}) {
   };
 
   /**
+   * Account names are printed in CLI tables and matched by exact string, so
+   * control characters (notably newlines) would break the layout and let one
+   * name impersonate another. Trim and reject them at the boundary.
+   *
+   * @param {unknown} name
+   * @returns {string}
+   */
+  function normalizeName(name) {
+    const value = String(name || '').trim();
+    if (!value) throw new AccountVaultError('Account name is required.');
+    // eslint-disable-next-line no-control-regex
+    if (/[\u0000-\u001f\u007f]/.test(value)) {
+      throw new AccountVaultError('Account name must not contain control characters.');
+    }
+    return value;
+  }
+
+  /**
+   * Parse stored credentials JSON. A corrupt row gets a clean error instead
+   * of a raw SyntaxError with the whole blob.
+   *
+   * @param {object} row
+   * @returns {object}
+   */
+  function parseStoredCredentials(row) {
+    try {
+      return JSON.parse(row.credentials);
+    } catch {
+      throw new AccountVaultError(
+        `Stored credentials for ${row.platform}/"${row.name}" are corrupt — remove and re-add the account.`,
+      );
+    }
+  }
+
+  /**
    * Masked public shape of a row — the only shape that leaves the vault.
    * @param {object} row
    */
@@ -413,7 +551,8 @@ export function createAccountVault(options = {}) {
       proxy: proxyHost(row.proxy),
       addedAt: new Date(row.added_at).toISOString(),
       lastUsedAt: row.last_used ? new Date(row.last_used).toISOString() : null,
-      locked: Boolean(row.locked),
+      // `locked` stays in the schema for pool compatibility but is never
+      // exposed: the vault does not lock accounts.
     };
   }
 
@@ -423,8 +562,7 @@ export function createAccountVault(options = {}) {
    * @returns {object|null}
    */
   function findEntry({ platform, name } = {}) {
-    const accountName = String(name || '').trim();
-    if (!accountName) throw new AccountVaultError('Account name is required.');
+    const accountName = normalizeName(name);
 
     if (platform) {
       return stmts.get.get(normalizePlatform(platform), accountName) || null;
@@ -462,11 +600,10 @@ export function createAccountVault(options = {}) {
      */
     async add({ platform: rawPlatform, name, credentials, proxy } = {}) {
       const platform = normalizePlatform(rawPlatform);
-      const accountName = String(name || '').trim();
-      if (!accountName) throw new AccountVaultError('Account name is required.');
+      const accountName = normalizeName(name);
 
       const normalized = normalizeCredentials(platform, credentials);
-      const proxyValue = proxy != null && String(proxy).trim() !== '' ? String(proxy).trim() : null;
+      const proxyValue = normalizeProxy(proxy);
       const replaced = Boolean(stmts.get.get(platform, accountName));
 
       stmts.upsert.run({
@@ -514,11 +651,13 @@ export function createAccountVault(options = {}) {
     },
 
     /**
-     * Activate a stored twitter account as the live X session: the current
-     * `~/.xactions/cookies.json` is backed up to `cookies.json.bak`, then the
-     * stored jar is written owner-only there (plus the config.json token
-     * mirror) — the hardcoded session path the CLI reads. Other platforms
-     * throw — they have no live-session concept yet.
+     * Activate a stored twitter account as the live X session. The jar is
+     * written atomically (tmp+rename, mode 0600) to BOTH session dirs —
+     * `~/.xactions/` (the CLI's hardcoded path) and `resolveCacheDir()`
+     * when it differs — with each existing `cookies.json` backed up to
+     * `cookies.json.bak` (0600). `config.json` token mirrors are written
+     * FIRST, so a mirror failure aborts before any jar is touched. Other
+     * platforms throw — they have no live-session concept yet.
      *
      * @returns {Promise<object>}
      */
@@ -529,18 +668,38 @@ export function createAccountVault(options = {}) {
           `Only twitter accounts can be activated as the live X session — "${row.name}" is a ${row.platform} account (stored credentials only).`,
         );
       }
-      const cookies = JSON.parse(row.credentials).cookies;
-      // The CLI reads the live session from ~/.xactions (hardcoded in
-      // src/cli/index.js), so write there even when the vault DB itself
-      // lives under $XACTIONS_HOME.
-      const sessionDirectory = sessionDir();
-      fs.mkdirSync(sessionDirectory, { recursive: true, mode: 0o700 });
-      const cookiePath = path.join(sessionDirectory, 'cookies.json');
-      const backup = fs.existsSync(cookiePath);
-      if (backup) fs.copyFileSync(cookiePath, `${cookiePath}.bak`);
-      fs.writeFileSync(cookiePath, JSON.stringify(cookies, null, 2), { mode: 0o600 });
-      fs.chmodSync(cookiePath, 0o600);
-      mirrorSessionTokens(sessionDirectory, cookies);
+      const cookies = parseStoredCredentials(row).cookies;
+      // Two readers, two directories: the CLI hardcodes ~/.xactions
+      // (src/cli/index.js CONFIG_DIR), while $XACTIONS_HOME readers
+      // (src/utils/savedSession.js sessionDir) follow the vault's cache
+      // dir. Write the session to both so `use` activates everywhere.
+      const dirs = [sessionDir()];
+      const cacheDir = resolveCacheDir();
+      if (!cacheDir.startsWith('memory:') && path.resolve(cacheDir) !== path.resolve(dirs[0])) {
+        dirs.push(cacheDir);
+      }
+
+      // Mirror config.json FIRST: a mirror failure (e.g. corrupt existing
+      // config) must abort before any jar is touched, so the activation
+      // cannot half-apply. Dirs are created up front so the mirror can write.
+      for (const dir of dirs) fs.mkdirSync(dir, { recursive: true, mode: 0o700 });
+      for (const dir of dirs) mirrorSessionTokens(dir, cookies);
+
+      const jar = JSON.stringify(cookies, null, 2);
+      let backup = false;
+      for (const dir of dirs) {
+        const cookiePath = path.join(dir, 'cookies.json');
+        if (fs.existsSync(cookiePath)) {
+          fs.copyFileSync(cookiePath, `${cookiePath}.bak`);
+          fs.chmodSync(`${cookiePath}.bak`, 0o600);
+          backup = true;
+        }
+        // tmp+rename: a crash mid-write must never leave a truncated jar.
+        const tmpPath = `${cookiePath}.tmp-${process.pid}`;
+        fs.writeFileSync(tmpPath, jar, { mode: 0o600 });
+        fs.renameSync(tmpPath, cookiePath);
+        fs.chmodSync(cookiePath, 0o600);
+      }
 
       stmts.touch.run(Date.now(), row.platform, row.name);
       tightenDbSidecarModes(dbPath);
@@ -556,7 +715,7 @@ export function createAccountVault(options = {}) {
      */
     async test({ platform, name } = {}) {
       const row = resolveEntry({ platform, name });
-      const creds = JSON.parse(row.credentials);
+      const creds = parseStoredCredentials(row);
 
       let result;
       try {
@@ -564,13 +723,14 @@ export function createAccountVault(options = {}) {
           const header = (creds.cookies || []).map((c) => `${c.name}=${c.value}`).join('; ');
           result = await twitterTest(header, row.proxy);
         } else if (row.platform === 'bluesky') {
-          result = await blueskyTest(creds, fetchImpl);
+          result = await blueskyTest(creds, fetchImpl, row.proxy);
         } else {
-          result = await mastodonTest(creds, fetchImpl);
+          result = await mastodonTest(creds, fetchImpl, row.proxy);
         }
       } catch (error) {
-        result = { ok: false, reason: error.message };
+        result = { ok: false, reason: sanitizeReason(error.message) };
       }
+      result.reason = sanitizeReason(result.reason);
 
       // last_used only records successful checks — a failed check is not a use.
       if (result.ok) {

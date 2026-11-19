@@ -145,9 +145,23 @@ describe('accountVault', () => {
       vault.close();
     });
 
+    it('keeps db and sidecar files owner-only (0600)', async () => {
+      const vault = makeVault(home);
+      await vault.add({ platform: 'bluesky', name: 'b1', credentials: BSKY_CREDS });
+      const dbPath = path.join(home, 'accounts.db');
+      for (const suffix of ['', '-wal', '-shm']) {
+        const p = `${dbPath}${suffix}`;
+        if (fs.existsSync(p)) {
+          expect(fs.statSync(p).mode & 0o777, p).toBe(0o600);
+        }
+      }
+      vault.close();
+    });
+
     it('upserts on duplicate (platform, name) keeping added_at', async () => {
       const vault = makeVault(home);
       await vault.add({ platform: 'bluesky', name: 'b1', credentials: BSKY_CREDS });
+      const [first] = await vault.list();
       await new Promise((r) => setTimeout(r, 5));
       const second = await vault.add({
         platform: 'bsky', name: 'b1',
@@ -156,6 +170,38 @@ describe('accountVault', () => {
       expect(second.replaced).toBe(true);
       const listed = await vault.list();
       expect(listed).toHaveLength(1);
+      // addedAt survives the upsert — it is the account's birth time.
+      expect(listed[0].addedAt).toBe(first.addedAt);
+      vault.close();
+    });
+
+    it('rejects an http:// bluesky service or mastodon instance', async () => {
+      const vault = makeVault(home);
+      await expect(
+        vault.add({ platform: 'bluesky', name: 'b1', credentials: { ...BSKY_CREDS, service: 'http://bsky.social' } })
+      ).rejects.toThrow(/https/);
+      await expect(
+        vault.add({ platform: 'mastodon', name: 'm1', credentials: { instance: 'http://masto.social', accessToken: 't' } })
+      ).rejects.toThrow(/https/);
+      vault.close();
+    });
+
+    it('rejects an unparseable proxy and cookie names with separators', async () => {
+      const vault = makeVault(home);
+      await expect(
+        vault.add({ platform: 'twitter', name: 'a1', credentials: { cookies: TWITTER_COOKIES }, proxy: 'http://[bad' })
+      ).rejects.toThrow(/not a valid URL/);
+      await expect(
+        vault.add({ platform: 'twitter', name: 'a2', credentials: { cookies: [{ name: 'bad;name', value: 'x' }, { name: 'auth_token', value: 't' }] } })
+      ).rejects.toThrow(/separator or whitespace/);
+      vault.close();
+    });
+
+    it('rejects account names with control characters', async () => {
+      const vault = makeVault(home);
+      await expect(
+        vault.add({ platform: 'bluesky', name: 'bad\nname', credentials: BSKY_CREDS })
+      ).rejects.toThrow(/control characters/);
       vault.close();
     });
   });
@@ -231,6 +277,39 @@ describe('accountVault', () => {
       const config = JSON.parse(fs.readFileSync(path.join(sessionHome, 'config.json'), 'utf8'));
       expect(config.authToken).toBe('tok-abc');
       expect(config.csrfToken).toBe('csrf-123');
+
+      // XACTIONS_HOME (= home here) is a second session dir: $XACTIONS_HOME
+      // readers (src/utils/savedSession.js) get the activated session too.
+      const cacheJar = JSON.parse(fs.readFileSync(path.join(home, 'cookies.json'), 'utf8'));
+      expect(cacheJar.some((c) => c.name === 'auth_token' && c.value === 'tok-abc')).toBe(true);
+      expect(fs.statSync(path.join(home, 'cookies.json')).mode & 0o777).toBe(0o600);
+      vault.close();
+    });
+
+    it('aborts before touching the jar when config.json is corrupt', async () => {
+      const vault = makeVault(home);
+      await vault.add({ platform: 'twitter', name: 'a1', credentials: { cookies: TWITTER_COOKIES } });
+      const sessionHome = path.join(home, '.xactions');
+      fs.mkdirSync(sessionHome, { recursive: true });
+      fs.writeFileSync(path.join(sessionHome, 'config.json'), '{ not json');
+      fs.writeFileSync(path.join(sessionHome, 'cookies.json'), 'pre-existing', { mode: 0o600 });
+      await expect(vault.use({ name: 'a1' })).rejects.toThrow(/not valid JSON/);
+      // Jar untouched: activation half-applied nothing.
+      expect(fs.readFileSync(path.join(sessionHome, 'cookies.json'), 'utf8')).toBe('pre-existing');
+      vault.close();
+    });
+
+    it('jar without ct0 deletes csrfToken from config.json, keeps other keys', async () => {
+      const vault = makeVault(home);
+      await vault.add({ platform: 'twitter', name: 'a1', credentials: { cookies: 'auth_token=tok-only' } });
+      const sessionHome = path.join(home, '.xactions');
+      fs.mkdirSync(sessionHome, { recursive: true });
+      fs.writeFileSync(path.join(sessionHome, 'config.json'), JSON.stringify({ authToken: 'old', csrfToken: 'old-csrf', theme: 'dark' }));
+      await vault.use({ name: 'a1' });
+      const config = JSON.parse(fs.readFileSync(path.join(sessionHome, 'config.json'), 'utf8'));
+      expect(config.authToken).toBe('tok-only');
+      expect('csrfToken' in config).toBe(false);
+      expect(config.theme).toBe('dark');
       vault.close();
     });
 
@@ -263,6 +342,9 @@ describe('accountVault', () => {
       expect(result.ok).toBe(false);
       expect(result.reason).toContain('401');
       expect(await vault.list()).toHaveLength(1);
+      // A failed check is not a use — last_used stays untouched.
+      const [row] = await vault.list();
+      expect(row.lastUsedAt).toBeNull();
       vault.close();
     });
 
@@ -328,6 +410,55 @@ describe('accountVault', () => {
       await expect(
         toolMap.x_accounts_add({ platform: 'bluesky', name: 'x', credentials_file: '/no/such/file.json' })
       ).rejects.toThrow(/cannot read credentials_file/);
+    });
+
+    it('x_accounts_use activates a twitter account and writes the jar', async () => {
+      const cookieFile = path.join(home, 'mcp-cookies.txt');
+      fs.writeFileSync(cookieFile, TWITTER_COOKIES);
+      await toolMap.x_accounts_add({ platform: 'twitter', name: 'mcp-use', cookies_file: cookieFile });
+      const result = await toolMap.x_accounts_use({ name: 'mcp-use' });
+      expect(result).toMatchObject({ activated: 'mcp-use', platform: 'twitter' });
+      const jar = JSON.parse(fs.readFileSync(path.join(home, '.xactions', 'cookies.json'), 'utf8'));
+      expect(jar.some((c) => c.name === 'auth_token' && c.value === 'tok-abc')).toBe(true);
+    });
+
+    it('x_accounts_remove deletes only the named account', async () => {
+      await toolMap.x_accounts_add({ platform: 'bluesky', name: 'mcp-rm', identifier: BSKY_CREDS.identifier, password: BSKY_CREDS.password });
+      const removed = await toolMap.x_accounts_remove({ name: 'mcp-rm' });
+      expect(removed.removed).toBe(true);
+      const rows = await toolMap.x_accounts_list({});
+      expect(rows.some((r) => r.name === 'mcp-rm')).toBe(false);
+    });
+
+    it('x_accounts_test reports failure without leaking secrets', async () => {
+      // 127.0.0.1:1 refuses immediately — no external network, deterministic.
+      await toolMap.x_accounts_add({
+        platform: 'bluesky', name: 'mcp-test',
+        identifier: BSKY_CREDS.identifier, password: BSKY_CREDS.password,
+        service: 'https://127.0.0.1:1',
+      });
+      const result = await toolMap.x_accounts_test({ name: 'mcp-test' });
+      expect(result.ok).toBe(false);
+      expect(result.reason).toBeTruthy();
+      expect(JSON.stringify(result)).not.toContain('app-pass-xyz');
+    });
+  });
+
+  describe('MCP server surface', () => {
+    it('all five x_accounts_* tools are declared in TOOLS', async () => {
+      const { TOOLS } = await import('../src/mcp/server.js');
+      const names = new Set(TOOLS.map((t) => t.name));
+      for (const n of ['x_accounts_add', 'x_accounts_list', 'x_accounts_remove', 'x_accounts_use', 'x_accounts_test']) {
+        expect(names.has(n), `${n} missing from TOOLS`).toBe(true);
+      }
+    });
+
+    it('executeTool dispatches x_accounts_list in remote mode (localTools null)', async () => {
+      const { executeTool } = await import('../src/mcp/server.js');
+      // No options.localTools, no MODE=local: the early dispatch must lazily
+      // import local-tools.js. Empty vault under the temp XACTIONS_HOME.
+      const result = await executeTool('x_accounts_list', {});
+      expect(Array.isArray(result)).toBe(true);
     });
   });
 });
@@ -403,6 +534,24 @@ describe('xactions accounts CLI', () => {
     const out = cli(['accounts']);
     expect(out).toContain('a1');
     expect(out).toContain('twitter');
+  });
+
+  it('accounts test exits 1 when the credential check fails', async () => {
+    // bluesky against a port that refuses instantly — no external network.
+    cli(['accounts', 'add', 'bad1', '--platform', 'bluesky', '--identifier', 'a.bsky.social',
+      '--password', 'wrong', '--service', 'https://127.0.0.1:1']);
+    const err = cliError(['accounts', 'test', 'bad1']);
+    expect(err.status).toBe(1);
+  });
+
+  it('accounts add --credentials-file loads bluesky creds from JSON', async () => {
+    const credsFile = path.join(home, 'creds.json');
+    fs.writeFileSync(credsFile, JSON.stringify(BSKY_CREDS));
+    cli(['accounts', 'add', 'b1', '--platform', 'bluesky', '--credentials-file', credsFile, '--json']);
+    const rows = JSON.parse(cli(['accounts', 'list', '--json']));
+    expect(rows).toHaveLength(1);
+    expect(rows[0]).toMatchObject({ platform: 'bluesky', name: 'b1' });
+    expect(JSON.stringify(rows)).not.toContain('app-pass-xyz');
   });
 });
 

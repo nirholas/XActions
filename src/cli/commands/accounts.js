@@ -105,7 +105,21 @@ async function addCommand(name, options = {}) {
     throw new Error(`--platform is required. Supported: ${SUPPORTED_PLATFORMS.join(', ')} (aliases: x, bsky, masto).`);
   }
 
-  const credentials = {};
+  // File inputs are preferred over inline secret flags so credentials stay
+  // out of shell history and process listings. Precedence: --credentials-file
+  // (JSON, any platform) > --cookies-file (twitter session file) > inline flags.
+  let credentials = {};
+  if (options.credentialsFile) {
+    let parsed;
+    try {
+      parsed = JSON.parse(fs.readFileSync(options.credentialsFile, 'utf8'));
+    } catch (error) {
+      throw new Error(`Cannot read credentials file "${options.credentialsFile}": ${error.message}`);
+    }
+    if (Array.isArray(parsed)) credentials = { cookies: parsed };
+    else if (parsed && typeof parsed === 'object') credentials = { ...parsed };
+    else throw new Error('Credentials file must contain a JSON object (or cookie array for twitter).');
+  }
   if (options.cookiesFile) {
     credentials.cookies = fs.readFileSync(options.cookiesFile, 'utf8');
   } else if (options.cookies) {
@@ -177,13 +191,14 @@ async function testCommand(name, options = {}) {
 
 /** Credential flags shared by `add`; each platform uses its own subset. */
 const CREDENTIAL_OPTIONS = [
-  ['--cookies <string>', 'Twitter: session cookies as a header string (alternative to --cookies-file)'],
+  ['--credentials-file <path>', 'PREFERRED for all platforms: JSON file with credential fields (twitter: {"cookies": [...]} or cookie array; bluesky: {"identifier","password","service"?}; mastodon: {"instance","accessToken"})'],
+  ['--cookies <string>', 'Twitter: session cookies as a header string (fallback — prefer --credentials-file/--cookies-file)'],
   ['--cookies-file <path>', 'Twitter: file with the session cookies (cookies.txt, Cookie-Editor JSON, Playwright storageState, or "auth_token=...; ct0=...")'],
-  ['--identifier <id>', 'Bluesky: account identifier (handle or did)'],
-  ['--password <password>', 'Bluesky: app password'],
-  ['--service <url>', 'Bluesky: PDS/AppView URL (default public.api.bsky.app)'],
-  ['--instance <url>', 'Mastodon: instance URL (e.g. mastodon.social)'],
-  ['--access-token <token>', 'Mastodon: access token'],
+  ['--identifier <id>', 'Bluesky: account identifier (handle or did) — fallback, prefer --credentials-file'],
+  ['--password <password>', 'Bluesky: app password — fallback, prefer --credentials-file'],
+  ['--service <url>', 'Bluesky: PDS/AppView URL (default public.api.bsky.app); must be https'],
+  ['--instance <url>', 'Mastodon: instance URL (e.g. mastodon.social); must be https'],
+  ['--access-token <token>', 'Mastodon: access token — fallback, prefer --credentials-file'],
   ['--proxy <url>', 'Proxy URL for requests with this account'],
 ];
 
