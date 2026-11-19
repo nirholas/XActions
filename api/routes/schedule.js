@@ -25,6 +25,7 @@ router.get('/', async (req, res) => {
   try {
     const { getScheduler } = await import('../../src/scheduler/scheduler.js');
     const scheduler = getScheduler();
+    await scheduler.load();
     res.json({ jobs: scheduler.listJobs() });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -41,6 +42,7 @@ router.post('/', async (req, res) => {
     const { name, cron, command, action, args } = req.body;
     const cli = command || action;
     if (!name || !cron || !cli) return res.status(400).json({ error: 'name, cron and command required' });
+    await scheduler.load();
     scheduler.addJob({ name, cron, command: cli, args: Array.isArray(args) ? args.map(String) : [] });
     res.json({ status: 'scheduled', name, cron, command: cli });
   } catch (error) {
@@ -52,7 +54,10 @@ router.post('/', async (req, res) => {
 router.delete('/:name', async (req, res) => {
   try {
     const { getScheduler } = await import('../../src/scheduler/scheduler.js');
-    getScheduler().removeJob(req.params.name);
+    const scheduler = getScheduler();
+    await scheduler.load();
+    const result = scheduler.removeJob(req.params.name);
+    if (result?.error) return res.status(404).json(result);
     res.json({ status: 'removed', name: req.params.name });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -63,7 +68,10 @@ router.delete('/:name', async (req, res) => {
 router.post('/:name/run', async (req, res) => {
   try {
     const { getScheduler } = await import('../../src/scheduler/scheduler.js');
-    await getScheduler().runJobNow(req.params.name);
+    const scheduler = getScheduler();
+    await scheduler.load();
+    const result = await scheduler.runJobNow(req.params.name);
+    if (result?.error) return res.status(404).json(result);
     res.json({ status: 'executed', name: req.params.name });
   } catch (error) {
     res.status(500).json({ error: error.message });

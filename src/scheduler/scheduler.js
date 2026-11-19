@@ -209,6 +209,13 @@ export class Scheduler extends EventEmitter {
   _registerJob(config) {
     // createTask, not schedule: node-cron 4 starts a scheduled task
     // immediately, and jobs here must stay idle until start() is called.
+    const existing = this.jobs.get(config.name);
+    if (existing?.cronTask) {
+      // destroy() removes the task from node-cron's registry; stop() only
+      // halts it and leaves the dead entry there.
+      try { existing.cronTask.destroy(); } catch { try { existing.cronTask.stop(); } catch {} }
+    }
+
     const task = cron.createTask(config.cron, () => {
       this._executeJob(this.jobs.get(config.name));
     });
@@ -216,9 +223,15 @@ export class Scheduler extends EventEmitter {
     this.jobs.set(config.name, {
       config,
       cronTask: task,
-      lastRun: null,
-      lastStatus: null,
+      // Keep run history across load() refreshes so listJobs() keeps
+      // reporting lastRun/lastStatus in long-lived processes.
+      lastRun: existing?.lastRun ?? null,
+      lastStatus: existing?.lastStatus ?? null,
     });
+
+    // load() may re-register a job while the daemon is running — the new
+    // task is created idle, so it must be started here or the job stops firing.
+    if (this.running && config.enabled !== false) task.start();
   }
 
   async _executeJob(job) {
