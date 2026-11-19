@@ -23,6 +23,7 @@ If you should be on this list and are not, open an issue and say so.
 
 | Contributor | Report |
 |---|---|
+| [@cmdenney](https://github.com/cmdenney) | Flagged that Blocknative's API was shutting down while the docs still taught it ([#30](https://github.com/nirholas/XActions/issues/30)). |
 | [@n4s3r](https://github.com/n4s3r) | `xactions followers` failed with a bare `HTTP 404:` because the client still sent `Followers` and `SearchTimeline` as GET, and the browser script stopped at about 27 followers ([#99](https://github.com/nirholas/XActions/issues/99)). |
 | [@mayconfrr](https://github.com/mayconfrr) | Found that cookie login failed because `verify_credentials` answered 404 on every call, and that GraphQL responses needed unwrapping from their `data` envelope ([#44](https://github.com/nirholas/XActions/pull/44)). Both are fixed on main. |
 | [@W4ilops](https://github.com/W4ilops) | Found and fixed the `await` in a non-async SIGINT handler that crashed the CLI at load ([#26](https://github.com/nirholas/XActions/pull/26)), three months before it was reported as #35. |
