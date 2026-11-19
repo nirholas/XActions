@@ -58,6 +58,7 @@ import {
 import * as drafts from './drafts.js';
 import * as actionCaps from './action-caps.js';
 import { gotoAndRender } from '../utils/navigation.js';
+import { typeIntoComposer, clickPostButton, confirmPosted } from './composer.js';
 
 // ============================================================================
 // Configuration
@@ -3133,16 +3134,23 @@ async function executeXeepyTool(name, args) {
       await page.click('[data-testid="retweet"]').catch(() => {});
       await new Promise(r => setTimeout(r, 1000));
       const quoteOption = await page.$('text/Quote');
-      if (quoteOption) await quoteOption.click();
-      await new Promise(r => setTimeout(r, 1500));
-      // Type the quote text
-      const composer = await page.$('[data-testid="tweetTextarea_0"]');
-      if (composer) {
-        await composer.type(args.text, { delay: 30 });
-        await new Promise(r => setTimeout(r, 500));
-        await page.click('[data-testid="tweetButton"]').catch(() => {});
+      if (!quoteOption) {
+        return { success: false, message: 'The Quote option was not in the repost menu', quotedUrl: args.tweetUrl };
       }
-      return { success: true, quotedUrl: args.tweetUrl, text: args.text };
+      await quoteOption.click();
+      await new Promise(r => setTimeout(r, 1500));
+      // The quote opens the same contenteditable composer as a new post, so it
+      // takes the same click-then-keyboard input and the same confirmation.
+      if (!(await typeIntoComposer(page, 0, args.text))) {
+        return { success: false, message: 'The quote text did not reach the composer, so nothing was posted', quotedUrl: args.tweetUrl };
+      }
+      await new Promise(r => setTimeout(r, 500));
+      if (!(await clickPostButton(page))) {
+        return { success: false, message: 'The post button never became enabled, so nothing was posted', quotedUrl: args.tweetUrl };
+      }
+      const confirmation = await confirmPosted(page, { typed: args.text });
+      if (!confirmation.ok) return { success: false, message: confirmation.reason, quotedUrl: args.tweetUrl };
+      return { success: true, quotedUrl: args.tweetUrl, text: args.text, confirmedBy: confirmation.via };
     }
 
     case 'x_auto_comment': {
@@ -3150,8 +3158,9 @@ async function executeXeepyTool(name, args) {
       const commented = [];
       for (const tweet of asTweetList(searchResults)) {
         try {
-          await localTools.x_reply?.({ tweetUrl: tweet.url, text: args.comment });
-          commented.push(tweet.url);
+          const outcome = await localTools.x_reply?.({ url: tweet.url, text: args.comment });
+          // A reply counts once it is confirmed, not because nothing threw.
+          if (outcome && outcome.success !== false) commented.push(tweet.url);
           await new Promise(r => setTimeout(r, (args.delay || 5) * 1000));
         } catch (e) { /* skip */ }
       }

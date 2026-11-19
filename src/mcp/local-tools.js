@@ -37,6 +37,15 @@ import { isBrowserConnected, isPageUsable } from '../utils/browserState.js';
 import { loadSavedSession, sessionDir } from '../utils/savedSession.js';
 import { performFollow, performUnfollow, FOLLOW_STATUS } from './followAction.js';
 import { gotoAndRender } from '../utils/navigation.js';
+import {
+  openComposer,
+  typeIntoComposer,
+  clickPostButton,
+  confirmPosted,
+  setDialogSelects,
+  scheduleSelectValues,
+  pollDurationValues,
+} from './composer.js';
 
 // ============================================================================
 // Singleton Browser Management
@@ -641,21 +650,42 @@ export async function x_detect_unfollowers({ username }) {
 // 12–14. Post / Like / Retweet
 // ============================================================================
 
+/**
+ * Shared failure messages for the compose-based tools, so each one says
+ * which step X refused rather than a bare "could not post".
+ */
+const COMPOSE_FAIL = {
+  open: 'Could not open the composer. Check that the MCP browser is logged in (xactions login).',
+  typed: 'The text did not reach the composer, so nothing was posted.',
+  button: 'The post button never became enabled, so nothing was posted.',
+};
+
+/**
+ * Press post and wait for X to confirm it.
+ *
+ * @returns {Promise<{ ok: boolean, message?: string, confirmation?: object }>}
+ */
+async function postAndConfirm(pg, typed, { testids } = {}) {
+  if (!(await clickPostButton(pg, testids ? { testids } : undefined))) {
+    return { ok: false, message: COMPOSE_FAIL.button };
+  }
+  const confirmation = await confirmPosted(pg, { typed });
+  if (!confirmation.ok) return { ok: false, message: confirmation.reason, confirmation };
+  return { ok: true, confirmation };
+}
+
 export async function x_post_tweet({ text }) {
   const { page: pg } = await ensureBrowser();
-  await gotoAndRender(pg, 'https://x.com/compose/tweet', '[data-testid="tweetTextarea_0"]');
+  if (!(await openComposer(pg))) return { success: false, message: COMPOSE_FAIL.open };
   await randomDelay();
 
-  const textbox = await pg.$('[data-testid="tweetTextarea_0"]');
-  if (textbox) {
-    await textbox.type(text, { delay: 50 });
-    await sleep(500);
-    if (await clickIfPresent(pg, '[data-testid="tweetButton"]')) {
-      await randomDelay();
-      return { success: true, message: 'Tweet posted successfully' };
-    }
-  }
-  return { success: false, message: 'Could not post tweet' };
+  if (!(await typeIntoComposer(pg, 0, text))) return { success: false, message: COMPOSE_FAIL.typed };
+  await sleep(500);
+
+  const posted = await postAndConfirm(pg, text);
+  if (!posted.ok) return { success: false, message: posted.message };
+  await randomDelay();
+  return { success: true, message: 'Tweet posted', confirmedBy: posted.confirmation.via };
 }
 
 export async function x_like({ url }) {
@@ -927,30 +957,29 @@ export async function x_post_thread({ tweets }) {
   }
 
   const { page: pg } = await ensureBrowser();
-  await gotoAndRender(pg, 'https://x.com/compose/tweet', '[data-testid="tweetTextarea_0"]');
+  if (!(await openComposer(pg))) return { success: false, message: COMPOSE_FAIL.open };
   await randomDelay();
 
-  const textbox = await pg.$('[data-testid="tweetTextarea_0"]');
-  if (!textbox) return { success: false, message: 'Could not open compose' };
-  await textbox.type(tweets[0], { delay: 40 });
+  if (!(await typeIntoComposer(pg, 0, tweets[0], { delay: 40 }))) {
+    return { success: false, message: COMPOSE_FAIL.typed };
+  }
   await sleep(500);
 
   for (let i = 1; i < tweets.length; i++) {
-    // Click "Add another tweet" button
-    await clickIfPresent(pg, '[data-testid="addButton"]');
+    // "Add another post" opens the next editor. A thread missing a post must
+    // not go out, so a box that never takes its text stops the whole thread.
+    await clickIfPresent(pg, '[role="dialog"] [data-testid="addButton"], [data-testid="addButton"]');
     await sleep(500);
-    const nextBox = await pg.$(`[data-testid="tweetTextarea_${i}"]`);
-    if (nextBox) {
-      await nextBox.type(tweets[i], { delay: 40 });
-      await sleep(300);
+    if (!(await typeIntoComposer(pg, i, tweets[i], { delay: 40 }))) {
+      return { success: false, message: `Post ${i + 1} of the thread did not reach the composer, so nothing was posted.` };
     }
+    await sleep(300);
   }
 
-  if (await clickIfPresent(pg, '[data-testid="tweetButton"]')) {
-    await randomDelay();
-    return { success: true, message: `Thread posted (${tweets.length} tweets)` };
-  }
-  return { success: false, message: 'Could not post thread' };
+  const posted = await postAndConfirm(pg, tweets[0]);
+  if (!posted.ok) return { success: false, message: posted.message };
+  await randomDelay();
+  return { success: true, message: `Thread posted (${tweets.length} tweets)`, confirmedBy: posted.confirmation.via };
 }
 
 export async function x_create_poll({ question, options, durationMinutes = 1440 }) {
@@ -958,65 +987,120 @@ export async function x_create_poll({ question, options, durationMinutes = 1440 
     return { success: false, message: 'Polls require 2–4 options' };
   }
 
+  const minutes = Math.round(Number(durationMinutes));
+  if (!Number.isFinite(minutes) || minutes < 5 || minutes > 7 * 24 * 60) {
+    return { success: false, message: 'Poll duration must be between 5 minutes and 7 days' };
+  }
+
   const { page: pg } = await ensureBrowser();
-  await gotoAndRender(pg, 'https://x.com/compose/tweet', '[data-testid="tweetTextarea_0"]');
+  if (!(await openComposer(pg))) return { success: false, message: COMPOSE_FAIL.open };
   await randomDelay();
 
-  const textbox = await pg.$('[data-testid="tweetTextarea_0"]');
-  if (!textbox) return { success: false, message: 'Could not open compose' };
-  await textbox.type(question, { delay: 40 });
+  if (!(await typeIntoComposer(pg, 0, question, { delay: 40 }))) {
+    return { success: false, message: COMPOSE_FAIL.typed };
+  }
   await sleep(500);
 
-  // Open poll UI
-  const pollBtn = await pg.$('[data-testid="pollButton"]');
+  // Open poll UI. The aria-label and testid variants are the ones the
+  // repo's console poll scripts use.
+  const pollBtn = await pg.$('[aria-label="Add poll"], [data-testid="pollButton"], [data-testid="createPoll"]');
   if (!pollBtn) return { success: false, message: 'Poll button not found (may require Premium)' };
   await pollBtn.click();
   await sleep(1000);
 
-  // Fill poll options (3rd/4th may need "+ Add" click first)
+  // Fill poll options (3rd/4th may need "+ Add" click first). Option inputs
+  // are native <input>s, so ElementHandle.type() reaches React for these.
   for (let i = 0; i < options.length; i++) {
     if (i >= 2) {
-      await clickIfPresent(pg, '[data-testid="addPollOption"]');
+      await clickIfPresent(pg, '[data-testid="addPollOption"], [data-testid="addPollOptionButton"], [aria-label="Add a choice"]');
       await sleep(300);
     }
-    const input = await pg.$(`[data-testid="pollOption${i + 1}"]`);
-    if (input) {
-      await input.type(options[i], { delay: 30 });
-      await sleep(200);
+    const input = await pg.$(
+      `[data-testid="pollOption${i + 1}"], [data-testid="pollOption_${i}"], [data-testid="pollOptionTextInput_${i}"]`
+    );
+    if (!input) {
+      return { success: false, message: `Poll choice ${i + 1} was not found, so nothing was posted.` };
     }
+    await input.type(options[i], { delay: 30 });
+    await sleep(200);
   }
 
-  if (await clickIfPresent(pg, '[data-testid="tweetButton"]')) {
-    await randomDelay();
-    return { success: true, message: `Poll posted with ${options.length} options` };
+  // X's picker defaults to one day; anything else has to be set, and a poll
+  // must not go out with a length the caller did not ask for.
+  if (minutes !== 1440) {
+    const { failed } = await setDialogSelects(pg, pollDurationValues(minutes));
+    if (failed.length) {
+      return { success: false, message: `Could not set the poll length (${failed.join(', ')}), so nothing was posted.` };
+    }
+    await sleep(400);
   }
-  return { success: false, message: 'Could not post poll' };
+
+  const posted = await postAndConfirm(pg, question);
+  if (!posted.ok) return { success: false, message: posted.message };
+  await randomDelay();
+  return {
+    success: true,
+    message: `Poll posted with ${options.length} options`,
+    durationMinutes: minutes,
+    confirmedBy: posted.confirmation.via,
+  };
 }
 
 export async function x_schedule_post({ text, scheduledAt }) {
+  // The dialog takes a local date and time, so the date is parsed and
+  // checked before anything is opened.
+  const when = new Date(scheduledAt);
+  if (Number.isNaN(when.getTime())) {
+    return { success: false, message: `scheduledAt is not a valid date/time: "${scheduledAt}"` };
+  }
+  if (when.getTime() <= Date.now()) {
+    return { success: false, message: 'scheduledAt is in the past; pick a future date/time' };
+  }
+
   const { page: pg } = await ensureBrowser();
-  await gotoAndRender(pg, 'https://x.com/compose/tweet', '[data-testid="tweetTextarea_0"]');
+  if (!(await openComposer(pg))) return { success: false, message: COMPOSE_FAIL.open };
   await randomDelay();
 
-  const textbox = await pg.$('[data-testid="tweetTextarea_0"]');
-  if (!textbox) return { success: false, message: 'Could not open compose' };
-  await textbox.type(text, { delay: 40 });
+  if (!(await typeIntoComposer(pg, 0, text, { delay: 40 }))) {
+    return { success: false, message: COMPOSE_FAIL.typed };
+  }
   await sleep(500);
 
-  const schedBtn = await pg.$('[data-testid="scheduleButton"]');
+  // `scheduleOption` is the testid the repo's schedule scripts use;
+  // `scheduleButton` is the one this tool used before.
+  const schedBtn = await pg.$('[data-testid="scheduleOption"], [data-testid="scheduleButton"]');
   if (!schedBtn) return { success: false, message: 'Schedule button not found (requires Premium)' };
   await schedBtn.click();
   await sleep(1000);
 
-  // Confirm the scheduling dialog
-  if (await clickIfPresent(pg, '[data-testid="scheduledConfirmationPrimaryAction"]')) {
-    await sleep(500);
-    if (await clickIfPresent(pg, '[data-testid="tweetButton"]')) {
-      await randomDelay();
-      return { success: true, message: `Tweet scheduled for ${scheduledAt}` };
-    }
+  // Set the date and time. Without this the dialog's default time was
+  // confirmed and the tool still reported the time it had been asked for.
+  const { found, failed } = await setDialogSelects(pg, scheduleSelectValues(when));
+  if (!found || failed.length) {
+    return {
+      success: false,
+      message: found
+        ? `Could not set ${failed.join(', ')} in the schedule dialog, so nothing was scheduled.`
+        : 'The schedule dialog did not open, so nothing was scheduled.',
+    };
   }
-  return { success: false, message: 'Could not schedule tweet' };
+  await sleep(500);
+
+  if (!(await clickIfPresent(pg, '[data-testid="scheduledConfirmationPrimaryAction"]'))) {
+    return { success: false, message: 'Could not confirm the schedule dialog, so nothing was scheduled.' };
+  }
+  await sleep(500);
+
+  // The post button now reads "Schedule"; X confirms with a toast.
+  const posted = await postAndConfirm(pg, text);
+  if (!posted.ok) return { success: false, message: posted.message };
+  await randomDelay();
+  return {
+    success: true,
+    message: `Tweet scheduled for ${when.toString()}`,
+    scheduledAt: when.toISOString(),
+    confirmedBy: posted.confirmation.via,
+  };
 }
 
 export async function x_delete_tweet({ url }) {
@@ -1048,20 +1132,18 @@ export async function x_reply({ url, text }) {
   await gotoAndRender(pg, url, '[data-testid="tweetTextarea_0"]');
   await randomDelay();
 
-  const replyBox = await pg.$('[data-testid="tweetTextarea_0"]');
-  if (replyBox) {
-    await replyBox.type(text, { delay: 50 });
-    await sleep(500);
-    // Try inline button first, then regular
-    if (
-      (await clickIfPresent(pg, '[data-testid="tweetButtonInline"]')) ||
-      (await clickIfPresent(pg, '[data-testid="tweetButton"]'))
-    ) {
-      await randomDelay();
-      return { success: true, message: 'Reply posted' };
-    }
+  // The inline reply box is the same contenteditable editor as the compose
+  // dialog, so it takes the same click-then-keyboard input.
+  if (!(await typeIntoComposer(pg, 0, text, { delay: 50 }))) {
+    return { success: false, message: 'Could not reply to tweet: the reply box did not take the text' };
   }
-  return { success: false, message: 'Could not reply to tweet' };
+  await sleep(500);
+
+  // Inline button first, then the dialog's.
+  const posted = await postAndConfirm(pg, text, { testids: ['tweetButtonInline', 'tweetButton'] });
+  if (!posted.ok) return { success: false, message: `Could not reply to tweet: ${posted.message}` };
+  await randomDelay();
+  return { success: true, message: 'Reply posted', confirmedBy: posted.confirmation.via };
 }
 
 export async function x_bookmark({ url }) {
