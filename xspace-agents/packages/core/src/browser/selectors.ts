@@ -149,13 +149,14 @@ export const SELECTOR_DEFINITIONS: SelectorDefinition[] = [
   },
   {
     name: 'leave-button',
-    description: 'Button to leave the Space (has no aria-label, only text)',
+    description: 'Button to leave the Space (usually text-only; aria-label when present)',
     strategies: [
       { name: 'testid', selector: '[data-testid="SpaceLeaveButton"]', priority: 1 },
       { name: 'aria', selector: 'button[aria-label*="leave" i]', priority: 2 },
       { name: 'dock-leave', selector: '[data-testid="SpaceDockExpanded"] button', priority: 3 },
     ],
     textMatch: 'Leave',
+    ariaMatch: 'Leave',
   },
   {
     name: 'space-dock',

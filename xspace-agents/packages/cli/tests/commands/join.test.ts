@@ -60,11 +60,10 @@ const mockOn = vi.hoisted(() => vi.fn())
 const mockLeave = vi.hoisted(() => vi.fn().mockResolvedValue(undefined))
 
 vi.mock('xspace-agent', () => ({
-  XSpaceAgent: vi.fn().mockImplementation(() => ({
-    join: mockJoin,
-    on: mockOn,
-    leave: mockLeave,
-  })),
+  // A regular function, not an arrow: vitest 4 refuses `new` on arrow implementations.
+  XSpaceAgent: vi.fn().mockImplementation(function () {
+    return { join: mockJoin, on: mockOn, leave: mockLeave }
+  }),
 }))
 
 import { joinCommand } from '../../src/commands/join'

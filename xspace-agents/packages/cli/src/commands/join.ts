@@ -6,6 +6,9 @@ import ora from 'ora';
 import { resolveConfig, configToEnv, AgentConfig } from '../config';
 import { banner, error, info, spacer, debug } from '../logger';
 
+const VOICE_PROVIDERS = ['openai', 'elevenlabs', 'browser'] as const;
+type VoiceProvider = (typeof VOICE_PROVIDERS)[number];
+
 interface JoinOptions {
   config: string;
   provider?: string;
@@ -35,6 +38,12 @@ export async function joinCommand(spaceUrl: string, options: JoinOptions): Promi
   }
   const config = resolveConfig(options.config, cliFlags);
   configToEnv(config);
+
+  const voiceProvider = config.voice?.provider || process.env.TTS_PROVIDER || 'openai';
+  if (!(VOICE_PROVIDERS as readonly string[]).includes(voiceProvider)) {
+    error(`Unknown voice provider "${voiceProvider}". Expected one of: ${VOICE_PROVIDERS.join(', ')}.`);
+    process.exit(1);
+  }
 
   if (options.listenOnly) {
     info(chalk.yellow('  Listen-only mode (transcription only)'));
@@ -83,7 +92,7 @@ export async function joinCommand(spaceUrl: string, options: JoinOptions): Promi
         systemPrompt: config.ai?.systemPrompt || 'You are a helpful AI agent participating in an X Space.',
       },
       voice: {
-        provider: config.voice?.provider || process.env.TTS_PROVIDER || 'openai',
+        provider: voiceProvider as VoiceProvider,
         apiKey: process.env.ELEVENLABS_API_KEY || process.env.OPENAI_API_KEY,
       },
       browser: browserConfig,

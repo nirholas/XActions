@@ -1,7 +1,6 @@
+#!/usr/bin/env node
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2026 nirholas (https://github.com/nirholas/xspace-agent)
-
-#!/usr/bin/env node
 
 /**
  * Migration script: encrypt existing plain JSON data files at rest.

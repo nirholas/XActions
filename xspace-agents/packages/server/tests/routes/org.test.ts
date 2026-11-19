@@ -118,13 +118,14 @@ const mockUserRepo = {
 // ---------------------------------------------------------------------------
 
 vi.mock('xspace-agent', () => ({
-  OrganizationRepository: vi.fn(() => mockOrgRepo),
-  MemberRepository: vi.fn(() => mockMemberRepo),
-  CustomRoleRepository: vi.fn(() => mockCustomRoleRepo),
-  InvitationRepository: vi.fn(() => mockInvitationRepo),
-  TeamRepository: vi.fn(() => mockTeamRepo),
-  AuditRepository: vi.fn(() => mockAuditRepo),
-  UserRepository: vi.fn(() => mockUserRepo),
+  OrganizationRepository: vi.fn(function () { return mockOrgRepo }),
+  MemberRepository: vi.fn(function () { return mockMemberRepo }),
+  CustomRoleRepository: vi.fn(function () { return mockCustomRoleRepo }),
+  InvitationRepository: vi.fn(function () { return mockInvitationRepo }),
+  TeamRepository: vi.fn(function () { return mockTeamRepo }),
+  AuditRepository: vi.fn(function () { return mockAuditRepo }),
+  UserRepository: vi.fn(function () { return mockUserRepo }),
+  ...rbacMock,
 }))
 
 // Mock authorize middleware to pass through for most tests
@@ -134,8 +135,9 @@ vi.mock('../../src/middleware/authorize', () => ({
   requireEnterprise: () => (_req: any, _res: any, next: any) => next(),
 }))
 
-// Mock RBAC permissions
-vi.mock('xspace-agent/rbac/permissions', () => ({
+// Mock RBAC permissions. routes/org.ts imports these from the package root while
+// tests reach them through the subpath, so both mocks share one hoisted object.
+const rbacMock = vi.hoisted(() => ({
   ROLES: {
     owner: { description: 'Full access' },
     admin: { description: 'Administrative access' },
@@ -163,6 +165,8 @@ vi.mock('xspace-agent/rbac/permissions', () => ({
   }),
   hasPermission: vi.fn(() => true),
 }))
+
+vi.mock('xspace-agent/rbac/permissions', () => rbacMock)
 
 import { createOrgRoutes } from '../../src/routes/org'
 

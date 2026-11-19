@@ -104,10 +104,10 @@ const mockPayoutRepo = {
 }
 
 vi.mock('xspace-agent', () => ({
-  MarketplaceListingRepository: vi.fn(() => mockListingRepo),
-  MarketplaceInstallRepository: vi.fn(() => mockInstallRepo),
-  MarketplaceReviewRepository: vi.fn(() => mockReviewRepo),
-  PublisherPayoutRepository: vi.fn(() => mockPayoutRepo),
+  MarketplaceListingRepository: vi.fn(function () { return mockListingRepo }),
+  MarketplaceInstallRepository: vi.fn(function () { return mockInstallRepo }),
+  MarketplaceReviewRepository: vi.fn(function () { return mockReviewRepo }),
+  PublisherPayoutRepository: vi.fn(function () { return mockPayoutRepo }),
 }))
 
 import { createMarketplaceRoutes } from '../../src/routes/marketplace'
