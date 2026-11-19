@@ -9,7 +9,7 @@
  * @license Apache-2.0
  */
 
-import { GRAPHQL_ENDPOINTS, DEFAULT_FEATURES, buildGraphQLUrl } from './graphqlQueries.js';
+import { GRAPHQL_ENDPOINTS, DEFAULT_FEATURES, graphqlQuery } from './graphqlQueries.js';
 import { Profile } from '../models/Profile.js';
 import { NotFoundError, ScraperError } from '../errors.js';
 import { parseTimelineEntries, parseUserEntry } from './parsers.js';
@@ -33,8 +33,7 @@ export async function getUserByScreenName(http, username) {
     screen_name: username,
     withSafetyModeUserFields: true,
   };
-  const url = buildGraphQLUrl(endpoint, variables);
-  const data = await http.get(url);
+  const data = await graphqlQuery(http, endpoint, variables);
 
   const userResult = data?.data?.user?.result;
   if (!userResult || userResult.__typename === 'UserUnavailable') {
@@ -67,8 +66,7 @@ export async function getUserById(http, userId) {
     userId,
     withSafetyModeUserFields: true,
   };
-  const url = buildGraphQLUrl(endpoint, variables);
-  const data = await http.get(url);
+  const data = await graphqlQuery(http, endpoint, variables);
 
   const userResult = data?.data?.user?.result;
   if (!userResult || userResult.__typename === 'UserUnavailable') {
@@ -120,8 +118,7 @@ export async function* getFollowers(http, userId, count = 100) {
     };
     if (cursor) variables.cursor = cursor;
 
-    const url = buildGraphQLUrl(endpoint, variables);
-    const data = await http.get(url);
+    const data = await graphqlQuery(http, endpoint, variables);
 
     const { entries, cursor: nextCursor } = parseTimelineEntries(
       data,
@@ -166,8 +163,7 @@ export async function* getFollowing(http, userId, count = 100) {
     };
     if (cursor) variables.cursor = cursor;
 
-    const url = buildGraphQLUrl(endpoint, variables);
-    const data = await http.get(url);
+    const data = await graphqlQuery(http, endpoint, variables);
 
     const { entries, cursor: nextCursor } = parseTimelineEntries(
       data,

@@ -256,10 +256,23 @@
   const CONFIG = {
     MAX_FOLLOWERS: 5000,
     SCROLL_DELAY: 1500,
+    MAX_SCROLLS: 1000,
     FORMAT: &#39;both&#39;, // &#39;json&#39;, &#39;csv&#39;, &#39;both&#39;
   };
 
   const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+
+  // When X throttles a long list it stops loading and shows a Retry button.
+  // Clicking it resumes the list; without this a throttled list looked done.
+  const clickRetryIfPresent = () =&gt; {
+    const btn = Array.from(document.querySelectorAll(&#39;[role=&quot;button&quot;]&#39;))
+      .find(b =&gt; /^(retry|try again)$/i.test((b.innerText || &#39;&#39;).trim()));
+    if (btn) { btn.click(); return true; }
+    return false;
+  };
+
+  // A spinner means the next page is still on its way, not that the list ended.
+  const isLoading = () =&gt; !!document.querySelector(&#39;[role=&quot;progressbar&quot;]&#39;);
 
   const download = (content, filename, type) =&gt; {
     const blob = new Blob([content], { type });
@@ -329,15 +342,24 @@
       if (added &gt; 0) {
         console.log(`👥 Collected ${followers.size} followers...`);
         noNewCount = 0;
-      } else {
+      } else if (clickRetryIfPresent()) {
+        console.log(&#39;🔁 X paused the list with a Retry button, clicked it...&#39;);
+        await sleep(CONFIG.SCROLL_DELAY * 2);
+      } else if (!isLoading()) {
         noNewCount++;
       }
 
-      window.scrollBy(0, 800);
+      // One screen at a time: X virtualizes the list, so a fixed jump can skip
+      // rows that are rendered and recycled between two passes.
+      window.scrollBy(0, window.innerHeight * 0.8);
       await sleep(CONFIG.SCROLL_DELAY);
       scrolls++;
 
-      if (scrolls &gt; 200) break;
+      if (scrolls &gt; CONFIG.MAX_SCROLLS) break;
+    }
+
+    if (noNewCount &gt;= 5 &amp;&amp; followers.size &lt; CONFIG.MAX_FOLLOWERS) {
+      console.warn(`⚠️ X stopped serving new rows after ${followers.size}. Wait a few minutes and run again to continue past a rate limit.`);
     }
 
     const followerList = Array.from(followers.values());

@@ -9,7 +9,7 @@
  * @license Apache-2.0
  */
 
-import { GRAPHQL_ENDPOINTS, DEFAULT_FEATURES, buildGraphQLUrl } from './graphqlQueries.js';
+import { GRAPHQL_ENDPOINTS, DEFAULT_FEATURES, graphqlQuery } from './graphqlQueries.js';
 import { Tweet } from '../models/Tweet.js';
 import { Profile } from '../models/Profile.js';
 import { parseTimelineEntries, parseTweetEntry, parseUserEntry } from './parsers.js';
@@ -58,8 +58,7 @@ export async function* searchTweets(http, query, count = 100, mode = 'Latest') {
     };
     if (cursor) variables.cursor = cursor;
 
-    const url = buildGraphQLUrl(endpoint, variables);
-    const data = await http.get(url);
+    const data = await graphqlQuery(http, endpoint, variables);
 
     const { entries, cursor: nextCursor } = parseTimelineEntries(
       data,
@@ -105,8 +104,7 @@ export async function* searchProfiles(http, query, count = 100) {
     };
     if (cursor) variables.cursor = cursor;
 
-    const url = buildGraphQLUrl(endpoint, variables);
-    const data = await http.get(url);
+    const data = await graphqlQuery(http, endpoint, variables);
 
     const { entries, cursor: nextCursor } = parseTimelineEntries(
       data,

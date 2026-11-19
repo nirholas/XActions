@@ -12,7 +12,7 @@
  * @license Apache-2.0
  */
 
-import { GRAPHQL, BEARER_TOKEN as SHARED_BEARER_TOKEN } from '../../scrapers/twitter/http/endpoints.js';
+import { GRAPHQL, BEARER_TOKEN as SHARED_BEARER_TOKEN, graphqlRequestMethod } from '../../scrapers/twitter/http/endpoints.js';
 import { getQueryId } from '../../scrapers/twitter/http/queryIds.js';
 
 /**
@@ -112,8 +112,8 @@ export const GRAPHQL_ENDPOINTS = {
   UserTweets: graphqlEndpoint('UserTweets', 'E3opETHurmVJflFsUBVuUQ', { method: 'GET' }),
   UserTweetsAndReplies: graphqlEndpoint('UserTweetsAndReplies', 'Q6aAvPw7azXZbqXzuqTALA', { method: 'GET' }),
   TweetDetail: graphqlEndpoint('TweetDetail', 'BbCrSoXIR7z93lLCVFlQ2Q', { method: 'GET' }),
-  SearchTimeline: graphqlEndpoint('SearchTimeline', 'gkjsKepM6gl_HmFWoWKfgg', { method: 'GET' }),
-  Followers: graphqlEndpoint('Followers', 'djdTXDIk2qhd4OStqlUFeQ', { method: 'GET' }),
+  SearchTimeline: graphqlEndpoint('SearchTimeline', 'gkjsKepM6gl_HmFWoWKfgg', { method: 'POST' }),
+  Followers: graphqlEndpoint('Followers', 'djdTXDIk2qhd4OStqlUFeQ', { method: 'POST' }),
   Following: graphqlEndpoint('Following', 'IWP6Zt14sARO29lJT35bBw', { method: 'GET' }),
   Likes: graphqlEndpoint('Likes', 'eSSNbhECHHBBew2wkHY_Bw', { method: 'GET' }),
   CreateTweet: graphqlEndpoint('CreateTweet', 'a1p9RWpkYKBjWv_I3WzS-A', { method: 'POST' }),
@@ -186,4 +186,33 @@ export function buildGraphQLUrl(endpoint, variables = {}, features) {
   params.set('features', JSON.stringify(mergedFeatures));
 
   return `${base}?${params.toString()}`;
+}
+
+/**
+ * Run a GraphQL read with the transport x.com currently requires for it.
+ *
+ * Most persisted reads are still GET with variables in the query string, but
+ * X moved some (`Followers`, `SearchTimeline`) to POST and answers a GET on
+ * them with a bare `HTTP 404`. The http scraper learned that in #42; this
+ * client kept sending GET, so `xactions followers` and `xactions search`
+ * failed with `HTTP 404:` (#99). Both clients now read the same
+ * `graphqlRequestMethod()` map, so an operation X moves next is fixed for
+ * both by adding it there once.
+ *
+ * @param {Object} http - HTTP client with get/post methods
+ * @param {Object} endpoint - Entry from GRAPHQL_ENDPOINTS
+ * @param {Object} [variables={}] - GraphQL variables
+ * @param {Object} [features] - Feature flags (defaults to DEFAULT_FEATURES)
+ * @returns {Promise<any>} Parsed JSON body
+ */
+export function graphqlQuery(http, endpoint, variables = {}, features) {
+  if (endpoint.isRest || graphqlRequestMethod(endpoint.operationName) !== 'POST') {
+    return http.get(buildGraphQLUrl(endpoint, variables, features));
+  }
+  const { queryId: id, operationName } = endpoint;
+  return http.post(`https://x.com/i/api/graphql/${id}/${operationName}`, {
+    variables: { ...endpoint.defaultVariables, ...variables },
+    features: features || DEFAULT_FEATURES,
+    queryId: id,
+  });
 }
