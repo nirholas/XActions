@@ -1,12 +1,14 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 import { prisma } from '../../../src/utils/prisma.js';
 import { getTwitterClient } from '../../routes/twitter.js';
+import { actionBudget } from './actionBudget.js';
 
 /**
  * Follow users who engaged (liked/retweeted) with specific tweets
  * Uses Twitter API when OAuth tokens available
  */
-async function processFollowEngagers({ operationId, userId, config }, isCancelled = () => false) {
+async function processFollowEngagers({ operationId, userId, config }, isCancelled = () => false, charge) {
+  const budget = actionBudget(charge, isCancelled);
   try {
     await prisma.operation.update({
       where: { id: operationId },
@@ -73,6 +75,8 @@ async function processFollowEngagers({ operationId, userId, config }, isCancelle
 
       if (followedCount >= maxFollows) break;
 
+      if (!dryRun && !(await budget.spend('follow'))) break;
+
       try {
         if (!dryRun) {
           await client.post(`/users/${myTwitterId}/following`, {
@@ -120,7 +124,8 @@ async function processFollowEngagers({ operationId, userId, config }, isCancelle
       followedUsers: followedUsers.slice(0, 50),
       errors: errors.slice(0, 10),
       dryRun,
-      cancelled: isCancelled()
+      cancelled: isCancelled(),
+      stoppedReason: budget.stoppedReason
     };
   } catch (error) {
     console.error('❌ Follow engagers error:', error);

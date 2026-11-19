@@ -86,8 +86,8 @@ router.post('/analyze', async (req, res) => {
   if (!graphOperationId) return res.status(400).json({ error: 'INVALID_INPUT', message: 'graphOperationId is required' });
 
   try {
-    const { getJobStatus } = await import('../../services/jobQueue.js');
-    const graphJob = await getJobStatus(graphOperationId);
+    const { getQueuedJob } = await import('../../services/jobQueue.js');
+    const graphJob = await getQueuedJob(String(graphOperationId));
 
     if (!graphJob) return res.status(404).json({ error: 'NOT_FOUND', message: 'Graph build job not found' });
     if (graphJob.status !== 'completed') {

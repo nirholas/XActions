@@ -115,27 +115,43 @@ export function releaseBrowser(browser) {
   }
 }
 
+/** page → the isolated browser context it was opened in */
+const pageContexts = new WeakMap();
+
 /**
  * Create an authenticated page from a pooled browser.
  * Returns { browser, page } — caller must call releasePage() when done.
+ *
+ * Each page gets its own browser context. Pages in one context share a
+ * cookie jar, so two streams for two accounts on the same pooled browser
+ * would otherwise overwrite each other's auth_token and read (or act) as the
+ * wrong account. Closing the page closes its context and drops the cookies.
  */
 export async function acquirePage(authToken) {
   const browser = await acquireBrowser();
+  let context = null;
   try {
-    const page = await createPage(browser);
+    // Adapter browsers (src/scrapers/adapters) may not offer contexts; they
+    // fall back to the browser itself.
+    if (typeof browser.createBrowserContext === 'function') {
+      context = await browser.createBrowserContext();
+    }
+    const page = await createPage(context || browser);
+    if (context) pageContexts.set(page, context);
     if (authToken) {
       await loginWithCookie(page, authToken);
     }
     return { browser, page };
   } catch (err) {
-    // Release the slot if page creation fails
+    // Release the slot (and the context) if page creation fails
+    if (context) await context.close().catch(() => {});
     releaseBrowser(browser);
     throw err;
   }
 }
 
 /**
- * Release a page and its browser slot.
+ * Release a page, its browser context, and its browser slot.
  */
 export async function releasePage(browser, page) {
   try {
@@ -143,6 +159,11 @@ export async function releasePage(browser, page) {
       await page.close();
     }
   } catch { /* already closed */ }
+  const context = page ? pageContexts.get(page) : null;
+  if (context) {
+    pageContexts.delete(page);
+    try { await context.close(); } catch { /* browser already gone */ }
+  }
   releaseBrowser(browser);
 }
 

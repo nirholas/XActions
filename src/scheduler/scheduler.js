@@ -10,16 +10,27 @@
  */
 
 import cron from 'node-cron';
-import { execFile, spawn } from 'child_process';
+import { spawn } from 'child_process';
+import crypto from 'crypto';
+import { fileURLToPath } from 'url';
 import fs from 'fs';
 import fsp from 'fs/promises';
 import path from 'path';
-import os from 'os';
+import { xactionsHome } from '../utils/savedSession.js';
 import { EventEmitter } from 'events';
 
-const CONFIG_DIR = path.join(os.homedir(), '.xactions');
-const SCHEDULER_FILE = path.join(CONFIG_DIR, 'scheduler.json');
-const HISTORY_DIR = path.join(CONFIG_DIR, 'scheduler-history');
+// Resolved per call, not at import, so XACTIONS_HOME set after import (by a
+// test, or a CLI flag) is honoured.
+const configDir = () => xactionsHome();
+const schedulerFile = () => path.join(configDir(), 'scheduler.json');
+const historyDir = () => path.join(configDir(), 'scheduler-history');
+
+/**
+ * The xactions CLI that jobs run, resolved from this module rather than the
+ * working directory: a job must run the installed XActions, not whatever
+ * `bin/` happens to sit in the directory the scheduler was started from.
+ */
+export const CLI_PATH = fileURLToPath(new URL('../cli/index.js', import.meta.url));
 
 // ============================================================================
 // Scheduler Class
@@ -30,8 +41,8 @@ export class Scheduler extends EventEmitter {
     super();
     this.jobs = new Map(); // name → { config, cronTask }
     this.running = false;
-    fs.mkdirSync(CONFIG_DIR, { recursive: true });
-    fs.mkdirSync(HISTORY_DIR, { recursive: true });
+    fs.mkdirSync(configDir(), { recursive: true });
+    fs.mkdirSync(historyDir(), { recursive: true });
   }
 
   /**
@@ -39,7 +50,7 @@ export class Scheduler extends EventEmitter {
    */
   async load() {
     try {
-      const data = JSON.parse(await fsp.readFile(SCHEDULER_FILE, 'utf-8'));
+      const data = JSON.parse(await fsp.readFile(schedulerFile(), 'utf-8'));
       for (const config of data.jobs || []) {
         this._registerJob(config);
       }
@@ -54,7 +65,7 @@ export class Scheduler extends EventEmitter {
    * Add a new scheduled job
    */
   addJob(config) {
-    const { name, cron: cronExpr, command, args = [], enabled = true, maxRetries = 2, timeout = 300000 } = config;
+    const { name, cron: cronExpr, command, args = [], enabled = true, maxRetries = 2, timeout = 300000, webhookSecret } = config;
 
     if (!name || !cronExpr || !command) {
       throw new Error('Job requires: name, cron, command');
@@ -72,7 +83,15 @@ export class Scheduler extends EventEmitter {
       throw new Error(`Job "${name}" already exists. Remove it first.`);
     }
 
-    const jobConfig = { name, cron: cronExpr, command, args, enabled, maxRetries, timeout, createdAt: new Date().toISOString() };
+    if (webhookSecret !== undefined && (typeof webhookSecret !== 'string' || webhookSecret.length < 16)) {
+      throw new Error('webhookSecret must be a string of at least 16 characters');
+    }
+
+    const jobConfig = {
+      name, cron: cronExpr, command, args, enabled, maxRetries, timeout,
+      ...(webhookSecret && { webhookSecret }),
+      createdAt: new Date().toISOString(),
+    };
     this._registerJob(jobConfig);
     this._save();
 
@@ -122,6 +141,26 @@ export class Scheduler extends EventEmitter {
   }
 
   /**
+   * Set (or generate) the secret a webhook must present to trigger this job.
+   * A job without one cannot be triggered over HTTP at all.
+   *
+   * @param {string} name
+   * @param {string} [secret] at least 16 characters; omitted, a random one is made
+   * @returns {{ name: string, webhookSecret: string } | { error: string }}
+   */
+  setWebhookSecret(name, secret) {
+    const job = this.jobs.get(name);
+    if (!job) return { error: `Job "${name}" not found` };
+    const value = secret ?? crypto.randomBytes(24).toString('base64url');
+    if (typeof value !== 'string' || value.length < 16) {
+      return { error: 'webhookSecret must be a string of at least 16 characters' };
+    }
+    job.config.webhookSecret = value;
+    this._save();
+    return { name, webhookSecret: value };
+  }
+
+  /**
    * List all jobs with status
    */
   listJobs() {
@@ -145,7 +184,7 @@ export class Scheduler extends EventEmitter {
    */
   async getJobHistory(name, limit = 10) {
     try {
-      const files = (await fsp.readdir(HISTORY_DIR))
+      const files = (await fsp.readdir(historyDir()))
         .filter(f => f.startsWith(`${name}_`))
         .sort()
         .reverse()
@@ -154,7 +193,7 @@ export class Scheduler extends EventEmitter {
       const history = [];
       for (const file of files) {
         try {
-          const content = await fsp.readFile(path.join(HISTORY_DIR, file), 'utf-8');
+          const content = await fsp.readFile(path.join(historyDir(), file), 'utf-8');
           const [meta, ...outputLines] = content.split('\n---OUTPUT---\n');
           const metadata = JSON.parse(meta);
           history.push({ ...metadata, outputPreview: outputLines.join('\n').slice(0, 500) });
@@ -246,19 +285,27 @@ export class Scheduler extends EventEmitter {
 
     let retries = 0;
     let result = null;
+    const maxRetries = config.maxRetries ?? 2;
 
-    while (retries <= config.maxRetries) {
+    // _runCommand rejects on a non-zero exit as well as a spawn failure, so a
+    // command that fails is retried rather than recorded as done on try one.
+    while (retries <= maxRetries) {
       try {
         result = await this._runCommand(config.command, config.args, config.timeout);
         break;
       } catch (error) {
         retries++;
-        if (retries <= config.maxRetries) {
-          const delay = Math.min(60000, 2000 * Math.pow(2, retries));
-          console.log(`⚠️  Job "${config.name}" failed (attempt ${retries}/${config.maxRetries + 1}), retrying in ${delay / 1000}s...`);
+        if (retries <= maxRetries) {
+          const delay = this._retryDelay(retries);
+          console.log(`⚠️  Job "${config.name}" failed (attempt ${retries}/${maxRetries + 1}), retrying in ${delay / 1000}s...`);
           await new Promise(r => setTimeout(r, delay));
         } else {
-          result = { exitCode: 1, stdout: '', stderr: error.message, error: true };
+          result = {
+            exitCode: error.exitCode ?? 1,
+            stdout: error.stdout || '',
+            stderr: error.stderr || error.message,
+            error: true,
+          };
         }
       }
     }
@@ -270,7 +317,7 @@ export class Scheduler extends EventEmitter {
     job.lastStatus = result.error ? 'failed' : 'success';
 
     // Save history
-    const historyFile = path.join(HISTORY_DIR, `${config.name}_${timestamp}.log`);
+    const historyFile = path.join(historyDir(), `${config.name}_${timestamp}.log`);
     const metadata = {
       name: config.name,
       command: config.command,
@@ -294,12 +341,23 @@ export class Scheduler extends EventEmitter {
     return { ...metadata, outputPreview: (result.stdout || '').slice(0, 500) };
   }
 
+  /** Backoff before retry `n` (1-based). */
+  _retryDelay(n) {
+    return Math.min(60000, 2000 * Math.pow(2, n));
+  }
+
+  /**
+   * Run one xactions CLI command. Resolves on exit code 0; rejects otherwise
+   * (non-zero exit, killed by the timeout, or failed to spawn) with
+   * `exitCode`, `stdout` and `stderr` attached to the error.
+   */
   _runCommand(command, args = [], timeout = 300000) {
     return new Promise((resolve, reject) => {
-      const cliPath = path.join(process.cwd(), 'bin', 'unfollowx');
-      const fullArgs = command.split(/\s+/).concat(args);
+      const fullArgs = command.split(/\s+/).filter(Boolean).concat(args);
 
-      const proc = spawn('node', [cliPath, ...fullArgs], {
+      // process.execPath, not "node" from PATH, so the job runs under the same
+      // Node that runs the scheduler.
+      const proc = spawn(process.execPath, [CLI_PATH, ...fullArgs], {
         cwd: process.cwd(),
         env: { ...process.env },
         timeout,
@@ -311,12 +369,17 @@ export class Scheduler extends EventEmitter {
       proc.stdout?.on('data', (data) => { stdout += data.toString(); });
       proc.stderr?.on('data', (data) => { stderr += data.toString(); });
 
-      proc.on('close', (code) => {
-        if (code !== 0) {
-          resolve({ exitCode: code, stdout, stderr, error: true });
-        } else {
+      proc.on('close', (code, signal) => {
+        if (code === 0) {
           resolve({ exitCode: 0, stdout, stderr, error: false });
+          return;
         }
+        const reason = code === null ? `killed by ${signal || 'signal'}` : `exited with code ${code}`;
+        const error = new Error(`Command "${command}" ${reason}`);
+        error.exitCode = code ?? 1;
+        error.stdout = stdout;
+        error.stderr = stderr || error.message;
+        reject(error);
       });
 
       proc.on('error', (error) => {
@@ -330,8 +393,8 @@ export class Scheduler extends EventEmitter {
     for (const [, job] of this.jobs) {
       data.jobs.push(job.config);
     }
-    fs.mkdirSync(CONFIG_DIR, { recursive: true });
-    fs.writeFileSync(SCHEDULER_FILE, JSON.stringify(data, null, 2));
+    fs.mkdirSync(configDir(), { recursive: true });
+    fs.writeFileSync(schedulerFile(), JSON.stringify(data, null, 2));
   }
 }
 

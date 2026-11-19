@@ -98,6 +98,8 @@ Rules:
         temperature: 0.3,
         max_tokens: 500,
       }),
+      // A stalled upstream would otherwise hold the request open indefinitely.
+      signal: AbortSignal.timeout(60_000),
     });
 
     if (!response.ok) {

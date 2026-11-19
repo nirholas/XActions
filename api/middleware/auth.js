@@ -1,7 +1,7 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-import jwt from 'jsonwebtoken';
 import { prisma } from '../../src/utils/prisma.js';
 import { tierMeetsRequirement, getTier, isWithinLimit } from '../config/subscription-tiers.js';
+import { verifySessionToken } from '../utils/sessionToken.js';
 
 const authMiddleware = async (req, res, next) => {
   try {
@@ -12,7 +12,7 @@ const authMiddleware = async (req, res, next) => {
     }
 
     const token = authHeader.substring(7);
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = verifySessionToken(token);
 
     // Get user from database
     const user = await prisma.user.findUnique({
@@ -48,7 +48,7 @@ const optionalAuthMiddleware = async (req, res, next) => {
     }
 
     const token = authHeader.substring(7);
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = verifySessionToken(token);
 
     const user = await prisma.user.findUnique({
       where: { id: decoded.userId }

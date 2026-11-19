@@ -1052,7 +1052,15 @@
           threadTweets.slice(0, opts.maxTweets).forEach((text, i) => {
             const p = document.createElement('div');
             p.style.cssText = 'padding:12px 0;border-bottom:1px solid #2f3336;font-size:15px;line-height:1.5;';
-            p.innerHTML = `<span style="color:#71767b;font-size:12px;">${i + 1}/${threadTweets.length}</span><br>${text}`;
+            // Tweet text is written by whoever posted it, so it goes in as text:
+            // through innerHTML a tweet could carry markup into this overlay.
+            const counter = document.createElement('span');
+            counter.style.cssText = 'color:#71767b;font-size:12px;';
+            counter.textContent = `${i + 1}/${threadTweets.length}`;
+            const body = document.createElement('div');
+            body.style.whiteSpace = 'pre-wrap';
+            body.textContent = text;
+            p.append(counter, body);
             container.appendChild(p);
           });
 

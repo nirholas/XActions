@@ -51,23 +51,42 @@ router.get('/profile', async (req, res) => {
   }
 });
 
+// Usernames follow the registration rule (api/routes/auth.js). Unvalidated, a
+// user could rename to someone else's email address, and since login matches
+// email OR username, lock that person out of their account.
+const USERNAME = /^[a-zA-Z0-9_]{3,30}$/;
+
 // Update user profile
 router.patch('/profile', async (req, res) => {
   try {
-    const { username } = req.body;
-    
-    if (username) {
-      // Check if username is taken
-      const existing = await prisma.user.findFirst({
-        where: {
-          username,
-          NOT: { id: req.user.id }
-        }
-      });
+    const { username } = req.body || {};
 
-      if (existing) {
-        return res.status(400).json({ error: 'Username already taken' });
+    if (username === undefined || username === req.user.username) {
+      return res.json({ id: req.user.id, email: req.user.email, username: req.user.username, plan: 'free_unlimited' });
+    }
+
+    if (typeof username !== 'string' || !USERNAME.test(username)) {
+      return res.status(400).json({ error: 'Username must be 3-30 letters, digits or underscores' });
+    }
+
+    // Check if username is taken
+    const existing = await prisma.user.findFirst({
+      where: {
+        OR: [{ username }, { email: username.toLowerCase() }],
+        NOT: { id: req.user.id }
       }
+    });
+
+    if (existing) {
+      return res.status(400).json({ error: 'Username already taken' });
+    }
+
+    // Team membership is keyed by username (src/auth/teamManager.js), so a
+    // name someone renamed away from still holds their team roles. Taking it
+    // would inherit them.
+    const { getUserTeams } = await import('../../src/auth/teamManager.js');
+    if ((await getUserTeams(username)).length > 0) {
+      return res.status(400).json({ error: 'Username already taken' });
     }
 
     const user = await prisma.user.update({
@@ -82,6 +101,9 @@ router.patch('/profile', async (req, res) => {
       plan: 'free_unlimited'
     });
   } catch (error) {
+    if (error.code === 'P2002') {
+      return res.status(400).json({ error: 'Username already taken' });
+    }
     console.error('❌ Profile update error:', error);
     res.status(500).json({ error: 'Failed to update profile' });
   }

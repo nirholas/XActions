@@ -181,7 +181,9 @@ export function parseTweetData(rawTweet) {
 
   return {
     id: tweet.rest_id || legacy.id_str || null,
-    text: legacy.full_text || '',
+    // A post over 280 characters arrives with `legacy.full_text` cut off and
+    // its whole body in `note_tweet`.
+    text: tweet.note_tweet?.note_tweet_results?.result?.text || legacy.full_text || '',
     createdAt: toISODate(legacy.created_at),
     author,
     metrics,
@@ -232,6 +234,8 @@ export function userTimelineInstructions(payload) {
  * - `TimelineAddEntries` — primary timeline entries and cursors
  * - `TimelineAddToModule` — entries inside conversation modules
  * - `TimelinePinEntry` — pinned tweets
+ * - `TimelineReplaceEntry` — the bottom cursor from page two on (search
+ *   timelines deliver it this way rather than inside `TimelineAddEntries`)
  *
  * @param {object[]} instructions — The `instructions` array.
  * @returns {{ tweets: object[], cursor: string|null }}
@@ -298,6 +302,12 @@ export function parseTimelineInstructions(instructions) {
       }
     }
 
+    // ---- TimelineReplaceEntry ----------------------------------------------
+    if (type === 'TimelineReplaceEntry') {
+      const replaced = readReplacedBottomCursor(instruction);
+      if (replaced) cursor = replaced;
+    }
+
     // ---- TimelinePinEntry --------------------------------------------------
     if (type === 'TimelinePinEntry') {
       const tweetResult =
@@ -310,6 +320,24 @@ export function parseTimelineInstructions(instructions) {
   }
 
   return { tweets, cursor };
+}
+
+/**
+ * The bottom cursor a `TimelineReplaceEntry` instruction carries, or null when
+ * it replaces anything else (the top cursor, a tweet).
+ *
+ * @param {object} instruction
+ * @returns {string|null}
+ */
+export function readReplacedBottomCursor(instruction) {
+  const entry = instruction?.entry;
+  if (!entry) return null;
+  const isBottom =
+    entry.content?.cursorType === 'Bottom' ||
+    entry.entryId?.startsWith('cursor-bottom-') ||
+    instruction.entry_id_to_replace?.startsWith('cursor-bottom-');
+  if (!isBottom) return null;
+  return entry.content?.value ?? entry.content?.itemContent?.value ?? null;
 }
 
 /**

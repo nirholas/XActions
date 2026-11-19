@@ -153,9 +153,9 @@ router.post('/leave', async (req, res) => {
   const { operationId: spaceOperationId } = req.body;
 
   try {
-    const { cancelJob } = await import('../../services/jobQueue.js');
+    const { cancelQueuedJob } = await import('../../services/jobQueue.js');
     if (spaceOperationId) {
-      await cancelJob(spaceOperationId);
+      await cancelQueuedJob(String(spaceOperationId));
     }
 
     return successResponse(res, { status: 'left', spaceOperationId: spaceOperationId || null });
@@ -174,8 +174,8 @@ router.post('/status', async (req, res) => {
   if (!spaceOperationId) return res.status(400).json({ error: 'INVALID_INPUT', message: 'operationId is required' });
 
   try {
-    const { getJobStatus } = await import('../../services/jobQueue.js');
-    const status = await getJobStatus(spaceOperationId);
+    const { getQueuedJob } = await import('../../services/jobQueue.js');
+    const status = await getQueuedJob(String(spaceOperationId));
 
     if (!status) return res.status(404).json({ error: 'NOT_FOUND', message: 'Space session not found' });
 
@@ -200,8 +200,8 @@ router.post('/transcript', async (req, res) => {
   if (!spaceOperationId) return res.status(400).json({ error: 'INVALID_INPUT', message: 'operationId is required' });
 
   try {
-    const { getJobStatus } = await import('../../services/jobQueue.js');
-    const status = await getJobStatus(spaceOperationId);
+    const { getQueuedJob } = await import('../../services/jobQueue.js');
+    const status = await getQueuedJob(String(spaceOperationId));
 
     if (!status) return res.status(404).json({ error: 'NOT_FOUND', message: 'Space session not found' });
 

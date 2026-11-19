@@ -12,6 +12,19 @@ import {
   getAllSkills,
   refreshSkills,
 } from '../../src/a2a/skillRegistry.js';
+import { TOOLS } from '../../src/mcp/server.js';
+
+describe('registry is derived from the MCP server', () => {
+  it('advertises every MCP tool with the schema the server serves', () => {
+    for (const tool of TOOLS) {
+      const skill = getSkillById(`xactions.${tool.name}`);
+      expect(skill, tool.name).not.toBeNull();
+      expect(skill.description).toBe(tool.description);
+      expect(skill.inputSchema).toEqual(tool.inputSchema);
+    }
+    expect(getAllSkills().length).toBeGreaterThanOrEqual(TOOLS.length);
+  });
+});
 
 describe('convertMcpToolToA2aSkill', () => {
   it('converts an MCP tool to an A2A skill', () => {

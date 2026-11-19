@@ -46,8 +46,8 @@ router.use((req, res, next) => {
 async function findStream(req, res, streamId) {
   const stream = await monitors.get(req.ownerKey, String(streamId));
   if (stream && stream.type === 'streamStart') return stream;
-  const { getJob } = await import('../../services/jobQueue.js');
-  const job = await getJob(String(streamId));
+  const { getQueuedJob } = await import('../../services/jobQueue.js');
+  const job = await getQueuedJob(String(streamId));
   if (job && job.type === 'streamStart' && ['queued', 'processing'].includes(job.status)) {
     successResponse(res, { streamId, status: job.status === 'queued' ? 'starting' : 'taking first reading', itemsCollected: 0, latestItems: [] });
     return null;
@@ -129,10 +129,10 @@ router.post('/stop', async (req, res) => {
     if (stopped && stopped.type === 'streamStart') {
       return successResponse(res, { streamId, status: stopped.status, stoppedAt: stopped.updatedAt, itemsCollected: stopped.stats?.events ?? 0 });
     }
-    const { cancelJob, getJob } = await import('../../services/jobQueue.js');
-    const job = await getJob(String(streamId));
+    const { cancelQueuedJob, getQueuedJob } = await import('../../services/jobQueue.js');
+    const job = await getQueuedJob(String(streamId));
     if (job && job.type === 'streamStart' && job.status === 'queued') {
-      await cancelJob(String(streamId));
+      await cancelQueuedJob(String(streamId));
       return successResponse(res, { streamId, status: 'cancelled', stoppedAt: new Date().toISOString() });
     }
     return res.status(404).json({ success: false, error: 'NOT_FOUND', message: 'No running stream with that id belongs to this session' });

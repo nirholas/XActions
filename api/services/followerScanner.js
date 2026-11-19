@@ -13,6 +13,21 @@
 import { prisma } from '../../src/utils/prisma.js';
 import { scrapeFollowers } from './browserAutomation.js';
 
+/** Below this many previous followers a shrinking count is plausible, so it is diffed. */
+const MIN_COLLAPSE_BASELINE = 20;
+/** A scan that returns less than this share of the previous count is incomplete. */
+const MIN_SANE_FRACTION = 0.5;
+
+/** A stored snapshot's follower list; an unreadable one counts as empty. */
+function parseSnapshot(json) {
+  try {
+    const parsed = JSON.parse(json);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
 /**
  * Run a full follower scan for a user
  * @param {string} userId - XActions user ID
@@ -38,6 +53,41 @@ export async function runFollowerScan(userId, sessionCookie, username, options =
     orderBy: { createdAt: 'desc' },
   });
 
+  // Parsed once: it was re-parsed for every current follower, which held the
+  // event loop for tens of seconds on a 5,000-follower account.
+  const previousFollowers = previousSnapshot ? parseSnapshot(previousSnapshot.followers) : [];
+  const previousMap = new Map();
+  for (const f of previousFollowers) {
+    previousMap.set(f.username, f);
+  }
+
+  // The scraper returns an empty list when the session is logged out or rate
+  // limited, and a short one when X stops serving pages. Neither means people
+  // unfollowed, so neither is diffed: that once recorded every follower as lost
+  // and fired the mass-unfollow alert and webhook.
+  if (previousMap.size > 0 && currentFollowers.length === 0) {
+    throw new Error(
+      `The scan of @${username} returned no followers (it had ${previousMap.size}). ` +
+        'The X session is probably logged out or rate limited; nothing was recorded.',
+    );
+  }
+  if (previousMap.size >= MIN_COLLAPSE_BASELINE && currentFollowers.length < previousMap.size * MIN_SANE_FRACTION) {
+    console.warn(
+      `⚠️ Scan of @${username} returned ${currentFollowers.length} of ${previousMap.size} followers; ` +
+        'treating it as incomplete and keeping the previous snapshot.',
+    );
+    return {
+      snapshotId: previousSnapshot.id,
+      scanDate: new Date(),
+      totalFollowers: previousMap.size,
+      scrapedFollowers: currentFollowers.length,
+      gained: [],
+      lost: [],
+      isFirstScan: false,
+      incomplete: true,
+    };
+  }
+
   // 3. Build lookup maps
   const currentMap = new Map();
   for (const f of currentFollowers) {
@@ -52,23 +102,14 @@ export async function runFollowerScan(userId, sessionCookie, username, options =
   let lost = [];
 
   if (previousSnapshot) {
-    const previousFollowers = JSON.parse(previousSnapshot.followers);
-    const previousMap = new Map();
-    for (const f of previousFollowers) {
-      previousMap.set(f.username, f);
-    }
-
-    const currentSet = new Set(currentMap.keys());
-    const previousSet = new Set(previousMap.keys());
-
     // New followers = in current but not in previous
-    gained = [...currentSet]
-      .filter(u => !previousSet.has(u))
+    gained = [...currentMap.keys()]
+      .filter(u => !previousMap.has(u))
       .map(u => currentMap.get(u));
 
     // Lost followers = in previous but not in current
-    lost = [...previousSet]
-      .filter(u => !currentSet.has(u))
+    lost = [...previousMap.keys()]
+      .filter(u => !currentMap.has(u))
       .map(u => ({
         ...previousMap.get(u),
         followedSince: previousMap.get(u).followedSince || previousSnapshot.createdAt,
@@ -76,17 +117,12 @@ export async function runFollowerScan(userId, sessionCookie, username, options =
   }
 
   // 4. Store new snapshot
+  const now = new Date().toISOString();
   const followersJson = currentFollowers.map(f => ({
     username: f.username,
     name: f.name || null,
     avatarUrl: f.profileImage || null,
-    followedSince: previousSnapshot
-      ? (() => {
-          const prev = JSON.parse(previousSnapshot.followers);
-          const existing = prev.find(p => p.username === f.username);
-          return existing?.followedSince || new Date().toISOString();
-        })()
-      : new Date().toISOString(),
+    followedSince: previousMap.get(f.username)?.followedSince || now,
   }));
 
   const snapshot = await prisma.followerSnapshot.create({

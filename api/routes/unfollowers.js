@@ -18,7 +18,9 @@
 import express from 'express';
 import { prisma } from '../../src/utils/prisma.js';
 import { authMiddleware } from '../middleware/auth.js';
-import { queueJob } from '../services/jobQueue.js';
+import { authTokenForUser } from '../services/xSession.js';
+import { userRoom } from '../realtime/socketHandler.js';
+import { PublicUrlError } from '../utils/publicUrl.js';
 import {
   runFollowerScan,
   getScanHistory,
@@ -65,11 +67,20 @@ router.post('/scan', async (req, res) => {
       });
     }
 
+    // User.sessionCookie holds the cookie encrypted; the scraper needs the
+    // bare auth_token. Passing the ciphertext ran every scan logged out.
+    const authToken = await authTokenForUser(user.id);
+    if (!authToken) {
+      return res.status(400).json({
+        error: 'The saved X session could not be read. Save your session cookie again.',
+      });
+    }
+
     const { limit = 5000 } = req.body;
     const io = req.app.get('io');
 
-    // Emit scan-started event
-    io.emit('unfollower:scan-started', { userId: user.id });
+    // Emit scan-started event to this user's sockets only
+    io.to(userRoom(user.id)).emit('unfollower:scan-started', { userId: user.id });
 
     // Create operation record for tracking
     const operation = await prisma.operation.create({
@@ -85,7 +96,7 @@ router.post('/scan', async (req, res) => {
       // Run the scan
       const result = await runFollowerScan(
         user.id,
-        user.sessionCookie,
+        authToken,
         user.twitterUsername,
         { limit }
       );
@@ -240,6 +251,9 @@ router.post('/schedule', async (req, res) => {
       schedule,
     });
   } catch (error) {
+    if (error instanceof PublicUrlError) {
+      return res.status(400).json({ error: error.message });
+    }
     console.error('❌ Schedule set error:', error);
     res.status(500).json({ error: error.message || 'Failed to set schedule' });
   }

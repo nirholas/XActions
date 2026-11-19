@@ -504,6 +504,19 @@ export async function discoverQueryIds(options = {}) {
     throw new Error(`Fetched ${targets.length} bundle(s) from ${entryUrl} but found no GraphQL operations`);
   }
 
+  // A sweep where some chunks failed only saw part of the client. The
+  // operations those chunks define are missing from `operations`, not gone
+  // from x.com, so the previous cache's IDs for them are kept and the fresh
+  // ones laid over the top. A complete sweep replaces the cache outright, so
+  // operations x.com really removed do not linger.
+  let merged = operations;
+  let carriedOver = 0;
+  if (options.persist !== false && chunksFailed.length > 0) {
+    const previous = loadCache(options.cacheDir)?.operations ?? {};
+    merged = { ...previous, ...operations };
+    carriedOver = Object.keys(merged).length - count;
+  }
+
   const fetchedAt = new Date().toISOString();
   const payload = {
     version: 1,
@@ -515,19 +528,20 @@ export async function discoverQueryIds(options = {}) {
       chunksFetched: targets.length - chunksFailed.length,
       chunksFailed,
       bytes,
+      ...(carriedOver > 0 ? { carriedOver } : {}),
     },
-    operations,
+    operations: merged,
   };
 
   let cachePath = null;
   if (options.persist !== false) {
     cachePath = saveCache(payload, options.cacheDir);
-    state.operations = operations;
+    state.operations = merged;
     state.fetchedAt = fetchedAt;
     state.loadedFrom = cachePath;
   }
 
-  return { operations, fetchedAt, count, source: payload.source, cachePath };
+  return { operations: merged, fetchedAt, count: Object.keys(merged).length, source: payload.source, cachePath };
 }
 
 /**

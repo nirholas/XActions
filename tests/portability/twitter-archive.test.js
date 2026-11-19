@@ -450,6 +450,43 @@ describe('exportArchive', () => {
     expect(html).toContain('Shipping #xactions');
   });
 
+  it('cannot be steered out of exports/ or into the HTML by a hostile archive username', async () => {
+    const r = await importTwitterArchive(zipPath);
+    const hostile = "../../../evil</title><script>alert(1)</script>'+alert(2)+'";
+    const tampered = { ...r, account: { ...r.account, username: hostile } };
+    const work = await fs.mkdtemp(path.join(os.tmpdir(), 'xactions-archive-cwd-'));
+    const cwd = process.cwd();
+    process.chdir(work);
+    let dir;
+    try {
+      ({ dir } = await exportArchive(tampered, { formats: ['html'] }));
+    } finally {
+      process.chdir(cwd);
+    }
+    const exportsDir = path.join(await fs.realpath(work), 'exports');
+    expect(path.relative(exportsDir, await fs.realpath(dir)).startsWith('..')).toBe(false);
+    expect(path.basename(dir)).toMatch(/^eviltitlescriptalert1scriptalert2_archive_/);
+
+    const html = await fs.readFile(path.join(dir, 'index.html'), 'utf-8');
+    expect(html).not.toContain('<script>alert(1)');
+    expect(html).not.toContain("'+alert(2)+'");
+    await fs.rm(work, { recursive: true, force: true });
+  });
+
+  it('escapes the handle in the viewer title and passes it to the script as JSON', async () => {
+    const { generateArchiveHTML } = await import('../../src/portability/archive-viewer.js');
+    const html = generateArchiveHTML({ profile: { username: "a</title><b>x'\\" }, tweets: [] });
+    expect(html).toContain('<title>@a&lt;/title&gt;&lt;b&gt;x\'\\ — XActions Archive</title>');
+    expect(html).toContain('const HANDLE="@a\\u003c/title\\u003e\\u003cb\\u003ex\'\\\\";');
+  });
+
+  it('forwards tweetLimit from migrate() to the platform migrator', async () => {
+    const outDir = path.join(tmp, 'migrate-limit');
+    const summary = await migrate({ platform: 'bluesky', source: 'twitterArchive', archivePath: zipPath, exportDir: outDir, dryRun: true, tweetLimit: 2 });
+    expect(summary.tweets.total).toBe(2);
+    expect(summary.actions.filter((a) => a.type === 'create_post')).toHaveLength(2);
+  });
+
   it('feeds migrate() through source: twitterArchive', async () => {
     const outDir = path.join(tmp, 'migrate');
     const summary = await migrate({ platform: 'bluesky', source: 'twitterArchive', archivePath: zipPath, exportDir: outDir, dryRun: true });

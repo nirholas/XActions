@@ -271,12 +271,18 @@ async function getHttpServer() {
  */
 export function createMcpPaymentMiddleware() {
   return async function mcpPaymentMiddleware(req, res, next) {
-    // Only intercept POST /mcp
-    if (req.method !== 'POST' || req.path !== '/mcp') {
+    // Only intercept POST /mcp. Express routes `app.all('/mcp')` for /mcp/
+    // and /MCP too (case-insensitive, trailing slash allowed), so the gate
+    // normalises the same way; an exact compare let both skip payment.
+    const normalised = req.path.toLowerCase().replace(/\/+$/, '');
+    if (req.method !== 'POST' || normalised !== '/mcp') {
       return next();
     }
 
-    // Skip if x402 not configured (graceful degradation in dev)
+    // No pay-to address means payments are not switched on for this server:
+    // serve free, in production too. A configured but invalid setup is
+    // still an error.
+    if (!PAY_TO_ADDRESS) return next();
     if (!ensureConfigValidated()) {
       if (process.env.NODE_ENV !== 'production') return next();
       return res.status(500).json({ error: 'Payment system not configured' });

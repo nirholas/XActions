@@ -19,11 +19,72 @@
  * @license Apache-2.0
  */
 
+import crypto from 'node:crypto';
 import express from 'express';
 import { authMiddleware } from '../middleware/auth.js';
 import { authTokenForUser } from '../services/xSession.js';
 
 const router = express.Router();
+
+// ============================================================================
+// Webhook Trigger
+// ============================================================================
+
+/** Header an external sender puts the workflow's webhook secret in. */
+const WEBHOOK_SECRET_HEADER = 'x-webhook-secret';
+
+/** Constant-time comparison of two secrets of any length. */
+function secretsMatch(expected, provided) {
+  if (typeof expected !== 'string' || !expected || typeof provided !== 'string' || !provided) return false;
+  const a = crypto.createHash('sha256').update(expected).digest();
+  const b = crypto.createHash('sha256').update(provided).digest();
+  return crypto.timingSafeEqual(a, b);
+}
+
+/**
+ * A webhook trigger with a server-chosen id and secret. A caller-supplied
+ * webhookId could take over another workflow's id, and a generated one was
+ * derived from the workflow id and a timestamp. The previous trigger's id and
+ * secret are kept when it was already a webhook, so the sender's URL and
+ * header keep working across edits.
+ */
+function webhookTrigger(trigger, previous) {
+  if (trigger?.type !== 'webhook') return trigger;
+  const kept = previous?.type === 'webhook' && previous.webhookId && previous.secret ? previous : null;
+  return {
+    ...trigger,
+    webhookId: kept ? kept.webhookId : `wh-${crypto.randomBytes(16).toString('hex')}`,
+    secret: kept ? kept.secret : crypto.randomBytes(32).toString('hex'),
+  };
+}
+
+/**
+ * POST /api/workflows/webhook/:webhookId — External webhook trigger
+ *
+ * Mounted before authentication: the sender is an outside service with no
+ * XActions session (behind auth it always got 401), and any signed-in user
+ * could trigger anyone's workflow by its webhook id. The sender proves itself
+ * with the workflow's secret in the X-Webhook-Secret header.
+ */
+router.post('/webhook/:webhookId', async (req, res) => {
+  try {
+    const workflows = await getWorkflows();
+    const { webhookId } = req.params;
+    const registered = workflows.triggerManager
+      .getRegisteredTriggers()
+      .find((t) => t.type === 'webhook' && t.webhookId === webhookId);
+    const workflow = registered ? await workflows.get(registered.workflowId) : null;
+
+    if (!workflow || !secretsMatch(workflow.trigger?.secret, req.get(WEBHOOK_SECRET_HEADER))) {
+      return res.status(401).json({ error: 'Unknown webhook ID or wrong X-Webhook-Secret' });
+    }
+
+    workflows.triggerManager.handleWebhook(webhookId, req.body);
+    res.json({ success: true, message: 'Workflow triggered' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 // Automation routes control the owner's account, so they carry the same
 // authentication as /api/crm and /api/automations. A public deployment
@@ -90,7 +151,7 @@ router.post('/', async (req, res) => {
     const workflow = await workflows.create({
       name,
       description: description || '',
-      trigger: trigger || { type: 'manual' },
+      trigger: webhookTrigger(trigger || { type: 'manual' }),
       steps,
       enabled: enabled !== false,
       userId: req.user?.id || 'anonymous',
@@ -149,6 +210,7 @@ router.put('/:id', requireOwnWorkflow, async (req, res) => {
   try {
     const workflows = await getWorkflows();
     const { userId: _ignored, ...changes } = req.body || {};
+    if (changes.trigger) changes.trigger = webhookTrigger(changes.trigger, req.workflow.trigger);
     const updated = await workflows.update(req.params.id, changes);
     res.json(updated);
   } catch (error) {
@@ -258,28 +320,6 @@ router.get('/:id/runs/:runId', requireOwnWorkflow, async (req, res) => {
       return res.status(404).json({ error: 'Run not found' });
     }
     res.json(run);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// ============================================================================
-// Webhook Trigger
-// ============================================================================
-
-/**
- * POST /api/workflows/webhook/:webhookId — External webhook trigger
- */
-router.post('/webhook/:webhookId', async (req, res) => {
-  try {
-    const workflows = await getWorkflows();
-    const handled = workflows.triggerManager.handleWebhook(req.params.webhookId, req.body);
-    
-    if (!handled) {
-      return res.status(404).json({ error: 'Unknown webhook ID' });
-    }
-
-    res.json({ success: true, message: 'Workflow triggered' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

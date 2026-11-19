@@ -15,8 +15,10 @@ import chalk from 'chalk';
 import ora from 'ora';
 import inquirer from 'inquirer';
 import fs from 'fs/promises';
+import { mkdirSync, realpathSync } from 'node:fs';
 import path from 'path';
 import os from 'os';
+import { fileURLToPath } from 'node:url';
 
 import scrapers from '../scrapers/index.js';
 import { registerConnectCommand } from './commands/connect.js';
@@ -34,11 +36,13 @@ import { registerDraftsCommand } from './commands/drafts.js';
 import { registerArchiveCommand } from './commands/archive.js';
 import { renderRootHelp } from './help-groups.js';
 import { createSpinner, printCompact, resolveOutputMode } from '../utils/output.js';
+import { xactionsHome } from '../utils/savedSession.js';
 
 const program = new Command();
 
-// Config file path
-const CONFIG_DIR = path.join(os.homedir(), '.xactions');
+// Config file path. XACTIONS_HOME moves it, the same as it moves the MCP
+// server's session, so one variable points both lanes at the same account.
+const CONFIG_DIR = xactionsHome();
 const CONFIG_FILE = path.join(CONFIG_DIR, 'config.json');
 
 // ============================================================================
@@ -149,14 +153,24 @@ async function createHttpScraper() {
  */
 async function createTwitterHttpClient() {
   const { TwitterHttpClient } = await import('../scrapers/twitter/http/client.js');
+  const cookies = await loadSavedCookieString();
+  return cookies ? new TwitterHttpClient({ cookies }) : new TwitterHttpClient();
+}
 
+/**
+ * The saved session as a `name=value; ...` cookie string, or null when there
+ * is none: the cookie jar first, then the two tokens `xactions login` stores.
+ *
+ * @returns {Promise<string|null>}
+ */
+async function loadSavedCookieString() {
   try {
     const jar = JSON.parse(await fs.readFile(COOKIE_FILE, 'utf-8'));
     const cookies = (Array.isArray(jar) ? jar : jar.cookies || [])
       .filter((c) => c && c.name && c.value)
       .map((c) => `${c.name}=${c.value}`)
       .join('; ');
-    if (cookies.includes('auth_token=')) return new TwitterHttpClient({ cookies });
+    if (cookies.includes('auth_token=')) return cookies;
   } catch {
     // No cookie jar saved; fall through to the values `xactions login` stores.
   }
@@ -165,10 +179,40 @@ async function createTwitterHttpClient() {
   if (config.authToken) {
     const parts = [`auth_token=${config.authToken}`];
     if (config.csrfToken) parts.push(`ct0=${config.csrfToken}`);
-    return new TwitterHttpClient({ cookies: parts.join('; ') });
+    return parts.join('; ');
   }
 
-  return new TwitterHttpClient();
+  return null;
+}
+
+/**
+ * Build the method bag `src/media` resolves targets through: the factory in
+ * `scrapers/twitter/http` (`scrapeMedia`, `scrapeProfile`, `scrapeTweetById`,
+ * `scrapeCommunityMedia`), plus `searchTweets`, which the factory does not
+ * carry. The client `Scraper` has none of these names, so `download` handed
+ * one failed on every target.
+ *
+ * The saved cookies are set on the client directly rather than through the
+ * factory's `cookies` option, which would demand ct0 and spend a request
+ * validating the session before the first read.
+ *
+ * @param {object} [options] - Passed to the HTTP client (proxy, rateLimitStrategy, ...)
+ * @returns {Promise<object>}
+ */
+async function createMediaScrapers(options = {}) {
+  const [{ createHttpScraper: createFactory }, { searchTweets }] = await Promise.all([
+    import('../scrapers/twitter/http/index.js'),
+    import('../scrapers/twitter/http/search.js'),
+  ]);
+  const clientOptions = { ...options };
+  delete clientOptions.cookies;
+  const scrapers = await createFactory(clientOptions);
+  const cookies = await loadSavedCookieString();
+  if (cookies) scrapers.client.setCookies(cookies);
+  if (typeof scrapers.searchTweets !== 'function') {
+    scrapers.searchTweets = (query, opts) => searchTweets(scrapers.client, query, opts);
+  }
+  return scrapers;
 }
 
 /**
@@ -207,24 +251,30 @@ const AUTH_HINT =
 /** Record kind per smartOutput default name, so --compact knows which columns matter. */
 const COMPACT_KIND = { followers: 'user', following: 'user', tweets: 'tweet', report: 'report' };
 
-async function smartOutput(data, options, defaultName = 'data') {
-  // `--compact` is the agent-facing sibling of `--json`: one record per line,
-  // essential fields only. Like `--json` it is a stdout contract and wins
-  // over every file destination.
+async function smartOutput(data, options, defaultName = 'data', { toFile = false } = {}) {
   const mode = resolveOutputMode(program, options);
-  if (mode.compact) {
-    printCompact(data, { kind: COMPACT_KIND[defaultName] || 'record', fields: mode.fields });
-    return;
-  }
+  // With `toFile` the caller has already printed to stdout and wants only the
+  // file written, so confirmations go to stderr and never into a pipe.
+  const notify = toFile || mode.compact || options.json ? console.error : console.log;
 
-  // `--json` is an explicit "give me the data on stdout" and outranks every
-  // destination flag. These commands already default to JSON when no
-  // destination is set, but a script written against the documented contract
-  // (`--json` works on every read command) must not silently write a file
-  // instead of piping, and must not fail with "unknown option" either.
-  if (options.json) {
-    console.log(JSON.stringify(data, null, 2));
-    return;
+  if (!toFile) {
+    // `--compact` is the agent-facing sibling of `--json`: one record per line,
+    // essential fields only. Like `--json` it is a stdout contract and wins
+    // over every file destination.
+    if (mode.compact) {
+      printCompact(data, { kind: COMPACT_KIND[defaultName] || 'record', fields: mode.fields });
+      return;
+    }
+
+    // `--json` is an explicit "give me the data on stdout" and outranks every
+    // destination flag. These commands already default to JSON when no
+    // destination is set, but a script written against the documented contract
+    // (`--json` works on every read command) must not silently write a file
+    // instead of piping, and must not fail with "unknown option" either.
+    if (options.json) {
+      console.log(JSON.stringify(data, null, 2));
+      return;
+    }
   }
 
   // Google Sheets export
@@ -236,18 +286,19 @@ async function smartOutput(data, options, defaultName = 'data') {
         sheetName: options.sheetName || defaultName,
         mode: options.sheetMode || 'append',
       });
-      console.log(chalk.green(`✓ Exported ${result.rowsWritten} rows to Google Sheets`));
-      console.log(chalk.gray(`  → ${result.url}`));
+      notify(chalk.green(`✓ Exported ${result.rowsWritten} rows to Google Sheets`));
+      notify(chalk.gray(`  → ${result.url}`));
       return;
     } catch (error) {
       console.error(chalk.red(`Google Sheets export failed: ${error.message}`));
-      console.log(chalk.yellow('Falling back to JSON output...'));
+      console.error(chalk.yellow('Falling back to JSON output...'));
     }
   }
 
   // File output
   if (options.output) {
     const ext = path.extname(options.output).toLowerCase();
+    await fs.mkdir(path.dirname(path.resolve(options.output)), { recursive: true });
 
     if (ext === '.xlsx') {
       try {
@@ -256,11 +307,11 @@ async function smartOutput(data, options, defaultName = 'data') {
           filepath: options.output,
           sheetName: options.sheetName || defaultName,
         });
-        console.log(chalk.green(`✓ Saved ${result.rowsWritten} rows to ${options.output}`));
+        notify(chalk.green(`✓ Saved ${result.rowsWritten} rows to ${options.output}`));
         return;
       } catch (error) {
         console.error(chalk.red(`Excel export failed: ${error.message}`));
-        console.log(chalk.yellow('Falling back to JSON...'));
+        console.error(chalk.yellow('Falling back to JSON...'));
       }
     }
 
@@ -269,9 +320,11 @@ async function smartOutput(data, options, defaultName = 'data') {
     } else {
       await scrapers.exportToJSON(data, options.output);
     }
-    console.log(chalk.green(`✓ Saved to ${options.output}`));
+    notify(chalk.green(`✓ Saved to ${options.output}`));
     return;
   }
+
+  if (toFile) return;
 
   // Default: print JSON to stdout
   console.log(JSON.stringify(data, null, 2));
@@ -288,6 +341,49 @@ program
   .option('--compact', 'One record per line, essential fields only, no colours or spinners (for agents and pipes)')
   .option('--fields <list>', 'With --compact: comma-separated fields to print, e.g. id,text,likes');
 
+/** Option placeholders that promise a number, e.g. `--limit <number>`. */
+const NUMERIC_PLACEHOLDER = /<(number|n|ms|seconds|minutes|days)>/;
+
+/**
+ * Reject a non-numeric value for any option whose placeholder promises a
+ * number. `parseInt('abc')` is NaN, and NaN slipped through every clamp:
+ * `--limit abc` scraped nothing and `monitor --interval abc` polled every
+ * millisecond. Negative values are refused too, unless the option's own
+ * default is negative (`--threshold -0.3`).
+ *
+ * @param {import('commander').Command} command
+ * @returns {string|null} The error message, or null when every value is fine
+ */
+function invalidNumericOption(command) {
+  for (const option of command.options) {
+    if (!NUMERIC_PLACEHOLDER.test(option.flags)) continue;
+    const value = command.getOptionValue(option.attributeName());
+    if (value === undefined || value === null || typeof value === 'boolean') continue;
+    const number = Number(value);
+    const allowsNegative = Number(option.defaultValue) < 0;
+    if (String(value).trim() === '' || !Number.isFinite(number) || (number < 0 && !allowsNegative)) {
+      return `option '${option.flags}' expects a ${allowsNegative ? '' : 'non-negative '}number, got "${value}"`;
+    }
+  }
+  return null;
+}
+
+program.hook('preAction', (_root, command) => {
+  const problem = invalidNumericOption(command);
+  if (problem) command.error(`error: ${problem}`);
+
+  // Create the parent of an output path before any work starts, so a typo'd
+  // directory costs nothing rather than failing after the whole scrape.
+  const output = command.getOptionValue('output');
+  if (typeof output === 'string' && output) {
+    try {
+      mkdirSync(path.dirname(path.resolve(output)), { recursive: true });
+    } catch (error) {
+      command.error(`error: cannot create the directory for --output ${output}: ${error.message}`);
+    }
+  }
+});
+
 // ============================================================================
 // Commands that live in their own modules
 //
@@ -303,7 +399,7 @@ registerAskCommand(program);
 registerReportCommand(program, { createHttpScraper, smartOutput });
 registerBriefCommand(program, { createHttpScraper });
 registerEngageCommand(program, { createHttpScraper, loadConfig, configDir: CONFIG_DIR });
-registerDownloadCommand(program, { createHttpScraper, loadConfig });
+registerDownloadCommand(program, { createMediaScrapers, loadConfig });
 registerReputationCommand(program, { createHttpScraper, loadConfig });
 registerQuickstartCommand(program, { version: VERSION });
 registerCompletionCommand(program);
@@ -624,6 +720,13 @@ program
         return;
       }
 
+      // `--json` is a stdout contract: the array and nothing else, so the
+      // human summary below must not run ahead of it into the pipe.
+      if (options.json) {
+        console.log(JSON.stringify(nonFollowers, null, 2));
+        return;
+      }
+
       console.log(chalk.bold('\n📊 Follow Analysis\n'));
       console.log(`  ${chalk.cyan('Total Following:')} ${following.length}`);
       console.log(`  ${chalk.green('Mutuals:')}         ${mutuals.length}`);
@@ -640,9 +743,7 @@ program
         }
       }
 
-      if (options.json) {
-        console.log(JSON.stringify(nonFollowers, null, 2));
-      } else if (options.output) {
+      if (options.output) {
         await scrapers.exportToJSON(nonFollowers, options.output);
         console.log(chalk.green(`\n✓ Full list saved to ${options.output}`));
       }
@@ -690,6 +791,9 @@ program
     }
   });
 
+/** Values `search --filter` accepts. */
+const SEARCH_FILTERS = ['latest', 'top', 'people', 'photos', 'videos'];
+
 program
   .command('search <query>')
   .description('Search for tweets')
@@ -700,38 +804,50 @@ program
   .action(async (query, options) => {
     const limit = parseInt(options.limit);
     const mode = resolveOutputMode(program, options);
+    const filter = String(options.filter).toLowerCase();
+    if (!SEARCH_FILTERS.includes(filter)) {
+      console.error(chalk.red(`Unknown --filter "${options.filter}". Use one of: ${SEARCH_FILTERS.join(', ')}.`));
+      process.exitCode = 1;
+      return;
+    }
+    const people = filter === 'people';
     const spinner = createSpinner(`Searching for "${query}"`, mode);
 
     try {
       const scraper = await createHttpScraper();
       const { SearchMode } = await import('../client/index.js');
 
-      const searchMode =
-        {
-          latest: SearchMode.Latest,
-          top: SearchMode.Top,
-          photos: SearchMode.Photos,
-          videos: SearchMode.Videos,
-        }[String(options.filter).toLowerCase()] || SearchMode.Latest;
+      // `people` is a different timeline (accounts, not posts), so it goes
+      // through searchProfiles and prints user records. It used to fall back
+      // to Latest and return tweets without a word.
+      const stream = people
+        ? scraper.searchProfiles(query, limit)
+        : scraper.searchTweets(query, limit, {
+            latest: SearchMode.Latest,
+            top: SearchMode.Top,
+            photos: SearchMode.Photos,
+            videos: SearchMode.Videos,
+          }[filter]);
 
-      const tweets = [];
-      for await (const tweet of scraper.searchTweets(query, limit, searchMode)) {
-        tweets.push(tweet);
-        spinner.text = `Searching for "${query}" (${tweets.length}/${limit})`;
+      const results = [];
+      for await (const item of stream) {
+        results.push(item);
+        spinner.text = `Searching for "${query}" (${results.length}/${limit})`;
+        if (results.length >= limit) break;
       }
 
-      assertNotEmpty(tweets, `results for "${query}"`, AUTH_HINT);
-      spinner.succeed(`Found ${tweets.length} tweets`);
+      assertNotEmpty(results, `${people ? 'accounts' : 'results'} for "${query}"`, AUTH_HINT);
+      spinner.succeed(`Found ${results.length} ${people ? 'accounts' : 'tweets'}`);
 
       if (mode.compact) {
-        printCompact(tweets, { kind: 'tweet', fields: mode.fields });
+        printCompact(results, { kind: people ? 'user' : 'tweet', fields: mode.fields });
       } else if (options.json) {
-        console.log(JSON.stringify(tweets, null, 2));
+        console.log(JSON.stringify(results, null, 2));
       } else if (options.output) {
-        await scrapers.exportToJSON(tweets, options.output);
+        await scrapers.exportToJSON(results, options.output);
         console.log(chalk.green(`✓ Saved to ${options.output}`));
       } else {
-        console.log(JSON.stringify(tweets, null, 2));
+        console.log(JSON.stringify(results, null, 2));
       }
     } catch (error) {
       spinner.fail('Search failed');
@@ -751,9 +867,10 @@ program
     const hashtag = tag.startsWith('#') ? tag : `#${tag}`;
     const mode = resolveOutputMode(program, options);
     const spinner = createSpinner(`Scraping ${hashtag}`, mode);
+    let browser = null;
 
     try {
-      const browser = await scrapers.createBrowser();
+      browser = await scrapers.createBrowser();
       const page = await scrapers.createPage(browser);
 
       const config = await loadConfig();
@@ -763,7 +880,9 @@ program
 
       const tweets = await scrapers.scrapeHashtag(page, tag, { limit });
       await browser.close();
+      browser = null;
 
+      assertNotEmpty(tweets, `tweets for ${hashtag}`, AUTH_HINT);
       spinner.succeed(`Found ${tweets.length} tweets`);
 
       if (mode.compact) {
@@ -779,6 +898,10 @@ program
     } catch (error) {
       spinner.fail('Scraping failed');
       console.error(chalk.red(error.message));
+      process.exitCode = 1;
+    } finally {
+      // A failed navigation or login left Chromium running and the CLI hung.
+      if (browser) await browser.close().catch(() => {});
     }
   });
 
@@ -936,6 +1059,7 @@ pluginCmd
     } catch (error) {
       spinner.fail(`Failed to install plugin "${name}"`);
       console.error(chalk.red(error.message));
+      process.exitCode = 1;
     }
   });
 
@@ -951,6 +1075,7 @@ pluginCmd
     } catch (error) {
       spinner.fail(`Failed to remove plugin "${name}"`);
       console.error(chalk.red(error.message));
+      process.exitCode = 1;
     }
   });
 
@@ -979,6 +1104,7 @@ pluginCmd
       console.log('');
     } catch (error) {
       console.error(chalk.red('Failed to list plugins: ' + error.message));
+      process.exitCode = 1;
     }
   });
 
@@ -992,6 +1118,7 @@ pluginCmd
       console.log(chalk.green(`✓ Plugin "${name}" enabled`));
     } catch (error) {
       console.error(chalk.red(error.message));
+      process.exitCode = 1;
     }
   });
 
@@ -1005,6 +1132,7 @@ pluginCmd
       console.log(chalk.green(`✓ Plugin "${name}" disabled`));
     } catch (error) {
       console.error(chalk.red(error.message));
+      process.exitCode = 1;
     }
   });
 
@@ -1030,6 +1158,7 @@ pluginCmd
     } catch (error) {
       spinner.fail('Failed to discover plugins');
       console.error(chalk.red(error.message));
+      process.exitCode = 1;
     }
   });
 
@@ -1065,6 +1194,7 @@ streamCmd
     } catch (error) {
       spinner.fail('Failed to start stream');
       console.error(chalk.red(error.message));
+      process.exitCode = 1;
     }
   });
 
@@ -1080,6 +1210,7 @@ streamCmd
     } catch (error) {
       spinner.fail('Failed to stop stream');
       console.error(chalk.red(error.message));
+      process.exitCode = 1;
     }
   });
 
@@ -1112,6 +1243,7 @@ streamCmd
       console.log('');
     } catch (error) {
       console.error(chalk.red('Failed to list streams: ' + error.message));
+      process.exitCode = 1;
     }
   });
 
@@ -1144,6 +1276,7 @@ streamCmd
       console.log('');
     } catch (error) {
       console.error(chalk.red('Failed to get history: ' + error.message));
+      process.exitCode = 1;
     }
   });
 
@@ -1160,6 +1293,7 @@ streamCmd
     } catch (error) {
       spinner.fail('Failed to pause stream');
       console.error(chalk.red(error.message));
+      process.exitCode = 1;
     }
   });
 
@@ -1175,6 +1309,7 @@ streamCmd
     } catch (error) {
       spinner.fail('Failed to resume stream');
       console.error(chalk.red(error.message));
+      process.exitCode = 1;
     }
   });
 
@@ -1186,7 +1321,8 @@ streamCmd
       const { getStreamStatus } = await import('../streaming/index.js');
       const s = await getStreamStatus(streamId);
       if (!s) {
-        console.log(chalk.red(`\n  Stream not found: ${streamId}\n`));
+        console.error(chalk.red(`\n  Stream not found: ${streamId}\n`));
+        process.exitCode = 1;
         return;
       }
       const statusColor = s.status === 'running' ? chalk.green : s.status === 'paused' ? chalk.yellow : chalk.red;
@@ -1203,6 +1339,7 @@ streamCmd
       console.log('');
     } catch (error) {
       console.error(chalk.red('Failed to get status: ' + error.message));
+      process.exitCode = 1;
     }
   });
 
@@ -1218,6 +1355,7 @@ streamCmd
     } catch (error) {
       spinner.fail('Failed to stop all streams');
       console.error(chalk.red(error.message));
+      process.exitCode = 1;
     }
   });
 
@@ -1277,6 +1415,7 @@ workflowCmd
       console.log(chalk.gray('  Add steps by editing the workflow JSON or using the API.'));
     } catch (error) {
       console.error(chalk.red('Failed to create workflow: ' + error.message));
+      process.exitCode = 1;
     }
   });
 
@@ -1308,6 +1447,7 @@ workflowCmd
         spinner.succeed(`Workflow "${result.workflowName}" completed (${result.stepsCompleted}/${result.totalSteps} steps)`);
       } else if (result.status === 'failed') {
         spinner.fail(`Workflow failed: ${result.error}`);
+        process.exitCode = 1;
       } else {
         spinner.info(`Workflow finished with status: ${result.status}`);
       }
@@ -1323,6 +1463,7 @@ workflowCmd
     } catch (error) {
       spinner.fail('Failed to run workflow');
       console.error(chalk.red(error.message));
+      process.exitCode = 1;
     }
   });
 
@@ -1351,6 +1492,7 @@ workflowCmd
       }
     } catch (error) {
       console.error(chalk.red('Failed to list workflows: ' + error.message));
+      process.exitCode = 1;
     }
   });
 
@@ -1364,10 +1506,12 @@ workflowCmd
       if (deleted) {
         console.log(chalk.green(`✓ Workflow deleted: ${id}`));
       } else {
-        console.log(chalk.red(`Workflow not found: ${id}`));
+        console.error(chalk.red(`Workflow not found: ${id}`));
+        process.exitCode = 1;
       }
     } catch (error) {
       console.error(chalk.red('Failed to delete workflow: ' + error.message));
+      process.exitCode = 1;
     }
   });
 
@@ -1397,6 +1541,7 @@ workflowCmd
       }
     } catch (error) {
       console.error(chalk.red('Failed to list actions: ' + error.message));
+      process.exitCode = 1;
     }
   });
 
@@ -1424,6 +1569,7 @@ workflowCmd
       console.log('');
     } catch (error) {
       console.error(chalk.red('Failed to get runs: ' + error.message));
+      process.exitCode = 1;
     }
   });
 
@@ -1463,6 +1609,7 @@ graphCmd
     } catch (error) {
       spinner.fail('Failed to build graph');
       console.error(chalk.red(error.message));
+      process.exitCode = 1;
     }
   });
 
@@ -1476,6 +1623,7 @@ graphCmd
       const data = await graph.get(graphId);
       if (!data) {
         spinner.fail(`Graph not found: ${graphId}`);
+        process.exitCode = 1;
         return;
       }
 
@@ -1516,6 +1664,7 @@ graphCmd
     } catch (error) {
       spinner.fail('Analysis failed');
       console.error(chalk.red(error.message));
+      process.exitCode = 1;
     }
   });
 
@@ -1528,6 +1677,7 @@ graphCmd
       const data = await graph.get(graphId);
       if (!data) {
         console.error(chalk.red(`Graph not found: ${graphId}`));
+        process.exitCode = 1;
         return;
       }
 
@@ -1566,6 +1716,7 @@ graphCmd
       console.log('');
     } catch (error) {
       console.error(chalk.red('Failed to get recommendations: ' + error.message));
+      process.exitCode = 1;
     }
   });
 
@@ -1580,6 +1731,7 @@ graphCmd
       const data = await graphMod.get(graphId);
       if (!data) {
         console.error(chalk.red(`Graph not found: ${graphId}`));
+        process.exitCode = 1;
         return;
       }
 
@@ -1597,6 +1749,7 @@ graphCmd
       console.log(chalk.green(`✓ Graph exported to ${outPath} (${format})`));
     } catch (error) {
       console.error(chalk.red('Failed to export graph: ' + error.message));
+      process.exitCode = 1;
     }
   });
 
@@ -1622,6 +1775,7 @@ graphCmd
       }
     } catch (error) {
       console.error(chalk.red('Failed to list graphs: ' + error.message));
+      process.exitCode = 1;
     }
   });
 
@@ -1635,10 +1789,12 @@ graphCmd
       if (deleted) {
         console.log(chalk.green(`✓ Graph deleted: ${graphId}`));
       } else {
-        console.log(chalk.red(`Graph not found: ${graphId}`));
+        console.error(chalk.red(`Graph not found: ${graphId}`));
+        process.exitCode = 1;
       }
     } catch (error) {
       console.error(chalk.red('Failed to delete graph: ' + error.message));
+      process.exitCode = 1;
     }
   });
 
@@ -1707,6 +1863,7 @@ program
     } catch (error) {
       spinner.fail('Export failed');
       console.error(chalk.red(error.message));
+      process.exitCode = 1;
     }
   });
 
@@ -1725,6 +1882,7 @@ program
 
     if (!['bluesky', 'mastodon'].includes(platform)) {
       console.error(chalk.red('Platform must be "bluesky" or "mastodon"'));
+      process.exitCode = 1;
       return;
     }
 
@@ -1745,17 +1903,27 @@ program
 
     if (!exportDir) {
       console.error(chalk.red(`No export found for @${user}. Run "xactions export @${user}" first.`));
+      process.exitCode = 1;
       return;
     }
 
     const spinner = ora(`${dryRun ? 'Previewing' : 'Executing'} migration to ${platform}...`).start();
 
     try {
-      const { migrate } = await import('../portability/importer.js');
-      const summary = await migrate({
-        platform,
+      // The per-platform migrators take `tweetLimit`; the `migrate()` wrapper
+      // does not forward it, which is why `--limit` was always 50. Call the
+      // migrator directly, after the same export-directory check the wrapper makes.
+      const { migrateToBluesky, migrateToMastodon } = await import('../portability/importer.js');
+      try {
+        await fs.access(exportDir);
+      } catch {
+        throw new Error(`Export directory not found: ${exportDir}`);
+      }
+      const run = platform === 'bluesky' ? migrateToBluesky : migrateToMastodon;
+      const summary = await run({
         exportDir,
         dryRun,
+        tweetLimit: parseInt(options.limit, 10) || 50,
         onProgress: ({ phase, completed, total }) => {
           spinner.text = `[${phase}] ${completed}/${total}`;
         },
@@ -1785,6 +1953,7 @@ program
     } catch (error) {
       spinner.fail('Migration failed');
       console.error(chalk.red(error.message));
+      process.exitCode = 1;
     }
   });
 
@@ -1820,6 +1989,7 @@ program
     } catch (error) {
       spinner.fail('Diff failed');
       console.error(chalk.red(error.message));
+      process.exitCode = 1;
     }
   });
 
@@ -1920,6 +2090,7 @@ program
       } catch (error) {
         console.error(chalk.red(`Failed to write config: ${error.message}`));
         console.log(chalk.gray('\nCopy the JSON above and paste it manually.'));
+        process.exitCode = 1;
       }
     } else if (options.write) {
       console.log(chalk.yellow('Config path not found for this client/OS. Copy the JSON above manually.'));
@@ -1994,6 +2165,7 @@ program
     } catch (error) {
       spinner.fail('Sentiment analysis failed');
       console.error(chalk.red(error.message));
+      process.exitCode = 1;
     }
   });
 
@@ -2041,6 +2213,7 @@ program
     } catch (error) {
       spinner.fail('Failed to start monitor');
       console.error(chalk.red(error.message));
+      process.exitCode = 1;
     }
   });
 
@@ -2062,8 +2235,19 @@ program
       );
 
       if (!monitor) {
-        spinner.fail(`No active monitor found for @${username}`);
-        console.log(chalk.yellow('Start one first with: xactions monitor @' + username));
+        // Monitors and their history live in memory inside the process that
+        // runs `xactions monitor`; nothing is written to disk, so a separate
+        // `xactions report` process can never see one. Say so rather than
+        // implying a monitor would help.
+        spinner.fail(`No monitor for @${username.replace(/^@/, '')} in this process`);
+        console.error(
+          chalk.yellow(
+            'Monitors run inside the `xactions monitor` process and keep their history in memory only, ' +
+              'so a separate `xactions report` cannot read them. For a one-off account report use ' +
+              '`xactions analyze ' + username.replace(/^@/, '') + '`, or `xactions reputation ' + username.replace(/^@/, '') + '` to score its posts.',
+          ),
+        );
+        process.exitCode = 1;
         return;
       }
 
@@ -2095,12 +2279,24 @@ program
     } catch (error) {
       spinner.fail('Failed to generate report');
       console.error(chalk.red(error.message));
+      process.exitCode = 1;
     }
   });
 
 // ============================================================================
 // Cross-Platform Scrape Command
 // ============================================================================
+
+/** Compact record kind per `scrape` action, so --compact picks the right columns. */
+const SCRAPE_COMPACT_KIND = {
+  profile: 'profile',
+  followers: 'user',
+  following: 'user',
+  tweets: 'tweet',
+  posts: 'tweet',
+  search: 'tweet',
+  hashtag: 'tweet',
+};
 
 const scrapeCmd = program
   .command('scrape <action> [target]')
@@ -2111,7 +2307,7 @@ const scrapeCmd = program
   .option('-l, --limit <number>', 'Maximum results', '100')
   .option('-i, --instance <url>', 'Mastodon instance URL (e.g. https://mastodon.social)')
   .option('-o, --output <file>', 'Output file (json or csv)')
-  .option('-j, --json', 'Output as JSON to stdout')
+  .option('-j, --json', 'Output as JSON to stdout (wins over --output)')
   .action(async (action, target, options) => {
     const platform = options.platform.toLowerCase();
     const limit = parseInt(options.limit);
@@ -2119,7 +2315,8 @@ const scrapeCmd = program
     const query = options.query || target;
 
     const actionLabel = `${platform}/${action}` + (username ? ` @${username}` : query ? ` "${query}"` : '');
-    const spinner = ora(`Scraping ${actionLabel}`).start();
+    const mode = resolveOutputMode(program, options);
+    const spinner = createSpinner(`Scraping ${actionLabel}`, mode);
 
     try {
       const { scrape } = await import('../scrapers/index.js');
@@ -2150,9 +2347,20 @@ const scrapeCmd = program
       }
 
       const result = await scrape(platform, action, scrapeOptions);
+      if (Array.isArray(result)) {
+        assertNotEmpty(result, `${action} results from ${platform}`, AUTH_HINT);
+      } else if (!result || typeof result !== 'object' || Object.keys(result).length === 0) {
+        throw new Error(`No ${action} data returned from ${platform}. ${AUTH_HINT}`);
+      }
       spinner.succeed(`Scraped ${actionLabel}`);
 
-      if (options.output) {
+      // Same precedence as every other read command: --compact, then --json,
+      // then a file, then the default rendering.
+      if (mode.compact) {
+        printCompact(result, { kind: SCRAPE_COMPACT_KIND[action] || 'record', fields: mode.fields });
+      } else if (options.json) {
+        console.log(JSON.stringify(result, null, 2));
+      } else if (options.output) {
         const ext = path.extname(options.output).toLowerCase();
         const { exportToJSON, exportToCSV } = await import('../scrapers/index.js');
         const data = Array.isArray(result) ? result : [result];
@@ -2162,7 +2370,7 @@ const scrapeCmd = program
           await exportToJSON(data, options.output);
         }
         console.log(chalk.green(`✓ Saved to ${options.output}`));
-      } else if (options.json || Array.isArray(result)) {
+      } else if (Array.isArray(result)) {
         console.log(JSON.stringify(result, null, 2));
       } else {
         // Pretty-print profile-like objects
@@ -2177,6 +2385,7 @@ const scrapeCmd = program
     } catch (error) {
       spinner.fail(`Failed to scrape ${actionLabel}`);
       console.error(chalk.red(error.message));
+      process.exitCode = 1;
     }
   });
 
@@ -2212,9 +2421,9 @@ ai
   .option('--json', 'Output as JSON')
   .action(async (username, options) => {
     const config = await loadConfig();
-    const token = config.auth_token || process.env.TWITTER_AUTH_TOKEN;
+    const token = config.authToken || config.auth_token || process.env.TWITTER_AUTH_TOKEN;
     if (!token) {
-      console.error(chalk.red('✗ Auth token required. Run: xactions config --token <auth_token>'));
+      console.error(chalk.red('✗ Auth token required. Run: xactions login (or xactions connect)'));
       process.exit(1);
     }
     const spinner = ora(`Analyzing @${username}'s writing voice...`).start();
@@ -2228,6 +2437,7 @@ ai
       await browser.close();
       if (!tweets || tweets.length === 0) {
         spinner.fail(`No tweets found for @${username}`);
+        process.exitCode = 1;
         return;
       }
       spinner.text = `Analyzing ${tweets.length} tweets...`;
@@ -2249,6 +2459,7 @@ ai
     } catch (error) {
       spinner.fail('Voice analysis failed');
       console.error(chalk.red(error.message));
+      process.exitCode = 1;
     }
   });
 
@@ -2267,10 +2478,10 @@ ai
       process.exit(1);
     }
     const config = await loadConfig();
-    const token = config.auth_token || process.env.TWITTER_AUTH_TOKEN;
+    const token = config.authToken || config.auth_token || process.env.TWITTER_AUTH_TOKEN;
     const apiKey = options.apiKey || config.openrouter_api_key || process.env.OPENROUTER_API_KEY;
     if (!token) {
-      console.error(chalk.red('✗ Auth token required. Run: xactions config --token <auth_token>'));
+      console.error(chalk.red('✗ Auth token required. Run: xactions login (or xactions connect)'));
       process.exit(1);
     }
     if (!apiKey) {
@@ -2291,6 +2502,7 @@ ai
       await browser.close();
       if (!tweets || tweets.length === 0) {
         spinner.fail(`No tweets found for @${options.voice}`);
+        process.exitCode = 1;
         return;
       }
       const voiceProfile = analyzeVoice(options.voice, tweets);
@@ -2320,6 +2532,7 @@ ai
     } catch (error) {
       spinner.fail('Generation failed');
       console.error(chalk.red(error.message));
+      process.exitCode = 1;
     }
   });
 
@@ -2337,10 +2550,10 @@ ai
       process.exit(1);
     }
     const config = await loadConfig();
-    const token = config.auth_token || process.env.TWITTER_AUTH_TOKEN;
+    const token = config.authToken || config.auth_token || process.env.TWITTER_AUTH_TOKEN;
     const apiKey = options.apiKey || config.openrouter_api_key || process.env.OPENROUTER_API_KEY;
     if (!token) {
-      console.error(chalk.red('✗ Auth token required. Run: xactions config --token <auth_token>'));
+      console.error(chalk.red('✗ Auth token required. Run: xactions login (or xactions connect)'));
       process.exit(1);
     }
     if (!apiKey) {
@@ -2361,6 +2574,7 @@ ai
       await browser.close();
       if (!tweets || tweets.length === 0) {
         spinner.fail(`No tweets found for @${options.voice}`);
+        process.exitCode = 1;
         return;
       }
       const voiceProfile = analyzeVoice(options.voice, tweets);
@@ -2379,6 +2593,7 @@ ai
     } catch (error) {
       spinner.fail('Rewrite failed');
       console.error(chalk.red(error.message));
+      process.exitCode = 1;
     }
   });
 
@@ -2393,10 +2608,10 @@ ai
   .option('-k, --api-key <key>', 'OpenRouter API key (or set OPENROUTER_API_KEY)')
   .action(async (username, options) => {
     const config = await loadConfig();
-    const token = config.auth_token || process.env.TWITTER_AUTH_TOKEN;
+    const token = config.authToken || config.auth_token || process.env.TWITTER_AUTH_TOKEN;
     const apiKey = options.apiKey || config.openrouter_api_key || process.env.OPENROUTER_API_KEY;
     if (!token) {
-      console.error(chalk.red('✗ Auth token required. Run: xactions config --token <auth_token>'));
+      console.error(chalk.red('✗ Auth token required. Run: xactions login (or xactions connect)'));
       process.exit(1);
     }
     if (!apiKey) {
@@ -2417,6 +2632,7 @@ ai
       await browser.close();
       if (!tweets || tweets.length === 0) {
         spinner.fail(`No tweets found for @${username}`);
+        process.exitCode = 1;
         return;
       }
       const voiceProfile = analyzeVoice(username, tweets);
@@ -2446,6 +2662,7 @@ ai
     } catch (error) {
       spinner.fail('Calendar generation failed');
       console.error(chalk.red(error.message));
+      process.exitCode = 1;
     }
   });
 
@@ -2596,6 +2813,7 @@ personaCmd
 
     if (!token) {
       console.error(chalk.red('❌ No auth token. Run "xactions login" first, pass --token, or set XACTIONS_SESSION_COOKIE'));
+      process.exitCode = 1;
       return;
     }
 
@@ -2618,6 +2836,7 @@ personaCmd
       });
     } catch (error) {
       console.error(chalk.red(`\n❌ ${error.message}`));
+      process.exitCode = 1;
     }
   });
 
@@ -2666,6 +2885,7 @@ personaCmd
       console.log();
     } catch (error) {
       console.error(chalk.red(`❌ ${error.message}`));
+      process.exitCode = 1;
     }
   });
 
@@ -2688,6 +2908,7 @@ personaCmd
       }
     } catch (error) {
       console.error(chalk.red(`❌ ${error.message}`));
+      process.exitCode = 1;
     }
   });
 
@@ -2725,6 +2946,7 @@ personaCmd
       console.log(chalk.green(`✅ Persona "${persona.name}" updated`));
     } catch (error) {
       console.error(chalk.red(`❌ ${error.message}`));
+      process.exitCode = 1;
     }
   });
 
@@ -2752,7 +2974,7 @@ program
       } else {
         console.log(JSON.stringify(data, null, 2));
       }
-    } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+    } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); process.exitCode = 1; }
   });
 
 program
@@ -2766,7 +2988,7 @@ program
       console.log(chalk.green(`✅ Auto-snapshot started for @${username} every ${options.interval}m`));
       console.log(chalk.dim('Press Ctrl+C to stop'));
       await new Promise(() => {}); // Keep alive
-    } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+    } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); process.exitCode = 1; }
   });
 
 // ============================================================================
@@ -2782,11 +3004,15 @@ program
       const { analyzeOverlap } = await import('../analytics/audienceOverlap.js');
       const spin = ora('Analyzing audience overlap...').start();
       const result = await analyzeOverlap(username1, username2, { maxFollowers: parseInt(options.max) });
+      if (!result.accountA?.followerCount && !result.accountB?.followerCount) {
+        spin.fail('No followers returned for either account');
+        throw new Error(`X returned no followers for @${username1} or @${username2}. ${AUTH_HINT}`);
+      }
       spin.succeed('Overlap analysis complete');
-      console.log(`\n${chalk.bold('Overlap:')} ${result.overlapCount} users (${result.overlapPercent}%)`);
-      console.log(`${chalk.blue('@' + username1)} unique: ${result.uniqueToA}`);
-      console.log(`${chalk.blue('@' + username2)} unique: ${result.uniqueToB}`);
-    } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+      console.log(`\n${chalk.bold('Overlap:')} ${result.shared.count} users (${result.shared.percentage}%)`);
+      console.log(`${chalk.blue('@' + username1)} unique: ${result.uniqueToA.count} of ${result.accountA.followerCount}`);
+      console.log(`${chalk.blue('@' + username2)} unique: ${result.uniqueToB.count} of ${result.accountB.followerCount}`);
+    } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); process.exitCode = 1; }
   });
 
 // ============================================================================
@@ -2801,7 +3027,7 @@ crmCmd.command('sync <username>').description('Sync followers to CRM').action(as
     const spin = ora('Syncing followers...').start();
     const result = await syncFollowers(username);
     spin.succeed(`Synced: ${result.added} added, ${result.updated} updated`);
-  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); process.exitCode = 1; }
 });
 
 crmCmd.command('tag <username> <tag>').description('Tag a contact').action(async (username, tag) => {
@@ -2809,7 +3035,7 @@ crmCmd.command('tag <username> <tag>').description('Tag a contact').action(async
     const { tagContact } = await import('../analytics/followerCRM.js');
     tagContact(username, tag);
     console.log(chalk.green(`✅ Tagged @${username} with "${tag}"`));
-  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); process.exitCode = 1; }
 });
 
 crmCmd.command('search <query>').description('Search contacts').action(async (query) => {
@@ -2817,7 +3043,7 @@ crmCmd.command('search <query>').description('Search contacts').action(async (qu
     const { searchContacts } = await import('../analytics/followerCRM.js');
     const results = searchContacts(query);
     console.log(JSON.stringify(results.slice(0, 20), null, 2));
-  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); process.exitCode = 1; }
 });
 
 crmCmd.command('score').description('Auto-score all contacts').action(async () => {
@@ -2825,7 +3051,7 @@ crmCmd.command('score').description('Auto-score all contacts').action(async () =
     const { autoScore } = await import('../analytics/followerCRM.js');
     const result = autoScore();
     console.log(chalk.green(`✅ Scored ${result.scored} contacts`));
-  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); process.exitCode = 1; }
 });
 
 crmCmd.command('segment <name>').description('Get segment members').action(async (name) => {
@@ -2833,7 +3059,7 @@ crmCmd.command('segment <name>').description('Get segment members').action(async
     const { getSegment } = await import('../analytics/followerCRM.js');
     const members = getSegment(name);
     console.log(JSON.stringify(members, null, 2));
-  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); process.exitCode = 1; }
 });
 
 // ============================================================================
@@ -2852,8 +3078,16 @@ program
       const usernames = await parseBulkInput(file);
       console.log(chalk.blue(`📋 Loaded ${usernames.length} usernames from ${file}`));
       if (action === 'scrape') {
-        const result = await bulkScrape(usernames, { delay: parseInt(options.delay), dryRun: options.dryRun });
-        console.log(chalk.green(`✅ Scraped ${result.results?.length || 0} profiles`));
+        const result = await bulkScrape(usernames, { delayMs: parseInt(options.delay, 10) || 1500, dryRun: options.dryRun });
+        if (result.error) throw new Error(result.error);
+        const failed = (result.results || []).filter((r) => r?.error).length;
+        const scraped = (result.results?.length || 0) - failed;
+        if (failed > 0 || scraped === 0) {
+          console.error(chalk.yellow(`⚠️  Scraped ${scraped} profiles, ${failed} failed`));
+          process.exitCode = 1;
+        } else {
+          console.log(chalk.green(`✅ Scraped ${scraped} profiles`));
+        }
       } else {
         const result = await bulkExecute(usernames, action, {
           delayMs: parseInt(options.delay, 10) || 2000,
@@ -2865,10 +3099,16 @@ program
           process.exitCode = 1;
         } else {
           const already = result.alreadyFollowing ? `, ${result.alreadyFollowing} already done` : '';
-          console.log(chalk.green(`✅ Bulk ${action}: ${result.succeeded} succeeded, ${result.failed} failed${already}`));
+          const line = `Bulk ${action}: ${result.succeeded} succeeded, ${result.failed} failed${already}`;
+          if (result.failed > 0) {
+            console.error(chalk.yellow(`⚠️  ${line}`));
+            process.exitCode = 1;
+          } else {
+            console.log(chalk.green(`✅ ${line}`));
+          }
         }
       }
-    } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); } finally {
+    } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); process.exitCode = 1; } finally {
       // bulkExecute closes the browser it opened; this covers the paths that
       // throw before it gets the chance, so the CLI never hangs on a live
       // Puppeteer singleton after printing its summary.
@@ -2894,7 +3134,7 @@ schedCmd.command('add <name> <cron>').description('Add scheduled job').option('-
     await scheduler.load();
     scheduler.addJob({ name, cron, command: options.command || 'echo "Job: ' + name + '"' });
     console.log(chalk.green(`✅ Job "${name}" scheduled: ${cron}`));
-  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); process.exitCode = 1; }
 });
 
 schedCmd.command('list').description('List all jobs').action(async () => {
@@ -2905,7 +3145,7 @@ schedCmd.command('list').description('List all jobs').action(async () => {
     const jobs = scheduler.listJobs();
     if (jobs.length === 0) { console.log(chalk.dim('No scheduled jobs')); return; }
     jobs.forEach(j => console.log(`  ${j.enabled ? '🟢' : '🔴'} ${j.name}  ${chalk.dim(j.cron)}  ${chalk.dim('Next: ' + (j.nextRun || '—'))}`));
-  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); process.exitCode = 1; }
 });
 
 schedCmd.command('remove <name>').description('Remove a scheduled job').action(async (name) => {
@@ -2916,7 +3156,7 @@ schedCmd.command('remove <name>').description('Remove a scheduled job').action(a
     const result = scheduler.removeJob(name);
     if (result?.error) { console.error(chalk.red(`❌ ${result.error}`)); process.exitCode = 1; }
     else console.log(chalk.green(`✅ Job "${name}" removed`));
-  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); process.exitCode = 1; }
 });
 
 schedCmd.command('run <name>').description('Run a job immediately').action(async (name) => {
@@ -2925,9 +3165,13 @@ schedCmd.command('run <name>').description('Run a job immediately').action(async
     const scheduler = getScheduler();
     await scheduler.load();
     const result = await scheduler.runJobNow(name);
-    if (result?.error) { console.error(chalk.red(`❌ ${result.error}`)); process.exitCode = 1; }
-    else console.log(chalk.green(`✅ Job "${name}" executed`));
-  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+    // The runner reports a failed command as `status: 'failed'`, not `error`.
+    if (result?.error || result?.status === 'failed') {
+      const detail = typeof result.error === 'string' ? result.error : `exit code ${result.exitCode ?? 'unknown'}`;
+      console.error(chalk.red(`❌ Job "${name}" failed: ${String(detail).trim()}`));
+      process.exitCode = 1;
+    } else console.log(chalk.green(`✅ Job "${name}" executed`));
+  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); process.exitCode = 1; }
 });
 
 // ============================================================================
@@ -2955,7 +3199,7 @@ program
         await createEvergreenQueue(username, candidates);
         console.log(chalk.green(`✅ Evergreen queue created with ${candidates.length} tweets`));
       }
-    } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+    } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); process.exitCode = 1; }
   });
 
 // ============================================================================
@@ -2969,7 +3213,7 @@ rssCmd.command('add <name> <url>').description('Add an RSS feed').option('-t, --
     const { addFeed } = await import('../automation/rssMonitor.js');
     addFeed({ name, url, template: options.template });
     console.log(chalk.green(`✅ Feed "${name}" added`));
-  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); process.exitCode = 1; }
 });
 
 rssCmd.command('list').description('List all feeds').action(async () => {
@@ -2978,7 +3222,7 @@ rssCmd.command('list').description('List all feeds').action(async () => {
     const feeds = listFeeds();
     if (feeds.length === 0) { console.log(chalk.dim('No feeds configured')); return; }
     feeds.forEach(f => console.log(`  ${f.enabled ? '🟢' : '🔴'} ${f.name}  ${chalk.dim(f.url)}`));
-  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); process.exitCode = 1; }
 });
 
 rssCmd.command('check [name]').description('Check feeds for new items').action(async (name) => {
@@ -2988,7 +3232,7 @@ rssCmd.command('check [name]').description('Check feeds for new items').action(a
     const result = name ? await checkFeed(name) : await checkAllFeeds();
     const count = name ? result.newItems : result.reduce((s, r) => s + r.newItems, 0);
     spin.succeed(`Found ${count} new items`);
-  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); process.exitCode = 1; }
 });
 
 rssCmd.command('drafts').description('View draft posts from feeds').action(async () => {
@@ -2997,7 +3241,7 @@ rssCmd.command('drafts').description('View draft posts from feeds').action(async
     const drafts = getDrafts();
     if (drafts.length === 0) { console.log(chalk.dim('No drafts')); return; }
     drafts.forEach((d, i) => console.log(`  ${i + 1}. ${chalk.dim(d.text?.substring(0, 80))}...`));
-  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); process.exitCode = 1; }
 });
 
 // ============================================================================
@@ -3020,7 +3264,7 @@ program
         console.log(`\n${chalk.bold('Tips:')}`);
         result.suggestions.forEach(s => console.log(`  💡 ${s}`));
       }
-    } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+    } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); process.exitCode = 1; }
   });
 
 program
@@ -3033,7 +3277,7 @@ program
       const result = await suggestHashtags(text, { count: parseInt(options.count) });
       console.log(`${chalk.bold('Suggested hashtags:')}`);
       result.hashtags?.forEach(h => console.log(`  #${h}`));
-    } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+    } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); process.exitCode = 1; }
   });
 
 program
@@ -3048,7 +3292,7 @@ program
       console.log(`  Reach: ${result.estimatedReach || '—'}`);
       if (result.strengths?.length) result.strengths.forEach(s => console.log(`  ✅ ${s}`));
       if (result.weaknesses?.length) result.weaknesses.forEach(w => console.log(`  ⚠️  ${w}`));
-    } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+    } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); process.exitCode = 1; }
   });
 
 program
@@ -3061,7 +3305,7 @@ program
       const result = await generateVariations(text, parseInt(options.count));
       console.log(`${chalk.bold('Variations:')}`);
       result.forEach((v, i) => console.log(`\n  ${i + 1}. ${v}`));
-    } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+    } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); process.exitCode = 1; }
   });
 
 // ============================================================================
@@ -3077,7 +3321,7 @@ notifyCmd.command('test <channel>').description('Send a test notification').acti
     const result = await notifier.test(channel);
     console.log(chalk.green(`✅ Test notification sent to ${channel}`));
     console.log(JSON.stringify(result, null, 2));
-  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); process.exitCode = 1; }
 });
 
 notifyCmd.command('send <message>').description('Send notification to all channels').option('-t, --title <title>', 'Notification title', 'XActions Alert').option('-s, --severity <level>', 'info, warning, critical', 'info').action(async (message, options) => {
@@ -3087,7 +3331,7 @@ notifyCmd.command('send <message>').description('Send notification to all channe
     const result = await notifier.send({ title: options.title, message, severity: options.severity });
     console.log(chalk.green('✅ Notification sent'));
     console.log(JSON.stringify(result, null, 2));
-  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); process.exitCode = 1; }
 });
 
 notifyCmd.command('configure').description('Configure notification channels interactively').action(async () => {
@@ -3110,7 +3354,7 @@ notifyCmd.command('configure').description('Configure notification channels inte
       notifier.configure({ email: { enabled: true, smtp: { host, user, pass }, to } });
     }
     console.log(chalk.green(`✅ ${channel} configured`));
-  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); process.exitCode = 1; }
 });
 
 // ============================================================================
@@ -3125,7 +3369,7 @@ datasetCmd.command('list').description('List all datasets').action(async () => {
     const datasets = await listDatasets();
     if (datasets.length === 0) { console.log(chalk.dim('No datasets')); return; }
     datasets.forEach(d => console.log(`  📦 ${d.name}  ${chalk.dim(`${d.itemCount} items, ${d.size}`)}`));
-  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); process.exitCode = 1; }
 });
 
 datasetCmd.command('export <name>').description('Export dataset').option('-f, --format <format>', 'json, csv, jsonl', 'json').option('-o, --output <path>', 'Output file path').action(async (name, options) => {
@@ -3140,7 +3384,7 @@ datasetCmd.command('export <name>').description('Export dataset').option('-f, --
     } else {
       console.log(data);
     }
-  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); process.exitCode = 1; }
 });
 
 datasetCmd.command('delete <name>').description('Delete a dataset').action(async (name) => {
@@ -3149,7 +3393,7 @@ datasetCmd.command('delete <name>').description('Delete a dataset').action(async
     const ds = new DatasetStore(name);
     await ds.delete();
     console.log(chalk.green(`✅ Dataset "${name}" deleted`));
-  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); process.exitCode = 1; }
 });
 
 // ============================================================================
@@ -3163,7 +3407,7 @@ teamCmd.command('create <name>').description('Create a new team').option('-u, --
     const { createTeam } = await import('../auth/teamManager.js');
     const result = await createTeam(name, options.owner || 'default');
     console.log(chalk.green(`✅ Team "${name}" created (ID: ${result.id})`));
-  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); process.exitCode = 1; }
 });
 
 teamCmd.command('invite <teamId> <email>').description('Invite user to team').option('-r, --role <role>', 'Role: admin, member, viewer', 'member').action(async (teamId, email, options) => {
@@ -3172,16 +3416,16 @@ teamCmd.command('invite <teamId> <email>').description('Invite user to team').op
     const result = await inviteUser(teamId, email, options.role);
     console.log(chalk.green(`✅ Invite sent to ${email} as ${options.role}`));
     console.log(chalk.dim(`Token: ${result.token}`));
-  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); process.exitCode = 1; }
 });
 
 teamCmd.command('members <teamId>').description('List team members').action(async (teamId) => {
   try {
     const { listTeamMembers } = await import('../auth/teamManager.js');
     const members = await listTeamMembers(teamId);
-    if (members.error) { console.error(chalk.red(members.error)); return; }
+    if (members.error) { console.error(chalk.red(members.error)); process.exitCode = 1; return; }
     members.forEach(m => console.log(`  ${m.role === 'owner' ? '👑' : '👤'} @${m.username}  ${chalk.dim(m.role)}`));
-  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); process.exitCode = 1; }
 });
 
 teamCmd.command('activity <teamId>').description('View team activity log').option('-l, --limit <n>', 'Max entries', '20').action(async (teamId, options) => {
@@ -3189,7 +3433,7 @@ teamCmd.command('activity <teamId>').description('View team activity log').optio
     const { getActivityLog } = await import('../auth/teamManager.js');
     const log = await getActivityLog(teamId, { limit: parseInt(options.limit) });
     log.forEach(a => console.log(`  ${chalk.dim(a.timestamp.split('T')[0])} @${chalk.blue(a.user)} ${a.action} ${JSON.stringify(a.target)}`));
-  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+  } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); process.exitCode = 1; }
 });
 
 // ============================================================================
@@ -3214,7 +3458,7 @@ program
         await fs.writeFile(options.output, JSON.stringify(result.items, null, 2));
         console.log(chalk.green(`Saved to ${options.output}`));
       }
-    } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+    } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); process.exitCode = 1; }
   });
 
 program
@@ -3235,7 +3479,7 @@ program
       } else {
         console.log(output);
       }
-    } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+    } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); process.exitCode = 1; }
   });
 
 program
@@ -3256,7 +3500,7 @@ program
       } else {
         console.log(output);
       }
-    } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+    } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); process.exitCode = 1; }
   });
 
 // ============================================================================
@@ -3354,7 +3598,7 @@ agentCmd
         console.log(`  🧠 LLM cost:  $${llmCost.totalCost.toFixed(4)}`);
       }
       console.log('');
-    } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+    } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); process.exitCode = 1; }
   });
 
 agentCmd
@@ -3381,7 +3625,7 @@ agentCmd
         console.log(`\n  🧠 Total LLM cost: $${llmCost.totalCost.toFixed(4)}`);
       }
       console.log('');
-    } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); }
+    } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); process.exitCode = 1; }
   });
 
 // ============================================================================
@@ -3415,6 +3659,7 @@ clientCmd
       spinner.stop();
     } catch (error) {
       spinner.fail(chalk.red(`Login failed: ${error.message}`));
+      process.exitCode = 1;
     }
   });
 
@@ -3442,6 +3687,7 @@ clientCmd
       console.log('');
     } catch (error) {
       spinner.fail(chalk.red(`Failed: ${error.message}`));
+      process.exitCode = 1;
     }
   });
 
@@ -3467,6 +3713,7 @@ clientCmd
       console.log('');
     } catch (error) {
       spinner.fail(chalk.red(`Failed: ${error.message}`));
+      process.exitCode = 1;
     }
   });
 
@@ -3504,6 +3751,7 @@ clientCmd
       }
     } catch (error) {
       spinner.fail(chalk.red(`Failed: ${error.message}`));
+      process.exitCode = 1;
     }
   });
 
@@ -3523,6 +3771,7 @@ clientCmd
       console.log(chalk.cyan(`  https://x.com/${tweet.username}/status/${tweet.id}\n`));
     } catch (error) {
       spinner.fail(chalk.red(`Failed: ${error.message}`));
+      process.exitCode = 1;
     }
   });
 
@@ -3553,6 +3802,7 @@ clientCmd
       console.log('');
     } catch (error) {
       spinner.fail(chalk.red(`Failed: ${error.message}`));
+      process.exitCode = 1;
     }
   });
 
@@ -3583,6 +3833,7 @@ clientCmd
       console.log('');
     } catch (error) {
       spinner.fail(chalk.red(`Failed: ${error.message}`));
+      process.exitCode = 1;
     }
   });
 
@@ -3605,6 +3856,7 @@ clientCmd
       console.log('');
     } catch (error) {
       spinner.fail(chalk.red(`Failed: ${error.message}`));
+      process.exitCode = 1;
     }
   });
 
@@ -3629,4 +3881,30 @@ program.configureHelp({
 // `xactions quickstart` in three places, which is where a first-time user
 // should go; there is deliberately no redirect here, because an implicit jump
 // would hide the command list from someone who ran the binary to see it.
-program.parse();
+
+/**
+ * Is this module the process entry point?
+ *
+ * The `xactions` bin is a symlink npm creates in node_modules/.bin, so
+ * `process.argv[1]` is the link while `import.meta.url` is the real file.
+ * Resolving argv[1] through realpath makes `node src/cli/index.js`,
+ * `npx xactions` and a global install all compare equal.
+ *
+ * @returns {boolean}
+ */
+function isEntryPoint() {
+  if (!process.argv[1]) return false;
+  try {
+    return realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url));
+  } catch {
+    return false;
+  }
+}
+
+// Importing `xactions/cli` must not run the CLI: parse() would read the host
+// process's argv and could exit it. Only parse when run as the binary.
+if (isEntryPoint()) {
+  program.parse();
+}
+
+export { program, isEntryPoint, createMediaScrapers };

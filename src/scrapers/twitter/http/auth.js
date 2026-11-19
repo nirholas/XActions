@@ -710,7 +710,10 @@ export class TwitterAuth {
       payload = JSON.stringify(cookieArray, null, 2);
     }
 
-    await fs.writeFile(filePath, payload, 'utf8');
+    // Session cookies: readable by their owner only. `mode` applies only when
+    // the file is created, so an existing file is tightened explicitly.
+    await fs.writeFile(filePath, payload, { encoding: 'utf8', mode: 0o600 });
+    await fs.chmod(filePath, 0o600);
   }
 
   /**

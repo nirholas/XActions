@@ -259,6 +259,57 @@ describe('download engine', () => {
     expect(b.ino).toBe(a.ino);
   });
 
+  it('keeps the downloaded file when the dedupe link cannot be made', async () => {
+    const base = await listen((req, res) => { res.writeHead(200).end(PHOTO); });
+    const archive = await openArchive(join(outputDir, 'a.jsonl'));
+    const ctx = { outputDir, template: '{tweet_id}_{num}.{ext}', archive };
+
+    const original = await downloadItem(item({ url: `${base}/original.jpg` }), ctx);
+    // The twin vanishes, so link() fails with ENOENT.
+    await rm(original.path);
+    const second = await downloadItem(item({ url: `${base}/again.jpg`, tweetId: '7777' }), ctx);
+
+    expect(second.outcome).toBe('downloaded');
+    expect((await readFile(second.path)).equals(PHOTO)).toBe(true);
+  });
+
+  it('treats the timeout as idle time, so a slow but steady body completes', async () => {
+    const base = await listen((req, res) => {
+      res.writeHead(200, { 'content-length': String(PHOTO.length) });
+      let offset = 0;
+      const tick = setInterval(() => {
+        res.write(PHOTO.subarray(offset, offset + 100));
+        offset += 100;
+        if (offset >= PHOTO.length) { clearInterval(tick); res.end(); }
+      }, 60);
+    });
+    // Whole body takes ~540 ms; no gap is longer than 60 ms.
+    const result = await downloadItem(item({ url: `${base}/slow.jpg` }), { outputDir, timeoutMs: 300, retries: 0 });
+    expect(result.outcome).toBe('downloaded');
+    expect((await readFile(result.path)).equals(PHOTO)).toBe(true);
+  }, 20000);
+
+  it('retries a stalled body and resumes it with a Range request', async () => {
+    const ranges = [];
+    const base = await listen((req, res) => {
+      ranges.push(req.headers.range || null);
+      const match = /bytes=(\d+)-/.exec(req.headers.range || '');
+      if (match) {
+        const from = Number(match[1]);
+        res.writeHead(206, { 'content-range': `bytes ${from}-${PHOTO.length - 1}/${PHOTO.length}` });
+        res.end(PHOTO.subarray(from));
+        return;
+      }
+      res.writeHead(200, { 'content-length': String(PHOTO.length) });
+      res.write(PHOTO.subarray(0, 50));
+      // ...and then nothing: the connection stays open but silent.
+    });
+    const result = await downloadItem(item({ url: `${base}/stall.jpg` }), { outputDir, timeoutMs: 200, retries: 2 });
+    expect(result.outcome).toBe('downloaded');
+    expect(ranges).toEqual([null, 'bytes=50-']);
+    expect((await readFile(result.path)).equals(PHOTO)).toBe(true);
+  }, 20000);
+
   it('runs a batch through a pool and reports every outcome honestly', async () => {
     const base = await listen((req, res) => {
       if (req.url.includes('bad')) { res.writeHead(404).end(); return; }

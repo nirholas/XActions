@@ -488,17 +488,48 @@
       ? 'http://localhost:3001/api'
       : '/api';
 
-    // Handle OAuth callback — token arrives in URL hash fragment
+    // OAuth login nonce. Before this, any link of the form
+    // /login?oauth=success#token=<jwt> stored that JWT as authToken, so an
+    // attacker could sign a victim into the attacker's account (login CSRF) and
+    // read whatever the victim then connected or typed. signInWithX() now puts a
+    // random nonce in this tab's sessionStorage and sends it to the backend,
+    // which carries it through the signed OAuth state and echoes it back in the
+    // fragment next to the token. A token is accepted only when the echoed nonce
+    // matches the one this tab stored; a link crafted elsewhere cannot know it.
+    const OAUTH_NONCE_KEY = 'xactions_oauth_nonce';
+
+    function newOAuthNonce() {
+      const bytes = new Uint8Array(16);
+      crypto.getRandomValues(bytes);
+      return Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    // Handle OAuth callback: /login?oauth=success#token=<jwt>&nonce=<nonce>
     (function handleOAuthCallback() {
       const params = new URLSearchParams(window.location.search);
-      const hash = window.location.hash;
+      const fragment = new URLSearchParams(window.location.hash.slice(1));
 
-      if (params.get('oauth') === 'success' && hash.startsWith('#token=')) {
-        const token = hash.substring('#token='.length);
-        if (token) {
+      if (params.get('oauth') === 'success' || fragment.has('token')) {
+        const token = fragment.get('token');
+        const nonce = fragment.get('nonce');
+        let expected = null;
+        try {
+          expected = sessionStorage.getItem(OAUTH_NONCE_KEY);
+          // Single use: a nonce that has come back once is spent either way.
+          sessionStorage.removeItem(OAUTH_NONCE_KEY);
+        } catch {
+          expected = null;
+        }
+        // Never leave a token sitting in the address bar or the history entry.
+        history.replaceState(null, '', window.location.pathname);
+
+        if (params.get('oauth') === 'success' && token && expected && nonce === expected) {
           localStorage.setItem('authToken', token);
-          // Clean URL and redirect to dashboard
           window.location.replace('/dashboard?twitter_connected=true');
+          return;
+        }
+        if (token) {
+          setTimeout(() => showError('That sign-in link did not start in this browser tab, so it was ignored. Sign in with X again.'), 100);
           return;
         }
       }
@@ -518,10 +549,20 @@
 
     function signInWithX() {
       const btn = document.getElementById('btn-sign-in-x');
+      // The nonce comes back in the callback fragment; see handleOAuthCallback.
+      const nonce = newOAuthNonce();
+      try {
+        sessionStorage.setItem(OAUTH_NONCE_KEY, nonce);
+      } catch {
+        // Without sessionStorage the callback cannot be verified, so it would
+        // be refused; say so now instead of after a round trip to X.
+        showError('Sign in with X needs browser storage. Allow site data for this page and try again.');
+        return;
+      }
       btn.disabled = true;
       btn.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" style="width:20px;height:20px;fill:white"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg> Redirecting to X...';
       // Redirect to backend which redirects to Twitter OAuth
-      window.location.href = `${API_URL}/twitter/login`;
+      window.location.href = `${API_URL}/twitter/login?nonce=${encodeURIComponent(nonce)}`;
     }
 
     function showLogin() {

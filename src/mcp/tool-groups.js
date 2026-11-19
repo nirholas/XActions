@@ -247,13 +247,50 @@ export const UNCAPPED_WRITE_TOOLS = Object.freeze(new Set([
  * @param {object} [args] tool arguments
  * @returns {{ actionClass: string, count: number } | Array<{ actionClass: string, count: number }> | null}
  */
+/**
+ * Is this call live rather than a preview? A missing or null `dryRun` is a
+ * preview for the tools that default to one; anything else falsy (false, 0,
+ * "") is live. The x_engage handler reads the same function, so the ledger
+ * and the handler can never disagree about whether a call acts.
+ *
+ * @param {unknown} dryRun
+ * @returns {boolean}
+ */
+export function isLiveRun(dryRun) {
+  return dryRun !== undefined && dryRun !== null && !dryRun;
+}
+
+/** A count argument, or its default, clamped to at least one action. */
+function countArg(value, fallback, max = Infinity) {
+  const n = Math.floor(Number(value));
+  return Math.max(1, Math.min(Number.isFinite(n) && n > 0 ? n : fallback, max));
+}
+
+/**
+ * Bulk tools that act many times per call, charged for the most they can do
+ * (their count argument, or the handler's default). Charging one per call
+ * let ten `x_auto_like {maxLikes: 500}` calls spend 5,000 likes against a
+ * 500 cap while the ledger showed 10. A tool whose `dryRun` is set to a
+ * preview costs nothing.
+ */
+const BULK_CHARGES = Object.freeze({
+  x_auto_like: (a) => countArg(a.maxLikes, 20),
+  x_auto_follow: (a) => countArg(a.limit, 10),
+  x_auto_comment: (a) => countArg(a.limit, 5),
+  x_auto_retweet: (a) => countArg(a.limit, 5),
+  x_follow_engagers: (a) => countArg(a.limit, 10, 200),
+  x_unfollow_non_followers: (a) => (a.dryRun ? 0 : countArg(a.maxUnfollows, 100)),
+  x_smart_unfollow: (a) => (a.dryRun ? 0 : countArg(a.limit, 20)),
+  x_unfollow_all: (a) => countArg(a.limit, 1000),
+});
+
 export function resolveActionCharge(name, args = {}) {
   if (name === 'x_engage') {
     // Charged for the whole limit before the sweep starts, the same way
     // x_bulk_execute is charged for its whole username list: the ledger has
     // to hold the budget before the first write, and the run is free to
     // engage fewer. Keep `limit` to what you actually intend to spend.
-    if (args?.dryRun !== false) return null;
+    if (!isLiveRun(args?.dryRun)) return null;
     const count = Math.max(1, Math.min(Number(args?.limit) || 20, 200));
     const charges = [];
     if (args?.like !== false) charges.push({ actionClass: 'like', count });
@@ -270,7 +307,12 @@ export function resolveActionCharge(name, args = {}) {
     return { actionClass: cls, count: Math.max(1, count) };
   }
   const cls = ACTION_CLASS[name];
-  return cls ? { actionClass: cls, count: 1 } : null;
+  if (!cls) return null;
+  if (BULK_CHARGES[name]) {
+    const count = BULK_CHARGES[name](args || {});
+    return count > 0 ? { actionClass: cls, count } : null;
+  }
+  return { actionClass: cls, count: 1 };
 }
 
 /**
@@ -325,8 +367,18 @@ export function parseSelection(value) {
 }
 
 /**
+ * `writes` selects every tool with a side effect on the account (WRITE_TOOLS),
+ * across all groups. The `write` group is a category, and automation, DM,
+ * lists, scheduling and personas all write too, so `--exclude write` alone
+ * left x_engage, x_auto_like, x_bulk_execute and a dozen others callable.
+ * `--exclude writes` is the token that means "no writes at all".
+ */
+export const WRITES_SELECTOR = 'writes';
+
+/**
  * Expand a token list into the set of tool names it selects. A token is a
- * tool name, a group name, or a wildcard suffix pattern such as `x_get_*`.
+ * tool name, a group name, `writes` (every write tool), or a wildcard suffix
+ * pattern such as `x_get_*`.
  * @param {string[]} tokens
  * @param {Array<{name: string}>} tools
  * @returns {{ names: Set<string>, unknown: string[] }}
@@ -338,7 +390,9 @@ export function expandSelection(tokens, tools) {
   const known = new Set(tools.map((t) => t.name));
 
   for (const token of tokens) {
-    if (groups[token]) {
+    if (token === WRITES_SELECTOR) {
+      for (const n of known) if (WRITE_TOOLS.has(n)) names.add(n);
+    } else if (groups[token]) {
       for (const n of groups[token]) names.add(n);
     } else if (token.endsWith('*')) {
       const prefix = token.slice(0, -1);

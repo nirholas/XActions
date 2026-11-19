@@ -10,7 +10,6 @@
     "activeTab",
     "storage",
     "alarms",
-    "scripting",
     "contextMenus",
     "notifications"
   ],
@@ -22,8 +21,13 @@
     "https://api.openai.com/*",
     "https://api.anthropic.com/*",
     "https://api.x.ai/*",
-    "http://localhost/*",
-    "http://127.0.0.1/*"
+    "http://localhost:11434/*",
+    "http://127.0.0.1:11434/*"
+  ],
+
+  "optional_host_permissions": [
+    "https://*/*",
+    "http://*/*"
   ],
 
   "action": {

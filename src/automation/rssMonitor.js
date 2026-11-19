@@ -13,8 +13,9 @@ import fs from 'fs';
 import fsp from 'fs/promises';
 import path from 'path';
 import os from 'os';
+import { xactionsHome } from '../utils/savedSession.js';
 
-const CONFIG_DIR = path.join(os.homedir(), '.xactions');
+const CONFIG_DIR = xactionsHome();
 const FEEDS_FILE = path.join(CONFIG_DIR, 'rss-feeds.json');
 const SEEN_FILE = path.join(CONFIG_DIR, 'rss-seen.json');
 const DRAFTS_FILE = path.join(CONFIG_DIR, 'drafts.json');

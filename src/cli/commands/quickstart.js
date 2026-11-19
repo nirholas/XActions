@@ -12,11 +12,11 @@
  */
 
 import fs from 'fs/promises';
-import os from 'os';
 import path from 'path';
+import { xactionsHome } from '../../utils/savedSession.js';
 import chalk from 'chalk';
 
-const CONFIG_DIR = path.join(os.homedir(), '.xactions');
+const CONFIG_DIR = xactionsHome();
 
 /**
  * Detect what the user has set up, so the guidance matches their machine.

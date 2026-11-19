@@ -816,7 +816,8 @@ body::-webkit-scrollbar-thumb {
   margin-bottom: 8px;
 }
 
-.settings-section input[type="number"] {
+.settings-section input[type="number"],
+.settings-section input[type="url"] {
   display: block;
   width: 100%;
   margin-top: 4px;
@@ -828,8 +829,15 @@ body::-webkit-scrollbar-thumb {
   font-size: 13px;
   outline: none;
 }
-.settings-section input[type="number"]:focus {
+.settings-section input[type="number"]:focus,
+.settings-section input[type="url"]:focus {
   border-color: var(--accent);
+}
+
+.settings-hint {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin: 0 0 8px;
 }
 
 .btn-secondary {

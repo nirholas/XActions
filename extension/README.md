@@ -107,10 +107,10 @@ popup.js                    service-worker.js              bridge.js            
 | `activeTab` | Access the current X tab |
 | `storage` | Persist settings and activity log |
 | `alarms` | Periodic health checks |
-| `scripting` | Inject automation code |
 | `contextMenus` | Right-click: Download video, Unroll thread, Analyze account |
 | `notifications` | Rate limit alerts |
-| `host_permissions` | Only x.com and twitter.com |
+| `host_permissions` | x.com and twitter.com; the OpenRouter, OpenAI, Anthropic and xAI APIs for the LLM relay; Ollama on `localhost:11434` / `127.0.0.1:11434` |
+| `optional_host_permissions` | Requested for one origin only when you save a custom AI provider URL in Settings |
 
 ## Credits
 
@@ -133,7 +133,6 @@ window.postMessage({
     provider: 'openrouter',           // openrouter | openai | anthropic | xai | ollama | custom
     apiKey: 'sk-or-...',              // blank for ollama
     model: 'google/gemini-2.5-flash', // provider default when omitted
-    baseUrl: '',                      // full chat-completions URL for custom
     messages: [{ role: 'user', content: 'hi' }],
     temperature: 0.9,
     maxTokens: 160,
@@ -146,6 +145,11 @@ window.addEventListener('message', (e) => {
   }
 });
 ```
+
+The page does not choose where the request goes. Any script on x.com can post
+this message, so a `baseUrl` in the request is ignored: each provider has a
+fixed URL, and `custom` goes to the chat-completions URL saved in the popup's
+**Settings > Custom AI provider** field, which only you can set.
 
 `scripts/engageProfile.js` uses this when its provider is set to **XActions
 extension (any provider)**. The key travels page, content script, service

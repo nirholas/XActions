@@ -11,8 +11,13 @@ import { VERSION } from '../../src/version.js';
 let agent, server;
 const PORT = 31999; // high port to avoid conflicts
 const BASE = `http://localhost:${PORT}`;
+// tasks/sendSubscribe runs the task in the background. The tool call is held
+// open here so a test sees the task mid-flight and nothing reaches X.
+const pendingToolCalls = [];
 
 beforeAll(async () => {
+  // These tests exercise the HTTP surface, not auth: they opt out explicitly.
+  // tests/a2a/security.test.js covers the default, authenticated server.
   agent = createA2AServer({
     port: PORT,
     enableAuth: false,
@@ -20,10 +25,12 @@ beforeAll(async () => {
     enableLogging: false,
     mode: 'local',
   });
+  agent.bridge.getToolResult = () => new Promise((resolve) => pendingToolCalls.push(resolve));
   server = await agent.start(PORT);
 });
 
 afterAll(() => {
+  for (const resolve of pendingToolCalls) resolve({ ok: true });
   agent.shutdown();
 });
 
@@ -160,7 +167,7 @@ describe('POST /a2a/tasks/:taskId/cancel', () => {
         jsonrpc: '2.0',
         method: 'tasks/sendSubscribe',
         params: {
-          message: { role: 'user', parts: [{ type: 'text', text: 'cancellable' }] },
+          message: { role: 'user', parts: [{ type: 'text', text: 'get profile for cancellable' }] },
         },
         id: 'cancel-test',
       }),
@@ -176,10 +183,16 @@ describe('POST /a2a/tasks/:taskId/cancel', () => {
 });
 
 describe('CORS', () => {
-  it('returns CORS headers on OPTIONS', async () => {
+  it('answers a preflight with no Origin but grants no wildcard', async () => {
     const res = await fetch(`${BASE}/a2a/health`, { method: 'OPTIONS' });
     expect(res.status).toBe(204);
-    expect(res.headers.get('access-control-allow-origin')).toBe('*');
+    expect(res.headers.get('access-control-allow-origin')).toBeNull();
+  });
+
+  it('refuses a browser request from an origin that is not on the allowlist', async () => {
+    const res = await fetch(`${BASE}/a2a/health`, { method: 'OPTIONS', headers: { Origin: 'https://evil.example' } });
+    expect(res.status).toBe(403);
+    expect(res.headers.get('access-control-allow-origin')).toBeNull();
   });
 });
 

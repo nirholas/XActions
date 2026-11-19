@@ -1,5 +1,6 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 import browserAutomation from '../../browserAutomation.js';
+import { actionBudget } from '../actionBudget.js';
 
 /**
  * Follow users who engaged with specific tweets using browser automation
@@ -8,7 +9,8 @@ import browserAutomation from '../../browserAutomation.js';
  * @param {function} updateProgress - Callback to update job progress
  * @param {function} isCancelled - Function to check if job is cancelled
  */
-async function followEngagersBrowser(userId, config, updateProgress, isCancelled = () => false) {
+async function followEngagersBrowser(userId, config, updateProgress, isCancelled = () => false, charge) {
+  const budget = actionBudget(charge, isCancelled);
   const page = await browserAutomation.createPage(config.sessionCookie);
   
   try {
@@ -71,6 +73,7 @@ async function followEngagersBrowser(userId, config, updateProgress, isCancelled
       updateProgress(`Following @${user.username} (${i + 1}/${limit})`);
 
       if (!dryRun) {
+        if (!(await budget.spend('follow'))) break;
         const result = await browserAutomation.followUser(page, user.username);
         
         if (result.success) {
@@ -116,7 +119,8 @@ async function followEngagersBrowser(userId, config, updateProgress, isCancelled
       totalEngagers: engagers.length,
       totalProcessed: followed.length + failed.length,
       dryRun,
-      cancelled: isCancelled()
+      cancelled: isCancelled(),
+      stoppedReason: budget.stoppedReason
     };
 
   } finally {

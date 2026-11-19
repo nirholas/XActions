@@ -21,7 +21,7 @@
 import { promises as fs, createReadStream } from 'fs';
 import path from 'path';
 import yauzl from 'yauzl';
-import { toCSV, tweetsToMarkdown, profileToMarkdown } from './exporter.js';
+import { toCSV, tweetsToMarkdown, profileToMarkdown, sanitize } from './exporter.js';
 import { generateArchiveHTML } from './archive-viewer.js';
 
 export const ARCHIVE_SOURCE = 'twitterArchive';
@@ -755,7 +755,10 @@ function flattenDm(c) {
  */
 export async function exportArchive(result, options = {}) {
   const { formats = ['json', 'csv', 'md', 'html'] } = options;
-  const username = result.account?.username || result.profile?.username || 'archive';
+  // The handle comes from the archive file, which is untrusted input: reduce
+  // it to username characters before it names a directory or goes into the
+  // generated Markdown and HTML.
+  const username = sanitize(result.account?.username || result.profile?.username || '') || 'archive';
   const date = new Date().toISOString().slice(0, 10);
   const dir = options.outputDir || path.join(process.cwd(), 'exports', `${username}_archive_${date}`);
   await fs.mkdir(dir, { recursive: true });

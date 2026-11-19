@@ -135,7 +135,15 @@ scripts/reputationAudit.js, pasted into DevTools on your own profile.
           concurrency: Math.max(1, Math.min(8, parseInt(options.concurrency, 10) || 4)),
           onProgress: (done, total) => { scoreSpinner.text = `Scoring ${done}/${total}`; },
         });
-        scoreSpinner.succeed(`Scored ${scores.filter((s) => !s.error).length}/${posts.length} posts`);
+        const scoredOk = scores.filter((s) => !s.error).length;
+        if (scoredOk === 0) {
+          // Every model call failed. Summarising zero scores yields 100/100 A+
+          // "reads clean", which is the opposite of what happened.
+          scoreSpinner.fail(`Scored 0/${posts.length} posts`);
+          const firstError = scores.find((s) => s?.error)?.error || 'the model returned nothing';
+          throw new Error(`No post could be scored, so there is no reputation score. First error: ${firstError}`);
+        }
+        scoreSpinner.succeed(`Scored ${scoredOk}/${posts.length} posts`);
 
         const top = Math.max(0, parseInt(options.top, 10) || 10);
         report = summarizeReport(posts, scores, top);

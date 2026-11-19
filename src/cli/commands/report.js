@@ -239,8 +239,11 @@ export function registerReportCommand(program, { createHttpScraper, smartOutput 
           for (const report of reports) printReport(report);
         }
 
+        // -o always writes the file. Passing it through smartOutput's stdout
+        // branches meant `--json -o f` or `--compact -o f` printed twice and
+        // never wrote anything.
         if (options.output) {
-          await smartOutput(reports, options, 'report');
+          await smartOutput(reports, options, 'report', { toFile: true });
         }
       } catch (error) {
         spinner.fail(chalk.red(error.message));

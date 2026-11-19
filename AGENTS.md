@@ -1,6 +1,6 @@
 # XActions for agents
 
-X/Twitter automation with no X API key: a 56-command CLI, a Node library, 152
+X/Twitter automation with no X API key: a 57-command CLI, a Node library, 155
 MCP tools, 50 agent skills, 95 browser console scripts, and a web dashboard.
 Apache-2.0, by nichxbt.
 
@@ -23,7 +23,7 @@ difference is what each costs you before you have read a single tweet.
 | Writes | reads, plus `engage` and `bulk` | every write tool, with an approval gate |
 | Usable without client configuration | yes, it is just a process | no, the client must be configured first |
 
-The tool list is not small. The server advertises 152 tools, and the
+The tool list is not small. The server advertises 155 tools, and the
 `tools/list` payload it serves is about 60 KB of JSON before you have done any
 work at all. Measure it yourself:
 
@@ -241,7 +241,7 @@ stdio is the default and is what a local client wants. `--http` (or
 remote or hosted client; set `XACTIONS_MCP_TOKEN` and send
 `Authorization: Bearer <token>` to require auth on it.
 
-### Do not load all 152 tools
+### Do not load all 155 tools
 
 The tool list is filterable by group, and a filtered tool is neither advertised
 nor callable, so the schema cost drops with it. Groups: `read`, `write`, `dm`,
@@ -250,10 +250,14 @@ nor callable, so the schema cost drops with it. Groups: `read`, `write`, `dm`,
 
 ```bash
 XACTIONS_MCP_TOOLS=read,analytics node src/mcp/server.js
-XACTIONS_MCP_EXCLUDE=write,dm node src/mcp/server.js
+XACTIONS_MCP_EXCLUDE=writes node src/mcp/server.js
 node src/mcp/server.js --tools read,analytics
-node src/mcp/server.js --exclude write,dm
+node src/mcp/server.js --exclude writes
 ```
+
+`write` is a group, not every write: automation, DMs, lists, scheduling and
+personas write too. To take away every tool with a side effect, exclude
+`writes` (plural), which selects all of them across groups.
 
 If a session is only ever going to read, `XACTIONS_MCP_TOOLS=read` is the
 closest the MCP lane gets to the CLI lane's context cost.

@@ -40,3 +40,15 @@ coverage
 **/__pycache__
 **/.venv
 **/venv
+
+# Local agent and client settings can hold session cookies and tokens
+.mcp.json
+.claude
+**/.npmrc
+
+# Build output and scrape exports, never read by the server
+exports
+pages-out
+dist
+.wrangler
+*.tgz

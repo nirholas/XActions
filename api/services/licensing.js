@@ -48,6 +48,9 @@ const LICENSE_TIERS = {
 
 // In-memory cache
 let cachedLicense = null;
+// A failed lookup (database unreachable) is retried after this long, not cached.
+const TRANSIENT_RETRY_MS = 60_000;
+let transientLicense = null;
 let instanceId = null;
 
 /**
@@ -133,9 +136,13 @@ async function validateLicense(licenseKey) {
       return { valid: false, tier: 'free', error: result.error };
     }
     
-    // Activate on this instance if valid
+    // Activate on this instance if valid. A refused activation (instance
+    // limit reached, key gone) leaves the instance unlicensed.
     const instanceId = getInstanceId();
-    await dbActivateLicense(licenseKey, instanceId);
+    const activation = await dbActivateLicense(licenseKey, instanceId);
+    if (!activation?.success) {
+      return { valid: false, tier: 'free', features: LICENSE_TIERS.free, error: activation?.error || 'License activation failed' };
+    }
     
     return {
       valid: true,
@@ -145,8 +152,10 @@ async function validateLicense(licenseKey) {
       customer: result.customer,
     };
   } catch (e) {
+    // The database was unreachable: no verdict, so this is not cached (see
+    // getLicenseStatus) and the next check asks again.
     console.error('❌ License validation error:', e);
-    return { valid: false, tier: 'free', error: 'License validation failed' };
+    return { valid: false, tier: 'free', features: LICENSE_TIERS.free, error: 'License validation failed', transient: true };
   }
 }
 
@@ -155,6 +164,7 @@ async function validateLicense(licenseKey) {
  */
 async function getLicenseStatus() {
   if (cachedLicense) return cachedLicense;
+  if (transientLicense && Date.now() - transientLicense.at < TRANSIENT_RETRY_MS) return transientLicense.result;
   
   const licenseKey = process.env.XACTIONS_LICENSE_KEY;
   
@@ -167,7 +177,14 @@ async function getLicenseStatus() {
     return cachedLicense;
   }
   
-  cachedLicense = await validateLicense(licenseKey);
+  const result = await validateLicense(licenseKey);
+  if (result.transient) {
+    // A database error at boot once fixed the instance at "free" until restart.
+    transientLicense = { at: Date.now(), result };
+    return result;
+  }
+  transientLicense = null;
+  cachedLicense = result;
   return cachedLicense;
 }
 
@@ -238,25 +255,38 @@ async function initializeLicensing() {
   return license;
 }
 
+/** Whether a response with this Content-Type (or none yet, which send() makes text/html) is HTML. */
+function isHtmlResponse(res) {
+  const type = res.get('Content-Type');
+  return !type || /^text\/html\b/i.test(type);
+}
+
 /**
- * Express middleware to inject branding
+ * Express middleware to inject branding.
+ *
+ * The license is resolved before the request continues, so the wrapped
+ * res.send stays synchronous and returns the response as Express's does (it
+ * was made async and returned a Promise). Only HTML is touched: any string
+ * containing </body>, a JSON body included, once had markup spliced into it.
  */
 function brandingMiddleware() {
   return async (req, res, next) => {
-    // Only inject into HTML responses
+    let branding = '';
+    try {
+      branding = await getBrandingHtml();
+    } catch (e) {
+      console.warn('⚠️ Branding check failed:', e.message);
+    }
+    if (!branding) return next();
+
     const originalSend = res.send;
-    
-    res.send = async function(body) {
-      // Check if HTML and branding should be shown
-      if (typeof body === 'string' && 
-          body.includes('</body>') && 
-          await shouldShowBranding()) {
-        const branding = await getBrandingHtml();
+    res.send = function (body) {
+      if (typeof body === 'string' && body.includes('</body>') && isHtmlResponse(this)) {
         body = body.replace('</body>', `${branding}</body>`);
       }
       return originalSend.call(this, body);
     };
-    
+
     next();
   };
 }

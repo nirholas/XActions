@@ -18,10 +18,12 @@ import { TaskDecomposer } from '../../src/a2a/orchestrator.js';
 // ── Server lifecycle ─────────────────────────────────────────────────────────
 
 let agent, server;
+const pendingToolCalls = [];
 const PORT = 31998;
 const BASE = `http://localhost:${PORT}`;
 
 beforeAll(async () => {
+  // Auth is opted out explicitly; tests/a2a/security.test.js covers it.
   agent = createA2AServer({
     port: PORT,
     enableAuth: false,
@@ -29,10 +31,14 @@ beforeAll(async () => {
     enableLogging: false,
     mode: 'local',
   });
+  // Hold every tool call open so a task stays "working" until it is canceled
+  // and nothing reaches X.
+  agent.bridge.getToolResult = () => new Promise((resolve) => pendingToolCalls.push(resolve));
   server = await agent.start(PORT);
 });
 
 afterAll(() => {
+  for (const resolve of pendingToolCalls) resolve({ ok: true });
   agent.shutdown();
   clearCardCache();
 });
@@ -78,7 +84,7 @@ describe('Task lifecycle', () => {
         jsonrpc: '2.0',
         method: 'tasks/sendSubscribe',
         params: {
-          message: { role: 'user', parts: [{ type: 'text', text: 'integration test' }] },
+          message: { role: 'user', parts: [{ type: 'text', text: 'get profile for integrationtest' }] },
         },
         id: 'integ-1',
       }),

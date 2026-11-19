@@ -3,15 +3,19 @@ import express from 'express';
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import { prisma } from '../../src/utils/prisma.js';
-import { authMiddleware } from '../middleware/auth.js';
+import { authMiddleware, requireAdmin } from '../middleware/auth.js';
 import crypto from 'crypto';
 import { requireJwtSecret } from '../utils/secrets.js';
+import { signSessionToken } from '../utils/sessionToken.js';
 
 const router = express.Router();
 
 // Twitter OAuth 2.0 configuration
 const TWITTER_CLIENT_ID = process.env.TWITTER_CLIENT_ID;
 const TWITTER_CLIENT_SECRET = process.env.TWITTER_CLIENT_SECRET;
+
+// Every call to X gives up after this long instead of holding the request open.
+const X_API_TIMEOUT_MS = 30_000;
 
 // Derive base URL — works on Vercel (VERCEL_URL), Railway (API_URL), or localhost
 function getBaseUrl() {
@@ -26,18 +30,79 @@ function getFrontendUrl() {
   return 'http://localhost:3000';
 }
 
-// Stateless OAuth state — encode data as a signed JWT used as the `state` param.
-// Works across serverless instances (no shared memory needed).
-function createOAuthState(data) {
-  return jwt.sign(data, requireJwtSecret(), { expiresIn: '10m' });
+// OAuth state.
+//
+// The `state` parameter is a short-lived JWT typed `oauth_state`, so it can
+// never pass for a session token, and it carries no secret: the PKCE verifier
+// stays out of the URL (and out of X's logs and the Referer header). The
+// verifier goes to the initiating browser in an httpOnly, SameSite=Lax cookie
+// scoped to the callback, and the state holds its S256 challenge. The callback
+// accepts a state only from the browser holding the matching verifier, so a
+// callback URL (or authorize URL) handed to someone else cannot log them in as
+// another account or link their X account to someone else's. Nothing is kept
+// in server memory, so this works across serverless and replicated instances.
+const OAUTH_STATE_TYP = 'oauth_state';
+const OAUTH_COOKIE = 'xactions_oauth';
+const OAUTH_COOKIE_PATH = '/api/twitter/callback';
+const OAUTH_TTL_MS = 10 * 60 * 1000;
+
+function challengeOf(codeVerifier) {
+  return crypto.createHash('sha256').update(codeVerifier).digest('base64url');
 }
 
-function parseOAuthState(state) {
+/**
+ * Start an OAuth flow: set the verifier cookie on this response and return the
+ * signed state and the challenge to send to X.
+ */
+function beginOAuth(res, data) {
+  const codeVerifier = crypto.randomBytes(32).toString('base64url');
+  const codeChallenge = challengeOf(codeVerifier);
+  res.cookie(OAUTH_COOKIE, codeVerifier, {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: getBaseUrl().startsWith('https:'),
+    path: OAUTH_COOKIE_PATH,
+    maxAge: OAUTH_TTL_MS,
+  });
+  const state = jwt.sign({ ...data, typ: OAUTH_STATE_TYP, cc: codeChallenge }, requireJwtSecret(), {
+    expiresIn: OAUTH_TTL_MS / 1000,
+  });
+  return { state, codeChallenge };
+}
+
+function readCookie(req, name) {
+  for (const part of String(req.headers.cookie || '').split(';')) {
+    const eq = part.indexOf('=');
+    if (eq !== -1 && part.slice(0, eq).trim() === name) {
+      try {
+        return decodeURIComponent(part.slice(eq + 1).trim());
+      } catch {
+        return null;
+      }
+    }
+  }
+  return null;
+}
+
+/**
+ * The flow a callback belongs to and the verifier to redeem its code with, or
+ * null when the state is forged, expired, of another type, or was started in a
+ * different browser.
+ */
+function parseOAuthState(req, state) {
+  let data;
   try {
-    return jwt.verify(state, requireJwtSecret());
+    data = jwt.verify(String(state), requireJwtSecret());
   } catch {
     return null;
   }
+  if (data?.typ !== OAUTH_STATE_TYP || typeof data.cc !== 'string') return null;
+  const codeVerifier = readCookie(req, OAUTH_COOKIE);
+  if (!codeVerifier) return null;
+  const expected = Buffer.from(data.cc);
+  const actual = Buffer.from(challengeOf(codeVerifier));
+  if (expected.length !== actual.length || !crypto.timingSafeEqual(expected, actual)) return null;
+  return { ...data, codeVerifier };
 }
 
 // Build Twitter OAuth URL
@@ -68,14 +133,16 @@ async function exchangeCodeForUser(code, codeVerifier) {
     }),
     {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      auth: { username: TWITTER_CLIENT_ID, password: TWITTER_CLIENT_SECRET }
+      auth: { username: TWITTER_CLIENT_ID, password: TWITTER_CLIENT_SECRET },
+      timeout: X_API_TIMEOUT_MS
     }
   );
 
   const { access_token, refresh_token, expires_in } = tokenResponse.data;
 
   const userResponse = await axios.get('https://api.x.com/2/users/me', {
-    headers: { Authorization: `Bearer ${access_token}` }
+    headers: { Authorization: `Bearer ${access_token}` },
+    timeout: X_API_TIMEOUT_MS
   });
 
   return {
@@ -88,7 +155,9 @@ async function exchangeCodeForUser(code, codeVerifier) {
 // Documented in api/openapi.js and, until now, never served. Reports whether
 // this instance holds a usable X session and which account it belongs to,
 // without exposing the cookie itself.
-router.get('/status', authMiddleware, async (req, res) => {
+// The X sessions are the operator's, so only an admin may see which accounts
+// they belong to.
+router.get('/status', authMiddleware, requireAdmin, async (req, res) => {
   try {
     const { getActiveSession, listSessions } = await import('../../src/client/auth/storage.js');
     const [active, sessions] = await Promise.all([getActiveSession(), listSessions()]);
@@ -103,21 +172,24 @@ router.get('/status', authMiddleware, async (req, res) => {
   }
 });
 
+// The login page's own nonce, echoed back with the token so the page can tell
+// a token it asked for from one planted in its URL by someone else.
+const LOGIN_NONCE = /^[A-Za-z0-9_-]{16,128}$/;
+
 // Sign in with X — no auth required, redirects to Twitter OAuth
 router.get('/login', (req, res) => {
-  const codeVerifier = crypto.randomBytes(32).toString('base64url');
-  const codeChallenge = crypto.createHash('sha256').update(codeVerifier).digest('base64url');
-  const state = createOAuthState({ codeVerifier, flow: 'login' });
-
+  const nonce = typeof req.query.nonce === 'string' ? req.query.nonce : '';
+  if (!LOGIN_NONCE.test(nonce)) {
+    return res.redirect(`${getFrontendUrl()}/login?error=invalid_state`);
+  }
+  const { state, codeChallenge } = beginOAuth(res, { flow: 'login', nonce });
   res.redirect(buildOAuthUrl(state, codeChallenge));
 });
 
-// Connect X to existing account — requires auth
+// Connect X to existing account — requires auth. The verifier cookie is set on
+// this response, so the browser that asked is the only one that can finish.
 router.get('/connect', authMiddleware, (req, res) => {
-  const codeVerifier = crypto.randomBytes(32).toString('base64url');
-  const codeChallenge = crypto.createHash('sha256').update(codeVerifier).digest('base64url');
-  const state = createOAuthState({ codeVerifier, flow: 'connect', userId: req.user.id });
-
+  const { state, codeChallenge } = beginOAuth(res, { flow: 'connect', userId: req.user.id });
   res.json({ authUrl: buildOAuthUrl(state, codeChallenge), state });
 });
 
@@ -131,9 +203,10 @@ router.get('/callback', async (req, res) => {
       return res.redirect(`${FRONTEND_URL}/login?error=missing_params`);
     }
 
-    // Verify JWT-encoded state — cryptographically signed, no shared storage needed
-    const oauthData = parseOAuthState(state);
-    if (!oauthData) {
+    // Signed state, bound to this browser by the verifier cookie
+    const oauthData = parseOAuthState(req, state);
+    res.clearCookie(OAUTH_COOKIE, { path: OAUTH_COOKIE_PATH });
+    if (!oauthData || (oauthData.flow === 'login' && !LOGIN_NONCE.test(String(oauthData.nonce || '')))) {
       return res.redirect(`${FRONTEND_URL}/login?error=invalid_state`);
     }
 
@@ -181,13 +254,9 @@ router.get('/callback', async (req, res) => {
         });
       }
 
-      const token = jwt.sign(
-        { userId: user.id, username: user.username },
-        requireJwtSecret(),
-        { expiresIn: '7d' }
-      );
+      const token = signSessionToken(user);
 
-      res.redirect(`${FRONTEND_URL}/login?oauth=success#token=${token}`);
+      res.redirect(`${FRONTEND_URL}/login?oauth=success#token=${token}&nonce=${oauthData.nonce}`);
       return;
     }
 
@@ -247,7 +316,8 @@ async function refreshTwitterToken(user) {
         auth: {
           username: TWITTER_CLIENT_ID,
           password: TWITTER_CLIENT_SECRET
-        }
+        },
+        timeout: X_API_TIMEOUT_MS
       }
     );
 
@@ -280,6 +350,7 @@ async function getTwitterClient(user) {
 
   return axios.create({
     baseURL: 'https://api.x.com/2',
+    timeout: X_API_TIMEOUT_MS,
     headers: {
       Authorization: `Bearer ${accessToken}`
     }

@@ -363,11 +363,12 @@ export async function migrateToMastodon(options) {
  * @param {string} options.platform - 'bluesky' or 'mastodon'
  * @param {boolean} [options.dryRun=true]
  * @param {object} [options.credentials] - Platform-specific credentials
+ * @param {number} [options.tweetLimit] - Max tweets to migrate (each target's default when omitted)
  * @param {function} [options.onProgress]
  * @returns {object} Migration summary
  */
 export async function migrate(options) {
-  const { platform, dryRun = true, credentials = {}, onProgress, source, archivePath } = options;
+  const { platform, dryRun = true, credentials = {}, onProgress, source, archivePath, tweetLimit } = options;
   let { exportDir } = options;
 
   // source: 'twitterArchive' reads the official X data export (zip or folder)
@@ -398,6 +399,7 @@ export async function migrate(options) {
         password: credentials.password,
         dryRun,
         onProgress,
+        ...(tweetLimit !== undefined && { tweetLimit }),
       });
     case 'mastodon':
       return migrateToMastodon({
@@ -406,6 +408,7 @@ export async function migrate(options) {
         accessToken: credentials.accessToken,
         dryRun,
         onProgress,
+        ...(tweetLimit !== undefined && { tweetLimit }),
       });
     default:
       throw new Error(`Unsupported platform: ${platform}. Use 'bluesky' or 'mastodon'.`);

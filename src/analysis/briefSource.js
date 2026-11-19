@@ -15,9 +15,9 @@
  */
 
 import fs from 'fs/promises';
-import os from 'os';
 import path from 'path';
 
+import { xactionsHome } from '../utils/savedSession.js';
 import { buildAccountBrief, buildEcosystemBrief, toPlainProfile, toPlainTweet } from './accountBrief.js';
 
 export const DEFAULT_LIMIT = 100;
@@ -32,7 +32,7 @@ const MS_PER_HOUR = 3_600_000;
  * @returns {string}
  */
 export function briefCacheDir() {
-  return path.join(process.env.XACTIONS_HOME || path.join(os.homedir(), '.xactions'), 'cache', 'brief');
+  return path.join(xactionsHome(), 'cache', 'brief');
 }
 
 /**
@@ -107,11 +107,26 @@ export async function collectAccountSample(getScraper, username, { limit = DEFAU
     if (tweets.length >= limit) break;
   }
 
+  // An empty timeline is almost always X serving a logged-out or rate-limited
+  // page, not an account with nothing to say. Reporting it as a zero, and
+  // caching that zero for hours, would hide the failure on every re-run.
+  if (tweets.length === 0) {
+    throw new Error(
+      profile.tweetCount === 0
+        ? 'The account has no posts.'
+        : 'X returned no posts for this account. This usually means an empty or rate-limited page; retry later, or run `xactions connect`.',
+    );
+  }
+
+  // A short page only proves the account is exhausted when its own post count
+  // says so. Without that, a truncated timeline would be cached as complete and
+  // answer every larger request from a partial sample.
+  const total = Number(profile.tweetCount);
   const plainProfile = toPlainProfile(profile);
   await writeCached(username, {
     fetchedAt: new Date().toISOString(),
     limit,
-    exhausted: tweets.length < limit,
+    exhausted: tweets.length < limit && Number.isFinite(total) && total <= tweets.length,
     profile: plainProfile,
     tweets,
   });

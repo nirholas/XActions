@@ -289,9 +289,11 @@ export class TaskExecutor {
    * Execute a task end-to-end.
    *
    * @param {string} taskId
+   * @param {object} [context] caller identity, passed to bridge.execute() for
+   *   its permission check
    * @returns {Promise<object>} Final task state
    */
-  async execute(taskId) {
+  async execute(taskId, context = {}) {
     // Acquire lock to prevent double execution
     if (!this.store.acquireLock(taskId)) {
       throw new Error(`Task ${taskId} is already executing`);
@@ -318,7 +320,7 @@ export class TaskExecutor {
       this._progress.set(taskId, { step: 0, total: 1, description: `Executing ${skillId || 'task'}` });
 
       // Execute via bridge
-      const result = await this.bridge.execute(skillId, inputParts);
+      const result = await this.bridge.execute(skillId, inputParts, context);
 
       if (result.success) {
         // Add result as artifact

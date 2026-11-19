@@ -1788,7 +1788,10 @@
     async function connectTwitterOAuth() {
       try {
         const res = await fetch(`${API_URL}/twitter/connect`, {
-          headers: { 'Authorization': `Bearer ${authToken}` }
+          headers: { 'Authorization': `Bearer ${authToken}` },
+          // The API binds the OAuth flow to this browser with an httpOnly
+          // cookie; without credentials a cross-origin API drops it.
+          credentials: 'include',
         });
         const data = await res.json();
         window.location.href = data.authUrl;

@@ -10,6 +10,7 @@
  */
 
 import crypto from 'crypto';
+import { assertSafeOutboundUrl } from './urlGuard.js';
 
 // ============================================================================
 // PushNotificationServer
@@ -137,6 +138,9 @@ export class PushNotificationClient {
             ...(signature && { 'X-XActions-Signature': signature }),
           },
           body,
+          // A callback that answers with a redirect could bounce the request
+          // to an internal host the URL check refused; treat it as a failure.
+          redirect: 'manual',
         });
 
         if (response.ok) return true;
@@ -181,10 +185,17 @@ export class PushNotificationClient {
 // ============================================================================
 
 export class SubscriptionManager {
-  constructor() {
+  /**
+   * @param {object} [options={}]
+   * @param {boolean} [options.allowPrivateUrls=false] deliver to loopback and
+   *   private-network callbacks too. Off by default: every callback URL is
+   *   re-resolved before each delivery and refused if it points inside.
+   */
+  constructor(options = {}) {
     /** @type {Map<string, Set<string>>} taskId → Set<callbackUrl> */
     this._subscriptions = new Map();
     this._client = new PushNotificationClient();
+    this.allowPrivateUrls = Boolean(options.allowPrivateUrls);
   }
 
   /**
@@ -233,7 +244,12 @@ export class SubscriptionManager {
 
     const notification = { taskId, ...event, timestamp: new Date().toISOString() };
     await Promise.allSettled(
-      urls.map(url => this._client.sendNotification(url, notification))
+      urls.map(async (url) => {
+        // Checked again at delivery time, not only at subscribe time, so a
+        // hostname that re-resolves to an internal address is still refused.
+        await assertSafeOutboundUrl(url, { label: 'pushNotification.url', allowPrivate: this.allowPrivateUrls });
+        return this._client.sendNotification(url, notification);
+      })
     );
   }
 }

@@ -33,8 +33,8 @@ export function toD3(graph, options = {}) {
   const nodes = Array.from(graph.nodes.values()).map((node) => ({
     id: node.username,
     name: node.name || node.username,
-    followers: node.followers || 0,
-    following: node.following || 0,
+    followers: Number(node.followers) || 0,
+    following: Number(node.following) || 0,
     bio: (node.bio || '').slice(0, 200),
     verified: node.verified || false,
     depth: node.depth || 0,
@@ -122,18 +122,44 @@ export function toGEXF(graph) {
 // Standalone HTML Visualization
 // ============================================================================
 
+/** Escape text for an HTML text node or attribute. */
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+/**
+ * JSON that is safe inside an inline <script>: a bio or name containing
+ * "</script>" or "<!--" must not end the script element and start markup.
+ * The \u escapes are valid JSON and valid JS string escapes, so the parsed
+ * value is unchanged. U+2028/2029 are escaped for pre-ES2019 engines.
+ */
+function safeJSON(value) {
+  return JSON.stringify(value)
+    .replace(/</g, '\\u003c')
+    .replace(/>/g, '\\u003e')
+    .replace(/&/g, '\\u0026')
+    .replace(/\u2028/g, '\\u2028')
+    .replace(/\u2029/g, '\\u2029');
+}
+
 /**
  * Generate a self-contained HTML file with an interactive D3.js force graph
  */
 export function toHTML(graph) {
   const d3Data = toD3(graph);
+  const seed = escapeHtml(graph.seed);
 
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Social Graph: @${graph.seed} — XActions</title>
+<title>Social Graph: @${seed} — XActions</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { background: #000; color: #e7e9ea; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; overflow: hidden; }
@@ -159,7 +185,7 @@ export function toHTML(graph) {
 </head>
 <body>
 <div id="controls">
-  <h2>📊 @${graph.seed}</h2>
+  <h2>📊 @${seed}</h2>
   <p>${d3Data.nodes.length} accounts · ${d3Data.links.length} connections</p>
   <input type="text" id="search" placeholder="Search accounts...">
   <label><input type="checkbox" id="showLabels" checked> Show labels</label>
@@ -176,7 +202,7 @@ export function toHTML(graph) {
 
 <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
 <script>
-const graphData = ${JSON.stringify(d3Data)};
+const graphData = ${safeJSON(d3Data)};
 
 const svg = d3.select('svg');
 const width = window.innerWidth;

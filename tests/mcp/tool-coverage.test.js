@@ -19,6 +19,12 @@ import { fileURLToPath } from 'node:url';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
 
+// An approved draft really reaches the local backend now. Point Puppeteer at
+// a binary that does not exist so a replay fails in milliseconds instead of
+// launching Chrome against x.com from the test run. The server is imported
+// dynamically below, after this is set.
+process.env.PUPPETEER_EXECUTABLE_PATH = '/nonexistent/xactions-test-chrome';
+
 const here = dirname(fileURLToPath(import.meta.url));
 const serverSource = readFileSync(join(here, '../../src/mcp/server.js'), 'utf8');
 

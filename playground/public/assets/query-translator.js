@@ -1,6 +1,6 @@
 // GENERATED FILE. Do not edit.
 // Source: src/codegen/queryTranslator.js
-// Rebuild: npm run build:playground
+// Rebuild: node scripts/build-playground.mjs
 
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
@@ -221,9 +221,9 @@ function cliSnippet(query) {
     case 'timeline':
       return `npx xactions tweets ${query.username} --limit ${query.limit}`;
     case 'report':
-      return `npx xactions report ${query.username} --limit ${query.limit}`;
+      return `npx xactions analyze ${query.username} --limit ${query.limit}`;
     case 'compare':
-      return `npx xactions report ${query.users.join(' ')} --limit ${query.limit}`;
+      return `npx xactions analyze ${query.users.join(' ')} --limit ${query.limit}`;
     default:
       return '';
   }

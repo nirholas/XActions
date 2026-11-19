@@ -218,6 +218,9 @@ function collectMarkdown(dir, found = []) {
     const full = join(dir, entry.name);
     if (entry.isDirectory()) collectMarkdown(full, found);
     else if (entry.name.endsWith('.md')) found.push(full);
+    // llms.txt and llms-full.txt are the files agents fetch first. They carry
+    // the same counts as the README and drifted from it unseen for releases.
+    else if (dir === ROOT && /^llms(-full)?\.txt$/.test(entry.name)) found.push(full);
   }
 
   return found;
@@ -296,6 +299,32 @@ function anchorsFor(absPath) {
     }
   }
   return anchorCache.get(absPath);
+}
+
+/**
+ * Everything a line is "about": its paragraph (the run of non-blank lines it
+ * sits in) and every heading it is nested under, so "### Do not load all 152
+ * tools" inherits "## The MCP lane" two levels up.
+ * @param {string[]} lines
+ * @param {number} index
+ * @returns {string}
+ */
+function contextOf(lines, index) {
+  let start = index;
+  let end = index;
+  while (start > 0 && lines[start - 1].trim() !== '') start -= 1;
+  while (end < lines.length - 1 && lines[end + 1].trim() !== '') end += 1;
+  const parts = lines.slice(start, end + 1);
+
+  let level = 7;
+  for (let i = index; i >= 0 && level > 1; i -= 1) {
+    const heading = /^(#{1,6})\s/.exec(lines[i]);
+    if (heading && heading[1].length < level) {
+      parts.push(lines[i]);
+      level = heading[1].length;
+    }
+  }
+  return parts.join(' ');
 }
 
 // ---------------------------------------------------------------------------
@@ -403,12 +432,21 @@ for (const file of files) {
     lines.forEach((text, index) => {
       // Only lines that are talking about MCP. "108 tools" in a paragraph about
       // the browser command palette is a different number about a different
-      // thing, and rewriting it would make the docs wrong.
-      if (!/\bMCP\b/i.test(text)) return;
+      // thing, and rewriting it would make the docs wrong. Prose wraps, so a
+      // line counts as talking about MCP when its paragraph or any heading it
+      // sits under does: "The server advertises 152 tools" sat in AGENTS.md
+      // for a release because "MCP" was on a different line.
+      if (!/\bMCP\b|tools\/list/i.test(contextOf(lines, index))) return;
+
+      // A count can end one line and its noun start the next: "a Node
+      // library, 152\nMCP tools". Read the line with the next one's first
+      // words appended, and only report numbers that sit on this line.
+      const joined = `${text} ${(lines[index + 1] ?? '').trim().split(/\s+/).slice(0, 2).join(' ')}`;
 
       // The negative lookbehind keeps "x402" from reading as a claim of 402
       // tools.
-      for (const match of text.matchAll(/(?<![\w.])(\d+)\+?\s+(?:MCP\s+)?tools?\b/gi)) {
+      for (const match of joined.matchAll(/(?<![\w.])(\d+)\+?\s+(?:MCP\s+)?tools?\b/gi)) {
+        if (match.index >= text.length) continue;
         const claimed = Number(match[1]);
         // Small numbers describe competing servers in comparison tables.
         if (claimed < 20 || claimed === MCP_TOOL_COUNT) continue;
@@ -420,8 +458,9 @@ for (const file of files) {
     // anchored on the noun so a number about something else is left alone.
     const countChecks = [
       { actual: SKILL_COUNT, label: 'agent skills', re: /(?<![\w.])(\d+)\+?\s+(?:agent\s+)?skills\b/gi, min: 5 },
-      { actual: ROUTE_MODULE_COUNT, label: 'route modules', re: /(?<![\w.])(\d+)\+?\s+route\s+modules\b/gi, min: 5 },
-      { actual: CLI_COMMAND_COUNT, label: 'CLI commands', re: /(?<![\w.])(\d+)\+?\s+(?:CLI\s+)?commands\b/gi, min: 10 },
+      { actual: ROUTE_MODULE_COUNT, label: 'route modules', re: /(?<![\w.])(\d+)\+?\s+(?:REST\s+)?route\s+modules\b/gi, min: 5 },
+      // "56-command CLI" is the same claim as "56 CLI commands".
+      { actual: CLI_COMMAND_COUNT, label: 'CLI commands', re: /(?<![\w.])(\d+)\+?(?:\s+(?:CLI\s+)?commands\b|-command\b)/gi, min: 10 },
     ];
     lines.forEach((text, index) => {
       for (const check of countChecks) {
@@ -529,7 +568,7 @@ if (process.argv.includes('--fix')) {
       // any "+" suffix off: "151+ tools" becomes "152 tools", not "152+ tools",
       // because the number is now exact.
       const next = lines[i].replace(
-        new RegExp(`(?<![\\w.])${claimed}\\+?(?=\\s)`, 'g'),
+        new RegExp(`(?<![\\w.])${claimed}\\+?(?=\\s|-command\\b|$)`, 'g'),
         String(actual),
       );
       if (next !== lines[i]) {

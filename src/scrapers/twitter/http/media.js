@@ -531,16 +531,26 @@ export async function scrapeMedia(client, username, options = {}) {
     const instructions = userTimelineInstructions(resp?.data);
 
     let foundTweets = false;
+    const requestedCursor = nextCursor;
     nextCursor = null;
 
     for (const instruction of instructions) {
-      const entries = instruction.entries ?? [];
+      // Page one carries the media grid as a module inside TimelineAddEntries;
+      // later pages append to that module with TimelineAddToModule, whose
+      // items sit in `moduleItems`. The bottom cursor can also arrive as a
+      // TimelineReplaceEntry.
+      const entries = [
+        ...(instruction.entries ?? []),
+        ...(instruction.moduleItems ?? []),
+        ...(instruction.entry ? [instruction.entry] : []),
+      ];
       for (const entry of entries) {
         // Cursor entries
-        if (entry.entryId?.startsWith('cursor-bottom-')) {
+        if (entry.entryId?.startsWith('cursor-bottom-') || entry.content?.cursorType === 'Bottom') {
           nextCursor = entry.content?.value ?? null;
           continue;
         }
+        if (entry.entryId?.startsWith('cursor-')) continue;
 
         // Tweet entries — may be nested in modules
         const tweetResults = extractTweetResultsFromEntry(entry);
@@ -561,7 +571,7 @@ export async function scrapeMedia(client, username, options = {}) {
       }
     }
 
-    if (!nextCursor || !foundTweets) break;
+    if (!nextCursor || !foundTweets || nextCursor === requestedCursor) break;
   }
 
   return mediaItems;
@@ -575,8 +585,9 @@ export async function scrapeMedia(client, username, options = {}) {
 function extractTweetResultsFromEntry(entry) {
   const results = [];
 
-  // Direct tweet entry
-  const itemContent = entry.content?.itemContent ?? entry.content;
+  // Direct tweet entry; a module item (TimelineAddToModule) nests it under
+  // `item` instead of `content`.
+  const itemContent = entry.content?.itemContent ?? entry.item?.itemContent ?? entry.content;
   if (itemContent?.tweet_results?.result) {
     const r = itemContent.tweet_results.result;
     // Handle TweetWithVisibilityResults wrapper

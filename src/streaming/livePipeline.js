@@ -62,6 +62,9 @@ export const DEFAULT_RECONNECT = Object.freeze({
   factor: 2,
   jitter: 0.3,
   maxAttempts: Infinity,
+  // A reconnected stream has to stay up this long before the attempt counter
+  // (and so the backoff) resets; null means maxDelayMs.
+  stableAfterMs: null,
 });
 
 /** How long to wait for the session config frame before calling the open failed. */
@@ -778,13 +781,23 @@ class LivePipeline {
           await this._connect();
           this._state = 'open';
           this._stats.reconnects += 1;
-          attempt = 0;
+          const connectedAt = Date.now();
           cause = await this._waitForDrop();
+          // The backoff only starts over once a connection has proved itself
+          // by staying up for a while. Resetting on the config frame alone
+          // let a server that accepts and then drops at once be redialled at
+          // the minimum delay forever (maxAttempts is Infinity by default).
+          if (Date.now() - connectedAt >= this._stableAfterMs()) attempt = 0;
         } catch (err) {
           cause = err;
         }
       }
     })();
+  }
+
+  /** How long a reconnected stream must stay up before the backoff resets. */
+  _stableAfterMs() {
+    return this._reconnect.stableAfterMs ?? this._reconnect.maxDelayMs;
   }
 
   async _waitForDrop() {
@@ -956,7 +969,9 @@ class LivePipeline {
  * @param {(event: {type: string, topic: string|null, payload: object, receivedAt: string, raw: object}) => void} [options.onEvent]
  * @param {(error: Error, info: {fatal: boolean, willRetry: boolean, attempt?: number, delayMs?: number}) => void} [options.onError]
  * @param {object|false} [options.reconnect] - `false` disables reconnect; otherwise
- *   `{ enabled, minDelayMs, maxDelayMs, factor, jitter, maxAttempts, random }`.
+ *   `{ enabled, minDelayMs, maxDelayMs, factor, jitter, maxAttempts, stableAfterMs, random }`.
+ *   `stableAfterMs` (default maxDelayMs) is how long a reconnected stream must
+ *   stay up before the backoff starts over from minDelayMs.
  * @param {typeof globalThis.fetch} [options.fetch] - Transport override (tests, proxies).
  * @param {string} [options.eventsUrl] - Override the events endpoint.
  * @param {string} [options.subscriptionsUrl] - Override the subscriptions endpoint.

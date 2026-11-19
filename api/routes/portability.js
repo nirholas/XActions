@@ -17,15 +17,19 @@ import express from 'express';
 import path from 'path';
 import { promises as fs } from 'fs';
 import { fileURLToPath } from 'url';
-import { authMiddleware } from '../middleware/auth.js';
+import { authMiddleware, requireAdmin } from '../middleware/auth.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const router = express.Router();
 
-// All portability routes require authentication
-router.use(authMiddleware);
+// Exports are written to the server's own disk under one shared directory and
+// record no owner, and diff and migrate take directory paths, so only the
+// operator may use these routes. Any signed-in user could once read any
+// directory on the server through dirA/dirB/exportDir, and list and download
+// everyone's exports by their guessable ids.
+router.use(authMiddleware, requireAdmin);
 
 // In-memory job tracking (could be backed by Bull/Redis in production)
 const jobs = new Map();

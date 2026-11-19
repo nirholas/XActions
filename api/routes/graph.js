@@ -16,13 +16,35 @@
  */
 
 import express from 'express';
-import { authenticate } from '../middleware/auth.js';
+import os from 'node:os';
+import path from 'node:path';
+import { authenticate, requireAdmin } from '../middleware/auth.js';
 import { authTokenForUser } from '../services/xSession.js';
+import { userRoom } from '../realtime/socketHandler.js';
 
 const router = express.Router();
 
-// Require authentication for all graph routes
-router.use(authenticate);
+// Saved graphs live in one directory on the server and record no owner, so,
+// like /api/datasets, only the operator lists, reads, builds or deletes them.
+// Any signed-in user could once read and delete everyone's graphs.
+router.use(authenticate, requireAdmin);
+
+// Where src/graph keeps saved graphs, for the containment check below.
+const GRAPHS_DIR = path.join(os.homedir(), '.xactions', 'graphs');
+const GRAPH_ID = /^[\w-]{1,128}$/;
+
+/**
+ * Refuse a graph id that is not a plain file name inside GRAPHS_DIR. Express 5
+ * decodes %2F in params, so DELETE /api/graph/..%2Fconfig once unlinked
+ * ~/.xactions/config.json.
+ */
+router.param('id', (req, res, next, id) => {
+  const resolved = path.resolve(GRAPHS_DIR, `${id}.json`);
+  if (!GRAPH_ID.test(id) || path.dirname(resolved) !== GRAPHS_DIR) {
+    return res.status(400).json({ error: 'Invalid graph id' });
+  }
+  next();
+});
 
 // Lazy-load graph module to avoid circular deps
 let _graph = null;
@@ -76,7 +98,7 @@ router.post('/build', async (req, res) => {
         // Emit Socket.IO event if available
         const io = req.app.get('io');
         if (io) {
-          io.emit('graph:complete', { graphId: result.id, seed: username, nodesCount: result.nodes?.length || 0 });
+          io.to(userRoom(req.user.id)).emit('graph:complete', { graphId: result.id, seed: username, nodesCount: result.nodes?.length || 0 });
         }
       }).catch((err) => {
         console.error(`❌ Graph build failed for @${username}: ${err.message}`);

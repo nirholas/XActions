@@ -283,6 +283,8 @@ Progress is saved per feed under ${configDir}/engage/ so re-running skips posts 
         if (options.dryRun) out(chalk.yellow('  Dry run: nothing was posted. Drop --dry-run to do it for real.'));
         else if (options.resume !== false) out(chalk.gray(`  Progress saved to ${state.file}`));
         if (quiet) console.log(JSON.stringify(report, null, 2));
+        // A run where actions failed is not a success, even if it finished.
+        if (report.failed > 0) process.exitCode = 1;
       } catch (error) {
         spinner.fail('Engage run failed');
         console.error(chalk.red(error.message));

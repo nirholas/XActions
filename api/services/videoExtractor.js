@@ -415,7 +415,7 @@ export async function extractVideo(tweetUrl) {
 export async function extractViaEmbed(tweetUrl) {
   try {
     const embedUrl = `https://publish.twitter.com/oembed?url=${encodeURIComponent(tweetUrl)}&omit_script=true`;
-    const response = await fetch(embedUrl);
+    const response = await fetch(embedUrl, { signal: AbortSignal.timeout(15_000) });
     if (!response.ok) return null;
 
     const data = await response.json();

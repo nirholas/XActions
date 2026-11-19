@@ -16,6 +16,12 @@ let createMcpServer;
 let TOOLS;
 let draftsMod;
 let home;
+// An approved draft really reaches the local backend now. Point Puppeteer at
+// a binary that does not exist so a replay fails in milliseconds instead of
+// launching Chrome against x.com from the test run. The server is imported
+// dynamically below, after this is set.
+process.env.PUPPETEER_EXECUTABLE_PATH = '/nonexistent/xactions-test-chrome';
+
 const prevHome = process.env.XACTIONS_HOME;
 const prevCaps = process.env.XACTIONS_ACTION_CAPS;
 const prevAccount = process.env.XACTIONS_ACCOUNT;

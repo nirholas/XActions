@@ -39,12 +39,16 @@ import { runBrowserScript } from '../operations/puppeteer/scriptRunner.js';
  */
 function dualEngine(browserEngine, apiEngine) {
   return async (ctx) => {
+    const isCancelled = () => ctx.cancelled();
+    // Every write is charged against the account's rolling 24 hour cap, as
+    // every other write path is; these engines once bypassed it.
+    const charge = (actionClass) => ctx.charge(actionClass);
     const oauthOnly = ctx.data.authMethod && ctx.data.authMethod !== 'session';
     if (!oauthOnly && (await ctx.hasSession())) {
       const config = { ...ctx.config, sessionCookie: await ctx.authToken() };
-      return browserEngine(ctx.userId, config, (message) => ctx.progress(message), () => ctx.cancelled());
+      return browserEngine(ctx.userId, config, (message) => ctx.progress(message), isCancelled, charge);
     }
-    return apiEngine(ctx.data, () => ctx.cancelled());
+    return apiEngine(ctx.data, isCancelled, charge);
   };
 }
 

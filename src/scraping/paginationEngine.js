@@ -13,8 +13,9 @@ import fs from 'fs';
 import fsp from 'fs/promises';
 import path from 'path';
 import os from 'os';
+import { xactionsHome } from '../utils/savedSession.js';
 
-const DATA_DIR = path.join(os.homedir(), '.xactions');
+const DATA_DIR = xactionsHome();
 const DATASETS_DIR = path.join(DATA_DIR, 'datasets');
 const CHECKPOINTS_DIR = path.join(DATA_DIR, 'scrape-checkpoints');
 

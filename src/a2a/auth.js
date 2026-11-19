@@ -18,10 +18,12 @@ import os from 'os';
 // Constants & Paths
 // ============================================================================
 
-const A2A_DIR = path.join(os.homedir(), '.xactions', 'a2a');
-const KEYS_FILE = path.join(A2A_DIR, 'a2a-keys.json');
-const SECRET_FILE = path.join(A2A_DIR, 'a2a-secret.key');
-const OUTBOUND_FILE = path.join(A2A_DIR, 'outbound-auth.json');
+// Under XACTIONS_HOME (default ~/.xactions) like the rest of XActions' state,
+// resolved per call so a test or a second profile can point it elsewhere.
+const a2aDir = () => path.join(process.env.XACTIONS_HOME || path.join(os.homedir(), '.xactions'), 'a2a');
+const keysFile = () => path.join(a2aDir(), 'a2a-keys.json');
+const secretFile = () => path.join(a2aDir(), 'a2a-secret.key');
+const outboundFile = () => path.join(a2aDir(), 'outbound-auth.json');
 
 /** Available permissions */
 export const PERMISSIONS = [
@@ -40,7 +42,7 @@ export const PERMISSION_PRESETS = {
 // ============================================================================
 
 async function ensureDir() {
-  await fs.mkdir(A2A_DIR, { recursive: true });
+  await fs.mkdir(a2aDir(), { recursive: true, mode: 0o700 });
 }
 
 async function readJsonFile(filePath, fallback = []) {
@@ -52,9 +54,20 @@ async function readJsonFile(filePath, fallback = []) {
   }
 }
 
+// Every file here holds a credential (key hashes, outbound bearer tokens and
+// API keys), so it is readable by the owner only. `mode` applies when the file
+// is created; the chmod tightens a file an older version wrote world-readable.
 async function writeJsonFile(filePath, data) {
   await ensureDir();
-  await fs.writeFile(filePath, JSON.stringify(data, null, 2), 'utf-8');
+  await fs.writeFile(filePath, JSON.stringify(data, null, 2), { encoding: 'utf-8', mode: 0o600 });
+  await fs.chmod(filePath, 0o600);
+}
+
+/** Constant-time string comparison; unequal lengths are simply unequal. */
+function safeEqual(a, b) {
+  const left = Buffer.from(String(a));
+  const right = Buffer.from(String(b));
+  return left.length === right.length && crypto.timingSafeEqual(left, right);
 }
 
 function hashKey(key) {
@@ -64,11 +77,11 @@ function hashKey(key) {
 async function getOrCreateSecret() {
   await ensureDir();
   try {
-    const existing = await fs.readFile(SECRET_FILE, 'utf-8');
+    const existing = await fs.readFile(secretFile(), 'utf-8');
     return existing.trim();
   } catch {
     const secret = crypto.randomBytes(64).toString('hex');
-    await fs.writeFile(SECRET_FILE, secret, { mode: 0o600 });
+    await fs.writeFile(secretFile(), secret, { mode: 0o600 });
     return secret;
   }
 }
@@ -96,9 +109,9 @@ export async function generateApiKey(label, permissions = PERMISSION_PRESETS.rea
     revoked: false,
   };
 
-  const keys = await readJsonFile(KEYS_FILE, []);
+  const keys = await readJsonFile(keysFile(), []);
   keys.push(record);
-  await writeJsonFile(KEYS_FILE, keys);
+  await writeJsonFile(keysFile(), keys);
 
   return { key, label, permissions, createdAt: record.createdAt, expiresAt: record.expiresAt };
 }
@@ -112,7 +125,7 @@ export async function generateApiKey(label, permissions = PERMISSION_PRESETS.rea
 export async function validateApiKey(key) {
   if (!key || !key.startsWith('xa2a_')) return { valid: false };
   const hash = hashKey(key);
-  const keys = await readJsonFile(KEYS_FILE, []);
+  const keys = await readJsonFile(keysFile(), []);
   const record = keys.find(k => k.hash === hash && !k.revoked);
   if (!record) return { valid: false };
   if (new Date(record.expiresAt) < new Date()) return { valid: false };
@@ -127,11 +140,11 @@ export async function validateApiKey(key) {
  */
 export async function revokeApiKey(key) {
   const hash = hashKey(key);
-  const keys = await readJsonFile(KEYS_FILE, []);
+  const keys = await readJsonFile(keysFile(), []);
   const record = keys.find(k => k.hash === hash);
   if (!record) return false;
   record.revoked = true;
-  await writeJsonFile(KEYS_FILE, keys);
+  await writeJsonFile(keysFile(), keys);
   return true;
 }
 
@@ -141,7 +154,7 @@ export async function revokeApiKey(key) {
  * @returns {Promise<Array<{ label: string, permissions: string[], createdAt: string, expiresAt: string, revoked: boolean }>>}
  */
 export async function listApiKeys() {
-  const keys = await readJsonFile(KEYS_FILE, []);
+  const keys = await readJsonFile(keysFile(), []);
   return keys.map(({ label, permissions, createdAt, expiresAt, revoked }) => ({
     label, permissions, createdAt, expiresAt, revoked,
   }));
@@ -194,7 +207,7 @@ export async function validateToken(token) {
     const secret = await getOrCreateSecret();
     const expectedSig = crypto.createHmac('sha256', secret).update(`${encHeader}.${encPayload}`).digest('base64url');
 
-    if (signature !== expectedSig) return { valid: false, error: 'Invalid signature' };
+    if (!safeEqual(signature, expectedSig)) return { valid: false, error: 'Invalid signature' };
 
     const payload = JSON.parse(Buffer.from(encPayload, 'base64url').toString());
     if (payload.exp && payload.exp < Math.floor(Date.now() / 1000)) {
@@ -244,14 +257,18 @@ export function checkPermission(auth, requiredPermission) {
 /**
  * Create Express middleware for A2A authentication.
  *
+ * Authentication is required unless the caller passes `required: false`
+ * explicitly: an agent that can post, follow and DM as the account must not
+ * answer anonymous requests by default.
+ *
  * @param {object} [options={}]
- * @param {boolean} [options.required=false]
+ * @param {boolean} [options.required=true]
  * @param {boolean} [options.allowApiKey=true]
  * @param {boolean} [options.allowBearer=true]
  * @returns {function} Express middleware
  */
 export function createAuthMiddleware(options = {}) {
-  const { required = false, allowApiKey = true, allowBearer = true } = options;
+  const { required = true, allowApiKey = true, allowBearer = true } = options;
 
   return async (req, res, next) => {
     req.agent = null;
@@ -301,9 +318,9 @@ export function createAuthMiddleware(options = {}) {
  * @param {{ type: string, value: string }} credentials
  */
 export async function createOutboundAuth(agentUrl, credentials) {
-  const store = await readJsonFile(OUTBOUND_FILE, {});
+  const store = await readJsonFile(outboundFile(), {});
   store[agentUrl] = credentials;
-  await writeJsonFile(OUTBOUND_FILE, store);
+  await writeJsonFile(outboundFile(), store);
 }
 
 /**
@@ -313,7 +330,7 @@ export async function createOutboundAuth(agentUrl, credentials) {
  * @returns {Promise<{ type: string, value: string }|null>}
  */
 export async function getOutboundAuth(agentUrl) {
-  const store = await readJsonFile(OUTBOUND_FILE, {});
+  const store = await readJsonFile(outboundFile(), {});
   return store[agentUrl] || null;
 }
 

@@ -22,9 +22,36 @@ const CONFIG_FILE = path.join(CONFIG_DIR, 'config.json');
 // Notifier Class
 // ============================================================================
 
+/** How long one channel may take before it is given up on. */
+const DEFAULT_TIMEOUT_MS = 10_000;
+
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
 export class Notifier {
-  constructor() {
+  /**
+   * @param {object} [options]
+   * @param {number} [options.timeoutMs=10000] per-request timeout for the
+   *   Slack, Discord and Telegram calls
+   */
+  constructor(options = {}) {
     this.config = { email: { enabled: false }, slack: { enabled: false }, discord: { enabled: false }, telegram: { enabled: false }, webhook: { enabled: false } };
+    this.timeoutMs = options.timeoutMs ?? DEFAULT_TIMEOUT_MS;
+  }
+
+  /** POST JSON with a timeout, so one hung endpoint cannot stall a send. */
+  async _postJson(url, payload) {
+    return fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+      signal: AbortSignal.timeout(this.timeoutMs),
+    });
   }
 
   /**
@@ -50,37 +77,40 @@ export class Notifier {
   }
 
   /**
-   * Send notification to all enabled channels
+   * Send a notification to every enabled channel, or only to `event._channel`
+   * when it is set (sendTo() and test() set it). Channels are sent to
+   * concurrently: a slow or failing channel neither delays nor blocks the
+   * others, and each one's outcome is reported under its own key.
    */
   async send(event) {
-    const { type = 'info', title = 'XActions Notification', message, data, severity = 'info' } = event;
+    const { type = 'info', title = 'XActions Notification', message, data, severity = 'info', _channel } = event;
     const results = {};
 
-    for (const [channel, config] of Object.entries(this.config)) {
-      if (!config.enabled) continue;
+    const targets = Object.entries(this.config)
+      .filter(([channel, config]) => config?.enabled && (!_channel || channel === _channel));
 
-      try {
-        switch (channel) {
-          case 'email':
-            results.email = await this._sendEmail(config, { type, title, message, severity });
-            break;
-          case 'slack':
-            results.slack = await this._sendSlack(config, { type, title, message, severity });
-            break;
-          case 'discord':
-            results.discord = await this._sendDiscord(config, { type, title, message, severity });
-            break;
-          case 'telegram':
-            results.telegram = await this._sendTelegram(config, { type, title, message, severity });
-            break;
-          case 'webhook':
-            results.webhook = await this._sendWebhook(config, { type, title, message, severity, data });
-            break;
-        }
-      } catch (error) {
-        results[channel] = { error: error.message };
+    const dispatch = (channel, config) => {
+      switch (channel) {
+        case 'email': return this._sendEmail(config, { type, title, message, severity });
+        case 'slack': return this._sendSlack(config, { type, title, message, severity });
+        case 'discord': return this._sendDiscord(config, { type, title, message, severity });
+        case 'telegram': return this._sendTelegram(config, { type, title, message, severity });
+        case 'webhook': return this._sendWebhook(config, { type, title, message, severity, data });
+        default: return null;
       }
-    }
+    };
+
+    const settled = await Promise.allSettled(targets.map(([channel, config]) => dispatch(channel, config)));
+    targets.forEach(([channel], i) => {
+      const outcome = settled[i];
+      if (outcome.status === 'fulfilled') {
+        if (outcome.value !== null) results[channel] = outcome.value;
+      } else {
+        const error = outcome.reason;
+        const timedOut = error?.name === 'TimeoutError' || error?.name === 'AbortError';
+        results[channel] = { error: timedOut ? `${channel} did not answer within ${this.timeoutMs} ms` : (error?.message || String(error)) };
+      }
+    });
 
     return results;
   }
@@ -120,6 +150,9 @@ export class Notifier {
         port: smtp.port || 587,
         secure: smtp.port === 465,
         auth: { user: smtp.user, pass: smtp.pass },
+        connectionTimeout: this.timeoutMs,
+        greetingTimeout: this.timeoutMs,
+        socketTimeout: this.timeoutMs,
       });
 
       const severityEmoji = { info: 'ℹ️', warning: '⚠️', critical: '🚨' };
@@ -130,8 +163,8 @@ export class Notifier {
           </div>
           <div style="background: #1a1a1a; color: #e0e0e0; padding: 20px; border-radius: 0 0 12px 12px;">
             <p style="font-size: 14px; color: #888;">${severityEmoji[event.severity] || ''} ${event.severity.toUpperCase()}</p>
-            <h3 style="color: #1d9bf0;">${event.title}</h3>
-            <p>${event.message}</p>
+            <h3 style="color: #1d9bf0;">${escapeHtml(event.title)}</h3>
+            <p>${escapeHtml(event.message)}</p>
           </div>
         </div>
       `;
@@ -162,11 +195,7 @@ export class Notifier {
       ],
     };
 
-    const response = await fetch(webhookUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
+    const response = await this._postJson(webhookUrl, payload);
 
     if (!response.ok) throw new Error(`Slack webhook failed: ${response.status}`);
     return { status: 'sent', channel: 'slack' };
@@ -187,11 +216,7 @@ export class Notifier {
       }],
     };
 
-    const response = await fetch(webhookUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
+    const response = await this._postJson(webhookUrl, payload);
 
     if (!response.ok) throw new Error(`Discord webhook failed: ${response.status}`);
     return { status: 'sent', channel: 'discord' };
@@ -202,16 +227,14 @@ export class Notifier {
     if (!botToken || !chatId) return { error: 'Telegram bot token and chat ID required' };
 
     const severityEmoji = { info: 'ℹ️', warning: '⚠️', critical: '🚨' };
-    const text = `${severityEmoji[event.severity] || ''} *${event.title}*\n\n${event.message}\n\n_XActions • ${event.severity}_`;
+    // Plain text, no parse_mode: with Markdown on, Telegram rejects the whole
+    // message (HTTP 400) when the title or message has an unpaired "_" or "*",
+    // which handles and URLs often do, so the alert is silently lost.
+    const text = `${severityEmoji[event.severity] || ''} ${event.title}\n\n${event.message}\n\nXActions • ${event.severity}`;
 
-    const response = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        chat_id: chatId,
-        text,
-        parse_mode: 'Markdown',
-      }),
+    const response = await this._postJson(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+      chat_id: chatId,
+      text,
     });
 
     if (!response.ok) throw new Error(`Telegram API failed: ${response.status}`);

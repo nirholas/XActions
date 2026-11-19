@@ -98,7 +98,7 @@
       apiKey: '',                  // xAI key for provider 'xai'. Stored only if "remember" is ticked in the panel.
       model: 'grok-3-mini',        // xAI model. For 'bridge' this is the bridge provider's model.
       bridgeProvider: 'openrouter', // For 'bridge': openrouter | openai | anthropic | ollama | xai | custom
-      bridgeBaseUrl: '',           // For 'bridge' + custom: full chat-completions URL
+      bridgeBaseUrl: '',           // Ignored by the extension: set a custom URL in the extension popup
       temperature: 0.9,
       allowHashtags: false,
       allowEmoji: true,
@@ -995,7 +995,7 @@
                 <option value="ollama">Ollama (local)</option>
                 <option value="custom">Custom URL</option>
               </select></label>
-            <label><span class="xep-label">Custom URL</span><input type="text" id="xep-bridgeUrl" value="${esc(CONFIG.comments.bridgeBaseUrl)}" placeholder="https://.../v1/chat/completions"></label>
+            <p class="xep-label">Custom URL: set it in the XActions extension popup (Settings, Custom AI provider). The extension no longer takes a URL from the page.</p>
           </div>
           <label><span class="xep-label">API key</span><input type="password" id="xep-key" value="${esc(CONFIG.comments.apiKey)}" autocomplete="off" placeholder="xai-..."></label>
           <label class="xep-toggle"><span>Remember key in this browser</span><input type="checkbox" id="xep-rememberKey" ${savedKey ? 'checked' : ''}></label>
@@ -1093,7 +1093,8 @@
     c.provider = el('xep-provider').value;
     c.model = el('xep-model').value.trim();
     c.bridgeProvider = el('xep-bridgeProvider').value;
-    c.bridgeBaseUrl = el('xep-bridgeUrl').value.trim();
+    // The custom URL lives in the extension's own settings now; a page
+    // script can no longer choose where the extension sends requests.
     c.apiKey = el('xep-key').value.trim();
     c.fallbackToTemplates = el('xep-fallback').checked;
     try {

@@ -19,8 +19,12 @@
  *   ever serve.
  * - `createPooledClient(pool)` looks like a single `TwitterHttpClient`
  *   (`graphql`, `request`, `rest`, `graphqlPaginate`, `isAuthenticated`) and
- *   rotates accounts on its own: a 429 or a spent window moves the same call
- *   to the next account, a 401/403 locks the account and moves on.
+ *   rotates accounts on its own for reads: a 429 or a spent window moves the
+ *   same call to the next account, and a 401, or a 403 whose body says the
+ *   account is suspended or locked, locks the account and moves on. Any other
+ *   403 (a Cloudflare page, a refused write) is rethrown and locks nothing.
+ *   Writes are never rotated: a mutation retried on the next account would be
+ *   posted as a different user.
  *
  * @author nich (@nichxbt)
  * @license Apache-2.0
@@ -30,6 +34,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import Database from 'better-sqlite3';
 import { TwitterHttpClient } from './client.js';
+import { REST_BASE, graphqlRequestMethod } from './endpoints.js';
 import { AuthError, RateLimitError, TwitterApiError } from './errors.js';
 import { resolveCacheDir } from './queryIds.js';
 import { parseCookieInput } from '../../../client/auth/cookieImport.js';
@@ -128,8 +133,25 @@ export function operationFromUrl(url) {
 // SQLite schema
 // ---------------------------------------------------------------------------
 
+/**
+ * Restrict a file to its owner, when it exists. The store holds session
+ * cookies for every account, so it must not be world-readable.
+ * @param {string} file
+ */
+function chmodOwnerOnly(file) {
+  try {
+    fs.chmodSync(file, 0o600);
+  } catch (err) {
+    if (err.code !== 'ENOENT') throw err;
+  }
+}
+
 function openDatabase(storePath) {
-  fs.mkdirSync(path.dirname(storePath), { recursive: true });
+  fs.mkdirSync(path.dirname(storePath), { recursive: true, mode: 0o700 });
+  // Create the file owner-only before SQLite opens it; SQLite gives the
+  // -wal and -shm files the database file's permissions.
+  fs.closeSync(fs.openSync(storePath, 'a', 0o600));
+  chmodOwnerOnly(storePath);
   const db = new Database(storePath);
   db.pragma('journal_mode = WAL');
   db.pragma('busy_timeout = 5000');
@@ -154,7 +176,14 @@ function openDatabase(storePath) {
       FOREIGN KEY (account) REFERENCES accounts(name) ON DELETE CASCADE
     );
   `);
+  // Soft locks (a CSRF mismatch, say) expire; hard locks (suspended) do not.
+  const columns = db.prepare('PRAGMA table_info(accounts)').all().map((c) => c.name);
+  if (!columns.includes('lock_until')) {
+    db.exec('ALTER TABLE accounts ADD COLUMN lock_until INTEGER');
+  }
   db.pragma('foreign_keys = ON');
+  chmodOwnerOnly(`${storePath}-wal`);
+  chmodOwnerOnly(`${storePath}-shm`);
   return db;
 }
 
@@ -196,8 +225,11 @@ export function createAccountPool(options = {}) {
     get: db.prepare('SELECT * FROM accounts WHERE name = ?'),
     all: db.prepare('SELECT * FROM accounts ORDER BY added_at ASC, name ASC'),
     touch: db.prepare('UPDATE accounts SET last_used = ? WHERE name = ?'),
-    lock: db.prepare('UPDATE accounts SET locked = 1, lock_reason = ?, locked_at = ? WHERE name = ?'),
-    unlock: db.prepare('UPDATE accounts SET locked = 0, lock_reason = NULL, locked_at = NULL WHERE name = ?'),
+    lock: db.prepare('UPDATE accounts SET locked = 1, lock_reason = ?, locked_at = ?, lock_until = ? WHERE name = ?'),
+    unlock: db.prepare('UPDATE accounts SET locked = 0, lock_reason = NULL, locked_at = NULL, lock_until = NULL WHERE name = ?'),
+    expireLocks: db.prepare(
+      'UPDATE accounts SET locked = 0, lock_reason = NULL, locked_at = NULL, lock_until = NULL WHERE locked = 1 AND lock_until IS NOT NULL AND lock_until <= ?',
+    ),
     limitFor: db.prepare('SELECT * FROM rate_limits WHERE account = ? AND operation = ?'),
     limitsFor: db.prepare('SELECT * FROM rate_limits WHERE account = ?'),
     setLimit: db.prepare(`
@@ -261,6 +293,7 @@ export function createAccountPool(options = {}) {
       locked: Boolean(row.locked),
       lockReason: row.lock_reason || null,
       lockedAt: row.locked_at || null,
+      lockedUntil: row.lock_until || null,
       lastUsed: row.last_used || null,
       addedAt: row.added_at,
       leased: leased.has(row.name),
@@ -311,11 +344,13 @@ export function createAccountPool(options = {}) {
     },
 
     get(name) {
+      stmts.expireLocks.run(now());
       const row = stmts.get.get(name);
       return row ? rowToInfo(row) : null;
     },
 
     list() {
+      stmts.expireLocks.run(now());
       return stmts.all.all().map(rowToInfo);
     },
 
@@ -325,8 +360,18 @@ export function createAccountPool(options = {}) {
 
     // ---- Lock state --------------------------------------------------------
 
-    markLocked(name, reason = 'locked') {
-      stmts.lock.run(String(reason), now(), name);
+    /**
+     * Take an account out of rotation.
+     * @param {string} name
+     * @param {string} [reason]
+     * @param {object} [opts]
+     * @param {number} [opts.ttlMs] - Unlock automatically after this long;
+     *   omitted, the lock stays until `unlock()`.
+     */
+    markLocked(name, reason = 'locked', opts = {}) {
+      const t = now();
+      const until = Number.isFinite(opts.ttlMs) && opts.ttlMs > 0 ? t + opts.ttlMs : null;
+      stmts.lock.run(String(reason), t, until, name);
       leased.delete(name);
     },
 
@@ -385,6 +430,7 @@ export function createAccountPool(options = {}) {
       const startedAt = now();
 
       for (;;) {
+        stmts.expireLocks.run(now());
         const rows = stmts.candidates.all().filter((r) => !exclude.has(r.name) && !leased.has(r.name));
         if (rows.length === 0) {
           const total = stmts.all.all().length;
@@ -476,29 +522,80 @@ export function createAccountPool(options = {}) {
 // ---------------------------------------------------------------------------
 
 /**
- * Whether a thrown error means "this account cannot serve right now, try the
- * next one".
+ * X error codes that mean the account itself cannot serve: it is suspended,
+ * locked, or its session is gone. Only these (or a 401) lock an account.
+ * A 403 without one of them is a Cloudflare page, a refused write, a
+ * protected target: nothing a different account changes for good.
  */
-function isRotationTrigger(err) {
-  if (err instanceof RateLimitError) return true;
-  if (err instanceof AuthError && (err.status === 401 || err.status === 403)) return true;
-  return false;
+const DEAD_ACCOUNT_CODES = new Map([
+  [32, 'could not authenticate'],
+  [64, 'suspended'],
+  [89, 'invalid or expired token'],
+  [326, 'locked'],
+]);
+
+/**
+ * Codes that mean this session's cookies are out of step rather than the
+ * account being gone: 353 is a ct0/CSRF mismatch. The account is parked for
+ * `softLockMs` and comes back on its own.
+ */
+const SOFT_LOCK_CODES = new Map([[353, 'CSRF token mismatch']]);
+
+/** Default time a soft-locked account sits out. */
+const DEFAULT_SOFT_LOCK_MS = 60 * 60_000;
+
+function errorCodes(err) {
+  const errors = Array.isArray(err?.data?.errors) ? err.data.errors : [];
+  return errors.map((e) => Number(e?.code)).filter(Number.isFinite);
+}
+
+/**
+ * What an auth failure says about the account that got it.
+ * @param {Error} err
+ * @returns {{ lock: 'hard'|'soft', reason: string }|null} null when the
+ *   error is not about the account
+ */
+export function classifyAuthFailure(err) {
+  if (!(err instanceof AuthError)) return null;
+  const codes = errorCodes(err);
+  for (const code of codes) {
+    if (DEAD_ACCOUNT_CODES.has(code)) return { lock: 'hard', reason: `${DEAD_ACCOUNT_CODES.get(code)} (code ${code})` };
+  }
+  for (const code of codes) {
+    if (SOFT_LOCK_CODES.has(code)) return { lock: 'soft', reason: `${SOFT_LOCK_CODES.get(code)} (code ${code})` };
+  }
+  if (err.status === 401) return { lock: 'hard', reason: 'unauthorized' };
+  return null;
 }
 
 /**
  * A drop-in for `TwitterHttpClient` that spreads calls across a pool.
+ *
+ * Reads rotate: a rate limit or a dead account moves the call to the next
+ * account. Writes (GraphQL mutations, any non-GET REST call) never do; the
+ * error is recorded against the account and rethrown, so a post is never
+ * sent from an account other than the one it started on.
  *
  * @param {ReturnType<typeof createAccountPool>} pool
  * @param {object} [options]
  * @param {number} [options.maxAccounts] - Most accounts one call may try
  *   before the last error is rethrown. Defaults to the pool size at call time.
  * @param {number} [options.maxWaitMs] - Passed to `pool.acquire`.
+ * @param {number} [options.softLockMs=3600000] - How long an account with a
+ *   CSRF mismatch sits out before it is tried again.
  * @param {function} [options.onRotate] - `({ from, operation, reason, error })`
  */
 export function createPooledClient(pool, options = {}) {
-  async function run(operation, fn) {
+  const softLockMs = options.softLockMs ?? DEFAULT_SOFT_LOCK_MS;
+
+  /**
+   * @param {string} operation - Rate-limit key, the same one `onResponse` records under
+   * @param {function} fn
+   * @param {{ rotate?: boolean }} [opts] - false for writes
+   */
+  async function run(operation, fn, { rotate = true } = {}) {
     const tried = new Set();
-    const budget = options.maxAccounts ?? Math.max(pool.size(), 1);
+    const budget = rotate ? options.maxAccounts ?? Math.max(pool.size(), 1) : 1;
     let lastError = null;
 
     while (tried.size < budget) {
@@ -508,21 +605,35 @@ export function createPooledClient(pool, options = {}) {
         return await fn(lease.client);
       } catch (err) {
         lastError = err;
-        if (!isRotationTrigger(err)) throw err;
         let reason;
         if (err instanceof RateLimitError) {
           pool.markRateLimited(lease.name, operation, err.resetAt);
           reason = 'rate-limited';
         } else {
-          pool.markLocked(lease.name, `HTTP ${err.status} on ${operation}`);
+          const verdict = classifyAuthFailure(err);
+          if (!verdict) throw err;
+          pool.markLocked(
+            lease.name,
+            `HTTP ${err.status} on ${operation}: ${verdict.reason}`,
+            verdict.lock === 'soft' ? { ttlMs: softLockMs } : {},
+          );
           reason = 'locked';
         }
+        if (!rotate) throw err;
         options.onRotate?.({ from: lease.name, operation, reason, error: err });
       } finally {
         lease.release();
       }
     }
     throw lastError || new AccountPoolError(`No account could serve ${operation}.`, { operation });
+  }
+
+  /** Whether a raw request is a read that is safe to send from another account. */
+  function isReadRequest(url, method) {
+    if (method === 'GET' || method === 'HEAD') return true;
+    // GraphQL read queries X only accepts as POST (Followers, SearchTimeline).
+    const op = operationFromUrl(url);
+    return /\/graphql\//.test(String(url)) && graphqlRequestMethod(op) === 'POST';
   }
 
   const pooled = {
@@ -533,15 +644,25 @@ export function createPooledClient(pool, options = {}) {
     },
 
     graphql(queryId, operationName, variables, opts = {}) {
-      return run(operationName, (client) => client.graphql(queryId, operationName, variables, opts));
+      return run(operationName, (client) => client.graphql(queryId, operationName, variables, opts), {
+        rotate: opts.mutation !== true,
+      });
     },
 
     request(url, opts = {}) {
-      return run(operationFromUrl(url), (client) => client.request(url, opts));
+      const method = (opts.method || 'GET').toUpperCase();
+      return run(operationFromUrl(url), (client) => client.request(url, opts), {
+        rotate: isReadRequest(url, method),
+      });
     },
 
     rest(path, opts = {}) {
-      return run(path, (client) => client.rest(path, opts));
+      // Keyed the way onResponse records it (the URL pathname), so a REST
+      // window spent on one call is seen by the next acquire.
+      const method = (opts.method || 'POST').toUpperCase();
+      return run(operationFromUrl(`${REST_BASE}${path}`), (client) => client.rest(path, opts), {
+        rotate: method === 'GET',
+      });
     },
 
     graphqlPaginate(queryId, operationName, variables, opts = {}) {

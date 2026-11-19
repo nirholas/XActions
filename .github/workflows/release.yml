@@ -20,10 +20,37 @@ on:
     tags:
       - 'v*'
 
+# Read-only by default. Only the release job writes (it creates the GitHub
+# Release); the test and publish jobs run `npm ci`, which executes dependency
+# install scripts, and must not hold a token that can push to the repository.
 permissions:
-  contents: write
+  contents: read
 
 jobs:
+  # A tag that disagrees with package.json would create the GitHub Release and
+  # then fail at `npm publish` (or publish a version nobody tagged). Check it
+  # before anything else runs, so a mistyped tag stops with nothing published.
+  verify-version:
+    name: Tag matches package.json
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Compare tag and package.json version
+        run: |
+          TAG_VERSION="${GITHUB_REF#refs/tags/v}"
+          PKG_VERSION="$(node -p "require('./package.json').version")"
+          if [ "$TAG_VERSION" != "$PKG_VERSION" ]; then
+            echo "::error::Tag ${GITHUB_REF#refs/tags/} does not match package.json version $PKG_VERSION. Bump package.json or retag as v$PKG_VERSION."
+            exit 1
+          fi
+          echo "Tag v$TAG_VERSION matches package.json."
+
   # Runs before anything is published. A tag is not a promise that the code works,
   # so the suite has to say so first; publish-npm needs this job to pass.
   test:
@@ -31,12 +58,16 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
+    needs: verify-version
+
     env:
       NODE_ENV: test
 
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Setup Node.js
         uses: actions/setup-node@v7
@@ -53,16 +84,23 @@ jobs:
       - name: Run tests
         run: npm test
 
+  # Waits for the suite too: a GitHub Release for a tag whose tests fail
+  # announces a version that will never reach npm.
   release:
     name: Create Release
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    needs: [verify-version, test]
+
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout
         uses: actions/checkout@v7
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Setup Node.js
         uses: actions/setup-node@v7
@@ -130,6 +168,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Setup Node.js
         uses: actions/setup-node@v7

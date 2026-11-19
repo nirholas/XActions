@@ -17,6 +17,7 @@ import {
   validatePlugin,
   isValidPluginName,
   discoverPlugins,
+  packageNameFromSpec,
 } from './loader.js';
 
 // ============================================================================
@@ -76,7 +77,9 @@ export async function installPlugin(name) {
   // Register in config
   const config = await readPluginsConfig();
   config.plugins[plugin.name] = {
-    package: name,
+    // The bare name, so loading and `npm uninstall` find it whatever version
+    // spec it was installed with.
+    package: isLocal ? name : packageNameFromSpec(name),
     path: isLocal ? name : undefined,
     version: plugin.version,
     description: plugin.description || '',

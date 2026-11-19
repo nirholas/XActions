@@ -1,6 +1,6 @@
 ---
 name: a2a-multi-agent
-description: Runs XActions as an A2A (Agent-to-Agent) compatible agent that serves an Agent Card, accepts JSON-RPC tasks, bridges them onto the 154 MCP tools, streams progress over SSE, and discovers and delegates to other agents. Use when connecting XActions to external AI agents, building multi-agent orchestration, serving or reading an agent card, running the A2A server, or debugging inter-agent auth, discovery, streaming, or task delegation.
+description: Runs XActions as an A2A (Agent-to-Agent) compatible agent that serves an Agent Card, accepts JSON-RPC tasks, bridges them onto the 155 MCP tools, streams progress over SSE, and discovers and delegates to other agents. Use when connecting XActions to external AI agents, building multi-agent orchestration, serving or reading an agent card, running the A2A server, or debugging inter-agent auth, discovery, streaming, or task delegation.
 license: Apache-2.0
 compatibility: Requires Node.js 18+ and a free port for the A2A HTTP server (3100 by default).
 metadata:
@@ -53,10 +53,20 @@ node src/a2a/server.js
 node src/a2a/server.js --cookie "YOUR_X_SESSION_COOKIE"
 ```
 
+### Authenticate
+
+Every `/a2a` route needs `Authorization: ApiKey <key>` (or a bearer token);
+only the agent card is public. Create a key with
+`node src/a2a/index.js --create-key my-agent --preset standard`. The
+`readonly` preset cannot run write tools; `standard` can, and writes still go
+through the MCP approval gate (`XACTIONS_MCP_REQUIRE_APPROVAL=1`) and the daily
+action caps. Push-notification and discovery URLs must be public http(s)
+addresses unless `XACTIONS_A2A_ALLOW_PRIVATE=true`.
+
 ### Check health
 
 ```bash
-curl http://localhost:3100/a2a/health
+curl -H "Authorization: ApiKey $XACTIONS_A2A_KEY" http://localhost:3100/a2a/health
 ```
 
 ### View Agent Card
@@ -68,7 +78,7 @@ curl http://localhost:3100/.well-known/agent.json
 ### Send a task
 
 ```bash
-curl -X POST http://localhost:3100/a2a/tasks \
+curl -X POST -H "Authorization: ApiKey $XACTIONS_A2A_KEY" http://localhost:3100/a2a/tasks \
   -H "Content-Type: application/json" \
   -d '{
     "jsonrpc": "2.0",
@@ -86,7 +96,7 @@ curl -X POST http://localhost:3100/a2a/tasks \
 ### Discover an agent
 
 ```bash
-curl -X POST http://localhost:3100/a2a/agents/discover \
+curl -X POST -H "Authorization: ApiKey $XACTIONS_A2A_KEY" http://localhost:3100/a2a/agents/discover \
   -H 'Content-Type: application/json' \
   -d '{"url": "https://other-agent.example.com"}'
 ```
@@ -94,8 +104,8 @@ curl -X POST http://localhost:3100/a2a/agents/discover \
 ### List skills
 
 ```bash
-curl http://localhost:3100/a2a/skills
-curl 'http://localhost:3100/a2a/skills?query=scrape'
+curl -H "Authorization: ApiKey $XACTIONS_A2A_KEY" http://localhost:3100/a2a/skills
+curl -H "Authorization: ApiKey $XACTIONS_A2A_KEY" 'http://localhost:3100/a2a/skills?query=scrape'
 ```
 
 ## Architecture
@@ -117,7 +127,7 @@ curl 'http://localhost:3100/a2a/skills?query=scrape'
 │  └────────────────────┬────────────────────────────┘ │
 │                       │                              │
 │  ┌────────────────────┴────────────────────────────┐ │
-│  │           Skill Registry (140+ tools)           │ │
+│  │        Skill Registry (one per MCP tool)        │ │
 │  └─────────────────────────────────────────────────┘ │
 │                                                      │
 │  ┌─────────────┐  ┌────────────┐  ┌──────────────┐  │
@@ -133,7 +143,7 @@ curl 'http://localhost:3100/a2a/skills?query=scrape'
 Every A2A agent publishes a JSON document at `/.well-known/agent.json` describing its capabilities, skills, and supported protocols.
 
 ### Skills
-XActions converts its 154 MCP tools into A2A skills, each with a unique ID (`xactions.<tool_name>`), description, input schema, and category tags.
+XActions converts its 155 MCP tools into A2A skills, each with a unique ID (`xactions.<tool_name>`), description, input schema, and category tags.
 
 ### Task Lifecycle
 ```
@@ -172,7 +182,11 @@ The CLI has no A2A subcommand. The A2A agent is an HTTP server, and every
 operation is one of the endpoints in the table above.
 
 ```bash
-# Start it (defaults to port 3100)
+# Issue a key for the calling agent once; every /a2a route needs it
+node src/a2a/index.js --create-key my-agent --preset standard
+export XACTIONS_A2A_KEY=xa2a_...
+
+# Start it (binds 127.0.0.1:3100; set A2A_HOST to listen elsewhere)
 node src/a2a/server.js
 
 # Or on another port, with a session attached
@@ -181,17 +195,17 @@ A2A_PORT=3200 XACTIONS_SESSION_COOKIE=your_auth_token node src/a2a/server.js
 
 ```bash
 # Is it up?
-curl http://localhost:3100/a2a/health
+curl -H "Authorization: ApiKey $XACTIONS_A2A_KEY" http://localhost:3100/a2a/health
 
 # What can it do?
 curl http://localhost:3100/.well-known/agent.json
-curl 'http://localhost:3100/a2a/skills?query=scrape'
+curl -H "Authorization: ApiKey $XACTIONS_A2A_KEY" 'http://localhost:3100/a2a/skills?query=scrape'
 
 # Which other agents does it know about?
-curl http://localhost:3100/a2a/agents
+curl -H "Authorization: ApiKey $XACTIONS_A2A_KEY" http://localhost:3100/a2a/agents
 
 # Give it a task
-curl -X POST http://localhost:3100/a2a/orchestrate \
+curl -X POST -H "Authorization: ApiKey $XACTIONS_A2A_KEY" http://localhost:3100/a2a/orchestrate \
   -H 'Content-Type: application/json' \
   -d '{"task": "Scrape the profile of @nasa and summarise it"}'
 ```

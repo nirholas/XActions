@@ -82,7 +82,13 @@ router.post('/', async (req, res) => {
   res.flushHeaders();
   const send = (event) => res.write(`data: ${JSON.stringify(event)}\n\n`);
   const controller = new AbortController();
-  req.on('close', () => controller.abort());
+  // The client going away is the response closing before it ended. The
+  // request's own 'close' fires as soon as its body has been read (about 1 ms
+  // in on Node 24), which aborted every answer mid-stream and turned the
+  // first failed LLM lane into "aborted" instead of a try on the next one.
+  res.on('close', () => {
+    if (!res.writableEnded) controller.abort();
+  });
 
   try {
     await ask({

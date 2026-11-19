@@ -72,11 +72,25 @@ services:
           name: xactions-redis
           type: redis
           property: port
+      # The worker decrypts the X sessions the API saved, and the key is derived
+      # from COOKIE_ENCRYPTION_KEY || SESSION_SECRET || JWT_SECRET. Copy both
+      # secrets from the API rather than setting them here, or the worker derives
+      # a different key and cannot read a single session.
       - key: JWT_SECRET
-        sync: false
+        fromService:
+          name: xactions-api
+          type: web
+          envVarKey: JWT_SECRET
+      - key: SESSION_SECRET
+        fromService:
+          name: xactions-api
+          type: web
+          envVarKey: SESSION_SECRET
       - key: PUPPETEER_EXECUTABLE_PATH
         value: /usr/bin/chromium
       - key: PUPPETEER_HEADLESS
+        value: "true"
+      - key: PUPPETEER_NO_SANDBOX
         value: "true"
 
   # ─────────────────────────────────────────────────────────────────────────────

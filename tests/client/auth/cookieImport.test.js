@@ -32,12 +32,12 @@ import {
 
 describe('detectCookieFormat', () => {
   it('identifies a Netscape cookies.txt', () => {
-    const text = '# Netscape HTTP Cookie File\n.x.com\tTRUE\t/\tTRUE\t1799999999\tauth_token\tabc';
+    const text = '# Netscape HTTP Cookie File\n.x.com\tTRUE\t/\tTRUE\t2099999999\tauth_token\tabc';
     expect(detectCookieFormat(text)).toBe('netscape');
   });
 
   it('identifies a #HttpOnly_ prefixed Netscape row', () => {
-    const text = '#HttpOnly_.x.com\tTRUE\t/\tTRUE\t1799999999\tauth_token\tabc';
+    const text = '#HttpOnly_.x.com\tTRUE\t/\tTRUE\t2099999999\tauth_token\tabc';
     expect(detectCookieFormat(text)).toBe('netscape');
   });
 
@@ -70,8 +70,8 @@ describe('parseCookieInput: Netscape cookies.txt', () => {
   it('parses tab-separated rows and #HttpOnly_ prefixes', () => {
     const text = [
       '# Netscape HTTP Cookie File',
-      '#HttpOnly_.x.com\tTRUE\t/\tTRUE\t1799999999\tauth_token\tSECRETAUTH',
-      '.x.com\tTRUE\t/\tTRUE\t1799999999\tct0\tSECRETCT0',
+      '#HttpOnly_.x.com\tTRUE\t/\tTRUE\t2099999999\tauth_token\tSECRETAUTH',
+      '.x.com\tTRUE\t/\tTRUE\t2099999999\tct0\tSECRETCT0',
     ].join('\n');
 
     const cookies = parseCookieInput(text);
@@ -87,7 +87,7 @@ describe('parseCookieInput: Netscape cookies.txt', () => {
   it('drops non-X domains and comment lines', () => {
     const text = [
       '# comment',
-      '.x.com\tTRUE\t/\tTRUE\t1799999999\tauth_token\tabc',
+      '.x.com\tTRUE\t/\tTRUE\t2099999999\tauth_token\tabc',
       '.google.com\tTRUE\t/\tFALSE\t0\tjunk\tnope',
     ].join('\n');
 
@@ -97,16 +97,16 @@ describe('parseCookieInput: Netscape cookies.txt', () => {
   });
 
   it('keeps twitter.com cookies too', () => {
-    const text = '.twitter.com\tTRUE\t/\tTRUE\t1799999999\tauth_token\tabc';
+    const text = '.twitter.com\tTRUE\t/\tTRUE\t2099999999\tauth_token\tabc';
     const cookies = parseCookieInput(text);
     expect(cookies).toHaveLength(1);
     expect(cookies[0].domain).toBe('.twitter.com');
   });
 
   it('converts the unix-seconds expiry to ISO', () => {
-    const text = '.x.com\tTRUE\t/\tTRUE\t1799999999\tauth_token\tabc';
+    const text = '.x.com\tTRUE\t/\tTRUE\t2099999999\tauth_token\tabc';
     const cookies = parseCookieInput(text);
-    expect(cookies[0].expires).toBe(new Date(1799999999 * 1000).toISOString());
+    expect(cookies[0].expires).toBe(new Date(2099999999 * 1000).toISOString());
   });
 });
 
@@ -117,7 +117,7 @@ describe('parseCookieInput: Netscape cookies.txt', () => {
 describe('parseCookieInput: Cookie-Editor / EditThisCookie JSON', () => {
   it('parses an array with expirationDate seconds', () => {
     const text = JSON.stringify([
-      { name: 'auth_token', value: 'abc', domain: '.x.com', secure: true, httpOnly: true, expirationDate: 1799999999.5 },
+      { name: 'auth_token', value: 'abc', domain: '.x.com', secure: true, httpOnly: true, expirationDate: 2099999999.5 },
       { name: 'ct0', value: 'def', domain: '.x.com' },
       { name: 'unrelated', value: 'z', domain: '.github.com' },
     ]);
@@ -128,7 +128,7 @@ describe('parseCookieInput: Cookie-Editor / EditThisCookie JSON', () => {
     expect(auth.value).toBe('abc');
     expect(auth.secure).toBe(true);
     expect(auth.httpOnly).toBe(true);
-    expect(auth.expires).toBe(new Date(1799999999.5 * 1000).toISOString());
+    expect(auth.expires).toBe(new Date(2099999999.5 * 1000).toISOString());
   });
 
   it('respects a forced format even if detection would differ', () => {
@@ -146,7 +146,7 @@ describe('parseCookieInput: Playwright / Puppeteer storageState', () => {
   it('reads the cookies array out of a storageState object', () => {
     const text = JSON.stringify({
       cookies: [
-        { name: 'auth_token', value: 'abc', domain: '.x.com', path: '/', secure: true, httpOnly: true, expires: 1799999999 },
+        { name: 'auth_token', value: 'abc', domain: '.x.com', path: '/', secure: true, httpOnly: true, expires: 2099999999 },
         { name: 'ct0', value: 'def', domain: 'x.com' },
       ],
       origins: [],
@@ -208,6 +208,54 @@ describe('parseCookieInput: errors', () => {
 // readBrowserCookies: real SQLite fixtures in a temp HOME
 // ============================================================================
 
+describe('parseCookieInput: expired and duplicate cookies', () => {
+  const past = 1600000000; // 2020
+  const future = 2099999999; // 2036
+
+  it('drops expired cookies and keeps session cookies', () => {
+    const cookies = parseCookieInput(
+      JSON.stringify({
+        cookies: [
+          { name: 'auth_token', value: 'a', domain: '.x.com', expires: -1 },
+          { name: 'ct0', value: 'old', domain: '.x.com', expires: past },
+          { name: 'twid', value: 'u%3D1', domain: '.x.com', expires: future },
+        ],
+      }),
+    );
+    expect(cookies.map((c) => c.name).sort()).toEqual(['auth_token', 'twid']);
+  });
+
+  it('prefers the x.com copy over a twitter.com duplicate, wherever it appears in the file', () => {
+    const text = [
+      '# Netscape HTTP Cookie File',
+      `#HttpOnly_.x.com\tTRUE\t/\tTRUE\t${future}\tauth_token\tNEWTOKEN`,
+      `.x.com\tTRUE\t/\tTRUE\t${future}\tct0\tNEWCT0`,
+      `#HttpOnly_.twitter.com\tTRUE\t/\tTRUE\t${future}\tauth_token\tOLDTOKEN`,
+      `.twitter.com\tTRUE\t/\tTRUE\t${future}\tct0\tOLDCT0`,
+    ].join('\n');
+    const byName = Object.fromEntries(parseCookieInput(text).map((c) => [c.name, c.value]));
+    expect(byName).toEqual({ auth_token: 'NEWTOKEN', ct0: 'NEWCT0' });
+  });
+
+  it('drops an expired x.com cookie in favour of a live twitter.com one', () => {
+    const text = [
+      `.x.com\tTRUE\t/\tTRUE\t${past}\tauth_token\tDEAD`,
+      `.twitter.com\tTRUE\t/\tTRUE\t${future}\tauth_token\tLIVE`,
+    ].join('\n');
+    expect(parseCookieInput(text).map((c) => c.value)).toEqual(['LIVE']);
+  });
+
+  it('feeds deduplicated cookies to the account pool', async () => {
+    const { normalizeCookies } = await import('../../../src/scrapers/twitter/http/accountPool.js');
+    const text = [
+      `#HttpOnly_.x.com\tTRUE\t/\tTRUE\t${future}\tauth_token\tNEWTOKEN`,
+      `#HttpOnly_.twitter.com\tTRUE\t/\tTRUE\t${past}\tauth_token\tOLDTOKEN`,
+      `.x.com\tTRUE\t/\tTRUE\t${future}\tct0\tNEWCT0`,
+    ].join('\n');
+    expect(normalizeCookies(text)).toBe('auth_token=NEWTOKEN; ct0=NEWCT0');
+  });
+});
+
 describe('readBrowserCookies', () => {
   let home;
   let origHome;
@@ -251,8 +299,8 @@ describe('readBrowserCookies', () => {
     const ins = db.prepare(
       'INSERT INTO moz_cookies (host,name,value,path,expiry,isSecure,isHttpOnly) VALUES (?,?,?,?,?,?,?)',
     );
-    ins.run('.x.com', 'auth_token', 'FFAUTH', '/', 1799999999, 1, 1);
-    ins.run('.x.com', 'ct0', 'FFCT0', '/', 1799999999, 1, 0);
+    ins.run('.x.com', 'auth_token', 'FFAUTH', '/', 2099999999, 1, 1);
+    ins.run('.x.com', 'ct0', 'FFCT0', '/', 2099999999, 1, 0);
     ins.run('.google.com', 'junk', 'x', '/', 0, 0, 0);
     db.close();
 
@@ -282,9 +330,9 @@ describe('readBrowserCookies', () => {
     const ins = db.prepare(
       'INSERT INTO cookies (host_key,name,value,encrypted_value,path,expires_utc,is_secure,is_httponly) VALUES (?,?,?,?,?,?,?,?)',
     );
-    ins.run('.x.com', 'auth_token', '', encrypt('CHROMEAUTH'), '/', 13300000000000000, 1, 1);
-    ins.run('.x.com', 'ct0', '', encrypt('CHROMECT0'), '/', 13300000000000000, 1, 0);
-    ins.run('.google.com', 'junk', '', encrypt('nope'), '/', 13300000000000000, 0, 0);
+    ins.run('.x.com', 'auth_token', '', encrypt('CHROMEAUTH'), '/', 14000000000000000, 1, 1);
+    ins.run('.x.com', 'ct0', '', encrypt('CHROMECT0'), '/', 14000000000000000, 1, 0);
+    ins.run('.google.com', 'junk', '', encrypt('nope'), '/', 14000000000000000, 0, 0);
     db.close();
 
     const cookies = readBrowserCookies('chromium');
@@ -315,7 +363,7 @@ describe('readBrowserCookies', () => {
     // Only a non-auth cookie is present, so the required-cookie guard should fire.
     db.prepare(
       'INSERT INTO cookies (host_key,name,value,encrypted_value,path,expires_utc,is_secure,is_httponly) VALUES (?,?,?,?,?,?,?,?)',
-    ).run('.x.com', 'guest_id', '', encrypt('v1%3A9'), '/', 13300000000000000, 0, 0);
+    ).run('.x.com', 'guest_id', '', encrypt('v1%3A9'), '/', 14000000000000000, 0, 0);
     db.close();
 
     expect(() => readBrowserCookies('chrome')).toThrow(/did not find a logged-in x\.com session/);

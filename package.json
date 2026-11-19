@@ -14,7 +14,10 @@
   "main": "src/index.js",
   "types": "types/index.d.ts",
   "exports": {
-    ".": "./src/index.js",
+    ".": {
+      "types": "./types/index.d.ts",
+      "default": "./src/index.js"
+    },
     "./scrapers": "./src/scrapers/index.js",
     "./scrapers/twitter": "./src/scrapers/twitter/index.js",
     "./scrapers/twitter/http": "./src/scrapers/twitter/http/index.js",
@@ -29,7 +32,8 @@
     "./client": "./src/client/index.js",
     "./spaces": "./src/spaces/agent.js",
     "./portability": "./src/portability/index.js",
-    "./media": "./src/media/index.js"
+    "./media": "./src/media/index.js",
+    "./analysis": "./src/analysis/accountReport.js"
   },
   "bin": {
     "xactions": "./src/cli/index.js",
@@ -217,6 +221,8 @@
     "src",
     "types",
     "api/config/x402-config.js",
+    "dashboard/data/ask-index.json",
+    "dashboard/data/ask-actions.json",
     "skills",
     ".claude-plugin",
     "THIRD-PARTY-NOTICES.md"

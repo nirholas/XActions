@@ -37,7 +37,7 @@ export function generateArchiveHTML(data) {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>@${handle} — XActions Archive</title>
+<title>@${esc(handle)} — XActions Archive</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--bg:#000;--surface:#16181c;--border:#2f3336;--text:#e7e9ea;--text2:#71767b;--accent:#1d9bf0;--green:#00ba7c;--red:#f4212e;--card:#16181c}
@@ -190,6 +190,7 @@ footer{text-align:center;padding:20px;color:var(--text2);font-size:12px;border-t
     likes:${safeJSON(likes)}
   };
 
+  const HANDLE=${safeJSON('@' + handle)};
   const PAGE_SIZE=25;
   const state={tab:'tweets',page:0,query:'',filtered:{}};
 
@@ -214,7 +215,7 @@ footer{text-align:center;padding:20px;color:var(--text2);font-size:12px;border-t
   // Render tweet card
   function tweetHTML(t){
     return '<div class="tweet-card">'+
-      '<span class="tweet-author">'+(esc(t.author)||'@${esc(handle)}')+'</span>'+
+      '<span class="tweet-author">'+(esc(t.author)||esc(HANDLE))+'</span>'+
       (t.timestamp?'<span class="tweet-time">'+esc(t.timestamp)+'</span>':'')+
       '<div class="tweet-text">'+esc(t.text)+'</div>'+
       '<div class="tweet-metrics">'+

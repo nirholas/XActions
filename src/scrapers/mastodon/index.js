@@ -87,6 +87,94 @@ async function api(client, path, options = {}) {
 }
 
 /**
+ * The `rel="next"` URL of an RFC 8288 Link header, or null.
+ *
+ * @param {string|null|undefined} header
+ * @returns {string|null}
+ */
+export function parseNextLink(header) {
+  if (!header) return null;
+  for (const part of String(header).split(',')) {
+    const match = part.match(/<([^>]+)>\s*;(.*)$/);
+    if (!match) continue;
+    const rels = match[2].match(/rel\s*=\s*"?([^";]+)"?/i);
+    if (rels && rels[1].trim().split(/\s+/).includes('next')) return match[1].trim();
+  }
+  return null;
+}
+
+/**
+ * Walk an account list (followers, following) page by page.
+ *
+ * Mastodon pages these by the id of the follow relationship, not of the
+ * account, and only says what that id is in the `Link` header's
+ * `rel="next"` URL. Using the last account's id as `max_id` skips or repeats
+ * accounts, so the next page is always taken from the header.
+ *
+ * @param {Object} client
+ * @param {string} path - e.g. `/accounts/1/followers`
+ * @param {number} limit
+ * @param {function} [onProgress]
+ * @returns {Promise<Object[]>} Raw Mastodon account objects
+ */
+async function paginateAccounts(client, path, limit, onProgress) {
+  const headers = {};
+  if (client.accessToken) {
+    headers['Authorization'] = `Bearer ${client.accessToken}`;
+  }
+
+  const accounts = [];
+  const seen = new Set();
+  let url = `${client.instance}/api/v1${path}?limit=${Math.min(80, limit)}`;
+
+  while (url && accounts.length < limit) {
+    const res = await fetch(url, { method: 'GET', headers });
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(`Mastodon API error (${res.status}): ${text}`);
+    }
+    const data = await res.json();
+    if (!Array.isArray(data) || data.length === 0) break;
+
+    let added = 0;
+    for (const account of data) {
+      if (seen.has(account.id)) continue;
+      seen.add(account.id);
+      accounts.push(account);
+      added++;
+    }
+    if (onProgress) onProgress({ scraped: accounts.length, limit });
+    if (added === 0) break;
+
+    const next = parseNextLink(res.headers?.get?.('link'));
+    if (!next) break;
+    const nextUrl = new URL(next, client.instance);
+    nextUrl.searchParams.set('limit', String(Math.min(80, limit - accounts.length)));
+    url = nextUrl.toString();
+  }
+
+  return accounts.slice(0, limit);
+}
+
+/**
+ * Normalize a Mastodon account in a follower/following list.
+ * @param {Object} f
+ * @returns {Object}
+ */
+function toListedAccount(f) {
+  return {
+    username: f.acct,
+    id: f.id,
+    name: f.display_name || null,
+    bio: toPlainText(f.note),
+    avatar: f.avatar || null,
+    url: f.url || null,
+    bot: f.bot || false,
+    platform: 'mastodon',
+  };
+}
+
+/**
  * Internal helper — look up a user by username
  * Returns the account object
  */
@@ -164,39 +252,8 @@ export async function scrapeFollowers(client, username, options = {}) {
   const { limit = 100, onProgress } = options;
 
   const account = await lookupAccount(client, username);
-  const followers = [];
-  let maxId;
-
-  while (followers.length < limit) {
-    const pageLimit = Math.min(80, limit - followers.length);
-    const params = { limit: pageLimit };
-    if (maxId) params.max_id = maxId;
-
-    const data = await api(client, `/accounts/${account.id}/followers`, { params });
-    if (!data || data.length === 0) break;
-
-    for (const f of data) {
-      followers.push({
-        username: f.acct,
-        id: f.id,
-        name: f.display_name || null,
-        bio: toPlainText(f.note),
-        avatar: f.avatar || null,
-        url: f.url || null,
-        bot: f.bot || false,
-        platform: 'mastodon',
-      });
-    }
-
-    if (onProgress) {
-      onProgress({ scraped: followers.length, limit });
-    }
-
-    maxId = data[data.length - 1]?.id;
-    if (data.length < pageLimit) break;
-  }
-
-  return followers.slice(0, limit);
+  const accounts = await paginateAccounts(client, `/accounts/${account.id}/followers`, limit, onProgress);
+  return accounts.map(toListedAccount);
 }
 
 // ============================================================================
@@ -210,39 +267,8 @@ export async function scrapeFollowing(client, username, options = {}) {
   const { limit = 100, onProgress } = options;
 
   const account = await lookupAccount(client, username);
-  const following = [];
-  let maxId;
-
-  while (following.length < limit) {
-    const pageLimit = Math.min(80, limit - following.length);
-    const params = { limit: pageLimit };
-    if (maxId) params.max_id = maxId;
-
-    const data = await api(client, `/accounts/${account.id}/following`, { params });
-    if (!data || data.length === 0) break;
-
-    for (const f of data) {
-      following.push({
-        username: f.acct,
-        id: f.id,
-        name: f.display_name || null,
-        bio: toPlainText(f.note),
-        avatar: f.avatar || null,
-        url: f.url || null,
-        bot: f.bot || false,
-        platform: 'mastodon',
-      });
-    }
-
-    if (onProgress) {
-      onProgress({ scraped: following.length, limit });
-    }
-
-    maxId = data[data.length - 1]?.id;
-    if (data.length < pageLimit) break;
-  }
-
-  return following.slice(0, limit);
+  const accounts = await paginateAccounts(client, `/accounts/${account.id}/following`, limit, onProgress);
+  return accounts.map(toListedAccount);
 }
 
 // ============================================================================

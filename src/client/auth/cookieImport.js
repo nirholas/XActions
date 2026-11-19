@@ -125,18 +125,55 @@ function normalizeExpiry(value) {
 }
 
 /**
+ * Rank of a cookie's domain when two cookies share a name: x.com is the live
+ * site, twitter.com cookies are leftovers from before the move.
+ *
+ * @param {string} domain
+ * @returns {number}
+ */
+function domainRank(domain) {
+  const host = String(domain || '').replace(/^\./, '').toLowerCase();
+  if (host === 'x.com' || host.endsWith('.x.com')) return 2;
+  if (host === 'twitter.com' || host.endsWith('.twitter.com')) return 1;
+  return 0;
+}
+
+/**
  * Keep only X/Twitter cookies from a parsed list. Header strings carry no
  * domain, so when nothing has a domain the whole list is kept (the caller
  * supplied exactly the cookies they meant to).
  *
+ * Expired cookies are dropped, and when a name appears more than once (an
+ * export holding both `.x.com` and `.twitter.com` copies, typically an old
+ * auth_token beside the current one) the x.com copy wins, then the one that
+ * expires last. Before this the last line of the file won, which could pair
+ * a stale twitter.com auth_token with a current x.com ct0.
+ *
  * @param {Array<Record<string, any>>} cookies
+ * @param {object} [options]
+ * @param {number} [options.now] - Clock in ms, for tests
  * @returns {Array<{name: string, value: string, domain: string, path: string, secure: boolean, httpOnly: boolean, expires: string|null}>}
  */
-function filterXCookies(cookies) {
+function filterXCookies(cookies, { now = Date.now() } = {}) {
   const normalized = cookies.map(normalizeCookie).filter(Boolean);
   const anyHasDomain = normalized.some((c) => c.domain);
-  if (!anyHasDomain) return normalized;
-  return normalized.filter((c) => isXDomain(c.domain));
+  const scoped = anyHasDomain ? normalized.filter((c) => isXDomain(c.domain)) : normalized;
+  const live = scoped.filter((c) => !c.expires || Date.parse(c.expires) > now);
+
+  const byName = new Map();
+  for (const cookie of live) {
+    const current = byName.get(cookie.name);
+    if (!current) {
+      byName.set(cookie.name, cookie);
+      continue;
+    }
+    const rankDiff = domainRank(cookie.domain) - domainRank(current.domain);
+    const expiry = (c) => (c.expires ? Date.parse(c.expires) : Infinity);
+    if (rankDiff > 0 || (rankDiff === 0 && expiry(cookie) >= expiry(current))) {
+      byName.set(cookie.name, cookie);
+    }
+  }
+  return [...byName.values()];
 }
 
 // ============================================================================

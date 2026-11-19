@@ -204,22 +204,73 @@ describe('resumable scrapes', () => {
     await expect(scrapeFollowers(client(fetch), 'someone', { limit: 10, checkpoint })).rejects.toBeInstanceOf(NetworkError);
     expect(checkpoint.resume()).toMatchObject({ cursor: 'c2', count: 3, meta: { operation: 'Followers', userId: '42' } });
 
-    // Run 2: same command, picks up at c2 with the remaining budget of 7.
+    // Run 2: same command, picks up at c2 with the remaining budget of 7, and
+    // returns what run 1 collected as well as its own share.
     networkDown = false;
-    const rest = await scrapeFollowers(client(fetch), 'someone', { limit: 10, checkpoint });
-    expect(rest.map((u) => u.username)).toEqual(['f4', 'f5', 'f6']);
+    const all = await scrapeFollowers(client(fetch), 'someone', { limit: 10, checkpoint });
+    expect(all.map((u) => u.username)).toEqual(['f1', 'f2', 'f3', 'f4', 'f5', 'f6']);
     expect(fetch.calls.filter((c) => c.op === 'Followers').map((c) => c.cursor)).toEqual([null, 'c2', 'c2', 'c3']);
     expect(checkpoint.exists()).toBe(false); // finished: nothing left to resume
   });
 
-  it('returns nothing more once the checkpoint says the limit was already reached', async () => {
+  it('a rerun whose limit earlier runs already met returns their items and keeps the checkpoint', async () => {
     const checkpoint = createCheckpoint({ key: 'followers:done', dir });
-    checkpoint.save({ cursor: 'c9', count: 10 });
-    const fetch = fetchFor({ UserByScreenName: { first: userLookup } });
+    const fetch = fetchFor({
+      UserByScreenName: { first: userLookup },
+      Followers: {
+        first: followersPage(['f1', 'f2', 'f3'], 'c2'),
+        c2: () => {
+          throw new TypeError('fetch failed');
+        },
+      },
+    });
+    await expect(scrapeFollowers(client(fetch), 'someone', { limit: 10, checkpoint })).rejects.toBeInstanceOf(NetworkError);
+
+    // A smaller limit is already covered: no Followers request, the saved
+    // users come back, and the checkpoint survives for a larger run.
+    const some = await scrapeFollowers(client(fetch), 'someone', { limit: 2, checkpoint });
+    expect(some.map((u) => u.username)).toEqual(['f1', 'f2']);
+    expect(fetch.calls.filter((c) => c.op === 'Followers')).toHaveLength(2);
+    expect(checkpoint.resume()).toMatchObject({ cursor: 'c2', count: 3 });
+  });
+
+  it('still resumes a checkpoint written before items were saved alongside it', async () => {
+    const checkpoint = createCheckpoint({ key: 'followers:legacy', dir });
+    fs.writeFileSync(checkpoint.path, JSON.stringify({ key: 'followers:legacy', cursor: 'c3', count: 5, updatedAt: '2025-01-01T00:00:00.000Z', meta: {} }));
+    const fetch = fetchFor({
+      UserByScreenName: { first: userLookup },
+      Followers: { c3: followersPage(['f6'], null) },
+    });
     const rest = await scrapeFollowers(client(fetch), 'someone', { limit: 10, checkpoint });
-    expect(rest).toEqual([]);
-    expect(fetch.calls.map((c) => c.op)).toEqual(['UserByScreenName']);
+    expect(rest.map((u) => u.username)).toEqual(['f6']);
     expect(checkpoint.exists()).toBe(false);
+    expect(fs.existsSync(checkpoint.itemsPath)).toBe(false);
+  });
+
+  it('a fresh scrape ignores an orphaned item file', async () => {
+    const checkpoint = createCheckpoint({ key: 'tweets:orphan', dir });
+    fs.writeFileSync(checkpoint.itemsPath, JSON.stringify({ id: 'stale' }) + '\n');
+    const fetch = fetchFor({
+      UserByScreenName: { first: userLookup },
+      UserTweets: { first: tweetsPage(['1'], null) },
+    });
+    const tweets = await scrapeTweets(client(fetch), 'someone', { limit: 5, checkpoint });
+    expect(tweets.map((t) => t.id)).toEqual(['1']);
+  });
+
+  it('drops item lines a crash left past the saved position', () => {
+    const ckpt = createCheckpoint({ key: 'torn', dir });
+    ckpt.appendItems([{ id: 1 }, { id: 2 }]);
+    ckpt.save({ cursor: 'c2', count: 2, items: 2 });
+    ckpt.appendItems([{ id: 3 }]); // page 2 written, cursor never advanced
+    fs.appendFileSync(ckpt.itemsPath, '{"id":'); // torn line
+
+    const bound = bindCheckpoint(ckpt, { limit: 10 });
+    expect(bound.items).toEqual([{ id: 1 }, { id: 2 }]);
+    bound.record('c3', 1, [{ id: 3 }]);
+    expect(ckpt.loadItems()).toEqual([{ id: 1 }, { id: 2 }, { id: 3 }]);
+    expect(ckpt.resume()).toMatchObject({ cursor: 'c3', count: 3, items: 3 });
+    expect(bound.result([{ id: 3 }])).toEqual([{ id: 1 }, { id: 2 }, { id: 3 }]);
   });
 
   it('scrapeTweets and searchTweets record and resume the same way', async () => {
@@ -240,6 +291,15 @@ describe('resumable scrapes', () => {
 
     await expect(scrapeTweets(client(fetch), 'someone', { limit: 50, checkpoint: tweetsCkpt })).rejects.toBeInstanceOf(NetworkError);
     expect(tweetsCkpt.resume()).toMatchObject({ cursor: 't2', count: 2, meta: { operation: 'UserTweets', username: 'someone' } });
+
+    // Resuming the timeline returns run 1's tweets with the rest
+    const resumed = await scrapeTweets(
+      client(fetchFor({ UserByScreenName: { first: userLookup }, UserTweets: { t2: tweetsPage(['3'], null) } })),
+      'someone',
+      { limit: 50, checkpoint: tweetsCkpt },
+    );
+    expect(resumed.map((t) => t.id)).toEqual(['1', '2', '3']);
+    expect(tweetsCkpt.exists()).toBe(false);
 
     const searchCkpt = createCheckpoint({ key: 'search:test', dir });
     const results = await searchTweets(client(fetch), 'test', { limit: 50, checkpoint: searchCkpt });

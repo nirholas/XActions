@@ -107,6 +107,14 @@ async function handleMessage(message, sender) {
 // The page cannot call these hosts itself: x.com ships a Content-Security-Policy
 // whose connect-src only allows api.x.ai among LLM providers. The service worker
 // is not bound by the page's CSP, and manifest.json grants it these hosts.
+//
+// Every script running on x.com can post an LLM_REQUEST, not just XActions'
+// own, so nothing in the request may choose where the worker sends it. The
+// request used to carry a `baseUrl` that was fetched as given, which let any
+// page script make the extension POST to an arbitrary URL, local services
+// included. The destination is now one of these fixed URLs, or, for the
+// `custom` provider, the URL the user saved in the popup's Settings tab
+// (chrome.storage.local `llmCustomBaseUrl`), which a page cannot write.
 const LLM_URLS = {
   openrouter: 'https://openrouter.ai/api/v1/chat/completions',
   openai: 'https://api.openai.com/v1/chat/completions',
@@ -123,10 +131,29 @@ const LLM_DEFAULT_MODELS = {
   anthropic: 'claude-3-5-haiku-latest',
 };
 
+async function customLlmUrl() {
+  const { llmCustomBaseUrl } = await chrome.storage.local.get('llmCustomBaseUrl');
+  if (typeof llmCustomBaseUrl !== 'string' || !llmCustomBaseUrl) return null;
+  try {
+    const parsed = new URL(llmCustomBaseUrl);
+    return parsed.protocol === 'https:' || parsed.protocol === 'http:' ? parsed.href : null;
+  } catch {
+    return null;
+  }
+}
+
 async function completeChat(request) {
   const provider = String(request.provider || 'openrouter').toLowerCase();
-  const url = request.baseUrl || LLM_URLS[provider];
-  if (!url) return { error: `Unknown provider "${provider}" and no baseUrl given` };
+  let url;
+  if (provider === 'custom') {
+    url = await customLlmUrl();
+    if (!url) {
+      return { error: 'No custom provider URL is set. Open the XActions extension popup, Settings tab, and save one there; a page cannot set it.' };
+    }
+  } else {
+    url = Object.hasOwn(LLM_URLS, provider) ? LLM_URLS[provider] : null;
+    if (!url) return { error: `Unknown provider "${provider}"` };
+  }
   const model = request.model || LLM_DEFAULT_MODELS[provider];
   if (!model) return { error: 'No model given for the custom provider' };
   const messages = Array.isArray(request.messages) ? request.messages : [];

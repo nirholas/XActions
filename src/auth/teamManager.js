@@ -14,8 +14,9 @@ import fsp from 'fs/promises';
 import path from 'path';
 import os from 'os';
 import crypto from 'crypto';
+import { xactionsHome } from '../utils/savedSession.js';
 
-const DATA_DIR = path.join(os.homedir(), '.xactions');
+const DATA_DIR = xactionsHome();
 const TEAMS_FILE = path.join(DATA_DIR, 'teams.json');
 const USERS_FILE = path.join(DATA_DIR, 'users.json');
 const ACTIVITY_FILE = path.join(DATA_DIR, 'activity-log.json');

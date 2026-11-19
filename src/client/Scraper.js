@@ -20,7 +20,7 @@ import { ScraperError, AuthenticationError } from './errors.js';
 import { validateUsername, validateTweetId, validateTweetText, validateCount } from './validation.js';
 import { TokenManager } from './auth/TokenManager.js';
 import { getTransactionId, isTransactionIdEnabled } from '../scrapers/twitter/http/transactionId.js';
-import { withHttp2, fetchWithDispatcher } from '../utils/http2.js';
+import { withHttp2, fetchWithDispatcher, isPlatformFetch } from '../utils/http2.js';
 
 /**
  * Search mode enum for Twitter search.
@@ -128,6 +128,8 @@ class SimpleHttp {
     this._tokenManager = tokenManager;
     this._fetchFn = options.fetch || globalThis.fetch;
     this._proxy = options.proxy || null;
+    /** @private Built on first proxied request */
+    this._proxyDispatcher = null;
     this._transform = options.transform || null;
     this._transactionId = options.transactionId;
     this._cookies = null;
@@ -171,28 +173,100 @@ class SimpleHttp {
   }
 
   /**
+   * Choose the request's dispatcher: a proxy agent when `proxy` is set,
+   * otherwise the shared HTTP/2 agent. A custom `fetch` owns its transport
+   * and is left alone, as in TwitterHttpClient._requestInit.
+   *
+   * @param {object} req - fetch init, mutated
+   * @returns {Promise<object>}
+   * @private
+   */
+  async _dispatch(req) {
+    if (this._proxy && isPlatformFetch(this._fetchFn)) {
+      if (!this._proxyDispatcher) {
+        let undici;
+        try {
+          undici = await import('undici');
+        } catch {
+          throw new ScraperError(
+            `A proxy was configured (${this._proxy}) but the "undici" package is not installed; run "npm install undici" to route requests through it.`,
+            'NETWORK_ERROR',
+          );
+        }
+        this._proxyDispatcher = new undici.ProxyAgent(this._proxy);
+      }
+      req.dispatcher = this._proxyDispatcher;
+      return req;
+    }
+    return withHttp2(req, this._fetchFn);
+  }
+
+  /**
+   * Send a request through this client's transport (proxy or HTTP/2).
+   * The token manager's guest-token activation goes through here too, so a
+   * proxied scraper never reaches X from its own address.
+   *
+   * @param {string} url
+   * @param {object} [init]
+   * @returns {Promise<Response>}
+   */
+  async send(url, init = {}) {
+    const req = await this._dispatch({ ...init });
+    return fetchWithDispatcher(this._fetchFn, url, req);
+  }
+
+  /**
+   * One request with the session's headers. A logged-in session never asks
+   * for a guest token: activation is rate-limited on its own, and a 429 there
+   * used to fail reads that did not need a guest token at all. A guest
+   * session whose token X rejects (401/403/429) gets a fresh token and one
+   * more try.
+   *
+   * @param {string} method
+   * @param {string} url
+   * @param {string} [payload]
+   * @param {Object} [extraHeaders]
+   * @returns {Promise<any>}
+   * @private
+   */
+  async _request(method, url, payload, extraHeaders = {}) {
+    for (let attempt = 0; ; attempt++) {
+      const guest = !this._authenticated;
+      if (guest) await this._tokenManager.getGuestToken();
+
+      const headers = {
+        ...this._tokenManager.getHeaders(this._authenticated),
+        ...extraHeaders,
+      };
+      if (this._cookies) {
+        headers['Cookie'] = this._cookies;
+      }
+
+      let req = payload === undefined ? { method, headers } : { method, headers, body: payload };
+      if (this._transform) req = this._transform(req) || req;
+      req.headers = req.headers || headers;
+
+      await this._sign(method, url, req.headers);
+      const res = await this.send(url, req);
+      if (res.ok) return res.json();
+
+      const guestTokenRejected = guest && (res.status === 401 || res.status === 403 || res.status === 429);
+      if (guestTokenRejected && attempt === 0) {
+        this._tokenManager.invalidateGuestToken();
+        continue;
+      }
+      if (guestTokenRejected) this._tokenManager.invalidateGuestToken();
+      throw describeHttpFailure(res, url, this._sessionState());
+    }
+  }
+
+  /**
    * Make a GET request.
    * @param {string} url
    * @returns {Promise<any>}
    */
   async get(url) {
-    await this._tokenManager.getGuestToken();
-    const headers = this._tokenManager.getHeaders(this._authenticated);
-    if (this._cookies) {
-      headers['Cookie'] = this._cookies;
-    }
-
-    let req = { method: 'GET', headers };
-    if (this._transform) req = this._transform(req) || req;
-    req.headers = req.headers || headers;
-
-    await this._sign('GET', url, req.headers);
-    await withHttp2(req, this._fetchFn);
-    const res = await fetchWithDispatcher(this._fetchFn, url, req);
-    if (!res.ok) {
-      throw describeHttpFailure(res, url, this._sessionState());
-    }
-    return res.json();
+    return this._request('GET', url);
   }
 
   /**
@@ -203,31 +277,12 @@ class SimpleHttp {
    * @returns {Promise<any>}
    */
   async post(url, body, extraHeaders = {}) {
-    await this._tokenManager.getGuestToken();
-    const headers = {
-      ...this._tokenManager.getHeaders(this._authenticated),
-      ...extraHeaders,
-    };
-    if (this._cookies) {
-      headers['Cookie'] = this._cookies;
-    }
+    const headers = { ...extraHeaders };
     if (typeof body === 'object' && !extraHeaders['Content-Type']) {
       headers['Content-Type'] = 'application/json';
     }
-
     const payload = typeof body === 'string' ? body : JSON.stringify(body);
-
-    let req = { method: 'POST', headers, body: payload };
-    if (this._transform) req = this._transform(req) || req;
-    req.headers = req.headers || headers;
-
-    await this._sign('POST', url, req.headers);
-    await withHttp2(req, this._fetchFn);
-    const res = await fetchWithDispatcher(this._fetchFn, url, req);
-    if (!res.ok) {
-      throw describeHttpFailure(res, url, this._sessionState());
-    }
-    return res.json();
+    return this._request('POST', url, payload, headers);
   }
 }
 
@@ -263,8 +318,12 @@ export class Scraper {
    *   Defaults to on outside vitest; signing never blocks a request.
    */
   constructor(options = {}) {
+    // With a proxy, guest-token activation must leave through it as well.
+    const tokenFetch = options.proxy
+      ? (url, init) => this._http.send(url, init)
+      : options.fetch || globalThis.fetch;
     /** @private */
-    this._auth = new TokenManager(options.fetch || globalThis.fetch);
+    this._auth = new TokenManager(tokenFetch);
     /** @private */
     this._http = new SimpleHttp(this._auth, options);
     /** @private */

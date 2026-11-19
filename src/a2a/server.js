@@ -26,7 +26,8 @@ import { serveAgentCard } from './agentCard.js';
 import { createBridge } from './bridge.js';
 import { StreamManager, bridgeTaskStream, attachStreamEndpoint } from './streaming.js';
 import { SubscriptionManager } from './push.js';
-import { createAuthMiddleware } from './auth.js';
+import { createAuthMiddleware, checkPermission } from './auth.js';
+import { assertSafeOutboundUrl, privateUrlsAllowedByEnv, UnsafeUrlError } from './urlGuard.js';
 import { createDiscovery } from './discovery.js';
 import { createOrchestrator } from './orchestrator.js';
 import { getAllSkills, searchSkills, refreshSkills } from './skillRegistry.js';
@@ -96,13 +97,45 @@ function requestLogger(req, res, next) {
 // Create Server
 // ============================================================================
 
+function truthy(v) {
+  return v !== undefined && v !== '' && !['0', 'false', 'no', 'off'].includes(String(v).toLowerCase());
+}
+
+function isLoopbackHost(host) {
+  return host === 'localhost' || host === '::1' || /^127\./.test(host);
+}
+
 /**
  * Create and configure the A2A Express server.
  *
+ * The server can post, follow, DM and delete as the logged-in account, so it
+ * is locked down by default:
+ *
+ * - every /a2a route needs an API key or bearer token (`createAuthMiddleware`);
+ *   anonymous access needs an explicit `enableAuth: false` or
+ *   XACTIONS_A2A_ALLOW_UNAUTHENTICATED=1, and logs a warning when on;
+ * - it listens on 127.0.0.1 unless `host` / A2A_HOST says otherwise;
+ * - browsers get CORS only for origins in `corsOrigins` / A2A_CORS_ORIGINS,
+ *   and a request carrying any other Origin is refused;
+ * - write tools need the caller's "write" permission, are charged against the
+ *   daily action caps, and are held as drafts when
+ *   XACTIONS_MCP_REQUIRE_APPROVAL is set (see bridge.authorizeTool);
+ * - push callback and discovery URLs must resolve to public addresses unless
+ *   `allowPrivateUrls` / XACTIONS_A2A_ALLOW_PRIVATE=true.
+ *
  * @param {object} [options={}]
  * @param {number} [options.port=3100]
+ * @param {string} [options.host='127.0.0.1'] interface to bind (A2A_HOST)
  * @param {string} [options.sessionCookie]
- * @param {boolean} [options.enableAuth=true]
+ * @param {boolean} [options.enableAuth=true] false (or
+ *   XACTIONS_A2A_ALLOW_UNAUTHENTICATED=1) serves anonymous callers
+ * @param {string[]|string} [options.corsOrigins=[]] browser origins allowed to
+ *   call the API (A2A_CORS_ORIGINS, comma separated)
+ * @param {boolean} [options.allowPrivateUrls=false] let push callbacks and
+ *   discovery reach loopback and private-network hosts
+ * @param {boolean} [options.requireApproval] hold write tools as drafts
+ *   (default XACTIONS_MCP_REQUIRE_APPROVAL)
+ * @param {string} [options.account] ledger account for the daily action caps
  * @param {boolean} [options.enableRateLimit=true]
  * @param {boolean} [options.enableLogging=true]
  * @param {number} [options.rateLimit=100]  - max requests per minute per IP
@@ -114,15 +147,32 @@ function requestLogger(req, res, next) {
 export function createA2AServer(options = {}) {
   const {
     port = parseInt(process.env.A2A_PORT || '3100', 10),
+    host = process.env.A2A_HOST || '127.0.0.1',
     sessionCookie = process.env.X_SESSION_COOKIE || '',
-    enableAuth = true,
     enableRateLimit = true,
     enableLogging = true,
     rateLimit = 100,
     mode = 'local',
     apiUrl = process.env.XACTIONS_API_URL || 'http://localhost:3000',
     baseUrl = process.env.A2A_BASE_URL || `http://localhost:${port}`,
+    requireApproval,
+    account,
   } = options;
+  const enableAuth = options.enableAuth !== false && !truthy(process.env.XACTIONS_A2A_ALLOW_UNAUTHENTICATED);
+  const allowPrivateUrls = options.allowPrivateUrls ?? privateUrlsAllowedByEnv();
+  const rawOrigins = options.corsOrigins ?? process.env.A2A_CORS_ORIGINS ?? [];
+  const corsOrigins = new Set(
+    (Array.isArray(rawOrigins) ? rawOrigins : String(rawOrigins).split(','))
+      .map((o) => String(o).trim().replace(/\/$/, ''))
+      .filter(Boolean),
+  );
+
+  if (!enableAuth) {
+    console.warn(
+      '⚠️  A2A authentication is OFF. Anyone who can reach this server can run every tool, writes included, ' +
+        'as the logged-in account. Only do this on a machine nobody else can reach.',
+    );
+  }
 
   const app = express();
 
@@ -135,11 +185,27 @@ export function createA2AServer(options = {}) {
     next();
   });
 
-  // CORS
+  // CORS: an allowlist, never a wildcard. A page on some other site must not be
+  // able to drive this server from a visitor's browser, so a request whose
+  // Origin is not allowed is refused outright (non-browser clients send no
+  // Origin and are unaffected). The agent card is public metadata and stays
+  // readable from anywhere.
   app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Api-Key');
+    const origin = req.headers.origin;
+    if (req.path === '/.well-known/agent.json') {
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      if (req.method === 'OPTIONS') return res.sendStatus(204);
+      return next();
+    }
+    if (origin) {
+      if (!corsOrigins.has(origin)) {
+        return res.status(403).json(jsonRpcError(null, ERROR_CODES.AUTH_FORBIDDEN, `Origin ${origin} is not allowed`));
+      }
+      res.setHeader('Access-Control-Allow-Origin', origin);
+      res.setHeader('Vary', 'Origin');
+      res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+      res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    }
     if (req.method === 'OPTIONS') return res.sendStatus(204);
     next();
   });
@@ -148,10 +214,10 @@ export function createA2AServer(options = {}) {
   if (enableRateLimit) app.use(createRateLimiter({ maxRequests: rateLimit }));
 
   // ------- Internal wiring -------
-  const bridge = createBridge({ mode, sessionCookie, apiUrl });
+  const bridge = createBridge({ mode, sessionCookie, apiUrl, requireApproval, account });
   const { store: taskStore, executor, shutdown: shutdownTasks } = createTaskManager({ bridge });
   const streamManager = new StreamManager();
-  const subscriptions = new SubscriptionManager();
+  const subscriptions = new SubscriptionManager({ allowPrivateUrls });
   const discovery = createDiscovery();
   const orchestrator = createOrchestrator({
     registry: discovery.registry,
@@ -177,11 +243,21 @@ export function createA2AServer(options = {}) {
     },
   });
 
-  // ------- Auth (optional) -------
+  // ------- Auth -------
   if (enableAuth) {
-    const auth = createAuthMiddleware({ allowUnauthenticated: true });
-    app.use('/a2a', auth);
+    app.use('/a2a', createAuthMiddleware({ required: true }));
   }
+
+  // The caller identity handed to the bridge. With auth on it is always set
+  // (the middleware refused everyone else); with auth explicitly off it is
+  // null and the bridge skips the permission check.
+  const callerOf = (req) => ({ agent: enableAuth ? req.agent : null });
+
+  /** Refuse unless the caller holds `permission` (always passes with auth off). */
+  const requirePermission = (permission) => (req, res, next) => {
+    if (!enableAuth || checkPermission(req.agent, permission)) return next();
+    return res.status(403).json(jsonRpcError(null, ERROR_CODES.AUTH_FORBIDDEN, `This agent lacks the "${permission}" permission`));
+  };
 
   // ------- Health endpoint -------
   app.get('/a2a/health', (req, res) => {
@@ -210,7 +286,7 @@ export function createA2AServer(options = {}) {
   });
 
   // ------- Refresh skills -------
-  app.post('/a2a/skills/refresh', async (req, res) => {
+  app.post('/a2a/skills/refresh', requirePermission('admin'), async (req, res) => {
     await refreshSkills();
     res.json({ ok: true, skills: getAllSkills().length });
   });
@@ -227,6 +303,19 @@ export function createA2AServer(options = {}) {
       return res.status(400).json(jsonRpcError(id, ERROR_CODES.INVALID_PARAMS, 'message required'));
     }
 
+    // The agent POSTs task updates to this URL, so it must not point at
+    // loopback, the private network, or a cloud metadata endpoint.
+    if (params.pushNotification?.url) {
+      try {
+        await assertSafeOutboundUrl(params.pushNotification.url, { label: 'pushNotification.url', allowPrivate: allowPrivateUrls });
+      } catch (err) {
+        if (err instanceof UnsafeUrlError) {
+          return res.status(400).json(jsonRpcError(id, ERROR_CODES.INVALID_PARAMS, err.message));
+        }
+        throw err;
+      }
+    }
+
     try {
       const task = await taskStore.create({ message: params.message, metadata: params.metadata });
 
@@ -235,15 +324,18 @@ export function createA2AServer(options = {}) {
         subscriptions.subscribe(task.id, params.pushNotification.url, params.pushNotification.headers);
       }
 
-      // Execute in background (don't await for the response)
       const shouldStream = method === 'tasks/sendSubscribe';
 
       if (shouldStream) {
-        // Return task immediately, client should connect to SSE
+        // Return the task at once and run it in the background; the client
+        // follows progress on GET /a2a/tasks/:id/stream.
         res.json(jsonRpcSuccess(id, task));
+        executor.execute(task.id, callerOf(req)).catch((err) => {
+          console.error(`🔴 A2A task ${task.id} failed:`, err.message);
+        });
       } else {
         // Execute and wait — return completed task
-        await executor.execute(task.id);
+        await executor.execute(task.id, callerOf(req));
         const final = await taskStore.get(task.id);
         res.json(jsonRpcSuccess(id, final));
       }
@@ -279,7 +371,7 @@ export function createA2AServer(options = {}) {
   });
 
   // ------- SSE stream -------
-  attachStreamEndpoint(app, streamManager);
+  attachStreamEndpoint(app, streamManager, taskStore);
 
   // ------- Push notification callback -------
   app.post('/a2a/tasks/:taskId/message', async (req, res) => {
@@ -306,7 +398,7 @@ export function createA2AServer(options = {}) {
     }
 
     try {
-      const result = await orchestrator.execute(description, execOptions);
+      const result = await orchestrator.execute(description, execOptions, callerOf(req));
       res.json(result);
     } catch (err) {
       res.status(500).json({ error: err.message });
@@ -329,11 +421,14 @@ export function createA2AServer(options = {}) {
     res.json({ agents, total: agents.length });
   });
 
-  app.post('/a2a/agents/discover', async (req, res) => {
+  // Registering an agent makes this server fetch the URL, now and on every
+  // refresh, and later delegate tasks to it: admin only, public hosts only.
+  app.post('/a2a/agents/discover', requirePermission('admin'), async (req, res) => {
     const { urls } = req.body;
     const results = [];
-    for (const url of urls || []) {
+    for (const url of Array.isArray(urls) ? urls : []) {
       try {
+        await assertSafeOutboundUrl(url, { label: 'Agent URL', allowPrivate: allowPrivateUrls });
         const agent = await discovery.registry.register(url);
         results.push({ url, status: 'registered', agent });
       } catch (err) {
@@ -352,16 +447,26 @@ export function createA2AServer(options = {}) {
   // ------- Lifecycle -------
   let server = null;
 
-  function start(customPort) {
-    const p = customPort || port;
+  /**
+   * Listen on `customPort` (0 picks a free port) and `customHost`, defaulting
+   * to the options. The default host is loopback only.
+   */
+  function start(customPort, customHost) {
+    const p = customPort ?? port;
+    const h = customHost ?? host;
     return new Promise((resolve, reject) => {
       // Express 5 hands a listen failure (EADDRINUSE, EACCES) to this callback.
-      server = app.listen(p, (err) => {
+      server = app.listen(p, h, (err) => {
         if (err) return reject(err);
-        console.log(`⚡ XActions A2A Agent listening on port ${p}`);
-        console.log(`   Agent Card: http://localhost:${p}/.well-known/agent.json`);
-        console.log(`   Health:     http://localhost:${p}/a2a/health`);
-        console.log(`   Skills:     http://localhost:${p}/a2a/skills`);
+        const bound = server.address()?.port ?? p;
+        const shown = h.includes(':') ? `[${h}]` : h;
+        console.log(`⚡ XActions A2A Agent listening on ${shown}:${bound}`);
+        console.log(`   Agent Card: http://${shown}:${bound}/.well-known/agent.json`);
+        console.log(`   Health:     http://${shown}:${bound}/a2a/health`);
+        console.log(`   Skills:     http://${shown}:${bound}/a2a/skills`);
+        if (!isLoopbackHost(h)) {
+          console.warn(`⚠️  A2A server is reachable from other machines on ${shown}.${enableAuth ? '' : ' Authentication is OFF.'}`);
+        }
         resolve(server);
       });
     });

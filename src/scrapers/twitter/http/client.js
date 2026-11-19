@@ -87,6 +87,120 @@ async function readBody(res) {
   return (await res.json?.()) ?? {};
 }
 
+/**
+ * An error response body, for diagnosis only: JSON when it parses, otherwise
+ * the first part of the raw text (Cloudflare answers with an HTML page).
+ * Never throws.
+ *
+ * @param {Response} res
+ * @returns {Promise<object|null>}
+ */
+async function readErrorBody(res) {
+  try {
+    if (typeof res.text === 'function') {
+      const text = await res.text();
+      if (!text.trim()) return null;
+      try {
+        return JSON.parse(text);
+      } catch {
+        return { raw: text.slice(0, 500) };
+      }
+    }
+    return (await res.json?.()) ?? null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Walk a response for the first timeline `instructions` array.
+ * @param {object} obj
+ * @returns {Array|null}
+ */
+function findInstructions(obj) {
+  if (!obj || typeof obj !== 'object') return null;
+  if (Array.isArray(obj.instructions)) return obj.instructions;
+  for (const key of Object.keys(obj)) {
+    const result = findInstructions(obj[key]);
+    if (result) return result;
+  }
+  return null;
+}
+
+/**
+ * Every entry an instruction carries: `TimelineAddEntries.entries`,
+ * `TimelineAddToModule.moduleItems`, and the single `entry` of
+ * `TimelineReplaceEntry` / `TimelinePinEntry`.
+ * @param {object} instruction
+ * @returns {object[]}
+ */
+function instructionEntries(instruction) {
+  const out = [];
+  if (Array.isArray(instruction?.entries)) out.push(...instruction.entries);
+  if (Array.isArray(instruction?.moduleItems)) out.push(...instruction.moduleItems);
+  if (instruction?.entry && typeof instruction.entry === 'object') out.push(instruction.entry);
+  return out;
+}
+
+const entryIdOf = (entry) => entry?.entryId || entry?.entry_id || '';
+
+/**
+ * The bottom cursor of a timeline response. From page two on, x.com delivers
+ * it through a `TimelineReplaceEntry` instruction (`instruction.entry`), not
+ * inside `TimelineAddEntries`; reading only the latter ends pagination after
+ * the second page.
+ * @param {object} json
+ * @returns {string|null}
+ */
+export function extractBottomCursor(json) {
+  const instructions = findInstructions(json);
+  if (!instructions) return null;
+  for (const instruction of instructions) {
+    for (const entry of instructionEntries(instruction)) {
+      const id = entryIdOf(entry);
+      if (id.startsWith('cursor-bottom') || entry?.content?.cursorType === 'Bottom') {
+        const value = entry.content?.value || entry.content?.itemContent?.value || null;
+        if (value) return value;
+      }
+    }
+  }
+  return null;
+}
+
+/**
+ * How many non-cursor entries a timeline response carries. A page with none
+ * is the end of the timeline, whatever cursor it hands back.
+ * @param {object} json
+ * @returns {number}
+ */
+export function countTimelineItems(json) {
+  const instructions = findInstructions(json);
+  if (!instructions) return 0;
+  let n = 0;
+  for (const instruction of instructions) {
+    for (const entry of instructionEntries(instruction)) {
+      const id = entryIdOf(entry);
+      if (id.startsWith('cursor-') || entry?.content?.cursorType) continue;
+      n++;
+    }
+  }
+  return n;
+}
+
+/** Error codes that mean the request was never sent, so resending is safe. */
+const NEVER_SENT_CODES = new Set(['ECONNREFUSED', 'ENOTFOUND', 'EAI_AGAIN', 'UND_ERR_CONNECT_TIMEOUT']);
+
+/**
+ * Did this network error happen before the request reached the server?
+ * fetch wraps the socket error, so the code is on `cause`.
+ * @param {unknown} err
+ * @returns {boolean}
+ */
+function neverSent(err) {
+  const code = err?.cause?.code || err?.code;
+  return NEVER_SENT_CODES.has(code);
+}
+
 export class TwitterHttpClient {
   /**
    * @param {object} [options]
@@ -281,10 +395,15 @@ export class TwitterHttpClient {
    *   sent as JSON, URLSearchParams as a form, FormData as multipart.
    * @param {object} [options.headers]
    * @param {boolean} [options.authenticated=true]
+   * @param {boolean} [options.idempotent] - Whether the request may be sent
+   *   again after a 5xx. Defaults to true for GET/HEAD and false otherwise, so
+   *   a write is never repeated; GraphQL read queries that X requires as POST
+   *   pass true.
    * @returns {Promise<object>} Parsed JSON; `{}` for a success with no body
    */
   async request(url, options = {}) {
     const method = options.method || 'GET';
+    const idempotent = options.idempotent ?? (method === 'GET' || method === 'HEAD');
     const authenticated = options.authenticated !== false;
     const headers = { ...this._buildHeaders(authenticated), ...options.headers };
     let body = options.body;
@@ -334,16 +453,42 @@ export class TwitterHttpClient {
         }
 
         if (res.status === 401 || res.status === 403) {
-          throw new AuthError(`Authentication failed (${res.status})`, { status: res.status, endpoint: url });
+          // The body tells an account that is really dead (suspended,
+          // locked) from an edge block or a refused write; the account
+          // pool reads it before deciding to lock the account.
+          const data = await readErrorBody(res);
+          throw new AuthError(`Authentication failed (${res.status})`, { status: res.status, endpoint: url, data });
         }
         if (res.status === 404) {
           throw new NotFoundError('Resource not found', { status: 404, endpoint: url });
         }
 
-        const json = await readBody(res);
-
         if (res.status >= 400) {
-          throw new TwitterApiError(`HTTP ${res.status}`, { status: res.status, endpoint: url, data: json });
+          const data = await readErrorBody(res);
+          const apiErr = new TwitterApiError(`HTTP ${res.status}`, { status: res.status, endpoint: url, data });
+          // A 5xx is X's side failing (over capacity, a timed-out backend).
+          // Reads go round the back-off schedule; a write is never sent twice.
+          if (res.status >= 500 && idempotent && attempt < this._maxRetries) {
+            lastError = apiErr;
+            if (this._debug) {
+              console.log(`[TwitterHttpClient] ${method} ${url} → ${res.status}, retrying`);
+            }
+            await sleep(2 ** attempt * 1000 + Math.random() * 500);
+            continue;
+          }
+          throw apiErr;
+        }
+
+        let json;
+        try {
+          json = await readBody(res);
+        } catch (parseErr) {
+          // A write that succeeded with an unreadable body must not be
+          // retried: the retry would perform it a second time.
+          if (!idempotent) {
+            throw new TwitterApiError(`Unreadable response body (${parseErr.message})`, { status: res.status, endpoint: url });
+          }
+          throw parseErr;
         }
 
         return json;
@@ -364,6 +509,13 @@ export class TwitterHttpClient {
           (err instanceof TwitterApiError && !(err instanceof RateLimitError))
         ) {
           throw err;
+        }
+        // A write is resent only when the error proves it never left this
+        // machine (DNS failure, connection refused). A reset or timeout can
+        // land after X has already applied the write, and resending it would
+        // post, follow or reply a second time.
+        if (!idempotent && !neverSent(err)) {
+          throw new NetworkError(err?.message || 'Request failed', { endpoint: url });
         }
         // Network-level retry
         if (attempt < this._maxRetries) {
@@ -443,7 +595,10 @@ export class TwitterHttpClient {
     const url = method === 'POST'
       ? `${GRAPHQL_BASE}/${queryId}/${operationName}`
       : buildGraphQLUrl(queryId, operationName, variables, features, fieldToggles);
-    const json = await this.request(url, method === 'POST' ? { method, body } : undefined);
+    const json = await this.request(
+      url,
+      method === 'POST' ? { method, body, idempotent: true } : undefined,
+    );
 
     // x.com answers every GraphQL query with the envelope { data, errors }.
     // Consumers read `response.data.user`, `response.data.tweetResult` and so
@@ -533,6 +688,7 @@ export class TwitterHttpClient {
     const limit = options.limit ?? Infinity;
     let cursor = null;
     let fetched = 0;
+    let emptyPages = 0;
 
     while (fetched < limit) {
       const vars = cursor ? { ...variables, cursor } : { ...variables };
@@ -551,6 +707,10 @@ export class TwitterHttpClient {
       // relationship, tweet and search loops already do.
       if (!result.cursor || result.cursor === cursor) break;
       cursor = result.cursor;
+      // Past the end of some timelines X keeps handing out fresh cursors on
+      // pages that carry nothing else; two such pages in a row end the list.
+      emptyPages = countTimelineItems(result.data) === 0 ? emptyPages + 1 : 0;
+      if (emptyPages >= 2) break;
     }
   }
 
@@ -567,25 +727,7 @@ export class TwitterHttpClient {
    */
   _extractCursor(json) {
     try {
-      // Walk common timeline response shapes
-      const instructions = this._findInstructions(json);
-      if (!instructions) return null;
-
-      for (const instruction of instructions) {
-        const entries = instruction.entries || instruction.moduleItems || [];
-        for (const entry of entries) {
-          const id = entry.entryId || entry.entry_id || '';
-          if (id.startsWith('cursor-bottom')) {
-            return (
-              entry.content?.value ||
-              entry.content?.itemContent?.value ||
-              entry.content?.cursorType === 'Bottom' && entry.content?.value ||
-              null
-            );
-          }
-        }
-      }
-      return null;
+      return extractBottomCursor(json);
     } catch {
       return null;
     }
@@ -598,13 +740,7 @@ export class TwitterHttpClient {
    * @private
    */
   _findInstructions(obj) {
-    if (!obj || typeof obj !== 'object') return null;
-    if (Array.isArray(obj.instructions)) return obj.instructions;
-    for (const key of Object.keys(obj)) {
-      const result = this._findInstructions(obj[key]);
-      if (result) return result;
-    }
-    return null;
+    return findInstructions(obj);
   }
 
   // ---- REST helper --------------------------------------------------------

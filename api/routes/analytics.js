@@ -16,6 +16,8 @@
 
 import express from 'express';
 import { authenticate } from '../middleware/auth.js';
+import { assertPublicUrl, PublicUrlError } from '../utils/publicUrl.js';
+import { userRoom } from '../realtime/socketHandler.js';
 import {
   analyzeSentiment,
   analyzeBatch,
@@ -34,6 +36,18 @@ const router = express.Router();
 
 // Require authentication for all analytics routes
 router.use(authenticate);
+
+// Monitors live in memory in src/analytics and record no owner, so the owner
+// of each one is kept here, beside them, for as long as the process runs. Any
+// signed-in user could once list, read and delete every monitor.
+const monitorOwners = new Map(); // monitorId -> userId
+
+/** Whether this user may see and manage the monitor. */
+const ownsMonitor = (req, monitor) =>
+  Boolean(monitor) && (req.user.isAdmin || monitorOwners.get(monitor.id) === req.user.id);
+
+/** The monitors this user may see. */
+const visibleMonitors = (req) => listMonitors().filter((monitor) => ownsMonitor(req, monitor));
 
 // ============================================================================
 // Sentiment Analysis
@@ -94,8 +108,14 @@ router.post('/monitor', async (req, res) => {
       return res.status(400).json({ error: '"target" (username or keyword) is required' });
     }
 
+    // The server POSTs alerts to this URL, so it must be on the public internet.
+    if (alertConfig?.webhookUrl) {
+      await assertPublicUrl(alertConfig.webhookUrl, 'alertConfig.webhookUrl');
+    }
+
     // Get Socket.IO instance from app if available
     const io = req.app.get('io');
+    const room = userRoom(req.user.id);
 
     const monitor = createMonitor({
       target,
@@ -104,20 +124,24 @@ router.post('/monitor', async (req, res) => {
       sentimentMode: sentimentMode || 'rules',
       alertConfig: {
         ...alertConfig,
-        socketRoom: `monitor_${target}`,
+        socketRoom: room,
       },
     }, {
       onAlert: (alert) => {
-        // Emit alert via Socket.IO if available
+        // Alerts go to the owner's sockets only
         if (io) {
-          io.to(`monitor_${target}`).emit('analytics:alert', alert);
+          io.to(room).emit('analytics:alert', alert);
         }
         console.log(`🚨 Alert: ${alert.message}`);
       },
     });
+    monitorOwners.set(monitor.id, req.user.id);
 
     return res.status(201).json(monitor);
   } catch (error) {
+    if (error instanceof PublicUrlError) {
+      return res.status(400).json({ error: error.message });
+    }
     console.error('❌ Monitor creation error:', error.message);
     return res.status(500).json({ error: error.message });
   }
@@ -125,10 +149,10 @@ router.post('/monitor', async (req, res) => {
 
 /**
  * GET /api/analytics/monitor
- * List all active monitors
+ * List this user's monitors (every monitor, for an admin)
  */
 router.get('/monitor', (req, res) => {
-  const monitors = listMonitors();
+  const monitors = visibleMonitors(req);
   return res.json({ monitors, count: monitors.length });
 });
 
@@ -138,7 +162,7 @@ router.get('/monitor', (req, res) => {
  */
 router.get('/monitor/:id', (req, res) => {
   const monitor = getMonitor(req.params.id);
-  if (!monitor) {
+  if (!ownsMonitor(req, monitor)) {
     return res.status(404).json({ error: 'Monitor not found' });
   }
 
@@ -156,11 +180,12 @@ router.get('/monitor/:id', (req, res) => {
  */
 router.delete('/monitor/:id', (req, res) => {
   const monitor = getMonitor(req.params.id);
-  if (!monitor) {
+  if (!ownsMonitor(req, monitor)) {
     return res.status(404).json({ error: 'Monitor not found' });
   }
 
   removeMonitor(req.params.id);
+  monitorOwners.delete(req.params.id);
   return res.json({ success: true, message: `Monitor ${req.params.id} stopped and removed` });
 });
 
@@ -179,8 +204,8 @@ router.get('/reports/:username', (req, res) => {
   const period = req.query.period || '7d';
   const format = req.query.format || 'json';
 
-  // Find monitor for this username
-  const monitors = listMonitors();
+  // Find this user's monitor for this username
+  const monitors = visibleMonitors(req);
   const monitor = monitors.find(m =>
     m.target.replace(/^@/, '').toLowerCase() === username.toLowerCase()
   );
@@ -213,11 +238,14 @@ router.get('/reports/:username', (req, res) => {
  * Query: ?monitorId=xxx&severity=warning&limit=50
  */
 router.get('/alerts', (req, res) => {
+  // Only alerts raised by this user's monitors (all of them, for an admin)
+  const mine = new Set(visibleMonitors(req).map((monitor) => monitor.id));
+  const limit = parseInt(req.query.limit) || 50;
   const alerts = getAlerts({
     monitorId: req.query.monitorId,
     severity: req.query.severity,
-    limit: parseInt(req.query.limit) || 50,
-  });
+    limit: Number.MAX_SAFE_INTEGER,
+  }).filter((alert) => req.user.isAdmin || mine.has(alert.monitorId)).slice(-limit);
 
   return res.json({ alerts, count: alerts.length });
 });

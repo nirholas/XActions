@@ -10,6 +10,8 @@
  * @license Apache-2.0
  */
 
+import { assertPublicUrl } from '../utils/publicUrl.js';
+
 // ============================================================================
 // Alert types
 // ============================================================================
@@ -196,8 +198,12 @@ async function _deliverAlert(alert, config) {
   console.log(`${icon} [${alert.type}] ${alert.message}`);
 
   // Webhook delivery
+  // The URL is checked again at delivery (DNS can change after it was
+  // accepted) and redirects are not followed, so an alert cannot be steered at
+  // the server's own network or a cloud metadata endpoint.
   if (config.webhookUrl) {
     try {
+      await assertPublicUrl(config.webhookUrl, 'webhookUrl');
       await fetch(config.webhookUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -205,6 +211,8 @@ async function _deliverAlert(alert, config) {
           event: 'xactions.alert',
           alert,
         }),
+        redirect: 'manual',
+        signal: AbortSignal.timeout(10_000),
       });
     } catch (err) {
       console.error(`❌ Webhook delivery failed: ${err.message}`);

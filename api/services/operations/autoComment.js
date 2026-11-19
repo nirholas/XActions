@@ -1,12 +1,14 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 import { prisma } from '../../../src/utils/prisma.js';
 import { getTwitterClient } from '../../routes/twitter.js';
+import { actionBudget } from './actionBudget.js';
 
 /**
  * Auto-comment on tweets matching search criteria or from target users
  * Uses Twitter API when OAuth tokens available
  */
-async function processAutoComment({ operationId, userId, config }, isCancelled = () => false) {
+async function processAutoComment({ operationId, userId, config }, isCancelled = () => false, charge) {
+  const budget = actionBudget(charge, isCancelled);
   try {
     await prisma.operation.update({
       where: { id: operationId },
@@ -76,6 +78,8 @@ async function processAutoComment({ operationId, userId, config }, isCancelled =
 
       if (commentedCount >= maxComments) break;
 
+      if (!dryRun && !(await budget.spend('reply'))) break;
+
       try {
         // Rotate through comments
         const commentText = commentList[commentedCount % commentList.length];
@@ -123,7 +127,8 @@ async function processAutoComment({ operationId, userId, config }, isCancelled =
       commentedTweets: commentedTweets.slice(0, 20),
       errors: errors.slice(0, 10),
       dryRun,
-      cancelled: isCancelled()
+      cancelled: isCancelled(),
+      stoppedReason: budget.stoppedReason
     };
   } catch (error) {
     console.error('❌ Auto-comment error:', error);

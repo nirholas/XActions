@@ -201,9 +201,10 @@ async function initializeMiddleware() {
       console.log(`   📝 Audit: ${JSON.stringify(auditLog)}`);
     }
 
-    // Emit realtime event
+    // Emit realtime event to the admin dashboard only (it once went to every
+    // socket, anonymous agent sockets included)
     if (global.io) {
-      global.io.emit('x402:payment', auditLog);
+      global.io.to('admins').emit('x402:payment', auditLog);
     }
 
     // Record for analytics

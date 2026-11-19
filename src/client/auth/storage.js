@@ -13,8 +13,9 @@ import { promises as fs } from 'node:fs';
 import { homedir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { CookieAuth } from './CookieAuth.js';
+import { xactionsHome } from '../../utils/savedSession.js';
 
-const CONFIG_DIR = join(homedir(), '.xactions');
+const CONFIG_DIR = xactionsHome();
 const CONFIG_FILE = join(CONFIG_DIR, 'config.json');
 const DEFAULT_COOKIE_FILE = join(CONFIG_DIR, 'cookies.json');
 

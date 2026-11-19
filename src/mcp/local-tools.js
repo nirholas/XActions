@@ -29,6 +29,7 @@ import {
   scrapeSpaces,
 } from '../scrapers/index.js';
 
+import { AsyncLocalStorage } from 'node:async_hooks';
 import fs from 'fs/promises';
 import path from 'path';
 import os from 'os';
@@ -47,6 +48,7 @@ import {
   pollDurationValues,
 } from './composer.js';
 import { clearBookmarksOneByOne } from './clearBookmarks.js';
+import { isLiveRun } from './tool-groups.js';
 
 // ============================================================================
 // Singleton Browser Management
@@ -55,6 +57,53 @@ import { clearBookmarksOneByOne } from './clearBookmarks.js';
 let browser = null;
 let page = null;
 let appliedSessionStamp = null;
+
+// ----------------------------------------------------------------------------
+// One page, one tool at a time
+// ----------------------------------------------------------------------------
+//
+// Every browser-lane tool drives the same page. The MCP SDK runs requests
+// concurrently and clients send tool calls in parallel, so without a lock two
+// x_like calls both navigate, both click the second post (the second click
+// undoing the like), and both report success; two composers type into each
+// other. The lock is taken the first time a call reaches the browser and held
+// until that call returns, so HTTP-only tools (x_engage, the x_client_* tools)
+// never wait behind a browser action. It is reentrant through
+// AsyncLocalStorage: a tool that calls another tool already holds it.
+
+const toolContext = new AsyncLocalStorage();
+let browserLockTail = Promise.resolve();
+
+function acquireBrowserLock() {
+  let release;
+  const held = new Promise((resolve) => { release = resolve; });
+  const previous = browserLockTail;
+  browserLockTail = previous.then(() => held);
+  return previous.then(() => release);
+}
+
+/**
+ * Run one tool call in its own context, releasing the browser lock (if the
+ * call took it) when the call settles.
+ * @template T
+ * @param {() => Promise<T>} fn
+ * @returns {Promise<T>}
+ */
+export async function withToolContext(fn) {
+  if (toolContext.getStore()) return fn();
+  const store = { release: null };
+  try {
+    return await toolContext.run(store, fn);
+  } finally {
+    store.release?.();
+  }
+}
+
+export async function holdBrowser() {
+  const store = toolContext.getStore();
+  if (!store || store.release) return;
+  store.release = await acquireBrowserLock();
+}
 
 /**
  * Fingerprint of the on-disk session the browser was last primed with.
@@ -128,6 +177,7 @@ async function applySavedSession(pg) {
  * Uses createBrowser/createPage from the canonical scrapers module.
  */
 async function ensureBrowser() {
+  await holdBrowser();
   const stamp = await sessionStamp();
   if (!isBrowserConnected(browser) || !isPageUsable(page) || stamp !== appliedSessionStamp) {
     if (browser) {
@@ -753,8 +803,11 @@ export async function x_engage(args = {}) {
     minLikes = 0, maxLikes = 0,
     prompt, persona, provider, model, apiKey, baseUrl,
     templates = [], delaySeconds = 20, jitterSeconds = 10,
-    dryRun = true, reset = false, resume = true,
+    reset = false, resume = true,
   } = args;
+  // Missing or null is a preview; false, 0 or "" acts. The action-cap
+  // resolver reads the same rule, so a live sweep is always charged.
+  const dryRun = !isLiveRun(args.dryRun);
 
   const engage = await import('../engage/runner.js');
   const { createEngageState } = await import('../engage/state.js');
@@ -1885,7 +1938,7 @@ import { Scraper, SearchMode } from '../client/index.js';
  */
 async function getClientScraper() {
   const scraper = new Scraper();
-  const cookiePath = path.join(os.homedir(), '.xactions', 'cookies.json');
+  const cookiePath = path.join(sessionDir(), 'cookies.json');
   try {
     await fs.access(cookiePath);
     await scraper.loadCookies(cookiePath);
@@ -2029,6 +2082,12 @@ export const toolMap = {
   // Utility (not an MCP tool, used by server.js cleanup)
   getPage,
   closeBrowser,
+  withToolContext,
 };
+
+// Each tool runs in its own context so the browser lock is per call.
+for (const [name, fn] of Object.entries(toolMap)) {
+  if (name.startsWith('x_')) toolMap[name] = (...args) => withToolContext(() => fn(...args));
+}
 
 export default toolMap;

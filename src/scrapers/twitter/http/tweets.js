@@ -99,11 +99,12 @@ export async function scrapeTweets(client, username, options = {}) {
     // continuing would append the same items again.
     if (!bottomCursor || tweets.length === 0 || bottomCursor === nextCursor) break;
     nextCursor = bottomCursor;
-    checkpoint.record(bottomCursor, allTweets.length);
+    checkpoint.record(bottomCursor, allTweets.length, allTweets);
   }
 
   checkpoint.complete();
-  return allTweets.slice(0, limit);
+  // Earlier runs' items (when resuming a checkpoint) come first.
+  return checkpoint.result(allTweets, requestedLimit);
 }
 
 // ---------------------------------------------------------------------------
@@ -163,11 +164,12 @@ export async function scrapeTweetsAndReplies(client, username, options = {}) {
     // continuing would append the same items again.
     if (!bottomCursor || tweets.length === 0 || bottomCursor === nextCursor) break;
     nextCursor = bottomCursor;
-    checkpoint.record(bottomCursor, allTweets.length);
+    checkpoint.record(bottomCursor, allTweets.length, allTweets);
   }
 
   checkpoint.complete();
-  return allTweets.slice(0, limit);
+  // Earlier runs' items (when resuming a checkpoint) come first.
+  return checkpoint.result(allTweets, requestedLimit);
 }
 
 // ---------------------------------------------------------------------------

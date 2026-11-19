@@ -1067,8 +1067,10 @@ router.post('/cancel/:operationId', async (req, res) => {
   const { operationId } = req.params;
   
   try {
-    const { cancelJob } = await import('../../services/jobQueue.js');
-    const result = await cancelJob(operationId);
+    // Only jobs queued by the AI routes, from Bull. This endpoint takes no
+    // account, and it once cancelled any dashboard operation by its row id.
+    const { cancelQueuedJob } = await import('../../services/jobQueue.js');
+    const result = await cancelQueuedJob(operationId, { sessionCookie: req.sessionCookie });
     
     if (!result) {
       return res.status(404).json({
@@ -1098,8 +1100,10 @@ router.get('/status/:operationId', async (req, res) => {
   const { operationId } = req.params;
   
   try {
-    const { getJobStatus } = await import('../../services/jobQueue.js');
-    const status = await getJobStatus(operationId);
+    // Only jobs queued by the AI routes, from Bull. This endpoint takes no
+    // account, and it once returned any dashboard operation's row by its id.
+    const { getQueuedJob } = await import('../../services/jobQueue.js');
+    const status = await getQueuedJob(operationId);
     
     if (!status) {
       return res.status(404).json({

@@ -15,13 +15,14 @@ import fs from 'fs/promises';
 import path from 'path';
 import os from 'os';
 import crypto from 'crypto';
+import { xactionsHome } from '../utils/savedSession.js';
 
 // ============================================================================
 // Config
 // ============================================================================
 
-const WORKFLOWS_DIR = path.join(os.homedir(), '.xactions', 'workflows');
-const RUNS_DIR = path.join(os.homedir(), '.xactions', 'workflow-runs');
+const WORKFLOWS_DIR = path.join(xactionsHome(), 'workflows');
+const RUNS_DIR = path.join(xactionsHome(), 'workflow-runs');
 
 // ============================================================================
 // JSON File Store (fallback)

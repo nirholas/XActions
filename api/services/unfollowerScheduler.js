@@ -20,6 +20,7 @@
 
 import { prisma } from '../../src/utils/prisma.js';
 import { runFollowerScan } from './followerScanner.js';
+import { authTokenForUser } from './xSession.js';
 import { checkAndAlert, getDueSchedules, markScheduleExecuted } from './unfollowerAlerts.js';
 
 let schedulerInterval = null;
@@ -59,12 +60,21 @@ async function processDueSchedules(io) {
           continue;
         }
 
+        // The stored cookie is encrypted; the scraper needs the bare auth_token.
+        // The ciphertext was once passed as is, so every scan ran logged out.
+        const authToken = await authTokenForUser(user.id);
+        if (!authToken) {
+          console.warn(`⚠️ Scheduler: Skipping user ${schedule.userId} — saved session could not be decrypted`);
+          await markScheduleExecuted(schedule.userId);
+          continue;
+        }
+
         console.log(`🔍 Scheduler: Running scan for @${user.twitterUsername}`);
 
         // Run the scan
         const result = await runFollowerScan(
           user.id,
-          user.sessionCookie,
+          authToken,
           user.twitterUsername,
           { limit: 5000 }
         );

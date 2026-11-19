@@ -26,6 +26,8 @@
     globalMinDelay: $('#globalMinDelay'),
     globalMaxDelay: $('#globalMaxDelay'),
     globalDebug: $('#globalDebug'),
+    llmCustomBaseUrl: $('#llmCustomBaseUrl'),
+    btnSaveLlmCustomBaseUrl: $('#btnSaveLlmCustomBaseUrl'),
     rateLimitWarning: $('#rateLimitWarning'),
     btnDismissRateLimit: $('#btnDismissRateLimit'),
     onboardingModal: $('#onboardingModal'),
@@ -502,6 +504,46 @@
     DOM.globalMaxDelay.addEventListener('change', saveGlobal);
     DOM.globalDebug.addEventListener('change', saveGlobal);
 
+    // Custom LLM provider URL. The service worker sends `custom` completions
+    // only to this stored URL and ignores any URL a page script supplies, so
+    // this field is the one place it can be set. The host is not in the
+    // manifest's host_permissions, so saving asks Chrome for that origin.
+    chrome.storage.local.get('llmCustomBaseUrl').then(data => {
+      if (typeof data.llmCustomBaseUrl === 'string') DOM.llmCustomBaseUrl.value = data.llmCustomBaseUrl;
+    });
+    DOM.btnSaveLlmCustomBaseUrl.addEventListener('click', async () => {
+      const raw = DOM.llmCustomBaseUrl.value.trim();
+      if (!raw) {
+        await chrome.storage.local.remove('llmCustomBaseUrl');
+        showToast('Custom provider turned off', 'info');
+        return;
+      }
+      let parsed;
+      try {
+        parsed = new URL(raw);
+      } catch {
+        showToast('That is not a valid URL', 'error');
+        return;
+      }
+      if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') {
+        showToast('The URL must start with https:// or http://', 'error');
+        return;
+      }
+      // Saved before the prompt: on some platforms Chrome's permission dialog
+      // closes the popup, and the setting should survive that.
+      await chrome.storage.local.set({ llmCustomBaseUrl: parsed.href });
+      DOM.llmCustomBaseUrl.value = parsed.href;
+      let granted = false;
+      try {
+        granted = await chrome.permissions.request({ origins: [`${parsed.origin}/*`] });
+      } catch (err) {
+        showToast(`Saved, but the permission request failed: ${err.message}`, 'warning');
+        return;
+      }
+      if (granted) showToast('Custom provider URL saved', 'success');
+      else showToast(`Saved, but requests will fail until the extension may reach ${parsed.origin}`, 'warning');
+    });
+
     // Export
     DOM.btnExportSettings.addEventListener('click', async () => {
       const data = await chrome.storage.local.get(null);
@@ -769,11 +811,27 @@
       DOM.accountName.textContent = info.name || 'Unknown';
       DOM.accountHandle.textContent = info.handle ? `@${info.handle}` : info.url || '';
 
-      if (info.avatar) {
-        DOM.accountAvatar.innerHTML = `<img src="${info.avatar}" alt="">`;
+      // The avatar URL comes from the page, which any script on x.com can
+      // forge, so it is never parsed as HTML and only an https: URL is loaded.
+      const avatarUrl = safeHttpsUrl(info.avatar);
+      if (avatarUrl) {
+        const img = document.createElement('img');
+        img.src = avatarUrl;
+        img.alt = '';
+        DOM.accountAvatar.replaceChildren(img);
       }
     }
   });
+
+  function safeHttpsUrl(value) {
+    if (typeof value !== 'string' || !value) return null;
+    try {
+      const url = new URL(value);
+      return url.protocol === 'https:' ? url.href : null;
+    } catch {
+      return null;
+    }
+  }
 
   // ============================================
   // BOOT

@@ -115,21 +115,6 @@ export declare class CredentialAuth {
   login(credentials: LoginCredentials): Promise<void>;
 }
 
-// ── TwoFactorAuth ───────────────────────────────────────────────────────────
-
-export interface TwoFactorOptions {
-  fetch?: typeof globalThis.fetch;
-}
-
-export declare class TwoFactorAuth {
-  constructor(cookieAuth: CookieAuth, tokenManager: TokenManager, options?: TwoFactorOptions);
-
-  submitTotp(flowToken: string, code: string): Promise<FlowToken>;
-  submitSmsCode(flowToken: string, code: string): Promise<FlowToken>;
-  requestSmsCode(flowToken: string): Promise<FlowToken>;
-  detectMethod(subtasks: Array<{ subtask_id: string }>): '2fa_totp' | '2fa_sms' | null;
-}
-
 // ── SessionValidator ────────────────────────────────────────────────────────
 
 export interface ValidateResult {
@@ -198,7 +183,6 @@ export interface AuthContext {
   tokenManager: TokenManager;
   guestToken: GuestToken;
   credentialAuth: CredentialAuth;
-  twoFactor: TwoFactorAuth;
   sessionValidator: SessionValidator;
 }
 

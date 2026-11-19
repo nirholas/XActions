@@ -27,7 +27,7 @@ import { VERSION } from '../version.js';
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
-import { localhostHostValidation } from '@modelcontextprotocol/sdk/server/middleware/hostHeaderValidation.js';
+import { hostHeaderValidation, localhostHostValidation } from '@modelcontextprotocol/sdk/server/middleware/hostHeaderValidation.js';
 import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
@@ -1765,12 +1765,13 @@ const TOOLS = [
   // ── 09-D: Bulk Operations ──
   {
     name: 'x_bulk_execute',
-    description: 'Execute bulk follow/unfollow/block/mute from a list of usernames.',
+    description: 'Execute bulk follow/unfollow/mute/DM from a list of usernames. Charged against the daily action caps for the whole list before it runs.',
     inputSchema: {
       type: 'object',
       properties: {
         usernames: { type: 'array', items: { type: 'string' }, description: 'List of usernames' },
-        action: { type: 'string', enum: ['follow', 'unfollow', 'block', 'mute', 'dm'], description: 'Action to perform' },
+        action: { type: 'string', enum: ['follow', 'unfollow', 'mute', 'dm'], description: 'Action to perform' },
+        message: { type: 'string', description: 'Message text, required when action is "dm"' },
         delay: { type: 'number', description: 'Delay between actions in ms (default: 2000)' },
         dryRun: { type: 'boolean', description: 'Preview without executing' },
       },
@@ -2152,16 +2153,15 @@ const TOOLS = [
   },
   {
     name: 'x_smart_unfollow',
-    description: 'Smart unfollow based on criteria: inactive accounts, spam/bot accounts, accounts that never engage with you, or accounts outside your niche.',
+    description: 'Unfollow accounts you follow that match a criteria read from your following list. Supported today: no_bio (accounts with an empty bio). For accounts that do not follow back, use x_unfollow_non_followers.',
     inputSchema: {
       type: 'object',
       properties: {
         criteria: {
           type: 'string',
-          enum: ['inactive', 'spam', 'no_engagement', 'off_niche', 'no_bio', 'no_avatar', 'high_following_ratio'],
+          enum: ['no_bio'],
           description: 'Unfollow criteria',
         },
-        inactiveDays: { type: 'number', description: 'For "inactive" — days since last tweet (default: 90)' },
         limit: { type: 'number', description: 'Maximum to unfollow (default: 20)' },
         dryRun: { type: 'boolean', description: 'Preview who would be unfollowed without actually unfollowing (default: false)' },
         delay: { type: 'number', description: 'Delay between unfollows in seconds (default: 2)' },
@@ -2436,7 +2436,27 @@ const TOOLS = [
 /**
  * Initialize the appropriate backend based on mode
  */
+let backendReady = null;
+
+/**
+ * Bring the backend up once. main() calls it for the server; anything else
+ * that runs tools in-process (`xactions drafts approve` goes through
+ * approveDraftChecked) calls ensureBackend(), so a held draft runs the same
+ * code path the live tool call would have.
+ */
+function ensureBackend() {
+  backendReady ||= (async () => {
+    await initializeBackend();
+    return initializePlugins();
+  })().catch((error) => {
+    backendReady = null;
+    throw error;
+  });
+  return backendReady;
+}
+
 async function initializeBackend() {
+  if (localTools || remoteClient) return;
   if (MODE === 'remote') {
     console.error('🌐 XActions MCP Server: Remote mode');
     console.error('   API: ' + API_URL);
@@ -2592,6 +2612,15 @@ async function executeDownloadMediaTool(args) {
 }
 
 async function executeTool(name, args, options = {}) {
+  // One context per call, so the call holds the shared Puppeteer page for as
+  // long as it needs it and no parallel call can drive the page under it.
+  if (localTools?.withToolContext) {
+    return localTools.withToolContext(() => dispatchTool(name, args, options));
+  }
+  return dispatchTool(name, args, options);
+}
+
+async function dispatchTool(name, args, options = {}) {
   // Add session cookie to args if provided globally
   if (SESSION_COOKIE && !args.cookie && name === 'x_login') {
     args.cookie = SESSION_COOKIE;
@@ -2884,6 +2913,36 @@ function asTweetList(result) {
   return [];
 }
 
+/** The same for user lists: scrapers return an array, older callers `{users}`. */
+function asUserList(result) {
+  if (Array.isArray(result)) return result;
+  if (Array.isArray(result?.users)) return result.users;
+  return [];
+}
+
+/** Handles of the people who replied to a tweet, read off its page. */
+async function scrapeReplierHandles(tweetUrl, limit) {
+  const page = await localTools.getPage();
+  await gotoAndRender(page, tweetUrl, 'article[data-testid="tweet"]');
+  await new Promise(r => setTimeout(r, 3000));
+  return page.evaluate((max) => {
+    const handles = [];
+    const articles = document.querySelectorAll('article[data-testid="tweet"]');
+    // The first article is the tweet itself.
+    for (let i = 1; i < articles.length && handles.length < max; i++) {
+      const href = articles[i].querySelector('[data-testid="User-Name"] a[href^="/"]')?.getAttribute('href') || '';
+      const handle = href.split('/')[1];
+      if (handle && !handles.includes(handle)) handles.push(handle);
+    }
+    return handles;
+  }, limit);
+}
+
+/** Smart-unfollow criteria the following list can answer without a profile fetch per account. */
+const SMART_UNFOLLOW_CRITERIA = {
+  no_bio: (user) => !user.bio || !String(user.bio).trim(),
+};
+
 /**
  * Execute xeepy-ported tools (scrapers, follow/unfollow automation, engagement, AI, monitoring)
  * Ported from github.com/nirholas/xeepy — Python → JavaScript
@@ -3078,15 +3137,52 @@ async function executeXeepyTool(name, args) {
     }
 
     case 'x_follow_engagers': {
-      const tweets = await localTools.x_get_tweets?.({ username: args.username, limit: 10 });
-      const engagers = new Set();
-      const followed = [];
-      // Simplified — follow repliers from recent tweets
-      for (const tweet of asTweetList(tweets).slice(0, 5)) {
-        if (followed.length >= (args.limit || 10)) break;
-        // Would scrape replies for full implementation
+      const limit = Math.max(1, Math.min(Number(args.limit) || 10, 200));
+      const type = args.engagementType || 'all';
+      const tweets = asTweetList(await localTools.x_get_tweets?.({ username: args.username, limit: 10 }));
+      if (tweets.length === 0) throw new Error(`No recent posts found for @${args.username}`);
+
+      const self = String(args.username).replace(/^@/, '').toLowerCase();
+      const candidates = [];
+      const seen = new Set([self]);
+      const add = (handle) => {
+        const h = String(handle || '').replace(/^@/, '');
+        if (h && !seen.has(h.toLowerCase())) {
+          seen.add(h.toLowerCase());
+          candidates.push(h);
+        }
+      };
+
+      for (const tweet of tweets.slice(0, 5)) {
+        if (candidates.length >= limit) break;
+        if (!tweet.id) continue;
+        const tweetUrl = `https://x.com/i/status/${tweet.id}`;
+        if (type === 'likers' || type === 'all') {
+          const { likers } = await executeXeepyTool('x_get_likers', { tweetUrl, limit });
+          likers.forEach((u) => add(u.username));
+        }
+        if (type === 'retweeters' || type === 'all') {
+          const { retweeters } = await executeXeepyTool('x_get_retweeters', { tweetUrl, limit });
+          retweeters.forEach((u) => add(u.username));
+        }
+        if (type === 'repliers' || type === 'all') {
+          (await scrapeReplierHandles(tweetUrl, limit)).forEach(add);
+        }
       }
-      return { followed, count: followed.length, source: args.username };
+
+      const followed = [];
+      const failed = [];
+      for (const username of candidates.slice(0, limit)) {
+        try {
+          const outcome = await localTools.x_follow?.({ username });
+          if (outcome && outcome.success !== false) followed.push(username);
+          else failed.push(username);
+        } catch {
+          failed.push(username);
+        }
+        await new Promise(r => setTimeout(r, (args.delay || 3) * 1000));
+      }
+      return { followed, count: followed.length, failed, source: args.username, engagementType: type };
     }
 
     // ── Unfollow Automation ──
@@ -3094,44 +3190,70 @@ async function executeXeepyTool(name, args) {
       if (!args.confirm) {
         return { error: 'Must set confirm: true to mass unfollow everyone' };
       }
-      const following = await localTools.x_get_following?.({ username: 'me', limit: args.limit || 1000 });
+      const following = asUserList(await localTools.x_get_following?.({ username: 'me', limit: args.limit || 1000 }));
+      // An empty list is a failed read, not an account that follows nobody.
+      if (following.length === 0) throw new Error('Could not read the accounts you follow; nothing was unfollowed');
       const unfollowed = [];
-      for (const user of (following?.users || [])) {
+      const failed = [];
+      for (const user of following) {
         try {
-          await localTools.x_unfollow?.({ username: user.username });
-          unfollowed.push(user.username);
-          await new Promise(r => setTimeout(r, (args.delay || 2) * 1000));
-        } catch (e) { /* skip */ }
+          const outcome = await localTools.x_unfollow?.({ username: user.username });
+          if (outcome && outcome.success === false) failed.push(user.username);
+          else unfollowed.push(user.username);
+        } catch {
+          failed.push(user.username);
+        }
+        await new Promise(r => setTimeout(r, (args.delay || 2) * 1000));
       }
-      return { unfollowed, count: unfollowed.length };
+      return { unfollowed, count: unfollowed.length, failed };
     }
 
     case 'x_smart_unfollow': {
-      // Get following list, then filter by criteria
-      const following = await localTools.x_get_following?.({ username: 'me', limit: 500 });
-      const toUnfollow = [];
-      
+      // Only criteria the following list itself can answer are run. The
+      // others need a profile or timeline fetch per account and are refused
+      // rather than reported as "nothing matched".
+      const matches = SMART_UNFOLLOW_CRITERIA[args.criteria];
+      if (!matches) {
+        throw new Error(
+          `x_smart_unfollow: criteria "${args.criteria}" is not supported yet. Supported: ${Object.keys(SMART_UNFOLLOW_CRITERIA).join(', ')}. ` +
+          'For accounts that do not follow back, use x_unfollow_non_followers.'
+        );
+      }
+      const following = asUserList(await localTools.x_get_following?.({ username: 'me', limit: 500 }));
+      if (following.length === 0) throw new Error('Could not read the accounts you follow; nothing was unfollowed');
+      const toUnfollow = following.filter(matches).slice(0, args.limit || 20);
+
       if (args.dryRun) {
-        return { message: `Dry run — would analyze ${following?.users?.length || 0} accounts with criteria: ${args.criteria}`, criteria: args.criteria };
+        return { dryRun: true, criteria: args.criteria, scanned: following.length, wouldUnfollow: toUnfollow.map((u) => u.username) };
       }
-      
+
       const unfollowed = [];
-      for (const user of toUnfollow.slice(0, args.limit || 20)) {
+      const failed = [];
+      for (const user of toUnfollow) {
         try {
-          await localTools.x_unfollow?.({ username: user.username });
-          unfollowed.push(user.username);
-          await new Promise(r => setTimeout(r, (args.delay || 2) * 1000));
-        } catch (e) { /* skip */ }
+          const outcome = await localTools.x_unfollow?.({ username: user.username });
+          if (outcome && outcome.success === false) failed.push(user.username);
+          else unfollowed.push(user.username);
+        } catch {
+          failed.push(user.username);
+        }
+        await new Promise(r => setTimeout(r, (args.delay || 2) * 1000));
       }
-      return { unfollowed, count: unfollowed.length, criteria: args.criteria };
+      return { unfollowed, count: unfollowed.length, failed, criteria: args.criteria, scanned: following.length };
     }
 
     // ── Engagement Automation ──
     case 'x_quote_tweet': {
       const page = await localTools.getPage();
       await gotoAndRender(page, args.tweetUrl, '[data-testid="retweet"]');
-      // Click retweet button, select quote
-      await page.click('[data-testid="retweet"]').catch(() => {});
+      // Click retweet button, select quote.
+      // Each step is checked: a quote that never reached the composer is a
+      // failure, not a success.
+      const retweetButton = await page.$('[data-testid="retweet"]');
+      if (!retweetButton) {
+        return { success: false, message: 'The repost button was not on the post', quotedUrl: args.tweetUrl };
+      }
+      await retweetButton.click();
       await new Promise(r => setTimeout(r, 1000));
       const quoteOption = await page.$('text/Quote');
       if (!quoteOption) {
@@ -3915,7 +4037,8 @@ async function executeCompetitiveTool(name, args) {
     }
     case 'x_crm_tag': {
       const { tagContact } = await import('../analytics/followerCRM.js');
-      tagContact(args.username, args.tag);
+      const outcome = tagContact(args.username, args.tag);
+      if (outcome?.error) throw new Error(outcome.error);
       return { status: 'tagged', username: args.username, tag: args.tag };
     }
     case 'x_crm_search': {
@@ -3930,7 +4053,18 @@ async function executeCompetitiveTool(name, args) {
     // ── 09-D: Bulk Operations ──
     case 'x_bulk_execute': {
       const { bulkExecute } = await import('../bulk/bulkOperations.js');
-      return await bulkExecute(args.usernames, args.action, { delay: args.delay, dryRun: args.dryRun });
+      if (args.action === 'dm' && !args.message) throw new Error('x_bulk_execute: "message" is required when action is "dm"');
+      // The MCP lane's own daily caps (charged for the whole list before this
+      // runs) and approval gate are the safety net here, so the CLI's
+      // interactive "--force" prompt does not apply.
+      const result = await bulkExecute(args.usernames, args.action, {
+        delayMs: args.delay,
+        dryRun: args.dryRun,
+        message: args.message,
+        force: true,
+      });
+      if (result?.error) throw new Error(result.error);
+      return result;
     }
 
     // ── 09-F: Scheduler ──
@@ -3963,7 +4097,7 @@ async function executeCompetitiveTool(name, args) {
     // ── 09-I: RSS ──
     case 'x_rss_add': {
       const { addFeed } = await import('../automation/rssMonitor.js');
-      addFeed({ name: args.name, url: args.url, template: args.template });
+      await addFeed({ name: args.name, url: args.url, template: args.template });
       return { status: 'added', name: args.name };
     }
     case 'x_rss_check': {
@@ -4419,9 +4553,8 @@ async function enforceActionCap(name, args, options) {
   if (charges.length === 0) return null;
   const account = await resolveActionAccount(options);
   try {
-    for (const one of charges) {
-      actionCaps.checkAndRecord(account, one.actionClass, { count: one.count });
-    }
+    // All or nothing: a sweep refused on replies must not keep its likes.
+    actionCaps.checkAndRecordMany(account, charges);
     return null;
   } catch (error) {
     if (!(error instanceof actionCaps.ActionCapExceededError)) throw error;
@@ -4492,7 +4625,10 @@ export async function approveDraftChecked(id, options = {}) {
       throw Object.assign(new Error(body.error), body);
     }
   }
-  return drafts.approveDraft(id, (tool, toolArgs) => executeTool(tool, toolArgs, options));
+  return drafts.approveDraft(id, async (tool, toolArgs) => {
+    await ensureBackend();
+    return executeTool(tool, toolArgs, options);
+  });
 }
 
 function textResult(payload, isError = false) {
@@ -4583,6 +4719,15 @@ function createMcpServer(overrides = {}) {
     // anything reaches X. A refused approval leaves the draft pending.
     if (name === 'x_approve_draft') {
       const pending = args?.id ? drafts.getDraft(args.id) : null;
+      // A draft left over from another session must not run a tool this
+      // server's filter disables: filtered means "neither listed nor callable".
+      if (pending && !filter.isAllowed(pending.tool)) {
+        return textResult({
+          error: `Draft ${pending.id} runs "${pending.tool}", which is disabled by this server's tool filter`,
+          group: groupOf(pending.tool),
+          hint: `Approve it from a terminal with \`xactions drafts approve ${pending.id}\`, or start the server with that tool allowed.`,
+        }, true);
+      }
       if (pending && pending.status === 'pending') {
         const refused = await enforceActionCap(pending.tool, pending.args, options);
         if (refused) return refused;
@@ -4602,6 +4747,9 @@ function createMcpServer(overrides = {}) {
             text: JSON.stringify(result, null, 2),
           },
         ],
+        // A tool that reports `{ success: false }` failed; say so in the
+        // protocol, not only inside the text, so the agent does not count it.
+        ...(result && typeof result === 'object' && result.success === false ? { isError: true } : {}),
       };
 
     } catch (error) {
@@ -4755,7 +4903,8 @@ Transport
 
 Tool filtering (tool names, group names, or prefix* patterns; comma separated)
   --tools <list>         Only expose these tools/groups (XACTIONS_MCP_TOOLS)
-  --exclude <list>       Hide these tools/groups (XACTIONS_MCP_EXCLUDE)
+  --exclude <list>       Hide these tools/groups (XACTIONS_MCP_EXCLUDE);
+                         \`writes\` hides every tool with a side effect
   --list-groups          Print every group with its tools and exit
 
 Safety
@@ -4867,6 +5016,19 @@ function createBearerAuth(token) {
 }
 
 /**
+ * Pick the Host-header check for the HTTP transport.
+ *
+ * @param {{ allowedHosts?: string, token?: string }} options
+ * @returns {import('express').RequestHandler}
+ */
+export function hostValidationFor({ allowedHosts = '', token = '' } = {}) {
+  const hosts = String(allowedHosts).split(',').map((h) => h.trim().toLowerCase()).filter(Boolean);
+  if (hosts.length) return hostHeaderValidation(hosts);
+  if (token) return (_req, _res, next) => next();
+  return localhostHostValidation();
+}
+
+/**
  * Start the MCP server with Streamable HTTP transport.
  * Each client session gets its own Server + Transport pair.
  *
@@ -4891,12 +5053,18 @@ async function startHttpTransport({ port, host, serverOverrides = {} } = {}) {
   // which would let a web page drive the user's X account. The MCP spec
   // requires validating the Host header for exactly this reason, and the
   // SDK ships the check, so this runs before anything else looks at a body.
-  app.use(localhostHostValidation());
+  //
+  // A hosted server is reached by its own hostname, which the loopback list
+  // refuses. XACTIONS_MCP_ALLOWED_HOSTS names the hostnames to accept. Without
+  // it, a bearer token also defeats rebinding (a hostile page cannot send the
+  // token), so a token-protected server accepts any Host; an open server
+  // still answers only to loopback names.
+  const token = process.env.XACTIONS_MCP_TOKEN || '';
+  app.use(hostValidationFor({ allowedHosts: process.env.XACTIONS_MCP_ALLOWED_HOSTS, token }));
   app.use(express.json({ limit: '4mb' }));
 
   /** @type {Map<string, { server: Server, transport: StreamableHTTPServerTransport }>} */
   const sessions = new Map();
-  const token = process.env.XACTIONS_MCP_TOKEN || '';
 
   // Health check (unauthenticated, no session data)
   app.get('/health', (_req, res) => {
@@ -5025,9 +5193,7 @@ async function main(argv = process.argv.slice(2)) {
     return;
   }
 
-  await initializeBackend();
-
-  const pluginCount = await initializePlugins();
+  const pluginCount = await ensureBackend();
   const pluginToolCount = getPluginTools().length;
 
   const serverOverrides = serverOptionsFromCli(cli);

@@ -285,14 +285,51 @@ async function syncSubscription(stripeSubscription) {
 
   const status = stripeSubscription.cancel_at_period_end ? 'cancelled' : mapStripeStatus(stripeSubscription.status);
 
+  // A plan change in the portal arrives here as a new price on the
+  // subscription; the tier and price were never updated, so the user kept
+  // the old plan's limits. Only a price that maps to a configured tier moves
+  // the tier.
+  const priceId = stripeSubscription.items?.data?.[0]?.price?.id;
+  const tier = priceId ? tierForPrice(priceId) : null;
+
   await prisma.subscription.update({
     where: { id: sub.id },
     data: {
       status,
       endDate: fromEpoch(periodEnd(stripeSubscription)) ?? undefined,
       cancelAt: fromEpoch(stripeSubscription.cancel_at),
+      ...(tier ? { tier, stripePriceId: priceId } : {}),
     },
   });
+}
+
+/** The tier whose configured Stripe price this is, or null. */
+function tierForPrice(priceId) {
+  return Object.entries(TIERS).find(([, config]) => config.stripePriceId && config.stripePriceId === priceId)?.[0] || null;
+}
+
+/**
+ * Record a payment once per PaymentIntent. Stripe delivers a webhook at least
+ * once and retries the same PaymentIntent after a failure, and
+ * stripePaymentId is unique: a plain create threw P2002, the webhook answered
+ * 500, Stripe kept retrying for days, and a later success was never recorded.
+ */
+async function savePayment(data) {
+  if (data.stripePaymentId) {
+    return prisma.payment.upsert({
+      where: { stripePaymentId: data.stripePaymentId },
+      // A success settles the row; a failure never overwrites one (a late or
+      // repeated failure delivery must not undo a recorded success).
+      update: data.status === 'succeeded'
+        ? { status: data.status, amount: data.amount, currency: data.currency, stripeInvoiceId: data.stripeInvoiceId }
+        : {},
+      create: data,
+    });
+  }
+  const existing = data.stripeInvoiceId
+    ? await prisma.payment.findFirst({ where: { stripeInvoiceId: data.stripeInvoiceId, status: data.status } })
+    : null;
+  return existing || prisma.payment.create({ data });
 }
 
 async function deactivateSubscription(stripeSubscription) {
@@ -325,16 +362,14 @@ async function recordPayment(invoice) {
 
   if (!sub) return;
 
-  await prisma.payment.create({
-    data: {
-      userId: sub.userId,
-      type: 'subscription',
-      amount: invoice.amount_paid / 100,
-      currency: invoice.currency,
-      stripePaymentId: await invoicePaymentIntentId(invoice),
-      stripeInvoiceId: invoice.id,
-      status: 'succeeded',
-    },
+  await savePayment({
+    userId: sub.userId,
+    type: 'subscription',
+    amount: invoice.amount_paid / 100,
+    currency: invoice.currency,
+    stripePaymentId: await invoicePaymentIntentId(invoice),
+    stripeInvoiceId: invoice.id,
+    status: 'succeeded',
   });
 }
 
@@ -352,16 +387,14 @@ async function handleFailedPayment(invoice) {
     data: { status: 'past_due' },
   });
 
-  await prisma.payment.create({
-    data: {
-      userId: sub.userId,
-      type: 'subscription',
-      amount: invoice.amount_due / 100,
-      currency: invoice.currency,
-      stripePaymentId: await invoicePaymentIntentId(invoice),
-      stripeInvoiceId: invoice.id,
-      status: 'failed',
-    },
+  await savePayment({
+    userId: sub.userId,
+    type: 'subscription',
+    amount: invoice.amount_due / 100,
+    currency: invoice.currency,
+    stripePaymentId: await invoicePaymentIntentId(invoice),
+    stripeInvoiceId: invoice.id,
+    status: 'failed',
   });
 
   console.log(`❌ Payment failed: user=${sub.userId}`);

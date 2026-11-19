@@ -1,5 +1,6 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 import browserAutomation from '../../browserAutomation.js';
+import { actionBudget } from '../actionBudget.js';
 
 /**
  * Auto-comment on tweets using browser automation
@@ -8,7 +9,8 @@ import browserAutomation from '../../browserAutomation.js';
  * @param {function} updateProgress - Callback to update job progress
  * @param {function} isCancelled - Function to check if job is cancelled
  */
-async function autoCommentBrowser(userId, config, updateProgress, isCancelled = () => false) {
+async function autoCommentBrowser(userId, config, updateProgress, isCancelled = () => false, charge) {
+  const budget = actionBudget(charge, isCancelled);
   const page = await browserAutomation.createPage(config.sessionCookie);
   
   try {
@@ -76,6 +78,7 @@ async function autoCommentBrowser(userId, config, updateProgress, isCancelled = 
       updateProgress(`Commenting on tweet ${i + 1}/${limit} from @${tweet.username}`);
 
       if (!dryRun && tweet.url) {
+        if (!(await budget.spend('reply'))) break;
         const result = await browserAutomation.postComment(page, tweet.url, commentText);
         
         if (result.success) {
@@ -120,7 +123,8 @@ async function autoCommentBrowser(userId, config, updateProgress, isCancelled = 
       failed,
       totalProcessed: commented.length + failed.length,
       dryRun,
-      cancelled: isCancelled()
+      cancelled: isCancelled(),
+      stoppedReason: budget.stoppedReason
     };
 
   } finally {

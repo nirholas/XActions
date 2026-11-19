@@ -111,6 +111,29 @@ describe('xactions reputation (full run)', () => {
     process.exitCode = 0;
   });
 
+  it('fails with the model error instead of a clean A+ when every scoring call fails', async () => {
+    const original = globalThis.fetch;
+    globalThis.fetch = vi.fn(async () => ({ ok: false, status: 401, text: async () => 'invalid api key' }));
+    restoreFetch = () => { globalThis.fetch = original; };
+    const program = new Command();
+    program.exitOverride();
+    registerReputationCommand(program, {
+      createHttpScraper: async () => fakeScraper([tweet('1'), tweet('2')]),
+      loadConfig: async () => ({}),
+    });
+
+    await program.parseAsync(['node', 'xactions', 'reputation', 'nasa', '--provider', 'xai', '--api-key', 'bad-key', '--json']);
+
+    expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('invalid api key'));
+    const printed = logSpy.mock.calls.map((c) => c[0]).find((line) => typeof line === 'string' && line.trim().startsWith('{'));
+    const body = JSON.parse(printed);
+    expect(body.report).toBeNull();
+    expect(body.error).toMatch(/No post could be scored/);
+    expect(logSpy.mock.calls.flat().join('\n')).not.toContain('reads clean');
+    expect(process.exitCode).toBe(1);
+    process.exitCode = 0;
+  });
+
   it('reports no posts found with a clear, actionable message', async () => {
     const program = new Command();
     program.exitOverride();

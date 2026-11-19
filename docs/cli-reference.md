@@ -53,6 +53,11 @@ The answer streams as it is written and ends with a **Run it** block naming the 
   - [xactions thread](#xactions-thread)
   - [xactions article](#xactions-article)
   - [xactions media](#xactions-media)
+  - [xactions analyze](#xactions-analyze)
+  - [xactions brief](#xactions-brief)
+  - [xactions download](#xactions-download)
+  - [xactions reputation](#xactions-reputation)
+  - [xactions engage](#xactions-engage)
   - [xactions info](#xactions-info)
 - [Persona Commands](#xactions-persona-create)
   - [xactions persona create](#xactions-persona-create)
@@ -793,6 +798,116 @@ xactions media artist -l 200 -o artist-media.json
 ```
 
 ---
+
+### xactions analyze
+
+Account report from a sample of recent posts: engagement rate, cadence, content mix, best posting hour and weekday. Several usernames print a side-by-side comparison. No login needed.
+
+```bash
+xactions analyze <usernames...> [options]
+```
+
+| Option | Description |
+|--------|-------------|
+| `-l, --limit <number>` | Posts to sample per account, clamped to 5..200 (default 50) |
+| `-o, --output <file>` | Write the raw report to `.json`, `.csv` or `.xlsx`. Always writes, also alongside `--json` or `--compact` |
+| `--json` | Print the raw report as JSON instead of the formatted one |
+
+```bash
+xactions analyze NASA
+xactions analyze NASA SpaceX --fields username,followers,engagementRate,bestHourUTC --compact
+xactions analyze NASA --json -o reports/nasa.json
+```
+
+### xactions brief
+
+Research accounts before tagging them in a post: recent posts, the figures they publish with source links, their stats, who they tag, and who else the list keeps mentioning. Timelines are cached for six hours under `$XACTIONS_HOME/cache/brief/`. Full guide: [brief.md](brief.md).
+
+```bash
+xactions brief [usernames...] [options]
+```
+
+| Option | Description |
+|--------|-------------|
+| `-f, --file <path>` | Read accounts from a file: one per line or comma separated, `#` for comments |
+| `-t, --topic <keywords>` | Comma-separated keywords that make a post on topic |
+| `-l, --limit <number>` | Posts to read per account, 10..400 (default 100) |
+| `-d, --days <number>` | Only list posts and figures from the last N days (default 30) |
+| `--recent <number>` | Recent posts to list per account (default 5) |
+| `-o, --output <file>` | Write the brief: `.md` for Markdown, `.json` for the full data |
+| `--json` | Print the full brief as JSON instead of Markdown |
+| `--refresh` | Ignore cached timelines and fetch everything again |
+| `--cache-hours <number>` | Reuse timelines fetched within this many hours, `0` turns the cache off (default 6) |
+
+Exits 0 when every account was read, 2 when some failed (listed under "Not included"), 1 when none could be read. An empty timeline counts as a failure.
+
+```bash
+xactions brief coinbasedev base --topic x402
+xactions brief --file accounts.txt --topic "x402,agent payments" -o brief.md
+xactions brief --file accounts.txt --json | jq -r '.alsoTag[].username'
+```
+
+### xactions download
+
+Download photos, videos and GIFs from a profile, a tweet, a search or a community (alias `dl`). Targets: `@user` (media tab), `@user:avatar`, `@user:banner`, `@user:all`, a tweet id or status URL, `search:<query>`, `community:<id>`.
+
+```bash
+xactions download <target> [options]
+```
+
+| Option | Description |
+|--------|-------------|
+| `-o, --output <dir>` | Where files land (default `./media`) |
+| `-f, --filename <template>` | Filename template (default `{username}/{tweet_id}_{num}.{ext}`; `xactions download --help` lists the keys) |
+| `-a, --archive [path]` | Record what was downloaded so re-runs skip it (default path: beside the files) |
+| `-l, --limit <n>` | How many source items to walk (default 100) |
+| `-c, --concurrency <n>` | Parallel downloads (default 4) |
+| `-t, --type <type...>` | Only these types: `photo`, `video`, `gif` |
+| `--since <date>` / `--until <date>` | Date window, `YYYY-MM-DD` |
+| `--overwrite` | Re-download even when the file or archive entry exists |
+| `--dry-run` | List what would be downloaded, write nothing |
+| `--json` | Print the plan and results as JSON |
+| `-q, --quiet` | Summary only, no per-file lines |
+
+Exits 1 when nothing matched or any file failed.
+
+```bash
+xactions download @nichxbt --archive
+xactions download @nichxbt:all -o ./archive -f '{username}/{kind}/{date}_{media_filename}.{ext}'
+xactions download "search:from:nichxbt filter:videos" -t video
+xactions download https://x.com/nichxbt/status/123 --dry-run
+```
+
+### xactions reputation
+
+AI risk-score an account's posts on four dimensions (professional, hostile, legal, spam) and print a 0-100 reputation score, a grade and the posts worth a look. Needs an LLM key.
+
+```bash
+xactions reputation [username] [options]
+```
+
+| Option | Description |
+|--------|-------------|
+| `--replies` | Include the replies tab |
+| `--reposts` | Also score posts the account reposted from others |
+| `-l, --limit <number>` | Maximum posts to scan (default 60) |
+| `--dimensions <list>` | Subset of `professional,hostile,legal,spam` (default all four) |
+| `--custom-question <text>` | An extra risk question scored alongside the built-ins |
+| `--provider <name>` | `openrouter` (default), `openai`, `xai`, `anthropic`, `ollama`, `custom` |
+| `--model <name>` | Model override |
+| `--api-key <key>` | Or the provider's env var (`OPENROUTER_API_KEY`, `OPENAI_API_KEY`, `XAI_API_KEY`, `ANTHROPIC_API_KEY`) |
+| `--base-url <url>` | Chat-completions URL for `custom` |
+| `--concurrency <number>` | Posts scored in parallel (default 4) |
+| `--top <number>` | How many flagged or review posts to print (default 10) |
+| `--json` | Print the report as JSON on stdout |
+
+If no post could be scored (a bad key, an unreachable provider), the command prints the first model error and exits 1 rather than reporting a score.
+
+```bash
+xactions reputation nichxbt
+xactions reputation nichxbt --replies --limit 200
+XAI_API_KEY=xai-... xactions reputation nichxbt --provider xai --json
+```
 
 ### xactions engage
 
@@ -1746,6 +1861,8 @@ Generate a reputation report for a monitored username.
 xactions report <username> [options]
 ```
 
+Monitors and their history live in memory inside the `xactions monitor` process and are not written to disk, so a separate `xactions report` process cannot see them and exits 1 with that explanation. For a one-off report on an account, use [`xactions analyze`](#xactions-analyze) or [`xactions reputation`](#xactions-reputation).
+
 | Option | Description | Default |
 |--------|-------------|---------|
 | `-p, --period <period>` | 24h, 7d, 30d, all | `7d` |
@@ -2208,53 +2325,45 @@ xactions followers nichxbt | wc -l
 
 ## Environment Variables
 
-XActions supports the following environment variables:
+Only these are read. Anything else you may have seen in an older copy of this
+page (`XACTIONS_AUTH_TOKEN`, `XACTIONS_CONFIG_DIR`, `XACTIONS_HEADLESS`,
+`XACTIONS_TIMEOUT`, `XACTIONS_PROXY`) was never implemented and has no effect.
 
-| Variable              | Description                                      | Default              |
-|-----------------------|--------------------------------------------------|----------------------|
-| `XACTIONS_AUTH_TOKEN` | X/Twitter auth_token cookie (alternative to login) | —                  |
-| `XACTIONS_CONFIG_DIR` | Custom config directory path                     | `~/.xactions`        |
-| `XACTIONS_HEADLESS`   | Run browser in headless mode                     | `true`               |
-| `XACTIONS_TIMEOUT`    | Request timeout in milliseconds                  | `30000`              |
-| `XACTIONS_PROXY`      | HTTP/SOCKS proxy URL                             | —                    |
-| `DEBUG`               | Enable debug logging (`xactions:*`)              | —                    |
+| Variable | Read by | Effect |
+|---|---|---|
+| `XACTIONS_HOME` | every command | Where the config, the saved session (`config.json`, `cookies.json`), the brief cache, the query-ID cache and drafts live. Default `~/.xactions`. The MCP server honours the same variable, so one setting points both lanes at the same account |
+| `XACTIONS_SESSION_COOKIE` | `persona run`, `workflow run`, the MCP server | An `auth_token` used when no `--token` / `--auth` is passed and nothing is saved |
+| `TWITTER_AUTH_TOKEN` | `ai analyze`, `ai generate`, `ai rewrite`, `ai calendar` | Fallback `auth_token` when `xactions login` has not saved one |
+| `OPENROUTER_API_KEY`, `OPENROUTER_MODEL` | `ai`, `optimize` and the other AI commands | Key and model for OpenRouter |
+| `OPENAI_API_KEY`, `XAI_API_KEY` (or `GROK_API_KEY`), `ANTHROPIC_API_KEY` | `engage`, `reputation`, `ask --provider` | Key for the matching `--provider` when `--api-key` / `--key` is not passed |
+| `XACTIONS_DEBUG` | the HTTP scrapers | Log how each request's `x-client-transaction-id` was computed |
 
 ### Examples
 
 ```bash
-# Use auth token from environment
-export XACTIONS_AUTH_TOKEN="your_auth_token_here"
-xactions followers nichxbt
+# Keep a second account's session, caches and drafts apart from the first
+XACTIONS_HOME=~/.xactions-work xactions login --from-browser chrome
+XACTIONS_HOME=~/.xactions-work xactions followers nichxbt --limit 200 --compact
 
-# Use a proxy
-export XACTIONS_PROXY="http://proxy.example.com:8080"
-xactions profile elonmusk
-
-# Enable debug mode
-DEBUG=xactions:* xactions followers nichxbt
-
-# Custom config directory
-XACTIONS_CONFIG_DIR=/custom/path xactions login
-
-# Inline environment variables
-XACTIONS_HEADLESS=false xactions profile nichxbt
+# Score posts with xAI without passing the key on the command line
+XAI_API_KEY=xai-... xactions reputation nichxbt --provider xai
 ```
 
 ---
 
 ## Configuration
 
-XActions stores configuration in `~/.xactions/config.json`.
+`xactions login` and `xactions connect` write the session under
+`$XACTIONS_HOME` (default `~/.xactions`).
 
 ### Config File Location
 
 ```
-~/.xactions/
-├── config.json      # Authentication and settings
-├── personas/        # Saved persona configurations
-│   ├── persona_123.json
-│   └── persona_456.json
-└── cache/           # Temporary cache (optional)
+~/.xactions/              # or $XACTIONS_HOME
+├── config.json           # auth_token and ct0 saved by `xactions login`
+├── cookies.json          # the full cookie jar from --from-browser, --cookies-file or `connect` (read first)
+├── cache/brief/          # `xactions brief` timelines, six hours
+└── personas/             # saved persona configurations
 ```
 
 ### Config File Structure
@@ -2262,9 +2371,8 @@ XActions stores configuration in `~/.xactions/config.json`.
 ```json
 {
   "authToken": "your_auth_token_here",
-  "headless": true,
-  "timeout": 30000,
-  "proxy": null
+  "csrfToken": "your_ct0_here",
+  "openrouter_api_key": "optional, used by the ai commands"
 }
 ```
 
@@ -2273,11 +2381,7 @@ XActions stores configuration in `~/.xactions/config.json`.
 You can manually edit the config file:
 
 ```bash
-# View current config
-cat ~/.xactions/config.json
-
-# Edit config
-nano ~/.xactions/config.json
+cat "${XACTIONS_HOME:-$HOME/.xactions}/config.json"
 ```
 
 ---
@@ -2293,11 +2397,11 @@ nano ~/.xactions/config.json
 xactions login
 ```
 
-**2. "Timeout" errors**
+**2. Empty results or "No ... returned"**
 
 ```bash
-# Increase timeout
-XACTIONS_TIMEOUT=60000 xactions followers nichxbt
+# See what works right now and what each failure needs
+xactions doctor
 ```
 
 **3. "Browser not found" error**
@@ -2325,17 +2429,20 @@ If you're being rate limited:
 **5. "Page not loading" issues**
 
 ```bash
-# Run with visible browser for debugging
-XACTIONS_HEADLESS=false xactions profile nichxbt
+# Run the persona builder with a visible browser
+xactions persona run <id> --no-headless
 ```
 
 ### Debug Mode
 
-Enable verbose logging for troubleshooting:
+Log how each HTTP request was signed:
 
 ```bash
-DEBUG=xactions:* xactions followers nichxbt
+XACTIONS_DEBUG=1 xactions tweets nichxbt --limit 5
 ```
+
+Every command exits non-zero when it fails, so `xactions ... || echo failed`
+and `set -e` scripts see the failure.
 
 ### Getting Help
 

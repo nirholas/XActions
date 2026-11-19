@@ -233,6 +233,9 @@ async function scrapeUserList(client, endpoint, baseVariables, options = {}, res
   const limit = checkpoint.limit;
 
   const seen = new Map(); // username → user (deduplication)
+  const collected = []; // this run's users, in order, for the checkpoint
+  // Users an interrupted earlier run already returned to the checkpoint.
+  const earlier = new Set(checkpoint.items.map((u) => u?.username));
   let nextCursor = checkpoint.cursor;
   let pageNum = 0;
 
@@ -257,8 +260,9 @@ async function scrapeUserList(client, endpoint, baseVariables, options = {}, res
     // Deduplicate and collect
     for (const user of users) {
       if (seen.size >= limit) break;
-      if (!seen.has(user.username)) {
+      if (!seen.has(user.username) && !earlier.has(user.username)) {
         seen.set(user.username, user);
+        collected.push(user);
       }
     }
 
@@ -273,11 +277,12 @@ async function scrapeUserList(client, endpoint, baseVariables, options = {}, res
 
     nextCursor = cursor;
     pageNum++;
-    checkpoint.record(cursor, seen.size);
+    checkpoint.record(cursor, seen.size, collected);
   }
 
   checkpoint.complete();
-  return Array.from(seen.values()).slice(0, limit);
+  // Earlier runs' users (when resuming a checkpoint) come first.
+  return checkpoint.result(collected, requestedLimit);
 }
 
 /**

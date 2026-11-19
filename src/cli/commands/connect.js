@@ -24,9 +24,9 @@ import chalk from 'chalk';
 import ora from 'ora';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import os from 'node:os';
+import { xactionsHome } from '../../utils/savedSession.js';
 
-const CONFIG_DIR = path.join(os.homedir(), '.xactions');
+const CONFIG_DIR = xactionsHome();
 const COOKIE_FILE = path.join(CONFIG_DIR, 'cookies.json');
 
 /** The two cookies X needs before it will treat a request as logged in. */

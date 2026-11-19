@@ -273,6 +273,48 @@ describe('discoverQueryIds', () => {
   });
 });
 
+describe('discoverQueryIds after a partial sweep', () => {
+  const seed = () =>
+    fs.writeFileSync(
+      path.join(cacheDir, CACHE_FILENAME),
+      JSON.stringify({
+        version: 1,
+        fetchedAt: '2026-01-01T00:00:00.000Z',
+        operations: {
+          OnlyInAFailedChunk: { queryId: 'keepMe', operationType: 'query' },
+          UserByScreenName: { queryId: 'oldId', operationType: 'query' },
+        },
+      }),
+    );
+
+  it('keeps cached IDs the failed chunks would have refreshed, and lays the new IDs over them', async () => {
+    seed();
+    const result = await discoverQueryIds({ fetch: bundleFetch(), cacheDir });
+    expect(result.source.chunksFailed.length).toBeGreaterThan(0);
+    expect(result.operations.OnlyInAFailedChunk.queryId).toBe('keepMe');
+    expect(result.operations.UserByScreenName.queryId).toBe(LIVE.UserByScreenName);
+    expect(result.source.carriedOver).toBe(1);
+    const onDisk = JSON.parse(fs.readFileSync(path.join(cacheDir, CACHE_FILENAME), 'utf8'));
+    expect(onDisk.operations.OnlyInAFailedChunk.queryId).toBe('keepMe');
+    expect(resolveOperation('OnlyInAFailedChunk', { cacheDir }).queryId).toBe('keepMe');
+  });
+
+  it('replaces the cache outright when every chunk was read', async () => {
+    seed();
+    const base = bundleFetch();
+    // Every other chunk answers with a bundle that defines nothing.
+    const fetch = vi.fn(async (url) => {
+      const res = await base(url);
+      if (res.status === 404 && url.startsWith('https://abs.twimg.com/')) return textResponse(200, '');
+      return res;
+    });
+    const result = await discoverQueryIds({ fetch, cacheDir });
+    expect(result.source.chunksFailed).toEqual([]);
+    expect(result.operations.OnlyInAFailedChunk).toBeUndefined();
+    expect(result.count).toBe(10);
+  });
+});
+
 describe('refreshQueryIds', () => {
   it('shares one in-flight discovery between concurrent callers', async () => {
     const fetch = bundleFetch();

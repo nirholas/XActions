@@ -177,7 +177,7 @@ router.post('/run', async (req, res) => {
     }
   }
 
-  const operationId = `script-run-${Date.now()}-${crypto.randomBytes(4).toString('hex')}`;
+  const operationId = `script-run-${Date.now()}-${crypto.randomBytes(16).toString('hex')}`;
 
   try {
     const { queueJob } = await import('../services/jobQueue.js');

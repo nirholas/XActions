@@ -298,9 +298,9 @@ describe('createPooledClient', () => {
     expect(pool.stats().leased).toBe(0);
   });
 
-  it('locks an account on 403 and continues with the next one', async () => {
+  it('locks an account on a 403 that says it is locked and continues with the next one', async () => {
     const fetch = fetchByAccount({
-      a: () => response(403, { errors: [{ message: 'locked' }] }),
+      a: () => response(403, { errors: [{ code: 326, message: 'To protect our users from spam and other malicious activity, this account is temporarily locked.' }] }),
       b: () => OK(),
     });
     const pool = track(
@@ -310,7 +310,7 @@ describe('createPooledClient', () => {
 
     await client.graphql('QID', 'Followers', {});
     expect(fetch.calls.map((c) => c.account)).toEqual(['a', 'b']);
-    expect(pool.get('a')).toMatchObject({ locked: true, lockReason: 'HTTP 403 on Followers' });
+    expect(pool.get('a')).toMatchObject({ locked: true, lockReason: 'HTTP 403 on Followers: locked (code 326)', lockedUntil: null });
     expect(client.isAuthenticated()).toBe(true);
 
     await client.graphql('QID', 'Followers', {});
@@ -337,7 +337,7 @@ describe('createPooledClient', () => {
   it('gives up with the last error after trying every account', async () => {
     const fetch = fetchByAccount({
       a: () => response(429, {}),
-      b: () => response(403, {}),
+      b: () => response(403, { errors: [{ code: 64, message: 'Your account is suspended and is not permitted to access this feature.' }] }),
     });
     const pool = track(
       createAccountPool({ storePath: storePath(), accounts: accounts(['a', 'b']), clientOptions: { fetch, maxRetries: 0 } }),
@@ -403,5 +403,153 @@ describe('createPooledClient', () => {
     expect(fetch.calls.map((c) => c.account)).toEqual(['a', 'b']);
     // Followers is a POST query, so the cursor travels in the JSON body.
     expect(JSON.parse(fetch.calls[1].body).variables.cursor).toBe('c2');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Lock policy, write safety, REST rate-limit keys, file permissions
+// ---------------------------------------------------------------------------
+
+describe('pooled client lock policy', () => {
+  const GQL = 'https://x.com/i/api/graphql/QID/UserByRestId';
+
+  function htmlResponse(status, html) {
+    return { status, headers: { get: () => null }, text: async () => html };
+  }
+
+  it('does not lock or rotate on a Cloudflare HTML 403', async () => {
+    const fetch = fetchByAccount({
+      a: () => htmlResponse(403, '<html>Just a moment...</html>'),
+      b: () => OK(),
+      c: () => OK(),
+    });
+    const pool = track(
+      createAccountPool({ storePath: storePath(), accounts: accounts(['a', 'b', 'c']), clientOptions: { fetch, maxRetries: 0 } }),
+    );
+    const client = createPooledClient(pool);
+    const err = await client.request(GQL).catch((e) => e);
+    expect(err).toBeInstanceOf(AuthError);
+    expect(fetch.calls.map((c) => c.account)).toEqual(['a']);
+    expect(pool.list().map((a) => a.locked)).toEqual([false, false, false]);
+  });
+
+  it('does not lock on a 403 with an unrelated error code (a refused write)', async () => {
+    const fetch = fetchByAccount({
+      a: () => response(403, { errors: [{ code: 187, message: 'Status is a duplicate.' }] }),
+    });
+    const pool = track(createAccountPool({ storePath: storePath(), accounts: accounts(['a']), clientOptions: { fetch, maxRetries: 0 } }));
+    const client = createPooledClient(pool);
+    await expect(client.graphql('QID', 'CreateTweet', {}, { mutation: true })).rejects.toBeInstanceOf(AuthError);
+    expect(pool.get('a').locked).toBe(false);
+  });
+
+  it('locks permanently on 401', async () => {
+    const fetch = fetchByAccount({ a: () => response(401, {}), b: () => OK() });
+    const pool = track(
+      createAccountPool({ storePath: storePath(), accounts: accounts(['a', 'b']), clientOptions: { fetch, maxRetries: 0 } }),
+    );
+    await createPooledClient(pool).request(GQL);
+    expect(pool.get('a')).toMatchObject({ locked: true, lockedUntil: null });
+  });
+
+  it('parks an account with a CSRF mismatch (353) only until the soft lock expires', async () => {
+    let t = 1_000_000;
+    const fetch = fetchByAccount({
+      a: (i) => (i === 0 ? response(403, { errors: [{ code: 353, message: 'This request requires a matching csrf cookie and header.' }] }) : OK()),
+      b: () => OK(),
+    });
+    const pool = track(
+      createAccountPool({ storePath: storePath(), accounts: accounts(['a', 'b']), clientOptions: { fetch, maxRetries: 0 }, now: () => t }),
+    );
+    const client = createPooledClient(pool, { softLockMs: 60_000 });
+    await client.request(GQL);
+    expect(fetch.calls.map((c) => c.account)).toEqual(['a', 'b']);
+    expect(pool.get('a')).toMatchObject({ locked: true, lockedUntil: 1_060_000 });
+
+    t += 61_000;
+    expect(pool.get('a').locked).toBe(false);
+  });
+});
+
+describe('pooled client never rotates writes', () => {
+  it('rethrows a 429 on CreateTweet instead of posting it as the next account', async () => {
+    const fetch = fetchByAccount({
+      alice: () => response(429, {}),
+      bob: () => response(200, { data: { create_tweet: {} } }),
+    });
+    const pool = track(
+      createAccountPool({ storePath: storePath(), accounts: accounts(['alice', 'bob']), clientOptions: { fetch, maxRetries: 0 } }),
+    );
+    const rotations = [];
+    const client = createPooledClient(pool, { onRotate: (e) => rotations.push(e) });
+    const err = await client.graphql('QID', 'CreateTweet', { tweet_text: 'hi from alice' }, { mutation: true }).catch((e) => e);
+    expect(err).toBeInstanceOf(RateLimitError);
+    expect(fetch.calls.map((c) => c.account)).toEqual(['alice']);
+    expect(rotations).toEqual([]);
+    expect(pool.get('alice').limits.CreateTweet.remaining).toBe(0);
+  });
+
+  it('rethrows a 429 on a POST REST call and on a raw POST mutation request', async () => {
+    const fetch = fetchByAccount({ a: () => response(429, {}), b: () => response(429, {}) });
+    const pool = track(
+      createAccountPool({ storePath: storePath(), accounts: accounts(['a', 'b']), clientOptions: { fetch, maxRetries: 0 } }),
+    );
+    const client = createPooledClient(pool, { maxWaitMs: 0 });
+    await expect(client.rest('/1.1/friendships/create.json', { body: { user_id: '1' } })).rejects.toBeInstanceOf(RateLimitError);
+    expect(fetch.calls.map((c) => c.account)).toEqual(['a']);
+
+    await expect(
+      client.request('https://x.com/i/api/graphql/QID/FavoriteTweet', { method: 'POST', body: { variables: {} } }),
+    ).rejects.toBeInstanceOf(RateLimitError);
+    // one attempt per write: b (least recently used) took the second one alone
+    expect(fetch.calls.map((c) => c.account)).toEqual(['a', 'b']);
+  });
+
+  it('still rotates POST read queries (Followers)', async () => {
+    const fetch = fetchByAccount({ a: () => response(429, {}), b: () => OK() });
+    const pool = track(
+      createAccountPool({ storePath: storePath(), accounts: accounts(['a', 'b']), clientOptions: { fetch, maxRetries: 0 } }),
+    );
+    await createPooledClient(pool).graphql('QID', 'Followers', {});
+    expect(fetch.calls.map((c) => c.account)).toEqual(['a', 'b']);
+  });
+});
+
+describe('REST rate-limit key', () => {
+  it('records and looks up REST windows under the same key', async () => {
+    const resetSec = Math.floor(Date.now() / 1000) + 600;
+    const fetch = fetchByAccount({
+      a: () => response(200, [{ trends: [] }], { 'x-rate-limit-remaining': '0', 'x-rate-limit-reset': String(resetSec) }),
+      b: () => response(200, [{ trends: [] }], { 'x-rate-limit-remaining': '10', 'x-rate-limit-reset': String(resetSec) }),
+    });
+    const pool = track(
+      createAccountPool({ storePath: storePath(), accounts: accounts(['a', 'b']), clientOptions: { fetch, maxRetries: 0 } }),
+    );
+    const client = createPooledClient(pool);
+    await client.rest('/1.1/trends/place.json?id=1', { method: 'GET' });
+    expect(pool.get('a').limits['/i/api/1.1/trends/place.json'].remaining).toBe(0);
+    // a's window is spent: the next call goes to b
+    await client.rest('/1.1/trends/place.json?id=1', { method: 'GET' });
+    expect(fetch.calls.map((c) => c.account)).toEqual(['a', 'b']);
+  });
+});
+
+describe('account store permissions', () => {
+  it.skipIf(process.platform === 'win32')('creates the store owner-only', () => {
+    const file = path.join(tmpDir, 'nested', 'accounts.db');
+    const pool = track(createAccountPool({ storePath: file, accounts: accounts(['a']) }));
+    expect(fs.statSync(path.dirname(file)).mode & 0o777).toBe(0o700);
+    for (const f of [file, `${file}-wal`, `${file}-shm`]) {
+      if (fs.existsSync(f)) expect(fs.statSync(f).mode & 0o777).toBe(0o600);
+    }
+    expect(pool.size()).toBe(1);
+  });
+
+  it.skipIf(process.platform === 'win32')('tightens an existing world-readable store', () => {
+    const file = storePath('old.db');
+    fs.writeFileSync(file, '');
+    fs.chmodSync(file, 0o644);
+    track(createAccountPool({ storePath: file }));
+    expect(fs.statSync(file).mode & 0o777).toBe(0o600);
   });
 });

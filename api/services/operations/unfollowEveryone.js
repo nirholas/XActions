@@ -1,8 +1,10 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 import { prisma } from '../../../src/utils/prisma.js';
 import { getTwitterClient } from '../../routes/twitter.js';
+import { actionBudget } from './actionBudget.js';
 
-async function processUnfollowEveryone({ operationId, userId, config }) {
+async function processUnfollowEveryone({ operationId, userId, config }, isCancelled = () => false, charge) {
+  const budget = actionBudget(charge, isCancelled);
   try {
     await prisma.operation.update({
       where: { id: operationId },
@@ -38,6 +40,7 @@ async function processUnfollowEveryone({ operationId, userId, config }) {
 
     for (const followedUser of following) {
       if (unfollowedCount >= maxUnfollows) break;
+      if (dryRun ? isCancelled() : !(await budget.spend('unfollow'))) break;
 
       try {
         if (!dryRun) {
@@ -61,7 +64,9 @@ async function processUnfollowEveryone({ operationId, userId, config }) {
       unfollowedCount: dryRun ? 0 : unfollowedCount,
       totalFound: following.length,
       unfollowedUsers: unfollowedUsers.slice(0, 50),
-      dryRun
+      dryRun,
+      cancelled: isCancelled(),
+      stoppedReason: budget.stoppedReason
     };
   } catch (error) {
     console.error('❌ Unfollow everyone error:', error);

@@ -41,8 +41,12 @@ jobs:
     timeout-minutes: 20
 
     steps:
+      # Not persisted: `npm ci` below runs dependency install scripts, and this
+      # job holds contents: write for the release upload.
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Setup Node.js
         uses: actions/setup-node@v7

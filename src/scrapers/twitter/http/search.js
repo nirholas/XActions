@@ -13,6 +13,7 @@
 import { GRAPHQL, REST_BASE } from './endpoints.js';
 import { bindCheckpoint } from './checkpoint.js';
 import { parseTweetData, parseTimelineInstructions } from './tweets.js';
+import { readReplacedBottomCursor } from './parse/tweet.js';
 import { parseUserData } from './profile.js';
 import { NotFoundError, TwitterApiError } from './errors.js';
 
@@ -184,11 +185,12 @@ export async function searchTweets(client, query, options = {}) {
     // continuing would append the same items again.
     if (!bottomCursor || tweets.length === 0 || bottomCursor === nextCursor) break;
     nextCursor = bottomCursor;
-    checkpoint.record(bottomCursor, allTweets.length);
+    checkpoint.record(bottomCursor, allTweets.length, allTweets);
   }
 
   checkpoint.complete();
-  return allTweets.slice(0, limit);
+  // Earlier runs' items (when resuming a checkpoint) come first.
+  return checkpoint.result(allTweets, requestedLimit);
 }
 
 // ---------------------------------------------------------------------------
@@ -296,6 +298,12 @@ function parseSearchUserInstructions(instructions) {
           }
         }
       }
+    }
+
+    // From page two on the bottom cursor arrives as a replacement entry.
+    if (type === 'TimelineReplaceEntry') {
+      const replaced = readReplacedBottomCursor(instruction);
+      if (replaced) cursor = replaced;
     }
   }
 

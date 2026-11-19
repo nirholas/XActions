@@ -15,8 +15,9 @@ import path from 'path';
 import os from 'os';
 
 import { FOLLOW_STATUS, isRetryableStatus, classifyBrowserError } from '../mcp/followAction.js';
+import { xactionsHome } from '../utils/savedSession.js';
 
-const PROGRESS_DIR = path.join(os.homedir(), '.xactions');
+const PROGRESS_DIR = xactionsHome();
 
 // Daily action caps (configurable)
 const DEFAULT_CAPS = {
@@ -487,17 +488,33 @@ async function saveProgress(filePath, data) {
 async function getActionExecutor(action) {
   // Lazy-load local tools for action execution
   const localTools = await import('../mcp/local-tools.js');
+  // A missing tool is an error, never a silent success: `x_block?.() ||
+  // Promise.resolve()` reported every block as done while nothing ran.
+  const call = (fn, args) => {
+    if (typeof localTools[fn] !== 'function') {
+      return Promise.reject(new Error(`Action "${action}" is not supported: ${fn} is not available`));
+    }
+    return localTools[fn](args);
+  };
   const actionMap = {
-    follow: (u) => localTools.x_follow?.({ username: u }) || Promise.resolve(),
-    unfollow: (u) => localTools.x_unfollow?.({ username: u }) || Promise.resolve(),
-    block: (u) => localTools.x_block?.({ username: u }) || Promise.resolve(),
-    unblock: (u) => localTools.x_unblock?.({ username: u }) || Promise.resolve(),
-    mute: (u) => localTools.x_mute?.({ username: u }) || Promise.resolve(),
-    unmute: (u) => localTools.x_unmute?.({ username: u }) || Promise.resolve(),
-    'like-latest': (u) => localTools.x_like?.({ username: u }) || Promise.resolve(),
-    'scrape-profile': (u) => localTools.x_get_profile?.({ username: u }) || Promise.resolve(),
-    dm: (u, opts) => localTools.x_send_dm?.({ username: u, message: opts?.message }) || Promise.resolve(),
-    'add-to-list': (u, opts) => localTools.x_add_to_list?.({ username: u, listName: opts?.listName }) || Promise.resolve(),
+    follow: (u) => call('x_follow', { username: u }),
+    unfollow: (u) => call('x_unfollow', { username: u }),
+    block: (u) => call('x_block_user', { username: u }),
+    unblock: (u) => call('x_unblock_user', { username: u }),
+    mute: (u) => call('x_mute_user', { username: u }),
+    unmute: (u) => call('x_unmute_user', { username: u }),
+    'like-latest': async (u) => {
+      const tweets = await call('x_get_tweets', { username: u, limit: 1 });
+      const latest = (Array.isArray(tweets) ? tweets : tweets?.tweets || [])[0];
+      if (!latest?.id) throw new Error(`No posts found for @${u}`);
+      return call('x_like', { url: `https://x.com/${u}/status/${latest.id}` });
+    },
+    'scrape-profile': (u) => call('x_get_profile', { username: u }),
+    dm: (u, opts) => {
+      if (!opts?.message) return Promise.reject(new Error('The dm action needs a message'));
+      return call('x_send_dm', { username: u, message: opts.message });
+    },
+    'add-to-list': (u, opts) => call('x_add_to_list', { username: u, listName: opts?.listName }),
   };
   return actionMap[action] || (() => Promise.reject(new Error(`Unknown action: ${action}`)));
 }

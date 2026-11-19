@@ -11,6 +11,8 @@
 
 import { getSkillById } from './skillRegistry.js';
 import { createTextPart, createDataPart, createFilePart, PART_TYPES } from './types.js';
+import { WRITE_TOOLS, resolveActionCharge } from '../mcp/tool-groups.js';
+import { checkAndRecord, ActionCapExceededError, DEFAULT_ACCOUNT } from '../mcp/action-caps.js';
 
 // ============================================================================
 // Natural Language Patterns
@@ -42,11 +44,13 @@ const NL_PATTERNS = [
   // Thread
   { pattern: /(?:post|create|publish)\s+(?:a\s+)?thread/i, tool: 'x_post_thread', extract: () => ({}) },
 
-  // Follow / Unfollow
-  { pattern: /(?:follow)\s+@?(\w+)/i, tool: 'x_follow', extract: (m) => ({ username: m[1] }) },
-  { pattern: /(?:unfollow)\s+@?(\w+)/i, tool: 'x_unfollow', extract: (m) => ({ username: m[1] }) },
-  { pattern: /unfollow\s+(?:all\s+)?non[ -]?followers/i, tool: 'x_unfollow_non_followers', extract: () => ({}) },
-  { pattern: /unfollow\s+everyone|mass\s+unfollow/i, tool: 'x_unfollow_all', extract: () => ({}) },
+  // Unfollow / Follow. The specific unfollow forms come first, and "follow"
+  // is anchored on a word boundary, so "unfollow @nasa" can never be read as
+  // a follow (the \b also stops "unfollow" matching inside other words).
+  { pattern: /\bunfollow\s+(?:all\s+)?non[ -]?followers/i, tool: 'x_unfollow_non_followers', extract: () => ({}) },
+  { pattern: /\bunfollow\s+everyone|\bmass\s+unfollow/i, tool: 'x_unfollow_all', extract: () => ({}) },
+  { pattern: /\bunfollow\s+@?(\w+)/i, tool: 'x_unfollow', extract: (m) => ({ username: m[1] }) },
+  { pattern: /\bfollow\s+@?(\w+)/i, tool: 'x_follow', extract: (m) => ({ username: m[1] }) },
 
   // Like / Retweet / Reply
   { pattern: /(?:like)\s+(?:tweet\s+)?(?:https?:\/\/(?:x|twitter)\.com\/\w+\/status\/)?(\d+)/i, tool: 'x_like', extract: (m) => ({ tweetId: m[1] }) },
@@ -85,6 +89,40 @@ const NL_PATTERNS = [
 ];
 
 // ============================================================================
+// Write gate helpers
+// ============================================================================
+
+/** The narrow permission that also grants a write of this action class. */
+const CLASS_PERMISSION = Object.freeze({
+  post: 'post', reply: 'post', repost: 'post',
+  follow: 'follow', unfollow: 'follow',
+});
+
+function truthy(v) {
+  return v !== undefined && v !== '' && !['0', 'false', 'no', 'off'].includes(String(v).toLowerCase());
+}
+
+let cachedSessionAccount = null;
+
+/**
+ * The ledger account a write is charged to, resolved the way the MCP server
+ * resolves it so both lanes draw on one budget.
+ */
+async function resolveAccount(explicit) {
+  if (explicit) return explicit;
+  if (process.env.XACTIONS_ACCOUNT) return process.env.XACTIONS_ACCOUNT;
+  if (cachedSessionAccount === null) {
+    try {
+      const { getActiveSession } = await import('../client/auth/storage.js');
+      cachedSessionAccount = (await getActiveSession())?.username || '';
+    } catch {
+      cachedSessionAccount = '';
+    }
+  }
+  return cachedSessionAccount || DEFAULT_ACCOUNT;
+}
+
+// ============================================================================
 // Bridge Factory
 // ============================================================================
 
@@ -96,6 +134,14 @@ const NL_PATTERNS = [
  * @param {string} [options.sessionCookie]
  * @param {string} [options.apiUrl='https://api.xactions.app']
  * @param {number} [options.timeout=60000]
+ * @param {boolean} [options.requireApproval] hold write tools as drafts instead
+ *   of running them; defaults to XACTIONS_MCP_REQUIRE_APPROVAL, the same switch
+ *   the MCP server honours
+ * @param {string} [options.account] ledger account write tools are charged
+ *   to; defaults to XACTIONS_ACCOUNT, then the active saved session, then
+ *   "default" (the same order the MCP server uses)
+ * @param {boolean} [options.enforceActionCaps=true] charge write tools against
+ *   the persistent daily action caps (src/mcp/action-caps.js)
  * @returns {object} Bridge with execute(), parseNaturalLanguage(), etc.
  */
 export function createBridge(options = {}) {
@@ -104,7 +150,10 @@ export function createBridge(options = {}) {
     sessionCookie,
     apiUrl = 'https://api.xactions.app',
     timeout = 60000,
+    enforceActionCaps = true,
+    account,
   } = options;
+  const requireApproval = options.requireApproval ?? truthy(process.env.XACTIONS_MCP_REQUIRE_APPROVAL);
 
   // Lazy-loaded local tools module
   let _localTools = null;
@@ -133,9 +182,11 @@ export function createBridge(options = {}) {
      *
      * @param {string} skillId - A2A skill ID (e.g. 'xactions.x_get_profile')
      * @param {Array<object>} inputParts - A2A message parts
+     * @param {{ agent?: { id?: string, permissions?: string[] } | null }} [context]
+     *   the authenticated caller; when present its permissions are checked
      * @returns {Promise<{ success: boolean, artifacts: object[], error?: string, duration: number }>}
      */
-    async execute(skillId, inputParts) {
+    async execute(skillId, inputParts, context = {}) {
       const start = Date.now();
       try {
         // Resolve tool name from skill ID
@@ -198,6 +249,11 @@ export function createBridge(options = {}) {
           };
         }
 
+        // Permission, approval and daily cap checks run before anything
+        // reaches X, exactly as they do for an MCP tool call.
+        const refusal = await bridge.authorizeTool(toolName, params, context);
+        if (refusal) return { ...refusal, duration: Date.now() - start };
+
         // Execute the tool
         const result = await bridge.getToolResult(toolName, params);
         const artifacts = bridge._convertResultToArtifacts(result);
@@ -215,6 +271,65 @@ export function createBridge(options = {}) {
           duration: Date.now() - start,
         };
       }
+    },
+
+    /**
+     * Decide whether a resolved tool call may run. Returns null when it may,
+     * or a finished execute() result (minus duration) when it may not:
+     *
+     *   1. A caller identity in `context.agent` must hold the permission the
+     *      tool needs (write tools need "write", or "post"/"follow" for their
+     *      own action class; read tools need "read", "scrape" or "analytics").
+     *   2. With approval mode on, a write tool is saved as a draft for a person
+     *      to release with `xactions drafts approve <id>` and is not run.
+     *   3. Otherwise a write tool is charged against the daily action caps and
+     *      refused when the cap is reached.
+     *
+     * @param {string} toolName
+     * @param {object} params
+     * @param {{ agent?: { permissions?: string[] } | null }} [context]
+     * @returns {Promise<{ success: boolean, artifacts: object[], error?: string, held?: boolean } | null>}
+     */
+    async authorizeTool(toolName, params, context = {}) {
+      const isWrite = WRITE_TOOLS.has(toolName);
+      const charge = isWrite ? resolveActionCharge(toolName, params) : null;
+      const charges = charge ? (Array.isArray(charge) ? charge : [charge]) : [];
+
+      if (context?.agent) {
+        const granted = Array.isArray(context.agent.permissions) ? context.agent.permissions : [];
+        const accepted = isWrite
+          ? ['write', ...charges.map((c) => CLASS_PERMISSION[c.actionClass]).filter(Boolean)]
+          : ['read', 'scrape', 'analytics', 'write'];
+        const allowed = granted.includes('admin') || accepted.some((p) => granted.includes(p));
+        if (!allowed) {
+          const message = `Permission denied: "${toolName}" needs one of [${[...new Set(accepted)].join(', ')}]; this agent has [${granted.join(', ')}]`;
+          return { success: false, artifacts: [createTextPart(message)], error: message };
+        }
+      }
+
+      if (!isWrite) return null;
+
+      if (requireApproval) {
+        const { createDraft } = await import('../mcp/drafts.js');
+        const draft = createDraft(toolName, params || {});
+        const message = `Approval mode is on. "${toolName}" was saved as draft ${draft.id} and has NOT been executed. A person releases it with \`xactions drafts approve ${draft.id}\`.`;
+        return {
+          success: true,
+          held: true,
+          artifacts: [createDataPart({ held: true, draftId: draft.id, tool: draft.tool, args: draft.args, createdAt: draft.createdAt, message }, 'application/json')],
+        };
+      }
+
+      if (enforceActionCaps && charges.length > 0) {
+        const ledgerAccount = await resolveAccount(account);
+        try {
+          for (const one of charges) checkAndRecord(ledgerAccount, one.actionClass, { count: one.count });
+        } catch (err) {
+          if (!(err instanceof ActionCapExceededError)) throw err;
+          return { success: false, artifacts: [createTextPart(err.message)], error: err.message };
+        }
+      }
+      return null;
     },
 
     /**
@@ -314,6 +429,7 @@ export function createBridge(options = {}) {
      * @param {Array<{ tool: string, params: object }>} tasks
      * @param {object} [options={}]
      * @param {boolean} [options.stopOnError=true]
+     * @param {object} [options.context] caller identity, as for execute()
      * @returns {Promise<{ results: object[], artifacts: object[], errors: string[] }>}
      */
     async batchExecute(tasks, options = {}) {
@@ -328,7 +444,7 @@ export function createBridge(options = {}) {
 
         // Support A2A task format { skillId, inputParts } by delegating to execute()
         if (task.inputParts) {
-          const execResult = await bridge.execute(task.skillId || null, task.inputParts);
+          const execResult = await bridge.execute(task.skillId || null, task.inputParts, options.context);
           results.push(execResult);
           if (execResult.artifacts) allArtifacts.push(...execResult.artifacts);
           if (!execResult.success) {
@@ -343,6 +459,8 @@ export function createBridge(options = {}) {
         const resolvedParams = bridge._resolveStepRefs(task.params || {}, context);
 
         try {
+          const refusal = await bridge.authorizeTool(task.tool, resolvedParams, options.context);
+          if (refusal) throw new Error(refusal.error || 'held for approval');
           const result = await bridge.getToolResult(task.tool, resolvedParams);
           context[`$step${i + 1}`] = result;
           results.push({ step: i + 1, tool: task.tool, success: true, result });

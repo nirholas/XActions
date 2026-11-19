@@ -572,6 +572,86 @@ describe('reconnect timing', () => {
     expect(pipeline.stats.reconnects).toBe(1);
   });
 
+  it('keeps backing off when each reconnect drops right after its config frame', async () => {
+    vi.useFakeTimers();
+
+    // Every connection sends its config frame and then closes at once.
+    let call = 0;
+    const fetchImpl = vi.fn(async () => {
+      const conn = makeInjectedConnection();
+      const n = ++call;
+      queueMicrotask(() => {
+        conn.push({ payload: { config: { session_id: `s${n}`, heartbeat_millis: 0 } } });
+        if (n > 1) conn.end();
+      });
+      if (n === 1) firstConn = conn;
+      return conn.response;
+    });
+    let firstConn;
+    const client = new TwitterHttpClient({ cookies: COOKIES, fetch: fetchImpl });
+    const errors = [];
+
+    const pipeline = trackPipeline(
+      createLivePipeline({
+        client,
+        topics: [Topic.tweetEngagement('1')],
+        fetch: fetchImpl,
+        reconnect: { minDelayMs: 1000, maxDelayMs: 60000, jitter: 0 },
+        onError: (err, info) => errors.push({ err, info }),
+      })
+    );
+
+    const opening = pipeline.open();
+    await vi.advanceTimersByTimeAsync(0);
+    await opening;
+    firstConn.end();
+
+    // 1s + 2s + 4s + 8s of backoff: four short-lived reconnects.
+    await vi.advanceTimersByTimeAsync(15_100);
+    const retries = errors.filter((e) => e.info.willRetry).map((e) => e.info.delayMs);
+    expect(retries.slice(0, 5)).toEqual([1000, 2000, 4000, 8000, 16000]);
+    // Not ~15 dials at the 1 s floor.
+    expect(fetchImpl.mock.calls.length).toBeLessThanOrEqual(5);
+  });
+
+  it('starts the backoff over once a reconnected stream has stayed up', async () => {
+    vi.useFakeTimers();
+
+    const conns = [];
+    const fetchImpl = vi.fn(async () => {
+      const conn = makeInjectedConnection();
+      conns.push(conn);
+      queueMicrotask(() => conn.push({ payload: { config: { session_id: `s${conns.length}`, heartbeat_millis: 0 } } }));
+      return conn.response;
+    });
+    const client = new TwitterHttpClient({ cookies: COOKIES, fetch: fetchImpl });
+    const errors = [];
+
+    const pipeline = trackPipeline(
+      createLivePipeline({
+        client,
+        topics: [Topic.tweetEngagement('1')],
+        fetch: fetchImpl,
+        reconnect: { minDelayMs: 1000, maxDelayMs: 5000, jitter: 0 },
+        onError: (err, info) => errors.push({ err, info }),
+      })
+    );
+
+    const opening = pipeline.open();
+    await vi.advanceTimersByTimeAsync(0);
+    await opening;
+
+    conns[0].end();
+    await vi.advanceTimersByTimeAsync(1000); // reconnect #1 after 1 s
+    expect(conns).toHaveLength(2);
+    await vi.advanceTimersByTimeAsync(6000); // healthy for longer than maxDelayMs
+    conns[1].end();
+    await vi.advanceTimersByTimeAsync(0);
+
+    const delays = errors.filter((e) => e.info.willRetry).map((e) => e.info.delayMs);
+    expect(delays).toEqual([1000, 1000]);
+  });
+
   it('gives up with a fatal error once the attempt budget is spent', async () => {
     vi.useFakeTimers();
 

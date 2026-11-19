@@ -36,6 +36,7 @@
  */
 
 import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
+import { withFileLock } from '../utils/fileLock.js';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
 
@@ -191,8 +192,17 @@ export function resolveCaps(account = DEFAULT_ACCOUNT) {
   return caps;
 }
 
+/**
+ * Account names are X handles, and `constructor`, `toString` and `__proto__`
+ * are all valid handles. A plain object would resolve them to Object.prototype
+ * members, so the accounts map has no prototype.
+ */
+function accountsMap(source = {}) {
+  return Object.assign(Object.create(null), source);
+}
+
 function emptyLedger() {
-  return { version: 1, accounts: {} };
+  return { version: 1, accounts: accountsMap() };
 }
 
 function readLedger() {
@@ -204,6 +214,7 @@ function readLedger() {
   if (!parsed || typeof parsed !== 'object' || typeof parsed.accounts !== 'object') {
     throw new Error(`Action ledger at ${file} is not a ledger object`);
   }
+  parsed.accounts = accountsMap(parsed.accounts);
   return parsed;
 }
 
@@ -248,35 +259,72 @@ function prune(ledgerData, now) {
  * @returns {{ account: string, actionClass: string, cap: number, used: number, remaining: number, resetAt: Date | null }}
  */
 export function checkAndRecord(account, actionClass, { now = Date.now(), count = 1 } = {}) {
-  assertClass(actionClass);
+  return checkAndRecordMany(account, [{ actionClass, count }], { now })[0];
+}
+
+/**
+ * Charge several classes in one go, all or nothing: every class is checked
+ * before any is recorded, and the ledger is written once. A sweep that likes
+ * and replies and is refused on replies must not keep the likes it charged.
+ *
+ * The read, check and write happen under a cross-process lock, so two
+ * servers (Claude Desktop and Claude Code each start one) cannot both read
+ * the same count and overwrite each other's charges.
+ *
+ * @param {string} account
+ * @param {Array<{ actionClass: string, count?: number }>} charges
+ * @param {{ now?: number }} [options]
+ * @returns {Array<{ account: string, actionClass: string, cap: number, used: number, remaining: number, resetAt: Date | null }>}
+ */
+export function checkAndRecordMany(account, charges, { now = Date.now() } = {}) {
+  for (const { actionClass } of charges) assertClass(actionClass);
   const name = normalizeAccount(account);
-  const cap = resolveCaps(name)[actionClass];
-  const ledgerData = prune(readLedger(), now);
-  const bucket = (ledgerData.accounts[name] ||= {})[actionClass] || [];
-  const used = bucket.length;
-  const charge = Math.max(1, Math.floor(count));
+  const caps = resolveCaps(name);
 
-  if (used + charge > cap) {
-    // The slot frees when the oldest counted action ages out of the window;
-    // with a cap of 0 the class is disabled and never frees.
-    const oldest = bucket.length ? Math.min(...bucket) : now;
-    const resetAt = new Date(cap === 0 ? now + WINDOW_MS : oldest + WINDOW_MS);
-    throw new ActionCapExceededError({ account: name, actionClass, cap, used, resetAt });
-  }
+  return withFileLock(getLedgerPath(), () => {
+    const ledgerData = prune(readLedger(), now);
+    const buckets = Object.hasOwn(ledgerData.accounts, name) ? ledgerData.accounts[name] : {};
 
-  for (let i = 0; i < charge; i++) bucket.push(now);
-  ledgerData.accounts[name][actionClass] = bucket;
-  writeLedger(ledgerData);
+    // Sum charges per class first, so two entries for one class are checked
+    // against the cap together.
+    const totals = new Map();
+    for (const { actionClass, count = 1 } of charges) {
+      totals.set(actionClass, (totals.get(actionClass) || 0) + Math.max(1, Math.floor(count)));
+    }
 
-  const total = used + charge;
-  return {
-    account: name,
-    actionClass,
-    cap,
-    used: total,
-    remaining: cap - total,
-    resetAt: new Date(Math.min(...bucket) + WINDOW_MS),
-  };
+    for (const [actionClass, charge] of totals) {
+      const cap = caps[actionClass];
+      const bucket = buckets[actionClass] || [];
+      const used = bucket.length;
+      if (used + charge > cap) {
+        // The slot frees when the oldest counted action ages out of the
+        // window; with a cap of 0 the class is disabled and never frees.
+        const oldest = bucket.length ? Math.min(...bucket) : now;
+        const resetAt = new Date(cap === 0 ? now + WINDOW_MS : oldest + WINDOW_MS);
+        throw new ActionCapExceededError({ account: name, actionClass, cap, used, resetAt });
+      }
+    }
+
+    const results = [];
+    for (const [actionClass, charge] of totals) {
+      const bucket = buckets[actionClass] || [];
+      const used = bucket.length;
+      for (let i = 0; i < charge; i++) bucket.push(now);
+      buckets[actionClass] = bucket;
+      const cap = caps[actionClass];
+      results.push({
+        account: name,
+        actionClass,
+        cap,
+        used: used + charge,
+        remaining: cap - used - charge,
+        resetAt: new Date(Math.min(...bucket) + WINDOW_MS),
+      });
+    }
+    ledgerData.accounts[name] = buckets;
+    writeLedger(ledgerData);
+    return results;
+  });
 }
 
 /**

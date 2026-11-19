@@ -46,7 +46,7 @@ const OUTCOME_STYLE = {
 };
 
 export async function downloadCommand(target, options, deps) {
-  const { createHttpScraper, loadConfig } = deps;
+  const { createMediaScrapers, loadConfig } = deps;
 
   let parsed;
   try {
@@ -79,8 +79,11 @@ export async function downloadCommand(target, options, deps) {
 
   let scrapers;
   try {
+    // The factory from scrapers/twitter/http, not the client Scraper: target
+    // resolution calls scrapeMedia, scrapeProfile, scrapeTweetById,
+    // searchTweets and scrapeCommunityMedia, none of which the Scraper has.
     const config = await loadConfig();
-    scrapers = await createHttpScraper({ cookies: config.cookies, ...(config.httpScraper || {}) });
+    scrapers = await createMediaScrapers(config.httpScraper || {});
   } catch (error) {
     console.error(chalk.red(`Could not start a scraper: ${error.message}`));
     console.error(chalk.dim('Run `xactions login` first, or `xactions doctor` to see what is missing.'));
@@ -125,12 +128,15 @@ export async function downloadCommand(target, options, deps) {
 
     if (json) {
       console.log(JSON.stringify({ target: parsed, found: items.length, summary, results }, null, 2));
+      // An empty result is an error, not a zero; a partial failure is too.
+      if (!items.length || summary.failed) process.exitCode = 1;
       return;
     }
 
     if (!items.length) {
-      console.log(chalk.yellow('No media matched that target.'));
-      if (types) console.log(chalk.dim(`Filtered to: ${types.join(', ')}. Try without --type.`));
+      console.error(chalk.yellow('No media matched that target.'));
+      if (types) console.error(chalk.dim(`Filtered to: ${types.join(', ')}. Try without --type.`));
+      process.exitCode = 1;
       return;
     }
 

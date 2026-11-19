@@ -321,6 +321,20 @@ describe('saveCookies / loadCookies', () => {
     expect(auth2.getCookies().ct0).toBe('csrf1');
   });
 
+  it.skipIf(process.platform === 'win32')('writes the cookie file owner-only, tightening an existing one', async () => {
+    const auth = new TwitterAuth({ fetch: vi.fn() });
+    auth.setCookies({ auth_token: 'tok1', ct0: 'csrf1' });
+    const fp = path.join(tmpDir, 'perm.json');
+    await fs.writeFile(fp, '[]', { mode: 0o644 });
+    await fs.chmod(fp, 0o644);
+    await auth.saveCookies(fp);
+    expect((await fs.stat(fp)).mode & 0o777).toBe(0o600);
+
+    const fresh = path.join(tmpDir, 'fresh.json');
+    await auth.saveCookies(fresh);
+    expect((await fs.stat(fresh)).mode & 0o777).toBe(0o600);
+  });
+
   it('encrypts sensitive cookies when encryption key is provided', async () => {
     const fetchMock = vi.fn().mockResolvedValue(
       mockResponse(VERIFY_CREDENTIALS_RESPONSE),

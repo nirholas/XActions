@@ -73,10 +73,23 @@ reconcile('.claude-plugin/marketplace.json', (j) => {
   }
 });
 
+// The XACTIONS_MCP_TOOLS description tells registry users what loading every
+// tool costs. Its count was typed by hand and said 151 while the server shipped
+// 155, so it is rewritten from TOOLS like every other count here. smithery.yaml
+// copies the description from this file, so it follows. The token figure stays
+// prose: measuring it means importing the server, and this script runs before
+// any dependency is installed.
+const ALL_TOOLS_RE = /\bAll \d+ tools\b/g;
+
 reconcile('server.json', (j) => {
   j.version = VERSION;
   for (const p of j.packages || []) {
     p.version = VERSION;
+    for (const v of p.environmentVariables || []) {
+      if (typeof v.description === 'string') {
+        v.description = v.description.replace(ALL_TOOLS_RE, `All ${TOOL_COUNT} tools`);
+      }
+    }
   }
 });
 
@@ -101,7 +114,10 @@ reconcile('glama.json', () => {});
 
 // smithery.yaml: derived entirely from server.json's env schema, regenerated whole.
 function buildSmithery() {
-  const server = readJson('server.json');
+  // Mirror server.json as this run is about to write it, not as it sits on disk,
+  // so one run settles both files instead of leaving smithery.yaml a run behind.
+  const pending = changes.find((c) => c.file === 'server.json');
+  const server = pending ? JSON.parse(pending.after) : readJson('server.json');
   const envVars = (server.packages?.[0]?.environmentVariables) || [];
   const yamlStr = (s) => JSON.stringify(String(s));
   const lines = [

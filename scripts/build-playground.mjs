@@ -48,7 +48,7 @@ const SHARED_MODULES = [
  */
 async function copyModule({ from, to }) {
   const source = await readFile(path.join(ROOT, from), 'utf8');
-  const banner = `// GENERATED FILE. Do not edit.\n// Source: ${from}\n// Rebuild: npm run build:playground\n\n`;
+  const banner = `// GENERATED FILE. Do not edit.\n// Source: ${from}\n// Rebuild: node scripts/build-playground.mjs\n\n`;
   const output = banner + source;
   await writeFile(path.join(ASSETS, to), output);
   return output.length;
@@ -70,7 +70,7 @@ async function emitStaticPage() {
     .replace(/<meta name="playground-api" content="">/, `<meta name="playground-api" content="${API_BASE}">`)
     .replace(
       '<head>',
-      '<head>\n<!-- GENERATED FILE. Do not edit. Source: playground/public/index.html. Rebuild: npm run build:playground -->'
+      '<head>\n<!-- GENERATED FILE. Do not edit. Source: playground/public/index.html. Rebuild: node scripts/build-playground.mjs -->'
     );
 
   if (rewritten === source) {

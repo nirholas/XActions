@@ -9,15 +9,12 @@ import { assertPublicUrl } from '../utils/publicUrl.js';
 // In-memory job cancellation tracking
 const cancelledJobs = new Set();
 
-// Create Bull queue with Redis
-// prefix keeps keys namespaced when this Redis instance is shared with other services
-const operationsQueue = new Queue('operations', {
+// Create Bull queue with Redis.
+// prefix keeps keys namespaced when this Redis instance is shared with other services.
+// REDIS_URL (set by Railway and most hosts) wins over REDIS_HOST/PORT/PASSWORD;
+// it was ignored, so those deployments queued against localhost.
+const queueOptions = {
   prefix: process.env.REDIS_QUEUE_PREFIX || 'xactions',
-  redis: {
-    host: process.env.REDIS_HOST || 'localhost',
-    port: process.env.REDIS_PORT || 6379,
-    password: process.env.REDIS_PASSWORD
-  },
   defaultJobOptions: {
     attempts: 3,
     backoff: {
@@ -28,7 +25,76 @@ const operationsQueue = new Queue('operations', {
     removeOnComplete: { age: 86_400, count: 5_000 },
     removeOnFail: { age: 86_400, count: 5_000 }
   }
-});
+};
+const operationsQueue = process.env.REDIS_URL
+  ? new Queue('operations', process.env.REDIS_URL, queueOptions)
+  : new Queue('operations', {
+    ...queueOptions,
+    redis: {
+      host: process.env.REDIS_HOST || 'localhost',
+      port: process.env.REDIS_PORT || 6379,
+      password: process.env.REDIS_PASSWORD
+    }
+  });
+
+/** How long a request waits for Redis before the queue is reported unavailable. */
+const QUEUE_READY_TIMEOUT_MS = Math.max(500, parseInt(process.env.XACTIONS_QUEUE_TIMEOUT_MS, 10) || 5_000);
+
+/** Redis is down or unreachable, so nothing can be queued. Retrying later may work. */
+class QueueUnavailableError extends Error {
+  constructor(cause) {
+    super(`The job queue is unavailable (Redis did not answer within ${QUEUE_READY_TIMEOUT_MS / 1000}s). Try again shortly.`);
+    this.name = 'QueueUnavailableError';
+    this.code = 'QUEUE_UNAVAILABLE';
+    this.status = 503;
+    this.cause = cause;
+  }
+}
+
+function withTimeout(promise, ms) {
+  let timer;
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => {
+      timer = setTimeout(() => reject(new Error('timed out')), ms);
+    }),
+  ]).finally(() => clearTimeout(timer));
+}
+
+/**
+ * Add a job, failing fast when Redis is unreachable. Bull queues commands
+ * while its client is offline, so add() on a dead Redis never settled and the
+ * request (and its Operation row) hung at "pending". Nothing is added unless
+ * the client is connected first.
+ */
+async function addToQueue(name, data, opts) {
+  await queueReady();
+  return operationsQueue.add(name, data, opts);
+}
+
+/**
+ * Resolve once the Redis client is connected, or throw QueueUnavailableError.
+ * Bull's own isReady() resolves even while Redis is unreachable, so the
+ * client's connection status is what is checked.
+ */
+async function queueReady() {
+  const client = operationsQueue.client;
+  if (client.status === 'ready') return;
+  let onReady;
+  try {
+    await withTimeout(new Promise((resolve) => client.once('ready', (onReady = resolve))), QUEUE_READY_TIMEOUT_MS);
+  } catch (err) {
+    throw new QueueUnavailableError(err);
+  } finally {
+    client.removeListener('ready', onReady);
+  }
+}
+
+/** The Bull job with this id, failing fast instead of hanging when Redis is down. */
+async function bullJobById(jobId) {
+  await queueReady();
+  return operationsQueue.getJob(jobId);
+}
 
 const processors = await loadProcessors();
 
@@ -42,13 +108,15 @@ async function addJob(type, data, options = {}) {
   assertRunnable(processors, type);
   await checkCallbackUrl(data.config);
 
-  // Create operation record in database
+  // Create operation record in database. Operation.config is a TEXT column:
+  // an object here failed validation, so every addJob caller (A2A task
+  // submission among them) answered 500. The session is never stored.
   const operation = await prisma.operation.create({
     data: {
       type,
       status: 'queued',
       userId: data.userId,
-      config: data.config || {},
+      config: JSON.stringify(redactSession(data.config) || {}),
       createdAt: new Date()
     }
   });
@@ -59,12 +127,21 @@ async function addJob(type, data, options = {}) {
     ...data
   };
 
-  const job = await operationsQueue.add(type, jobData, {
-    priority: options.priority || 10,
-    delay: options.delay || 0,
-    attempts: options.attempts || 3,
-    jobId: operation.id // Use operation ID as job ID for easy lookup
-  });
+  let job;
+  try {
+    job = await addToQueue(type, jobData, {
+      priority: options.priority || 10,
+      delay: options.delay || 0,
+      attempts: options.attempts || 3,
+      jobId: operation.id // Use operation ID as job ID for easy lookup
+    });
+  } catch (err) {
+    await prisma.operation.update({
+      where: { id: operation.id },
+      data: { status: 'failed', error: err.message, completedAt: new Date() }
+    }).catch(() => {});
+    throw err;
+  }
   
   console.log(`📨 Job queued: ${job.id} (${type})`);
   return { jobId: operation.id, bullJobId: job.id, operation };
@@ -91,7 +168,7 @@ async function queueJob(jobData) {
     queuedAt: new Date().toISOString(),
     sessionHash: sessionHashOf(jobData.config),
   };
-  const job = await operationsQueue.add(jobData.type, data, {
+  const job = await addToQueue(jobData.type, data, {
     jobId,
     priority: jobData.priority || 10,
     // A delay in ms, or a repeat such as { cron: '0 9 * * *', tz: 'Europe/Berlin' }.
@@ -124,12 +201,12 @@ async function getJob(jobId) {
   const operation = await prisma.operation.findUnique({ where: { id: jobId } }).catch(() => null);
 
   if (!operation) {
-    const bullJob = await operationsQueue.getJob(jobId);
+    const bullJob = await bullJobById(jobId);
     return bullJob ? describeBullJob(bullJob) : null;
   }
 
-  // Get Bull job for live progress
-  const bullJob = await operationsQueue.getJob(jobId);
+  // Get Bull job for live progress (the row alone answers when Redis is down)
+  const bullJob = await bullJobById(jobId).catch(() => null);
   let progress = null;
   let state = operation.status;
 
@@ -143,7 +220,7 @@ async function getJob(jobId) {
     type: operation.type,
     status: state || operation.status,
     progress,
-    config: operation.config,
+    config: parseResult(operation.config),
     result: parseResult(operation.result),
     error: operation.error,
     createdAt: operation.createdAt,
@@ -182,16 +259,27 @@ async function getHistory(userId, limit = 50) {
 }
 
 /**
- * Cancel a running job
+ * Cancel a queued or running job.
  * @param {string} jobId - The operation/job ID
+ * @returns {Promise<object|null>} null when there is no such job or operation
  */
 async function cancelJob(jobId) {
+  // With Redis down nothing can run, so the row alone is cancelled.
+  const bullJob = await bullJobById(jobId).catch(() => null);
+  // Dashboard operations have a row; AI operations do not.
+  const updated = await prisma.operation.updateMany({
+    where: { id: jobId, status: { notIn: ['completed', 'failed', 'cancelled'] } },
+    data: {
+      status: 'cancelled',
+      completedAt: new Date()
+    }
+  }).catch(() => ({ count: 0 }));
+
+  if (!bullJob && updated.count === 0) return null;
+
   // Mark as cancelled in memory (for long-running operations to check)
   cancelledJobs.add(jobId);
 
-  // Try to remove from Bull queue if not yet started
-  const bullJob = await operationsQueue.getJob(jobId);
-  
   if (bullJob) {
     const state = await bullJob.getState();
     
@@ -204,15 +292,49 @@ async function cancelJob(jobId) {
     }
   }
 
-  // Update database (AI operations have no row)
-  await prisma.operation.updateMany({
-    where: { id: jobId },
-    data: {
-      status: 'cancelled',
-      completedAt: new Date()
-    }
-  });
+  return { success: true, jobId, message: 'Job cancelled' };
+}
 
+/**
+ * Ids the AI and agent routes hand out (ai-…, op-…, script-run-…). Only these
+ * resolve on their unauthenticated status and cancel endpoints: a dashboard
+ * operation's id is a row id, and its owner reads it through /api/operations.
+ */
+const QUEUED_JOB_ID = /^(?:ai|op|script-run)-[A-Za-z0-9-]{16,}$/;
+
+/** Whether an id is one the anonymous AI status and cancel endpoints may resolve. */
+function isQueuedJobId(jobId) {
+  return typeof jobId === 'string' && QUEUED_JOB_ID.test(jobId);
+}
+
+/**
+ * Status of a job queued by the AI routes, from Bull only. Never reads or
+ * returns an Operation row.
+ * @param {string} jobId
+ */
+async function getQueuedJob(jobId) {
+  if (!isQueuedJobId(jobId)) return null;
+  const bullJob = await bullJobById(jobId);
+  return bullJob ? describeBullJob(bullJob) : null;
+}
+
+/**
+ * Cancel a job queued by the AI routes. Never touches an Operation row.
+ * @param {string} jobId
+ * @param {{ sessionCookie?: string }} [caller] - when given, a job queued with
+ *   a session is cancelled only by a caller presenting that same session
+ * @returns {Promise<object|null>} null when there is no such job
+ */
+async function cancelQueuedJob(jobId, caller) {
+  if (!isQueuedJobId(jobId)) return null;
+  const bullJob = await bullJobById(jobId);
+  if (!bullJob) return null;
+  const owner = bullJob.data?.sessionHash;
+  if (caller && owner && owner !== sessionHashOf({ sessionCookie: caller.sessionCookie })) return null;
+  const state = await bullJob.getState();
+  if (state === 'completed' || state === 'failed') return null;
+  cancelledJobs.add(jobId);
+  if (state === 'waiting' || state === 'delayed' || state === 'paused') await bullJob.remove();
   return { success: true, jobId, message: 'Job cancelled' };
 }
 
@@ -248,7 +370,8 @@ async function runProcessor(job, def) {
     return await def.run(ctx);
   } catch (err) {
     // A missing session or bad input fails the same way on every retry.
-    if (isPermanentFailure(err)) await job.discard();
+    // A cancelled job is not retried either.
+    if (isPermanentFailure(err) || isJobCancelled(String(ctx.operationId))) await job.discard();
     throw err;
   } finally {
     await ctx.dispose();
@@ -426,7 +549,12 @@ operationsQueue.on('progress', (job, progress) => {
 
 operationsQueue.on('completed', async (job, result) => {
   if (loud(job)) console.log(`✅ Job completed: ${job.id}`);
-  await updateOperation(job, { status: 'completed', completedAt: new Date(), result: serializeResult(result) });
+  // A cancelled job that ran to its end keeps the status "cancelled" (its
+  // partial result is still stored); it was overwritten with "completed".
+  const cancelled = cancelledJobs.has(roomOf(job));
+  await updateOperation(job, cancelled
+    ? { result: serializeResult(result) }
+    : { status: 'completed', completedAt: new Date(), result: serializeResult(result) });
   await forgetSession(job, true);
 
   global.io?.to(`job:${roomOf(job)}`).emit('job:completed', {
@@ -445,9 +573,20 @@ operationsQueue.on('completed', async (job, result) => {
 });
 
 operationsQueue.on('failed', async (job, err) => {
+  const final = job.attemptsMade >= (job.opts.attempts ?? 1) || isPermanentFailure(err) || cancelledJobs.has(roomOf(job));
+  // Bull fires 'failed' on every attempt. Until the last one the job is only
+  // being retried: record the attempt, but do not mark the operation failed,
+  // tell the dashboard it failed, or POST job.failed to the callback.
+  if (!final) {
+    console.warn(`↻ Job ${job.id} attempt ${job.attemptsMade} failed, retrying: ${err.message}`);
+    await updateOperation(job, { error: err.message, retryCount: job.attemptsMade });
+    return;
+  }
   console.error(`❌ Job failed: ${job.id}`, err.message);
-  const final = job.attemptsMade >= (job.opts.attempts ?? 1) || isPermanentFailure(err);
-  await updateOperation(job, { status: 'failed', error: err.message, retryCount: job.attemptsMade });
+  const cancelled = cancelledJobs.has(roomOf(job));
+  await updateOperation(job, cancelled
+    ? { error: err.message, retryCount: job.attemptsMade }
+    : { status: 'failed', error: err.message, retryCount: job.attemptsMade });
   await forgetSession(job, final);
 
   global.io?.to(`job:${roomOf(job)}`).emit('job:failed', {
@@ -522,6 +661,10 @@ export {
   removeRepeatingJob,
   cancelJob,
   isJobCancelled,
+  isQueuedJobId,
+  getQueuedJob,
+  cancelQueuedJob,
+  QueueUnavailableError,
   operationsQueue,
   processors
 };

@@ -15,12 +15,13 @@
 import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, unlinkSync } from 'fs';
 import { join } from 'path';
 import { homedir } from 'os';
+import { xactionsHome } from './utils/savedSession.js';
 
 // ============================================================================
 // Constants
 // ============================================================================
 
-const PERSONAS_DIR = join(homedir(), '.xactions', 'personas');
+const PERSONAS_DIR = join(xactionsHome(), 'personas');
 const DEFAULT_MODELS = {
   comment: 'google/gemini-flash-2.0',
   post: 'google/gemini-flash-2.0',

@@ -113,6 +113,10 @@ services:
       redis:
         condition: service_healthy
     command: ["node", "api/services/jobQueue.js"]
+    # The image's HEALTHCHECK probes the API's HTTP port, which the worker
+    # never opens, so inherited it would mark the worker unhealthy forever.
+    healthcheck:
+      disable: true
 
 volumes:
   postgres_data:

@@ -22,8 +22,14 @@ function today() {
   return new Date().toISOString().slice(0, 10);
 }
 
-function sanitize(username) {
-  return username.replace(/^@/, '').replace(/[^a-zA-Z0-9_]/g, '');
+/**
+ * Reduce a handle to the characters an X username can contain, so it is safe
+ * as a path segment (no separators, no "..") and as plain text anywhere.
+ * @param {string} username
+ * @returns {string}
+ */
+export function sanitize(username) {
+  return String(username ?? '').replace(/^@/, '').replace(/[^a-zA-Z0-9_]/g, '');
 }
 
 /**

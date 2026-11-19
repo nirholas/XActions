@@ -1,5 +1,6 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 import browserAutomation from '../../browserAutomation.js';
+import { actionBudget } from '../actionBudget.js';
 
 /**
  * Auto-like tweets using browser automation
@@ -8,7 +9,8 @@ import browserAutomation from '../../browserAutomation.js';
  * @param {function} updateProgress - Callback to update job progress
  * @param {function} isCancelled - Function to check if job is cancelled
  */
-async function autoLikeBrowser(userId, config, updateProgress, isCancelled = () => false) {
+async function autoLikeBrowser(userId, config, updateProgress, isCancelled = () => false, charge) {
+  const budget = actionBudget(charge, isCancelled);
   const page = await browserAutomation.createPage(config.sessionCookie);
   
   try {
@@ -65,6 +67,7 @@ async function autoLikeBrowser(userId, config, updateProgress, isCancelled = () 
       updateProgress(`Liking tweet ${i + 1}/${limit} from @${tweet.username}`);
 
       if (!dryRun && tweet.url) {
+        if (!(await budget.spend('like'))) break;
         const result = await browserAutomation.likePost(page, tweet.url);
         
         if (result.success) {
@@ -104,7 +107,8 @@ async function autoLikeBrowser(userId, config, updateProgress, isCancelled = () 
       failed,
       totalProcessed: liked.length + failed.length,
       dryRun,
-      cancelled: isCancelled()
+      cancelled: isCancelled(),
+      stoppedReason: budget.stoppedReason
     };
 
   } finally {

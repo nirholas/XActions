@@ -1,7 +1,13 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 import browserAutomation from '../../browserAutomation.js';
+import { actionBudget } from '../actionBudget.js';
 
-async function unfollowNonFollowersBrowser(userId, config, updateProgress) {
+// Followers are read up to this many. A list that reaches it may be cut short,
+// and anyone past the cut would look like a non-follower and be unfollowed.
+const DEFAULT_MAX_FOLLOWERS = 10000;
+
+async function unfollowNonFollowersBrowser(userId, config, updateProgress, isCancelled = () => false, charge) {
+  const budget = actionBudget(charge, isCancelled);
   const page = await browserAutomation.createPage(config.sessionCookie);
   
   try {
@@ -23,13 +29,24 @@ async function unfollowNonFollowersBrowser(userId, config, updateProgress) {
     updateProgress(`Found ${following.length} accounts you follow`);
     
     updateProgress('Fetching your followers list...');
+    const maxFollowers = config.maxFollowers || DEFAULT_MAX_FOLLOWERS;
     const followers = await browserAutomation.getFollowers(
       page, 
       config.username, 
-      config.maxUsers || 1000
+      maxFollowers
     );
 
     updateProgress(`Found ${followers.length} followers`);
+
+    if (followers.length >= maxFollowers) {
+      throw new Error(
+        `Read ${followers.length} followers, the most this run reads (maxFollowers), so the list may be incomplete. ` +
+          'Nobody was unfollowed: raise maxFollowers above your follower count to run it.'
+      );
+    }
+    if (isCancelled()) {
+      return { success: true, unfollowed: [], cancelled: true };
+    }
 
     // Find non-followers
     const followerUsernames = new Set(followers.map(f => f.username));
@@ -53,6 +70,11 @@ async function unfollowNonFollowersBrowser(userId, config, updateProgress) {
     for (let i = 0; i < Math.min(nonFollowers.length, limit); i++) {
       const user = nonFollowers[i];
       
+      if (!(await budget.spend('unfollow'))) {
+        updateProgress(budget.stoppedReason === 'cancelled' ? 'Job cancelled by user' : `Stopped: ${budget.stoppedReason}`);
+        break;
+      }
+
       updateProgress(`Unfollowing ${user.username} (${i + 1}/${Math.min(nonFollowers.length, limit)})`);
 
       const result = await browserAutomation.unfollowUser(page, user.username);
@@ -78,7 +100,9 @@ async function unfollowNonFollowersBrowser(userId, config, updateProgress) {
       unfollowed,
       failed,
       nonFollowers: nonFollowers.map(u => u.username),
-      totalProcessed: unfollowed.length + failed.length
+      totalProcessed: unfollowed.length + failed.length,
+      cancelled: isCancelled(),
+      stoppedReason: budget.stoppedReason
     };
 
   } finally {

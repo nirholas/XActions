@@ -14,12 +14,13 @@ import Database from 'better-sqlite3';
 import fs from 'fs';
 import path from 'path';
 import os from 'os';
+import { xactionsHome } from '../utils/savedSession.js';
 
 // ============================================================================
 // Database Setup
 // ============================================================================
 
-const DB_DIR = path.join(os.homedir(), '.xactions');
+const DB_DIR = xactionsHome();
 const DB_PATH = path.join(DB_DIR, 'analytics.db');
 
 let _db = null;

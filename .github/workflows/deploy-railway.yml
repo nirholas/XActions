@@ -1,35 +1,50 @@
 # ═══════════════════════════════════════════════════════════════════════════════
 # XActions — Deploy API to Railway
-# Triggers on push to main (auto-deploy)
+# Triggers when CI passes on main (auto-deploy)
 # by nichxbt
 # ═══════════════════════════════════════════════════════════════════════════════
 
 name: Deploy API (Railway)
 
+# This used to run on push to main, in parallel with CI, so a commit that failed
+# its tests was already live by the time the red X appeared. It now waits for
+# the CI workflow to finish on main and deploys only the commit CI passed.
+#
+# workflow_run has no `paths` filter, and diffing only the triggering push would
+# skip a deploy whenever an earlier push's CI was cancelled or red (its changes
+# would never be diffed again), so every green commit on main deploys.
 on:
-  push:
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
     branches: [main]
-    paths:
-      - 'api/**'
-      - 'src/**'
-      - 'prisma/**'
-      - 'package.json'
-      - 'package-lock.json'
 
-concurrency:
-  group: deploy-railway
-  cancel-in-progress: true
+permissions:
+  contents: read
 
 jobs:
   deploy:
     name: Deploy to Railway
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    if: github.ref == 'refs/heads/main'
+    # Job-level, not workflow-level: a workflow-level group would let the run a
+    # red CI triggers (whose job is skipped) cancel a green commit's run.
+    concurrency:
+      group: deploy-railway
+      cancel-in-progress: true
+    # `branches: [main]` matches the head branch name only, which a fork's pull
+    # request can also be called, so require a push to this repository too.
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_repository.full_name == github.repository
 
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          persist-credentials: false
 
       - name: Install Railway CLI
         run: npm install -g @railway/cli

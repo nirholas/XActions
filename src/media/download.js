@@ -61,8 +61,18 @@ async function fetchToFile(url, target, { signal, timeoutMs, onProgress }) {
   const headers = { accept: '*/*' };
   if (already > 0) headers.range = `bytes=${already}-`;
 
+  // `timeoutMs` is an idle timeout, not a deadline for the whole body: it is
+  // re-armed on every chunk, so a 40 MB video on a slow link finishes while a
+  // connection that stops sending is cut off. A stall is retryable; the next
+  // attempt resumes from the `.part` with a Range request.
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  let stalled = false;
+  let timer;
+  const arm = () => {
+    clearTimeout(timer);
+    timer = setTimeout(() => { stalled = true; controller.abort(); }, timeoutMs);
+  };
+  arm();
   const onAbort = () => controller.abort();
   signal?.addEventListener('abort', onAbort, { once: true });
 
@@ -94,6 +104,7 @@ async function fetchToFile(url, target, { signal, timeoutMs, onProgress }) {
     const sink = createWriteStream(partial, { flags: resuming ? 'a' : 'w' });
     const source = Readable.fromWeb(res.body);
     source.on('data', (chunk) => {
+      arm();
       received += chunk.length;
       onProgress?.({ received, total });
     });
@@ -103,6 +114,13 @@ async function fetchToFile(url, target, { signal, timeoutMs, onProgress }) {
     const { readFile } = await import('node:fs/promises');
     const bytes = await readFile(target);
     return { bytes: bytes.length, hash: hashBytes(bytes) };
+  } catch (error) {
+    if (stalled && !signal?.aborted) {
+      const stall = new Error(`no data for ${timeoutMs} ms`);
+      stall.retryable = true;
+      throw stall;
+    }
+    throw error;
   } finally {
     clearTimeout(timer);
     signal?.removeEventListener('abort', onAbort);
@@ -114,6 +132,7 @@ async function fetchToFile(url, target, { signal, timeoutMs, onProgress }) {
  *
  * @param {object} item
  * @param {object} ctx  { outputDir, template, archive, overwrite, dryRun, retries, timeoutMs, signal, onProgress }
+ *   `timeoutMs` is how long a connection may go without sending a byte.
  * @returns {Promise<object>} the item plus `{ outcome, path, bytes, hash, reason }`
  */
 export async function downloadItem(item, ctx) {
@@ -154,16 +173,26 @@ export async function downloadItem(item, ctx) {
 
       // Identical bytes already on disk under another name: keep both paths,
       // store one copy.
+      // The link is made under a temporary name and renamed over the target,
+      // so the downloaded file is only replaced once its twin is in place: a
+      // link that fails (across filesystems, or the twin was deleted) leaves
+      // the downloaded copy exactly where it was.
       const twin = archive?.hashPath(hash);
       if (twin && twin !== target) {
+        const staged = `${target}.link-${process.pid}-${Date.now()}`;
+        let linked = false;
         try {
-          await unlink(target);
-          await link(twin, target);
-          await archive.record({ item, hash, path: target, bytes, url: item.url });
-          return { ...result, outcome: 'deduped', bytes, hash, reason: `same bytes as ${twin}` };
+          await link(twin, staged);
+          await rename(staged, target);
+          linked = true;
         } catch {
           // Hard links fail across filesystems; the downloaded copy is already
           // correct, so keep it rather than failing the item.
+          await unlink(staged).catch(() => {});
+        }
+        if (linked) {
+          await archive.record({ item, hash, path: target, bytes, url: item.url });
+          return { ...result, outcome: 'deduped', bytes, hash, reason: `same bytes as ${twin}` };
         }
       }
 
@@ -171,6 +200,8 @@ export async function downloadItem(item, ctx) {
       return { ...result, outcome: 'downloaded', bytes, hash };
     } catch (error) {
       lastError = error;
+      // A caller's abort is final; a stall carries retryable=true from
+      // fetchToFile; any other AbortError is treated as final too.
       const retryable = error.retryable ?? (error.name === 'AbortError' ? false : true);
       if (!retryable || attempt === retries || signal?.aborted) break;
       await sleep(Math.min(2 ** attempt * 500, 8000));

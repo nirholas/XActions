@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken';
 import { prisma } from '../../src/utils/prisma.js';
 import { body, validationResult } from 'express-validator';
 import validator from 'validator';
+import { signSessionToken, verifySessionToken } from '../utils/sessionToken.js';
 
 const router = express.Router();
 
@@ -88,12 +89,7 @@ router.post('/register',
         }
       });
 
-      // Generate JWT (use username if no email)
-      const token = jwt.sign(
-        { userId: user.id, username: user.username },
-        process.env.JWT_SECRET,
-        { expiresIn: '7d' }
-      );
+      const token = signSessionToken(user);
 
       res.status(201).json({
         token,
@@ -166,12 +162,7 @@ router.post('/login',
         return res.status(401).json({ error: 'Invalid credentials' });
       }
 
-      // Generate JWT
-      const token = jwt.sign(
-        { userId: user.id, username: user.username },
-        process.env.JWT_SECRET,
-        { expiresIn: '7d' }
-      );
+      const token = signSessionToken(user);
 
       res.json({
         token,
@@ -222,9 +213,11 @@ router.post('/refresh', async (req, res) => {
       return res.status(401).json({ error: 'Token too old to refresh — please log in again' });
     }
 
-    // Verify signature (allow recently expired tokens within the refresh window)
+    // Verify signature (allow recently expired tokens within the refresh window).
+    // Only a session token refreshes: an OAuth state value is signed with the
+    // same secret and once came back from here as a seven-day session.
     try {
-      jwt.verify(token, process.env.JWT_SECRET, { ignoreExpiration: true });
+      verifySessionToken(token, { ignoreExpiration: true });
     } catch {
       return res.status(401).json({ error: 'Invalid token signature' });
     }
@@ -236,11 +229,7 @@ router.post('/refresh', async (req, res) => {
     }
 
     // Generate new token
-    const newToken = jwt.sign(
-      { userId: decoded.userId, username: decoded.username },
-      process.env.JWT_SECRET,
-      { expiresIn: '7d' }
-    );
+    const newToken = signSessionToken(user);
 
     res.json({ token: newToken });
   } catch (error) {

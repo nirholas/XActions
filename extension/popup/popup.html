@@ -566,6 +566,14 @@
       </label>
     </div>
     <div class="settings-section">
+      <h3>Custom AI provider</h3>
+      <label>Chat-completions URL for the <code>custom</code> provider
+        <input type="url" id="llmCustomBaseUrl" placeholder="https://example.com/v1/chat/completions" autocomplete="off" spellcheck="false">
+      </label>
+      <p class="settings-hint">Page scripts that ask the extension for a <code>custom</code> completion are sent here and nowhere else. Leave blank to turn the custom provider off.</p>
+      <button id="btnSaveLlmCustomBaseUrl" class="btn-secondary">Save URL</button>
+    </div>
+    <div class="settings-section">
       <h3>Data</h3>
       <button id="btnExportSettings" class="btn-secondary">Export settings</button>
       <button id="btnImportSettings" class="btn-secondary">Import settings</button>

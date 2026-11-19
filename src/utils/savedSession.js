@@ -19,6 +19,22 @@ import os from 'node:os';
 import path from 'node:path';
 
 /**
+ * The XActions home directory: `XACTIONS_HOME` when set, otherwise
+ * `~/.xactions`. Read at call time so the variable can be set after import.
+ *
+ * Every CLI command that saves or reads a session, the config file or a cache
+ * resolves its directory through this, so `XACTIONS_HOME` moves all of them
+ * together instead of only the MCP server's half.
+ *
+ * @param {NodeJS.ProcessEnv} [env=process.env]
+ * @returns {string}
+ */
+export function xactionsHome(env = process.env) {
+  if (env.XACTIONS_HOME) return env.XACTIONS_HOME;
+  return path.join(os.homedir(), '.xactions');
+}
+
+/**
  * Where sessions live, honouring `XACTIONS_HOME` and staying out of the real
  * home directory while the test suite runs.
  *
@@ -29,7 +45,7 @@ export function sessionDir(override) {
   if (override) return override;
   if (process.env.XACTIONS_HOME) return process.env.XACTIONS_HOME;
   if (process.env.VITEST) return path.join(os.tmpdir(), `xactions-vitest-${process.pid}`);
-  return path.join(os.homedir(), '.xactions');
+  return xactionsHome();
 }
 
 /**

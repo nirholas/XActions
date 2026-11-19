@@ -1,7 +1,7 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 import browserAutomation from '../../browserAutomation.js';
 
-async function detectUnfollowersBrowser(userId, config, updateProgress) {
+async function detectUnfollowersBrowser(userId, config, updateProgress, isCancelled = () => false) {
   const page = await browserAutomation.createPage(config.sessionCookie);
   
   try {
@@ -20,6 +20,10 @@ async function detectUnfollowersBrowser(userId, config, updateProgress) {
     );
 
     updateProgress(`Found ${following.length} accounts you follow`);
+
+    if (isCancelled()) {
+      return { success: false, cancelled: true };
+    }
     
     updateProgress('Fetching your followers list...');
     const followers = await browserAutomation.getFollowers(

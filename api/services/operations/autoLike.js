@@ -1,12 +1,14 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 import { prisma } from '../../../src/utils/prisma.js';
 import { getTwitterClient } from '../../routes/twitter.js';
+import { actionBudget } from './actionBudget.js';
 
 /**
  * Auto-like tweets based on search query or target user's tweets
  * Uses Twitter API when OAuth tokens available
  */
-async function processAutoLike({ operationId, userId, config }, isCancelled = () => false) {
+async function processAutoLike({ operationId, userId, config }, isCancelled = () => false, charge) {
+  const budget = actionBudget(charge, isCancelled);
   try {
     await prisma.operation.update({
       where: { id: operationId },
@@ -71,6 +73,8 @@ async function processAutoLike({ operationId, userId, config }, isCancelled = ()
 
       if (likedCount >= maxLikes) break;
 
+      if (!dryRun && !(await budget.spend('like'))) break;
+
       try {
         if (!dryRun) {
           await client.post(`/users/${myTwitterId}/likes`, {
@@ -109,7 +113,8 @@ async function processAutoLike({ operationId, userId, config }, isCancelled = ()
       likedTweets: likedTweets.slice(0, 20),
       errors: errors.slice(0, 10),
       dryRun,
-      cancelled: isCancelled()
+      cancelled: isCancelled(),
+      stoppedReason: budget.stoppedReason
     };
   } catch (error) {
     console.error('❌ Auto-like error:', error);

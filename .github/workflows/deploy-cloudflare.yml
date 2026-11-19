@@ -1,6 +1,6 @@
 # ═══════════════════════════════════════════════════════════════════════════════
 # XActions — Deploy Static Frontend to Cloudflare Pages
-# Triggers on push to main when dashboard files change
+# Triggers when CI passes on main
 # by nichxbt
 # ═══════════════════════════════════════════════════════════════════════════════
 
@@ -10,38 +10,38 @@ name: Deploy Frontend (Cloudflare Pages)
 # Pages -> Edit) and CLOUDFLARE_ACCOUNT_ID. Without them wrangler exits 1 with
 # "it's necessary to set a CLOUDFLARE_API_TOKEN environment variable".
 
+# This used to run on push to main, in parallel with CI, so a commit that failed
+# its tests was already deployed by the time the red X appeared. It now waits
+# for the CI workflow to finish on main and deploys only the commit CI passed.
+#
+# workflow_run has no `paths` filter, and diffing only the triggering push would
+# skip a deploy whenever an earlier push's CI was cancelled or red (its changes
+# would never be diffed again), so every green commit on main deploys. The
+# build is a few seconds of file copying, and Pages deploys are atomic.
 on:
-  push:
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
     branches: [main]
-    paths:
-      - 'dashboard/**'
-      - 'public/**'
-      - 'site/**'
-      - 'functions/**'
-      - 'src/video/**'
-      - 'src/ask/**'
-      - 'src/edge/**'
-      - 'src/mcp/**'
-      - 'src/scrapers/twitter/http/**'
-      - 'api/openapi.js'
-      - 'api/config/**'
-      - 'packages/x402-mcp/**'
-      - 'deploy/cloudflare/**'
-      - 'llms.txt'
-      - 'llms-full.txt'
-      - '.github/workflows/deploy-cloudflare.yml'
   workflow_dispatch:
-
-concurrency:
-  group: deploy-cloudflare
-  cancel-in-progress: true
 
 jobs:
   deploy:
     name: Deploy to Cloudflare Pages
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    if: github.ref == 'refs/heads/main'
+    # Job-level, not workflow-level: a workflow-level group would let the run a
+    # red CI triggers (whose job is skipped) cancel a green commit's run.
+    concurrency:
+      group: deploy-cloudflare
+      cancel-in-progress: true
+    # `branches: [main]` matches the head branch name only, which a fork's pull
+    # request can also be called, so require a push to this repository too.
+    if: >-
+      (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main') ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.event == 'push' &&
+       github.event.workflow_run.head_repository.full_name == github.repository)
 
     permissions:
       contents: read
@@ -50,6 +50,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          persist-credentials: false
 
       # dashboard/ alone is not the site: the root page comes from site/, the og
       # images, icons, robots.txt and sitemap.xml come from public/, and the two

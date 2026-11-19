@@ -78,13 +78,16 @@ jobs:
       - name: Generate Prisma client
         run: npx prisma generate
 
+      # continue-on-error makes a failed step report success to `failure()`, so
+      # the fallback has to ask this step's own outcome instead.
       - name: Run database migrations
+        id: migrate
         run: npx prisma migrate deploy
         continue-on-error: true
 
       - name: Push schema (fallback)
         run: npx prisma db push
-        if: failure()
+        if: steps.migrate.outcome == 'failure'
 
       - name: Run tests
         run: npm test
@@ -149,8 +152,10 @@ jobs:
 
       # bin/ was never syntax-checked, which is how `unfollowx` shipped for two
       # years as a SyntaxError: a `#` shell comment on line 2 of a Node script.
+      # The check sits inside `if`, not an `&&` chain: a failing `node -c` at the
+      # end of a chain is just a false condition to `sh -e`, so it never failed.
       - name: Syntax check (bin)
-        run: for f in bin/*; do [ -f "$f" ] && head -1 "$f" | grep -q '^#!.*node' && node -c "$f"; done; true
+        run: for f in bin/*; do if [ -f "$f" ] && head -1 "$f" | grep -q '^#!.*node'; then node -c "$f"; fi; done
 
       - name: One licence, everywhere
         run: npm run check:licenses
@@ -166,6 +171,15 @@ jobs:
           npx xactions --version
           npx xactions --help >/dev/null
           node -e "import('xactions').then(m => { if (!m.Scraper) { throw new Error('xactions main export is missing Scraper'); } console.log('package entry point resolves'); })"
+          # `ask` reads dashboard/data/ask-index.json and ask-actions.json from the
+          # install and exits 1 when they are missing. The suggested actions come
+          # from the local catalogue before any network lane is tried, so the
+          # grep holds offline too.
+          timeout 180 npx xactions ask "unfollow everyone" --no-sources > ask.out
+          grep -q 'x_unfollow_all' ask.out || { cat ask.out; echo "::error::xactions ask suggested no actions from the installed catalogue"; exit 1; }
+          # Importing the MCP entry point must load the tool list without
+          # starting the stdio server (its is-main guard compares argv[1]).
+          node -e "import('xactions/mcp').then(m => { if (!Array.isArray(m.TOOLS) || m.TOOLS.length < 100) { throw new Error('xactions/mcp exposes ' + (m.TOOLS ? m.TOOLS.length : 'no') + ' tools'); } console.log('MCP server loads with', m.TOOLS.length, 'tools'); })"
 
   docs:
     name: Documentation
@@ -184,12 +198,20 @@ jobs:
       # Needs no dependencies: the auditor is dependency-free by design so a
       # broken link fails in seconds rather than after a full install.
 
-      # The retrieval index and the action catalogue are derived from the tree,
-      # so any commit that adds a doc, a skill, a browser script or an MCP tool
-      # without rerunning the generators leaves them behind and fails this job
-      # for whoever pushes next. Regenerate first, then check: the gate keeps
-      # catching what it is actually for (dead links, wrong counts, commands
-      # that do not exist) and stops failing on a lag nobody introduced.
+      # The registry manifests (server.json, smithery.yaml, the plugin and
+      # marketplace JSON) and the ask index are published from the committed
+      # copies, so a stale one ships stale. Check them against the tree before
+      # anything is regenerated: once the generators have run, `--check` can only
+      # ever compare a file with itself.
+      - name: Registry manifests are in sync
+        run: node scripts/sync-registry.mjs --check
+
+      - name: Ask index and action catalogue are in sync
+        run: npm run ask:index:check
+
+      # Regenerate before the audit so it judges the tree as it would be
+      # generated (dead links, wrong counts, commands that do not exist)
+      # rather than reporting the same staleness a second time.
       - name: Regenerate derived documentation artifacts
         run: |
           npm run ask:index
@@ -198,9 +220,8 @@ jobs:
       - name: Audit documentation
         run: npm run docs:check
 
-      # A stale artifact is still worth knowing about, because the deployed edge
-      # serves the committed copy. Report it without failing the build; the
-      # deploy regenerates before it builds, so production is never stale.
+      # The gates above already fail on a stale artifact; this lists exactly
+      # what regeneration changed, so the fix is obvious from the log.
       - name: Report uncommitted regeneration
         if: always()
         run: |

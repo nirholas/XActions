@@ -185,7 +185,9 @@ export class Tweet {
 
     // Core fields
     tweet.id = legacy.id_str || raw.rest_id || '';
-    tweet.fullText = legacy.full_text || legacy.text || '';
+    // A post over 280 characters arrives with `legacy.full_text` cut off and
+    // its whole body in `note_tweet`.
+    tweet.fullText = raw.note_tweet?.note_tweet_results?.result?.text || legacy.full_text || legacy.text || '';
     tweet.text = tweet.fullText;
     tweet.conversationId = legacy.conversation_id_str || '';
 

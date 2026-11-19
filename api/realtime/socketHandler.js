@@ -1,7 +1,8 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+import crypto from 'node:crypto';
 import { Server } from 'socket.io';
-import jwt from 'jsonwebtoken';
 import { prisma } from '../../src/utils/prisma.js';
+import { verifySessionToken } from '../utils/sessionToken.js';
 
 // Payment routes archived - XActions is now 100% free and open-source
 // All credit checks have been removed - unlimited operations for all users
@@ -31,6 +32,11 @@ async function canWatchJob(socket, jobId) {
   return /^(ai|op)-/.test(jobId) && jobId.length >= 36;
 }
 
+/** The room that carries one signed-in user's events. */
+export function userRoom(userId) {
+  return `user:${userId}`;
+}
+
 export function initializeSocketIO(httpServer) {
   const io = new Server(httpServer, {
     cors: {
@@ -53,7 +59,7 @@ export function initializeSocketIO(httpServer) {
       }
 
       if (token) {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const decoded = verifySessionToken(token);
         const user = await prisma.user.findUnique({
           where: { id: decoded.userId }
         });
@@ -74,6 +80,10 @@ export function initializeSocketIO(httpServer) {
 
   io.on('connection', (socket) => {
     console.log(`🔌 Socket connected: ${socket.id} (${socket.role})`);
+
+    // Per-user events (unfollower scans and alerts) go to this room only, never
+    // to every socket: agent sockets connect without any token.
+    if (socket.user?.id) socket.join(userRoom(socket.user.id));
 
     // Handle different connection types
     if (socket.role === 'agent') {
@@ -265,8 +275,10 @@ function handleAgentConnection(io, socket) {
 
 // ===== DASHBOARD (user's control panel) =====
 function handleDashboardConnection(io, socket) {
-  // Generate session ID for this user
-  const sessionId = `session_${socket.user.id}_${Date.now()}`;
+  // The session id is the only credential an agent socket presents, so it is
+  // random: it once was the user id and a timestamp, which anyone could guess
+  // to attach as that user's agent and read or steer their operations.
+  const sessionId = `session_${crypto.randomBytes(16).toString('hex')}`;
   
   // Create session
   activeSessions.set(sessionId, {
@@ -345,6 +357,7 @@ function handleAdminConnection(io, socket) {
   }
 
   adminSockets.add(socket);
+  socket.join('admins');
   
   // Send current active sessions
   const sessions = Array.from(activeSessions.entries()).map(([id, session]) => ({
@@ -467,6 +480,26 @@ function generateAgentScript(sessionId) {
     setTimeout(() => div.remove(), 3000);
   }
   
+  // The signed-in account, from the side bar link present on every x.com page.
+  function currentUsername() {
+    const link = document.querySelector('a[data-testid="AppTabBar_Profile_Link"]')?.getAttribute('href');
+    if (link && /^\\/\\w+$/.test(link)) return link.slice(1);
+    return document.querySelector('[data-testid="UserName"]')?.textContent?.match(/@(\\w+)/)?.[1] || null;
+  }
+
+  // x.com is a single-page app. Assigning location.href reloads the page, which
+  // ends this script and its socket mid-operation, so the client-side router is
+  // moved with pushState + popstate instead, then the list is awaited.
+  async function goTo(path) {
+    const sleep = ms => new Promise(r => setTimeout(r, ms));
+    if (location.pathname.toLowerCase() !== path.toLowerCase()) {
+      history.pushState({}, '', path);
+      window.dispatchEvent(new PopStateEvent('popstate', { state: {} }));
+    }
+    for (let i = 0; i < 60 && !document.querySelector('[data-testid="UserCell"]'); i++) await sleep(250);
+    await sleep(500);
+  }
+
   // Operation implementations will be injected by the server
   async function executeOperation(socket, operation, config) {
     window.XACTIONS_STOP = false;
@@ -493,14 +526,13 @@ function generateAgentScript(sessionId) {
     socket.emit('progress', { status: 'starting', message: 'Finding non-followers...' });
     
     // Navigate to following page
-    const username = document.querySelector('[data-testid="UserName"]')?.textContent?.match(/@(\\w+)/)?.[1];
+    const username = currentUsername();
     if (!username) {
       socket.emit('error', { message: 'Could not detect your username. Make sure you are on x.com' });
       return;
     }
     
-    window.location.href = 'https://x.com/' + username + '/following';
-    await sleep(2000);
+    await goTo('/' + username + '/following');
     
     while (unfollowed < max && !window.XACTIONS_STOP) {
       const cells = document.querySelectorAll('[data-testid="UserCell"]');
@@ -567,14 +599,13 @@ function generateAgentScript(sessionId) {
     
     socket.emit('progress', { status: 'starting', message: 'Starting mass unfollow...' });
     
-    const username = document.querySelector('[data-testid="UserName"]')?.textContent?.match(/@(\\w+)/)?.[1];
+    const username = currentUsername();
     if (!username) {
       socket.emit('error', { message: 'Could not detect your username' });
       return;
     }
     
-    window.location.href = 'https://x.com/' + username + '/following';
-    await sleep(2000);
+    await goTo('/' + username + '/following');
     
     while (unfollowed < max && !window.XACTIONS_STOP) {
       const btn = document.querySelector('[data-testid$="-unfollow"]');
@@ -623,15 +654,14 @@ function generateAgentScript(sessionId) {
     
     socket.emit('progress', { status: 'starting', message: 'Scanning followers...' });
     
-    const username = document.querySelector('[data-testid="UserName"]')?.textContent?.match(/@(\\w+)/)?.[1];
+    const username = currentUsername();
     if (!username) {
       socket.emit('error', { message: 'Could not detect your username' });
       return;
     }
     
     // Get current followers
-    window.location.href = 'https://x.com/' + username + '/followers';
-    await sleep(2000);
+    await goTo('/' + username + '/followers');
     
     const followers = new Set();
     let lastSize = 0;

@@ -1,12 +1,14 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 import { prisma } from '../../../src/utils/prisma.js';
 import { getTwitterClient } from '../../routes/twitter.js';
+import { actionBudget } from './actionBudget.js';
 
 /**
  * Follow users who tweet about specific keywords/hashtags
  * Uses Twitter API when OAuth tokens available
  */
-async function processKeywordFollow({ operationId, userId, config }, isCancelled = () => false) {
+async function processKeywordFollow({ operationId, userId, config }, isCancelled = () => false, charge) {
+  const budget = actionBudget(charge, isCancelled);
   try {
     await prisma.operation.update({
       where: { id: operationId },
@@ -98,6 +100,8 @@ async function processKeywordFollow({ operationId, userId, config }, isCancelled
 
       if (followedCount >= maxFollows) break;
 
+      if (!dryRun && !(await budget.spend('follow'))) break;
+
       try {
         if (!dryRun) {
           await client.post(`/users/${myTwitterId}/following`, {
@@ -147,7 +151,8 @@ async function processKeywordFollow({ operationId, userId, config }, isCancelled
       errors: errors.slice(0, 10),
       searchQuery,
       dryRun,
-      cancelled: isCancelled()
+      cancelled: isCancelled(),
+      stoppedReason: budget.stoppedReason
     };
   } catch (error) {
     console.error('❌ Keyword follow error:', error);

@@ -109,6 +109,18 @@ export function validatePlugin(mod) {
 // ============================================================================
 
 /**
+ * The bare package name of an npm install spec: `pkg@1.2.3` → `pkg`,
+ * `@scope/pkg@^2` → `@scope/pkg`. A spec without a version is returned as is.
+ *
+ * @param {string} spec
+ * @returns {string}
+ */
+export function packageNameFromSpec(spec) {
+  const at = spec.startsWith('@') ? spec.indexOf('@', 1) : spec.indexOf('@');
+  return at > 0 ? spec.slice(0, at) : spec;
+}
+
+/**
  * Load a single plugin by name or path
  * @param {string} nameOrPath - npm package name or local file path
  * @returns {Promise<Object>} The loaded and validated plugin module
@@ -121,9 +133,11 @@ export async function loadPlugin(nameOrPath) {
     const resolved = nameOrPath.startsWith('file://') ? nameOrPath : `file://${path.resolve(nameOrPath)}`;
     mod = await import(resolved);
   } else {
-    // Load as npm package — use createRequire to resolve from cwd
+    // Load as npm package — use createRequire to resolve from cwd. The spec
+    // may carry a version (`xactions-plugin-x@1.2.3`), which npm install
+    // understands and require.resolve does not.
     const require = createRequire(path.join(process.cwd(), 'package.json'));
-    const resolved = require.resolve(nameOrPath);
+    const resolved = require.resolve(packageNameFromSpec(nameOrPath));
     mod = await import(`file://${resolved}`);
   }
 
@@ -150,7 +164,9 @@ export async function loadAllPlugins() {
     if (entry.enabled === false) continue;
 
     try {
-      const plugin = await loadPlugin(entry.path || name);
+      // The registry is keyed by the plugin's declared name, which need not
+      // be its package name; load by what was installed.
+      const plugin = await loadPlugin(entry.path || entry.package || name);
       plugins.push(plugin);
     } catch (error) {
       console.error(`⚠️  Failed to load plugin "${name}": ${error.message}`);

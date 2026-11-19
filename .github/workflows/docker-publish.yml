@@ -6,16 +6,19 @@
 
 name: Docker Publish
 
+# Version tags and published releases build straight away, as before. The main
+# branch image used to build on push too, in parallel with CI, so a commit that
+# failed its tests was already `:main` on GHCR; it now waits for the CI workflow
+# to pass on main and builds exactly the commit CI tested.
 on:
   push:
-    branches: [main]
     tags: ['v*']
   release:
     types: [published]
-
-concurrency:
-  group: docker-publish-${{ github.ref }}
-  cancel-in-progress: true
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+    branches: [main]
 
 env:
   REGISTRY: ghcr.io
@@ -26,6 +29,20 @@ jobs:
     name: Build & Push Image
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    # Job-level, not workflow-level: a workflow-level group would let the run a
+    # red CI triggers (whose job is skipped) cancel a green commit's run.
+    concurrency:
+      group: docker-publish-${{ github.ref }}
+      cancel-in-progress: true
+
+    # For workflow_run, `branches: [main]` matches the head branch name only,
+    # which a fork's pull request can also be called, so require a push to
+    # this repository too.
+    if: >-
+      github.event_name != 'workflow_run' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.event == 'push' &&
+       github.event.workflow_run.head_repository.full_name == github.repository)
 
     permissions:
       contents: read
@@ -34,6 +51,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          persist-credentials: false
+
+      # Under workflow_run, github.ref and github.sha describe the default branch
+      # at the moment the run was queued, not the commit CI tested, so the
+      # branch and sha tags are named from the tested commit explicitly.
+      - name: Resolve the commit being built
+        id: commit
+        env:
+          SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
+        run: |
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+          echo "short=${SHA::7}" >> "$GITHUB_OUTPUT"
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
@@ -51,10 +82,12 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=ref,event=branch
+            type=raw,value=main,enable=${{ github.event_name == 'workflow_run' }}
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
-            type=sha,prefix=
+            type=raw,value=${{ steps.commit.outputs.short }}
+          labels: |
+            org.opencontainers.image.revision=${{ steps.commit.outputs.sha }}
 
       - name: Build and push
         uses: docker/build-push-action@v7

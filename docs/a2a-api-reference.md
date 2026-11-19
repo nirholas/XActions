@@ -232,15 +232,18 @@ Register remote agents by URL.
 
 ## Authentication
 
-Requests can be authenticated using:
+Every `/a2a` route requires one of these; only `/.well-known/agent.json` is public.
 
 | Scheme | Header | Format |
 |--------|--------|--------|
-| API Key | `X-Api-Key` | `xa2a_...` |
+| API Key | `Authorization` | `ApiKey xa2a_...` |
 | JWT | `Authorization` | `Bearer <token>` |
 
-When `enableAuth: false`, all requests are accepted.
-
+A missing or invalid credential answers 401; a valid one without the needed
+permission (for example `write` for a write tool, `admin` for discovery)
+answers 403. Issue keys with `node src/a2a/index.js --create-key <label> --preset readonly|standard|full`.
+Authentication is off only with `enableAuth: false`, `--no-auth`, or
+`XACTIONS_A2A_ALLOW_UNAUTHENTICATED=1`, and the server warns when it is.
 ---
 
 ## Error Codes

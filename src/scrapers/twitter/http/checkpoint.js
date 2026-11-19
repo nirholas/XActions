@@ -13,6 +13,12 @@
  * so the same command finishes the job. Borrowed from the CSV-resume idea in
  * Altimis/Scweet, minus the CSV.
  *
+ * The items themselves are appended, one JSON line per item, to a sidecar
+ * file next to the checkpoint (`<name>.items.jsonl`), so the resumed run
+ * returns everything both runs collected, not only its own share. A
+ * checkpoint written before the sidecar existed still resumes; it just has
+ * no earlier items to hand back.
+ *
  * Files live under `$XACTIONS_HOME/checkpoints/` (default `~/.xactions`).
  *
  * @author nich (@nichxbt)
@@ -33,6 +39,15 @@ const CHECKPOINT_DIRNAME = 'checkpoints';
 function fileNameFor(key) {
   const safe = String(key).replace(/[^a-zA-Z0-9._-]+/g, '_').replace(/^_+|_+$/g, '');
   return `${safe || 'checkpoint'}.json`;
+}
+
+/**
+ * Path of the item sidecar for a checkpoint file.
+ * @param {string} filePath
+ * @returns {string}
+ */
+function itemsPathFor(filePath) {
+  return filePath.replace(/\.json$/, '') + '.items.jsonl';
 }
 
 /**
@@ -60,8 +75,13 @@ function writeAtomic(filePath, data) {
  * @returns {{
  *   key: string,
  *   path: string,
- *   save: (state: { cursor: string|null, count?: number, meta?: object }) => object,
- *   resume: () => ({ cursor: string|null, count: number, updatedAt: string, meta: object }|null),
+ *   itemsPath: string,
+ *   save: (state: { cursor: string|null, count?: number, meta?: object, items?: number }) => object,
+ *   resume: () => ({ cursor: string|null, count: number, updatedAt: string, meta: object, items: number|null }|null),
+ *   appendItems: (items: object[]) => void,
+ *   loadItems: (max?: number) => object[],
+ *   replaceItems: (items: object[]) => void,
+ *   clearItems: () => void,
  *   clear: () => void,
  *   exists: () => boolean,
  * }}
@@ -72,15 +92,17 @@ export function createCheckpoint({ key, dir } = {}) {
   }
   const directory = dir || path.join(resolveCacheDir(), CHECKPOINT_DIRNAME);
   const filePath = path.join(directory, fileNameFor(key));
+  const itemsPath = itemsPathFor(filePath);
 
   return {
     key,
     path: filePath,
+    itemsPath,
 
     /**
      * Persist the position after a page. Returns the record written.
      */
-    save({ cursor = null, count = 0, meta = {} } = {}) {
+    save({ cursor = null, count = 0, meta = {}, items } = {}) {
       const record = {
         key,
         cursor: cursor || null,
@@ -88,6 +110,8 @@ export function createCheckpoint({ key, dir } = {}) {
         updatedAt: new Date().toISOString(),
         meta: meta && typeof meta === 'object' ? meta : {},
       };
+      // How many sidecar lines belong to this position (see appendItems).
+      if (Number.isFinite(items)) record.items = items;
       writeAtomic(filePath, record);
       return record;
     },
@@ -112,14 +136,67 @@ export function createCheckpoint({ key, dir } = {}) {
           count: Number(parsed.count) || 0,
           updatedAt: parsed.updatedAt || null,
           meta: parsed.meta && typeof parsed.meta === 'object' ? parsed.meta : {},
+          items: Number.isFinite(parsed.items) ? parsed.items : null,
         };
       } catch {
         return null;
       }
     },
 
+    /**
+     * Append collected items to the sidecar, one JSON line each. Called before
+     * `save()` moves the cursor past them, so a crash between the two leaves
+     * extra lines, which `loadItems(count)` ignores, never missing ones.
+     */
+    appendItems(items) {
+      if (!Array.isArray(items) || items.length === 0) return;
+      fs.mkdirSync(path.dirname(itemsPath), { recursive: true });
+      fs.appendFileSync(itemsPath, items.map((item) => JSON.stringify(item)).join('\n') + '\n');
+    },
+
+    /**
+     * Items saved by earlier runs, at most `max` of them. A torn last line
+     * (a crash mid-append) is skipped.
+     */
+    loadItems(max = Infinity) {
+      let text;
+      try {
+        text = fs.readFileSync(itemsPath, 'utf8');
+      } catch {
+        return [];
+      }
+      const items = [];
+      for (const line of text.split('\n')) {
+        if (items.length >= max) break;
+        if (!line.trim()) continue;
+        try {
+          items.push(JSON.parse(line));
+        } catch {
+          // torn write: ignore
+        }
+      }
+      return items;
+    },
+
+    /**
+     * Rewrite the sidecar to hold exactly `items`, atomically. A resumed run
+     * calls this so lines a crash left past the saved position are dropped
+     * before new ones are appended after them.
+     */
+    replaceItems(items) {
+      fs.mkdirSync(path.dirname(itemsPath), { recursive: true });
+      const tmp = `${itemsPath}.${process.pid}.${Date.now()}.tmp`;
+      fs.writeFileSync(tmp, items.map((item) => JSON.stringify(item) + '\n').join(''));
+      fs.renameSync(tmp, itemsPath);
+    },
+
+    clearItems() {
+      fs.rmSync(itemsPath, { force: true });
+    },
+
     clear() {
       fs.rmSync(filePath, { force: true });
+      fs.rmSync(itemsPath, { force: true });
     },
 
     exists() {
@@ -134,8 +211,14 @@ export function createCheckpoint({ key, dir } = {}) {
  * Every paginated scraper (`scrapeFollowers`, `scrapeTweets`, `searchTweets`,
  * ...) calls this once before its loop. With no checkpoint it is a no-op
  * pass-through; with one, it resumes the cursor, shrinks the limit by what
- * earlier runs already collected, records the cursor after each page, and
- * deletes the file when the scrape completes.
+ * earlier runs already collected, hands back the items those runs saved,
+ * records the cursor (and the new items) after each page, and deletes the
+ * files when the scrape completes.
+ *
+ * A resumed run whose limit was already met by earlier runs makes no
+ * request: `limit` is 0, `items` holds what was saved, and `complete()`
+ * keeps the checkpoint, so a later run with a larger limit still continues
+ * from where the scrape stopped rather than from page one.
  *
  * @param {object|null|undefined} checkpoint - Handle from `createCheckpoint`.
  * @param {object} initial
@@ -147,32 +230,75 @@ export function createCheckpoint({ key, dir } = {}) {
  *   cursor: string|null,
  *   limit: number,
  *   resumed: boolean,
- *   record: (cursor: string|null, fetchedThisRun: number) => void,
+ *   items: object[],
+ *   record: (cursor: string|null, fetchedThisRun: number, collected?: object[]) => void,
  *   complete: () => void,
+ *   result: (collected: object[], requestedLimit?: number) => object[],
  * }}
  */
 export function bindCheckpoint(checkpoint, { cursor = null, limit = Infinity, meta = {} } = {}) {
   if (!checkpoint || typeof checkpoint.resume !== 'function') {
-    return { cursor, limit, resumed: false, record() {}, complete() {} };
+    return {
+      cursor,
+      limit,
+      resumed: false,
+      items: [],
+      record() {},
+      complete() {},
+      result: (collected) => collected.slice(0, limit),
+    };
   }
 
   const saved = checkpoint.resume();
   const baseCount = saved ? saved.count : 0;
   const remaining = Number.isFinite(limit) ? Math.max(limit - baseCount, 0) : limit;
+  const canStoreItems = typeof checkpoint.appendItems === 'function';
+
+  // Items from earlier runs. A fresh scrape drops any sidecar left without a
+  // checkpoint, so it never inherits another run's items.
+  let items = [];
+  if (canStoreItems) {
+    if (saved) {
+      items = checkpoint.loadItems(saved.items ?? baseCount);
+      checkpoint.replaceItems?.(items);
+    } else {
+      checkpoint.clearItems?.();
+    }
+  }
+
+  // Items of this run already written to the sidecar.
+  let appended = 0;
+  const limitMetByEarlierRuns = Boolean(saved) && remaining === 0;
 
   return {
     cursor: saved?.cursor || cursor,
     limit: remaining,
     resumed: Boolean(saved),
-    record(nextCursor, fetchedThisRun) {
+    items,
+    record(nextCursor, fetchedThisRun, collected) {
+      const storing = canStoreItems && Array.isArray(collected);
+      if (storing && collected.length > appended) {
+        checkpoint.appendItems(collected.slice(appended));
+        appended = collected.length;
+      }
       checkpoint.save({
         cursor: nextCursor,
         count: baseCount + (Number(fetchedThisRun) || 0),
         meta: { ...(saved?.meta || {}), ...meta },
+        ...(storing ? { items: items.length + appended } : {}),
       });
     },
     complete() {
+      if (limitMetByEarlierRuns) return;
       checkpoint.clear();
+    },
+    /**
+     * The scrape's answer: earlier runs' items followed by this run's.
+     * @param {object[]} collected - This run's items
+     * @param {number} [requestedLimit] - The caller's full limit
+     */
+    result(collected, requestedLimit = limit) {
+      return [...items, ...collected].slice(0, requestedLimit);
     },
   };
 }

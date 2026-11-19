@@ -2,6 +2,20 @@
 import { prisma } from '../../../src/utils/prisma.js';
 import { getTwitterClient } from '../../routes/twitter.js';
 
+/** The follower list a stored result carries; an unreadable result has none. */
+function parsePreviousFollowers(stored) {
+  if (!stored) return [];
+  let result = stored;
+  if (typeof stored === 'string') {
+    try {
+      result = JSON.parse(stored);
+    } catch {
+      return [];
+    }
+  }
+  return Array.isArray(result?.followers) ? result.followers : [];
+}
+
 async function processDetectUnfollowers({ operationId, userId }) {
   try {
     await prisma.operation.update({
@@ -46,13 +60,11 @@ async function processDetectUnfollowers({ operationId, userId }) {
 
     let unfollowers = [];
 
-    if (lastOperation && lastOperation.result) {
-      const previousFollowerIds = new Set(
-        lastOperation.result.followers?.map(f => f.id) || []
-      );
-
+    // Operation.result is a TEXT column holding JSON; it was read as if it
+    // were already an object, so the previous list was always empty.
+    const previousFollowers = parsePreviousFollowers(lastOperation?.result);
+    if (previousFollowers.length > 0) {
       // Find who unfollowed
-      const previousFollowers = lastOperation.result.followers || [];
       unfollowers = previousFollowers.filter(
         f => !currentFollowerIds.has(f.id)
       );

@@ -346,9 +346,12 @@ export class Orchestrator {
    * @param {string} taskDescription
    * @param {object} [options={}]
    * @param {boolean} [options.stopOnError=false]
+   * @param {object} [caller] caller identity, handed to bridge.execute() so
+   *   every local step is permission-checked and capped like a single task.
+   *   Kept apart from `options`, which may come straight from a request body.
    * @returns {Promise<{ success: boolean, results: object[], artifacts: object[], errors: string[] }>}
    */
-  async execute(taskDescription, options = {}) {
+  async execute(taskDescription, options = {}, caller = {}) {
     const { stopOnError = false } = options;
     const steps = this.decomposer.decompose(taskDescription);
     const context = {};
@@ -371,11 +374,11 @@ export class Orchestrator {
         if (step.skill && getSkillById(step.skill)) {
           // Execute locally via bridge
           const inputParts = [createDataPart(resolvedParams)];
-          result = await this.bridge.execute(step.skill, inputParts);
+          result = await this.bridge.execute(step.skill, inputParts, caller);
         } else if (step.rawText) {
           // Natural language — try bridge NLP
           const inputParts = [createTextPart(step.rawText)];
-          result = await this.bridge.execute(null, inputParts);
+          result = await this.bridge.execute(null, inputParts, caller);
         } else if (step.skill) {
           // Try to delegate to a remote agent
           const agent = await this.delegator.selectAgent(step.skill, agents);

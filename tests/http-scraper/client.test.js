@@ -691,3 +691,132 @@ describe('Rate limit strategy classes', () => {
     expect(elapsed).toBeGreaterThanOrEqual(950); // small tolerance
   });
 });
+
+// ---------------------------------------------------------------------------
+// Pagination guards, TimelineReplaceEntry cursors, 5xx retry policy
+// ---------------------------------------------------------------------------
+
+describe('graphqlPaginate guards and cursor shapes', () => {
+  const json = (body, status = 200) => ({
+    status,
+    headers: { get: () => null },
+    text: async () => (typeof body === 'string' ? body : JSON.stringify(body)),
+  });
+
+  it('stops after two pages in a row that carry only fresh cursors', async () => {
+    const page = (c, withItem) => ({
+      data: {
+        timeline: {
+          instructions: [
+            {
+              type: 'TimelineAddEntries',
+              entries: [...(withItem ? [{ entryId: `tweet-${c}`, content: {} }] : []), { entryId: 'cursor-bottom-0', content: { value: c } }],
+            },
+          ],
+        },
+      },
+    });
+    let n = 0;
+    // item, empty, item, empty, empty, (never reached)
+    const shape = [true, false, true, false, false, true];
+    const fetch = vi.fn(async () => {
+      const i = n++;
+      return json(page(`C${i}`, shape[i]));
+    });
+    const client = new TwitterHttpClient({ cookies: 'auth_token=x; ct0=y', fetch, maxRetries: 0 });
+    const pages = [];
+    for await (const p of client.graphqlPaginate('Q', 'Op', {})) pages.push(p);
+    expect(pages).toHaveLength(5);
+  });
+
+  it('reads the bottom cursor from a TimelineReplaceEntry instruction', async () => {
+    const body = {
+      data: {
+        search_by_raw_query: {
+          search_timeline: {
+            timeline: {
+              instructions: [
+                { type: 'TimelineAddEntries', entries: [{ entryId: 'tweet-1', content: {} }] },
+                { type: 'TimelineReplaceEntry', entry_id_to_replace: 'cursor-top-1', entry: { entryId: 'cursor-top-1', content: { cursorType: 'Top', value: 'TOP' } } },
+                { type: 'TimelineReplaceEntry', entry_id_to_replace: 'cursor-bottom-1', entry: { entryId: 'cursor-bottom-1', content: { cursorType: 'Bottom', value: 'BOTTOM2' } } },
+              ],
+            },
+          },
+        },
+      },
+    };
+    const client = new TwitterHttpClient({ cookies: 'auth_token=x; ct0=y', fetch: vi.fn(async () => json(body)), maxRetries: 0 });
+    const result = await client.graphql('Q', 'UserTweets', {});
+    expect(result.cursor).toBe('BOTTOM2');
+  });
+});
+
+describe('5xx retry policy', () => {
+  const res = (status, body) => ({ status, headers: { get: () => null }, text: async () => body });
+
+  it('retries a 5xx on a GET read with back-off, then succeeds', async () => {
+    const fetch = vi.fn()
+      .mockResolvedValueOnce(res(503, '{"errors":[{"message":"Over capacity"}]}'))
+      .mockResolvedValueOnce(res(200, '{"ok":true}'));
+    const client = new TwitterHttpClient({ cookies: 'auth_token=x; ct0=y', fetch, maxRetries: 1 });
+    await expect(client.request('https://x.com/i/api/graphql/Q/UserByScreenName')).resolves.toEqual({ ok: true });
+    expect(fetch).toHaveBeenCalledTimes(2);
+  });
+
+  it('gives up on a 5xx after maxRetries with a TwitterApiError carrying the status', async () => {
+    const fetch = vi.fn(async () => res(502, '<html>bad gateway</html>'));
+    const client = new TwitterHttpClient({ cookies: 'auth_token=x; ct0=y', fetch, maxRetries: 1 });
+    const err = await client.request('https://x.com/test').catch((e) => e);
+    expect(err).toBeInstanceOf(TwitterApiError);
+    expect(err.status).toBe(502);
+    expect(fetch).toHaveBeenCalledTimes(2);
+  });
+
+  it('never resends a POST mutation after a 5xx', async () => {
+    const fetch = vi.fn(async () => res(503, ''));
+    const client = new TwitterHttpClient({ cookies: 'auth_token=x; ct0=y', fetch, maxRetries: 3 });
+    await expect(client.graphql('Q', 'CreateTweet', { tweet_text: 'hi' }, { mutation: true })).rejects.toBeInstanceOf(TwitterApiError);
+    expect(fetch).toHaveBeenCalledTimes(1);
+  });
+
+  it('never resends a POST mutation whose 200 body is unreadable', async () => {
+    const fetch = vi.fn(async () => res(200, '<html>not json</html>'));
+    const client = new TwitterHttpClient({ cookies: 'auth_token=x; ct0=y', fetch, maxRetries: 3 });
+    await expect(client.graphql('Q', 'CreateTweet', {}, { mutation: true })).rejects.toBeInstanceOf(TwitterApiError);
+    expect(fetch).toHaveBeenCalledTimes(1);
+  });
+
+  it('attaches the 403 body to the AuthError', async () => {
+    const fetch = vi.fn(async () => res(403, '{"errors":[{"code":64,"message":"Your account is suspended"}]}'));
+    const client = new TwitterHttpClient({ cookies: 'auth_token=x; ct0=y', fetch, maxRetries: 0 });
+    const err = await client.request('https://x.com/test').catch((e) => e);
+    expect(err).toBeInstanceOf(AuthError);
+    expect(err.data.errors[0].code).toBe(64);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Writes are never resent after an ambiguous network error
+// ---------------------------------------------------------------------------
+
+describe('Network errors on writes', () => {
+  const failing = (code) => vi.fn(async () => {
+    throw new TypeError('fetch failed', { cause: Object.assign(new Error(code), { code }) });
+  });
+
+  it('does not resend a POST after a connection reset, which X may already have applied', async () => {
+    const fetch = failing('ECONNRESET');
+    const client = new TwitterHttpClient({ cookies: 'auth_token=a; ct0=b', fetch, maxRetries: 2 });
+    await expect(client.request('https://x.com/i/api/graphql/q/CreateTweet', { method: 'POST', body: {} }))
+      .rejects.toBeInstanceOf(NetworkError);
+    expect(fetch).toHaveBeenCalledTimes(1);
+  });
+
+  it('resends a POST that provably never left (connection refused)', async () => {
+    const fetch = failing('ECONNREFUSED');
+    const client = new TwitterHttpClient({ cookies: 'auth_token=a; ct0=b', fetch, maxRetries: 1 });
+    await expect(client.request('https://x.com/i/api/graphql/q/CreateTweet', { method: 'POST', body: {} }))
+      .rejects.toBeInstanceOf(NetworkError);
+    expect(fetch).toHaveBeenCalledTimes(2);
+  });
+});

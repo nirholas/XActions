@@ -6,19 +6,19 @@
 
 XActions implements the [A2A protocol](https://github.com/google/A2A) to allow AI agents (Claude, GPT, Gemini, custom agents) to communicate with the XActions X/Twitter automation toolkit using a standardized protocol.
 
-The A2A server exposes all 140+ XActions tools as A2A skills, supports real-time streaming via SSE, push notifications via webhooks, inter-agent authentication, multi-agent discovery, and complex task orchestration.
+The A2A server exposes every XActions MCP tool as an A2A skill, supports real-time streaming via SSE, push notifications via webhooks, inter-agent authentication, multi-agent discovery, and complex task orchestration.
 
 ## Quick Start
 
 ```bash
-# Start the A2A server
-node src/a2a/server.js
+# Issue a key for the calling agent (printed once)
+node src/a2a/index.js --create-key my-agent --preset standard
 
-# Or via CLI
+# Start the A2A server (binds 127.0.0.1:3100)
 node src/a2a/server.js
 
 # Verify it's running
-curl http://localhost:3100/a2a/health
+curl -H "Authorization: ApiKey xa2a_..." http://localhost:3100/a2a/health
 ```
 
 ## Agent Card
@@ -107,23 +107,43 @@ curl -N http://localhost:3100/a2a/tasks/<taskId>/stream
 
 ## Authentication
 
-Two schemes are supported:
+Every `/a2a` route requires a credential, `/a2a/health` included. Only the
+agent card at `/.well-known/agent.json` is public. A server that anyone could
+reach would let any web page, or anyone on the network, post and follow as the
+account, so authentication is on unless you switch it off explicitly.
 
-### API Key
-
-```bash
-# Generate a key
-node -e "import('./src/a2a/auth.js').then(m => m.generateApiKey('my-agent').then(k => console.log(k)))"
-
-# Use it
-curl -H "X-Api-Key: xa2a_..." http://localhost:3100/a2a/health
-```
-
-### JWT
+Issue an API key for each calling agent. It is printed once and stored only as
+a hash under `XACTIONS_HOME`:
 
 ```bash
-curl -H "Authorization: Bearer <jwt-token>" http://localhost:3100/a2a/tasks
+node src/a2a/index.js --create-key my-agent --preset standard
 ```
+
+Send it as `Authorization: ApiKey <key>`; a JWT goes in
+`Authorization: Bearer <token>`:
+
+```bash
+curl -H "Authorization: ApiKey xa2a_..." http://localhost:3100/a2a/health
+```
+
+| Preset | Permissions | Can run write tools |
+|---|---|---|
+| `readonly` (default) | `read`, `scrape`, `analytics` | no |
+| `standard` | adds `write`, `follow` | yes |
+| `full` | every permission, including `admin` (needed for discovery and skill refresh) | yes |
+
+Write tools go through the same safety net as the MCP server: with
+`XACTIONS_MCP_REQUIRE_APPROVAL=1` each write is saved as a draft for
+`xactions drafts approve`, and every write is charged against the daily action
+caps.
+
+| Variable | Effect |
+|---|---|
+| `A2A_HOST` | Interface to bind. Default `127.0.0.1`; anything else logs a warning |
+| `A2A_CORS_ORIGINS` | Comma-separated browser origins allowed to call the API. Default none |
+| `XACTIONS_A2A_ALLOW_UNAUTHENTICATED=1` | Turn authentication off (same as `enableAuth: false` or `--no-auth`). Never on a reachable interface |
+| `XACTIONS_A2A_ALLOW_PRIVATE=true` | Allow push-notification and discovery URLs on private or loopback addresses (refused by default) |
+| `XACTIONS_A2A_KEY` | The key the client helpers in `src/a2a/index.js` send to a running agent |
 
 ## Multi-Agent Orchestration
 

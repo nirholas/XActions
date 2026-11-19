@@ -37,16 +37,17 @@ import { getRecommendations } from './recommendations.js';
 
 import fs from 'fs/promises';
 import path from 'path';
-import os from 'os';
+import { xactionsHome } from '../utils/savedSession.js';
 
 // ============================================================================
 // Storage
 // ============================================================================
 
-const GRAPHS_DIR = path.join(os.homedir(), '.xactions', 'graphs');
+// Resolved per call so XACTIONS_HOME set after import is honoured.
+const graphsDir = () => path.join(xactionsHome(), 'graphs');
 
 async function ensureDir() {
-  await fs.mkdir(GRAPHS_DIR, { recursive: true });
+  await fs.mkdir(graphsDir(), { recursive: true });
 }
 
 /**
@@ -55,7 +56,7 @@ async function ensureDir() {
 async function saveGraph(graph) {
   await ensureDir();
   const data = serializeGraph(graph);
-  const filePath = path.join(GRAPHS_DIR, `${data.id}.json`);
+  const filePath = path.join(graphsDir(), `${data.id}.json`);
   await fs.writeFile(filePath, JSON.stringify(data, null, 2));
   return data;
 }
@@ -65,7 +66,7 @@ async function saveGraph(graph) {
  */
 async function loadGraph(graphId) {
   try {
-    const filePath = path.join(GRAPHS_DIR, `${graphId}.json`);
+    const filePath = path.join(graphsDir(), `${graphId}.json`);
     const raw = await fs.readFile(filePath, 'utf-8');
     return deserializeGraph(JSON.parse(raw));
   } catch {
@@ -79,12 +80,12 @@ async function loadGraph(graphId) {
 async function listGraphs() {
   await ensureDir();
   try {
-    const files = await fs.readdir(GRAPHS_DIR);
+    const files = await fs.readdir(graphsDir());
     const graphs = [];
     for (const file of files) {
       if (!file.endsWith('.json')) continue;
       try {
-        const raw = await fs.readFile(path.join(GRAPHS_DIR, file), 'utf-8');
+        const raw = await fs.readFile(path.join(graphsDir(), file), 'utf-8');
         const data = JSON.parse(raw);
         graphs.push({
           id: data.id,
@@ -108,7 +109,7 @@ async function listGraphs() {
  */
 async function deleteGraph(graphId) {
   try {
-    await fs.unlink(path.join(GRAPHS_DIR, `${graphId}.json`));
+    await fs.unlink(path.join(graphsDir(), `${graphId}.json`));
     return true;
   } catch {
     return false;

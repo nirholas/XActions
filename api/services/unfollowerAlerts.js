@@ -15,6 +15,8 @@
  */
 
 import { prisma } from '../../src/utils/prisma.js';
+import { assertPublicUrl } from '../utils/publicUrl.js';
+import { userRoom } from '../realtime/socketHandler.js';
 
 /**
  * Check scan results for notable events and send alerts
@@ -27,8 +29,9 @@ export async function checkAndAlert(io, userId, scanResult) {
   const { gained, lost, totalFollowers, scanDate } = scanResult;
   const alerts = [];
 
-  if (scanResult.isFirstScan) {
-    // No alerts on first scan — no diff to compare
+  if (scanResult.isFirstScan || scanResult.incomplete) {
+    // No alerts on first scan — no diff to compare — nor on a scan that came
+    // back too short to trust
     return alerts;
   }
 
@@ -91,35 +94,20 @@ export async function checkAndAlert(io, userId, scanResult) {
     });
   }
 
-  // Emit alerts via Socket.IO
+  // Emit to the user's own sockets. These once went out with io.emit, to
+  // every connected socket, anonymous agent sockets included.
+  const room = io.to(userRoom(userId));
+  const summary = {
+    userId,
+    scanDate,
+    totalFollowers,
+    gained: gained.length,
+    lost: lost.length,
+  };
   if (alerts.length > 0) {
-    const payload = {
-      userId,
-      scanDate,
-      totalFollowers,
-      gained: gained.length,
-      lost: lost.length,
-      alerts,
-    };
-
-    io.emit(`unfollower:alerts:${userId}`, payload);
-    io.emit('unfollower:scan-complete', {
-      userId,
-      scanDate,
-      totalFollowers,
-      gained: gained.length,
-      lost: lost.length,
-    });
-  } else {
-    // Still emit scan completion even without alerts
-    io.emit('unfollower:scan-complete', {
-      userId,
-      scanDate,
-      totalFollowers,
-      gained: gained.length,
-      lost: lost.length,
-    });
+    room.emit(`unfollower:alerts:${userId}`, { ...summary, alerts });
   }
+  room.emit('unfollower:scan-complete', summary);
 
   // Deliver webhook if configured
   await deliverWebhook(userId, {
@@ -147,6 +135,10 @@ async function deliverWebhook(userId, payload) {
 
     if (!schedule?.webhookUrl) return;
 
+    // Checked again at delivery (DNS can change after the URL was accepted),
+    // and redirects are not followed, so the scan result cannot be steered at
+    // the server's own network.
+    await assertPublicUrl(schedule.webhookUrl, 'webhookUrl');
     const response = await fetch(schedule.webhookUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -156,6 +148,7 @@ async function deliverWebhook(userId, payload) {
         timestamp: new Date().toISOString(),
         ...payload,
       }),
+      redirect: 'manual',
       signal: AbortSignal.timeout(10000), // 10s timeout
     });
 
@@ -190,6 +183,8 @@ export async function setSchedule(userId, interval, webhookUrl = null) {
   if (!INTERVAL_MS[interval]) {
     throw new Error(`Invalid interval: ${interval}. Must be one of: ${Object.keys(INTERVAL_MS).join(', ')}`);
   }
+
+  if (webhookUrl) await assertPublicUrl(webhookUrl, 'webhookUrl');
 
   const nextRunAt = new Date(Date.now() + INTERVAL_MS[interval]);
 

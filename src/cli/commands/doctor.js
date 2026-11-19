@@ -19,12 +19,12 @@
 import chalk from 'chalk';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import os from 'node:os';
+import { xactionsHome } from '../../utils/savedSession.js';
 
 import { VERSION } from '../../version.js';
 import { countInstalledSkills } from './skills.js';
 
-const CONFIG_DIR = path.join(os.homedir(), '.xactions');
+const CONFIG_DIR = xactionsHome();
 const COOKIE_FILE = path.join(CONFIG_DIR, 'cookies.json');
 const CONFIG_FILE = path.join(CONFIG_DIR, 'config.json');
 

@@ -87,7 +87,9 @@ The command exits with code 0 when every account was read, 2 when some failed
 - **The cache.** Each account's profile and timeline sample is saved under
   `~/.xactions/cache/brief/` (or `$XACTIONS_HOME`). If you re-run the same list
   while drafting, or add one account to it, only the new or stale accounts are
-  fetched. A fully cached run makes no requests.
+  fetched. A fully cached run makes no requests. An account whose timeline
+  comes back empty is reported as a failure and never cached, so the next run
+  tries it again instead of answering with a cached zero.
 - **One account at a time.** Accounts are read in sequence, not in parallel.
   The rate limit belongs to the session, so parallel reads only hit it sooner.
   An account that fails is recorded and the run carries on.

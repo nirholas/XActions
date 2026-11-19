@@ -192,7 +192,8 @@ export async function askCommand(question, options = {}) {
     console.log('');
   }
 
-  if (collected.sources.length && !options.noSources) {
+  // Commander turns `--no-sources` into `sources: false`; there is no `noSources`.
+  if (collected.sources.length && options.sources !== false) {
     console.log(chalk.bold('Sources'));
     for (const source of collected.sources) {
       console.log(`  ${chalk.dim(`[${source.n}]`)} ${source.title}`);

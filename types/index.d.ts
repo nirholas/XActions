@@ -261,9 +261,30 @@ export interface Plugin {
   version: string;
   description: string;
   tools?: unknown[];
-  scrapers?: Record<string, Function>;
+  scrapers?: unknown[];
   routes?: unknown[];
-  actions?: Record<string, Function>;
+  actions?: unknown[];
+}
+
+/** One entry of listPlugins(): what the plugin registry knows about a plugin. */
+export interface PluginInfo {
+  name: string;
+  version: string;
+  description?: string;
+  enabled: boolean;
+  loaded: boolean;
+  installedAt?: string;
+}
+
+/** What installPlugin() reports: the plugin and how much it contributed. */
+export interface InstalledPlugin {
+  name: string;
+  version: string;
+  description?: string;
+  actions: number;
+  scrapers: number;
+  tools: number;
+  routes: number;
 }
 
 // ── Core Functions ──────────────────────────────────────────────────────────
@@ -647,14 +668,16 @@ export declare const spacesManager: unknown;
 // ── Plugin System ───────────────────────────────────────────────────────────
 
 export declare const plugins: unknown;
-export function initializePlugins(): Promise<void>;
-export function installPlugin(name: string): Promise<Plugin>;
-export function removePlugin(name: string): Promise<void>;
-export function listPlugins(): Plugin[];
+export function initializePlugins(): Promise<number>;
+export function installPlugin(name: string): Promise<InstalledPlugin>;
+export function removePlugin(name: string): Promise<boolean>;
+export function listPlugins(): Promise<PluginInfo[]>;
 export function getPluginTools(): unknown[];
-export function getPluginScrapers(): Record<string, Function>;
+/** Scrapers contributed by loaded plugins, each tagged with `_plugin`. */
+export function getPluginScrapers(): Array<Record<string, unknown> & { _plugin: string }>;
 export function getPluginRoutes(): unknown[];
-export function getPluginActions(): Record<string, Function>;
+/** Browser actions contributed by loaded plugins, each tagged with `_plugin`. */
+export function getPluginActions(): Array<Record<string, unknown> & { _plugin: string }>;
 
 // ── Browser Scripts Catalog ─────────────────────────────────────────────────
 
@@ -1321,8 +1344,12 @@ export function verifyWebhookSignature(
   options?: { toleranceSeconds?: number; now?: number },
 ): WebhookVerification;
 
-/** "sha256=<hex>" HMAC-SHA256 of the raw body. */
-export function signWebhookBody(rawBody: string | Buffer, secret: string): string;
+/**
+ * "sha256=<hex>" HMAC-SHA256 over `<timestamp>.<rawBody>`. The timestamp
+ * (unix seconds, the value sent as X-XActions-Timestamp) is part of the signed
+ * payload, so a captured delivery cannot be replayed with a fresh header.
+ */
+export function signWebhookBody(rawBody: string | Buffer, secret: string, timestamp: number | string): string;
 
 /** Sign and POST a webhook with retries; resolves with the delivery record either way. */
 export function deliverWebhook(options: DeliverWebhookOptions): Promise<WebhookDeliveryRecord>;
