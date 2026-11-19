@@ -2015,7 +2015,7 @@ export async function x_client_get_trends() {
 }
 
 // ============================================================================
-// Account vault tools (x_accounts_*) — local credential store, no approval gate
+// Account vault tools (x_accounts_*) — local credential store; use/remove are approval-gated as writes
 // ============================================================================
 
 /**
@@ -2119,7 +2119,7 @@ export async function x_accounts_test(args = {}) {
 export const toolMap = {
   // Auth
   x_login,
-  // Account vault (local credential store — no approval gate)
+  // Account vault (local credential store — use/remove gated as writes, rest reads)
   x_accounts_add,
   x_accounts_list,
   x_accounts_remove,

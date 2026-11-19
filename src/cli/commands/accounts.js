@@ -20,11 +20,26 @@
 
 import chalk from 'chalk';
 import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 
 import {
   createAccountVault,
   SUPPORTED_PLATFORMS,
 } from '../../vault/accountVault.js';
+
+/**
+ * Expand a leading `~` to the user's home, like the MCP lane's
+ * resolveVaultFilePath does for credentials_file/cookies_file.
+ * @param {string|undefined} filePath
+ * @returns {string|null}
+ */
+function expandHome(filePath) {
+  if (!filePath) return null;
+  const p = String(filePath).trim();
+  if (!p) return null;
+  return p === '~' || p.startsWith('~/') ? path.join(os.homedir(), p.slice(1)) : p;
+}
 
 /**
  * Print a JSON document to stdout.
@@ -106,30 +121,48 @@ async function addCommand(name, options = {}) {
   }
 
   // File inputs are preferred over inline secret flags so credentials stay
-  // out of shell history and process listings. Precedence: --credentials-file
-  // (JSON, any platform) > --cookies-file (twitter session file) > inline flags.
+  // out of shell history and process listings. Precedence mirrors the MCP
+  // lane (vaultCredentialsFromArgs): --credentials-file (JSON, any platform)
+  // > --cookies-file (twitter session file) > inline flags — first source
+  // wins; lower-precedence flags that were also given are ignored with a note.
+  const INLINE_KEYS = ['cookies', 'identifier', 'password', 'service', 'instance', 'accessToken'];
+  const givenInline = INLINE_KEYS.filter((key) => options[key] != null && options[key] !== '');
   let credentials = {};
-  if (options.credentialsFile) {
+  let ignored = [];
+
+  const credentialsPath = expandHome(options.credentialsFile);
+  if (credentialsPath) {
     let parsed;
     try {
-      parsed = JSON.parse(fs.readFileSync(options.credentialsFile, 'utf8'));
+      parsed = JSON.parse(fs.readFileSync(credentialsPath, 'utf8'));
     } catch (error) {
       throw new Error(`Cannot read credentials file "${options.credentialsFile}": ${error.message}`);
     }
     if (Array.isArray(parsed)) credentials = { cookies: parsed };
     else if (parsed && typeof parsed === 'object') credentials = { ...parsed };
     else throw new Error('Credentials file must contain a JSON object (or cookie array for twitter).');
+    ignored = ['--cookies-file', ...givenInline.map((key) => `--${key}`)];
+  } else if (expandHome(options.cookiesFile)) {
+    const cookiesPath = expandHome(options.cookiesFile);
+    try {
+      credentials.cookies = fs.readFileSync(cookiesPath, 'utf8');
+    } catch (error) {
+      throw new Error(`Cannot read cookies file "${options.cookiesFile}": ${error.message}`);
+    }
+    ignored = givenInline.map((key) => `--${key}`);
+  } else {
+    for (const key of givenInline) credentials[key] = options[key];
   }
-  if (options.cookiesFile) {
-    credentials.cookies = fs.readFileSync(options.cookiesFile, 'utf8');
-  } else if (options.cookies) {
-    credentials.cookies = options.cookies;
+
+  // Report only the ignored flags the user actually passed.
+  const actuallyIgnored = ignored.filter((flag) => {
+    if (flag === '--cookies-file') return Boolean(options.cookiesFile);
+    const key = flag.slice(2);
+    return options[key] != null && options[key] !== '';
+  });
+  if (actuallyIgnored.length > 0) {
+    console.error(chalk.yellow(`  note: ignoring ${actuallyIgnored.join(', ')} — a higher-precedence credential source was given`));
   }
-  if (options.identifier) credentials.identifier = options.identifier;
-  if (options.password) credentials.password = options.password;
-  if (options.service) credentials.service = options.service;
-  if (options.instance) credentials.instance = options.instance;
-  if (options.accessToken) credentials.accessToken = options.accessToken;
 
   const result = await withVault((vault) =>
     vault.add({

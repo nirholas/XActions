@@ -204,6 +204,63 @@ describe('accountVault', () => {
       ).rejects.toThrow(/control characters/);
       vault.close();
     });
+
+    it('canonicalizes bare proxies and rejects unsupported schemes', async () => {
+      const vault = makeVault(home);
+      // A bare host:port is stored with an http:// prefix so ProxyAgent
+      // receives a parseable URL.
+      const result = await vault.add({
+        platform: 'twitter', name: 'px1',
+        credentials: { cookies: TWITTER_COOKIES }, proxy: 'localhost:8080',
+      });
+      expect(result.proxy).toBe('localhost:8080');
+      const [row] = await vault.list({ platform: 'twitter' });
+      expect(row.proxy).toBe('localhost:8080');
+      for (const scheme of ['ftp://px.local:21', 'file:///etc/passwd', 'gopher://px.local']) {
+        await expect(
+          vault.add({ platform: 'twitter', name: 'px2', credentials: { cookies: TWITTER_COOKIES }, proxy: scheme })
+        ).rejects.toThrow(/unsupported scheme/);
+      }
+      vault.close();
+    });
+
+    it('rejects WHATWG scheme tricks on service/instance (http:host, HTTP:HOST, ftp://)', async () => {
+      const vault = makeVault(home);
+      // 'http:host'/'HTTP:HOST'/'http:/host' have no '://' so they get the
+      // https prefix and fail URL parsing outright; 'ftp://' parses but is
+      // not https. All must be rejected — none may reach the network.
+      for (const service of ['http:host', 'http:\\host', 'HTTP:HOST', 'http:/host', 'ftp://host']) {
+        await expect(
+          vault.add({ platform: 'bluesky', name: 'trick', credentials: { ...BSKY_CREDS, service } })
+        ).rejects.toThrow(/https|not a valid URL/);
+      }
+      await expect(
+        vault.add({ platform: 'mastodon', name: 'trick2', credentials: { instance: 'http:host', accessToken: 't' } })
+      ).rejects.toThrow(/https|not a valid/);
+      // Bare host (no colon) still gets the https prefix; host:port without
+      // an explicit scheme is ambiguous and rejected per the https rule.
+      await vault.add({ platform: 'mastodon', name: 'bare', credentials: { instance: 'masto.social', accessToken: 't' } });
+      await expect(
+        vault.add({ platform: 'mastodon', name: 'bare2', credentials: { instance: 'masto.social:8443', accessToken: 't' } })
+      ).rejects.toThrow(/https|not a valid/);
+      vault.close();
+    });
+
+    it('validates cookie names AND values in both array and object-map shapes', async () => {
+      const vault = makeVault(home);
+      // Object-map names bypass nothing: separators rejected like arrays.
+      await expect(
+        vault.add({ platform: 'twitter', name: 'c1', credentials: { cookies: { 'bad;name': 'x', auth_token: 't' } } })
+      ).rejects.toThrow(/separator or whitespace/);
+      // A ';' inside a VALUE would inject extra pairs into the rebuilt header.
+      await expect(
+        vault.add({ platform: 'twitter', name: 'c2', credentials: { cookies: [{ name: 'auth_token', value: 'a; b' }] } })
+      ).rejects.toThrow(/';' or control characters/);
+      await expect(
+        vault.add({ platform: 'twitter', name: 'c3', credentials: { cookies: { auth_token: 'x\ny' } } })
+      ).rejects.toThrow(/';' or control characters/);
+      vault.close();
+    });
   });
 
   describe('list / get / remove', () => {
@@ -296,6 +353,33 @@ describe('accountVault', () => {
       await expect(vault.use({ name: 'a1' })).rejects.toThrow(/not valid JSON/);
       // Jar untouched: activation half-applied nothing.
       expect(fs.readFileSync(path.join(sessionHome, 'cookies.json'), 'utf8')).toBe('pre-existing');
+      vault.close();
+    });
+
+    it('rejects a config.json that parses but is not an object (5, [], "x")', async () => {
+      for (const bad of ['5', '[]', '"x"', 'null']) {
+        fs.rmSync(home, { recursive: true, force: true });
+        fs.mkdirSync(home, { recursive: true });
+        const vault = makeVault(home);
+        await vault.add({ platform: 'twitter', name: 'a1', credentials: { cookies: TWITTER_COOKIES } });
+        const sessionHome = path.join(home, '.xactions');
+        fs.mkdirSync(sessionHome, { recursive: true });
+        fs.writeFileSync(path.join(sessionHome, 'config.json'), bad);
+        fs.writeFileSync(path.join(sessionHome, 'cookies.json'), 'pre-existing', { mode: 0o600 });
+        await expect(vault.use({ name: 'a1' })).rejects.toThrow(/not a JSON object|not valid JSON/);
+        expect(fs.readFileSync(path.join(sessionHome, 'cookies.json'), 'utf8')).toBe('pre-existing');
+        vault.close();
+      }
+    });
+
+    it('does not let a corrupt SECOND session dir leave the first switched', async () => {
+      // XACTIONS_HOME (home here) is the second session dir. Corrupt ITS
+      // config.json: use() must abort before touching ~/.xactions at all.
+      const vault = makeVault(home);
+      await vault.add({ platform: 'twitter', name: 'a1', credentials: { cookies: TWITTER_COOKIES } });
+      fs.writeFileSync(path.join(home, 'config.json'), '{ corrupt');
+      await expect(vault.use({ name: 'a1' })).rejects.toThrow(/not valid JSON/);
+      expect(fs.existsSync(path.join(home, '.xactions', 'cookies.json'))).toBe(false);
       vault.close();
     });
 
@@ -552,6 +636,21 @@ describe('xactions accounts CLI', () => {
     expect(rows).toHaveLength(1);
     expect(rows[0]).toMatchObject({ platform: 'bluesky', name: 'b1' });
     expect(JSON.stringify(rows)).not.toContain('app-pass-xyz');
+  });
+
+  it('accounts add gives --credentials-file precedence over --cookies-file (MCP parity)', async () => {
+    // Twitter: credentials-file carries the real jar; cookies-file carries
+    // garbage that must be ignored entirely.
+    const credsFile = path.join(home, 'creds.json');
+    fs.writeFileSync(credsFile, JSON.stringify({ cookies: [{ name: 'auth_token', value: 'file-wins-token' }, { name: 'ct0', value: 'file-wins-csrf' }] }));
+    const cookiesFile = path.join(home, 'garbage-cookies.txt');
+    fs.writeFileSync(cookiesFile, 'this is not a cookie file');
+    cli(['accounts', 'add', 't-pre', '--platform', 'twitter',
+         '--credentials-file', credsFile, '--cookies-file', cookiesFile, '--json']);
+    cli(['accounts', 'use', 't-pre', '--platform', 'twitter', '--json']);
+    const jar = JSON.parse(fs.readFileSync(path.join(home, '.xactions', 'cookies.json'), 'utf8'));
+    const auth = jar.find((c) => c.name === 'auth_token');
+    expect(auth.value).toBe('file-wins-token');
   });
 });
 

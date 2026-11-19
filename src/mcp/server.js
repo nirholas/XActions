@@ -2507,7 +2507,7 @@ const TOOLS = [
   },
   {
     name: 'x_accounts_list',
-    description: 'List accounts stored in the local vault. Returns only masked metadata — platform, name, proxy host, added/last-used timestamps, locked flag — never credentials or tokens. Optionally filter to one platform.',
+    description: 'List accounts stored in the local vault. Returns only masked metadata — platform, name, proxy host, added/last-used timestamps — never credentials or tokens. Optionally filter to one platform.',
     inputSchema: {
       type: 'object',
       properties: {

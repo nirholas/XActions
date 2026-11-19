@@ -105,39 +105,42 @@ export function normalizePlatform(input) {
 function cookieArray(input) {
   if (typeof input === 'string') return parseCookieInput(input);
 
+  let cookies;
   if (Array.isArray(input)) {
-    const cookies = input
+    cookies = input
       .filter((c) => c && c.name && c.value != null)
       .map((c) => ({ ...c, name: String(c.name), value: String(c.value) }));
-    if (cookies.length === 0) {
-      throw new AccountVaultError('Twitter credentials contained no usable cookies.');
-    }
-    // A cookie name is a bare token; anything with separators or whitespace
-    // would inject extra attributes when the jar is rebuilt as a header.
-    for (const cookie of cookies) {
-      if (/[;=\s]/.test(cookie.name)) {
-        throw new AccountVaultError(
-          `Cookie name "${cookie.name}" contains separator or whitespace characters and was rejected.`,
-        );
-      }
-    }
-    return cookies;
-  }
-
-  if (input && typeof input === 'object') {
-    const cookies = Object.entries(input)
+  } else if (input && typeof input === 'object') {
+    cookies = Object.entries(input)
       .filter(([, v]) => v != null && v !== '')
       .map(([name, value]) => ({ name, value: String(value) }));
-    if (cookies.length === 0) {
-      throw new AccountVaultError('Twitter credentials contained no usable cookies.');
-    }
-    return cookies;
+  } else {
+    throw new AccountVaultError(
+      'Twitter credentials must be a cookie string (cookies.txt, Cookie-Editor JSON, ' +
+        'Playwright storageState, or "auth_token=...; ct0=..."), a cookie array, or a { auth_token, ct0 } map.',
+    );
   }
 
-  throw new AccountVaultError(
-    'Twitter credentials must be a cookie string (cookies.txt, Cookie-Editor JSON, ' +
-      'Playwright storageState, or "auth_token=...; ct0=..."), a cookie array, or a { auth_token, ct0 } map.',
-  );
+  if (cookies.length === 0) {
+    throw new AccountVaultError('Twitter credentials contained no usable cookies.');
+  }
+  // Names are bare tokens and values must not carry ';' or control chars —
+  // either would inject extra pairs when the jar is rebuilt as a Cookie
+  // header (parseCookieInput already enforces this for string input).
+  for (const cookie of cookies) {
+    if (/[;=\s]/.test(cookie.name)) {
+      throw new AccountVaultError(
+        `Cookie name "${cookie.name}" contains separator or whitespace characters and was rejected.`,
+      );
+    }
+    // eslint-disable-next-line no-control-regex
+    if (/[;\u0000-\u001f\u007f]/.test(cookie.value)) {
+      throw new AccountVaultError(
+        `Cookie "${cookie.name}" has a value containing ';' or control characters and was rejected.`,
+      );
+    }
+  }
+  return cookies;
 }
 
 /**
@@ -176,34 +179,23 @@ function normalizeCredentials(platform, credentials = {}) {
     }
     const out = { identifier, password };
     if (credentials.service) {
-      const service = String(credentials.service).trim().replace(/\/+$/, '');
-      if (/^http:\/\//i.test(service)) {
-        throw new AccountVaultError(
-          'Bluesky service must be an https:// URL — plaintext http would send the app password unencrypted.',
-        );
-      }
-      out.service = service;
+      out.service = normalizeHttpsUrl(credentials.service, 'Bluesky service');
     }
     return out;
   }
 
   // mastodon
-  const instance = String(credentials.instance || '').trim().replace(/\/+$/, '');
+  const rawInstance = String(credentials.instance || '').trim();
   const accessToken = String(credentials.accessToken || '').trim();
   const missing = [
-    ...(!instance ? ['instance'] : []),
+    ...(!rawInstance ? ['instance'] : []),
     ...(!accessToken ? ['accessToken'] : []),
   ];
   if (missing.length > 0) {
     throw new AccountVaultError(`Mastodon credentials are missing: ${missing.join(', ')}.`);
   }
-  if (/^http:\/\//i.test(instance)) {
-    throw new AccountVaultError(
-      'Mastodon instance must be an https:// URL — plaintext http would send the access token unencrypted.',
-    );
-  }
   return {
-    instance: /^https?:\/\//i.test(instance) ? instance : `https://${instance}`,
+    instance: normalizeHttpsUrl(rawInstance, 'Mastodon instance'),
     accessToken,
   };
 }
@@ -229,6 +221,50 @@ function proxyHost(proxy) {
 }
 
 /**
+ * Normalize a credential endpoint URL (bluesky service, mastodon instance)
+ * to a canonical https URL. WHATWG parsing catches the bypasses a regex
+ * misses — `http:host`, `http:\\host`, `HTTP:HOST`, `http:/host`,
+ * `ftp://host` all parse but never reach `https:`.
+ *
+ * An explicit scheme must be `https://`; a bare host gets `https://`
+ * prefixed. Anything else (including any `:`-carrying non-https input)
+ * is rejected.
+ *
+ * @param {unknown} value
+ * @param {string} label - e.g. 'Bluesky service'
+ * @returns {string}
+ */
+function normalizeHttpsUrl(value, label) {
+  const raw = String(value || '').trim();
+  if (!raw) throw new AccountVaultError(`${label} URL is required.`);
+  // Prefix unless an explicit 'scheme://' is present — 'host:8080' has a
+  // colon but no scheme, and WHATWG would read 'host:' as the protocol.
+  const candidate = /^[a-z][a-z0-9+.-]*:\/\//i.test(raw) ? raw : `https://${raw}`;
+  let parsed;
+  try {
+    parsed = new URL(candidate);
+  } catch {
+    throw new AccountVaultError(`${label} "${raw}" is not a valid URL.`);
+  }
+  if (parsed.protocol !== 'https:') {
+    throw new AccountVaultError(
+      `${label} must be an https:// URL — plaintext or non-https targets would send credentials unencrypted.`,
+    );
+  }
+  // Reject authority-confusion inputs like 'http:\\host' or 'http:/host':
+  // with no '://' they were prefixed to 'https://http:\\host', which WHATWG
+  // silently parses as host 'http' — the original scheme text survives only
+  // in the path. A bare hostname never contains ':' or '\\', so reject any
+  // raw input whose pre-prefix text looks like 'word:' or 'word;'.
+  if (/^[a-z][a-z0-9+.-]*[:;\\/]/i.test(raw) && !/^[a-z][a-z0-9+.-]*:\/\//i.test(raw)) {
+    throw new AccountVaultError(
+      `${label} "${raw}" is not a valid https URL — write it as https://host[:port][/path].`,
+    );
+  }
+  return parsed.toString().replace(/\/+$/, '');
+}
+
+/**
  * Validate the optional per-account proxy. Accepts a full URL
  * (`http://user:pass@host:port`, `socks5://...`) or a bare `host:port`.
  *
@@ -238,16 +274,28 @@ function proxyHost(proxy) {
 function normalizeProxy(proxy) {
   if (proxy == null || String(proxy).trim() === '') return null;
   const value = String(proxy).trim();
+  // Canonicalize: a bare host:port gets an http:// prefix so downstream
+  // consumers (undici ProxyAgent) always receive a parseable URL. Schemes
+  // are restricted to what the HTTP client actually supports.
+  // A scheme only counts when written as 'scheme://'; 'host:port' is a
+  // bare authority, not a scheme (WHATWG would parse 'localhost:8080' as
+  // protocol 'localhost:').
+  const hasScheme = /^[a-z][a-z0-9+.-]*:\/\//i.test(value);
+  const candidate = hasScheme ? value : `http://${value}`;
+  let parsed;
   try {
-    // A value that already carries a scheme must parse as-is — prefixing it
-    // would turn 'http://[bad' into the bogus host 'http'.
-    new URL(/^[a-z][a-z0-9+.-]*:\/\//i.test(value) ? value : `http://${value}`);
+    parsed = new URL(candidate);
   } catch {
     throw new AccountVaultError(
       `Proxy "${value}" is not a valid URL — use http(s)://[user:pass@]host:port or socks5://host:port.`,
     );
   }
-  return value;
+  if (!['http:', 'https:', 'socks5:', 'socks5h:'].includes(parsed.protocol)) {
+    throw new AccountVaultError(
+      `Proxy "${value}" uses unsupported scheme "${parsed.protocol}" — allowed: http, https, socks5, socks5h.`,
+    );
+  }
+  return parsed.toString();
 }
 
 /**
@@ -274,28 +322,42 @@ function sessionDir() {
  * @param {string} dir
  * @param {Array<object>} cookies
  */
-function mirrorSessionTokens(dir, cookies) {
-  const authToken = cookies.find((c) => c.name === 'auth_token')?.value;
-  const csrfToken = cookies.find((c) => c.name === 'ct0')?.value;
-
-  const configPath = path.join(dir, 'config.json');
-  let config = {};
+/**
+ * Read and validate a session `config.json`. Missing file → `{}`. Anything
+ * that is not a JSON object (scalar, array, corrupt) is a clean
+ * AccountVaultError — never a TypeError on property write.
+ */
+function readSessionConfig(configPath) {
   let raw = null;
   try {
     raw = fs.readFileSync(configPath, 'utf8');
   } catch {
     // Missing config starts empty.
   }
-  if (raw != null) {
-    try {
-      config = JSON.parse(raw);
-    } catch {
-      throw new AccountVaultError(
-        `Existing ${configPath} is not valid JSON — fix or remove it before activating an account ` +
-          '(refusing to overwrite it with a two-key stub).',
-      );
-    }
+  if (raw == null) return {};
+  let parsed;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    throw new AccountVaultError(
+      `Existing ${configPath} is not valid JSON — fix or remove it before activating an account ` +
+        '(refusing to overwrite it with a two-key stub).',
+    );
   }
+  if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
+    throw new AccountVaultError(
+      `Existing ${configPath} is not a JSON object — fix or remove it before activating an account.`,
+    );
+  }
+  return parsed;
+}
+
+function mirrorSessionTokens(dir, cookies) {
+  const authToken = cookies.find((c) => c.name === 'auth_token')?.value;
+  const csrfToken = cookies.find((c) => c.name === 'ct0')?.value;
+
+  const configPath = path.join(dir, 'config.json');
+  const config = readSessionConfig(configPath);
   if (authToken) config.authToken = authToken;
   if (csrfToken) config.csrfToken = csrfToken;
   else delete config.csrfToken;
@@ -363,16 +425,21 @@ async function blueskyTest(creds, fetchImpl, proxy) {
     signal: AbortSignal.timeout(TEST_TIMEOUT_MS),
   };
   let res;
-  if (proxy) {
-    const { fetchWithDispatcher } = await import('../utils/http2.js');
-    const undici = await import('undici').catch(() => null);
-    if (!undici) {
-      return { ok: false, reason: 'proxy configured but undici is not installed' };
+  try {
+    if (proxy) {
+      const { fetchWithDispatcher } = await import('../utils/http2.js');
+      const undici = await import('undici').catch(() => null);
+      if (!undici) {
+        return { ok: false, reason: 'proxy configured but undici is not installed' };
+      }
+      init.dispatcher = new undici.ProxyAgent(proxy);
+      res = await fetchWithDispatcher(fetchImpl, `${service}/xrpc/com.atproto.server.createSession`, init);
+    } else {
+      res = await fetchImpl(`${service}/xrpc/com.atproto.server.createSession`, init);
     }
-    init.dispatcher = new undici.ProxyAgent(proxy);
-    res = await fetchWithDispatcher(fetchImpl, `${service}/xrpc/com.atproto.server.createSession`, init);
-  } else {
-    res = await fetchImpl(`${service}/xrpc/com.atproto.server.createSession`, init);
+  } finally {
+    // One-shot check: release the proxy agent's sockets immediately.
+    await init.dispatcher?.close().catch(() => {});
   }
   if (res.ok) return { ok: true, reason: 'login succeeded' };
   let detail = `HTTP ${res.status}`;
@@ -401,16 +468,21 @@ async function mastodonTest(creds, fetchImpl, proxy) {
     signal: AbortSignal.timeout(TEST_TIMEOUT_MS),
   };
   let res;
-  if (proxy) {
-    const { fetchWithDispatcher } = await import('../utils/http2.js');
-    const undici = await import('undici').catch(() => null);
-    if (!undici) {
-      return { ok: false, reason: 'proxy configured but undici is not installed' };
+  try {
+    if (proxy) {
+      const { fetchWithDispatcher } = await import('../utils/http2.js');
+      const undici = await import('undici').catch(() => null);
+      if (!undici) {
+        return { ok: false, reason: 'proxy configured but undici is not installed' };
+      }
+      init.dispatcher = new undici.ProxyAgent(proxy);
+      res = await fetchWithDispatcher(fetchImpl, `${creds.instance}/api/v1/accounts/verify_credentials`, init);
+    } else {
+      res = await fetchImpl(`${creds.instance}/api/v1/accounts/verify_credentials`, init);
     }
-    init.dispatcher = new undici.ProxyAgent(proxy);
-    res = await fetchWithDispatcher(fetchImpl, `${creds.instance}/api/v1/accounts/verify_credentials`, init);
-  } else {
-    res = await fetchImpl(`${creds.instance}/api/v1/accounts/verify_credentials`, init);
+  } finally {
+    // One-shot check: release the proxy agent's sockets immediately.
+    await init.dispatcher?.close().catch(() => {});
   }
   if (res.ok) return { ok: true, reason: 'token accepted' };
   return { ok: false, reason: `HTTP ${res.status}` };
@@ -673,18 +745,36 @@ export function createAccountVault(options = {}) {
       // (src/cli/index.js CONFIG_DIR), while $XACTIONS_HOME readers
       // (src/utils/savedSession.js sessionDir) follow the vault's cache
       // dir. Write the session to both so `use` activates everywhere.
-      const dirs = [sessionDir()];
+      // Dedup on realpath so a symlink-aliased dir cannot make the `.bak`
+      // of the second pass capture the jar the first pass just wrote.
+      const dirs = [];
+      const seenDirs = new Set();
+      const candidates = [sessionDir()];
       const cacheDir = resolveCacheDir();
-      if (!cacheDir.startsWith('memory:') && path.resolve(cacheDir) !== path.resolve(dirs[0])) {
-        dirs.push(cacheDir);
+      if (!cacheDir.startsWith('memory:')) candidates.push(cacheDir);
+      for (const dir of candidates) {
+        let key;
+        try {
+          key = fs.realpathSync(dir);
+        } catch {
+          key = path.resolve(dir);
+        }
+        if (!seenDirs.has(key)) {
+          seenDirs.add(key);
+          dirs.push(dir);
+        }
       }
 
-      // Mirror config.json FIRST: a mirror failure (e.g. corrupt existing
-      // config) must abort before any jar is touched, so the activation
-      // cannot half-apply. Dirs are created up front so the mirror can write.
+      // Create dirs, then validate EVERY config.json up front: a corrupt
+      // mirror target aborts before any dir is touched.
       for (const dir of dirs) fs.mkdirSync(dir, { recursive: true, mode: 0o700 });
-      for (const dir of dirs) mirrorSessionTokens(dir, cookies);
+      for (const dir of dirs) readSessionConfig(path.join(dir, 'config.json'));
 
+      // Per-dir interleave — each dir is fully switched (jar + backup +
+      // mirror) before the next starts, so a mid-loop failure leaves at
+      // worst one dir switched, never a config/jar split inside a dir.
+      // Jar first: config.json tokens are only a fallback mirror, so a
+      // mirror write failure still leaves a working session via the jar.
       const jar = JSON.stringify(cookies, null, 2);
       let backup = false;
       for (const dir of dirs) {
@@ -699,6 +789,7 @@ export function createAccountVault(options = {}) {
         fs.writeFileSync(tmpPath, jar, { mode: 0o600 });
         fs.renameSync(tmpPath, cookiePath);
         fs.chmodSync(cookiePath, 0o600);
+        mirrorSessionTokens(dir, cookies);
       }
 
       stmts.touch.run(Date.now(), row.platform, row.name);
