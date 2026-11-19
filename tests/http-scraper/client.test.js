@@ -465,6 +465,29 @@ describe('Pagination cursor extraction', () => {
     expect(pages).toHaveLength(2);
     expect(fetch).toHaveBeenCalledTimes(2);
   });
+
+  it('graphqlPaginate stops when the cursor stops advancing', async () => {
+    const makePage = (cursorVal) => ({
+      data: { timeline: { instructions: [{ entries: [{ entryId: 'cursor-bottom-x', content: { value: cursorVal } }] }] } },
+    });
+    const ok = (page) => ({ status: 200, headers: { get: () => null }, json: () => Promise.resolve(page) });
+    // Without the guard the loop would repeat the STUCK request forever; the
+    // cursorless fallback page bounds the test so a regression fails, not hangs.
+    const fetch = vi.fn()
+      .mockResolvedValueOnce(ok(makePage('STUCK')))
+      .mockResolvedValueOnce(ok(makePage('STUCK')))
+      .mockResolvedValue(ok({ data: { timeline: { instructions: [{ entries: [] }] } } }));
+
+    const client = new TwitterHttpClient({ cookies: 'auth_token=x; ct0=y', fetch, maxRetries: 0 });
+
+    const pages = [];
+    for await (const batch of client.graphqlPaginate('qId', 'Op', {})) {
+      pages.push(batch);
+    }
+
+    expect(pages).toHaveLength(2);
+    expect(fetch).toHaveBeenCalledTimes(2);
+  });
 });
 
 // ---------------------------------------------------------------------------
