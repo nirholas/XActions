@@ -16,6 +16,7 @@ import { WebhookRepository, WebhookDeliveryRepository } from '../db/repositories
 import type { Webhook } from '../db/repositories/webhook'
 import type { WebhookDelivery } from '../db/repositories/webhook-delivery'
 import { signPayload, generateEventId } from './signing'
+import { assertDeliverableUrl, publicOnlyAgents } from './public-url'
 import {
   DEFAULT_RETRY_CONFIG,
   type WebhookEventType,
@@ -265,11 +266,15 @@ export class WebhookDeliveryService extends EventEmitter {
 
     const start = Date.now()
     try {
+      // Tenant-supplied URL: refuse private/local targets, checked again at
+      // connect time by the agents so DNS rebinding cannot slip past.
+      assertDeliverableUrl(webhook.url)
       const response = await axios.post(webhook.url, payload, {
         headers,
         timeout: this.requestTimeoutMs,
         validateStatus: () => true, // Don't throw on non-2xx
         maxRedirects: 0,
+        ...publicOnlyAgents,
       })
 
       const durationMs = Date.now() - start

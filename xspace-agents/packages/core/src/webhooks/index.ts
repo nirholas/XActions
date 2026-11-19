@@ -25,6 +25,13 @@ export {
   generateEventId,
 } from './signing'
 
+// Outbound URL safety
+export {
+  assertDeliverableUrl,
+  isPrivateAddress,
+  WebhookUrlError,
+} from './public-url'
+
 // Delivery service
 export {
   WebhookDeliveryService,
