@@ -70,17 +70,16 @@ const mockCicd = {
 // Mock xspace-agent repositories and CICDService
 // ---------------------------------------------------------------------------
 
+// Regular functions, not arrows: vitest 4 refuses `new` on arrow implementations.
+// routes/deployments.ts imports CICDService from the package root.
 vi.mock('xspace-agent', () => ({
   AgentRepository: vi.fn(),
   AgentVersionRepository: vi.fn(),
   AgentDeploymentRepository: vi.fn(),
-  AuditRepository: vi.fn(() => ({
-    log: vi.fn(async () => {}),
-  })),
-}))
-
-vi.mock('xspace-agent/cicd', () => ({
-  CICDService: vi.fn(() => mockCicd),
+  AuditRepository: vi.fn(function () {
+    return { log: vi.fn(async () => {}) }
+  }),
+  CICDService: vi.fn(function () { return mockCicd }),
 }))
 
 // Mock authorize middleware to pass through (tenant is injected by test-app)

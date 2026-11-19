@@ -1,7 +1,6 @@
+#!/usr/bin/env node
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2026 nirholas (https://github.com/nirholas/xspace-agent) [§32]
-
-#!/usr/bin/env node
 
 import { Command } from 'commander';
 import { setVerbose, setQuiet } from './logger';
