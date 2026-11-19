@@ -26,7 +26,7 @@ Add the MCP server:
 claude mcp add xactions -- npx -y xactions-mcp
 ```
 
-Load only the tools the session needs. The full list is 155 tools and about 60 KB of
+Load only the tools the session needs. The full list is 156 tools and about 60 KB of
 JSON before you have read a single tweet:
 
 ```bash

@@ -103,7 +103,7 @@ Set them in the `env` block of your AI client's MCP configuration, not in a
 }
 ```
 
-Without them the server still starts and still serves all 155 tools. The
+Without them the server still starts and still serves all 156 tools. The
 guest-tier ones (profiles, public timelines) work and the rest report that they
 need a session.
 
