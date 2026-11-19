@@ -3,7 +3,7 @@
 
 import { describe, it, expect } from 'vitest';
 
-import { describeAccounts, describeQueryIds, formatCacheAge } from '../../src/cli/commands/doctor.js';
+import { describeAccounts, describeQueryIds, describeRefreshFailure, formatCacheAge } from '../../src/cli/commands/doctor.js';
 
 const NOW = Date.parse('2026-08-27T12:00:00.000Z');
 const CACHE = '/tmp/xactions-home/query-ids.json';
@@ -16,6 +16,26 @@ describe('doctor', () => {
       expect(formatCacheAge('2026-08-27T07:00:00.000Z', NOW)).toBe('5h old');
       expect(formatCacheAge('2026-08-20T12:00:00.000Z', NOW)).toBe('7d old');
       expect(formatCacheAge('garbage', NOW)).toBe('unknown age');
+    });
+  });
+
+  describe('describeRefreshFailure', () => {
+    const previous = { status: 'ok', detail: '123 IDs cached' };
+
+    it('warns without blaming the network when x.com served the x-web client', () => {
+      const err = Object.assign(new Error('Could not locate x.com client bundle.'), { code: 'X_WEB_CLIENT' });
+      const result = describeRefreshFailure(err, previous);
+      expect(result.status).toBe('warn');
+      expect(result.detail).toContain('x-web');
+      expect(result.detail).toContain('123 IDs cached');
+      expect(result.fix).not.toMatch(/network|proxy/i);
+    });
+
+    it('fails with the network fix for any other refresh error', () => {
+      const result = describeRefreshFailure(new Error('fetch failed'), previous);
+      expect(result.status).toBe('fail');
+      expect(result.detail).toContain('fetch failed');
+      expect(result.fix).toMatch(/network/);
     });
   });
 

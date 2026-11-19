@@ -128,6 +128,14 @@ const OPERATION_RE =
 
 const MAIN_BUNDLE_RE = /https:\/\/abs\.twimg\.com\/responsive-web\/client-web(?:-legacy)?\/main\.([a-z0-9]+)\.js/;
 
+/**
+ * x.com's newer web client (served logged-out from November 2026) loads from
+ * `abs.twimg.com/x-web/` and ships Relay persisted queries
+ * (`params:{id,name,operationKind}`) with different operation names, not the
+ * webpack `queryId/operationName` pairs this module extracts.
+ */
+const XWEB_ENTRY_RE = /https:\/\/abs\.twimg\.com\/x-web\/[^"'\s]+\.js/;
+
 // ---------------------------------------------------------------------------
 // Module state
 // ---------------------------------------------------------------------------
@@ -312,6 +320,17 @@ export function parseMainBundleUrl(html) {
 }
 
 /**
+ * Whether page HTML is the newer x-web client shell, which carries no
+ * classic main bundle for discovery to read.
+ *
+ * @param {string} html
+ * @returns {boolean}
+ */
+export function isXWebShell(html) {
+  return typeof html === 'string' && !MAIN_BUNDLE_RE.test(html) && XWEB_ENTRY_RE.test(html);
+}
+
+/**
  * Choose which manifest chunks to download.
  *
  * @param {Array<{name: string, url: string}>} chunks
@@ -429,12 +448,18 @@ export async function discoverQueryIds(options = {}) {
   let entryUrl = null;
   let mainBundle = null;
   const entryErrors = [];
+  let xwebPages = 0;
   for (const url of entryUrls) {
     try {
       const text = await fetchText(fetchFn, url, browserNavigationHeaders());
       const main = parseMainBundleUrl(text);
       if (!main) {
-        entryErrors.push(`${url}: no main bundle in HTML`);
+        if (isXWebShell(text)) {
+          xwebPages++;
+          entryErrors.push(`${url}: served the newer x-web client, which has no classic bundle to read`);
+        } else {
+          entryErrors.push(`${url}: no main bundle in HTML`);
+        }
         continue;
       }
       html = text;
@@ -446,7 +471,11 @@ export async function discoverQueryIds(options = {}) {
     }
   }
   if (!html) {
-    throw new Error(`Could not locate x.com client bundle. ${entryErrors.join('; ')}`);
+    const err = new Error(`Could not locate x.com client bundle. ${entryErrors.join('; ')}`);
+    // x.com answered with the x-web shell, so it was reachable: the cause is
+    // the client change, not the network, and callers can say so.
+    if (xwebPages > 0) err.code = 'X_WEB_CLIENT';
+    throw err;
   }
 
   const manifest = parseChunkManifest(html);

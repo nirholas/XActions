@@ -22,6 +22,7 @@ import {
   extractOperations,
   parseChunkManifest,
   parseMainBundleUrl,
+  isXWebShell,
   selectChunks,
   discoverQueryIds,
   refreshQueryIds,
@@ -127,6 +128,24 @@ describe('extractOperations', () => {
   });
 });
 
+// Trimmed from the logged-out x.com page served in November 2026.
+const XWEB_HTML =
+  '<!DOCTYPE html><html lang="en" data-app-env="prod"><head><title>X</title>' +
+  '<link rel="preload" as="font" href="https://abs.twimg.com/fonts/subset/Chirp-Regular.c88864db.latin.woff2"/>' +
+  '</head><body><script nonce="n" type="module" src="https://abs.twimg.com/x-web/x-web/entry-client-logged-out-CMAWGEf4.js"></script></body></html>';
+
+describe('isXWebShell', () => {
+  it('recognises the x-web client shell', () => {
+    expect(isXWebShell(XWEB_HTML)).toBe(true);
+  });
+
+  it('is false for the classic client and for unrelated pages', () => {
+    expect(isXWebShell(HOME_HTML)).toBe(false);
+    expect(isXWebShell('<html>no bundles here</html>')).toBe(false);
+    expect(isXWebShell(undefined)).toBe(false);
+  });
+});
+
 describe('parseMainBundleUrl / parseChunkManifest', () => {
   it('finds the main bundle URL in page HTML', () => {
     expect(parseMainBundleUrl(HOME_HTML)).toBe(MAIN_URL);
@@ -219,6 +238,32 @@ describe('discoverQueryIds', () => {
     const fetch = vi.fn(async () => textResponse(403, 'blocked'));
     await expect(discoverQueryIds({ fetch, cacheDir })).rejects.toThrow(/Could not locate x.com client bundle/);
     expect(fs.existsSync(path.join(cacheDir, CACHE_FILENAME))).toBe(false);
+  });
+
+  it('names the x-web client, not the network, when every page serves it', async () => {
+    const fetch = vi.fn(async () => textResponse(200, XWEB_HTML));
+    const err = await discoverQueryIds({ fetch, cacheDir }).catch((e) => e);
+    expect(err).toBeInstanceOf(Error);
+    expect(err.code).toBe('X_WEB_CLIENT');
+    expect(err.message).toMatch(/served the newer x-web client/);
+    expect(fs.existsSync(path.join(cacheDir, CACHE_FILENAME))).toBe(false);
+  });
+
+  it('still names the x-web client when other entry pages fail', async () => {
+    const fetch = bundleFetch({
+      'https://x.com/home': () => textResponse(403, 'blocked'),
+      'https://x.com/i/flow/login': () => textResponse(200, XWEB_HTML),
+      'https://twitter.com/home': () => textResponse(403, 'blocked'),
+      'https://x.com/': () => textResponse(200, XWEB_HTML),
+    });
+    const err = await discoverQueryIds({ fetch, cacheDir }).catch((e) => e);
+    expect(err.code).toBe('X_WEB_CLIENT');
+  });
+
+  it('leaves the error uncoded when x.com never answered with the x-web shell', async () => {
+    const fetch = vi.fn(async () => textResponse(403, 'blocked'));
+    const err = await discoverQueryIds({ fetch, cacheDir }).catch((e) => e);
+    expect(err.code).toBeUndefined();
   });
 
   it('does not persist when persist:false', async () => {

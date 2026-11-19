@@ -320,15 +320,35 @@ async function checkQueryIds({ refresh = false } = {}) {
       const result = await refreshQueryIds();
       return { status: 'ok', detail: `Refreshed ${result.count} query IDs from x.com into ${result.cachePath}` };
     } catch (error) {
-      const previous = describeQueryIds(queryIdStatus());
-      return {
-        status: 'fail',
-        detail: `Refresh failed: ${error.message}. Still using: ${previous.detail}`,
-        fix: 'Check your network and any proxy, then run `xactions doctor --refresh-ids` again.',
-      };
+      return describeRefreshFailure(error, describeQueryIds(queryIdStatus()));
     }
   }
   return describeQueryIds(queryIdStatus());
+}
+
+/**
+ * Turn a failed query-ID refresh into a check result. Pure, for tests.
+ *
+ * An `X_WEB_CLIENT` failure means x.com answered with its newer client, so
+ * blaming the network or a proxy would send people the wrong way.
+ *
+ * @param {Error & {code?: string}} error
+ * @param {CheckResult} previous - describeQueryIds() for what stays in use
+ * @returns {CheckResult}
+ */
+export function describeRefreshFailure(error, previous) {
+  if (error.code === 'X_WEB_CLIENT') {
+    return {
+      status: 'warn',
+      detail: `x.com served its newer x-web client, which this version cannot read query IDs from. Still using: ${previous.detail}`,
+      fix: 'Nothing on this machine needs fixing. The query IDs shipped with XActions stay in use; update XActions when a release adds x-web discovery.',
+    };
+  }
+  return {
+    status: 'fail',
+    detail: `Refresh failed: ${error.message}. Still using: ${previous.detail}`,
+    fix: 'Check your network and any proxy, then run `xactions doctor --refresh-ids` again.',
+  };
 }
 
 /**
