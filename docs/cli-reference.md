@@ -121,6 +121,7 @@ xactions doctor              # verify the install and see which tier you are on
 xactions profile NASA        # works with no account
 xactions tweets NASA --limit 20
 xactions analyze NASA        # engagement rate, cadence, content mix, best posting hour
+xactions brief base CoinbaseDev --topic x402   # research accounts before tagging them
 
 xactions connect             # log in once, in a real browser, to unlock the rest
 xactions search "your topic" --limit 50

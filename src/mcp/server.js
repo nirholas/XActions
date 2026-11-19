@@ -1245,6 +1245,30 @@ const TOOLS = [
       required: ['username'],
     },
   },
+  {
+    name: 'x_account_brief',
+    description:
+      'Research a list of public X accounts before posting about or tagging them, with no login. For each account: its own account statistics worded as things you could say (followers, best post versus typical post, views), the figures it has posted about itself (money, percentages, multiples, counts like "1.2M transactions") quoted in context with a link to the source post, its posts about a topic, its recent posts, and who it tags, reposts and links to. Across the list: a ready-to-paste tag line, and accounts that several listed accounts mention but that are not on the list yet. Returns Markdown by default, suited to drafting posts from; pass format "json" for the structured data. Cached for six hours, so calling again with one more account only fetches the new one.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        usernames: {
+          oneOf: [{ type: 'string' }, { type: 'array', items: { type: 'string' }, minItems: 1, maxItems: 25 }],
+          description: 'One username, or up to 25. Without @; profile URLs are accepted.',
+        },
+        topic: {
+          type: 'string',
+          description: 'Comma-separated keywords that make a post on topic, e.g. "x402,agent payments". Matches text, hashtags, tagged accounts and links.',
+        },
+        limit: { type: 'number', description: 'Posts to read per account (default 60, 10 to 400).' },
+        days: { type: 'number', description: 'Only list posts and figures from the last N days (default 30).' },
+        recent: { type: 'number', description: 'Recent posts to list per account (default 5).' },
+        format: { type: 'string', enum: ['markdown', 'json'], description: 'markdown (default) or json.' },
+        refresh: { type: 'boolean', description: 'Ignore the cache and fetch every account again.' },
+      },
+      required: ['usernames'],
+    },
+  },
   // ====== AI Tools (require OPENROUTER_API_KEY) ======
   {
     name: 'x_analyze_voice',

@@ -442,6 +442,49 @@ export async function x_account_report({ username, limit = 50 }) {
 }
 
 /**
+ * Research a list of accounts before posting about them: what each is posting,
+ * the figures they publish about themselves (with the post each came from),
+ * their account statistics, who they tag, and which accounts several of them
+ * mention that are not on the list. Shares its cache with `xactions brief`.
+ *
+ * @param {{usernames: string|string[], topic?: string, limit?: number, days?: number, recent?: number, format?: 'markdown'|'json', refresh?: boolean}} args
+ * @returns {Promise<object>}
+ */
+export async function x_account_brief({ usernames, topic, limit = 60, days = 30, recent = 5, format = 'markdown', refresh = false }) {
+  const { parseAccountList, renderBriefMarkdown } = await import('../analysis/accountBrief.js');
+  const { runBrief, clampInt, DEFAULT_CACHE_HOURS, MIN_LIMIT, MAX_LIMIT } = await import('../analysis/briefSource.js');
+
+  const rejected = [];
+  const accounts = parseAccountList((Array.isArray(usernames) ? usernames : [usernames]).join('\n'), rejected);
+  if (!accounts.length) throw new Error('No valid usernames given.');
+  if (accounts.length > 25) throw new Error(`${accounts.length} accounts is more than one call should read; split the list into groups of 25 or fewer.`);
+
+  const { ecosystem } = await runBrief({
+    accounts,
+    getScraper: ensureHttpScraper,
+    topic,
+    limit: clampInt(limit, 60, MIN_LIMIT, MAX_LIMIT),
+    days: clampInt(days, 30, 1, 3650),
+    recent: clampInt(recent, 5, 0, 50),
+    cacheHours: refresh ? 0 : DEFAULT_CACHE_HOURS,
+  });
+
+  if (!ecosystem.accounts.length) {
+    throw new Error(`Could not read any of the accounts: ${ecosystem.failures.map((f) => `@${f.username} (${f.error})`).join('; ')}`);
+  }
+
+  const skipped = rejected.map((token) => ({ username: token, error: 'not a valid X handle' }));
+  if (format === 'json') return { ...ecosystem, failures: [...ecosystem.failures, ...skipped] };
+
+  return {
+    brief: renderBriefMarkdown(ecosystem),
+    tagLine: ecosystem.tagLine,
+    alsoTag: ecosystem.alsoTag.map((e) => e.username),
+    failures: [...ecosystem.failures, ...skipped],
+  };
+}
+
+/**
  * When an account's posts actually perform.
  *
  * Derived from the same report as `x_account_report` rather than recomputing
@@ -1818,6 +1861,7 @@ export const toolMap = {
   x_get_thread,
   x_best_time_to_post,
   x_account_report,
+  x_account_brief,
   // Core actions
   x_follow,
   x_unfollow,

@@ -123,7 +123,7 @@ export const GROUP_RULES = Object.freeze([
     names: [
       'x_detect_unfollowers', 'x_get_analytics', 'x_get_post_analytics',
       'x_competitor_analysis', 'x_creator_analytics', 'x_analyze_sentiment',
-      'x_reputation_report', 'x_best_time_to_post', 'x_account_report',
+      'x_reputation_report', 'x_best_time_to_post', 'x_account_report', 'x_account_brief',
       'x_audience_insights', 'x_engagement_report', 'x_detect_bots',
       'x_find_influencers', 'x_smart_target', 'x_crypto_analyze',
       'x_growth_rate', 'x_compare_accounts', 'x_audience_overlap',

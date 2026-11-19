@@ -63,6 +63,7 @@ export const DEFAULT_FIELDS = {
     'bestHourUTC',
     'bestWeekday',
   ],
+  brief: ['username', 'followers', 'engagementRate', 'topicPosts', 'figures', 'recentPosts', 'daysSinceLastPost', 'topFigure'],
 };
 
 /**

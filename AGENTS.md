@@ -135,6 +135,21 @@ xactions analyze NASA SpaceX --fields username,followers,engagementRate,bestHour
 `analyze` takes several usernames and samples `--limit` posts from each
 (default 50, clamped to the 5 to 200 range).
 
+Research accounts before posting about them (recent posts, the figures they
+publish with source links, their stats, who they tag, and who else the list
+keeps mentioning):
+
+```bash
+xactions brief base CoinbaseDev --topic x402
+xactions brief --file accounts.txt --topic "x402,agent payments" -o brief.md
+xactions brief --file accounts.txt --json | jq -r '.alsoTag[].username'
+```
+
+Timelines are cached for six hours under `XACTIONS_HOME`, so re-running a list
+only fetches new or stale accounts. Logged out, X may return an account's
+popular posts instead of its latest; the brief flags it. See
+[`docs/brief.md`](docs/brief.md).
+
 The rest of the read surface, same flags:
 
 ```bash
@@ -308,6 +323,7 @@ is not, that is a bug in this table.
 | Grow an account over time | [`skills/algorithm-cultivation/SKILL.md`](skills/algorithm-cultivation/SKILL.md) |
 | Run a long-lived LLM-driven agent | `src/algorithmBuilder.js` with `src/personaEngine.js`, via `xactions persona run <id>` |
 | Read an account without logging in | `xactions profile <user>`, `xactions tweets <user>` |
+| Research accounts before tagging them in a post | `xactions brief --file accounts.txt --topic x402`, or the `x_account_brief` MCP tool. See [`docs/brief.md`](docs/brief.md) |
 | Import an official X archive | `xactions archive <path-to-zip>` |
 | Hold agent writes for human approval | set `XACTIONS_MCP_REQUIRE_APPROVAL=1`, then `xactions drafts` |
 | Log in from a browser already signed in to x.com | `xactions login --from-browser`, or `--cookies-file` for an export |
