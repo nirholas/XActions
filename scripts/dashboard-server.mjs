@@ -2,7 +2,7 @@
 /**
  * Standalone static server for the dashboard (no database, no API).
  *
- * Usage: node dashboard-server.js   (PORT overrides the default 3000)
+ * Usage: npm run dashboard:serve   (or node scripts/dashboard-server.mjs; PORT overrides the default 3000)
  * For the full app with the REST API behind it, run `node api/server.js` instead.
  */
 import express from 'express';
@@ -10,7 +10,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const DASHBOARD_DIR = path.join(__dirname, 'dashboard');
+const DASHBOARD_DIR = path.join(__dirname, '..', 'dashboard');
 
 const app = express();
 

@@ -13,7 +13,7 @@ XActions includes a web dashboard with 30+ pages for managing automations, analy
 node api/server.js
 
 # Or use the dashboard server directly
-node dashboard-server.js
+npm run dashboard:serve
 ```
 
 Open [http://localhost:3001](http://localhost:3001) in your browser (the standalone dashboard server listens on [http://localhost:3000](http://localhost:3000); set `PORT` to change it).

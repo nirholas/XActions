@@ -44,6 +44,8 @@
   "scripts": {
     "vercel-build": "prisma generate",
     "dev": "NODE_ENV=development nodemon api/server.js",
+    "setup": "bash scripts/setup.sh",
+    "dashboard:serve": "node scripts/dashboard-server.mjs",
     "start": "NODE_ENV=production node api/server.js",
     "cli": "node src/cli/index.js",
     "mcp": "node src/mcp/server.js",
