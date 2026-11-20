@@ -85,6 +85,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   - `res.status(201).success(...)` was overwritten to 200. CORS read `NODE_ENV` once at import, so the posture could disagree with the running environment. The health routes ignored the circuit breakers they were given.
   - Two memory backups in the same millisecond shared a file name, and the second overwrote the first. A knowledge-base paragraph or markdown section longer than one chunk was embedded as one oversized chunk; it is now split.
 
+### Removed
+
+- **`api/services/monitoring.js`, an internal module nothing imported.** Its snapshot helpers (`createSnapshot`, `getLatestSnapshot`, `compareSnapshots`, `listSnapshots`) had no caller in the API, the job queue, the worker, the Cloudflare functions or the tests. The `AccountSnapshot` Prisma model it wrote to is left in the schema.
+
 ### Security
 
 - **The A2A server no longer runs write tools for anyone who can reach it.** It asked for `allowUnauthenticated: true`, an option that does not exist, so authentication silently defaulted off; CORS answered every origin and the server bound every interface. A web page the user happened to visit could `fetch` it and post or follow as their account, outside the MCP approval gate and the daily caps. Every `/a2a` route now needs `Authorization: ApiKey <key>` or a bearer token (`node src/a2a/index.js --create-key <label> --preset standard`), the server binds `127.0.0.1` unless `A2A_HOST` says otherwise, CORS is an allowlist (`A2A_CORS_ORIGINS`), write tools need the `write` permission and go through the approval gate and the action caps, and push-notification and discovery URLs must be public http(s) addresses. "unfollow @x" was also read as a follow; it is not any more. Docs: [docs/a2a-protocol.md](docs/a2a-protocol.md#authentication).
