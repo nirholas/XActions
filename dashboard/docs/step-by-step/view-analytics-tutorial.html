@@ -480,7 +480,7 @@
 })();
 </code></pre>
 <h3>Method 2: Node.js (Puppeteer)</h3>
-<p><strong>Scripts:</strong> <code>src/viewAnalytics.js</code>, <code>src/creatorStudio.js</code></p>
+<p><strong>Scripts:</strong> <code>browser/viewAnalytics.js</code>, <code>src/creatorStudio.js</code></p>
 <pre><code class="language-javascript">import { getAccountAnalytics, getPostAnalytics } from &#39;./src/creatorStudio.js&#39;;
 import puppeteer from &#39;puppeteer-extra&#39;;
 import StealthPlugin from &#39;puppeteer-extra-plugin-stealth&#39;;
@@ -605,7 +605,7 @@ await browser.close();
 </thead>
 <tbody><tr>
 <td>Creator Revenue</td>
-<td><code>src/creatorSubscriptions.js</code></td>
+<td><code>browser/creatorSubscriptions.js</code></td>
 <td>Revenue sharing and subscriber management</td>
 </tr>
 <tr>

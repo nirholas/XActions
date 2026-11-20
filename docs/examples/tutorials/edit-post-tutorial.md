@@ -11,7 +11,7 @@
 ## Quick Start
 1. Navigate to the post you want to edit on x.com
 2. Open DevTools (F12)
-3. Copy the script from `src/editPost.js`
+3. Copy the script from `browser/editPost.js`
 4. Set `CONFIG.mode = 'edit'`
 5. Set `CONFIG.postUrl` and `CONFIG.newText`
 6. Paste into Console and press Enter
@@ -53,7 +53,7 @@ const CONFIG = {
 
 ### Editing a Post (Browser Console)
 
-1. Copy `src/editPost.js`
+1. Copy `browser/editPost.js`
 2. Set your configuration:
    ```js
    const CONFIG = {
@@ -77,7 +77,7 @@ The script performs these steps:
 ### How the Edit Flow Works Internally
 
 ```js
-// From src/editPost.js -- key steps:
+// From browser/editPost.js -- key steps:
 
 // 1. Find the tweet on the page
 const tweet = await waitForElement('article[data-testid="tweet"]');
@@ -146,6 +146,6 @@ This means you cannot silently fix mistakes -- all versions are public.
 
 ## Related Scripts
 
-- `src/editPost.js` (undo mode) -- Undo a recently posted tweet
+- `browser/editPost.js` (undo mode) -- Undo a recently posted tweet
 - `src/postComposer.js` -- Create new posts
 - `docs/examples/tutorials/undo-post-tutorial.md` -- Undo post guide

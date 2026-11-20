@@ -9,7 +9,7 @@
 ## Quick Start
 1. Navigate to x.com
 2. Open DevTools (F12)
-3. Copy the script from `src/textFormatting.js`
+3. Copy the script from `browser/textFormatting.js`
 4. Set `CONFIG.text` and `CONFIG.format`
 5. Paste into Console and press Enter
 6. The formatted text is copied to your clipboard
@@ -55,7 +55,7 @@ const CONFIG = {
 
 ### Basic Usage
 
-1. Paste `src/textFormatting.js` into the DevTools console
+1. Paste `browser/textFormatting.js` into the DevTools console
 2. The script formats `CONFIG.text` with `CONFIG.format` and copies it to clipboard
 3. Paste (Ctrl+V) into any tweet compose box
 
@@ -178,6 +178,6 @@ Note: Punctuation, spaces, and special characters pass through unchanged in most
 ## Related Scripts
 
 - `src/postComposer.js` -- Post tweets with the formatted text
-- `src/postThread.js` -- Create threads with formatted headers
-- `src/threadComposer.js` -- Advanced thread composition
+- `browser/postThread.js` -- Create threads with formatted headers
+- `browser/threadComposer.js` -- Advanced thread composition
 - `docs/examples/tutorials/post-content-tutorial.md` -- General posting guide

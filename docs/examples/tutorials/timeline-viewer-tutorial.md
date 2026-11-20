@@ -29,7 +29,7 @@ date: "2026-03-30"
 
 1. Open x.com on your **Home** timeline (`https://x.com/home`)
 2. Press **F12** to open DevTools, then click the **Console** tab
-3. Copy the script from `src/timelineViewer.js`
+3. Copy the script from `browser/timelineViewer.js`
 4. Edit the `CONFIG` section as needed
 5. Paste into the console and press Enter
 
@@ -254,4 +254,4 @@ Each post includes:
 ## Related Scripts
 
 - `src/discoveryExplore.js` -- Browse explore feed and trends
-- `src/saveSearch.js` -- Save and manage search queries
+- `browser/saveSearch.js` -- Save and manage search queries

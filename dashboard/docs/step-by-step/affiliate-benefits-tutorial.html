@@ -224,7 +224,7 @@
 </ol>
 <hr>
 <h2>Configuration</h2>
-<p>The affiliate features use a combination of <code>src/premiumManager.js</code> and <code>src/creatorSubscriptions.js</code>:</p>
+<p>The affiliate features use a combination of <code>src/premiumManager.js</code> and <code>browser/creatorSubscriptions.js</code>:</p>
 <pre><code class="language-javascript">import { getTierFeatures, checkRevenueEligibility } from &#39;./src/premiumManager.js&#39;;
 import { getAccountAnalytics, getRevenue } from &#39;./src/creatorStudio.js&#39;;
 </code></pre>
@@ -447,7 +447,7 @@ await browser.close();
 </li>
 <li><p><strong>Multiple revenue streams</strong> -- Combine ad revenue, creator subscriptions, tips, and referral commissions for maximum earnings.</p>
 </li>
-<li><p><strong>Track with analytics</strong> -- Use <code>src/viewAnalytics.js</code> or <code>x.com/i/account_analytics</code> to monitor your impression count and engagement trends.</p>
+<li><p><strong>Track with analytics</strong> -- Use <code>browser/viewAnalytics.js</code> or <code>x.com/i/account_analytics</code> to monitor your impression count and engagement trends.</p>
 </li>
 <li><p><strong>Stripe setup</strong> -- Complete Stripe onboarding early. It is required for all monetization features and can take a few days to verify.</p>
 </li>
@@ -494,7 +494,7 @@ await browser.close();
 </thead>
 <tbody><tr>
 <td>Creator Revenue</td>
-<td><code>src/creatorSubscriptions.js</code></td>
+<td><code>browser/creatorSubscriptions.js</code></td>
 <td>Subscription tiers and subscriber management</td>
 </tr>
 <tr>
@@ -509,12 +509,12 @@ await browser.close();
 </tr>
 <tr>
 <td>View Analytics</td>
-<td><code>src/viewAnalytics.js</code></td>
+<td><code>browser/viewAnalytics.js</code></td>
 <td>Track impressions and engagement</td>
 </tr>
 <tr>
 <td>Subscribe to Premium</td>
-<td><code>src/subscribePremium.js</code></td>
+<td><code>browser/subscribePremium.js</code></td>
 <td>Get Premium for monetization</td>
 </tr>
 </tbody></table>

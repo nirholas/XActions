@@ -10,7 +10,7 @@
 
 ## Engagement Analytics
 
-**File:** `src/engagementAnalytics.js`
+**File:** `browser/engagementAnalytics.js`
 
 Scrolls your profile and analyzes engagement metrics across your recent posts.
 
@@ -35,7 +35,7 @@ Exports a full JSON report with per-post data including engagement rates, best t
 
 ## Best Time to Post
 
-**File:** `src/bestTimeToPost.js`
+**File:** `browser/bestTimeToPost.js`
 
 Analyzes your posting history to determine when your audience is most engaged.
 
@@ -56,7 +56,7 @@ Analyzes your posting history to determine when your audience is most engaged.
 
 ## Hashtag Analytics
 
-**File:** `src/hashtagAnalytics.js`
+**File:** `browser/hashtagAnalytics.js`
 
 Analyze the performance of any hashtag: top posts, top contributors, hourly distribution.
 
@@ -76,7 +76,7 @@ Analyze the performance of any hashtag: top posts, top contributors, hourly dist
 
 ## Competitor Analysis
 
-**File:** `src/competitorAnalysis.js`
+**File:** `browser/competitorAnalysis.js`
 
 Compare engagement metrics between multiple X accounts.
 
@@ -100,7 +100,7 @@ Each account takes ~15-30 seconds to analyze as the script navigates between pro
 
 ## Audit Followers
 
-**File:** `src/auditFollowers.js`
+**File:** `browser/auditFollowers.js`
 
 Scan your followers list and categorize accounts as legitimate, suspicious, or likely-fake.
 

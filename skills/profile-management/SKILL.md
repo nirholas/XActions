@@ -16,12 +16,12 @@ Browser console scripts for updating X/Twitter profile information.
 | Script | File | Purpose |
 |--------|------|---------|
 | Profile Manager | `src/profileManager.js` | Core profile management operations |
-| Update Profile | `src/updateProfile.js` | Update bio, name, location, website |
-| QR Code Sharing | `src/qrCodeSharing.js` | Generate and share profile QR codes |
+| Update Profile | `browser/updateProfile.js` | Update bio, name, location, website |
+| QR Code Sharing | `browser/qrCodeSharing.js` | Generate and share profile QR codes |
 
 ## Update Profile
 
-**File:** `src/updateProfile.js`
+**File:** `browser/updateProfile.js`
 
 Programmatically updates profile fields: display name, bio, location, website, birth date.
 
@@ -49,7 +49,7 @@ Core module for reading and updating profile data. Used by other scripts that ne
 
 ## QR Code Sharing
 
-**File:** `src/qrCodeSharing.js`
+**File:** `browser/qrCodeSharing.js`
 
 Generates a shareable QR code for your X profile. Useful for in-person networking and cross-platform promotion.
 
@@ -97,9 +97,9 @@ Generates a shareable QR code for your X profile. Useful for in-person networkin
 Example: "Building AI tools for indie hackers | 10K+ users | Free at example.com"
 
 ### Profile A/B testing
-1. Use `src/updateProfile.js` to set version A
-2. Run for 1 week, track follower growth with `src/followerGrowthTracker.js`
-3. Switch to version B with `src/updateProfile.js`
+1. Use `browser/updateProfile.js` to set version A
+2. Run for 1 week, track follower growth with `browser/followerGrowthTracker.js`
+3. Switch to version B with `browser/updateProfile.js`
 4. Compare growth rates after another week
 5. Keep the winning version
 

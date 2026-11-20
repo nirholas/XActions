@@ -2,7 +2,7 @@
 
 ## Checklist
 
-1. Create the script in `src/` following [browser-script-patterns.md](browser-script-patterns.md)
+1. Create the script in `browser/` following [browser-script-patterns.md](browser-script-patterns.md)
 2. Add documentation in `docs/examples/your-feature.md`
 3. Update `README.md` — add to examples and feature matrix
 4. If it belongs to an existing skill category, update that `skills/*/SKILL.md`

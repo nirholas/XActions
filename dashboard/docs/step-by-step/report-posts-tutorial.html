@@ -213,7 +213,7 @@
 <ol>
 <li>Navigate to any x.com page</li>
 <li>Open DevTools (F12) and go to the Console tab</li>
-<li>Copy the contents of <code>src/reportSpam.js</code></li>
+<li>Copy the contents of <code>browser/reportSpam.js</code></li>
 <li>Edit the <code>CONFIG</code> section (users, reason, dryRun)</li>
 <li>Paste into the console and press Enter</li>
 </ol>
@@ -301,7 +301,7 @@
   dryRun: true,
 };
 </code></pre>
-<p><strong>Step 2:</strong> Paste <code>src/reportSpam.js</code>:</p>
+<p><strong>Step 2:</strong> Paste <code>browser/reportSpam.js</code>:</p>
 <pre><code>REPORT SPAM
 DRY RUN MODE
   1. @obvious_spammer (spam)
@@ -338,8 +338,8 @@ RESULTS:
 };
 </code></pre>
 <h3>Report a Specific Post</h3>
-<p>For reporting individual posts (not accounts), use <code>src/postInteractions.js</code>:</p>
-<pre><code class="language-js">// First paste src/postInteractions.js, then call:
+<p>For reporting individual posts (not accounts), use <code>browser/postInteractions.js</code>:</p>
+<pre><code class="language-js">// First paste browser/postInteractions.js, then call:
 await XActions.postInteractions.reportPost(
   &#39;https://x.com/user/status/123456789&#39;,
   &#39;spam&#39;
@@ -363,7 +363,7 @@ await XActions.postInteractions.reportPost(
 <li><strong><code>actionDelay: 4000</code></strong> (4 seconds) is the minimum recommended delay. X may throttle rapid reports.</li>
 <li><strong>The report flow has multiple steps.</strong> The script handles the initial steps but you may need to complete sub-category selection manually.</li>
 <li><strong><code>blockAfterReport: false</code></strong> by default. Set to <code>true</code> to also block each reported account.</li>
-<li><strong>For individual post reports</strong>, use <code>src/postInteractions.js</code> which provides <code>reportPost(url, category)</code>.</li>
+<li><strong>For individual post reports</strong>, use <code>browser/postInteractions.js</code> which provides <code>reportPost(url, category)</code>.</li>
 <li><strong>Do not abuse the report feature.</strong> Filing false reports can result in your own account being restricted.</li>
 <li><strong>Some profiles may not load</strong> (deleted, suspended). The script logs these as failures and moves on.</li>
 </ul>
@@ -398,9 +398,9 @@ await XActions.postInteractions.reportPost(
 </tbody></table>
 <h2>Related Scripts</h2>
 <ul>
-<li><code>src/massBlock.js</code> -- Block accounts in bulk</li>
-<li><code>src/blockBots.js</code> -- Detect and block bot accounts</li>
-<li><code>src/postInteractions.js</code> -- Report individual posts (plus many other post actions)</li>
+<li><code>browser/massBlock.js</code> -- Block accounts in bulk</li>
+<li><code>browser/blockBots.js</code> -- Detect and block bot accounts</li>
+<li><code>browser/postInteractions.js</code> -- Report individual posts (plus many other post actions)</li>
 </ul>
 
 

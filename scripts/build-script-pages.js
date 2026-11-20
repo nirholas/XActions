@@ -2,7 +2,7 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * Build Individual HTML Pages for Every Browser Console Script
- * Scans: src/*.js, src/automation/*.js, scripts/*.js, scripts/twitter/*.js
+ * Scans: browser/*.js, src/automation/*.js, scripts/*.js, scripts/twitter/*.js
  * Outputs to: dashboard/scripts/<slug>.html + dashboard/scripts/index.html
  * by nichxbt
  */
@@ -265,7 +265,7 @@ const CATEGORIES = {
 
 // ─── Script Sources ────────────────────────────────────────────────
 const SCRIPT_DIRS = [
-  { dir: 'src', label: 'Core Library', context: 'browser' },
+  { dir: 'browser', label: 'Browser Scripts', context: 'browser' },
   { dir: 'src/automation', label: 'Automation Suite', context: 'browser', requiresCore: true },
   { dir: 'scripts', label: 'Standalone Scripts', context: 'browser' },
   { dir: 'scripts/twitter', label: 'Twitter Scripts', context: 'browser' },
@@ -888,8 +888,8 @@ function build() {
     const files = fs.readdirSync(dir).filter(f => {
       if (!f.endsWith('.js')) return false;
       if (SKIP_FILES.has(f)) return false;
-      // For src/, skip subdirectories' files
-      if (source.dir === 'src') {
+      // For browser/, skip subdirectories' files
+      if (source.dir === 'browser') {
         const stat = fs.statSync(path.join(dir, f));
         if (!stat.isFile()) return false;
       }
@@ -900,7 +900,7 @@ function build() {
 
     for (const file of files) {
       const slug = slugify(file);
-      if (seen.has(slug)) continue; // Skip duplicates (prefer first source = src/)
+      if (seen.has(slug)) continue; // Skip duplicates (prefer first source = browser/)
       seen.add(slug);
 
       const filePath = path.join(dir, file);

@@ -30,15 +30,15 @@ Open [x.com](https://x.com) and log in. For unfollow scripts, go to `x.com/YOUR_
 
 ### 3. Copy & Paste a Script
 
-Go to the [src/ folder](https://github.com/nirholas/XActions/tree/main/src) on GitHub, open a script, click **Copy raw file**, paste into the console, and press Enter.
+Go to the [browser/ folder](https://github.com/nirholas/XActions/tree/main/browser) on GitHub, open a script, click **Copy raw file**, paste into the console, and press Enter.
 
 **Popular scripts:**
 
 | Task | Script |
 |------|--------|
-| Unfollow non-followers | `src/unfollowback.js` |
-| Unfollow everyone | `src/unfollowEveryone.js` |
-| Detect who unfollowed you | `src/detectUnfollowers.js` |
+| Unfollow non-followers | `browser/unfollowback.js` |
+| Unfollow everyone | `browser/unfollowEveryone.js` |
+| Detect who unfollowed you | `browser/detectUnfollowers.js` |
 | Auto-like by keyword | `src/automation/autoLiker.js` |
 | Scrape followers | `scripts/scrapeFollowers.js` |
 

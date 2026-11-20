@@ -39,7 +39,7 @@ This script provides the following capabilities:
 **Steps:**
 1. Go to `x.com/search`
 2. Open browser console (`F12` → Console tab)
-3. Copy and paste the script from [`src/keywordMonitor.js`](https://github.com/nirholas/XActions/blob/main/src/keywordMonitor.js)
+3. Copy and paste the script from [`browser/keywordMonitor.js`](https://github.com/nirholas/XActions/blob/main/browser/keywordMonitor.js)
 4. Press Enter to run
 
 ```javascript
@@ -408,7 +408,7 @@ Open your browser and go to `x.com/search`. Make sure you're logged in to your X
 
 ### Step 3: Paste the script
 
-Copy the entire script from [`src/keywordMonitor.js`](https://github.com/nirholas/XActions/blob/main/src/keywordMonitor.js) and paste it into the console.
+Copy the entire script from [`browser/keywordMonitor.js`](https://github.com/nirholas/XActions/blob/main/browser/keywordMonitor.js) and paste it into the console.
 
 ### Step 4: Customize the CONFIG (optional)
 
@@ -467,7 +467,7 @@ See the [MCP Setup Guide](../mcp-setup.md) for integration with Claude Desktop, 
 
 | File | Description |
 |------|-------------|
-| [`src/keywordMonitor.js`](https://github.com/nirholas/XActions/blob/main/src/keywordMonitor.js) | Main script |
+| [`browser/keywordMonitor.js`](https://github.com/nirholas/XActions/blob/main/browser/keywordMonitor.js) | Main script |
 
 ---
 

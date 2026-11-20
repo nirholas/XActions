@@ -9,7 +9,7 @@
 ## Quick Start
 1. Navigate to a search result, user timeline, or list on x.com
 2. Open DevTools (F12) and go to the Console tab
-3. Copy the contents of `src/quoteTweetAutomation.js`
+3. Copy the contents of `browser/quoteTweetAutomation.js`
 4. Edit the `CONFIG` section (templates, keywords, dryRun)
 5. Paste into the console and press Enter
 
@@ -167,6 +167,6 @@ minEngagement: 50,  // Minimum combined likes + retweets
 
 ## Related Scripts
 
-- `src/repostPost.js` -- Simple repost (no commentary)
-- `src/autoReply.js` -- Auto-reply to matching tweets
-- `src/likePost.js` -- Like posts by URL or keyword
+- `browser/repostPost.js` -- Simple repost (no commentary)
+- `browser/autoReply.js` -- Auto-reply to matching tweets
+- `browser/likePost.js` -- Like posts by URL or keyword

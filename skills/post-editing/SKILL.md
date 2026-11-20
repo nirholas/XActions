@@ -17,8 +17,8 @@ Browser console script for editing existing posts or undoing a recently posted t
 
 | Goal | File | Navigate to |
 |------|------|-------------|
-| Edit an existing post | `src/editPost.js` | `x.com` |
-| Undo a post within 30 seconds of posting | `src/editPost.js` | `x.com` |
+| Edit an existing post | `browser/editPost.js` | `x.com` |
+| Undo a post within 30 seconds of posting | `browser/editPost.js` | `x.com` |
 
 ## Quick Start
 
@@ -27,14 +27,14 @@ Browser console script for editing existing posts or undoing a recently posted t
 1. Go to `x.com`
 2. Open DevTools (F12) → Console
 3. Set `mode: 'edit'`, `postUrl`, and `newText` in CONFIG
-4. Paste `src/editPost.js` → Enter
+4. Paste `browser/editPost.js` → Enter
 
 ### Undo a post (must run within 30 seconds of posting)
 
 1. Post your tweet
 2. Immediately open DevTools (F12) → Console
 3. Set `mode: 'undo'` in CONFIG
-4. Paste `src/editPost.js` → Enter
+4. Paste `browser/editPost.js` → Enter
 
 ## Configuration
 

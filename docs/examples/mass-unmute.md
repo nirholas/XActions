@@ -17,7 +17,7 @@ Unmute all muted accounts from your X/Twitter settings.
 
 **Steps:**
 1. Go to `x.com/settings/muted/all`
-2. Open console (F12) and paste `src/massUnmute.js`
+2. Open console (F12) and paste `browser/massUnmute.js`
 
 **Configuration:**
 ```javascript
@@ -31,8 +31,8 @@ const CONFIG = {
 
 ## 📁 Files
 
-- `src/massUnmute.js` — Browser console mass unmute
-- `src/muteByKeywords.js` — Mute users by keywords (counterpart)
+- `browser/massUnmute.js` — Browser console mass unmute
+- `browser/muteByKeywords.js` — Mute users by keywords (counterpart)
 
 ## ⚠️ Notes
 

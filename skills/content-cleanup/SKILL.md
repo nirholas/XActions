@@ -16,11 +16,11 @@ Browser console scripts for mass-cleaning your X/Twitter account history.
 | Script | File | Purpose |
 |--------|------|---------|
 | Search Sweep | `scripts/searchSweep.js` | Delete (or like/repost/reply to) every post an X search returns |
-| Bulk Delete Tweets | `src/bulkDeleteTweets.js` | Delete your own posts from your profile timeline by age, keyword, or engagement |
-| Unlike All Posts | `src/unlikeAllPosts.js` | Remove all likes from your likes page |
-| Clear All Reposts | `src/clearAllReposts.js` | Remove all retweets/reposts |
-| Clear All Bookmarks | `src/clearAllBookmarks.js` | Remove all saved bookmarks |
-| Remove Followers | `src/removeFollowers.js` | Soft-block to remove specific followers |
+| Bulk Delete Tweets | `browser/bulkDeleteTweets.js` | Delete your own posts from your profile timeline by age, keyword, or engagement |
+| Unlike All Posts | `browser/unlikeAllPosts.js` | Remove all likes from your likes page |
+| Clear All Reposts | `browser/clearAllReposts.js` | Remove all retweets/reposts |
+| Clear All Bookmarks | `browser/clearAllBookmarks.js` | Remove all saved bookmarks |
+| Remove Followers | `browser/removeFollowers.js` | Soft-block to remove specific followers |
 
 ## Search Sweep: delete everything matching a search
 
@@ -64,7 +64,7 @@ https://x.com/search?q=from%3AYOUR_HANDLE%20%40someone&src=typed_query&f=live
 
 ## Unlike All Posts
 
-**File:** `src/unlikeAllPosts.js`
+**File:** `browser/unlikeAllPosts.js`
 
 Mass-unlike all posts from your likes page.
 
@@ -92,7 +92,7 @@ const CONFIG = {
 
 ## Clear All Reposts
 
-**File:** `src/clearAllReposts.js`
+**File:** `browser/clearAllReposts.js`
 
 Remove all retweets/reposts from your profile.
 
@@ -111,7 +111,7 @@ Remove all retweets/reposts from your profile.
 
 ## Clear All Bookmarks
 
-**File:** `src/clearAllBookmarks.js`
+**File:** `browser/clearAllBookmarks.js`
 
 Remove all saved bookmarks. Tries the built-in "Clear All" button first, falls back to individual removal.
 
@@ -123,7 +123,7 @@ Remove all saved bookmarks. Tries the built-in "Clear All" button first, falls b
 
 ## Remove Followers
 
-**File:** `src/removeFollowers.js`
+**File:** `browser/removeFollowers.js`
 
 Remove specific followers without fully blocking them (soft-block technique).
 

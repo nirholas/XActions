@@ -229,7 +229,7 @@
 <li>Go to your followers page (<code>x.com/yourusername/followers</code>)</li>
 <li>Edit CONFIG with usernames to remove</li>
 <li>Set <code>dryRun: false</code> when ready</li>
-<li>Open console (F12) and paste <code>src/removeFollowers.js</code></li>
+<li>Open console (F12) and paste <code>browser/removeFollowers.js</code></li>
 </ol>
 <p><strong>Configuration:</strong></p>
 <pre><code class="language-javascript">const CONFIG = {
@@ -241,15 +241,15 @@
 <hr>
 <h2>📁 Files</h2>
 <ul>
-<li><code>src/removeFollowers.js</code> — Browser console follower removal</li>
-<li><code>src/auditFollowers.js</code> — Audit followers first (companion script)</li>
+<li><code>browser/removeFollowers.js</code> — Browser console follower removal</li>
+<li><code>browser/auditFollowers.js</code> — Audit followers first (companion script)</li>
 </ul>
 <h2>⚠️ Notes</h2>
 <ul>
 <li>Must be logged in to do this</li>
 <li>The &quot;soft-block&quot; technique (block + unblock) removes followers without a permanent block</li>
 <li>Users can still visit your profile and re-follow</li>
-<li>Use <code>src/auditFollowers.js</code> first to identify which followers to remove</li>
+<li>Use <code>browser/auditFollowers.js</code> first to identify which followers to remove</li>
 </ul>
 
 

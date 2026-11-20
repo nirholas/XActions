@@ -226,20 +226,20 @@
 </tr>
 </thead>
 <tbody><tr>
-<td><code>src/repostPost.js</code></td>
+<td><code>browser/repostPost.js</code></td>
 <td>Repost by URL, keyword, or unrepost by URL</td>
 </tr>
 <tr>
-<td><code>src/autoRepost.js</code></td>
+<td><code>browser/autoRepost.js</code></td>
 <td>Auto-repost matching tweets from timeline/search</td>
 </tr>
 <tr>
-<td><code>src/clearAllReposts.js</code></td>
+<td><code>browser/clearAllReposts.js</code></td>
 <td>Remove all reposts from your profile</td>
 </tr>
 </tbody></table>
 <h2>Configuration</h2>
-<h3>src/repostPost.js</h3>
+<h3>browser/repostPost.js</h3>
 <h4>Mode Selection</h4>
 <pre><code class="language-js">const CONFIG = {
   mode: &#39;keywords&#39;,  // &#39;urls&#39;, &#39;keywords&#39;, or &#39;unrepost&#39;
@@ -289,7 +289,7 @@ matchAll: false,  // false = any keyword; true = ALL must match
 <td>Only repost tweets with at least N likes</td>
 </tr>
 </tbody></table>
-<h3>src/autoRepost.js</h3>
+<h3>browser/autoRepost.js</h3>
 <pre><code class="language-js">const CONFIG = {
   keywords: [&#39;AI agents&#39;],
   fromUsers: [&#39;nichxbt&#39;],
@@ -301,7 +301,7 @@ matchAll: false,  // false = any keyword; true = ALL must match
 };
 </code></pre>
 <p>At least one of <code>keywords</code> or <code>fromUsers</code> must have entries.</p>
-<h3>src/clearAllReposts.js</h3>
+<h3>browser/clearAllReposts.js</h3>
 <pre><code class="language-js">const CONFIG = {
   maxRemovals: Infinity,    // Or set a number to limit
   dryRun: false,
@@ -313,7 +313,7 @@ matchAll: false,  // false = any keyword; true = ALL must match
 </code></pre>
 <h2>Step-by-Step Guide</h2>
 <h3>Repost a Single Post by URL</h3>
-<p><strong>Step 1:</strong> Set mode to <code>urls</code> in <code>src/repostPost.js</code>:</p>
+<p><strong>Step 1:</strong> Set mode to <code>urls</code> in <code>browser/repostPost.js</code>:</p>
 <pre><code class="language-js">const CONFIG = {
   mode: &#39;urls&#39;,
   postUrls: [
@@ -327,7 +327,7 @@ Reposted! (1/10)
 </code></pre>
 <h3>Auto-Repost by Keywords</h3>
 <p><strong>Step 1:</strong> Navigate to your timeline or a search page.</p>
-<p><strong>Step 2:</strong> Configure <code>src/autoRepost.js</code>:</p>
+<p><strong>Step 2:</strong> Configure <code>browser/autoRepost.js</code>:</p>
 <pre><code class="language-js">const CONFIG = {
   keywords: [&#39;machine learning&#39;, &#39;AI tools&#39;],
   fromUsers: [],
@@ -340,7 +340,7 @@ Reposted! (1/10)
 Reposted (2/10): &quot;AI tools are revolutionizing the way...&quot;
 </code></pre>
 <h3>Unrepost Specific Posts</h3>
-<p>Use <code>unrepost</code> mode in <code>src/repostPost.js</code> to remove reposts:</p>
+<p>Use <code>unrepost</code> mode in <code>browser/repostPost.js</code> to remove reposts:</p>
 <pre><code class="language-js">const CONFIG = {
   mode: &#39;unrepost&#39;,
   postUrls: [
@@ -350,7 +350,7 @@ Reposted (2/10): &quot;AI tools are revolutionizing the way...&quot;
 </code></pre>
 <h3>Clear All Reposts</h3>
 <p><strong>Step 1:</strong> Navigate to your profile page: <code>https://x.com/YOUR_USERNAME</code></p>
-<p><strong>Step 2:</strong> Paste <code>src/clearAllReposts.js</code>. It scrolls through your profile and removes all reposts.</p>
+<p><strong>Step 2:</strong> Paste <code>browser/clearAllReposts.js</code>. It scrolls through your profile and removes all reposts.</p>
 <p><strong>Step 3:</strong> Use controls while running:</p>
 <pre><code class="language-js">window.XActions.pause();   // Pause
 window.XActions.resume();  // Resume
@@ -403,9 +403,9 @@ window.XActions.status();  // Show progress
 </tbody></table>
 <h2>Related Scripts</h2>
 <ul>
-<li><code>src/likePost.js</code> -- Like posts by URL or keyword</li>
-<li><code>src/quoteTweetAutomation.js</code> -- Quote tweet with commentary</li>
-<li><code>src/autoReply.js</code> -- Auto-reply to matching tweets</li>
+<li><code>browser/likePost.js</code> -- Like posts by URL or keyword</li>
+<li><code>browser/quoteTweetAutomation.js</code> -- Quote tweet with commentary</li>
+<li><code>browser/autoReply.js</code> -- Auto-reply to matching tweets</li>
 </ul>
 
 

@@ -19,7 +19,7 @@ Automatically discover and join X Communities matching keyword criteria.
 **Steps:**
 1. Go to `x.com/communities/suggested`
 2. Edit CONFIG with your keywords
-3. Open console (F12) and paste `src/joinCommunities.js`
+3. Open console (F12) and paste `browser/joinCommunities.js`
 
 **Configuration:**
 ```javascript
@@ -35,12 +35,12 @@ const CONFIG = {
 
 ## 📁 Files
 
-- `src/joinCommunities.js` — Browser console community joiner
-- `src/leaveAllCommunities.js` — Leave all communities (companion script)
+- `browser/joinCommunities.js` — Browser console community joiner
+- `browser/leaveAllCommunities.js` — Leave all communities (companion script)
 
 ## ⚠️ Notes
 
 - Must start on `x.com/communities/suggested` or a similar communities page
 - Some communities require admin approval after clicking Join
-- Use `src/leaveAllCommunities.js` to undo if needed
+- Use `browser/leaveAllCommunities.js` to undo if needed
 - Keyword matching is case-insensitive on community name and description

@@ -4,7 +4,7 @@ You are my X/Twitter DM management specialist. I want to use XActions to send DM
 
 ## Context
 
-I'm using XActions (https://github.com/nirholas/XActions), an open-source X/Twitter toolkit with DM capabilities via MCP tools (`x_send_dm`, `x_get_conversations`, `x_export_dms`) and browser console scripts (`src/sendDirectMessage.js`, `src/automation/customerService.js`).
+I'm using XActions (https://github.com/nirholas/XActions), an open-source X/Twitter toolkit with DM capabilities via MCP tools (`x_send_dm`, `x_get_conversations`, `x_export_dms`) and browser console scripts (`browser/sendDirectMessage.js`, `src/automation/customerService.js`).
 
 ## What I Need You To Do
 
@@ -63,7 +63,7 @@ Send direct messages through Claude:
 
 ### Part 3: Browser Console DM Script
 
-Walk me through `src/sendDirectMessage.js`:
+Walk me through `browser/sendDirectMessage.js`:
 
 1. **How it works:**
    - Navigates to X DM interface

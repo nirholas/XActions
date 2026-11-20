@@ -219,6 +219,6 @@ console.log(`Found ${tweets.length} recent tweets about "${topTrend.name}"`);
 ## Related Scripts
 
 - `src/discoveryExplore.js` -- Full Node.js module for search, trends, and explore
-- `src/saveSearch.js` -- Save and manage searches (browser script)
-- `src/topicManager.js` -- Follow topics related to trending subjects
-- `src/timelineViewer.js` -- View and export your For You/Following timelines
+- `browser/saveSearch.js` -- Save and manage searches (browser script)
+- `browser/topicManager.js` -- Follow topics related to trending subjects
+- `browser/timelineViewer.js` -- View and export your For You/Following timelines

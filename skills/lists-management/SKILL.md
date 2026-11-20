@@ -15,13 +15,13 @@ Browser console script for creating and managing X/Twitter lists.
 
 | Goal | File | Navigate to |
 |------|------|-------------|
-| Create a new list | `src/listManager.js` | `x.com/USERNAME/lists` |
-| Add users to a list | `src/listManager.js` | List page |
-| Export list members | `src/listManager.js` | List members page |
+| Create a new list | `browser/listManager.js` | `x.com/USERNAME/lists` |
+| Add users to a list | `browser/listManager.js` | List page |
+| Export list members | `browser/listManager.js` | List members page |
 
 ## List Manager
 
-**File:** `src/listManager.js`
+**File:** `browser/listManager.js`
 
 Browser console script that creates lists, adds members by username, and exports member data.
 

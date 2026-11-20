@@ -30,7 +30,7 @@ date: "2026-03-30"
 
 1. Open x.com and navigate to **Messages** (`https://x.com/messages`)
 2. Press **F12** to open DevTools, then click the **Console** tab
-3. Copy the script from `src/dmCalls.js`
+3. Copy the script from `browser/dmCalls.js`
 4. Edit `CONFIG.username` and `CONFIG.callType`
 5. Paste into the console and press Enter
 
@@ -128,7 +128,7 @@ The process is identical -- the script simply clicks the video call button inste
 ## Tips & Tricks
 
 - **Both users must enable DM calls.** Go to Settings -> Privacy and Safety -> Direct Messages and enable "Allow audio and video calls."
-- **You need an existing conversation.** The script looks for an existing DM thread. If you have never messaged the user, send a DM first using `src/sendDirectMessage.js`.
+- **You need an existing conversation.** The script looks for an existing DM thread. If you have never messaged the user, send a DM first using `browser/sendDirectMessage.js`.
 - **The conversation must be visible.** If the target conversation is far down your list, increase `maxScrollAttempts` to give the script more time to find it.
 - **Audio calls use less bandwidth.** If you have a slow connection, prefer `'audio'` over `'video'`.
 
@@ -148,7 +148,7 @@ The process is identical -- the script simply clicks the video call button inste
 
 ## Related Scripts
 
-- `src/sendDirectMessage.js` -- Send DMs to users
-- `src/groupDM.js` -- Create group DM conversations
-- `src/encryptedDM.js` -- Send encrypted DMs
+- `browser/sendDirectMessage.js` -- Send DMs to users
+- `browser/groupDM.js` -- Create group DM conversations
+- `browser/encryptedDM.js` -- Send encrypted DMs
 - `src/dmManager.js` -- Node.js DM management library

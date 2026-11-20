@@ -29,7 +29,7 @@ Automatically retweet posts matching keyword/user filters from your timeline.
 1. Go to `x.com/home` (or any timeline)
 2. Edit CONFIG with your filters
 3. Set `dryRun: false` when ready
-4. Open console (F12) and paste `src/autoRepost.js`
+4. Open console (F12) and paste `browser/autoRepost.js`
 
 **Configuration:**
 ```javascript
@@ -52,7 +52,7 @@ const CONFIG = {
 
 ## 📁 Files
 
-- `src/autoRepost.js` — Browser console auto-repost script
+- `browser/autoRepost.js` — Browser console auto-repost script
 
 ## ⚠️ Notes
 

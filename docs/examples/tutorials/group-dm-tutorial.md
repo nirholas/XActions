@@ -30,7 +30,7 @@ date: "2026-03-30"
 
 1. Open x.com and navigate to **Messages** (`https://x.com/messages`)
 2. Press **F12** to open DevTools, then click the **Console** tab
-3. Copy the script from `src/groupDM.js`
+3. Copy the script from `browser/groupDM.js`
 4. Edit the `CONFIG.recipients` array with at least 2 usernames
 5. Paste into the console and press Enter
 
@@ -75,7 +75,7 @@ Go to `https://x.com/messages` in your browser.
 
 ### Step 2 -- Configure Recipients
 
-Edit the `CONFIG` section in `src/groupDM.js`:
+Edit the `CONFIG` section in `browser/groupDM.js`:
 
 ```js
 const CONFIG = {
@@ -159,7 +159,7 @@ window.XActions.abort();
 
 ## Related Scripts
 
-- `src/sendDirectMessage.js` -- Send individual DMs to a list of users
+- `browser/sendDirectMessage.js` -- Send individual DMs to a list of users
 - `src/dmManager.js` -- Node.js DM management library
-- `src/dmCalls.js` -- Start audio/video calls in DMs
-- `src/encryptedDM.js` -- Send encrypted DMs
+- `browser/dmCalls.js` -- Start audio/video calls in DMs
+- `browser/encryptedDM.js` -- Send encrypted DMs

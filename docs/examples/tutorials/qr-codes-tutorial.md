@@ -215,9 +215,9 @@ To generate QR codes in bulk for a list of usernames:
 
 | Feature | Script | Description |
 |---------|--------|-------------|
-| Customize Profile | `src/updateProfile.js` | Update bio, name, location, website |
+| Customize Profile | `browser/updateProfile.js` | Update bio, name, location, website |
 | Profile Scraping | `src/profileManager.js` | Scrape profile data for any user |
-| Share Profile | `src/qrCodeSharing.js` | Full QR code sharing module |
+| Share Profile | `browser/qrCodeSharing.js` | Full QR code sharing module |
 
 ---
 

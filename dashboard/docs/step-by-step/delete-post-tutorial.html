@@ -208,13 +208,13 @@
 <ul>
 <li>Logged into x.com in your browser</li>
 <li>Browser DevTools console (F12 -&gt; Console tab)</li>
-<li><strong>Backup first</strong> -- deletion is permanent. Consider using <code>src/backupAccount.js</code> before deleting.</li>
+<li><strong>Backup first</strong> -- deletion is permanent. Consider using <code>browser/backupAccount.js</code> before deleting.</li>
 </ul>
 <h2>Quick Start</h2>
 <ol>
 <li>Navigate to your own profile: <code>https://x.com/YOUR_USERNAME</code>. Its tabs work too,<br>so <code>https://x.com/YOUR_USERNAME/with_replies</code> is the right place to clear replies.</li>
 <li>Open DevTools (F12) and go to the Console tab</li>
-<li>Copy the contents of <code>src/bulkDeleteTweets.js</code></li>
+<li>Copy the contents of <code>browser/bulkDeleteTweets.js</code></li>
 <li>Edit the <code>CONFIG</code> section (filters, dryRun)</li>
 <li>Paste into the console and press Enter</li>
 </ol>
@@ -424,7 +424,7 @@ XActionsUtils.abort();   // Stop
 <h2>Tips &amp; Tricks</h2>
 <ul>
 <li><strong>Set <code>dryRun: true</code> for the first pass on a new filter.</strong> Deletion is permanent, and the default is a real run.</li>
-<li><strong>Export first</strong> using <code>src/backupAccount.js</code> to save your tweets before deleting.</li>
+<li><strong>Export first</strong> using <code>browser/backupAccount.js</code> to save your tweets before deleting.</li>
 <li><strong>Use <code>excludeKeywords</code></strong> to protect important tweets (e.g., <code>[&#39;thread&#39;, &#39;announcement&#39;, &#39;milestone&#39;]</code>).</li>
 <li><strong><code>excludePinned: true</code></strong> (default) prevents accidentally deleting your pinned tweet.</li>
 <li><strong><code>confirmEvery: 50</code></strong> adds a checkpoint. The script pauses and waits for you to call <code>resume()</code>.</li>
@@ -467,9 +467,9 @@ XActionsUtils.abort();   // Stop
 </tbody></table>
 <h2>Related Scripts</h2>
 <ul>
-<li><code>src/pinTweetManager.js</code> -- Pin/unpin posts</li>
-<li><code>src/clearAllReposts.js</code> -- Remove all reposts</li>
-<li><code>src/clearAllBookmarks.js</code> -- Remove all bookmarks</li>
+<li><code>browser/pinTweetManager.js</code> -- Pin/unpin posts</li>
+<li><code>browser/clearAllReposts.js</code> -- Remove all reposts</li>
+<li><code>browser/clearAllBookmarks.js</code> -- Remove all bookmarks</li>
 </ul>
 
 

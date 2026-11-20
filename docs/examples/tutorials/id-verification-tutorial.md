@@ -169,7 +169,7 @@ const CONFIG = {
 Run the complete script for status check, requirements display, and auto-navigation:
 
 ```javascript
-// Copy the full contents of src/idVerification.js and paste into console
+// Copy the full contents of browser/idVerification.js and paste into console
 // The script will:
 // 1. Display all verification requirements
 // 2. Check your current verification status
@@ -258,9 +258,9 @@ Run the complete script for status check, requirements display, and auto-navigat
 
 | Feature | Script | Description |
 |---------|--------|-------------|
-| Subscribe to Premium | `src/subscribePremium.js` | Get Premium (required for verification) |
+| Subscribe to Premium | `browser/subscribePremium.js` | Get Premium (required for verification) |
 | Blue Checkmark | `src/premiumManager.js` | Check verification badge status |
-| Customize Profile | `src/updateProfile.js` | Update profile to match ID |
+| Customize Profile | `browser/updateProfile.js` | Update profile to match ID |
 | Protect Account | `src/settingsManager.js` | Manage privacy settings |
 
 ---

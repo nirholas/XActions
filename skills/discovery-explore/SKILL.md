@@ -15,11 +15,11 @@ Browser console scripts and MCP tools for exploring trends, searching content, a
 
 | Goal | File | Navigate to |
 |------|------|-------------|
-| Monitor trending topics | `src/trendingTopicMonitor.js` | `x.com/explore/tabs/trending` |
+| Monitor trending topics | `browser/trendingTopicMonitor.js` | `x.com/explore/tabs/trending` |
 | Search tweets | `scripts/scrapeSearch.js` | Search results page |
 | Scrape hashtag | `scripts/scrapeHashtag.js` | `x.com/hashtag/TAG` |
-| Find viral tweets | `src/viralTweetDetector.js` | Any profile |
-| Keyword monitoring | `src/keywordMonitor.js` | Any page |
+| Find viral tweets | `browser/viralTweetDetector.js` | Any profile |
+| Keyword monitoring | `browser/keywordMonitor.js` | Any page |
 | Scrape explore page | `src/exploreScraper.js` | `x.com/explore` |
 
 ## MCP Tools
@@ -32,7 +32,7 @@ Browser console scripts and MCP tools for exploring trends, searching content, a
 
 ## Trending Topic Monitor
 
-**File:** `src/trendingTopicMonitor.js`
+**File:** `browser/trendingTopicMonitor.js`
 
 Real-time trending topic scraper with niche classification.
 
@@ -51,7 +51,7 @@ Real-time trending topic scraper with niche classification.
 
 ## Keyword Monitor
 
-**File:** `src/keywordMonitor.js`
+**File:** `browser/keywordMonitor.js`
 
 Monitors X for mentions of specific keywords with sentiment classification.
 
@@ -66,22 +66,22 @@ Monitors X for mentions of specific keywords with sentiment classification.
 ## Strategy Guide
 
 ### Trend-jacking workflow
-1. Run `src/trendingTopicMonitor.js` -> `XActions.forNiche('your_niche')`
+1. Run `browser/trendingTopicMonitor.js` -> `XActions.forNiche('your_niche')`
 2. Identify relevant trends with momentum
-3. Craft timely content using `src/threadComposer.js` or `src/contentRepurposer.js`
+3. Craft timely content using `browser/threadComposer.js` or `browser/contentRepurposer.js`
 4. Post within the first 2 hours of trend emergence for maximum visibility
-5. Track performance with `src/tweetPerformance.js`
+5. Track performance with `browser/tweetPerformance.js`
 
 ### Content ideation from search
 1. Use `scripts/scrapeSearch.js` or `x_search_tweets` for niche keywords
 2. Analyze top results for content gaps
-3. Use `src/viralTweetDetector.js` on popular accounts in your niche
-4. Repurpose successful formats with `src/contentRepurposer.js`
+3. Use `browser/viralTweetDetector.js` on popular accounts in your niche
+4. Repurpose successful formats with `browser/contentRepurposer.js`
 
 ### Building a discovery routine
-1. Daily: `src/trendingTopicMonitor.js` -> `XActions.track()` for trend log
+1. Daily: `browser/trendingTopicMonitor.js` -> `XActions.track()` for trend log
 2. Weekly: Review `XActions.history()` for recurring themes
-3. Set `src/keywordMonitor.js` for brand/topic monitoring
+3. Set `browser/keywordMonitor.js` for brand/topic monitoring
 
 ## Notes
 - Explore page content varies by region and account history

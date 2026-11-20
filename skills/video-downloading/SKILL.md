@@ -15,9 +15,9 @@ Download videos and GIFs from X/Twitter posts — no API key needed.
 
 | Goal | File | Navigate to |
 |------|------|-------------|
-| Download video from current tweet | `src/videoDownloaderBrowser.js` | Tweet page (`x.com/user/status/ID`) |
-| Batch download multiple videos | `src/videoDownloaderBrowser.js` | Any page |
-| Download video info only (no save) | `src/videoDownloaderBrowser.js` | Tweet page |
+| Download video from current tweet | `browser/videoDownloaderBrowser.js` | Tweet page (`x.com/user/status/ID`) |
+| Batch download multiple videos | `browser/videoDownloaderBrowser.js` | Any page |
+| Download video info only (no save) | `browser/videoDownloaderBrowser.js` | Tweet page |
 | Download via script (non-browser) | `scripts/videoDownloader.js` | N/A (run in console) |
 | Download via API | `api/routes/video.js` | `POST /api/video/download` |
 
@@ -25,11 +25,11 @@ Download videos and GIFs from X/Twitter posts — no API key needed.
 
 1. Navigate to a tweet with a video: `x.com/user/status/123456`
 2. Open DevTools (F12) → Console
-3. Paste `src/videoDownloaderBrowser.js` → Enter
+3. Paste `browser/videoDownloaderBrowser.js` → Enter
 
 ## Available Functions
 
-After pasting `src/videoDownloaderBrowser.js`:
+After pasting `browser/videoDownloaderBrowser.js`:
 
 ```js
 downloadCurrent()                   // Download video from current tweet page

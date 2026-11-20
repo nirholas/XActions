@@ -30,7 +30,7 @@ date: "2026-03-30"
 
 1. Open x.com and navigate to **Messages** (`https://x.com/messages`)
 2. Press **F12** to open DevTools, then click the **Console** tab
-3. Copy the script from `src/encryptedDM.js`
+3. Copy the script from `browser/encryptedDM.js`
 4. Set `CONFIG.action` to `'send'`, `'check'`, or `'enable'`
 5. Paste into the console and press Enter
 
@@ -192,7 +192,7 @@ Set `dryRun: false` and paste again. The script will:
 
 ## Related Scripts
 
-- `src/sendDirectMessage.js` -- Send regular (non-encrypted) DMs
-- `src/groupDM.js` -- Create group DM conversations
-- `src/dmCalls.js` -- Start audio/video calls in DMs
+- `browser/sendDirectMessage.js` -- Send regular (non-encrypted) DMs
+- `browser/groupDM.js` -- Create group DM conversations
+- `browser/dmCalls.js` -- Start audio/video calls in DMs
 - `src/dmManager.js` -- Node.js DM management library

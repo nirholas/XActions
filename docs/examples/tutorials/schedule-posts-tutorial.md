@@ -11,7 +11,7 @@
 ## Quick Start
 1. Navigate to x.com
 2. Open DevTools (F12)
-3. Copy the script from `src/schedulePosts.js`
+3. Copy the script from `browser/schedulePosts.js`
 4. Edit the CONFIG section with your posts and times
 5. Paste into Console and press Enter
 
@@ -19,12 +19,12 @@
 
 | Script | Runtime | Best For |
 |--------|---------|----------|
-| `src/schedulePosts.js` | Browser console | Scheduling multiple posts from DevTools |
+| `browser/schedulePosts.js` | Browser console | Scheduling multiple posts from DevTools |
 | `src/postComposer.js` (`schedulePost`) | Node.js / Puppeteer | Programmatic scheduling from scripts |
 
 ## Configuration
 
-### `src/schedulePosts.js` (Browser Console)
+### `browser/schedulePosts.js` (Browser Console)
 
 ```js
 const CONFIG = {
@@ -73,7 +73,7 @@ console.log(result);
 ### Scheduling Posts (Browser Console)
 
 1. Open x.com and press F12 for DevTools
-2. Copy `src/schedulePosts.js`
+2. Copy `browser/schedulePosts.js`
 3. Edit the `CONFIG.posts` array:
    ```js
    posts: [
@@ -197,6 +197,6 @@ Note: Times are in your local timezone unless you specify a UTC offset.
 ## Related Scripts
 
 - `src/postComposer.js` -- Post tweets immediately (text, media, polls)
-- `src/postThread.js` -- Create threads (schedule the first tweet, then manually thread the rest)
-- `src/threadComposer.js` -- Advanced thread composition with drafts
+- `browser/postThread.js` -- Create threads (schedule the first tweet, then manually thread the rest)
+- `browser/threadComposer.js` -- Advanced thread composition with drafts
 - `docs/examples/tutorials/post-content-tutorial.md` -- General posting guide

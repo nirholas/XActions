@@ -17,13 +17,13 @@
 
 | Script | Context | Purpose |
 |--------|---------|---------|
-| `src/bookmarkOrganizer.js` | Browser | Scan, categorize, and export bookmarks |
-| `src/clearAllBookmarks.js` | Browser | Remove all bookmarks with keep-filters |
+| `browser/bookmarkOrganizer.js` | Browser | Scan, categorize, and export bookmarks |
+| `browser/clearAllBookmarks.js` | Browser | Remove all bookmarks with keep-filters |
 | `src/bookmarkManager.js` | Node.js (Puppeteer) | Get bookmarks, create folders, clear all |
 
 ## Configuration
 
-### src/bookmarkOrganizer.js (Browser Script)
+### browser/bookmarkOrganizer.js (Browser Script)
 
 ```js
 const CONFIG = {
@@ -40,7 +40,7 @@ const CONFIG = {
 };
 ```
 
-### src/clearAllBookmarks.js (Browser Script)
+### browser/clearAllBookmarks.js (Browser Script)
 
 | Option | Default | Description |
 |--------|---------|-------------|
@@ -73,7 +73,7 @@ await clearAllBookmarks(page);
 
 **Step 1:** Navigate to `https://x.com/i/bookmarks`.
 
-**Step 2:** Customize categories in `src/bookmarkOrganizer.js` to match your interests:
+**Step 2:** Customize categories in `browser/bookmarkOrganizer.js` to match your interests:
 
 ```js
 categories: {
@@ -133,7 +133,7 @@ await createFolder(page, 'Funny');
 
 **Step 1:** Navigate to `https://x.com/i/bookmarks`.
 
-**Step 2:** Paste `src/clearAllBookmarks.js`.
+**Step 2:** Paste `browser/clearAllBookmarks.js`.
 
 If no `keepKeywords` are set and `useBulkClear` is true, it tries the built-in "Clear All" button first (instant).
 
@@ -182,6 +182,6 @@ This keeps any bookmark whose text contains "important", "save", or "reference".
 ## Related Scripts
 
 - `src/bookmarkManager.js` -- Node.js Puppeteer-based bookmark management
-- `src/bookmarkOrganizer.js` -- Browser-based bookmark export and categorization
-- `src/clearAllBookmarks.js` -- Browser-based bookmark clearing
-- `src/shareEmbed.js` -- Copy links and embed codes for posts
+- `browser/bookmarkOrganizer.js` -- Browser-based bookmark export and categorization
+- `browser/clearAllBookmarks.js` -- Browser-based bookmark clearing
+- `browser/shareEmbed.js` -- Copy links and embed codes for posts

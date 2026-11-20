@@ -15,14 +15,14 @@ Browser console scripts for viewing, switching, and collecting posts from your X
 
 | Goal | File | Navigate to |
 |------|------|-------------|
-| Switch timeline, auto-scroll, export posts | `src/timelineViewer.js` | `x.com/home` |
-| Scrape timeline posts into structured data | `src/timelineScraper.js` | `x.com/home` |
+| Switch timeline, auto-scroll, export posts | `browser/timelineViewer.js` | `x.com/home` |
+| Scrape timeline posts into structured data | `browser/timelineScraper.js` | `x.com/home` |
 
 ## Quick Start
 
 1. Go to `x.com/home`
 2. Open DevTools (F12) → Console
-3. Paste `src/timelineViewer.js` → Enter
+3. Paste `browser/timelineViewer.js` → Enter
 4. JSON file auto-downloads when complete
 
 ## Configuration (`timelineViewer.js`)

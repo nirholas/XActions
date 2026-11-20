@@ -238,7 +238,7 @@ console.log(analysis.response);
 
 | Feature | Script | Description |
 |---------|--------|-------------|
-| View Analytics | `src/viewAnalytics.js` | View post performance metrics |
+| View Analytics | `browser/viewAnalytics.js` | View post performance metrics |
 | Auto Commenter | `src/autoCommenter.js` | Generate and post automated replies |
 | Algorithm Builder | `src/automation/algorithmBuilder.js` | Train the X algorithm for your niche |
 | Persona Engine | `src/personaEngine.js` | AI-powered content strategy |

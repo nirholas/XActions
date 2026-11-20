@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Discovery &amp; Explore - Search — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="src/discoveryExplore.js">
+  <title>Discovery Explore — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="scripts/discoveryExplore.js">
   <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, discovery, explore, discovery">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Discovery &amp; Explore - Search — XActions">
-  <meta property="og:description" content="src/discoveryExplore.js">
+  <meta property="og:title" content="Discovery Explore — XActions">
+  <meta property="og:description" content="scripts/discoveryExplore.js">
   <meta property="og:url" content="https://xactions.app/scripts/discovery-explore">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-image.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Discovery &amp; Explore - Search — XActions">
-  <meta name="twitter:description" content="src/discoveryExplore.js">
+  <meta name="twitter:title" content="Discovery Explore — XActions">
+  <meta name="twitter:description" content="scripts/discoveryExplore.js">
 
   <link rel="canonical" href="https://xactions.app/scripts/discovery-explore">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
@@ -28,8 +28,8 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Discovery & Explore - Search — Free X/Twitter Script | XActions",
-    "description": "src/discoveryExplore.js",
+    "headline": "Discovery Explore — Free X/Twitter Script | XActions",
+    "description": "scripts/discoveryExplore.js",
     "url": "https://xactions.app/scripts/discovery-explore",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -47,7 +47,7 @@
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
       { "@type": "ListItem", "position": 3, "name": "Discovery", "item": "https://xactions.app/scripts#discovery" },
-      { "@type": "ListItem", "position": 4, "name": "Discovery & Explore - Search", "item": "https://xactions.app/scripts/discovery-explore" }
+      { "@type": "ListItem", "position": 4, "name": "Discovery Explore", "item": "https://xactions.app/scripts/discovery-explore" }
     ]
   }
   </script>
@@ -112,24 +112,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🔍 Discovery &amp; Explore - Search</h1>
+        <h1>🔍 Discovery Explore</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#discovery">Discovery</a> › Discovery &amp; Explore - Search
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#discovery">Discovery</a> › Discovery Explore
         </div>
       </header>
 
       <article class="article">
         <span class="cat-badge">Discovery</span>
-        <span class="source-badge">src</span>
+        <span class="source-badge">scripts</span>
 
         <div class="meta-row">
           
           
-          <span>215 lines</span>
+          <span>151 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>src/discoveryExplore.js</p>
+        <p>scripts/discoveryExplore.js</p>
 
         
 
@@ -143,8 +143,30 @@
         
 
         
-        
-        
+        <section class="config-section">
+        <h2>Configuration Options</h2>
+        <table>
+          <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>action</code></td><td><code>'trends'</code></td><td>'trends' | 'search'</td></tr>
+<tr><td><code>searchQuery</code></td><td><code>''</code></td><td>Query for 'search' action</td></tr>
+          </tbody>
+        </table>
+      </section>
+        <section class="config-code">
+        <h2>Default Configuration</h2>
+        <div class="code-block">
+          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
+          <pre><code>const CONFIG = {
+    action: 'trends',           // 'trends' | 'search'
+    searchQuery: '',            // Query for 'search' action
+    maxResults: 20,
+    exportResults: true,
+    scrollDelay: 1500,
+    maxScrollRetries: 5,
+  };</code></pre>
+        </div>
+      </section>
 
         <section class="full-code">
           <h2>Full Script</h2>
@@ -152,219 +174,155 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// src/discoveryExplore.js
-// Discovery, Explore, Trends, Topics, Search for X/Twitter
+// scripts/discoveryExplore.js
+// Browser console script for scraping trending topics and search results on X/Twitter
+// Paste in DevTools console on x.com/explore
 // by nichxbt
 
-/**
- * Discovery &amp; Explore - Search, trends, topics, and explore feed automation
- * 
- * Features:
- * - Search tweets with advanced operators
- * - Scrape trending topics (global/local)
- * - Browse and follow topics
- * - Get explore/For You feed
- * - Advanced search with filters
- * - Grok AI topic summaries (2026)
- */
+(() =&gt; {
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
 
-const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+  // =============================================
+  // CONFIGURATION
+  // =============================================
+  const CONFIG = {
+    action: 'trends',           // 'trends' | 'search'
+    searchQuery: '',            // Query for 'search' action
+    maxResults: 20,
+    exportResults: true,
+    scrollDelay: 1500,
+    maxScrollRetries: 5,
+  };
+  // =============================================
 
-const SELECTORS = {
-  searchInput: '[data-testid=&quot;SearchBox_Search_Input&quot;]',
-  searchResults: '[data-testid=&quot;TypeaheadListItem&quot;]',
-  trendItem: '[data-testid=&quot;trend&quot;]',
-  topicFollow: '[data-testid=&quot;TopicFollow&quot;]',
-  exploreTabs: '[role=&quot;tab&quot;]',
-  tweet: 'article[data-testid=&quot;tweet&quot;]',
-  tweetText: '[data-testid=&quot;tweetText&quot;]',
-  latestTab: 'a[href*=&quot;f=live&quot;]',
-  peopleTab: 'a[href*=&quot;f=user&quot;]',
-  mediaTab: 'a[href*=&quot;f=image&quot;]',
-};
-
-/**
- * Search tweets with query
- * @param {import('puppeteer').Page} page
- * @param {string} query - Search query (supports operators)
- * @param {Object} options
- * @returns {Promise&lt;Array&gt;}
- */
-export async function searchTweets(page, query, options = {}) {
-  const { limit = 50, tab = 'latest', since = null, until = null } = options;
-
-  let searchQuery = query;
-  if (since) searchQuery += ` since:${since}`;
-  if (until) searchQuery += ` until:${until}`;
-
-  const tabParam = tab === 'latest' ? '&amp;f=live' : tab === 'people' ? '&amp;f=user' : tab === 'media' ? '&amp;f=image' : '';
-  await page.goto(`https://x.com/search?q=${encodeURIComponent(searchQuery)}${tabParam}`, { waitUntil: 'networkidle2' });
-  await sleep(3000);
-
-  const tweets = [];
-  let scrollAttempts = 0;
-
-  while (tweets.length &lt; limit &amp;&amp; scrollAttempts &lt; Math.ceil(limit / 3)) {
-    const newTweets = await page.evaluate((sel) =&gt; {
-      return Array.from(document.querySelectorAll(sel.tweet)).map(tweet =&gt; {
-        const text = tweet.querySelector(sel.tweetText)?.textContent || '';
-        const time = tweet.querySelector('time')?.getAttribute('datetime') || '';
-        const author = tweet.querySelector('[data-testid=&quot;User-Name&quot;] a')?.textContent || '';
-        const link = tweet.querySelector('a[href*=&quot;/status/&quot;]')?.href || '';
-        const likes = tweet.querySelector('[data-testid=&quot;like&quot;] span')?.textContent || '0';
-        const reposts = tweet.querySelector('[data-testid=&quot;retweet&quot;] span')?.textContent || '0';
-        return { text, time, author, link, likes, reposts };
-      });
-    }, SELECTORS);
-
-    for (const tweet of newTweets) {
-      if (tweet.link &amp;&amp; !tweets.find(t =&gt; t.link === tweet.link)) {
-        tweets.push(tweet);
-      }
-    }
-
-    await page.evaluate(() =&gt; window.scrollBy(0, 1000));
-    await sleep(1500);
-    scrollAttempts++;
-  }
-
-  return tweets.slice(0, limit);
-}
-
-/**
- * Get trending topics
- * @param {import('puppeteer').Page} page
- * @param {Object} options
- * @returns {Promise&lt;Array&gt;}
- */
-export async function getTrends(page, options = {}) {
-  const { location = 'global' } = options;
-
-  await page.goto('https://x.com/explore/tabs/trending', { waitUntil: 'networkidle2' });
-  await sleep(3000);
-
-  const trends = await page.evaluate((sel) =&gt; {
-    return Array.from(document.querySelectorAll(sel.trendItem)).map((trend, index) =&gt; {
-      const name = trend.querySelector('[dir=&quot;ltr&quot;] span')?.textContent || '';
-      const category = trend.querySelector('[dir=&quot;ltr&quot;]:first-child')?.textContent || '';
-      const tweetCount = trend.querySelector('[dir=&quot;ltr&quot;]:last-child')?.textContent || '';
-      return { rank: index + 1, name, category, tweetCount: tweetCount.trim() };
-    });
-  }, SELECTORS);
-
-  return { location, trends, scrapedAt: new Date().toISOString() };
-}
-
-/**
- * Get explore feed content
- * @param {import('puppeteer').Page} page
- * @param {Object} options
- * @returns {Promise&lt;Array&gt;}
- */
-export async function getExploreFeed(page, options = {}) {
-  const { limit = 30, tab = 'foryou' } = options;
-
-  const tabUrls = {
-    foryou: 'https://x.com/explore',
-    trending: 'https://x.com/explore/tabs/trending',
-    news: 'https://x.com/explore/tabs/news',
-    sports: 'https://x.com/explore/tabs/sports',
-    entertainment: 'https://x.com/explore/tabs/entertainment',
+  const download = (data, filename) =&gt; {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    console.log(`📥 Downloaded: ${filename}`);
   };
 
-  await page.goto(tabUrls[tab] || tabUrls.foryou, { waitUntil: 'networkidle2' });
-  await sleep(3000);
+  const scrapeTrends = async () =&gt; {
+    console.log('📈 Scraping trending topics...');
 
-  const items = [];
-  let scrollAttempts = 0;
-
-  while (items.length &lt; limit &amp;&amp; scrollAttempts &lt; 10) {
-    const newItems = await page.evaluate((sel) =&gt; {
-      return Array.from(document.querySelectorAll(sel.tweet)).map(tweet =&gt; {
-        const text = tweet.querySelector(sel.tweetText)?.textContent || '';
-        const time = tweet.querySelector('time')?.getAttribute('datetime') || '';
-        const author = tweet.querySelector('[data-testid=&quot;User-Name&quot;] a')?.textContent || '';
-        const link = tweet.querySelector('a[href*=&quot;/status/&quot;]')?.href || '';
-        return { text, time, author, link };
-      });
-    }, SELECTORS);
-
-    for (const item of newItems) {
-      if (item.link &amp;&amp; !items.find(i =&gt; i.link === item.link)) {
-        items.push(item);
-      }
+    // Navigate to trending tab if not already there
+    if (!window.location.href.includes('/explore/tabs/trending')) {
+      const trendingTab = document.querySelector('a[href=&quot;/explore/tabs/trending&quot;]');
+      if (trendingTab) { trendingTab.click(); await sleep(2000); }
     }
 
-    await page.evaluate(() =&gt; window.scrollBy(0, 1000));
-    await sleep(1500);
-    scrollAttempts++;
-  }
+    const trends = [];
+    let retries = 0;
 
-  return { tab, items: items.slice(0, limit), scrapedAt: new Date().toISOString() };
-}
+    while (trends.length &lt; CONFIG.maxResults &amp;&amp; retries &lt; CONFIG.maxScrollRetries) {
+      const prevSize = trends.length;
 
-/**
- * Follow a topic
- * @param {import('puppeteer').Page} page
- * @param {string} topicName
- * @returns {Promise&lt;Object&gt;}
- */
-export async function followTopic(page, topicName) {
-  await page.goto(`https://x.com/search?q=${encodeURIComponent(topicName)}&amp;f=topic`, { waitUntil: 'networkidle2' });
-  await sleep(2000);
+      document.querySelectorAll('[data-testid=&quot;trend&quot;]').forEach((trend, idx) =&gt; {
+        const spans = trend.querySelectorAll('[dir=&quot;ltr&quot;] span');
+        const texts = Array.from(spans).map(s =&gt; s.textContent).filter(Boolean);
+        const name = texts.find(t =&gt; t.startsWith('#') || t.length &gt; 3) || texts[0] || '';
+        const category = texts.find(t =&gt; t.includes('·') || t.includes('Trending')) || '';
+        const count = texts.find(t =&gt; /\d+[KMB]?\s*(posts|tweets)/i.test(t)) || '';
 
-  try {
-    await page.click(SELECTORS.topicFollow);
-    await sleep(1500);
-    return { success: true, topic: topicName, action: 'followed' };
-  } catch (e) {
-    return { success: false, topic: topicName, error: 'Topic follow button not found' };
-  }
-}
+        if (name &amp;&amp; !trends.find(t =&gt; t.name === name)) {
+          trends.push({ rank: trends.length + 1, name, category: category.trim(), tweetCount: count.trim() });
+        }
+      });
 
-/**
- * Advanced search with multiple filters
- * @param {import('puppeteer').Page} page
- * @param {Object} filters
- * @returns {Promise&lt;Array&gt;}
- */
-export async function advancedSearch(page, filters = {}) {
-  const {
-    allWords = '', exactPhrase = '', anyWords = '', noneOfWords = '',
-    hashtags = '', from = '', to = '', mentioning = '',
-    since = '', until = '', minLikes = 0, minRetweets = 0,
-    hasMedia = false, hasLinks = false, lang = '',
-    limit = 50,
-  } = filters;
+      if (trends.length === prevSize) retries++;
+      else retries = 0;
 
-  let query = '';
-  if (allWords) query += allWords + ' ';
-  if (exactPhrase) query += `&quot;${exactPhrase}&quot; `;
-  if (anyWords) query += `(${anyWords.split(' ').join(' OR ')}) `;
-  if (noneOfWords) query += noneOfWords.split(' ').map(w =&gt; `-${w}`).join(' ') + ' ';
-  if (hashtags) query += hashtags.split(' ').map(h =&gt; h.startsWith('#') ? h : `#${h}`).join(' ') + ' ';
-  if (from) query += `from:${from} `;
-  if (to) query += `to:${to} `;
-  if (mentioning) query += `@${mentioning} `;
-  if (since) query += `since:${since} `;
-  if (until) query += `until:${until} `;
-  if (minLikes &gt; 0) query += `min_faves:${minLikes} `;
-  if (minRetweets &gt; 0) query += `min_retweets:${minRetweets} `;
-  if (hasMedia) query += 'filter:media ';
-  if (hasLinks) query += 'filter:links ';
-  if (lang) query += `lang:${lang} `;
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(CONFIG.scrollDelay);
+    }
 
-  return searchTweets(page, query.trim(), { limit });
-}
+    console.log(`\n📈 Found ${trends.length} trends:\n`);
+    trends.slice(0, 20).forEach(t =&gt; {
+      console.log(`   #${t.rank} ${t.name} ${t.tweetCount ? '(' + t.tweetCount + ')' : ''}`);
+    });
 
-export default {
-  searchTweets,
-  getTrends,
-  getExploreFeed,
-  followTopic,
-  advancedSearch,
-  SELECTORS,
-};
+    return { type: 'trends', trends };
+  };
+
+  const searchTweets = async () =&gt; {
+    if (!CONFIG.searchQuery) {
+      console.error('❌ Set CONFIG.searchQuery first!');
+      return null;
+    }
+
+    console.log(`🔍 Searching: &quot;${CONFIG.searchQuery}&quot;...`);
+
+    // Type in search box
+    const searchInput = document.querySelector('[data-testid=&quot;SearchBox_Search_Input&quot;]');
+    if (searchInput) {
+      searchInput.focus();
+      searchInput.value = '';
+      document.execCommand('insertText', false, CONFIG.searchQuery);
+      await sleep(500);
+      searchInput.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', keyCode: 13, bubbles: true }));
+      await sleep(3000);
+    } else {
+      // Navigate directly
+      window.location.href = `https://x.com/search?q=${encodeURIComponent(CONFIG.searchQuery)}&amp;f=live`;
+      await sleep(4000);
+    }
+
+    const results = new Map();
+    let retries = 0;
+
+    while (results.size &lt; CONFIG.maxResults &amp;&amp; retries &lt; CONFIG.maxScrollRetries) {
+      const prevSize = results.size;
+
+      document.querySelectorAll('article[data-testid=&quot;tweet&quot;]').forEach(tweet =&gt; {
+        const linkEl = tweet.querySelector('a[href*=&quot;/status/&quot;]');
+        if (!linkEl || results.has(linkEl.href)) return;
+
+        const text = tweet.querySelector('[data-testid=&quot;tweetText&quot;]')?.textContent || '';
+        const author = tweet.querySelector('[data-testid=&quot;User-Name&quot;] a')?.textContent || '';
+        const time = tweet.querySelector('time')?.getAttribute('datetime') || '';
+        const likes = tweet.querySelector('[data-testid=&quot;like&quot;] span, [data-testid=&quot;unlike&quot;] span')?.textContent || '0';
+        const reposts = tweet.querySelector('[data-testid=&quot;retweet&quot;] span')?.textContent || '0';
+
+        results.set(linkEl.href, { text: text.substring(0, 300), author, time, url: linkEl.href, likes, reposts });
+      });
+
+      if (results.size === prevSize) retries++;
+      else retries = 0;
+
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(CONFIG.scrollDelay);
+    }
+
+    const all = [...results.values()];
+    console.log(`\n🔍 Found ${all.length} results`);
+
+    return { type: 'search', query: CONFIG.searchQuery, results: all };
+  };
+
+  const run = async () =&gt; {
+    console.log('🔍 DISCOVERY &amp; EXPLORE — XActions by nichxbt\n');
+
+    let data;
+    if (CONFIG.action === 'trends') data = await scrapeTrends();
+    else if (CONFIG.action === 'search') data = await searchTweets();
+    else { console.error(`❌ Unknown action: ${CONFIG.action}`); return; }
+
+    if (data &amp;&amp; CONFIG.exportResults) {
+      const date = new Date().toISOString().slice(0, 10);
+      download(
+        { exportedAt: new Date().toISOString(), ...data },
+        `xactions-explore-${CONFIG.action}-${date}.json`
+      );
+    }
+
+    console.log('\n🏁 Done!');
+  };
+
+  run();
+})();
 </code></pre>
           </div>
         </section>

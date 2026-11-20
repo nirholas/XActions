@@ -15,14 +15,14 @@ Browser console script for managing X Topics — the interest categories that pe
 
 | Goal | File | Navigate to |
 |------|------|-------------|
-| List, follow, unfollow, or discover X Topics | `src/topicManager.js` | `x.com/i/topics` or `x.com/settings/your_topics` |
+| List, follow, unfollow, or discover X Topics | `browser/topicManager.js` | `x.com/i/topics` or `x.com/settings/your_topics` |
 
 ## Quick Start
 
 1. Go to `x.com/i/topics` or `x.com/settings/your_topics`
 2. Open DevTools (F12) → Console
 3. Set `action` in CONFIG
-4. Paste `src/topicManager.js` → Enter
+4. Paste `browser/topicManager.js` → Enter
 
 ## Configuration
 

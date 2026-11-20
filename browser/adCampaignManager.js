@@ -1,5 +1,5 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// src/adCampaignManager.js
+// browser/adCampaignManager.js
 // Ad campaign management for X/Twitter
 // by nichxbt
 // 1. Go to ads.x.com or x.com

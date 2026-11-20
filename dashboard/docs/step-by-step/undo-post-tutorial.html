@@ -215,7 +215,7 @@
 <ol>
 <li>Post a tweet on x.com</li>
 <li>Immediately open DevTools (F12) -- or have it open already</li>
-<li>Copy the script from <code>src/editPost.js</code></li>
+<li>Copy the script from <code>browser/editPost.js</code></li>
 <li>Set <code>CONFIG.mode = &#39;undo&#39;</code></li>
 <li>Paste into Console and press Enter within 30 seconds of posting</li>
 </ol>
@@ -265,7 +265,7 @@
 <p>The best approach is to have the script ready <strong>before</strong> you post:</p>
 <ol>
 <li>Open DevTools (F12) on x.com</li>
-<li>Paste <code>src/editPost.js</code> into the console with <code>CONFIG.mode = &#39;undo&#39;</code></li>
+<li>Paste <code>browser/editPost.js</code> into the console with <code>CONFIG.mode = &#39;undo&#39;</code></li>
 <li><strong>Do not press Enter yet</strong></li>
 <li>Post your tweet normally through the X interface</li>
 <li>Immediately switch to the DevTools console and press Enter</li>
@@ -273,7 +273,7 @@
 </ol>
 <h3>How It Works Internally</h3>
 <p>The undo function is straightforward:</p>
-<pre><code class="language-js">// From src/editPost.js -- undo mode:
+<pre><code class="language-js">// From browser/editPost.js -- undo mode:
 
 const undoPost = async () =&gt; {
   console.log(&#39;Looking for undo button...&#39;);
@@ -399,7 +399,7 @@ window.undoLastPost = async () =&gt; {
 </tbody></table>
 <h2>Related Scripts</h2>
 <ul>
-<li><code>src/editPost.js</code> (edit mode) -- Edit posts within 1 hour</li>
+<li><code>browser/editPost.js</code> (edit mode) -- Edit posts within 1 hour</li>
 <li><code>src/postComposer.js</code> (<code>deletePost</code>) -- Delete posts at any time</li>
 <li><code>docs/examples/tutorials/edit-post-tutorial.md</code> -- Edit post guide</li>
 </ul>

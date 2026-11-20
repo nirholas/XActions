@@ -26,12 +26,12 @@ MCP-powered workflow plus browser scripts for analyzing competitor X/Twitter acc
 
 | Goal | Script |
 |------|--------|
-| Side-by-side competitor comparison | `src/competitorAnalysis.js` |
-| Compare audience overlap | `src/audienceOverlap.js` |
-| Analyze their audience demographics | `src/audienceDemographics.js` |
-| Find their viral tweets | `src/viralTweetDetector.js` |
-| Benchmark your engagement | `src/tweetPerformance.js` |
-| Track their trending topics | `src/trendingTopicMonitor.js` |
+| Side-by-side competitor comparison | `browser/competitorAnalysis.js` |
+| Compare audience overlap | `browser/audienceOverlap.js` |
+| Analyze their audience demographics | `browser/audienceDemographics.js` |
+| Find their viral tweets | `browser/viralTweetDetector.js` |
+| Benchmark your engagement | `browser/tweetPerformance.js` |
+| Track their trending topics | `browser/trendingTopicMonitor.js` |
 
 ## Analysis Workflow
 
@@ -41,7 +41,7 @@ MCP-powered workflow plus browser scripts for analyzing competitor X/Twitter acc
 4. **Categorize content** -- Original vs reply vs retweet vs thread
 5. **Audit audience** -- `x_get_followers` with `limit: 100`, scan bios
 6. **Map network** -- `x_get_following` for mutual connections and influencer relationships
-7. **Find overlap** -- `src/audienceOverlap.js` to compare your followers with theirs
+7. **Find overlap** -- `browser/audienceOverlap.js` to compare your followers with theirs
 
 ## Output Template
 
@@ -68,6 +68,6 @@ MCP-powered workflow plus browser scripts for analyzing competitor X/Twitter acc
 
 ## Tips
 - Run competitor analysis quarterly for trends
-- Use `src/audienceOverlap.js` to find collaboration opportunities
+- Use `browser/audienceOverlap.js` to find collaboration opportunities
 - Track competitors' viral content for content inspiration
 - Mirror successful content formats, not exact content

@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Profile Manager - Automate profile updates and management — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="src/profileManager.js">
+  <title>Profile Manager — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="scripts/profileManager.js">
   <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, profile, manager, account management">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Profile Manager - Automate profile updates and management — XActions">
-  <meta property="og:description" content="src/profileManager.js">
+  <meta property="og:title" content="Profile Manager — XActions">
+  <meta property="og:description" content="scripts/profileManager.js">
   <meta property="og:url" content="https://xactions.app/scripts/profile-manager">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-image.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Profile Manager - Automate profile updates and management — XActions">
-  <meta name="twitter:description" content="src/profileManager.js">
+  <meta name="twitter:title" content="Profile Manager — XActions">
+  <meta name="twitter:description" content="scripts/profileManager.js">
 
   <link rel="canonical" href="https://xactions.app/scripts/profile-manager">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
@@ -28,8 +28,8 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Profile Manager - Automate profile updates and management — Free X/Twitter Script | XActions",
-    "description": "src/profileManager.js",
+    "headline": "Profile Manager — Free X/Twitter Script | XActions",
+    "description": "scripts/profileManager.js",
     "url": "https://xactions.app/scripts/profile-manager",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -47,7 +47,7 @@
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
       { "@type": "ListItem", "position": 3, "name": "Account Management", "item": "https://xactions.app/scripts#account-management" },
-      { "@type": "ListItem", "position": 4, "name": "Profile Manager - Automate profile updates and management", "item": "https://xactions.app/scripts/profile-manager" }
+      { "@type": "ListItem", "position": 4, "name": "Profile Manager", "item": "https://xactions.app/scripts/profile-manager" }
     ]
   }
   </script>
@@ -112,24 +112,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>👤 Profile Manager - Automate profile updates and management</h1>
+        <h1>👤 Profile Manager</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#account-management">Account Management</a> › Profile Manager - Automate profile updates and management
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#account-management">Account Management</a> › Profile Manager
         </div>
       </header>
 
       <article class="article">
         <span class="cat-badge">Account Management</span>
-        <span class="source-badge">src</span>
+        <span class="source-badge">scripts</span>
 
         <div class="meta-row">
           
           
-          <span>271 lines</span>
+          <span>124 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>src/profileManager.js</p>
+        <p>scripts/profileManager.js</p>
 
         
 
@@ -143,8 +143,24 @@
         
 
         
-        
-        
+        <section class="config-section">
+        <h2>Configuration Options</h2>
+        <table>
+          <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>exportResults</code></td><td><code>true</code></td><td>Download profile data as JSON</td></tr>
+          </tbody>
+        </table>
+      </section>
+        <section class="config-code">
+        <h2>Default Configuration</h2>
+        <div class="code-block">
+          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
+          <pre><code>const CONFIG = {
+    exportResults: true,      // Download profile data as JSON
+  };</code></pre>
+        </div>
+      </section>
 
         <section class="full-code">
           <h2>Full Script</h2>
@@ -152,275 +168,128 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// src/profileManager.js
-// Profile management automation for X/Twitter
+// scripts/profileManager.js
+// Browser console script for scraping profile data from any X/Twitter profile page
+// Paste in DevTools console on x.com/USERNAME
 // by nichxbt
 
-/**
- * Profile Manager - Automate profile updates and management
- * 
- * Features:
- * - Update display name, bio, location, website
- * - Change profile picture and header image
- * - Manage verification and labels
- * - Filter posts by latest/most liked (2026)
- * - Generate QR codes
- * - Sync contacts
- */
+(() =&gt; {
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
 
-const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
-
-// ============================================================================
-// Selectors
-// ============================================================================
-
-const SELECTORS = {
-  editProfileButton: '[data-testid=&quot;editProfileButton&quot;]',
-  nameInput: 'input[name=&quot;displayName&quot;]',
-  bioTextarea: 'textarea[name=&quot;description&quot;]',
-  locationInput: 'input[name=&quot;location&quot;]',
-  websiteInput: 'input[name=&quot;url&quot;]',
-  saveButton: '[data-testid=&quot;Profile_Save_Button&quot;]',
-  avatarEdit: '[data-testid=&quot;editProfileAvatar&quot;]',
-  headerEdit: '[data-testid=&quot;editProfileHeader&quot;]',
-  verificationBadge: '[data-testid=&quot;icon-verified&quot;]',
-  followerCount: 'a[href$=&quot;/followers&quot;] span',
-  followingCount: 'a[href$=&quot;/following&quot;] span',
-  profileName: '[data-testid=&quot;UserName&quot;]',
-  profileBio: '[data-testid=&quot;UserDescription&quot;]',
-  profileLocation: '[data-testid=&quot;UserLocation&quot;]',
-  profileUrl: '[data-testid=&quot;UserUrl&quot;]',
-  profileJoinDate: '[data-testid=&quot;UserJoinDate&quot;]',
-  postFilterLatest: '[data-testid=&quot;sortByLatest&quot;]',
-  postFilterLiked: '[data-testid=&quot;sortByLiked&quot;]',
-};
-
-// ============================================================================
-// Profile Reading
-// ============================================================================
-
-/**
- * Scrape detailed profile information
- * @param {import('puppeteer').Page} page - Puppeteer page
- * @param {string} username - Twitter username (without @)
- * @returns {Promise&lt;Object&gt;} Profile data
- */
-export async function getProfile(page, username) {
-  await page.goto(`https://x.com/${username}`, { waitUntil: 'networkidle2' });
-  await sleep(2000);
-
-  const profile = await page.evaluate((sel) =&gt; {
-    const getText = (s) =&gt; document.querySelector(s)?.textContent?.trim() || null;
-    const getAttr = (s, attr) =&gt; document.querySelector(s)?.getAttribute(attr) || null;
-
-    return {
-      name: getText(sel.profileName),
-      bio: getText(sel.profileBio),
-      location: getText(sel.profileLocation),
-      website: getText(sel.profileUrl),
-      joinDate: getText(sel.profileJoinDate),
-      isVerified: !!document.querySelector(sel.verificationBadge),
-      followers: getText(sel.followerCount),
-      following: getText(sel.followingCount),
-      avatarUrl: getAttr('img[alt=&quot;Opens profile photo&quot;]', 'src'),
-    };
-  }, SELECTORS);
-
-  return { username, ...profile, scrapedAt: new Date().toISOString() };
-}
-
-/**
- * Filter a user's posts by latest or most liked (2026 feature)
- * @param {import('puppeteer').Page} page
- * @param {string} username
- * @param {string} sort - 'latest' or 'most_liked'
- * @param {Object} options
- * @returns {Promise&lt;Array&gt;} Sorted posts
- */
-export async function filterPosts(page, username, sort = 'latest', options = {}) {
-  const { limit = 50, type = 'all' } = options;
-  await page.goto(`https://x.com/${username}`, { waitUntil: 'networkidle2' });
-  await sleep(2000);
-
-  // Click sort filter if available
-  const sortSelector = sort === 'most_liked' ? SELECTORS.postFilterLiked : SELECTORS.postFilterLatest;
-  try {
-    await page.click(sortSelector);
-    await sleep(1500);
-  } catch (e) {
-    console.log(`⚠️ Sort filter not available, using default order`);
-  }
-
-  const posts = [];
-  let scrollAttempts = 0;
-  const maxScrolls = Math.ceil(limit / 5);
-
-  while (posts.length &lt; limit &amp;&amp; scrollAttempts &lt; maxScrolls) {
-    const newPosts = await page.evaluate(() =&gt; {
-      return Array.from(document.querySelectorAll('article[data-testid=&quot;tweet&quot;]')).map(tweet =&gt; {
-        const text = tweet.querySelector('[data-testid=&quot;tweetText&quot;]')?.textContent || '';
-        const time = tweet.querySelector('time')?.getAttribute('datetime') || '';
-        const likes = tweet.querySelector('[data-testid=&quot;like&quot;] span')?.textContent || '0';
-        const reposts = tweet.querySelector('[data-testid=&quot;retweet&quot;] span')?.textContent || '0';
-        const replies = tweet.querySelector('[data-testid=&quot;reply&quot;] span')?.textContent || '0';
-        const link = tweet.querySelector('a[href*=&quot;/status/&quot;]')?.href || '';
-        return { text, time, likes, reposts, replies, link };
-      });
-    });
-
-    for (const post of newPosts) {
-      if (!posts.find(p =&gt; p.link === post.link)) {
-        posts.push(post);
-      }
-    }
-
-    await page.evaluate(() =&gt; window.scrollBy(0, 1000));
-    await sleep(1500);
-    scrollAttempts++;
-  }
-
-  return posts.slice(0, limit);
-}
-
-// ============================================================================
-// Profile Updating
-// ============================================================================
-
-/**
- * Update profile fields
- * @param {import('puppeteer').Page} page
- * @param {Object} updates - Fields to update { name, bio, location, website }
- * @returns {Promise&lt;Object&gt;} Update result
- */
-export async function updateProfile(page, updates = {}) {
-  await page.goto('https://x.com/settings/profile', { waitUntil: 'networkidle2' });
-  await sleep(2000);
-
-  // Click edit profile
-  try {
-    await page.click(SELECTORS.editProfileButton);
-    await sleep(1500);
-  } catch (e) {
-    // May already be in edit mode on settings/profile
-  }
-
-  const fieldUpdated = [];
-
-  if (updates.name) {
-    const nameInput = await page.$(SELECTORS.nameInput);
-    if (nameInput) {
-      await nameInput.click({ clickCount: 3 });
-      await nameInput.type(updates.name);
-      fieldUpdated.push('name');
-    }
-  }
-
-  if (updates.bio) {
-    const bioInput = await page.$(SELECTORS.bioTextarea);
-    if (bioInput) {
-      await bioInput.click({ clickCount: 3 });
-      await bioInput.type(updates.bio);
-      fieldUpdated.push('bio');
-    }
-  }
-
-  if (updates.location) {
-    const locInput = await page.$(SELECTORS.locationInput);
-    if (locInput) {
-      await locInput.click({ clickCount: 3 });
-      await locInput.type(updates.location);
-      fieldUpdated.push('location');
-    }
-  }
-
-  if (updates.website) {
-    const urlInput = await page.$(SELECTORS.websiteInput);
-    if (urlInput) {
-      await urlInput.click({ clickCount: 3 });
-      await urlInput.type(updates.website);
-      fieldUpdated.push('website');
-    }
-  }
-
-  // Save changes
-  if (fieldUpdated.length &gt; 0) {
-    await page.click(SELECTORS.saveButton);
-    await sleep(2000);
-  }
-
-  return {
-    success: fieldUpdated.length &gt; 0,
-    updated: fieldUpdated,
-    timestamp: new Date().toISOString(),
+  // =============================================
+  // CONFIGURATION
+  // =============================================
+  const CONFIG = {
+    exportResults: true,      // Download profile data as JSON
   };
-}
+  // =============================================
 
-/**
- * Upload profile picture
- * @param {import('puppeteer').Page} page
- * @param {string} imagePath - Local path to image file
- */
-export async function uploadAvatar(page, imagePath) {
-  await page.goto('https://x.com/settings/profile', { waitUntil: 'networkidle2' });
-  await sleep(2000);
+  const download = (data, filename) =&gt; {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  };
 
-  try {
-    await page.click(SELECTORS.editProfileButton);
-    await sleep(1500);
-  } catch (e) {}
+  const parseCount = (text) =&gt; {
+    if (!text) return 0;
+    const clean = text.replace(/,/g, '').trim();
+    const num = parseFloat(clean);
+    if (clean.includes('K')) return Math.round(num * 1000);
+    if (clean.includes('M')) return Math.round(num * 1000000);
+    return isNaN(num) ? 0 : num;
+  };
 
-  const avatarButton = await page.$(SELECTORS.avatarEdit);
-  if (avatarButton) {
-    const [fileChooser] = await Promise.all([
-      page.waitForFileChooser(),
-      avatarButton.click(),
-    ]);
-    await fileChooser.accept([imagePath]);
-    await sleep(2000);
-    await page.click(SELECTORS.saveButton);
-    await sleep(2000);
-    return { success: true, field: 'avatar' };
-  }
-  return { success: false, error: 'Avatar edit button not found' };
-}
+  const run = async () =&gt; {
+    console.log('👤 PROFILE MANAGER — XActions by nichxbt');
+    console.log('━'.repeat(45));
 
-/**
- * Upload header/banner image
- * @param {import('puppeteer').Page} page
- * @param {string} imagePath
- */
-export async function uploadHeader(page, imagePath) {
-  await page.goto('https://x.com/settings/profile', { waitUntil: 'networkidle2' });
-  await sleep(2000);
+    const pathMatch = window.location.pathname.match(/^\/([A-Za-z0-9_]+)/);
+    const username = pathMatch ? pathMatch[1] : null;
 
-  try {
-    await page.click(SELECTORS.editProfileButton);
-    await sleep(1500);
-  } catch (e) {}
+    if (!username || ['home', 'explore', 'notifications', 'messages', 'i', 'settings', 'search'].includes(username)) {
+      console.error('❌ Navigate to a profile page first! (x.com/USERNAME)');
+      return;
+    }
 
-  const headerButton = await page.$(SELECTORS.headerEdit);
-  if (headerButton) {
-    const [fileChooser] = await Promise.all([
-      page.waitForFileChooser(),
-      headerButton.click(),
-    ]);
-    await fileChooser.accept([imagePath]);
-    await sleep(2000);
-    await page.click(SELECTORS.saveButton);
-    await sleep(2000);
-    return { success: true, field: 'header' };
-  }
-  return { success: false, error: 'Header edit button not found' };
-}
+    console.log(`🔍 Scraping profile: @${username}\n`);
+    await sleep(1000);
 
-export default {
-  getProfile,
-  filterPosts,
-  updateProfile,
-  uploadAvatar,
-  uploadHeader,
-  SELECTORS,
-};
+    const getText = (sel) =&gt; document.querySelector(sel)?.textContent?.trim() || null;
+
+    // Display name
+    const nameEl = document.querySelector('[data-testid=&quot;UserName&quot;]');
+    const displayName = nameEl?.querySelector('span')?.textContent?.trim() || null;
+    console.log(`   📛 Name: ${displayName || '—'}`);
+
+    // Bio
+    const bio = getText('[data-testid=&quot;UserDescription&quot;]');
+    console.log(`   📝 Bio: ${bio ? bio.substring(0, 60) + (bio.length &gt; 60 ? '...' : '') : '—'}`);
+
+    // Location
+    const location = getText('[data-testid=&quot;UserLocation&quot;]');
+    console.log(`   📍 Location: ${location || '—'}`);
+
+    // Website
+    const website = getText('[data-testid=&quot;UserUrl&quot;]');
+    console.log(`   🔗 Website: ${website || '—'}`);
+
+    // Join date
+    const joinDate = getText('[data-testid=&quot;UserJoinDate&quot;]');
+    console.log(`   📅 Joined: ${joinDate || '—'}`);
+
+    // Verified status
+    const isVerified = !!document.querySelector('[data-testid=&quot;icon-verified&quot;]');
+    console.log(`   ✅ Verified: ${isVerified ? 'Yes' : 'No'}`);
+
+    // Follower / Following counts
+    const followerEl = document.querySelector('a[href$=&quot;/followers&quot;] span');
+    const followingEl = document.querySelector('a[href$=&quot;/following&quot;] span');
+    const followers = followerEl?.textContent?.trim() || '0';
+    const following = followingEl?.textContent?.trim() || '0';
+    console.log(`   👥 Followers: ${followers}`);
+    console.log(`   👣 Following: ${following}`);
+
+    // Avatar
+    const avatarUrl = document.querySelector('[data-testid=&quot;UserAvatar-Container&quot;] img')?.src || null;
+
+    const profile = {
+      username,
+      displayName,
+      bio,
+      location,
+      website,
+      joinDate,
+      isVerified,
+      followers: parseCount(followers),
+      followersRaw: followers,
+      following: parseCount(following),
+      followingRaw: following,
+      avatarUrl,
+      scrapedAt: new Date().toISOString(),
+      url: window.location.href,
+    };
+
+    console.log('\n' + '━'.repeat(45));
+    console.log('✅ Profile data scraped successfully!');
+
+    if (CONFIG.exportResults) {
+      download(profile, `profile-${username}-${new Date().toISOString().slice(0, 10)}.json`);
+      console.log('📥 Profile exported as JSON');
+    }
+
+    console.log('\n💡 Access data: copy(JSON.parse(JSON.stringify(profile)))');
+    console.log('');
+
+    // Store in window for easy access
+    window.__xactions_profile = profile;
+    return profile;
+  };
+
+  run();
+})();
 </code></pre>
           </div>
         </section>

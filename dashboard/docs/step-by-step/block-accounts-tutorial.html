@@ -227,23 +227,23 @@
 </tr>
 </thead>
 <tbody><tr>
-<td><code>src/massBlock.js</code></td>
+<td><code>browser/massBlock.js</code></td>
 <td>Any x.com page</td>
 <td>Block by username list or visible users</td>
 </tr>
 <tr>
-<td><code>src/massUnblock.js</code></td>
+<td><code>browser/massUnblock.js</code></td>
 <td><code>x.com/settings/blocked/all</code></td>
 <td>Unblock all or selected users</td>
 </tr>
 <tr>
-<td><code>src/blockBots.js</code></td>
+<td><code>browser/blockBots.js</code></td>
 <td>Any followers/user list</td>
 <td>Detect and block likely bot accounts</td>
 </tr>
 </tbody></table>
 <h2>Configuration</h2>
-<h3>src/massBlock.js</h3>
+<h3>browser/massBlock.js</h3>
 <pre><code class="language-js">const CONFIG = {
   mode: &#39;list&#39;,               // &#39;list&#39; or &#39;visible&#39;
   usersToBlock: [
@@ -259,7 +259,7 @@
   exportOnComplete: true,
 };
 </code></pre>
-<h3>src/massUnblock.js</h3>
+<h3>browser/massUnblock.js</h3>
 <pre><code class="language-js">const CONFIG = {
   maxUnblocks: Infinity,
   keepBlocked: [],            // Keep these users blocked
@@ -269,7 +269,7 @@
   exportOnComplete: true,
 };
 </code></pre>
-<h3>src/blockBots.js</h3>
+<h3>browser/blockBots.js</h3>
 <pre><code class="language-js">const CONFIG = {
   minFollowersToFollowingRatio: 0.01,
   maxDefaultProfileAge: 30,
@@ -284,7 +284,7 @@
 </code></pre>
 <h2>Step-by-Step Guide</h2>
 <h3>Block a List of Users</h3>
-<p><strong>Step 1:</strong> Start with a dry run in <code>src/massBlock.js</code>:</p>
+<p><strong>Step 1:</strong> Start with a dry run in <code>browser/massBlock.js</code>:</p>
 <pre><code class="language-js">const CONFIG = {
   mode: &#39;list&#39;,
   usersToBlock: [
@@ -335,7 +335,7 @@ RESULTS
 </code></pre>
 <h3>Detect and Block Bots</h3>
 <p><strong>Step 1:</strong> Navigate to your followers list (<code>x.com/YOUR_USERNAME/followers</code>) or any user list.</p>
-<p><strong>Step 2:</strong> Paste <code>src/blockBots.js</code>:</p>
+<p><strong>Step 2:</strong> Paste <code>browser/blockBots.js</code>:</p>
 <pre><code class="language-js">const CONFIG = {
   dryRun: true,
   maxBlocks: 50,
@@ -365,7 +365,7 @@ RESULTS:
 </ul>
 <h3>Mass Unblock</h3>
 <p><strong>Step 1:</strong> Navigate to <code>https://x.com/settings/blocked/all</code>.</p>
-<p><strong>Step 2:</strong> Configure <code>src/massUnblock.js</code>:</p>
+<p><strong>Step 2:</strong> Configure <code>browser/massUnblock.js</code>:</p>
 <pre><code class="language-js">const CONFIG = {
   keepBlocked: [&#39;definite_spammer&#39;],  // Keep these blocked
   dryRun: false,
@@ -435,10 +435,10 @@ window.XActions.status();
 </tbody></table>
 <h2>Related Scripts</h2>
 <ul>
-<li><code>src/muteByKeywords.js</code> -- Mute users by tweet keywords</li>
-<li><code>src/manageMutedWords.js</code> -- Bulk-add muted words</li>
-<li><code>src/massUnmute.js</code> -- Mass unmute users</li>
-<li><code>src/reportSpam.js</code> -- Report spam accounts</li>
+<li><code>browser/muteByKeywords.js</code> -- Mute users by tweet keywords</li>
+<li><code>browser/manageMutedWords.js</code> -- Bulk-add muted words</li>
+<li><code>browser/massUnmute.js</code> -- Mass unmute users</li>
+<li><code>browser/reportSpam.js</code> -- Report spam accounts</li>
 </ul>
 
 

@@ -20,7 +20,7 @@ Create poll tweets with 2–4 options and a configurable duration.
 **Steps:**
 1. Go to `x.com/home`
 2. Edit CONFIG with your question and options
-3. Open console (F12) and paste `src/createPoll.js`
+3. Open console (F12) and paste `browser/createPoll.js`
 
 **Configuration:**
 ```javascript
@@ -37,7 +37,7 @@ const CONFIG = {
 
 ## 📁 Files
 
-- `src/createPoll.js` — Browser console poll creator
+- `browser/createPoll.js` — Browser console poll creator
 
 ## ⚠️ Notes
 

@@ -1,6 +1,6 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
- * src/clearAllBookmarks.js: the route guard.
+ * browser/clearAllBookmarks.js: the route guard.
  *
  * Some accounts are redirected from the bookmarks page to /i/history, and
  * the guard refused to run there. This pastes the real script into a jsdom
@@ -18,7 +18,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const here = dirname(fileURLToPath(import.meta.url));
-const SOURCE = readFileSync(join(here, '../../src/clearAllBookmarks.js'), 'utf8');
+const SOURCE = readFileSync(join(here, '../../browser/clearAllBookmarks.js'), 'utf8');
 const REFUSAL = '❌ Navigate to x.com/i/bookmarks first!';
 
 /** Paste the script into the current jsdom window. */

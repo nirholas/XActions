@@ -28,7 +28,7 @@ Queue tweets to be posted at specific future times using X/Twitter's native sche
 **Steps:**
 1. Go to `x.com/home`
 2. Edit the posts array with your content and times
-3. Open console (F12) and paste `src/schedulePosts.js`
+3. Open console (F12) and paste `browser/schedulePosts.js`
 
 **Configuration:**
 ```javascript
@@ -45,7 +45,7 @@ const CONFIG = {
 
 ## 📁 Files
 
-- `src/schedulePosts.js` — Browser console scheduler
+- `browser/schedulePosts.js` — Browser console scheduler
 
 ## ⚠️ Notes
 

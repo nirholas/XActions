@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Engagement Manager - Likes — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="src/engagementManager.js">
+  <title>Engagement Manager — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="scripts/engagementManager.js">
   <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, engagement, manager, engagement">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Engagement Manager - Likes — XActions">
-  <meta property="og:description" content="src/engagementManager.js">
+  <meta property="og:title" content="Engagement Manager — XActions">
+  <meta property="og:description" content="scripts/engagementManager.js">
   <meta property="og:url" content="https://xactions.app/scripts/engagement-manager">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-image.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Engagement Manager - Likes — XActions">
-  <meta name="twitter:description" content="src/engagementManager.js">
+  <meta name="twitter:title" content="Engagement Manager — XActions">
+  <meta name="twitter:description" content="scripts/engagementManager.js">
 
   <link rel="canonical" href="https://xactions.app/scripts/engagement-manager">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
@@ -28,8 +28,8 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Engagement Manager - Likes — Free X/Twitter Script | XActions",
-    "description": "src/engagementManager.js",
+    "headline": "Engagement Manager — Free X/Twitter Script | XActions",
+    "description": "scripts/engagementManager.js",
     "url": "https://xactions.app/scripts/engagement-manager",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -47,7 +47,7 @@
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
       { "@type": "ListItem", "position": 3, "name": "Engagement", "item": "https://xactions.app/scripts#engagement" },
-      { "@type": "ListItem", "position": 4, "name": "Engagement Manager - Likes", "item": "https://xactions.app/scripts/engagement-manager" }
+      { "@type": "ListItem", "position": 4, "name": "Engagement Manager", "item": "https://xactions.app/scripts/engagement-manager" }
     ]
   }
   </script>
@@ -112,24 +112,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>⚡ Engagement Manager - Likes</h1>
+        <h1>⚡ Engagement Manager</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#engagement">Engagement</a> › Engagement Manager - Likes
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#engagement">Engagement</a> › Engagement Manager
         </div>
       </header>
 
       <article class="article">
         <span class="cat-badge">Engagement</span>
-        <span class="source-badge">src</span>
+        <span class="source-badge">scripts</span>
 
         <div class="meta-row">
           
           
-          <span>274 lines</span>
+          <span>127 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>src/engagementManager.js</p>
+        <p>scripts/engagementManager.js</p>
 
         
 
@@ -143,8 +143,28 @@
         
 
         
-        
-        
+        <section class="config-section">
+        <h2>Configuration Options</h2>
+        <table>
+          <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>action</code></td><td><code>'like'</code></td><td>'like' | 'bookmark' | 'reply'</td></tr>
+<tr><td><code>replyText</code></td><td><code>''</code></td><td>required when action = 'reply'</td></tr>
+          </tbody>
+        </table>
+      </section>
+        <section class="config-code">
+        <h2>Default Configuration</h2>
+        <div class="code-block">
+          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
+          <pre><code>const CONFIG = {
+    action: 'like',           // 'like' | 'bookmark' | 'reply'
+    replyText: '',            // required when action = 'reply'
+    maxTweets: 10,
+    delay: 2000,
+  };</code></pre>
+        </div>
+      </section>
 
         <section class="full-code">
           <h2>Full Script</h2>
@@ -152,278 +172,131 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// src/engagementManager.js
-// Engagement and interaction automation for X/Twitter
+// scripts/engagementManager.js
+// Browser console script for liking, bookmarking, or replying to visible tweets
+// Paste in DevTools console on x.com/home or any timeline
 // by nichxbt
 
-/**
- * Engagement Manager - Likes, replies, bookmarks, reactions, analytics
- * 
- * Features:
- * - Like/unlike posts
- * - Reply to posts
- * - Bookmark management
- * - Hide replies
- * - Set reply limits
- * - Get engagement analytics
- * - Video reactions
- */
+(() =&gt; {
+  'use strict';
 
-const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
-
-const SELECTORS = {
-  like: '[data-testid=&quot;like&quot;]',
-  unlike: '[data-testid=&quot;unlike&quot;]',
-  reply: '[data-testid=&quot;reply&quot;]',
-  retweet: '[data-testid=&quot;retweet&quot;]',
-  bookmark: '[data-testid=&quot;bookmark&quot;]',
-  removeBookmark: '[data-testid=&quot;removeBookmark&quot;]',
-  share: '[data-testid=&quot;share&quot;]',
-  tweet: 'article[data-testid=&quot;tweet&quot;]',
-  tweetText: '[data-testid=&quot;tweetText&quot;]',
-  replyInput: '[data-testid=&quot;tweetTextarea_0&quot;]',
-  replySubmit: '[data-testid=&quot;tweetButton&quot;]',
-  hideReply: '[data-testid=&quot;hideReply&quot;]',
-  caret: '[data-testid=&quot;caret&quot;]',
-  replyRestriction: '[data-testid=&quot;replyRestriction&quot;]',
-  analyticsLink: '[data-testid=&quot;analyticsButton&quot;]',
-  impressionCount: '[data-testid=&quot;impressions&quot;]',
-};
-
-/**
- * Like a tweet by URL
- * @param {import('puppeteer').Page} page
- * @param {string} tweetUrl
- * @returns {Promise&lt;Object&gt;}
- */
-export async function likeTweet(page, tweetUrl) {
-  await page.goto(tweetUrl, { waitUntil: 'networkidle2' });
-  await sleep(2000);
-
-  const alreadyLiked = await page.$(SELECTORS.unlike);
-  if (alreadyLiked) {
-    return { success: true, action: 'already_liked', url: tweetUrl };
-  }
-
-  await page.click(SELECTORS.like);
-  await sleep(1500);
-
-  return { success: true, action: 'liked', url: tweetUrl, timestamp: new Date().toISOString() };
-}
-
-/**
- * Unlike a tweet by URL
- * @param {import('puppeteer').Page} page
- * @param {string} tweetUrl
- * @returns {Promise&lt;Object&gt;}
- */
-export async function unlikeTweet(page, tweetUrl) {
-  await page.goto(tweetUrl, { waitUntil: 'networkidle2' });
-  await sleep(2000);
-
-  const likedButton = await page.$(SELECTORS.unlike);
-  if (!likedButton) {
-    return { success: true, action: 'not_liked', url: tweetUrl };
-  }
-
-  await page.click(SELECTORS.unlike);
-  await sleep(1500);
-
-  return { success: true, action: 'unliked', url: tweetUrl, timestamp: new Date().toISOString() };
-}
-
-/**
- * Reply to a tweet
- * @param {import('puppeteer').Page} page
- * @param {string} tweetUrl
- * @param {string} replyText
- * @param {Object} options
- * @returns {Promise&lt;Object&gt;}
- */
-export async function replyToTweet(page, tweetUrl, replyText, options = {}) {
-  const { media = null } = options;
-
-  await page.goto(tweetUrl, { waitUntil: 'networkidle2' });
-  await sleep(2000);
-
-  // Click reply area
-  await page.click(SELECTORS.replyInput);
-  await sleep(500);
-
-  // Type reply
-  await page.keyboard.type(replyText, { delay: 30 });
-  await sleep(500);
-
-  // Add media if provided
-  if (media) {
-    const fileInput = await page.$('[data-testid=&quot;fileInput&quot;]');
-    if (fileInput) {
-      await fileInput.uploadFile(media);
-      await sleep(2000);
-    }
-  }
-
-  // Submit reply
-  await page.click(SELECTORS.replySubmit);
-  await sleep(3000);
-
-  return {
-    success: true,
-    action: 'replied',
-    url: tweetUrl,
-    reply: replyText.substring(0, 100),
-    timestamp: new Date().toISOString(),
+  // ── CONFIG ────────────────────────────────────────────────
+  const CONFIG = {
+    action: 'like',           // 'like' | 'bookmark' | 'reply'
+    replyText: '',            // required when action = 'reply'
+    maxTweets: 10,
+    delay: 2000,
   };
-}
 
-/**
- * Bookmark a tweet
- * @param {import('puppeteer').Page} page
- * @param {string} tweetUrl
- * @returns {Promise&lt;Object&gt;}
- */
-export async function bookmarkTweet(page, tweetUrl) {
-  await page.goto(tweetUrl, { waitUntil: 'networkidle2' });
-  await sleep(2000);
+  // ── HELPERS ───────────────────────────────────────────────
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
 
-  // Click share button to access bookmark
-  await page.click(SELECTORS.share);
-  await sleep(1000);
-  await page.click(SELECTORS.bookmark);
-  await sleep(1500);
+  const SELECTORS = {
+    tweet: 'article[data-testid=&quot;tweet&quot;]',
+    tweetText: '[data-testid=&quot;tweetText&quot;]',
+    like: '[data-testid=&quot;like&quot;]',
+    unlike: '[data-testid=&quot;unlike&quot;]',
+    bookmark: '[data-testid=&quot;bookmark&quot;]',
+    removeBookmark: '[data-testid=&quot;removeBookmark&quot;]',
+    reply: '[data-testid=&quot;reply&quot;]',
+    replyInput: '[data-testid=&quot;tweetTextarea_0&quot;]',
+    replySubmit: '[data-testid=&quot;tweetButton&quot;]',
+  };
 
-  return { success: true, action: 'bookmarked', url: tweetUrl, timestamp: new Date().toISOString() };
-}
+  // ── ACTION HANDLERS ───────────────────────────────────────
+  const doLike = async (article) =&gt; {
+    const btn = article.querySelector(SELECTORS.like);
+    if (!btn) return false;
+    btn.click();
+    return true;
+  };
 
-/**
- * Remove a bookmark
- * @param {import('puppeteer').Page} page
- * @param {string} tweetUrl
- * @returns {Promise&lt;Object&gt;}
- */
-export async function unbookmarkTweet(page, tweetUrl) {
-  await page.goto(tweetUrl, { waitUntil: 'networkidle2' });
-  await sleep(2000);
+  const doBookmark = async (article) =&gt; {
+    const btn = article.querySelector(SELECTORS.bookmark);
+    if (!btn) return false;
+    btn.click();
+    return true;
+  };
 
-  await page.click(SELECTORS.share);
-  await sleep(1000);
-  await page.click(SELECTORS.removeBookmark);
-  await sleep(1500);
+  const doReply = async (article) =&gt; {
+    if (!CONFIG.replyText) {
+      console.warn('⚠️ Set CONFIG.replyText before using reply action');
+      return false;
+    }
+    const btn = article.querySelector(SELECTORS.reply);
+    if (!btn) return false;
+    btn.click();
+    await sleep(1200);
+    const textbox = document.querySelector(SELECTORS.replyInput);
+    if (!textbox) { document.body.click(); return false; }
+    textbox.focus();
+    await sleep(200);
+    for (const ch of CONFIG.replyText) {
+      document.execCommand('insertText', false, ch);
+      await sleep(25);
+    }
+    await sleep(400);
+    const send = document.querySelector(SELECTORS.replySubmit);
+    if (send) { send.click(); return true; }
+    document.body.click();
+    return false;
+  };
 
-  return { success: true, action: 'unbookmarked', url: tweetUrl, timestamp: new Date().toISOString() };
-}
+  const actions = { like: doLike, bookmark: doBookmark, reply: doReply };
 
-/**
- * Hide a reply on your post
- * @param {import('puppeteer').Page} page
- * @param {string} replyUrl
- * @returns {Promise&lt;Object&gt;}
- */
-export async function hideReply(page, replyUrl) {
-  await page.goto(replyUrl, { waitUntil: 'networkidle2' });
-  await sleep(2000);
+  // ── MAIN ──────────────────────────────────────────────────
+  (async () =&gt; {
+    const emoji = { like: '❤️', bookmark: '🔖', reply: '💬' }[CONFIG.action] || '🔧';
+    console.log(`${emoji} ENGAGEMENT MANAGER — XActions by nichxbt`);
+    console.log(`   Action: ${CONFIG.action} | Max: ${CONFIG.maxTweets} | Delay: ${CONFIG.delay}ms\n`);
 
-  await page.click(SELECTORS.caret);
-  await sleep(1000);
-  await page.click(SELECTORS.hideReply);
-  await sleep(1500);
+    if (!actions[CONFIG.action]) {
+      console.error(`❌ Unknown action &quot;${CONFIG.action}&quot;. Use: like, bookmark, reply`);
+      return;
+    }
 
-  return { success: true, action: 'hidden', url: replyUrl, timestamp: new Date().toISOString() };
-}
+    const handler = actions[CONFIG.action];
+    const processed = new Set();
+    let count = 0;
 
-/**
- * Auto-like posts in a feed based on keywords
- * @param {import('puppeteer').Page} page
- * @param {Object} options
- * @returns {Promise&lt;Object&gt;}
- */
-export async function autoLikeByKeyword(page, options = {}) {
-  const { keywords = [], limit = 20, delay = 2000, url = 'https://x.com/home' } = options;
+    const articles = document.querySelectorAll(SELECTORS.tweet);
+    console.log(`📜 Found ${articles.length} tweets on page`);
 
-  await page.goto(url, { waitUntil: 'networkidle2' });
-  await sleep(3000);
+    for (const article of articles) {
+      if (count &gt;= CONFIG.maxTweets) break;
 
-  let liked = 0;
-  let scrollAttempts = 0;
+      const link = article.querySelector('a[href*=&quot;/status/&quot;]');
+      const href = link?.getAttribute('href') || '';
+      if (!href || processed.has(href)) continue;
+      processed.add(href);
 
-  while (liked &lt; limit &amp;&amp; scrollAttempts &lt; limit * 2) {
-    const tweets = await page.$$(SELECTORS.tweet);
+      // Skip already actioned
+      if (CONFIG.action === 'like' &amp;&amp; article.querySelector(SELECTORS.unlike)) continue;
+      if (CONFIG.action === 'bookmark' &amp;&amp; article.querySelector(SELECTORS.removeBookmark)) continue;
 
-    for (const tweet of tweets) {
-      if (liked &gt;= limit) break;
+      const text = article.querySelector(SELECTORS.tweetText)?.textContent || '';
+      const snippet = text.slice(0, 50);
 
-      const text = await tweet.$eval(SELECTORS.tweetText, el =&gt; el.textContent).catch(() =&gt; '');
+      article.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      await sleep(300);
 
-      const matches = keywords.length === 0 || keywords.some(kw =&gt;
-        text.toLowerCase().includes(kw.toLowerCase())
-      );
-
-      if (matches) {
-        const likeBtn = await tweet.$(SELECTORS.like);
-        if (likeBtn) {
-          await likeBtn.click();
-          liked++;
-          console.log(`❤️ Liked (${liked}/${limit}): ${text.substring(0, 50)}...`);
-          await sleep(delay);
+      try {
+        const ok = await handler(article);
+        if (ok) {
+          count++;
+          console.log(`${emoji} #${count}/${CONFIG.maxTweets}: &quot;${snippet}...&quot;`);
         }
+      } catch (e) {
+        console.warn(`⚠️ Error: ${e.message}`);
+        document.body.click();
       }
+
+      await sleep(CONFIG.delay);
     }
 
-    await page.evaluate(() =&gt; window.scrollBy(0, 800));
-    await sleep(1500);
-    scrollAttempts++;
-  }
-
-  return {
-    success: true,
-    liked,
-    keywords,
-    timestamp: new Date().toISOString(),
-  };
-}
-
-/**
- * Get engagement analytics for a post
- * @param {import('puppeteer').Page} page
- * @param {string} tweetUrl
- * @returns {Promise&lt;Object&gt;}
- */
-export async function getEngagementAnalytics(page, tweetUrl) {
-  await page.goto(tweetUrl, { waitUntil: 'networkidle2' });
-  await sleep(2000);
-
-  const analytics = await page.evaluate((sel) =&gt; {
-    const tweet = document.querySelector(sel.tweet);
-    if (!tweet) return null;
-
-    const getText = (s) =&gt; tweet.querySelector(s)?.textContent?.trim() || '0';
-
-    return {
-      likes: getText(sel.like + ' span') || getText(sel.unlike + ' span'),
-      reposts: getText(sel.retweet + ' span'),
-      replies: getText('[data-testid=&quot;reply&quot;] span'),
-      impressions: getText(sel.impressionCount),
-    };
-  }, SELECTORS);
-
-  return {
-    url: tweetUrl,
-    analytics,
-    scrapedAt: new Date().toISOString(),
-  };
-}
-
-export default {
-  likeTweet,
-  unlikeTweet,
-  replyToTweet,
-  bookmarkTweet,
-  unbookmarkTweet,
-  hideReply,
-  autoLikeByKeyword,
-  getEngagementAnalytics,
-  SELECTORS,
-};
+    console.log(`\n✅ Done! ${CONFIG.action === 'like' ? 'Liked' : CONFIG.action === 'bookmark' ? 'Bookmarked' : 'Replied to'} ${count} tweets.`);
+  })();
+})();
 </code></pre>
           </div>
         </section>

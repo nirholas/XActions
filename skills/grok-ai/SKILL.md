@@ -61,7 +61,7 @@ Automates Grok AI prompts and response scraping.
 2. `XActions.ask("Write 3 tweet variations about {topic}")`
 3. `XActions.ask("Analyze this tweet for engagement: {tweet_text}")`
 4. Capture responses with `XActions.scrapeResponse()`
-5. Feed into `src/threadComposer.js` for thread creation
+5. Feed into `browser/threadComposer.js` for thread creation
 
 ### Batch content generation
 ```javascript

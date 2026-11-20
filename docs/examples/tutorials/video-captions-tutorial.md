@@ -13,7 +13,7 @@
 2. Open the tweet composer and upload a video
 3. Wait for the video to finish processing
 4. Open DevTools (F12)
-5. Copy the script from `src/videoCaptions.js`
+5. Copy the script from `browser/videoCaptions.js`
 6. Edit the CONFIG section with your caption content
 7. Paste into Console and press Enter
 
@@ -130,7 +130,7 @@ Before running the caption script:
 
 ### 3. Run the Caption Script
 
-Paste `src/videoCaptions.js` into the DevTools console. The script will:
+Paste `browser/videoCaptions.js` into the DevTools console. The script will:
 
 1. Verify the compose dialog is open (`[data-testid="tweetTextarea_0"]`)
 2. Check that media attachments exist (`[data-testid="attachments"]`)
@@ -207,6 +207,6 @@ CONFIG.languageLabel = 'Spanish';
 ## Related Scripts
 
 - `src/postComposer.js` -- Post tweets with video media
-- `src/postThread.js` -- Post threads with video content
+- `browser/postThread.js` -- Post threads with video content
 - `docs/examples/tutorials/add-media-tutorial.md` -- General media upload guide
 - `docs/examples/tutorials/alt-text-tutorial.md` -- Adding image descriptions

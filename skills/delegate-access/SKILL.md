@@ -15,14 +15,14 @@ Browser console script for managing who can post on behalf of your X account.
 
 | Goal | File | Navigate to |
 |------|------|-------------|
-| View and manage delegates | `src/delegateAccess.js` | `x.com` |
+| View and manage delegates | `browser/delegateAccess.js` | `x.com` |
 
 ## Quick Start
 
 1. Go to `x.com`
 2. Open DevTools (F12) → Console
 3. Edit CONFIG if needed
-4. Paste `src/delegateAccess.js` → Enter
+4. Paste `browser/delegateAccess.js` → Enter
 
 ## Configuration
 

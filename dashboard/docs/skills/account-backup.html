@@ -251,12 +251,12 @@
 </thead>
 <tbody><tr>
 <td>Backup profile, tweets, likes, bookmarks, followers/following</td>
-<td><code>src/backupAccount.js</code></td>
+<td><code>browser/backupAccount.js</code></td>
 <td><code>x.com/USERNAME</code></td>
 </tr>
 <tr>
 <td>Trigger X&#39;s official data archive download</td>
-<td><code>src/downloadAccountData.js</code></td>
+<td><code>browser/downloadAccountData.js</code></td>
 <td><code>x.com/settings/download_your_data</code></td>
 </tr>
 <tr>
@@ -270,14 +270,14 @@
 <ol>
 <li>Navigate to <code>x.com/USERNAME</code> (your own profile)</li>
 <li>Open DevTools (F12) → Console</li>
-<li>Paste <code>src/backupAccount.js</code> → Enter</li>
+<li>Paste <code>browser/backupAccount.js</code> → Enter</li>
 <li>JSON file auto-downloads when complete</li>
 </ol>
 <h3 id="official-x-data-archive">Official X data archive</h3>
 <ol>
 <li>Navigate to <code>x.com/settings/download_your_data</code></li>
 <li>Open DevTools (F12) → Console</li>
-<li>Paste <code>src/downloadAccountData.js</code> → Enter</li>
+<li>Paste <code>browser/downloadAccountData.js</code> → Enter</li>
 <li>Script triggers the request and monitors progress (checks every 30s, up to 60 min)</li>
 </ol>
 <h2 id="configuration-backupaccountjs">Configuration (<code>backupAccount.js</code>)</h2>

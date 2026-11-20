@@ -187,6 +187,6 @@ await postThread(page, [
 ## Related Scripts
 
 - `src/postComposer.js` -- Core posting with media support
-- `src/videoCaptions.js` -- Add captions/subtitles to videos
-- `src/postThread.js` -- Threads with media per tweet
+- `browser/videoCaptions.js` -- Add captions/subtitles to videos
+- `browser/postThread.js` -- Threads with media per tweet
 - `src/articlePublisher.js` -- Long-form articles with cover images

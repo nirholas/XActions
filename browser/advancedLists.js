@@ -1,5 +1,5 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// src/advancedLists.js
+// browser/advancedLists.js
 // Advanced list management for X/Twitter
 // by nichxbt
 // https://github.com/nirholas/XActions

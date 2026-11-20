@@ -165,7 +165,7 @@ For large video files, you may need to increase wait times since processing take
 - **Compress first**: Use ffmpeg or HandBrake to compress videos before uploading
 - **Format**: MP4 with H.264 video codec and AAC audio codec works best
 - **Thumbnail**: X auto-generates a thumbnail from the first frame
-- **Captions**: Add captions using `src/videoCaptions.js` for accessibility (see the video captions tutorial)
+- **Captions**: Add captions using `browser/videoCaptions.js` for accessibility (see the video captions tutorial)
 - **Processing time**: Large videos can take several minutes to process on X's servers
 
 ## Extended Content Strategy
@@ -214,6 +214,6 @@ For large video files, you may need to increase wait times since processing take
 
 - `src/postComposer.js` -- Standard tweet posting (supports extended tweets)
 - `src/articlePublisher.js` -- Article publishing and management
-- `src/postThread.js` -- Thread posting (alternative to extended tweets)
-- `src/videoCaptions.js` -- Add captions to longer videos
-- `src/schedulePosts.js` -- Schedule extended tweets for later
+- `browser/postThread.js` -- Thread posting (alternative to extended tweets)
+- `browser/videoCaptions.js` -- Add captions to longer videos
+- `browser/schedulePosts.js` -- Schedule extended tweets for later

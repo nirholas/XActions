@@ -187,6 +187,6 @@ If you are deleting, export your posts first. There is no undo.
 ## Related
 
 - [`scripts/engageProfile.js`](engage.md) sweeps one profile's timeline instead of a search.
-- [`src/bulkDeleteTweets.js`](../src/bulkDeleteTweets.js) and [`scripts/twitter/delete-tweets.js`](../scripts/twitter/delete-tweets.js) delete from your own profile timeline, filtered by age, keywords, or engagement.
+- [`browser/bulkDeleteTweets.js`](../browser/bulkDeleteTweets.js) and [`scripts/twitter/delete-tweets.js`](../scripts/twitter/delete-tweets.js) delete from your own profile timeline, filtered by age, keywords, or engagement.
 - [`docs/browser-scripts.md`](browser-scripts.md) is the full catalog.
 - [`docs/dom-selectors.md`](dom-selectors.md) if X changes its markup and something stops finding the button.

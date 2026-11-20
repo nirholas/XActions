@@ -259,9 +259,9 @@ const CONFIG = {
 | Feature | Script | Description |
 |---------|--------|-------------|
 | Protect Account | `src/settingsManager.js` | Toggle privacy settings |
-| View Analytics | `src/viewAnalytics.js` | Analytics that delegates can view |
-| Customize Profile | `src/updateProfile.js` | Profile edits that delegates can make |
-| Subscribe to Premium | `src/subscribePremium.js` | Get Premium for delegate access |
+| View Analytics | `browser/viewAnalytics.js` | Analytics that delegates can view |
+| Customize Profile | `browser/updateProfile.js` | Profile edits that delegates can make |
+| Subscribe to Premium | `browser/subscribePremium.js` | Get Premium for delegate access |
 
 ---
 

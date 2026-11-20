@@ -214,7 +214,7 @@
 <ol>
 <li>Navigate to x.com</li>
 <li>Open DevTools (F12)</li>
-<li>Copy the script from <code>src/postThread.js</code> or <code>src/threadComposer.js</code></li>
+<li>Copy the script from <code>browser/postThread.js</code> or <code>browser/threadComposer.js</code></li>
 <li>Edit the CONFIG section with your thread content</li>
 <li>Paste into Console and press Enter</li>
 </ol>
@@ -228,12 +228,12 @@
 </tr>
 </thead>
 <tbody><tr>
-<td><code>src/postThread.js</code></td>
+<td><code>browser/postThread.js</code></td>
 <td>Browser console</td>
 <td>Quick one-off threads</td>
 </tr>
 <tr>
-<td><code>src/threadComposer.js</code></td>
+<td><code>browser/threadComposer.js</code></td>
 <td>Browser console</td>
 <td>Advanced threads with drafts, preview, auto-numbering</td>
 </tr>
@@ -244,7 +244,7 @@
 </tr>
 </tbody></table>
 <h2>Configuration</h2>
-<h3><code>src/postThread.js</code> (Browser Console)</h3>
+<h3><code>browser/postThread.js</code> (Browser Console)</h3>
 <pre><code class="language-js">const CONFIG = {
   thread: [
     &#39;First tweet in the thread&#39;,
@@ -283,7 +283,7 @@
 <td>Preview mode -- set <code>false</code> to post</td>
 </tr>
 </tbody></table>
-<h3><code>src/threadComposer.js</code> (Browser Console -- Advanced)</h3>
+<h3><code>browser/threadComposer.js</code> (Browser Console -- Advanced)</h3>
 <pre><code class="language-js">const CONFIG = {
   dryRun: true,
   autoNumber: false,         // Add &quot;1/N&quot; numbering to each tweet
@@ -346,7 +346,7 @@ const result = await postThread(page, [
 <h3>Using <code>postThread.js</code> (Browser Console)</h3>
 <ol>
 <li>Open x.com and press F12 to open DevTools</li>
-<li>Copy the contents of <code>src/postThread.js</code></li>
+<li>Copy the contents of <code>browser/postThread.js</code></li>
 <li>Edit the <code>CONFIG.thread</code> array with your tweets:<pre><code class="language-js">thread: [
   &#39;Here is my hot take on AI agents...&#39;,
   &#39;First, they need to understand context.&#39;,
@@ -368,7 +368,7 @@ const result = await postThread(page, [
 </ul>
 <h3>Using <code>threadComposer.js</code> (Browser Console -- Advanced)</h3>
 <ol>
-<li>Paste <code>src/threadComposer.js</code> into the console</li>
+<li>Paste <code>browser/threadComposer.js</code> into the console</li>
 <li>Load your thread content:<pre><code class="language-js">XActions.thread([
   &quot;Hot take: browser automation is underrated&quot;,
   &quot;Most people think you need API access to automate X&quot;,
@@ -452,8 +452,8 @@ console.log(result);
 <h2>Related Scripts</h2>
 <ul>
 <li><code>src/postComposer.js</code> -- Single tweet posting with media support</li>
-<li><code>src/schedulePosts.js</code> -- Schedule threads for specific times</li>
-<li><code>src/textFormatting.js</code> -- Format text with bold, italic, etc.</li>
+<li><code>browser/schedulePosts.js</code> -- Schedule threads for specific times</li>
+<li><code>browser/textFormatting.js</code> -- Format text with bold, italic, etc.</li>
 <li><code>src/articlePublisher.js</code> -- For long-form content that exceeds thread length</li>
 </ul>
 

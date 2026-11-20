@@ -227,12 +227,12 @@
 </tr>
 </thead>
 <tbody><tr>
-<td><code>src/bookmarkOrganizer.js</code></td>
+<td><code>browser/bookmarkOrganizer.js</code></td>
 <td>Browser</td>
 <td>Scan, categorize, and export bookmarks</td>
 </tr>
 <tr>
-<td><code>src/clearAllBookmarks.js</code></td>
+<td><code>browser/clearAllBookmarks.js</code></td>
 <td>Browser</td>
 <td>Remove all bookmarks with keep-filters</td>
 </tr>
@@ -243,7 +243,7 @@
 </tr>
 </tbody></table>
 <h2>Configuration</h2>
-<h3>src/bookmarkOrganizer.js (Browser Script)</h3>
+<h3>browser/bookmarkOrganizer.js (Browser Script)</h3>
 <pre><code class="language-js">const CONFIG = {
   maxBookmarks: 200,
   scrollDelay: 1500,
@@ -257,7 +257,7 @@
   },
 };
 </code></pre>
-<h3>src/clearAllBookmarks.js (Browser Script)</h3>
+<h3>browser/clearAllBookmarks.js (Browser Script)</h3>
 <table>
 <thead>
 <tr>
@@ -308,7 +308,7 @@ await clearAllBookmarks(page);
 <h2>Step-by-Step Guide</h2>
 <h3>Export and Categorize Bookmarks</h3>
 <p><strong>Step 1:</strong> Navigate to <code>https://x.com/i/bookmarks</code>.</p>
-<p><strong>Step 2:</strong> Customize categories in <code>src/bookmarkOrganizer.js</code> to match your interests:</p>
+<p><strong>Step 2:</strong> Customize categories in <code>browser/bookmarkOrganizer.js</code> to match your interests:</p>
 <pre><code class="language-js">categories: {
   &#39;AI&#39;: [&#39;ai&#39;, &#39;machine learning&#39;, &#39;llm&#39;, &#39;gpt&#39;, &#39;neural&#39;],
   &#39;Dev Tools&#39;: [&#39;github&#39;, &#39;vscode&#39;, &#39;docker&#39;, &#39;api&#39;],
@@ -350,7 +350,7 @@ await createFolder(page, &#39;Funny&#39;);
 </code></pre>
 <h3>Clear All Bookmarks</h3>
 <p><strong>Step 1:</strong> Navigate to <code>https://x.com/i/bookmarks</code>.</p>
-<p><strong>Step 2:</strong> Paste <code>src/clearAllBookmarks.js</code>.</p>
+<p><strong>Step 2:</strong> Paste <code>browser/clearAllBookmarks.js</code>.</p>
 <p>If no <code>keepKeywords</code> are set and <code>useBulkClear</code> is true, it tries the built-in &quot;Clear All&quot; button first (instant).</p>
 <p>Otherwise, it removes bookmarks one by one, scrolling through the list.</p>
 <p><strong>Step 3:</strong> Use controls while running:</p>
@@ -407,9 +407,9 @@ window.XActions.status();  // Show progress
 <h2>Related Scripts</h2>
 <ul>
 <li><code>src/bookmarkManager.js</code> -- Node.js Puppeteer-based bookmark management</li>
-<li><code>src/bookmarkOrganizer.js</code> -- Browser-based bookmark export and categorization</li>
-<li><code>src/clearAllBookmarks.js</code> -- Browser-based bookmark clearing</li>
-<li><code>src/shareEmbed.js</code> -- Copy links and embed codes for posts</li>
+<li><code>browser/bookmarkOrganizer.js</code> -- Browser-based bookmark export and categorization</li>
+<li><code>browser/clearAllBookmarks.js</code> -- Browser-based bookmark clearing</li>
+<li><code>browser/shareEmbed.js</code> -- Copy links and embed codes for posts</li>
 </ul>
 
 

@@ -29,7 +29,7 @@ const SYNDICATION_POST = {
 
 const ctx = {
   getSearcher: async () => ({
-    search: () => [{ t: 'Unfollow everyone', u: 'https://xactions.app/scripts/unfollow', p: 'src/unfollowEveryone.js', k: 'script', x: 'Paste this in the console.', score: 5 }],
+    search: () => [{ t: 'Unfollow everyone', u: 'https://xactions.app/scripts/unfollow', p: 'browser/unfollowEveryone.js', k: 'script', x: 'Paste this in the console.', score: 5 }],
   }),
   getResources: async () => buildResourceIndex({
     chunks: Array.from({ length: 150 }, (_, i) => ({ t: `Doc ${i}`, u: `https://xactions.app/${i}`, p: `docs/${i}.md`, k: 'doc', x: `body ${i}` })),

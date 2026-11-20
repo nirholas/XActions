@@ -15,12 +15,12 @@ Browser console scripts for account utility tasks on X/Twitter.
 
 | Goal | File | Navigate to |
 |------|------|-------------|
-| View join date, login history, connected accounts | `src/accountMisc.js` | `x.com` |
-| Appeal account suspension | `src/accountMisc.js` | `x.com` |
-| Calculate account age | `src/accountMisc.js` | `x.com/USERNAME` |
-| Generate QR code for a profile/tweet | `src/qrCodeSharing.js` | Any page |
-| Share or embed a tweet | `src/shareEmbed.js` | Tweet page |
-| Upload contacts for people discovery | `src/uploadContacts.js` | `x.com` |
+| View join date, login history, connected accounts | `browser/accountMisc.js` | `x.com` |
+| Appeal account suspension | `browser/accountMisc.js` | `x.com` |
+| Calculate account age | `browser/accountMisc.js` | `x.com/USERNAME` |
+| Generate QR code for a profile/tweet | `browser/qrCodeSharing.js` | Any page |
+| Share or embed a tweet | `browser/shareEmbed.js` | Tweet page |
+| Upload contacts for people discovery | `browser/uploadContacts.js` | `x.com` |
 
 ## accountMisc.js — Available Functions
 

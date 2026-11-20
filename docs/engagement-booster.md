@@ -23,7 +23,7 @@ Works standalone — does **not** require `core.js`.
 
 1. Navigate to any timeline, user profile, or search results page on [x.com](https://x.com)
 2. Open DevTools Console (F12)
-3. Paste `src/engagementBooster.js`
+3. Paste `browser/engagementBooster.js`
 4. A floating panel appears in the bottom-right corner
 5. Configure via the panel or edit `CONFIG` in the script
 6. Click **▶ Start**

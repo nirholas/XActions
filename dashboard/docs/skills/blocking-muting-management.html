@@ -251,42 +251,42 @@
 </thead>
 <tbody><tr>
 <td>Block multiple accounts</td>
-<td><code>src/massBlock.js</code></td>
+<td><code>browser/massBlock.js</code></td>
 <td>Any page on x.com</td>
 </tr>
 <tr>
 <td>Unblock all blocked accounts</td>
-<td><code>src/massUnblock.js</code></td>
+<td><code>browser/massUnblock.js</code></td>
 <td><code>x.com/settings/blocked/all</code></td>
 </tr>
 <tr>
 <td>Unmute all muted accounts</td>
-<td><code>src/massUnmute.js</code></td>
+<td><code>browser/massUnmute.js</code></td>
 <td><code>x.com/settings/muted/all</code></td>
 </tr>
 <tr>
 <td>Detect and block bots</td>
-<td><code>src/blockBots.js</code></td>
+<td><code>browser/blockBots.js</code></td>
 <td><code>x.com/USERNAME/followers</code></td>
 </tr>
 <tr>
 <td>Mute users by keywords</td>
-<td><code>src/muteByKeywords.js</code></td>
+<td><code>browser/muteByKeywords.js</code></td>
 <td>Timeline or search results</td>
 </tr>
 <tr>
 <td>Manage muted words</td>
-<td><code>src/manageMutedWords.js</code></td>
+<td><code>browser/manageMutedWords.js</code></td>
 <td>Any page</td>
 </tr>
 <tr>
 <td>Report spam</td>
-<td><code>src/reportSpam.js</code></td>
+<td><code>browser/reportSpam.js</code></td>
 <td>Target account profile</td>
 </tr>
 <tr>
 <td>Remove followers (soft-block)</td>
-<td><code>src/removeFollowers.js</code></td>
+<td><code>browser/removeFollowers.js</code></td>
 <td><code>x.com/USERNAME/followers</code></td>
 </tr>
 </tbody></table>
@@ -358,16 +358,16 @@
 <h2 id="strategy-guide">Strategy Guide</h2>
 <h3 id="cleaning-up-after-a-bot-attack">Cleaning up after a bot attack</h3>
 <ol>
-<li>Run <code>src/blockBots.js</code> on your followers page</li>
+<li>Run <code>browser/blockBots.js</code> on your followers page</li>
 <li>Review flagged accounts in the console output</li>
 <li>Let the script block confirmed bots</li>
-<li>Run <code>src/auditFollowers.js</code> to verify remaining follower quality</li>
+<li>Run <code>browser/auditFollowers.js</code> to verify remaining follower quality</li>
 </ol>
 <h3 id="mass-cleanup-of-mutedblocked-accounts">Mass cleanup of muted/blocked accounts</h3>
 <ol>
-<li>Run <code>src/massUnblock.js</code> on <code>x.com/settings/blocked/all</code> to clear block list</li>
-<li>Run <code>src/massUnmute.js</code> on <code>x.com/settings/muted/all</code> to clear mute list</li>
-<li>Set up fresh keyword mutes with <code>src/manageMutedWords.js</code></li>
+<li>Run <code>browser/massUnblock.js</code> on <code>x.com/settings/blocked/all</code> to clear block list</li>
+<li>Run <code>browser/massUnmute.js</code> on <code>x.com/settings/muted/all</code> to clear mute list</li>
+<li>Set up fresh keyword mutes with <code>browser/manageMutedWords.js</code></li>
 </ol>
 <h2 id="notes">Notes</h2>
 <ul>

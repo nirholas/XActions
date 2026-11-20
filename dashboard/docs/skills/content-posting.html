@@ -251,52 +251,52 @@
 </thead>
 <tbody><tr>
 <td>Post a thread</td>
-<td><code>src/postThread.js</code></td>
+<td><code>browser/postThread.js</code></td>
 <td><code>x.com</code></td>
 </tr>
 <tr>
 <td>Schedule posts</td>
-<td><code>src/schedulePosts.js</code></td>
+<td><code>browser/schedulePosts.js</code></td>
 <td><code>x.com</code></td>
 </tr>
 <tr>
 <td>Create a poll</td>
-<td><code>src/createPoll.js</code></td>
+<td><code>browser/createPoll.js</code></td>
 <td><code>x.com</code></td>
 </tr>
 <tr>
 <td>Auto-repost by keyword</td>
-<td><code>src/autoRepost.js</code></td>
+<td><code>browser/autoRepost.js</code></td>
 <td>Timeline or search</td>
 </tr>
 <tr>
 <td>Compose + preview threads</td>
-<td><code>src/threadComposer.js</code></td>
+<td><code>browser/threadComposer.js</code></td>
 <td><code>x.com/USERNAME</code></td>
 </tr>
 <tr>
 <td>Quote-tweet with templates</td>
-<td><code>src/quoteTweetAutomation.js</code></td>
+<td><code>browser/quoteTweetAutomation.js</code></td>
 <td>Timeline</td>
 </tr>
 <tr>
 <td>Repurpose tweets</td>
-<td><code>src/contentRepurposer.js</code></td>
+<td><code>browser/contentRepurposer.js</code></td>
 <td><code>x.com/USERNAME</code></td>
 </tr>
 <tr>
 <td>Auto-plug viral tweets</td>
-<td><code>src/autoPlugReplies.js</code></td>
+<td><code>browser/autoPlugReplies.js</code></td>
 <td><code>x.com/USERNAME</code></td>
 </tr>
 <tr>
 <td>Content calendar analysis</td>
-<td><code>src/contentCalendar.js</code></td>
+<td><code>browser/contentCalendar.js</code></td>
 <td><code>x.com/USERNAME</code></td>
 </tr>
 <tr>
 <td>Optimize posting times</td>
-<td><code>src/tweetScheduleOptimizer.js</code></td>
+<td><code>browser/tweetScheduleOptimizer.js</code></td>
 <td><code>x.com/USERNAME</code></td>
 </tr>
 </tbody></table>
@@ -356,16 +356,16 @@
 <h2 id="content-strategy">Content Strategy</h2>
 <h3 id="maximizing-content-output">Maximizing content output</h3>
 <ol>
-<li><code>src/tweetPerformance.js</code> -- identify your best-performing content</li>
-<li><code>src/contentRepurposer.js</code> -- generate 5 variations per top tweet</li>
-<li><code>src/tweetScheduleOptimizer.js</code> -- schedule content at optimal times</li>
-<li><code>src/autoPlugReplies.js</code> -- automatically promote on viral tweets</li>
-<li><code>src/contentCalendar.js</code> -- identify posting gaps to fill</li>
+<li><code>browser/tweetPerformance.js</code> -- identify your best-performing content</li>
+<li><code>browser/contentRepurposer.js</code> -- generate 5 variations per top tweet</li>
+<li><code>browser/tweetScheduleOptimizer.js</code> -- schedule content at optimal times</li>
+<li><code>browser/autoPlugReplies.js</code> -- automatically promote on viral tweets</li>
+<li><code>browser/contentCalendar.js</code> -- identify posting gaps to fill</li>
 </ol>
 <h3 id="thread-workflow">Thread workflow</h3>
 <ol>
-<li>Use <code>src/contentRepurposer.js</code> -&gt; <code>XActions.toThread(i)</code> for thread outlines</li>
-<li>Edit and refine with <code>src/threadComposer.js</code></li>
+<li>Use <code>browser/contentRepurposer.js</code> -&gt; <code>XActions.toThread(i)</code> for thread outlines</li>
+<li>Edit and refine with <code>browser/threadComposer.js</code></li>
 <li>Preview with <code>XActions.preview()</code></li>
 <li>Post with <code>XActions.post()</code></li>
 </ol>

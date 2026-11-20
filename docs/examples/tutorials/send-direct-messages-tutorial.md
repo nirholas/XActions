@@ -29,7 +29,7 @@ date: "2026-03-30"
 
 1. Open x.com and navigate to **Messages** (`https://x.com/messages`)
 2. Press **F12** to open DevTools, then click the **Console** tab
-3. Copy the script from `src/sendDirectMessage.js`
+3. Copy the script from `browser/sendDirectMessage.js`
 4. Edit the `CONFIG` section with your target users and message
 5. Paste into the console and press Enter
 
@@ -37,7 +37,7 @@ date: "2026-03-30"
 
 ## Configuration
 
-### Browser Script (`src/sendDirectMessage.js`)
+### Browser Script (`browser/sendDirectMessage.js`)
 
 ```js
 const CONFIG = {
@@ -82,7 +82,7 @@ Press F12 (or Cmd+Option+J on Mac) to open the browser console.
 
 **Step 3 -- Configure your recipients**
 
-Edit the CONFIG in `src/sendDirectMessage.js`:
+Edit the CONFIG in `browser/sendDirectMessage.js`:
 
 ```js
 const CONFIG = {
@@ -201,7 +201,7 @@ await updateDMSettings(page, { allowDMsFrom: 'everyone' });
 
 ## Related Scripts
 
-- `src/groupDM.js` -- Create group DM conversations
-- `src/dmCalls.js` -- Start audio/video calls in DMs
-- `src/encryptedDM.js` -- Send encrypted DMs
+- `browser/groupDM.js` -- Create group DM conversations
+- `browser/dmCalls.js` -- Start audio/video calls in DMs
+- `browser/encryptedDM.js` -- Send encrypted DMs
 - `src/dmManager.js` -- Node.js DM management library (Puppeteer)

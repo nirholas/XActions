@@ -5,15 +5,15 @@
     "description": "Comprehensive health check for your X/Twitter account.",
     "category": "Analytics",
     "icon": "🏥",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "account-misc",
     "title": "Account Misc",
-    "description": "src/accountMisc.js",
+    "description": "browser/accountMisc.js",
     "category": "Other Tools",
     "icon": "⚡",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "account-settings",
@@ -34,10 +34,10 @@
   {
     "slug": "ad-campaign-manager",
     "title": "Ad Campaign Manager",
-    "description": "src/adCampaignManager.js",
+    "description": "browser/adCampaignManager.js",
     "category": "Other Tools",
     "icon": "⚡",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "add-to-list",
@@ -53,71 +53,71 @@
     "description": "Business Ads & Campaigns — by nichxbt",
     "category": "Business",
     "icon": "📢",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "advanced-creator",
     "title": "Advanced Creator",
-    "description": "src/advancedCreator.js",
+    "description": "browser/advancedCreator.js",
     "category": "Other Tools",
     "icon": "⚡",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "advanced-dm",
     "title": "Advanced DM",
-    "description": "src/advancedDM.js",
+    "description": "browser/advancedDM.js",
     "category": "Other Tools",
     "icon": "⚡",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "advanced-grok",
     "title": "Advanced Grok",
-    "description": "src/advancedGrok.js",
+    "description": "browser/advancedGrok.js",
     "category": "Other Tools",
     "icon": "⚡",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "advanced-lists",
     "title": "Advanced Lists",
-    "description": "src/advancedLists.js",
+    "description": "browser/advancedLists.js",
     "category": "Lists & Communities",
     "icon": "📝",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "advanced-notifications",
     "title": "Advanced Notifications",
-    "description": "src/advancedNotifications.js",
+    "description": "browser/advancedNotifications.js",
     "category": "Other Tools",
     "icon": "⚡",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "advanced-premium",
     "title": "Advanced Premium",
-    "description": "src/advancedPremium.js",
+    "description": "browser/advancedPremium.js",
     "category": "Other Tools",
     "icon": "⚡",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "advanced-settings",
     "title": "Advanced Settings",
-    "description": "src/advancedSettings.js",
+    "description": "browser/advancedSettings.js",
     "category": "Other Tools",
     "icon": "⚡",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "article-publisher",
-    "title": "Article Publisher - Create and manage long-form articles",
-    "description": "src/articlePublisher.js",
+    "title": "Article Publisher",
+    "description": "scripts/articlePublisher.js",
     "category": "Posting",
     "icon": "📰",
-    "sourceDir": "src"
+    "sourceDir": "scripts"
   },
   {
     "slug": "audience-demographics",
@@ -125,7 +125,7 @@
     "description": "Analyze your followers' demographics by scraping",
     "category": "Analytics",
     "icon": "📊",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "audience-overlap",
@@ -133,7 +133,7 @@
     "description": "Compare the follower lists of two X/Twitter",
     "category": "Analytics",
     "icon": "🔗",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "audit-console-errors",
@@ -149,7 +149,7 @@
     "description": "Audit Followers on X - by nichxbt",
     "category": "Follower Monitoring",
     "icon": "📊",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "auto-commenter",
@@ -197,7 +197,7 @@
     "description": "Auto Repost (Retweet) on X - by nichxbt",
     "category": "Engagement",
     "icon": "🔁",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "auto-plug-replies",
@@ -205,7 +205,7 @@
     "description": "Automatically reply to your own tweets that go",
     "category": "Engagement",
     "icon": "🔌",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "auto-reply",
@@ -213,7 +213,7 @@
     "description": "Automatically reply to tweets matching filters.",
     "category": "Engagement",
     "icon": "💬",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "backup-account",
@@ -221,7 +221,7 @@
     "description": "Backup Account Data on X - by nichxbt",
     "category": "Account Management",
     "icon": "💾",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "best-time-to-post",
@@ -229,7 +229,7 @@
     "description": "Best Time to Post on X - by nichxbt",
     "category": "Analytics",
     "icon": "⏰",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "blacklist",
@@ -245,7 +245,7 @@
     "description": "Block Bot Accounts on X - by nichxbt",
     "category": "Safety & Privacy",
     "icon": "🤖",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "block-by-keywords",
@@ -266,10 +266,10 @@
   {
     "slug": "block-list-manager",
     "title": "Block List Manager",
-    "description": "src/blockListManager.js",
+    "description": "browser/blockListManager.js",
     "category": "Lists & Communities",
     "icon": "📝",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "block-list-transfer",
@@ -289,11 +289,11 @@
   },
   {
     "slug": "bookmark-manager",
-    "title": "Bookmark Manager - Save",
-    "description": "src/bookmarkManager.js",
+    "title": "Bookmark Manager",
+    "description": "scripts/bookmarkManager.js",
     "category": "Content Tools",
     "icon": "📚",
-    "sourceDir": "src"
+    "sourceDir": "scripts"
   },
   {
     "slug": "bookmark-organizer",
@@ -301,7 +301,7 @@
     "description": "Bookmark Organizer on X - by nichxbt",
     "category": "Content Tools",
     "icon": "📂",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "scrape-bookmarks",
@@ -317,7 +317,7 @@
     "description": "Delete your tweets by age, keyword, or engagement threshold.",
     "category": "Content Tools",
     "icon": "🗑️",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "bulk-dm",
@@ -337,11 +337,11 @@
   },
   {
     "slug": "business-tools",
-    "title": "Business Tools - Ads",
-    "description": "src/businessTools.js",
+    "title": "Business Tools",
+    "description": "scripts/businessTools.js",
     "category": "Business",
     "icon": "💼",
-    "sourceDir": "src"
+    "sourceDir": "scripts"
   },
   {
     "slug": "clear-all-bookmarks",
@@ -349,7 +349,7 @@
     "description": "Remove all bookmarked posts. Tries the built-in",
     "category": "Content Tools",
     "icon": "🗑️",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "clear-all-likes",
@@ -365,7 +365,7 @@
     "description": "Remove all reposts/retweets from your profile.",
     "category": "Content Tools",
     "icon": "🗑️",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "clear-all-retweets",
@@ -378,10 +378,10 @@
   {
     "slug": "community-manager",
     "title": "Community Manager",
-    "description": "src/communityManager.js",
+    "description": "browser/communityManager.js",
     "category": "Other Tools",
     "icon": "⚡",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "community-notes",
@@ -389,7 +389,7 @@
     "description": "View and contribute to Community Notes on posts,",
     "category": "Other Tools",
     "icon": "⚡",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "competitor-analysis",
@@ -397,7 +397,7 @@
     "description": "Competitor Analysis on X - by nichxbt",
     "category": "Analytics",
     "icon": "🔍",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "content-calendar",
@@ -405,7 +405,7 @@
     "description": "Plan and visualize your posting schedule. Tracks",
     "category": "Posting",
     "icon": "📅",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "content-repurposer",
@@ -413,7 +413,7 @@
     "description": "Transform existing tweets into new content formats.",
     "category": "Content Tools",
     "icon": "♻️",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "continuous-monitor",
@@ -421,7 +421,7 @@
     "description": "ContinuousMonitor.js — Auto-refresh monitoring for followers/following changes",
     "category": "Follower Monitoring",
     "icon": "🔄",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "control-panel",
@@ -445,7 +445,7 @@
     "description": "Create a new X Community with name, description,",
     "category": "Lists & Communities",
     "icon": "🏘️",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "create-poll",
@@ -453,15 +453,15 @@
     "description": "Create Poll on X - by nichxbt",
     "category": "Posting",
     "icon": "📊",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "creator-studio",
-    "title": "Creator Studio - Analytics",
-    "description": "src/creatorStudio.js",
+    "title": "Creator Studio",
+    "description": "scripts/creatorStudio.js",
     "category": "Business",
     "icon": "🎨",
-    "sourceDir": "src"
+    "sourceDir": "scripts"
   },
   {
     "slug": "creator-subscriptions",
@@ -469,7 +469,7 @@
     "description": "Creator Subscriptions & Revenue Sharing — by nichxbt",
     "category": "Premium",
     "icon": "💰",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "customer-service",
@@ -480,12 +480,20 @@
     "sourceDir": "src/automation"
   },
   {
+    "slug": "algorithm-builder",
+    "title": "Cycle 1",
+    "description": "XActions Automation — Algorithm Builder",
+    "category": "Growth",
+    "icon": "🧠",
+    "sourceDir": "src/automation"
+  },
+  {
     "slug": "delegate-access",
     "title": "Delegate Access",
     "description": "Delegate Access — by nichxbt",
     "category": "Account Management",
     "icon": "🔑",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "delete-tweets",
@@ -501,15 +509,15 @@
     "description": "DetectUnfollowers.js — Find out who unfollowed you on X (Twitter)",
     "category": "Follower Monitoring",
     "icon": "🔍",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "discovery-explore",
-    "title": "Discovery & Explore - Search",
-    "description": "src/discoveryExplore.js",
+    "title": "Discovery Explore",
+    "description": "scripts/discoveryExplore.js",
     "category": "Discovery",
     "icon": "🔍",
-    "sourceDir": "src"
+    "sourceDir": "scripts"
   },
   {
     "slug": "dm-calls",
@@ -517,7 +525,7 @@
     "description": "Navigate to a DM conversation and initiate",
     "category": "Messaging",
     "icon": "📞",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "dm-exporter",
@@ -529,11 +537,11 @@
   },
   {
     "slug": "dm-manager",
-    "title": "DM Manager - Send",
-    "description": "src/dmManager.js",
+    "title": "DM Manager",
+    "description": "scripts/dmManager.js",
     "category": "Messaging",
     "icon": "✉️",
-    "sourceDir": "src"
+    "sourceDir": "scripts"
   },
   {
     "slug": "scrape-dms",
@@ -549,7 +557,7 @@
     "description": "Download Account Data from X - by nichxbt",
     "category": "Account Management",
     "icon": "📥",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "edit-post",
@@ -557,7 +565,7 @@
     "description": "Edit Post & Undo Post on X - by nichxbt",
     "category": "Posting",
     "icon": "✏️",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "edit-profile",
@@ -573,7 +581,7 @@
     "description": "Enable encrypted DM mode, send encrypted messages,",
     "category": "Messaging",
     "icon": "🔒",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "engage-profile",
@@ -589,7 +597,7 @@
     "description": "Engagement Analytics on X - by nichxbt",
     "category": "Analytics",
     "icon": "📈",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "engagement-booster",
@@ -597,7 +605,7 @@
     "description": "Systematically engage with tweets from target",
     "category": "Engagement",
     "icon": "🚀",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "engagement-leaderboard",
@@ -605,15 +613,15 @@
     "description": "Analyze who engages with your tweets the most.",
     "category": "Engagement",
     "icon": "🏆",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "engagement-manager",
-    "title": "Engagement Manager - Likes",
-    "description": "src/engagementManager.js",
+    "title": "Engagement Manager",
+    "description": "scripts/engagementManager.js",
     "category": "Engagement",
     "icon": "⚡",
-    "sourceDir": "src"
+    "sourceDir": "scripts"
   },
   {
     "slug": "export-to-csv",
@@ -645,7 +653,7 @@
     "description": "Follow/unfollow X Lists, pin lists to your",
     "category": "Growth",
     "icon": "📋",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "follow-account",
@@ -653,7 +661,7 @@
     "description": "Follow Accounts on X - by nichxbt",
     "category": "Growth",
     "icon": "➕",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "follow-back",
@@ -685,7 +693,7 @@
     "description": "Monitor and manage your follow/following ratio.",
     "category": "Unfollow Tools",
     "icon": "⚖️",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "follow-target-users",
@@ -701,15 +709,15 @@
     "description": "Track follower count over time, detect growth/loss",
     "category": "Follower Monitoring",
     "icon": "📈",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "follower-tools",
     "title": "Follower Tools",
-    "description": "src/followerTools.js",
+    "description": "browser/followerTools.js",
     "category": "Follower Monitoring",
     "icon": "👥",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "followers-growth-tracker",
@@ -737,11 +745,11 @@
   },
   {
     "slug": "grok-integration",
-    "title": "Grok Integration - Interact with Grok AI features",
-    "description": "src/grokIntegration.js",
+    "title": "Grok Integration",
+    "description": "scripts/grokIntegration.js",
     "category": "AI & Developer",
     "icon": "🧠",
-    "sourceDir": "src"
+    "sourceDir": "scripts"
   },
   {
     "slug": "group-dm",
@@ -749,7 +757,7 @@
     "description": "Create group DM conversations and send messages",
     "category": "Messaging",
     "icon": "👥",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "growth-suite",
@@ -765,7 +773,7 @@
     "description": "Hashtag Analytics on X - by nichxbt",
     "category": "Analytics",
     "icon": "#️⃣",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "scrape-hashtag",
@@ -781,7 +789,7 @@
     "description": "Start a new X Space with title, topic, and",
     "category": "Spaces & Live",
     "icon": "🎙️",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "interact-by-hashtag",
@@ -821,7 +829,7 @@
     "description": "Find and join live X Spaces by topic, keyword,",
     "category": "Spaces & Live",
     "icon": "🎙️",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "join-communities",
@@ -829,7 +837,7 @@
     "description": "Join Communities on X - by nichxbt",
     "category": "Lists & Communities",
     "icon": "🏘️",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "keyword-follow",
@@ -853,7 +861,7 @@
     "description": "Monitor any X/Twitter search for keyword mentions",
     "category": "Analytics",
     "icon": "🔑",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "leave-all-communities",
@@ -861,7 +869,7 @@
     "description": "Leave all X Communities you've joined. Navigates",
     "category": "Lists & Communities",
     "icon": "🚪",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "leave-community",
@@ -909,7 +917,7 @@
     "description": "Like Posts on X - by nichxbt",
     "category": "Engagement",
     "icon": "❤️",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "like-user-replies",
@@ -949,7 +957,7 @@
     "description": "Manage Lists on X - by nichxbt",
     "category": "Lists & Communities",
     "icon": "📝",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "scrape-list",
@@ -973,7 +981,7 @@
     "description": "Manage X Community members, roles, settings,",
     "category": "Lists & Communities",
     "icon": "🏘️",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "manage-lists",
@@ -989,7 +997,7 @@
     "description": "Manage Muted Words on X - by nichxbt",
     "category": "Safety & Privacy",
     "icon": "🔇",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "manage-notifications",
@@ -1013,7 +1021,7 @@
     "description": "Block multiple accounts by username list. Also",
     "category": "Safety & Privacy",
     "icon": "🚫",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "mass-unblock",
@@ -1021,7 +1029,7 @@
     "description": "Unblock all or selected users from your blocked",
     "category": "Safety & Privacy",
     "icon": "🔓",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "mass-unmute",
@@ -1029,7 +1037,7 @@
     "description": "Unmute all or selected users from your muted list.",
     "category": "Safety & Privacy",
     "icon": "🔊",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "scrape-media",
@@ -1042,10 +1050,10 @@
   {
     "slug": "media-studio",
     "title": "Media Studio",
-    "description": "src/mediaStudio.js",
+    "description": "browser/mediaStudio.js",
     "category": "Business",
     "icon": "🖼️",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "mention-users",
@@ -1053,7 +1061,7 @@
     "description": "Mention Users in Posts on X - by nichxbt",
     "category": "Engagement",
     "icon": "💬",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "monitor-account",
@@ -1061,7 +1069,7 @@
     "description": "MonitorAccount.js — Track follows/unfollows on ANY public X (Twitter) account",
     "category": "Follower Monitoring",
     "icon": "📊",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "multi-account",
@@ -1085,7 +1093,7 @@
     "description": "Mute Users by Keywords on X - by nichxbt",
     "category": "Safety & Privacy",
     "icon": "🔕",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "natural-flow",
@@ -1098,10 +1106,10 @@
   {
     "slug": "id-verification",
     "title": "Navigate to verification settings and start the ID verification flow",
-    "description": "src/idVerification.js",
+    "description": "browser/idVerification.js",
     "category": "Safety & Privacy",
     "icon": "🪪",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "new-followers-alert",
@@ -1109,15 +1117,15 @@
     "description": "NewFollowersAlert.js — Get notified when you gain new followers",
     "category": "Follower Monitoring",
     "icon": "🔔",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "notification-manager",
-    "title": "Notification Manager - Scrape",
-    "description": "src/notificationManager.js",
+    "title": "Notification Manager",
+    "description": "scripts/notificationManager.js",
     "category": "Analytics",
     "icon": "🔔",
-    "sourceDir": "src"
+    "sourceDir": "scripts"
   },
   {
     "slug": "scrape-notifications",
@@ -1125,6 +1133,14 @@
     "description": "",
     "category": "Scrapers",
     "icon": "🔔",
+    "sourceDir": "scripts"
+  },
+  {
+    "slug": "persona-engine",
+    "title": "Persona Engine",
+    "description": "scripts/personaEngine.js",
+    "category": "Growth",
+    "icon": "🎭",
     "sourceDir": "scripts"
   },
   {
@@ -1149,31 +1165,31 @@
     "description": "Pin/unpin tweets, auto-rotate pinned content,",
     "category": "Posting",
     "icon": "📌",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "poll-creator",
-    "title": "Poll Creator - Create and manage polls",
-    "description": "src/pollCreator.js",
+    "title": "Poll Creator",
+    "description": "scripts/pollCreator.js",
     "category": "Posting",
     "icon": "📊",
-    "sourceDir": "src"
+    "sourceDir": "scripts"
   },
   {
     "slug": "post-composer",
-    "title": "Post Composer - Full content creation automation",
-    "description": "src/postComposer.js",
+    "title": "Post Composer",
+    "description": "scripts/postComposer.js",
     "category": "Posting",
     "icon": "✏️",
-    "sourceDir": "src"
+    "sourceDir": "scripts"
   },
   {
     "slug": "post-interactions",
     "title": "Post Interactions",
-    "description": "src/postInteractions.js",
+    "description": "browser/postInteractions.js",
     "category": "Engagement",
     "icon": "💬",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "post-thread",
@@ -1181,7 +1197,7 @@
     "description": "Post Thread on X - by nichxbt",
     "category": "Posting",
     "icon": "🧵",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "post-tweet",
@@ -1205,23 +1221,23 @@
     "description": "Premium Gifting — by nichxbt",
     "category": "Premium",
     "icon": "🎁",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "premium-manager",
-    "title": "Premium Manager - Check and manage Premium subscription features",
-    "description": "src/premiumManager.js",
+    "title": "Premium Manager",
+    "description": "scripts/premiumManager.js",
     "category": "Premium",
     "icon": "⭐",
-    "sourceDir": "src"
+    "sourceDir": "scripts"
   },
   {
     "slug": "profile-manager",
-    "title": "Profile Manager - Automate profile updates and management",
-    "description": "src/profileManager.js",
+    "title": "Profile Manager",
+    "description": "scripts/profileManager.js",
     "category": "Account Management",
     "icon": "👤",
-    "sourceDir": "src"
+    "sourceDir": "scripts"
   },
   {
     "slug": "scrape-profile",
@@ -1261,7 +1277,7 @@
     "description": "QR Code Profile Sharing on X - by nichxbt",
     "category": "Account Management",
     "icon": "📱",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "quota-supervisor",
@@ -1293,7 +1309,7 @@
     "description": "Auto-retweet with quote using customizable",
     "category": "Engagement",
     "icon": "🔁",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "rate-limiter",
@@ -1317,7 +1333,7 @@
     "description": "Remove specific or all followers using the",
     "category": "Follower Monitoring",
     "icon": "🚫",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "scrape-replies",
@@ -1333,7 +1349,7 @@
     "description": "Report Spam Accounts on X - by nichxbt",
     "category": "Safety & Privacy",
     "icon": "⚠️",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "repost-post",
@@ -1341,7 +1357,7 @@
     "description": "Repost (Retweet) Posts on X - by nichxbt",
     "category": "Engagement",
     "icon": "🔁",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "reputation-audit",
@@ -1357,15 +1373,15 @@
     "description": "Save the current search query, list saved searches,",
     "category": "Discovery",
     "icon": "🔍",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "saved-search-manager",
     "title": "Saved Search Manager",
-    "description": "src/savedSearchManager.js",
+    "description": "browser/savedSearchManager.js",
     "category": "Other Tools",
     "icon": "⚡",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "schedule-post",
@@ -1381,7 +1397,7 @@
     "description": "Schedule Posts on X - by nichxbt",
     "category": "Posting",
     "icon": "⏰",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "scrape-analytics",
@@ -1413,7 +1429,7 @@
     "description": "Scrape Spaces (Audio/Video Broadcasts) on X - by nichxbt",
     "category": "Scrapers",
     "icon": "🎙️",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "scrape-user-likes",
@@ -1445,7 +1461,7 @@
     "description": "Send Direct Messages on X - by nichxbt",
     "category": "Messaging",
     "icon": "📬",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "session-logger",
@@ -1458,18 +1474,18 @@
   {
     "slug": "advanced-profile",
     "title": "Set birthday fields in the profile edit dialog",
-    "description": "src/advancedProfile.js",
+    "description": "browser/advancedProfile.js",
     "category": "Other Tools",
     "icon": "⚡",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "settings-manager",
-    "title": "Settings Manager - Account security",
-    "description": "src/settingsManager.js",
+    "title": "Settings Manager",
+    "description": "scripts/settingsManager.js",
     "category": "Safety & Privacy",
     "icon": "⚙️",
-    "sourceDir": "src"
+    "sourceDir": "scripts"
   },
   {
     "slug": "shadowban-checker",
@@ -1477,7 +1493,7 @@
     "description": "Check if your X/Twitter account is shadowbanned.",
     "category": "Analytics",
     "icon": "👻",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "share-embed",
@@ -1485,7 +1501,7 @@
     "description": "Share & Embed Posts on X - by nichxbt",
     "category": "Content Tools",
     "icon": "🔗",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "smart-unfollow",
@@ -1497,19 +1513,19 @@
   },
   {
     "slug": "spaces-manager",
-    "title": "Spaces Manager - Live audio/video",
-    "description": "src/spacesManager.js",
+    "title": "Spaces Manager",
+    "description": "scripts/spacesManager.js",
     "category": "Spaces & Live",
     "icon": "🎙️",
-    "sourceDir": "src"
+    "sourceDir": "scripts"
   },
   {
     "slug": "video-downloader-browser",
     "title": "Strategy 1",
-    "description": "src/videoDownloaderBrowser.js",
+    "description": "browser/videoDownloaderBrowser.js",
     "category": "Content Tools",
     "icon": "🎬",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "subscribe-premium",
@@ -1517,7 +1533,7 @@
     "description": "Subscribe to X Premium — by nichxbt",
     "category": "Account Management",
     "icon": "⭐",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "text-formatting",
@@ -1525,7 +1541,7 @@
     "description": "Text Formatting Helper for X - by nichxbt",
     "category": "Content Tools",
     "icon": "✏️",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "thought-leader-cultivator",
@@ -1541,7 +1557,7 @@
     "description": "Compose and publish Twitter/X threads from the",
     "category": "Posting",
     "icon": "🧵",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "thread-unroller",
@@ -1554,10 +1570,10 @@
   {
     "slug": "timeline-scraper",
     "title": "Timeline Scraper",
-    "description": "src/timelineScraper.js",
+    "description": "browser/timelineScraper.js",
     "category": "Other Tools",
     "icon": "⚡",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "timeline-viewer",
@@ -1565,7 +1581,7 @@
     "description": "Timeline Viewer — by nichxbt",
     "category": "Analytics",
     "icon": "📊",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "topic-manager",
@@ -1573,7 +1589,7 @@
     "description": "Browse, follow, and unfollow X Topics. Manage",
     "category": "Discovery",
     "icon": "🏷️",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "trending-monitor",
@@ -1589,7 +1605,7 @@
     "description": "Scrape and monitor X/Twitter trending topics in",
     "category": "Analytics",
     "icon": "📈",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "tweet-abtester",
@@ -1597,7 +1613,7 @@
     "description": "A/B test tweet performance. Post two variations",
     "category": "Other Tools",
     "icon": "⚡",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "tweet-performance",
@@ -1605,7 +1621,7 @@
     "description": "Compare the performance of your recent tweets",
     "category": "Analytics",
     "icon": "📊",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "tweet-price-correlation",
@@ -1621,7 +1637,7 @@
     "description": "Analyzes your historical tweet performance by",
     "category": "Analytics",
     "icon": "⏰",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "sentiment-analyzer",
@@ -1629,7 +1645,7 @@
     "description": "Analyze the sentiment of your recent tweets,",
     "category": "Analytics",
     "icon": "🧠",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "scrape-profile-posts",
@@ -1645,7 +1661,7 @@
     "description": "Unfollow every account you follow on X/Twitter.",
     "category": "Unfollow Tools",
     "icon": "👋",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "unfollowback",
@@ -1653,7 +1669,7 @@
     "description": "Unfollow accounts that do NOT follow you back.",
     "category": "Unfollow Tools",
     "icon": "🧹",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "unfollow-non-followers",
@@ -1669,7 +1685,7 @@
     "description": "Unfollow accounts that don't follow back, with",
     "category": "Other Tools",
     "icon": "⚡",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "unfollow-with-log",
@@ -1685,7 +1701,7 @@
     "description": "Unlike every post in your Likes tab. Supports",
     "category": "Content Tools",
     "icon": "💔",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "unlike-all",
@@ -1717,7 +1733,7 @@
     "description": "Update Profile on X - by nichxbt",
     "category": "Account Management",
     "icon": "✏️",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "update-bio",
@@ -1741,7 +1757,7 @@
     "description": "Navigate to the contact upload page on X/Twitter",
     "category": "Account Management",
     "icon": "📇",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "verified-only",
@@ -1749,7 +1765,7 @@
     "description": "Verified-Only Replies — by nichxbt",
     "category": "Safety & Privacy",
     "icon": "✅",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "video-captions",
@@ -1757,7 +1773,7 @@
     "description": "Video Captions Uploader on X - by nichxbt",
     "category": "Content Tools",
     "icon": "📝",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "view-analytics",
@@ -1765,7 +1781,7 @@
     "description": "View Analytics (Premium) — by nichxbt",
     "category": "Analytics",
     "icon": "📊",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "viral-tweet-detector",
@@ -1773,7 +1789,7 @@
     "description": "Scan any timeline and identify tweets going viral",
     "category": "Analytics",
     "icon": "🔥",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "viral-tweets-scraper",
@@ -1794,18 +1810,18 @@
   {
     "slug": "advanced-spaces",
     "title": "Wait for a DOM element to appear",
-    "description": "src/advancedSpaces.js",
+    "description": "browser/advancedSpaces.js",
     "category": "Other Tools",
     "icon": "⚡",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "post-advanced",
     "title": "Wait for an element to appear in the DOM",
-    "description": "src/postAdvanced.js",
+    "description": "browser/postAdvanced.js",
     "category": "Posting",
     "icon": "✏️",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "welcome-new-followers",
@@ -1813,7 +1829,7 @@
     "description": "Automatically send DM welcome messages to new",
     "category": "Follower Monitoring",
     "icon": "👋",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "whitelist",
@@ -1837,15 +1853,15 @@
     "description": "X Pro (TweetDeck) — by nichxbt",
     "category": "Discovery",
     "icon": "⚡",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "x-pro-manager",
     "title": "X Pro Manager",
-    "description": "src/xProManager.js",
+    "description": "browser/xProManager.js",
     "category": "Discovery",
     "icon": "⚡",
-    "sourceDir": "src"
+    "sourceDir": "browser"
   },
   {
     "slug": "video-downloader",
@@ -1880,14 +1896,6 @@
     "sourceDir": "scripts/twitter"
   },
   {
-    "slug": "algorithm-builder",
-    "title": "XActions Algorithm Builder",
-    "description": "",
-    "category": "Growth",
-    "icon": "🧠",
-    "sourceDir": "src"
-  },
-  {
     "slug": "xactions-command-center",
     "title": "XActions Command Center",
     "description": "One console script that opens a searchable menu of every XActions tool (scrape, analyze, grow, engage, clean up, and moderate) with per-tool options and one-click run.",
@@ -1902,14 +1910,6 @@
     "category": "Other Tools",
     "icon": "⚡",
     "sourceDir": "src/automation"
-  },
-  {
-    "slug": "persona-engine",
-    "title": "XActions Persona Engine",
-    "description": "",
-    "category": "Growth",
-    "icon": "🎭",
-    "sourceDir": "src"
   },
   {
     "slug": "rss-monitor",

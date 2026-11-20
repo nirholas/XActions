@@ -39,7 +39,7 @@ date: "2026-03-30"
 
 ## Configuration
 
-The affiliate features use a combination of `src/premiumManager.js` and `src/creatorSubscriptions.js`:
+The affiliate features use a combination of `src/premiumManager.js` and `browser/creatorSubscriptions.js`:
 
 ```javascript
 import { getTierFeatures, checkRevenueEligibility } from './src/premiumManager.js';
@@ -283,7 +283,7 @@ await browser.close();
 
 4. **Multiple revenue streams** -- Combine ad revenue, creator subscriptions, tips, and referral commissions for maximum earnings.
 
-5. **Track with analytics** -- Use `src/viewAnalytics.js` or `x.com/i/account_analytics` to monitor your impression count and engagement trends.
+5. **Track with analytics** -- Use `browser/viewAnalytics.js` or `x.com/i/account_analytics` to monitor your impression count and engagement trends.
 
 6. **Stripe setup** -- Complete Stripe onboarding early. It is required for all monetization features and can take a few days to verify.
 
@@ -305,11 +305,11 @@ await browser.close();
 
 | Feature | Script | Description |
 |---------|--------|-------------|
-| Creator Revenue | `src/creatorSubscriptions.js` | Subscription tiers and subscriber management |
+| Creator Revenue | `browser/creatorSubscriptions.js` | Subscription tiers and subscriber management |
 | Premium Manager | `src/premiumManager.js` | Tier features and revenue eligibility |
 | Creator Studio | `src/creatorStudio.js` | Analytics, revenue, and dashboard |
-| View Analytics | `src/viewAnalytics.js` | Track impressions and engagement |
-| Subscribe to Premium | `src/subscribePremium.js` | Get Premium for monetization |
+| View Analytics | `browser/viewAnalytics.js` | Track impressions and engagement |
+| Subscribe to Premium | `browser/subscribePremium.js` | Get Premium for monetization |
 
 ---
 

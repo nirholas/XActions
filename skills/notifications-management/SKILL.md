@@ -17,7 +17,7 @@ Browser console script for managing and filtering X/Twitter notifications.
 |------|------|-------------|
 | Filter and manage notifications | `src/notificationManager.js` | `x.com/notifications` |
 | Scrape notification data | `scripts/scrapeNotifications.js` | `x.com/notifications` |
-| Welcome new followers | `src/welcomeNewFollowers.js` | `x.com/USERNAME/followers` |
+| Welcome new followers | `browser/welcomeNewFollowers.js` | `x.com/USERNAME/followers` |
 
 ## Notification Manager
 
@@ -72,10 +72,10 @@ Standalone scraper that exports all visible notifications as structured JSON wit
 1. Run `src/notificationManager.js` to filter for mentions
 2. Identify high-value mentions (verified users, large accounts)
 3. Prioritize replies to mentions from users with 1000+ followers
-4. Use `src/engagementLeaderboard.js` to cross-reference top engagers
+4. Use `browser/engagementLeaderboard.js` to cross-reference top engagers
 
 ### Automated new follower pipeline
-1. Run `src/welcomeNewFollowers.js` to detect new followers
+1. Run `browser/welcomeNewFollowers.js` to detect new followers
 2. Review generated welcome message templates
 3. Customize messages per follower based on their bio/niche
 

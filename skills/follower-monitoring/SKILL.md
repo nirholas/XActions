@@ -15,14 +15,14 @@ Browser console scripts for tracking follower changes on X/Twitter. All scripts 
 
 | Goal | File | Navigate to |
 |------|------|-------------|
-| Detect who unfollowed you | `src/detectUnfollowers.js` | `x.com/USERNAME/followers` |
-| Monitor any public account | `src/monitorAccount.js` | `x.com/TARGET/followers` |
-| Continuous monitoring + alerts | `src/continuousMonitor.js` | `x.com/USERNAME/followers` |
-| New follower tracking + welcome | `src/newFollowersAlert.js` | `x.com/USERNAME/followers` |
-| Follower growth over time | `src/followerGrowthTracker.js` | `x.com/USERNAME/followers` |
-| Follower demographics | `src/audienceDemographics.js` | `x.com/USERNAME/followers` |
-| Audit follower quality | `src/auditFollowers.js` | `x.com/USERNAME/followers` |
-| Follow ratio management | `src/followRatioManager.js` | `x.com/USERNAME` |
+| Detect who unfollowed you | `browser/detectUnfollowers.js` | `x.com/USERNAME/followers` |
+| Monitor any public account | `browser/monitorAccount.js` | `x.com/TARGET/followers` |
+| Continuous monitoring + alerts | `browser/continuousMonitor.js` | `x.com/USERNAME/followers` |
+| New follower tracking + welcome | `browser/newFollowersAlert.js` | `x.com/USERNAME/followers` |
+| Follower growth over time | `browser/followerGrowthTracker.js` | `x.com/USERNAME/followers` |
+| Follower demographics | `browser/audienceDemographics.js` | `x.com/USERNAME/followers` |
+| Audit follower quality | `browser/auditFollowers.js` | `x.com/USERNAME/followers` |
+| Follow ratio management | `browser/followRatioManager.js` | `x.com/USERNAME` |
 
 ## How They Work
 
@@ -69,15 +69,15 @@ Navigate to profile page. Monitors follower/following ratio with letter grades. 
 
 ### Daily monitoring setup
 1. Open `x.com/USERNAME/followers` in a pinned tab
-2. Paste `src/continuousMonitor.js` — it auto-refreshes every 5 minutes
+2. Paste `browser/continuousMonitor.js` — it auto-refreshes every 5 minutes
 3. Enable browser notifications when prompted
 4. Check back periodically for alerts
 
 ### Weekly follower health check
-1. `src/followerGrowthTracker.js` -> `XActions.track()` to log this week
-2. `src/followRatioManager.js` -> `XActions.track()` for ratio snapshot
-3. `src/auditFollowers.js` to check for new bot followers
-4. `src/audienceDemographics.js` to verify audience quality
+1. `browser/followerGrowthTracker.js` -> `XActions.track()` to log this week
+2. `browser/followRatioManager.js` -> `XActions.track()` for ratio snapshot
+3. `browser/auditFollowers.js` to check for new bot followers
+4. `browser/audienceDemographics.js` to verify audience quality
 
 ### Resetting data
 ```javascript

@@ -4,7 +4,7 @@ Mute users who post specific keywords, and bulk-add words to your muted word lis
 
 ---
 
-## 🔇 Mute Users by Keywords (`src/muteByKeywords.js`)
+## 🔇 Mute Users by Keywords (`browser/muteByKeywords.js`)
 
 ### What It Does
 
@@ -17,7 +17,7 @@ Mute users who post specific keywords, and bulk-add words to your muted word lis
 
 1. Go to `x.com/home`
 2. Edit CONFIG with your keywords
-3. Open console (F12) and paste `src/muteByKeywords.js`
+3. Open console (F12) and paste `browser/muteByKeywords.js`
 
 ```javascript
 const CONFIG = {
@@ -29,7 +29,7 @@ const CONFIG = {
 
 ---
 
-## 📝 Manage Muted Words (`src/manageMutedWords.js`)
+## 📝 Manage Muted Words (`browser/manageMutedWords.js`)
 
 ### What It Does
 
@@ -41,7 +41,7 @@ const CONFIG = {
 
 1. Go to `x.com/settings/muted_keywords`
 2. Edit CONFIG with your words
-3. Open console (F12) and paste `src/manageMutedWords.js`
+3. Open console (F12) and paste `browser/manageMutedWords.js`
 
 ```javascript
 const CONFIG = {
@@ -56,9 +56,9 @@ const CONFIG = {
 
 ## 📁 Files
 
-- `src/muteByKeywords.js` — Mute users by content keywords
-- `src/manageMutedWords.js` — Bulk-add muted words
-- `src/massUnmute.js` — Unmute all users
+- `browser/muteByKeywords.js` — Mute users by content keywords
+- `browser/manageMutedWords.js` — Bulk-add muted words
+- `browser/massUnmute.js` — Unmute all users
 
 ## ⚠️ Notes
 

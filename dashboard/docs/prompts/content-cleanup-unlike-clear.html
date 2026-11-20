@@ -215,7 +215,7 @@
 <h1 id="tutorial-content-cleanup--unlike-all-clear-reposts-delete-tweets-with-claude">Tutorial: Content Cleanup — Unlike All, Clear Reposts, Delete Tweets with Claude</h1>
 <p>You are my X/Twitter content cleanup specialist. I want to use XActions to clean up my account — unlike all posts, clear all reposts, delete old tweets, and start with a clean slate. Help me systematically clean my public footprint.</p>
 <h2 id="context">Context</h2>
-<p>I&#39;m using XActions (<a target="_blank" rel="noopener noreferrer" href="https://github.com/nirholas/XActions">https://github.com/nirholas/XActions</a>), an open-source X/Twitter toolkit with content cleanup scripts: <code>src/unlikeAllPosts.js</code>, <code>src/clearAllReposts.js</code>, and more.</p>
+<p>I&#39;m using XActions (<a target="_blank" rel="noopener noreferrer" href="https://github.com/nirholas/XActions">https://github.com/nirholas/XActions</a>), an open-source X/Twitter toolkit with content cleanup scripts: <code>browser/unlikeAllPosts.js</code>, <code>browser/clearAllReposts.js</code>, and more.</p>
 <h2 id="what-i-need-you-to-do">What I Need You To Do</h2>
 <h3 id="part-1-assess-the-damage">Part 1: Assess the Damage</h3>
 <p>Before cleaning, let me understand what&#39;s on my account:</p>
@@ -243,7 +243,7 @@
 </li>
 </ol>
 <h3 id="part-2-unlike-all-posts">Part 2: Unlike All Posts</h3>
-<p>Using <code>src/unlikeAllPosts.js</code>:</p>
+<p>Using <code>browser/unlikeAllPosts.js</code>:</p>
 <ol>
 <li><p><strong>Navigate to your Likes page:</strong> <code>x.com/YOUR_USERNAME/likes</code></p>
 </li>
@@ -283,7 +283,7 @@
 </li>
 </ol>
 <h3 id="part-3-clear-all-reposts">Part 3: Clear All Reposts</h3>
-<p>Using <code>src/clearAllReposts.js</code>:</p>
+<p>Using <code>browser/clearAllReposts.js</code>:</p>
 <ol>
 <li><p><strong>Navigate to your profile:</strong> <code>x.com/YOUR_USERNAME</code></p>
 </li>
@@ -360,7 +360,7 @@
 <p>As part of a total cleanup:</p>
 <ol>
 <li><strong>Export bookmarks first:</strong> <code>x_get_bookmarks</code></li>
-<li><strong>Then clear:</strong> <code>x_clear_bookmarks</code> or <code>src/clearAllBookmarks.js</code></li>
+<li><strong>Then clear:</strong> <code>x_clear_bookmarks</code> or <code>browser/clearAllBookmarks.js</code></li>
 <li><strong>Start fresh</strong> with a curated bookmark system</li>
 </ol>
 <h3 id="part-6-full-account-reset-workflow">Part 6: Full Account Reset Workflow</h3>

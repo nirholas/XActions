@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Post Composer - Full content creation automation — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="src/postComposer.js">
+  <title>Post Composer — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="scripts/postComposer.js">
   <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, post, composer, posting">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Post Composer - Full content creation automation — XActions">
-  <meta property="og:description" content="src/postComposer.js">
+  <meta property="og:title" content="Post Composer — XActions">
+  <meta property="og:description" content="scripts/postComposer.js">
   <meta property="og:url" content="https://xactions.app/scripts/post-composer">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-image.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Post Composer - Full content creation automation — XActions">
-  <meta name="twitter:description" content="src/postComposer.js">
+  <meta name="twitter:title" content="Post Composer — XActions">
+  <meta name="twitter:description" content="scripts/postComposer.js">
 
   <link rel="canonical" href="https://xactions.app/scripts/post-composer">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
@@ -28,8 +28,8 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Post Composer - Full content creation automation — Free X/Twitter Script | XActions",
-    "description": "src/postComposer.js",
+    "headline": "Post Composer — Free X/Twitter Script | XActions",
+    "description": "scripts/postComposer.js",
     "url": "https://xactions.app/scripts/post-composer",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -47,7 +47,7 @@
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
       { "@type": "ListItem", "position": 3, "name": "Posting", "item": "https://xactions.app/scripts#posting" },
-      { "@type": "ListItem", "position": 4, "name": "Post Composer - Full content creation automation", "item": "https://xactions.app/scripts/post-composer" }
+      { "@type": "ListItem", "position": 4, "name": "Post Composer", "item": "https://xactions.app/scripts/post-composer" }
     ]
   }
   </script>
@@ -112,24 +112,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>✏️ Post Composer - Full content creation automation</h1>
+        <h1>✏️ Post Composer</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#posting">Posting</a> › Post Composer - Full content creation automation
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#posting">Posting</a> › Post Composer
         </div>
       </header>
 
       <article class="article">
         <span class="cat-badge">Posting</span>
-        <span class="source-badge">src</span>
+        <span class="source-badge">scripts</span>
 
         <div class="meta-row">
           
           
-          <span>377 lines</span>
+          <span>161 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>src/postComposer.js</p>
+        <p>scripts/postComposer.js</p>
 
         
 
@@ -152,381 +152,165 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// src/postComposer.js
-// Post creation, threads, polls, scheduling, articles for X/Twitter
+// scripts/postComposer.js
+// Browser console script to compose and post tweets, threads, and polls
+// Paste in DevTools console on x.com
 // by nichxbt
 
-/**
- * Post Composer - Full content creation automation
- * 
- * Features:
- * - Post tweets (text + media)
- * - Create multi-tweet threads
- * - Create polls with options (+ image polls 2026)
- * - Schedule posts (Premium)
- * - Quote posts and reposts
- * - Edit posts (Premium, 1hr window)
- * - Delete posts
- */
+(() =&gt; {
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
 
-const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+  // =============================================
+  // CONFIGURE YOUR POST HERE
+  // =============================================
+  const MODE = 'tweet'; // 'tweet', 'thread', or 'poll'
 
-// ============================================================================
-// Selectors
-// ============================================================================
+  // For single tweet
+  const TWEET_TEXT = 'Hello from XActions! 🚀';
 
-const SELECTORS = {
-  composeButton: 'a[data-testid=&quot;SideNav_NewTweet_Button&quot;]',
-  tweetTextarea: '[data-testid=&quot;tweetTextarea_0&quot;]',
-  tweetButton: '[data-testid=&quot;tweetButton&quot;]',
-  mediaInput: '[data-testid=&quot;fileInput&quot;]',
-  addPoll: '[aria-label=&quot;Add poll&quot;]',
-  pollOption1: '[data-testid=&quot;pollOption_0&quot;]',
-  pollOption2: '[data-testid=&quot;pollOption_1&quot;]',
-  pollOption3: '[data-testid=&quot;pollOption_2&quot;]',
-  pollOption4: '[data-testid=&quot;pollOption_3&quot;]',
-  addPollOption: '[data-testid=&quot;addPollOption&quot;]',
-  pollDuration: '[data-testid=&quot;pollDuration&quot;]',
-  scheduleButton: '[data-testid=&quot;scheduleOption&quot;]',
-  scheduleDateInput: '[data-testid=&quot;scheduleDateInput&quot;]',
-  scheduleTimeInput: '[data-testid=&quot;scheduleTimeInput&quot;]',
-  scheduleConfirm: '[data-testid=&quot;scheduleConfirm&quot;]',
-  addThread: '[data-testid=&quot;addButton&quot;]',
-  gifButton: '[aria-label=&quot;Add a GIF&quot;]',
-  emojiButton: '[aria-label=&quot;Add emoji&quot;]',
-  altTextInput: '[data-testid=&quot;altTextInput&quot;]',
-  replyRestriction: '[data-testid=&quot;replyRestriction&quot;]',
-  editButton: '[data-testid=&quot;editTweet&quot;]',
-  deleteButton: '[data-testid=&quot;deleteTweet&quot;]',
-  confirmDelete: '[data-testid=&quot;confirmationSheetConfirm&quot;]',
-  quoteTweet: '[data-testid=&quot;quoteTweet&quot;]',
-  retweetButton: '[data-testid=&quot;retweet&quot;]',
-  retweetConfirm: '[data-testid=&quot;retweetConfirm&quot;]',
-  tweetArticle: 'article[data-testid=&quot;tweet&quot;]',
-};
-
-// ============================================================================
-// Posting
-// ============================================================================
-
-/**
- * Post a tweet
- * @param {import('puppeteer').Page} page
- * @param {string} text - Tweet text
- * @param {Object} options
- * @returns {Promise&lt;Object&gt;} Post result
- */
-export async function postTweet(page, text, options = {}) {
-  const { media = null, altText = null, replyTo = null } = options;
-
-  if (replyTo) {
-    await page.goto(replyTo, { waitUntil: 'networkidle2' });
-    await sleep(2000);
-    await page.click('[data-testid=&quot;reply&quot;]');
-    await sleep(1000);
-  } else {
-    await page.goto('https://x.com/compose/tweet', { waitUntil: 'networkidle2' });
-    await sleep(2000);
-  }
-
-  // Type text
-  await page.click(SELECTORS.tweetTextarea);
-  await page.keyboard.type(text, { delay: 30 });
-  await sleep(500);
-
-  // Add media if provided
-  if (media) {
-    const fileInput = await page.$(SELECTORS.mediaInput);
-    if (fileInput) {
-      await fileInput.uploadFile(media);
-      await sleep(2000);
-
-      // Add alt text if provided
-      if (altText) {
-        try {
-          await page.click(SELECTORS.altTextInput);
-          await page.keyboard.type(altText);
-          await sleep(500);
-        } catch (e) {
-          console.log('⚠️ Alt text input not found');
-        }
-      }
-    }
-  }
-
-  // Post
-  await page.click(SELECTORS.tweetButton);
-  await sleep(3000);
-
-  return {
-    success: true,
-    text: text.substring(0, 100),
-    hasMedia: !!media,
-    timestamp: new Date().toISOString(),
-  };
-}
-
-/**
- * Post a thread (multiple linked tweets)
- * @param {import('puppeteer').Page} page
- * @param {Array&lt;string|Object&gt;} tweets - Array of tweet texts or { text, media } objects
- * @returns {Promise&lt;Object&gt;} Thread result
- */
-export async function postThread(page, tweets) {
-  await page.goto('https://x.com/compose/tweet', { waitUntil: 'networkidle2' });
-  await sleep(2000);
-
-  const results = [];
-
-  for (let i = 0; i &lt; tweets.length; i++) {
-    const tweet = typeof tweets[i] === 'string' ? { text: tweets[i] } : tweets[i];
-
-    if (i &gt; 0) {
-      // Add new tweet to thread
-      await page.click(SELECTORS.addThread);
-      await sleep(1000);
-    }
-
-    // Type text in the current textarea
-    const textareaSelector = `[data-testid=&quot;tweetTextarea_${i}&quot;]`;
-    try {
-      await page.click(textareaSelector);
-    } catch {
-      await page.click(SELECTORS.tweetTextarea);
-    }
-    await page.keyboard.type(tweet.text, { delay: 20 });
-    await sleep(500);
-
-    // Add media if present
-    if (tweet.media) {
-      const fileInput = await page.$(SELECTORS.mediaInput);
-      if (fileInput) {
-        await fileInput.uploadFile(tweet.media);
-        await sleep(2000);
-      }
-    }
-
-    results.push({ index: i + 1, text: tweet.text.substring(0, 50) });
-  }
-
-  // Post entire thread
-  await page.click(SELECTORS.tweetButton);
-  await sleep(3000);
-
-  return {
-    success: true,
-    tweetCount: tweets.length,
-    tweets: results,
-    timestamp: new Date().toISOString(),
-  };
-}
-
-/**
- * Create a poll
- * @param {import('puppeteer').Page} page
- * @param {string} question - Poll question
- * @param {Array&lt;string&gt;} choices - 2-4 poll options
- * @param {Object} options
- * @returns {Promise&lt;Object&gt;} Poll result
- */
-export async function createPoll(page, question, choices, options = {}) {
-  const { duration = '1d' } = options;
-
-  if (choices.length &lt; 2 || choices.length &gt; 4) {
-    throw new Error('Polls require 2-4 choices');
-  }
-
-  await page.goto('https://x.com/compose/tweet', { waitUntil: 'networkidle2' });
-  await sleep(2000);
-
-  // Type question
-  await page.click(SELECTORS.tweetTextarea);
-  await page.keyboard.type(question, { delay: 30 });
-  await sleep(500);
-
-  // Open poll interface
-  await page.click(SELECTORS.addPoll);
-  await sleep(1500);
-
-  // Fill in choices
-  const choiceSelectors = [
-    SELECTORS.pollOption1,
-    SELECTORS.pollOption2,
-    SELECTORS.pollOption3,
-    SELECTORS.pollOption4,
+  // For thread
+  const THREAD_TWEETS = [
+    '🧵 Thread: Why automation matters (1/3)',
+    'Automation saves hours of manual work and lets you focus on what matters — creating great content. (2/3)',
+    'Try XActions for free at github.com/nirholas/XActions ⚡ (3/3)',
   ];
 
-  for (let i = 0; i &lt; choices.length; i++) {
-    if (i &gt;= 2) {
-      // Need to add extra options for 3rd and 4th
-      try {
-        await page.click(SELECTORS.addPollOption);
-        await sleep(500);
-      } catch (e) {
-        console.log(`⚠️ Could not add poll option ${i + 1}`);
-      }
+  // For poll
+  const POLL_QUESTION = 'What is your favorite programming language?';
+  const POLL_OPTIONS = ['JavaScript', 'Python', 'TypeScript', 'Rust'];
+  // =============================================
+
+  const SELECTORS = {
+    tweetTextarea: '[data-testid=&quot;tweetTextarea_0&quot;]',
+    tweetButton: '[data-testid=&quot;tweetButton&quot;]',
+    addThread: '[data-testid=&quot;addButton&quot;]',
+    addPoll: '[aria-label=&quot;Add poll&quot;]',
+    pollOption: (i) =&gt; `[data-testid=&quot;pollOption_${i}&quot;]`,
+    addPollOption: '[data-testid=&quot;addPollOption&quot;]',
+  };
+
+  const typeInTextarea = async (selector, text) =&gt; {
+    const el = document.querySelector(selector);
+    if (!el) return false;
+    el.focus();
+    await sleep(200);
+
+    // Simulate typing for React
+    for (const char of text) {
+      el.dispatchEvent(new InputEvent('beforeinput', { data: char, inputType: 'insertText', bubbles: true }));
+      document.execCommand('insertText', false, char);
+      await sleep(10);
     }
-    await page.click(choiceSelectors[i]);
-    await page.keyboard.type(choices[i], { delay: 20 });
-    await sleep(300);
-  }
-
-  // Post poll
-  await page.click(SELECTORS.tweetButton);
-  await sleep(3000);
-
-  return {
-    success: true,
-    question,
-    choices,
-    duration,
-    timestamp: new Date().toISOString(),
+    return true;
   };
-}
 
-/**
- * Schedule a post for later (Premium required)
- * @param {import('puppeteer').Page} page
- * @param {string} text - Tweet text
- * @param {Date|string} scheduledTime - When to post
- * @returns {Promise&lt;Object&gt;} Schedule result
- */
-export async function schedulePost(page, text, scheduledTime) {
-  await page.goto('https://x.com/compose/tweet', { waitUntil: 'networkidle2' });
-  await sleep(2000);
+  const postTweet = async () =&gt; {
+    console.log('📝 Posting tweet...');
 
-  // Type text
-  await page.click(SELECTORS.tweetTextarea);
-  await page.keyboard.type(text, { delay: 30 });
-  await sleep(500);
+    // Navigate to compose if not already there
+    if (!document.querySelector(SELECTORS.tweetTextarea)) {
+      document.querySelector('a[data-testid=&quot;SideNav_NewTweet_Button&quot;]')?.click();
+      await sleep(2000);
+    }
 
-  // Open schedule dialog
-  await page.click(SELECTORS.scheduleButton);
-  await sleep(1500);
-
-  // Set date and time
-  const date = new Date(scheduledTime);
-  const dateStr = date.toISOString().split('T')[0];
-  const timeStr = date.toTimeString().split(' ')[0].substring(0, 5);
-
-  try {
-    await page.click(SELECTORS.scheduleDateInput);
-    await page.keyboard.type(dateStr);
+    await typeInTextarea(SELECTORS.tweetTextarea, TWEET_TEXT);
     await sleep(500);
 
-    await page.click(SELECTORS.scheduleTimeInput);
-    await page.keyboard.type(timeStr);
+    document.querySelector(SELECTORS.tweetButton)?.click();
+    await sleep(3000);
+
+    console.log('✅ Tweet posted!');
+  };
+
+  const postThread = async () =&gt; {
+    console.log(`🧵 Posting thread (${THREAD_TWEETS.length} tweets)...`);
+
+    // Navigate to compose
+    if (!document.querySelector(SELECTORS.tweetTextarea)) {
+      document.querySelector('a[data-testid=&quot;SideNav_NewTweet_Button&quot;]')?.click();
+      await sleep(2000);
+    }
+
+    for (let i = 0; i &lt; THREAD_TWEETS.length; i++) {
+      if (i &gt; 0) {
+        document.querySelector(SELECTORS.addThread)?.click();
+        await sleep(1000);
+      }
+
+      const textareaSel = `[data-testid=&quot;tweetTextarea_${i}&quot;]`;
+      const textarea = document.querySelector(textareaSel) || document.querySelector(SELECTORS.tweetTextarea);
+      if (textarea) {
+        textarea.focus();
+        await sleep(200);
+        for (const char of THREAD_TWEETS[i]) {
+          document.execCommand('insertText', false, char);
+          await sleep(5);
+        }
+      }
+      await sleep(500);
+      console.log(`  ✅ Tweet ${i + 1}/${THREAD_TWEETS.length} composed`);
+    }
+
+    document.querySelector(SELECTORS.tweetButton)?.click();
+    await sleep(3000);
+
+    console.log('🎉 Thread posted!');
+  };
+
+  const postPoll = async () =&gt; {
+    console.log('📊 Creating poll...');
+
+    if (!document.querySelector(SELECTORS.tweetTextarea)) {
+      document.querySelector('a[data-testid=&quot;SideNav_NewTweet_Button&quot;]')?.click();
+      await sleep(2000);
+    }
+
+    // Type question
+    await typeInTextarea(SELECTORS.tweetTextarea, POLL_QUESTION);
     await sleep(500);
-  } catch (e) {
-    console.log('⚠️ Schedule input not available — Premium required');
-    return { success: false, error: 'Schedule requires Premium' };
-  }
 
-  // Confirm schedule
-  await page.click(SELECTORS.scheduleConfirm);
-  await sleep(2000);
+    // Open poll
+    document.querySelector(SELECTORS.addPoll)?.click();
+    await sleep(1500);
 
-  return {
-    success: true,
-    text: text.substring(0, 100),
-    scheduledFor: date.toISOString(),
-    timestamp: new Date().toISOString(),
+    // Fill options
+    for (let i = 0; i &lt; POLL_OPTIONS.length; i++) {
+      if (i &gt;= 2) {
+        document.querySelector(SELECTORS.addPollOption)?.click();
+        await sleep(500);
+      }
+
+      const optEl = document.querySelector(SELECTORS.pollOption(i));
+      if (optEl) {
+        optEl.focus();
+        await sleep(200);
+        for (const char of POLL_OPTIONS[i]) {
+          document.execCommand('insertText', false, char);
+          await sleep(10);
+        }
+      }
+      await sleep(300);
+    }
+
+    document.querySelector(SELECTORS.tweetButton)?.click();
+    await sleep(3000);
+
+    console.log('✅ Poll posted!');
   };
-}
 
-/**
- * Quote a post
- * @param {import('puppeteer').Page} page
- * @param {string} postUrl - URL of the post to quote
- * @param {string} commentary - Your commentary
- * @returns {Promise&lt;Object&gt;}
- */
-export async function quotePost(page, postUrl, commentary) {
-  await page.goto(postUrl, { waitUntil: 'networkidle2' });
-  await sleep(2000);
+  const run = async () =&gt; {
+    console.log('⚡ XActions Post Composer');
+    console.log('========================');
 
-  // Click retweet button to open menu
-  await page.click(SELECTORS.retweetButton);
-  await sleep(1000);
-
-  // Click &quot;Quote Tweet&quot;
-  await page.click(SELECTORS.quoteTweet);
-  await sleep(1500);
-
-  // Type commentary
-  await page.click(SELECTORS.tweetTextarea);
-  await page.keyboard.type(commentary, { delay: 30 });
-  await sleep(500);
-
-  // Post
-  await page.click(SELECTORS.tweetButton);
-  await sleep(3000);
-
-  return {
-    success: true,
-    quotedUrl: postUrl,
-    commentary: commentary.substring(0, 100),
-    timestamp: new Date().toISOString(),
+    switch (MODE) {
+      case 'thread': return postThread();
+      case 'poll': return postPoll();
+      default: return postTweet();
+    }
   };
-}
 
-/**
- * Repost/retweet a post
- * @param {import('puppeteer').Page} page
- * @param {string} postUrl
- * @returns {Promise&lt;Object&gt;}
- */
-export async function repost(page, postUrl) {
-  await page.goto(postUrl, { waitUntil: 'networkidle2' });
-  await sleep(2000);
-
-  await page.click(SELECTORS.retweetButton);
-  await sleep(1000);
-  await page.click(SELECTORS.retweetConfirm);
-  await sleep(2000);
-
-  return {
-    success: true,
-    repostedUrl: postUrl,
-    timestamp: new Date().toISOString(),
-  };
-}
-
-/**
- * Delete a post
- * @param {import('puppeteer').Page} page
- * @param {string} postUrl
- * @returns {Promise&lt;Object&gt;}
- */
-export async function deletePost(page, postUrl) {
-  await page.goto(postUrl, { waitUntil: 'networkidle2' });
-  await sleep(2000);
-
-  // Open more menu and click delete
-  await page.click('[data-testid=&quot;caret&quot;]');
-  await sleep(1000);
-  await page.click(SELECTORS.deleteButton);
-  await sleep(1000);
-  await page.click(SELECTORS.confirmDelete);
-  await sleep(2000);
-
-  return {
-    success: true,
-    deletedUrl: postUrl,
-    timestamp: new Date().toISOString(),
-  };
-}
-
-export default {
-  postTweet,
-  postThread,
-  createPoll,
-  schedulePost,
-  quotePost,
-  repost,
-  deletePost,
-  SELECTORS,
-};
+  run();
+})();
 </code></pre>
           </div>
         </section>
@@ -542,13 +326,13 @@ export default {
     <aside class="sidebar-right">
       <div class="sidebar-card">
         <h3>✏️ Posting</h3>
-        <a href="/scripts/article-publisher">📰 Article Publisher - Create and manage long-form articles</a>
+        <a href="/scripts/article-publisher">📰 Article Publisher</a>
 <a href="/scripts/content-calendar">📅 Content Calendar &amp; Tweet Scheduler</a>
 <a href="/scripts/create-poll">📊 Create Poll</a>
 <a href="/scripts/edit-post">✏️ Edit Post</a>
 <a href="/scripts/pin-tweet">📌 Pin Tweet - XActions</a>
 <a href="/scripts/pin-tweet-manager">📌 Pin Tweet Manager</a>
-<a href="/scripts/poll-creator">📊 Poll Creator - Create and manage polls</a>
+<a href="/scripts/poll-creator">📊 Poll Creator</a>
 <a href="/scripts/post-thread">🧵 Post Thread</a>
 <a href="/scripts/post-tweet">✍️ Post Tweet - XActions</a>
 <a href="/scripts/publish-article">📰 Publish Article</a>

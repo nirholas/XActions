@@ -17,13 +17,13 @@
 
 | Script | Requires core.js | Purpose |
 |--------|-----------------|---------|
-| `src/unfollowEveryone.js` | No | Unfollow every account you follow |
-| `src/unfollowback.js` | No | Unfollow only non-followers |
+| `browser/unfollowEveryone.js` | No | Unfollow every account you follow |
+| `browser/unfollowback.js` | No | Unfollow only non-followers |
 | `src/automation/smartUnfollow.js` | Yes | Time-based unfollow (integrates with keywordFollow) |
 
 ## Configuration
 
-### src/unfollowEveryone.js
+### browser/unfollowEveryone.js
 
 ```js
 const CONFIG = {
@@ -44,7 +44,7 @@ const CONFIG = {
 };
 ```
 
-### src/unfollowback.js
+### browser/unfollowback.js
 
 ```js
 const CONFIG = {
@@ -90,7 +90,7 @@ const CONFIG = {
 };
 ```
 
-**Step 3:** Paste `src/unfollowEveryone.js`. It scrolls through your following list and unfollows each account:
+**Step 3:** Paste `browser/unfollowEveryone.js`. It scrolls through your following list and unfollows each account:
 
 ```
 UNFOLLOW EVERYONE
@@ -129,7 +129,7 @@ const CONFIG = {
 };
 ```
 
-**Step 3:** Paste `src/unfollowback.js`. The script checks each user for the "Follows you" badge:
+**Step 3:** Paste `browser/unfollowback.js`. The script checks each user for the "Follows you" badge:
 
 ```
 UNFOLLOW NON-FOLLOWERS
@@ -225,7 +225,7 @@ window.stopSmartUnfollow();
 
 ## Related Scripts
 
-- `src/followAccount.js` -- Follow specific accounts
+- `browser/followAccount.js` -- Follow specific accounts
 - `src/automation/keywordFollow.js` -- Keyword-based follow
 - `src/automation/followTargetUsers.js` -- Follow followers of target accounts
-- `src/detectUnfollowers.js` -- Detect who unfollowed you
+- `browser/detectUnfollowers.js` -- Detect who unfollowed you

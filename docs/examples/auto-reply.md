@@ -39,7 +39,7 @@ This script provides the following capabilities:
 **Steps:**
 1. Go to `x.com/search or timeline`
 2. Open browser console (`F12` → Console tab)
-3. Copy and paste the script from [`src/autoReply.js`](https://github.com/nirholas/XActions/blob/main/src/autoReply.js)
+3. Copy and paste the script from [`browser/autoReply.js`](https://github.com/nirholas/XActions/blob/main/browser/autoReply.js)
 4. Press Enter to run
 
 ```javascript
@@ -309,7 +309,7 @@ Open your browser and go to `x.com/search or timeline`. Make sure you're logged 
 
 ### Step 3: Paste the script
 
-Copy the entire script from [`src/autoReply.js`](https://github.com/nirholas/XActions/blob/main/src/autoReply.js) and paste it into the console.
+Copy the entire script from [`browser/autoReply.js`](https://github.com/nirholas/XActions/blob/main/browser/autoReply.js) and paste it into the console.
 
 ### Step 4: Customize the CONFIG (optional)
 
@@ -368,7 +368,7 @@ See the [MCP Setup Guide](../mcp-setup.md) for integration with Claude Desktop, 
 
 | File | Description |
 |------|-------------|
-| [`src/autoReply.js`](https://github.com/nirholas/XActions/blob/main/src/autoReply.js) | Main script |
+| [`browser/autoReply.js`](https://github.com/nirholas/XActions/blob/main/browser/autoReply.js) | Main script |
 
 ---
 

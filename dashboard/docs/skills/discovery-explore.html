@@ -251,7 +251,7 @@
 </thead>
 <tbody><tr>
 <td>Monitor trending topics</td>
-<td><code>src/trendingTopicMonitor.js</code></td>
+<td><code>browser/trendingTopicMonitor.js</code></td>
 <td><code>x.com/explore/tabs/trending</code></td>
 </tr>
 <tr>
@@ -266,12 +266,12 @@
 </tr>
 <tr>
 <td>Find viral tweets</td>
-<td><code>src/viralTweetDetector.js</code></td>
+<td><code>browser/viralTweetDetector.js</code></td>
 <td>Any profile</td>
 </tr>
 <tr>
 <td>Keyword monitoring</td>
-<td><code>src/keywordMonitor.js</code></td>
+<td><code>browser/keywordMonitor.js</code></td>
 <td>Any page</td>
 </tr>
 <tr>
@@ -302,7 +302,7 @@
 </tr>
 </tbody></table>
 <h2 id="trending-topic-monitor">Trending Topic Monitor</h2>
-<p><strong>File:</strong> <code>src/trendingTopicMonitor.js</code></p>
+<p><strong>File:</strong> <code>browser/trendingTopicMonitor.js</code></p>
 <p>Real-time trending topic scraper with niche classification.</p>
 <h3 id="controls">Controls</h3>
 <ul>
@@ -320,7 +320,7 @@
 <li>Alerts on niche-relevant trends</li>
 </ul>
 <h2 id="keyword-monitor">Keyword Monitor</h2>
-<p><strong>File:</strong> <code>src/keywordMonitor.js</code></p>
+<p><strong>File:</strong> <code>browser/keywordMonitor.js</code></p>
 <p>Monitors X for mentions of specific keywords with sentiment classification.</p>
 <h3 id="controls-1">Controls</h3>
 <ul>
@@ -334,24 +334,24 @@
 <h2 id="strategy-guide">Strategy Guide</h2>
 <h3 id="trend-jacking-workflow">Trend-jacking workflow</h3>
 <ol>
-<li>Run <code>src/trendingTopicMonitor.js</code> -&gt; <code>XActions.forNiche(&#39;your_niche&#39;)</code></li>
+<li>Run <code>browser/trendingTopicMonitor.js</code> -&gt; <code>XActions.forNiche(&#39;your_niche&#39;)</code></li>
 <li>Identify relevant trends with momentum</li>
-<li>Craft timely content using <code>src/threadComposer.js</code> or <code>src/contentRepurposer.js</code></li>
+<li>Craft timely content using <code>browser/threadComposer.js</code> or <code>browser/contentRepurposer.js</code></li>
 <li>Post within the first 2 hours of trend emergence for maximum visibility</li>
-<li>Track performance with <code>src/tweetPerformance.js</code></li>
+<li>Track performance with <code>browser/tweetPerformance.js</code></li>
 </ol>
 <h3 id="content-ideation-from-search">Content ideation from search</h3>
 <ol>
 <li>Use <code>scripts/scrapeSearch.js</code> or <code>x_search_tweets</code> for niche keywords</li>
 <li>Analyze top results for content gaps</li>
-<li>Use <code>src/viralTweetDetector.js</code> on popular accounts in your niche</li>
-<li>Repurpose successful formats with <code>src/contentRepurposer.js</code></li>
+<li>Use <code>browser/viralTweetDetector.js</code> on popular accounts in your niche</li>
+<li>Repurpose successful formats with <code>browser/contentRepurposer.js</code></li>
 </ol>
 <h3 id="building-a-discovery-routine">Building a discovery routine</h3>
 <ol>
-<li>Daily: <code>src/trendingTopicMonitor.js</code> -&gt; <code>XActions.track()</code> for trend log</li>
+<li>Daily: <code>browser/trendingTopicMonitor.js</code> -&gt; <code>XActions.track()</code> for trend log</li>
 <li>Weekly: Review <code>XActions.history()</code> for recurring themes</li>
-<li>Set <code>src/keywordMonitor.js</code> for brand/topic monitoring</li>
+<li>Set <code>browser/keywordMonitor.js</code> for brand/topic monitoring</li>
 </ol>
 <h2 id="notes">Notes</h2>
 <ul>

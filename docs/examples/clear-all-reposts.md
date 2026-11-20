@@ -27,7 +27,7 @@ Remove all your retweets/reposts in bulk.
 
 **Steps:**
 1. Go to your profile page (`x.com/yourusername`)
-2. Open console (F12) and paste `src/clearAllReposts.js`
+2. Open console (F12) and paste `browser/clearAllReposts.js`
 
 **Configuration:**
 ```javascript
@@ -42,9 +42,9 @@ const CONFIG = {
 
 ## 📁 Files
 
-- `src/clearAllReposts.js` — Remove all retweets
-- `src/unlikeAllPosts.js` — Unlike all liked posts (companion)
-- `src/clearAllBookmarks.js` — Clear all bookmarks (companion)
+- `browser/clearAllReposts.js` — Remove all retweets
+- `browser/unlikeAllPosts.js` — Unlike all liked posts (companion)
+- `browser/clearAllBookmarks.js` — Clear all bookmarks (companion)
 
 ## ⚠️ Notes
 

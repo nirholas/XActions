@@ -17,8 +17,8 @@ Browser console scripts for managing and analyzing X/Twitter creator monetizatio
 |------|------|-------------|
 | Creator dashboard analytics | `src/creatorStudio.js` | `x.com/i/monetization` |
 | Subscription management | `src/subscriptionManager.js` | `x.com/i/monetization` |
-| Content performance for monetization | `src/tweetPerformance.js` | `x.com/USERNAME` |
-| Audience demographics | `src/audienceDemographics.js` | `x.com/USERNAME/followers` |
+| Content performance for monetization | `browser/tweetPerformance.js` | `x.com/USERNAME` |
+| Audience demographics | `browser/audienceDemographics.js` | `x.com/USERNAME/followers` |
 
 ## Creator Studio
 
@@ -55,17 +55,17 @@ Scrapes and analyzes creator monetization data from X's dashboard.
 ## Monetization Strategy
 
 ### Maximizing ad revenue
-1. `src/tweetPerformance.js` -- identify high-impression content types
-2. `src/tweetScheduleOptimizer.js` -- post at peak times for maximum reach
-3. `src/contentRepurposer.js` -- multiply high-performing content
+1. `browser/tweetPerformance.js` -- identify high-impression content types
+2. `browser/tweetScheduleOptimizer.js` -- post at peak times for maximum reach
+3. `browser/contentRepurposer.js` -- multiply high-performing content
 4. Focus on original tweets, not replies (replies don't earn ad revenue)
 5. Threads generate more impressions than single tweets
 
 ### Growing subscriptions
-1. `src/audienceDemographics.js` -- understand who your audience is
-2. Post subscriber-only previews with `src/postThread.js`
-3. Use `src/autoPlugReplies.js` to promote subscription on viral tweets
-4. Track subscriber growth with `src/followerGrowthTracker.js`
+1. `browser/audienceDemographics.js` -- understand who your audience is
+2. Post subscriber-only previews with `browser/postThread.js`
+3. Use `browser/autoPlugReplies.js` to promote subscription on viral tweets
+4. Track subscriber growth with `browser/followerGrowthTracker.js`
 
 ### Content that earns
 | Content Type | Revenue Potential | Why |

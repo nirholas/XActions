@@ -1,5 +1,5 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// src/advancedDM.js
+// browser/advancedDM.js
 // Advanced Direct Message features for X/Twitter
 // by nichxbt
 //

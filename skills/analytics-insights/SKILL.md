@@ -15,24 +15,24 @@ Browser console scripts for analyzing X/Twitter performance — no API key neede
 
 | Goal | File | Navigate to |
 |------|------|-------------|
-| Engagement metrics | `src/engagementAnalytics.js` | `x.com/USERNAME` |
-| Best posting times | `src/bestTimeToPost.js` | `x.com/USERNAME` |
-| Hashtag analysis | `src/hashtagAnalytics.js` | `x.com/search?q=%23tag` |
-| Competitor comparison | `src/competitorAnalysis.js` | Any page |
-| Follower audit (fake/bot) | `src/auditFollowers.js` | `x.com/USERNAME/followers` |
-| Sentiment analysis | `src/sentimentAnalyzer.js` | Any timeline |
-| Tweet performance ranking | `src/tweetPerformance.js` | `x.com/USERNAME` |
-| Viral tweet detection | `src/viralTweetDetector.js` | `x.com/USERNAME` |
-| Posting schedule optimizer | `src/tweetScheduleOptimizer.js` | `x.com/USERNAME` |
-| Follower demographics | `src/audienceDemographics.js` | `x.com/USERNAME/followers` |
-| Follower growth tracking | `src/followerGrowthTracker.js` | `x.com/USERNAME/followers` |
-| Content calendar analysis | `src/contentCalendar.js` | `x.com/USERNAME` |
-| Engagement leaderboard | `src/engagementLeaderboard.js` | `x.com/USERNAME` |
-| Tweet A/B testing | `src/tweetABTester.js` | `x.com/USERNAME` |
-| Follow ratio management | `src/followRatioManager.js` | `x.com/USERNAME` |
-| Audience overlap analysis | `src/audienceOverlap.js` | `x.com/ACCOUNT/followers` |
-| Account health scoring | `src/accountHealthMonitor.js` | `x.com/USERNAME` |
-| Shadowban detection | `src/shadowbanChecker.js` | `x.com/USERNAME` |
+| Engagement metrics | `browser/engagementAnalytics.js` | `x.com/USERNAME` |
+| Best posting times | `browser/bestTimeToPost.js` | `x.com/USERNAME` |
+| Hashtag analysis | `browser/hashtagAnalytics.js` | `x.com/search?q=%23tag` |
+| Competitor comparison | `browser/competitorAnalysis.js` | Any page |
+| Follower audit (fake/bot) | `browser/auditFollowers.js` | `x.com/USERNAME/followers` |
+| Sentiment analysis | `browser/sentimentAnalyzer.js` | Any timeline |
+| Tweet performance ranking | `browser/tweetPerformance.js` | `x.com/USERNAME` |
+| Viral tweet detection | `browser/viralTweetDetector.js` | `x.com/USERNAME` |
+| Posting schedule optimizer | `browser/tweetScheduleOptimizer.js` | `x.com/USERNAME` |
+| Follower demographics | `browser/audienceDemographics.js` | `x.com/USERNAME/followers` |
+| Follower growth tracking | `browser/followerGrowthTracker.js` | `x.com/USERNAME/followers` |
+| Content calendar analysis | `browser/contentCalendar.js` | `x.com/USERNAME` |
+| Engagement leaderboard | `browser/engagementLeaderboard.js` | `x.com/USERNAME` |
+| Tweet A/B testing | `browser/tweetABTester.js` | `x.com/USERNAME` |
+| Follow ratio management | `browser/followRatioManager.js` | `x.com/USERNAME` |
+| Audience overlap analysis | `browser/audienceOverlap.js` | `x.com/ACCOUNT/followers` |
+| Account health scoring | `browser/accountHealthMonitor.js` | `x.com/USERNAME` |
+| Shadowban detection | `browser/shadowbanChecker.js` | `x.com/USERNAME` |
 
 ## Quick Start
 
@@ -85,25 +85,25 @@ Compare follower lists between two accounts to find shared followers, unique aud
 
 ### Weekly analytics routine
 
-1. Run `src/tweetPerformance.js` — identify this week's top content
-2. Run `src/tweetScheduleOptimizer.js` — verify you're posting at optimal times
-3. Run `src/followRatioManager.js` → `XActions.track()` — log weekly ratio
-4. Run `src/engagementLeaderboard.js` — identify top engagers to nurture
+1. Run `browser/tweetPerformance.js` — identify this week's top content
+2. Run `browser/tweetScheduleOptimizer.js` — verify you're posting at optimal times
+3. Run `browser/followRatioManager.js` → `XActions.track()` — log weekly ratio
+4. Run `browser/engagementLeaderboard.js` — identify top engagers to nurture
 
 ### Diagnosing a growth stall
 
-1. `src/accountHealthMonitor.js` — check overall account health score
-2. `src/shadowbanChecker.js` — rule out shadowban
-3. `src/audienceDemographics.js` — verify you're attracting the right audience
-4. `src/viralTweetDetector.js` — check if you've had any breakout content recently
-5. `src/competitorAnalysis.js` — compare your metrics to peers
+1. `browser/accountHealthMonitor.js` — check overall account health score
+2. `browser/shadowbanChecker.js` — rule out shadowban
+3. `browser/audienceDemographics.js` — verify you're attracting the right audience
+4. `browser/viralTweetDetector.js` — check if you've had any breakout content recently
+5. `browser/competitorAnalysis.js` — compare your metrics to peers
 
 ### Preparing for a content pivot
 
-1. `src/sentimentAnalyzer.js` — understand current audience sentiment
-2. `src/tweetPerformance.js` — identify what content types work
-3. `src/audienceOverlap.js` — compare your audience with target niche leaders
-4. `src/contentCalendar.js` — find posting gaps to fill
+1. `browser/sentimentAnalyzer.js` — understand current audience sentiment
+2. `browser/tweetPerformance.js` — identify what content types work
+3. `browser/audienceOverlap.js` — compare your audience with target niche leaders
+4. `browser/contentCalendar.js` — find posting gaps to fill
 
 ## Notes
 

@@ -9,7 +9,7 @@
 
 ## Post Thread
 
-**File:** `src/postThread.js`
+**File:** `browser/postThread.js`
 
 Compose and post a connected thread of tweets.
 
@@ -49,7 +49,7 @@ const CONFIG = {
 
 ## Schedule Posts
 
-**File:** `src/schedulePosts.js`
+**File:** `browser/schedulePosts.js`
 
 Queue multiple posts for future publishing using X's native scheduling (Premium feature).
 
@@ -68,7 +68,7 @@ Scheduling posts requires X Premium. The script uses X's built-in scheduler UI.
 
 ## Create Poll
 
-**File:** `src/createPoll.js`
+**File:** `browser/createPoll.js`
 
 Create a poll with 2-4 options and configurable duration.
 
@@ -91,7 +91,7 @@ const CONFIG = {
 
 ## Auto Repost
 
-**File:** `src/autoRepost.js`
+**File:** `browser/autoRepost.js`
 
 Automatically repost tweets matching keywords or from specific users.
 

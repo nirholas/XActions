@@ -284,27 +284,27 @@
 </thead>
 <tbody><tr>
 <td>Audit follower quality</td>
-<td><code>src/auditFollowers.js</code></td>
+<td><code>browser/auditFollowers.js</code></td>
 </tr>
 <tr>
 <td>Detect unfollowers</td>
-<td><code>src/detectUnfollowers.js</code></td>
+<td><code>browser/detectUnfollowers.js</code></td>
 </tr>
 <tr>
 <td>Audience demographics</td>
-<td><code>src/audienceDemographics.js</code></td>
+<td><code>browser/audienceDemographics.js</code></td>
 </tr>
 <tr>
 <td>Follow ratio analysis</td>
-<td><code>src/followRatioManager.js</code></td>
+<td><code>browser/followRatioManager.js</code></td>
 </tr>
 <tr>
 <td>Account health dashboard</td>
-<td><code>src/accountHealthMonitor.js</code></td>
+<td><code>browser/accountHealthMonitor.js</code></td>
 </tr>
 <tr>
 <td>Shadowban check</td>
-<td><code>src/shadowbanChecker.js</code></td>
+<td><code>browser/shadowbanChecker.js</code></td>
 </tr>
 </tbody></table>
 <h2 id="workflow">Workflow</h2>
@@ -363,7 +363,7 @@ Date: {date} | Health Score: {score}/100
 <li>Run full MCP workflow above for baseline report</li>
 <li>Compare against previous month&#39;s scores</li>
 <li>Action items: block flagged bots, unfollow non-reciprocals above threshold</li>
-<li>Use <code>src/accountHealthMonitor.js</code> for quick between-audit checks</li>
+<li>Use <code>browser/accountHealthMonitor.js</code> for quick between-audit checks</li>
 </ol>
 <h3 id="score-interpretation">Score interpretation</h3>
 <table>
@@ -402,8 +402,8 @@ Date: {date} | Health Score: {score}/100
 </tbody></table>
 <h3 id="improving-a-low-health-score">Improving a low health score</h3>
 <ol>
-<li>Block suspect bot followers with <code>src/blockBots.js</code></li>
-<li>Unfollow non-reciprocals with <code>src/unfollowback.js</code></li>
+<li>Block suspect bot followers with <code>browser/blockBots.js</code></li>
+<li>Unfollow non-reciprocals with <code>browser/unfollowback.js</code></li>
 <li>Increase posting consistency to reduce churn</li>
 <li>Engage authentically to improve engagement rate</li>
 </ol>

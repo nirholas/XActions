@@ -123,94 +123,96 @@ export { default as spacesManager } from './spacesManager.js';
  * Catalog of all browser console scripts.
  * These are IIFEs meant to be pasted into x.com Developer Console.
  * Use: `import { browserScripts } from 'xactions'` to get script metadata.
+ * `file` is the script's path in the GitHub repository (browser/); the scripts
+ * themselves are not part of the npm package, since they never run in Node.
  */
 export const browserScripts = {
   // --- Unfollow Management ---
-  unfollowEveryone: { file: 'src/unfollowEveryone.js', description: 'Unfollow all accounts you follow' },
-  unfollowback: { file: 'src/unfollowback.js', description: 'Unfollow users who don\'t follow you back' },
-  unfollowWDFBLog: { file: 'src/unfollowWDFBLog.js', description: 'Unfollow non-followers with detailed logging' },
+  unfollowEveryone: { file: 'browser/unfollowEveryone.js', description: 'Unfollow all accounts you follow' },
+  unfollowback: { file: 'browser/unfollowback.js', description: 'Unfollow users who don\'t follow you back' },
+  unfollowWDFBLog: { file: 'browser/unfollowWDFBLog.js', description: 'Unfollow non-followers with detailed logging' },
 
   // --- Content Cleanup ---
-  unlikeAllPosts: { file: 'src/unlikeAllPosts.js', description: 'Unlike all your liked posts' },
-  clearAllReposts: { file: 'src/clearAllReposts.js', description: 'Remove all your retweets' },
-  clearAllBookmarks: { file: 'src/clearAllBookmarks.js', description: 'Clear all bookmarks' },
+  unlikeAllPosts: { file: 'browser/unlikeAllPosts.js', description: 'Unlike all your liked posts' },
+  clearAllReposts: { file: 'browser/clearAllReposts.js', description: 'Remove all your retweets' },
+  clearAllBookmarks: { file: 'browser/clearAllBookmarks.js', description: 'Clear all bookmarks' },
 
   // --- Blocking & Muting ---
-  massBlock: { file: 'src/massBlock.js', description: 'Block a list of usernames' },
-  massUnblock: { file: 'src/massUnblock.js', description: 'Unblock all blocked accounts' },
-  massUnmute: { file: 'src/massUnmute.js', description: 'Unmute all muted accounts' },
-  muteByKeywords: { file: 'src/muteByKeywords.js', description: 'Mute users posting specific keywords' },
-  manageMutedWords: { file: 'src/manageMutedWords.js', description: 'Bulk-add muted words/phrases' },
-  blockBots: { file: 'src/blockBots.js', description: 'Detect and block bot accounts' },
-  reportSpam: { file: 'src/reportSpam.js', description: 'Report accounts for spam/abuse' },
+  massBlock: { file: 'browser/massBlock.js', description: 'Block a list of usernames' },
+  massUnblock: { file: 'browser/massUnblock.js', description: 'Unblock all blocked accounts' },
+  massUnmute: { file: 'browser/massUnmute.js', description: 'Unmute all muted accounts' },
+  muteByKeywords: { file: 'browser/muteByKeywords.js', description: 'Mute users posting specific keywords' },
+  manageMutedWords: { file: 'browser/manageMutedWords.js', description: 'Bulk-add muted words/phrases' },
+  blockBots: { file: 'browser/blockBots.js', description: 'Detect and block bot accounts' },
+  reportSpam: { file: 'browser/reportSpam.js', description: 'Report accounts for spam/abuse' },
 
   // --- Follower Monitoring ---
-  detectUnfollowers: { file: 'src/detectUnfollowers.js', description: 'Detect who unfollowed you' },
-  newFollowersAlert: { file: 'src/newFollowersAlert.js', description: 'Monitor for new followers' },
-  continuousMonitor: { file: 'src/continuousMonitor.js', description: 'Continuous follower monitoring' },
-  monitorAccount: { file: 'src/monitorAccount.js', description: 'Monitor account stats over time' },
-  auditFollowers: { file: 'src/auditFollowers.js', description: 'Audit follower quality (legit/suspicious/fake)' },
-  removeFollowers: { file: 'src/removeFollowers.js', description: 'Remove specific followers via soft-block' },
+  detectUnfollowers: { file: 'browser/detectUnfollowers.js', description: 'Detect who unfollowed you' },
+  newFollowersAlert: { file: 'browser/newFollowersAlert.js', description: 'Monitor for new followers' },
+  continuousMonitor: { file: 'browser/continuousMonitor.js', description: 'Continuous follower monitoring' },
+  monitorAccount: { file: 'browser/monitorAccount.js', description: 'Monitor account stats over time' },
+  auditFollowers: { file: 'browser/auditFollowers.js', description: 'Audit follower quality (legit/suspicious/fake)' },
+  removeFollowers: { file: 'browser/removeFollowers.js', description: 'Remove specific followers via soft-block' },
 
   // --- Analytics & Insights ---
-  engagementAnalytics: { file: 'src/engagementAnalytics.js', description: 'Analyze engagement metrics' },
-  bestTimeToPost: { file: 'src/bestTimeToPost.js', description: 'Find optimal posting times' },
-  hashtagAnalytics: { file: 'src/hashtagAnalytics.js', description: 'Analyze hashtag performance' },
-  competitorAnalysis: { file: 'src/competitorAnalysis.js', description: 'Compare account metrics' },
-  sentimentAnalyzer: { file: 'src/sentimentAnalyzer.js', description: 'Lexicon-based sentiment analysis on any timeline' },
-  tweetPerformance: { file: 'src/tweetPerformance.js', description: 'Compare tweet performance side by side with rankings' },
-  viralTweetDetector: { file: 'src/viralTweetDetector.js', description: 'Detect viral tweets by velocity and multi-factor scoring' },
-  tweetScheduleOptimizer: { file: 'src/tweetScheduleOptimizer.js', description: 'Personalized optimal posting schedule from historical data' },
-  audienceDemographics: { file: 'src/audienceDemographics.js', description: 'Analyze follower demographics, niches, and bot likelihood' },
-  followerGrowthTracker: { file: 'src/followerGrowthTracker.js', description: 'Track follower count over time with growth projections' },
-  contentCalendar: { file: 'src/contentCalendar.js', description: 'Posting frequency heatmap, gap analysis, and content queue' },
-  engagementLeaderboard: { file: 'src/engagementLeaderboard.js', description: 'Rank top engagers, identify superfans, VIP list export' },
-  tweetABTester: { file: 'src/tweetABTester.js', description: 'A/B test tweet variations with statistical comparison' },
-  followRatioManager: { file: 'src/followRatioManager.js', description: 'Monitor follow ratio with letter grades, plans, and history' },
-  audienceOverlap: { file: 'src/audienceOverlap.js', description: 'Compare follower lists between two accounts for overlap analysis' },
+  engagementAnalytics: { file: 'browser/engagementAnalytics.js', description: 'Analyze engagement metrics' },
+  bestTimeToPost: { file: 'browser/bestTimeToPost.js', description: 'Find optimal posting times' },
+  hashtagAnalytics: { file: 'browser/hashtagAnalytics.js', description: 'Analyze hashtag performance' },
+  competitorAnalysis: { file: 'browser/competitorAnalysis.js', description: 'Compare account metrics' },
+  sentimentAnalyzer: { file: 'browser/sentimentAnalyzer.js', description: 'Lexicon-based sentiment analysis on any timeline' },
+  tweetPerformance: { file: 'browser/tweetPerformance.js', description: 'Compare tweet performance side by side with rankings' },
+  viralTweetDetector: { file: 'browser/viralTweetDetector.js', description: 'Detect viral tweets by velocity and multi-factor scoring' },
+  tweetScheduleOptimizer: { file: 'browser/tweetScheduleOptimizer.js', description: 'Personalized optimal posting schedule from historical data' },
+  audienceDemographics: { file: 'browser/audienceDemographics.js', description: 'Analyze follower demographics, niches, and bot likelihood' },
+  followerGrowthTracker: { file: 'browser/followerGrowthTracker.js', description: 'Track follower count over time with growth projections' },
+  contentCalendar: { file: 'browser/contentCalendar.js', description: 'Posting frequency heatmap, gap analysis, and content queue' },
+  engagementLeaderboard: { file: 'browser/engagementLeaderboard.js', description: 'Rank top engagers, identify superfans, VIP list export' },
+  tweetABTester: { file: 'browser/tweetABTester.js', description: 'A/B test tweet variations with statistical comparison' },
+  followRatioManager: { file: 'browser/followRatioManager.js', description: 'Monitor follow ratio with letter grades, plans, and history' },
+  audienceOverlap: { file: 'browser/audienceOverlap.js', description: 'Compare follower lists between two accounts for overlap analysis' },
 
   // --- Content Posting ---
-  postThread: { file: 'src/postThread.js', description: 'Post multi-tweet threads' },
-  schedulePosts: { file: 'src/schedulePosts.js', description: 'Schedule future posts' },
-  createPoll: { file: 'src/createPoll.js', description: 'Create poll tweets' },
-  autoRepost: { file: 'src/autoRepost.js', description: 'Auto-retweet by keyword/user filters' },
-  threadComposer: { file: 'src/threadComposer.js', description: 'Compose, preview, and publish threads with draft persistence' },
-  quoteTweetAutomation: { file: 'src/quoteTweetAutomation.js', description: 'Auto quote-tweet with customizable templates and filters' },
-  contentRepurposer: { file: 'src/contentRepurposer.js', description: 'Repurpose tweets into threads, storms, blog outlines, and quote templates' },
-  autoPlugReplies: { file: 'src/autoPlugReplies.js', description: 'Auto-reply to own viral tweets with promotional plugs' },
+  postThread: { file: 'browser/postThread.js', description: 'Post multi-tweet threads' },
+  schedulePosts: { file: 'browser/schedulePosts.js', description: 'Schedule future posts' },
+  createPoll: { file: 'browser/createPoll.js', description: 'Create poll tweets' },
+  autoRepost: { file: 'browser/autoRepost.js', description: 'Auto-retweet by keyword/user filters' },
+  threadComposer: { file: 'browser/threadComposer.js', description: 'Compose, preview, and publish threads with draft persistence' },
+  quoteTweetAutomation: { file: 'browser/quoteTweetAutomation.js', description: 'Auto quote-tweet with customizable templates and filters' },
+  contentRepurposer: { file: 'browser/contentRepurposer.js', description: 'Repurpose tweets into threads, storms, blog outlines, and quote templates' },
+  autoPlugReplies: { file: 'browser/autoPlugReplies.js', description: 'Auto-reply to own viral tweets with promotional plugs' },
 
   // --- Tweet Management ---
-  bulkDeleteTweets: { file: 'src/bulkDeleteTweets.js', description: 'Bulk delete tweets with keyword/date/engagement filters' },
-  pinTweetManager: { file: 'src/pinTweetManager.js', description: 'Pin/unpin tweets and find best tweet to pin' },
+  bulkDeleteTweets: { file: 'browser/bulkDeleteTweets.js', description: 'Bulk delete tweets with keyword/date/engagement filters' },
+  pinTweetManager: { file: 'browser/pinTweetManager.js', description: 'Pin/unpin tweets and find best tweet to pin' },
 
   // --- Messaging & Engagement ---
-  sendDirectMessage: { file: 'src/sendDirectMessage.js', description: 'Send personalized DMs' },
-  welcomeNewFollowers: { file: 'src/welcomeNewFollowers.js', description: 'Detect new followers and send welcome DMs' },
-  engagementBooster: { file: 'src/engagementBooster.js', description: 'Systematically like/reply to target account tweets' },
-  autoReply: { file: 'src/autoReply.js', description: 'Auto-reply to tweets matching keyword filters' },
+  sendDirectMessage: { file: 'browser/sendDirectMessage.js', description: 'Send personalized DMs' },
+  welcomeNewFollowers: { file: 'browser/welcomeNewFollowers.js', description: 'Detect new followers and send welcome DMs' },
+  engagementBooster: { file: 'browser/engagementBooster.js', description: 'Systematically like/reply to target account tweets' },
+  autoReply: { file: 'browser/autoReply.js', description: 'Auto-reply to tweets matching keyword filters' },
 
   // --- Community & Lists ---
-  joinCommunities: { file: 'src/joinCommunities.js', description: 'Join communities by keyword' },
-  leaveAllCommunities: { file: 'src/leaveAllCommunities.js', description: 'Leave all joined communities' },
-  listManager: { file: 'src/listManager.js', description: 'Create and manage X Lists' },
+  joinCommunities: { file: 'browser/joinCommunities.js', description: 'Join communities by keyword' },
+  leaveAllCommunities: { file: 'browser/leaveAllCommunities.js', description: 'Leave all joined communities' },
+  listManager: { file: 'browser/listManager.js', description: 'Create and manage X Lists' },
 
   // --- Profile & Account ---
-  updateProfile: { file: 'src/updateProfile.js', description: 'Update bio, name, location, website' },
-  backupAccount: { file: 'src/backupAccount.js', description: 'Export account data as JSON' },
-  downloadAccountData: { file: 'src/downloadAccountData.js', description: 'Trigger official X data archive' },
-  qrCodeSharing: { file: 'src/qrCodeSharing.js', description: 'Generate QR code for profiles' },
-  shadowbanChecker: { file: 'src/shadowbanChecker.js', description: 'Multi-method shadowban detection with scoring' },
-  accountHealthMonitor: { file: 'src/accountHealthMonitor.js', description: 'Comprehensive account health scoring and diagnostics' },
+  updateProfile: { file: 'browser/updateProfile.js', description: 'Update bio, name, location, website' },
+  backupAccount: { file: 'browser/backupAccount.js', description: 'Export account data as JSON' },
+  downloadAccountData: { file: 'browser/downloadAccountData.js', description: 'Trigger official X data archive' },
+  qrCodeSharing: { file: 'browser/qrCodeSharing.js', description: 'Generate QR code for profiles' },
+  shadowbanChecker: { file: 'browser/shadowbanChecker.js', description: 'Multi-method shadowban detection with scoring' },
+  accountHealthMonitor: { file: 'browser/accountHealthMonitor.js', description: 'Comprehensive account health scoring and diagnostics' },
 
   // --- Bookmarks ---
-  bookmarkOrganizer: { file: 'src/bookmarkOrganizer.js', description: 'Categorize bookmarks by keywords' },
+  bookmarkOrganizer: { file: 'browser/bookmarkOrganizer.js', description: 'Categorize bookmarks by keywords' },
 
   // --- Spaces ---
-  scrapeSpaces: { file: 'src/scrapeSpaces.js', description: 'Find live/scheduled X Spaces' },
+  scrapeSpaces: { file: 'browser/scrapeSpaces.js', description: 'Find live/scheduled X Spaces' },
 
   // --- Discovery & Monitoring ---
-  trendingTopicMonitor: { file: 'src/trendingTopicMonitor.js', description: 'Real-time trending topic monitoring with niche classification' },
-  keywordMonitor: { file: 'src/keywordMonitor.js', description: 'Monitor keyword mentions across X search with alerts and sentiment' },
+  trendingTopicMonitor: { file: 'browser/trendingTopicMonitor.js', description: 'Real-time trending topic monitoring with niche classification' },
+  keywordMonitor: { file: 'browser/keywordMonitor.js', description: 'Monitor keyword mentions across X search with alerts and sentiment' },
 };
 
 /**

@@ -74,7 +74,7 @@ question ──► BM25 search over dashboard/data/ask-index.json  ─┐
 
 1. **Index.** `npm run ask:index` (`scripts/build-ask-index.mjs`) strips YAML frontmatter and SEO keyword lists (both matched queries while teaching the reader nothing), then chunks `docs/**/*.md`, `skills/*/SKILL.md`, `tutorials/**/*.md`, the top-level README/CHANGELOG, the header comments of every browser script in `src/` and `scripts/`, and the text of the dashboard pages (FAQ, pricing, features, ...). Each chunk carries the live URL it came from: the rendered docs page when one exists (via `dashboard/docs/_pages-manifest.json`), the `/scripts/<slug>` page for a script, or the GitHub blob URL. The result is `dashboard/data/ask-index.json`, served at `/data/ask-index.json`. `npm run docs:check` fails when the committed index is stale.
 2. **Retrieval.** `src/ask/engine.js` builds a BM25 searcher over the chunks at startup (about 20 ms per query), with a small synonym map bridging how people ask ("all", "twitter", "retweet") to how the docs are written ("everyone", "X", "repost"). Titles are boosted, results are capped per document, and a live GitHub issues/PR search is merged in so recent bug reports show up too.
-3. **Actions.** `src/ask/actions.js` ranks the catalog in `dashboard/data/ask-actions.json` against the question *and* the passages retrieval just found. A passage from `docs/examples/unfollow-everyone.md` is direct evidence that `src/unfollowEveryone.js` is the answer, which survives phrasing ("clean out my following", "start fresh") that no keyword match would. Terms carried by a large share of the catalog are ignored, so the product's own name cannot make "is XActions safe?" look like a request to run something, and a conceptual question correctly returns nothing runnable.
+3. **Actions.** `src/ask/actions.js` ranks the catalog in `dashboard/data/ask-actions.json` against the question *and* the passages retrieval just found. A passage from `docs/examples/unfollow-everyone.md` is direct evidence that `browser/unfollowEveryone.js` is the answer, which survives phrasing ("clean out my following", "start fresh") that no keyword match would. Terms carried by a large share of the catalog are ignored, so the product's own name cannot make "is XActions safe?" look like a request to run something, and a conceptual question correctly returns nothing runnable.
 4. **Answer.** The sources, the question, and the matched actions go to the first lane that accepts the request in `src/ask/lanes.js`; the reply streams back as Server-Sent Events. The model is given the actions so its prose agrees with the buttons beside it instead of inventing a script name.
 
 ### The action catalog
@@ -83,11 +83,11 @@ question ──► BM25 search over dashboard/data/ask-index.json  ─┐
 
 | Surface | Read from | Carries |
 |---|---|---|
-| Browser scripts | `src/*.js`, `scripts/*.js` headers | title, description, the x.com page to paste it on, raw source URL, `/scripts/<slug>` page, whether `core.js` must be pasted first |
+| Browser scripts | `browser/*.js`, `scripts/*.js` headers | title, description, the x.com page to paste it on, raw source URL, `/scripts/<slug>` page, whether `core.js` must be pasted first |
 | CLI commands | the `.command()`/`.description()` calls in `src/cli/**` | full invocation including subcommand prefixes |
 | MCP tools | the tool definitions in `src/mcp/server.js` | name, description, required arguments |
 
-61 scripts exist in both `src/` and `scripts/`; the catalog keeps whichever copy the generated page was built from, so the source quoted beside a link always matches the page it links to.
+61 scripts exist in both `browser/` and `scripts/`; the catalog keeps whichever copy the generated page was built from, so the source quoted beside a link always matches the page it links to.
 
 ## Free LLM lanes
 

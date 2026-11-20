@@ -29,7 +29,7 @@ date: "2026-03-30"
 
 1. Open x.com and navigate to **Lists** (`https://x.com/i/lists`) or a specific list page
 2. Press **F12** to open DevTools, then click the **Console** tab
-3. Copy the script from `src/followList.js`
+3. Copy the script from `browser/followList.js`
 4. Set `CONFIG.action` and `CONFIG.listUrl` as needed
 5. Paste into the console and press Enter
 
@@ -229,5 +229,5 @@ window.XActions.abort();
 
 ## Related Scripts
 
-- `src/listManager.js` -- Create lists, add members, and export member data
-- `src/topicManager.js` -- Follow and manage X Topics
+- `browser/listManager.js` -- Create lists, add members, and export member data
+- `browser/topicManager.js` -- Follow and manage X Topics

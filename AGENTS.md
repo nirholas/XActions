@@ -318,9 +318,9 @@ is not, that is a bug in this table.
 
 | Request | Answer |
 |---|---|
-| Unfollow everyone | `src/unfollowEveryone.js` |
-| Unfollow people who do not follow back | `src/unfollowback.js`, or `xactions non-followers` |
-| Who unfollowed me | `src/detectUnfollowers.js` |
+| Unfollow everyone | `browser/unfollowEveryone.js` |
+| Unfollow people who do not follow back | `browser/unfollowback.js`, or `xactions non-followers` |
+| Who unfollowed me | `browser/detectUnfollowers.js` |
 | Download a video | `scripts/videoDownloader.js` |
 | Like, repost and reply to every post on a profile | `scripts/engageProfile.js` (browser panel) or `xactions engage <user> --like --repost --comment --prompt "..."`. See [`docs/engage.md`](docs/engage.md) |
 | Act on every result of a search | `scripts/searchSweep.js`. See [`docs/search-sweep.md`](docs/search-sweep.md) |
@@ -377,6 +377,11 @@ src/scrapers/     HTTP and browser scrapers
 src/client/       The low-level HTTP Twitter client
 src/automation/   Browser console scripts (paste core.js first)
 src/a2a/          Agent-to-Agent protocol server
+src/*.js          Node modules only: index.js (the library entry), version.js,
+                  and the Puppeteer *Manager.js-style modules index.js re-exports
+browser/          112 standalone browser console scripts (IIFEs you paste into
+                  DevTools on x.com). Not in the npm package; linted with browser
+                  globals only, so `process` or `require` there is an error
 skills/           50 Agent Skills, one directory each
 api/              Express backend (routes/, services/, middleware/)
 dashboard/        Static frontend
@@ -391,7 +396,7 @@ The three runtime contexts, because code that is correct in one is broken in ano
 
 | Context | Runs in | Entry point | Hard constraint |
 |---|---|---|---|
-| Browser scripts | the DevTools console on x.com | an IIFE you paste | no Node APIs; DOM and `sessionStorage` only |
+| Browser scripts | the DevTools console on x.com | an IIFE you paste, from `browser/`, `scripts/` or `src/automation/` | no Node APIs; DOM and `sessionStorage` only |
 | Library, CLI, MCP | your machine | `src/cli/index.js`, `src/mcp/server.js` | Node >= 22.19, ESM throughout |
 | API server | an Express process | `api/server.js` | PostgreSQL via Prisma, Redis for the queue |
 

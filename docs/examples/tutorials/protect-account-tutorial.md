@@ -232,7 +232,7 @@ await browser.close();
 | Block/Mute Management | `src/settingsManager.js` → `getBlockedAccounts()` | List blocked accounts |
 | Content Preferences | `src/settingsManager.js` → `setContentPreferences()` | Toggle content filters |
 | Data Download | `src/settingsManager.js` → `requestDataDownload()` | Request archive of your data |
-| Delegate Access | `src/delegateAccess.js` | Manage who can act on your behalf |
+| Delegate Access | `browser/delegateAccess.js` | Manage who can act on your behalf |
 
 ---
 

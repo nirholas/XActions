@@ -39,7 +39,7 @@ This script provides the following capabilities:
 **Steps:**
 1. Go to `x.com/settings/blocked`
 2. Open browser console (`F12` → Console tab)
-3. Copy and paste the script from [`src/massUnblock.js`](https://github.com/nirholas/XActions/blob/main/src/massUnblock.js)
+3. Copy and paste the script from [`browser/massUnblock.js`](https://github.com/nirholas/XActions/blob/main/browser/massUnblock.js)
 4. Press Enter to run
 
 ```javascript
@@ -258,7 +258,7 @@ Open your browser and go to `x.com/settings/blocked`. Make sure you're logged in
 
 ### Step 3: Paste the script
 
-Copy the entire script from [`src/massUnblock.js`](https://github.com/nirholas/XActions/blob/main/src/massUnblock.js) and paste it into the console.
+Copy the entire script from [`browser/massUnblock.js`](https://github.com/nirholas/XActions/blob/main/browser/massUnblock.js) and paste it into the console.
 
 ### Step 4: Customize the CONFIG (optional)
 
@@ -317,7 +317,7 @@ See the [MCP Setup Guide](../mcp-setup.md) for integration with Claude Desktop, 
 
 | File | Description |
 |------|-------------|
-| [`src/massUnblock.js`](https://github.com/nirholas/XActions/blob/main/src/massUnblock.js) | Main script |
+| [`browser/massUnblock.js`](https://github.com/nirholas/XActions/blob/main/browser/massUnblock.js) | Main script |
 
 ---
 

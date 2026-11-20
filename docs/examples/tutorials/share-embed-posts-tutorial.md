@@ -9,7 +9,7 @@
 ## Quick Start
 1. Navigate to any timeline, profile, or search page on x.com
 2. Open DevTools (F12) and go to the Console tab
-3. Copy the contents of `src/shareEmbed.js`
+3. Copy the contents of `browser/shareEmbed.js`
 4. Edit the `CONFIG` section (mode, URLs)
 5. Paste into the console and press Enter
 
@@ -173,5 +173,5 @@ JSON.parse(sessionStorage.getItem('xactions_bulk_links'));
 ## Related Scripts
 
 - `src/bookmarkManager.js` -- Bookmark management
-- `src/postInteractions.js` -- View likes, reposts, quotes on a post
-- `src/pinTweetManager.js` -- Pin/unpin posts on your profile
+- `browser/postInteractions.js` -- View likes, reposts, quotes on a post
+- `browser/pinTweetManager.js` -- Pin/unpin posts on your profile

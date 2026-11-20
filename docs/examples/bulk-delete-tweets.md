@@ -39,7 +39,7 @@ This script provides the following capabilities:
 **Steps:**
 1. Go to `x.com/YOUR_USERNAME`
 2. Open browser console (`F12` → Console tab)
-3. Copy and paste the script from [`src/bulkDeleteTweets.js`](https://github.com/nirholas/XActions/blob/main/src/bulkDeleteTweets.js)
+3. Copy and paste the script from [`browser/bulkDeleteTweets.js`](https://github.com/nirholas/XActions/blob/main/browser/bulkDeleteTweets.js)
 4. Press Enter to run
 
 ```javascript
@@ -66,7 +66,7 @@ This script provides the following capabilities:
  * 4. Paste this script and press Enter
  *
  * ⚠️ DELETION IS PERMANENT. There is no undo. Export first!
- *    Use src/backupAccount.js to save your tweets before deleting.
+ *    Use browser/backupAccount.js to save your tweets before deleting.
  *
  * CONTROLS:
  *   XActionsUtils.pause()   — pause
@@ -505,7 +505,7 @@ Open your browser and go to `x.com/YOUR_USERNAME`. Make sure you're logged in to
 
 ### Step 3: Paste the script
 
-Copy the entire script from [`src/bulkDeleteTweets.js`](https://github.com/nirholas/XActions/blob/main/src/bulkDeleteTweets.js) and paste it into the console.
+Copy the entire script from [`browser/bulkDeleteTweets.js`](https://github.com/nirholas/XActions/blob/main/browser/bulkDeleteTweets.js) and paste it into the console.
 
 ### Step 4: Customize the CONFIG (optional)
 
@@ -564,7 +564,7 @@ See the [MCP Setup Guide](../mcp-setup.md) for integration with Claude Desktop, 
 
 | File | Description |
 |------|-------------|
-| [`src/bulkDeleteTweets.js`](https://github.com/nirholas/XActions/blob/main/src/bulkDeleteTweets.js) | Main script |
+| [`browser/bulkDeleteTweets.js`](https://github.com/nirholas/XActions/blob/main/browser/bulkDeleteTweets.js) | Main script |
 
 ---
 

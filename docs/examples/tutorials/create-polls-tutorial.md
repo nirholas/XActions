@@ -10,7 +10,7 @@
 ## Quick Start
 1. Navigate to x.com
 2. Open DevTools (F12)
-3. Copy the script from `src/createPoll.js`
+3. Copy the script from `browser/createPoll.js`
 4. Edit the CONFIG section with your poll question and options
 5. Paste into Console and press Enter
 
@@ -18,12 +18,12 @@
 
 | Script | Runtime | Best For |
 |--------|---------|----------|
-| `src/createPoll.js` | Browser console | Quick poll creation from DevTools |
+| `browser/createPoll.js` | Browser console | Quick poll creation from DevTools |
 | `src/pollCreator.js` | Node.js / Puppeteer | Automated poll creation, result scraping |
 
 ## Configuration
 
-### `src/createPoll.js` (Browser Console)
+### `browser/createPoll.js` (Browser Console)
 
 ```js
 const CONFIG = {
@@ -78,7 +78,7 @@ const result = await createPoll(page, 'Best frontend framework?', [
 ### Creating a Poll (Browser Console)
 
 1. Open x.com and press F12 for DevTools
-2. Copy `src/createPoll.js`
+2. Copy `browser/createPoll.js`
 3. Edit your poll configuration:
    ```js
    question: 'Tabs or spaces?',
@@ -170,5 +170,5 @@ This returns the vote percentages, total votes, and time remaining.
 ## Related Scripts
 
 - `src/postComposer.js` -- General tweet posting (includes `createPoll` function)
-- `src/postThread.js` -- Create threads (combine polls with threads for engagement)
-- `src/schedulePosts.js` -- Schedule a poll for a specific time
+- `browser/postThread.js` -- Create threads (combine polls with threads for engagement)
+- `browser/schedulePosts.js` -- Schedule a poll for a specific time

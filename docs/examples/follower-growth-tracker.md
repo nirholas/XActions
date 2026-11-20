@@ -39,7 +39,7 @@ This script provides the following capabilities:
 **Steps:**
 1. Go to `x.com/YOUR_USERNAME`
 2. Open browser console (`F12` → Console tab)
-3. Copy and paste the script from [`src/followerGrowthTracker.js`](https://github.com/nirholas/XActions/blob/main/src/followerGrowthTracker.js)
+3. Copy and paste the script from [`browser/followerGrowthTracker.js`](https://github.com/nirholas/XActions/blob/main/browser/followerGrowthTracker.js)
 4. Press Enter to run
 
 ```javascript
@@ -311,7 +311,7 @@ Open your browser and go to `x.com/YOUR_USERNAME`. Make sure you're logged in to
 
 ### Step 3: Paste the script
 
-Copy the entire script from [`src/followerGrowthTracker.js`](https://github.com/nirholas/XActions/blob/main/src/followerGrowthTracker.js) and paste it into the console.
+Copy the entire script from [`browser/followerGrowthTracker.js`](https://github.com/nirholas/XActions/blob/main/browser/followerGrowthTracker.js) and paste it into the console.
 
 ### Step 4: Customize the CONFIG (optional)
 
@@ -370,7 +370,7 @@ See the [MCP Setup Guide](../mcp-setup.md) for integration with Claude Desktop, 
 
 | File | Description |
 |------|-------------|
-| [`src/followerGrowthTracker.js`](https://github.com/nirholas/XActions/blob/main/src/followerGrowthTracker.js) | Main script |
+| [`browser/followerGrowthTracker.js`](https://github.com/nirholas/XActions/blob/main/browser/followerGrowthTracker.js) | Main script |
 
 ---
 

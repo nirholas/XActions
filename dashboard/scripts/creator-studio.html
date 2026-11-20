@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Creator Studio - Analytics — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="src/creatorStudio.js">
+  <title>Creator Studio — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="scripts/creatorStudio.js">
   <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, creator, studio, business">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Creator Studio - Analytics — XActions">
-  <meta property="og:description" content="src/creatorStudio.js">
+  <meta property="og:title" content="Creator Studio — XActions">
+  <meta property="og:description" content="scripts/creatorStudio.js">
   <meta property="og:url" content="https://xactions.app/scripts/creator-studio">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-image.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Creator Studio - Analytics — XActions">
-  <meta name="twitter:description" content="src/creatorStudio.js">
+  <meta name="twitter:title" content="Creator Studio — XActions">
+  <meta name="twitter:description" content="scripts/creatorStudio.js">
 
   <link rel="canonical" href="https://xactions.app/scripts/creator-studio">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
@@ -28,8 +28,8 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Creator Studio - Analytics — Free X/Twitter Script | XActions",
-    "description": "src/creatorStudio.js",
+    "headline": "Creator Studio — Free X/Twitter Script | XActions",
+    "description": "scripts/creatorStudio.js",
     "url": "https://xactions.app/scripts/creator-studio",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -47,7 +47,7 @@
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
       { "@type": "ListItem", "position": 3, "name": "Business", "item": "https://xactions.app/scripts#business" },
-      { "@type": "ListItem", "position": 4, "name": "Creator Studio - Analytics", "item": "https://xactions.app/scripts/creator-studio" }
+      { "@type": "ListItem", "position": 4, "name": "Creator Studio", "item": "https://xactions.app/scripts/creator-studio" }
     ]
   }
   </script>
@@ -112,24 +112,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🎨 Creator Studio - Analytics</h1>
+        <h1>🎨 Creator Studio</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#business">Business</a> › Creator Studio - Analytics
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#business">Business</a> › Creator Studio
         </div>
       </header>
 
       <article class="article">
         <span class="cat-badge">Business</span>
-        <span class="source-badge">src</span>
+        <span class="source-badge">scripts</span>
 
         <div class="meta-row">
           
           
-          <span>184 lines</span>
+          <span>200 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>src/creatorStudio.js</p>
+        <p>scripts/creatorStudio.js</p>
 
         
 
@@ -144,7 +144,17 @@
 
         
         
-        
+        <section class="config-code">
+        <h2>Default Configuration</h2>
+        <div class="code-block">
+          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
+          <pre><code>const CONFIG = {
+    maxPosts: 30,
+    scrollDelay: 1500,
+    exportResults: true,
+  };</code></pre>
+        </div>
+      </section>
 
         <section class="full-code">
           <h2>Full Script</h2>
@@ -152,188 +162,204 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// src/creatorStudio.js
-// Creator Studio and monetization tools for X/Twitter
+// scripts/creatorStudio.js
+// Browser console script for analyzing account analytics and content performance
+// Paste in DevTools console on x.com/USERNAME (your profile)
 // by nichxbt
 
-/**
- * Creator Studio - Analytics, subscriptions, tips, revenue
- * 
- * Features:
- * - Account and post analytics
- * - Revenue tracking
- * - Subscription management
- * - Tip configuration
- * - X Money integration (2026)
- * - Affiliate tracking
- */
+(() =&gt; {
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
 
-const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
-
-const SELECTORS = {
-  analyticsNav: 'a[href=&quot;/i/account_analytics&quot;]',
-  impressions: '[data-testid=&quot;impressions&quot;]',
-  engagements: '[data-testid=&quot;engagements&quot;]',
-  followersChart: '[data-testid=&quot;followersChart&quot;]',
-  revenueTab: '[data-testid=&quot;revenueTab&quot;]',
-  monetization: 'a[href=&quot;/settings/monetization&quot;]',
-  subscriptionSettings: '[data-testid=&quot;subscriptionSettings&quot;]',
-  tipsSettings: '[data-testid=&quot;tipsSettings&quot;]',
-  analyticsExport: '[data-testid=&quot;exportAnalytics&quot;]',
-};
-
-/**
- * Get account analytics
- * @param {import('puppeteer').Page} page
- * @param {Object} options
- * @returns {Promise&lt;Object&gt;}
- */
-export async function getAccountAnalytics(page, options = {}) {
-  const { period = '28d' } = options;
-
-  await page.goto('https://x.com/i/account_analytics', { waitUntil: 'networkidle2' });
-  await sleep(3000);
-
-  const analytics = await page.evaluate(() =&gt; {
-    const getText = (sel) =&gt; document.querySelector(sel)?.textContent?.trim() || '0';
-    
-    // Try to extract key metrics from the analytics page
-    const metrics = {};
-    const statElements = document.querySelectorAll('[data-testid*=&quot;stat&quot;], [data-testid*=&quot;metric&quot;]');
-    statElements.forEach(el =&gt; {
-      const label = el.querySelector('span:first-child')?.textContent || '';
-      const value = el.querySelector('span:last-child')?.textContent || '';
-      if (label &amp;&amp; value) metrics[label] = value;
-    });
-
-    // Also try generic extraction
-    const cards = document.querySelectorAll('[role=&quot;listitem&quot;], [data-testid=&quot;analyticsCard&quot;]');
-    cards.forEach(card =&gt; {
-      const text = card.textContent?.trim() || '';
-      if (text) metrics[`card_${cards.length}`] = text.substring(0, 200);
-    });
-
-    return metrics;
-  });
-
-  return {
-    period,
-    analytics,
-    scrapedAt: new Date().toISOString(),
+  // =============================================
+  // CONFIGURATION
+  // =============================================
+  const CONFIG = {
+    maxPosts: 30,
+    scrollDelay: 1500,
+    exportResults: true,
   };
-}
+  // =============================================
 
-/**
- * Get analytics for a specific post
- * @param {import('puppeteer').Page} page
- * @param {string} postUrl
- * @returns {Promise&lt;Object&gt;}
- */
-export async function getPostAnalytics(page, postUrl) {
-  await page.goto(postUrl, { waitUntil: 'networkidle2' });
-  await sleep(2000);
-
-  // Click analytics button on the post
-  try {
-    await page.click('[data-testid=&quot;analyticsButton&quot;]');
-    await sleep(2000);
-  } catch (e) {
-    // Analytics may be inline on the post
-  }
-
-  const analytics = await page.evaluate(() =&gt; {
-    const tweet = document.querySelector('article[data-testid=&quot;tweet&quot;]');
-    if (!tweet) return null;
-
-    return {
-      likes: tweet.querySelector('[data-testid=&quot;like&quot;] span')?.textContent || '0',
-      reposts: tweet.querySelector('[data-testid=&quot;retweet&quot;] span')?.textContent || '0',
-      replies: tweet.querySelector('[data-testid=&quot;reply&quot;] span')?.textContent || '0',
-      bookmarks: tweet.querySelector('[data-testid=&quot;bookmark&quot;] span')?.textContent || '0',
-      views: tweet.querySelector('[data-testid=&quot;impressions&quot;], [data-testid=&quot;analyticsButton&quot;] span')?.textContent || '0',
-    };
-  });
-
-  return {
-    postUrl,
-    analytics: analytics || { error: 'Could not extract analytics' },
-    scrapedAt: new Date().toISOString(),
+  const download = (data, filename) =&gt; {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    console.log(`📥 Downloaded: ${filename}`);
   };
-}
 
-/**
- * Get revenue/earnings data
- * @param {import('puppeteer').Page} page
- * @returns {Promise&lt;Object&gt;}
- */
-export async function getRevenue(page) {
-  await page.goto('https://x.com/settings/monetization', { waitUntil: 'networkidle2' });
-  await sleep(3000);
-
-  const revenue = await page.evaluate(() =&gt; {
-    const text = document.querySelector('[role=&quot;main&quot;]')?.textContent || '';
-    return { rawText: text.substring(0, 500) };
-  });
-
-  return {
-    revenue,
-    note: 'Revenue data requires Premium subscription and eligibility',
-    scrapedAt: new Date().toISOString(),
+  const parseMetric = (text) =&gt; {
+    if (!text) return 0;
+    text = text.trim().replace(/,/g, '');
+    if (text.endsWith('K')) return Math.round(parseFloat(text) * 1000);
+    if (text.endsWith('M')) return Math.round(parseFloat(text) * 1000000);
+    return parseInt(text) || 0;
   };
-}
 
-/**
- * Get subscriber list
- * @param {import('puppeteer').Page} page
- * @param {Object} options
- * @returns {Promise&lt;Object&gt;}
- */
-export async function getSubscribers(page, options = {}) {
-  const { limit = 50 } = options;
-
-  await page.goto('https://x.com/settings/monetization/subscribers', { waitUntil: 'networkidle2' });
-  await sleep(3000);
-
-  const subscribers = await page.evaluate((sel, max) =&gt; {
-    return Array.from(document.querySelectorAll('[data-testid=&quot;UserCell&quot;]')).slice(0, max).map(user =&gt; {
-      const name = user.querySelector('[dir=&quot;ltr&quot;]')?.textContent || '';
-      const username = user.querySelector('a[role=&quot;link&quot;]')?.href?.split('/').pop() || '';
-      const since = user.querySelector('time')?.getAttribute('datetime') || '';
-      return { name, username, subscribedSince: since };
-    });
-  }, SELECTORS, limit);
-
-  return {
-    subscribers,
-    count: subscribers.length,
-    scrapedAt: new Date().toISOString(),
+  const classifyPost = (article) =&gt; {
+    if (article.querySelector('[data-testid=&quot;tweetPhoto&quot;]')) return 'image';
+    if (article.querySelector('video')) return 'video';
+    if (article.querySelector('[data-testid=&quot;card.wrapper&quot;]')) return 'link';
+    if (article.querySelector('[data-testid=&quot;TextPoll&quot;]')) return 'poll';
+    return 'text';
   };
-}
 
-/**
- * Creator dashboard - combined analytics
- * @param {import('puppeteer').Page} page
- * @returns {Promise&lt;Object&gt;}
- */
-export async function getCreatorDashboard(page) {
-  const analytics = await getAccountAnalytics(page);
-  const revenue = await getRevenue(page);
+  const run = async () =&gt; {
+    console.log('🎨 Creator Studio — Account Analytics');
+    console.log('━'.repeat(50));
 
-  return {
-    analytics: analytics.analytics,
-    revenue: revenue.revenue,
-    scrapedAt: new Date().toISOString(),
+    // Extract profile stats
+    const profileStats = (() =&gt; {
+      const followersEl = document.querySelector('a[href$=&quot;/verified_followers&quot;] span, a[href$=&quot;/followers&quot;] span');
+      const followingEl = document.querySelector('a[href$=&quot;/following&quot;] span');
+      const nameEl = document.querySelector('[data-testid=&quot;UserName&quot;]');
+      return {
+        name: nameEl?.textContent?.trim() || 'Unknown',
+        followers: followersEl?.textContent?.trim() || '0',
+        following: followingEl?.textContent?.trim() || '0',
+      };
+    })();
+
+    console.log(`👤 ${profileStats.name}`);
+    console.log(`👥 Followers: ${profileStats.followers} | Following: ${profileStats.following}`);
+
+    // Collect posts
+    const posts = [];
+    const seen = new Set();
+    let scrollRounds = 0;
+    const maxRounds = Math.ceil(CONFIG.maxPosts / 3) + 2;
+
+    while (posts.length &lt; CONFIG.maxPosts &amp;&amp; scrollRounds &lt; maxRounds) {
+      const articles = document.querySelectorAll('article[data-testid=&quot;tweet&quot;]');
+
+      for (const article of articles) {
+        if (posts.length &gt;= CONFIG.maxPosts) break;
+
+        const linkEl = article.querySelector('a[href*=&quot;/status/&quot;]');
+        const href = linkEl?.href || '';
+        if (!href || seen.has(href)) continue;
+        seen.add(href);
+
+        const timeEl = article.querySelector('time');
+        const datetime = timeEl?.getAttribute('datetime') || '';
+        const tweetText = article.querySelector('[data-testid=&quot;tweetText&quot;]')?.textContent?.trim() || '';
+
+        const likes = parseMetric(article.querySelector('[data-testid=&quot;like&quot;] span')?.textContent);
+        const reposts = parseMetric(article.querySelector('[data-testid=&quot;retweet&quot;] span')?.textContent);
+        const replies = parseMetric(article.querySelector('[data-testid=&quot;reply&quot;] span')?.textContent);
+        const bookmarks = parseMetric(article.querySelector('[data-testid=&quot;bookmark&quot;] span')?.textContent);
+        const views = parseMetric(article.querySelector('a[href*=&quot;/analytics&quot;] span')?.textContent);
+
+        const type = classifyPost(article);
+        const totalEngagement = likes + reposts + replies + bookmarks;
+        const engagementRate = views &gt; 0 ? ((totalEngagement / views) * 100) : 0;
+
+        posts.push({
+          url: href,
+          text: tweetText.slice(0, 120),
+          datetime,
+          type,
+          likes,
+          reposts,
+          replies,
+          bookmarks,
+          views,
+          totalEngagement,
+          engagementRate,
+        });
+      }
+
+      console.log(`📜 Scroll ${scrollRounds + 1}: ${posts.length}/${CONFIG.maxPosts} posts collected`);
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(CONFIG.scrollDelay);
+      scrollRounds++;
+    }
+
+    if (posts.length === 0) {
+      console.error('❌ No posts found. Make sure you are on a profile page with tweets.');
+      return;
+    }
+
+    console.log(`\n✅ Collected ${posts.length} posts. Analyzing...\n`);
+
+    // --- Compute Stats ---
+    const avgEngRate = posts.reduce((s, p) =&gt; s + p.engagementRate, 0) / posts.length;
+    const avgLikes = posts.reduce((s, p) =&gt; s + p.likes, 0) / posts.length;
+    const avgReposts = posts.reduce((s, p) =&gt; s + p.reposts, 0) / posts.length;
+    const avgReplies = posts.reduce((s, p) =&gt; s + p.replies, 0) / posts.length;
+    const totalViews = posts.reduce((s, p) =&gt; s + p.views, 0);
+
+    console.log('━━━ 📊 ENGAGEMENT OVERVIEW ━━━');
+    console.log(`  Avg engagement rate: ${avgEngRate.toFixed(2)}%`);
+    console.log(`  Avg likes: ${avgLikes.toFixed(1)} | Avg reposts: ${avgReposts.toFixed(1)} | Avg replies: ${avgReplies.toFixed(1)}`);
+    console.log(`  Total views across ${posts.length} posts: ${totalViews.toLocaleString()}`);
+
+    // --- Best post type ---
+    const typeMap = {};
+    for (const p of posts) {
+      if (!typeMap[p.type]) typeMap[p.type] = { count: 0, totalEng: 0, totalRate: 0 };
+      typeMap[p.type].count++;
+      typeMap[p.type].totalEng += p.totalEngagement;
+      typeMap[p.type].totalRate += p.engagementRate;
+    }
+
+    console.log('\n━━━ 🏷️ PERFORMANCE BY POST TYPE ━━━');
+    const typeEntries = Object.entries(typeMap).sort((a, b) =&gt; (b[1].totalRate / b[1].count) - (a[1].totalRate / a[1].count));
+    for (const [type, data] of typeEntries) {
+      const avg = (data.totalRate / data.count).toFixed(2);
+      const avgEng = (data.totalEng / data.count).toFixed(1);
+      const bar = '█'.repeat(Math.round(parseFloat(avg) * 5));
+      console.log(`  ${type.padEnd(8)} — ${data.count} posts, avg rate: ${avg}%, avg engagement: ${avgEng} ${bar}`);
+    }
+
+    const bestType = typeEntries[0]?.[0] || 'text';
+    console.log(`  🏆 Best performing type: ${bestType}`);
+
+    // --- Posting frequency ---
+    const dates = posts.filter(p =&gt; p.datetime).map(p =&gt; new Date(p.datetime));
+    if (dates.length &gt;= 2) {
+      dates.sort((a, b) =&gt; a - b);
+      const spanDays = (dates[dates.length - 1] - dates[0]) / 86400000;
+      const postsPerDay = spanDays &gt; 0 ? (dates.length / spanDays).toFixed(2) : dates.length;
+      console.log(`\n━━━ 📅 POSTING FREQUENCY ━━━`);
+      console.log(`  Period: ${spanDays.toFixed(0)} days`);
+      console.log(`  Rate: ~${postsPerDay} posts/day`);
+      if (postsPerDay &lt; 1) console.log('  💡 Consider posting at least 1-2x daily for growth.');
+      else if (postsPerDay &gt; 8) console.log('  💡 Very active! Focus on quality over quantity.');
+      else console.log('  ✅ Healthy posting cadence.');
+    }
+
+    // --- Top posts ---
+    const topPosts = [...posts].sort((a, b) =&gt; b.totalEngagement - a.totalEngagement).slice(0, 5);
+    console.log('\n━━━ 🔥 TOP 5 POSTS ━━━');
+    for (const p of topPosts) {
+      console.log(`  [${p.type}] ${p.totalEngagement} eng (${p.engagementRate.toFixed(2)}%) — &quot;${p.text.slice(0, 60)}...&quot;`);
+    }
+
+    // --- Growth indicator ---
+    console.log('\n━━━ 📈 GROWTH INDICATORS ━━━');
+    const growthMsg = avgEngRate &gt; 5 ? '🚀 Excellent — strong growth' : avgEngRate &gt; 2 ? '📈 Good — steady growth' : avgEngRate &gt; 0.5 ? '📊 Average — focus on top types' : '⚠️ Low — experiment more';
+    console.log(`  ${growthMsg}. Best type: &quot;${bestType}&quot; — post more of it!`);
+
+    // --- Export ---
+    if (CONFIG.exportResults) {
+      const report = {
+        profile: profileStats,
+        summary: { totalPosts: posts.length, avgEngagementRate: avgEngRate.toFixed(2) + '%', avgLikes: avgLikes.toFixed(1), totalViews, bestPostType: bestType },
+        topPosts: topPosts.map(p =&gt; ({ url: p.url, type: p.type, engagement: p.totalEngagement, rate: p.engagementRate.toFixed(2) + '%' })),
+        posts,
+        analyzedAt: new Date().toISOString(),
+      };
+      download(report, `xactions-creator-studio-${new Date().toISOString().slice(0, 10)}.json`);
+    }
+
+    console.log('\n✅ Creator Studio analysis complete.');
   };
-}
 
-export default {
-  getAccountAnalytics,
-  getPostAnalytics,
-  getRevenue,
-  getSubscribers,
-  getCreatorDashboard,
-  SELECTORS,
-};
+  run();
+})();
 </code></pre>
           </div>
         </section>
@@ -351,7 +377,7 @@ export default {
         <h3>🎨 Business</h3>
         <a href="/scripts/ads-manager">📢 Ads Manager</a>
 <a href="/scripts/business-analytics">💼 Business Analytics</a>
-<a href="/scripts/business-tools">💼 Business Tools - Ads</a>
+<a href="/scripts/business-tools">💼 Business Tools</a>
 <a href="/scripts/media-studio">🖼️ Media Studio</a>
       </div>
       <div class="sidebar-card">

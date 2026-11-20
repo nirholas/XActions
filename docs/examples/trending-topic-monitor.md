@@ -39,7 +39,7 @@ This script provides the following capabilities:
 **Steps:**
 1. Go to `x.com/explore`
 2. Open browser console (`F12` → Console tab)
-3. Copy and paste the script from [`src/trendingTopicMonitor.js`](https://github.com/nirholas/XActions/blob/main/src/trendingTopicMonitor.js)
+3. Copy and paste the script from [`browser/trendingTopicMonitor.js`](https://github.com/nirholas/XActions/blob/main/browser/trendingTopicMonitor.js)
 4. Press Enter to run
 
 ```javascript
@@ -414,7 +414,7 @@ Open your browser and go to `x.com/explore`. Make sure you're logged in to your 
 
 ### Step 3: Paste the script
 
-Copy the entire script from [`src/trendingTopicMonitor.js`](https://github.com/nirholas/XActions/blob/main/src/trendingTopicMonitor.js) and paste it into the console.
+Copy the entire script from [`browser/trendingTopicMonitor.js`](https://github.com/nirholas/XActions/blob/main/browser/trendingTopicMonitor.js) and paste it into the console.
 
 ### Step 4: Customize the CONFIG (optional)
 
@@ -473,7 +473,7 @@ See the [MCP Setup Guide](../mcp-setup.md) for integration with Claude Desktop, 
 
 | File | Description |
 |------|-------------|
-| [`src/trendingTopicMonitor.js`](https://github.com/nirholas/XActions/blob/main/src/trendingTopicMonitor.js) | Main script |
+| [`browser/trendingTopicMonitor.js`](https://github.com/nirholas/XActions/blob/main/browser/trendingTopicMonitor.js) | Main script |
 
 ---
 

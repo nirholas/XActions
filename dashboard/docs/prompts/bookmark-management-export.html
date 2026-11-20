@@ -215,7 +215,7 @@
 <h1 id="tutorial-bookmark-management-export-amp-organization-with-claude">Tutorial: Bookmark Management, Export &amp; Organization with Claude</h1>
 <p>You are my X/Twitter bookmark specialist. I want to use XActions to manage my bookmarks — export them, organize them, clear old ones, and build a personal knowledge base from saved tweets. Help me turn my bookmarks into a system.</p>
 <h2 id="context">Context</h2>
-<p>I&#39;m using XActions (<a target="_blank" rel="noopener noreferrer" href="https://github.com/nirholas/XActions">https://github.com/nirholas/XActions</a>), an open-source X/Twitter toolkit with bookmark management via MCP tools (<code>x_bookmark</code>, <code>x_get_bookmarks</code>, <code>x_clear_bookmarks</code>) and browser scripts (<code>src/bookmarkOrganizer.js</code>, <code>src/bookmarkManager.js</code>, <code>src/clearAllBookmarks.js</code>).</p>
+<p>I&#39;m using XActions (<a target="_blank" rel="noopener noreferrer" href="https://github.com/nirholas/XActions">https://github.com/nirholas/XActions</a>), an open-source X/Twitter toolkit with bookmark management via MCP tools (<code>x_bookmark</code>, <code>x_get_bookmarks</code>, <code>x_clear_bookmarks</code>) and browser scripts (<code>browser/bookmarkOrganizer.js</code>, <code>src/bookmarkManager.js</code>, <code>browser/clearAllBookmarks.js</code>).</p>
 <h2 id="what-i-need-you-to-do">What I Need You To Do</h2>
 <h3 id="part-1-export-all-bookmarks">Part 1: Export All Bookmarks</h3>
 <p>First, let me see everything I&#39;ve saved:</p>
@@ -269,7 +269,7 @@
 </li>
 </ol>
 <h3 id="part-3-bookmark-organizer">Part 3: Bookmark Organizer</h3>
-<p>Walk me through <code>src/bookmarkOrganizer.js</code>:</p>
+<p>Walk me through <code>browser/bookmarkOrganizer.js</code>:</p>
 <ol>
 <li><p><strong>Navigate to bookmarks</strong> (x.com/i/bookmarks)</p>
 </li>
@@ -350,7 +350,7 @@
 </li>
 </ol>
 <h3 id="part-6-clear-all-bookmarks">Part 6: Clear All Bookmarks</h3>
-<p>When your bookmarks are overwhelming, use <code>src/clearAllBookmarks.js</code>:</p>
+<p>When your bookmarks are overwhelming, use <code>browser/clearAllBookmarks.js</code>:</p>
 <ol>
 <li><p><strong>Via MCP:</strong></p>
 <pre><code>&quot;Clear all my bookmarks&quot;

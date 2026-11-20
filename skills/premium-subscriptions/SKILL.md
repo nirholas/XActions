@@ -17,7 +17,7 @@ Browser console script for checking and managing X/Twitter Premium subscription 
 |------|------|-------------|
 | Check Premium status | `src/premiumManager.js` | `x.com/settings/account` |
 | Manage articles (Premium+) | `src/articlePublisher.js` | `x.com/compose/article` |
-| Schedule posts (Premium) | `src/schedulePosts.js` | `x.com` |
+| Schedule posts (Premium) | `browser/schedulePosts.js` | `x.com` |
 | Creator monetization | `src/creatorStudio.js` | `x.com/i/monetization` |
 
 ## Premium Manager
@@ -45,7 +45,7 @@ Several scripts depend on Premium:
 
 | Feature | Required Tier | Script |
 |---------|---------------|--------|
-| Scheduling | Premium+ | `src/schedulePosts.js` |
+| Scheduling | Premium+ | `browser/schedulePosts.js` |
 | Articles | Premium+ | `src/articlePublisher.js` |
 | Advanced analytics | Premium | `src/creatorStudio.js` |
 | Edit posts | Basic+ | N/A (manual edit) |

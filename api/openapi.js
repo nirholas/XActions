@@ -4188,7 +4188,7 @@ Free alternatives: Browser scripts, CLI, and Node.js library at https://xactions
       '/api/scripts/src/{name}': {
         get: {
           tags: ['Scripts'],
-          summary: 'Download a browser script from src/',
+          summary: 'Download a top-level browser script (browser/ in the repository)',
           parameters: [{ name: 'name', in: 'path', required: true, schema: { type: 'string' } }],
           responses: { 200: ok200('Script content'), 402: payment402 },
         },

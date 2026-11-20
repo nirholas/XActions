@@ -20,21 +20,21 @@ Provides three actions:
 **Steps:**
 1. Go to `x.com/i/lists`
 2. Set `action: 'create'` in CONFIG
-3. Open console (F12) and paste `src/listManager.js`
+3. Open console (F12) and paste `browser/listManager.js`
 
 ### Add Members to a List
 
 **Steps:**
 1. Go to the list page (`x.com/i/lists/<listId>`)
 2. Set `action: 'addMembers'` in CONFIG
-3. Open console (F12) and paste `src/listManager.js`
+3. Open console (F12) and paste `browser/listManager.js`
 
 ### Export Members
 
 **Steps:**
 1. Go to the list's members page
 2. Set `action: 'exportMembers'`
-3. Open console (F12) and paste `src/listManager.js`
+3. Open console (F12) and paste `browser/listManager.js`
 
 **Configuration:**
 ```javascript
@@ -51,7 +51,7 @@ const CONFIG = {
 
 ## 📁 Files
 
-- `src/listManager.js` — Browser console list manager
+- `browser/listManager.js` — Browser console list manager
 
 ## ⚠️ Notes
 

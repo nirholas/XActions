@@ -241,7 +241,7 @@ Navigate to the recipient's profile first, then paste:
 
 | Feature | Script | Description |
 |---------|--------|-------------|
-| Subscribe to Premium | `src/subscribePremium.js` | Subscribe yourself to Premium |
+| Subscribe to Premium | `browser/subscribePremium.js` | Subscribe yourself to Premium |
 | Premium Manager | `src/premiumManager.js` | Check tier features |
 | Blue Checkmark | `src/premiumManager.js` | Verification status and features |
 | Profile Scraping | `src/profileManager.js` | Check a user's profile before gifting |

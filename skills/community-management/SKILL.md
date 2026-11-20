@@ -15,12 +15,12 @@ Browser console scripts for managing X/Twitter Communities — leaving, joining,
 
 | Goal | File | Navigate to |
 |------|------|-------------|
-| Leave ALL communities | `src/leaveAllCommunities.js` | `x.com/communities` |
-| Join communities by topic | `src/joinCommunities.js` | `x.com/i/communities/suggested` |
+| Leave ALL communities | `browser/leaveAllCommunities.js` | `x.com/communities` |
+| Join communities by topic | `browser/joinCommunities.js` | `x.com/i/communities/suggested` |
 
 ## Leave All Communities
 
-**File:** `src/leaveAllCommunities.js`
+**File:** `browser/leaveAllCommunities.js`
 
 Paste into DevTools on `x.com/communities`.
 
@@ -50,7 +50,7 @@ Note: `sessionStorage` clears automatically when the browser tab closes.
 
 ## Join Communities
 
-**File:** `src/joinCommunities.js`
+**File:** `browser/joinCommunities.js`
 
 Navigate to community discovery pages and paste the script to auto-join communities matching your interests.
 
@@ -86,23 +86,23 @@ Navigate to community discovery pages and paste the script to auto-join communit
 ### Cleaning up community memberships
 
 1. Navigate to `x.com/communities` to see all your communities
-2. Paste `src/leaveAllCommunities.js` and let it run
+2. Paste `browser/leaveAllCommunities.js` and let it run
 3. If interrupted (tab close, navigation), re-paste the script — it resumes from sessionStorage
 4. Verify completion by refreshing the communities page
 
 ### Joining niche communities for growth
 
 1. Navigate to `x.com/i/communities/suggested`
-2. Paste `src/joinCommunities.js`
+2. Paste `browser/joinCommunities.js`
 3. Configure keywords matching your niche
 4. The script joins matching communities and skips already-joined ones
 
 ### Community engagement strategy
 
 1. Join 5-10 relevant communities in your niche
-2. Use `src/engagementBooster.js` to engage with community members' content
+2. Use `browser/engagementBooster.js` to engage with community members' content
 3. Post valuable content in communities to build authority
-4. Use `src/audienceDemographics.js` to understand community member demographics
+4. Use `browser/audienceDemographics.js` to understand community member demographics
 5. Leave inactive communities periodically with `leaveAllCommunities.js`
 
 ## Troubleshooting

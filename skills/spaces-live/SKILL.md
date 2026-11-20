@@ -16,7 +16,7 @@ Browser console scripts for interacting with X/Twitter Spaces.
 | Script | File | Purpose |
 |--------|------|---------|
 | Spaces Manager | `src/spacesManager.js` | Join, manage, and interact with Spaces |
-| Scrape Spaces | `src/scrapeSpaces.js` | Find and collect Space metadata from search |
+| Scrape Spaces | `browser/scrapeSpaces.js` | Find and collect Space metadata from search |
 
 ## Spaces Manager
 
@@ -31,7 +31,7 @@ Manages interactions with X Spaces: join, leave, request to speak, and get live 
 
 ## Scrape Spaces
 
-**File:** `src/scrapeSpaces.js`
+**File:** `browser/scrapeSpaces.js`
 
 Finds X Spaces from search results or timelines. Identifies live, scheduled, and ended Spaces with metadata.
 
@@ -73,7 +73,7 @@ const CONFIG = {
 ## Strategy Guide
 
 ### Using Spaces for growth
-1. Use `src/scrapeSpaces.js` to find active Spaces in your niche
+1. Use `browser/scrapeSpaces.js` to find active Spaces in your niche
 2. Join as a listener -- consistent presence builds recognition
 3. Request to speak when topic aligns with your expertise
 4. Follow hosts and frequent speakers afterward
@@ -82,14 +82,14 @@ const CONFIG = {
 ### Discovering niche Spaces
 1. Search `x.com/search?q=your-topic&f=live` for live Spaces
 2. Follow accounts that regularly host Spaces in your niche
-3. Set up `src/keywordMonitor.js` with Space-related keywords
+3. Set up `browser/keywordMonitor.js` with Space-related keywords
 4. Check `/i/spaces` for recommended Spaces in your interests
 
 ### Hosting workflow
 1. Schedule a Space from the compose button
 2. Promote it with a tweet thread 24h before
-3. Use `src/scrapeSpaces.js` to record participant metadata
-4. After the Space, engage with attendees using `src/engagementBooster.js`
+3. Use `browser/scrapeSpaces.js` to record participant metadata
+4. After the Space, engage with attendees using `browser/engagementBooster.js`
 
 ## Notes
 - Scraping captures metadata only (not audio content)

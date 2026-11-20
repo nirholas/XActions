@@ -22,7 +22,7 @@
  * 4. Paste this script and press Enter
  *
  * ⚠️ DELETION IS PERMANENT. There is no undo. Export first!
- *    Use src/backupAccount.js to save your tweets before deleting.
+ *    Use browser/backupAccount.js to save your tweets before deleting.
  *
  * CONTROLS:
  *   XActionsUtils.pause()   — pause

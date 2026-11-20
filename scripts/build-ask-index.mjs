@@ -9,7 +9,7 @@
  *   docs/**\/*.md, skills/*\/SKILL.md, tutorials/**\/*.md   -> the live docs page
  *                                                           (via dashboard/docs/_pages-manifest.json)
  *   README.md, CHANGELOG.md, AGENTS.md                      -> GitHub blob URL
- *   src/*.js and scripts/*.js browser scripts (header docs) -> /scripts/<slug> when a page exists
+ *   browser/*.js and scripts/*.js browser scripts (header docs) -> /scripts/<slug> when a page exists
  *   dashboard/*.html marketing pages (FAQ, pricing, ...)    -> the page URL
  *
  * Output: dashboard/data/ask-index.json (served as /data/ask-index.json), plus a
@@ -190,7 +190,7 @@ for (const name of ['README.md', 'CHANGELOG.md', 'AGENTS.md', 'SECURITY.md', 'CO
 
 // 3. Browser scripts: the header block documents what the script does and where to paste it.
 const kebab = (s) => s.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
-for (const dir of ['src', 'scripts']) {
+for (const dir of ['browser', 'scripts']) {
   for (const entry of readdirSync(join(ROOT, dir))) {
     if (!entry.endsWith('.js') || entry.endsWith('.mjs')) continue;
     const file = join(ROOT, dir, entry);

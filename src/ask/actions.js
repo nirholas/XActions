@@ -12,7 +12,7 @@
  *
  * The retrieved sources matter as much as the question text: a passage from
  * docs/examples/unfollow-everyone.md is direct evidence that
- * src/unfollowEveryone.js is the answer, and it survives phrasing
+ * browser/unfollowEveryone.js is the answer, and it survives phrasing
  * ("clean out my following", "start fresh") that no keyword match would.
  *
  * Runs unchanged in Node, the Cloudflare Worker and the browser.

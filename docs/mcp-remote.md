@@ -150,7 +150,7 @@ The server publishes the whole XActions corpus as MCP resources, roughly 700 of 
 ```
 xactions://doc/docs/video-downloader.md
 xactions://skill/skills/algorithm-cultivation/SKILL.md
-xactions://script/src/unfollowEveryone.js
+xactions://script/browser/unfollowEveryone.js
 ```
 
 `xactions_docs` finds the right passage; a resource read pulls the whole file. Agents that support resource attachment can pin one into context.

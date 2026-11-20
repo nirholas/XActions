@@ -19,7 +19,7 @@ Compare engagement metrics across multiple X/Twitter accounts side by side.
 **Steps:**
 1. Go to `x.com` (any page)
 2. Edit CONFIG with target usernames
-3. Open console (F12) and paste `src/competitorAnalysis.js`
+3. Open console (F12) and paste `browser/competitorAnalysis.js`
 
 **Configuration:**
 ```javascript
@@ -51,7 +51,7 @@ The script prints a comparison table and rankings:
 
 ## 📁 Files
 
-- `src/competitorAnalysis.js` — Browser console competitor analysis
+- `browser/competitorAnalysis.js` — Browser console competitor analysis
 
 ## ⚠️ Notes
 

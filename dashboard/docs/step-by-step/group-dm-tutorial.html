@@ -218,7 +218,7 @@
 <ol>
 <li>Open x.com and navigate to <strong>Messages</strong> (<code>https://x.com/messages</code>)</li>
 <li>Press <strong>F12</strong> to open DevTools, then click the <strong>Console</strong> tab</li>
-<li>Copy the script from <code>src/groupDM.js</code></li>
+<li>Copy the script from <code>browser/groupDM.js</code></li>
 <li>Edit the <code>CONFIG.recipients</code> array with at least 2 usernames</li>
 <li>Paste into the console and press Enter</li>
 </ol>
@@ -296,7 +296,7 @@
 <h3>Step 1 -- Navigate to Messages</h3>
 <p>Go to <code>https://x.com/messages</code> in your browser.</p>
 <h3>Step 2 -- Configure Recipients</h3>
-<p>Edit the <code>CONFIG</code> section in <code>src/groupDM.js</code>:</p>
+<p>Edit the <code>CONFIG</code> section in <code>browser/groupDM.js</code>:</p>
 <pre><code class="language-js">const CONFIG = {
   recipients: [&#39;alice_dev&#39;, &#39;bob_crypto&#39;, &#39;charlie_ai&#39;],
   message: &#39;Hey team! Let us coordinate our next project here.&#39;,
@@ -386,10 +386,10 @@ window.XActions.abort();
 <hr>
 <h2>Related Scripts</h2>
 <ul>
-<li><code>src/sendDirectMessage.js</code> -- Send individual DMs to a list of users</li>
+<li><code>browser/sendDirectMessage.js</code> -- Send individual DMs to a list of users</li>
 <li><code>src/dmManager.js</code> -- Node.js DM management library</li>
-<li><code>src/dmCalls.js</code> -- Start audio/video calls in DMs</li>
-<li><code>src/encryptedDM.js</code> -- Send encrypted DMs</li>
+<li><code>browser/dmCalls.js</code> -- Start audio/video calls in DMs</li>
+<li><code>browser/encryptedDM.js</code> -- Send encrypted DMs</li>
 </ul>
 
 

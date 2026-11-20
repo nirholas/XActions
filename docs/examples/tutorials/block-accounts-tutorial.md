@@ -17,13 +17,13 @@
 
 | Script | Starting Page | Purpose |
 |--------|--------------|---------|
-| `src/massBlock.js` | Any x.com page | Block by username list or visible users |
-| `src/massUnblock.js` | `x.com/settings/blocked/all` | Unblock all or selected users |
-| `src/blockBots.js` | Any followers/user list | Detect and block likely bot accounts |
+| `browser/massBlock.js` | Any x.com page | Block by username list or visible users |
+| `browser/massUnblock.js` | `x.com/settings/blocked/all` | Unblock all or selected users |
+| `browser/blockBots.js` | Any followers/user list | Detect and block likely bot accounts |
 
 ## Configuration
 
-### src/massBlock.js
+### browser/massBlock.js
 
 ```js
 const CONFIG = {
@@ -42,7 +42,7 @@ const CONFIG = {
 };
 ```
 
-### src/massUnblock.js
+### browser/massUnblock.js
 
 ```js
 const CONFIG = {
@@ -55,7 +55,7 @@ const CONFIG = {
 };
 ```
 
-### src/blockBots.js
+### browser/blockBots.js
 
 ```js
 const CONFIG = {
@@ -75,7 +75,7 @@ const CONFIG = {
 
 ### Block a List of Users
 
-**Step 1:** Start with a dry run in `src/massBlock.js`:
+**Step 1:** Start with a dry run in `browser/massBlock.js`:
 
 ```js
 const CONFIG = {
@@ -146,7 +146,7 @@ Blocking visible users on page (max 20)
 
 **Step 1:** Navigate to your followers list (`x.com/YOUR_USERNAME/followers`) or any user list.
 
-**Step 2:** Paste `src/blockBots.js`:
+**Step 2:** Paste `browser/blockBots.js`:
 
 ```js
 const CONFIG = {
@@ -185,7 +185,7 @@ A user is flagged as a bot if 2 or more of these are true:
 
 **Step 1:** Navigate to `https://x.com/settings/blocked/all`.
 
-**Step 2:** Configure `src/massUnblock.js`:
+**Step 2:** Configure `browser/massUnblock.js`:
 
 ```js
 const CONFIG = {
@@ -242,7 +242,7 @@ window.XActions.status();
 
 ## Related Scripts
 
-- `src/muteByKeywords.js` -- Mute users by tweet keywords
-- `src/manageMutedWords.js` -- Bulk-add muted words
-- `src/massUnmute.js` -- Mass unmute users
-- `src/reportSpam.js` -- Report spam accounts
+- `browser/muteByKeywords.js` -- Mute users by tweet keywords
+- `browser/manageMutedWords.js` -- Bulk-add muted words
+- `browser/massUnmute.js` -- Mass unmute users
+- `browser/reportSpam.js` -- Report spam accounts

@@ -217,7 +217,7 @@
 <p><strong>Steps:</strong></p>
 <ol>
 <li>Go to your profile page (<code>x.com/yourusername</code>)</li>
-<li>Open console (F12) and paste <code>src/backupAccount.js</code></li>
+<li>Open console (F12) and paste <code>browser/backupAccount.js</code></li>
 </ol>
 <p><strong>Configuration:</strong></p>
 <pre><code class="language-javascript">const CONFIG = {
@@ -242,15 +242,15 @@
 <hr>
 <h2>📁 Files</h2>
 <ul>
-<li><code>src/backupAccount.js</code> — Full account backup script</li>
-<li><code>src/downloadAccountData.js</code> — Trigger X&#39;s official data archive</li>
+<li><code>browser/backupAccount.js</code> — Full account backup script</li>
+<li><code>browser/downloadAccountData.js</code> — Trigger X&#39;s official data archive</li>
 <li><code>scripts/twitter/backup-account.js</code> — Extended DevTools version</li>
 </ul>
 <h2>⚠️ Notes</h2>
 <ul>
 <li>Disable individual sections with <code>includeTweets: false</code>, etc.</li>
 <li>Scroll cycles determine how much data is collected (more = slower but more complete)</li>
-<li>For a truly complete backup, also use <code>src/downloadAccountData.js</code> to request X&#39;s official archive</li>
+<li>For a truly complete backup, also use <code>browser/downloadAccountData.js</code> to request X&#39;s official archive</li>
 <li>Large accounts may take several minutes</li>
 </ul>
 

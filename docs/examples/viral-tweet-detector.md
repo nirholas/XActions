@@ -39,7 +39,7 @@ This script provides the following capabilities:
 **Steps:**
 1. Go to `x.com (any timeline)`
 2. Open browser console (`F12` → Console tab)
-3. Copy and paste the script from [`src/viralTweetDetector.js`](https://github.com/nirholas/XActions/blob/main/src/viralTweetDetector.js)
+3. Copy and paste the script from [`browser/viralTweetDetector.js`](https://github.com/nirholas/XActions/blob/main/browser/viralTweetDetector.js)
 4. Press Enter to run
 
 ```javascript
@@ -295,7 +295,7 @@ Open your browser and go to `x.com (any timeline)`. Make sure you're logged in t
 
 ### Step 3: Paste the script
 
-Copy the entire script from [`src/viralTweetDetector.js`](https://github.com/nirholas/XActions/blob/main/src/viralTweetDetector.js) and paste it into the console.
+Copy the entire script from [`browser/viralTweetDetector.js`](https://github.com/nirholas/XActions/blob/main/browser/viralTweetDetector.js) and paste it into the console.
 
 ### Step 4: Customize the CONFIG (optional)
 
@@ -354,7 +354,7 @@ See the [MCP Setup Guide](../mcp-setup.md) for integration with Claude Desktop, 
 
 | File | Description |
 |------|-------------|
-| [`src/viralTweetDetector.js`](https://github.com/nirholas/XActions/blob/main/src/viralTweetDetector.js) | Main script |
+| [`browser/viralTweetDetector.js`](https://github.com/nirholas/XActions/blob/main/browser/viralTweetDetector.js) | Main script |
 
 ---
 
