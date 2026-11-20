@@ -9,6 +9,7 @@
 
 import { lookup as dnsLookup } from 'node:dns/promises';
 import { BlockList, isIP } from 'node:net';
+import { fetchWithDispatcher } from './http2.js';
 
 /** A URL the server will not call. Retrying cannot fix it. */
 export class PublicUrlError extends Error {
@@ -94,6 +95,20 @@ export function isPrivateAddress(address) {
  * @returns {Promise<URL>}
  */
 export async function assertPublicUrl(raw, label = 'URL', lookup = dnsLookup) {
+  return (await resolvePublicUrl(raw, label, lookup)).url;
+}
+
+/**
+ * Validate a URL as {@link assertPublicUrl} does and also return the address
+ * that was checked, so the request can be sent to that address and no other.
+ * `address` is null when private hosts are allowed and nothing was pinned.
+ *
+ * @param {string} raw
+ * @param {string} [label='URL']
+ * @param {typeof dnsLookup} [lookup]
+ * @returns {Promise<{ url: URL, address: string | null, family: 4 | 6 | null }>}
+ */
+export async function resolvePublicUrl(raw, label = 'URL', lookup = dnsLookup) {
   let url;
   try {
     url = new URL(String(raw));
@@ -101,7 +116,7 @@ export async function assertPublicUrl(raw, label = 'URL', lookup = dnsLookup) {
     throw new PublicUrlError(`${label} is not a valid URL`);
   }
   if (url.protocol !== 'https:' && url.protocol !== 'http:') throw new PublicUrlError(`${label} must be an http or https URL`);
-  if (process.env.XACTIONS_WEBHOOK_ALLOW_PRIVATE === 'true') return url;
+  if (process.env.XACTIONS_WEBHOOK_ALLOW_PRIVATE === 'true') return { url, address: null, family: null };
 
   const host = url.hostname.replace(/^\[|\]$/g, '');
   let addresses;
@@ -121,5 +136,59 @@ export async function assertPublicUrl(raw, label = 'URL', lookup = dnsLookup) {
         'a self-hosted server can allow internal hosts with XACTIONS_WEBHOOK_ALLOW_PRIVATE=true.',
     );
   }
-  return url;
+  return { url, address: addresses[0], family: isIP(addresses[0]) === 6 ? 6 : 4 };
+}
+
+/**
+ * An undici dispatcher that connects every request to one address, whatever
+ * the hostname resolves to by then. TLS still verifies the certificate
+ * against the URL's hostname (SNI and the check use the hostname, only the
+ * socket address is fixed).
+ *
+ * @param {string} address
+ * @param {4 | 6} family
+ * @returns {Promise<import('undici').Agent | null>} null when undici is unavailable
+ */
+export async function pinnedDispatcher(address, family) {
+  let undici;
+  try {
+    undici = await import('undici');
+  } catch {
+    return null;
+  }
+  return new undici.Agent({
+    connect: {
+      lookup(_hostname, options, callback) {
+        if (options?.all) callback(null, [{ address, family }]);
+        else callback(null, address, family);
+      },
+    },
+  });
+}
+
+/**
+ * Fetch a URL only if it is public, connecting to the exact address that was
+ * checked. Checking a hostname and then letting fetch resolve it again leaves
+ * a gap: a hostile DNS server answers the check with a public address and the
+ * fetch with 127.0.0.1 or a cloud metadata address (DNS rebinding). Redirects
+ * are not followed (`redirect: 'manual'` unless the caller says otherwise),
+ * so a caller that follows one must call this again for the new location.
+ *
+ * @param {string | URL} raw
+ * @param {RequestInit} [init]
+ * @param {{ label?: string, lookup?: typeof dnsLookup, fetch?: typeof globalThis.fetch }} [options]
+ *   `fetch` is the caller's fetch; a replaced or injected one is used as is,
+ *   without pinning (tests, interceptors)
+ * @returns {Promise<Response>}
+ */
+export async function publicFetch(raw, init = {}, { label = 'URL', lookup = dnsLookup, fetch: fetchFn = globalThis.fetch } = {}) {
+  const { url, address, family } = await resolvePublicUrl(raw, label, lookup);
+  const dispatcher = address ? await pinnedDispatcher(address, family) : null;
+  const request = { redirect: 'manual', ...init, ...(dispatcher ? { dispatcher } : {}) };
+  try {
+    return await fetchWithDispatcher(fetchFn, url.href, request);
+  } finally {
+    // Graceful: an open response body keeps its socket until it is read.
+    dispatcher?.close().catch(() => {});
+  }
 }

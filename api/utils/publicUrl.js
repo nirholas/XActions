@@ -8,4 +8,4 @@
  * @license Apache-2.0
  */
 
-export { PublicUrlError, isPrivateAddress, assertPublicUrl } from '../../src/utils/publicUrl.js';
+export { PublicUrlError, isPrivateAddress, assertPublicUrl, resolvePublicUrl, publicFetch } from '../../src/utils/publicUrl.js';

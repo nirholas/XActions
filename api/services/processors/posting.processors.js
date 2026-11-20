@@ -23,6 +23,7 @@
 import { uploadChunked } from '../../../src/scrapers/twitter/http/media.js';
 import { TwitterApiError } from '../../../src/scrapers/twitter/http/errors.js';
 import dns from 'node:dns/promises';
+import { PublicUrlError, publicFetch } from '../../utils/publicUrl.js';
 import fs from 'node:fs/promises';
 import net from 'node:net';
 import os from 'node:os';
@@ -427,10 +428,12 @@ async function assertPublicUrl(raw, lookup) {
 async function download(deps, raw, { maxBytes, what }) {
   let url = await assertPublicUrl(raw, deps.lookup);
   for (let hop = 0; hop < 5; hop++) {
-    const res = await deps.fetch(url.href, {
-      redirect: 'manual',
+    // Pinned to the address that was just checked (DNS rebinding).
+    const res = await publicFetch(url, {
       headers: { 'user-agent': 'XActions/1.0 (+https://xactions.app)' },
       signal: AbortSignal.timeout(30_000),
+    }, { label: what, lookup: deps.lookup, fetch: deps.fetch }).catch((err) => {
+      throw err instanceof PublicUrlError ? new JobInputError(err.message) : err;
     });
     if (res.status >= 300 && res.status < 400 && res.headers.get('location')) {
       url = await assertPublicUrl(new URL(res.headers.get('location'), url).href, deps.lookup);

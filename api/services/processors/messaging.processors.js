@@ -31,7 +31,7 @@
 
 import { createCipheriv, createDecipheriv, createHash, randomBytes } from 'node:crypto';
 import { lookup as dnsLookup } from 'node:dns/promises';
-import { PublicUrlError, assertPublicUrl as assertPublic } from '../../utils/publicUrl.js';
+import { PublicUrlError, assertPublicUrl as assertPublic, publicFetch } from '../../utils/publicUrl.js';
 import { JobInputError, createJobContext, isPermanentFailure, ownerKeyForSession } from './context.js';
 import { searchTweets } from '../../../src/scrapers/twitter/http/search.js';
 import { scrapeTweets, scrapeTweetById } from '../../../src/scrapers/twitter/http/tweets.js';
@@ -502,10 +502,23 @@ async function sendDirectMessage(ctx, { recipient, text, mediaId, seed }) {
   }
 }
 
+/**
+ * Fetch a URL pinned to the public address it was checked against
+ * (publicFetch), with a refused URL failing the job as an input error.
+ */
+async function pinnedFetch(fetchImpl, lookup, url, init, label) {
+  try {
+    return await publicFetch(url, init, { label, lookup, fetch: fetchImpl });
+  } catch (err) {
+    if (err instanceof PublicUrlError) throw new JobInputError(err.message);
+    throw err;
+  }
+}
+
 async function downloadMedia(fetchImpl, lookup, mediaUrl) {
   let url = await assertPublicUrl(mediaUrl, 'mediaUrl', lookup);
   for (let hop = 0; hop < 4; hop++) {
-    const res = await fetchImpl(url.href, { redirect: 'manual', signal: AbortSignal.timeout(30_000) });
+    const res = await pinnedFetch(fetchImpl, lookup, url, { signal: AbortSignal.timeout(30_000) }, 'mediaUrl');
     const location = res.headers?.get?.('location');
     if (res.status >= 300 && res.status < 400 && location) {
       url = await assertPublicUrl(new URL(location, url).href, 'mediaUrl redirect', lookup);
@@ -977,7 +990,10 @@ export function createMessaging(deps = {}) {
 
   // A redirect could point a delivery at a host assertPublicUrl refused, so
   // deliveries do not follow one; the 3xx is recorded as the outcome.
-  const deliveryFetch = (url, init) => fetchImpl(url, { ...init, redirect: 'manual' });
+  // Each delivery connects to the address that passed the public check, so
+  // a webhook host cannot pass the check and then resolve to this server's
+  // own network for the request itself.
+  const deliveryFetch = (url, init) => pinnedFetch(fetchImpl, lookup, url, init, 'webhook URL');
 
   async function deliver(target, event, payload) {
     const record = await deliverWebhook({ url: target.url, secret: target.secret, event, payload, fetchImpl: deliveryFetch });

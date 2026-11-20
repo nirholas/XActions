@@ -4,7 +4,7 @@ import { prisma } from '../../src/utils/prisma.js';
 import crypto from 'node:crypto';
 import { SESSION_KEYS, createJobContext, isPermanentFailure, sessionHashOf } from './processors/context.js';
 import { assertRunnable, loadProcessors } from './processors/registry.js';
-import { assertPublicUrl } from '../utils/publicUrl.js';
+import { assertPublicUrl, publicFetch } from '../utils/publicUrl.js';
 
 // In-memory job cancellation tracking
 const cancelledJobs = new Set();
@@ -498,14 +498,13 @@ function parseResult(stored) {
 async function deliverCallback(url, payload) {
   if (!url) return;
   try {
-    await assertPublicUrl(url, 'callbackUrl');
-    await fetch(url, {
+    await publicFetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'X-XActions-Event': payload.event },
       body: JSON.stringify(payload),
       redirect: 'manual',
       signal: AbortSignal.timeout(10_000),
-    });
+    }, { label: 'callbackUrl' });
   } catch (err) {
     console.warn(`⚠️  callbackUrl delivery failed (${url}): ${err.message}`);
   }

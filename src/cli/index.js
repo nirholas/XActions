@@ -152,6 +152,30 @@ async function createHttpScraper() {
  *
  * @returns {Promise<import('../scrapers/twitter/http/client.js').TwitterHttpClient>}
  */
+/**
+ * Media read off a public timeline: the logged-out fallback for `media`.
+ * Scans up to five times the limit in posts, since most posts carry none.
+ *
+ * @param {string} handle
+ * @param {number} limit
+ * @returns {Promise<Array<{type: string, url: string, tweetUrl: string, altText?: string}>>}
+ */
+async function mediaFromTimeline(handle, limit) {
+  const scraper = await createHttpScraper();
+  const media = [];
+  for await (const tweet of scraper.getTweets(handle, Math.max(limit * 5, 40))) {
+    const tweetUrl = `https://x.com/${handle}/status/${tweet.id}`;
+    for (const photo of tweet.photos || []) {
+      media.push({ type: 'photo', url: photo.url, tweetUrl, altText: photo.alt || undefined });
+    }
+    for (const video of tweet.videos || []) {
+      if (video.url) media.push({ type: 'video', url: video.url, tweetUrl });
+    }
+    if (media.length >= limit) break;
+  }
+  return media.slice(0, limit);
+}
+
 async function createTwitterHttpClient() {
   const { TwitterHttpClient } = await import('../scrapers/twitter/http/client.js');
   const cookies = await loadSavedCookieString();
@@ -212,6 +236,54 @@ async function createMediaScrapers(options = {}) {
   if (cookies) scrapers.client.setCookies(cookies);
   if (typeof scrapers.searchTweets !== 'function') {
     scrapers.searchTweets = (query, opts) => searchTweets(scrapers.client, query, opts);
+  }
+  // Logged out, X refuses the media-tab query (403) but serves the timeline,
+  // so a profile download reads its media from the posts instead.
+  if (!cookies) {
+    const viaMediaTab = scrapers.scrapeMedia.bind(scrapers);
+    const { AuthError } = await import('../scrapers/twitter/http/errors.js');
+    scrapers.scrapeMedia = async (handle, opts = {}) => {
+      try {
+        return await viaMediaTab(handle, opts);
+      } catch (error) {
+        if (!(error instanceof AuthError)) throw error;
+        const items = await mediaFromTimeline(handle, opts.limit || 100);
+        return items.map((item) => ({
+          url: item.url,
+          mediaType: item.type,
+          tweetId: item.tweetUrl.split('/status/')[1],
+          username: handle,
+          altText: item.altText ?? null,
+        }));
+      }
+    };
+    // A single post the same way, through the guest rails the hosted MCP
+    // server reads posts with.
+    const viaTweetDetail = scrapers.scrapeTweetById.bind(scrapers);
+    scrapers.scrapeTweetById = async (id) => {
+      try {
+        return await viaTweetDetail(id);
+      } catch (error) {
+        if (!(error instanceof AuthError)) throw error;
+        const { getPost } = await import('../edge/postReader.js');
+        const post = await getPost(id);
+        return {
+          id: post.id,
+          username: post.author?.username,
+          userId: post.author?.id,
+          createdAt: post.createdAt,
+          media: (post.media || []).map((m) => ({
+            tweetId: post.id,
+            mediaType: m.type,
+            url: m.url,
+            width: m.width ?? 0,
+            height: m.height ?? 0,
+            bitrate: m.variants?.[0]?.bitrate ?? 0,
+            altText: m.altText ?? null,
+          })),
+        };
+      }
+    };
   }
   return scrapers;
 }
@@ -922,10 +994,34 @@ program
         throw new Error(`Could not find a tweet id in "${url}". Pass a status URL or a numeric id.`);
       }
 
-      const client = await createTwitterHttpClient();
-      const { scrapeFullThread } = await import('../scrapers/twitter/http/thread.js');
-      const result = await scrapeFullThread(client, tweetId);
-      const thread = [result.rootTweet, ...result.authorReplies].filter(Boolean);
+      let thread;
+      try {
+        const client = await createTwitterHttpClient();
+        const { scrapeFullThread } = await import('../scrapers/twitter/http/thread.js');
+        const result = await scrapeFullThread(client, tweetId);
+        thread = [result.rootTweet, ...result.authorReplies].filter(Boolean);
+      } catch (error) {
+        // TweetDetail answers 403 to visitors without a session. Logged out,
+        // read the thread through the guest rails the hosted MCP server uses
+        // (the reply chain up to the root, then the author's continuation).
+        const { AuthError } = await import('../scrapers/twitter/http/errors.js');
+        if ((await loadSavedCookieString()) || !(error instanceof AuthError)) throw error;
+        const { getThread } = await import('../edge/postReader.js');
+        const { posts } = await getThread(tweetId, { limit: 50 });
+        thread = posts.map((post) => ({
+          id: post.id,
+          username: post.author?.username,
+          name: post.author?.name,
+          date: post.createdAt,
+          createdAt: post.createdAt,
+          text: post.text,
+          likes: post.metrics?.likes,
+          retweets: post.metrics?.reposts,
+          replies: post.metrics?.replies,
+          views: post.metrics?.views,
+          url: post.url,
+        }));
+      }
 
       assertNotEmpty(thread, 'tweets in thread', AUTH_HINT);
       spinner.succeed(`Scraped ${thread.length} tweets in thread`);
@@ -1003,18 +1099,30 @@ program
     const spinner = createSpinner(`Scraping media from @${username}`, mode);
 
     try {
-      const client = await createTwitterHttpClient();
-      const { scrapeMedia } = await import('../scrapers/twitter/http/media.js');
       const handle = username.replace(/^@/, '');
-      const raw = await scrapeMedia(client, handle, { limit });
-      const media = raw.map((m) => ({
-        type: m.mediaType,
-        url: m.url,
-        tweetUrl: m.tweetId ? `https://x.com/${handle}/status/${m.tweetId}` : undefined,
-        width: m.width || undefined,
-        height: m.height || undefined,
-        altText: m.altText || undefined,
-      }));
+      const loggedIn = Boolean(await loadSavedCookieString());
+      let media;
+      try {
+        const client = await createTwitterHttpClient();
+        const { scrapeMedia } = await import('../scrapers/twitter/http/media.js');
+        const raw = await scrapeMedia(client, handle, { limit });
+        media = raw.map((m) => ({
+          type: m.mediaType,
+          url: m.url,
+          tweetUrl: m.tweetId ? `https://x.com/${handle}/status/${m.tweetId}` : undefined,
+          width: m.width || undefined,
+          height: m.height || undefined,
+          altText: m.altText || undefined,
+        }));
+      } catch (error) {
+        // X answers the media-tab query with 403 to visitors without a
+        // session, while the timeline stays public. Logged out, read the
+        // media off the timeline instead of failing a read AGENTS.md lists
+        // as public.
+        const { AuthError } = await import('../scrapers/twitter/http/errors.js');
+        if (loggedIn || !(error instanceof AuthError)) throw error;
+        media = await mediaFromTimeline(handle, limit);
+      }
 
       assertNotEmpty(media, 'media items', AUTH_HINT);
       spinner.succeed(`Found ${media.length} media items`);
