@@ -9,6 +9,8 @@
  * @license Apache-2.0
  */
 
+import { BROWSER_INSTALL, importOptional } from '../utils/optionalDeps.js';
+
 // ============================================================================
 // User-Agent Pool
 // ============================================================================
@@ -56,7 +58,7 @@ export async function launchStealthBrowser(options = {}) {
     console.log('🥷 Stealth plugin loaded');
   } catch {
     // Fallback to regular puppeteer
-    puppeteer = (await import('puppeteer')).default;
+    puppeteer = (await importOptional('puppeteer', { feature: 'The stealth browser', install: BROWSER_INSTALL })).default;
     console.log('⚠️  puppeteer-extra not available, using basic stealth patches');
   }
 

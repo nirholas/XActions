@@ -20,6 +20,7 @@ import chalk from 'chalk';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { xactionsHome } from '../../utils/savedSession.js';
+import { BROWSER_INSTALL, isMissingPackage } from '../../utils/optionalDeps.js';
 
 import { VERSION } from '../../version.js';
 import { countInstalledSkills } from './skills.js';
@@ -207,8 +208,20 @@ async function checkSessionLive(stored) {
  * @returns {Promise<CheckResult>}
  */
 async function checkBrowser() {
+  let puppeteer;
   try {
-    const puppeteer = (await import('puppeteer')).default;
+    puppeteer = (await import('puppeteer')).default;
+  } catch (err) {
+    if (!isMissingPackage(err, 'puppeteer')) {
+      return { status: 'warn', detail: `Puppeteer failed to load: ${err.message}` };
+    }
+    return {
+      status: 'warn',
+      detail: 'Puppeteer is not installed (an install with --omit=optional leaves it out)',
+      fix: `Run \`${BROWSER_INSTALL}\`. Only \`xactions connect\` and the posting commands need it; every read works without it.`,
+    };
+  }
+  try {
     // Puppeteer 25 resolves the path asynchronously.
     const executable = await puppeteer.executablePath();
     await fs.access(executable);

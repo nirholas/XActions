@@ -3,7 +3,8 @@ import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 
 const major = (range) => Number(String(range).replace(/^[^\d]*/, '').split('.')[0]);
-const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
+// The Prisma packages are server dependencies, declared in the api/ workspace.
+const pkg = JSON.parse(readFileSync(new URL('../api/package.json', import.meta.url), 'utf8'));
 
 describe('prisma toolchain', () => {
 	it('keeps @prisma/client and the prisma CLI on the same major version', () => {

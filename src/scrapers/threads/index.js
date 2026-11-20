@@ -11,10 +11,7 @@
  * @license Apache-2.0
  */
 
-import puppeteer from 'puppeteer-extra';
-import StealthPlugin from 'puppeteer-extra-plugin-stealth';
-
-puppeteer.use(StealthPlugin());
+import { loadStealthPuppeteer } from '../../utils/optionalDeps.js';
 
 // ============================================================================
 // Core Utilities
@@ -29,6 +26,7 @@ const THREADS_BASE = 'https://www.threads.net';
  * Create a browser instance for Threads scraping
  */
 export async function createBrowser(options = {}) {
+  const puppeteer = await loadStealthPuppeteer('Scraping Threads');
   return puppeteer.launch({
     headless: options.headless !== false ? 'new' : false,
     args: [

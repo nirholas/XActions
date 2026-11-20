@@ -110,36 +110,14 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.30.0",
-    "@prisma/adapter-pg": "^7.10.1",
-    "@prisma/client": "^7.10.1",
-    "axios": "^1.15.2",
-    "bcryptjs": "^2.4.3",
     "better-sqlite3": "^13.0.3",
-    "bull": "^4.12.0",
     "chalk": "^6.0.1",
     "commander": "^15.0.0",
-    "compression": "^1.8.1",
-    "cors": "^2.8.5",
-    "dotenv": "^18.0.4",
-    "exceljs": "^4.4.0",
     "express": "^5.3.0",
-    "express-rate-limit": "^8.7.0",
-    "express-validator": "^7.0.1",
-    "helmet": "^7.1.0",
     "inquirer": "^14.2.2",
-    "jsonwebtoken": "^9.0.2",
-    "morgan": "^1.10.1",
     "node-cron": "^4.6.0",
-    "nodemailer": "^10.0.10",
     "ora": "^10.0.0",
-    "prisma": "^7.10.1",
-    "puppeteer": "^25.11.0",
-    "puppeteer-extra": "^3.3.6",
-    "puppeteer-extra-plugin-stealth": "^2.11.2",
-    "socket.io": "^4.7.5",
-    "stripe": "^23.0.1",
     "undici": "^8.12.3",
-    "validator": "~13.15.23",
     "yauzl": "^3.4.0"
   },
   "optionalDependencies": {
@@ -148,6 +126,9 @@
     "@x402/evm": "^2.8.0",
     "@x402/express": "^2.8.0",
     "ioredis": "^6.0.0",
+    "puppeteer": "^25.11.0",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
     "viem": "^2.0.0"
   },
   "devDependencies": {
@@ -240,18 +221,27 @@
     "minimatch@>=7.0.0 <11.0.1": "^11.0.1"
   },
   "peerDependencies": {
+    "bull": "^4.12.0",
     "cheerio": ">=1.0.0",
     "crawlee": ">=3.0.0",
+    "exceljs": "^4.4.0",
     "googleapis": "^171.4.0",
     "got-scraping": ">=4.0.0",
+    "nodemailer": "^10.0.10",
     "playwright": ">=1.40.0",
     "selenium-webdriver": ">=4.0.0"
   },
   "peerDependenciesMeta": {
+    "bull": {
+      "optional": true
+    },
     "cheerio": {
       "optional": true
     },
     "crawlee": {
+      "optional": true
+    },
+    "exceljs": {
       "optional": true
     },
     "googleapis": {
@@ -260,11 +250,17 @@
     "got-scraping": {
       "optional": true
     },
+    "nodemailer": {
+      "optional": true
+    },
     "playwright": {
       "optional": true
     },
     "selenium-webdriver": {
       "optional": true
     }
-  }
+  },
+  "workspaces": [
+    "api"
+  ]
 }

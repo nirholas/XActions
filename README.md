@@ -192,6 +192,10 @@ xactions quickstart          # guided first run
 xactions doctor              # check what works right now
 ```
 
+Only reading? `npm install -g xactions --omit=optional` skips Puppeteer and its
+Chromium download. Every HTTP read and the MCP server work without them;
+`xactions connect` and the browser-driven write tools tell you what to install.
+
 </td>
 </tr>
 <tr>

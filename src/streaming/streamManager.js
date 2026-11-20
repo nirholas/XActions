@@ -19,13 +19,13 @@
  */
 
 import { randomUUID } from 'crypto';
-import Queue from 'bull';
 import { pollTweets } from './tweetStream.js';
 import { pollFollowers } from './followerStream.js';
 import { pollMentions } from './mentionStream.js';
 import { getPoolStatus, closeAll as closeBrowserPool, isHealthy as isBrowserPoolHealthy } from './browserPool.js';
 import { createLivePipeline } from './livePipeline.js';
 import { TwitterHttpClient } from '../scrapers/twitter/http/client.js';
+import { importOptional } from '../utils/optionalDeps.js';
 
 // ============================================================================
 // Constants
@@ -77,7 +77,7 @@ let _redisHealthy = true;
 async function getRedis() {
   if (_redis && _redisHealthy) return _redis;
   try {
-    const Redis = (await import('ioredis')).default;
+    const Redis = (await importOptional('ioredis', { feature: 'Streams (which keep their state in Redis)' })).default;
     if (!_redis) {
       _redis = new Redis(getRedisOpts());
 
@@ -126,29 +126,46 @@ const pollingNow = new Set();
 // ============================================================================
 
 let streamQueue = null;
+/** @type {Promise<any> | null} */
+let streamQueueLoading = null;
 
-function getQueue() {
-  if (!streamQueue) {
-    streamQueue = new Queue('xactions-streams', {
-      redis: getRedisOpts(),
-      defaultJobOptions: {
-        attempts: 1,
-        removeOnComplete: true,
-        removeOnFail: true,
-      },
-    });
+/**
+ * The Bull queue that schedules poll-transport streams, created on first use.
+ *
+ * `bull` is an optional peer dependency, imported here rather than at the top
+ * of the file, so live-transport streams and everything else that imports this
+ * module work without it.
+ */
+async function getQueue() {
+  if (streamQueue) return streamQueue;
+  if (!streamQueueLoading) {
+    streamQueueLoading = importOptional('bull', {
+      feature: 'Poll-transport streams (scheduled on a Bull queue in Redis)',
+    }).then(({ default: Queue }) => {
+      streamQueue = new Queue('xactions-streams', {
+        redis: getRedisOpts(),
+        defaultJobOptions: {
+          attempts: 1,
+          removeOnComplete: true,
+          removeOnFail: true,
+        },
+      });
 
-    // Process poll jobs — concurrency 3 (one per browser)
-    streamQueue.process('poll', 3, async (job) => {
-      const { streamId } = job.data;
-      await executePoll(streamId);
-    });
+      // Process poll jobs — concurrency 3 (one per browser)
+      streamQueue.process('poll', 3, async (job) => {
+        const { streamId } = job.data;
+        await executePoll(streamId);
+      });
 
-    streamQueue.on('error', (err) => {
-      console.error('❌ Stream queue error:', err.message);
+      streamQueue.on('error', (err) => {
+        console.error('❌ Stream queue error:', err.message);
+      });
+      return streamQueue;
+    }).finally(() => {
+      streamQueueLoading = null;
     });
   }
-  return streamQueue;
+  return streamQueueLoading;
 }
 
 // ============================================================================
@@ -381,7 +398,7 @@ export async function updateStream(streamId, updates = {}) {
   // job to reschedule; its interval only matters if it falls back later.
   if (rescheduled && meta.status === 'running' && meta.transport === 'poll') {
     await removeRepeatableJob(streamId);
-    const queue = getQueue();
+    const queue = await getQueue();
     await queue.add('poll', { streamId }, {
       repeat: { every: meta.interval },
       jobId: streamId,
@@ -677,7 +694,7 @@ const liveTransports = new Map();
  */
 async function schedulePollJob(meta, { immediate = true } = {}) {
   meta.transport = 'poll';
-  const queue = getQueue();
+  const queue = await getQueue();
   await queue.add('poll', { streamId: meta.id }, {
     repeat: { every: meta.interval },
     jobId: meta.id,
@@ -935,7 +952,7 @@ async function saveMeta(streamId, meta) {
 
 async function removeRepeatableJob(streamId) {
   try {
-    const queue = getQueue();
+    const queue = await getQueue();
     const repeatableJobs = await queue.getRepeatableJobs();
     const match = repeatableJobs.find((j) => j.id === streamId);
     if (match) {
@@ -975,7 +992,7 @@ async function refreshFromRedis() {
         // Re-register Bull job if stream should be running
         if (!live.attached && (meta.status === 'running' || meta.status === 'backoff')) {
           try {
-            const queue = getQueue();
+            const queue = await getQueue();
             const repeatableJobs = await queue.getRepeatableJobs();
             const exists = repeatableJobs.find((j) => j.id === meta.id);
             if (!exists) {

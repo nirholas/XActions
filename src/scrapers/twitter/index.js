@@ -16,13 +16,10 @@
  * @license Apache-2.0
  */
 
-import puppeteer from 'puppeteer-extra';
-import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import fs from 'fs/promises';
 
 import { gotoAndRender } from '../../utils/navigation.js';
-
-puppeteer.use(StealthPlugin());
+import { loadStealthPuppeteer } from '../../utils/optionalDeps.js';
 
 // ============================================================================
 // Core Utilities
@@ -52,6 +49,9 @@ export async function createBrowser(options = {}) {
     return adapter.launch(adapterOptions);
   }
 
+  // Loaded here, not at the top of the file: the CLI and the library import
+  // this module at startup, and every HTTP read works without a browser.
+  const puppeteer = await loadStealthPuppeteer();
   return puppeteer.launch({
     headless: options.headless !== false ? 'new' : false,
     args: [
