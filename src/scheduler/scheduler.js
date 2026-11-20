@@ -252,7 +252,9 @@ export class Scheduler extends EventEmitter {
     if (existing?.cronTask) {
       // destroy() removes the task from node-cron's registry; stop() only
       // halts it and leaves the dead entry there.
-      try { existing.cronTask.destroy(); } catch { try { existing.cronTask.stop(); } catch {} }
+      // Replacing a job: whichever teardown this node-cron build supports is
+      // enough, and a task that is already stopped needs neither.
+      try { existing.cronTask.destroy(); } catch { try { existing.cronTask.stop(); } catch { /* already stopped */ } }
     }
 
     const task = cron.createTask(config.cron, () => {

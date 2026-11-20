@@ -8,6 +8,7 @@ import fs from 'fs';
 import path from 'path';
 import readline from 'readline';
 import { BrowserDriver } from './browserDriver.js';
+import { isEntryPoint } from '../utils/entryPoint.js';
 
 const DATA_DIR = path.resolve('data');
 const CONFIG_DIR = path.resolve('config');
@@ -348,11 +349,7 @@ async function run() {
 }
 
 // Run if executed directly
-const isMain = process.argv[1] && (
-  process.argv[1].endsWith('setup.js') || process.argv[1].endsWith('setup')
-);
-
-if (isMain) {
+if (isEntryPoint(import.meta.url)) {
   run().catch((err) => {
     console.error('❌ Setup failed:', err);
     process.exit(1);

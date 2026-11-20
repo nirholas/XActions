@@ -77,6 +77,8 @@ beforeEach(() => {
   delete window.XEngage;
   vi.spyOn(console, 'error').mockImplementation(() => {});
   vi.spyOn(console, 'log').mockImplementation(() => {});
+  // The panel log mirrors 'warn' lines to console.warn ("This feed mixes authors").
+  vi.spyOn(console, 'warn').mockImplementation(() => {});
 });
 
 afterEach(() => {

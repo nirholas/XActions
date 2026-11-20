@@ -96,7 +96,7 @@ async function getBrowser() {
         return entry;
       }
       const idx = browsers.indexOf(entry);
-      try { await entry.browser.close(); } catch {}
+      try { await entry.browser.close(); } catch { /* disconnected: being replaced */ }
       const browser = await createBrowser();
       browsers[idx] = { browser, busy: true };
       return browsers[idx];
@@ -133,7 +133,7 @@ function releaseBrowser(entry) {
  */
 export async function closePool() {
   for (const entry of browsers) {
-    try { await entry.browser.close(); } catch {}
+    try { await entry.browser.close(); } catch { /* shutting down: already closed is fine */ }
   }
   browsers.length = 0;
 }
@@ -229,7 +229,10 @@ async function extractViaPuppeteer(tweetId, username) {
         if (playBtn) playBtn.click();
       });
       await new Promise((r) => setTimeout(r, 1500));
-    } catch {}
+    } catch {
+      // Optional nudge so the player requests its stream. Without it the scan
+      // below can still find the URL, and throws if it finds nothing.
+    }
 
     // Scan page HTML for video URLs
     const pageVideos = await page.evaluate(() => {
@@ -315,7 +318,7 @@ async function extractViaPuppeteer(tweetId, username) {
     };
   } finally {
     if (page) {
-      try { await page.close(); } catch {}
+      try { await page.close(); } catch { /* cleanup in finally: must not mask the result */ }
     }
     releaseBrowser(browserEntry);
   }

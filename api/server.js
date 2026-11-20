@@ -10,7 +10,8 @@ import { fileURLToPath } from 'url';
 import { createServer } from 'http';
 import dotenv from 'dotenv';
 
-dotenv.config();
+// dotenv 17+ prints an "injected env" line on every load; keep it out of test output.
+dotenv.config({ quiet: process.env.NODE_ENV === 'test' });
 
 // Process-level safety net. A Puppeteer page crash or a rejected promise inside a
 // background job must not take the whole API down with it: log it, keep serving.
@@ -249,7 +250,11 @@ export function createApp({ rateLimiting = true } = {}) {
       return url.pathname + url.search;
     } catch { return '-'; }
   });
-  app.use(morgan(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":safe-referrer" ":user-agent"'));
+  // The access log is skipped under the test runner, where the contract suite
+  // alone makes about 600 requests and the log buried real failures.
+  app.use(morgan(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":safe-referrer" ":user-agent"', {
+    skip: () => process.env.NODE_ENV === 'test',
+  }));
 
   // Body parsing — skip JSON parsing for Stripe webhooks (needs raw body for signature verification)
   app.use((req, res, next) => {

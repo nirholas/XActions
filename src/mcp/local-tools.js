@@ -183,7 +183,9 @@ async function ensureBrowser() {
     if (browser) {
       try {
         await browser.close();
-      } catch {}
+      } catch {
+        // Replacing a dead or stale browser; it may already be gone.
+      }
     }
     browser = null;
     page = null;
@@ -269,7 +271,9 @@ export async function closeBrowser() {
   if (browser) {
     try {
       await browser.close();
-    } catch {}
+    } catch {
+      // Shutting down: a browser that already exited is the goal state.
+    }
     browser = null;
     page = null;
   }
@@ -290,7 +294,10 @@ async function clickIfPresent(pg, selector, { timeout = 3000 } = {}) {
       await el.click();
       return true;
     }
-  } catch {}
+  } catch {
+    // Probe for an optional control: absent within the timeout means false,
+    // which every caller checks.
+  }
   return false;
 }
 

@@ -181,7 +181,10 @@
       const summary = bookmarkList.map(b => `@${b.handle}: ${b.text.slice(0, 100)}... - ${b.url}`).join('\n');
       await navigator.clipboard.writeText(summary);
       console.log('📋 Summary copied to clipboard!');
-    } catch (e) {}
+    } catch {
+      // Optional extra: the clipboard needs page focus and permission. The
+      // export itself already succeeded and is on window.exportedBookmarks.
+    }
 
     // Store globally
     window.exportedBookmarks = bookmarkList;

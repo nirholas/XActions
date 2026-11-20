@@ -4903,21 +4903,25 @@ function createMcpServer(overrides = {}) {
 // Cleanup and Startup
 // ============================================================================
 
-// Cleanup on exit
-process.on('SIGINT', async () => {
-  console.error('\n🛑 Shutting down...');
-  if (MODE === 'local' && localTools?.closeBrowser) {
-    await localTools.closeBrowser();
-  }
-  process.exit(0);
-});
-
-process.on('SIGTERM', async () => {
-  if (MODE === 'local' && localTools?.closeBrowser) {
-    await localTools.closeBrowser();
-  }
-  process.exit(0);
-});
+/**
+ * Close the browser and exit on SIGINT/SIGTERM.
+ *
+ * Installed by main(), never at import: this module is also imported for its
+ * tool list (the A2A skill registry, `xactions doctor`, `xactions drafts`), and
+ * a handler that calls process.exit would end whatever process imported it the
+ * first time someone pressed Ctrl+C, skipping that host's own shutdown.
+ */
+function installShutdownHandlers() {
+  const shutdown = async (signal) => {
+    if (signal === 'SIGINT') console.error('\n🛑 Shutting down...');
+    if (MODE === 'local' && localTools?.closeBrowser) {
+      await localTools.closeBrowser();
+    }
+    process.exit(0);
+  };
+  process.once('SIGINT', shutdown);
+  process.once('SIGTERM', shutdown);
+}
 
 /**
  * Print startup banner and status info.
@@ -5286,6 +5290,7 @@ async function main(argv = process.argv.slice(2)) {
     return;
   }
 
+  installShutdownHandlers();
   const pluginCount = await ensureBackend();
   const pluginToolCount = getPluginTools().length;
 

@@ -8,7 +8,8 @@ import rateLimit from 'express-rate-limit';
 import dotenv from 'dotenv';
 import { paymentGatePath } from './utils/paymentGatePath.js';
 
-dotenv.config();
+// dotenv 17+ prints an "injected env" line on every load; keep it out of test output.
+dotenv.config({ quiet: process.env.NODE_ENV === 'test' });
 
 import authRoutes from './routes/auth.js';
 import userRoutes from './routes/user.js';
