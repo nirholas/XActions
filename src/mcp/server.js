@@ -2551,8 +2551,8 @@ async function initializeBackend() {
 /**
  * x_ask: the toolkit answering questions about itself.
  *
- * An agent driving XActions has the same problem a person does: 149 tools, 94
- * browser scripts and 120 CLI commands are more surface than fits in a prompt.
+ * An agent driving XActions has the same problem a person does: over a hundred MCP tools,
+ * plus the browser scripts and CLI commands, are more surface than fits in a prompt.
  * Rather than guess at a workflow or invent a script name, it can ask, and get
  * back the documented answer, the sources behind it, and the exact thing to
  * run next. Retrieval is local to the install; the written answer uses the
