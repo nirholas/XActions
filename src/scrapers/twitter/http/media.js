@@ -73,6 +73,9 @@ const DEFAULT_FEATURES = _endpointsModule?.DEFAULT_FEATURES ?? {
 
 const UPLOAD_BASE = 'https://upload.x.com/i/media/upload.json';
 const METADATA_URL = 'https://x.com/i/api/1.1/media/metadata/create.json';
+// upload.x.com refuses any request without a matching Origin/Referer pair —
+// the browser always sends them, bare HTTP calls must too (403 otherwise).
+const UPLOAD_HEADERS = { origin: 'https://x.com', referer: 'https://x.com/' };
 
 const CHUNK_SIZE = 5 * 1024 * 1024; // 5 MB
 
@@ -208,6 +211,7 @@ export async function uploadChunked(client, buffer, mediaType, mediaCategory, op
 
   const initResp = await client.request(UPLOAD_BASE, {
     method: 'POST',
+    headers: UPLOAD_HEADERS,
     body: new URLSearchParams({
       command: 'INIT',
       total_bytes: String(buffer.length),
@@ -240,7 +244,7 @@ export async function uploadChunked(client, buffer, mediaType, mediaCategory, op
     form.set('segment_index', String(i));
     form.set('media', new Blob([chunk], { type: 'application/octet-stream' }), 'blob');
     // X answers APPEND with an empty body; request() reads that as {}.
-    await client.request(UPLOAD_BASE, { method: 'POST', body: form });
+    await client.request(UPLOAD_BASE, { method: 'POST', headers: UPLOAD_HEADERS, body: form });
   }
 
   // ---- FINALIZE ------------------------------------------------------------
@@ -248,6 +252,7 @@ export async function uploadChunked(client, buffer, mediaType, mediaCategory, op
 
   const finalResp = await client.request(UPLOAD_BASE, {
     method: 'POST',
+    headers: UPLOAD_HEADERS,
     body: new URLSearchParams({ command: 'FINALIZE', media_id: mediaId }),
   });
 
@@ -281,7 +286,7 @@ export async function pollProcessingStatus(client, mediaId, onProgress) {
       throw new Error(`Media processing failed for ${mediaId}: still processing after ${STATUS_POLL_TIMEOUT_MS / 60000} minutes`);
     }
     const status = new URLSearchParams({ command: 'STATUS', media_id: mediaId });
-    const resp = await client.request(`${UPLOAD_BASE}?${status}`, { method: 'GET' });
+    const resp = await client.request(`${UPLOAD_BASE}?${status}`, { method: 'GET', headers: UPLOAD_HEADERS });
 
     const info = resp.processing_info;
     if (!info) return resp; // no processing needed
@@ -428,6 +433,7 @@ export async function setAltText(client, mediaId, altText) {
 
   await client.request(METADATA_URL, {
     method: 'POST',
+    headers: UPLOAD_HEADERS,
     body: { media_id: mediaId, alt_text: { text: altText } },
   });
 }
