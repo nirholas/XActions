@@ -303,6 +303,10 @@ export class TaskExecutor {
       const task = await this.store.get(taskId);
       if (!task) throw new Error(`Task not found: ${taskId}`);
 
+      // Canceled before it started (tasks/sendSubscribe runs in the
+      // background, so a cancel can land first): there is nothing to run.
+      if (task.status.state === TASK_STATES.CANCELED) return task;
+
       // Transition to working
       await this.store.transition(taskId, TASK_STATES.WORKING, 'Executing task');
 
@@ -321,6 +325,14 @@ export class TaskExecutor {
 
       // Execute via bridge
       const result = await this.bridge.execute(skillId, inputParts, context);
+
+      // Canceled while the tool ran. Canceled is terminal, so the result is
+      // not recorded; reporting "failed: Invalid state transition" for a task
+      // the caller asked to stop would be wrong.
+      if ((await this.store.get(taskId))?.status.state === TASK_STATES.CANCELED) {
+        this._progress.delete(taskId);
+        return this.store.get(taskId);
+      }
 
       if (result.success) {
         // Add result as artifact

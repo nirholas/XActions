@@ -136,4 +136,46 @@ describe('TaskExecutor', () => {
 
     shutdown();
   });
+
+  it('leaves a task canceled while its tool ran canceled, without recording the result', async () => {
+    let finish;
+    const bridge = {
+      execute: () => new Promise((resolve) => { finish = resolve; }),
+      parseNaturalLanguage: () => null,
+    };
+    const { store, executor, shutdown } = createTaskManager({ bridge });
+
+    const task = await store.create({
+      message: createMessage('user', [createTextPart('slow')]),
+      metadata: { skillId: 'x_get_profile' },
+    });
+    const running = executor.execute(task.id);
+    await vi.waitFor(() => expect(finish).toBeTypeOf('function'));
+    await executor.cancel(task.id);
+    finish({ success: true, artifacts: [createTextPart('late')] });
+
+    // Used to reject with 'Invalid state transition: "canceled" → "completed"'.
+    const final = await running;
+    expect(final.status.state).toBe(TASK_STATES.CANCELED);
+    expect(final.artifacts).toEqual([]);
+
+    shutdown();
+  });
+
+  it('does not run a task that was canceled before it started', async () => {
+    const bridge = mockBridge();
+    const { store, executor, shutdown } = createTaskManager({ bridge });
+
+    const task = await store.create({
+      message: createMessage('user', [createTextPart('never')]),
+      metadata: { skillId: 'x_get_profile' },
+    });
+    await executor.cancel(task.id);
+
+    const final = await executor.execute(task.id);
+    expect(final.status.state).toBe(TASK_STATES.CANCELED);
+    expect(bridge.execute).not.toHaveBeenCalled();
+
+    shutdown();
+  });
 });

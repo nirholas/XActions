@@ -5,7 +5,7 @@
  */
 
 import { createA2AServer } from '../../src/a2a/server.js';
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
 import { VERSION } from '../../src/version.js';
 
 let agent, server;
@@ -201,5 +201,42 @@ describe('start()', () => {
     const other = createA2AServer({ enableAuth: false, enableRateLimit: false, enableLogging: false, mode: 'local' });
     await expect(other.start(PORT)).rejects.toMatchObject({ code: 'EADDRINUSE' });
     other.shutdown();
+  });
+});
+
+describe('startup output', () => {
+  /** Start a server on a free port and return everything it printed. */
+  async function printedBy(options) {
+    const lines = [];
+    const record = (...args) => { lines.push(args.join(' ')); };
+    const log = vi.spyOn(console, 'log').mockImplementation(record);
+    const warn = vi.spyOn(console, 'warn').mockImplementation(record);
+    const agent = createA2AServer({ enableRateLimit: false, mode: 'local', ...options });
+    try {
+      await agent.start(0, options.host);
+    } finally {
+      agent.shutdown();
+      log.mockRestore();
+      warn.mockRestore();
+    }
+    return lines.join('\n');
+  }
+
+  it('prints the banner and the auth-off notice by default', async () => {
+    const out = await printedBy({ enableAuth: false });
+    expect(out).toContain('XActions A2A Agent listening on');
+    expect(out).toContain('A2A authentication is OFF');
+  });
+
+  it('prints neither with enableLogging: false', async () => {
+    const out = await printedBy({ enableAuth: false, enableLogging: false });
+    expect(out).not.toContain('listening on');
+    expect(out).not.toContain('authentication is OFF');
+  });
+
+  it('still warns that an unauthenticated server is reachable from other machines', async () => {
+    const out = await printedBy({ enableAuth: false, enableLogging: false, host: '0.0.0.0' });
+    expect(out).toContain('reachable from other machines');
+    expect(out).toContain('Authentication is OFF');
   });
 });

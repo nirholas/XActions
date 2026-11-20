@@ -147,8 +147,9 @@ function ensureInitialized() {
   } catch {
     // Plugins not yet initialized — base tools are sufficient
   }
+  // No log line here: this runs on first use from any importer (the agent
+  // card, a test, a script). The A2A server reports the count in its banner.
   _initialized = true;
-  console.log(`📋 A2A Skill Registry initialized: ${_skills.size} skills registered`);
 }
 
 /**

@@ -202,8 +202,9 @@ export function aiDetectorMiddleware(req, res, next) {
   // Add response header indicating detection (useful for debugging)
   res.set('X-XActions-Client', req.agentType);
   
-  // Log AI requests for analytics (in production, send to analytics service)
-  if (req.isAI && req.path.startsWith('/api/')) {
+  // Log AI requests for analytics (in production, send to analytics service).
+  // Not under the test runner, where every supertest call reads as an agent.
+  if (req.isAI && req.path.startsWith('/api/') && process.env.NODE_ENV !== 'test') {
     console.log(`🤖 AI Request: ${req.agentType} → ${req.method} ${req.path}`);
   }
   

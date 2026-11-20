@@ -2,7 +2,7 @@
 // XActions — EngagementNetwork Tests
 // by nichxbt
 
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { EngagementNetwork } from '../../src/agents/engagementNetwork.js';
 import fs from 'fs';
 import path from 'path';
@@ -19,10 +19,13 @@ describe('EngagementNetwork', () => {
       backupData = fs.readFileSync(NETWORK_FILE, 'utf-8');
       backupExists = true;
     }
+    // The network narrates every register/share on console.log; warnings stay visible.
+    vi.spyOn(console, 'log').mockImplementation(() => {});
     network = new EngagementNetwork({ maxNetworkSize: 3 });
   });
 
   afterEach(() => {
+    vi.restoreAllMocks();
     if (backupExists && backupData) {
       fs.writeFileSync(NETWORK_FILE, backupData);
     } else if (fs.existsSync(NETWORK_FILE)) {

@@ -138,7 +138,9 @@ function isLoopbackHost(host) {
  *   (default XACTIONS_MCP_REQUIRE_APPROVAL)
  * @param {string} [options.account] ledger account for the daily action caps
  * @param {boolean} [options.enableRateLimit=true]
- * @param {boolean} [options.enableLogging=true]
+ * @param {boolean} [options.enableLogging=true] request log, startup banner
+ *   and the authentication-off notice. The warning that the server is
+ *   reachable from other machines is printed regardless.
  * @param {number} [options.rateLimit=100]  - max requests per minute per IP
  * @param {string} [options.mode='local']
  * @param {string} [options.apiUrl]
@@ -168,7 +170,7 @@ export function createA2AServer(options = {}) {
       .filter(Boolean),
   );
 
-  if (!enableAuth) {
+  if (!enableAuth && enableLogging) {
     console.warn(
       '⚠️  A2A authentication is OFF. Anyone who can reach this server can run every tool, writes included, ' +
         'as the logged-in account. Only do this on a machine nobody else can reach.',
@@ -461,10 +463,12 @@ export function createA2AServer(options = {}) {
         if (err) return reject(err);
         const bound = server.address()?.port ?? p;
         const shown = h.includes(':') ? `[${h}]` : h;
-        console.log(`⚡ XActions A2A Agent listening on ${shown}:${bound}`);
-        console.log(`   Agent Card: http://${shown}:${bound}/.well-known/agent.json`);
-        console.log(`   Health:     http://${shown}:${bound}/a2a/health`);
-        console.log(`   Skills:     http://${shown}:${bound}/a2a/skills`);
+        if (enableLogging) {
+          console.log(`⚡ XActions A2A Agent listening on ${shown}:${bound}`);
+          console.log(`   Agent Card: http://${shown}:${bound}/.well-known/agent.json`);
+          console.log(`   Health:     http://${shown}:${bound}/a2a/health`);
+          console.log(`   Skills:     http://${shown}:${bound}/a2a/skills (${getAllSkills().length} registered)`);
+        }
         if (!isLoopbackHost(h)) {
           console.warn(`⚠️  A2A server is reachable from other machines on ${shown}.${enableAuth ? '' : ' Authentication is OFF.'}`);
         }
