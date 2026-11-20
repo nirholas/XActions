@@ -36,7 +36,7 @@ const read = (paths) =>
 	});
 
 const publishedSources = read(['src']);
-const serverSources = read(['api', 'src', 'scripts', 'prisma', 'bin', 'dashboard-server.js', 'prisma.config.js']);
+const serverSources = read(['api', 'src', 'scripts', 'prisma', 'bin', 'prisma.config.js']);
 
 function isImported(name, sources) {
 	const escaped = name.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&');
