@@ -157,6 +157,23 @@ export function discardDraft(id) {
 }
 
 /**
+ * Whether a tool's return value reports a failure without having thrown.
+ *
+ * Browser tools say `{ success: false, message }`; the handlers in server.js
+ * say `{ error: "..." }` (a missing argument, no API key, a monitor that does
+ * not exist). Both are failures, and treating the second as a success let an
+ * agent count a refused call as done.
+ *
+ * @param {unknown} result
+ * @returns {boolean}
+ */
+export function reportsFailure(result) {
+  if (!result || typeof result !== 'object' || Array.isArray(result)) return false;
+  if (result.success === false) return true;
+  return result.success !== true && typeof result.error === 'string' && result.error.length > 0;
+}
+
+/**
  * Execute a pending draft through the supplied executor and record the
  * outcome on the draft. The executor receives `(tool, args)` and is the
  * same dispatch the live tool call would have used.
@@ -190,9 +207,9 @@ export async function approveDraft(id, execute) {
   const outcome = {};
   try {
     const result = await execute(claimed.tool, claimed.args);
-    // Many browser tools report a failure as `{ success: false }` rather
-    // than throwing; that is a failed draft, not an executed one.
-    if (result && typeof result === 'object' && result.success === false) {
+    // Many tools report a failure as `{ success: false }` or `{ error }`
+    // rather than throwing; that is a failed draft, not an executed one.
+    if (reportsFailure(result)) {
       outcome.status = 'failed';
       outcome.error = String(result.message || result.error || `${claimed.tool} reported failure`);
       outcome.result = result;

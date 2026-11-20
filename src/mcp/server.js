@@ -4848,9 +4848,10 @@ function createMcpServer(overrides = {}) {
             text: JSON.stringify(result, null, 2),
           },
         ],
-        // A tool that reports `{ success: false }` failed; say so in the
-        // protocol, not only inside the text, so the agent does not count it.
-        ...(result && typeof result === 'object' && result.success === false ? { isError: true } : {}),
+        // A tool that reports `{ success: false }` or `{ error }` failed; say
+        // so in the protocol, not only inside the text, so the agent does not
+        // count it.
+        ...(drafts.reportsFailure(result) ? { isError: true } : {}),
       };
 
     } catch (error) {
