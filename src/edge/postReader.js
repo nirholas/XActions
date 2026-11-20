@@ -55,6 +55,49 @@ function postUrl(username, id) {
 }
 
 /**
+ * @typedef {object} PostAuthor
+ * @property {string | null} id
+ * @property {string | null} username
+ * @property {string | null} name
+ * @property {string | null} avatar
+ * @property {boolean} verified
+ * @property {string | null} verifiedType
+ */
+
+/**
+ * @typedef {object} PostMedia
+ * @property {string} type `photo`, `video` or `gif`.
+ * @property {string | null} url The image, or the best mp4 for a video or gif.
+ * @property {number} width
+ * @property {number} height
+ * @property {string | null} altText
+ * @property {string | null} [thumbnail] Video and gif only.
+ * @property {number | null} [durationMs] Video and gif only.
+ * @property {Array<{ url: string, quality: string, width: number, height: number, bitrate: number }>} [variants]
+ *   Video and gif only, best first.
+ */
+
+/**
+ * The normalised post shape both rails return.
+ *
+ * @typedef {object} Post
+ * @property {string} id
+ * @property {string} url
+ * @property {string | null} createdAt ISO 8601.
+ * @property {string | null} lang
+ * @property {string} text
+ * @property {PostAuthor} author
+ * @property {{ likes: number, reposts: number, replies: number, quotes: number, bookmarks: number, views: number }} metrics
+ * @property {PostMedia[]} media
+ * @property {{ hashtags: string[], symbols: string[], mentions: string[], urls: Array<{ url: string, expanded: string, display: string }> }} entities
+ * @property {string | null} conversationId
+ * @property {{ id: string, username: string | null } | null} replyTo
+ * @property {Post | null} quoted
+ * @property {boolean} possiblySensitive
+ * @property {'graphql' | 'syndication'} source
+ */
+
+/**
  * Media entities arrive in the same shape on both rails, so one reader covers
  * them. Video variants are filtered to real mp4 files and sorted best first,
  * matching what the download endpoints hand out.
@@ -213,7 +256,7 @@ function normalizeSyndicationPost(data) {
 /**
  * Read one post through the guest GraphQL rail.
  * @param {string} id
- * @returns {Promise<object>}
+ * @returns {Promise<Post>}
  */
 export async function getPostViaGraphQL(id) {
   const data = await guestGraphQL('TweetResultByRestId', {
@@ -228,7 +271,7 @@ export async function getPostViaGraphQL(id) {
 /**
  * Read one post through the public syndication rail.
  * @param {string} id
- * @returns {Promise<object>}
+ * @returns {Promise<Post>}
  */
 export async function getPostViaSyndication(id) {
   const url = `https://cdn.syndication.twimg.com/tweet-result?id=${id}&token=${syndicationToken(id)}&lang=en`;
@@ -245,7 +288,7 @@ export async function getPostViaSyndication(id) {
  * Read one public post by ID or URL.
  *
  * @param {string} idOrUrl
- * @returns {Promise<object>} The normalised post shape.
+ * @returns {Promise<Post>}
  */
 export async function getPost(idOrUrl) {
   const id = normalizePostId(idOrUrl);
@@ -280,7 +323,7 @@ export async function getPost(idOrUrl) {
  * @param {number} [options.limit=25] Maximum posts to return.
  * @param {(username: string, options: object) => Promise<{tweets: object[]}>} [options.timelineReader]
  *   Injected for tests; defaults to the guest UserTweets reader.
- * @returns {Promise<{ focal: object, posts: object[], author: object, truncated: boolean }>}
+ * @returns {Promise<{ focal: Post, posts: Post[], author: PostAuthor, truncated: boolean }>}
  */
 export async function getThread(idOrUrl, { limit = 25, timelineReader } = {}) {
   const cap = Math.max(1, Math.min(Number(limit) || 25, THREAD_MAX_POSTS));

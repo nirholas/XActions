@@ -2,7 +2,7 @@
   "name": "@xactions/server",
   "version": "0.0.0",
   "private": true,
-  "description": "Dependencies of the self-hosted XActions API server (api/, dashboard-server.js, prisma/). An npm workspace of the repository root, so `npm ci` at the root installs them; they are not dependencies of the published xactions package.",
+  "description": "Dependencies of the self-hosted XActions API server (api/, scripts/dashboard-server.mjs, prisma/). An npm workspace of the repository root, so `npm ci` at the root installs them; they are not dependencies of the published xactions package.",
   "type": "module",
   "license": "Apache-2.0",
   "author": {

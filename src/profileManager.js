@@ -214,7 +214,10 @@ export async function uploadAvatar(page, imagePath) {
   try {
     await page.click(SELECTORS.editProfileButton);
     await sleep(1500);
-  } catch (e) {}
+  } catch {
+    // The edit dialog may already be open. If it is not, the edit button probe
+    // below finds nothing and the result says so.
+  }
 
   const avatarButton = await page.$(SELECTORS.avatarEdit);
   if (avatarButton) {
@@ -243,7 +246,10 @@ export async function uploadHeader(page, imagePath) {
   try {
     await page.click(SELECTORS.editProfileButton);
     await sleep(1500);
-  } catch (e) {}
+  } catch {
+    // The edit dialog may already be open. If it is not, the edit button probe
+    // below finds nothing and the result says so.
+  }
 
   const headerButton = await page.$(SELECTORS.headerEdit);
   if (headerButton) {
