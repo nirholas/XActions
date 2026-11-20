@@ -90,7 +90,10 @@ export async function generateImage(page, prompt) {
   try {
     await page.click(SELECTORS.newChat);
     await sleep(1000);
-  } catch (e) {}
+  } catch {
+    // No new-chat button on a fresh Grok page; typing below fails loudly if
+    // the chat input is missing too.
+  }
 
   // Type image generation prompt
   const imagePrompt = `Generate an image: ${prompt}`;

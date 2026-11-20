@@ -121,17 +121,18 @@ export function listActiveSnapshots() {
 }
 
 /**
- * Stop all auto-snapshots — for graceful shutdown
+ * Stop all auto-snapshots, for a host's own graceful shutdown.
+ *
+ * The module installs no signal handlers itself: a SIGINT or SIGTERM listener
+ * replaces Node's default exit, so one added at import time would keep the
+ * importing process (an API server, a user's script) running after Ctrl+C or
+ * `docker stop`. A host that wants the intervals cleared calls this from its
+ * own handler; a process that just exits takes the intervals with it.
  */
 export function stopAllSnapshots() {
   for (const [username] of activeSnapshots) {
     stopAutoSnapshot(username);
   }
 }
-
-// Graceful shutdown
-process.on('SIGINT', stopAllSnapshots);
-process.on('SIGTERM', stopAllSnapshots);
-process.on('exit', stopAllSnapshots);
 
 // by nichxbt

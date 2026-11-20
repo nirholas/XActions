@@ -14,7 +14,7 @@
 
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { spawnSync } from 'node:child_process';
-import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -72,6 +72,30 @@ describe('importing does not act as a script', () => {
     `);
     expect(r.status).toBe(0);
     expect(JSON.parse(r.stdout.trim().split('\n').pop())).toEqual([0, 0]);
+  });
+
+  it('no published entry point installs a SIGINT/SIGTERM/exit handler on import', () => {
+    // A signal listener replaces Node's default "exit on Ctrl+C / SIGTERM", so
+    // one installed at import time keeps the host running after it is told to
+    // stop: an API server under `docker stop`, a user's script under Ctrl+C.
+    const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
+    const entries = Object.entries(pkg.exports)
+      .filter(([key, target]) => !key.includes('*') && typeof target === 'string' && target.endsWith('.js'))
+      .map(([key, target]) => [key, moduleUrl(target)]);
+    expect(entries.length).toBeGreaterThan(5);
+    const r = runScript('import-entries.mjs', `
+      const counts = {};
+      for (const [key, url] of ${JSON.stringify(entries)}) {
+        const before = ['SIGINT', 'SIGTERM', 'exit'].map((s) => process.listenerCount(s));
+        await import(url);
+        const added = ['SIGINT', 'SIGTERM', 'exit'].map((s, i) => process.listenerCount(s) - before[i]);
+        if (added.some((n) => n !== 0)) counts[key] = added;
+      }
+      console.log(JSON.stringify(counts));
+      process.exit(0);
+    `);
+    expect(r.status, r.stderr).toBe(0);
+    expect(JSON.parse(r.stdout.trim().split('\n').pop())).toEqual({});
   });
 
   it('src/agents/setup.js does not start the wizard for a host script named setup.js', () => {
