@@ -2231,7 +2231,8 @@ export default {
   personaCreate: { run: personaCreateJob, concurrency: 4, description: 'Save a posting persona' },
   personaEdit: { run: personaEditJob, concurrency: 4, description: 'Change a saved persona' },
   personaDelete: { run: personaDeleteJob, concurrency: 4, description: 'Delete a saved persona' },
-  personaRun: { run: personaRunJob, concurrency: 2, write: true, description: 'Run engagement sessions as a persona' },
+  // Sessions with rests of many minutes between them: hours, so it does not wait in a shared slot.
+  personaRun: { run: personaRunJob, concurrency: 2, ownQueue: true, write: true, description: 'Run engagement sessions as a persona' },
 
   workflowCreate: { run: workflowCreateJob, concurrency: 4, description: 'Save a multi-step workflow' },
   workflowRun: { run: workflowRunJob, concurrency: 2, write: true, description: 'Run a workflow' },

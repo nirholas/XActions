@@ -1262,7 +1262,8 @@ async function mediaCaptions(ctx) {
 
 export default {
   discoveryTrending: { run: discoveryTrending, concurrency: 3, description: 'Trending topics, with endpoint failover' },
-  discoveryTrendingMonitor: { run: discoveryTrendingMonitor, concurrency: 2, description: 'Snapshot trends over time and diff them' },
+  // Up to 12 snapshots an hour apart: hours, so it does not wait in a shared slot.
+  discoveryTrendingMonitor: { run: discoveryTrendingMonitor, concurrency: 2, ownQueue: true, description: 'Snapshot trends over time and diff them' },
   discoverySaveSearch: { run: discoverySaveSearch, write: true, description: 'Save a search on the X account' },
   discoverySavedSearches: { run: discoverySavedSearches, write: true, description: 'List, run or delete saved searches' },
   discoveryTopics: { run: discoveryTopics, write: true, description: 'Suggested Topics; follow or unfollow Topics' },

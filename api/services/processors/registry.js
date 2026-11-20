@@ -12,11 +12,18 @@
  *       write: true,                                 // acts on the account
  *       description: 'Like one post',                // optional
  *       quiet: false,                                // true: no per-run log lines (frequent internal jobs)
+ *       ownQueue: false,                             // true: a queue of its own (see below)
  *     },
  *   };
  *
  * The queue registers exactly these types, and refuses to enqueue any other,
  * so a route can never accept (or charge for) work that nothing will run.
+ *
+ * Most types share one queue, each held to its own `concurrency` there. A job
+ * waiting for its type's limit holds one of that queue's slots, so a type that
+ * runs one at a time (`concurrency: 1`) gets a queue of its own, and so does
+ * one that declares `ownQueue: true`. Declare it on a type that can run for
+ * hours at a limit above one; each such queue costs one Redis connection.
  *
  * @author nich (@nichxbt)
  * @license Apache-2.0
@@ -45,7 +52,7 @@ const cache = new Map();
  * Load and validate every processor module in a directory.
  *
  * @param {string} [dir]
- * @returns {Promise<Map<string, { run: Function, concurrency: number, write: boolean, description: string, source: string }>>}
+ * @returns {Promise<Map<string, { run: Function, concurrency: number, write: boolean, quiet: boolean, ownQueue: boolean, description: string, source: string }>>}
  */
 export async function loadProcessors(dir = HERE) {
   if (cache.has(dir)) return cache.get(dir);
@@ -67,6 +74,7 @@ export async function loadProcessors(dir = HERE) {
           concurrency: def.concurrency ?? 2,
           write: Boolean(def.write),
           quiet: Boolean(def.quiet),
+          ownQueue: Boolean(def.ownQueue),
           description: def.description || '',
           source: file,
         });
