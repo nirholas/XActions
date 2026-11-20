@@ -1363,7 +1363,6 @@ prisma/         Database schema and migrations
 deploy/         Cloudflare and GCP deployment assets
 types/          TypeScript declarations
 data/           Runtime output (gitignored, keeps a .gitkeep)
-archive/        Retired code, kept for reference. Do not modify
 
 python/         xeepy, the Python twin of the library
 xspace-agents/  The Spaces agent monorepo
