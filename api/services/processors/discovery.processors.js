@@ -21,6 +21,7 @@
  */
 
 import { lookup } from 'node:dns/promises';
+import { PublicUrlError, publicFetch } from '../../utils/publicUrl.js';
 import { BlockList, isIP } from 'node:net';
 
 import { JobInputError } from './context.js';
@@ -1118,7 +1119,11 @@ async function assertPublicUrl(raw) {
 async function fetchPublicFile(raw, maxBytes) {
   let url = await assertPublicUrl(raw);
   for (let hop = 0; hop < 4; hop++) {
-    const res = await fetch(url, { redirect: 'manual', signal: AbortSignal.timeout(120_000) });
+    // Connect to the address that was just checked, not a fresh lookup of
+    // the hostname (DNS rebinding).
+    const res = await publicFetch(url, { signal: AbortSignal.timeout(120_000) }, { label: 'media URL', lookup }).catch((err) => {
+      throw err instanceof PublicUrlError ? new JobInputError(err.message) : err;
+    });
     if (res.status >= 300 && res.status < 400 && res.headers.get('location')) {
       url = await assertPublicUrl(new URL(res.headers.get('location'), url).href);
       continue;

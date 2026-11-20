@@ -353,7 +353,23 @@ async function scrollCollect(pg, extractFn, { limit = 100, maxRetries = 10 } = {
 export async function x_login({ cookie }) {
   const { page: pg } = await ensureBrowser();
   await loginWithCookie(pg, cookie);
-  return { success: true, message: 'Logged in with session cookie' };
+  // Setting a cookie proves nothing: a dead token lands on the login flow.
+  // The profile tab in the side nav exists only for a signed-in session and
+  // carries the handle, which the action ledger needs to charge the right
+  // account from here on.
+  const state = await pg.evaluate(() => ({
+    url: location.href,
+    profileHref: document.querySelector('a[data-testid="AppTabBar_Profile_Link"]')?.getAttribute('href') || '',
+  }));
+  const username = state.profileHref.replace(/^\//, '').split(/[/?#]/)[0] || null;
+  if (!username && /\/(login|i\/flow)/.test(state.url)) {
+    return { success: false, message: 'X rejected the session cookie (redirected to the login page)' };
+  }
+  return {
+    success: true,
+    username,
+    message: username ? `Logged in as @${username}` : 'Session cookie set; the account handle could not be read from the page',
+  };
 }
 
 // ============================================================================

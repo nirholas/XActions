@@ -2668,10 +2668,15 @@ async function executeDownloadMediaTool(args) {
 async function executeTool(name, args, options = {}) {
   // One context per call, so the call holds the shared Puppeteer page for as
   // long as it needs it and no parallel call can drive the page under it.
-  if (localTools?.withToolContext) {
-    return localTools.withToolContext(() => dispatchTool(name, args, options));
+  const result = localTools?.withToolContext
+    ? await localTools.withToolContext(() => dispatchTool(name, args, options))
+    : await dispatchTool(name, args, options);
+  // x_login switches the browser to another account; charge that account's
+  // caps from now on rather than the one resolved before the switch.
+  if (name === 'x_login' && result?.success && result.username) {
+    cachedSessionAccount = String(result.username).toLowerCase();
   }
-  return dispatchTool(name, args, options);
+  return result;
 }
 
 async function dispatchTool(name, args, options = {}) {

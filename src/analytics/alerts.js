@@ -10,7 +10,7 @@
  * @license Apache-2.0
  */
 
-import { assertPublicUrl } from '../utils/publicUrl.js';
+import { assertPublicUrl, publicFetch } from '../utils/publicUrl.js';
 
 // ============================================================================
 // Alert types
@@ -203,8 +203,7 @@ async function _deliverAlert(alert, config) {
   // the server's own network or a cloud metadata endpoint.
   if (config.webhookUrl) {
     try {
-      await assertPublicUrl(config.webhookUrl, 'webhookUrl');
-      await fetch(config.webhookUrl, {
+      await publicFetch(config.webhookUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -213,7 +212,7 @@ async function _deliverAlert(alert, config) {
         }),
         redirect: 'manual',
         signal: AbortSignal.timeout(10_000),
-      });
+      }, { label: 'webhookUrl' });
     } catch (err) {
       console.error(`❌ Webhook delivery failed: ${err.message}`);
     }

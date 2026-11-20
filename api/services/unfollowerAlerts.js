@@ -15,7 +15,7 @@
  */
 
 import { prisma } from '../../src/utils/prisma.js';
-import { assertPublicUrl } from '../utils/publicUrl.js';
+import { assertPublicUrl, publicFetch } from '../utils/publicUrl.js';
 import { userRoom } from '../realtime/socketHandler.js';
 
 /**
@@ -138,8 +138,7 @@ async function deliverWebhook(userId, payload) {
     // Checked again at delivery (DNS can change after the URL was accepted),
     // and redirects are not followed, so the scan result cannot be steered at
     // the server's own network.
-    await assertPublicUrl(schedule.webhookUrl, 'webhookUrl');
-    const response = await fetch(schedule.webhookUrl, {
+    const response = await publicFetch(schedule.webhookUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -150,7 +149,7 @@ async function deliverWebhook(userId, payload) {
       }),
       redirect: 'manual',
       signal: AbortSignal.timeout(10000), // 10s timeout
-    });
+    }, { label: 'webhookUrl' });
 
     if (!response.ok) {
       console.warn(`⚠️ Webhook delivery failed for user ${userId}: ${response.status}`);

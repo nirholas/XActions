@@ -45,10 +45,17 @@ describe('AntiDetection', () => {
 
   describe('addJitter', () => {
     it('should return a number close to the base', () => {
-      const jittered = ad.addJitter(1000);
-      expect(typeof jittered).toBe('number');
-      expect(jittered).toBeGreaterThan(500);
-      expect(jittered).toBeLessThan(2000);
+      // The jitter is Gaussian (sd 20% of the base) with a floor at 30% of
+      // it. A single draw below 50% happens in about 1 run in 160, so test
+      // the floor on every draw and closeness on the average, not one draw.
+      const draws = Array.from({ length: 2000 }, () => ad.addJitter(1000));
+      for (const jittered of draws) {
+        expect(Number.isInteger(jittered)).toBe(true);
+        expect(jittered).toBeGreaterThanOrEqual(300);
+      }
+      const mean = draws.reduce((a, b) => a + b, 0) / draws.length;
+      expect(mean).toBeGreaterThan(950);
+      expect(mean).toBeLessThan(1050);
     });
 
     it('should vary across calls', () => {
