@@ -51,8 +51,25 @@ export class Scheduler extends EventEmitter {
   async load() {
     try {
       const data = JSON.parse(await fsp.readFile(schedulerFile(), 'utf-8'));
-      for (const config of data.jobs || []) {
-        this._registerJob(config);
+      if (!Array.isArray(data?.jobs) || data.jobs.some((job) =>
+        !job || typeof job.name !== 'string' || typeof job.cron !== 'string' || !cron.validate(job.cron))) {
+        return this;
+      }
+      // Reconcile against the snapshot: jobs removed through another process
+      // (CLI vs API share the same file) must disappear here too, or the next
+      // _save() writes them back and deleted jobs resurrect.
+      const savedNames = new Set(data.jobs.map(({ name }) => name));
+      for (const [name, job] of this.jobs) {
+        if (!savedNames.has(name)) {
+          try { job.cronTask.destroy(); } catch { try { job.cronTask.stop(); } catch { /* already stopped */ } }
+          this.jobs.delete(name);
+        }
+      }
+      for (const config of data.jobs) {
+        const existing = this.jobs.get(config.name);
+        if (JSON.stringify(existing?.config) !== JSON.stringify(config)) {
+          this._registerJob(config);
+        }
       }
       console.log(`📋 Loaded ${this.jobs.size} scheduled jobs`);
     } catch {

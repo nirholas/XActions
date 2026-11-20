@@ -123,7 +123,7 @@ describe('postTweet', () => {
     await postTweet(client, 'my take', { quoteTweetId: '555' });
 
     const variables = client.graphql.mock.calls[0][2];
-    expect(variables.attachment_url).toBe('https://x.com/i/web/status/555');
+    expect(variables.attachment_url).toBe('https://x.com/i/status/555');
   });
 
   it('should attach media entities when mediaIds provided', async () => {
@@ -324,6 +324,46 @@ describe('postThread', () => {
   it('should reject non-array input', async () => {
     await expect(postThread(client, 'not an array')).rejects.toThrow(TwitterApiError);
   });
+
+  it('mid-thread failure rejects with the confirmed prefix and the failed index', async () => {
+    client.graphql
+      .mockResolvedValueOnce({
+        data: { create_tweet: { tweet_results: { result: { rest_id: 't1' } } } },
+      })
+      .mockRejectedValueOnce(new Error('network down'));
+    const tweets = [{ text: 'A' }, { text: 'B' }, { text: 'C' }];
+
+    try {
+      await postThread(client, tweets);
+      expect.unreachable('should have rejected');
+    } catch (err) {
+      expect(err.failedIndex).toBe(1);
+      expect(err.partialResults).toEqual([{ rest_id: 't1' }]);
+      expect(err.message).toMatch(/network down/);
+    }
+    // Stops at the failure — the third tweet is never attempted.
+    expect(client.graphql).toHaveBeenCalledTimes(2);
+  });
+
+  it('a posted tweet without an id stops the thread instead of reporting success', async () => {
+    client.graphql
+      .mockResolvedValueOnce({
+        data: { create_tweet: { tweet_results: { result: { rest_id: 't1' } } } },
+      })
+      .mockResolvedValueOnce({ data: { create_tweet: { tweet_results: { result: {} } } } });
+    const tweets = [{ text: 'A' }, { text: 'B' }, { text: 'C' }];
+
+    try {
+      await postThread(client, tweets);
+      expect.unreachable('should have rejected');
+    } catch (err) {
+      expect(err.failedIndex).toBe(1);
+      expect(err.missingId).toBe(true);
+      // The id-less result stays in the partial list so callers see what X returned.
+      expect(err.partialResults).toHaveLength(2);
+    }
+    expect(client.graphql).toHaveBeenCalledTimes(2);
+  });
 });
 
 // ============================================================================
@@ -411,7 +451,7 @@ describe('quoteTweet', () => {
     await quoteTweet(client, '555', 'my take');
 
     const variables = client.graphql.mock.calls[0][2];
-    expect(variables.attachment_url).toBe('https://x.com/i/web/status/555');
+    expect(variables.attachment_url).toBe('https://x.com/i/status/555');
     expect(variables.tweet_text).toBe('my take');
   });
 
@@ -420,7 +460,7 @@ describe('quoteTweet', () => {
 
     const variables = client.graphql.mock.calls[0][2];
     expect(variables.media.media_entities).toHaveLength(1);
-    expect(variables.attachment_url).toBe('https://x.com/i/web/status/555');
+    expect(variables.attachment_url).toBe('https://x.com/i/status/555');
   });
 });
 

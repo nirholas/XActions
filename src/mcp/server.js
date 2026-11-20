@@ -4186,7 +4186,12 @@ async function executeCompetitiveTool(name, args) {
       const { getScheduler } = await import('../scheduler/scheduler.js');
       const scheduler = getScheduler();
       await scheduler.load();
-      return scheduler.removeJob(args.name);
+      // removeJob reports a missing job as { error }, not by throwing — a
+      // bare return would surface as a normal result; throw so the tool
+      // call is marked isError instead.
+      const result = scheduler.removeJob(args.name);
+      if (result?.error) throw new Error(result.error);
+      return result;
     }
 
     // ── 09-H: Evergreen ──
