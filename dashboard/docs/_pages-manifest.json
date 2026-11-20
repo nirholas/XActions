@@ -1,7 +1,7 @@
 [
   {
     "slug": "feature_inventory",
-    "title": "XActions v3.5.0: Complete Feature Inventory",
+    "title": "XActions v5.0.0: Complete Feature Inventory",
     "description": "Every surface this repository ships, with the file that implements each one.",
     "section": "Guides & Reference",
     "icon": "📖",
@@ -26,7 +26,7 @@
   {
     "slug": "readme",
     "title": "XActions Documentation",
-    "description": "Complete documentation for XActions v3.5.0, the X/Twitter automation toolkit.",
+    "description": "Complete documentation for XActions v5.0.0, the X/Twitter automation toolkit.",
     "section": "Guides & Reference",
     "icon": "📖",
     "urlPath": "/docs/guides/readme",
@@ -206,7 +206,7 @@
   {
     "slug": "architecture",
     "title": "Architecture",
-    "description": "XActions v3.5.0 — System architecture, project structure, and design decisions.",
+    "description": "XActions v5.0.0 — System architecture, project structure, and design decisions.",
     "section": "Guides & Reference",
     "icon": "📖",
     "urlPath": "/docs/guides/architecture",
@@ -842,7 +842,7 @@
   {
     "slug": "video-downloader",
     "title": "Video Downloader",
-    "description": "XActions v3.5.0 — Download videos from X/Twitter tweets.",
+    "description": "XActions v5.0.0 — Download videos from X/Twitter tweets.",
     "section": "Guides & Reference",
     "icon": "📖",
     "urlPath": "/docs/guides/video-downloader",

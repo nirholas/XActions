@@ -7,7 +7,7 @@
     "url": "https://github.com/nirholas/XActions",
     "source": "github"
   },
-  "version": "3.5.0",
+  "version": "5.0.0",
   "icons": [
     {
       "src": "https://xactions.app/icon-192.png",
@@ -21,7 +21,7 @@
     {
       "registryType": "npm",
       "identifier": "xactions",
-      "version": "3.5.0",
+      "version": "5.0.0",
       "runtimeHint": "npx",
       "transport": {
         "type": "stdio"
