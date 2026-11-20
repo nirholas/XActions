@@ -127,17 +127,30 @@ const NO_OWNER_SESSION =
 // triggered run using the session of the workflow's owner.
 let _workflows = null;
 function getWorkflows() {
-  _workflows ??= import('../../src/workflows/index.js').then((mod) => {
+  _workflows ??= import('../../src/workflows/index.js').then(async (mod) => {
     mod.initTriggers({
       authTokenFor: (workflow) => authTokenForUser(workflow.userId),
       noSessionError: NO_OWNER_SESSION,
     });
+    // Re-register stored triggers before any request is answered, so a
+    // webhook arriving right after a restart finds its workflow.
+    const restored = await mod.restoreTriggers();
+    if (restored) console.log(`⚡ Restored ${restored} workflow trigger(s)`);
     return mod.default;
   }).catch((error) => {
     _workflows = null; // let the next request try again
     throw error;
   });
   return _workflows;
+}
+
+/**
+ * Bring workflow triggers up at server start, so interval and schedule
+ * triggers resume without waiting for the first workflow request.
+ * @returns {Promise<void>}
+ */
+export async function startWorkflowTriggers() {
+  await getWorkflows();
 }
 
 // ============================================================================

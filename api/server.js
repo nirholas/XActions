@@ -73,7 +73,7 @@ import settingsRoutes from './routes/settings.js';
 import streamRoutes from './routes/streams.js';
 import automationsRoutes from './routes/automations.js';
 import analyticsRoutes from './routes/analytics.js';
-import workflowRoutes from './routes/workflows.js';
+import workflowRoutes, { startWorkflowTriggers } from './routes/workflows.js';
 import agentRoutes from './routes/agent.js';
 import portabilityRoutes from './routes/portability.js';
 import graphRoutes from './routes/graph.js';
@@ -679,6 +679,9 @@ export function start() {
 
     // Start unfollower auto-scan scheduler
     startScheduler(io);
+
+    // Workflow triggers live in memory; restore the stored ones
+    startWorkflowTriggers().catch((error) => console.warn('⚠️  Workflow triggers not restored:', error.message));
   });
 
   return { app, httpServer, io };

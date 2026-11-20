@@ -188,6 +188,33 @@ function initTriggers(options = {}) {
 }
 
 /**
+ * Register the trigger of every stored, enabled workflow.
+ *
+ * Triggers live in memory, registered when a workflow is created or updated.
+ * Without this, a restarted server forgot them all: webhooks answered 401 and
+ * intervals stopped until each workflow happened to be saved again. One
+ * workflow whose trigger fails to register is logged and skipped, not fatal.
+ *
+ * @returns {Promise<number>} how many triggers were registered
+ */
+async function restoreTriggers() {
+  const store = await getStore();
+  let restored = 0;
+  for (const summary of await store.listWorkflows()) {
+    try {
+      const workflow = await store.getWorkflow(summary.id);
+      if (!workflow || workflow.enabled === false) continue;
+      if (!workflow.trigger || workflow.trigger.type === 'manual') continue;
+      await triggerManager.register(workflow.id, workflow.trigger);
+      restored += 1;
+    } catch (error) {
+      console.error(`⚠️  Could not restore the trigger of workflow ${summary.id}: ${error.message}`);
+    }
+  }
+  return restored;
+}
+
+/**
  * Shutdown workflows (clean up triggers, close browsers)
  */
 async function shutdown() {
@@ -209,6 +236,7 @@ const workflows = {
   runs,
   getRun,
   initTriggers,
+  restoreTriggers,
   shutdown,
   validate: validateWorkflow,
   listActions,
@@ -229,6 +257,7 @@ export {
   runs,
   getRun,
   initTriggers,
+  restoreTriggers,
   shutdown,
   validateWorkflow,
   listActions,
