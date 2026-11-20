@@ -13,14 +13,22 @@
  *
  *   manifest.json      generated here from package.json and the live TOOLS array
  *   icon.png           public/icon-512.png
- *   package.json       the same one npm publishes, so the entry point resolves
+ *   package.json       the one npm publishes, so the entry point resolves, with
+ *                      the browser stack promoted to dependencies (see below)
  *   src/, types/       the server and everything it imports
  *   api/config/x402-config.js   the one api/ file package.json ships
  *   node_modules/      production dependencies only, install scripts skipped
  *   README.md, LICENSE
  *
- * Dependencies are installed with `npm ci --omit=dev --omit=optional
- * --ignore-scripts` and `PUPPETEER_SKIP_DOWNLOAD=1`. Skipping install scripts
+ * Dependencies are installed with `npm install --omit=dev --omit=optional
+ * --ignore-scripts` and `PUPPETEER_SKIP_DOWNLOAD=1`, against the committed
+ * lockfile so every version is the locked one. Puppeteer, puppeteer-extra and
+ * the stealth plugin are optionalDependencies of the npm package (an HTTP-only
+ * install can leave them out), so the staged package.json moves them into
+ * dependencies first: the bundle keeps the browser-driven tools while still
+ * leaving out viem, x402 and the AT Protocol SDK. It also drops `workspaces`,
+ * whose api/ manifest holds the self-hosted server's dependencies and is not
+ * part of the bundle. Skipping install scripts
  * keeps a browser download out of the bundle: the browser-driven tools fetch
  * Chromium into the user's own puppeteer cache on first use, and every HTTP
  * tool works without it. `@prisma/client` is imported lazily by one workflow
@@ -68,6 +76,10 @@ const PAYLOAD = [
   'src',
   'types',
   'api/config/x402-config.js',
+  // package.json overrides deepmerge with this patched copy, and the lockfile
+  // installs it as a link to vendor/deepmerge. Without it the link dangles and
+  // the pack step fails on it.
+  'vendor/deepmerge',
   'README.md',
   'LICENSE',
 ];
@@ -220,7 +232,30 @@ function stagePayload() {
     cpSync(from, to, { recursive: true });
   }
 
+  stagePackageJson();
   stageIcon();
+}
+
+/** Optional dependencies the bundle still installs: the browser-driven tools need them. */
+const BUNDLED_OPTIONAL = ['puppeteer', 'puppeteer-extra', 'puppeteer-extra-plugin-stealth'];
+
+/**
+ * Rewrite the staged package.json for the bundle's install: promote the browser
+ * stack from optionalDependencies to dependencies, and drop `workspaces`, since
+ * the api/ server manifest is not staged.
+ */
+function stagePackageJson() {
+  const staged = JSON.parse(readFileSync(join(stageDir, 'package.json'), 'utf8'));
+  delete staged.workspaces;
+  for (const name of BUNDLED_OPTIONAL) {
+    const range = staged.optionalDependencies?.[name];
+    if (!range) {
+      throw new Error(`package.json no longer lists ${name} in optionalDependencies; update BUNDLED_OPTIONAL in scripts/build-mcpb.mjs`);
+    }
+    staged.dependencies[name] = range;
+    delete staged.optionalDependencies[name];
+  }
+  writeFileSync(join(stageDir, 'package.json'), `${JSON.stringify(staged, null, 2)}\n`);
 }
 
 /** Copy the bundle icon, which validation requires even on a manifest-only run. */
@@ -230,7 +265,10 @@ function stageIcon() {
 
 /** Install production dependencies inside the staging directory. */
 function installDependencies() {
-  run('npm', ['ci', '--omit=dev', '--omit=optional', '--ignore-scripts', '--no-audit', '--no-fund'], {
+  // `install`, not `ci`: the staged package.json differs from the lockfile's
+  // root entry (see stagePackageJson), and `ci` refuses any difference. The
+  // lockfile still pins every package it lists.
+  run('npm', ['install', '--omit=dev', '--omit=optional', '--ignore-scripts', '--no-audit', '--no-fund'], {
     cwd: stageDir,
     env: { ...process.env, PUPPETEER_SKIP_DOWNLOAD: '1', NODE_ENV: 'production' },
   });

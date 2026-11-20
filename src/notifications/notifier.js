@@ -14,6 +14,7 @@ import fsp from 'fs/promises';
 import path from 'path';
 import os from 'os';
 import { deliverWebhook } from './webhook.js';
+import { importOptional } from '../utils/optionalDeps.js';
 
 const CONFIG_DIR = path.join(os.homedir(), '.xactions');
 const CONFIG_FILE = path.join(CONFIG_DIR, 'config.json');
@@ -144,7 +145,7 @@ export class Notifier {
     if (!smtp || !to) return { error: 'Email not fully configured (need smtp + to)' };
 
     try {
-      const nodemailer = await import('nodemailer');
+      const nodemailer = await importOptional('nodemailer', { feature: 'Email notifications' });
       const transporter = nodemailer.default.createTransport({
         host: smtp.host,
         port: smtp.port || 587,

@@ -3,13 +3,10 @@
 // Puppeteer stealth wrapper for X.com automation
 // by nichxbt
 
-import puppeteer from 'puppeteer-extra';
-import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import fs from 'fs';
 import path from 'path';
 import { AntiDetection } from './antiDetection.js';
-
-puppeteer.use(StealthPlugin());
+import { loadStealthPuppeteer } from '../utils/optionalDeps.js';
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
@@ -94,6 +91,7 @@ class BrowserDriver {
     ];
     if (this.proxy) args.push(`--proxy-server=${this.proxy}`);
 
+    const puppeteer = await loadStealthPuppeteer('The thought-leader agent');
     this.browser = await puppeteer.launch({
       headless: this.headless ? 'new' : false,
       args,

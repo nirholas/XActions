@@ -383,7 +383,10 @@ browser/          112 standalone browser console scripts (IIFEs you paste into
                   DevTools on x.com). Not in the npm package; linted with browser
                   globals only, so `process` or `require` there is an error
 skills/           50 Agent Skills, one directory each
-api/              Express backend (routes/, services/, middleware/)
+api/              Express backend (routes/, services/, middleware/). Its
+                  dependencies are in api/package.json, an npm workspace:
+                  the root `npm ci` installs them, `npm install xactions`
+                  never does
 dashboard/        Static frontend
 scripts/          The 95 browser console scripts, plus build and maintenance
                   scripts (twitter/ holds standalone console variants)

@@ -12,14 +12,28 @@ ENV PUPPETEER_SKIP_DOWNLOAD=true
 
 WORKDIR /app
 
-# Copy package files
+# better-sqlite3 has no install script, so npm runs its implicit `node-gyp
+# rebuild`. The package ships a prebuilt binary and binding.gyp then builds
+# nothing, but node-gyp still needs Python (and make) to read binding.gyp, and
+# node:22-slim has neither, so `npm ci` failed here. g++ covers a platform with
+# no prebuild. All three stay in this stage; the runtime image copies only
+# node_modules.
+RUN apt-get update && apt-get install -y --no-install-recommends python3 make g++ \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy package files. api/package.json is an npm workspace holding the server's
+# own dependencies (Express middleware, Prisma, Stripe, Bull, Socket.IO, ...),
+# which the published xactions package does not carry; `npm ci` installs the
+# workspaces with the root, so it must be present before the install.
 COPY package.json package-lock.json* ./
+COPY api/package.json ./api/
 COPY prisma ./prisma/
 COPY prisma.config.js ./
 # package.json overrides deepmerge with this patched copy, so npm ci needs it
 COPY vendor ./vendor/
 
-# Install production dependencies only
+# Install production dependencies only: the root's dependencies and
+# optionalDependencies (Puppeteer, ioredis, x402) plus the api/ workspace's.
 RUN npm ci --omit=dev && npx prisma generate
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -60,6 +74,9 @@ WORKDIR /app
 # Copy dependencies from stage 1
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/prisma ./prisma
+# Carries api/node_modules too, should npm ever have to nest a server package
+# there instead of hoisting it (the build context excludes every node_modules).
+COPY --from=deps /app/api ./api
 
 # Copy application code
 COPY . .
