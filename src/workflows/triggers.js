@@ -73,7 +73,11 @@ class TriggerManager extends EventEmitter {
       if (jobInfo.repeatKey && this._queue) {
         try {
           await this._queue.removeRepeatableByKey(jobInfo.repeatKey);
-        } catch {}
+        } catch (err) {
+          // Keep unregistering locally, but say so: the repeatable job is
+          // still in Redis and will keep firing this workflow.
+          console.warn(`⚠️ Could not remove the schedule for workflow ${workflowId} from the queue: ${err.message}`);
+        }
       }
       if (jobInfo.intervalId) {
         clearInterval(jobInfo.intervalId);

@@ -96,7 +96,11 @@ async function listGraphs() {
           createdAt: data.createdAt,
           updatedAt: data.updatedAt,
         });
-      } catch {}
+      } catch (err) {
+        // One corrupt file must not hide the other graphs, but it must not
+        // vanish from the list silently either.
+        console.warn(`⚠️ Skipping unreadable graph file ${file}: ${err.message}`);
+      }
     }
     return graphs.sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''));
   } catch {

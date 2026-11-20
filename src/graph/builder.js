@@ -265,7 +265,8 @@ export async function buildGraph(seedUsername, options = {}) {
     throw error;
   } finally {
     if (browser) {
-      try { await browser.close(); } catch {}
+      // Cleanup in finally: a close failure must not mask the crawl's own result or error.
+      try { await browser.close(); } catch { /* browser already gone */ }
     }
   }
 }

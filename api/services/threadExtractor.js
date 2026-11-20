@@ -58,7 +58,7 @@ async function getBrowser() {
       }
       // Browser disconnected — replace it
       const idx = browsers.indexOf(entry);
-      try { await entry.browser.close(); } catch {}
+      try { await entry.browser.close(); } catch { /* disconnected: being replaced */ }
       const browser = await createBrowser();
       browsers[idx] = { browser, busy: true };
       return browsers[idx];
@@ -97,7 +97,7 @@ function releaseBrowser(entry) {
  */
 export async function closePool() {
   for (const entry of browsers) {
-    try { await entry.browser.close(); } catch {}
+    try { await entry.browser.close(); } catch { /* shutting down: already closed is fine */ }
   }
   browsers.length = 0;
 }
@@ -240,7 +240,9 @@ async function clickExpansionButtons(page) {
         try {
           el.click();
           clicked++;
-        } catch {}
+        } catch {
+          // Element detached mid-scan; the next expand pass picks up what is left.
+        }
       }
     }
     return clicked;

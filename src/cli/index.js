@@ -106,6 +106,28 @@ function formatNumber(num) {
 }
 
 /**
+ * Load a saved cookie jar into an HTTP scraper if there is one.
+ *
+ * No file means a guest session, which public reads accept. A file that exists
+ * but cannot be read or parsed is different: swallowing that ran the command
+ * as a guest while the user believed they were signed in, so what a guest
+ * cannot see was simply absent from the answer.
+ *
+ * @param {import('../client/index.js').Scraper} scraper
+ * @param {string} cookiePath
+ * @returns {Promise<boolean>} true if cookies were loaded, false if none are saved
+ */
+async function loadOptionalCookies(scraper, cookiePath) {
+  try {
+    await scraper.loadCookies(cookiePath);
+    return true;
+  } catch (err) {
+    if (err.code === 'ENOENT') return false;
+    throw new Error(`Could not load saved cookies from ${cookiePath}: ${err.message}. Fix or delete the file.`);
+  }
+}
+
+/**
  * Build an HTTP-only Scraper, authenticated if a session cookie is saved.
  *
  * Read commands prefer this over Puppeteer. X no longer serves profile or
@@ -3674,7 +3696,7 @@ clientCmd
       const { Scraper } = await import('../client/index.js');
       const scraper = new Scraper();
       const cookiePath = path.join(CONFIG_DIR, 'cookies.json');
-      try { await scraper.loadCookies(cookiePath); } catch {}
+      await loadOptionalCookies(scraper, cookiePath);
 
       const profile = await scraper.getProfile(username);
       spinner.stop();
@@ -3702,7 +3724,7 @@ clientCmd
       const { Scraper } = await import('../client/index.js');
       const scraper = new Scraper();
       const cookiePath = path.join(CONFIG_DIR, 'cookies.json');
-      try { await scraper.loadCookies(cookiePath); } catch {}
+      await loadOptionalCookies(scraper, cookiePath);
 
       const tweet = await scraper.getTweet(tweetId);
       spinner.stop();
@@ -3730,7 +3752,7 @@ clientCmd
       const { Scraper } = await import('../client/index.js');
       const scraper = new Scraper();
       const cookiePath = path.join(CONFIG_DIR, 'cookies.json');
-      try { await scraper.loadCookies(cookiePath); } catch {}
+      await loadOptionalCookies(scraper, cookiePath);
 
       const count = parseInt(options.count, 10) || 20;
       const tweets = [];
@@ -3787,7 +3809,7 @@ clientCmd
       const { Scraper } = await import('../client/index.js');
       const scraper = new Scraper();
       const cookiePath = path.join(CONFIG_DIR, 'cookies.json');
-      try { await scraper.loadCookies(cookiePath); } catch {}
+      await loadOptionalCookies(scraper, cookiePath);
 
       const profile = await scraper.getProfile(username);
       const count = parseInt(options.count, 10) || 100;
@@ -3817,7 +3839,7 @@ clientCmd
       const { Scraper } = await import('../client/index.js');
       const scraper = new Scraper();
       const cookiePath = path.join(CONFIG_DIR, 'cookies.json');
-      try { await scraper.loadCookies(cookiePath); } catch {}
+      await loadOptionalCookies(scraper, cookiePath);
 
       const trends = await scraper.getTrends();
       spinner.stop();

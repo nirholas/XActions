@@ -87,7 +87,11 @@ class FileStore {
             createdAt: wf.createdAt,
             updatedAt: wf.updatedAt,
           });
-        } catch {}
+        } catch (err) {
+          // One corrupt file must not hide the other workflows, but it must
+          // not vanish from the list silently either.
+          console.warn(`⚠️ Skipping unreadable workflow file ${file}: ${err.message}`);
+        }
       }
       return workflows.sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''));
     } catch {
@@ -162,7 +166,9 @@ class FileStore {
             totalSteps: run.totalSteps || 0,
             error: run.error,
           });
-        } catch {}
+        } catch (err) {
+          console.warn(`⚠️ Skipping unreadable run file ${workflowId}/${file}: ${err.message}`);
+        }
       }
       return runs;
     } catch {

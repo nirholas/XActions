@@ -184,7 +184,10 @@
         const domain = new URL(url).hostname.replace('www.', '');
         if (!byDomain[domain]) byDomain[domain] = [];
         byDomain[domain].push({ url, ...data });
-      } catch (e) {}
+      } catch {
+        // Not an absolute URL, so it has no domain to group under. It is still
+        // counted and listed in the totals above.
+      }
     }
 
     // Print by domain

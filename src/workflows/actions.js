@@ -25,7 +25,7 @@ const MAX_BROWSER_USES = 50; // Recycle browser after N uses
 async function getBrowser() {
   if (!_browser || _browserUseCount >= MAX_BROWSER_USES) {
     if (_browser) {
-      try { await _browser.close(); } catch {}
+      try { await _browser.close(); } catch { /* recycling: the old browser may already be gone */ }
     }
     _browser = await scrapers.createBrowser();
     _browserUseCount = 0;
@@ -45,7 +45,7 @@ async function getAuthenticatedPage(authToken) {
 
 export async function closeBrowser() {
   if (_browser) {
-    try { await _browser.close(); } catch {}
+    try { await _browser.close(); } catch { /* shutting down: already closed is fine */ }
     _browser = null;
     _browserUseCount = 0;
   }
