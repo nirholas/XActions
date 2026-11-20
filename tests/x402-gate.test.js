@@ -256,6 +256,42 @@ describe('server config honesty', () => {
     expect(body.error).toMatch(/unavailable/i);
   });
 
+  it('asks the configured facilitator what it supports, not the library default', async () => {
+    // HTTPFacilitatorClient takes { url }. It was handed the bare URL string,
+    // read config.url as undefined and fell back to https://x402.org/facilitator,
+    // which settles testnets only: in production every paid route answered 503
+    // missing_facilitator whatever X402_FACILITATOR_URL said.
+    process.env.X402_FACILITATOR_URL = 'https://facilitator.example.test';
+    const asked = [];
+    vi.stubGlobal('fetch', vi.fn(async (input) => {
+      const url = typeof input === 'string' ? input : input.url;
+      asked.push(url);
+      return new Response(JSON.stringify({
+        kinds: [{ x402Version: 2, scheme: 'exact', network: 'eip155:8453' }],
+        extensions: [],
+        signers: {},
+      }), { status: 200, headers: { 'content-type': 'application/json' } });
+    }));
+    const { x402Middleware } = await import('../api/middleware/x402.js');
+
+    const req = {
+      path: '/api/ai/scrape/profile', originalUrl: '/api/ai/scrape/profile', url: '/api/ai/scrape/profile',
+      method: 'POST', headers: { host: 'xactions.app' }, protocol: 'https', body: {},
+      get(name) { return this.headers[name.toLowerCase()]; }, header(name) { return this.get(name); },
+    };
+    const res = {
+      statusCode: 200, headersSent: false,
+      status(code) { this.statusCode = code; return this; },
+      json() { return this; }, send() { return this; }, end() { return this; },
+      setHeader() {}, getHeader() {}, set() { return this; }, header() { return this; },
+    };
+    await x402Middleware(req, res, () => {});
+
+    expect(asked.length, 'the middleware never asked a facilitator').toBeGreaterThan(0);
+    expect(asked.every((u) => u.startsWith('https://facilitator.example.test/'))).toBe(true);
+    expect(asked.some((u) => u.includes('x402.org'))).toBe(false);
+  });
+
   it('advertises only the network it will actually accept', async () => {
     const { x402Pricing } = await import('../api/middleware/x402.js');
     const { NETWORK } = await import('../api/config/x402-config.js');

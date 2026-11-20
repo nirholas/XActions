@@ -149,7 +149,11 @@ async function initializeMiddleware() {
   const { ExactEvmScheme } = await import('@x402/evm/exact/server');
 
   // Create facilitator client
-  const facilitator = new HTTPFacilitatorClient(FACILITATOR_URL);
+  // The client takes a config object. Given a bare string it reads
+  // `config.url` as undefined and silently uses https://x402.org/facilitator,
+  // which settles only testnets, so every mainnet route failed with
+  // missing_facilitator (503) no matter what X402_FACILITATOR_URL said.
+  const facilitator = new HTTPFacilitatorClient({ url: FACILITATOR_URL });
 
   // Create resource server and register the EVM scheme for the configured network
   const server = new x402ResourceServer(facilitator);
