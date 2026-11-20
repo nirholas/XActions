@@ -42,15 +42,31 @@ local choice.
 
 ## ✅ Before you open a PR
 
-Three commands. All of them run in CI, so running them locally saves a round
-trip:
+These all run in CI, so running them locally saves a round trip:
 
 ```bash
-npm test              # the whole suite, offline, under a minute
+npm test              # the whole suite, offline, under two minutes
 npm run lint          # ESLint over the whole repo
+npm run typecheck     # tsc over src/ and api/, against a per-file baseline
+npm run test:coverage # the suite again, failing if coverage drops below the floor
 npm run docs:check    # dead links, stale versions and counts, invented CLI commands
 npm run docs:scripts  # only if you added or renamed a browser console script
 ```
+
+`npm install` points git at `.githooks/`, whose pre-commit hook runs ESLint on
+the staged files and the type check (a few seconds). Skip it once with
+`git commit --no-verify`.
+
+Three of these checks are ratchets: they accept the debt that already exists
+and refuse anything new.
+
+| Check | What it tolerates | When you fix old problems |
+|-------|-------------------|---------------------------|
+| `lint` | Violations recorded in `eslint-suppressions.json` | `npx eslint . --prune-suppressions`, or lint fails on the unused entry |
+| `typecheck` | Each file's error count in `config/typecheck-baseline.json`; a file not listed must have none | `npm run typecheck -- --update` (CI fails until the lower count is committed) |
+| `test:coverage` | The `thresholds` in `vitest.config.js` | Raise them to just under the new numbers |
+
+Never regenerate a baseline to make a new error go away. Fix the error.
 
 `docs:check` runs four checks in sequence: the browser-script catalog is
 regenerated and compared, the MCP registry manifests are compared, the Ask
