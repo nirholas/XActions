@@ -68,6 +68,10 @@ const PAYLOAD = [
   'src',
   'types',
   'api/config/x402-config.js',
+  // package.json overrides deepmerge with this patched copy, and the lockfile
+  // installs it as a link to vendor/deepmerge. Without it the link dangles and
+  // the pack step fails on it.
+  'vendor/deepmerge',
   'README.md',
   'LICENSE',
 ];
