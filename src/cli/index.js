@@ -2244,7 +2244,7 @@ program
   .description('Show XActions information')
   .action(() => {
     console.log(`
-${chalk.bold.cyan('⚡ XActions')} ${chalk.gray('v3.0.0')}
+${chalk.bold.cyan('⚡ XActions')} ${chalk.gray(`v${VERSION}`)}
 
 ${chalk.bold('The Complete X/Twitter Automation Toolkit')}
 
