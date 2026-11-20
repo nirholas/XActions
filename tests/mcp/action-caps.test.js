@@ -188,6 +188,24 @@ describe('write-tool mapping', () => {
     }
   });
 
+  it('pins the account-vault approval gate: use/remove stay writes and uncapped', async () => {
+    // Regression pin: the vault tools activate/delete local credentials —
+    // they must stay behind the approval gate (WRITE_TOOLS) without a daily
+    // action-cap class (UNCAPPED_WRITE_TOOLS). Removing either entry would
+    // silently ungate destructive local operations.
+    const groups = await import('../../src/mcp/tool-groups.js');
+    for (const name of ['x_accounts_use', 'x_accounts_remove']) {
+      expect(groups.WRITE_TOOLS.has(name), `${name} must be approval-gated`).toBe(true);
+      expect(groups.UNCAPPED_WRITE_TOOLS.has(name), `${name} must stay uncapped`).toBe(true);
+      expect(groups.isWriteTool(name)).toBe(true);
+      expect(groups.resolveActionCharge(name)).toBeNull();
+    }
+    // The read-side vault tools must NOT be gated.
+    for (const name of ['x_accounts_add', 'x_accounts_list', 'x_accounts_test']) {
+      expect(groups.WRITE_TOOLS.has(name), `${name} is a read/local op, not a write`).toBe(false);
+    }
+  });
+
   it('resolveActionCharge reads the class off bulk arguments and skips dry runs and read tools', async () => {
     const { resolveActionCharge } = await import('../../src/mcp/tool-groups.js');
     expect(resolveActionCharge('x_follow')).toEqual({ actionClass: 'follow', count: 1 });

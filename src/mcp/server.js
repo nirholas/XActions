@@ -2482,6 +2482,75 @@ const TOOLS = [
       },
     },
   },
+
+  // ====== Account vault (local credential store — see src/vault/accountVault.js) ======
+  {
+    name: 'x_accounts_add',
+    description: 'Store credentials for a platform account in the local vault (accounts.db in the XActions cache dir — $XACTIONS_HOME or ~/.xactions) so several logins per platform can be kept and switched between. Platforms: twitter (aliases x), bluesky (bsky), mastodon (masto); threads is anonymous and rejected. PREFER file-path credential inputs so secrets never enter the conversation log: credentials_file (JSON object of credential fields for any platform, e.g. {"identifier":"...","password":"..."} for bluesky or {"instance":"...","accessToken":"..."} for mastodon) or cookies_file (twitter session cookies in any format xactions login accepts: cookies.txt, Cookie-Editor JSON, Playwright storageState, or an "auth_token=...; ct0=..." header). Inline fields (cookies, identifier, password, service, instance, accessToken) are accepted as a fallback. Re-adding the same platform+name updates the stored credentials. Results are masked — stored secrets are never returned.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        platform: { type: 'string', description: 'twitter|x, bluesky|bsky, or mastodon|masto' },
+        name: { type: 'string', description: 'Account name, unique within the platform' },
+        credentials_file: { type: 'string', description: 'PREFERRED: path to a JSON file holding the credential fields (any platform). Keeps secrets out of the tool-call log.' },
+        cookies_file: { type: 'string', description: 'Twitter only: path to a session cookie file (cookies.txt, Cookie-Editor JSON, Playwright storageState, or cookie header text)' },
+        cookies: { type: 'string', description: 'Twitter: inline cookie string fallback when no file is available' },
+        identifier: { type: 'string', description: 'Bluesky: account identifier (handle or did)' },
+        password: { type: 'string', description: 'Bluesky: app password' },
+        service: { type: 'string', description: 'Bluesky: PDS/AppView URL (default https://public.api.bsky.app)' },
+        instance: { type: 'string', description: 'Mastodon: instance URL (e.g. mastodon.social)' },
+        accessToken: { type: 'string', description: 'Mastodon: access token' },
+        proxy: { type: 'string', description: 'Proxy URL used for requests made as this account' },
+      },
+      required: ['platform', 'name'],
+    },
+  },
+  {
+    name: 'x_accounts_list',
+    description: 'List accounts stored in the local vault. Returns only masked metadata — platform, name, proxy host, added/last-used timestamps — never credentials or tokens. Optionally filter to one platform.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        platform: { type: 'string', description: 'Optional platform filter: twitter|x, bluesky|bsky, mastodon|masto' },
+      },
+    },
+  },
+  {
+    name: 'x_accounts_remove',
+    description: 'Delete an account from the local vault. When the same name exists on several platforms, pass platform to disambiguate.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string', description: 'Account name to remove' },
+        platform: { type: 'string', description: 'Platform the account belongs to (needed only when the name is ambiguous)' },
+      },
+      required: ['name'],
+    },
+  },
+  {
+    name: 'x_accounts_use',
+    description: 'Activate a stored twitter vault account as the live X session: the current cookies.json is backed up to cookies.json.bak, then the stored jar is written owner-only. Only twitter accounts can be activated — bluesky/mastodon entries are stored credentials only.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string', description: 'Twitter account name to activate' },
+        platform: { type: 'string', description: 'Platform the account belongs to (needed only when the name is ambiguous)' },
+      },
+      required: ['name'],
+    },
+  },
+  {
+    name: 'x_accounts_test',
+    description: 'Check stored credentials against their platform with a light authenticated call (twitter: notifications timeline; bluesky: createSession login; mastodon: verify_credentials). Returns { ok, reason } — never the credentials themselves — and does not lock or remove the account on failure.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string', description: 'Account name to test' },
+        platform: { type: 'string', description: 'Platform the account belongs to (needed only when the name is ambiguous)' },
+      },
+      required: ['name'],
+    },
+  },
 ];
 
 // ============================================================================
@@ -2699,6 +2768,20 @@ async function dispatchTool(name, args, options = {}) {
   // Platform directory: reads the scraper registry, needs no browser
   if (name === 'x_list_platforms') {
     return await executePlatformTool();
+  }
+
+  // Account vault: local credential store, available in both modes
+  // (remote mode never populates localTools, so import it on demand here).
+  if (name.startsWith('x_accounts_')) {
+    if (!localTools) {
+      const tools = await import('./local-tools.js');
+      localTools = tools.toolMap || tools.default || tools;
+    }
+    const toolFn = localTools[name];
+    if (!toolFn) {
+      throw new Error(`Unknown tool: ${name}`);
+    }
+    return await toolFn(args);
   }
 
   // Ask XActions: reads the shipped documentation index, needs no browser

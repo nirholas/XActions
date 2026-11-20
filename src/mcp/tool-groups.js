@@ -43,6 +43,10 @@ export const GROUP_RULES = Object.freeze([
   { group: 'drafts', names: [...ALWAYS_AVAILABLE_TOOLS] },
   { group: 'auth', names: ['x_login'] },
   {
+    group: 'accounts',
+    prefixes: ['x_accounts_'],
+  },
+  {
     group: 'dm',
     names: ['x_send_dm', 'x_get_conversations', 'x_export_dms'],
   },
@@ -174,6 +178,8 @@ export const WRITE_TOOLS = Object.freeze(new Set([
   'x_space_join',
   // Outbound notifications
   'x_notify_send',
+  // Account vault destructive/activation ops (local state, human-decided)
+  'x_accounts_use', 'x_accounts_remove',
 ]));
 
 /**
@@ -235,6 +241,8 @@ export const ARGUMENT_RESOLVED_WRITE_TOOLS = Object.freeze(new Set([
 export const UNCAPPED_WRITE_TOOLS = Object.freeze(new Set([
   'x_update_profile', 'x_toggle_protected', 'x_migrate_account',
   'x_space_join', 'x_notify_send',
+  // Local vault ops: nothing X rate-limits; gated by approval only.
+  'x_accounts_use', 'x_accounts_remove',
 ]));
 
 /**
