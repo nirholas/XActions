@@ -59,9 +59,9 @@ export function registerReputationCommand(program, { createHttpScraper, loadConf
     .option('-l, --limit <number>', 'Maximum posts to scan', '60')
     .option('--dimensions <list>', `Comma-separated subset: ${DIMENSION_KEYS.join(', ')}`, DIMENSION_KEYS.join(','))
     .option('--custom-question <text>', 'An extra risk question specific to this account, scored alongside the built-ins')
-    .option('--provider <name>', 'LLM provider: openrouter, openai, xai, anthropic, ollama, custom', 'openrouter')
-    .option('--model <name>', 'LLM model (provider default if omitted)')
-    .option('--api-key <key>', 'LLM API key (or set OPENROUTER_API_KEY / OPENAI_API_KEY / XAI_API_KEY / ANTHROPIC_API_KEY)')
+    .option('--provider <name>', 'LLM provider: free (default, no key needed), or your own key with openrouter, openai, xai, anthropic, ollama, custom', 'free')
+    .option('--model <name>', 'LLM model for a non-free provider (provider default if omitted)')
+    .option('--api-key <key>', 'Your own key for a non-free provider (or set OPENROUTER_API_KEY / OPENAI_API_KEY / XAI_API_KEY / ANTHROPIC_API_KEY)')
     .option('--base-url <url>', 'Custom OpenAI-compatible chat-completions URL (provider custom)')
     .option('--concurrency <number>', 'Posts scored in parallel', '4')
     .option('--top <number>', 'How many flagged/review posts to print', '10')
@@ -71,7 +71,7 @@ Examples:
   $ xactions reputation nichxbt
   $ xactions reputation nichxbt --replies --limit 200
   $ xactions reputation nichxbt --dimensions hostile,legal --custom-question "Does this reveal my employer?"
-  $ XAI_API_KEY=xai-... xactions reputation nichxbt --provider xai --json
+  $ GROQ_API_KEY=gsk_... xactions reputation nichxbt --json   # a free-tier key adds capacity
 
 For a downloadable, shareable score card image, use the browser version instead:
 scripts/reputationAudit.js, pasted into DevTools on your own profile.

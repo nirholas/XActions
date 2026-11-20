@@ -91,21 +91,33 @@ question ──► BM25 search over dashboard/data/ask-index.json  ─┐
 
 ## Free LLM lanes
 
+XActions uses free LLMs only, and these lanes are how. Ask and Chat use them directly; every other feature that writes, summarizes, scores or describes with a model goes through them as well, via `freeChat()` in [`src/ai/freeLLM.js`](../src/ai/freeLLM.js).
+
 Every lane is an OpenAI-compatible chat endpoint reached with `fetch`, so the same file runs in Node, in the Cloudflare Worker, and in the browser. Lanes are tried in order; a `402`, `429`, `5xx`, or network error moves on to the next one.
 
 | Order | Lane | Needs | Model |
 |---|---|---|---|
-| 1 | Your key (BYOK, from the model picker) | user-supplied | provider default |
-| 2 | Groq | `GROQ_API_KEY` | llama-3.3-70b-versatile |
+| 1 | Your key (BYOK, from the model picker) | user-supplied | provider default (`openrouter/free` for OpenRouter) |
+| 2 | Groq | `GROQ_API_KEY` | `openai/gpt-oss-120b` (`GROQ_MODEL` to change) |
 | 3 | Cerebras | `CEREBRAS_API_KEY` | llama-3.3-70b |
-| 4 | OpenRouter free tier | `OPENROUTER_API_KEY` | first live `:free` model (read from `/models`, never hardcoded) |
-| 5 | xAI | `XAI_API_KEY` | grok-4.1-fast |
+| 4 | NVIDIA NIM | `NVIDIA_API_KEY` | `nvidia/nemotron-3.5-lightning-30b-a3b` (`NVIDIA_MODEL`) |
+| 5 | OpenRouter free tier, one lane per key | `OPENROUTER_API_KEY`, `OPENROUTER_API_KEYS` | `openrouter/free`, OpenRouter's router over its live free models |
 | 6 | Google AI Studio | `GEMINI_API_KEY` | gemini-2.5-flash-lite |
 | 7 | Mistral | `MISTRAL_API_KEY` | mistral-small-latest |
 | 8 | Cloudflare Workers AI | `CLOUDFLARE_AI_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID` | llama-3.3-70b-instruct-fp8-fast |
-| 9 | LLM7 | nothing | gemini-3.1-flash-lite |
+| 9 | LLM7 | nothing | `default` (LLM7's alias for a live model) |
 | 10 | Pollinations | nothing | openai-fast |
 | 11 | OVH AI Endpoints (anonymous) | nothing | Meta-Llama-3.3-70B |
+
+Only free tiers get a lane from the server's environment. A paid provider key in the environment (`XAI_API_KEY`, `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`) is not used. `OPENROUTER_FREE_MODEL` can pin a specific `:free` model; a paid id there is ignored.
+
+Each OpenRouter key has its own daily free quota, so `OPENROUTER_API_KEYS` (comma- or space-separated) adds a lane per key. Reasoning models would otherwise spend `max_tokens` thinking and stop mid-answer, so the OpenRouter, NVIDIA and Groq gpt-oss lanes ask for reasoning off or low.
+
+Describing images uses a separate vision chain: OpenRouter's free router (one lane per key) and `nvidia/nemotron-3.5-super-vl-120b-a12b`. No keyless lane takes images, so image features need `OPENROUTER_API_KEY` or `NVIDIA_API_KEY`.
+
+Set `XACTIONS_LLM=off` to turn every LLM call off; features fall back to their rule-based paths. The test suite runs that way.
+
+Model ids get retired; `npm run check:models` reports any OpenRouter id in the code that is retired or not free.
 
 Lanes 9 to 11 need no key, so a deployment with an empty environment still answers. Add any of the keyed free tiers to get a stronger model and a separate quota pool. `GITHUB_TOKEN` is optional and only raises the GitHub search rate limit and enables code search.
 

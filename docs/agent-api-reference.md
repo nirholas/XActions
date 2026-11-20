@@ -178,7 +178,7 @@ curl "http://localhost:3001/api/agent/llm-usage?days=30"
     },
     {
       "date": "2026-02-25",
-      "model": "anthropic/claude-3.5-haiku",
+      "model": "openrouter:free:openrouter/free",
       "calls": 28,
       "input_tokens": 34000,
       "output_tokens": 8500

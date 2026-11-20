@@ -1437,8 +1437,8 @@ const NICHE_CONFIG = {
 
 const LLM_CONFIG = {
   enabled: true,
-  apiKey: 'your_openrouter_api_key',
-  model: 'google/gemini-flash-2.0',
+  apiKey: 'your_openrouter_api_key', // a free OpenRouter key works
+  model: 'openrouter/free',         // free models only
 };
 ```
 

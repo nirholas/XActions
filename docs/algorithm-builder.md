@@ -85,8 +85,8 @@ const NICHE_CONFIG = {
 const LLM_CONFIG = {
   ENABLED: false,                    // Set to true to enable AI comments
   API_URL: 'https://openrouter.ai/api/v1/chat/completions',
-  API_KEY: '',                       // Your OpenRouter or OpenAI API key
-  MODEL: 'google/gemini-flash-1.5',  // Any OpenRouter model
+  API_KEY: '',                       // Your OpenRouter key (the free tier works)
+  MODEL: 'openrouter/free',          // OpenRouter's router over its free models
   SYSTEM_PROMPT: '...',              // Customizable persona prompt
   MAX_TOKENS: 80,
   TEMPERATURE: 0.9,                  // Higher = more creative

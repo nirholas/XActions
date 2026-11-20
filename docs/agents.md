@@ -103,15 +103,7 @@ const agent = new ThoughtLeaderAgent({
     avoid: ['politics', 'crypto shilling'],
     exampleTweets: ['The gap between open and closed models shrinks every month...'],
   },
-  llm: {
-    provider: 'openrouter',
-    apiKey: process.env.OPENROUTER_API_KEY,
-    models: {
-      fast: 'deepseek/deepseek-chat',
-      mid: 'anthropic/claude-3.5-haiku',
-      smart: 'anthropic/claude-sonnet-4',
-    },
-  },
+  llm: { provider: 'free' }, // free models only; 'ollama' runs a local model instead
   schedule: { timezone: 'America/New_York', sleepHours: [23, 6] },
   limits: { dailyLikes: 150, dailyFollows: 80, dailyComments: 25, dailyPosts: 5 },
   browser: { headless: true, sessionPath: 'data/session.json' },
@@ -158,13 +150,7 @@ await agent.stop();
     }
   },
   "llm": {
-    "provider": "openrouter",
-    "apiKey": "sk-...",
-    "models": {
-      "fast": "deepseek/deepseek-chat",
-      "mid": "anthropic/claude-3.5-haiku",
-      "smart": "anthropic/claude-sonnet-4"
-    }
+    "provider": "free"
   },
   "schedule": {
     "timezone": "America/New_York",
@@ -208,15 +194,9 @@ Tiered LLM client that uses the right model for each task.
 ```javascript
 import { LLMBrain } from 'xactions/src/agents/llmBrain.js';
 
-const llm = new LLMBrain({
-  provider: 'openrouter',
-  apiKey: process.env.OPENROUTER_API_KEY,
-  models: {
-    fast: 'deepseek/deepseek-chat',
-    mid: 'anthropic/claude-3.5-haiku',
-    smart: 'anthropic/claude-sonnet-4',
-  },
-});
+// Free models only (src/ai/freeLLM.js). For a local model instead:
+// new LLMBrain({ provider: 'ollama', models: { fast: 'llama3.2:3b', mid: 'llama3.2:3b', smart: 'llama3.1:8b' } })
+const llm = new LLMBrain({ provider: 'free' });
 ```
 
 #### Tier Assignment
@@ -495,13 +475,7 @@ const cost = db.getLLMCost(7); // Last 7 days total cost
 
 #### LLM Cost Tracking
 
-| Model | Input $/M tokens | Output $/M tokens |
-|-------|-------------------|---------------------|
-| `deepseek/deepseek-chat` | $0.14 | $0.28 |
-| `anthropic/claude-3.5-haiku` | $0.80 | $4.00 |
-| `anthropic/claude-sonnet-4` | $3.00 | $15.00 |
-
-Typical daily cost at Normal intensity: ~$0.50-2.00
+The agent uses free models only, so every call is recorded at $0. `llm_usage` still counts calls per lane and model (for example `groq:openai/gpt-oss-120b`), which shows which free lanes are carrying the load.
 
 ---
 

@@ -82,14 +82,14 @@ xactions persona delete <personaId>
 
 | Variable | Purpose |
 |----------|---------|
-| `OPENROUTER_API_KEY` | Required for LLM-generated comments and posts |
+| `GROQ_API_KEY`, `NVIDIA_API_KEY`, `OPENROUTER_API_KEY` | Optional free-tier keys; LLM comments and posts work without them |
 | `XACTIONS_SESSION_COOKIE` | X auth token (alternative to `--token` flag) |
 
 ## Getting Started (5 minutes)
 
 ```bash
-# 1. Set your OpenRouter key
-export OPENROUTER_API_KEY=sk-or-v1-...
+# 1. Optional: a free-tier key gives the free models more capacity
+export GROQ_API_KEY=gsk_...
 
 # 2. Login to X
 xactions login

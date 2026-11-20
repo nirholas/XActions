@@ -59,7 +59,8 @@ import * as drafts from './drafts.js';
 import * as actionCaps from './action-caps.js';
 import { gotoAndRender } from '../utils/navigation.js';
 import { typeIntoComposer, clickPostButton, confirmPosted } from './composer.js';
-import { OPENROUTER_FREE_MODEL, OPENROUTER_DEFAULT_MODEL } from '../ai/models.js';
+import { freeChat, freeAsk, llmEnabled } from '../ai/freeLLM.js';
+import { buildLaneChain } from '../ask/lanes.js';
 
 // ============================================================================
 // Configuration
@@ -367,9 +368,9 @@ const TOOLS = [
         prompt: { type: 'string', description: 'How the replies should sound, e.g. "supportive, specific, one honest question, no hype". Turns on LLM replies.' },
         persona: { type: 'string', description: 'Optional persona line for the LLM, e.g. "You are @you, a founder building X"' },
         templates: { type: 'array', items: { type: 'string' }, description: 'Reply templates; {author} and {name} are filled in. Used directly, or as the fallback when the model fails.' },
-        provider: { type: 'string', enum: ['openrouter', 'openai', 'xai', 'anthropic', 'ollama', 'custom'], description: 'LLM provider (default openrouter)' },
-        model: { type: 'string', description: 'LLM model; provider default if omitted' },
-        apiKey: { type: 'string', description: 'LLM API key; falls back to OPENROUTER_API_KEY / OPENAI_API_KEY / XAI_API_KEY / ANTHROPIC_API_KEY' },
+        provider: { type: 'string', enum: ['free', 'openrouter', 'openai', 'xai', 'anthropic', 'ollama', 'custom'], description: 'LLM provider. Default "free": XActions\' free lane chain, no key needed. The others use your own key.' },
+        model: { type: 'string', description: 'LLM model for a non-free provider; provider default if omitted' },
+        apiKey: { type: 'string', description: 'Your own key for a non-free provider; falls back to OPENROUTER_API_KEY / OPENAI_API_KEY / XAI_API_KEY / ANTHROPIC_API_KEY' },
         baseUrl: { type: 'string', description: 'Chat-completions URL for provider "custom"' },
         includeReplies: { type: 'boolean', description: 'Include replies, not just top-level posts' },
         includeReposts: { type: 'boolean', description: "Include posts the account reposted from others" },
@@ -880,7 +881,7 @@ const TOOLS = [
         },
         mode: {
           type: 'string',
-          description: 'Analysis mode: "rules" (default, offline) or "llm" (requires OPENROUTER_API_KEY)',
+          description: 'Analysis mode: "rules" (default, offline) or "llm" (free models, no key needed)',
           enum: ['rules', 'llm'],
         },
       },
@@ -1286,10 +1287,10 @@ const TOOLS = [
       required: ['usernames'],
     },
   },
-  // ====== AI Tools (require OPENROUTER_API_KEY) ======
+  // ====== AI Tools (free LLM lanes, src/ai/freeLLM.js) ======
   {
     name: 'x_analyze_voice',
-    description: 'Analyze a user\'s writing style/voice from their tweets. Returns tone, vocabulary patterns, emoji usage, avg length, and a voice profile. Requires OPENROUTER_API_KEY for full analysis.',
+    description: 'Analyze a user\'s writing style/voice from their tweets. Returns tone, vocabulary patterns, emoji usage, avg length, and a voice profile.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -1307,7 +1308,7 @@ const TOOLS = [
   },
   {
     name: 'x_generate_tweet',
-    description: 'Generate a tweet in the style of a user. First analyzes their voice, then generates content matching their tone. Requires OPENROUTER_API_KEY.',
+    description: 'Generate a tweet in the style of a user. First analyzes their voice, then generates content matching their tone. Uses free models; no key needed.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -1338,7 +1339,7 @@ const TOOLS = [
   },
   {
     name: 'x_rewrite_tweet',
-    description: 'Rewrite/improve an existing tweet to be more engaging, shorter, add a hook, etc. Uses a voice profile for style matching. Requires OPENROUTER_API_KEY.',
+    description: 'Rewrite/improve an existing tweet to be more engaging, shorter, add a hook, etc. Uses a voice profile for style matching. Uses free models; no key needed.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -1365,7 +1366,7 @@ const TOOLS = [
   },
   {
     name: 'x_summarize_thread',
-    description: 'AI-powered summarization of a Twitter/X thread. Unrolls the thread and generates a concise summary. Requires OPENROUTER_API_KEY.',
+    description: 'AI-powered summarization of a Twitter/X thread. Unrolls the thread and generates a concise summary. Uses free models; no key needed.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -1623,7 +1624,7 @@ const TOOLS = [
   },
   {
     name: 'x_persona_run',
-    description: 'Start the 24/7 Algorithm Builder for a persona. Launches headless Puppeteer with LLM-powered engagement (search, like, comment, follow, post). Requires auth token and OPENROUTER_API_KEY for AI comments.',
+    description: 'Start the 24/7 Algorithm Builder for a persona. Launches headless Puppeteer with LLM-powered engagement (search, like, comment, follow, post). Requires an auth token; AI comments use free models.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -2268,7 +2269,7 @@ const TOOLS = [
   },
   {
     name: 'x_grok_analyze_image',
-    description: 'Analyze an image using Grok\'s multimodal vision capabilities. Extract text, describe content, identify objects, or answer questions about images in tweets.',
+    description: 'Analyze an image with a free vision model (OpenRouter free tier or NVIDIA; needs OPENROUTER_API_KEY or NVIDIA_API_KEY). Extract text, describe content, identify objects, or answer questions about images in tweets.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -3538,12 +3539,7 @@ async function executeXeepyTool(name, args) {
     }
 
     case 'x_grok_analyze_image': {
-      // Use Grok API for multimodal analysis
-      const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
-      if (!OPENROUTER_API_KEY) {
-        throw new Error('OPENROUTER_API_KEY required for Grok image analysis. Get a free key at https://openrouter.ai');
-      }
-      
+      // Free vision models (src/ai/freeLLM.js). The name is kept for existing callers.
       let imageUrl = args.imageUrl;
       if (!imageUrl && args.tweetUrl) {
         // Scrape tweet to extract image
@@ -3554,28 +3550,19 @@ async function executeXeepyTool(name, args) {
           return img?.src || null;
         });
       }
-      
+
       if (!imageUrl) {
         throw new Error('No image found. Provide imageUrl or a tweetUrl containing an image.');
       }
 
-      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${OPENROUTER_API_KEY}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: OPENROUTER_DEFAULT_MODEL,
-          messages: [{
-            role: 'user',
-            content: [
-              { type: 'image_url', image_url: { url: imageUrl } },
-              { type: 'text', text: args.question || 'Describe this image in detail.' },
-            ],
-          }],
-        }),
-      });
-      
-      const data = await response.json();
-      return { imageUrl, analysis: data.choices?.[0]?.message?.content || 'No analysis generated' };
+      const { text, lane, model } = await freeChat([{
+        role: 'user',
+        content: [
+          { type: 'image_url', image_url: { url: imageUrl } },
+          { type: 'text', text: args.question || 'Describe this image in detail.' },
+        ],
+      }], { vision: true, maxTokens: 1200, timeoutMs: 90_000 });
+      return { imageUrl, analysis: text || 'No analysis generated', model: `${lane}:${model}` };
     }
 
     // ── Analytics ──
@@ -4459,8 +4446,6 @@ async function executePersonaTool(name, args) {
  * Execute AI-specific tools (voice analysis, tweet generation, thread summarization)
  */
 async function executeAITool(name, args) {
-  const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
-
   switch (name) {
     case 'x_analyze_voice': {
       const ai = await import('../ai/index.js');
@@ -4481,9 +4466,6 @@ async function executeAITool(name, args) {
     }
 
     case 'x_generate_tweet': {
-      if (!OPENROUTER_API_KEY) {
-        return { error: 'OPENROUTER_API_KEY environment variable required for AI tweet generation. Get one free at https://openrouter.ai' };
-      }
       const ai = await import('../ai/index.js');
       const scrapersMod = await import('../scrapers/index.js');
       const scrapers = scrapersMod.default || scrapersMod;
@@ -4515,9 +4497,6 @@ async function executeAITool(name, args) {
     }
 
     case 'x_rewrite_tweet': {
-      if (!OPENROUTER_API_KEY) {
-        return { error: 'OPENROUTER_API_KEY environment variable required for AI tweet rewriting. Get one free at https://openrouter.ai' };
-      }
       const ai = await import('../ai/index.js');
       const scrapersMod = await import('../scrapers/index.js');
       const scrapers = scrapersMod.default || scrapersMod;
@@ -4539,9 +4518,6 @@ async function executeAITool(name, args) {
     }
 
     case 'x_summarize_thread': {
-      if (!OPENROUTER_API_KEY) {
-        return { error: 'OPENROUTER_API_KEY environment variable required for AI thread summarization. Get one free at https://openrouter.ai' };
-      }
       const scrapersMod = await import('../scrapers/index.js');
       const scrapers = scrapersMod.default || scrapersMod;
       const browser = await scrapers.createBrowser();
@@ -4560,30 +4536,12 @@ async function executeAITool(name, args) {
           bullet: 'Provide a bullet-point summary with key takeaways.',
         };
 
-        const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-            'HTTP-Referer': 'https://xactions.app',
-            'X-Title': 'XActions MCP',
-          },
-          body: JSON.stringify({
-            model: process.env.OPENROUTER_MODEL || OPENROUTER_FREE_MODEL,
-            messages: [
-              { role: 'system', content: `You are a thread summarizer. ${stylePrompts[style]}` },
-              { role: 'user', content: `Summarize this Twitter/X thread:\n\n${fullThread}` },
-            ],
-          }),
-        });
-
-        if (!response.ok) {
-          const err = await response.text();
-          return { error: `OpenRouter API error: ${err}` };
+        let summary;
+        try {
+          summary = await freeAsk(`You are a thread summarizer. ${stylePrompts[style]}`, `Summarize this Twitter/X thread:\n\n${fullThread}`, { maxTokens: 800 });
+        } catch (error) {
+          return { error: `Free LLMs unavailable: ${error.message}` };
         }
-
-        const data = await response.json();
-        const summary = data.choices?.[0]?.message?.content || 'No summary generated';
         return {
           url: args.url,
           tweetCount: threadTexts.length,
@@ -4937,7 +4895,6 @@ function installShutdownHandlers() {
  * Print startup banner and status info.
  */
 function printBanner(pluginCount, pluginToolCount) {
-  const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 
   console.error('');
   console.error(`⚡ XActions MCP Server v${VERSION} — ${TOOLS.length + pluginToolCount} tools`);
@@ -4963,12 +4920,12 @@ function printBanner(pluginCount, pluginToolCount) {
   }
 
   // ── AI Tools Status ──
-  if (OPENROUTER_API_KEY) {
-    console.error('✅ AI tools enabled (OPENROUTER_API_KEY set)');
-    console.error('   x_analyze_voice, x_generate_tweet, x_summarize_thread');
+  const llmLanes = buildLaneChain(process.env).map((lane) => lane.name);
+  if (!llmEnabled()) {
+    console.error('ℹ️  AI tools off (XACTIONS_LLM=off).');
   } else {
-    console.error('ℹ️  AI tools disabled. Set OPENROUTER_API_KEY for voice analysis & tweet generation.');
-    console.error('   Get a free key at https://openrouter.ai');
+    console.error(`✅ AI tools use free models: ${llmLanes.join(' → ')}`);
+    console.error('   Optional free-tier keys add capacity: GROQ_API_KEY, NVIDIA_API_KEY, OPENROUTER_API_KEY(S).');
   }
 
   console.error('');

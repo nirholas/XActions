@@ -100,7 +100,7 @@ scores posts that are new or that you changed the rubric for.
 xactions reputation nichxbt
 xactions reputation nichxbt --replies --limit 200
 xactions reputation nichxbt --dimensions hostile,legal --custom-question "Does this reveal my employer?"
-XAI_API_KEY=xai-... xactions reputation nichxbt --provider xai --json
+GROQ_API_KEY=gsk_... xactions reputation nichxbt --json   # a free-tier key adds capacity
 ```
 
 Prints the score, a bar per dimension, and the worst posts with the reason

@@ -13,7 +13,7 @@
 import scrapers from '../scrapers/index.js';
 import { gotoAndRender } from '../utils/navigation.js';
 import { openComposer, typeIntoComposer, clickPostButton, confirmPosted } from '../mcp/composer.js';
-import { OPENROUTER_FREE_MODEL } from '../ai/models.js';
+import { freeAsk, llmEnabled } from '../ai/freeLLM.js';
 
 // ============================================================================
 // Browser Pool (shared across action executions)
@@ -602,63 +602,41 @@ registerAction('slice', {
 // ============================================================================
 
 registerAction('summarize', {
-  description: 'Summarize text using OpenRouter or local LLM',
+  description: 'Summarize text with a free LLM (no key needed)',
   category: 'ai',
   params: {
     input: { type: 'string', required: true, description: 'Text to summarize (or context variable name)' },
-    provider: { type: 'string', default: 'openrouter', description: 'LLM provider' },
-    model: { type: 'string', default: OPENROUTER_FREE_MODEL, description: 'Model ID' },
     prompt: { type: 'string', default: 'Summarize the following text concisely:', description: 'System prompt' },
   },
   async execute(params, context) {
     // Resolve input from context if it's a variable reference
     let text = context[params.input] ?? params.input;
     if (typeof text === 'object') text = JSON.stringify(text, null, 2);
-    
-    const apiKey = process.env.OPENROUTER_API_KEY;
-    if (!apiKey) {
-      // Fallback: simple extractive summary (no LLM)
+
+    // Extractive fallback: the first three substantial sentences.
+    const extractive = () => {
       const sentences = String(text).split(/[.!?]+/).filter(s => s.trim().length > 20);
       return sentences.slice(0, 3).join('. ').trim() + '.';
+    };
+    if (!llmEnabled()) return extractive();
+
+    try {
+      return await freeAsk(params.prompt || 'Summarize the following text concisely:', String(text).slice(0, 4000), { maxTokens: 500 });
+    } catch (error) {
+      console.warn(`⚠️  summarize: free LLMs unavailable (${error.message}); using an extractive summary`);
+      return extractive();
     }
-
-    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://xactions.app',
-        'X-Title': 'XActions Workflow',
-      },
-      body: JSON.stringify({
-        model: params.model || OPENROUTER_FREE_MODEL,
-        messages: [
-          { role: 'system', content: params.prompt || 'Summarize the following text concisely:' },
-          { role: 'user', content: String(text).slice(0, 4000) },
-        ],
-        max_tokens: 500,
-      }),
-    });
-
-    const result = await response.json();
-    return result.choices?.[0]?.message?.content || 'Summary unavailable';
   },
 });
 
 registerAction('generateText', {
-  description: 'Generate text using OpenRouter or local LLM',
+  description: 'Generate text with a free LLM (no key needed)',
   category: 'ai',
   params: {
     prompt: { type: 'string', required: true, description: 'The prompt' },
     system: { type: 'string', default: 'You are a helpful assistant.', description: 'System prompt' },
-    model: { type: 'string', default: OPENROUTER_FREE_MODEL, description: 'Model ID' },
   },
   async execute(params, context) {
-    const apiKey = process.env.OPENROUTER_API_KEY;
-    if (!apiKey) {
-      return `[AI generation unavailable — set OPENROUTER_API_KEY] Prompt was: ${params.prompt}`;
-    }
-
     // Template replacement in prompt
     let prompt = params.prompt;
     for (const [key, value] of Object.entries(context)) {
@@ -666,26 +644,9 @@ registerAction('generateText', {
       prompt = prompt.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), strVal);
     }
 
-    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://xactions.app',
-        'X-Title': 'XActions Workflow',
-      },
-      body: JSON.stringify({
-        model: params.model || OPENROUTER_FREE_MODEL,
-        messages: [
-          { role: 'system', content: params.system || 'You are a helpful assistant.' },
-          { role: 'user', content: prompt.slice(0, 4000) },
-        ],
-        max_tokens: 500,
-      }),
-    });
-
-    const result = await response.json();
-    return result.choices?.[0]?.message?.content || '';
+    // Throws LLMUnavailableError when LLMs are off or every lane fails, so
+    // the workflow step fails visibly instead of passing placeholder text on.
+    return freeAsk(params.system || 'You are a helpful assistant.', prompt.slice(0, 4000), { maxTokens: 500 });
   },
 });
 

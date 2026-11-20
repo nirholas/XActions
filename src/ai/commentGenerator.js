@@ -8,17 +8,22 @@
  * CLI command, the `/api/ai/writer/comment` endpoint, and (through the
  * extension bridge) the browser sweep script.
  *
- * Any OpenAI-compatible chat endpoint works: OpenRouter, OpenAI, xAI (Grok),
- * Ollama, or a custom base URL. Anthropic is supported natively through the
- * Messages API. The provider is a config value, not a code path the caller
- * has to know about.
+ * The default provider, `free`, is XActions' free lane chain
+ * (src/ai/freeLLM.js): free tiers and keyless models, no key needed. A user
+ * can bring their own key for any OpenAI-compatible endpoint instead:
+ * OpenRouter, OpenAI, xAI (Grok), Ollama, or a custom base URL, and Anthropic
+ * natively through the Messages API. The provider is a config value, not a
+ * code path the caller has to know about.
  *
  * @author nich (@nichxbt) - https://github.com/nirholas
  * @license Apache-2.0
  */
 
+import { freeChat } from './freeLLM.js';
+
 /** Chat-completions URLs for the OpenAI-compatible providers. */
 export const PROVIDER_URLS = {
+  free: 'xactions:free-lanes',
   openrouter: 'https://openrouter.ai/api/v1/chat/completions',
   openai: 'https://api.openai.com/v1/chat/completions',
   xai: 'https://api.x.ai/v1/chat/completions',
@@ -28,7 +33,9 @@ export const PROVIDER_URLS = {
 
 /** Sensible default model per provider. Override with `model`. */
 export const DEFAULT_MODELS = {
-  openrouter: 'google/gemini-2.5-flash',
+  free: 'free',
+  // Free even on the user's own key; name a paid model to use one.
+  openrouter: 'openrouter/free',
   openai: 'gpt-4o-mini',
   xai: 'grok-3-mini',
   ollama: 'llama3.1',
@@ -38,6 +45,7 @@ export const DEFAULT_MODELS = {
 
 /** Env vars checked, in order, when no apiKey is passed for a provider. */
 export const PROVIDER_ENV_KEYS = {
+  free: [],
   openrouter: ['OPENROUTER_API_KEY'],
   openai: ['OPENAI_API_KEY'],
   xai: ['XAI_API_KEY', 'GROK_API_KEY'],
@@ -210,7 +218,7 @@ export function isGenericComment(text) {
  * Resolve the provider config into a request target.
  *
  * @param {object} config
- * @param {'openrouter'|'openai'|'xai'|'ollama'|'anthropic'|'custom'} [config.provider='openrouter']
+ * @param {string} [config.provider='free'] - free, openrouter, openai, xai, ollama, anthropic or custom (checked at runtime)
  * @param {string} [config.apiKey]
  * @param {string} [config.baseUrl] - Full chat-completions URL; required for `custom`
  * @param {string} [config.model]
@@ -218,7 +226,7 @@ export function isGenericComment(text) {
  * @returns {{ provider: string, url: string, apiKey: string, model: string }}
  */
 export function resolveProvider(config = {}, env = process.env) {
-  const provider = (config.provider || 'openrouter').toLowerCase();
+  const provider = (config.provider || 'free').toLowerCase();
   if (!(provider in DEFAULT_MODELS)) {
     throw new Error(`Unknown LLM provider "${provider}". Use one of: ${Object.keys(DEFAULT_MODELS).join(', ')}`);
   }
@@ -234,7 +242,7 @@ export function resolveProvider(config = {}, env = process.env) {
       if (env[name]) { apiKey = env[name]; break; }
     }
   }
-  if (!apiKey && provider !== 'ollama' && provider !== 'custom') {
+  if (!apiKey && !['free', 'ollama', 'custom'].includes(provider)) {
     const names = PROVIDER_ENV_KEYS[provider].join(' or ');
     throw new Error(`${provider} needs an API key. Pass apiKey or set ${names}.`);
   }
@@ -243,6 +251,34 @@ export function resolveProvider(config = {}, env = process.env) {
   if (!model) throw new Error('provider "custom" needs a model name');
 
   return { provider, url, apiKey, model };
+}
+
+/** Providers a server lets a caller choose. */
+export const CALLER_PROVIDERS = ['free', 'openrouter', 'openai', 'xai', 'anthropic'];
+
+/**
+ * Resolve a provider requested by a remote caller (an API request or a queued
+ * job), for code running on a server.
+ *
+ * Free models unless the caller brings their own key. Never the server's own
+ * env keys for a provider the caller names (that would let anyone spend the
+ * operator's key on a paid model), and never `custom`, `ollama` or a
+ * caller-supplied `baseUrl` (that would let anyone point the server, and
+ * LLM_API_KEY, at any URL, including its own network).
+ *
+ * @param {{ provider?: string, apiKey?: string, model?: string }} [config]
+ * @returns {{ provider: string, url: string, apiKey: string, model: string }}
+ */
+export function resolveCallerProvider(config = {}) {
+  const provider = String(config.provider || (config.apiKey ? 'openrouter' : 'free')).toLowerCase();
+  if (!CALLER_PROVIDERS.includes(provider)) {
+    throw new Error(`provider must be one of: ${CALLER_PROVIDERS.join(', ')}`);
+  }
+  if (provider === 'free') return resolveProvider({ provider: 'free' });
+  if (!config.apiKey) {
+    throw new Error(`provider "${provider}" needs your own apiKey. Leave provider out to use free models.`);
+  }
+  return resolveProvider({ provider, apiKey: config.apiKey, model: config.model }, {});
 }
 
 /**
@@ -273,6 +309,11 @@ function toAnthropicBody(messages, { model, temperature, maxTokens }) {
  */
 export async function chatCompletion(target, messages, opts = {}) {
   const { temperature = 0.9, maxTokens = 160, retries = 2 } = opts;
+  if (target.provider === 'free') {
+    // freeChat already fails over across lanes, so there is no retry here.
+    const { text, lane, model } = await freeChat(messages, { temperature, maxTokens });
+    return { text, model: `${lane}:${model}`, usage: {} };
+  }
   const fetchImpl = opts.fetchImpl || globalThis.fetch;
   if (typeof fetchImpl !== 'function') throw new Error('No fetch implementation available');
 
@@ -341,6 +382,7 @@ export async function chatCompletion(target, messages, opts = {}) {
  * @param {boolean} [config.allowHashtags=false]
  * @param {boolean} [config.allowEmoji=true]
  * @param {typeof fetch} [config.fetchImpl]
+ * @param {boolean} [config.callerSupplied] - settings came from a remote caller; apply resolveCallerProvider's server rules
  * @returns {{
  *   generate: (tweet: {text:string, author?:string, authorName?:string, quotedText?:string, hasMedia?:boolean}) => Promise<{ text: string, model: string, attempts: number }>,
  *   history: string[],
@@ -349,7 +391,9 @@ export async function chatCompletion(target, messages, opts = {}) {
  */
 export function createCommentGenerator(config) {
   if (!config || !config.prompt) throw new Error('createCommentGenerator needs a prompt describing how comments should sound');
-  const target = resolveProvider(config);
+  // callerSupplied: the provider settings came from a remote caller, so apply
+  // the server rules in resolveCallerProvider.
+  const target = config.callerSupplied ? resolveCallerProvider(config) : resolveProvider(config);
   const systemPrompt = buildSystemPrompt(config);
   const history = [];
   const sanitizeOpts = { allowHashtags: config.allowHashtags, maxLength: config.maxLength };

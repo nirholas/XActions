@@ -34,7 +34,9 @@ const SESSION = 'auth_token=tok; ct0=csrf';
 const OWNER = sessionOwnerKey(SESSION);
 const OTHER_SESSION = 'auth_token=other; ct0=csrf2';
 const PNG = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 1, 2, 3, 4, 5, 6, 7, 8]);
-const LLM_KEYS = ['OPENROUTER_API_KEY', 'ANTHROPIC_API_KEY', 'OPENAI_API_KEY', 'XAI_API_KEY', 'GROK_API_KEY'];
+const LLM_KEYS = ['OPENROUTER_API_KEY', 'OPENROUTER_API_KEYS', 'GROQ_API_KEY', 'NVIDIA_API_KEY', 'CEREBRAS_API_KEY', 'GEMINI_API_KEY', 'MISTRAL_API_KEY', 'ANTHROPIC_API_KEY', 'OPENAI_API_KEY', 'XAI_API_KEY', 'GROK_API_KEY', 'XACTIONS_LLM'];
+// Every free LLM lane (src/ask/lanes.js) answers from the same fake model.
+const LLM_HOSTS = new Set(['openrouter.ai', 'api.llm7.io', 'text.pollinations.ai', 'oai.endpoints.kepler.ai.cloud.ovh.net', 'api.groq.com', 'integrate.api.nvidia.com']);
 
 let home;
 const savedEnv = {};
@@ -175,9 +177,9 @@ function createWorld() {
       return response(w.hookStatus, {});
     }
     if (u.hostname === 'media.example.com') return response(200, PNG, { 'content-type': 'image/png', 'content-length': String(PNG.length) });
-    if (u.hostname === 'openrouter.ai') {
+    if (LLM_HOSTS.has(u.hostname)) {
       const body = JSON.parse(init.body);
-      w.llmRequests.push({ body, headers: init.headers });
+      w.llmRequests.push({ url: String(url), body, headers: init.headers });
       return response(200, { model: 'test-model', choices: [{ message: { content: w.llm(body) } }] });
     }
     if (u.hostname === 'upload.x.com') {
@@ -247,6 +249,9 @@ function createWorld() {
 /** The processors over a world, a memory store and a recording scheduler. */
 function harness() {
   const world = createWorld();
+  // The free LLM lanes call the global fetch, so it must be the fake network
+  // too; otherwise an LLM job would reach real providers. (Unstubbed in afterEach.)
+  vi.stubGlobal('fetch', world.fetch);
   const store = new MemoryStore();
   const scheduled = [];
   const lookup = async (host) => [{ address: host.startsWith('internal.') ? '10.0.0.5' : '93.184.216.34', family: 4 }];
@@ -831,25 +836,34 @@ describe('automation', () => {
     expect(again.candidates).toBe(0);
   });
 
-  it('contentRepurpose names the missing LLM key, then repurposes through the configured provider', async () => {
+  it('contentRepurpose writes with free models: keyless with no key, the free OpenRouter lane with one', async () => {
     const h = harness();
     const alice = h.world.addUser('42', 'alice');
     h.world.addTweet('9601', 'Ship small, ship often.', alice);
-    await expect(h.run('contentRepurpose', { tweetIds: ['9601'] }, { key: 'session' })).rejects.toThrow(/OPENROUTER_API_KEY/);
+    process.env.XACTIONS_LLM = 'on';
+    h.world.llm = () => '```json\n{"posts": ["Ship small.", "Ship often."]}\n```';
+
+    const keyless = await h.run('contentRepurpose', { tweetIds: ['9601'], format: 'thread' }, { key: 'session' });
+    expect(keyless.model).toMatch(/^llm7:/);
+    expect(h.world.llmRequests[0].url).toBe('https://api.llm7.io/v1/chat/completions');
 
     process.env.OPENROUTER_API_KEY = 'sk-test';
-    h.world.llm = () => '```json\n{"posts": ["Ship small.", "Ship often."]}\n```';
+    // A paid provider key on the server is never used for a job.
+    process.env.ANTHROPIC_API_KEY = 'sk-ant-server';
     const result = await h.run('contentRepurpose', { tweetIds: '9601, 9999', format: 'thread' }, { key: 'session' });
-    expect(result).toMatchObject({ format: 'thread', model: 'test-model', count: 1 });
+    expect(result).toMatchObject({ format: 'thread', model: 'openrouter:free:openrouter/free', count: 1 });
     expect(result.results[0].output).toEqual({ posts: ['Ship small.', 'Ship often.'], overLimit: [] });
     expect(result.results[1]).toEqual({ tweetId: '9999', error: 'post not found or unavailable' });
-    expect(h.world.llmRequests[0].headers.Authorization).toBe('Bearer sk-test');
+    const request = h.world.llmRequests.at(-1);
+    expect(request.headers.authorization).toBe('Bearer sk-test');
+    expect(request.body.model).toBe('openrouter/free');
     await expect(h.run('contentRepurpose', { tweetIds: ['9601'], format: 'poem' }, { key: 'session' })).rejects.toThrow('format must be one of');
   });
 
   it('contentCalendar plans posts at the hours the account does best', async () => {
     const h = harness();
     process.env.OPENROUTER_API_KEY = 'sk-test';
+    process.env.XACTIONS_LLM = 'on';
     h.world.timelines.set('100', [
       rawTweet('9703', 'a', h.world.me, { likes: 50, createdAt: 'Mon Sep 21 18:00:00 +0000 2026' }),
       rawTweet('9702', 'b', h.world.me, { likes: 60, createdAt: 'Tue Sep 22 18:30:00 +0000 2026' }),

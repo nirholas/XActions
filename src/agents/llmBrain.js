@@ -3,23 +3,23 @@
 // Tiered LLM client for intelligent decision-making
 // by nichxbt
 
-import { AGENT_MODELS } from '../ai/models.js';
+import { freeChat } from '../ai/freeLLM.js';
 
 /**
+ * The agent uses free models only: `free`, XActions' free lane chain
+ * (src/ai/freeLLM.js), or `ollama`, a model running on this machine.
+ *
  * @typedef {Object} LLMConfig
- * @property {'openrouter'|'openai'|'ollama'} provider
- * @property {string} [apiKey]
- * @property {string} [baseUrl]
- * @property {{ fast: string, mid: string, smart: string }} models
+ * @property {'free'|'ollama'} provider
+ * @property {string} [baseUrl]  Ollama only
+ * @property {{ fast: string, mid: string, smart: string }} [models]  Ollama only
  */
 
-const DEFAULT_MODELS = AGENT_MODELS;
+const PROVIDERS = ['free', 'ollama'];
 
-const PROVIDER_URLS = {
-  openrouter: 'https://openrouter.ai/api/v1/chat/completions',
-  openai: 'https://api.openai.com/v1/chat/completions',
-  ollama: 'http://localhost:11434/v1/chat/completions',
-};
+const DEFAULT_MODELS = { fast: 'free', mid: 'free', smart: 'free' };
+
+const OLLAMA_URL = 'http://localhost:11434/v1/chat/completions';
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -31,10 +31,15 @@ class LLMBrain {
    * @param {LLMConfig} config
    */
   constructor(config = {}) {
-    this.provider = config.provider || 'openrouter';
-    this.apiKey = config.apiKey || process.env.OPENROUTER_API_KEY || process.env.OPENAI_API_KEY || '';
-    this.baseUrl = config.baseUrl || PROVIDER_URLS[this.provider] || PROVIDER_URLS.openrouter;
-    this.models = { ...DEFAULT_MODELS, ...(config.models || {}) };
+    const requested = config.provider || 'free';
+    if (!PROVIDERS.includes(requested)) {
+      // Configs written before the agent went free-only name openrouter or
+      // openai with paid models (some of them since retired).
+      console.log(`ℹ️  LLM provider "${requested}" is no longer used: the agent runs on free models only. Set llm.provider to "free" or "ollama" in your agent config to silence this.`);
+    }
+    this.provider = PROVIDERS.includes(requested) ? requested : 'free';
+    this.baseUrl = this.provider === 'ollama' ? (config.baseUrl || OLLAMA_URL) : null;
+    this.models = this.provider === 'ollama' ? { ...DEFAULT_MODELS, ...(config.models || {}) } : { ...DEFAULT_MODELS };
 
     /** @type {Map<string, { count: number, resetAt: number }>} Rate limit counters per model */
     this._rateLimits = new Map();
@@ -59,6 +64,17 @@ class LLMBrain {
     const model = this.models[tier];
     await this._checkRateLimit(model);
 
+    if (this.provider === 'free') {
+      // freeChat fails over across lanes itself; no retry loop needed.
+      const { text, lane, model: used } = await freeChat(messages, {
+        temperature: options.temperature ?? 0.7,
+        maxTokens: options.maxTokens ?? 1024,
+      });
+      this._recordUsage(`${lane}:${used}`, 0, 0);
+      this._bumpRateLimit(model);
+      return { text, inputTokens: 0, outputTokens: 0 };
+    }
+
     const body = {
       model,
       messages,
@@ -70,11 +86,6 @@ class LLMBrain {
     for (let attempt = 0; attempt < 3; attempt++) {
       try {
         const headers = { 'Content-Type': 'application/json' };
-        if (this.apiKey) headers['Authorization'] = `Bearer ${this.apiKey}`;
-        if (this.provider === 'openrouter') {
-          headers['HTTP-Referer'] = 'https://xactions.app';
-          headers['X-Title'] = 'XActions Agent';
-        }
 
         const res = await fetch(this.baseUrl, { method: 'POST', headers, body: JSON.stringify(body) });
 

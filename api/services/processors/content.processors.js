@@ -10,10 +10,10 @@
  *    it: a CreateGrokConversation mutation, then a streaming add_response
  *    request whose body is newline-delimited JSON.
  *  - A language model for writing, through the provider layer in
- *    src/ai/commentGenerator.js. The server's configured key is used
- *    (OPENROUTER_API_KEY, ANTHROPIC_API_KEY, OPENAI_API_KEY or XAI_API_KEY, in
- *    that order), or the caller's own when the job carries `provider` and
- *    `apiKey`. With neither, a writing job fails and names the variables.
+ *    src/ai/commentGenerator.js. The server writes only with free models (the
+ *    `free` provider, src/ai/freeLLM.js). A caller can bring their own key by
+ *    sending `provider` and `apiKey`; the server never spends its own key on
+ *    a provider the caller names.
  *  - An owner-scoped file store under `$XACTIONS_HOME/owners/<hash>/` for what
  *    outlives a job (personas, workflows, teams, exports). The record formats
  *    are the ones src/personaEngine.js and src/workflows/store.js already
@@ -35,7 +35,7 @@ import os from 'node:os';
 import path from 'node:path';
 
 import { JobInputError, ownerKeyForSession } from './context.js';
-import { chatCompletion, resolveProvider, sanitizeComment, PROVIDER_ENV_KEYS } from '../../../src/ai/commentGenerator.js';
+import { chatCompletion, resolveCallerProvider, sanitizeComment } from '../../../src/ai/commentGenerator.js';
 import { analyzeVoice, buildVoicePrompt } from '../../../src/ai/voiceAnalyzer.js';
 import { predictPerformance } from '../../../src/ai/contentOptimizer.js';
 import {
@@ -281,33 +281,21 @@ export const ownerStore = {
 // Language model
 // ============================================================================
 
-const LLM_PROVIDERS = ['openrouter', 'anthropic', 'openai', 'xai'];
-
 /**
- * The model endpoint a job writes with: the caller's own key when the job
- * carries one, else the first provider this server has a key for.
+ * The model endpoint a job writes with: free models, unless the job brings
+ * its own key (`provider` + `apiKey`).
+ *
+ * The server never falls back to its own env keys for a provider the caller
+ * names: that would let any caller spend the operator's key on a paid model.
  *
  * @param {object} [config] job config (`provider`, `apiKey`, `model` for BYOK)
- * @param {Record<string, string|undefined>} [env]
  */
-export function llmTarget(config = {}, env = process.env) {
-  if (config.apiKey || config.provider) {
-    const provider = String(config.provider || 'openrouter').toLowerCase();
-    if (!LLM_PROVIDERS.includes(provider)) {
-      throw new JobInputError(`provider must be one of: ${LLM_PROVIDERS.join(', ')}`);
-    }
-    try {
-      return resolveProvider({ provider, apiKey: config.apiKey, model: config.model }, env);
-    } catch (err) {
-      throw new JobInputError(err.message);
-    }
+export function llmTarget(config = {}) {
+  try {
+    return resolveCallerProvider(config);
+  } catch (err) {
+    throw new JobInputError(err.message);
   }
-  const provider = LLM_PROVIDERS.find((p) => PROVIDER_ENV_KEYS[p].some((key) => env[key]));
-  if (!provider) {
-    const names = LLM_PROVIDERS.flatMap((p) => PROVIDER_ENV_KEYS[p]).join(', ');
-    throw new JobInputError(`No language model is configured on this server. Set one of ${names}, or send provider and apiKey with the request.`);
-  }
-  return resolveProvider({ provider }, env);
 }
 
 /** Whether a model name belongs to the provider it would be sent to. */

@@ -496,8 +496,9 @@ const run = await workflows.getRun('morning-engagement', '6c3f...-uuid');
 }
 ```
 
-`summarize` and `generateText` route through OpenRouter by default and need
-`OPENROUTER_API_KEY`. For sentiment scoring specifically, the analytics module
+`summarize` and `generateText` use free models (the free LLM lanes, no key
+needed). With `XACTIONS_LLM=off`, `summarize` falls back to an extractive summary
+and `generateText` fails the step. For sentiment scoring specifically, the analytics module
 is the better tool: `analyzeSentiment` is not a workflow action. See
 [analytics.md](analytics.md).
 

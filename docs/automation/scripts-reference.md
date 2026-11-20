@@ -512,8 +512,8 @@ const NICHE_CONFIG = {
 const LLM_CONFIG = {
   ENABLED: false,              // Set true + add API key for AI comments
   API_URL: 'https://openrouter.ai/api/v1/chat/completions',
-  API_KEY: '',                 // Your OpenRouter or OpenAI key
-  MODEL: 'google/gemini-flash-1.5',
+  API_KEY: '',                 // Your OpenRouter key (the free tier works)
+  MODEL: 'openrouter/free',    // free models only
   SYSTEM_PROMPT: `You are a witty person in the {niche} space on Twitter/X.
 Generate a short, authentic reply...`,
   MAX_TOKENS: 80,

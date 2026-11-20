@@ -13,6 +13,10 @@ export default defineConfig({
     testTimeout: 60000,
     hookTimeout: 120000,
     include: ['tests/**/*.test.js'],
+    // Code under test that writes with an LLM uses the free lane chain, which
+    // has keyless lanes and so would reach the network from any test. Off by
+    // default; tests that exercise the chain pass their own env or stub fetch.
+    env: { XACTIONS_LLM: 'off' },
     exclude: ['node_modules', 'dist', 'archive'],
     reporters: ['verbose'],
     // Cap worker processes: an uncapped fork pool on a loaded machine produced

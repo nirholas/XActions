@@ -2,14 +2,14 @@
 /**
  * Thread Summarizer Service
  * 
- * Uses OpenRouter AI to generate summaries of Twitter/X threads.
- * Gracefully falls back if no OPENROUTER_API_KEY is configured.
+ * Summarizes Twitter/X threads through the free LLM lanes (src/ai/freeLLM.js).
+ * Returns `available: false` when LLM calls are off or every lane fails.
  * 
  * @module api/services/threadSummarizer
  * @author nichxbt
  */
 
-import { OPENROUTER_DEFAULT_MODEL } from '../../src/ai/models.js';
+import { freeChat, llmEnabled } from '../../src/ai/freeLLM.js';
 
 /**
  * Calculate estimated reading time
@@ -23,38 +23,32 @@ export function calculateReadingTime(texts) {
 }
 
 /**
- * Summarize a thread using OpenRouter AI
- * 
+ * Summarize a thread with a free LLM
+ *
  * @param {object} options
  * @param {Array<{text: string}>} options.tweets - Array of tweet objects with text
  * @param {string} [options.author] - Thread author username
- * @param {string} [options.apiKey] - OpenRouter API key (falls back to env)
- * @param {string} [options.model] - Model to use
  * @returns {Promise<{ summary: string, keyPoints: string[], readingTime: string }>}
  */
 export async function summarizeThread(options = {}) {
-  const { tweets, author, apiKey: providedKey, model } = options;
+  const { tweets, author } = options;
 
   if (!tweets || tweets.length === 0) {
     throw new Error('No tweets provided for summarization');
   }
 
-  const apiKey = providedKey || process.env.OPENROUTER_API_KEY;
   const texts = tweets.map((t) => (typeof t === 'string' ? t : t.text)).filter(Boolean);
   const readingTime = calculateReadingTime(texts);
 
-  // If no API key, return graceful fallback
-  if (!apiKey) {
+  if (!llmEnabled()) {
     return {
       summary: null,
       keyPoints: [],
       readingTime,
       available: false,
-      message: 'Enable AI summaries by adding OPENROUTER_API_KEY to your environment variables.',
+      message: 'AI summaries are turned off on this server (XACTIONS_LLM=off).',
     };
   }
-
-  const selectedModel = model || OPENROUTER_DEFAULT_MODEL;
 
   // Build the thread text for the prompt
   const threadText = texts
@@ -83,41 +77,13 @@ Rules:
     : `Summarize this thread:\n\n${threadText}`;
 
   try {
-    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://xactions.app',
-        'X-Title': 'XActions Thread Summarizer',
-      },
-      body: JSON.stringify({
-        model: selectedModel,
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt },
-        ],
-        temperature: 0.3,
-        max_tokens: 500,
-      }),
-      // A stalled upstream would otherwise hold the request open indefinitely.
-      signal: AbortSignal.timeout(60_000),
-    });
-
-    if (!response.ok) {
-      const errorBody = await response.text();
-      console.error(`OpenRouter API error (${response.status}): ${errorBody}`);
-      return {
-        summary: null,
-        keyPoints: [],
-        readingTime,
-        available: false,
-        message: 'AI summary temporarily unavailable. Please try again later.',
-      };
-    }
-
-    const data = await response.json();
-    const content = data.choices?.[0]?.message?.content || '';
+    const { text: content } = await freeChat(
+      [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt },
+      ],
+      { temperature: 0.3, maxTokens: 800, timeoutMs: 60_000 },
+    );
 
     // Parse JSON from response
     const jsonMatch = content.match(/\{[\s\S]*\}/);

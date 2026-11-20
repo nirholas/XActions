@@ -124,11 +124,12 @@ const LLM_URLS = {
 };
 
 const LLM_DEFAULT_MODELS = {
-  openrouter: 'google/gemini-2.5-flash',
+  // Free models unless the user names another; openrouter/free routes to a live one.
+  openrouter: 'openrouter/free',
   openai: 'gpt-4o-mini',
   xai: 'grok-3-mini',
   ollama: 'llama3.1',
-  anthropic: 'claude-3-5-haiku-latest',
+  anthropic: 'claude-haiku-5-5',
 };
 
 async function customLlmUrl() {

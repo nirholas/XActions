@@ -72,9 +72,9 @@ export function registerEngageCommand(program, { createHttpScraper, loadConfig, 
     .option('--persona <text>', 'AI mode: who is writing, e.g. "You are @you, a founder building X"')
     .option('--template <text>', 'Reply template ({author}, {name} are filled in). Repeatable.', (v, all) => [...(all || []), v], [])
     .option('--templates-file <path>', 'File with one reply template per line')
-    .option('--provider <name>', 'LLM provider: openrouter, openai, xai, anthropic, ollama, custom', 'openrouter')
-    .option('--model <name>', 'LLM model (provider default if omitted)')
-    .option('--api-key <key>', 'LLM API key (or set OPENROUTER_API_KEY / OPENAI_API_KEY / XAI_API_KEY / ANTHROPIC_API_KEY)')
+    .option('--provider <name>', 'LLM provider: free (default, no key needed), or your own key with openrouter, openai, xai, anthropic, ollama, custom', 'free')
+    .option('--model <name>', 'LLM model for a non-free provider (provider default if omitted)')
+    .option('--api-key <key>', 'Your own key for a non-free provider (or set OPENROUTER_API_KEY / OPENAI_API_KEY / XAI_API_KEY / ANTHROPIC_API_KEY)')
     .option('--base-url <url>', 'Custom OpenAI-compatible chat-completions URL (provider custom)')
     .option('--delay <seconds>', 'Seconds to wait between posts', '20')
     .option('--jitter <seconds>', 'Random spread added to --delay', '10')
@@ -89,7 +89,7 @@ Examples:
   $ xactions engage nasa --like --repost --comment --prompt "supportive, specific, one honest question, no hype"
   $ xactions engage --search "open source AI" --like --comment --prompt "curious builder" --max-likes 50
   $ xactions engage --list 1234567890 --like --keyword solana,rust --limit 25
-  $ XAI_API_KEY=xai-... xactions engage nasa --comment --provider xai --prompt "dry wit, one sentence"
+  $ GROQ_API_KEY=gsk_... xactions engage nasa --comment --prompt "dry wit, one sentence"   # a free-tier key adds capacity
 
 Needs a logged-in session for anything but --dry-run: run \`xactions connect\` or \`xactions login\` first.
 Progress is saved per feed under ${configDir}/engage/ so re-running skips posts already done.

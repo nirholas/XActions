@@ -26,13 +26,14 @@ describe('LLMBrain', () => {
 
   beforeEach(() => {
     mockFetch.mockReset();
+    // The request path below is the local Ollama one; the free default is
+    // covered at the end of this file.
     brain = new LLMBrain({
-      provider: 'openrouter',
-      apiKey: 'test-key-123',
+      provider: 'ollama',
       models: {
-        fast: 'deepseek/deepseek-chat',
-        mid: 'anthropic/claude-3.5-haiku',
-        smart: 'anthropic/claude-sonnet-4',
+        fast: 'llama3.2:3b',
+        mid: 'qwen3:8b',
+        smart: 'llama3.1:8b',
       },
     });
   });
@@ -56,7 +57,7 @@ describe('LLMBrain', () => {
 
       const call = mockFetch.mock.calls[0];
       const body = JSON.parse(call[1].body);
-      expect(body.model).toBe('deepseek/deepseek-chat');
+      expect(body.model).toBe('llama3.2:3b');
     });
 
     it('should return 50 on JSON parse error', async () => {
@@ -101,7 +102,7 @@ describe('LLMBrain', () => {
 
       const call = mockFetch.mock.calls[0];
       const body = JSON.parse(call[1].body);
-      expect(body.model).toBe('anthropic/claude-3.5-haiku');
+      expect(body.model).toBe('qwen3:8b');
     });
 
     it('should include persona context in system message', async () => {
@@ -143,7 +144,7 @@ describe('LLMBrain', () => {
 
       const call = mockFetch.mock.calls[0];
       const body = JSON.parse(call[1].body);
-      expect(body.model).toBe('anthropic/claude-sonnet-4');
+      expect(body.model).toBe('llama3.1:8b');
     });
 
     it('should return thread as array for thread type', async () => {
@@ -228,35 +229,59 @@ describe('LLMBrain', () => {
       mockFetch.mockResolvedValue(mockResponse('50', { inputTokens: 50, outputTokens: 10 }));
       await brain.scoreRelevance('test', ['test']);
 
-      expect(onUsage).toHaveBeenCalledWith('deepseek/deepseek-chat', 50, 10);
+      expect(onUsage).toHaveBeenCalledWith('llama3.2:3b', 50, 10);
     });
   });
 
   describe('API request formatting', () => {
-    it('should include Authorization header', async () => {
+    it('should send no Authorization header to local Ollama', async () => {
       mockFetch.mockResolvedValue(mockResponse('50'));
       await brain.scoreRelevance('test', ['test']);
 
       const call = mockFetch.mock.calls[0];
-      expect(call[1].headers['Authorization']).toBe('Bearer test-key-123');
+      expect(call[1].headers['Authorization']).toBeUndefined();
     });
 
-    it('should include OpenRouter headers for openrouter provider', async () => {
+    it('should POST to the local Ollama URL', async () => {
       mockFetch.mockResolvedValue(mockResponse('50'));
       await brain.scoreRelevance('test', ['test']);
 
       const call = mockFetch.mock.calls[0];
-      expect(call[1].headers['HTTP-Referer']).toBe('https://xactions.app');
-      expect(call[1].headers['X-Title']).toBe('XActions Agent');
-    });
-
-    it('should POST to the correct URL', async () => {
-      mockFetch.mockResolvedValue(mockResponse('50'));
-      await brain.scoreRelevance('test', ['test']);
-
-      const call = mockFetch.mock.calls[0];
-      expect(call[0]).toBe('https://openrouter.ai/api/v1/chat/completions');
+      expect(call[0]).toBe('http://localhost:11434/v1/chat/completions');
       expect(call[1].method).toBe('POST');
+    });
+  });
+
+  describe('free models only', () => {
+    // A lane answer as a provider sends it (the lane client reads headers).
+    const laneResponse = (content) => new Response(JSON.stringify({ choices: [{ message: { content } }] }), { status: 200, headers: { 'content-type': 'application/json' } });
+    const LLM_ENV = process.env.XACTIONS_LLM;
+    beforeEach(() => { process.env.XACTIONS_LLM = 'on'; });
+    afterEach(() => {
+      if (LLM_ENV === undefined) delete process.env.XACTIONS_LLM; else process.env.XACTIONS_LLM = LLM_ENV;
+    });
+
+    it('defaults to the free lane chain', async () => {
+      const free = new LLMBrain();
+      expect(free.provider).toBe('free');
+      mockFetch.mockResolvedValue(laneResponse('64'));
+      expect(await free.scoreRelevance('test', ['test'])).toBe(64);
+      // With no keys in this env the first free lane is a keyless one.
+      expect(String(mockFetch.mock.calls[0][0])).toBe('https://api.llm7.io/v1/chat/completions');
+      expect(Object.keys(free.getUsageToday())[0]).toMatch(/^llm7:/);
+    });
+
+    it.each(['openrouter', 'openai'])('runs a saved %s config on free models, ignoring its paid models and key', async (provider) => {
+      const log = vi.spyOn(console, 'log').mockImplementation(() => {});
+      const legacy = new LLMBrain({ provider, apiKey: 'sk-paid', models: { fast: 'deepseek/deepseek-chat', mid: 'anthropic/claude-3.5-haiku', smart: 'anthropic/claude-sonnet-4' } }); // check:models ignore
+      expect(legacy.provider).toBe('free');
+      expect(legacy.models).toEqual({ fast: 'free', mid: 'free', smart: 'free' });
+      expect(log.mock.calls.flat().join(' ')).toMatch(/free models only/);
+      mockFetch.mockResolvedValue(laneResponse('70'));
+      expect(await legacy.scoreRelevance('test', ['test'])).toBe(70);
+      const [url, init] = mockFetch.mock.calls[0];
+      expect(String(url)).not.toMatch(/openrouter|openai\.com/);
+      expect(init.headers.authorization).toBeUndefined();
     });
   });
 });

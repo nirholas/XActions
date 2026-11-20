@@ -132,7 +132,7 @@ window.postMessage({
   request: {
     provider: 'openrouter',           // openrouter | openai | anthropic | xai | ollama | custom
     apiKey: 'sk-or-...',              // blank for ollama
-    model: 'google/gemini-2.5-flash', // provider default when omitted
+    model: 'openrouter/free',         // provider default when omitted (free models)
     messages: [{ role: 'user', content: 'hi' }],
     temperature: 0.9,
     maxTokens: 160,

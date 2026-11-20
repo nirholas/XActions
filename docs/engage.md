@@ -180,9 +180,9 @@ is no page CSP in the way.
 | `--templates-file <path>` | One template per line; `#` lines are comments. |
 | `--prompt <brief>` | Turns on AI replies. The brief is the whole instruction. |
 | `--persona <text>` | Optional first line of the system prompt. |
-| `--provider <name>` | `openrouter` (default), `openai`, `xai`, `anthropic`, `ollama`, `custom`. |
-| `--model <name>` | Provider default if omitted: `google/gemini-2.5-flash`, `gpt-4o-mini`, `grok-3-mini`, `claude-3-5-haiku-latest`, `llama3.1`. |
-| `--api-key <key>` | Or set `OPENROUTER_API_KEY`, `OPENAI_API_KEY`, `XAI_API_KEY`, `ANTHROPIC_API_KEY`. Ollama needs none. |
+| `--provider <name>` | `free` (default): XActions' free models, no key needed. Or bring your own key: `openrouter`, `openai`, `xai`, `anthropic`, `ollama`, `custom`. |
+| `--model <name>` | For a non-free provider. Default if omitted: `openrouter/free`, `gpt-4o-mini`, `grok-3-mini`, `claude-haiku-5-5`, `llama3.1`. |
+| `--api-key <key>` | Your own key for a non-free provider, or set `OPENROUTER_API_KEY`, `OPENAI_API_KEY`, `XAI_API_KEY`, `ANTHROPIC_API_KEY`. `free` and Ollama need none. |
 | `--base-url <url>` | For `--provider custom`: a full OpenAI-compatible chat-completions URL. |
 | `--delay <s>` / `--jitter <s>` | Seconds between posts (default 20 ± 10). |
 | `--dry-run` | Print everything, including the generated replies, post nothing. |
@@ -209,7 +209,7 @@ profile sweep and a search sweep keep separate records.
 
 ```bash
 # Every morning: like and reply to whatever @nasa posted since yesterday
-0 9 * * * XAI_API_KEY=xai-... xactions engage nasa --like --comment --provider xai \
+0 9 * * * GROQ_API_KEY=gsk_... xactions engage nasa --like --comment \
   --prompt "curious, specific, one question" --since "$(date -d yesterday +%F)" --json >> ~/engage.log
 ```
 

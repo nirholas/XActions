@@ -229,7 +229,7 @@ process itself) runs it:
 | `REDIS_HOST` / `REDIS_PORT` / `REDIS_PASSWORD` | No | Redis for the Bull job queue |
 | `XACTIONS_WORKER_CONCURRENCY` | No | Jobs one worker process runs at once on the shared queue (default 8); types with a queue of their own run on top of this |
 | `STRIPE_SECRET_KEY` | No | Stripe payments |
-| `OPENROUTER_API_KEY` | No | AI features (OpenRouter) |
+| `GROQ_API_KEY`, `NVIDIA_API_KEY`, `OPENROUTER_API_KEY` | No | Optional free-tier keys for the AI features, which use free models only ([Free LLM lanes](ask.md#free-llm-lanes)) |
 | `X_SESSION_COOKIE` | No | Default auth_token for CLI |
 | `XACTIONS_PROXIES` | No | Comma-separated proxy list |
 | `XACTIONS_PROXY_FILE` | No | Path to proxy list file |

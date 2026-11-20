@@ -7,16 +7,8 @@ import Database from 'better-sqlite3';
 import path from 'path';
 import fs from 'fs';
 
-// Default model costs per million tokens (USD)
-const MODEL_COSTS = {
-  // OpenRouter list prices, checked 2026-11-20.
-  'deepseek/deepseek-chat': { input: 0.26, output: 1.03 },
-  'anthropic/claude-haiku-5.5': { input: 0.10, output: 0.50 },
-  'anthropic/claude-sonnet-5.5': { input: 2.00, output: 10.00 },
-  // Retired ids, kept so usage recorded before the switch is still priced.
-  'anthropic/claude-3.5-haiku': { input: 0.80, output: 4.00 }, // check:models ignore
-  'anthropic/claude-sonnet-4': { input: 3.00, output: 15.00 }, // check:models ignore
-};
+// The agent uses free models only (free lanes or local Ollama), so new usage
+// costs nothing. Rows recorded before that keep the cost stored with them.
 
 /**
  * SQLite-based action logger, metrics tracker, and analytics engine.
@@ -278,13 +270,13 @@ class AgentDatabase {
 
   /**
    * Record LLM token usage. Aggregates by date + model.
-   * @param {string} model - Model identifier (e.g., 'deepseek/deepseek-chat')
+   * @param {string} model - Lane and model that answered (e.g., 'groq:openai/gpt-oss-120b')
    * @param {number} inputTokens
    * @param {number} outputTokens
    */
   recordLLMUsage(model, inputTokens, outputTokens) {
     const today = new Date().toISOString().split('T')[0];
-    const cost = this._calculateCost(model, inputTokens, outputTokens);
+    const cost = 0; // free models only (see the note at the top of this file)
 
     const existing = this.db.prepare(
       'SELECT * FROM llm_usage WHERE date = ? AND model = ?',
@@ -324,10 +316,6 @@ class AgentDatabase {
     return row.total;
   }
 
-  _calculateCost(model, inputTokens, outputTokens) {
-    const costs = MODEL_COSTS[model] || { input: 1.0, output: 3.0 };
-    return (inputTokens / 1_000_000) * costs.input + (outputTokens / 1_000_000) * costs.output;
-  }
 
   // ─── Growth Report ────────────────────────────────────────────
 

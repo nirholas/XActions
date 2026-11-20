@@ -894,9 +894,9 @@ xactions reputation [username] [options]
 | `-l, --limit <number>` | Maximum posts to scan (default 60) |
 | `--dimensions <list>` | Subset of `professional,hostile,legal,spam` (default all four) |
 | `--custom-question <text>` | An extra risk question scored alongside the built-ins |
-| `--provider <name>` | `openrouter` (default), `openai`, `xai`, `anthropic`, `ollama`, `custom` |
+| `--provider <name>` | `free` (default: free models, no key needed), or your own key with `openrouter`, `openai`, `xai`, `anthropic`, `ollama`, `custom` |
 | `--model <name>` | Model override |
-| `--api-key <key>` | Or the provider's env var (`OPENROUTER_API_KEY`, `OPENAI_API_KEY`, `XAI_API_KEY`, `ANTHROPIC_API_KEY`) |
+| `--api-key <key>` | Your own key for a non-free provider, or its env var (`OPENROUTER_API_KEY`, `OPENAI_API_KEY`, `XAI_API_KEY`, `ANTHROPIC_API_KEY`) |
 | `--base-url <url>` | Chat-completions URL for `custom` |
 | `--concurrency <number>` | Posts scored in parallel (default 4) |
 | `--top <number>` | How many flagged or review posts to print (default 10) |
@@ -907,7 +907,7 @@ If no post could be scored (a bad key, an unreachable provider), the command pri
 ```bash
 xactions reputation nichxbt
 xactions reputation nichxbt --replies --limit 200
-XAI_API_KEY=xai-... xactions reputation nichxbt --provider xai --json
+GROQ_API_KEY=gsk_... xactions reputation nichxbt --json   # a free-tier key adds capacity
 ```
 
 ### xactions engage
@@ -935,9 +935,9 @@ xactions engage --list <id> [options]
 | `--templates-file <path>` | One template per line |
 | `--prompt <brief>` | AI replies: how they should sound |
 | `--persona <text>` | Optional persona line for the model |
-| `--provider <name>` | `openrouter` (default), `openai`, `xai`, `anthropic`, `ollama`, `custom` |
+| `--provider <name>` | `free` (default: free models, no key needed), or your own key with `openrouter`, `openai`, `xai`, `anthropic`, `ollama`, `custom` |
 | `--model <name>` | Model override |
-| `--api-key <key>` | Or the provider's env var (`OPENROUTER_API_KEY`, `OPENAI_API_KEY`, `XAI_API_KEY`, `ANTHROPIC_API_KEY`) |
+| `--api-key <key>` | Your own key for a non-free provider, or its env var (`OPENROUTER_API_KEY`, `OPENAI_API_KEY`, `XAI_API_KEY`, `ANTHROPIC_API_KEY`) |
 | `--base-url <url>` | Chat-completions URL for `custom` |
 | `--delay <s>` / `--jitter <s>` | Pacing between posts (default 20 ± 10) |
 | `--dry-run` | Preview, including generated replies, post nothing |
@@ -1117,7 +1117,7 @@ xactions persona run <personaId> [options]
 | Variable | Required | Description |
 |----------|----------|-------------|
 | `XACTIONS_SESSION_COOKIE` | Yes* | X auth token (alt: `--token` or `xactions login`) |
-| `OPENROUTER_API_KEY` | Yes | OpenRouter key for LLM-generated comments/posts |
+| `GROQ_API_KEY`, `NVIDIA_API_KEY`, `OPENROUTER_API_KEY` | No | Comments and posts use free models; these free-tier keys add capacity |
 
 **Examples:**
 
@@ -2365,8 +2365,8 @@ page (`XACTIONS_AUTH_TOKEN`, `XACTIONS_CONFIG_DIR`, `XACTIONS_HEADLESS`,
 | `XACTIONS_HOME` | every command | Where the config, the saved session (`config.json`, `cookies.json`), the brief cache, the query-ID cache and drafts live. Default `~/.xactions`. The MCP server honours the same variable, so one setting points both lanes at the same account |
 | `XACTIONS_SESSION_COOKIE` | `persona run`, `workflow run`, the MCP server | An `auth_token` used when no `--token` / `--auth` is passed and nothing is saved |
 | `TWITTER_AUTH_TOKEN` | `ai analyze`, `ai generate`, `ai rewrite`, `ai calendar` | Fallback `auth_token` when `xactions login` has not saved one |
-| `OPENROUTER_API_KEY`, `OPENROUTER_MODEL` | `ai`, `optimize` and the other AI commands | Key and model for OpenRouter |
-| `OPENAI_API_KEY`, `XAI_API_KEY` (or `GROK_API_KEY`), `ANTHROPIC_API_KEY` | `engage`, `reputation`, `ask --provider` | Key for the matching `--provider` when `--api-key` / `--key` is not passed |
+| `GROQ_API_KEY`, `NVIDIA_API_KEY`, `OPENROUTER_API_KEY`(`S`) | `ai`, `optimize` and every other AI feature | Optional free-tier keys; each adds a lane to the free models those features use ([Free LLM lanes](ask.md#free-llm-lanes)). `XACTIONS_LLM=off` turns LLM calls off |
+| `OPENAI_API_KEY`, `XAI_API_KEY` (or `GROK_API_KEY`), `ANTHROPIC_API_KEY` | `engage`, `reputation`, `ask --provider` | Your own key for the matching `--provider` when `--api-key` / `--key` is not passed. Only used when you name that provider |
 | `XACTIONS_DEBUG` | the HTTP scrapers | Log how each request's `x-client-transaction-id` was computed |
 
 ### Examples
@@ -2376,8 +2376,8 @@ page (`XACTIONS_AUTH_TOKEN`, `XACTIONS_CONFIG_DIR`, `XACTIONS_HEADLESS`,
 XACTIONS_HOME=~/.xactions-work xactions login --from-browser chrome
 XACTIONS_HOME=~/.xactions-work xactions followers nichxbt --limit 200 --compact
 
-# Score posts with xAI without passing the key on the command line
-XAI_API_KEY=xai-... xactions reputation nichxbt --provider xai
+# Give the free models a lane of your own (a free Groq key) without passing it on the command line
+GROQ_API_KEY=gsk_... xactions reputation nichxbt
 ```
 
 ---

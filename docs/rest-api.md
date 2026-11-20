@@ -401,7 +401,7 @@ Content-Type: application/json
 { "url": "https://x.com/user/status/123456789" }
 ```
 
-Or send the posts yourself as `{ "tweets": [{ "text": "..." }] }`. No account is needed. The summary comes from `google/gemini-2.5-flash` on the server's `OPENROUTER_API_KEY`; without one the response has `"available": false`. A request is limited to 200 posts and 100,000 characters (`400` beyond that).
+Or send the posts yourself as `{ "tweets": [{ "text": "..." }] }`. No account is needed. The summary comes from the free LLM lanes ([Free LLM lanes](ask.md#free-llm-lanes)); when none answers, or `XACTIONS_LLM=off`, the response has `"available": false`. A request is limited to 200 posts and 100,000 characters (`400` beyond that).
 
 ### Get as Text/Markdown
 
@@ -1014,7 +1014,7 @@ GET    /api/teams/:id/activity           # Activity log
 
 ## AI Content Optimizer
 
-Tweet optimization. Every route needs a signed-in user (`Authorization: Bearer <jwt_token>`). With `OPENROUTER_API_KEY` set, `optimize`, `hashtags` and `variations` ask an LLM (`openrouter/free` unless `OPENROUTER_MODEL` says otherwise); without it they answer from rule-based heuristics. `predict` is always rule-based.
+Tweet optimization. Every route needs a signed-in user (`Authorization: Bearer <jwt_token>`). `optimize`, `hashtags` and `variations` ask a free LLM ([Free LLM lanes](ask.md#free-llm-lanes)), and fall back to rule-based heuristics when none answers or `XACTIONS_LLM=off`. `predict` is always rule-based.
 
 `text` is required on every route: a non-empty string of at most 25,000 characters. `count` is an integer from 1 to 30 for `hashtags` (default 5) and 1 to 10 for `variations` (default 3). `goal` on `optimize` is a short phrase such as `engagement` or `replies` (letters, digits, spaces and hyphens, up to 40 characters). Anything else answers `400`.
 
@@ -1228,6 +1228,6 @@ socket.on('alert:sentiment-shift', (data) => { /* sentiment change */ });
 | `REDIS_HOST` | No | `localhost` | Redis for streaming/queues |
 | `REDIS_PORT` | No | `6379` | Redis port |
 | `XACTIONS_SESSION_COOKIE` | No | — | Default X auth token |
-| `OPENROUTER_API_KEY` | No | — | For AI writer/optimizer |
+| `GROQ_API_KEY`, `NVIDIA_API_KEY`, `OPENROUTER_API_KEY` | No | — | Optional free-tier keys for the AI features, which use free models only ([Free LLM lanes](ask.md#free-llm-lanes)) |
 | `X402_PAY_TO_ADDRESS` | No | — | Wallet for micropayments |
 | `FRONTEND_URL` | No | — | CORS allowed origin |
