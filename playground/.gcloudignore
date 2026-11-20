@@ -1,0 +1,20 @@
+# Upload list for `gcloud builds submit --ignore-file=playground/.gcloudignore`.
+# The root .gcloudignore is an allow-list for the website image and drops
+# everything here. tests/playground-image.test.js checks the Dockerfile copies
+# what server.mjs imports; keep this list in step with those COPY lines.
+*
+!playground/
+!playground/**
+!src/
+!src/client/
+!src/client/**
+!src/analysis/
+!src/analysis/**
+!src/codegen/
+!src/codegen/**
+!src/scrapers/
+!src/scrapers/twitter/
+!src/scrapers/twitter/http/
+!src/scrapers/twitter/http/**
+!src/utils/
+!src/utils/**

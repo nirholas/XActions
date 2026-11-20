@@ -37,10 +37,15 @@ COPY playground/package.json ./playground/package.json
 COPY playground/server.mjs ./playground/server.mjs
 COPY playground/public ./playground/public
 
-# The scraper client, the report analyser and the query translator.
+# The scraper client, the report analyser and the query translator, plus the
+# HTTP layer and utilities the client imports. tests/playground-image.test.js
+# walks the import graph from server.mjs and fails when a file it reaches is
+# not copied here, which is how this image came to crash at start.
 COPY src/client ./src/client
 COPY src/analysis ./src/analysis
 COPY src/codegen ./src/codegen
+COPY src/scrapers/twitter/http ./src/scrapers/twitter/http
+COPY src/utils ./src/utils
 
 # Cloud Run injects PORT. 8080 is its default and the local default too.
 ENV PORT=8080
