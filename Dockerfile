@@ -12,6 +12,15 @@ ENV PUPPETEER_SKIP_DOWNLOAD=true
 
 WORKDIR /app
 
+# better-sqlite3 has no install script, so npm runs its implicit `node-gyp
+# rebuild`. The package ships a prebuilt binary and binding.gyp then builds
+# nothing, but node-gyp still needs Python (and make) to read binding.gyp, and
+# node:22-slim has neither, so `npm ci` failed here. g++ covers a platform with
+# no prebuild. All three stay in this stage; the runtime image copies only
+# node_modules.
+RUN apt-get update && apt-get install -y --no-install-recommends python3 make g++ \
+    && rm -rf /var/lib/apt/lists/*
+
 # Copy package files
 COPY package.json package-lock.json* ./
 COPY prisma ./prisma/
