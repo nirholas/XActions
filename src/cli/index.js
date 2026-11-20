@@ -2165,7 +2165,15 @@ program
       },
     };
 
-    const configPath = configPaths[client]?.[platform] || configPaths[client]?.linux;
+    // An unknown client used to print Claude Desktop's format and exit 0, and
+    // --write then did nothing. Refuse it, the same as search --filter does.
+    if (!configPaths[client]) {
+      console.error(chalk.red(`Unknown --client "${client}". Use one of: ${Object.keys(configPaths).join(', ')}.`));
+      process.exitCode = 1;
+      return;
+    }
+
+    const configPath = configPaths[client][platform] || configPaths[client].linux;
 
     // Build the MCP config snippet
     const mcpEntry = {
