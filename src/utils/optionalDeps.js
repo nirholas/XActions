@@ -81,7 +81,7 @@ export function isMissingPackage(err, pkg) {
  * @returns {Promise<any>} The module namespace
  * @throws {MissingDependencyError} When the package is not installed
  */
-export async function importOptional(specifier, { feature, install } = {}) {
+export async function importOptional(specifier, { feature, install }) {
   const pkg = packageName(specifier);
   try {
     return await import(specifier);
