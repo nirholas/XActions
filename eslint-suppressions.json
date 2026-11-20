@@ -1035,11 +1035,6 @@
       "count": 1
     }
   },
-  "src/grokIntegration.js": {
-    "no-empty": {
-      "count": 1
-    }
-  },
   "src/mcp/edgePrompts.js": {
     "no-useless-escape": {
       "count": 1
@@ -1086,9 +1081,6 @@
     }
   },
   "src/profileManager.js": {
-    "no-empty": {
-      "count": 2
-    },
     "no-unused-vars": {
       "count": 1
     }
