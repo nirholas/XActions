@@ -29,7 +29,7 @@ date: "2026-03-30"
 
 1. Open x.com (any page for list creation, or a list page for member management)
 2. Press **F12** to open DevTools, then click the **Console** tab
-3. Copy the script from `src/listManager.js`
+3. Copy the script from `browser/listManager.js`
 4. Edit the `CONFIG` section to enable the operations you want
 5. Paste into the console and press Enter
 
@@ -232,5 +232,5 @@ This creates the list first, then adds members to it.
 
 ## Related Scripts
 
-- `src/followList.js` -- Follow, unfollow, pin, and browse lists
-- `src/manageCommunity.js` -- Similar management features for Communities
+- `browser/followList.js` -- Follow, unfollow, pin, and browse lists
+- `browser/manageCommunity.js` -- Similar management features for Communities

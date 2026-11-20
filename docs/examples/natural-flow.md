@@ -243,7 +243,7 @@ Each paste picks up exactly where you left off. Stats accumulate across phases.
 | `scripts/keywordLiker.js` | Like-only with keyword prompt input |
 | `scripts/multiAccountTimelineLiker.js` | Like timelines of multiple accounts |
 | `scripts/autoEngage.js` | Simple auto-like/bookmark |
-| `src/engagementBooster.js` | Production-grade engagement with reply templates |
+| `browser/engagementBooster.js` | Production-grade engagement with reply templates |
 
 ---
 

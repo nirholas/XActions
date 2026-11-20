@@ -40,7 +40,7 @@ Help me identify and block bot/spam accounts:
 
 ### Part 2: Mass Block Script
 
-Walk me through `src/massBlock.js`:
+Walk me through `browser/massBlock.js`:
 
 1. **Use case:** Block a list of specific accounts or block based on criteria
 2. **Navigate to the account you want to block** or use a prepared list
@@ -59,7 +59,7 @@ Walk me through `src/massBlock.js`:
 
 ### Part 3: Mass Unblock
 
-When you've overblocked or want to start fresh, use `src/massUnblock.js`:
+When you've overblocked or want to start fresh, use `browser/massUnblock.js`:
 
 1. **Check your blocked list** using `x_get_blocked`:
    ```
@@ -81,7 +81,7 @@ For accounts you don't want to block but don't want to see:
    "Mute these accounts: @annoying1, @annoying2"
    ```
 
-2. **Mass unmute** using `x_unmute_user` or `src/massUnmute.js`:
+2. **Mass unmute** using `x_unmute_user` or `browser/massUnmute.js`:
    ```
    "Unmute @user1"
    ```
@@ -94,7 +94,7 @@ For accounts you don't want to block but don't want to see:
 
 ### Part 5: Keyword Muting
 
-Control your timeline with `src/muteByKeywords.js` and `src/manageMutedWords.js`:
+Control your timeline with `browser/muteByKeywords.js` and `browser/manageMutedWords.js`:
 
 1. **Mute specific keywords/phrases:**
    - Words that trigger you or cause negative experiences
@@ -121,7 +121,7 @@ Control your timeline with `src/muteByKeywords.js` and `src/manageMutedWords.js`
 
 ### Part 6: Report Spam
 
-For accounts actively spamming or harassing, use `src/reportSpam.js`:
+For accounts actively spamming or harassing, use `browser/reportSpam.js`:
 
 1. **How it works:**
    - Identifies spam accounts from your mentions/notifications
@@ -142,7 +142,7 @@ For accounts actively spamming or harassing, use `src/reportSpam.js`:
 
 ### Part 7: Removing Unwanted Followers
 
-Use `src/removeFollowers.js` to remove followers you don't want:
+Use `browser/removeFollowers.js` to remove followers you don't want:
 
 1. **Why remove followers?**
    - Bot followers that hurt your engagement rate

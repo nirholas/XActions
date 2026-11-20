@@ -224,7 +224,7 @@
 <p><strong>Steps:</strong></p>
 <ol>
 <li>Go to your followers page (<code>x.com/yourusername/followers</code>)</li>
-<li>Open console (F12) and paste <code>src/auditFollowers.js</code></li>
+<li>Open console (F12) and paste <code>browser/auditFollowers.js</code></li>
 </ol>
 <p><strong>Configuration:</strong></p>
 <pre><code class="language-javascript">const CONFIG = {
@@ -251,16 +251,16 @@ Top suspicious accounts listed with scores...
 <hr>
 <h2>📁 Files</h2>
 <ul>
-<li><code>src/auditFollowers.js</code> — Follower audit script</li>
-<li><code>src/blockBots.js</code> — Block detected bots (companion script)</li>
-<li><code>src/removeFollowers.js</code> — Remove specific followers</li>
+<li><code>browser/auditFollowers.js</code> — Follower audit script</li>
+<li><code>browser/blockBots.js</code> — Block detected bots (companion script)</li>
+<li><code>browser/removeFollowers.js</code> — Remove specific followers</li>
 </ul>
 <h2>⚠️ Notes</h2>
 <ul>
 <li>Accuracy depends on visible profile data (avatar, bio, stats)</li>
 <li>The heuristic scores are tunable via <code>thresholds</code> in CONFIG</li>
 <li>Not all &quot;suspicious&quot; accounts are bots — use as guidance</li>
-<li>For higher accuracy, combine with <code>src/blockBots.js</code> which checks additional signals</li>
+<li>For higher accuracy, combine with <code>browser/blockBots.js</code> which checks additional signals</li>
 </ul>
 
 

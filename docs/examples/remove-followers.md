@@ -30,7 +30,7 @@ Remove unwanted followers using the soft-block technique (block then immediately
 1. Go to your followers page (`x.com/yourusername/followers`)
 2. Edit CONFIG with usernames to remove
 3. Set `dryRun: false` when ready
-4. Open console (F12) and paste `src/removeFollowers.js`
+4. Open console (F12) and paste `browser/removeFollowers.js`
 
 **Configuration:**
 ```javascript
@@ -45,12 +45,12 @@ const CONFIG = {
 
 ## 📁 Files
 
-- `src/removeFollowers.js` — Browser console follower removal
-- `src/auditFollowers.js` — Audit followers first (companion script)
+- `browser/removeFollowers.js` — Browser console follower removal
+- `browser/auditFollowers.js` — Audit followers first (companion script)
 
 ## ⚠️ Notes
 
 - Must be logged in to do this
 - The "soft-block" technique (block + unblock) removes followers without a permanent block
 - Users can still visit your profile and re-follow
-- Use `src/auditFollowers.js` first to identify which followers to remove
+- Use `browser/auditFollowers.js` first to identify which followers to remove

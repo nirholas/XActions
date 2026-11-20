@@ -9,7 +9,7 @@
 ## Quick Start
 1. Navigate to `https://x.com/home`, a search page, or any profile
 2. Open DevTools (F12) and go to the Console tab
-3. Copy the contents of `src/likePost.js`
+3. Copy the contents of `browser/likePost.js`
 4. Edit the `CONFIG` section (mode, keywords, URLs)
 5. Paste into the console and press Enter
 
@@ -17,12 +17,12 @@
 
 | Script | Requires core.js | Use Case |
 |--------|-----------------|----------|
-| `src/likePost.js` | No | Like by URL or keyword -- standalone |
+| `browser/likePost.js` | No | Like by URL or keyword -- standalone |
 | `src/automation/autoLiker.js` | Yes | Continuous auto-liker with rate limiting |
 
 ## Configuration
 
-### src/likePost.js
+### browser/likePost.js
 
 #### Mode Selection
 
@@ -185,7 +185,7 @@ window.stopAutoLiker();
 
 ## Related Scripts
 
-- `src/autoReply.js` -- Auto-reply to matching tweets
-- `src/repostPost.js` -- Repost posts by URL or keyword
+- `browser/autoReply.js` -- Auto-reply to matching tweets
+- `browser/repostPost.js` -- Repost posts by URL or keyword
 - `src/automation/autoLiker.js` -- Continuous auto-liker (requires core.js)
-- `src/quoteTweetAutomation.js` -- Quote tweet with commentary
+- `browser/quoteTweetAutomation.js` -- Quote tweet with commentary

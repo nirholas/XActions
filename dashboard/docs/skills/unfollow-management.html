@@ -251,17 +251,17 @@
 </thead>
 <tbody><tr>
 <td>Unfollow ALL accounts</td>
-<td><code>src/unfollowEveryone.js</code></td>
+<td><code>browser/unfollowEveryone.js</code></td>
 <td><code>x.com/USERNAME/following</code></td>
 </tr>
 <tr>
 <td>Unfollow only non-followers</td>
-<td><code>src/unfollowback.js</code></td>
+<td><code>browser/unfollowback.js</code></td>
 <td><code>x.com/USERNAME/following</code></td>
 </tr>
 <tr>
 <td>Unfollow non-followers + download log</td>
-<td><code>src/unfollowWDFBLog.js</code></td>
+<td><code>browser/unfollowWDFBLog.js</code></td>
 <td><code>x.com/USERNAME/following</code></td>
 </tr>
 <tr>
@@ -271,17 +271,17 @@
 </tr>
 <tr>
 <td>Detect who unfollowed you</td>
-<td><code>src/detectUnfollowers.js</code></td>
+<td><code>browser/detectUnfollowers.js</code></td>
 <td><code>x.com/USERNAME/followers</code></td>
 </tr>
 <tr>
 <td>Monitor follow/following ratio + plan</td>
-<td><code>src/followRatioManager.js</code></td>
+<td><code>browser/followRatioManager.js</code></td>
 <td><code>x.com/USERNAME</code></td>
 </tr>
 <tr>
 <td>Remove specific followers from YOUR list</td>
-<td><code>src/removeFollowers.js</code></td>
+<td><code>browser/removeFollowers.js</code></td>
 <td><code>x.com/USERNAME/followers</code></td>
 </tr>
 </tbody></table>
@@ -299,25 +299,25 @@
 <h2 id="strategy-guide">Strategy Guide</h2>
 <h3 id="cleaning-a-bloated-following-list">Cleaning a bloated following list</h3>
 <ol>
-<li>Run <code>src/followRatioManager.js</code> on your profile to assess current ratio</li>
+<li>Run <code>browser/followRatioManager.js</code> on your profile to assess current ratio</li>
 <li>Use <code>XActions.plan()</code> to see how many unfollows are needed</li>
-<li>Run <code>src/unfollowback.js</code> to remove non-followers first (safest)</li>
-<li>If more cleanup needed, use <code>src/unfollowEveryone.js</code> with abort when satisfied</li>
+<li>Run <code>browser/unfollowback.js</code> to remove non-followers first (safest)</li>
+<li>If more cleanup needed, use <code>browser/unfollowEveryone.js</code> with abort when satisfied</li>
 <li>Re-check ratio with <code>XActions.track()</code></li>
 </ol>
 <h3 id="maintaining-a-healthy-ratio-over-time">Maintaining a healthy ratio over time</h3>
 <ol>
-<li>Set up periodic runs of <code>src/detectUnfollowers.js</code> to track losses</li>
-<li>Use <code>src/followRatioManager.js</code> weekly to monitor trends</li>
-<li>Run <code>src/unfollowback.js</code> monthly to remove non-reciprocal follows</li>
+<li>Set up periodic runs of <code>browser/detectUnfollowers.js</code> to track losses</li>
+<li>Use <code>browser/followRatioManager.js</code> weekly to monitor trends</li>
+<li>Run <code>browser/unfollowback.js</code> monthly to remove non-reciprocal follows</li>
 <li>Keep a whitelist in <code>smartUnfollow.js</code> for accounts you always want to follow</li>
 </ol>
 <h3 id="before-a-big-unfollow-session">Before a big unfollow session</h3>
 <ol>
 <li>Export your following list first: <code>scripts/scrapeFollowing.js</code></li>
-<li>Run <code>src/unfollowWDFBLog.js</code> (saves log of who was unfollowed)</li>
+<li>Run <code>browser/unfollowWDFBLog.js</code> (saves log of who was unfollowed)</li>
 <li>Review the downloaded log for any mistakes</li>
-<li>Use <code>src/followRatioManager.js</code> to verify improvements</li>
+<li>Use <code>browser/followRatioManager.js</code> to verify improvements</li>
 </ol>
 <h2 id="troubleshooting">Troubleshooting</h2>
 <table>

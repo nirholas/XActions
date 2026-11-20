@@ -87,7 +87,9 @@ xactions/
 │   ├── plugins/            # Plugin system
 │   ├── agents/             # Thought leader agent
 │   ├── graph/              # Social network graph
-│   └── *.js                # 80+ browser scripts
+│   └── *.js                # index.js (library entry) and Node modules
+│
+├── browser/                # 112 standalone browser console scripts (IIFEs)
 │
 ├── dashboard/              # Static HTML frontend
 │   ├── index.html          # Main dashboard
@@ -157,7 +159,7 @@ API routes delegate to services (`api/services/`):
 
 ### Browser Script Independence
 
-Scripts in `src/` are designed to run standalone in a browser DevTools console — no build step, no bundler. They use:
+Scripts in `browser/` (and `scripts/`, `src/automation/`) are designed to run standalone in a browser DevTools console — no build step, no bundler. They use:
 - `sessionStorage` for persistence (lost on tab close)
 - DOM selectors from `docs/dom-selectors.md`
 - `console.log` with emojis for output

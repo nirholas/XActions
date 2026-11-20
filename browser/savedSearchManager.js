@@ -1,5 +1,5 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// src/savedSearchManager.js
+// browser/savedSearchManager.js
 // Saved search and discovery tools for X/Twitter
 // by nichxbt
 // 1. Go to x.com

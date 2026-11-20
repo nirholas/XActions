@@ -19,7 +19,7 @@ Automatically categorize your bookmarks using keyword rules, then export as JSON
 **Steps:**
 1. Go to `x.com/i/bookmarks`
 2. Edit CONFIG with your categorization rules
-3. Open console (F12) and paste `src/bookmarkOrganizer.js`
+3. Open console (F12) and paste `browser/bookmarkOrganizer.js`
 
 **Configuration:**
 ```javascript
@@ -56,8 +56,8 @@ Total bookmarks: 150
 
 ## 📁 Files
 
-- `src/bookmarkOrganizer.js` — Bookmark organizer and exporter
-- `src/clearAllBookmarks.js` — Clear all bookmarks (use after exporting)
+- `browser/bookmarkOrganizer.js` — Bookmark organizer and exporter
+- `browser/clearAllBookmarks.js` — Clear all bookmarks (use after exporting)
 
 ## ⚠️ Notes
 

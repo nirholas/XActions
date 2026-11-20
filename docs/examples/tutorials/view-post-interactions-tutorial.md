@@ -9,7 +9,7 @@
 ## Quick Start
 1. Navigate to any tweet page on x.com (or any x.com page)
 2. Open DevTools (F12) and go to the Console tab
-3. Copy the contents of `src/postInteractions.js`
+3. Copy the contents of `browser/postInteractions.js`
 4. Paste into the console and press Enter
 5. Call functions via `window.XActions.postInteractions.<function>(url)`
 
@@ -55,7 +55,7 @@ Functions marked with `url?` are optional -- if omitted and you are on a tweet p
 
 ### View Who Liked a Post
 
-**Step 1:** Paste `src/postInteractions.js` into the console.
+**Step 1:** Paste `browser/postInteractions.js` into the console.
 
 **Step 2:** Call `viewLikes` with a tweet URL:
 
@@ -226,6 +226,6 @@ await XActions.postInteractions.writeCommunityNote('https://x.com/user/status/12
 
 ## Related Scripts
 
-- `src/shareEmbed.js` -- Bulk copy links and embed codes
-- `src/bookmarkOrganizer.js` -- Export and categorize bookmarks
-- `src/reportSpam.js` -- Report multiple spam accounts
+- `browser/shareEmbed.js` -- Bulk copy links and embed codes
+- `browser/bookmarkOrganizer.js` -- Export and categorize bookmarks
+- `browser/reportSpam.js` -- Report multiple spam accounts

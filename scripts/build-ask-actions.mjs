@@ -8,7 +8,7 @@
  * run. This catalogs all three executable surfaces straight from source, so
  * the catalog cannot drift from what the code offers:
  *
- *   browser scripts  src/*.js + scripts/*.js, cross-checked against the
+ *   browser scripts  browser/*.js + scripts/*.js, cross-checked against the
  *                    generated /scripts/<slug> pages, with the raw source URL
  *   CLI commands     the .command()/.description() calls in src/cli/**
  *   MCP tools        the tool definitions in src/mcp/server.js
@@ -85,7 +85,7 @@ const clean = (url) => url.replace(/[.,)]+$/, '');
  */
 function collectScripts() {
   const actions = [];
-  for (const dir of ['src', 'scripts']) {
+  for (const dir of ['browser', 'scripts']) {
     for (const entry of readdirSync(join(ROOT, dir))) {
       if (!entry.endsWith('.js') || entry.endsWith('.mjs')) continue;
       const path = `${dir}/${entry}`;
@@ -189,7 +189,7 @@ function collectMcp() {
 }
 
 /**
- * 61 scripts exist in both src/ and scripts/. The generated page was built
+ * 61 scripts exist in both browser/ and scripts/. The generated page was built
  * from one of them, so the catalog keeps that copy: linking a user to a page
  * whose source differs from the file quoted beside it is how a "just paste
  * this" answer stops matching what the page shows.

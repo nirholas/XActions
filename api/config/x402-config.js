@@ -804,7 +804,7 @@ export const FREE_OPERATIONS = {
 
 // Pricing for browser script downloads (GET /api/scripts/src/:name, GET /api/scripts/automation/:name)
 export const SCRIPT_PRICES = {
-  // ── src/ scripts ─────────────────────────────────────────────
+  // ── src/ scripts (files in browser/; the src/ id is the public URL) ──
   // $0.001 — simple utility/view scripts
   'src/accountMisc': '$0.001',
   'src/communityNotes': '$0.001',

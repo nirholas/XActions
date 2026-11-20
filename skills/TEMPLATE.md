@@ -30,7 +30,7 @@ Describe how to implement the feature. Include:
 If applicable, explain which page to navigate to and how to paste/run the script:
 
 ```js
-// Paste src/your-script.js into DevTools console on x.com/page
+// Paste browser/your-script.js into DevTools console on x.com/page
 ```
 
 ### CLI Usage

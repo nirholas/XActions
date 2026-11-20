@@ -545,7 +545,7 @@ This script:
 <details>
 <summary><strong>How do I find who unfollowed me on Twitter?</strong></summary>
 
-Use `src/detectUnfollowers.js` - it saves a snapshot of your followers and compares on next run.
+Use `browser/detectUnfollowers.js` - it saves a snapshot of your followers and compares on next run.
 </details>
 
 <details>
@@ -1333,8 +1333,8 @@ Every top-level directory, so nothing here is a surprise.
 ```
 src/            The library. cli/ mcp/ scrapers/ client/ automation/ agents/
                 analytics/ streaming/ workflows/ plugins/ portability/ graph/
-                a2a/ spaces/ ai/ auth/ scheduler/ notifications/, plus the
-                browser console scripts that sit at the top level
+                a2a/ spaces/ ai/ auth/ scheduler/ notifications/
+browser/        Browser console scripts: IIFEs you paste into DevTools on x.com
 api/            Express REST API: routes/ services/ middleware/ realtime/
 bin/            Legacy command name (unfollowx), forwards to the CLI
 packages/       xactions-mcp, the thin MCP wrapper published to npm

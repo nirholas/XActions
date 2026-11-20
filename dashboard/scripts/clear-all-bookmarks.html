@@ -120,12 +120,12 @@
 
       <article class="article">
         <span class="cat-badge">Content Tools</span>
-        <span class="source-badge">src</span>
+        <span class="source-badge">browser</span>
 
         <div class="meta-row">
           <span>v2.0.0</span>
           <span>Updated: 2026-02-24</span>
-          <span>189 lines</span>
+          <span>194 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
@@ -261,7 +261,12 @@
     console.log('║  by nichxbt — v2.0' + ' '.repeat(W - 21) + '║');
     console.log('╚' + '═'.repeat(W) + '╝');
 
-    if (!window.location.href.includes('/bookmarks')) {
+    // Some accounts are redirected from the bookmarks page to /i/history
+    // (reported in https://github.com/nirholas/XActions/pull/88); the list
+    // there is the same, so run on either. Only the path is checked, so a
+    // search for &quot;/bookmarks&quot; does not count.
+    const path = window.location.pathname;
+    if (!path.includes('/bookmarks') &amp;&amp; !/^\/i\/history(\/|$)/.test(path)) {
       console.error('❌ Navigate to x.com/i/bookmarks first!');
       return;
     }
@@ -382,7 +387,7 @@
       <div class="sidebar-card">
         <h3>🗑️ Content Tools</h3>
         <a href="/scripts/bookmark-exporter">📚 Bookmark Exporter</a>
-<a href="/scripts/bookmark-manager">📚 Bookmark Manager - Save</a>
+<a href="/scripts/bookmark-manager">📚 Bookmark Manager</a>
 <a href="/scripts/bookmark-organizer">📂 Bookmark Organizer</a>
 <a href="/scripts/bulk-delete-tweets">🗑️ Bulk Delete Tweets</a>
 <a href="/scripts/clear-all-likes">🗑️ Clear All Likes</a>

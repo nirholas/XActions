@@ -29,7 +29,7 @@ Send personalized DMs to a list of X/Twitter users.
 1. Go to `x.com/messages`
 2. Edit CONFIG with users and message template
 3. Set `dryRun = false`
-4. Open console (F12) and paste `src/sendDirectMessage.js`
+4. Open console (F12) and paste `browser/sendDirectMessage.js`
 
 **Configuration:**
 ```javascript
@@ -57,7 +57,7 @@ const CONFIG = {
 
 ## 📁 Files
 
-- `src/sendDirectMessage.js` — Main DM script
+- `browser/sendDirectMessage.js` — Main DM script
 - `scripts/twitter/send-direct-message.js` — Extended DevTools version
 
 ## ⚠️ Notes

@@ -368,7 +368,7 @@ Browse your timeline and export all noted tweets as JSON:
 
 3. **Include sources** -- When writing a note, always include links to authoritative sources. Notes with citations are rated more favorably.
 
-4. **Abort at any time** -- If the full script from `src/communityNotes.js` is running, type `XActions.abort()` in the console to stop it.
+4. **Abort at any time** -- If the full script from `browser/communityNotes.js` is running, type `XActions.abort()` in the console to stop it.
 
 5. **Check status** -- While the script is running, type `XActions.status()` to see progress.
 
@@ -392,7 +392,7 @@ Browse your timeline and export all noted tweets as JSON:
 |---------|--------|-------------|
 | Tweet Scraping | `src/scrapers/twitter/index.js` | Scrape tweet content and metadata |
 | Auto Commenter | `src/autoCommenter.js` | Automate replies to tweets |
-| View Analytics | `src/viewAnalytics.js` | View engagement metrics on your posts |
+| View Analytics | `browser/viewAnalytics.js` | View engagement metrics on your posts |
 
 ---
 

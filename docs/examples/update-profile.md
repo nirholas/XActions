@@ -21,7 +21,7 @@ Update your X/Twitter display name, bio, location, and website from the browser 
 **Steps:**
 1. Go to your profile page (`x.com/yourusername`)
 2. Edit CONFIG with your new info
-3. Open console (F12) and paste `src/updateProfile.js`
+3. Open console (F12) and paste `browser/updateProfile.js`
 
 **Configuration:**
 ```javascript
@@ -37,7 +37,7 @@ const CONFIG = {
 
 ## 📁 Files
 
-- `src/updateProfile.js` — Browser console profile updater
+- `browser/updateProfile.js` — Browser console profile updater
 - `scripts/twitter/update-bio.js` — Extended DevTools version
 
 ## ⚠️ Notes

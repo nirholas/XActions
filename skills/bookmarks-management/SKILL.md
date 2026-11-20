@@ -16,8 +16,8 @@ Browser console scripts for managing, organizing, exporting, and clearing X/Twit
 | Goal | File | Navigate to |
 |------|------|-------------|
 | Export bookmarks (full metadata) | `scripts/scrapeBookmarks.js` | `x.com/i/bookmarks` |
-| Organize bookmarks by category | `src/bookmarkOrganizer.js` | `x.com/i/bookmarks` |
-| Clear all bookmarks | `src/clearAllBookmarks.js` | `x.com/i/bookmarks` |
+| Organize bookmarks by category | `browser/bookmarkOrganizer.js` | `x.com/i/bookmarks` |
+| Clear all bookmarks | `browser/clearAllBookmarks.js` | `x.com/i/bookmarks` |
 | Manage bookmarks (Puppeteer) | `src/bookmarkManager.js` | `x.com/i/bookmarks` |
 
 ## Scrape Bookmarks
@@ -46,7 +46,7 @@ Each bookmark includes: `tweetId`, `handle`, `displayName`, `verified`, `text`, 
 
 ## Bookmark Organizer
 
-**File:** `src/bookmarkOrganizer.js`
+**File:** `browser/bookmarkOrganizer.js`
 
 Auto-categorizes bookmarks by keyword matching and exports organized data. Configure categories in `CONFIG.categories` (default: Tech, News, Crypto, Funny, Business). Unmatched bookmarks go to "Uncategorized." Supports JSON and CSV export.
 
@@ -55,7 +55,7 @@ Auto-categorizes bookmarks by keyword matching and exports organized data. Confi
 
 ## Clear All Bookmarks
 
-**File:** `src/clearAllBookmarks.js`
+**File:** `browser/clearAllBookmarks.js`
 
 Removes all bookmarks. Tries the built-in "Clear All" button first, then falls back to removing bookmarks individually by scrolling and clicking.
 

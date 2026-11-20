@@ -2,19 +2,23 @@
 /**
  * Browser Script Download Routes
  *
- * Serves XActions browser scripts (src/ and src/automation/) behind x402 micropayments.
+ * Serves XActions browser scripts (browser/ and src/automation/) behind x402 micropayments.
  * Payment is verified by the x402 middleware before these handlers run.
  *
  * Routes:
  *   GET /api/scripts          — list all scripts with prices (free)
- *   GET /api/scripts/src/:name       — download a src/ script
+ *   GET /api/scripts/src/:name       — download a top-level browser script
  *   GET /api/scripts/automation/:name — download an automation script
+ *
+ * The `src/` collection name is part of the public URL and of the SCRIPT_PRICES
+ * keys, so it stays even though the files moved out of src/ into browser/.
  *
  * @author nichxbt
  */
 
 import { Router } from 'express';
 import { readFile } from 'fs/promises';
+import { existsSync } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import crypto from 'crypto';
@@ -24,6 +28,21 @@ const router = Router();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const SRC_ROOT = path.resolve(__dirname, '../../src');
+const BROWSER_ROOT = path.resolve(__dirname, '../../browser');
+
+/**
+ * Where a `src/<name>` script lives. The console scripts are in browser/; a few
+ * SCRIPT_PRICES entries still name Node modules that remain in src/, so those
+ * resolve there as before. Returns null if the name escapes either root.
+ */
+function resolveTopLevelScript(name) {
+  for (const root of [BROWSER_ROOT, SRC_ROOT]) {
+    const filePath = path.resolve(root, `${name}.js`);
+    if (!filePath.startsWith(root + path.sep)) return null;
+    if (existsSync(filePath)) return filePath;
+  }
+  return path.resolve(BROWSER_ROOT, `${name}.js`);
+}
 
 // Only allow safe camelCase / known filename characters
 const SAFE_NAME = /^[a-zA-Z0-9_-]+$/;
@@ -54,7 +73,7 @@ router.get('/', (req, res) => {
 
 /**
  * GET /api/scripts/src/:name
- * Serve a browser script from src/ — requires x402 payment.
+ * Serve a top-level browser script (browser/<name>.js) — requires x402 payment.
  */
 router.get('/src/:name', async (req, res) => {
   const { name } = req.params;
@@ -68,9 +87,9 @@ router.get('/src/:name', async (req, res) => {
     return res.status(404).json({ error: 'Script not found' });
   }
 
-  const filePath = path.resolve(SRC_ROOT, `${name}.js`);
-  // Guard against path traversal (resolve must stay within SRC_ROOT)
-  if (!filePath.startsWith(SRC_ROOT + path.sep) && filePath !== SRC_ROOT) {
+  // Guard against path traversal (resolve must stay within browser/ or src/)
+  const filePath = resolveTopLevelScript(name);
+  if (!filePath) {
     return res.status(403).json({ error: 'Access denied' });
   }
 

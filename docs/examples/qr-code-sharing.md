@@ -18,7 +18,7 @@ Generate QR codes for any X/Twitter profile — display on screen and download a
 **Steps:**
 1. Go to any page on `x.com`
 2. Edit CONFIG with the target username (or leave blank to use current page)
-3. Open console (F12) and paste `src/qrCodeSharing.js`
+3. Open console (F12) and paste `browser/qrCodeSharing.js`
 
 **Configuration:**
 ```javascript
@@ -34,7 +34,7 @@ const CONFIG = {
 
 ## 📁 Files
 
-- `src/qrCodeSharing.js` — QR code generator and display
+- `browser/qrCodeSharing.js` — QR code generator and display
 
 ## ⚠️ Notes
 

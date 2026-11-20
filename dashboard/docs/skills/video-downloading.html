@@ -251,17 +251,17 @@
 </thead>
 <tbody><tr>
 <td>Download video from current tweet</td>
-<td><code>src/videoDownloaderBrowser.js</code></td>
+<td><code>browser/videoDownloaderBrowser.js</code></td>
 <td>Tweet page (<code>x.com/user/status/ID</code>)</td>
 </tr>
 <tr>
 <td>Batch download multiple videos</td>
-<td><code>src/videoDownloaderBrowser.js</code></td>
+<td><code>browser/videoDownloaderBrowser.js</code></td>
 <td>Any page</td>
 </tr>
 <tr>
 <td>Download video info only (no save)</td>
-<td><code>src/videoDownloaderBrowser.js</code></td>
+<td><code>browser/videoDownloaderBrowser.js</code></td>
 <td>Tweet page</td>
 </tr>
 <tr>
@@ -279,10 +279,10 @@
 <ol>
 <li>Navigate to a tweet with a video: <code>x.com/user/status/123456</code></li>
 <li>Open DevTools (F12) → Console</li>
-<li>Paste <code>src/videoDownloaderBrowser.js</code> → Enter</li>
+<li>Paste <code>browser/videoDownloaderBrowser.js</code> → Enter</li>
 </ol>
 <h2 id="available-functions">Available Functions</h2>
-<p>After pasting <code>src/videoDownloaderBrowser.js</code>:</p>
+<p>After pasting <code>browser/videoDownloaderBrowser.js</code>:</p>
 <pre><code class="language-js">downloadCurrent()                   // Download video from current tweet page
 downloadFromUrl(&#39;https://x.com/..&#39;) // Navigate to tweet URL and download
 downloadGif()                       // Download GIF (GIFs are MP4 on X)

@@ -227,23 +227,23 @@
 </tr>
 </thead>
 <tbody><tr>
-<td><code>src/muteByKeywords.js</code></td>
+<td><code>browser/muteByKeywords.js</code></td>
 <td>Any timeline/search</td>
 <td>Mute users whose posts contain keywords</td>
 </tr>
 <tr>
-<td><code>src/manageMutedWords.js</code></td>
+<td><code>browser/manageMutedWords.js</code></td>
 <td><code>x.com/settings/muted_keywords</code></td>
 <td>Bulk-add muted words</td>
 </tr>
 <tr>
-<td><code>src/massUnmute.js</code></td>
+<td><code>browser/massUnmute.js</code></td>
 <td><code>x.com/settings/muted/all</code></td>
 <td>Unmute all or selected users</td>
 </tr>
 </tbody></table>
 <h2>Configuration</h2>
-<h3>src/muteByKeywords.js</h3>
+<h3>browser/muteByKeywords.js</h3>
 <pre><code class="language-js">const CONFIG = {
   keywords: [
     &#39;spam&#39;,
@@ -258,7 +258,7 @@
   caseSensitive: false,
 };
 </code></pre>
-<h3>src/manageMutedWords.js</h3>
+<h3>browser/manageMutedWords.js</h3>
 <pre><code class="language-js">const CONFIG = {
   wordsToMute: [
     &#39;crypto scam&#39;,
@@ -272,7 +272,7 @@
   dryRun: true,
 };
 </code></pre>
-<h3>src/massUnmute.js</h3>
+<h3>browser/massUnmute.js</h3>
 <pre><code class="language-js">const CONFIG = {
   maxUnmutes: Infinity,
   keepMuted: [],              // Keep these users muted
@@ -286,7 +286,7 @@
 <h3>Mute Users by Keywords</h3>
 <p>This script scrolls your timeline, finds tweets matching your keywords, and mutes the authors.</p>
 <p><strong>Step 1:</strong> Navigate to your home timeline, a search page, or any page with tweets.</p>
-<p><strong>Step 2:</strong> Configure keywords in <code>src/muteByKeywords.js</code>:</p>
+<p><strong>Step 2:</strong> Configure keywords in <code>browser/muteByKeywords.js</code>:</p>
 <pre><code class="language-js">const CONFIG = {
   keywords: [&#39;spam&#39;, &#39;giveaway&#39;, &#39;follow back&#39;, &#39;dm for collab&#39;],
   maxMutes: 30,
@@ -320,7 +320,7 @@ Muted users: spammer1, spammer2, ...
   dryRun: true,
 };
 </code></pre>
-<p><strong>Step 3:</strong> Paste <code>src/manageMutedWords.js</code>. In dry run mode, it lists what would be muted:</p>
+<p><strong>Step 3:</strong> Paste <code>browser/manageMutedWords.js</code>. In dry run mode, it lists what would be muted:</p>
 <pre><code>Words to mute: 5
   1. &quot;crypto scam&quot;
   2. &quot;follow for follow&quot;
@@ -366,7 +366,7 @@ DRY RUN MODE - Set CONFIG.dryRun = false to actually mute
   dryRun: false,
 };
 </code></pre>
-<p><strong>Step 3:</strong> Paste <code>src/massUnmute.js</code>. It scrolls through your muted list and unmutes everyone (except those in <code>keepMuted</code>):</p>
+<p><strong>Step 3:</strong> Paste <code>browser/massUnmute.js</code>. It scrolls through your muted list and unmutes everyone (except those in <code>keepMuted</code>):</p>
 <pre><code>MASS UNMUTE USERS
 Max: unlimited | Dry run: false | Keep muted: 2
 
@@ -425,9 +425,9 @@ window.XActions.status();
 </tbody></table>
 <h2>Related Scripts</h2>
 <ul>
-<li><code>src/massBlock.js</code> -- Block accounts by list or from visible users</li>
-<li><code>src/blockBots.js</code> -- Detect and block bot accounts</li>
-<li><code>src/massUnblock.js</code> -- Unblock accounts in bulk</li>
+<li><code>browser/massBlock.js</code> -- Block accounts by list or from visible users</li>
+<li><code>browser/blockBots.js</code> -- Detect and block bot accounts</li>
+<li><code>browser/massUnblock.js</code> -- Unblock accounts in bulk</li>
 </ul>
 
 

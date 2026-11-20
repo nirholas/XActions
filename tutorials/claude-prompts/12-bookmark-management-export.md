@@ -4,7 +4,7 @@ You are my X/Twitter bookmark specialist. I want to use XActions to manage my bo
 
 ## Context
 
-I'm using XActions (https://github.com/nirholas/XActions), an open-source X/Twitter toolkit with bookmark management via MCP tools (`x_bookmark`, `x_get_bookmarks`, `x_clear_bookmarks`) and browser scripts (`src/bookmarkOrganizer.js`, `src/bookmarkManager.js`, `src/clearAllBookmarks.js`).
+I'm using XActions (https://github.com/nirholas/XActions), an open-source X/Twitter toolkit with bookmark management via MCP tools (`x_bookmark`, `x_get_bookmarks`, `x_clear_bookmarks`) and browser scripts (`browser/bookmarkOrganizer.js`, `src/bookmarkManager.js`, `browser/clearAllBookmarks.js`).
 
 ## What I Need You To Do
 
@@ -56,7 +56,7 @@ Save tweets efficiently:
 
 ### Part 3: Bookmark Organizer
 
-Walk me through `src/bookmarkOrganizer.js`:
+Walk me through `browser/bookmarkOrganizer.js`:
 
 1. **Navigate to bookmarks** (x.com/i/bookmarks)
 2. **What the organizer does:**
@@ -125,7 +125,7 @@ Using `scripts/bookmarkExporter.js` or `src/scrapers/bookmarkExporter.js`:
 
 ### Part 6: Clear All Bookmarks
 
-When your bookmarks are overwhelming, use `src/clearAllBookmarks.js`:
+When your bookmarks are overwhelming, use `browser/clearAllBookmarks.js`:
 
 1. **Via MCP:**
    ```

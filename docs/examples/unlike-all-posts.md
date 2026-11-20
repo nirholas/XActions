@@ -25,7 +25,7 @@ Mass-unlike all liked posts on your X/Twitter account.
 **Steps:**
 1. Go to `x.com/YOUR_USERNAME/likes`
 2. Open browser console (F12 → Console tab)
-3. Paste the script from `src/unlikeAllPosts.js`
+3. Paste the script from `browser/unlikeAllPosts.js`
 4. Press Enter
 
 **Configuration:**
@@ -50,5 +50,5 @@ const CONFIG = {
 
 ## 📁 Files
 
-- `src/unlikeAllPosts.js` — Main script
+- `browser/unlikeAllPosts.js` — Main script
 - `scripts/twitter/unlike-all.js` — Extended DevTools version

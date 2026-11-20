@@ -161,10 +161,10 @@ const CONFIG = {
 
 ### Full Script (All-in-One)
 
-Run the complete `src/subscribePremium.js` script for the full experience including status check, tier comparison, and auto-navigation:
+Run the complete `browser/subscribePremium.js` script for the full experience including status check, tier comparison, and auto-navigation:
 
 ```javascript
-// Copy the full contents of src/subscribePremium.js and paste into console
+// Copy the full contents of browser/subscribePremium.js and paste into console
 // The script will:
 // 1. Check if you already have Premium
 // 2. Display a tier comparison table
@@ -258,9 +258,9 @@ Run the complete `src/subscribePremium.js` script for the full experience includ
 | Feature | Script | Description |
 |---------|--------|-------------|
 | Blue Checkmark & Fewer Ads | `src/premiumManager.js` | Manage Premium features and check tier |
-| Premium Gifting | `src/premiumGifting.js` | Gift Premium to another user |
-| ID Verification | `src/idVerification.js` | Complete identity verification |
-| Creator Revenue | `src/creatorSubscriptions.js` | Set up revenue sharing |
+| Premium Gifting | `browser/premiumGifting.js` | Gift Premium to another user |
+| ID Verification | `browser/idVerification.js` | Complete identity verification |
+| Creator Revenue | `browser/creatorSubscriptions.js` | Set up revenue sharing |
 
 ---
 

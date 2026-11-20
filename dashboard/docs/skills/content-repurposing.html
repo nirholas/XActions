@@ -251,32 +251,32 @@
 </thead>
 <tbody><tr>
 <td>Repurpose tweets (5 formats)</td>
-<td><code>src/contentRepurposer.js</code></td>
+<td><code>browser/contentRepurposer.js</code></td>
 <td><code>x.com/USERNAME</code></td>
 </tr>
 <tr>
 <td>Compose threads from ideas</td>
-<td><code>src/threadComposer.js</code></td>
+<td><code>browser/threadComposer.js</code></td>
 <td><code>x.com/USERNAME</code></td>
 </tr>
 <tr>
 <td>Content calendar analysis</td>
-<td><code>src/contentCalendar.js</code></td>
+<td><code>browser/contentCalendar.js</code></td>
 <td><code>x.com/USERNAME</code></td>
 </tr>
 <tr>
 <td>Find top-performing content</td>
-<td><code>src/tweetPerformance.js</code></td>
+<td><code>browser/tweetPerformance.js</code></td>
 <td><code>x.com/USERNAME</code></td>
 </tr>
 <tr>
 <td>Optimize posting schedule</td>
-<td><code>src/tweetScheduleOptimizer.js</code></td>
+<td><code>browser/tweetScheduleOptimizer.js</code></td>
 <td><code>x.com/USERNAME</code></td>
 </tr>
 </tbody></table>
 <h2 id="content-repurposer">Content Repurposer</h2>
-<p><strong>File:</strong> <code>src/contentRepurposer.js</code></p>
+<p><strong>File:</strong> <code>browser/contentRepurposer.js</code></p>
 <p>The main repurposing engine. Scans your timeline, then converts any tweet into 5 content formats.</p>
 <h3 id="controls">Controls</h3>
 <ul>
@@ -343,8 +343,8 @@
 <h2 id="strategy-guide">Strategy Guide</h2>
 <h3 id="weekly-content-repurposing-routine">Weekly content repurposing routine</h3>
 <ol>
-<li>Run <code>src/tweetPerformance.js</code> to identify top 5 tweets this week</li>
-<li>Run <code>src/contentRepurposer.js</code> -&gt; <code>XActions.scan()</code></li>
+<li>Run <code>browser/tweetPerformance.js</code> to identify top 5 tweets this week</li>
+<li>Run <code>browser/contentRepurposer.js</code> -&gt; <code>XActions.scan()</code></li>
 <li>For each top tweet: <code>XActions.all(i)</code> to generate all formats</li>
 <li>Export with <code>XActions.export()</code> for scheduling</li>
 <li>Space repurposed content 3+ days from original</li>
@@ -354,7 +354,7 @@
 <li>When a tweet goes viral, immediately run <code>XActions.toThread(i)</code> for a follow-up thread</li>
 <li>Use <code>XActions.toQuoteTemplates(i)</code> for engagement in replies</li>
 <li>Later, use <code>XActions.toBlog(i)</code> for a long-form article</li>
-<li>Use <code>src/autoPlugReplies.js</code> to plug your offer on the viral tweet</li>
+<li>Use <code>browser/autoPlugReplies.js</code> to plug your offer on the viral tweet</li>
 </ol>
 <h2 id="notes">Notes</h2>
 <ul>

@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Notification Manager - Scrape — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="src/notificationManager.js">
+  <title>Notification Manager — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="scripts/notificationManager.js">
   <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, notification, manager, analytics">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Notification Manager - Scrape — XActions">
-  <meta property="og:description" content="src/notificationManager.js">
+  <meta property="og:title" content="Notification Manager — XActions">
+  <meta property="og:description" content="scripts/notificationManager.js">
   <meta property="og:url" content="https://xactions.app/scripts/notification-manager">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-image.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Notification Manager - Scrape — XActions">
-  <meta name="twitter:description" content="src/notificationManager.js">
+  <meta name="twitter:title" content="Notification Manager — XActions">
+  <meta name="twitter:description" content="scripts/notificationManager.js">
 
   <link rel="canonical" href="https://xactions.app/scripts/notification-manager">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
@@ -28,8 +28,8 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Notification Manager - Scrape — Free X/Twitter Script | XActions",
-    "description": "src/notificationManager.js",
+    "headline": "Notification Manager — Free X/Twitter Script | XActions",
+    "description": "scripts/notificationManager.js",
     "url": "https://xactions.app/scripts/notification-manager",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -47,7 +47,7 @@
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
       { "@type": "ListItem", "position": 3, "name": "Analytics", "item": "https://xactions.app/scripts#analytics" },
-      { "@type": "ListItem", "position": 4, "name": "Notification Manager - Scrape", "item": "https://xactions.app/scripts/notification-manager" }
+      { "@type": "ListItem", "position": 4, "name": "Notification Manager", "item": "https://xactions.app/scripts/notification-manager" }
     ]
   }
   </script>
@@ -112,24 +112,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🔔 Notification Manager - Scrape</h1>
+        <h1>🔔 Notification Manager</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#analytics">Analytics</a> › Notification Manager - Scrape
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#analytics">Analytics</a> › Notification Manager
         </div>
       </header>
 
       <article class="article">
         <span class="cat-badge">Analytics</span>
-        <span class="source-badge">src</span>
+        <span class="source-badge">scripts</span>
 
         <div class="meta-row">
           
           
-          <span>173 lines</span>
+          <span>120 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>src/notificationManager.js</p>
+        <p>scripts/notificationManager.js</p>
 
         
 
@@ -143,8 +143,28 @@
         
 
         
-        
-        
+        <section class="config-section">
+        <h2>Configuration Options</h2>
+        <table>
+          <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>filterType</code></td><td><code>'all'</code></td><td>'all' | 'mentions' | 'verified'</td></tr>
+          </tbody>
+        </table>
+      </section>
+        <section class="config-code">
+        <h2>Default Configuration</h2>
+        <div class="code-block">
+          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
+          <pre><code>const CONFIG = {
+    maxNotifications: 50,
+    filterType: 'all',          // 'all' | 'mentions' | 'verified'
+    exportResults: true,
+    scrollDelay: 1500,
+    maxScrollRetries: 5,
+  };</code></pre>
+        </div>
+      </section>
 
         <section class="full-code">
           <h2>Full Script</h2>
@@ -152,177 +172,124 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// src/notificationManager.js
-// Notification management for X/Twitter
+// scripts/notificationManager.js
+// Browser console script for scraping and filtering notifications on X/Twitter
+// Paste in DevTools console on x.com/notifications
 // by nichxbt
 
-/**
- * Notification Manager - Scrape, filter, and manage notifications
- * 
- * Features:
- * - Scrape notifications (likes, mentions, replies, follows)
- * - Filter by notification type
- * - Mute/unmute users and keywords
- * - Configure notification preferences
- * - Priority notifications (2026)
- */
+(() =&gt; {
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
 
-const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+  // =============================================
+  // CONFIGURATION
+  // =============================================
+  const CONFIG = {
+    maxNotifications: 50,
+    filterType: 'all',          // 'all' | 'mentions' | 'verified'
+    exportResults: true,
+    scrollDelay: 1500,
+    maxScrollRetries: 5,
+  };
+  // =============================================
 
-const SELECTORS = {
-  notificationTab: 'a[href=&quot;/notifications&quot;]',
-  mentionsTab: 'a[href=&quot;/notifications/mentions&quot;]',
-  notification: '[data-testid=&quot;notification&quot;]',
-  settingsGear: 'a[href=&quot;/settings/notifications&quot;]',
-  toggleSwitch: '[data-testid=&quot;settingsSwitch&quot;]',
-  notificationText: '[data-testid=&quot;notification&quot;] span',
-  userCell: '[data-testid=&quot;UserCell&quot;]',
-  muteOption: '[data-testid=&quot;mute&quot;]',
-};
+  const download = (data, filename) =&gt; {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    console.log(`📥 Downloaded: ${filename}`);
+  };
 
-/**
- * Scrape recent notifications
- * @param {import('puppeteer').Page} page
- * @param {Object} options
- * @returns {Promise&lt;Array&gt;}
- */
-export async function getNotifications(page, options = {}) {
-  const { limit = 50, type = 'all' } = options;
+  const classifyNotification = (text) =&gt; {
+    const lc = text.toLowerCase();
+    if (lc.includes('liked your') || lc.includes('likes')) return 'like';
+    if (lc.includes('retweeted') || lc.includes('reposted')) return 'repost';
+    if (lc.includes('followed you')) return 'follow';
+    if (lc.includes('replied') || lc.includes('mentioned')) return 'mention';
+    if (lc.includes('quoted')) return 'quote';
+    return 'other';
+  };
 
-  const url = type === 'mentions' ? 'https://x.com/notifications/mentions' : 'https://x.com/notifications';
-  await page.goto(url, { waitUntil: 'networkidle2' });
-  await sleep(3000);
+  const run = async () =&gt; {
+    console.log('🔔 NOTIFICATION MANAGER — XActions by nichxbt\n');
 
-  const notifications = [];
-  let scrollAttempts = 0;
-
-  while (notifications.length &lt; limit &amp;&amp; scrollAttempts &lt; 15) {
-    const newNotifs = await page.evaluate(() =&gt; {
-      return Array.from(document.querySelectorAll('[data-testid=&quot;notification&quot;]')).map(notif =&gt; {
-        const text = notif.textContent || '';
-        const links = Array.from(notif.querySelectorAll('a')).map(a =&gt; ({
-          text: a.textContent,
-          href: a.href,
-        }));
-        const time = notif.querySelector('time')?.getAttribute('datetime') || '';
-        return { text: text.substring(0, 200), links, time };
-      });
-    });
-
-    for (const notif of newNotifs) {
-      if (!notifications.find(n =&gt; n.text === notif.text &amp;&amp; n.time === notif.time)) {
-        notifications.push(notif);
-      }
+    if (!window.location.href.includes('/notifications')) {
+      console.error('❌ Navigate to x.com/notifications first!');
+      return;
     }
 
-    await page.evaluate(() =&gt; window.scrollBy(0, 800));
-    await sleep(1500);
-    scrollAttempts++;
-  }
+    // Switch to mentions tab if needed
+    if (CONFIG.filterType === 'mentions') {
+      const mentionsTab = document.querySelector('a[href=&quot;/notifications/mentions&quot;]');
+      if (mentionsTab) { mentionsTab.click(); await sleep(2000); }
+    }
 
-  return {
-    type,
-    notifications: notifications.slice(0, limit),
-    scrapedAt: new Date().toISOString(),
+    console.log(`📊 Scraping notifications (filter: ${CONFIG.filterType})...`);
+    const notifications = new Map();
+    let retries = 0;
+
+    while (notifications.size &lt; CONFIG.maxNotifications &amp;&amp; retries &lt; CONFIG.maxScrollRetries) {
+      const prevSize = notifications.size;
+
+      document.querySelectorAll('[data-testid=&quot;notification&quot;], article[data-testid=&quot;tweet&quot;]').forEach(notif =&gt; {
+        const text = notif.textContent?.substring(0, 300) || '';
+        const time = notif.querySelector('time')?.getAttribute('datetime') || '';
+        const links = Array.from(notif.querySelectorAll('a[href^=&quot;/&quot;]')).map(a =&gt; ({
+          text: a.textContent,
+          href: a.href,
+        })).filter(l =&gt; l.href.includes('x.com/'));
+        const isVerified = !!notif.querySelector('[data-testid=&quot;icon-verified&quot;]');
+        const type = classifyNotification(text);
+        const key = text.substring(0, 80) + time;
+
+        if (!notifications.has(key)) {
+          // Apply filter
+          if (CONFIG.filterType === 'mentions' &amp;&amp; type !== 'mention') return;
+          if (CONFIG.filterType === 'verified' &amp;&amp; !isVerified) return;
+
+          notifications.set(key, { text: text.substring(0, 200), type, time, isVerified, users: links.slice(0, 5) });
+        }
+      });
+
+      if (notifications.size === prevSize) retries++;
+      else retries = 0;
+
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(CONFIG.scrollDelay);
+    }
+
+    const all = [...notifications.values()];
+
+    // Group by type
+    const byType = {};
+    all.forEach(n =&gt; {
+      if (!byType[n.type]) byType[n.type] = [];
+      byType[n.type].push(n);
+    });
+
+    console.log(`\n🔔 Total notifications: ${all.length}\n`);
+    console.log('📊 BY TYPE:');
+    Object.entries(byType)
+      .sort((a, b) =&gt; b[1].length - a[1].length)
+      .forEach(([type, items]) =&gt; {
+        console.log(`   ${type}: ${items.length}`);
+      });
+
+    if (CONFIG.exportResults) {
+      const date = new Date().toISOString().slice(0, 10);
+      download(
+        { exportedAt: new Date().toISOString(), filter: CONFIG.filterType, total: all.length, byType, notifications: all },
+        `xactions-notifications-${date}.json`
+      );
+    }
+
+    console.log('\n🏁 Done!');
   };
-}
 
-/**
- * Mute a user
- * @param {import('puppeteer').Page} page
- * @param {string} username
- * @returns {Promise&lt;Object&gt;}
- */
-export async function muteUser(page, username) {
-  await page.goto(`https://x.com/${username}`, { waitUntil: 'networkidle2' });
-  await sleep(2000);
-
-  // Click more options
-  await page.click('[data-testid=&quot;userActions&quot;]');
-  await sleep(1000);
-
-  // Click mute
-  await page.click('[data-testid=&quot;mute&quot;]');
-  await sleep(1500);
-
-  return { success: true, action: 'muted', username, timestamp: new Date().toISOString() };
-}
-
-/**
- * Unmute a user
- * @param {import('puppeteer').Page} page
- * @param {string} username
- * @returns {Promise&lt;Object&gt;}
- */
-export async function unmuteUser(page, username) {
-  await page.goto(`https://x.com/${username}`, { waitUntil: 'networkidle2' });
-  await sleep(2000);
-
-  await page.click('[data-testid=&quot;userActions&quot;]');
-  await sleep(1000);
-  await page.click('[data-testid=&quot;unmute&quot;]');
-  await sleep(1500);
-
-  return { success: true, action: 'unmuted', username, timestamp: new Date().toISOString() };
-}
-
-/**
- * Mute a word/phrase
- * @param {import('puppeteer').Page} page
- * @param {string} word
- * @param {Object} options
- * @returns {Promise&lt;Object&gt;}
- */
-export async function muteWord(page, word, options = {}) {
-  const { duration = 'forever' } = options; // forever, 24h, 7d, 30d
-
-  await page.goto('https://x.com/settings/muted_keywords', { waitUntil: 'networkidle2' });
-  await sleep(2000);
-
-  // Click add muted word
-  await page.click('[data-testid=&quot;addMutedWord&quot;]');
-  await sleep(1000);
-
-  // Type the word
-  await page.click('[data-testid=&quot;mutedWordInput&quot;]');
-  await page.keyboard.type(word);
-  await sleep(500);
-
-  // Save
-  await page.click('[data-testid=&quot;saveMutedWord&quot;]');
-  await sleep(1500);
-
-  return { success: true, action: 'muted_word', word, duration, timestamp: new Date().toISOString() };
-}
-
-/**
- * Get notification settings
- * @param {import('puppeteer').Page} page
- * @returns {Promise&lt;Object&gt;}
- */
-export async function getNotificationSettings(page) {
-  await page.goto('https://x.com/settings/notifications', { waitUntil: 'networkidle2' });
-  await sleep(2000);
-
-  const settings = await page.evaluate(() =&gt; {
-    const switches = Array.from(document.querySelectorAll('[data-testid=&quot;settingsSwitch&quot;]'));
-    return switches.map(s =&gt; ({
-      label: s.closest('[role=&quot;listitem&quot;]')?.textContent || '',
-      enabled: s.getAttribute('aria-checked') === 'true',
-    }));
-  });
-
-  return { settings, scrapedAt: new Date().toISOString() };
-}
-
-export default {
-  getNotifications,
-  muteUser,
-  unmuteUser,
-  muteWord,
-  getNotificationSettings,
-  SELECTORS,
-};
+  run();
+})();
 </code></pre>
           </div>
         </section>

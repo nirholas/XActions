@@ -27,9 +27,9 @@ A systematic audit of every file that reads user data from `[data-testid="UserCe
 
 | Strategy | Selector / Technique | Files Using It | Reliability |
 |----------|---------------------|----------------|-------------|
-| A: `testid` | `[data-testid="UserDescription"]` | `src/blockBots.js`, `src/auditFollowers.js`, `src/backupAccount.js`, `src/competitorAnalysis.js`, `src/businessTools.js`, `src/accountHealthMonitor.js`, `src/profileManager.js`, `scripts/manageLists.js`, `scripts/scrapeFollowers.js`, `scripts/scrapeFollowing.js`, `src/scrapers/twitter/index.js` (×5), `src/mcp/local-tools.js` (×2) | ★★★★★ Most stable — Twitter's own test ID |
-| B: `dir-auto-not-testid` | `[dir="auto"]:not([data-testid])` | `src/blockBots.js`, `src/auditFollowers.js`, `src/backupAccount.js`, `src/listManager.js`, `src/businessTools.js`, `scripts/manageLists.js`, `scripts/scrapeFollowers.js` | ★★★☆☆ Medium — matches variant DOMs but can catch non-bio elements |
-| C: `dir-auto-not-role` | `[dir="auto"]:not([role])` | `src/blockBots.js`, `src/auditFollowers.js` | ★★★☆☆ Medium — useful when `dir-auto-not-testid` over-matches links |
+| A: `testid` | `[data-testid="UserDescription"]` | `browser/blockBots.js`, `browser/auditFollowers.js`, `browser/backupAccount.js`, `browser/competitorAnalysis.js`, `src/businessTools.js`, `browser/accountHealthMonitor.js`, `src/profileManager.js`, `scripts/manageLists.js`, `scripts/scrapeFollowers.js`, `scripts/scrapeFollowing.js`, `src/scrapers/twitter/index.js` (×5), `src/mcp/local-tools.js` (×2) | ★★★★★ Most stable — Twitter's own test ID |
+| B: `dir-auto-not-testid` | `[dir="auto"]:not([data-testid])` | `browser/blockBots.js`, `browser/auditFollowers.js`, `browser/backupAccount.js`, `browser/listManager.js`, `src/businessTools.js`, `scripts/manageLists.js`, `scripts/scrapeFollowers.js` | ★★★☆☆ Medium — matches variant DOMs but can catch non-bio elements |
+| C: `dir-auto-not-role` | `[dir="auto"]:not([role])` | `browser/blockBots.js`, `browser/auditFollowers.js` | ★★★☆☆ Medium — useful when `dir-auto-not-testid` over-matches links |
 | D: `span-iteration` | Loop all `<span>` elements, heuristic length/content filtering | `src/automation/core.js` (Strategy 4) | ★★☆☆☆ Weak — last resort when DOM structure changes significantly |
 | E: `typo (bug)` | `[data-testid="userDescription"]` (lowercase `d`) | `src/scrapers/twitter/index.js:772` | ☆☆☆☆☆ **Broken** — `data-testid` is case-sensitive; this never matches |
 
@@ -39,9 +39,9 @@ Most files implemented only Strategy A with no fallback — a single DOM change 
 
 | Strategy | Technique | Files Using It | Notes |
 |----------|-----------|----------------|-------|
-| A: `testid` span walk | `[data-testid="User-Name"]` → iterate `<span>` children, take first non-`@` text | `src/automation/core.js`, `src/blockBots.js`, `src/auditFollowers.js`, `src/listManager.js`, `src/backupAccount.js` | Most reliable; skips handle and badge spans |
+| A: `testid` span walk | `[data-testid="User-Name"]` → iterate `<span>` children, take first non-`@` text | `src/automation/core.js`, `browser/blockBots.js`, `browser/auditFollowers.js`, `browser/listManager.js`, `browser/backupAccount.js` | Most reliable; skips handle and badge spans |
 | B: `dir="ltr"` > span | `[dir="ltr"] > span` | `src/scrapers/twitter/index.js:770`, `scripts/scrapeFollowers.js:43` | Simpler, but fragile if Twitter changes text directionality |
-| C: `textContent.split('@')` | `nameEl.textContent.split('@')[0].trim()` | `src/auditFollowers.js:64` | Breaks if display name contains `@` |
+| C: `textContent.split('@')` | `nameEl.textContent.split('@')[0].trim()` | `browser/auditFollowers.js:64` | Breaks if display name contains `@` |
 
 Several files also fell back to using the username as the display name when no other method worked — acceptable, but lossy.
 
@@ -49,9 +49,9 @@ Several files also fell back to using the username as the display name when no o
 
 | Strategy | Technique | Files Using It |
 |----------|-----------|----------------|
-| A: `href` regex | `a[href^="/"]` → `href.match(/^\/([^/]+)$/)` | `src/automation/core.js`, `src/blockBots.js` |
-| B: `href` string split | `.href.replace(/^.*x\.com\//, '').split('/')[0]` | `src/auditFollowers.js`, `src/listManager.js`, `src/backupAccount.js`, `src/removeFollowers.js` |
-| C: `@` text extraction | `fullText.match(/@(\w+)/)` from `User-Name` text content | `src/blockBots.js` (bot detection heuristic) |
+| A: `href` regex | `a[href^="/"]` → `href.match(/^\/([^/]+)$/)` | `src/automation/core.js`, `browser/blockBots.js` |
+| B: `href` string split | `.href.replace(/^.*x\.com\//, '').split('/')[0]` | `browser/auditFollowers.js`, `browser/listManager.js`, `browser/backupAccount.js`, `browser/removeFollowers.js` |
+| C: `@` text extraction | `fullText.match(/@(\w+)/)` from `User-Name` text content | `browser/blockBots.js` (bot detection heuristic) |
 | D: Path segment | `getAttribute('href').replace('/', '').split('/')[0]` | `scripts/scrapeFollowers.js`, `src/scrapers/twitter/index.js:771` |
 
 Strategy A (the regex approach) is the most robust because it rejects system paths like `/i/`, `/search`, `/explore`, and `/settings`. The other strategies can return these system paths as false usernames when the first link in a cell isn't a profile link.
@@ -60,7 +60,7 @@ Strategy A (the regex approach) is the most robust because it rejects system pat
 
 | Strategy | Selector | Files Using It |
 |----------|----------|----------------|
-| A: `testid` | `[data-testid="icon-verified"]` | `src/automation/core.js`, `src/businessTools.js`, `scripts/manageLists.js`, `scripts/businessAnalytics.js`, `src/accountHealthMonitor.js`, `src/profileManager.js`, `src/premiumManager.js`, `src/autoReply.js`, `src/automation/followEngagers.js` |
+| A: `testid` | `[data-testid="icon-verified"]` | `src/automation/core.js`, `src/businessTools.js`, `scripts/manageLists.js`, `scripts/businessAnalytics.js`, `browser/accountHealthMonitor.js`, `src/profileManager.js`, `src/premiumManager.js`, `browser/autoReply.js`, `src/automation/followEngagers.js` |
 | B: `aria-label` SVG | `svg[aria-label*="Verified"]` | `src/scrapers/twitter/index.js:109`, `src/scrapers/twitter/index.js:142`, tutorial docs |
 
 The core module uses **both** as a fallback chain (`A || B`), which is the correct approach — Twitter has historically switched between these two badge implementations.
@@ -250,7 +250,7 @@ The refactored extraction architecture delivers measurable improvements:
 | Observability | None | `_meta` strategy tracking per extraction |
 | Maintenance surface for DOM changes | Every file individually | One function to update |
 
-Scripts like `src/blockBots.js`, `src/auditFollowers.js`, and `scripts/manageLists.js` still include inline extraction for standalone browser-console use (scripts must be self-contained when pasted into DevTools). But they now follow the canonical cascade pattern from `core.js`, and the documentation makes clear where the authoritative version lives.
+Scripts like `browser/blockBots.js`, `browser/auditFollowers.js`, and `scripts/manageLists.js` still include inline extraction for standalone browser-console use (scripts must be self-contained when pasted into DevTools). But they now follow the canonical cascade pattern from `core.js`, and the documentation makes clear where the authoritative version lives.
 
 ---
 

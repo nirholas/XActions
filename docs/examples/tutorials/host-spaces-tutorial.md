@@ -30,7 +30,7 @@ date: "2026-03-30"
 
 1. Open x.com on your **Home** timeline (`https://x.com/home`)
 2. Press **F12** to open DevTools, then click the **Console** tab
-3. Copy the script from `src/hostSpace.js`
+3. Copy the script from `browser/hostSpace.js`
 4. Edit the `CONFIG` section with your Space title and settings
 5. Paste into the console and press Enter
 
@@ -172,5 +172,5 @@ After scheduling, X will notify your followers about the upcoming Space.
 
 ## Related Scripts
 
-- `src/joinSpace.js` -- Find and join live Spaces
+- `browser/joinSpace.js` -- Find and join live Spaces
 - `src/discoveryExplore.js` -- Search for Spaces and trending topics

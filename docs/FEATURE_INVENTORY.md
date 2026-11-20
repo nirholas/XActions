@@ -15,7 +15,7 @@ here is a build failure rather than a surprise for a reader.
 ## Table of Contents
 
 1. [Architecture Overview](#1-architecture-overview)
-2. [Browser Console Scripts (`src/`)](#2-browser-console-scripts)
+2. [Browser Console Scripts (`browser/`)](#2-browser-console-scripts)
 3. [Automation Framework (`src/automation/`)](#3-automation-framework)
 4. [Scrapers (`src/scrapers/`)](#4-scrapers)
 5. [Puppeteer Manager Modules (`src/*.js` ES exports)](#5-puppeteer-manager-modules)
@@ -83,88 +83,88 @@ that genuinely need a browser.
 
 | # | File | What It Does | Page Required | Key Config |
 |---|------|-------------|---------------|------------|
-| 1 | `src/unfollowEveryone.js` | Unfollow ALL accounts you follow | `x.com/USERNAME/following` | Retry limit: 3, auto-scroll |
-| 2 | `src/unfollowback.js` | Unfollow users who DON'T follow you back | `x.com/USERNAME/following` | Filters via `userFollowIndicator` selector |
-| 3 | `src/unfollowWDFBLog.js` | Unfollow non-followers WITH logging + downloadable .txt report | `x.com/USERNAME/following` | Creates downloadable .txt file |
+| 1 | `browser/unfollowEveryone.js` | Unfollow ALL accounts you follow | `x.com/USERNAME/following` | Retry limit: 3, auto-scroll |
+| 2 | `browser/unfollowback.js` | Unfollow users who DON'T follow you back | `x.com/USERNAME/following` | Filters via `userFollowIndicator` selector |
+| 3 | `browser/unfollowWDFBLog.js` | Unfollow non-followers WITH logging + downloadable .txt report | `x.com/USERNAME/following` | Creates downloadable .txt file |
 
 ### 2.2 Content Cleanup
 
 | # | File | What It Does | Page Required | Key Config |
 |---|------|-------------|---------------|------------|
-| 4 | `src/unlikeAllPosts.js` | Unlike all your liked posts | `x.com/USERNAME/likes` | `maxUnlikes`, `minDelay`, `maxDelay` |
-| 5 | `src/clearAllReposts.js` | Remove all your retweets | `x.com/USERNAME` | `maxUnretweets`, `minDelay`, `maxDelay` |
-| 6 | `src/clearAllBookmarks.js` | Clear all bookmarks (tries bulk clear first, then one-by-one) | `x.com/i/bookmarks` | None |
+| 4 | `browser/unlikeAllPosts.js` | Unlike all your liked posts | `x.com/USERNAME/likes` | `maxUnlikes`, `minDelay`, `maxDelay` |
+| 5 | `browser/clearAllReposts.js` | Remove all your retweets | `x.com/USERNAME` | `maxUnretweets`, `minDelay`, `maxDelay` |
+| 6 | `browser/clearAllBookmarks.js` | Clear all bookmarks (tries bulk clear first, then one-by-one) | `x.com/i/bookmarks` | None |
 
 ### 2.3 Blocking & Muting
 
 | # | File | What It Does | Page Required | Key Config |
 |---|------|-------------|---------------|------------|
-| 7 | `src/massBlock.js` | Block a list of usernames | Any x.com page | `usersToBlock[]`, `dryRun` |
-| 8 | `src/massUnblock.js` | Unblock ALL blocked users | `x.com/settings/blocked/all` | Auto-scroll + confirm |
-| 9 | `src/massUnmute.js` | Unmute ALL muted users | `x.com/settings/muted/all` | Auto-scroll |
-| 10 | `src/muteByKeywords.js` | Mute users whose posts contain specific keywords | Any timeline/search | `keywords[]`, `caseSensitive`, `maxMutes` |
-| 11 | `src/manageMutedWords.js` | Bulk-add muted words/phrases to X settings | `x.com/settings/muted_keywords` | `wordsToMute[]`, `duration` (forever/24h/7d/30d), `muteFrom`, `dryRun` |
-| 12 | `src/blockBots.js` | Detect and block bot accounts using heuristics | `x.com/USERNAME/followers` | `dryRun`, `maxBlocks`; heuristics: default avatar, high-digit username, no bio, 0 followers; exports JSON report |
-| 13 | `src/reportSpam.js` | Report accounts for spam/abuse | Any x.com page | `usersToReport[]`, `reason` (spam/abuse/fake), `dryRun`, `blockAfterReport` |
+| 7 | `browser/massBlock.js` | Block a list of usernames | Any x.com page | `usersToBlock[]`, `dryRun` |
+| 8 | `browser/massUnblock.js` | Unblock ALL blocked users | `x.com/settings/blocked/all` | Auto-scroll + confirm |
+| 9 | `browser/massUnmute.js` | Unmute ALL muted users | `x.com/settings/muted/all` | Auto-scroll |
+| 10 | `browser/muteByKeywords.js` | Mute users whose posts contain specific keywords | Any timeline/search | `keywords[]`, `caseSensitive`, `maxMutes` |
+| 11 | `browser/manageMutedWords.js` | Bulk-add muted words/phrases to X settings | `x.com/settings/muted_keywords` | `wordsToMute[]`, `duration` (forever/24h/7d/30d), `muteFrom`, `dryRun` |
+| 12 | `browser/blockBots.js` | Detect and block bot accounts using heuristics | `x.com/USERNAME/followers` | `dryRun`, `maxBlocks`; heuristics: default avatar, high-digit username, no bio, 0 followers; exports JSON report |
+| 13 | `browser/reportSpam.js` | Report accounts for spam/abuse | Any x.com page | `usersToReport[]`, `reason` (spam/abuse/fake), `dryRun`, `blockAfterReport` |
 
 ### 2.4 Follower Monitoring
 
 | # | File | What It Does | Page Required | Key Config |
 |---|------|-------------|---------------|------------|
-| 14 | `src/detectUnfollowers.js` | Detect who unfollowed you (snapshot comparison via localStorage) | `x.com/USERNAME/followers` | Persists snapshots between sessions |
-| 15 | `src/newFollowersAlert.js` | Track new followers over time, welcome message templates | `x.com/USERNAME/followers` | localStorage snapshots, shows gained/lost |
-| 16 | `src/continuousMonitor.js` | Auto-refresh monitoring with browser notifications + sound | `x.com/USERNAME/followers` or `/following` | `CHECK_INTERVAL_MINUTES` (default 5), browser notification API |
-| 17 | `src/monitorAccount.js` | Monitor ANY public account's follower/following changes | `x.com/TARGET/followers` or `/following` | localStorage snapshots, downloads change reports |
-| 18 | `src/auditFollowers.js` | Audit follower quality: categorize as legitimate/suspicious/fake | `x.com/USERNAME/followers` | Heuristics: avatar, bio, username patterns; exports JSON audit report |
-| 19 | `src/removeFollowers.js` | Remove specific followers via soft-block (block+unblock) | `x.com/USERNAME/followers` | `usersToRemove[]` or `removeAll`, `dryRun` |
+| 14 | `browser/detectUnfollowers.js` | Detect who unfollowed you (snapshot comparison via localStorage) | `x.com/USERNAME/followers` | Persists snapshots between sessions |
+| 15 | `browser/newFollowersAlert.js` | Track new followers over time, welcome message templates | `x.com/USERNAME/followers` | localStorage snapshots, shows gained/lost |
+| 16 | `browser/continuousMonitor.js` | Auto-refresh monitoring with browser notifications + sound | `x.com/USERNAME/followers` or `/following` | `CHECK_INTERVAL_MINUTES` (default 5), browser notification API |
+| 17 | `browser/monitorAccount.js` | Monitor ANY public account's follower/following changes | `x.com/TARGET/followers` or `/following` | localStorage snapshots, downloads change reports |
+| 18 | `browser/auditFollowers.js` | Audit follower quality: categorize as legitimate/suspicious/fake | `x.com/USERNAME/followers` | Heuristics: avatar, bio, username patterns; exports JSON audit report |
+| 19 | `browser/removeFollowers.js` | Remove specific followers via soft-block (block+unblock) | `x.com/USERNAME/followers` | `usersToRemove[]` or `removeAll`, `dryRun` |
 
 ### 2.5 Analytics
 
 | # | File | What It Does | Page Required | Key Config |
 |---|------|-------------|---------------|------------|
-| 20 | `src/engagementAnalytics.js` | Analyze engagement metrics per post (likes, RT, replies, views) | `x.com/USERNAME` | Calculates averages, best posting times; exports JSON |
-| 21 | `src/bestTimeToPost.js` | Find optimal posting times using hour×day engagement matrix | `x.com/USERNAME` | Recommends best day+hour combos; exports JSON |
-| 22 | `src/hashtagAnalytics.js` | Analyze hashtag performance (posts, users, peak hours) | `x.com/search?q=%23HASHTAG` | `MIN_POSTS`, tracks unique users, top contributors; exports JSON |
-| 23 | `src/competitorAnalysis.js` | Compare multiple accounts' metrics side by side | Any x.com page | `accounts[]`: navigates to each, scrapes followers/engagement; exports JSON |
+| 20 | `browser/engagementAnalytics.js` | Analyze engagement metrics per post (likes, RT, replies, views) | `x.com/USERNAME` | Calculates averages, best posting times; exports JSON |
+| 21 | `browser/bestTimeToPost.js` | Find optimal posting times using hour×day engagement matrix | `x.com/USERNAME` | Recommends best day+hour combos; exports JSON |
+| 22 | `browser/hashtagAnalytics.js` | Analyze hashtag performance (posts, users, peak hours) | `x.com/search?q=%23HASHTAG` | `MIN_POSTS`, tracks unique users, top contributors; exports JSON |
+| 23 | `browser/competitorAnalysis.js` | Compare multiple accounts' metrics side by side | Any x.com page | `accounts[]`: navigates to each, scrapes followers/engagement; exports JSON |
 
 ### 2.6 Content Creation
 
 | # | File | What It Does | Page Required | Key Config |
 |---|------|-------------|---------------|------------|
-| 24 | `src/postThread.js` | Post multi-tweet threads | `x.com` (home) | `thread[]` of strings, `dryRun`; validates 280 char limit |
-| 25 | `src/schedulePosts.js` | Schedule future posts using X's native scheduler | `x.com` (home) | `posts[]` with `text` + `scheduledFor` datetime (Premium feature) |
-| 26 | `src/createPoll.js` | Create poll tweets | `x.com` (home) | `question`, `options` (2–4, max 25 chars), `durationDays/Hours/Minutes`, `dryRun` |
-| 27 | `src/autoRepost.js` | Auto-retweet by keyword/user filters | `x.com/home` or `/search` | `keywords[]`, `fromUsers[]`, `maxReposts`, `minLikes` threshold, `skipReplies` |
+| 24 | `browser/postThread.js` | Post multi-tweet threads | `x.com` (home) | `thread[]` of strings, `dryRun`; validates 280 char limit |
+| 25 | `browser/schedulePosts.js` | Schedule future posts using X's native scheduler | `x.com` (home) | `posts[]` with `text` + `scheduledFor` datetime (Premium feature) |
+| 26 | `browser/createPoll.js` | Create poll tweets | `x.com` (home) | `question`, `options` (2–4, max 25 chars), `durationDays/Hours/Minutes`, `dryRun` |
+| 27 | `browser/autoRepost.js` | Auto-retweet by keyword/user filters | `x.com/home` or `/search` | `keywords[]`, `fromUsers[]`, `maxReposts`, `minLikes` threshold, `skipReplies` |
 
 ### 2.7 Direct Messages
 
 | # | File | What It Does | Page Required | Key Config |
 |---|------|-------------|---------------|------------|
-| 28 | `src/sendDirectMessage.js` | Send personalized DMs with template variables | `x.com/messages` | `targetUsers[]`, `messageTemplate` with `{username}` placeholder, `skipIfAlreadyMessaged`, `dryRun`; localStorage history |
+| 28 | `browser/sendDirectMessage.js` | Send personalized DMs with template variables | `x.com/messages` | `targetUsers[]`, `messageTemplate` with `{username}` placeholder, `skipIfAlreadyMessaged`, `dryRun`; localStorage history |
 
 ### 2.8 Communities
 
 | # | File | What It Does | Page Required | Key Config |
 |---|------|-------------|---------------|------------|
-| 29 | `src/joinCommunities.js` | Join communities by keyword filter | `x.com/i/communities/suggested` | `keywords[]`, `maxJoins`, `dryRun` |
-| 30 | `src/leaveAllCommunities.js` | Leave ALL joined communities (recursive navigation) | `x.com/USERNAME/communities` | sessionStorage tracking of left communities |
+| 29 | `browser/joinCommunities.js` | Join communities by keyword filter | `x.com/i/communities/suggested` | `keywords[]`, `maxJoins`, `dryRun` |
+| 30 | `browser/leaveAllCommunities.js` | Leave ALL joined communities (recursive navigation) | `x.com/USERNAME/communities` | sessionStorage tracking of left communities |
 
 ### 2.9 Lists & Profile
 
 | # | File | What It Does | Page Required | Key Config |
 |---|------|-------------|---------------|------------|
-| 31 | `src/listManager.js` | Create/manage X Lists: create, add users, export members | Any x.com or list page | `createList(name, description, private)`, `addUsers`, `exportMembers` |
-| 32 | `src/updateProfile.js` | Update bio, name, location, website | Profile page | `displayName` (50 chars), `bio` (160 chars), `location`, `website`, `autoSave` |
+| 31 | `browser/listManager.js` | Create/manage X Lists: create, add users, export members | Any x.com or list page | `createList(name, description, private)`, `addUsers`, `exportMembers` |
+| 32 | `browser/updateProfile.js` | Update bio, name, location, website | Profile page | `displayName` (50 chars), `bio` (160 chars), `location`, `website`, `autoSave` |
 
 ### 2.10 Data Export & Backup
 
 | # | File | What It Does | Page Required | Key Config |
 |---|------|-------------|---------------|------------|
-| 33 | `src/backupAccount.js` | Export full account data as JSON (profile, tweets, likes, bookmarks, following, followers) | `x.com/USERNAME` | Navigates each section, scrolls+collects |
-| 34 | `src/downloadAccountData.js` | Trigger X's official data archive download | `x.com/settings/download_your_data` | Clicks Request/Download button, monitors status |
-| 35 | `src/qrCodeSharing.js` | Generate QR code for any profile | Any x.com or profile | Uses qrserver.com API, shows overlay, auto-downloads PNG |
-| 36 | `src/bookmarkOrganizer.js` | Categorize bookmarks by keyword categories | `x.com/i/bookmarks` | Auto-categorizes (Tech, News, Crypto, etc.); exports JSON/CSV |
-| 37 | `src/scrapeSpaces.js` | Find live/scheduled X Spaces from search/timeline | Search or timeline | Extracts spaceId, title, host, status; reports live/scheduled/ended |
+| 33 | `browser/backupAccount.js` | Export full account data as JSON (profile, tweets, likes, bookmarks, following, followers) | `x.com/USERNAME` | Navigates each section, scrolls+collects |
+| 34 | `browser/downloadAccountData.js` | Trigger X's official data archive download | `x.com/settings/download_your_data` | Clicks Request/Download button, monitors status |
+| 35 | `browser/qrCodeSharing.js` | Generate QR code for any profile | Any x.com or profile | Uses qrserver.com API, shows overlay, auto-downloads PNG |
+| 36 | `browser/bookmarkOrganizer.js` | Categorize bookmarks by keyword categories | `x.com/i/bookmarks` | Auto-categorizes (Tech, News, Crypto, etc.); exports JSON/CSV |
+| 37 | `browser/scrapeSpaces.js` | Find live/scheduled X Spaces from search/timeline | Search or timeline | Extracts spaceId, title, host, status; reports live/scheduled/ended |
 
 ---
 
@@ -645,7 +645,7 @@ bookmarks and DMs need a session.
 > hand-kept list of a hundred files is a list that is wrong within a month, so
 > this section covers only what is unique to `scripts/twitter/`.
 
-### 8.1 Scripts UNIQUE to `scripts/twitter/` (not in `src/`)
+### 8.1 Scripts UNIQUE to `scripts/twitter/` (not in `browser/`)
 
 | # | File | What It Does | Page Required |
 |---|------|-------------|---------------|
@@ -677,7 +677,7 @@ bookmarks and DMs need a session.
 | 26 | `scrape-profile-posts.js` (887 lines) | Advanced tweet scraper with filtering, analytics, multi-format export | Any profile page |
 | 27 | `scraper-toolbox.js` (1309 lines) | Interactive scraper control panel: GraphQL capture (exact counts, full long-post text), start/pause/stop, live filters, user exclusions, 5 export formats + clipboard | Any timeline (profile, search, list, likes, bookmarks, home) |
 
-### 8.2 Scripts that MIRROR `src/` features (shared as standalone versions)
+### 8.2 Scripts that MIRROR `browser/` features (shared as standalone versions)
 
 `unfollow-everyone.js`, `unfollow-non-followers.js`, `unfollow-with-log.js`, `smart-unfollow.js`, `detect-unfollowers.js`, `monitor-account.js`, `continuous-monitor.js`, `new-followers-alert.js`, `auto-liker.js`, `auto-commenter.js`, `follow-engagers.js`, `follow-target-users.js`, `keyword-follow.js`, `protect-active-users.js`, `growth-suite.js`, `multi-account.js`, `audit-followers.js`, `block-bots.js`, `mass-block.js`, `mass-unblock.js`, `mass-unmute.js`, `mute-by-keywords.js`, `report-spam.js`, `clear-all-bookmarks.js`, `clear-all-likes.js`, `clear-all-retweets.js`, `leave-all-communities.js`, `join-communities.js`, `send-direct-message.js`, `backup-account.js`, `best-time-to-post.js`, `competitor-analysis.js`, `engagement-analytics.js`, `hashtag-analytics.js`, `bookmark-exporter.js`, `thread-unroller.js`, `video-downloader.js`, `viral-tweets-scraper.js`, `link-scraper.js`
 
@@ -855,7 +855,8 @@ rows on every run and fails the build when one has drifted.
 | API route modules * | 41 | `.js` files in `api/routes/` |
 | Browser console scripts | 95 | files in `scripts/` carrying a "Paste in DevTools" header, catalogued in [browser-scripts.md](browser-scripts.md) |
 | Standalone console variants | 110 | `.js` files in `scripts/twitter/` |
-| Library modules at `src/` top level | 131 | `.js` files directly in `src/` |
+| Library modules at `src/` top level | 19 | `.js` files directly in `src/`: `index.js`, `version.js` and the Puppeteer manager modules |
+| Top-level browser scripts | 112 | `.js` files in `browser/`, moved out of `src/` so they stay out of the npm package |
 | Automation framework modules | 20 | `.js` files in `src/automation/` |
 | Scraper modules | 6 | `.js` files directly in `src/scrapers/`, plus the platform subdirectories |
 | MCP server modules | 11 | `.js` files in `src/mcp/` |

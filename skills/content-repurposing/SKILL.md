@@ -15,15 +15,15 @@ Browser scripts and MCP workflows for identifying top content and generating rep
 
 | Goal | File | Navigate to |
 |------|------|-------------|
-| Repurpose tweets (5 formats) | `src/contentRepurposer.js` | `x.com/USERNAME` |
-| Compose threads from ideas | `src/threadComposer.js` | `x.com/USERNAME` |
-| Content calendar analysis | `src/contentCalendar.js` | `x.com/USERNAME` |
-| Find top-performing content | `src/tweetPerformance.js` | `x.com/USERNAME` |
-| Optimize posting schedule | `src/tweetScheduleOptimizer.js` | `x.com/USERNAME` |
+| Repurpose tweets (5 formats) | `browser/contentRepurposer.js` | `x.com/USERNAME` |
+| Compose threads from ideas | `browser/threadComposer.js` | `x.com/USERNAME` |
+| Content calendar analysis | `browser/contentCalendar.js` | `x.com/USERNAME` |
+| Find top-performing content | `browser/tweetPerformance.js` | `x.com/USERNAME` |
+| Optimize posting schedule | `browser/tweetScheduleOptimizer.js` | `x.com/USERNAME` |
 
 ## Content Repurposer
 
-**File:** `src/contentRepurposer.js`
+**File:** `browser/contentRepurposer.js`
 
 The main repurposing engine. Scans your timeline, then converts any tweet into 5 content formats.
 
@@ -70,8 +70,8 @@ High-engagement tweet
 ## Strategy Guide
 
 ### Weekly content repurposing routine
-1. Run `src/tweetPerformance.js` to identify top 5 tweets this week
-2. Run `src/contentRepurposer.js` -> `XActions.scan()`
+1. Run `browser/tweetPerformance.js` to identify top 5 tweets this week
+2. Run `browser/contentRepurposer.js` -> `XActions.scan()`
 3. For each top tweet: `XActions.all(i)` to generate all formats
 4. Export with `XActions.export()` for scheduling
 5. Space repurposed content 3+ days from original
@@ -80,7 +80,7 @@ High-engagement tweet
 1. When a tweet goes viral, immediately run `XActions.toThread(i)` for a follow-up thread
 2. Use `XActions.toQuoteTemplates(i)` for engagement in replies
 3. Later, use `XActions.toBlog(i)` for a long-form article
-4. Use `src/autoPlugReplies.js` to plug your offer on the viral tweet
+4. Use `browser/autoPlugReplies.js` to plug your offer on the viral tweet
 
 ## Notes
 - Content repurposer generates outlines and templates, not final polished content

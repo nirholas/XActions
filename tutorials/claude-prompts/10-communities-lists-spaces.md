@@ -13,7 +13,7 @@ I'm using XActions (https://github.com/nirholas/XActions), an open-source X/Twit
 If I've joined too many communities and want to clean up:
 
 1. **The problem:** X communities clutter notifications and feed
-2. **Using `src/leaveAllCommunities.js`** browser script:
+2. **Using `browser/leaveAllCommunities.js`** browser script:
    - Navigate to your Communities page (`x.com/communities`)
    - Paste the script in DevTools console
    - How it works:
@@ -33,7 +33,7 @@ If I've joined too many communities and want to clean up:
 
 ### Part 2: Join New Communities
 
-Using `src/joinCommunities.js`:
+Using `browser/joinCommunities.js`:
 
 1. **Find relevant communities:**
    - Search for communities in your niche
@@ -66,7 +66,7 @@ X Lists are the most underrated feature for organizing your feed. Help me master
    "Show me the members of this list: [list URL]"
    ```
 
-3. **List management with `src/listManager.js`** browser script:
+3. **List management with `browser/listManager.js`** browser script:
    - Create new lists
    - Add/remove members
    - Organize by category
@@ -95,7 +95,7 @@ X Lists are the most underrated feature for organizing your feed. Help me master
 
 ### Part 4: List Manager Script
 
-Walk me through `src/listManager.js` in detail:
+Walk me through `browser/listManager.js` in detail:
 
 1. **Navigate to Lists** (x.com/lists)
 2. **Available actions:**
@@ -139,7 +139,7 @@ Use Spaces tools to find live conversations:
    - Duration
    - Topics/tags
 
-3. **Using `src/scrapeSpaces.js`** browser script:
+3. **Using `browser/scrapeSpaces.js`** browser script:
    - Scrape all visible Spaces from the Spaces tab
    - Extract metadata for analysis
    - Find Spaces in your niche

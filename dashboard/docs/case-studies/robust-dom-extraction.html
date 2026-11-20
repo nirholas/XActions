@@ -220,19 +220,19 @@
 <tbody><tr>
 <td>A: <code>testid</code></td>
 <td><code>[data-testid=&quot;UserDescription&quot;]</code></td>
-<td><code>src/blockBots.js</code>, <code>src/auditFollowers.js</code>, <code>src/backupAccount.js</code>, <code>src/competitorAnalysis.js</code>, <code>src/businessTools.js</code>, <code>src/accountHealthMonitor.js</code>, <code>src/profileManager.js</code>, <code>scripts/manageLists.js</code>, <code>scripts/scrapeFollowers.js</code>, <code>scripts/scrapeFollowing.js</code>, <code>src/scrapers/twitter/index.js</code> (×5), <code>src/mcp/local-tools.js</code> (×2)</td>
+<td><code>browser/blockBots.js</code>, <code>browser/auditFollowers.js</code>, <code>browser/backupAccount.js</code>, <code>browser/competitorAnalysis.js</code>, <code>src/businessTools.js</code>, <code>browser/accountHealthMonitor.js</code>, <code>src/profileManager.js</code>, <code>scripts/manageLists.js</code>, <code>scripts/scrapeFollowers.js</code>, <code>scripts/scrapeFollowing.js</code>, <code>src/scrapers/twitter/index.js</code> (×5), <code>src/mcp/local-tools.js</code> (×2)</td>
 <td>★★★★★ Most stable — Twitter&#39;s own test ID</td>
 </tr>
 <tr>
 <td>B: <code>dir-auto-not-testid</code></td>
 <td><code>[dir=&quot;auto&quot;]:not([data-testid])</code></td>
-<td><code>src/blockBots.js</code>, <code>src/auditFollowers.js</code>, <code>src/backupAccount.js</code>, <code>src/listManager.js</code>, <code>src/businessTools.js</code>, <code>scripts/manageLists.js</code>, <code>scripts/scrapeFollowers.js</code></td>
+<td><code>browser/blockBots.js</code>, <code>browser/auditFollowers.js</code>, <code>browser/backupAccount.js</code>, <code>browser/listManager.js</code>, <code>src/businessTools.js</code>, <code>scripts/manageLists.js</code>, <code>scripts/scrapeFollowers.js</code></td>
 <td>★★★☆☆ Medium — matches variant DOMs but can catch non-bio elements</td>
 </tr>
 <tr>
 <td>C: <code>dir-auto-not-role</code></td>
 <td><code>[dir=&quot;auto&quot;]:not([role])</code></td>
-<td><code>src/blockBots.js</code>, <code>src/auditFollowers.js</code></td>
+<td><code>browser/blockBots.js</code>, <code>browser/auditFollowers.js</code></td>
 <td>★★★☆☆ Medium — useful when <code>dir-auto-not-testid</code> over-matches links</td>
 </tr>
 <tr>
@@ -262,7 +262,7 @@
 <tbody><tr>
 <td>A: <code>testid</code> span walk</td>
 <td><code>[data-testid=&quot;User-Name&quot;]</code> → iterate <code>&lt;span&gt;</code> children, take first non-<code>@</code> text</td>
-<td><code>src/automation/core.js</code>, <code>src/blockBots.js</code>, <code>src/auditFollowers.js</code>, <code>src/listManager.js</code>, <code>src/backupAccount.js</code></td>
+<td><code>src/automation/core.js</code>, <code>browser/blockBots.js</code>, <code>browser/auditFollowers.js</code>, <code>browser/listManager.js</code>, <code>browser/backupAccount.js</code></td>
 <td>Most reliable; skips handle and badge spans</td>
 </tr>
 <tr>
@@ -274,7 +274,7 @@
 <tr>
 <td>C: <code>textContent.split(&#39;@&#39;)</code></td>
 <td><code>nameEl.textContent.split(&#39;@&#39;)[0].trim()</code></td>
-<td><code>src/auditFollowers.js:64</code></td>
+<td><code>browser/auditFollowers.js:64</code></td>
 <td>Breaks if display name contains <code>@</code></td>
 </tr>
 </tbody></table>
@@ -291,17 +291,17 @@
 <tbody><tr>
 <td>A: <code>href</code> regex</td>
 <td><code>a[href^=&quot;/&quot;]</code> → <code>href.match(/^\/([^/]+)$/)</code></td>
-<td><code>src/automation/core.js</code>, <code>src/blockBots.js</code></td>
+<td><code>src/automation/core.js</code>, <code>browser/blockBots.js</code></td>
 </tr>
 <tr>
 <td>B: <code>href</code> string split</td>
 <td><code>.href.replace(/^.*x\.com\//, &#39;&#39;).split(&#39;/&#39;)[0]</code></td>
-<td><code>src/auditFollowers.js</code>, <code>src/listManager.js</code>, <code>src/backupAccount.js</code>, <code>src/removeFollowers.js</code></td>
+<td><code>browser/auditFollowers.js</code>, <code>browser/listManager.js</code>, <code>browser/backupAccount.js</code>, <code>browser/removeFollowers.js</code></td>
 </tr>
 <tr>
 <td>C: <code>@</code> text extraction</td>
 <td><code>fullText.match(/@(\w+)/)</code> from <code>User-Name</code> text content</td>
-<td><code>src/blockBots.js</code> (bot detection heuristic)</td>
+<td><code>browser/blockBots.js</code> (bot detection heuristic)</td>
 </tr>
 <tr>
 <td>D: Path segment</td>
@@ -322,7 +322,7 @@
 <tbody><tr>
 <td>A: <code>testid</code></td>
 <td><code>[data-testid=&quot;icon-verified&quot;]</code></td>
-<td><code>src/automation/core.js</code>, <code>src/businessTools.js</code>, <code>scripts/manageLists.js</code>, <code>scripts/businessAnalytics.js</code>, <code>src/accountHealthMonitor.js</code>, <code>src/profileManager.js</code>, <code>src/premiumManager.js</code>, <code>src/autoReply.js</code>, <code>src/automation/followEngagers.js</code></td>
+<td><code>src/automation/core.js</code>, <code>src/businessTools.js</code>, <code>scripts/manageLists.js</code>, <code>scripts/businessAnalytics.js</code>, <code>browser/accountHealthMonitor.js</code>, <code>src/profileManager.js</code>, <code>src/premiumManager.js</code>, <code>browser/autoReply.js</code>, <code>src/automation/followEngagers.js</code></td>
 </tr>
 <tr>
 <td>B: <code>aria-label</code> SVG</td>
@@ -506,7 +506,7 @@ const bioEl = cell.querySelector(&#39;[style*=&quot;overflow: hidden&quot;]&#39;
 <td>One function to update</td>
 </tr>
 </tbody></table>
-<p>Scripts like <code>src/blockBots.js</code>, <code>src/auditFollowers.js</code>, and <code>scripts/manageLists.js</code> still include inline extraction for standalone browser-console use (scripts must be self-contained when pasted into DevTools). But they now follow the canonical cascade pattern from <code>core.js</code>, and the documentation makes clear where the authoritative version lives.</p>
+<p>Scripts like <code>browser/blockBots.js</code>, <code>browser/auditFollowers.js</code>, and <code>scripts/manageLists.js</code> still include inline extraction for standalone browser-console use (scripts must be self-contained when pasted into DevTools). But they now follow the canonical cascade pattern from <code>core.js</code>, and the documentation makes clear where the authoritative version lives.</p>
 <hr>
 <h2 id="7-lessons-for-contributors">7. Lessons for Contributors</h2>
 <ol>

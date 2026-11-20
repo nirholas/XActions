@@ -22,9 +22,9 @@ Browser console scripts for X/Twitter. **Always paste `src/automation/core.js` f
 | Follow target account's audience | `src/automation/followTargetUsers.js` |
 | All-in-one growth suite | `src/automation/growthSuite.js` |
 | Train algorithm for your niche | `src/automation/algorithmTrainer.js` |
-| Boost engagement systematically | `src/engagementBooster.js` |
-| Welcome new followers | `src/welcomeNewFollowers.js` |
-| Auto-plug viral tweets | `src/autoPlugReplies.js` |
+| Boost engagement systematically | `browser/engagementBooster.js` |
+| Welcome new followers | `browser/welcomeNewFollowers.js` |
+| Auto-plug viral tweets | `browser/autoPlugReplies.js` |
 
 ## Key Scripts
 
@@ -92,17 +92,17 @@ Defined in `src/automation/core.js`:
 1. Set up `src/automation/algorithmTrainer.js` with your niche keywords
 2. Run `src/automation/keywordFollow.js` targeting niche keywords daily
 3. Use `src/automation/autoLiker.js` to engage with niche content
-4. Enable `src/welcomeNewFollowers.js` to greet new followers
+4. Enable `browser/welcomeNewFollowers.js` to greet new followers
 5. After 7 days, run `src/automation/smartUnfollow.js` to remove non-reciprocals
 
 ### Accelerating an established account
 1. Use `src/automation/followEngagers.js` on competitor's viral tweets
-2. Run `src/engagementBooster.js` targeting accounts in your space
-3. Set up `src/autoPlugReplies.js` on your viral tweets
+2. Run `browser/engagementBooster.js` targeting accounts in your space
+3. Set up `browser/autoPlugReplies.js` on your viral tweets
 4. Use `src/automation/followTargetUsers.js` on competitor audiences with ratio filter
 
 ## Notes
 - Always paste `src/automation/core.js` first for automation scripts
-- Browser scripts in `src/` (non-automation) are standalone -- no core.js needed
+- Browser scripts in `browser/` are standalone -- no core.js needed
 - All growth scripts include pause/resume/abort controls
 - Growth automation works best combined with quality content

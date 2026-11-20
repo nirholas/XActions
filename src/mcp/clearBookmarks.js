@@ -7,7 +7,7 @@
  * while testing by hand), so the tool found nothing to click and reported
  * failure on every call. This removes each
  * bookmark through its own button instead, with the delays and rate-limit
- * cooldown the browser console script (`src/clearAllBookmarks.js`) uses.
+ * cooldown the browser console script (`browser/clearAllBookmarks.js`) uses.
  *
  * A removal is counted only once that specific post has left the feed. X can
  * re-render the clicked node, so the post is identified by its permalink

@@ -125,7 +125,7 @@
         <div class="meta-row">
           
           
-          <span>336 lines</span>
+          <span>337 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
@@ -166,8 +166,9 @@ import fs from 'fs';
 import fsp from 'fs/promises';
 import path from 'path';
 import os from 'os';
+import { xactionsHome } from '../utils/savedSession.js';
 
-const CONFIG_DIR = path.join(os.homedir(), '.xactions');
+const CONFIG_DIR = xactionsHome();
 const FEEDS_FILE = path.join(CONFIG_DIR, 'rss-feeds.json');
 const SEEN_FILE = path.join(CONFIG_DIR, 'rss-seen.json');
 const DRAFTS_FILE = path.join(CONFIG_DIR, 'drafts.json');

@@ -15,14 +15,14 @@ Browser console scripts for blocking, unblocking, muting, and managing unwanted 
 
 | Goal | File | Navigate to |
 |------|------|-------------|
-| Block multiple accounts | `src/massBlock.js` | Any page on x.com |
-| Unblock all blocked accounts | `src/massUnblock.js` | `x.com/settings/blocked/all` |
-| Unmute all muted accounts | `src/massUnmute.js` | `x.com/settings/muted/all` |
-| Detect and block bots | `src/blockBots.js` | `x.com/USERNAME/followers` |
-| Mute users by keywords | `src/muteByKeywords.js` | Timeline or search results |
-| Manage muted words | `src/manageMutedWords.js` | Any page |
-| Report spam | `src/reportSpam.js` | Target account profile |
-| Remove followers (soft-block) | `src/removeFollowers.js` | `x.com/USERNAME/followers` |
+| Block multiple accounts | `browser/massBlock.js` | Any page on x.com |
+| Unblock all blocked accounts | `browser/massUnblock.js` | `x.com/settings/blocked/all` |
+| Unmute all muted accounts | `browser/massUnmute.js` | `x.com/settings/muted/all` |
+| Detect and block bots | `browser/blockBots.js` | `x.com/USERNAME/followers` |
+| Mute users by keywords | `browser/muteByKeywords.js` | Timeline or search results |
+| Manage muted words | `browser/manageMutedWords.js` | Any page |
+| Report spam | `browser/reportSpam.js` | Target account profile |
+| Remove followers (soft-block) | `browser/removeFollowers.js` | `x.com/USERNAME/followers` |
 
 ## Script Details
 
@@ -79,15 +79,15 @@ Removes followers using the block-then-immediately-unblock method. They stop fol
 ## Strategy Guide
 
 ### Cleaning up after a bot attack
-1. Run `src/blockBots.js` on your followers page
+1. Run `browser/blockBots.js` on your followers page
 2. Review flagged accounts in the console output
 3. Let the script block confirmed bots
-4. Run `src/auditFollowers.js` to verify remaining follower quality
+4. Run `browser/auditFollowers.js` to verify remaining follower quality
 
 ### Mass cleanup of muted/blocked accounts
-1. Run `src/massUnblock.js` on `x.com/settings/blocked/all` to clear block list
-2. Run `src/massUnmute.js` on `x.com/settings/muted/all` to clear mute list
-3. Set up fresh keyword mutes with `src/manageMutedWords.js`
+1. Run `browser/massUnblock.js` on `x.com/settings/blocked/all` to clear block list
+2. Run `browser/massUnmute.js` on `x.com/settings/muted/all` to clear mute list
+3. Set up fresh keyword mutes with `browser/manageMutedWords.js`
 
 ## Notes
 - Block/unblock operations are final — X doesn't have a bulk undo

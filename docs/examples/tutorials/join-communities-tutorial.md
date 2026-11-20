@@ -29,7 +29,7 @@ date: "2026-03-30"
 
 1. Open x.com and navigate to **Suggested Communities** (`https://x.com/i/communities/suggested`)
 2. Press **F12** to open DevTools, then click the **Console** tab
-3. Copy the script from `src/joinCommunities.js`
+3. Copy the script from `browser/joinCommunities.js`
 4. Edit `CONFIG.keywords` with topics you are interested in
 5. Paste into the console and press Enter
 
@@ -152,5 +152,5 @@ const CONFIG = {
 
 ## Related Scripts
 
-- `src/createCommunity.js` -- Create your own community with name, description, and rules
-- `src/manageCommunity.js` -- Manage members, roles, rules, and posting in existing communities
+- `browser/createCommunity.js` -- Create your own community with name, description, and rules
+- `browser/manageCommunity.js` -- Manage members, roles, rules, and posting in existing communities

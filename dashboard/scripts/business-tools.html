@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Business Tools - Ads — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="src/businessTools.js">
+  <title>Business Tools — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="scripts/businessTools.js">
   <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, business, tools, business">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Business Tools - Ads — XActions">
-  <meta property="og:description" content="src/businessTools.js">
+  <meta property="og:title" content="Business Tools — XActions">
+  <meta property="og:description" content="scripts/businessTools.js">
   <meta property="og:url" content="https://xactions.app/scripts/business-tools">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-image.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Business Tools - Ads — XActions">
-  <meta name="twitter:description" content="src/businessTools.js">
+  <meta name="twitter:title" content="Business Tools — XActions">
+  <meta name="twitter:description" content="scripts/businessTools.js">
 
   <link rel="canonical" href="https://xactions.app/scripts/business-tools">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
@@ -28,8 +28,8 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Business Tools - Ads — Free X/Twitter Script | XActions",
-    "description": "src/businessTools.js",
+    "headline": "Business Tools — Free X/Twitter Script | XActions",
+    "description": "scripts/businessTools.js",
     "url": "https://xactions.app/scripts/business-tools",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -47,7 +47,7 @@
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
       { "@type": "ListItem", "position": 3, "name": "Business", "item": "https://xactions.app/scripts#business" },
-      { "@type": "ListItem", "position": 4, "name": "Business Tools - Ads", "item": "https://xactions.app/scripts/business-tools" }
+      { "@type": "ListItem", "position": 4, "name": "Business Tools", "item": "https://xactions.app/scripts/business-tools" }
     ]
   }
   </script>
@@ -112,24 +112,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>💼 Business Tools - Ads</h1>
+        <h1>💼 Business Tools</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#business">Business</a> › Business Tools - Ads
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#business">Business</a> › Business Tools
         </div>
       </header>
 
       <article class="article">
         <span class="cat-badge">Business</span>
-        <span class="source-badge">src</span>
+        <span class="source-badge">scripts</span>
 
         <div class="meta-row">
           
           
-          <span>204 lines</span>
+          <span>190 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>src/businessTools.js</p>
+        <p>scripts/businessTools.js</p>
 
         
 
@@ -144,7 +144,18 @@
 
         
         
-        
+        <section class="config-code">
+        <h2>Default Configuration</h2>
+        <div class="code-block">
+          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
+          <pre><code>const CONFIG = {
+    brandName: 'XActions',
+    maxTweets: 30,
+    scrollDelay: 1500,
+    exportResults: true,
+  };</code></pre>
+        </div>
+      </section>
 
         <section class="full-code">
           <h2>Full Script</h2>
@@ -152,208 +163,194 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// src/businessTools.js
-// Business and advertising tools for X/Twitter
+// scripts/businessTools.js
+// Browser console script for brand mention monitoring and sentiment analysis
+// Paste in DevTools console on x.com/search or any timeline
 // by nichxbt
 
-/**
- * Business Tools - Ads, campaigns, brand monitoring, audience insights
- * 
- * Features:
- * - Brand mention monitoring
- * - Competitor analysis
- * - Audience insights
- * - Campaign management basics
- * - Social listening
- * - Post boosting
- */
+(() =&gt; {
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
 
-const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+  // =============================================
+  // CONFIGURATION
+  // =============================================
+  const CONFIG = {
+    brandName: 'XActions',
+    maxTweets: 30,
+    scrollDelay: 1500,
+    exportResults: true,
+  };
+  // =============================================
 
-const SELECTORS = {
-  tweet: 'article[data-testid=&quot;tweet&quot;]',
-  tweetText: '[data-testid=&quot;tweetText&quot;]',
-  userCell: '[data-testid=&quot;UserCell&quot;]',
-  searchInput: '[data-testid=&quot;SearchBox_Search_Input&quot;]',
-};
+  const download = (data, filename) =&gt; {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    console.log(`📥 Downloaded: ${filename}`);
+  };
 
-/**
- * Monitor brand mentions
- * @param {import('puppeteer').Page} page
- * @param {string} brandName - Brand name or @handle to monitor
- * @param {Object} options
- * @returns {Promise&lt;Object&gt;}
- */
-export async function monitorBrandMentions(page, brandName, options = {}) {
-  const { limit = 50, since = null } = options;
+  const parseMetric = (text) =&gt; {
+    if (!text) return 0;
+    text = text.trim().replace(/,/g, '');
+    if (text.endsWith('K')) return Math.round(parseFloat(text) * 1000);
+    if (text.endsWith('M')) return Math.round(parseFloat(text) * 1000000);
+    return parseInt(text) || 0;
+  };
 
-  let query = brandName;
-  if (since) query += ` since:${since}`;
+  const POSITIVE_WORDS = ['love', 'great', 'amazing', 'awesome', 'excellent', 'best', 'good', 'fantastic', 'perfect', 'brilliant', 'helpful', 'recommend', '🔥', '❤️', '👏', '💯', '🙌'];
+  const NEGATIVE_WORDS = ['hate', 'terrible', 'worst', 'bad', 'awful', 'horrible', 'scam', 'broken', 'trash', 'useless', 'disappointed', 'bug', '💩', '👎', '😡'];
 
-  await page.goto(`https://x.com/search?q=${encodeURIComponent(query)}&amp;f=live`, {
-    waitUntil: 'networkidle2',
-  });
-  await sleep(3000);
+  const analyzeSentiment = (text) =&gt; {
+    const lower = text.toLowerCase();
+    let posScore = 0;
+    let negScore = 0;
+    for (const w of POSITIVE_WORDS) { if (lower.includes(w)) posScore++; }
+    for (const w of NEGATIVE_WORDS) { if (lower.includes(w)) negScore++; }
+    if (posScore &gt; negScore) return 'positive';
+    if (negScore &gt; posScore) return 'negative';
+    return 'neutral';
+  };
 
-  const mentions = [];
-  let scrollAttempts = 0;
+  const run = async () =&gt; {
+    console.log(`🏢 Business Tools — Brand Monitor: &quot;${CONFIG.brandName}&quot;`);
+    console.log('━'.repeat(50));
 
-  while (mentions.length &lt; limit &amp;&amp; scrollAttempts &lt; Math.ceil(limit / 5)) {
-    const newMentions = await page.evaluate((sel) =&gt; {
-      return Array.from(document.querySelectorAll(sel.tweet)).map(tweet =&gt; {
-        const text = tweet.querySelector(sel.tweetText)?.textContent || '';
-        const author = tweet.querySelector('[data-testid=&quot;User-Name&quot;] a')?.textContent || '';
-        const time = tweet.querySelector('time')?.getAttribute('datetime') || '';
-        const link = tweet.querySelector('a[href*=&quot;/status/&quot;]')?.href || '';
-        const likes = tweet.querySelector('[data-testid=&quot;like&quot;] span')?.textContent || '0';
-        const reposts = tweet.querySelector('[data-testid=&quot;retweet&quot;] span')?.textContent || '0';
-
-        // Basic sentiment analysis
-        const lowerText = text.toLowerCase();
-        let sentiment = 'neutral';
-        const positive = ['love', 'great', 'amazing', 'awesome', 'excellent', 'best', 'good', '🔥', '❤️', '👏'];
-        const negative = ['hate', 'terrible', 'worst', 'bad', 'awful', 'horrible', 'scam', '💩', '👎'];
-        if (positive.some(w =&gt; lowerText.includes(w))) sentiment = 'positive';
-        if (negative.some(w =&gt; lowerText.includes(w))) sentiment = 'negative';
-
-        return { text, author, time, link, likes, reposts, sentiment };
-      });
-    }, SELECTORS);
-
-    for (const mention of newMentions) {
-      if (mention.link &amp;&amp; !mentions.find(m =&gt; m.link === mention.link)) {
-        mentions.push(mention);
-      }
+    // Navigate to search if not already there
+    const searchUrl = `https://x.com/search?q=${encodeURIComponent(CONFIG.brandName)}&amp;f=live`;
+    if (!window.location.href.includes('/search')) {
+      console.log(`🔍 Navigating to search for &quot;${CONFIG.brandName}&quot;...`);
+      window.location.href = searchUrl;
+      return; // Page will reload; user re-pastes or script continues after load
     }
 
-    await page.evaluate(() =&gt; window.scrollBy(0, 1000));
-    await sleep(1500);
-    scrollAttempts++;
-  }
+    console.log(`🔍 Scanning tweets mentioning &quot;${CONFIG.brandName}&quot;...\n`);
 
-  const result = mentions.slice(0, limit);
-  const sentimentBreakdown = {
-    positive: result.filter(m =&gt; m.sentiment === 'positive').length,
-    negative: result.filter(m =&gt; m.sentiment === 'negative').length,
-    neutral: result.filter(m =&gt; m.sentiment === 'neutral').length,
-  };
+    const mentions = [];
+    const seen = new Set();
+    let scrollRounds = 0;
+    const maxRounds = Math.ceil(CONFIG.maxTweets / 3) + 3;
 
-  return {
-    brand: brandName,
-    mentions: result,
-    count: result.length,
-    sentiment: sentimentBreakdown,
-    scrapedAt: new Date().toISOString(),
-  };
-}
+    while (mentions.length &lt; CONFIG.maxTweets &amp;&amp; scrollRounds &lt; maxRounds) {
+      const articles = document.querySelectorAll('article[data-testid=&quot;tweet&quot;]');
 
-/**
- * Get audience insights for an account
- * @param {import('puppeteer').Page} page
- * @param {string} username
- * @param {Object} options
- * @returns {Promise&lt;Object&gt;}
- */
-export async function getAudienceInsights(page, username, options = {}) {
-  const { sampleSize = 50 } = options;
+      for (const article of articles) {
+        if (mentions.length &gt;= CONFIG.maxTweets) break;
 
-  // Scrape followers for analysis
-  await page.goto(`https://x.com/${username}/followers`, { waitUntil: 'networkidle2' });
-  await sleep(3000);
+        const linkEl = article.querySelector('a[href*=&quot;/status/&quot;]');
+        const href = linkEl?.href || '';
+        if (seen.has(href)) continue;
+        seen.add(href);
 
-  const followers = [];
-  let scrollAttempts = 0;
+        const text = article.querySelector('[data-testid=&quot;tweetText&quot;]')?.textContent?.trim() || '';
+        const authorEl = article.querySelector('[data-testid=&quot;User-Name&quot;]');
+        const author = authorEl?.querySelector('a')?.textContent?.trim() || '';
+        const handle = authorEl?.querySelector('a[href]')?.href?.split('/').pop() || '';
+        const timeEl = article.querySelector('time');
+        const datetime = timeEl?.getAttribute('datetime') || '';
 
-  while (followers.length &lt; sampleSize &amp;&amp; scrollAttempts &lt; Math.ceil(sampleSize / 5)) {
-    const newFollowers = await page.evaluate((sel) =&gt; {
-      const extractBio = (cell) =&gt; {
-        const testId = cell.querySelector('[data-testid=&quot;UserDescription&quot;]');
-        if (testId?.textContent?.trim()) return testId.textContent.trim();
-        const autoDir = cell.querySelector('[dir=&quot;auto&quot;]:not([data-testid])');
-        const text = autoDir?.textContent?.trim();
-        if (text &amp;&amp; text.length &gt;= 10 &amp;&amp; !text.startsWith('@')) return text;
-        return '';
-      };
-      return Array.from(document.querySelectorAll(sel.userCell)).map(user =&gt; {
-        const name = user.querySelector('[dir=&quot;ltr&quot;]')?.textContent || '';
-        const bio = extractBio(user);
-        const isVerified = !!user.querySelector('[data-testid=&quot;icon-verified&quot;]');
-        return { name, bio: bio.substring(0, 200), isVerified };
-      });
-    }, SELECTORS);
+        const likes = parseMetric(article.querySelector('[data-testid=&quot;like&quot;] span')?.textContent);
+        const reposts = parseMetric(article.querySelector('[data-testid=&quot;retweet&quot;] span')?.textContent);
+        const replies = parseMetric(article.querySelector('[data-testid=&quot;reply&quot;] span')?.textContent);
 
-    for (const f of newFollowers) {
-      if (f.name &amp;&amp; !followers.find(e =&gt; e.name === f.name)) {
-        followers.push(f);
+        const sentiment = analyzeSentiment(text);
+        const totalEngagement = likes + reposts + replies;
+
+        mentions.push({
+          url: href,
+          text: text.slice(0, 280),
+          author,
+          handle,
+          datetime,
+          likes,
+          reposts,
+          replies,
+          totalEngagement,
+          sentiment,
+        });
       }
+
+      console.log(`📜 Scroll ${scrollRounds + 1}: ${mentions.length}/${CONFIG.maxTweets} mentions found`);
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(CONFIG.scrollDelay);
+      scrollRounds++;
     }
 
-    await page.evaluate(() =&gt; window.scrollBy(0, 800));
-    await sleep(1500);
-    scrollAttempts++;
-  }
+    if (mentions.length === 0) {
+      console.error(`❌ No mentions found for &quot;${CONFIG.brandName}&quot;. Try a different keyword.`);
+      return;
+    }
 
-  // Basic analysis
-  const sample = followers.slice(0, sampleSize);
-  const verifiedPct = Math.round((sample.filter(f =&gt; f.isVerified).length / sample.length) * 100);
+    console.log(`\n✅ Found ${mentions.length} mentions. Analyzing...\n`);
 
-  // Extract common interests from bios
-  const bioWords = sample.map(f =&gt; f.bio.toLowerCase()).join(' ');
-  const techKeywords = ['developer', 'engineer', 'coding', 'tech', 'AI', 'startup', 'founder', 'crypto', 'web3', 'design'];
-  const interests = {};
-  techKeywords.forEach(kw =&gt; {
-    const count = (bioWords.match(new RegExp(kw, 'gi')) || []).length;
-    if (count &gt; 0) interests[kw] = count;
-  });
+    // --- Sentiment breakdown ---
+    const positive = mentions.filter(m =&gt; m.sentiment === 'positive');
+    const negative = mentions.filter(m =&gt; m.sentiment === 'negative');
+    const neutral = mentions.filter(m =&gt; m.sentiment === 'neutral');
 
-  return {
-    username,
-    sampleSize: sample.length,
-    verifiedFollowersPct: verifiedPct + '%',
-    topInterests: Object.entries(interests).sort((a, b) =&gt; b[1] - a[1]).slice(0, 10),
-    scrapedAt: new Date().toISOString(),
-  };
-}
+    console.log('━━━ 💬 SENTIMENT ANALYSIS ━━━');
+    console.log(`  ✅ Positive: ${positive.length} (${((positive.length / mentions.length) * 100).toFixed(0)}%)`);
+    console.log(`  ❌ Negative: ${negative.length} (${((negative.length / mentions.length) * 100).toFixed(0)}%)`);
+    console.log(`  ➖ Neutral:  ${neutral.length} (${((neutral.length / mentions.length) * 100).toFixed(0)}%)`);
 
-/**
- * Competitor analysis
- * @param {import('puppeteer').Page} page
- * @param {Array&lt;string&gt;} competitors - Array of usernames to compare
- * @returns {Promise&lt;Object&gt;}
- */
-export async function analyzeCompetitors(page, competitors) {
-  const results = [];
+    const sentimentBar = (label, count, total, char) =&gt; {
+      const width = Math.round((count / total) * 30);
+      return `  ${label} ${char.repeat(width)} ${count}`;
+    };
+    console.log('\n' + sentimentBar('👍', positive.length, mentions.length, '█'));
+    console.log(sentimentBar('👎', negative.length, mentions.length, '█'));
+    console.log(sentimentBar('😐', neutral.length, mentions.length, '░'));
 
-  for (const username of competitors) {
-    await page.goto(`https://x.com/${username}`, { waitUntil: 'networkidle2' });
-    await sleep(2000);
+    // --- Engagement stats ---
+    const totalEng = mentions.reduce((s, m) =&gt; s + m.totalEngagement, 0);
+    const avgEng = totalEng / mentions.length;
 
-    const profile = await page.evaluate(() =&gt; {
-      const getText = (sel) =&gt; document.querySelector(sel)?.textContent?.trim() || '';
-      return {
-        followers: getText('a[href$=&quot;/followers&quot;] span'),
-        following: getText('a[href$=&quot;/following&quot;] span'),
-        isVerified: !!document.querySelector('[data-testid=&quot;icon-verified&quot;]'),
-        bio: getText('[data-testid=&quot;UserDescription&quot;]'),
+    console.log('\n━━━ 📊 ENGAGEMENT AROUND BRAND ━━━');
+    console.log(`  Total engagement: ${totalEng.toLocaleString()}`);
+    console.log(`  Avg per mention: ${avgEng.toFixed(1)}`);
+
+    // --- Top mentions ---
+    const topMentions = [...mentions].sort((a, b) =&gt; b.totalEngagement - a.totalEngagement).slice(0, 5);
+    console.log('\n━━━ 🔥 TOP MENTIONS (by engagement) ━━━');
+    for (const m of topMentions) {
+      const emoji = m.sentiment === 'positive' ? '✅' : m.sentiment === 'negative' ? '❌' : '➖';
+      console.log(`  ${emoji} @${m.handle} (${m.totalEngagement} eng) — &quot;${m.text.slice(0, 70)}...&quot;`);
+    }
+
+    // --- Key voices ---
+    if (positive.length &gt; 0) {
+      const top = [...positive].sort((a, b) =&gt; b.totalEngagement - a.totalEngagement)[0];
+      console.log(`\n  🌟 Top advocate: @${top.handle} — &quot;${top.text.slice(0, 60)}...&quot;`);
+    }
+    if (negative.length &gt; 0) {
+      const top = [...negative].sort((a, b) =&gt; b.totalEngagement - a.totalEngagement)[0];
+      console.log(`  ⚠️ Top critic:   @${top.handle} — &quot;${top.text.slice(0, 60)}...&quot;`);
+    }
+
+    // --- Export ---
+    if (CONFIG.exportResults) {
+      const report = {
+        brand: CONFIG.brandName,
+        summary: {
+          totalMentions: mentions.length,
+          sentiment: { positive: positive.length, negative: negative.length, neutral: neutral.length },
+          totalEngagement: totalEng,
+          avgEngagement: avgEng.toFixed(1),
+        },
+        topMentions: topMentions.map(m =&gt; ({ url: m.url, author: m.handle, sentiment: m.sentiment, engagement: m.totalEngagement })),
+        mentions,
+        scannedAt: new Date().toISOString(),
       };
-    });
+      download(report, `xactions-brand-monitor-${CONFIG.brandName}-${new Date().toISOString().slice(0, 10)}.json`);
+    }
 
-    results.push({ username, ...profile });
-    await sleep(1000);
-  }
-
-  return {
-    competitors: results,
-    comparedAt: new Date().toISOString(),
+    console.log('\n✅ Brand monitoring complete.');
   };
-}
 
-export default {
-  monitorBrandMentions,
-  getAudienceInsights,
-  analyzeCompetitors,
-  SELECTORS,
-};
+  run();
+})();
 </code></pre>
           </div>
         </section>
@@ -371,7 +368,7 @@ export default {
         <h3>💼 Business</h3>
         <a href="/scripts/ads-manager">📢 Ads Manager</a>
 <a href="/scripts/business-analytics">💼 Business Analytics</a>
-<a href="/scripts/creator-studio">🎨 Creator Studio - Analytics</a>
+<a href="/scripts/creator-studio">🎨 Creator Studio</a>
 <a href="/scripts/media-studio">🖼️ Media Studio</a>
       </div>
       <div class="sidebar-card">

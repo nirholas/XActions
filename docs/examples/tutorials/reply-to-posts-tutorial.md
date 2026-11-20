@@ -9,13 +9,13 @@
 ## Quick Start
 1. Navigate to `https://x.com/home` or any search page
 2. Open DevTools (F12) and go to the Console tab
-3. Copy the contents of `src/autoReply.js`
+3. Copy the contents of `browser/autoReply.js`
 4. Edit the `CONFIG` section (triggers, delays, dryRun)
 5. Paste into the console and press Enter
 
 ## Configuration
 
-The `CONFIG` object at the top of `src/autoReply.js` controls all behavior:
+The `CONFIG` object at the top of `browser/autoReply.js` controls all behavior:
 
 ### Trigger/Reply Pairs
 
@@ -162,7 +162,7 @@ maxLikes: 1000,
 
 ## Related Scripts
 
-- `src/likePost.js` -- Like posts by URL or keyword
-- `src/quoteTweetAutomation.js` -- Quote tweet with commentary
-- `src/mentionUsers.js` -- Mention multiple users in a post
+- `browser/likePost.js` -- Like posts by URL or keyword
+- `browser/quoteTweetAutomation.js` -- Quote tweet with commentary
+- `browser/mentionUsers.js` -- Mention multiple users in a post
 - `src/automation/autoLiker.js` -- Auto-like posts (requires core.js)

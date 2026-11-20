@@ -61,7 +61,7 @@ const ctx = {
     chunks: [
       { t: 'Video Downloader', u: 'https://xactions.app/docs/video-downloader', p: 'docs/video-downloader.md', k: 'doc', x: 'part one' },
       { t: 'Video Downloader', u: 'https://xactions.app/docs/video-downloader', p: 'docs/video-downloader.md', k: 'doc', x: 'part two' },
-      { t: 'Unfollow everyone', u: 'https://xactions.app/scripts/unfollow', p: 'src/unfollowEveryone.js', k: 'script', x: 'a script' },
+      { t: 'Unfollow everyone', u: 'https://xactions.app/scripts/unfollow', p: 'browser/unfollowEveryone.js', k: 'script', x: 'a script' },
     ],
   }),
 };
@@ -166,7 +166,7 @@ describe('resources', () => {
     expect(result.resources).toHaveLength(2);
     expect(result.resources.map((r) => r.uri)).toEqual([
       'xactions://doc/docs/video-downloader.md',
-      'xactions://script/src/unfollowEveryone.js',
+      'xactions://script/browser/unfollowEveryone.js',
     ]);
     expect(result.nextCursor).toBeUndefined();
   });

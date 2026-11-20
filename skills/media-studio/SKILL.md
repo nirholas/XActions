@@ -15,14 +15,14 @@ Browser console scripts for X's Media Studio (`studio.x.com`).
 
 | Goal | File | Navigate to |
 |------|------|-------------|
-| Navigate to Media Studio, upload, manage library | `src/mediaStudio.js` | `x.com` or `studio.x.com` |
-| Add or manage video captions | `src/videoCaptions.js` | `studio.x.com` or tweet with video |
+| Navigate to Media Studio, upload, manage library | `browser/mediaStudio.js` | `x.com` or `studio.x.com` |
+| Add or manage video captions | `browser/videoCaptions.js` | `studio.x.com` or tweet with video |
 
 ## Quick Start
 
 1. Go to `x.com` or `studio.x.com`
 2. Open DevTools (F12) → Console
-3. Paste `src/mediaStudio.js` → Enter
+3. Paste `browser/mediaStudio.js` → Enter
 
 ## mediaStudio.js — Available Functions
 

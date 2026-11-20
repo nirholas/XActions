@@ -425,21 +425,21 @@ that genuinely need a browser.</p>
 </thead>
 <tbody><tr>
 <td>1</td>
-<td><code>src/unfollowEveryone.js</code></td>
+<td><code>browser/unfollowEveryone.js</code></td>
 <td>Unfollow ALL accounts you follow</td>
 <td><code>x.com/USERNAME/following</code></td>
 <td>Retry limit: 3, auto-scroll</td>
 </tr>
 <tr>
 <td>2</td>
-<td><code>src/unfollowback.js</code></td>
+<td><code>browser/unfollowback.js</code></td>
 <td>Unfollow users who DON&#39;T follow you back</td>
 <td><code>x.com/USERNAME/following</code></td>
 <td>Filters via <code>userFollowIndicator</code> selector</td>
 </tr>
 <tr>
 <td>3</td>
-<td><code>src/unfollowWDFBLog.js</code></td>
+<td><code>browser/unfollowWDFBLog.js</code></td>
 <td>Unfollow non-followers WITH logging + downloadable .txt report</td>
 <td><code>x.com/USERNAME/following</code></td>
 <td>Creates downloadable .txt file</td>
@@ -458,21 +458,21 @@ that genuinely need a browser.</p>
 </thead>
 <tbody><tr>
 <td>4</td>
-<td><code>src/unlikeAllPosts.js</code></td>
+<td><code>browser/unlikeAllPosts.js</code></td>
 <td>Unlike all your liked posts</td>
 <td><code>x.com/USERNAME/likes</code></td>
 <td><code>maxUnlikes</code>, <code>minDelay</code>, <code>maxDelay</code></td>
 </tr>
 <tr>
 <td>5</td>
-<td><code>src/clearAllReposts.js</code></td>
+<td><code>browser/clearAllReposts.js</code></td>
 <td>Remove all your retweets</td>
 <td><code>x.com/USERNAME</code></td>
 <td><code>maxUnretweets</code>, <code>minDelay</code>, <code>maxDelay</code></td>
 </tr>
 <tr>
 <td>6</td>
-<td><code>src/clearAllBookmarks.js</code></td>
+<td><code>browser/clearAllBookmarks.js</code></td>
 <td>Clear all bookmarks (tries bulk clear first, then one-by-one)</td>
 <td><code>x.com/i/bookmarks</code></td>
 <td>None</td>
@@ -491,49 +491,49 @@ that genuinely need a browser.</p>
 </thead>
 <tbody><tr>
 <td>7</td>
-<td><code>src/massBlock.js</code></td>
+<td><code>browser/massBlock.js</code></td>
 <td>Block a list of usernames</td>
 <td>Any x.com page</td>
 <td><code>usersToBlock[]</code>, <code>dryRun</code></td>
 </tr>
 <tr>
 <td>8</td>
-<td><code>src/massUnblock.js</code></td>
+<td><code>browser/massUnblock.js</code></td>
 <td>Unblock ALL blocked users</td>
 <td><code>x.com/settings/blocked/all</code></td>
 <td>Auto-scroll + confirm</td>
 </tr>
 <tr>
 <td>9</td>
-<td><code>src/massUnmute.js</code></td>
+<td><code>browser/massUnmute.js</code></td>
 <td>Unmute ALL muted users</td>
 <td><code>x.com/settings/muted/all</code></td>
 <td>Auto-scroll</td>
 </tr>
 <tr>
 <td>10</td>
-<td><code>src/muteByKeywords.js</code></td>
+<td><code>browser/muteByKeywords.js</code></td>
 <td>Mute users whose posts contain specific keywords</td>
 <td>Any timeline/search</td>
 <td><code>keywords[]</code>, <code>caseSensitive</code>, <code>maxMutes</code></td>
 </tr>
 <tr>
 <td>11</td>
-<td><code>src/manageMutedWords.js</code></td>
+<td><code>browser/manageMutedWords.js</code></td>
 <td>Bulk-add muted words/phrases to X settings</td>
 <td><code>x.com/settings/muted_keywords</code></td>
 <td><code>wordsToMute[]</code>, <code>duration</code> (forever/24h/7d/30d), <code>muteFrom</code>, <code>dryRun</code></td>
 </tr>
 <tr>
 <td>12</td>
-<td><code>src/blockBots.js</code></td>
+<td><code>browser/blockBots.js</code></td>
 <td>Detect and block bot accounts using heuristics</td>
 <td><code>x.com/USERNAME/followers</code></td>
 <td><code>dryRun</code>, <code>maxBlocks</code>; heuristics: default avatar, high-digit username, no bio, 0 followers; exports JSON report</td>
 </tr>
 <tr>
 <td>13</td>
-<td><code>src/reportSpam.js</code></td>
+<td><code>browser/reportSpam.js</code></td>
 <td>Report accounts for spam/abuse</td>
 <td>Any x.com page</td>
 <td><code>usersToReport[]</code>, <code>reason</code> (spam/abuse/fake), <code>dryRun</code>, <code>blockAfterReport</code></td>
@@ -552,42 +552,42 @@ that genuinely need a browser.</p>
 </thead>
 <tbody><tr>
 <td>14</td>
-<td><code>src/detectUnfollowers.js</code></td>
+<td><code>browser/detectUnfollowers.js</code></td>
 <td>Detect who unfollowed you (snapshot comparison via localStorage)</td>
 <td><code>x.com/USERNAME/followers</code></td>
 <td>Persists snapshots between sessions</td>
 </tr>
 <tr>
 <td>15</td>
-<td><code>src/newFollowersAlert.js</code></td>
+<td><code>browser/newFollowersAlert.js</code></td>
 <td>Track new followers over time, welcome message templates</td>
 <td><code>x.com/USERNAME/followers</code></td>
 <td>localStorage snapshots, shows gained/lost</td>
 </tr>
 <tr>
 <td>16</td>
-<td><code>src/continuousMonitor.js</code></td>
+<td><code>browser/continuousMonitor.js</code></td>
 <td>Auto-refresh monitoring with browser notifications + sound</td>
 <td><code>x.com/USERNAME/followers</code> or <code>/following</code></td>
 <td><code>CHECK_INTERVAL_MINUTES</code> (default 5), browser notification API</td>
 </tr>
 <tr>
 <td>17</td>
-<td><code>src/monitorAccount.js</code></td>
+<td><code>browser/monitorAccount.js</code></td>
 <td>Monitor ANY public account&#39;s follower/following changes</td>
 <td><code>x.com/TARGET/followers</code> or <code>/following</code></td>
 <td>localStorage snapshots, downloads change reports</td>
 </tr>
 <tr>
 <td>18</td>
-<td><code>src/auditFollowers.js</code></td>
+<td><code>browser/auditFollowers.js</code></td>
 <td>Audit follower quality: categorize as legitimate/suspicious/fake</td>
 <td><code>x.com/USERNAME/followers</code></td>
 <td>Heuristics: avatar, bio, username patterns; exports JSON audit report</td>
 </tr>
 <tr>
 <td>19</td>
-<td><code>src/removeFollowers.js</code></td>
+<td><code>browser/removeFollowers.js</code></td>
 <td>Remove specific followers via soft-block (block+unblock)</td>
 <td><code>x.com/USERNAME/followers</code></td>
 <td><code>usersToRemove[]</code> or <code>removeAll</code>, <code>dryRun</code></td>
@@ -606,28 +606,28 @@ that genuinely need a browser.</p>
 </thead>
 <tbody><tr>
 <td>20</td>
-<td><code>src/engagementAnalytics.js</code></td>
+<td><code>browser/engagementAnalytics.js</code></td>
 <td>Analyze engagement metrics per post (likes, RT, replies, views)</td>
 <td><code>x.com/USERNAME</code></td>
 <td>Calculates averages, best posting times; exports JSON</td>
 </tr>
 <tr>
 <td>21</td>
-<td><code>src/bestTimeToPost.js</code></td>
+<td><code>browser/bestTimeToPost.js</code></td>
 <td>Find optimal posting times using hour×day engagement matrix</td>
 <td><code>x.com/USERNAME</code></td>
 <td>Recommends best day+hour combos; exports JSON</td>
 </tr>
 <tr>
 <td>22</td>
-<td><code>src/hashtagAnalytics.js</code></td>
+<td><code>browser/hashtagAnalytics.js</code></td>
 <td>Analyze hashtag performance (posts, users, peak hours)</td>
 <td><code>x.com/search?q=%23HASHTAG</code></td>
 <td><code>MIN_POSTS</code>, tracks unique users, top contributors; exports JSON</td>
 </tr>
 <tr>
 <td>23</td>
-<td><code>src/competitorAnalysis.js</code></td>
+<td><code>browser/competitorAnalysis.js</code></td>
 <td>Compare multiple accounts&#39; metrics side by side</td>
 <td>Any x.com page</td>
 <td><code>accounts[]</code>: navigates to each, scrapes followers/engagement; exports JSON</td>
@@ -646,28 +646,28 @@ that genuinely need a browser.</p>
 </thead>
 <tbody><tr>
 <td>24</td>
-<td><code>src/postThread.js</code></td>
+<td><code>browser/postThread.js</code></td>
 <td>Post multi-tweet threads</td>
 <td><code>x.com</code> (home)</td>
 <td><code>thread[]</code> of strings, <code>dryRun</code>; validates 280 char limit</td>
 </tr>
 <tr>
 <td>25</td>
-<td><code>src/schedulePosts.js</code></td>
+<td><code>browser/schedulePosts.js</code></td>
 <td>Schedule future posts using X&#39;s native scheduler</td>
 <td><code>x.com</code> (home)</td>
 <td><code>posts[]</code> with <code>text</code> + <code>scheduledFor</code> datetime (Premium feature)</td>
 </tr>
 <tr>
 <td>26</td>
-<td><code>src/createPoll.js</code></td>
+<td><code>browser/createPoll.js</code></td>
 <td>Create poll tweets</td>
 <td><code>x.com</code> (home)</td>
 <td><code>question</code>, <code>options</code> (2–4, max 25 chars), <code>durationDays/Hours/Minutes</code>, <code>dryRun</code></td>
 </tr>
 <tr>
 <td>27</td>
-<td><code>src/autoRepost.js</code></td>
+<td><code>browser/autoRepost.js</code></td>
 <td>Auto-retweet by keyword/user filters</td>
 <td><code>x.com/home</code> or <code>/search</code></td>
 <td><code>keywords[]</code>, <code>fromUsers[]</code>, <code>maxReposts</code>, <code>minLikes</code> threshold, <code>skipReplies</code></td>
@@ -686,7 +686,7 @@ that genuinely need a browser.</p>
 </thead>
 <tbody><tr>
 <td>28</td>
-<td><code>src/sendDirectMessage.js</code></td>
+<td><code>browser/sendDirectMessage.js</code></td>
 <td>Send personalized DMs with template variables</td>
 <td><code>x.com/messages</code></td>
 <td><code>targetUsers[]</code>, <code>messageTemplate</code> with <code>{username}</code> placeholder, <code>skipIfAlreadyMessaged</code>, <code>dryRun</code>; localStorage history</td>
@@ -705,14 +705,14 @@ that genuinely need a browser.</p>
 </thead>
 <tbody><tr>
 <td>29</td>
-<td><code>src/joinCommunities.js</code></td>
+<td><code>browser/joinCommunities.js</code></td>
 <td>Join communities by keyword filter</td>
 <td><code>x.com/i/communities/suggested</code></td>
 <td><code>keywords[]</code>, <code>maxJoins</code>, <code>dryRun</code></td>
 </tr>
 <tr>
 <td>30</td>
-<td><code>src/leaveAllCommunities.js</code></td>
+<td><code>browser/leaveAllCommunities.js</code></td>
 <td>Leave ALL joined communities (recursive navigation)</td>
 <td><code>x.com/USERNAME/communities</code></td>
 <td>sessionStorage tracking of left communities</td>
@@ -731,14 +731,14 @@ that genuinely need a browser.</p>
 </thead>
 <tbody><tr>
 <td>31</td>
-<td><code>src/listManager.js</code></td>
+<td><code>browser/listManager.js</code></td>
 <td>Create/manage X Lists: create, add users, export members</td>
 <td>Any x.com or list page</td>
 <td><code>createList(name, description, private)</code>, <code>addUsers</code>, <code>exportMembers</code></td>
 </tr>
 <tr>
 <td>32</td>
-<td><code>src/updateProfile.js</code></td>
+<td><code>browser/updateProfile.js</code></td>
 <td>Update bio, name, location, website</td>
 <td>Profile page</td>
 <td><code>displayName</code> (50 chars), <code>bio</code> (160 chars), <code>location</code>, <code>website</code>, <code>autoSave</code></td>
@@ -757,35 +757,35 @@ that genuinely need a browser.</p>
 </thead>
 <tbody><tr>
 <td>33</td>
-<td><code>src/backupAccount.js</code></td>
+<td><code>browser/backupAccount.js</code></td>
 <td>Export full account data as JSON (profile, tweets, likes, bookmarks, following, followers)</td>
 <td><code>x.com/USERNAME</code></td>
 <td>Navigates each section, scrolls+collects</td>
 </tr>
 <tr>
 <td>34</td>
-<td><code>src/downloadAccountData.js</code></td>
+<td><code>browser/downloadAccountData.js</code></td>
 <td>Trigger X&#39;s official data archive download</td>
 <td><code>x.com/settings/download_your_data</code></td>
 <td>Clicks Request/Download button, monitors status</td>
 </tr>
 <tr>
 <td>35</td>
-<td><code>src/qrCodeSharing.js</code></td>
+<td><code>browser/qrCodeSharing.js</code></td>
 <td>Generate QR code for any profile</td>
 <td>Any x.com or profile</td>
 <td>Uses qrserver.com API, shows overlay, auto-downloads PNG</td>
 </tr>
 <tr>
 <td>36</td>
-<td><code>src/bookmarkOrganizer.js</code></td>
+<td><code>browser/bookmarkOrganizer.js</code></td>
 <td>Categorize bookmarks by keyword categories</td>
 <td><code>x.com/i/bookmarks</code></td>
 <td>Auto-categorizes (Tech, News, Crypto, etc.); exports JSON/CSV</td>
 </tr>
 <tr>
 <td>37</td>
-<td><code>src/scrapeSpaces.js</code></td>
+<td><code>browser/scrapeSpaces.js</code></td>
 <td>Find live/scheduled X Spaces from search/timeline</td>
 <td>Search or timeline</td>
 <td>Extracts spaceId, title, host, status; reports live/scheduled/ended</td>

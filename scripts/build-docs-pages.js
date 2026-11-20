@@ -92,7 +92,7 @@ const CATEGORIES = {
   'business-ads': { cat: 'Business', icon: '💼', priority: 0.5 },
   'creator-monetization': { cat: 'Business', icon: '💰', priority: 0.5 },
   'discovery-explore': { cat: 'Discovery', icon: '🔍', priority: 0.5 },
-  // ── New: src/ scripts ──
+  // ── New: browser/ scripts ──
   'account-health-monitor': { cat: 'Analytics', icon: '🏥', priority: 0.7 },
   'algorithm-builder': { cat: 'Growth', icon: '🧠', priority: 0.8 },
   'article-publisher': { cat: 'Posting', icon: '📰', priority: 0.6 },

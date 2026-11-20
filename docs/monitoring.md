@@ -25,7 +25,7 @@ https://x.com/YOUR_USERNAME/followers
 ```
 
 ### Step 2: Run the Script
-Open Developer Console and paste the contents of [`src/detectUnfollowers.js`](../src/detectUnfollowers.js)
+Open Developer Console and paste the contents of [`browser/detectUnfollowers.js`](../browser/detectUnfollowers.js)
 
 ### Step 3: Run Again Later
 The script saves a snapshot. Run it again (hours, days, weeks later) to see:

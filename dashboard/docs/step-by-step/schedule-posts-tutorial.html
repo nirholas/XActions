@@ -215,7 +215,7 @@
 <ol>
 <li>Navigate to x.com</li>
 <li>Open DevTools (F12)</li>
-<li>Copy the script from <code>src/schedulePosts.js</code></li>
+<li>Copy the script from <code>browser/schedulePosts.js</code></li>
 <li>Edit the CONFIG section with your posts and times</li>
 <li>Paste into Console and press Enter</li>
 </ol>
@@ -229,7 +229,7 @@
 </tr>
 </thead>
 <tbody><tr>
-<td><code>src/schedulePosts.js</code></td>
+<td><code>browser/schedulePosts.js</code></td>
 <td>Browser console</td>
 <td>Scheduling multiple posts from DevTools</td>
 </tr>
@@ -240,7 +240,7 @@
 </tr>
 </tbody></table>
 <h2>Configuration</h2>
-<h3><code>src/schedulePosts.js</code> (Browser Console)</h3>
+<h3><code>browser/schedulePosts.js</code> (Browser Console)</h3>
 <pre><code class="language-js">const CONFIG = {
   posts: [
     { text: &#39;Good morning! Rise and grind.&#39;, scheduledFor: &#39;2026-04-01T09:00:00&#39; },
@@ -335,7 +335,7 @@ console.log(result);
 <h3>Scheduling Posts (Browser Console)</h3>
 <ol>
 <li>Open x.com and press F12 for DevTools</li>
-<li>Copy <code>src/schedulePosts.js</code></li>
+<li>Copy <code>browser/schedulePosts.js</code></li>
 <li>Edit the <code>CONFIG.posts</code> array:<pre><code class="language-js">posts: [
   { text: &#39;Morning tweet!&#39;, scheduledFor: &#39;2026-04-01T09:00:00&#39; },
   { text: &#39;Afternoon tweet!&#39;, scheduledFor: &#39;2026-04-01T14:00:00&#39; },
@@ -482,8 +482,8 @@ const timeStr = date.toTimeString().split(&#39; &#39;)[0].substring(0, 5); // &#
 <h2>Related Scripts</h2>
 <ul>
 <li><code>src/postComposer.js</code> -- Post tweets immediately (text, media, polls)</li>
-<li><code>src/postThread.js</code> -- Create threads (schedule the first tweet, then manually thread the rest)</li>
-<li><code>src/threadComposer.js</code> -- Advanced thread composition with drafts</li>
+<li><code>browser/postThread.js</code> -- Create threads (schedule the first tweet, then manually thread the rest)</li>
+<li><code>browser/threadComposer.js</code> -- Advanced thread composition with drafts</li>
 <li><code>docs/examples/tutorials/post-content-tutorial.md</code> -- General posting guide</li>
 </ul>
 

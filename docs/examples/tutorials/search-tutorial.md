@@ -29,7 +29,7 @@ date: "2026-03-30"
 
 1. Open x.com and navigate to **Search** or **Explore**
 2. Press **F12** to open DevTools, then click the **Console** tab
-3. Copy the script from `src/saveSearch.js` (browser) or use `src/discoveryExplore.js` (Node.js)
+3. Copy the script from `browser/saveSearch.js` (browser) or use `src/discoveryExplore.js` (Node.js)
 4. Edit the `CONFIG` section
 5. Paste into the console and press Enter
 
@@ -37,7 +37,7 @@ date: "2026-03-30"
 
 ## Configuration
 
-### Browser Script (`src/saveSearch.js`)
+### Browser Script (`browser/saveSearch.js`)
 
 ```js
 const CONFIG = {
@@ -250,5 +250,5 @@ The `advancedSearch` function builds a query string from the filter object:
 ## Related Scripts
 
 - `src/discoveryExplore.js` -- Node.js search, trends, and explore automation
-- `src/saveSearch.js` -- Browser script for saving and managing searches
-- `src/topicManager.js` -- Follow topics related to your searches
+- `browser/saveSearch.js` -- Browser script for saving and managing searches
+- `browser/topicManager.js` -- Follow topics related to your searches

@@ -682,6 +682,7 @@ export function getPluginActions(): Array<Record<string, unknown> & { _plugin: s
 // ── Browser Scripts Catalog ─────────────────────────────────────────────────
 
 export declare const browserScripts: Record<string, {
+  /** Path in the GitHub repository, e.g. `browser/unfollowback.js`. Not shipped in the npm package. */
   file: string;
   description: string;
 }>;

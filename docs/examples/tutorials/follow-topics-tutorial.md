@@ -29,7 +29,7 @@ date: "2026-03-30"
 
 1. Open x.com and navigate to **Topics** (`https://x.com/i/topics` or `https://x.com/settings/your_topics`)
 2. Press **F12** to open DevTools, then click the **Console** tab
-3. Copy the script from `src/topicManager.js`
+3. Copy the script from `browser/topicManager.js`
 4. Set `CONFIG.action` and optional `CONFIG.keywords`
 5. Paste into the console and press Enter
 
@@ -232,5 +232,5 @@ window.XActions.abort();
 
 ## Related Scripts
 
-- `src/followList.js` -- Follow and manage X Lists
+- `browser/followList.js` -- Follow and manage X Lists
 - `src/discoveryExplore.js` -- Search, trends, and explore feed automation

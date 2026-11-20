@@ -215,7 +215,7 @@
 <ol>
 <li>Navigate to the post you want to edit on x.com</li>
 <li>Open DevTools (F12)</li>
-<li>Copy the script from <code>src/editPost.js</code></li>
+<li>Copy the script from <code>browser/editPost.js</code></li>
 <li>Set <code>CONFIG.mode = &#39;edit&#39;</code></li>
 <li>Set <code>CONFIG.postUrl</code> and <code>CONFIG.newText</code></li>
 <li>Paste into Console and press Enter</li>
@@ -302,7 +302,7 @@
 <h2>Step-by-Step Guide</h2>
 <h3>Editing a Post (Browser Console)</h3>
 <ol>
-<li>Copy <code>src/editPost.js</code></li>
+<li>Copy <code>browser/editPost.js</code></li>
 <li>Set your configuration:<pre><code class="language-js">const CONFIG = {
   mode: &#39;edit&#39;,
   postUrl: &#39;https://x.com/nichxbt/status/123456789&#39;,
@@ -323,7 +323,7 @@
 <li><strong>Save</strong>: Clicks the save button (<code>[data-testid=&quot;tweetButton&quot;]</code>)</li>
 </ol>
 <h3>How the Edit Flow Works Internally</h3>
-<pre><code class="language-js">// From src/editPost.js -- key steps:
+<pre><code class="language-js">// From browser/editPost.js -- key steps:
 
 // 1. Find the tweet on the page
 const tweet = await waitForElement(&#39;article[data-testid=&quot;tweet&quot;]&#39;);
@@ -412,7 +412,7 @@ saveBtn.click();
 </tbody></table>
 <h2>Related Scripts</h2>
 <ul>
-<li><code>src/editPost.js</code> (undo mode) -- Undo a recently posted tweet</li>
+<li><code>browser/editPost.js</code> (undo mode) -- Undo a recently posted tweet</li>
 <li><code>src/postComposer.js</code> -- Create new posts</li>
 <li><code>docs/examples/tutorials/undo-post-tutorial.md</code> -- Undo post guide</li>
 </ul>

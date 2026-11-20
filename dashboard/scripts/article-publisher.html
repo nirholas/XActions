@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Article Publisher - Create and manage long-form articles — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="src/articlePublisher.js">
+  <title>Article Publisher — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="scripts/articlePublisher.js">
   <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, article, publisher, posting">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Article Publisher - Create and manage long-form articles — XActions">
-  <meta property="og:description" content="src/articlePublisher.js">
+  <meta property="og:title" content="Article Publisher — XActions">
+  <meta property="og:description" content="scripts/articlePublisher.js">
   <meta property="og:url" content="https://xactions.app/scripts/article-publisher">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-image.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Article Publisher - Create and manage long-form articles — XActions">
-  <meta name="twitter:description" content="src/articlePublisher.js">
+  <meta name="twitter:title" content="Article Publisher — XActions">
+  <meta name="twitter:description" content="scripts/articlePublisher.js">
 
   <link rel="canonical" href="https://xactions.app/scripts/article-publisher">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
@@ -28,8 +28,8 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Article Publisher - Create and manage long-form articles — Free X/Twitter Script | XActions",
-    "description": "src/articlePublisher.js",
+    "headline": "Article Publisher — Free X/Twitter Script | XActions",
+    "description": "scripts/articlePublisher.js",
     "url": "https://xactions.app/scripts/article-publisher",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -47,7 +47,7 @@
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
       { "@type": "ListItem", "position": 3, "name": "Posting", "item": "https://xactions.app/scripts#posting" },
-      { "@type": "ListItem", "position": 4, "name": "Article Publisher - Create and manage long-form articles", "item": "https://xactions.app/scripts/article-publisher" }
+      { "@type": "ListItem", "position": 4, "name": "Article Publisher", "item": "https://xactions.app/scripts/article-publisher" }
     ]
   }
   </script>
@@ -112,24 +112,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>📰 Article Publisher - Create and manage long-form articles</h1>
+        <h1>📰 Article Publisher</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#posting">Posting</a> › Article Publisher - Create and manage long-form articles
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#posting">Posting</a> › Article Publisher
         </div>
       </header>
 
       <article class="article">
         <span class="cat-badge">Posting</span>
-        <span class="source-badge">src</span>
+        <span class="source-badge">scripts</span>
 
         <div class="meta-row">
           
           
-          <span>177 lines</span>
+          <span>145 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>src/articlePublisher.js</p>
+        <p>scripts/articlePublisher.js</p>
 
         
 
@@ -143,8 +143,28 @@
         
 
         
-        
-        
+        <section class="config-section">
+        <h2>Configuration Options</h2>
+        <table>
+          <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>action</code></td><td><code>'draft'</code></td><td>'draft' | 'publish'</td></tr>
+<tr><td><code>dryRun</code></td><td><code>true</code></td><td>SET FALSE TO EXECUTE</td></tr>
+          </tbody>
+        </table>
+      </section>
+        <section class="config-code">
+        <h2>Default Configuration</h2>
+        <div class="code-block">
+          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
+          <pre><code>const CONFIG = {
+    title: 'My Article',
+    body: 'Article content goes here. Replace this with your full article text.',
+    action: 'draft',          // 'draft' | 'publish'
+    dryRun: true,             // SET FALSE TO EXECUTE
+  };</code></pre>
+        </div>
+      </section>
 
         <section class="full-code">
           <h2>Full Script</h2>
@@ -152,181 +172,149 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// src/articlePublisher.js
-// Long-form article publishing for X/Twitter (Premium+)
+// scripts/articlePublisher.js
+// Browser console script for publishing long-form articles on X (Premium+ required)
+// Paste in DevTools console on x.com/compose/article
 // by nichxbt
 
-/**
- * Article Publisher - Create and manage long-form articles
- * 
- * Features:
- * - Publish articles with rich formatting
- * - Save drafts
- * - Audio articles (2026, testing)
- * - Article analytics
- * - Article management (list, edit, delete)
- */
+(() =&gt; {
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
 
-const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
-
-const SELECTORS = {
-  articleCompose: 'a[href=&quot;/compose/article&quot;]',
-  titleInput: '[data-testid=&quot;articleTitle&quot;]',
-  bodyEditor: '[data-testid=&quot;articleBody&quot;]',
-  publishButton: '[data-testid=&quot;articlePublish&quot;]',
-  saveDraft: '[data-testid=&quot;articleSaveDraft&quot;]',
-  coverImage: '[data-testid=&quot;articleCoverImage&quot;]',
-  articleList: '[data-testid=&quot;articleList&quot;]',
-  articleCard: '[data-testid=&quot;articleCard&quot;]',
-};
-
-/**
- * Publish a long-form article
- * @param {import('puppeteer').Page} page
- * @param {Object} article - { title, body, coverImage? }
- * @returns {Promise&lt;Object&gt;}
- */
-export async function publishArticle(page, article) {
-  const { title, body, coverImage = null } = article;
-
-  await page.goto('https://x.com/compose/article', { waitUntil: 'networkidle2' });
-  await sleep(3000);
-
-  // Enter title
-  try {
-    await page.click(SELECTORS.titleInput);
-    await page.keyboard.type(title, { delay: 20 });
-    await sleep(500);
-  } catch (e) {
-    return { success: false, error: 'Article compose not available — Premium+ required' };
-  }
-
-  // Enter body
-  await page.click(SELECTORS.bodyEditor);
-  await page.keyboard.type(body, { delay: 10 });
-  await sleep(1000);
-
-  // Upload cover image if provided
-  if (coverImage) {
-    try {
-      const coverButton = await page.$(SELECTORS.coverImage);
-      if (coverButton) {
-        const [fileChooser] = await Promise.all([
-          page.waitForFileChooser(),
-          coverButton.click(),
-        ]);
-        await fileChooser.accept([coverImage]);
-        await sleep(3000);
-      }
-    } catch (e) {
-      console.log('⚠️ Cover image upload failed:', e.message);
-    }
-  }
-
-  // Publish
-  await page.click(SELECTORS.publishButton);
-  await sleep(5000);
-
-  return {
-    success: true,
-    title,
-    bodyLength: body.length,
-    hasCover: !!coverImage,
-    timestamp: new Date().toISOString(),
+  // =============================================
+  // CONFIGURATION
+  // =============================================
+  const CONFIG = {
+    title: 'My Article',
+    body: 'Article content goes here. Replace this with your full article text.',
+    action: 'draft',          // 'draft' | 'publish'
+    dryRun: true,             // SET FALSE TO EXECUTE
   };
-}
+  // =============================================
 
-/**
- * Save article as draft
- * @param {import('puppeteer').Page} page
- * @param {Object} article - { title, body }
- * @returns {Promise&lt;Object&gt;}
- */
-export async function saveDraft(page, article) {
-  const { title, body } = article;
+  const SELECTORS = {
+    title: '[data-testid=&quot;articleTitle&quot;], h1[contenteditable]',
+    body: '[data-testid=&quot;articleBody&quot;], [data-testid=&quot;richTextEditor&quot;]',
+    publish: '[data-testid=&quot;articlePublish&quot;]',
+    saveDraft: '[data-testid=&quot;articleSaveDraft&quot;]',
+  };
 
-  await page.goto('https://x.com/compose/article', { waitUntil: 'networkidle2' });
-  await sleep(3000);
+  const typeInto = async (el, text) =&gt; {
+    el.focus();
+    // Use execCommand for contenteditable elements
+    if (el.contentEditable === 'true') {
+      document.execCommand('selectAll', false, null);
+      document.execCommand('insertText', false, text);
+    } else {
+      // For regular inputs
+      const nativeSet = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set
+        || Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value')?.set;
+      if (nativeSet) {
+        nativeSet.call(el, text);
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+      } else {
+        el.value = text;
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+    }
+    await sleep(300);
+  };
 
-  try {
-    await page.click(SELECTORS.titleInput);
-    await page.keyboard.type(title, { delay: 20 });
-    await sleep(500);
+  const run = async () =&gt; {
+    console.log('📝 Article Publisher — Long-form Content');
+    console.log('━'.repeat(50));
+    console.log(`  Title:  &quot;${CONFIG.title}&quot;`);
+    console.log(`  Body:   ${CONFIG.body.length} chars`);
+    console.log(`  Action: ${CONFIG.action}`);
+    console.log(`  Dry run: ${CONFIG.dryRun}`);
+    console.log('');
 
-    await page.click(SELECTORS.bodyEditor);
-    await page.keyboard.type(body, { delay: 10 });
-    await sleep(500);
+    // Check we're on the right page
+    if (!window.location.href.includes('/compose/article')) {
+      console.log('⚠️ Navigate to x.com/compose/article first (Premium+ required).');
+      console.log('🔗 Redirecting...');
+      window.location.href = 'https://x.com/compose/article';
+      return;
+    }
 
-    await page.click(SELECTORS.saveDraft);
     await sleep(2000);
 
-    return { success: true, action: 'draft_saved', title };
-  } catch (e) {
-    return { success: false, error: 'Could not save draft — Premium+ required' };
-  }
-}
+    // Find title input
+    const titleEl = document.querySelector(SELECTORS.title);
+    if (!titleEl) {
+      console.error('❌ Title field not found. Premium+ may be required, or the page hasn\'t loaded.');
+      console.log('   Tried selectors:', SELECTORS.title);
+      return;
+    }
 
-/**
- * Get published articles
- * @param {import('puppeteer').Page} page
- * @param {string} username
- * @returns {Promise&lt;Object&gt;}
- */
-export async function getArticles(page, username) {
-  await page.goto(`https://x.com/${username}/articles`, { waitUntil: 'networkidle2' });
-  await sleep(3000);
+    // Find body editor
+    const bodyEl = document.querySelector(SELECTORS.body);
+    if (!bodyEl) {
+      console.error('❌ Body editor not found.');
+      console.log('   Tried selectors:', SELECTORS.body);
+      return;
+    }
 
-  const articles = await page.evaluate((sel) =&gt; {
-    return Array.from(document.querySelectorAll(sel.articleCard || 'article')).map(card =&gt; {
-      const title = card.querySelector('h2, [role=&quot;heading&quot;]')?.textContent || '';
-      const preview = card.querySelector('p, [data-testid=&quot;articlePreview&quot;]')?.textContent || '';
-      const time = card.querySelector('time')?.getAttribute('datetime') || '';
-      const link = card.querySelector('a[href*=&quot;/articles/&quot;]')?.href || '';
-      return { title, preview: preview.substring(0, 200), time, link };
-    });
-  }, SELECTORS);
+    console.log('✅ Found title and body fields.');
 
-  return {
-    username,
-    articles,
-    count: articles.length,
-    scrapedAt: new Date().toISOString(),
+    if (CONFIG.dryRun) {
+      console.log('\n🔒 DRY RUN — no changes made.');
+      console.log('   Would fill title:', CONFIG.title);
+      console.log('   Would fill body:', CONFIG.body.slice(0, 100) + (CONFIG.body.length &gt; 100 ? '...' : ''));
+      console.log(`   Would ${CONFIG.action === 'publish' ? 'PUBLISH' : 'SAVE DRAFT'}`);
+      console.log('\n💡 Set CONFIG.dryRun = false to execute.');
+      return;
+    }
+
+    // Fill title
+    console.log('📝 Filling title...');
+    await typeInto(titleEl, CONFIG.title);
+    console.log('✅ Title entered.');
+
+    // Fill body
+    console.log('📝 Filling body...');
+    await typeInto(bodyEl, CONFIG.body);
+    console.log('✅ Body entered.');
+
+    await sleep(1000);
+
+    // Perform action
+    if (CONFIG.action === 'publish') {
+      const publishBtn = document.querySelector(SELECTORS.publish);
+      if (!publishBtn) {
+        console.error('❌ Publish button not found. Saving as draft instead.');
+        const draftBtn = document.querySelector(SELECTORS.saveDraft);
+        if (draftBtn) {
+          draftBtn.click();
+          console.log('💾 Saved as draft (publish button unavailable).');
+        }
+        return;
+      }
+      console.log('🚀 Publishing article...');
+      publishBtn.click();
+      await sleep(3000);
+      console.log('✅ Article published!');
+    } else {
+      const draftBtn = document.querySelector(SELECTORS.saveDraft);
+      if (!draftBtn) {
+        console.error('❌ Save Draft button not found.');
+        console.log('   Tried selector:', SELECTORS.saveDraft);
+        return;
+      }
+      console.log('💾 Saving draft...');
+      draftBtn.click();
+      await sleep(2000);
+      console.log('✅ Draft saved!');
+    }
+
+    console.log('\n📊 Summary:');
+    console.log(`  Title:  ${CONFIG.title}`);
+    console.log(`  Length: ${CONFIG.body.length} characters`);
+    console.log(`  Action: ${CONFIG.action === 'publish' ? 'Published' : 'Saved as draft'}`);
+    console.log(`  Time:   ${new Date().toLocaleString()}`);
   };
-}
 
-/**
- * Get article analytics
- * @param {import('puppeteer').Page} page
- * @param {string} articleUrl
- * @returns {Promise&lt;Object&gt;}
- */
-export async function getArticleAnalytics(page, articleUrl) {
-  await page.goto(articleUrl, { waitUntil: 'networkidle2' });
-  await sleep(3000);
-
-  const analytics = await page.evaluate(() =&gt; {
-    return {
-      title: document.querySelector('h1, [role=&quot;heading&quot;]')?.textContent || '',
-      likes: document.querySelector('[data-testid=&quot;like&quot;] span')?.textContent || '0',
-      reposts: document.querySelector('[data-testid=&quot;retweet&quot;] span')?.textContent || '0',
-      views: document.querySelector('[data-testid=&quot;analyticsButton&quot;] span')?.textContent || '0',
-    };
-  });
-
-  return {
-    articleUrl,
-    analytics,
-    scrapedAt: new Date().toISOString(),
-  };
-}
-
-export default {
-  publishArticle,
-  saveDraft,
-  getArticles,
-  getArticleAnalytics,
-  SELECTORS,
-};
+  run();
+})();
 </code></pre>
           </div>
         </section>
@@ -347,8 +335,8 @@ export default {
 <a href="/scripts/edit-post">✏️ Edit Post</a>
 <a href="/scripts/pin-tweet">📌 Pin Tweet - XActions</a>
 <a href="/scripts/pin-tweet-manager">📌 Pin Tweet Manager</a>
-<a href="/scripts/poll-creator">📊 Poll Creator - Create and manage polls</a>
-<a href="/scripts/post-composer">✏️ Post Composer - Full content creation automation</a>
+<a href="/scripts/poll-creator">📊 Poll Creator</a>
+<a href="/scripts/post-composer">✏️ Post Composer</a>
 <a href="/scripts/post-thread">🧵 Post Thread</a>
 <a href="/scripts/post-tweet">✍️ Post Tweet - XActions</a>
 <a href="/scripts/publish-article">📰 Publish Article</a>

@@ -17,13 +17,13 @@
 
 | Script | Requires core.js | Purpose |
 |--------|-----------------|---------|
-| `src/followAccount.js` | No | Follow a list of specific usernames |
+| `browser/followAccount.js` | No | Follow a list of specific usernames |
 | `src/automation/followTargetUsers.js` | Yes | Follow followers/following of target accounts |
 | `src/automation/keywordFollow.js` | Yes | Search keywords and follow matching users |
 
 ## Configuration
 
-### src/followAccount.js
+### browser/followAccount.js
 
 ```js
 const CONFIG = {
@@ -82,7 +82,7 @@ const OPTIONS = {
 
 ### Follow Specific Users by Username
 
-**Step 1:** Add usernames to `src/followAccount.js`:
+**Step 1:** Add usernames to `browser/followAccount.js`:
 
 ```js
 const CONFIG = {
@@ -211,7 +211,7 @@ FILTERS: {
 
 ## Related Scripts
 
-- `src/unfollowEveryone.js` -- Unfollow all accounts
-- `src/unfollowback.js` -- Unfollow non-followers
+- `browser/unfollowEveryone.js` -- Unfollow all accounts
+- `browser/unfollowback.js` -- Unfollow non-followers
 - `src/automation/smartUnfollow.js` -- Time-based smart unfollow
 - `src/automation/keywordFollow.js` -- Keyword-based follow

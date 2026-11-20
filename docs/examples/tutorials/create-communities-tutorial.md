@@ -29,7 +29,7 @@ date: "2026-03-30"
 
 1. Open x.com and navigate to **Communities** (`https://x.com/communities`)
 2. Press **F12** to open DevTools, then click the **Console** tab
-3. Copy the script from `src/createCommunity.js`
+3. Copy the script from `browser/createCommunity.js`
 4. Edit the `CONFIG` section with your community details
 5. Paste into the console and press Enter
 
@@ -166,5 +166,5 @@ When `isPrivate` is true, the script will toggle the privacy setting, requiring 
 
 ## Related Scripts
 
-- `src/joinCommunities.js` -- Find and join communities by keyword
-- `src/manageCommunity.js` -- Manage members, roles, rules, and posts in existing communities
+- `browser/joinCommunities.js` -- Find and join communities by keyword
+- `browser/manageCommunity.js` -- Manage members, roles, rules, and posts in existing communities

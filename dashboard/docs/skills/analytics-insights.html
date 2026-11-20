@@ -251,92 +251,92 @@
 </thead>
 <tbody><tr>
 <td>Engagement metrics</td>
-<td><code>src/engagementAnalytics.js</code></td>
+<td><code>browser/engagementAnalytics.js</code></td>
 <td><code>x.com/USERNAME</code></td>
 </tr>
 <tr>
 <td>Best posting times</td>
-<td><code>src/bestTimeToPost.js</code></td>
+<td><code>browser/bestTimeToPost.js</code></td>
 <td><code>x.com/USERNAME</code></td>
 </tr>
 <tr>
 <td>Hashtag analysis</td>
-<td><code>src/hashtagAnalytics.js</code></td>
+<td><code>browser/hashtagAnalytics.js</code></td>
 <td><code>x.com/search?q=%23tag</code></td>
 </tr>
 <tr>
 <td>Competitor comparison</td>
-<td><code>src/competitorAnalysis.js</code></td>
+<td><code>browser/competitorAnalysis.js</code></td>
 <td>Any page</td>
 </tr>
 <tr>
 <td>Follower audit (fake/bot)</td>
-<td><code>src/auditFollowers.js</code></td>
+<td><code>browser/auditFollowers.js</code></td>
 <td><code>x.com/USERNAME/followers</code></td>
 </tr>
 <tr>
 <td>Sentiment analysis</td>
-<td><code>src/sentimentAnalyzer.js</code></td>
+<td><code>browser/sentimentAnalyzer.js</code></td>
 <td>Any timeline</td>
 </tr>
 <tr>
 <td>Tweet performance ranking</td>
-<td><code>src/tweetPerformance.js</code></td>
+<td><code>browser/tweetPerformance.js</code></td>
 <td><code>x.com/USERNAME</code></td>
 </tr>
 <tr>
 <td>Viral tweet detection</td>
-<td><code>src/viralTweetDetector.js</code></td>
+<td><code>browser/viralTweetDetector.js</code></td>
 <td><code>x.com/USERNAME</code></td>
 </tr>
 <tr>
 <td>Posting schedule optimizer</td>
-<td><code>src/tweetScheduleOptimizer.js</code></td>
+<td><code>browser/tweetScheduleOptimizer.js</code></td>
 <td><code>x.com/USERNAME</code></td>
 </tr>
 <tr>
 <td>Follower demographics</td>
-<td><code>src/audienceDemographics.js</code></td>
+<td><code>browser/audienceDemographics.js</code></td>
 <td><code>x.com/USERNAME/followers</code></td>
 </tr>
 <tr>
 <td>Follower growth tracking</td>
-<td><code>src/followerGrowthTracker.js</code></td>
+<td><code>browser/followerGrowthTracker.js</code></td>
 <td><code>x.com/USERNAME/followers</code></td>
 </tr>
 <tr>
 <td>Content calendar analysis</td>
-<td><code>src/contentCalendar.js</code></td>
+<td><code>browser/contentCalendar.js</code></td>
 <td><code>x.com/USERNAME</code></td>
 </tr>
 <tr>
 <td>Engagement leaderboard</td>
-<td><code>src/engagementLeaderboard.js</code></td>
+<td><code>browser/engagementLeaderboard.js</code></td>
 <td><code>x.com/USERNAME</code></td>
 </tr>
 <tr>
 <td>Tweet A/B testing</td>
-<td><code>src/tweetABTester.js</code></td>
+<td><code>browser/tweetABTester.js</code></td>
 <td><code>x.com/USERNAME</code></td>
 </tr>
 <tr>
 <td>Follow ratio management</td>
-<td><code>src/followRatioManager.js</code></td>
+<td><code>browser/followRatioManager.js</code></td>
 <td><code>x.com/USERNAME</code></td>
 </tr>
 <tr>
 <td>Audience overlap analysis</td>
-<td><code>src/audienceOverlap.js</code></td>
+<td><code>browser/audienceOverlap.js</code></td>
 <td><code>x.com/ACCOUNT/followers</code></td>
 </tr>
 <tr>
 <td>Account health scoring</td>
-<td><code>src/accountHealthMonitor.js</code></td>
+<td><code>browser/accountHealthMonitor.js</code></td>
 <td><code>x.com/USERNAME</code></td>
 </tr>
 <tr>
 <td>Shadowban detection</td>
-<td><code>src/shadowbanChecker.js</code></td>
+<td><code>browser/shadowbanChecker.js</code></td>
 <td><code>x.com/USERNAME</code></td>
 </tr>
 </tbody></table>
@@ -375,25 +375,25 @@
 <h2 id="strategy-guide">Strategy Guide</h2>
 <h3 id="weekly-analytics-routine">Weekly analytics routine</h3>
 <ol>
-<li>Run <code>src/tweetPerformance.js</code> — identify this week&#39;s top content</li>
-<li>Run <code>src/tweetScheduleOptimizer.js</code> — verify you&#39;re posting at optimal times</li>
-<li>Run <code>src/followRatioManager.js</code> → <code>XActions.track()</code> — log weekly ratio</li>
-<li>Run <code>src/engagementLeaderboard.js</code> — identify top engagers to nurture</li>
+<li>Run <code>browser/tweetPerformance.js</code> — identify this week&#39;s top content</li>
+<li>Run <code>browser/tweetScheduleOptimizer.js</code> — verify you&#39;re posting at optimal times</li>
+<li>Run <code>browser/followRatioManager.js</code> → <code>XActions.track()</code> — log weekly ratio</li>
+<li>Run <code>browser/engagementLeaderboard.js</code> — identify top engagers to nurture</li>
 </ol>
 <h3 id="diagnosing-a-growth-stall">Diagnosing a growth stall</h3>
 <ol>
-<li><code>src/accountHealthMonitor.js</code> — check overall account health score</li>
-<li><code>src/shadowbanChecker.js</code> — rule out shadowban</li>
-<li><code>src/audienceDemographics.js</code> — verify you&#39;re attracting the right audience</li>
-<li><code>src/viralTweetDetector.js</code> — check if you&#39;ve had any breakout content recently</li>
-<li><code>src/competitorAnalysis.js</code> — compare your metrics to peers</li>
+<li><code>browser/accountHealthMonitor.js</code> — check overall account health score</li>
+<li><code>browser/shadowbanChecker.js</code> — rule out shadowban</li>
+<li><code>browser/audienceDemographics.js</code> — verify you&#39;re attracting the right audience</li>
+<li><code>browser/viralTweetDetector.js</code> — check if you&#39;ve had any breakout content recently</li>
+<li><code>browser/competitorAnalysis.js</code> — compare your metrics to peers</li>
 </ol>
 <h3 id="preparing-for-a-content-pivot">Preparing for a content pivot</h3>
 <ol>
-<li><code>src/sentimentAnalyzer.js</code> — understand current audience sentiment</li>
-<li><code>src/tweetPerformance.js</code> — identify what content types work</li>
-<li><code>src/audienceOverlap.js</code> — compare your audience with target niche leaders</li>
-<li><code>src/contentCalendar.js</code> — find posting gaps to fill</li>
+<li><code>browser/sentimentAnalyzer.js</code> — understand current audience sentiment</li>
+<li><code>browser/tweetPerformance.js</code> — identify what content types work</li>
+<li><code>browser/audienceOverlap.js</code> — compare your audience with target niche leaders</li>
+<li><code>browser/contentCalendar.js</code> — find posting gaps to fill</li>
 </ol>
 <h2 id="notes">Notes</h2>
 <ul>

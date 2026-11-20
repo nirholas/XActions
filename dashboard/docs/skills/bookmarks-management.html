@@ -256,12 +256,12 @@
 </tr>
 <tr>
 <td>Organize bookmarks by category</td>
-<td><code>src/bookmarkOrganizer.js</code></td>
+<td><code>browser/bookmarkOrganizer.js</code></td>
 <td><code>x.com/i/bookmarks</code></td>
 </tr>
 <tr>
 <td>Clear all bookmarks</td>
-<td><code>src/clearAllBookmarks.js</code></td>
+<td><code>browser/clearAllBookmarks.js</code></td>
 <td><code>x.com/i/bookmarks</code></td>
 </tr>
 <tr>
@@ -290,14 +290,14 @@
 <h3 id="output">Output</h3>
 <p>Each bookmark includes: <code>tweetId</code>, <code>handle</code>, <code>displayName</code>, <code>verified</code>, <code>text</code>, <code>url</code>, <code>time</code>, <code>likes</code>, <code>retweets</code>, <code>replies</code>, <code>views</code>, <code>images</code>, <code>videos</code>, <code>links</code>, <code>hashtags</code>, <code>mentions</code>.</p>
 <h2 id="bookmark-organizer">Bookmark Organizer</h2>
-<p><strong>File:</strong> <code>src/bookmarkOrganizer.js</code></p>
+<p><strong>File:</strong> <code>browser/bookmarkOrganizer.js</code></p>
 <p>Auto-categorizes bookmarks by keyword matching and exports organized data. Configure categories in <code>CONFIG.categories</code> (default: Tech, News, Crypto, Funny, Business). Unmatched bookmarks go to &quot;Uncategorized.&quot; Supports JSON and CSV export.</p>
 <ol>
 <li>Navigate to <code>x.com/i/bookmarks</code> → paste in DevTools → Enter</li>
 <li>Prints category breakdown in console → auto-downloads organized export</li>
 </ol>
 <h2 id="clear-all-bookmarks">Clear All Bookmarks</h2>
-<p><strong>File:</strong> <code>src/clearAllBookmarks.js</code></p>
+<p><strong>File:</strong> <code>browser/clearAllBookmarks.js</code></p>
 <p>Removes all bookmarks. Tries the built-in &quot;Clear All&quot; button first, then falls back to removing bookmarks individually by scrolling and clicking.</p>
 <h3 id="how-to-use-1">How to Use</h3>
 <ol>

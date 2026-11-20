@@ -15,8 +15,8 @@ Browser console scripts for managing saved searches on X/Twitter.
 
 | Goal | File | Navigate to |
 |------|------|-------------|
-| Save a search query | `src/saveSearch.js` | `x.com/search?q=...` (search results page) |
-| List / delete / run saved searches | `src/savedSearchManager.js` | `x.com` |
+| Save a search query | `browser/saveSearch.js` | `x.com/search?q=...` (search results page) |
+| List / delete / run saved searches | `browser/savedSearchManager.js` | `x.com` |
 
 ## Quick Start
 
@@ -24,13 +24,13 @@ Browser console scripts for managing saved searches on X/Twitter.
 
 1. Search for something on X: `x.com/search?q=your+query`
 2. Open DevTools (F12) → Console
-3. Paste `src/saveSearch.js` → Enter
+3. Paste `browser/saveSearch.js` → Enter
 
 ### Manage saved searches
 
 1. Go to `x.com`
 2. Open DevTools (F12) → Console
-3. Paste `src/savedSearchManager.js` → Enter
+3. Paste `browser/savedSearchManager.js` → Enter
 
 ## Available Functions (`savedSearchManager.js`)
 

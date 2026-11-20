@@ -20,7 +20,7 @@ Compose and publish a multi-tweet thread on X/Twitter.
 1. Go to x.com
 2. Edit the thread content in CONFIG
 3. Set `dryRun = false` to post
-4. Open console (F12) and paste `src/postThread.js`
+4. Open console (F12) and paste `browser/postThread.js`
 
 **Configuration:**
 ```javascript
@@ -51,10 +51,10 @@ The script validates before posting:
 
 | Script | File | Purpose |
 |--------|------|---------|
-| Post Thread | `src/postThread.js` | Multi-tweet thread |
-| Schedule Posts | `src/schedulePosts.js` | Queue future posts |
-| Create Poll | `src/createPoll.js` | Create poll tweets |
-| Auto Repost | `src/autoRepost.js` | Auto-retweet by filter |
+| Post Thread | `browser/postThread.js` | Multi-tweet thread |
+| Schedule Posts | `browser/schedulePosts.js` | Queue future posts |
+| Create Poll | `browser/createPoll.js` | Create poll tweets |
+| Auto Repost | `browser/autoRepost.js` | Auto-retweet by filter |
 
 ## ⚠️ Notes
 

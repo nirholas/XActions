@@ -359,6 +359,12 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://xactions.app/scripts/algorithm-builder</loc>
+    <lastmod>2026-03-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://xactions.app/scripts/delegate-access</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
@@ -840,6 +846,12 @@
   </url>
   <url>
     <loc>https://xactions.app/scripts/scrape-notifications</loc>
+    <lastmod>2026-03-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://xactions.app/scripts/persona-engine</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -1409,12 +1421,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://xactions.app/scripts/algorithm-builder</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://xactions.app/scripts/xactions-command-center</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
@@ -1425,12 +1431,6 @@
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/persona-engine</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/rss-monitor</loc>

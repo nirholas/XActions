@@ -224,7 +224,7 @@
 <ol>
 <li>Go to your followers page (<code>x.com/yourusername/followers</code>)</li>
 <li>Set <code>dryRun: false</code> when ready to block</li>
-<li>Open console (F12) and paste <code>src/blockBots.js</code></li>
+<li>Open console (F12) and paste <code>browser/blockBots.js</code></li>
 </ol>
 <p><strong>Configuration:</strong></p>
 <pre><code class="language-javascript">const CONFIG = {
@@ -237,16 +237,16 @@
 <hr>
 <h2>📁 Files</h2>
 <ul>
-<li><code>src/blockBots.js</code> — Bot detection and blocking</li>
-<li><code>src/auditFollowers.js</code> — Full follower audit (companion)</li>
-<li><code>src/massBlock.js</code> — Block a specific list of users</li>
+<li><code>browser/blockBots.js</code> — Bot detection and blocking</li>
+<li><code>browser/auditFollowers.js</code> — Full follower audit (companion)</li>
+<li><code>browser/massBlock.js</code> — Block a specific list of users</li>
 </ul>
 <h2>⚠️ Notes</h2>
 <ul>
 <li>Always run with <code>dryRun: true</code> first to review detected bots</li>
 <li>The heuristic is not perfect — review the exported JSON before blocking</li>
 <li>Threshold of 5 is a good starting point; lower = more aggressive</li>
-<li>Blocked accounts can be unblocked later using <code>src/massUnblock.js</code></li>
+<li>Blocked accounts can be unblocked later using <code>browser/massUnblock.js</code></li>
 </ul>
 
 

@@ -193,6 +193,6 @@ await page.click('[data-testid="articleSaveDraft"]');
 ## Related Scripts
 
 - `src/postComposer.js` -- Regular tweet posting (for promoting your articles)
-- `src/schedulePosts.js` -- Schedule a tweet linking to your article
+- `browser/schedulePosts.js` -- Schedule a tweet linking to your article
 - `docs/examples/tutorials/longer-content-tutorial.md` -- Extended tweets and video guide
 - `docs/examples/tutorials/post-content-tutorial.md` -- General posting guide

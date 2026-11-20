@@ -298,7 +298,7 @@ To remove previously synced contacts from X:
 |---------|--------|-------------|
 | Follow Target Followers | `src/followTargetFollowers.js` | Follow people from another account's follower list |
 | Keyword Follow | `src/keywordFollow.js` | Auto-follow users posting about specific topics |
-| Detect Unfollowers | `src/detectUnfollowers.js` | Find who unfollowed you |
+| Detect Unfollowers | `browser/detectUnfollowers.js` | Find who unfollowed you |
 
 ---
 

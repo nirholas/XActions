@@ -15,16 +15,16 @@ Browser console scripts for automating content creation and publishing on X/Twit
 
 | Goal | File | Navigate to |
 |------|------|-------------|
-| Post a thread | `src/postThread.js` | `x.com` |
-| Schedule posts | `src/schedulePosts.js` | `x.com` |
-| Create a poll | `src/createPoll.js` | `x.com` |
-| Auto-repost by keyword | `src/autoRepost.js` | Timeline or search |
-| Compose + preview threads | `src/threadComposer.js` | `x.com/USERNAME` |
-| Quote-tweet with templates | `src/quoteTweetAutomation.js` | Timeline |
-| Repurpose tweets | `src/contentRepurposer.js` | `x.com/USERNAME` |
-| Auto-plug viral tweets | `src/autoPlugReplies.js` | `x.com/USERNAME` |
-| Content calendar analysis | `src/contentCalendar.js` | `x.com/USERNAME` |
-| Optimize posting times | `src/tweetScheduleOptimizer.js` | `x.com/USERNAME` |
+| Post a thread | `browser/postThread.js` | `x.com` |
+| Schedule posts | `browser/schedulePosts.js` | `x.com` |
+| Create a poll | `browser/createPoll.js` | `x.com` |
+| Auto-repost by keyword | `browser/autoRepost.js` | Timeline or search |
+| Compose + preview threads | `browser/threadComposer.js` | `x.com/USERNAME` |
+| Quote-tweet with templates | `browser/quoteTweetAutomation.js` | Timeline |
+| Repurpose tweets | `browser/contentRepurposer.js` | `x.com/USERNAME` |
+| Auto-plug viral tweets | `browser/autoPlugReplies.js` | `x.com/USERNAME` |
+| Content calendar analysis | `browser/contentCalendar.js` | `x.com/USERNAME` |
+| Optimize posting times | `browser/tweetScheduleOptimizer.js` | `x.com/USERNAME` |
 
 ## Script Details
 
@@ -62,15 +62,15 @@ Auto quote-tweets matching tweets with customizable templates and engagement fil
 ## Content Strategy
 
 ### Maximizing content output
-1. `src/tweetPerformance.js` -- identify your best-performing content
-2. `src/contentRepurposer.js` -- generate 5 variations per top tweet
-3. `src/tweetScheduleOptimizer.js` -- schedule content at optimal times
-4. `src/autoPlugReplies.js` -- automatically promote on viral tweets
-5. `src/contentCalendar.js` -- identify posting gaps to fill
+1. `browser/tweetPerformance.js` -- identify your best-performing content
+2. `browser/contentRepurposer.js` -- generate 5 variations per top tweet
+3. `browser/tweetScheduleOptimizer.js` -- schedule content at optimal times
+4. `browser/autoPlugReplies.js` -- automatically promote on viral tweets
+5. `browser/contentCalendar.js` -- identify posting gaps to fill
 
 ### Thread workflow
-1. Use `src/contentRepurposer.js` -> `XActions.toThread(i)` for thread outlines
-2. Edit and refine with `src/threadComposer.js`
+1. Use `browser/contentRepurposer.js` -> `XActions.toThread(i)` for thread outlines
+2. Edit and refine with `browser/threadComposer.js`
 3. Preview with `XActions.preview()`
 4. Post with `XActions.post()`
 

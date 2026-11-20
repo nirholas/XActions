@@ -31,7 +31,7 @@ import { dirname } from 'node:path';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
 /** Directories walked for source headers. */
-const ROOTS = ['src', 'api', 'scripts', 'bin', 'types', 'tests', 'examples'];
+const ROOTS = ['src', 'browser', 'api', 'scripts', 'bin', 'types', 'tests', 'examples'];
 
 /** Never skipped by extension: bin entries have no suffix. */
 const EXTENSIONS = ['.js', '.mjs', '.cjs', '.ts'];

@@ -292,9 +292,9 @@ const CONFIG = {
 
 | Feature | Script | Description |
 |---------|--------|-------------|
-| Subscribe to Premium | `src/subscribePremium.js` | Get Premium+ for X Pro access |
-| Media Studio | `src/mediaStudio.js` | Media library and analytics |
-| View Analytics | `src/viewAnalytics.js` | Post and account analytics |
+| Subscribe to Premium | `browser/subscribePremium.js` | Get Premium+ for X Pro access |
+| Media Studio | `browser/mediaStudio.js` | Media library and analytics |
+| View Analytics | `browser/viewAnalytics.js` | Post and account analytics |
 | Tweet Scraping | `src/scrapers/twitter/index.js` | Scrape tweet data |
 
 ---

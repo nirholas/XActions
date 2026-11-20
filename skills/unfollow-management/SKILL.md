@@ -15,13 +15,13 @@ Browser console scripts for managing who you follow on X/Twitter. All scripts ru
 
 | Goal | File | Navigate to |
 |------|------|-------------|
-| Unfollow ALL accounts | `src/unfollowEveryone.js` | `x.com/USERNAME/following` |
-| Unfollow only non-followers | `src/unfollowback.js` | `x.com/USERNAME/following` |
-| Unfollow non-followers + download log | `src/unfollowWDFBLog.js` | `x.com/USERNAME/following` |
+| Unfollow ALL accounts | `browser/unfollowEveryone.js` | `x.com/USERNAME/following` |
+| Unfollow only non-followers | `browser/unfollowback.js` | `x.com/USERNAME/following` |
+| Unfollow non-followers + download log | `browser/unfollowWDFBLog.js` | `x.com/USERNAME/following` |
 | Time-based smart unfollow with whitelist | `src/automation/smartUnfollow.js` | `x.com/USERNAME/following` |
-| Detect who unfollowed you | `src/detectUnfollowers.js` | `x.com/USERNAME/followers` |
-| Monitor follow/following ratio + plan | `src/followRatioManager.js` | `x.com/USERNAME` |
-| Remove specific followers from YOUR list | `src/removeFollowers.js` | `x.com/USERNAME/followers` |
+| Detect who unfollowed you | `browser/detectUnfollowers.js` | `x.com/USERNAME/followers` |
+| Monitor follow/following ratio + plan | `browser/followRatioManager.js` | `x.com/USERNAME` |
+| Remove specific followers from YOUR list | `browser/removeFollowers.js` | `x.com/USERNAME/followers` |
 
 ## Script Details
 
@@ -40,25 +40,25 @@ For detailed algorithms, controls, configurations, and DOM selectors for each sc
 
 ### Cleaning a bloated following list
 
-1. Run `src/followRatioManager.js` on your profile to assess current ratio
+1. Run `browser/followRatioManager.js` on your profile to assess current ratio
 2. Use `XActions.plan()` to see how many unfollows are needed
-3. Run `src/unfollowback.js` to remove non-followers first (safest)
-4. If more cleanup needed, use `src/unfollowEveryone.js` with abort when satisfied
+3. Run `browser/unfollowback.js` to remove non-followers first (safest)
+4. If more cleanup needed, use `browser/unfollowEveryone.js` with abort when satisfied
 5. Re-check ratio with `XActions.track()`
 
 ### Maintaining a healthy ratio over time
 
-1. Set up periodic runs of `src/detectUnfollowers.js` to track losses
-2. Use `src/followRatioManager.js` weekly to monitor trends
-3. Run `src/unfollowback.js` monthly to remove non-reciprocal follows
+1. Set up periodic runs of `browser/detectUnfollowers.js` to track losses
+2. Use `browser/followRatioManager.js` weekly to monitor trends
+3. Run `browser/unfollowback.js` monthly to remove non-reciprocal follows
 4. Keep a whitelist in `smartUnfollow.js` for accounts you always want to follow
 
 ### Before a big unfollow session
 
 1. Export your following list first: `scripts/scrapeFollowing.js`
-2. Run `src/unfollowWDFBLog.js` (saves log of who was unfollowed)
+2. Run `browser/unfollowWDFBLog.js` (saves log of who was unfollowed)
 3. Review the downloaded log for any mistakes
-4. Use `src/followRatioManager.js` to verify improvements
+4. Use `browser/followRatioManager.js` to verify improvements
 
 ## Troubleshooting
 

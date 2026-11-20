@@ -1,5 +1,5 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// src/advancedSettings.js
+// browser/advancedSettings.js
 // Advanced settings and privacy management for X/Twitter
 // by nichxbt
 // 1. Go to x.com

@@ -17,13 +17,13 @@
 
 | Script | Starting Page | Purpose |
 |--------|--------------|---------|
-| `src/muteByKeywords.js` | Any timeline/search | Mute users whose posts contain keywords |
-| `src/manageMutedWords.js` | `x.com/settings/muted_keywords` | Bulk-add muted words |
-| `src/massUnmute.js` | `x.com/settings/muted/all` | Unmute all or selected users |
+| `browser/muteByKeywords.js` | Any timeline/search | Mute users whose posts contain keywords |
+| `browser/manageMutedWords.js` | `x.com/settings/muted_keywords` | Bulk-add muted words |
+| `browser/massUnmute.js` | `x.com/settings/muted/all` | Unmute all or selected users |
 
 ## Configuration
 
-### src/muteByKeywords.js
+### browser/muteByKeywords.js
 
 ```js
 const CONFIG = {
@@ -41,7 +41,7 @@ const CONFIG = {
 };
 ```
 
-### src/manageMutedWords.js
+### browser/manageMutedWords.js
 
 ```js
 const CONFIG = {
@@ -58,7 +58,7 @@ const CONFIG = {
 };
 ```
 
-### src/massUnmute.js
+### browser/massUnmute.js
 
 ```js
 const CONFIG = {
@@ -79,7 +79,7 @@ This script scrolls your timeline, finds tweets matching your keywords, and mute
 
 **Step 1:** Navigate to your home timeline, a search page, or any page with tweets.
 
-**Step 2:** Configure keywords in `src/muteByKeywords.js`:
+**Step 2:** Configure keywords in `browser/muteByKeywords.js`:
 
 ```js
 const CONFIG = {
@@ -125,7 +125,7 @@ const CONFIG = {
 };
 ```
 
-**Step 3:** Paste `src/manageMutedWords.js`. In dry run mode, it lists what would be muted:
+**Step 3:** Paste `browser/manageMutedWords.js`. In dry run mode, it lists what would be muted:
 
 ```
 Words to mute: 5
@@ -164,7 +164,7 @@ const CONFIG = {
 };
 ```
 
-**Step 3:** Paste `src/massUnmute.js`. It scrolls through your muted list and unmutes everyone (except those in `keepMuted`):
+**Step 3:** Paste `browser/massUnmute.js`. It scrolls through your muted list and unmutes everyone (except those in `keepMuted`):
 
 ```
 MASS UNMUTE USERS
@@ -210,6 +210,6 @@ window.XActions.status();
 
 ## Related Scripts
 
-- `src/massBlock.js` -- Block accounts by list or from visible users
-- `src/blockBots.js` -- Detect and block bot accounts
-- `src/massUnblock.js` -- Unblock accounts in bulk
+- `browser/massBlock.js` -- Block accounts by list or from visible users
+- `browser/blockBots.js` -- Detect and block bot accounts
+- `browser/massUnblock.js` -- Unblock accounts in bulk

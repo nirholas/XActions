@@ -147,6 +147,6 @@ have no CSP to work around and take any of them directly.
 ## Related
 
 - [`scripts/searchSweep.js`](search-sweep.md) deletes by search query instead of AI-judged risk.
-- [`src/bulkDeleteTweets.js`](../src/bulkDeleteTweets.js) deletes by age, keyword, or engagement.
+- [`browser/bulkDeleteTweets.js`](../browser/bulkDeleteTweets.js) deletes by age, keyword, or engagement.
 - [`docs/browser-scripts.md`](browser-scripts.md) is the full script catalog.
 - [Skills Reference](skills.md) — the `reputation-audit` skill an AI assistant reads to use this.

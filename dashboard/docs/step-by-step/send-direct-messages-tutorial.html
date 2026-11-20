@@ -217,13 +217,13 @@
 <ol>
 <li>Open x.com and navigate to <strong>Messages</strong> (<code>https://x.com/messages</code>)</li>
 <li>Press <strong>F12</strong> to open DevTools, then click the <strong>Console</strong> tab</li>
-<li>Copy the script from <code>src/sendDirectMessage.js</code></li>
+<li>Copy the script from <code>browser/sendDirectMessage.js</code></li>
 <li>Edit the <code>CONFIG</code> section with your target users and message</li>
 <li>Paste into the console and press Enter</li>
 </ol>
 <hr>
 <h2>Configuration</h2>
-<h3>Browser Script (<code>src/sendDirectMessage.js</code>)</h3>
+<h3>Browser Script (<code>browser/sendDirectMessage.js</code>)</h3>
 <pre><code class="language-js">const CONFIG = {
   targetUsers: [
     &#39;username1&#39;,
@@ -294,7 +294,7 @@
 <p><strong>Step 2 -- Open DevTools</strong></p>
 <p>Press F12 (or Cmd+Option+J on Mac) to open the browser console.</p>
 <p><strong>Step 3 -- Configure your recipients</strong></p>
-<p>Edit the CONFIG in <code>src/sendDirectMessage.js</code>:</p>
+<p>Edit the CONFIG in <code>browser/sendDirectMessage.js</code>:</p>
 <pre><code class="language-js">const CONFIG = {
   targetUsers: [
     &#39;elonmusk&#39;,
@@ -407,9 +407,9 @@ await updateDMSettings(page, { allowDMsFrom: &#39;everyone&#39; });
 <hr>
 <h2>Related Scripts</h2>
 <ul>
-<li><code>src/groupDM.js</code> -- Create group DM conversations</li>
-<li><code>src/dmCalls.js</code> -- Start audio/video calls in DMs</li>
-<li><code>src/encryptedDM.js</code> -- Send encrypted DMs</li>
+<li><code>browser/groupDM.js</code> -- Create group DM conversations</li>
+<li><code>browser/dmCalls.js</code> -- Start audio/video calls in DMs</li>
+<li><code>browser/encryptedDM.js</code> -- Send encrypted DMs</li>
 <li><code>src/dmManager.js</code> -- Node.js DM management library (Puppeteer)</li>
 </ul>
 

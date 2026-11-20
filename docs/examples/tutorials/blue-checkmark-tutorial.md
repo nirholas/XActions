@@ -256,11 +256,11 @@ Articles             | ❌      | ❌      | ❌      | ✅
 
 | Feature | Script | Description |
 |---------|--------|-------------|
-| Subscribe to Premium | `src/subscribePremium.js` | Navigate through subscription flow |
-| ID Verification | `src/idVerification.js` | Complete identity verification |
-| Premium Gifting | `src/premiumGifting.js` | Gift Premium to someone |
-| Verified-Only Replies | `src/verifiedOnly.js` | Restrict replies to verified users |
-| View Analytics | `src/viewAnalytics.js` | Access Premium analytics dashboard |
+| Subscribe to Premium | `browser/subscribePremium.js` | Navigate through subscription flow |
+| ID Verification | `browser/idVerification.js` | Complete identity verification |
+| Premium Gifting | `browser/premiumGifting.js` | Gift Premium to someone |
+| Verified-Only Replies | `browser/verifiedOnly.js` | Restrict replies to verified users |
+| View Analytics | `browser/viewAnalytics.js` | Access Premium analytics dashboard |
 
 ---
 

@@ -26,7 +26,7 @@ Block or unblock multiple X/Twitter accounts at once.
 1. Go to x.com (any page)
 2. Edit `CONFIG.usersToBlock` with usernames
 3. Set `CONFIG.dryRun = false` to enable
-4. Open console (F12) and paste `src/massBlock.js`
+4. Open console (F12) and paste `browser/massBlock.js`
 
 **Configuration:**
 ```javascript
@@ -43,7 +43,7 @@ const CONFIG = {
 
 **Steps:**
 1. Go to `x.com/settings/blocked/all`
-2. Open console (F12) and paste `src/massUnblock.js`
+2. Open console (F12) and paste `browser/massUnblock.js`
 
 ---
 
@@ -51,7 +51,7 @@ const CONFIG = {
 
 Automatically detect and block likely bot accounts using heuristics.
 
-**File:** `src/blockBots.js`
+**File:** `browser/blockBots.js`
 
 **Steps:**
 1. Go to any followers/following list
@@ -77,6 +77,6 @@ Automatically detect and block likely bot accounts using heuristics.
 
 ## 📁 Files
 
-- `src/massBlock.js` — Block multiple users from a list
-- `src/massUnblock.js` — Unblock all blocked users
-- `src/blockBots.js` — Detect and block bot accounts
+- `browser/massBlock.js` — Block multiple users from a list
+- `browser/massUnblock.js` — Unblock all blocked users
+- `browser/blockBots.js` — Detect and block bot accounts

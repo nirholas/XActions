@@ -251,42 +251,42 @@
 </thead>
 <tbody><tr>
 <td>Detect who unfollowed you</td>
-<td><code>src/detectUnfollowers.js</code></td>
+<td><code>browser/detectUnfollowers.js</code></td>
 <td><code>x.com/USERNAME/followers</code></td>
 </tr>
 <tr>
 <td>Monitor any public account</td>
-<td><code>src/monitorAccount.js</code></td>
+<td><code>browser/monitorAccount.js</code></td>
 <td><code>x.com/TARGET/followers</code></td>
 </tr>
 <tr>
 <td>Continuous monitoring + alerts</td>
-<td><code>src/continuousMonitor.js</code></td>
+<td><code>browser/continuousMonitor.js</code></td>
 <td><code>x.com/USERNAME/followers</code></td>
 </tr>
 <tr>
 <td>New follower tracking + welcome</td>
-<td><code>src/newFollowersAlert.js</code></td>
+<td><code>browser/newFollowersAlert.js</code></td>
 <td><code>x.com/USERNAME/followers</code></td>
 </tr>
 <tr>
 <td>Follower growth over time</td>
-<td><code>src/followerGrowthTracker.js</code></td>
+<td><code>browser/followerGrowthTracker.js</code></td>
 <td><code>x.com/USERNAME/followers</code></td>
 </tr>
 <tr>
 <td>Follower demographics</td>
-<td><code>src/audienceDemographics.js</code></td>
+<td><code>browser/audienceDemographics.js</code></td>
 <td><code>x.com/USERNAME/followers</code></td>
 </tr>
 <tr>
 <td>Audit follower quality</td>
-<td><code>src/auditFollowers.js</code></td>
+<td><code>browser/auditFollowers.js</code></td>
 <td><code>x.com/USERNAME/followers</code></td>
 </tr>
 <tr>
 <td>Follow ratio management</td>
-<td><code>src/followRatioManager.js</code></td>
+<td><code>browser/followRatioManager.js</code></td>
 <td><code>x.com/USERNAME</code></td>
 </tr>
 </tbody></table>
@@ -345,16 +345,16 @@
 <h3 id="daily-monitoring-setup">Daily monitoring setup</h3>
 <ol>
 <li>Open <code>x.com/USERNAME/followers</code> in a pinned tab</li>
-<li>Paste <code>src/continuousMonitor.js</code> — it auto-refreshes every 5 minutes</li>
+<li>Paste <code>browser/continuousMonitor.js</code> — it auto-refreshes every 5 minutes</li>
 <li>Enable browser notifications when prompted</li>
 <li>Check back periodically for alerts</li>
 </ol>
 <h3 id="weekly-follower-health-check">Weekly follower health check</h3>
 <ol>
-<li><code>src/followerGrowthTracker.js</code> -&gt; <code>XActions.track()</code> to log this week</li>
-<li><code>src/followRatioManager.js</code> -&gt; <code>XActions.track()</code> for ratio snapshot</li>
-<li><code>src/auditFollowers.js</code> to check for new bot followers</li>
-<li><code>src/audienceDemographics.js</code> to verify audience quality</li>
+<li><code>browser/followerGrowthTracker.js</code> -&gt; <code>XActions.track()</code> to log this week</li>
+<li><code>browser/followRatioManager.js</code> -&gt; <code>XActions.track()</code> for ratio snapshot</li>
+<li><code>browser/auditFollowers.js</code> to check for new bot followers</li>
+<li><code>browser/audienceDemographics.js</code> to verify audience quality</li>
 </ol>
 <h3 id="resetting-data">Resetting data</h3>
 <pre><code class="language-javascript">localStorage.removeItem(&#39;xactions_my_followers&#39;)

@@ -76,7 +76,7 @@ Help me craft an optimized profile:
 
 ### Part 3: Profile Manager (Puppeteer)
 
-For advanced profile management, the `profileManager` module and `src/updateProfile.js`:
+For advanced profile management, the `profileManager` module and `browser/updateProfile.js`:
 
 1. **Available functions:**
    - Update display name
@@ -95,7 +95,7 @@ For advanced profile management, the `profileManager` module and `src/updateProf
 
 ### Part 4: Account Backup
 
-Protect your account with full backup using `src/backupAccount.js`:
+Protect your account with full backup using `browser/backupAccount.js`:
 
 1. **What's backed up:**
    - Profile information (bio, stats)
@@ -123,7 +123,7 @@ Protect your account with full backup using `src/backupAccount.js`:
 
 ### Part 5: Download Account Data
 
-Using `src/downloadAccountData.js` for comprehensive data export:
+Using `browser/downloadAccountData.js` for comprehensive data export:
 
 1. **What it downloads:**
    - Your complete Twitter/X data archive
@@ -138,7 +138,7 @@ Using `src/downloadAccountData.js` for comprehensive data export:
 
 ### Part 6: QR Code Sharing
 
-Using `src/qrCodeSharing.js`:
+Using `browser/qrCodeSharing.js`:
 
 1. **Generate QR codes** for your profile
 2. **Use cases:**

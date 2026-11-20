@@ -4,7 +4,7 @@ You are my X/Twitter content cleanup specialist. I want to use XActions to clean
 
 ## Context
 
-I'm using XActions (https://github.com/nirholas/XActions), an open-source X/Twitter toolkit with content cleanup scripts: `src/unlikeAllPosts.js`, `src/clearAllReposts.js`, and more.
+I'm using XActions (https://github.com/nirholas/XActions), an open-source X/Twitter toolkit with content cleanup scripts: `browser/unlikeAllPosts.js`, `browser/clearAllReposts.js`, and more.
 
 ## What I Need You To Do
 
@@ -29,7 +29,7 @@ Before cleaning, let me understand what's on my account:
 
 ### Part 2: Unlike All Posts
 
-Using `src/unlikeAllPosts.js`:
+Using `browser/unlikeAllPosts.js`:
 
 1. **Navigate to your Likes page:** `x.com/YOUR_USERNAME/likes`
 2. **Paste the script in DevTools**
@@ -59,7 +59,7 @@ Using `src/unlikeAllPosts.js`:
 
 ### Part 3: Clear All Reposts
 
-Using `src/clearAllReposts.js`:
+Using `browser/clearAllReposts.js`:
 
 1. **Navigate to your profile:** `x.com/YOUR_USERNAME`
 2. **Paste the script**
@@ -119,7 +119,7 @@ For the nuclear option — deleting old tweets:
 As part of a total cleanup:
 
 1. **Export bookmarks first:** `x_get_bookmarks`
-2. **Then clear:** `x_clear_bookmarks` or `src/clearAllBookmarks.js`
+2. **Then clear:** `x_clear_bookmarks` or `browser/clearAllBookmarks.js`
 3. **Start fresh** with a curated bookmark system
 
 ### Part 6: Full Account Reset Workflow

@@ -48,6 +48,7 @@ src/                 Core library
   workflows/         Multi-step automation
   spaces/            AI voice agent for live X Spaces
   utils/             Shared utilities
+browser/             112 browser console scripts (IIFEs pasted into DevTools on x.com)
 api/                 Express.js backend
   server.js          Main entry
   routes/            41 REST route modules

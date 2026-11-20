@@ -20,7 +20,7 @@ Analyze likes, retweets, replies, and views across your X/Twitter posts.
 **Steps:**
 1. Go to `x.com/YOUR_USERNAME`
 2. Open browser console (F12 → Console tab)
-3. Paste `src/engagementAnalytics.js`
+3. Paste `browser/engagementAnalytics.js`
 4. Wait for analysis to complete
 
 **Configuration:**
@@ -48,11 +48,11 @@ const CONFIG = {
 
 | Script | File | Purpose |
 |--------|------|---------|
-| Engagement Analytics | `src/engagementAnalytics.js` | Full engagement analysis |
-| Best Time to Post | `src/bestTimeToPost.js` | Optimal posting time analysis |
-| Hashtag Analytics | `src/hashtagAnalytics.js` | Hashtag performance analysis |
-| Competitor Analysis | `src/competitorAnalysis.js` | Compare multiple accounts |
-| Audit Followers | `src/auditFollowers.js` | Detect fake/bot followers |
+| Engagement Analytics | `browser/engagementAnalytics.js` | Full engagement analysis |
+| Best Time to Post | `browser/bestTimeToPost.js` | Optimal posting time analysis |
+| Hashtag Analytics | `browser/hashtagAnalytics.js` | Hashtag performance analysis |
+| Competitor Analysis | `browser/competitorAnalysis.js` | Compare multiple accounts |
+| Audit Followers | `browser/auditFollowers.js` | Detect fake/bot followers |
 
 ## ⚠️ Notes
 

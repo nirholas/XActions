@@ -39,7 +39,7 @@ This script provides the following capabilities:
 **Steps:**
 1. Go to `x.com/YOUR_USERNAME/followers`
 2. Open browser console (`F12` → Console tab)
-3. Copy and paste the script from [`src/audienceDemographics.js`](https://github.com/nirholas/XActions/blob/main/src/audienceDemographics.js)
+3. Copy and paste the script from [`browser/audienceDemographics.js`](https://github.com/nirholas/XActions/blob/main/browser/audienceDemographics.js)
 4. Press Enter to run
 
 ```javascript
@@ -346,7 +346,7 @@ Open your browser and go to `x.com/YOUR_USERNAME/followers`. Make sure you're lo
 
 ### Step 3: Paste the script
 
-Copy the entire script from [`src/audienceDemographics.js`](https://github.com/nirholas/XActions/blob/main/src/audienceDemographics.js) and paste it into the console.
+Copy the entire script from [`browser/audienceDemographics.js`](https://github.com/nirholas/XActions/blob/main/browser/audienceDemographics.js) and paste it into the console.
 
 ### Step 4: Customize the CONFIG (optional)
 
@@ -405,7 +405,7 @@ See the [MCP Setup Guide](../mcp-setup.md) for integration with Claude Desktop, 
 
 | File | Description |
 |------|-------------|
-| [`src/audienceDemographics.js`](https://github.com/nirholas/XActions/blob/main/src/audienceDemographics.js) | Main script |
+| [`browser/audienceDemographics.js`](https://github.com/nirholas/XActions/blob/main/browser/audienceDemographics.js) | Main script |
 
 ---
 

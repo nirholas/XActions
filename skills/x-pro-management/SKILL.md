@@ -15,14 +15,14 @@ Browser console scripts for navigating and configuring X Pro (formerly TweetDeck
 
 | Goal | File | Navigate to |
 |------|------|-------------|
-| Navigate to X Pro + setup columns | `src/xPro.js` | `x.com` or `pro.x.com` |
-| Extended X Pro management | `src/xProManager.js` | `pro.x.com` |
+| Navigate to X Pro + setup columns | `browser/xPro.js` | `x.com` or `pro.x.com` |
+| Extended X Pro management | `browser/xProManager.js` | `pro.x.com` |
 
 ## Quick Start
 
 1. Go to `x.com` or `pro.x.com`
 2. Open DevTools (F12) → Console
-3. Paste `src/xPro.js` → Enter
+3. Paste `browser/xPro.js` → Enter
 
 ## Configuration (`xPro.js`)
 
@@ -59,7 +59,7 @@ const CONFIG = {
 ## Notes
 
 - X Pro requires an X Premium subscription
-- Column setup uses DOM automation — column UI may change; selectors in `src/xPro.js`
+- Column setup uses DOM automation — column UI may change; selectors in `browser/xPro.js`
 - `xProManager.js` provides extended operations including column reordering and removal
 - If `autoNavigate: true`, the script will redirect to `pro.x.com` automatically
 

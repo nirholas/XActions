@@ -19,7 +19,7 @@ Find and collect data on live, scheduled, and ended X Spaces.
 **Steps:**
 1. Go to `x.com/search?q=yourquery` or `x.com/home`
 2. Edit CONFIG with your search query
-3. Open console (F12) and paste `src/scrapeSpaces.js`
+3. Open console (F12) and paste `browser/scrapeSpaces.js`
 
 **Configuration:**
 ```javascript
@@ -55,7 +55,7 @@ const CONFIG = {
 
 ## 📁 Files
 
-- `src/scrapeSpaces.js` — Browser console Spaces scraper
+- `browser/scrapeSpaces.js` — Browser console Spaces scraper
 
 ## ⚠️ Notes
 

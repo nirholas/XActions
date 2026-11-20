@@ -72,12 +72,12 @@ Set me up with ongoing unfollower detection:
    - Compare snapshots to find who unfollowed me
    - Show me: "Since last check, 3 people unfollowed you: @user1, @user2, @user3"
 
-2. **Using browser script** (`src/detectUnfollowers.js`):
+2. **Using browser script** (`browser/detectUnfollowers.js`):
    - Explain how it stores follower snapshots in localStorage
    - How to compare snapshots to detect changes
    - Setting up the `newFollowersAlert.js` for real-time monitoring
 
-3. **Using the continuous monitor** (`src/continuousMonitor.js`):
+3. **Using the continuous monitor** (`browser/continuousMonitor.js`):
    - Explain how it runs continuously checking for new followers/unfollowers
    - How to configure check intervals
    - How to set up alerts

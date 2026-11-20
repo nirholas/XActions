@@ -486,7 +486,7 @@ Full list, flag by flag: [cli-reference.md](cli-reference.md).
 target page in [browser-scripts.md](browser-scripts.md) (generated from each
 file's header by `npm run docs:scripts`).
 
-A smaller registry of the copy-paste scripts under `src/` is exported from the
+A smaller registry of the copy-paste scripts under `browser/` is exported from the
 package, so a tool can list them without reading the repo:
 
 ```javascript
@@ -494,7 +494,7 @@ import { browserScripts } from 'xactions';
 
 console.log(Object.keys(browserScripts).length);   // 61
 console.log(browserScripts.unfollowback);
-// { file: 'src/unfollowback.js', description: "Unfollow users who don't follow you back" }
+// { file: 'browser/unfollowback.js', description: "Unfollow users who don't follow you back" }
 ```
 
 ---

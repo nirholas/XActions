@@ -11,7 +11,7 @@
 
 ## Block Bots
 
-**File:** `src/blockBots.js`
+**File:** `browser/blockBots.js`
 
 Scans your followers list and blocks accounts matching bot heuristics.
 
@@ -32,7 +32,7 @@ Scans your followers list and blocks accounts matching bot heuristics.
 
 ## Mass Block / Unblock
 
-**Files:** `src/massBlock.js`, `src/massUnblock.js`
+**Files:** `browser/massBlock.js`, `browser/massUnblock.js`
 
 Block or unblock accounts from a configurable list of usernames.
 
@@ -54,13 +54,13 @@ const CONFIG = {
 
 ## Mass Unmute
 
-**File:** `src/massUnmute.js`
+**File:** `browser/massUnmute.js`
 
 Unmute multiple previously muted accounts. Uses the same CONFIG pattern as Mass Unblock.
 
 ## Mute by Keywords
 
-**File:** `src/muteByKeywords.js`
+**File:** `browser/muteByKeywords.js`
 
 Scans your timeline for tweets containing specified keywords and mutes the authors.
 
@@ -77,13 +77,13 @@ Scrolls timeline, matches tweet text against keywords, and mutes matching author
 
 ## Report Spam
 
-**File:** `src/reportSpam.js`
+**File:** `browser/reportSpam.js`
 
 Reports accounts for spam or abuse through X's reporting flow. Use responsibly — reports are submitted to X.
 
 ## Remove Followers
 
-**File:** `src/removeFollowers.js`
+**File:** `browser/removeFollowers.js`
 
 Removes followers without permanently blocking them. Uses the block → immediate unblock pattern: blocking causes them to unfollow, then unblocking restores your ability to interact normally.
 

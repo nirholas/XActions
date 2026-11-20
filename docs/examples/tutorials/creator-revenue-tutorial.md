@@ -322,10 +322,10 @@ console.log(eligibility);
 
 | Feature | Script | Description |
 |---------|--------|-------------|
-| View Analytics | `src/viewAnalytics.js` | Check impressions and engagement |
+| View Analytics | `browser/viewAnalytics.js` | Check impressions and engagement |
 | Premium Manager | `src/premiumManager.js` | Check tier features and eligibility |
 | Creator Studio | `src/creatorStudio.js` | Combined analytics and revenue dashboard |
-| Subscribe to Premium | `src/subscribePremium.js` | Get Premium for monetization access |
+| Subscribe to Premium | `browser/subscribePremium.js` | Get Premium for monetization access |
 
 ---
 

@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bookmark Manager - Save — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="src/bookmarkManager.js">
+  <title>Bookmark Manager — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="scripts/bookmarkManager.js">
   <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, bookmark, manager, content tools">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Bookmark Manager - Save — XActions">
-  <meta property="og:description" content="src/bookmarkManager.js">
+  <meta property="og:title" content="Bookmark Manager — XActions">
+  <meta property="og:description" content="scripts/bookmarkManager.js">
   <meta property="og:url" content="https://xactions.app/scripts/bookmark-manager">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-image.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Bookmark Manager - Save — XActions">
-  <meta name="twitter:description" content="src/bookmarkManager.js">
+  <meta name="twitter:title" content="Bookmark Manager — XActions">
+  <meta name="twitter:description" content="scripts/bookmarkManager.js">
 
   <link rel="canonical" href="https://xactions.app/scripts/bookmark-manager">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
@@ -28,8 +28,8 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Bookmark Manager - Save — Free X/Twitter Script | XActions",
-    "description": "src/bookmarkManager.js",
+    "headline": "Bookmark Manager — Free X/Twitter Script | XActions",
+    "description": "scripts/bookmarkManager.js",
     "url": "https://xactions.app/scripts/bookmark-manager",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -47,7 +47,7 @@
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
       { "@type": "ListItem", "position": 3, "name": "Content Tools", "item": "https://xactions.app/scripts#content-tools" },
-      { "@type": "ListItem", "position": 4, "name": "Bookmark Manager - Save", "item": "https://xactions.app/scripts/bookmark-manager" }
+      { "@type": "ListItem", "position": 4, "name": "Bookmark Manager", "item": "https://xactions.app/scripts/bookmark-manager" }
     ]
   }
   </script>
@@ -112,24 +112,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>📚 Bookmark Manager - Save</h1>
+        <h1>📚 Bookmark Manager</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#content-tools">Content Tools</a> › Bookmark Manager - Save
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#content-tools">Content Tools</a> › Bookmark Manager
         </div>
       </header>
 
       <article class="article">
         <span class="cat-badge">Content Tools</span>
-        <span class="source-badge">src</span>
+        <span class="source-badge">scripts</span>
 
         <div class="meta-row">
           
           
-          <span>148 lines</span>
+          <span>117 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>src/bookmarkManager.js</p>
+        <p>scripts/bookmarkManager.js</p>
 
         
 
@@ -143,8 +143,32 @@
         
 
         
-        
-        
+        <section class="config-section">
+        <h2>Configuration Options</h2>
+        <table>
+          <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>action</code></td><td><code>'export'</code></td><td>'export' | 'clear'</td></tr>
+<tr><td><code>maxBookmarks</code></td><td><code>200</code></td><td>Max bookmarks to scrape</td></tr>
+<tr><td><code>format</code></td><td><code>'json'</code></td><td>'json' | 'csv'</td></tr>
+<tr><td><code>scrollDelay</code></td><td><code>1500</code></td><td>ms between scrolls</td></tr>
+<tr><td><code>maxScrollRetries</code></td><td><code>5</code></td><td>Stop after N scrolls with no new items</td></tr>
+          </tbody>
+        </table>
+      </section>
+        <section class="config-code">
+        <h2>Default Configuration</h2>
+        <div class="code-block">
+          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
+          <pre><code>const CONFIG = {
+    action: 'export',         // 'export' | 'clear'
+    maxBookmarks: 200,        // Max bookmarks to scrape
+    format: 'json',           // 'json' | 'csv'
+    scrollDelay: 1500,        // ms between scrolls
+    maxScrollRetries: 5,      // Stop after N scrolls with no new items
+  };</code></pre>
+        </div>
+      </section>
 
         <section class="full-code">
           <h2>Full Script</h2>
@@ -152,152 +176,121 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// src/bookmarkManager.js
-// Advanced bookmark management for X/Twitter
+// scripts/bookmarkManager.js
+// Browser console script for exporting and clearing bookmarks on X/Twitter
+// Paste in DevTools console on x.com/i/bookmarks
 // by nichxbt
 
-/**
- * Bookmark Manager - Save, organize, export, and manage bookmarks
- * 
- * Features:
- * - Bookmark/unbookmark posts
- * - Create bookmark folders (Premium)
- * - Export bookmarks to JSON/CSV
- * - Clear all bookmarks
- * - Search within bookmarks
- */
+(() =&gt; {
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
 
-const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+  // =============================================
+  // CONFIGURATION
+  // =============================================
+  const CONFIG = {
+    action: 'export',         // 'export' | 'clear'
+    maxBookmarks: 200,        // Max bookmarks to scrape
+    format: 'json',           // 'json' | 'csv'
+    scrollDelay: 1500,        // ms between scrolls
+    maxScrollRetries: 5,      // Stop after N scrolls with no new items
+  };
+  // =============================================
 
-const SELECTORS = {
-  bookmarksNav: 'a[href=&quot;/i/bookmarks&quot;]',
-  bookmark: '[data-testid=&quot;bookmark&quot;]',
-  removeBookmark: '[data-testid=&quot;removeBookmark&quot;]',
-  bookmarkFolder: '[data-testid=&quot;bookmarkFolder&quot;]',
-  createFolder: '[data-testid=&quot;createBookmarkFolder&quot;]',
-  tweet: 'article[data-testid=&quot;tweet&quot;]',
-  tweetText: '[data-testid=&quot;tweetText&quot;]',
-  clearAll: '[data-testid=&quot;clearAllBookmarks&quot;]',
-  confirmClear: '[data-testid=&quot;confirmationSheetConfirm&quot;]',
-};
+  const download = (data, filename) =&gt; {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([typeof data === 'string' ? data : JSON.stringify(data, null, 2)], { type: typeof data === 'string' ? 'text/csv' : 'application/json' }));
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    console.log(`📥 Downloaded: ${filename}`);
+  };
 
-/**
- * Get all bookmarks
- * @param {import('puppeteer').Page} page
- * @param {Object} options
- * @returns {Promise&lt;Object&gt;}
- */
-export async function getBookmarks(page, options = {}) {
-  const { limit = 100, format = 'json' } = options;
+  const scrapeBookmarks = async () =&gt; {
+    console.log(`📖 Scraping up to ${CONFIG.maxBookmarks} bookmarks...`);
+    const bookmarks = new Map();
+    let retries = 0;
 
-  await page.goto('https://x.com/i/bookmarks', { waitUntil: 'networkidle2' });
-  await sleep(3000);
+    while (bookmarks.size &lt; CONFIG.maxBookmarks &amp;&amp; retries &lt; CONFIG.maxScrollRetries) {
+      const prevSize = bookmarks.size;
 
-  const bookmarks = [];
-  let scrollAttempts = 0;
-  const maxScrolls = Math.ceil(limit / 5);
+      document.querySelectorAll('article[data-testid=&quot;tweet&quot;]').forEach(tweet =&gt; {
+        const linkEl = tweet.querySelector('a[href*=&quot;/status/&quot;]');
+        if (!linkEl || bookmarks.has(linkEl.href)) return;
 
-  while (bookmarks.length &lt; limit &amp;&amp; scrollAttempts &lt; maxScrolls) {
-    const newBookmarks = await page.evaluate((sel) =&gt; {
-      return Array.from(document.querySelectorAll(sel.tweet)).map(tweet =&gt; {
-        const text = tweet.querySelector(sel.tweetText)?.textContent || '';
-        const author = tweet.querySelector('[data-testid=&quot;User-Name&quot;] a')?.textContent || '';
+        const text = tweet.querySelector('[data-testid=&quot;tweetText&quot;]')?.textContent || '';
+        const userLink = tweet.querySelector('a[href^=&quot;/&quot;][role=&quot;link&quot;]');
+        const username = userLink?.href?.match(/x\.com\/([^/]+)/)?.[1] || '';
         const time = tweet.querySelector('time')?.getAttribute('datetime') || '';
-        const link = tweet.querySelector('a[href*=&quot;/status/&quot;]')?.href || '';
-        const likes = tweet.querySelector('[data-testid=&quot;like&quot;] span')?.textContent || '0';
+        const likes = tweet.querySelector('[data-testid=&quot;like&quot;] span, [data-testid=&quot;unlike&quot;] span')?.textContent || '0';
         const hasMedia = !!tweet.querySelector('img[src*=&quot;media&quot;], video');
-        return { text, author, time, link, likes, hasMedia };
-      });
-    }, SELECTORS);
 
-    for (const bm of newBookmarks) {
-      if (bm.link &amp;&amp; !bookmarks.find(b =&gt; b.link === bm.link)) {
-        bookmarks.push(bm);
-      }
+        bookmarks.set(linkEl.href, { text: text.substring(0, 300), url: linkEl.href, username, time, likes, hasMedia });
+      });
+
+      if (bookmarks.size === prevSize) retries++;
+      else retries = 0;
+
+      console.log(`   📚 Found ${bookmarks.size} bookmarks...`);
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(CONFIG.scrollDelay);
     }
 
-    await page.evaluate(() =&gt; window.scrollBy(0, 1000));
-    await sleep(1500);
-    scrollAttempts++;
-  }
-
-  const result = bookmarks.slice(0, limit);
-
-  if (format === 'csv') {
-    const csv = [
-      'text,author,time,link,likes,hasMedia',
-      ...result.map(b =&gt; `&quot;${b.text.replace(/&quot;/g, '&quot;&quot;')}&quot;,&quot;${b.author}&quot;,&quot;${b.time}&quot;,&quot;${b.link}&quot;,&quot;${b.likes}&quot;,&quot;${b.hasMedia}&quot;`),
-    ].join('\n');
-    return { format: 'csv', data: csv, count: result.length };
-  }
-
-  return {
-    bookmarks: result,
-    count: result.length,
-    format: 'json',
-    scrapedAt: new Date().toISOString(),
+    return [...bookmarks.values()];
   };
-}
 
-/**
- * Create a bookmark folder (Premium required)
- * @param {import('puppeteer').Page} page
- * @param {string} folderName
- * @returns {Promise&lt;Object&gt;}
- */
-export async function createFolder(page, folderName) {
-  await page.goto('https://x.com/i/bookmarks', { waitUntil: 'networkidle2' });
-  await sleep(2000);
+  const exportBookmarks = async () =&gt; {
+    const bookmarks = await scrapeBookmarks();
+    const date = new Date().toISOString().slice(0, 10);
 
-  try {
-    await page.click(SELECTORS.createFolder);
-    await sleep(1000);
+    if (CONFIG.format === 'csv') {
+      const header = 'URL,Username,Text,Likes,HasMedia,Time';
+      const rows = bookmarks.map(b =&gt;
+        `&quot;${b.url}&quot;,&quot;${b.username}&quot;,&quot;${b.text.replace(/&quot;/g, '&quot;&quot;')}&quot;,&quot;${b.likes}&quot;,&quot;${b.hasMedia}&quot;,&quot;${b.time}&quot;`
+      );
+      download([header, ...rows].join('\n'), `xactions-bookmarks-${date}.csv`);
+    } else {
+      download({ exportedAt: new Date().toISOString(), count: bookmarks.length, bookmarks }, `xactions-bookmarks-${date}.json`);
+    }
 
-    await page.click('input[name=&quot;folderName&quot;]');
-    await page.keyboard.type(folderName);
-    await sleep(500);
+    console.log(`✅ Exported ${bookmarks.length} bookmarks as ${CONFIG.format.toUpperCase()}`);
+  };
 
-    await page.click('[data-testid=&quot;createFolderConfirm&quot;]');
-    await sleep(1500);
+  const clearBookmarks = async () =&gt; {
+    console.log('🗑️ Clearing all bookmarks...');
+    try {
+      const moreBtn = document.querySelector('[aria-label=&quot;More&quot;]');
+      if (moreBtn) { moreBtn.click(); await sleep(1000); }
 
-    return { success: true, action: 'created_folder', name: folderName };
-  } catch (e) {
-    return { success: false, error: 'Could not create folder — Premium required' };
-  }
-}
+      const clearBtn = document.querySelector('[data-testid=&quot;clearAllBookmarks&quot;]');
+      if (clearBtn) { clearBtn.click(); await sleep(1000); }
 
-/**
- * Clear all bookmarks
- * @param {import('puppeteer').Page} page
- * @returns {Promise&lt;Object&gt;}
- */
-export async function clearAllBookmarks(page) {
-  await page.goto('https://x.com/i/bookmarks', { waitUntil: 'networkidle2' });
-  await sleep(2000);
+      const confirmBtn = document.querySelector('[data-testid=&quot;confirmationSheetConfirm&quot;]');
+      if (confirmBtn) { confirmBtn.click(); await sleep(2000); }
 
-  try {
-    // Open more options
-    await page.click('[aria-label=&quot;More&quot;]');
-    await sleep(1000);
+      console.log('✅ All bookmarks cleared!');
+    } catch (e) {
+      console.error('❌ Failed to clear bookmarks:', e.message);
+    }
+  };
 
-    await page.click(SELECTORS.clearAll);
-    await sleep(1000);
+  const run = async () =&gt; {
+    console.log('🔖 BOOKMARK MANAGER — XActions by nichxbt\n');
 
-    await page.click(SELECTORS.confirmClear);
-    await sleep(2000);
+    if (!window.location.href.includes('/bookmarks')) {
+      console.error('❌ Navigate to x.com/i/bookmarks first!');
+      return;
+    }
 
-    return { success: true, action: 'cleared_all', timestamp: new Date().toISOString() };
-  } catch (e) {
-    return { success: false, error: 'Could not clear bookmarks' };
-  }
-}
+    if (CONFIG.action === 'export') await exportBookmarks();
+    else if (CONFIG.action === 'clear') await clearBookmarks();
+    else console.error(`❌ Unknown action: ${CONFIG.action}`);
 
-export default {
-  getBookmarks,
-  createFolder,
-  clearAllBookmarks,
-  SELECTORS,
-};
+    console.log('\n🏁 Done!');
+  };
+
+  run();
+})();
 </code></pre>
           </div>
         </section>

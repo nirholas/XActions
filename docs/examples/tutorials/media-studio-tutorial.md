@@ -281,9 +281,9 @@ After navigating to `studio.x.com`, paste this script:
 
 | Feature | Script | Description |
 |---------|--------|-------------|
-| View Analytics | `src/viewAnalytics.js` | View post and account analytics |
-| Creator Revenue | `src/creatorSubscriptions.js` | Monetization and revenue settings |
-| X Pro | `src/xPro.js` | Multi-column TweetDeck interface |
+| View Analytics | `browser/viewAnalytics.js` | View post and account analytics |
+| Creator Revenue | `browser/creatorSubscriptions.js` | Monetization and revenue settings |
+| X Pro | `browser/xPro.js` | Multi-column TweetDeck interface |
 | Video Downloader | `scripts/videoDownloader.js` | Download videos from X |
 
 ---

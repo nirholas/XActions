@@ -213,7 +213,7 @@
 <ol>
 <li>Navigate to any tweet page on x.com (or any x.com page)</li>
 <li>Open DevTools (F12) and go to the Console tab</li>
-<li>Copy the contents of <code>src/postInteractions.js</code></li>
+<li>Copy the contents of <code>browser/postInteractions.js</code></li>
 <li>Paste into the console and press Enter</li>
 <li>Call functions via <code>window.XActions.postInteractions.&lt;function&gt;(url)</code></li>
 </ol>
@@ -298,7 +298,7 @@
 <p>Functions marked with <code>url?</code> are optional -- if omitted and you are on a tweet page, the current tweet is used.</p>
 <h2>Step-by-Step Guide</h2>
 <h3>View Who Liked a Post</h3>
-<p><strong>Step 1:</strong> Paste <code>src/postInteractions.js</code> into the console.</p>
+<p><strong>Step 1:</strong> Paste <code>browser/postInteractions.js</code> into the console.</p>
 <p><strong>Step 2:</strong> Call <code>viewLikes</code> with a tweet URL:</p>
 <pre><code class="language-js">await XActions.postInteractions.viewLikes(&#39;https://x.com/nichxbt/status/123456789&#39;);
 </code></pre>
@@ -442,9 +442,9 @@ await XActions.postInteractions.writeCommunityNote(&#39;https://x.com/user/statu
 </tbody></table>
 <h2>Related Scripts</h2>
 <ul>
-<li><code>src/shareEmbed.js</code> -- Bulk copy links and embed codes</li>
-<li><code>src/bookmarkOrganizer.js</code> -- Export and categorize bookmarks</li>
-<li><code>src/reportSpam.js</code> -- Report multiple spam accounts</li>
+<li><code>browser/shareEmbed.js</code> -- Bulk copy links and embed codes</li>
+<li><code>browser/bookmarkOrganizer.js</code> -- Export and categorize bookmarks</li>
+<li><code>browser/reportSpam.js</code> -- Report multiple spam accounts</li>
 </ul>
 
 

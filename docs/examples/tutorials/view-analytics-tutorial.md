@@ -278,7 +278,7 @@ Run this after the analytics page has loaded:
 
 ### Method 2: Node.js (Puppeteer)
 
-**Scripts:** `src/viewAnalytics.js`, `src/creatorStudio.js`
+**Scripts:** `browser/viewAnalytics.js`, `src/creatorStudio.js`
 
 ```javascript
 import { getAccountAnalytics, getPostAnalytics } from './src/creatorStudio.js';
@@ -388,7 +388,7 @@ await browser.close();
 
 | Feature | Script | Description |
 |---------|--------|-------------|
-| Creator Revenue | `src/creatorSubscriptions.js` | Revenue sharing and subscriber management |
+| Creator Revenue | `browser/creatorSubscriptions.js` | Revenue sharing and subscriber management |
 | Creator Studio | `src/creatorStudio.js` | Combined analytics, revenue, and subscribers |
 | Premium Manager | `src/premiumManager.js` | Check tier and available features |
 | Grok AI | `src/grokIntegration.js` | Use Grok to analyze post potential |

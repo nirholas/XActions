@@ -113,9 +113,9 @@ failures; set `X_AUTH_TOKEN` and `X_CSRF_TOKEN` to cover those too.
 
 ```
 xactions/
-├── src/              # Core modules
-│   ├── automation/   # Automation features
-│   └── *.js          # Main scripts
+├── src/              # Node library, CLI, MCP server
+│   └── automation/   # Automation features
+├── browser/          # Browser console scripts (paste into DevTools on x.com)
 ├── api/              # Backend API routes
 ├── dashboard/        # Frontend UI
 ├── docs/             # Documentation

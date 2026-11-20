@@ -227,12 +227,12 @@
 </tr>
 </thead>
 <tbody><tr>
-<td><code>src/unfollowEveryone.js</code></td>
+<td><code>browser/unfollowEveryone.js</code></td>
 <td>No</td>
 <td>Unfollow every account you follow</td>
 </tr>
 <tr>
-<td><code>src/unfollowback.js</code></td>
+<td><code>browser/unfollowback.js</code></td>
 <td>No</td>
 <td>Unfollow only non-followers</td>
 </tr>
@@ -243,7 +243,7 @@
 </tr>
 </tbody></table>
 <h2>Configuration</h2>
-<h3>src/unfollowEveryone.js</h3>
+<h3>browser/unfollowEveryone.js</h3>
 <pre><code class="language-js">const CONFIG = {
   maxUnfollows: Infinity,
   minDelay: 1200,
@@ -261,7 +261,7 @@
   exportOnComplete: true,
 };
 </code></pre>
-<h3>src/unfollowback.js</h3>
+<h3>browser/unfollowback.js</h3>
 <pre><code class="language-js">const CONFIG = {
   maxUnfollows: Infinity,
   whitelist: [],
@@ -295,7 +295,7 @@
   maxUnfollows: 100,  // Start with a small batch
 };
 </code></pre>
-<p><strong>Step 3:</strong> Paste <code>src/unfollowEveryone.js</code>. It scrolls through your following list and unfollows each account:</p>
+<p><strong>Step 3:</strong> Paste <code>browser/unfollowEveryone.js</code>. It scrolls through your following list and unfollows each account:</p>
 <pre><code>UNFOLLOW EVERYONE
 LIVE
 
@@ -322,7 +322,7 @@ XActionsUtils.abort();   // Stop
   maxUnfollows: 50,
 };
 </code></pre>
-<p><strong>Step 3:</strong> Paste <code>src/unfollowback.js</code>. The script checks each user for the &quot;Follows you&quot; badge:</p>
+<p><strong>Step 3:</strong> Paste <code>browser/unfollowback.js</code>. The script checks each user for the &quot;Follows you&quot; badge:</p>
 <pre><code>UNFOLLOW NON-FOLLOWERS
 DRY RUN -- no accounts will be unfollowed.
 
@@ -422,10 +422,10 @@ Done! Unfollowed 12 users.
 </tbody></table>
 <h2>Related Scripts</h2>
 <ul>
-<li><code>src/followAccount.js</code> -- Follow specific accounts</li>
+<li><code>browser/followAccount.js</code> -- Follow specific accounts</li>
 <li><code>src/automation/keywordFollow.js</code> -- Keyword-based follow</li>
 <li><code>src/automation/followTargetUsers.js</code> -- Follow followers of target accounts</li>
-<li><code>src/detectUnfollowers.js</code> -- Detect who unfollowed you</li>
+<li><code>browser/detectUnfollowers.js</code> -- Detect who unfollowed you</li>
 </ul>
 
 

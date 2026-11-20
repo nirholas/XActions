@@ -105,6 +105,20 @@ export default [
     },
   },
   {
+    // Console scripts pasted into DevTools on x.com: browser globals only, no Node.
+    // Flat config merges `globals` across blocks, so the Node-only names the block
+    // above grants are switched off here rather than merely left out.
+    files: ['browser/**/*.js'],
+    languageOptions: {
+      sourceType: 'script',
+      globals: {
+        ...Object.fromEntries(Object.keys(globals.node).map((name) => [name, 'off'])),
+        ...globals.browser,
+        ...globals.es2024,
+      },
+    },
+  },
+  {
     // Template that scripts/build-toolkit.mjs prepends with the CATALOG/CATEGORIES/TOOLS tables.
     files: ['scripts/twitter/_command-center-shell.js'],
     languageOptions: { globals: { CATALOG: 'readonly', CATEGORIES: 'readonly', TOOLS: 'readonly' } },

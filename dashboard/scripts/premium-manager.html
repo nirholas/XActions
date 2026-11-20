@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Premium Manager - Check and manage Premium subscription features — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="src/premiumManager.js">
+  <title>Premium Manager — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="scripts/premiumManager.js">
   <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, premium, manager, premium">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Premium Manager - Check and manage Premium subscription features — XActions">
-  <meta property="og:description" content="src/premiumManager.js">
+  <meta property="og:title" content="Premium Manager — XActions">
+  <meta property="og:description" content="scripts/premiumManager.js">
   <meta property="og:url" content="https://xactions.app/scripts/premium-manager">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-image.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Premium Manager - Check and manage Premium subscription features — XActions">
-  <meta name="twitter:description" content="src/premiumManager.js">
+  <meta name="twitter:title" content="Premium Manager — XActions">
+  <meta name="twitter:description" content="scripts/premiumManager.js">
 
   <link rel="canonical" href="https://xactions.app/scripts/premium-manager">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
@@ -28,8 +28,8 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Premium Manager - Check and manage Premium subscription features — Free X/Twitter Script | XActions",
-    "description": "src/premiumManager.js",
+    "headline": "Premium Manager — Free X/Twitter Script | XActions",
+    "description": "scripts/premiumManager.js",
     "url": "https://xactions.app/scripts/premium-manager",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -47,7 +47,7 @@
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
       { "@type": "ListItem", "position": 3, "name": "Premium", "item": "https://xactions.app/scripts#premium" },
-      { "@type": "ListItem", "position": 4, "name": "Premium Manager - Check and manage Premium subscription features", "item": "https://xactions.app/scripts/premium-manager" }
+      { "@type": "ListItem", "position": 4, "name": "Premium Manager", "item": "https://xactions.app/scripts/premium-manager" }
     ]
   }
   </script>
@@ -112,24 +112,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>⭐ Premium Manager - Check and manage Premium subscription features</h1>
+        <h1>⭐ Premium Manager</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#premium">Premium</a> › Premium Manager - Check and manage Premium subscription features
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#premium">Premium</a> › Premium Manager
         </div>
       </header>
 
       <article class="article">
         <span class="cat-badge">Premium</span>
-        <span class="source-badge">src</span>
+        <span class="source-badge">scripts</span>
 
         <div class="meta-row">
           
           
-          <span>233 lines</span>
+          <span>149 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>src/premiumManager.js</p>
+        <p>scripts/premiumManager.js</p>
 
         
 
@@ -144,7 +144,15 @@
 
         
         
-        
+        <section class="config-code">
+        <h2>Default Configuration</h2>
+        <div class="code-block">
+          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
+          <pre><code>const CONFIG = {
+    exportResults: true,
+  };</code></pre>
+        </div>
+      </section>
 
         <section class="full-code">
           <h2>Full Script</h2>
@@ -152,237 +160,153 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// src/premiumManager.js  
-// Premium subscription feature management for X/Twitter
+// scripts/premiumManager.js
+// Browser console script for detecting Premium tier and features on X/Twitter
+// Paste in DevTools console on x.com
 // by nichxbt
 
-/**
- * Premium Manager - Check and manage Premium subscription features
- * 
- * Features:
- * - Check Premium tier (Basic/Premium/Premium+)
- * - List available features per tier
- * - Verification status
- * - Revenue sharing eligibility
- * - Pay-for-reach analysis (2026)
- */
+(() =&gt; {
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
 
-const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+  // =============================================
+  // CONFIGURATION
+  // =============================================
+  const CONFIG = {
+    exportResults: true,
+  };
+  // =============================================
 
-const SELECTORS = {
-  premiumNav: 'a[href=&quot;/i/premium_sign_up&quot;]',
-  verificationBadge: '[data-testid=&quot;icon-verified&quot;]',
-  subscriptionInfo: '[data-testid=&quot;subscriptionInfo&quot;]',
-  premiumBanner: '[data-testid=&quot;premiumBanner&quot;]',
-};
+  const download = (data, filename) =&gt; {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    console.log(`📥 Downloaded: ${filename}`);
+  };
 
-/**
- * Tier feature definitions
- */
-const TIER_FEATURES = {
-  free: {
-    tier: 'Free',
-    price: '$0/mo',
-    features: {
-      postLength: 280,
-      videoLength: '140s',
-      adReduction: 'None',
-      verification: false,
-      editPost: false,
-      scheduling: false,
-      bookmarkFolders: false,
-      formatting: false,
-      revenueShare: false,
-      articles: false,
-      radarSearch: false,
-      grokLevel: 'Basic (~10 queries/day)',
-      replyBoost: 'None',
+  const TIER_FEATURES = {
+    free: {
+      tier: 'Free', price: '$0/mo',
+      features: { postLength: 280, videoLength: '140s', adReduction: 'None', verification: false, editPost: false, scheduling: false, bookmarkFolders: false, revenueShare: false, grokLevel: 'Basic (~10 queries/day)', replyBoost: 'None' },
     },
-  },
-  basic: {
-    tier: 'Basic',
-    price: '$3/mo',
-    features: {
-      postLength: 280,
-      videoLength: '140s',
-      adReduction: '50% fewer',
-      verification: false,
-      editPost: false,
-      scheduling: false,
-      bookmarkFolders: false,
-      formatting: false,
-      revenueShare: false,
-      articles: false,
-      radarSearch: false,
-      grokLevel: 'More queries',
-      replyBoost: 'Small',
+    basic: {
+      tier: 'Basic', price: '$3/mo',
+      features: { postLength: 280, videoLength: '140s', adReduction: '50% fewer', verification: false, editPost: false, scheduling: false, bookmarkFolders: false, revenueShare: false, grokLevel: 'More queries', replyBoost: 'Small' },
     },
-  },
-  premium: {
-    tier: 'Premium',
-    price: '$8/mo',
-    features: {
-      postLength: 25000,
-      videoLength: '60min',
-      adReduction: '50% fewer',
-      verification: true,
-      editPost: true,
-      scheduling: true,
-      bookmarkFolders: true,
-      formatting: true,
-      revenueShare: true,
-      articles: false,
-      radarSearch: false,
-      grokLevel: 'Higher (~100 queries/day)',
-      replyBoost: 'Medium',
+    premium: {
+      tier: 'Premium', price: '$8/mo',
+      features: { postLength: 25000, videoLength: '60min', adReduction: '50% fewer', verification: true, editPost: true, scheduling: true, bookmarkFolders: true, revenueShare: true, grokLevel: 'Higher (~100 queries/day)', replyBoost: 'Medium' },
     },
-  },
-  'premium+': {
-    tier: 'Premium+',
-    price: '$16/mo',
-    features: {
-      postLength: 25000,
-      videoLength: '3hr',
-      adReduction: 'No ads',
-      verification: true,
-      editPost: true,
-      scheduling: true,
-      bookmarkFolders: true,
-      formatting: true,
-      revenueShare: true,
-      articles: true,
-      radarSearch: true,
-      grokLevel: 'Highest (unlimited)',
-      replyBoost: 'Largest',
+    'premium+': {
+      tier: 'Premium+', price: '$16/mo',
+      features: { postLength: 25000, videoLength: '3hr', adReduction: 'No ads', verification: true, editPost: true, scheduling: true, bookmarkFolders: true, revenueShare: true, grokLevel: 'Highest (unlimited)', replyBoost: 'Largest' },
     },
-  },
-  supergrok: {
-    tier: 'SuperGrok',
-    price: '$60/mo (separate xAI subscription)',
-    features: {
-      unlimited_grok: true,
-      unlimited_agents: true,
-      dedicated_apps: 'MacOS/iOS',
-      project_org: true,
-      advanced_ai: true,
-    },
-  },
-};
+  };
 
-/**
- * Check a user's Premium tier
- * @param {import('puppeteer').Page} page
- * @param {string} username
- * @returns {Promise&lt;Object&gt;}
- */
-export async function checkPremiumStatus(page, username) {
-  await page.goto(`https://x.com/${username}`, { waitUntil: 'networkidle2' });
-  await sleep(2000);
+  const detectTier = () =&gt; {
+    const signals = {
+      hasVerificationBadge: false,
+      hasPremiumNav: false,
+      hasPremiumBanner: false,
+      canEditPosts: false,
+      hasBookmarkFolders: false,
+      hasLongPostOption: false,
+    };
 
-  const status = await page.evaluate((sel) =&gt; {
-    const isVerified = !!document.querySelector(sel.verificationBadge);
-    const badges = document.querySelectorAll('svg[data-testid]');
-    let badgeType = 'none';
+    // Check for verification badge on own profile
+    const badge = document.querySelector('[data-testid=&quot;icon-verified&quot;]');
+    signals.hasVerificationBadge = !!badge;
 
-    badges.forEach(badge =&gt; {
-      const testId = badge.getAttribute('data-testid');
-      if (testId?.includes('verified')) badgeType = 'blue';
-      if (testId?.includes('verifiedOrg')) badgeType = 'gold';
+    // Check for Premium navigation link
+    const premiumLink = document.querySelector('a[href=&quot;/i/premium_sign_up&quot;]');
+    signals.hasPremiumNav = !!premiumLink;
+
+    // Check for premium banner
+    const premiumBanner = document.querySelector('[data-testid=&quot;premiumBanner&quot;]');
+    signals.hasPremiumBanner = !!premiumBanner;
+
+    // Check tweet composer for long-form option
+    const composer = document.querySelector('[data-testid=&quot;tweetTextarea_0&quot;]');
+    if (composer) {
+      const charLimit = document.querySelector('[data-testid=&quot;characterCount&quot;]');
+      signals.hasLongPostOption = !!charLimit;
+    }
+
+    // Check for edit button on own tweets
+    const editBtn = document.querySelector('[data-testid=&quot;editTweet&quot;]');
+    signals.canEditPosts = !!editBtn;
+
+    // Infer tier
+    let tier = 'free';
+    if (signals.hasVerificationBadge &amp;&amp; signals.canEditPosts) {
+      tier = 'premium';
+    } else if (signals.hasVerificationBadge) {
+      tier = 'premium';
+    } else if (!signals.hasPremiumNav) {
+      // If premium nav is absent, user might be subscribed
+      tier = 'basic';
+    }
+
+    // If no ads visible, might be premium+
+    const ads = document.querySelectorAll('[data-testid=&quot;placementTracking&quot;]');
+    if (signals.hasVerificationBadge &amp;&amp; ads.length === 0) {
+      tier = 'premium+';
+    }
+
+    return { tier, signals };
+  };
+
+  const run = async () =&gt; {
+    console.log('⭐ PREMIUM MANAGER — XActions by nichxbt\n');
+    console.log('🔍 Detecting Premium tier...\n');
+
+    const { tier, signals } = detectTier();
+    const tierInfo = TIER_FEATURES[tier] || TIER_FEATURES.free;
+
+    console.log(`🏷️ Detected tier: ${tierInfo.tier} (${tierInfo.price})`);
+    console.log(`   ℹ️ Detection is approximate — exact tier requires account settings\n`);
+
+    console.log('📋 DETECTION SIGNALS:');
+    Object.entries(signals).forEach(([key, val]) =&gt; {
+      console.log(`   ${val ? '✅' : '❌'} ${key}`);
     });
 
-    return { isVerified, badgeType };
-  }, SELECTORS);
+    console.log(`\n🎁 FEATURES FOR ${tierInfo.tier.toUpperCase()}:`);
+    Object.entries(tierInfo.features).forEach(([key, val]) =&gt; {
+      const icon = val === true ? '✅' : val === false ? '❌' : '📊';
+      console.log(`   ${icon} ${key}: ${val}`);
+    });
 
-  // Infer tier from badge
-  let inferredTier = 'free';
-  if (status.badgeType === 'gold') inferredTier = 'organization';
-  else if (status.isVerified) inferredTier = 'premium_or_higher';
+    // Compare with upgrade
+    const tiers = ['free', 'basic', 'premium', 'premium+'];
+    const currentIdx = tiers.indexOf(tier);
+    if (currentIdx &lt; tiers.length - 1) {
+      const nextTier = tiers[currentIdx + 1];
+      const nextInfo = TIER_FEATURES[nextTier];
+      console.log(`\n💡 UPGRADE TO ${nextInfo.tier.toUpperCase()} (${nextInfo.price}):`);
+      Object.entries(nextInfo.features).forEach(([key, val]) =&gt; {
+        const currentVal = tierInfo.features[key];
+        if (val !== currentVal) {
+          console.log(`   🆕 ${key}: ${currentVal ?? 'N/A'} → ${val}`);
+        }
+      });
+    }
 
-  return {
-    username,
-    ...status,
-    inferredTier,
-    note: 'Exact tier detection requires account owner access',
-    scrapedAt: new Date().toISOString(),
+    if (CONFIG.exportResults) {
+      const date = new Date().toISOString().slice(0, 10);
+      download(
+        { exportedAt: new Date().toISOString(), detectedTier: tier, tierInfo, signals, allTiers: TIER_FEATURES },
+        `xactions-premium-status-${date}.json`
+      );
+    }
+
+    console.log('\n🏁 Done!');
   };
-}
 
-/**
- * Get features available for a tier
- * @param {string} tier - 'free', 'basic', 'premium', 'premium+', 'supergrok'
- * @returns {Object}
- */
-export function getTierFeatures(tier) {
-  const normalized = tier.toLowerCase().replace(/\s+/g, '');
-  return TIER_FEATURES[normalized] || { error: `Unknown tier: ${tier}` };
-}
-
-/**
- * Compare two tiers
- * @param {string} tier1
- * @param {string} tier2
- * @returns {Object}
- */
-export function compareTiers(tier1, tier2) {
-  const t1 = getTierFeatures(tier1);
-  const t2 = getTierFeatures(tier2);
-
-  if (t1.error || t2.error) {
-    return { error: t1.error || t2.error };
-  }
-
-  const comparison = {};
-  const allFeatures = new Set([
-    ...Object.keys(t1.features || {}),
-    ...Object.keys(t2.features || {}),
-  ]);
-
-  for (const feature of allFeatures) {
-    comparison[feature] = {
-      [t1.tier]: t1.features?.[feature] ?? 'N/A',
-      [t2.tier]: t2.features?.[feature] ?? 'N/A',
-    };
-  }
-
-  return { comparison, tiers: [t1.tier, t2.tier] };
-}
-
-/**
- * Check revenue sharing eligibility
- * @param {import('puppeteer').Page} page
- * @param {string} username
- * @returns {Promise&lt;Object&gt;}
- */
-export async function checkRevenueEligibility(page, username) {
-  const profile = await page.evaluate(() =&gt; {
-    const followers = document.querySelector('a[href$=&quot;/followers&quot;] span')?.textContent || '0';
-    return { followers };
-  });
-
-  const followerCount = parseInt(profile.followers.replace(/[,K.M]/g, '')) || 0;
-
-  return {
-    username,
-    followers: profile.followers,
-    meetsFollowerMin: followerCount &gt;= 500,
-    requirements: {
-      minFollowers: '500+',
-      minImpressions: '5M+ in last 3 months',
-      premiumRequired: true,
-      note: 'Must have Premium ($8/mo) or higher',
-    },
-    note: 'Impression data requires account owner access to verify',
-  };
-}
-
-export default {
-  checkPremiumStatus,
-  getTierFeatures,
-  compareTiers,
-  checkRevenueEligibility,
-  TIER_FEATURES,
-  SELECTORS,
-};
+  run();
+})();
 </code></pre>
           </div>
         </section>

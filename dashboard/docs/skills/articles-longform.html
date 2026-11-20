@@ -256,17 +256,17 @@
 </tr>
 <tr>
 <td>Convert thread to article</td>
-<td><code>src/contentRepurposer.js</code></td>
+<td><code>browser/contentRepurposer.js</code></td>
 <td><code>x.com/USERNAME</code></td>
 </tr>
 <tr>
 <td>Track article performance</td>
-<td><code>src/tweetPerformance.js</code></td>
+<td><code>browser/tweetPerformance.js</code></td>
 <td><code>x.com/USERNAME</code></td>
 </tr>
 <tr>
 <td>Generate blog outline</td>
-<td><code>src/contentRepurposer.js</code></td>
+<td><code>browser/contentRepurposer.js</code></td>
 <td><code>x.com/USERNAME</code></td>
 </tr>
 </tbody></table>
@@ -334,15 +334,15 @@
 <h2 id="content-strategy">Content Strategy</h2>
 <h3 id="thread-to-article-pipeline">Thread-to-Article pipeline</h3>
 <ol>
-<li>Run <code>src/tweetPerformance.js</code> to find your best-performing threads</li>
-<li>Run <code>src/contentRepurposer.js</code> -&gt; <code>XActions.toBlog(i)</code> to generate article outline</li>
+<li>Run <code>browser/tweetPerformance.js</code> to find your best-performing threads</li>
+<li>Run <code>browser/contentRepurposer.js</code> -&gt; <code>XActions.toBlog(i)</code> to generate article outline</li>
 <li>Navigate to <code>x.com/compose/article</code></li>
 <li>Use <code>src/articlePublisher.js</code> to format and publish</li>
 <li>Share the article link as a tweet for promotion</li>
 </ol>
 <h3 id="seo-and-reach-optimization">SEO and reach optimization</h3>
 <ul>
-<li>Use <code>src/contentRepurposer.js</code> -&gt; <code>XActions.toBlog(i)</code> for keyword suggestions</li>
+<li>Use <code>browser/contentRepurposer.js</code> -&gt; <code>XActions.toBlog(i)</code> for keyword suggestions</li>
 <li>Articles get indexed by Google (unlike regular tweets)</li>
 <li>Include 1-2 images per 500 words for better engagement</li>
 <li>Link back to your profile and other articles</li>

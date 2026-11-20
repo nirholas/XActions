@@ -16,6 +16,7 @@
  */
 
 import { readFile } from 'fs/promises';
+import { existsSync } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import puppeteer from 'puppeteer-extra';
@@ -26,6 +27,7 @@ puppeteer.use(StealthPlugin());
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const SRC_ROOT = path.resolve(__dirname, '../../../../src');
+const BROWSER_ROOT = path.resolve(__dirname, '../../../../browser');
 
 /** Maximum wall-clock time before the script is force-aborted. */
 const SCRIPT_TIMEOUT_MS = 5 * 60 * 1000; // 5 minutes
@@ -62,7 +64,10 @@ function patchConfig(scriptCode, params) {
 
 /**
  * Resolve a validated script path to an absolute file path.
- * Throws if the resolved path escapes the src/ tree (path-traversal guard).
+ * Throws if the resolved path escapes its tree (path-traversal guard).
+ *
+ * `src/<name>` is the public script id; the console scripts it names live in
+ * browser/. A few ids still name Node modules left in src/, which resolve there.
  */
 function resolveScriptPath(scriptPath) {
   if (scriptPath.startsWith('automation/')) {
@@ -76,11 +81,14 @@ function resolveScriptPath(scriptPath) {
   }
 
   const name = scriptPath.startsWith('src/') ? scriptPath.slice(4) : scriptPath;
-  const filePath = path.resolve(SRC_ROOT, `${name}.js`);
-  if (!filePath.startsWith(SRC_ROOT + path.sep) && filePath !== SRC_ROOT) {
-    throw new Error('Invalid script path');
+  for (const root of [BROWSER_ROOT, SRC_ROOT]) {
+    const filePath = path.resolve(root, `${name}.js`);
+    if (!filePath.startsWith(root + path.sep)) {
+      throw new Error('Invalid script path');
+    }
+    if (existsSync(filePath)) return filePath;
   }
-  return filePath;
+  return path.resolve(BROWSER_ROOT, `${name}.js`);
 }
 
 /**

@@ -184,23 +184,23 @@ For Premium users, use `x_creator_analytics`:
 
 For advanced analysis, walk me through the DevTools scripts:
 
-#### Engagement Analytics (`src/engagementAnalytics.js`)
+#### Engagement Analytics (`browser/engagementAnalytics.js`)
 - Paste in console on your profile
 - Calculates engagement rate per tweet
 - Identifies your most engaging content patterns
 - Generates a report with recommendations
 
-#### Best Time to Post (`src/bestTimeToPost.js`)
+#### Best Time to Post (`browser/bestTimeToPost.js`)
 - Analyzes your tweets' timestamps vs engagement
 - Builds a time-slot performance map
 - Recommends optimal posting schedule
 
-#### Competitor Analysis (`src/competitorAnalysis.js`)
+#### Competitor Analysis (`browser/competitorAnalysis.js`)
 - Compare up to 5 accounts side by side
 - Engagement benchmarking
 - Content strategy comparison
 
-#### Hashtag Analytics (`src/hashtagAnalytics.js`)
+#### Hashtag Analytics (`browser/hashtagAnalytics.js`)
 - Track hashtag performance over time
 - Find trending hashtags in your niche
 - Recommend hashtags based on your content

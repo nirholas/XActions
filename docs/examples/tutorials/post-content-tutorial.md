@@ -137,8 +137,8 @@ await repost(page, 'https://x.com/user/status/123456789');
 
 ## Related Scripts
 
-- `src/postThread.js` -- Post multi-tweet threads (browser console)
-- `src/threadComposer.js` -- Advanced thread composer with drafts (browser console)
-- `src/schedulePosts.js` -- Schedule posts for later (browser console)
-- `src/textFormatting.js` -- Format text with bold, italic, etc.
-- `src/createPoll.js` -- Create poll tweets (browser console)
+- `browser/postThread.js` -- Post multi-tweet threads (browser console)
+- `browser/threadComposer.js` -- Advanced thread composer with drafts (browser console)
+- `browser/schedulePosts.js` -- Schedule posts for later (browser console)
+- `browser/textFormatting.js` -- Format text with bold, italic, etc.
+- `browser/createPoll.js` -- Create poll tweets (browser console)

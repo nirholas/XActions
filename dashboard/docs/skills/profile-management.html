@@ -256,17 +256,17 @@
 </tr>
 <tr>
 <td>Update Profile</td>
-<td><code>src/updateProfile.js</code></td>
+<td><code>browser/updateProfile.js</code></td>
 <td>Update bio, name, location, website</td>
 </tr>
 <tr>
 <td>QR Code Sharing</td>
-<td><code>src/qrCodeSharing.js</code></td>
+<td><code>browser/qrCodeSharing.js</code></td>
 <td>Generate and share profile QR codes</td>
 </tr>
 </tbody></table>
 <h2 id="update-profile">Update Profile</h2>
-<p><strong>File:</strong> <code>src/updateProfile.js</code></p>
+<p><strong>File:</strong> <code>browser/updateProfile.js</code></p>
 <p>Programmatically updates profile fields: display name, bio, location, website, birth date.</p>
 <h3 id="how-to-use">How to Use</h3>
 <ol>
@@ -286,7 +286,7 @@
 <p><strong>File:</strong> <code>src/profileManager.js</code></p>
 <p>Core module for reading and updating profile data. Used by other scripts that need profile context.</p>
 <h2 id="qr-code-sharing">QR Code Sharing</h2>
-<p><strong>File:</strong> <code>src/qrCodeSharing.js</code></p>
+<p><strong>File:</strong> <code>browser/qrCodeSharing.js</code></p>
 <p>Generates a shareable QR code for your X profile. Useful for in-person networking and cross-platform promotion.</p>
 <h2 id="dom-selectors">DOM Selectors</h2>
 <table>
@@ -380,9 +380,9 @@
 <p>Example: &quot;Building AI tools for indie hackers | 10K+ users | Free at example.com&quot;</p>
 <h3 id="profile-ab-testing">Profile A/B testing</h3>
 <ol>
-<li>Use <code>src/updateProfile.js</code> to set version A</li>
-<li>Run for 1 week, track follower growth with <code>src/followerGrowthTracker.js</code></li>
-<li>Switch to version B with <code>src/updateProfile.js</code></li>
+<li>Use <code>browser/updateProfile.js</code> to set version A</li>
+<li>Run for 1 week, track follower growth with <code>browser/followerGrowthTracker.js</code></li>
+<li>Switch to version B with <code>browser/updateProfile.js</code></li>
 <li>Compare growth rates after another week</li>
 <li>Keep the winning version</li>
 </ol>

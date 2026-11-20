@@ -246,5 +246,5 @@ for (const keyword of spamKeywords) {
 ## Related Scripts
 
 - `src/discoveryExplore.js` -- Search and trend monitoring
-- `src/topicManager.js` -- Manage topics to control what appears in your feed
-- `src/timelineViewer.js` -- View and export timeline posts
+- `browser/topicManager.js` -- Manage topics to control what appears in your feed
+- `browser/timelineViewer.js` -- View and export timeline posts

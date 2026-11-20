@@ -246,10 +246,10 @@ The boost is automatic -- there is no setting to toggle. Simply having Premium g
 
 | Feature | Script | Description |
 |---------|--------|-------------|
-| Subscribe to Premium | `src/subscribePremium.js` | Get Premium for reply restrictions |
+| Subscribe to Premium | `browser/subscribePremium.js` | Get Premium for reply restrictions |
 | Blue Checkmark | `src/premiumManager.js` | Check verification status |
 | Auto Commenter | `src/autoCommenter.js` | Automate replies to tweets |
-| View Analytics | `src/viewAnalytics.js` | See engagement on your posts |
+| View Analytics | `browser/viewAnalytics.js` | See engagement on your posts |
 
 ---
 

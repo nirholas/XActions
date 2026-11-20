@@ -24,7 +24,7 @@ Detect and block bot/fake accounts on your follower list using heuristic analysi
 **Steps:**
 1. Go to your followers page (`x.com/yourusername/followers`)
 2. Set `dryRun: false` when ready to block
-3. Open console (F12) and paste `src/blockBots.js`
+3. Open console (F12) and paste `browser/blockBots.js`
 
 **Configuration:**
 ```javascript
@@ -40,13 +40,13 @@ const CONFIG = {
 
 ## 📁 Files
 
-- `src/blockBots.js` — Bot detection and blocking
-- `src/auditFollowers.js` — Full follower audit (companion)
-- `src/massBlock.js` — Block a specific list of users
+- `browser/blockBots.js` — Bot detection and blocking
+- `browser/auditFollowers.js` — Full follower audit (companion)
+- `browser/massBlock.js` — Block a specific list of users
 
 ## ⚠️ Notes
 
 - Always run with `dryRun: true` first to review detected bots
 - The heuristic is not perfect — review the exported JSON before blocking
 - Threshold of 5 is a good starting point; lower = more aggressive
-- Blocked accounts can be unblocked later using `src/massUnblock.js`
+- Blocked accounts can be unblocked later using `browser/massUnblock.js`

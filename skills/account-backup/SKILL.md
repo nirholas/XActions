@@ -15,8 +15,8 @@ Browser console scripts for exporting your X/Twitter account data without an API
 
 | Goal | File | Navigate to |
 |------|------|-------------|
-| Backup profile, tweets, likes, bookmarks, followers/following | `src/backupAccount.js` | `x.com/USERNAME` |
-| Trigger X's official data archive download | `src/downloadAccountData.js` | `x.com/settings/download_your_data` |
+| Backup profile, tweets, likes, bookmarks, followers/following | `browser/backupAccount.js` | `x.com/USERNAME` |
+| Trigger X's official data archive download | `browser/downloadAccountData.js` | `x.com/settings/download_your_data` |
 | Export data via API | `api/routes/portability.js` | API endpoint `/api/portability/export` |
 
 ## Quick Start
@@ -25,14 +25,14 @@ Browser console scripts for exporting your X/Twitter account data without an API
 
 1. Navigate to `x.com/USERNAME` (your own profile)
 2. Open DevTools (F12) → Console
-3. Paste `src/backupAccount.js` → Enter
+3. Paste `browser/backupAccount.js` → Enter
 4. JSON file auto-downloads when complete
 
 ### Official X data archive
 
 1. Navigate to `x.com/settings/download_your_data`
 2. Open DevTools (F12) → Console
-3. Paste `src/downloadAccountData.js` → Enter
+3. Paste `browser/downloadAccountData.js` → Enter
 4. Script triggers the request and monitors progress (checks every 30s, up to 60 min)
 
 ## Configuration (`backupAccount.js`)

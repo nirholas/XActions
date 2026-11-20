@@ -9,7 +9,7 @@
 ## Quick Start
 1. Navigate to your profile page: `https://x.com/YOUR_USERNAME`
 2. Open DevTools (F12) and go to the Console tab
-3. Copy the contents of `src/pinTweetManager.js`
+3. Copy the contents of `browser/pinTweetManager.js`
 4. Edit the `CONFIG` section (action, metric, tweetUrl)
 5. Paste into the console and press Enter
 
@@ -153,6 +153,6 @@ No pinned tweet found.
 
 ## Related Scripts
 
-- `src/bulkDeleteTweets.js` -- Delete tweets with filters
-- `src/shareEmbed.js` -- Copy links and embed codes
-- `src/postInteractions.js` -- View likes, reposts, quotes on a post
+- `browser/bulkDeleteTweets.js` -- Delete tweets with filters
+- `browser/shareEmbed.js` -- Copy links and embed codes
+- `browser/postInteractions.js` -- View likes, reposts, quotes on a post

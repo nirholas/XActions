@@ -15,12 +15,12 @@ Browser console scripts for sending, managing, and exporting X/Twitter DMs.
 
 | Script | File | Purpose |
 |--------|------|---------|
-| Send Direct Messages | `src/sendDirectMessage.js` | Send personalized DMs to a list of users |
+| Send Direct Messages | `browser/sendDirectMessage.js` | Send personalized DMs to a list of users |
 | DM Manager | `src/dmManager.js` | Core DM management (read, filter, organize, export) |
 
 ## Send Direct Messages
 
-**File:** `src/sendDirectMessage.js`
+**File:** `browser/sendDirectMessage.js`
 
 Send personalized DMs to multiple users with message templates and rate limiting.
 

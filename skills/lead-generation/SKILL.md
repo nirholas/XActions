@@ -42,10 +42,10 @@ Enhance MCP workflows with browser scripts:
 
 | Goal | Script |
 |------|--------|
-| Monitor keywords in real-time | `src/keywordMonitor.js` |
-| Analyze potential lead's audience | `src/audienceDemographics.js` |
-| Check overlap with your audience | `src/audienceOverlap.js` |
-| Engage with leads' content | `src/engagementBooster.js` |
+| Monitor keywords in real-time | `browser/keywordMonitor.js` |
+| Analyze potential lead's audience | `browser/audienceDemographics.js` |
+| Check overlap with your audience | `browser/audienceOverlap.js` |
+| Engage with leads' content | `browser/engagementBooster.js` |
 | Auto-follow qualified leads | `src/automation/keywordFollow.js` |
 
 ## Output Template
@@ -70,4 +70,4 @@ Generated: {date} | Total qualified: {count}
 - Run searches at different times to catch varied audiences
 - Refresh weekly -- buying signals are time-sensitive
 - Cross-reference with `x_get_followers` to find warm intros
-- Use `src/keywordMonitor.js` for ongoing keyword monitoring
+- Use `browser/keywordMonitor.js` for ongoing keyword monitoring

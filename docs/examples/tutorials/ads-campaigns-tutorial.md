@@ -292,9 +292,9 @@ Navigate to your profile page first, then paste:
 
 | Feature | Script | Description |
 |---------|--------|-------------|
-| View Analytics | `src/viewAnalytics.js` | Track post and account performance |
-| Creator Revenue | `src/creatorSubscriptions.js` | Monetization and revenue sharing |
-| Subscribe to Premium | `src/subscribePremium.js` | Get Premium for advanced features |
+| View Analytics | `browser/viewAnalytics.js` | Track post and account performance |
+| Creator Revenue | `browser/creatorSubscriptions.js` | Monetization and revenue sharing |
+| Subscribe to Premium | `browser/subscribePremium.js` | Get Premium for advanced features |
 | Grok AI | `src/grokIntegration.js` | Use AI to analyze ad copy effectiveness |
 
 ---

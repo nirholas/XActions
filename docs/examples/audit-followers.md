@@ -24,7 +24,7 @@ Analyze and categorize your followers as legitimate, suspicious, or likely fake.
 
 **Steps:**
 1. Go to your followers page (`x.com/yourusername/followers`)
-2. Open console (F12) and paste `src/auditFollowers.js`
+2. Open console (F12) and paste `browser/auditFollowers.js`
 
 **Configuration:**
 ```javascript
@@ -58,13 +58,13 @@ Top suspicious accounts listed with scores...
 
 ## 📁 Files
 
-- `src/auditFollowers.js` — Follower audit script
-- `src/blockBots.js` — Block detected bots (companion script)
-- `src/removeFollowers.js` — Remove specific followers
+- `browser/auditFollowers.js` — Follower audit script
+- `browser/blockBots.js` — Block detected bots (companion script)
+- `browser/removeFollowers.js` — Remove specific followers
 
 ## ⚠️ Notes
 
 - Accuracy depends on visible profile data (avatar, bio, stats)
 - The heuristic scores are tunable via `thresholds` in CONFIG
 - Not all "suspicious" accounts are bots — use as guidance
-- For higher accuracy, combine with `src/blockBots.js` which checks additional signals
+- For higher accuracy, combine with `browser/blockBots.js` which checks additional signals

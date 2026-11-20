@@ -47,7 +47,7 @@ const EXCLUDES = [
 ];
 
 /** Directories scanned for JavaScript sources. */
-const DIRS = ['src', 'api', 'tests', 'scripts', 'packages', 'integrations', 'archive'];
+const DIRS = ['src', 'browser', 'api', 'tests', 'scripts', 'packages', 'integrations', 'archive'];
 
 const BIN_DIR = join(ROOT, 'bin');
 

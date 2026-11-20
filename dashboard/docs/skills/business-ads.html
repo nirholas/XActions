@@ -266,22 +266,22 @@
 </tr>
 <tr>
 <td>A/B test tweet performance</td>
-<td><code>src/tweetABTester.js</code></td>
+<td><code>browser/tweetABTester.js</code></td>
 <td><code>x.com/USERNAME</code></td>
 </tr>
 <tr>
 <td>Auto-plug viral tweets</td>
-<td><code>src/autoPlugReplies.js</code></td>
+<td><code>browser/autoPlugReplies.js</code></td>
 <td><code>x.com/USERNAME</code></td>
 </tr>
 <tr>
 <td>Audience demographics</td>
-<td><code>src/audienceDemographics.js</code></td>
+<td><code>browser/audienceDemographics.js</code></td>
 <td><code>x.com/USERNAME/followers</code></td>
 </tr>
 <tr>
 <td>Content performance</td>
-<td><code>src/tweetPerformance.js</code></td>
+<td><code>browser/tweetPerformance.js</code></td>
 <td><code>x.com/USERNAME</code></td>
 </tr>
 </tbody></table>
@@ -310,26 +310,26 @@
 </tr>
 </tbody></table>
 <h2 id="tweet-ab-testing">Tweet A/B Testing</h2>
-<p><strong>File:</strong> <code>src/tweetABTester.js</code></p>
+<p><strong>File:</strong> <code>browser/tweetABTester.js</code></p>
 <p>Test tweet variations with statistical comparison.</p>
 <p><strong>Controls:</strong> <code>XActions.createTest(name, textA, textB)</code>, <code>XActions.setUrl(name, variant, url)</code>, <code>XActions.measure(name)</code>, <code>XActions.results(name)</code></p>
 <h2 id="auto-plug-replies">Auto-Plug Replies</h2>
-<p><strong>File:</strong> <code>src/autoPlugReplies.js</code></p>
+<p><strong>File:</strong> <code>browser/autoPlugReplies.js</code></p>
 <p>Automatically reply to your viral tweets with promotional content.</p>
 <p><strong>Controls:</strong> <code>XActions.setPlug(text)</code>, <code>XActions.setThreshold(n)</code>, <code>XActions.scan()</code>, <code>XActions.autoScan(ms)</code></p>
 <h2 id="strategy-guide">Strategy Guide</h2>
 <h3 id="low-budget-promotion-no-ads-spend">Low-budget promotion (no ads spend)</h3>
 <ol>
-<li>A/B test content styles with <code>src/tweetABTester.js</code></li>
-<li>Set up <code>src/autoPlugReplies.js</code> to promote on viral tweets</li>
-<li>Find trends with <code>src/trendingTopicMonitor.js</code> for timely content</li>
-<li>Analyze audience with <code>src/audienceDemographics.js</code> for targeting</li>
-<li>Track results with <code>src/tweetPerformance.js</code></li>
+<li>A/B test content styles with <code>browser/tweetABTester.js</code></li>
+<li>Set up <code>browser/autoPlugReplies.js</code> to promote on viral tweets</li>
+<li>Find trends with <code>browser/trendingTopicMonitor.js</code> for timely content</li>
+<li>Analyze audience with <code>browser/audienceDemographics.js</code> for targeting</li>
+<li>Track results with <code>browser/tweetPerformance.js</code></li>
 </ol>
 <h3 id="brand-monitoring">Brand monitoring</h3>
 <ol>
 <li>Use <code>src/businessTools.js</code> -&gt; <code>monitorBrandMentions()</code> for sentiment</li>
-<li>Set up <code>src/keywordMonitor.js</code> for real-time brand mention alerts</li>
+<li>Set up <code>browser/keywordMonitor.js</code> for real-time brand mention alerts</li>
 <li>Export data for reporting</li>
 </ol>
 <h2 id="notes">Notes</h2>

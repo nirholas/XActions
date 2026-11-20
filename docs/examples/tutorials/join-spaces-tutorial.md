@@ -29,7 +29,7 @@ date: "2026-03-30"
 
 1. Open x.com on the **Search** or **Home** page
 2. Press **F12** to open DevTools, then click the **Console** tab
-3. Copy the script from `src/joinSpace.js`
+3. Copy the script from `browser/joinSpace.js`
 4. Edit `CONFIG.keywords` or `CONFIG.targetHost`
 5. Paste into the console and press Enter
 
@@ -182,5 +182,5 @@ window.XActions.abort();
 
 ## Related Scripts
 
-- `src/hostSpace.js` -- Create and host your own Space
+- `browser/hostSpace.js` -- Create and host your own Space
 - `src/discoveryExplore.js` -- Search for content and trends on X

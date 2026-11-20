@@ -203,7 +203,7 @@
         <h1>🔇 Mute by Keywords &amp; Manage Muted Words</h1>
 <p>Mute users who post specific keywords, and bulk-add words to your muted word list.</p>
 <hr>
-<h2>🔇 Mute Users by Keywords (<code>src/muteByKeywords.js</code>)</h2>
+<h2>🔇 Mute Users by Keywords (<code>browser/muteByKeywords.js</code>)</h2>
 <h3>What It Does</h3>
 <ol>
 <li>Scrolls the timeline collecting tweets</li>
@@ -215,7 +215,7 @@
 <ol>
 <li>Go to <code>x.com/home</code></li>
 <li>Edit CONFIG with your keywords</li>
-<li>Open console (F12) and paste <code>src/muteByKeywords.js</code></li>
+<li>Open console (F12) and paste <code>browser/muteByKeywords.js</code></li>
 </ol>
 <pre><code class="language-javascript">const CONFIG = {
   keywords: [&#39;crypto scam&#39;, &#39;dm me&#39;, &#39;giveaway&#39;],
@@ -224,7 +224,7 @@
 };
 </code></pre>
 <hr>
-<h2>📝 Manage Muted Words (<code>src/manageMutedWords.js</code>)</h2>
+<h2>📝 Manage Muted Words (<code>browser/manageMutedWords.js</code>)</h2>
 <h3>What It Does</h3>
 <ol>
 <li>Navigates to Settings → Muted Words</li>
@@ -235,7 +235,7 @@
 <ol>
 <li>Go to <code>x.com/settings/muted_keywords</code></li>
 <li>Edit CONFIG with your words</li>
-<li>Open console (F12) and paste <code>src/manageMutedWords.js</code></li>
+<li>Open console (F12) and paste <code>browser/manageMutedWords.js</code></li>
 </ol>
 <pre><code class="language-javascript">const CONFIG = {
   words: [&#39;crypto scam&#39;, &#39;follow for follow&#39;, &#39;dm me&#39;],
@@ -247,9 +247,9 @@
 <hr>
 <h2>📁 Files</h2>
 <ul>
-<li><code>src/muteByKeywords.js</code> — Mute users by content keywords</li>
-<li><code>src/manageMutedWords.js</code> — Bulk-add muted words</li>
-<li><code>src/massUnmute.js</code> — Unmute all users</li>
+<li><code>browser/muteByKeywords.js</code> — Mute users by content keywords</li>
+<li><code>browser/manageMutedWords.js</code> — Bulk-add muted words</li>
+<li><code>browser/massUnmute.js</code> — Unmute all users</li>
 </ul>
 <h2>⚠️ Notes</h2>
 <ul>

@@ -20,7 +20,7 @@ Analyze hashtag performance — top posts, contributors, and engagement patterns
 **Steps:**
 1. Go to `x.com/search?q=%23yourhashtag` (or any search page)
 2. Edit CONFIG with your target hashtag
-3. Open console (F12) and paste `src/hashtagAnalytics.js`
+3. Open console (F12) and paste `browser/hashtagAnalytics.js`
 
 **Configuration:**
 ```javascript
@@ -54,7 +54,7 @@ const CONFIG = {
 
 ## 📁 Files
 
-- `src/hashtagAnalytics.js` — Browser console hashtag analysis
+- `browser/hashtagAnalytics.js` — Browser console hashtag analysis
 
 ## ⚠️ Notes
 

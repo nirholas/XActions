@@ -19,7 +19,7 @@ Export your X/Twitter account data (profile, tweets, likes, followers) as a JSON
 
 **Steps:**
 1. Go to your profile page (`x.com/yourusername`)
-2. Open console (F12) and paste `src/backupAccount.js`
+2. Open console (F12) and paste `browser/backupAccount.js`
 
 **Configuration:**
 ```javascript
@@ -52,13 +52,13 @@ Downloads a JSON file like:
 
 ## 📁 Files
 
-- `src/backupAccount.js` — Full account backup script
-- `src/downloadAccountData.js` — Trigger X's official data archive
+- `browser/backupAccount.js` — Full account backup script
+- `browser/downloadAccountData.js` — Trigger X's official data archive
 - `scripts/twitter/backup-account.js` — Extended DevTools version
 
 ## ⚠️ Notes
 
 - Disable individual sections with `includeTweets: false`, etc.
 - Scroll cycles determine how much data is collected (more = slower but more complete)
-- For a truly complete backup, also use `src/downloadAccountData.js` to request X's official archive
+- For a truly complete backup, also use `browser/downloadAccountData.js` to request X's official archive
 - Large accounts may take several minutes

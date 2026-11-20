@@ -384,7 +384,7 @@ Score 8+: 0 files (0%)        — No production-grade scripts
 
 ### Immediate Actions (High Impact, Low Effort)
 
-1. **Create `src/bulkDeleteTweets.js`** — Most-requested missing feature. Template from `clearAllReposts.js`.
+1. **Create `browser/bulkDeleteTweets.js`** — Most-requested missing feature. Template from `clearAllReposts.js`.
 
 2. **Create `src/shadowbanCheck.js`** — Extremely popular utility. Check search bans, ghost bans, reply deboosting by querying `x.com/search?q=from:USERNAME` and checking if results appear.
 

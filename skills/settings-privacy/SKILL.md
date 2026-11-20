@@ -16,9 +16,9 @@ Browser console scripts for managing X/Twitter account settings and privacy cont
 | Script | File | Purpose |
 |--------|------|---------|
 | Settings Manager | `src/settingsManager.js` | Account settings, privacy, content preferences |
-| Muted Words | `src/manageMutedWords.js` | Bulk add, remove, and manage muted words/phrases |
-| Mass Unblock | `src/massUnblock.js` | Clear blocked accounts |
-| Mass Unmute | `src/massUnmute.js` | Clear muted accounts |
+| Muted Words | `browser/manageMutedWords.js` | Bulk add, remove, and manage muted words/phrases |
+| Mass Unblock | `browser/massUnblock.js` | Clear blocked accounts |
+| Mass Unmute | `browser/massUnmute.js` | Clear muted accounts |
 
 ## Settings Manager
 
@@ -33,7 +33,7 @@ Manages account settings: privacy controls, content filtering, notification pref
 
 ## Muted Words Manager
 
-**File:** `src/manageMutedWords.js`
+**File:** `browser/manageMutedWords.js`
 
 Bulk add or remove muted words and phrases to filter unwanted content from timeline, notifications, and search.
 
@@ -81,13 +81,13 @@ const CONFIG = {
 ### Locking down a new account
 1. Navigate to `/settings/audience_and_tagging` -> enable Protected Tweets
 2. Navigate to `/settings/privacy_and_safety` -> adjust DM settings
-3. Run `src/manageMutedWords.js` to add spam filters
+3. Run `browser/manageMutedWords.js` to add spam filters
 4. Navigate to `/settings/notifications` -> filter notifications from non-followers
 
 ### Cleaning up after spam attack
-1. Run `src/massUnblock.js` to clear old blocks (make room for new ones)
-2. Run `src/blockBots.js` on your followers page
-3. Run `src/manageMutedWords.js` with spam keywords
+1. Run `browser/massUnblock.js` to clear old blocks (make room for new ones)
+2. Run `browser/blockBots.js` on your followers page
+3. Run `browser/manageMutedWords.js` with spam keywords
 4. Check `/settings/muted/all` and `/settings/blocked/all` for status
 
 ### Content creator setup

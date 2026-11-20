@@ -9,7 +9,7 @@
 ## Quick Start
 1. Navigate to `https://x.com` (any page)
 2. Open DevTools (F12) and go to the Console tab
-3. Copy the contents of `src/mentionUsers.js`
+3. Copy the contents of `browser/mentionUsers.js`
 4. Edit the `CONFIG` section (usernames, message, batch settings)
 5. Paste into the console and press Enter
 
@@ -177,6 +177,6 @@ usernames: ['@nichxbt', 'valid_user', 'this-is-invalid!'],
 
 ## Related Scripts
 
-- `src/autoReply.js` -- Auto-reply to matching tweets
-- `src/quoteTweetAutomation.js` -- Quote tweet with commentary
-- `src/likePost.js` -- Like posts by URL or keyword
+- `browser/autoReply.js` -- Auto-reply to matching tweets
+- `browser/quoteTweetAutomation.js` -- Quote tweet with commentary
+- `browser/likePost.js` -- Like posts by URL or keyword

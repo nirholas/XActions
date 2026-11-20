@@ -65,7 +65,7 @@ const CONFIG = {
 
 ### Method 1: Browser Console (Quick Profile Text Updates)
 
-**Script:** `src/updateProfile.js`
+**Script:** `browser/updateProfile.js`
 
 This script updates text fields (name, bio, location, website) directly from the DevTools console.
 
@@ -277,8 +277,8 @@ await browser.close();
 |---------|--------|-------------|
 | Profile Scraping | `src/profileManager.js` → `getProfile()` | Read any user's public profile data |
 | Filter Posts | `src/profileManager.js` → `filterPosts()` | Sort a user's posts by latest or most liked |
-| QR Code Sharing | `src/qrCodeSharing.js` | Generate a QR code for your profile |
-| View Analytics | `src/viewAnalytics.js` | View impressions and engagement metrics |
+| QR Code Sharing | `browser/qrCodeSharing.js` | Generate a QR code for your profile |
+| View Analytics | `browser/viewAnalytics.js` | View impressions and engagement metrics |
 
 ---
 

@@ -10,7 +10,7 @@
 ## Quick Start
 1. Navigate to x.com
 2. Open DevTools (F12)
-3. Copy the script from `src/postThread.js` or `src/threadComposer.js`
+3. Copy the script from `browser/postThread.js` or `browser/threadComposer.js`
 4. Edit the CONFIG section with your thread content
 5. Paste into Console and press Enter
 
@@ -18,13 +18,13 @@
 
 | Script | Runtime | Best For |
 |--------|---------|----------|
-| `src/postThread.js` | Browser console | Quick one-off threads |
-| `src/threadComposer.js` | Browser console | Advanced threads with drafts, preview, auto-numbering |
+| `browser/postThread.js` | Browser console | Quick one-off threads |
+| `browser/threadComposer.js` | Browser console | Advanced threads with drafts, preview, auto-numbering |
 | `src/postComposer.js` (`postThread`) | Node.js / Puppeteer | Automated thread posting from scripts |
 
 ## Configuration
 
-### `src/postThread.js` (Browser Console)
+### `browser/postThread.js` (Browser Console)
 
 ```js
 const CONFIG = {
@@ -44,7 +44,7 @@ const CONFIG = {
 | `delayBetweenTweets` | `number` | `2000` | Milliseconds between adding each tweet |
 | `dryRun` | `boolean` | `true` | Preview mode -- set `false` to post |
 
-### `src/threadComposer.js` (Browser Console -- Advanced)
+### `browser/threadComposer.js` (Browser Console -- Advanced)
 
 ```js
 const CONFIG = {
@@ -116,7 +116,7 @@ The `postThread` function accepts an array where each element is either:
 ### Using `postThread.js` (Browser Console)
 
 1. Open x.com and press F12 to open DevTools
-2. Copy the contents of `src/postThread.js`
+2. Copy the contents of `browser/postThread.js`
 3. Edit the `CONFIG.thread` array with your tweets:
    ```js
    thread: [
@@ -138,7 +138,7 @@ The script will:
 
 ### Using `threadComposer.js` (Browser Console -- Advanced)
 
-1. Paste `src/threadComposer.js` into the console
+1. Paste `browser/threadComposer.js` into the console
 2. Load your thread content:
    ```js
    XActions.thread([
@@ -206,6 +206,6 @@ The script will:
 ## Related Scripts
 
 - `src/postComposer.js` -- Single tweet posting with media support
-- `src/schedulePosts.js` -- Schedule threads for specific times
-- `src/textFormatting.js` -- Format text with bold, italic, etc.
+- `browser/schedulePosts.js` -- Schedule threads for specific times
+- `browser/textFormatting.js` -- Format text with bold, italic, etc.
 - `src/articlePublisher.js` -- For long-form content that exceeds thread length

@@ -178,6 +178,6 @@ if (altButton) {
 ## Related Scripts
 
 - `src/postComposer.js` -- Post with media and alt text
-- `src/videoCaptions.js` -- Add captions to videos (the video equivalent of alt text)
+- `browser/videoCaptions.js` -- Add captions to videos (the video equivalent of alt text)
 - `docs/examples/tutorials/add-media-tutorial.md` -- General media upload guide
 - `docs/examples/tutorials/post-content-tutorial.md` -- Complete posting guide

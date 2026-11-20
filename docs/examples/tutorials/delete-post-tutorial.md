@@ -5,13 +5,13 @@
 ## Prerequisites
 - Logged into x.com in your browser
 - Browser DevTools console (F12 -> Console tab)
-- **Backup first** -- deletion is permanent. Consider using `src/backupAccount.js` before deleting.
+- **Backup first** -- deletion is permanent. Consider using `browser/backupAccount.js` before deleting.
 
 ## Quick Start
 1. Navigate to your own profile: `https://x.com/YOUR_USERNAME`. Its tabs work too,
    so `https://x.com/YOUR_USERNAME/with_replies` is the right place to clear replies.
 2. Open DevTools (F12) and go to the Console tab
-3. Copy the contents of `src/bulkDeleteTweets.js`
+3. Copy the contents of `browser/bulkDeleteTweets.js`
 4. Edit the `CONFIG` section (filters, dryRun)
 5. Paste into the console and press Enter
 
@@ -221,7 +221,7 @@ A JSON file is auto-downloaded with all deleted tweets:
 ## Tips & Tricks
 
 - **Set `dryRun: true` for the first pass on a new filter.** Deletion is permanent, and the default is a real run.
-- **Export first** using `src/backupAccount.js` to save your tweets before deleting.
+- **Export first** using `browser/backupAccount.js` to save your tweets before deleting.
 - **Use `excludeKeywords`** to protect important tweets (e.g., `['thread', 'announcement', 'milestone']`).
 - **`excludePinned: true`** (default) prevents accidentally deleting your pinned tweet.
 - **`confirmEvery: 50`** adds a checkpoint. The script pauses and waits for you to call `resume()`.
@@ -242,6 +242,6 @@ A JSON file is auto-downloaded with all deleted tweets:
 
 ## Related Scripts
 
-- `src/pinTweetManager.js` -- Pin/unpin posts
-- `src/clearAllReposts.js` -- Remove all reposts
-- `src/clearAllBookmarks.js` -- Remove all bookmarks
+- `browser/pinTweetManager.js` -- Pin/unpin posts
+- `browser/clearAllReposts.js` -- Remove all reposts
+- `browser/clearAllBookmarks.js` -- Remove all bookmarks

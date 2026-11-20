@@ -227,7 +227,7 @@
 <li>Go to any page on <code>x.com</code></li>
 <li>Edit CONFIG with target accounts and reason</li>
 <li>Set <code>dryRun: false</code> when ready</li>
-<li>Open console (F12) and paste <code>src/reportSpam.js</code></li>
+<li>Open console (F12) and paste <code>browser/reportSpam.js</code></li>
 </ol>
 <p><strong>Configuration:</strong></p>
 <pre><code class="language-javascript">const CONFIG = {
@@ -240,15 +240,15 @@
 <hr>
 <h2>📁 Files</h2>
 <ul>
-<li><code>src/reportSpam.js</code> — Spam/abuse reporter</li>
-<li><code>src/blockBots.js</code> — Detect bots first (companion)</li>
-<li><code>src/massBlock.js</code> — Block accounts (companion)</li>
+<li><code>browser/reportSpam.js</code> — Spam/abuse reporter</li>
+<li><code>browser/blockBots.js</code> — Detect bots first (companion)</li>
+<li><code>browser/massBlock.js</code> — Block accounts (companion)</li>
 </ul>
 <h2>⚠️ Notes</h2>
 <ul>
 <li>The script navigates between profiles, so don&#39;t interact while it runs</li>
 <li>X may rate-limit reporting — use long delays (5+ seconds)</li>
-<li>Use <code>src/blockBots.js</code> or <code>src/auditFollowers.js</code> first to identify targets</li>
+<li>Use <code>browser/blockBots.js</code> or <code>browser/auditFollowers.js</code> first to identify targets</li>
 <li>Reports are anonymous — the reported user won&#39;t know who reported them</li>
 </ul>
 

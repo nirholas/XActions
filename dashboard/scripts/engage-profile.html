@@ -125,7 +125,7 @@
         <div class="meta-row">
           <span>v1.0.0</span>
           <span>Updated: 2026-08-27</span>
-          <span>1263 lines</span>
+          <span>1264 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
@@ -171,7 +171,7 @@
 <tr><td><code>apiKey</code></td><td><code>''</code></td><td>xAI key for provider 'xai'. Stored only if &quot;remember&quot; is ticked in the panel.</td></tr>
 <tr><td><code>model</code></td><td><code>'grok-3-mini'</code></td><td>xAI model. For 'bridge' this is the bridge provider's model.</td></tr>
 <tr><td><code>bridgeProvider</code></td><td><code>'openrouter'</code></td><td>For 'bridge': openrouter | openai | anthropic | ollama | xai | custom</td></tr>
-<tr><td><code>bridgeBaseUrl</code></td><td><code>''</code></td><td>For 'bridge' + custom: full chat-completions URL</td></tr>
+<tr><td><code>bridgeBaseUrl</code></td><td><code>''</code></td><td>Ignored by the extension: set a custom URL in the extension popup</td></tr>
 <tr><td><code>fallbackToTemplates</code></td><td><code>true</code></td><td>If the model fails for a post, use a template instead of skipping</td></tr>
           </tbody>
         </table>
@@ -229,7 +229,7 @@
       apiKey: '',                  // xAI key for provider 'xai'. Stored only if &quot;remember&quot; is ticked in the panel.
       model: 'grok-3-mini',        // xAI model. For 'bridge' this is the bridge provider's model.
       bridgeProvider: 'openrouter', // For 'bridge': openrouter | openai | anthropic | ollama | xai | custom
-      bridgeBaseUrl: '',           // For 'bridge' + custom: full chat-completions URL
+      bridgeBaseUrl: '',           // Ignored by the extension: set a custom URL in the extension popup
       temperature: 0.9,
       allowHashtags: false,
       allowEmoji: true,
@@ -344,7 +344,7 @@
       apiKey: '',                  // xAI key for provider 'xai'. Stored only if &quot;remember&quot; is ticked in the panel.
       model: 'grok-3-mini',        // xAI model. For 'bridge' this is the bridge provider's model.
       bridgeProvider: 'openrouter', // For 'bridge': openrouter | openai | anthropic | ollama | xai | custom
-      bridgeBaseUrl: '',           // For 'bridge' + custom: full chat-completions URL
+      bridgeBaseUrl: '',           // Ignored by the extension: set a custom URL in the extension popup
       temperature: 0.9,
       allowHashtags: false,
       allowEmoji: true,
@@ -1241,7 +1241,7 @@
                 &lt;option value=&quot;ollama&quot;&gt;Ollama (local)&lt;/option&gt;
                 &lt;option value=&quot;custom&quot;&gt;Custom URL&lt;/option&gt;
               &lt;/select&gt;&lt;/label&gt;
-            &lt;label&gt;&lt;span class=&quot;xep-label&quot;&gt;Custom URL&lt;/span&gt;&lt;input type=&quot;text&quot; id=&quot;xep-bridgeUrl&quot; value=&quot;${esc(CONFIG.comments.bridgeBaseUrl)}&quot; placeholder=&quot;https://.../v1/chat/completions&quot;&gt;&lt;/label&gt;
+            &lt;p class=&quot;xep-label&quot;&gt;Custom URL: set it in the XActions extension popup (Settings, Custom AI provider). The extension no longer takes a URL from the page.&lt;/p&gt;
           &lt;/div&gt;
           &lt;label&gt;&lt;span class=&quot;xep-label&quot;&gt;API key&lt;/span&gt;&lt;input type=&quot;password&quot; id=&quot;xep-key&quot; value=&quot;${esc(CONFIG.comments.apiKey)}&quot; autocomplete=&quot;off&quot; placeholder=&quot;xai-...&quot;&gt;&lt;/label&gt;
           &lt;label class=&quot;xep-toggle&quot;&gt;&lt;span&gt;Remember key in this browser&lt;/span&gt;&lt;input type=&quot;checkbox&quot; id=&quot;xep-rememberKey&quot; ${savedKey ? 'checked' : ''}&gt;&lt;/label&gt;
@@ -1339,7 +1339,8 @@
     c.provider = el('xep-provider').value;
     c.model = el('xep-model').value.trim();
     c.bridgeProvider = el('xep-bridgeProvider').value;
-    c.bridgeBaseUrl = el('xep-bridgeUrl').value.trim();
+    // The custom URL lives in the extension's own settings now; a page
+    // script can no longer choose where the extension sends requests.
     c.apiKey = el('xep-key').value.trim();
     c.fallbackToTemplates = el('xep-fallback').checked;
     try {

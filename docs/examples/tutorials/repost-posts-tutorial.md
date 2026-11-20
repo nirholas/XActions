@@ -17,13 +17,13 @@
 
 | Script | Purpose |
 |--------|---------|
-| `src/repostPost.js` | Repost by URL, keyword, or unrepost by URL |
-| `src/autoRepost.js` | Auto-repost matching tweets from timeline/search |
-| `src/clearAllReposts.js` | Remove all reposts from your profile |
+| `browser/repostPost.js` | Repost by URL, keyword, or unrepost by URL |
+| `browser/autoRepost.js` | Auto-repost matching tweets from timeline/search |
+| `browser/clearAllReposts.js` | Remove all reposts from your profile |
 
 ## Configuration
 
-### src/repostPost.js
+### browser/repostPost.js
 
 #### Mode Selection
 
@@ -61,7 +61,7 @@ matchAll: false,  // false = any keyword; true = ALL must match
 | `skipReplies` | `true` | Skip reply tweets |
 | `minLikes` | `5` | Only repost tweets with at least N likes |
 
-### src/autoRepost.js
+### browser/autoRepost.js
 
 ```js
 const CONFIG = {
@@ -77,7 +77,7 @@ const CONFIG = {
 
 At least one of `keywords` or `fromUsers` must have entries.
 
-### src/clearAllReposts.js
+### browser/clearAllReposts.js
 
 ```js
 const CONFIG = {
@@ -94,7 +94,7 @@ const CONFIG = {
 
 ### Repost a Single Post by URL
 
-**Step 1:** Set mode to `urls` in `src/repostPost.js`:
+**Step 1:** Set mode to `urls` in `browser/repostPost.js`:
 
 ```js
 const CONFIG = {
@@ -116,7 +116,7 @@ Reposted! (1/10)
 
 **Step 1:** Navigate to your timeline or a search page.
 
-**Step 2:** Configure `src/autoRepost.js`:
+**Step 2:** Configure `browser/autoRepost.js`:
 
 ```js
 const CONFIG = {
@@ -136,7 +136,7 @@ Reposted (2/10): "AI tools are revolutionizing the way..."
 
 ### Unrepost Specific Posts
 
-Use `unrepost` mode in `src/repostPost.js` to remove reposts:
+Use `unrepost` mode in `browser/repostPost.js` to remove reposts:
 
 ```js
 const CONFIG = {
@@ -151,7 +151,7 @@ const CONFIG = {
 
 **Step 1:** Navigate to your profile page: `https://x.com/YOUR_USERNAME`
 
-**Step 2:** Paste `src/clearAllReposts.js`. It scrolls through your profile and removes all reposts.
+**Step 2:** Paste `browser/clearAllReposts.js`. It scrolls through your profile and removes all reposts.
 
 **Step 3:** Use controls while running:
 
@@ -195,6 +195,6 @@ Reposts whose text contains any of these keywords will be skipped.
 
 ## Related Scripts
 
-- `src/likePost.js` -- Like posts by URL or keyword
-- `src/quoteTweetAutomation.js` -- Quote tweet with commentary
-- `src/autoReply.js` -- Auto-reply to matching tweets
+- `browser/likePost.js` -- Like posts by URL or keyword
+- `browser/quoteTweetAutomation.js` -- Quote tweet with commentary
+- `browser/autoReply.js` -- Auto-reply to matching tweets

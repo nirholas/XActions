@@ -19,7 +19,7 @@ Browser automation for X/Twitter engagement — liking, replying, bookmarking, h
 | Auto-like by keyword | `src/engagementManager.js` | `x.com/home` or search page |
 | Get engagement analytics for a post | `src/engagementManager.js` | Tweet URL |
 | Hide replies on your posts | `src/engagementManager.js` | Reply URL |
-| Unlike ALL liked posts | `src/unlikeAllPosts.js` | `x.com/USERNAME/likes` |
+| Unlike ALL liked posts | `browser/unlikeAllPosts.js` | `x.com/USERNAME/likes` |
 | Like + repost + reply to EVERY post in a feed (profile, search, list, hashtag, home) | `scripts/engageProfile.js`, `xactions engage` , or MCP `x_engage` | the feed itself, or any terminal |
 
 ## Engagement Manager
@@ -60,7 +60,7 @@ Navigates to a tweet, types a reply, optionally attaches media, and submits.
 
 ## Unlike All Posts
 
-**File:** `src/unlikeAllPosts.js`
+**File:** `browser/unlikeAllPosts.js`
 
 Browser console script that unlikes every post in your Likes tab. Supports keyword filters, dry run mode, rate limit detection, and exports a log.
 

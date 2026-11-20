@@ -18,10 +18,10 @@ Browser console scripts and automation for X/Twitter business intelligence and p
 | Brand monitoring & sentiment | `src/businessTools.js` | Search results page |
 | Audience insights | `src/businessTools.js` | `x.com/USERNAME/followers` |
 | Competitor comparison | `src/businessTools.js` | Any profile page |
-| A/B test tweet performance | `src/tweetABTester.js` | `x.com/USERNAME` |
-| Auto-plug viral tweets | `src/autoPlugReplies.js` | `x.com/USERNAME` |
-| Audience demographics | `src/audienceDemographics.js` | `x.com/USERNAME/followers` |
-| Content performance | `src/tweetPerformance.js` | `x.com/USERNAME` |
+| A/B test tweet performance | `browser/tweetABTester.js` | `x.com/USERNAME` |
+| Auto-plug viral tweets | `browser/autoPlugReplies.js` | `x.com/USERNAME` |
+| Audience demographics | `browser/audienceDemographics.js` | `x.com/USERNAME/followers` |
+| Content performance | `browser/tweetPerformance.js` | `x.com/USERNAME` |
 
 ## Business Tools
 
@@ -39,7 +39,7 @@ Puppeteer-based module for business intelligence.
 
 ## Tweet A/B Testing
 
-**File:** `src/tweetABTester.js`
+**File:** `browser/tweetABTester.js`
 
 Test tweet variations with statistical comparison.
 
@@ -47,7 +47,7 @@ Test tweet variations with statistical comparison.
 
 ## Auto-Plug Replies
 
-**File:** `src/autoPlugReplies.js`
+**File:** `browser/autoPlugReplies.js`
 
 Automatically reply to your viral tweets with promotional content.
 
@@ -56,15 +56,15 @@ Automatically reply to your viral tweets with promotional content.
 ## Strategy Guide
 
 ### Low-budget promotion (no ads spend)
-1. A/B test content styles with `src/tweetABTester.js`
-2. Set up `src/autoPlugReplies.js` to promote on viral tweets
-3. Find trends with `src/trendingTopicMonitor.js` for timely content
-4. Analyze audience with `src/audienceDemographics.js` for targeting
-5. Track results with `src/tweetPerformance.js`
+1. A/B test content styles with `browser/tweetABTester.js`
+2. Set up `browser/autoPlugReplies.js` to promote on viral tweets
+3. Find trends with `browser/trendingTopicMonitor.js` for timely content
+4. Analyze audience with `browser/audienceDemographics.js` for targeting
+5. Track results with `browser/tweetPerformance.js`
 
 ### Brand monitoring
 1. Use `src/businessTools.js` -> `monitorBrandMentions()` for sentiment
-2. Set up `src/keywordMonitor.js` for real-time brand mention alerts
+2. Set up `browser/keywordMonitor.js` for real-time brand mention alerts
 3. Export data for reporting
 
 ## Notes

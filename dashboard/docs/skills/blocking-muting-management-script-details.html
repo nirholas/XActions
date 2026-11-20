@@ -208,7 +208,7 @@
 <li><a href="#remove-followers">Remove Followers</a></li>
 </ul>
 <h2 id="block-bots">Block Bots</h2>
-<p><strong>File:</strong> <code>src/blockBots.js</code></p>
+<p><strong>File:</strong> <code>browser/blockBots.js</code></p>
 <p>Scans your followers list and blocks accounts matching bot heuristics.</p>
 <h3 id="detection-heuristics">Detection heuristics</h3>
 <ul>
@@ -226,7 +226,7 @@
 <li>Review flagged accounts before confirming blocks</li>
 </ol>
 <h2 id="mass-block--unblock">Mass Block / Unblock</h2>
-<p><strong>Files:</strong> <code>src/massBlock.js</code>, <code>src/massUnblock.js</code></p>
+<p><strong>Files:</strong> <code>browser/massBlock.js</code>, <code>browser/massUnblock.js</code></p>
 <p>Block or unblock accounts from a configurable list of usernames.</p>
 <h3 id="configuration">Configuration</h3>
 <pre><code class="language-javascript">const CONFIG = {
@@ -242,10 +242,10 @@
 <li>Script navigates to each profile and clicks block/unblock</li>
 </ol>
 <h2 id="mass-unmute">Mass Unmute</h2>
-<p><strong>File:</strong> <code>src/massUnmute.js</code></p>
+<p><strong>File:</strong> <code>browser/massUnmute.js</code></p>
 <p>Unmute multiple previously muted accounts. Uses the same CONFIG pattern as Mass Unblock.</p>
 <h2 id="mute-by-keywords">Mute by Keywords</h2>
-<p><strong>File:</strong> <code>src/muteByKeywords.js</code></p>
+<p><strong>File:</strong> <code>browser/muteByKeywords.js</code></p>
 <p>Scans your timeline for tweets containing specified keywords and mutes the authors.</p>
 <h3 id="configuration-1">Configuration</h3>
 <pre><code class="language-javascript">const CONFIG = {
@@ -255,10 +255,10 @@
 </code></pre>
 <p>Scrolls timeline, matches tweet text against keywords, and mutes matching authors.</p>
 <h2 id="report-spam">Report Spam</h2>
-<p><strong>File:</strong> <code>src/reportSpam.js</code></p>
+<p><strong>File:</strong> <code>browser/reportSpam.js</code></p>
 <p>Reports accounts for spam or abuse through X&#39;s reporting flow. Use responsibly — reports are submitted to X.</p>
 <h2 id="remove-followers">Remove Followers</h2>
-<p><strong>File:</strong> <code>src/removeFollowers.js</code></p>
+<p><strong>File:</strong> <code>browser/removeFollowers.js</code></p>
 <p>Removes followers without permanently blocking them. Uses the block → immediate unblock pattern: blocking causes them to unfollow, then unblocking restores your ability to interact normally.</p>
 <h3 id="configuration-2">Configuration</h3>
 <pre><code class="language-javascript">const CONFIG = {

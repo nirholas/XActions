@@ -15,14 +15,14 @@ Browser console script for interacting with X's Community Notes fact-checking sy
 
 | Goal | File | Navigate to |
 |------|------|-------------|
-| View, write, rate, or browse Community Notes | `src/communityNotes.js` | `x.com/home` or tweet page |
+| View, write, rate, or browse Community Notes | `browser/communityNotes.js` | `x.com/home` or tweet page |
 
 ## Quick Start
 
 1. Navigate to a tweet page or `x.com/home`
 2. Open DevTools (F12) → Console
 3. Edit `CONFIG.action` to choose what to do
-4. Paste `src/communityNotes.js` → Enter
+4. Paste `browser/communityNotes.js` → Enter
 
 ## Actions
 

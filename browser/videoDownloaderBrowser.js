@@ -1,5 +1,5 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// src/videoDownloaderBrowser.js
+// browser/videoDownloaderBrowser.js
 // Download videos from X/Twitter posts in browser
 // by nichxbt
 // https://github.com/nirholas/XActions

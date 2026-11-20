@@ -28,12 +28,12 @@ Complement MCP analysis with browser-side tools:
 
 | Goal | Script |
 |------|--------|
-| Audit follower quality | `src/auditFollowers.js` |
-| Detect unfollowers | `src/detectUnfollowers.js` |
-| Audience demographics | `src/audienceDemographics.js` |
-| Follow ratio analysis | `src/followRatioManager.js` |
-| Account health dashboard | `src/accountHealthMonitor.js` |
-| Shadowban check | `src/shadowbanChecker.js` |
+| Audit follower quality | `browser/auditFollowers.js` |
+| Detect unfollowers | `browser/detectUnfollowers.js` |
+| Audience demographics | `browser/audienceDemographics.js` |
+| Follow ratio analysis | `browser/followRatioManager.js` |
+| Account health dashboard | `browser/accountHealthMonitor.js` |
+| Shadowban check | `browser/shadowbanChecker.js` |
 
 ## Workflow
 
@@ -90,7 +90,7 @@ Date: {date} | Health Score: {score}/100
 1. Run full MCP workflow above for baseline report
 2. Compare against previous month's scores
 3. Action items: block flagged bots, unfollow non-reciprocals above threshold
-4. Use `src/accountHealthMonitor.js` for quick between-audit checks
+4. Use `browser/accountHealthMonitor.js` for quick between-audit checks
 
 ### Score interpretation
 | Score | Grade | Action |
@@ -102,8 +102,8 @@ Date: {date} | Health Score: {score}/100
 | 0-19 | Critical | Possible shadowban, mass bot followers, or inactive account |
 
 ### Improving a low health score
-1. Block suspect bot followers with `src/blockBots.js`
-2. Unfollow non-reciprocals with `src/unfollowback.js`
+1. Block suspect bot followers with `browser/blockBots.js`
+2. Unfollow non-reciprocals with `browser/unfollowback.js`
 3. Increase posting consistency to reduce churn
 4. Engage authentically to improve engagement rate
 

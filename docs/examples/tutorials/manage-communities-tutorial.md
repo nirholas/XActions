@@ -30,7 +30,7 @@ date: "2026-03-30"
 
 1. Open x.com and navigate to your **Community** page
 2. Press **F12** to open DevTools, then click the **Console** tab
-3. Copy the script from `src/manageCommunity.js`
+3. Copy the script from `browser/manageCommunity.js`
 4. Set `CONFIG.action` to the desired operation
 5. Paste into the console and press Enter
 
@@ -229,5 +229,5 @@ window.XActions.abort();
 
 ## Related Scripts
 
-- `src/createCommunity.js` -- Create a new community
-- `src/joinCommunities.js` -- Find and join communities by keyword
+- `browser/createCommunity.js` -- Create a new community
+- `browser/joinCommunities.js` -- Find and join communities by keyword

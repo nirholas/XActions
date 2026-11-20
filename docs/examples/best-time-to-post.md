@@ -19,7 +19,7 @@ Analyze your tweet history to find the optimal times for maximum engagement.
 
 **Steps:**
 1. Go to your profile page (`x.com/yourusername`)
-2. Open console (F12) and paste `src/bestTimeToPost.js`
+2. Open console (F12) and paste `browser/bestTimeToPost.js`
 
 **Configuration:**
 ```javascript
@@ -51,7 +51,7 @@ const CONFIG = {
 
 ## 📁 Files
 
-- `src/bestTimeToPost.js` — Browser console timing analysis
+- `browser/bestTimeToPost.js` — Browser console timing analysis
 
 ## ⚠️ Notes
 

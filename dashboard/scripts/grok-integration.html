@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Grok Integration - Interact with Grok AI features — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="src/grokIntegration.js">
+  <title>Grok Integration — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="scripts/grokIntegration.js">
   <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, grok, integration, ai &amp; developer">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Grok Integration - Interact with Grok AI features — XActions">
-  <meta property="og:description" content="src/grokIntegration.js">
+  <meta property="og:title" content="Grok Integration — XActions">
+  <meta property="og:description" content="scripts/grokIntegration.js">
   <meta property="og:url" content="https://xactions.app/scripts/grok-integration">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-image.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Grok Integration - Interact with Grok AI features — XActions">
-  <meta name="twitter:description" content="src/grokIntegration.js">
+  <meta name="twitter:title" content="Grok Integration — XActions">
+  <meta name="twitter:description" content="scripts/grokIntegration.js">
 
   <link rel="canonical" href="https://xactions.app/scripts/grok-integration">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
@@ -28,8 +28,8 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Grok Integration - Interact with Grok AI features — Free X/Twitter Script | XActions",
-    "description": "src/grokIntegration.js",
+    "headline": "Grok Integration — Free X/Twitter Script | XActions",
+    "description": "scripts/grokIntegration.js",
     "url": "https://xactions.app/scripts/grok-integration",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -47,7 +47,7 @@
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
       { "@type": "ListItem", "position": 3, "name": "AI & Developer", "item": "https://xactions.app/scripts#ai-developer" },
-      { "@type": "ListItem", "position": 4, "name": "Grok Integration - Interact with Grok AI features", "item": "https://xactions.app/scripts/grok-integration" }
+      { "@type": "ListItem", "position": 4, "name": "Grok Integration", "item": "https://xactions.app/scripts/grok-integration" }
     ]
   }
   </script>
@@ -112,24 +112,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🧠 Grok Integration - Interact with Grok AI features</h1>
+        <h1>🧠 Grok Integration</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#ai-developer">AI &amp; Developer</a> › Grok Integration - Interact with Grok AI features
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#ai-developer">AI &amp; Developer</a> › Grok Integration
         </div>
       </header>
 
       <article class="article">
         <span class="cat-badge">AI &amp; Developer</span>
-        <span class="source-badge">src</span>
+        <span class="source-badge">scripts</span>
 
         <div class="meta-row">
           
           
-          <span>154 lines</span>
+          <span>187 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>src/grokIntegration.js</p>
+        <p>scripts/grokIntegration.js</p>
 
         
 
@@ -144,7 +144,17 @@
 
         
         
-        
+        <section class="config-code">
+        <h2>Default Configuration</h2>
+        <div class="code-block">
+          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
+          <pre><code>const CONFIG = {
+    prompt: 'Analyze the latest tech trends on X',
+    waitForResponse: true,
+    maxWaitMs: 30000,
+  };</code></pre>
+        </div>
+      </section>
 
         <section class="full-code">
           <h2>Full Script</h2>
@@ -152,158 +162,191 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// src/grokIntegration.js
-// Grok AI integration for X/Twitter
+// scripts/grokIntegration.js
+// Browser console script for interacting with Grok AI on X
+// Paste in DevTools console on x.com/i/grok
 // by nichxbt
 
-/**
- * Grok Integration - Interact with Grok AI features
- * 
- * Features:
- * - Send queries to Grok
- * - Image generation (Premium+)
- * - Content summarization
- * - Post analysis and ranking prediction
- * - Topic summaries (2026)
- */
+(() =&gt; {
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
 
-const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
-
-const SELECTORS = {
-  grokNav: 'a[href=&quot;/i/grok&quot;]',
-  chatInput: '[data-testid=&quot;grokInput&quot;]',
-  sendButton: '[data-testid=&quot;grokSendButton&quot;]',
-  responseArea: '[data-testid=&quot;grokResponse&quot;]',
-  newChat: '[data-testid=&quot;grokNewChat&quot;]',
-  imageGen: '[data-testid=&quot;grokImageGen&quot;]',
-  chatHistory: '[data-testid=&quot;grokChatHistory&quot;]',
-  responseText: '[data-testid=&quot;grokResponseText&quot;]',
-};
-
-/**
- * Send a query to Grok AI
- * @param {import('puppeteer').Page} page
- * @param {string} query - The question/prompt for Grok
- * @param {Object} options
- * @returns {Promise&lt;Object&gt;}
- */
-export async function queryGrok(page, query, options = {}) {
-  const { newChat = true, waitTime = 15000 } = options;
-
-  await page.goto('https://x.com/i/grok', { waitUntil: 'networkidle2' });
-  await sleep(3000);
-
-  if (newChat) {
-    try {
-      await page.click(SELECTORS.newChat);
-      await sleep(1000);
-    } catch (e) {
-      // New chat button may not be visible if already in new chat
-    }
-  }
-
-  // Type query
-  await page.click(SELECTORS.chatInput);
-  await page.keyboard.type(query, { delay: 20 });
-  await sleep(500);
-
-  // Send
-  await page.click(SELECTORS.sendButton);
-
-  // Wait for response
-  await sleep(waitTime);
-
-  // Extract response
-  const response = await page.evaluate((sel) =&gt; {
-    const responses = document.querySelectorAll(sel.responseText || sel.responseArea);
-    if (responses.length === 0) return null;
-    const lastResponse = responses[responses.length - 1];
-    return lastResponse?.textContent?.trim() || null;
-  }, SELECTORS);
-
-  return {
-    success: !!response,
-    query,
-    response: response || 'No response received (try increasing waitTime)',
-    timestamp: new Date().toISOString(),
+  // =============================================
+  // CONFIGURATION
+  // =============================================
+  const CONFIG = {
+    prompt: 'Analyze the latest tech trends on X',
+    waitForResponse: true,
+    maxWaitMs: 30000,
   };
-}
+  // =============================================
 
-/**
- * Generate an image with Grok AI (Premium+ required)
- * @param {import('puppeteer').Page} page
- * @param {string} prompt - Image generation prompt
- * @returns {Promise&lt;Object&gt;}
- */
-export async function generateImage(page, prompt) {
-  await page.goto('https://x.com/i/grok', { waitUntil: 'networkidle2' });
-  await sleep(3000);
+  const SELECTORS = {
+    input: '[data-testid=&quot;grokInput&quot;], textarea[placeholder*=&quot;Ask&quot;], textarea[placeholder*=&quot;ask&quot;], [contenteditable=&quot;true&quot;]',
+    send: '[data-testid=&quot;grokSendButton&quot;], button[aria-label=&quot;Send&quot;], button[data-testid*=&quot;send&quot;]',
+    response: '[data-testid=&quot;grokResponse&quot;], [data-testid=&quot;grokResponseText&quot;]',
+    newChat: '[data-testid=&quot;grokNewChat&quot;], a[href=&quot;/i/grok&quot;]',
+  };
 
-  // Start new chat
-  try {
-    await page.click(SELECTORS.newChat);
-    await sleep(1000);
-  } catch (e) {}
-
-  // Type image generation prompt
-  const imagePrompt = `Generate an image: ${prompt}`;
-  await page.click(SELECTORS.chatInput);
-  await page.keyboard.type(imagePrompt, { delay: 20 });
-  await sleep(500);
-
-  await page.click(SELECTORS.sendButton);
-  await sleep(20000); // Image generation takes longer
-
-  // Try to extract image URL
-  const result = await page.evaluate(() =&gt; {
-    const images = document.querySelectorAll('img[src*=&quot;grok&quot;]');
-    if (images.length &gt; 0) {
-      const lastImg = images[images.length - 1];
-      return { imageUrl: lastImg.src, alt: lastImg.alt };
+  const findEl = (selectorString) =&gt; {
+    for (const sel of selectorString.split(',').map(s =&gt; s.trim())) {
+      const el = document.querySelector(sel);
+      if (el) return el;
     }
     return null;
-  });
-
-  return {
-    success: !!result,
-    prompt,
-    ...(result || { error: 'Image generation failed or Premium+ required' }),
-    timestamp: new Date().toISOString(),
   };
-}
 
-/**
- * Summarize a topic or thread using Grok
- * @param {import('puppeteer').Page} page
- * @param {string} topic - Topic or thread URL to summarize
- * @returns {Promise&lt;Object&gt;}
- */
-export async function summarize(page, topic) {
-  const prompt = topic.startsWith('http')
-    ? `Summarize this thread/post: ${topic}`
-    : `Summarize the latest discussion about: ${topic}`;
+  const typeInto = async (el, text) =&gt; {
+    el.focus();
+    await sleep(200);
+    if (el.contentEditable === 'true') {
+      document.execCommand('selectAll', false, null);
+      document.execCommand('insertText', false, text);
+    } else {
+      const nativeSet = Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value')?.set
+        || Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set;
+      if (nativeSet) {
+        nativeSet.call(el, text);
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+        el.dispatchEvent(new Event('change', { bubbles: true }));
+      } else {
+        el.value = text;
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+    }
+    await sleep(300);
+  };
 
-  return queryGrok(page, prompt, { waitTime: 20000 });
-}
+  const waitForResponse = async (maxMs) =&gt; {
+    const startTime = Date.now();
+    let lastLength = 0;
+    let stableCount = 0;
 
-/**
- * Analyze a post's potential performance
- * @param {import('puppeteer').Page} page
- * @param {string} postText - The post text to analyze
- * @returns {Promise&lt;Object&gt;}
- */
-export async function analyzePost(page, postText) {
-  const prompt = `Analyze this X/Twitter post for potential engagement and reach. Rate it 1-10 and suggest improvements:\n\n&quot;${postText}&quot;`;
-  return queryGrok(page, prompt, { waitTime: 15000 });
-}
+    console.log('⏳ Waiting for Grok response...');
 
-export default {
-  queryGrok,
-  generateImage,
-  summarize,
-  analyzePost,
-  SELECTORS,
-};
+    while (Date.now() - startTime &lt; maxMs) {
+      const responseEls = document.querySelectorAll(SELECTORS.response);
+      if (responseEls.length &gt; 0) {
+        const lastEl = responseEls[responseEls.length - 1];
+        const currentLength = (lastEl.textContent || '').length;
+
+        if (currentLength &gt; 0 &amp;&amp; currentLength === lastLength) {
+          stableCount++;
+          if (stableCount &gt;= 3) {
+            console.log('✅ Response received.');
+            return lastEl.textContent.trim();
+          }
+        } else {
+          stableCount = 0;
+          lastLength = currentLength;
+        }
+      }
+
+      await sleep(1000);
+      const elapsed = ((Date.now() - startTime) / 1000).toFixed(0);
+      if (parseInt(elapsed) % 5 === 0 &amp;&amp; parseInt(elapsed) &gt; 0) {
+        console.log(`   ⏳ Still waiting... (${elapsed}s)`);
+      }
+    }
+
+    // Timeout — grab whatever is there
+    const responseEls = document.querySelectorAll(SELECTORS.response);
+    if (responseEls.length &gt; 0) {
+      const text = responseEls[responseEls.length - 1].textContent?.trim();
+      if (text) {
+        console.log('⚠️ Timeout reached, but partial response captured.');
+        return text;
+      }
+    }
+
+    // Fallback: try markdown or grok-related elements
+    const fallback = document.querySelectorAll('[data-testid*=&quot;grok&quot;], [class*=&quot;markdown&quot;]');
+    if (fallback.length &gt; 0) {
+      const text = fallback[fallback.length - 1].textContent?.trim();
+      if (text) return text;
+    }
+
+    return null;
+  };
+
+  const run = async () =&gt; {
+    console.log('🤖 Grok Integration — AI Assistant');
+    console.log('━'.repeat(50));
+    console.log(`  Prompt: &quot;${CONFIG.prompt.slice(0, 80)}${CONFIG.prompt.length &gt; 80 ? '...' : ''}&quot;`);
+    console.log(`  Max wait: ${CONFIG.maxWaitMs / 1000}s`);
+    console.log('');
+
+    // Check page
+    if (!window.location.href.includes('/i/grok')) {
+      console.log('⚠️ Navigate to x.com/i/grok first.');
+      console.log('🔗 Redirecting...');
+      window.location.href = 'https://x.com/i/grok';
+      return;
+    }
+
+    await sleep(2000);
+
+    // Find input
+    const inputEl = findEl(SELECTORS.input);
+    if (!inputEl) {
+      console.error('❌ Grok input field not found.');
+      console.log('   Tried selectors:', SELECTORS.input);
+      console.log('   Make sure the Grok page is fully loaded.');
+      return;
+    }
+
+    console.log('✅ Found Grok input field.');
+
+    // Type prompt
+    console.log('📝 Typing prompt...');
+    await typeInto(inputEl, CONFIG.prompt);
+    await sleep(500);
+
+    // Find and click send
+    const sendBtn = findEl(SELECTORS.send);
+    if (!sendBtn) {
+      console.error('❌ Send button not found. Trying Enter key...');
+      inputEl.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+      await sleep(500);
+    } else {
+      console.log('🚀 Sending prompt...');
+      sendBtn.click();
+    }
+
+    await sleep(1000);
+
+    // Wait for response
+    if (CONFIG.waitForResponse) {
+      const response = await waitForResponse(CONFIG.maxWaitMs);
+
+      if (response) {
+        console.log('\n━━━ 🤖 GROK RESPONSE ━━━');
+        console.log(response);
+        console.log('━'.repeat(50));
+
+        console.log(`\n📊 Response stats:`);
+        console.log(`  Length: ${response.length} characters`);
+        console.log(`  Words: ~${response.split(/\s+/).length}`);
+        console.log(`  Time: ${new Date().toLocaleString()}`);
+
+        try {
+          await navigator.clipboard.writeText(response);
+          console.log('📋 Response copied to clipboard!');
+        } catch (e) {}
+      } else {
+        console.log('❌ No response received within timeout.');
+        console.log(`   Try increasing CONFIG.maxWaitMs (currently ${CONFIG.maxWaitMs}ms).`);
+        console.log('   Or check if Grok is available in your region/account.');
+      }
+    } else {
+      console.log('⏭️ Not waiting for response (CONFIG.waitForResponse = false).');
+      console.log('   Check the Grok chat for the reply.');
+    }
+
+    console.log('\n✅ Grok integration complete.');
+  };
+
+  run();
+})();
 </code></pre>
           </div>
         </section>

@@ -9,7 +9,7 @@
 ## Quick Start
 1. Navigate to any x.com page
 2. Open DevTools (F12) and go to the Console tab
-3. Copy the contents of `src/reportSpam.js`
+3. Copy the contents of `browser/reportSpam.js`
 4. Edit the `CONFIG` section (users, reason, dryRun)
 5. Paste into the console and press Enter
 
@@ -63,7 +63,7 @@ const CONFIG = {
 };
 ```
 
-**Step 2:** Paste `src/reportSpam.js`:
+**Step 2:** Paste `browser/reportSpam.js`:
 
 ```
 REPORT SPAM
@@ -116,10 +116,10 @@ const CONFIG = {
 
 ### Report a Specific Post
 
-For reporting individual posts (not accounts), use `src/postInteractions.js`:
+For reporting individual posts (not accounts), use `browser/postInteractions.js`:
 
 ```js
-// First paste src/postInteractions.js, then call:
+// First paste browser/postInteractions.js, then call:
 await XActions.postInteractions.reportPost(
   'https://x.com/user/status/123456789',
   'spam'
@@ -147,7 +147,7 @@ Some report flows have additional steps that require manual completion (e.g., pr
 - **`actionDelay: 4000`** (4 seconds) is the minimum recommended delay. X may throttle rapid reports.
 - **The report flow has multiple steps.** The script handles the initial steps but you may need to complete sub-category selection manually.
 - **`blockAfterReport: false`** by default. Set to `true` to also block each reported account.
-- **For individual post reports**, use `src/postInteractions.js` which provides `reportPost(url, category)`.
+- **For individual post reports**, use `browser/postInteractions.js` which provides `reportPost(url, category)`.
 - **Do not abuse the report feature.** Filing false reports can result in your own account being restricted.
 - **Some profiles may not load** (deleted, suspended). The script logs these as failures and moves on.
 
@@ -163,6 +163,6 @@ Some report flows have additional steps that require manual completion (e.g., pr
 
 ## Related Scripts
 
-- `src/massBlock.js` -- Block accounts in bulk
-- `src/blockBots.js` -- Detect and block bot accounts
-- `src/postInteractions.js` -- Report individual posts (plus many other post actions)
+- `browser/massBlock.js` -- Block accounts in bulk
+- `browser/blockBots.js` -- Detect and block bot accounts
+- `browser/postInteractions.js` -- Report individual posts (plus many other post actions)

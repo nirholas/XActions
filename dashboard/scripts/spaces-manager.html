@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Spaces Manager - Live audio/video — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="src/spacesManager.js">
+  <title>Spaces Manager — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="scripts/spacesManager.js">
   <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, spaces, manager, spaces &amp; live">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Spaces Manager - Live audio/video — XActions">
-  <meta property="og:description" content="src/spacesManager.js">
+  <meta property="og:title" content="Spaces Manager — XActions">
+  <meta property="og:description" content="scripts/spacesManager.js">
   <meta property="og:url" content="https://xactions.app/scripts/spaces-manager">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-image.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Spaces Manager - Live audio/video — XActions">
-  <meta name="twitter:description" content="src/spacesManager.js">
+  <meta name="twitter:title" content="Spaces Manager — XActions">
+  <meta name="twitter:description" content="scripts/spacesManager.js">
 
   <link rel="canonical" href="https://xactions.app/scripts/spaces-manager">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
@@ -28,8 +28,8 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Spaces Manager - Live audio/video — Free X/Twitter Script | XActions",
-    "description": "src/spacesManager.js",
+    "headline": "Spaces Manager — Free X/Twitter Script | XActions",
+    "description": "scripts/spacesManager.js",
     "url": "https://xactions.app/scripts/spaces-manager",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -47,7 +47,7 @@
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
       { "@type": "ListItem", "position": 3, "name": "Spaces & Live", "item": "https://xactions.app/scripts#spaces-live" },
-      { "@type": "ListItem", "position": 4, "name": "Spaces Manager - Live audio/video", "item": "https://xactions.app/scripts/spaces-manager" }
+      { "@type": "ListItem", "position": 4, "name": "Spaces Manager", "item": "https://xactions.app/scripts/spaces-manager" }
     ]
   }
   </script>
@@ -112,24 +112,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🎙️ Spaces Manager - Live audio/video</h1>
+        <h1>🎙️ Spaces Manager</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#spaces-live">Spaces &amp; Live</a> › Spaces Manager - Live audio/video
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#spaces-live">Spaces &amp; Live</a> › Spaces Manager
         </div>
       </header>
 
       <article class="article">
         <span class="cat-badge">Spaces &amp; Live</span>
-        <span class="source-badge">src</span>
+        <span class="source-badge">scripts</span>
 
         <div class="meta-row">
           
           
-          <span>177 lines</span>
+          <span>122 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>src/spacesManager.js</p>
+        <p>scripts/spacesManager.js</p>
 
         
 
@@ -144,7 +144,18 @@
 
         
         
-        
+        <section class="config-code">
+        <h2>Default Configuration</h2>
+        <div class="code-block">
+          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
+          <pre><code>const CONFIG = {
+    maxSpaces: 20,
+    exportResults: true,
+    scrollDelay: 2000,
+    maxScrollRetries: 5,
+  };</code></pre>
+        </div>
+      </section>
 
         <section class="full-code">
           <h2>Full Script</h2>
@@ -152,181 +163,126 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// src/spacesManager.js
-// Spaces, Live Streams, and Events management for X/Twitter
+// scripts/spacesManager.js
+// Browser console script for scraping live and scheduled Spaces on X/Twitter
+// Paste in DevTools console on x.com/i/spaces or x.com/explore
 // by nichxbt
 
-/**
- * Spaces Manager - Live audio/video, events, and Circles
- * 
- * Features:
- * - Scrape live and scheduled Spaces
- * - Monitor Space metadata (speakers, listeners)
- * - Create and schedule Spaces
- * - Event creation and management
- * - Circle management
- */
+(() =&gt; {
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
 
-const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+  // =============================================
+  // CONFIGURATION
+  // =============================================
+  const CONFIG = {
+    maxSpaces: 20,
+    exportResults: true,
+    scrollDelay: 2000,
+    maxScrollRetries: 5,
+  };
+  // =============================================
 
-const SELECTORS = {
-  spacesNav: 'a[href*=&quot;/spaces&quot;]',
-  startSpace: '[data-testid=&quot;SpaceButton&quot;]',
-  joinSpace: '[data-testid=&quot;joinSpace&quot;]',
-  spaceSpeakers: '[data-testid=&quot;spaceSpeakers&quot;]',
-  spaceListeners: '[data-testid=&quot;spaceListeners&quot;]',
-  spaceRecording: '[data-testid=&quot;spaceRecording&quot;]',
-  scheduleSpace: '[data-testid=&quot;scheduleSpace&quot;]',
-  spaceTopic: '[data-testid=&quot;spaceTopic&quot;]',
-  spaceTitle: '[data-testid=&quot;spaceTitle&quot;]',
-};
+  const download = (data, filename) =&gt; {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    console.log(`📥 Downloaded: ${filename}`);
+  };
 
-/**
- * Get live Spaces
- * @param {import('puppeteer').Page} page
- * @param {Object} options
- * @returns {Promise&lt;Object&gt;}
- */
-export async function getLiveSpaces(page, options = {}) {
-  const { query = '', limit = 20 } = options;
+  const run = async () =&gt; {
+    console.log('🎙️ SPACES MANAGER — XActions by nichxbt\n');
+    console.log(`📊 Scraping up to ${CONFIG.maxSpaces} Spaces...\n`);
 
-  const url = query
-    ? `https://x.com/search?q=${encodeURIComponent(query)}&amp;f=live_spaces`
-    : 'https://x.com/i/spaces';
-  
-  await page.goto(url, { waitUntil: 'networkidle2' });
-  await sleep(3000);
+    const spaces = new Map();
+    let retries = 0;
 
-  const spaces = await page.evaluate((max) =&gt; {
-    const items = [];
-    document.querySelectorAll('[data-testid=&quot;SpaceCard&quot;], [data-testid=&quot;space&quot;]').forEach(card =&gt; {
-      items.push({
-        title: card.querySelector('[data-testid=&quot;spaceTitle&quot;]')?.textContent || '',
-        host: card.querySelector('[data-testid=&quot;spaceHost&quot;]')?.textContent || '',
-        listeners: card.querySelector('[data-testid=&quot;spaceListeners&quot;]')?.textContent || '0',
-        speakers: card.querySelector('[data-testid=&quot;spaceSpeakers&quot;]')?.textContent || '0',
-        topic: card.querySelector('[data-testid=&quot;spaceTopic&quot;]')?.textContent || '',
-        link: card.querySelector('a')?.href || '',
-        isLive: true,
+    while (spaces.size &lt; CONFIG.maxSpaces &amp;&amp; retries &lt; CONFIG.maxScrollRetries) {
+      const prevSize = spaces.size;
+
+      // Scrape Space cards from timeline or explore
+      document.querySelectorAll('[data-testid=&quot;SpaceCard&quot;], [data-testid=&quot;space&quot;], [data-testid=&quot;card.layoutLarge.media&quot;]').forEach(card =&gt; {
+        const title = card.querySelector('[data-testid=&quot;spaceTitle&quot;]')?.textContent
+          || card.querySelector('[dir=&quot;auto&quot;] span')?.textContent || '';
+        const host = card.querySelector('[data-testid=&quot;spaceHost&quot;]')?.textContent
+          || card.querySelector('a[role=&quot;link&quot;]')?.textContent || '';
+        const listeners = card.querySelector('[data-testid=&quot;spaceListeners&quot;]')?.textContent || '';
+        const speakers = card.querySelector('[data-testid=&quot;spaceSpeakers&quot;]')?.textContent || '';
+        const topic = card.querySelector('[data-testid=&quot;spaceTopic&quot;]')?.textContent || '';
+        const link = card.querySelector('a')?.href || '';
+        const scheduled = card.querySelector('time')?.getAttribute('datetime') || '';
+        const key = title + host;
+
+        if (title &amp;&amp; !spaces.has(key)) {
+          spaces.set(key, {
+            title: title.substring(0, 200),
+            host,
+            listeners,
+            speakers,
+            topic,
+            link,
+            scheduledFor: scheduled || null,
+            isLive: !scheduled,
+          });
+        }
       });
-    });
-    return items.slice(0, max);
-  }, limit);
 
-  return {
-    spaces,
-    count: spaces.length,
-    query,
-    scrapedAt: new Date().toISOString(),
-  };
-}
-
-/**
- * Get scheduled Spaces
- * @param {import('puppeteer').Page} page
- * @param {string} username
- * @returns {Promise&lt;Object&gt;}
- */
-export async function getScheduledSpaces(page, username) {
-  await page.goto(`https://x.com/${username}`, { waitUntil: 'networkidle2' });
-  await sleep(2000);
-
-  const scheduled = await page.evaluate(() =&gt; {
-    const items = [];
-    document.querySelectorAll('[data-testid=&quot;scheduledSpace&quot;]').forEach(el =&gt; {
-      items.push({
-        title: el.querySelector('[data-testid=&quot;spaceTitle&quot;]')?.textContent || '',
-        scheduledFor: el.querySelector('time')?.getAttribute('datetime') || '',
-        link: el.querySelector('a')?.href || '',
+      // Also check for inline Space cards in tweets
+      document.querySelectorAll('article[data-testid=&quot;tweet&quot;]').forEach(tweet =&gt; {
+        const spaceLink = tweet.querySelector('a[href*=&quot;/spaces/&quot;]');
+        if (!spaceLink) return;
+        const text = tweet.querySelector('[data-testid=&quot;tweetText&quot;]')?.textContent || '';
+        const key = spaceLink.href;
+        if (!spaces.has(key)) {
+          spaces.set(key, {
+            title: text.substring(0, 200),
+            host: tweet.querySelector('[data-testid=&quot;User-Name&quot;] a')?.textContent || '',
+            listeners: '',
+            speakers: '',
+            topic: '',
+            link: spaceLink.href,
+            scheduledFor: null,
+            isLive: text.toLowerCase().includes('live'),
+          });
+        }
       });
+
+      if (spaces.size === prevSize) retries++;
+      else retries = 0;
+
+      console.log(`   🎙️ Found ${spaces.size} Spaces...`);
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(CONFIG.scrollDelay);
+    }
+
+    const all = [...spaces.values()];
+    const live = all.filter(s =&gt; s.isLive);
+    const scheduled = all.filter(s =&gt; !s.isLive);
+
+    console.log(`\n🎙️ Total Spaces: ${all.length}`);
+    console.log(`   🔴 Live: ${live.length}`);
+    console.log(`   📅 Scheduled: ${scheduled.length}\n`);
+
+    all.forEach(s =&gt; {
+      const status = s.isLive ? '🔴 LIVE' : '📅 Scheduled';
+      console.log(`   ${status} | ${s.title.substring(0, 50)} | Host: ${s.host} | ${s.listeners ? s.listeners + ' listening' : ''}`);
     });
-    return items;
-  });
 
-  return {
-    username,
-    scheduledSpaces: scheduled,
-    count: scheduled.length,
-    scrapedAt: new Date().toISOString(),
+    if (CONFIG.exportResults) {
+      const date = new Date().toISOString().slice(0, 10);
+      download(
+        { exportedAt: new Date().toISOString(), total: all.length, live: live.length, scheduled: scheduled.length, spaces: all },
+        `xactions-spaces-${date}.json`
+      );
+    }
+
+    console.log('\n🏁 Done!');
   };
-}
 
-/**
- * Scrape Space metadata
- * @param {import('puppeteer').Page} page
- * @param {string} spaceUrl
- * @returns {Promise&lt;Object&gt;}
- */
-export async function scrapeSpace(page, spaceUrl) {
-  await page.goto(spaceUrl, { waitUntil: 'networkidle2' });
-  await sleep(5000);
-
-  const metadata = await page.evaluate((sel) =&gt; {
-    return {
-      title: document.querySelector(sel.spaceTitle)?.textContent || '',
-      topic: document.querySelector(sel.spaceTopic)?.textContent || '',
-      speakers: document.querySelector(sel.spaceSpeakers)?.textContent || '0',
-      listeners: document.querySelector(sel.spaceListeners)?.textContent || '0',
-      isRecording: !!document.querySelector(sel.spaceRecording),
-      participantList: Array.from(document.querySelectorAll('[data-testid=&quot;UserCell&quot;]')).map(u =&gt;
-        u.querySelector('[dir=&quot;ltr&quot;]')?.textContent || ''
-      ),
-    };
-  }, SELECTORS);
-
-  return {
-    url: spaceUrl,
-    ...metadata,
-    scrapedAt: new Date().toISOString(),
-  };
-}
-
-/**
- * Create an event
- * @param {import('puppeteer').Page} page
- * @param {Object} event - { title, description, date, time, location? }
- * @returns {Promise&lt;Object&gt;}
- */
-export async function createEvent(page, event) {
-  const { title, description, date, time, location = '' } = event;
-
-  // X Events are typically created through Communities or Spaces
-  await page.goto('https://x.com/compose/tweet', { waitUntil: 'networkidle2' });
-  await sleep(2000);
-
-  // Post event announcement
-  const eventText = [
-    `📅 ${title}`,
-    '',
-    description,
-    '',
-    `🗓 ${date} at ${time}`,
-    location ? `📍 ${location}` : '',
-    '',
-    '#event',
-  ].filter(Boolean).join('\n');
-
-  await page.click('[data-testid=&quot;tweetTextarea_0&quot;]');
-  await page.keyboard.type(eventText, { delay: 20 });
-  await sleep(500);
-
-  await page.click('[data-testid=&quot;tweetButton&quot;]');
-  await sleep(3000);
-
-  return {
-    success: true,
-    event: { title, date, time, location },
-    timestamp: new Date().toISOString(),
-  };
-}
-
-export default {
-  getLiveSpaces,
-  getScheduledSpaces,
-  scrapeSpace,
-  createEvent,
-  SELECTORS,
-};
+  run();
+})();
 </code></pre>
           </div>
         </section>

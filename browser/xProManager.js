@@ -1,5 +1,5 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// src/xProManager.js
+// browser/xProManager.js
 // X Pro (TweetDeck) automation for X/Twitter
 // by nichxbt
 // 1. Go to pro.x.com
