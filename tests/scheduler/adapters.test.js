@@ -55,15 +55,25 @@ describe('xactions schedule add (CLI)', () => {
     assert.equal(job.command, 'echo hi');
   });
 
-  it('persists the default command when -c is omitted', () => {
+  it('rejects a missing or blank command without persisting a job', () => {
+    for (const options of [[], ['--command', '   ']]) {
+      assert.throws(() => execFileSync(process.execPath,
+        [CLI, 'schedule', 'add', 'cli-missing-command', '0 10 * * *', ...options],
+        { env: { ...process.env, HOME: tmpHome }, stdio: 'pipe' },
+      ), (error) => error.status === 1 && /--command is required/.test(error.stderr.toString()));
+    }
+    assert.ok(!savedJobs().some((j) => j.name === 'cli-missing-command'));
+  });
+
+  it('keeps earlier jobs when adding another explicit command', () => {
     execFileSync(
       process.execPath,
-      [CLI, 'schedule', 'add', 'cli-default', '0 10 * * *'],
+      [CLI, 'schedule', 'add', 'cli-second', '0 10 * * *', '--command', 'doctor'],
       { env: { ...process.env, HOME: tmpHome } }
     );
-    const job = savedJobs().find((j) => j.name === 'cli-default');
+    const job = savedJobs().find((j) => j.name === 'cli-second');
     assert.ok(job);
-    assert.equal(job.command, 'echo "Job: cli-default"');
+    assert.equal(job.command, 'doctor');
     // Regression: without load() before add, each add overwrote scheduler.json
     // with only the newest job — the earlier one vanished from disk.
     assert.ok(
@@ -78,7 +88,31 @@ describe('xactions schedule add (CLI)', () => {
       encoding: 'utf-8',
     });
     assert.match(out, /cli-cmd/);
-    assert.match(out, /cli-default/);
+    assert.match(out, /cli-second/);
+  });
+
+  it('reports a child command failure with a nonzero CLI exit', () => {
+    execFileSync(process.execPath, [CLI, 'schedule', 'add', 'cli-fail', '0 9 * * *', '-c', 'unknown-regression-command']);
+    assert.throws(() => execFileSync(process.execPath, [CLI, 'schedule', 'run', 'cli-fail'], { stdio: 'pipe' }),
+      (error) => error.status === 1 && /cli-fail.*failed.*exit/i.test(error.stderr.toString()));
+  });
+
+  it('reconciles two schedulers without rewriting disk or replacing unchanged tasks', async () => {
+    const { Scheduler } = await import('../../src/scheduler/scheduler.js');
+    const first = await new Scheduler().load();
+    first.addJob({ name: 'external-removal', cron: '0 9 * * *', command: 'doctor' });
+    const other = await new Scheduler().load();
+    const unchanged = other.jobs.get('cli-second').cronTask;
+    first.removeJob('external-removal');
+    first.addJob({ name: 'external-add', cron: '0 9 * * *', command: 'doctor' });
+    const snapshot = fs.readFileSync(schedulerFile(), 'utf8');
+    await other.load();
+    assert.equal(other.jobs.get('cli-second').cronTask, unchanged);
+    assert.equal(other.jobs.has('external-removal'), false);
+    assert.ok(other.jobs.has('external-add'));
+    assert.equal(fs.readFileSync(schedulerFile(), 'utf8'), snapshot);
+    other.addJob({ name: 'after-reload', cron: '0 9 * * *', command: 'doctor' });
+    assert.ok(!savedJobs().some((job) => job.name === 'external-removal'));
   });
 });
 

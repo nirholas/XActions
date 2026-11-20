@@ -3267,13 +3267,19 @@ program
 
 const schedCmd = program.command('schedule').description('Cron-based task scheduler');
 
-schedCmd.command('add <name> <cron>').description('Add scheduled job').option('-c, --command <cmd>', 'Command to run').action(async (name, cron, options) => {
+schedCmd.command('add <name> <cron>').description('Add scheduled job').option('-c, --command <cmd>', 'xactions subcommand to run (e.g. \'search "from:user"\') — required, shell commands are not allowed').action(async (name, cron, options) => {
   try {
+    const cmd = (options.command || '').trim();
+    if (!cmd) {
+      console.error(chalk.red('❌ --command is required: an xactions subcommand to run on schedule (not a shell command)'));
+      process.exitCode = 1;
+      return;
+    }
     const { getScheduler } = await import('../scheduler/scheduler.js');
     const scheduler = getScheduler();
     await scheduler.load();
-    scheduler.addJob({ name, cron, command: options.command || 'echo "Job: ' + name + '"' });
-    console.log(chalk.green(`✅ Job "${name}" scheduled: ${cron}`));
+    scheduler.addJob({ name, cron, command: cmd });
+    console.log(chalk.green(`✅ Job "${name}" scheduled: ${cron} → ${cmd}`));
   } catch (error) { console.error(chalk.red(`❌ ${error.message}`)); process.exitCode = 1; }
 });
 

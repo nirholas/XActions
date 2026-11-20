@@ -72,6 +72,7 @@ router.post('/:name/run', async (req, res) => {
     await scheduler.load();
     const result = await scheduler.runJobNow(req.params.name);
     if (result?.error) return res.status(404).json(result);
+    if (result.status === 'failed') return res.status(500).json(result);
     res.json({ status: 'executed', name: req.params.name });
   } catch (error) {
     res.status(500).json({ error: error.message });
