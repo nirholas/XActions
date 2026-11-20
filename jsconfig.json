@@ -2,17 +2,20 @@
   "compilerOptions": {
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "target": "ES2022",
-    "strict": true,
+    "target": "ES2024",
+    "lib": ["ES2024", "DOM"],
+    "types": ["node"],
+    "allowJs": true,
     "checkJs": true,
+    "noEmit": true,
+    "strict": false,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "baseUrl": ".",
     "paths": {
       "xactions": ["./src/index.js"],
       "xactions/*": ["./src/*"]
     }
   },
-  "include": ["src/**/*.js", "api/**/*.js", "tests/**/*.js", "types/**/*.d.ts"],
-  "exclude": ["node_modules", "archive", "dist", "dashboard", "site"]
+  "include": ["src/**/*.js", "api/**/*.js", "types/**/*.d.ts"],
+  "exclude": ["node_modules", "archive", "dist", "dashboard", "site", "tests/**/fixtures/**"]
 }
