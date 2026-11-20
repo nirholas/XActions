@@ -36,7 +36,8 @@ Export, manage, and automate X/Twitter Direct Messages.
 ## 📦 Node.js Module
 
 ```javascript
-import { sendDM, getConversations, exportDMs } from 'xactions';
+import { sendDM, getConversations } from 'xactions/src/dmManager.js';
+import { exportDMs } from 'xactions';
 
 // Send a DM
 await sendDM(page, 'username', 'Hello from XActions!');

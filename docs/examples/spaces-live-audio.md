@@ -34,7 +34,7 @@ Scrape, monitor, and interact with X/Twitter Spaces and live audio events.
 ## 📦 Node.js Module
 
 ```javascript
-import { getLiveSpaces, getScheduledSpaces, scrapeSpace } from 'xactions';
+import { getLiveSpaces, getScheduledSpaces, scrapeSpace } from 'xactions/src/spacesManager.js';
 
 // Get live Spaces
 const live = await getLiveSpaces(page, { topic: 'crypto' });

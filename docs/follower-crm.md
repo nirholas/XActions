@@ -72,7 +72,7 @@ import {
   exportSegment,
   addAutoTagRule,
   BUILT_IN_RULES
-} from 'xactions/src/analytics/followerCRM.js';
+} from 'xactions/analytics';
 
 // Sync followers to CRM
 await syncFollowers('nichxbt');

@@ -29,7 +29,7 @@ document.querySelector('button[aria-label="Send"]')?.click();
 ## 📦 Node.js Module
 
 ```javascript
-import { queryGrok, summarize, analyzePost } from 'xactions';
+import { queryGrok, summarize, analyzePost } from 'xactions/src/grokIntegration.js';
 
 // Query Grok (requires active x.com session)
 const response = await queryGrok(page, 'What are people saying about AI on X?');

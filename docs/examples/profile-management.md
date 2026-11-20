@@ -29,7 +29,7 @@ Edit and manage your X/Twitter profile — update bio, avatar, header, filter po
 ## 📦 Node.js Module
 
 ```javascript
-import { getProfile, updateProfile, uploadAvatar } from 'xactions';
+import { getProfile, updateProfile, uploadAvatar } from 'xactions/src/profileManager.js';
 
 // Get profile info
 const profile = await getProfile(page, 'nichxbt');

@@ -35,7 +35,7 @@ Compare X/Twitter Premium tiers and check which features are available to your a
 ## 📦 Node.js Module
 
 ```javascript
-import { checkPremiumStatus, compareTiers } from 'xactions';
+import { checkPremiumStatus, compareTiers } from 'xactions/src/premiumManager.js';
 
 const status = await checkPremiumStatus(page);
 console.log(status.tier); // 'premium', 'premium+', etc.

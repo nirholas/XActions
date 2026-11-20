@@ -112,7 +112,7 @@ If XActions is configured as an MCP server (Claude Desktop, Cursor, etc.):
 For programmatic control:
 
 ```javascript
-import { joinSpace, leaveSpace, getSpaceAgentStatus, getSpaceTranscript } from 'xactions/spaces/agent';
+import { joinSpace, leaveSpace, getSpaceAgentStatus, getSpaceTranscript } from 'xactions/spaces';
 
 // Join with full configuration
 const result = await joinSpace({
