@@ -100,3 +100,6 @@ exports/
 *.csv
 !replies_clean.csv  # Keep the example file
 .vercel
+
+# MkDocs build output; Vercel runs `mkdocs build` on deploy (see vercel.json)
+site/

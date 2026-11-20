@@ -47,7 +47,6 @@ dashboard/*.html
 dashboard/tutorials/
 
 # Archive (legacy scripts)
-archive/
 
 # SEO / marketing scripts
 scripts/twitter/
