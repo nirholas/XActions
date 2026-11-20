@@ -1,41 +1,46 @@
 #!/usr/bin/env node
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
- * Buy one call from an x402 endpoint, for real.
+ * Buy one call from any x402 endpoint, for real, on any chain and asset it offers.
  *
  * This is the end-to-end proof that a paid API works: it does exactly what an
- * agent does. Request the resource, read the 402 terms, sign a USDC transfer
- * with a wallet, retry with the payment attached, and print the result together
- * with the settlement receipt and the on-chain transaction.
+ * agent does. Request the resource, read the 402 terms, sign a payment with a
+ * wallet, retry with the payment attached, and print the result together with
+ * the settlement receipt and the on-chain transaction.
  *
- * Both chains XActions offers are supported:
+ * Signing goes through the official x402 clients, so every scheme they support
+ * works here without a hand-rolled copy:
  *
- *   solana  the exact scheme over @x402/svm: a partially-signed transaction
- *           whose fee payer is the facilitator, so the buyer needs no SOL
- *   base    EIP-3009 transferWithAuthorization signed with viem, so the buyer
- *           needs no ETH either
+ *   Solana  @x402/svm exact: a partially-signed SPL transfer (USDC, or any SPL
+ *           token the endpoint names) whose fee payer is the facilitator
+ *   EVM     @x402/evm exact on any eip155 chain: EIP-3009 for USDC-style tokens,
+ *           Permit2 for tokens without it (Sperax USDs), including the
+ *           facilitator-sponsored approval when the terms offer it
  *
  * Usage:
- *   node scripts/x402-pay.mjs --url https://xactions.app/api/ai/scrape/profile \
- *     --body '{"username":"nasa"}' --chain solana
+ *   node scripts/x402-pay.mjs --url <url> [--body '<json>'] --network <net> [--asset <asset>]
  *
  *   --url <url>          Endpoint to buy from
  *   --body <json>        POST body (omit for a GET)
- *   --chain <name>       solana (default) or base
- *   --rpc <url>          Solana RPC, default https://api.mainnet-beta.solana.com
+ *   --network <net>      solana, base, arbitrum, xlayer, or a CAIP-2 id (eip155:42161).
+ *                        --chain is accepted as an alias.
+ *   --asset <asset>      Token address/mint, or a symbol the terms name (USDC, USDs, THREE).
+ *                        Omit to take the first option on the network.
+ *   --max <amount>       Refuse to pay more than this many tokens (default 0.10). A safety
+ *                        net: the server, not this script, chooses the price.
+ *   --list               Print every option the endpoint offers, then stop
+ *   --dry-run            Print the chosen terms and the payer balance, pay nothing
  *   --yes                Spend without the confirmation prompt
- *   --dry-run            Print the terms and the payer balance, pay nothing
  *
- * The key comes from X402_BUYER_SOLANA_SECRET (base58, 64 bytes) or
- * X402_BUYER_EVM_PRIVATE_KEY (0x hex). Both can be loaded straight from Google
- * Secret Manager:
+ * Keys come from X402_BUYER_SOLANA_SECRET (base58, 64 bytes) and
+ * X402_BUYER_EVM_PRIVATE_KEY (0x hex; one key pays on every EVM chain). Load
+ * them from Secret Manager without printing them:
  *
- *   export X402_BUYER_SOLANA_SECRET=$(gcloud secrets versions access latest \
- *     --secret=X402_BUYER_SOLANA_SECRET)
+ *   export X402_BUYER_EVM_PRIVATE_KEY=$(gcloud secrets versions access latest \
+ *     --secret=X402_BUYER_EVM_PRIVATE_KEY)
  *
- * Requires @x402/svm and @solana/kit for the Solana lane and viem for Base. If
- * they are not in this repo's node_modules, point NODE_PATH at a tree that has
- * them.
+ * The Solana lane needs @x402/svm and @solana/kit. If they are not in this
+ * repo's node_modules, point NODE_PATH at a tree that has them.
  *
  * by nichxbt
  */
@@ -53,9 +58,45 @@ const has = (name) => argv.includes(`--${name}`);
 
 const URL_ARG = flag('url', 'https://xactions.app/api/ai/scrape/profile');
 const BODY = flag('body', null);
-const CHAIN = flag('chain', 'solana');
-const RPC = flag('rpc', 'https://api.mainnet-beta.solana.com');
-const DRY_RUN = has('dry-run');
+const NETWORK_ARG = flag('network', flag('chain', 'solana'));
+const ASSET_ARG = flag('asset', null);
+const MAX = Number(flag('max', '0.10'));
+const SOLANA_RPC = flag('rpc', 'https://api.mainnet-beta.solana.com');
+
+const SOLANA = 'solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp';
+const NETWORK_ALIASES = {
+  solana: SOLANA,
+  base: 'eip155:8453',
+  arbitrum: 'eip155:42161',
+  xlayer: 'eip155:196',
+  ethereum: 'eip155:1',
+  polygon: 'eip155:137',
+  optimism: 'eip155:10',
+  bsc: 'eip155:56',
+};
+/** Public RPCs for the chains we read balances on. Anything else needs --evm-rpc. */
+const EVM_RPC = {
+  1: 'https://ethereum-rpc.publicnode.com',
+  10: 'https://mainnet.optimism.io',
+  56: 'https://bsc-dataseed.bnbchain.org',
+  137: 'https://polygon-rpc.com',
+  196: 'https://rpc.xlayer.tech',
+  8453: 'https://mainnet.base.org',
+  42161: 'https://arb1.arbitrum.io/rpc',
+};
+const EXPLORER = {
+  [SOLANA]: 'https://solscan.io/tx/',
+  'eip155:1': 'https://etherscan.io/tx/',
+  'eip155:10': 'https://optimistic.etherscan.io/tx/',
+  'eip155:56': 'https://bscscan.com/tx/',
+  'eip155:137': 'https://polygonscan.com/tx/',
+  'eip155:196': 'https://www.okx.com/web3/explorer/xlayer/tx/',
+  'eip155:8453': 'https://basescan.org/tx/',
+  'eip155:42161': 'https://arbiscan.io/tx/',
+};
+/** v1 terms name networks by slug; v2 by CAIP-2. Compare in CAIP-2. */
+const V1_NETWORKS = { solana: SOLANA, base: 'eip155:8453', arbitrum: 'eip155:42161', 'x-layer': 'eip155:196' };
+const caip = (network) => NETWORK_ALIASES[network] || V1_NETWORKS[network] || network;
 
 /** Resolve a package from this repo or from NODE_PATH, with a useful failure. */
 async function load(specifier) {
@@ -77,167 +118,114 @@ async function load(specifier) {
   }
 }
 
-function base64Json(value) {
-  return Buffer.from(JSON.stringify(value)).toString('base64');
-}
-
-/** Ask the endpoint for its terms. */
-async function fetchTerms() {
+const requestInit = () => {
   const init = { headers: { accept: 'application/json' } };
   if (BODY) {
     init.method = 'POST';
     init.headers['content-type'] = 'application/json';
     init.body = BODY;
   }
-  const response = await fetch(URL_ARG, init);
-  if (response.status !== 402) {
-    const text = await response.text();
-    throw new Error(
-      `expected 402, got ${response.status}. The endpoint may be free, or the payment gate is off.\n${text.slice(0, 400)}`,
-    );
-  }
-  return { challenge: await response.json(), init };
-}
+  return init;
+};
 
-/** The accepts entry for the requested chain. */
-function pickRequirements(challenge, chain) {
-  const wanted = chain === 'base' ? ['base', 'eip155:8453'] : ['solana', 'solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp'];
-  const match = (challenge.accepts || []).find((entry) => wanted.includes(entry.network));
-  if (!match) {
-    const offered = (challenge.accepts || []).map((entry) => entry.network).join(', ');
-    throw new Error(`this endpoint does not accept ${chain}. It offers: ${offered || 'nothing'}`);
-  }
-  return match;
-}
-
+const amountOf = (req) => BigInt(req.amount ?? req.maxAmountRequired);
+/** Well-known SPL mints, since Solana terms often carry only a display name. */
+const KNOWN_MINTS = { EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v: 'USDC', Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB: 'USDT' };
+const symbols = new Map();
 /**
- * How much of the payment asset the buyer holds, so an empty wallet fails with
- * a sentence instead of an RPC error from three layers down.
- *
- * @param {string} owner - Buyer address.
- * @param {string} mint - SPL mint from the payment requirements.
- * @returns {Promise<{ amount: bigint, accounts: number }>}
+ * The token's ticker: from the terms when they carry one, else the ERC-20
+ * contract or a known mint. Terms often name a token "USD Coin" or not at all
+ * (Permit2 terms for USDs carry only the transfer method), so `--asset USDC`
+ * has to match the contract's own symbol.
  */
-async function solanaTokenBalance(owner, mint) {
-  const response = await fetch(RPC, {
+async function symbolOf(req) {
+  if (req.extra?.symbol) return req.extra.symbol;
+  if (!symbols.has(req.asset)) {
+    let symbol = KNOWN_MINTS[req.asset] || null;
+    if (!symbol && caip(req.network) !== SOLANA) {
+      try {
+        const { erc20Abi } = await load('viem');
+        const client = await evmPublicClient(caip(req.network));
+        symbol = await client.readContract({ address: req.asset, abi: erc20Abi, functionName: 'symbol' });
+      } catch {
+        // fall through to the display name
+      }
+    }
+    symbols.set(req.asset, symbol || req.extra?.name || req.asset);
+  }
+  return symbols.get(req.asset);
+}
+/** Decimals from the terms, else from the chain. */
+async function decimalsOf(req) {
+  if (Number.isInteger(req.extra?.decimals)) return req.extra.decimals;
+  const network = caip(req.network);
+  if (network === SOLANA) {
+    const info = await solanaRpc('getAccountInfo', [req.asset, { encoding: 'jsonParsed' }]);
+    return info?.value?.data?.parsed?.info?.decimals ?? 6;
+  }
+  const client = await evmPublicClient(network);
+  const { erc20Abi } = await load('viem');
+  return Number(await client.readContract({ address: req.asset, abi: erc20Abi, functionName: 'decimals' }));
+}
+const human = (raw, decimals) => {
+  const s = raw.toString().padStart(decimals + 1, '0');
+  const whole = s.slice(0, s.length - decimals);
+  const frac = s.slice(s.length - decimals).replace(/0+$/, '');
+  return frac ? `${whole}.${frac}` : whole;
+};
+
+async function solanaRpc(method, params) {
+  const response = await fetch(SOLANA_RPC, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({
-      jsonrpc: '2.0',
-      id: 1,
-      method: 'getTokenAccountsByOwner',
-      params: [owner, { mint }, { encoding: 'jsonParsed' }],
-    }),
+    body: JSON.stringify({ jsonrpc: '2.0', id: 1, method, params }),
   });
-  const body = await response.json();
-  const accounts = body?.result?.value ?? [];
-  const amount = accounts.reduce(
-    (total, account) => total + BigInt(account.account.data.parsed.info.tokenAmount.amount),
-    0n,
-  );
-  return { amount, accounts: accounts.length };
+  return (await response.json()).result;
 }
 
-/** Sign the Solana exact-scheme payload with the official SVM client. */
-async function paySolana(requirements) {
+const evmClients = new Map();
+async function evmPublicClient(network) {
+  const chainId = Number(network.split(':')[1]);
+  if (!evmClients.has(chainId)) {
+    const rpc = flag('evm-rpc', EVM_RPC[chainId]);
+    if (!rpc) throw new Error(`no RPC known for ${network}; pass --evm-rpc <url>`);
+    const { createPublicClient, http } = await load('viem');
+    evmClients.set(chainId, createPublicClient({ transport: http(rpc) }));
+  }
+  return evmClients.get(chainId);
+}
+
+/** The buyer's balance of the payment asset, so an empty wallet fails with a sentence. */
+async function balanceOf(req, payer) {
+  const network = caip(req.network);
+  if (network === SOLANA) {
+    const result = await solanaRpc('getTokenAccountsByOwner', [payer, { mint: req.asset }, { encoding: 'jsonParsed' }]);
+    return (result?.value ?? []).reduce((t, a) => t + BigInt(a.account.data.parsed.info.tokenAmount.amount), 0n);
+  }
+  const client = await evmPublicClient(network);
+  const { erc20Abi } = await load('viem');
+  return client.readContract({ address: req.asset, abi: erc20Abi, functionName: 'balanceOf', args: [payer] });
+}
+
+async function solanaSigner() {
   const secret = process.env.X402_BUYER_SOLANA_SECRET;
-  if (!secret) throw new Error('X402_BUYER_SOLANA_SECRET is not set');
-
-  const [{ createKeyPairSignerFromBytes }, { base58 }, { ExactSvmSchemeV1 }] = await Promise.all([
-    load('@solana/kit'),
-    load('@scure/base'),
-    load('@x402/svm/v1'),
-  ]);
-
+  if (!secret) return null;
+  const [{ createKeyPairSignerFromBytes }, { base58 }] = await Promise.all([load('@solana/kit'), load('@scure/base')]);
   const bytes = base58.decode(secret.trim());
   if (bytes.length !== 64) throw new Error(`expected a 64-byte Solana secret, got ${bytes.length}`);
-  const signer = await createKeyPairSignerFromBytes(bytes);
-
-  const needed = BigInt(requirements.maxAmountRequired ?? requirements.amount);
-  const { amount, accounts } = await solanaTokenBalance(signer.address, requirements.asset);
-  if (accounts === 0) {
-    throw new Error(
-      `${signer.address} holds no ${requirements.asset}. Send at least ` +
-        `${(Number(needed) / 1_000_000).toFixed(6)} USDC to that address on Solana mainnet.`,
-    );
-  }
-  if (amount < needed) {
-    throw new Error(
-      `${signer.address} holds ${(Number(amount) / 1_000_000).toFixed(6)} USDC, ` +
-        `this call costs ${(Number(needed) / 1_000_000).toFixed(6)}.`,
-    );
-  }
-  console.log(`balance   ${(Number(amount) / 1_000_000).toFixed(6)} USDC`);
-
-  const scheme = new ExactSvmSchemeV1(signer, { rpcUrl: RPC });
-  const payload = await scheme.createPaymentPayload(1, requirements);
-  return { payer: signer.address, payload };
+  return createKeyPairSignerFromBytes(bytes);
 }
 
-/** Sign an EIP-3009 transferWithAuthorization for the Base lane. */
-async function payBase(requirements) {
+async function evmAccount() {
   const key = process.env.X402_BUYER_EVM_PRIVATE_KEY;
-  if (!key) throw new Error('X402_BUYER_EVM_PRIVATE_KEY is not set');
-
+  if (!key) return null;
   const { privateKeyToAccount } = await load('viem/accounts');
-  const { toHex } = await load('viem');
-  const account = privateKeyToAccount(key.trim());
-
-  const now = Math.floor(Date.now() / 1000);
-  const authorization = {
-    from: account.address,
-    to: requirements.payTo,
-    value: BigInt(requirements.maxAmountRequired ?? requirements.amount),
-    validAfter: BigInt(now - 60),
-    validBefore: BigInt(now + Number(requirements.maxTimeoutSeconds || 300)),
-    nonce: toHex(crypto.getRandomValues(new Uint8Array(32))),
-  };
-
-  const signature = await account.signTypedData({
-    domain: {
-      name: requirements.extra?.name || 'USD Coin',
-      version: requirements.extra?.version || '2',
-      chainId: 8453,
-      verifyingContract: requirements.asset,
-    },
-    types: {
-      TransferWithAuthorization: [
-        { name: 'from', type: 'address' },
-        { name: 'to', type: 'address' },
-        { name: 'value', type: 'uint256' },
-        { name: 'validAfter', type: 'uint256' },
-        { name: 'validBefore', type: 'uint256' },
-        { name: 'nonce', type: 'bytes32' },
-      ],
-    },
-    primaryType: 'TransferWithAuthorization',
-    message: authorization,
-  });
-
-  return {
-    payer: account.address,
-    payload: {
-      x402Version: 1,
-      scheme: 'exact',
-      network: requirements.network,
-      payload: {
-        signature,
-        authorization: {
-          ...authorization,
-          value: authorization.value.toString(),
-          validAfter: authorization.validAfter.toString(),
-          validBefore: authorization.validBefore.toString(),
-        },
-      },
-    },
-  };
+  return privateKeyToAccount(key.trim());
 }
 
 async function confirm(question) {
   if (has('yes')) return true;
-  if (!process.stdin.isTTY) {
-    throw new Error('refusing to spend without --yes when there is no terminal to confirm at');
-  }
+  if (!process.stdin.isTTY) throw new Error('refusing to spend without --yes when there is no terminal to confirm at');
   const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
   const answer = (await rl.question(`${question} [y/N] `)).trim().toLowerCase();
   rl.close();
@@ -246,39 +234,116 @@ async function confirm(question) {
 
 // ---------------------------------------------------------------------- main
 
-const { challenge, init } = await fetchTerms();
-const requirements = pickRequirements(challenge, CHAIN);
-const amount = requirements.maxAmountRequired ?? requirements.amount;
-const usd = (Number(amount) / 1_000_000).toFixed(6);
+const { x402Client, x402HTTPClient } = await load('@x402/core/client');
 
-console.log(`\n402 from ${URL_ARG}`);
-console.log(`  chain     ${requirements.network}`);
-console.log(`  amount    ${amount} (${usd} USDC)`);
-console.log(`  asset     ${requirements.asset}`);
-console.log(`  payTo     ${requirements.payTo}`);
-if (requirements.extra?.feePayer) console.log(`  feePayer  ${requirements.extra.feePayer}`);
-console.log('');
+const first = await fetch(URL_ARG, requestInit());
+if (first.status !== 402) {
+  const text = await first.text();
+  console.error(`expected 402, got ${first.status}. The endpoint may be free, or its payment gate is off.\n${text.slice(0, 400)}`);
+  process.exit(1);
+}
+let firstBody;
+try {
+  firstBody = await first.json();
+} catch {
+  firstBody = undefined;
+}
+const probe = new x402HTTPClient(new x402Client());
+const paymentRequired = probe.getPaymentRequiredResponse((name) => first.headers.get(name), firstBody);
+const accepts = paymentRequired.accepts || [];
 
-if (DRY_RUN) {
-  console.log('--dry-run: nothing was signed or spent.');
-  process.exit(0);
+console.log(`\n402 from ${URL_ARG} (x402 v${paymentRequired.x402Version})`);
+for (const [i, req] of accepts.entries()) {
+  const decimals = await decimalsOf(req).catch(() => null);
+  const price = decimals === null ? amountOf(req).toString() : human(amountOf(req), decimals);
+  console.log(
+    `  [${i}] ${caip(req.network).padEnd(42)} ${price.padStart(10)} ${(await symbolOf(req)).padEnd(10)} ` +
+      `${req.extra?.assetTransferMethod || req.extra?.transferMethod || ''}`,
+  );
+}
+if (has('list')) process.exit(0);
+
+const network = caip(NETWORK_ARG);
+const assetWanted = ASSET_ARG?.toLowerCase();
+let chosen = null;
+for (const req of accepts) {
+  if (caip(req.network) !== network) continue;
+  if (!assetWanted || req.asset.toLowerCase() === assetWanted || (await symbolOf(req)).toLowerCase() === assetWanted) {
+    chosen = req;
+    break;
+  }
+}
+if (!chosen) {
+  console.error(`\nthis endpoint offers no ${ASSET_ARG ? `${ASSET_ARG} ` : ''}option on ${network}.`);
+  process.exit(1);
 }
 
-if (!(await confirm(`Pay ${usd} USDC on ${requirements.network} to ${requirements.payTo}?`))) {
+const decimals = await decimalsOf(chosen);
+const price = human(amountOf(chosen), decimals);
+const symbol = await symbolOf(chosen);
+console.log(`\nchosen    ${network} ${price} ${symbol}`);
+console.log(`  asset   ${chosen.asset}`);
+console.log(`  payTo   ${chosen.payTo}`);
+if (chosen.extra?.feePayer) console.log(`  feePayer ${chosen.extra.feePayer}`);
+if (Number(price) > MAX) {
+  console.error(`\n${price} ${symbol} is above --max ${MAX}. Raise --max if you mean it.`);
+  process.exit(1);
+}
+
+const isSolana = network === SOLANA;
+const signer = isSolana ? await solanaSigner() : await evmAccount();
+if (!signer) {
+  console.error(`\nset ${isSolana ? 'X402_BUYER_SOLANA_SECRET' : 'X402_BUYER_EVM_PRIVATE_KEY'} to pay on ${network}.`);
+  process.exit(1);
+}
+const balance = await balanceOf(chosen, signer.address);
+console.log(`  payer   ${signer.address} holds ${human(balance, decimals)} ${symbol}`);
+if (balance < amountOf(chosen)) {
+  console.error(`\nnot enough ${symbol}: send at least ${price} to ${signer.address} on ${network}.`);
+  process.exit(1);
+}
+
+if (has('dry-run')) {
+  console.log('\n--dry-run: nothing was signed or spent.');
+  process.exit(0);
+}
+if (!(await confirm(`Pay ${price} ${symbol} on ${network} to ${chosen.payTo}?`))) {
   console.log('cancelled, nothing was spent.');
   process.exit(1);
 }
 
-const { payer, payload } = CHAIN === 'base' ? await payBase(requirements) : await paySolana(requirements);
-console.log(`signed by ${payer}`);
-
-const paid = await fetch(URL_ARG, {
-  ...init,
-  headers: { ...init.headers, 'X-PAYMENT': base64Json(payload) },
+// The selector always returns the option chosen above; spend limits are the
+// --max check, so the client's default-asset allowlist (which would refuse
+// THREE or USDs) is turned off.
+const client = x402Client.fromConfig({
+  schemes: [],
+  spendControls: false,
+  paymentRequirementsSelector: () => chosen,
 });
+if (isSolana) {
+  const { registerExactSvmScheme } = await load('@x402/svm/exact/client');
+  registerExactSvmScheme(client, { signer, networks: [SOLANA] });
+} else {
+  const { registerExactEvmScheme } = await load('@x402/evm/exact/client');
+  const { toClientEvmSigner } = await load('@x402/evm');
+  const publicClient = await evmPublicClient(network);
+  const chainId = Number(network.split(':')[1]);
+  registerExactEvmScheme(client, {
+    signer: toClientEvmSigner(signer, publicClient),
+    schemeOptions: { [chainId]: { rpcUrl: flag('evm-rpc', EVM_RPC[chainId]) } },
+  });
+}
+const http = new x402HTTPClient(client);
+const payload = await client.createPaymentPayload(paymentRequired);
+const init = requestInit();
+const paid = await fetch(URL_ARG, { ...init, headers: { ...init.headers, ...http.encodePaymentSignatureHeader(payload) } });
 
-const receiptHeader = paid.headers.get('x-payment-response');
-const receipt = receiptHeader ? JSON.parse(Buffer.from(receiptHeader, 'base64').toString()) : null;
+let receipt = null;
+try {
+  receipt = http.getPaymentSettleResponse((name) => paid.headers.get(name));
+} catch {
+  // no settlement header: the server refused before settling
+}
 const text = await paid.text();
 
 console.log(`\nHTTP ${paid.status}`);
@@ -288,11 +353,8 @@ if (receipt) {
   console.log(`  network      ${receipt.network ?? '-'}`);
   console.log(`  transaction  ${receipt.transaction ?? '-'}`);
   console.log(`  payer        ${receipt.payer ?? '-'}`);
-  if (receipt.transaction && String(receipt.network).startsWith('solana')) {
-    console.log(`  explorer     https://solscan.io/tx/${receipt.transaction}`);
-  } else if (receipt.transaction) {
-    console.log(`  explorer     https://basescan.org/tx/${receipt.transaction}`);
-  }
+  if (receipt.transaction) console.log(`  explorer     ${EXPLORER[caip(receipt.network)] ?? ''}${receipt.transaction}`);
+  if (receipt.errorReason) console.log(`  error        ${receipt.errorReason}`);
 }
 console.log('\nresponse:');
 console.log(text.slice(0, 1500));
