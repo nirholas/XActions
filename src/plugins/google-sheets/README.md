@@ -41,7 +41,7 @@ export GOOGLE_SERVICE_ACCOUNT_KEY_FILE="./service-account-key.json"
 ### 3. Use it
 
 ```javascript
-import { exportToGoogleSheets } from 'xactions/plugins/google-sheets';
+import { exportToGoogleSheets } from 'xactions/src/plugins/google-sheets/index.js';
 
 // After scraping followers...
 const result = await exportToGoogleSheets(followers, {

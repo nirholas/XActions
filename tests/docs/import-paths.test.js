@@ -1,8 +1,9 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * Tests: every `import ... from 'xactions...'` a reader can copy out of the docs,
- * tutorials, skills, README or examples resolves through package.json `exports`
- * and provides the names it imports.
+ * tutorials, skills, README, examples, the plugin and types READMEs, or the n8n
+ * integration resolves through package.json `exports` and provides the names it
+ * imports.
  *
  * Thirty examples once failed for anyone who tried them: some named paths the
  * exports map does not allow (`xactions/src/...` before `./src/*` existed), some
@@ -32,7 +33,9 @@ function walk(dir, out = []) {
 }
 
 const sources = [
-  ...['docs', 'tutorials', 'skills', 'examples'].flatMap((d) => walk(path.join(root, d))),
+  ...['docs', 'tutorials', 'skills', 'examples', 'types', 'integrations'].flatMap((d) => walk(path.join(root, d))),
+  // READMEs that live beside the code they document, such as the plugin guides.
+  ...walk(path.join(root, 'src')).filter((f) => f.endsWith('.md')),
   path.join(root, 'README.md'),
 ];
 

@@ -18,7 +18,7 @@ npm install exceljs
 ### 2. Use it
 
 ```javascript
-import { exportToExcel } from 'xactions/plugins/excel';
+import { exportToExcel } from 'xactions/src/plugins/excel/index.js';
 
 // After scraping followers...
 const result = await exportToExcel(followers, {
@@ -60,7 +60,7 @@ xactions following @nichxbt -o following.xlsx
 Combine multiple datasets into a single Excel file:
 
 ```javascript
-import { exportMultiSheet } from 'xactions/plugins/excel';
+import { exportMultiSheet } from 'xactions/src/plugins/excel/index.js';
 
 const result = await exportMultiSheet({
   'Followers': followersData,

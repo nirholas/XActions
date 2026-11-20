@@ -30,11 +30,16 @@ tools, and `/api/datasets`.
 
 ### Import paths
 
-`package.json` publishes `xactions/scrapers/twitter/http` (the index) but not the
-individual modules inside it, and does not publish `src/scraping/` at all.
-`import ... from 'xactions/src/...'` throws `ERR_PACKAGE_PATH_NOT_EXPORTED`.
-Paths below that start with `./src/` are relative to the root of a clone; where a
-published subpath exists, the example uses it.
+`package.json` exports `./src/*`, so every module under `src/` can be imported
+from an installed package by its file path:
+
+```javascript
+import { ProxyManager } from 'xactions/src/scraping/proxyManager.js';
+```
+
+Paths below that start with `./src/` are relative to the root of a clone; in your
+own project, write `xactions/src/` instead. Where a shorter published subpath
+exists (`xactions/scrapers/twitter/http`), the example uses it.
 
 ---
 
