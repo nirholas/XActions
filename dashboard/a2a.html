@@ -265,6 +265,14 @@
     const LOCAL_A2A = window.location.hostname === 'localhost';
     const API = LOCAL_A2A ? 'http://localhost:3100' : window.location.origin;
     const A2A_BASE = LOCAL_A2A ? '' : '/api';
+    // xactions.app serves only the safe part of A2A: skill discovery, and
+    // POST /api/a2a/task for a signed-in account. Health, agents, the task
+    // list and orchestration belong to the A2A server (src/a2a/server.js),
+    // which runs tools as the logged-in X account and so runs on your own
+    // machine. On the hosted site the page says so instead of "Unreachable".
+    const HOSTED = !LOCAL_A2A;
+    const LOCAL_ONLY_NOTE = 'Agents, tasks and orchestration run on your own A2A server: ' +
+      'node src/a2a/server.js, then open this page at http://localhost.';
 
     // ── State ───────────────────────────────────────────────────────────────
     let allSkills = [];
@@ -282,8 +290,15 @@
 
     // ── Health ──────────────────────────────────────────────────────────────
     async function refreshHealth() {
-      const data = await api('/a2a/health');
       const badge = document.getElementById('health-badge');
+      if (HOSTED) {
+        const skills = await api('/a2a/skills');
+        const ok = Boolean(skills?.success || skills?.skills);
+        badge.textContent = ok ? 'Hosted: discovery' : 'Unreachable';
+        badge.className = `status-badge ${ok ? 'status-healthy' : 'status-unhealthy'}`;
+        return;
+      }
+      const data = await api('/a2a/health');
       if (data?.status === 'healthy') {
         badge.textContent = 'Healthy';
         badge.className = 'status-badge status-healthy';
@@ -306,9 +321,12 @@
     async function refreshSkills() {
       const data = await api('/a2a/skills');
       if (!data) return;
-      allSkills = data.skills || [];
-      document.getElementById('skill-count').textContent = data.total;
-      document.getElementById('stat-skills').textContent = data.total;
+      // The A2A server answers { skills, total }; the hosted API wraps the
+      // list as { success, data: { skills } } with no total.
+      allSkills = data.skills || data.data?.skills || [];
+      const total = data.total ?? allSkills.length;
+      document.getElementById('skill-count').textContent = total;
+      document.getElementById('stat-skills').textContent = total;
       renderSkills(allSkills);
     }
 
@@ -335,6 +353,11 @@
 
     // ── Agents ──────────────────────────────────────────────────────────────
     async function refreshAgents() {
+      if (HOSTED) {
+        document.getElementById('agent-body').innerHTML =
+          `<tr><td colspan="4" style="color:var(--text-secondary);">${esc(LOCAL_ONLY_NOTE)}</td></tr>`;
+        return;
+      }
       const data = await api('/a2a/agents');
       if (!data) return;
       allAgents = data.agents || [];
@@ -375,7 +398,7 @@
       const body = document.getElementById('task-body');
       document.getElementById('task-count').textContent = allTasks.length;
       if (allTasks.length === 0) {
-        body.innerHTML = '<tr><td colspan="4" style="color:var(--text-secondary)">No tasks yet</td></tr>';
+        body.innerHTML = `<tr><td colspan="4" style="color:var(--text-secondary)">${HOSTED ? esc(LOCAL_ONLY_NOTE) : 'No tasks yet'}</td></tr>`;
         return;
       }
       body.innerHTML = allTasks.slice(-20).reverse().map(t => `
@@ -512,6 +535,15 @@
     // ── Init ────────────────────────────────────────────────────────────────
     async function init() {
       addLog('Dashboard starting…');
+      if (HOSTED) {
+        for (const id of ['btn-plan', 'btn-send']) {
+          const btn = document.getElementById(id);
+          btn.disabled = true;
+          btn.title = LOCAL_ONLY_NOTE;
+        }
+        document.getElementById('plan-output').textContent = LOCAL_ONLY_NOTE;
+        addLog('Hosted mode: skill discovery from xactions.app');
+      }
       await refreshHealth();
       await refreshSkills();
       await refreshAgents();
