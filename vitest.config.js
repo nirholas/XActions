@@ -34,10 +34,10 @@ export default defineConfig({
       // A floor, not a target: set just under the measured numbers so a change
       // that drops coverage fails, and raised as tests are added.
       thresholds: {
-        lines: 31,
-        functions: 39,
-        branches: 31,
-        statements: 31,
+        lines: 48,
+        functions: 51,
+        branches: 43,
+        statements: 48,
       },
     },
   },

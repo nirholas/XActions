@@ -123,7 +123,7 @@ async function loadOptionalCookies(scraper, cookiePath) {
     return true;
   } catch (err) {
     if (err.code === 'ENOENT') return false;
-    throw new Error(`Could not load saved cookies from ${cookiePath}: ${err.message}. Fix or delete the file.`);
+    throw new Error(`Could not load saved cookies from ${cookiePath}: ${err.message}. Fix or delete the file.`, { cause: err });
   }
 }
 
