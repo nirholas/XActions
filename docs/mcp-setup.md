@@ -188,7 +188,7 @@ Then use `xactions-mcp` as the command instead of `npx`:
 
 ## Tool filtering
 
-The server ships 149 tools. Most sessions need a handful, and a smaller tool list means a cheaper, more accurate model. Filter with an allowlist, a denylist, or both. Each accepts a comma-separated mix of:
+The server ships 160 tools. Most sessions need a handful, and a smaller tool list means a cheaper, more accurate model. Filter with an allowlist, a denylist, or both. Each accepts a comma-separated mix of:
 
 - **tool names** such as `x_get_profile`
 - **group names** such as `read` or `analytics`
